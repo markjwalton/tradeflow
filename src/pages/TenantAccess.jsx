@@ -16,6 +16,7 @@ export default function TenantAccess() {
   const [selectedTenant, setSelectedTenant] = useState(null);
   const [manualName, setManualName] = useState("");
   const [manualEmail, setManualEmail] = useState("");
+  const [requestSubmitted, setRequestSubmitted] = useState(false);
   
   const urlParams = new URLSearchParams(window.location.search);
   const tenantSlug = urlParams.get("tenant");
@@ -84,7 +85,7 @@ export default function TenantAccess() {
     }),
     onSuccess: () => {
       toast.success("Access request submitted");
-      window.location.reload();
+      setRequestSubmitted(true);
     },
   });
 
@@ -117,37 +118,53 @@ export default function TenantAccess() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Building2 className="h-5 w-5" />
-              Find Your Organization
+              {user ? "Find Your Organization" : "Welcome"}
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {!user ? (
-              <>
-                <p className="text-gray-600">Sign in to request access to your organization.</p>
+          <CardContent className="space-y-6">
+            {/* Sign In option */}
+            <div className="space-y-3">
+              <p className="text-gray-600">
+                {user 
+                  ? `Signed in as ${user.email}` 
+                  : "Already have an account? Sign in to access your organization."}
+              </p>
+              {!user && (
                 <Button className="w-full" onClick={() => base44.auth.redirectToLogin()}>
-                  Sign In
+                  Sign In to My Account
                 </Button>
-              </>
-            ) : (
-              <>
-                <div className="space-y-2">
-                  <Label>Enter your Company ID</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      placeholder="e.g. ABC123"
-                      value={companyIdInput}
-                      onChange={(e) => setCompanyIdInput(e.target.value.toUpperCase())}
-                      className="font-mono"
-                      maxLength={6}
-                    />
-                    <Button onClick={handleCompanyIdLookup} disabled={lookupLoading || !companyIdInput.trim()}>
-                      {lookupLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Find"}
-                    </Button>
-                  </div>
-                  <p className="text-xs text-gray-500">Your administrator should have provided you with a 6-character Company ID</p>
-                </div>
-              </>
-            )}
+              )}
+            </div>
+
+            {/* Divider */}
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-white px-2 text-gray-500">
+                  {user ? "Or find your organization" : "Or register for access"}
+                </span>
+              </div>
+            </div>
+
+            {/* Company ID lookup */}
+            <div className="space-y-2">
+              <Label>Enter your Company ID</Label>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="e.g. ABC123"
+                  value={companyIdInput}
+                  onChange={(e) => setCompanyIdInput(e.target.value.toUpperCase())}
+                  className="font-mono"
+                  maxLength={6}
+                />
+                <Button onClick={handleCompanyIdLookup} disabled={lookupLoading || !companyIdInput.trim()}>
+                  {lookupLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Find"}
+                </Button>
+              </div>
+              <p className="text-xs text-gray-500">Your administrator should have provided you with a 6-character Company ID</p>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -214,14 +231,14 @@ export default function TenantAccess() {
     );
   }
 
-  if (existingRequest && existingRequest.status === "pending") {
+  if (requestSubmitted || (existingRequest && existingRequest.status === "pending")) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
         <Card className="max-w-md w-full">
           <CardContent className="pt-6 text-center space-y-4">
             <Clock className="h-12 w-12 text-amber-500 mx-auto" />
             <div>
-              <h2 className="text-xl font-semibold">Request Pending</h2>
+              <h2 className="text-xl font-semibold">Request Submitted</h2>
               <p className="text-gray-500">Your request to join {tenant.name} is awaiting approval.</p>
             </div>
           </CardContent>
