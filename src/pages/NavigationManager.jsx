@@ -84,6 +84,20 @@ export default function NavigationManager() {
     },
   });
 
+  // Helper to get item depth
+  const getItemDepth = (itemId, items) => {
+    const item = items.find(i => i.id === itemId);
+    if (!item || !item.parent_id) return 0;
+    return 1 + getItemDepth(item.parent_id, items);
+  };
+
+  // Helper to get max depth of children
+  const getMaxChildDepth = (itemId, items, currentDepth = 0) => {
+    const children = items.filter(i => i.parent_id === itemId);
+    if (children.length === 0) return currentDepth;
+    return Math.max(...children.map(c => getMaxChildDepth(c.id, items, currentDepth + 1)));
+  };
+
   const handleDragEnd = async (result) => {
     if (!result.destination) return;
 
@@ -106,24 +120,57 @@ export default function NavigationManager() {
     };
 
     const flatList = buildFlatList();
-    const [movedItem] = flatList.splice(result.source.index, 1);
-    flatList.splice(result.destination.index, 0, movedItem);
+    const movedItem = flatList[result.source.index];
+    const destIndex = result.destination.index;
+
+    // Determine new parent based on destination
+    let newParentId = null;
+    let newDepth = 0;
+
+    if (destIndex > 0) {
+      const itemAbove = flatList[destIndex > result.source.index ? destIndex : destIndex - 1];
+      if (itemAbove) {
+        // If dropping after an item, check if we should be a sibling or child
+        if (itemAbove.depth < 2 && destIndex > result.source.index) {
+          // Could become child of item above or sibling
+          newParentId = itemAbove.parent_id;
+          newDepth = itemAbove.depth;
+        } else {
+          newParentId = itemAbove.parent_id;
+          newDepth = itemAbove.depth;
+        }
+      }
+    }
+
+    // Calculate how deep the moved item's children go
+    const movedItemChildDepth = getMaxChildDepth(movedItem.id, navItems);
+    const totalDepthNeeded = newDepth + movedItemChildDepth;
+
+    // Check if move would exceed 3-level limit (depth 0, 1, 2)
+    if (totalDepthNeeded > 2) {
+      toast.error("Cannot move: would exceed 3-level depth limit");
+      return;
+    }
+
+    // Reorder within same parent level
+    const [removed] = flatList.splice(result.source.index, 1);
+    flatList.splice(result.destination.index, 0, removed);
 
     // Recalculate order for items at the same parent level
     const orderUpdates = [];
     const groupedByParent = {};
     
-    flatList.forEach((item, displayIndex) => {
+    flatList.forEach((item) => {
       const parentKey = item.parent_id || "__root__";
       if (!groupedByParent[parentKey]) groupedByParent[parentKey] = [];
-      groupedByParent[parentKey].push({ id: item.id, displayIndex });
+      groupedByParent[parentKey].push(item.id);
     });
 
-    Object.values(groupedByParent).forEach(group => {
-      group.forEach((item, orderInGroup) => {
-        const original = navItems.find(n => n.id === item.id);
+    Object.entries(groupedByParent).forEach(([parentKey, ids]) => {
+      ids.forEach((id, orderInGroup) => {
+        const original = navItems.find(n => n.id === id);
         if (original && original.order !== orderInGroup) {
-          orderUpdates.push(base44.entities.NavigationItem.update(item.id, { order: orderInGroup }));
+          orderUpdates.push(base44.entities.NavigationItem.update(id, { order: orderInGroup }));
         }
       });
     });
