@@ -48,12 +48,6 @@ export default function TenantAccess() {
   // Use URL tenant, or selected tenant from search
   const tenant = tenantSlug ? tenantsBySlug[0] : selectedTenant;
 
-  // Filter tenants by search query
-  const filteredTenants = allTenants.filter(t => 
-    t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    t.slug.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   // Check if user already has access
   const { data: userRoles = [], isLoading: loadingRoles } = useQuery({
     queryKey: ["myTenantRoles", tenant?.id, user?.id],
