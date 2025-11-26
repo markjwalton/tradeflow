@@ -9,6 +9,7 @@ import { toast } from "sonner";
 
 import TenantForm from "@/components/tenants/TenantForm";
 import TenantRoleManager from "@/components/tenants/TenantRoleManager";
+import TenantUserManager from "@/components/tenants/TenantUserManager";
 
 export default function TenantManager() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -125,8 +126,9 @@ export default function TenantManager() {
                     </Button>
                   </div>
                   {expandedTenants.has(tenant.id) && (
-                    <div className="p-3 bg-gray-50 border-t">
+                    <div className="p-3 bg-gray-50 border-t space-y-4">
                       <TenantRoleManager tenantId={tenant.id} />
+                      <TenantUserManager tenantId={tenant.id} />
                     </div>
                   )}
                 </div>
