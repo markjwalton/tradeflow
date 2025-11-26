@@ -233,6 +233,45 @@ export default function NavigationManager() {
     });
   };
 
+  const handleMoveToParent = async (item, newParentId) => {
+    // Get new order (add to end of new parent's children)
+    const newSiblings = navItems.filter(i => (i.parent_id || null) === newParentId);
+    const newOrder = newSiblings.length;
+
+    await base44.entities.NavigationItem.update(item.id, { 
+      parent_id: newParentId,
+      order: newOrder
+    });
+    
+    queryClient.invalidateQueries({ queryKey: ["navigationItems", selectedTenantId] });
+    toast.success(newParentId ? "Item moved" : "Moved to top level");
+  };
+
+  // Build parent options for move dropdown
+  const getParentOptions = (currentItem) => {
+    const topLevel = navItems.filter(i => !i.parent_id && i.id !== currentItem.id);
+    const level1 = navItems.filter(i => i.parent_id && topLevel.some(t => t.id === i.parent_id) && i.id !== currentItem.id);
+    
+    // Check if item has children - if so, limit where it can go
+    const hasChildren = navItems.some(i => i.parent_id === currentItem.id);
+    const hasGrandchildren = navItems.some(i => {
+      const parent = navItems.find(p => p.id === i.parent_id);
+      return parent?.parent_id === currentItem.id;
+    });
+
+    let options = [];
+    
+    // Can always go to top level items as parent (depth 0 -> 1)
+    options = [...topLevel.map(i => ({ ...i, depth: 0 }))];
+    
+    // Can only go to level1 items if no grandchildren (would exceed 3 levels)
+    if (!hasGrandchildren) {
+      options = [...options, ...level1.map(i => ({ ...i, depth: 1 }))];
+    }
+    
+    return options;
+  };
+
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <Card>
@@ -303,6 +342,8 @@ export default function NavigationManager() {
                                   onEdit={handleEdit}
                                   onDelete={(item) => deleteMutation.mutate(item.id)}
                                   onToggleVisibility={handleToggleVisibility}
+                                  onMoveToParent={handleMoveToParent}
+                                  parentOptions={getParentOptions(item)}
                                   dragHandleProps={provided.dragHandleProps}
                                   depth={item.depth}
                                   isDragging={snapshot.isDragging}
