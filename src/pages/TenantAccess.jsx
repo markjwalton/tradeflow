@@ -26,7 +26,8 @@ export default function TenantAccess() {
   const { data: tenants = [], isLoading: loadingTenant } = useQuery({
     queryKey: ["tenantBySlug", tenantSlug],
     queryFn: () => base44.entities.Tenant.filter({ slug: tenantSlug }),
-    enabled: !!tenantSlug,
+    enabled: !!tenantSlug && !loading,
+    retry: false,
   });
 
   const tenant = tenants[0];
@@ -39,6 +40,7 @@ export default function TenantAccess() {
       user_id: user?.id 
     }),
     enabled: !!tenant?.id && !!user?.id,
+    retry: false,
   });
 
   // Check if user has pending request
@@ -49,6 +51,7 @@ export default function TenantAccess() {
       user_id: user?.id 
     }),
     enabled: !!tenant?.id && !!user?.id,
+    retry: false,
   });
 
   const existingRequest = existingRequests[0];
