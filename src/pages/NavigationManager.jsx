@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Copy } from "lucide-react";
+import { Plus, Copy, ChevronDown, ChevronRight } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { toast } from "sonner";
 
@@ -16,7 +16,29 @@ export default function NavigationManager() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [draggingItemId, setDraggingItemId] = useState(null);
+  const [expandedItems, setExpandedItems] = useState(new Set());
   const queryClient = useQueryClient();
+
+  const toggleExpand = (itemId) => {
+    setExpandedItems(prev => {
+      const next = new Set(prev);
+      if (next.has(itemId)) {
+        next.delete(itemId);
+      } else {
+        next.add(itemId);
+      }
+      return next;
+    });
+  };
+
+  const expandAll = () => {
+    const allParentIds = navItems.filter(i => navItems.some(c => c.parent_id === i.id)).map(i => i.id);
+    setExpandedItems(new Set(allParentIds));
+  };
+
+  const collapseAll = () => {
+    setExpandedItems(new Set());
+  };
 
   // Fetch tenants
   const { data: tenants = [] } = useQuery({
@@ -301,7 +323,17 @@ export default function NavigationManager() {
         <CardContent>
           {isLoading ? (
             <div className="text-center py-8 text-gray-500">Loading...</div>
-          ) : navItems.length === 0 ? (
+          ) : navItems.length > 0 && (
+            <div className="flex gap-2 mb-4">
+              <Button variant="outline" size="sm" onClick={expandAll}>
+                <ChevronDown className="h-4 w-4 mr-1" /> Expand All
+              </Button>
+              <Button variant="outline" size="sm" onClick={collapseAll}>
+                <ChevronRight className="h-4 w-4 mr-1" /> Collapse All
+              </Button>
+            </div>
+          )}
+          {navItems.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               No navigation items. Add one or copy from global template.
             </div>
@@ -315,15 +347,18 @@ export default function NavigationManager() {
                     className="space-y-2"
                   >
                     {(() => {
-                      // Build flat list with depth info for display
+                      // Build flat list with depth info for display, respecting collapsed state
                       const flatList = [];
                       const topLevel = navItems.filter(i => !i.parent_id).sort((a, b) => (a.order || 0) - (b.order || 0));
                       const getChildren = (parentId) => navItems.filter(i => i.parent_id === parentId).sort((a, b) => (a.order || 0) - (b.order || 0));
 
                       const addItems = (items, depth) => {
                         items.forEach(item => {
-                          flatList.push({ ...item, depth });
-                          addItems(getChildren(item.id), depth + 1);
+                          const children = getChildren(item.id);
+                          flatList.push({ ...item, depth, hasChildren: children.length > 0 });
+                          if (expandedItems.has(item.id)) {
+                            addItems(children, depth + 1);
+                          }
                         });
                       };
                       addItems(topLevel, 0);
@@ -336,7 +371,22 @@ export default function NavigationManager() {
                               {...provided.draggableProps}
                               style={provided.draggableProps.style}
                             >
-                              <div style={{ marginLeft: item.depth * 24 }}>
+                              <div style={{ marginLeft: item.depth * 24 }} className="flex items-center gap-1">
+                                {item.hasChildren ? (
+                                  <button 
+                                    onClick={() => toggleExpand(item.id)}
+                                    className="p-1 hover:bg-gray-100 rounded"
+                                  >
+                                    {expandedItems.has(item.id) ? (
+                                      <ChevronDown className="h-4 w-4 text-gray-500" />
+                                    ) : (
+                                      <ChevronRight className="h-4 w-4 text-gray-500" />
+                                    )}
+                                  </button>
+                                ) : (
+                                  <div className="w-6" />
+                                )}
+                                <div className="flex-1">
                                 <NavigationItemRow
                                   item={item}
                                   onEdit={handleEdit}
@@ -348,6 +398,7 @@ export default function NavigationManager() {
                                   depth={item.depth}
                                   isDragging={snapshot.isDragging}
                                 />
+                                </div>
                               </div>
                             </div>
                           )}
