@@ -161,24 +161,59 @@ export default function NavigationManager() {
                     ref={provided.innerRef}
                     className="space-y-2"
                   >
-                    {navItems.map((item, index) => (
-                      <Draggable key={item.id} draggableId={item.id} index={index}>
-                        {(provided) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                          >
-                            <NavigationItemRow
-                              item={item}
-                              onEdit={handleEdit}
-                              onDelete={(item) => deleteMutation.mutate(item.id)}
-                              onToggleVisibility={handleToggleVisibility}
-                              dragHandleProps={provided.dragHandleProps}
-                            />
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
+                    {(() => {
+                      // Build nested structure
+                      const topLevel = navItems.filter(i => !i.parent_id);
+                      const getChildren = (parentId) => navItems.filter(i => i.parent_id === parentId);
+                      const getParentName = (parentId) => navItems.find(i => i.id === parentId)?.name;
+
+                      let flatIndex = 0;
+                      const renderItems = [];
+
+                      topLevel.forEach((item) => {
+                        const idx = flatIndex++;
+                        renderItems.push(
+                          <Draggable key={item.id} draggableId={item.id} index={idx}>
+                            {(provided) => (
+                              <div ref={provided.innerRef} {...provided.draggableProps}>
+                                <NavigationItemRow
+                                  item={item}
+                                  onEdit={handleEdit}
+                                  onDelete={(item) => deleteMutation.mutate(item.id)}
+                                  onToggleVisibility={handleToggleVisibility}
+                                  dragHandleProps={provided.dragHandleProps}
+                                  depth={0}
+                                />
+                              </div>
+                            )}
+                          </Draggable>
+                        );
+
+                        // Render children
+                        getChildren(item.id).forEach((child) => {
+                          const childIdx = flatIndex++;
+                          renderItems.push(
+                            <Draggable key={child.id} draggableId={child.id} index={childIdx}>
+                              {(provided) => (
+                                <div ref={provided.innerRef} {...provided.draggableProps}>
+                                  <NavigationItemRow
+                                    item={child}
+                                    onEdit={handleEdit}
+                                    onDelete={(item) => deleteMutation.mutate(item.id)}
+                                    onToggleVisibility={handleToggleVisibility}
+                                    dragHandleProps={provided.dragHandleProps}
+                                    depth={1}
+                                    parentName={item.name}
+                                  />
+                                </div>
+                              )}
+                            </Draggable>
+                          );
+                        });
+                      });
+
+                      return renderItems;
+                    })()}
                     {provided.placeholder}
                   </div>
                 )}
@@ -193,6 +228,7 @@ export default function NavigationManager() {
         onClose={() => { setIsFormOpen(false); setEditingItem(null); }}
         onSubmit={handleSubmit}
         item={editingItem}
+        parentOptions={navItems.filter(i => !i.parent_id)}
       />
     </div>
   );

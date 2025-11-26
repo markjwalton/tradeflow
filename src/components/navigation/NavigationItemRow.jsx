@@ -1,7 +1,8 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { GripVertical, Pencil, Trash2, Home, Settings, Users, FileText, LayoutDashboard, FolderOpen } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { GripVertical, Pencil, Trash2, Home, Settings, Users, FileText, LayoutDashboard, FolderOpen, ChevronRight } from "lucide-react";
 
 const iconMap = {
   Home,
@@ -18,21 +19,41 @@ export default function NavigationItemRow({
   onEdit, 
   onDelete, 
   onToggleVisibility,
-  dragHandleProps = {}
+  dragHandleProps = {},
+  depth = 0,
+  parentName = null
 }) {
   const IconComponent = item.icon ? iconMap[item.icon] : null;
 
   return (
-    <div className="flex items-center gap-3 p-3 bg-white border rounded-lg shadow-sm">
+    <div 
+      className="flex items-center gap-3 p-3 bg-white border rounded-lg shadow-sm"
+      style={{ marginLeft: depth * 24 }}
+    >
       <div {...dragHandleProps} className="cursor-grab">
         <GripVertical className="h-5 w-5 text-gray-400" />
       </div>
+      
+      {depth > 0 && (
+        <ChevronRight className="h-4 w-4 text-gray-300" />
+      )}
       
       <div className="flex items-center gap-2 flex-1">
         {IconComponent && <IconComponent className="h-4 w-4 text-gray-500" />}
         <span className="font-medium">{item.name}</span>
         <span className="text-sm text-gray-400">/{item.page_slug}</span>
+        {parentName && (
+          <span className="text-xs text-gray-400">(child of {parentName})</span>
+        )}
       </div>
+
+      {item.roles?.length > 0 && (
+        <div className="flex gap-1">
+          {item.roles.map(role => (
+            <Badge key={role} variant="outline" className="text-xs">{role}</Badge>
+          ))}
+        </div>
+      )}
 
       <Switch
         checked={item.is_visible !== false}

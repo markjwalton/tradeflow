@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import { X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +12,13 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function NavigationItemForm({ 
   isOpen, 
@@ -91,6 +100,61 @@ export default function NavigationItemForm({
               onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
               placeholder="Home"
             />
+          </div>
+
+          {/* Parent Selection */}
+          <div className="space-y-2">
+            <Label>Parent Item (optional)</Label>
+            <Select 
+              value={formData.parent_id || "none"} 
+              onValueChange={(val) => setFormData({ ...formData, parent_id: val === "none" ? "" : val })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="No parent (top level)" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">No parent (top level)</SelectItem>
+                {parentOptions
+                  .filter(p => p.id !== item?.id)
+                  .map((p) => (
+                    <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Roles */}
+          <div className="space-y-2">
+            <Label>Roles (leave empty for all)</Label>
+            <div className="flex gap-2">
+              <Input
+                placeholder="Add role (e.g. admin)"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    const role = e.target.value.trim();
+                    if (role && !formData.roles.includes(role)) {
+                      setFormData({ ...formData, roles: [...formData.roles, role] });
+                      e.target.value = "";
+                    }
+                  }
+                }}
+              />
+            </div>
+            <div className="flex flex-wrap gap-1 mt-2">
+              {formData.roles.map((role) => (
+                <Badge key={role} variant="secondary" className="gap-1">
+                  {role}
+                  <X 
+                    className="h-3 w-3 cursor-pointer" 
+                    onClick={() => setFormData({ 
+                      ...formData, 
+                      roles: formData.roles.filter(r => r !== role) 
+                    })}
+                  />
+                </Badge>
+              ))}
+            </div>
           </div>
 
           <div className="flex items-center justify-between">
