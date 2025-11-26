@@ -102,9 +102,9 @@ export default function NavigationItemForm({
             />
           </div>
 
-          {/* Parent Selection */}
+          {/* Parent Selection - supports up to 2 levels of nesting */}
           <div className="space-y-2">
-            <Label>Parent Item (optional)</Label>
+            <Label>Parent Item (optional, up to 2 levels deep)</Label>
             <Select 
               value={formData.parent_id || "none"} 
               onValueChange={(val) => setFormData({ ...formData, parent_id: val === "none" ? "" : val })}
@@ -117,10 +117,13 @@ export default function NavigationItemForm({
                 {parentOptions
                   .filter(p => p.id !== item?.id)
                   .map((p) => (
-                    <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                    <SelectItem key={p.id} value={p.id}>
+                      {p.depth > 0 ? "└─ " : ""}{p.name}
+                    </SelectItem>
                   ))}
               </SelectContent>
             </Select>
+            <p className="text-xs text-gray-500">Items can be nested up to 2 levels deep</p>
           </div>
 
           {/* Roles */}

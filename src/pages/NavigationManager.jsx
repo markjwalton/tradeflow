@@ -162,7 +162,7 @@ export default function NavigationManager() {
                     className="space-y-2"
                   >
                     {(() => {
-                      // Build nested structure
+                      // Build nested structure - supports up to 2 levels
                       const topLevel = navItems.filter(i => !i.parent_id);
                       const getChildren = (parentId) => navItems.filter(i => i.parent_id === parentId);
                       const getParentName = (parentId) => navItems.find(i => i.id === parentId)?.name;
@@ -189,7 +189,7 @@ export default function NavigationManager() {
                           </Draggable>
                         );
 
-                        // Render children
+                        // Render level 1 children
                         getChildren(item.id).forEach((child) => {
                           const childIdx = flatIndex++;
                           renderItems.push(
@@ -209,6 +209,28 @@ export default function NavigationManager() {
                               )}
                             </Draggable>
                           );
+
+                          // Render level 2 children (grandchildren)
+                          getChildren(child.id).forEach((grandchild) => {
+                            const grandchildIdx = flatIndex++;
+                            renderItems.push(
+                              <Draggable key={grandchild.id} draggableId={grandchild.id} index={grandchildIdx}>
+                                {(provided) => (
+                                  <div ref={provided.innerRef} {...provided.draggableProps}>
+                                    <NavigationItemRow
+                                      item={grandchild}
+                                      onEdit={handleEdit}
+                                      onDelete={(item) => deleteMutation.mutate(item.id)}
+                                      onToggleVisibility={handleToggleVisibility}
+                                      dragHandleProps={provided.dragHandleProps}
+                                      depth={2}
+                                      parentName={child.name}
+                                    />
+                                  </div>
+                                )}
+                              </Draggable>
+                            );
+                          });
                         });
                       });
 
@@ -228,7 +250,15 @@ export default function NavigationManager() {
         onClose={() => { setIsFormOpen(false); setEditingItem(null); }}
         onSubmit={handleSubmit}
         item={editingItem}
-        parentOptions={navItems.filter(i => !i.parent_id)}
+        parentOptions={(() => {
+          // Allow selecting top-level items or level-1 items as parents (max 2 levels deep)
+          const topLevel = navItems.filter(i => !i.parent_id);
+          const level1 = navItems.filter(i => i.parent_id && topLevel.some(t => t.id === i.parent_id));
+          return [
+            ...topLevel.map(i => ({ ...i, depth: 0 })),
+            ...level1.map(i => ({ ...i, depth: 1 }))
+          ];
+        })()}
       />
     </div>
   );
