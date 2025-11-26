@@ -153,65 +153,93 @@ export default function NavigationManager() {
     setDraggingItemId(null);
     
     if (!result.destination) return;
-    if (result.source.index === result.destination.index) return;
 
-    // Build flat list in display order with depth info
-    const buildFlatList = () => {
-      const list = [];
-      const topLevel = navItems.filter(i => !i.parent_id).sort((a, b) => a.order - b.order);
-      const getChildren = (parentId) => navItems.filter(i => i.parent_id === parentId).sort((a, b) => a.order - b.order);
+    const { source, destination, draggableId } = result;
+    
+    // Parse parent IDs from droppable IDs
+    const sourceParentId = source.droppableId === 'top-level' ? null : source.droppableId.replace('children-', '');
+    const destParentId = destination.droppableId === 'top-level' ? null : destination.droppableId.replace('children-', '');
+    
+    const draggedItem = navItems.find(item => item.id === draggableId);
+    if (!draggedItem) return;
+
+    // Check depth limit when moving to a new parent
+    if (sourceParentId !== destParentId && destParentId) {
+      const destParentDepth = getItemDepth(destParentId, navItems);
+      const draggedChildDepth = getMaxChildDepth(draggableId, navItems);
+      const newTotalDepth = destParentDepth + 1 + draggedChildDepth;
       
-      topLevel.forEach(item => {
-        list.push({ ...item, depth: 0 });
-        getChildren(item.id).forEach(child => {
-          list.push({ ...child, depth: 1 });
-          getChildren(child.id).forEach(grandchild => {
-            list.push({ ...grandchild, depth: 2 });
-          });
-        });
-      });
-      return list;
-    };
-
-    const flatList = buildFlatList();
-    const movedItem = flatList[result.source.index];
-    const destIndex = result.destination.index;
-    const destItem = flatList[destIndex];
-
-    // Only allow reordering within same parent
-    if (movedItem.parent_id !== destItem?.parent_id) {
-      toast.info("Drop onto an item to move it inside, or reorder within same level");
-      return;
+      if (newTotalDepth > 2) {
+        toast.error("Cannot move here - would exceed 3 level nesting limit");
+        return;
+      }
+      
+      // Check for circular nesting
+      const isDescendant = (parentId, itemId) => {
+        if (!parentId) return false;
+        if (parentId === itemId) return true;
+        const parent = navItems.find(i => i.id === parentId);
+        return parent ? isDescendant(parent.parent_id, itemId) : false;
+      };
+      if (isDescendant(destParentId, draggableId)) {
+        toast.error("Cannot nest a parent inside its own children");
+        return;
+      }
     }
 
-    // Get siblings (items with same parent)
-    const parentId = movedItem.parent_id || null;
-    const siblings = navItems
-      .filter(i => (i.parent_id || null) === parentId)
-      .sort((a, b) => a.order - b.order);
+    const updates = [];
 
-    // Find source and destination indices within siblings
-    const sourceIdx = siblings.findIndex(s => s.id === movedItem.id);
-    const destIdx = siblings.findIndex(s => s.id === destItem?.id);
+    if (sourceParentId !== destParentId) {
+      // Moving between different parents
+      const destChildren = navItems
+        .filter(item => (item.parent_id || null) === destParentId && item.id !== draggableId)
+        .sort((a, b) => (a.order || 0) - (b.order || 0));
+      
+      destChildren.splice(destination.index, 0, draggedItem);
+      
+      destChildren.forEach((item, index) => {
+        if (item.id === draggedItem.id) {
+          updates.push(
+            base44.entities.NavigationItem.update(item.id, {
+              parent_id: destParentId,
+              order: index
+            })
+          );
+        } else if (item.order !== index) {
+          updates.push(
+            base44.entities.NavigationItem.update(item.id, { order: index })
+          );
+        }
+      });
+    } else {
+      // Reordering within same parent
+      if (source.index === destination.index) return;
+      
+      const siblings = navItems
+        .filter(item => (item.parent_id || null) === sourceParentId)
+        .sort((a, b) => (a.order || 0) - (b.order || 0));
+      
+      const reordered = Array.from(siblings);
+      const [removed] = reordered.splice(source.index, 1);
+      reordered.splice(destination.index, 0, removed);
 
-    if (sourceIdx === -1 || destIdx === -1 || sourceIdx === destIdx) return;
-
-    // Reorder siblings
-    const newSiblings = [...siblings];
-    const [removed] = newSiblings.splice(sourceIdx, 1);
-    newSiblings.splice(destIdx, 0, removed);
-
-    // Update orders
-    const updates = newSiblings.map((item, idx) => {
-      if (item.order !== idx) {
-        return base44.entities.NavigationItem.update(item.id, { order: idx });
-      }
-      return null;
-    }).filter(Boolean);
+      reordered.forEach((item, index) => {
+        if (item.order !== index) {
+          updates.push(
+            base44.entities.NavigationItem.update(item.id, { order: index })
+          );
+        }
+      });
+    }
 
     if (updates.length > 0) {
-      await Promise.all(updates);
-      queryClient.invalidateQueries({ queryKey: ["navigationItems", selectedTenantId] });
+      try {
+        await Promise.all(updates);
+        queryClient.invalidateQueries({ queryKey: ["navigationItems", selectedTenantId] });
+        toast.success("Order updated");
+      } catch (error) {
+        toast.error("Failed to update order");
+      }
     }
   };
 
