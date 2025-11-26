@@ -298,96 +298,72 @@ export default function NavigationManager() {
             </div>
           ) : (
             <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-              <Droppable droppableId="nav-items">
-                {(provided) => (
+              <Droppable droppableId="top-level" type="mixed">
+                {(provided, snapshot) => (
                   <div
                     {...provided.droppableProps}
                     ref={provided.innerRef}
-                    className="space-y-2"
+                    className={`space-y-2 min-h-[50px] p-2 rounded-lg transition-colors ${
+                      snapshot.isDraggingOver ? 'bg-blue-50 border-2 border-dashed border-blue-300' : ''
+                    }`}
                   >
                     {(() => {
-                      // Build nested structure - supports up to 2 levels
-                      const topLevel = navItems.filter(i => !i.parent_id);
-                      const getChildren = (parentId) => navItems.filter(i => i.parent_id === parentId);
-                      const getParentName = (parentId) => navItems.find(i => i.id === parentId)?.name;
+                      const topLevel = navItems.filter(i => !i.parent_id).sort((a, b) => (a.order || 0) - (b.order || 0));
+                      const getChildren = (parentId) => navItems.filter(i => i.parent_id === parentId).sort((a, b) => (a.order || 0) - (b.order || 0));
 
-                      let flatIndex = 0;
-                      const renderItems = [];
+                      const renderNestedItem = (item, index, depth, parentName = null) => {
+                        const children = getChildren(item.id);
+                        const hasChildren = children.length > 0;
 
-                      topLevel.forEach((item) => {
-                        const idx = flatIndex++;
-                        renderItems.push(
-                          <Draggable key={item.id} draggableId={item.id} index={idx}>
-                            {(provided) => (
-                              <div ref={provided.innerRef} {...provided.draggableProps}>
+                        return (
+                          <Draggable key={item.id} draggableId={item.id} index={index}>
+                            {(provided, snapshot) => (
+                              <div 
+                                ref={provided.innerRef} 
+                                {...provided.draggableProps}
+                                className={snapshot.isDragging ? 'opacity-50' : ''}
+                              >
                                 <NavigationItemRow
                                   item={item}
                                   onEdit={handleEdit}
                                   onDelete={(item) => deleteMutation.mutate(item.id)}
                                   onToggleVisibility={handleToggleVisibility}
                                   dragHandleProps={provided.dragHandleProps}
-                                  depth={0}
+                                  depth={depth}
+                                  parentName={parentName}
                                   onDropInto={handleDropIntoItem}
                                   canDropInto={canDropIntoItem(draggingItemId, item)}
                                   isDragging={draggingItemId === item.id}
                                 />
+                                
+                                {/* Nested droppable for children */}
+                                {depth < 2 && (
+                                  <Droppable droppableId={`children-${item.id}`} type="mixed">
+                                    {(provided, snapshot) => (
+                                      <div
+                                        {...provided.droppableProps}
+                                        ref={provided.innerRef}
+                                        className={`ml-6 mt-1 min-h-[8px] rounded transition-colors ${
+                                          snapshot.isDraggingOver 
+                                            ? 'bg-green-50 border-2 border-dashed border-green-300 min-h-[40px]' 
+                                            : hasChildren ? '' : 'border border-dashed border-gray-200'
+                                        }`}
+                                      >
+                                        {children.map((child, childIndex) => 
+                                          renderNestedItem(child, childIndex, depth + 1, item.name)
+                                        )}
+                                        {provided.placeholder}
+                                      </div>
+                                    )}
+                                  </Droppable>
+                                )}
                               </div>
                             )}
                           </Draggable>
                         );
+                      };
 
-                        // Render level 1 children
-                        getChildren(item.id).forEach((child) => {
-                          const childIdx = flatIndex++;
-                          renderItems.push(
-                            <Draggable key={child.id} draggableId={child.id} index={childIdx}>
-                              {(provided) => (
-                                <div ref={provided.innerRef} {...provided.draggableProps}>
-                                  <NavigationItemRow
-                                                  item={child}
-                                                  onEdit={handleEdit}
-                                                  onDelete={(item) => deleteMutation.mutate(item.id)}
-                                                  onToggleVisibility={handleToggleVisibility}
-                                                  dragHandleProps={provided.dragHandleProps}
-                                                  depth={1}
-                                                  parentName={item.name}
-                                                  onDropInto={handleDropIntoItem}
-                                                  canDropInto={canDropIntoItem(draggingItemId, child)}
-                                                  isDragging={draggingItemId === child.id}
-                                                />
-                                </div>
-                              )}
-                            </Draggable>
-                          );
-
-                          // Render level 2 children (grandchildren)
-                          getChildren(child.id).forEach((grandchild) => {
-                            const grandchildIdx = flatIndex++;
-                            renderItems.push(
-                              <Draggable key={grandchild.id} draggableId={grandchild.id} index={grandchildIdx}>
-                                {(provided) => (
-                                  <div ref={provided.innerRef} {...provided.draggableProps}>
-                                    <NavigationItemRow
-                                                        item={grandchild}
-                                                        onEdit={handleEdit}
-                                                        onDelete={(item) => deleteMutation.mutate(item.id)}
-                                                        onToggleVisibility={handleToggleVisibility}
-                                                        dragHandleProps={provided.dragHandleProps}
-                                                        depth={2}
-                                                        parentName={child.name}
-                                                        onDropInto={handleDropIntoItem}
-                                                        canDropInto={canDropIntoItem(draggingItemId, grandchild)}
-                                                        isDragging={draggingItemId === grandchild.id}
-                                                      />
-                                  </div>
-                                )}
-                              </Draggable>
-                            );
-                          });
-                        });
-                      });
-
-                      return renderItems;
+                      return topLevel.map((item, index) => renderNestedItem(item, index, 0));
                     })()}
                     {provided.placeholder}
                   </div>
