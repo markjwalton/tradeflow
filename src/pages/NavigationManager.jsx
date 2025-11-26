@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,7 @@ export default function NavigationManager() {
   const [selectedTenantId, setSelectedTenantId] = useState("__global__");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+  const [draggingItemId, setDraggingItemId] = useState(null);
   const queryClient = useQueryClient();
 
   // Fetch tenants
@@ -98,7 +99,73 @@ export default function NavigationManager() {
     return Math.max(...children.map(c => getMaxChildDepth(c.id, items, currentDepth + 1)));
   };
 
+  // Get depth of an item's deepest child
+  const getMaxChildDepth = (itemId, items, currentDepth = 0) => {
+    const children = items.filter(i => i.parent_id === itemId);
+    if (children.length === 0) return currentDepth;
+    return Math.max(...children.map(c => getMaxChildDepth(c.id, items, currentDepth + 1)));
+  };
+
+  // Get depth of an item
+  const getItemDepth = (itemId, items) => {
+    const item = items.find(i => i.id === itemId);
+    if (!item || !item.parent_id) return 0;
+    return 1 + getItemDepth(item.parent_id, items);
+  };
+
+  // Check if dropping item into target would exceed depth limit
+  const canDropIntoItem = (draggedItemId, targetItem) => {
+    if (!draggedItemId || !targetItem) return false;
+    if (draggedItemId === targetItem.id) return false;
+    
+    // Can't drop into non-folders at level 2
+    const targetDepth = getItemDepth(targetItem.id, navItems);
+    if (targetDepth >= 2) return false;
+    
+    // Check if dragged item + its children would exceed limit
+    const draggedChildDepth = getMaxChildDepth(draggedItemId, navItems);
+    const newTotalDepth = targetDepth + 1 + draggedChildDepth;
+    if (newTotalDepth > 2) return false;
+
+    // Can't drop parent into its own child
+    const isDescendant = (parentId, itemId) => {
+      if (!parentId) return false;
+      if (parentId === itemId) return true;
+      const parent = navItems.find(i => i.id === parentId);
+      return parent ? isDescendant(parent.parent_id, itemId) : false;
+    };
+    if (isDescendant(targetItem.id, draggedItemId)) return false;
+
+    return true;
+  };
+
+  const handleDropIntoItem = async (targetItem) => {
+    if (!draggingItemId || !targetItem) return;
+    
+    const draggedItem = navItems.find(i => i.id === draggingItemId);
+    if (!draggedItem || draggedItem.parent_id === targetItem.id) return;
+
+    // Get new order (add to end of target's children)
+    const targetChildren = navItems.filter(i => i.parent_id === targetItem.id);
+    const newOrder = targetChildren.length;
+
+    await base44.entities.NavigationItem.update(draggingItemId, { 
+      parent_id: targetItem.id,
+      order: newOrder
+    });
+    
+    queryClient.invalidateQueries({ queryKey: ["navigationItems", selectedTenantId] });
+    toast.success(`Moved into ${targetItem.name}`);
+    setDraggingItemId(null);
+  };
+
+  const handleDragStart = (result) => {
+    setDraggingItemId(result.draggableId);
+  };
+
   const handleDragEnd = async (result) => {
+    setDraggingItemId(null);
+    
     if (!result.destination) return;
     if (result.source.index === result.destination.index) return;
 
@@ -127,7 +194,7 @@ export default function NavigationManager() {
 
     // Only allow reordering within same parent
     if (movedItem.parent_id !== destItem?.parent_id) {
-      toast.error("Use the edit form to change parent. Drag only reorders within same level.");
+      toast.info("Drop onto an item to move it inside, or reorder within same level");
       return;
     }
 
@@ -216,7 +283,7 @@ export default function NavigationManager() {
               No navigation items. Add one or copy from global template.
             </div>
           ) : (
-            <DragDropContext onDragEnd={handleDragEnd}>
+            <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
               <Droppable droppableId="nav-items">
                 {(provided) => (
                   <div
