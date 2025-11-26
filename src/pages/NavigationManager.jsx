@@ -123,87 +123,42 @@ export default function NavigationManager() {
     const flatList = buildFlatList();
     const movedItem = flatList[result.source.index];
     const destIndex = result.destination.index;
+    const destItem = flatList[destIndex];
 
-    // Determine new parent based on destination position
-    let newParentId = null;
-    let newDepth = 0;
+    // Only allow reordering within same parent
+    if (movedItem.parent_id !== destItem?.parent_id) {
+      toast.error("Use the edit form to change parent. Drag only reorders within same level.");
+      return;
+    }
 
-    if (destIndex === 0) {
-      // Moving to top - becomes root level
-      newParentId = null;
-      newDepth = 0;
-    } else {
-      // Look at item above destination to determine parent
-      const adjustedDestIndex = destIndex > result.source.index ? destIndex : destIndex - 1;
-      const itemAbove = flatList[adjustedDestIndex >= 0 ? adjustedDestIndex : 0];
-      
-      if (itemAbove && itemAbove.id !== movedItem.id) {
-        // Become sibling of item above (same parent)
-        newParentId = itemAbove.parent_id || null;
-        newDepth = itemAbove.depth;
+    // Get siblings (items with same parent)
+    const parentId = movedItem.parent_id || null;
+    const siblings = navItems
+      .filter(i => (i.parent_id || null) === parentId)
+      .sort((a, b) => a.order - b.order);
+
+    // Find source and destination indices within siblings
+    const sourceIdx = siblings.findIndex(s => s.id === movedItem.id);
+    const destIdx = siblings.findIndex(s => s.id === destItem?.id);
+
+    if (sourceIdx === -1 || destIdx === -1 || sourceIdx === destIdx) return;
+
+    // Reorder siblings
+    const newSiblings = [...siblings];
+    const [removed] = newSiblings.splice(sourceIdx, 1);
+    newSiblings.splice(destIdx, 0, removed);
+
+    // Update orders
+    const updates = newSiblings.map((item, idx) => {
+      if (item.order !== idx) {
+        return base44.entities.NavigationItem.update(item.id, { order: idx });
       }
-    }
-
-    // Calculate how deep the moved item's children go
-    const movedItemChildDepth = getMaxChildDepth(movedItem.id, navItems);
-    const totalDepthNeeded = newDepth + movedItemChildDepth;
-
-    // Check if move would exceed 3-level limit (depth 0, 1, 2)
-    if (totalDepthNeeded > 2) {
-      toast.error("Cannot move: would exceed 3-level depth limit");
-      return;
-    }
-
-    // Check if trying to move item into its own children (circular reference)
-    const isDescendant = (parentId, itemId) => {
-      if (!parentId) return false;
-      if (parentId === itemId) return true;
-      const parent = navItems.find(i => i.id === parentId);
-      return parent ? isDescendant(parent.parent_id, itemId) : false;
-    };
-
-    if (isDescendant(newParentId, movedItem.id)) {
-      toast.error("Cannot move item into its own children");
-      return;
-    }
-
-    // Build updates
-    const updates = [];
-
-    // Update parent if changed
-    if (movedItem.parent_id !== newParentId) {
-      updates.push(base44.entities.NavigationItem.update(movedItem.id, { 
-        parent_id: newParentId || null 
-      }));
-    }
-
-    // Reorder: rebuild flat list, move item, then recalculate orders per parent
-    const newFlatList = [...flatList];
-    const [removed] = newFlatList.splice(result.source.index, 1);
-    removed.parent_id = newParentId; // Update parent for ordering calculation
-    newFlatList.splice(result.destination.index, 0, removed);
-
-    // Group by parent and assign new orders
-    const orderByParent = {};
-    newFlatList.forEach(item => {
-      const parentKey = item.parent_id || "__root__";
-      if (!orderByParent[parentKey]) orderByParent[parentKey] = [];
-      orderByParent[parentKey].push(item.id);
-    });
-
-    Object.values(orderByParent).forEach(ids => {
-      ids.forEach((id, newOrder) => {
-        const original = navItems.find(n => n.id === id);
-        if (original && original.order !== newOrder) {
-          updates.push(base44.entities.NavigationItem.update(id, { order: newOrder }));
-        }
-      });
-    });
+      return null;
+    }).filter(Boolean);
 
     if (updates.length > 0) {
       await Promise.all(updates);
       queryClient.invalidateQueries({ queryKey: ["navigationItems", selectedTenantId] });
-      toast.success("Navigation updated");
     }
   };
 
