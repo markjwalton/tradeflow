@@ -1,8 +1,17 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { GripVertical, Pencil, Trash2 } from "lucide-react";
-import * as LucideIcons from "lucide-react";
+import { GripVertical, Pencil, Trash2, Home, Settings, Users, FileText, LayoutDashboard, FolderOpen } from "lucide-react";
+
+const iconMap = {
+  Home,
+  Settings,
+  Users,
+  FileText,
+  LayoutDashboard,
+  FolderOpen,
+  Dashboard: LayoutDashboard
+};
 
 export default function NavigationItemRow({ 
   item, 
@@ -11,7 +20,7 @@ export default function NavigationItemRow({
   onToggleVisibility,
   dragHandleProps = {}
 }) {
-  const IconComponent = item.icon ? LucideIcons[item.icon] : null;
+  const IconComponent = item.icon ? iconMap[item.icon] : null;
 
   return (
     <div className="flex items-center gap-3 p-3 bg-white border rounded-lg shadow-sm">
