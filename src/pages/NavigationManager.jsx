@@ -419,6 +419,7 @@ export default function NavigationManager() {
         onClose={() => { setIsFormOpen(false); setEditingItem(null); }}
         onSubmit={handleSubmit}
         item={editingItem}
+        tenantId={selectedTenantId}
         parentOptions={(() => {
           // Allow selecting top-level items or level-1 items as parents (max 2 levels deep)
           const topLevel = navItems.filter(i => !i.parent_id);

@@ -1,9 +1,12 @@
 import React from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { X, Home, Settings, Users, FileText, LayoutDashboard, FolderOpen, ShoppingCart, Mail, Calendar, Bell, Search, Heart, Star, Bookmark, Clock, Globe, Lock, Key, Shield, Zap, Database, Server, Code, Terminal, Cpu, Monitor, Smartphone, Tablet, Camera, Image, Video, Music, Mic, Phone, MessageSquare, Send, Inbox, Archive, Trash, Edit, PenTool, Layers, Grid, List, BarChart, PieChart, TrendingUp, DollarSign, CreditCard, Wallet, Gift, Tag, Package, Truck, MapPin, Navigation, Compass, Map, Flag, Award, Target, Crosshair } from "lucide-react";
 import {
   Dialog,
@@ -95,8 +98,26 @@ export default function NavigationItemForm({
   onClose, 
   onSubmit, 
   item = null,
-  parentOptions = []
+  parentOptions = [],
+  tenantId = "__global__"
 }) {
+  // Fetch roles for this tenant + global roles
+  const { data: tenantRoles = [] } = useQuery({
+    queryKey: ["tenantRoles", tenantId],
+    queryFn: () => base44.entities.TenantRole.filter({ tenant_id: tenantId }),
+    enabled: isOpen,
+  });
+
+  const { data: globalRoles = [] } = useQuery({
+    queryKey: ["tenantRoles", "__global__"],
+    queryFn: () => base44.entities.TenantRole.filter({ tenant_id: "__global__" }),
+    enabled: isOpen && tenantId !== "__global__",
+  });
+
+  // Combine roles, tenant-specific first
+  const availableRoles = tenantId === "__global__" 
+    ? tenantRoles 
+    : [...tenantRoles, ...globalRoles.filter(gr => !tenantRoles.some(tr => tr.name === gr.name))];
   const [formData, setFormData] = React.useState({
     name: "",
     item_type: "page",
@@ -258,36 +279,52 @@ export default function NavigationItemForm({
 
           {/* Roles */}
           <div className="space-y-2">
-            <Label>Roles (leave empty for all)</Label>
-            <div className="flex gap-2">
-              <Input
-                placeholder="Add role (e.g. admin)"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    const role = e.target.value.trim();
-                    if (role && !formData.roles.includes(role)) {
-                      setFormData({ ...formData, roles: [...formData.roles, role] });
-                      e.target.value = "";
-                    }
-                  }
-                }}
-              />
-            </div>
-            <div className="flex flex-wrap gap-1 mt-2">
-              {formData.roles.map((role) => (
-                <Badge key={role} variant="secondary" className="gap-1">
-                  {role}
-                  <X 
-                    className="h-3 w-3 cursor-pointer" 
-                    onClick={() => setFormData({ 
-                      ...formData, 
-                      roles: formData.roles.filter(r => r !== role) 
-                    })}
-                  />
-                </Badge>
-              ))}
-            </div>
+            <Label>Roles (leave empty for all users)</Label>
+            {availableRoles.length > 0 ? (
+              <div className="border rounded-md p-3 space-y-2 max-h-40 overflow-y-auto">
+                {availableRoles.map((role) => (
+                  <div key={role.id} className="flex items-center gap-2">
+                    <Checkbox
+                      id={`role-${role.id}`}
+                      checked={formData.roles.includes(role.name)}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setFormData({ ...formData, roles: [...formData.roles, role.name] });
+                        } else {
+                          setFormData({ ...formData, roles: formData.roles.filter(r => r !== role.name) });
+                        }
+                      }}
+                    />
+                    <label htmlFor={`role-${role.id}`} className="text-sm cursor-pointer flex-1">
+                      {role.name}
+                      {role.description && (
+                        <span className="text-gray-400 ml-1">— {role.description}</span>
+                      )}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500 italic">
+                No roles defined. Add roles in Tenant Manager first.
+              </p>
+            )}
+            {formData.roles.length > 0 && (
+              <div className="flex flex-wrap gap-1 mt-2">
+                {formData.roles.map((role) => (
+                  <Badge key={role} variant="secondary" className="gap-1">
+                    {role}
+                    <X 
+                      className="h-3 w-3 cursor-pointer" 
+                      onClick={() => setFormData({ 
+                        ...formData, 
+                        roles: formData.roles.filter(r => r !== role) 
+                      })}
+                    />
+                  </Badge>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="flex items-center justify-between">

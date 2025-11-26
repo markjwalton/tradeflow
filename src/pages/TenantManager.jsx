@@ -3,16 +3,30 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Pencil, Trash2, Building2, Check, X } from "lucide-react";
+import { Plus, Pencil, Trash2, Building2, Check, X, ChevronDown, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
 import TenantForm from "@/components/tenants/TenantForm";
+import TenantRoleManager from "@/components/tenants/TenantRoleManager";
 
 export default function TenantManager() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTenant, setEditingTenant] = useState(null);
+  const [expandedTenants, setExpandedTenants] = useState(new Set());
   const queryClient = useQueryClient();
+
+  const toggleExpand = (tenantId) => {
+    setExpandedTenants(prev => {
+      const next = new Set(prev);
+      if (next.has(tenantId)) {
+        next.delete(tenantId);
+      } else {
+        next.add(tenantId);
+      }
+      return next;
+    });
+  };
 
   const { data: tenants = [], isLoading } = useQuery({
     queryKey: ["tenants"],
@@ -79,28 +93,42 @@ export default function TenantManager() {
           ) : (
             <div className="space-y-2">
               {tenants.map((tenant) => (
-                <div 
-                  key={tenant.id} 
-                  className="flex items-center gap-3 p-3 bg-white border rounded-lg shadow-sm"
-                >
-                  <Building2 className="h-5 w-5 text-gray-400" />
-                  <div className="flex-1">
-                    <span className="font-medium">{tenant.name}</span>
-                    <span className="text-sm text-gray-400 ml-2">/{tenant.slug}</span>
+                <div key={tenant.id} className="border rounded-lg shadow-sm overflow-hidden">
+                  <div className="flex items-center gap-3 p-3 bg-white">
+                    <button 
+                      onClick={() => toggleExpand(tenant.id)}
+                      className="p-1 hover:bg-gray-100 rounded"
+                    >
+                      {expandedTenants.has(tenant.id) ? (
+                        <ChevronDown className="h-4 w-4 text-gray-500" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4 text-gray-500" />
+                      )}
+                    </button>
+                    <Building2 className="h-5 w-5 text-gray-400" />
+                    <div className="flex-1">
+                      <span className="font-medium">{tenant.name}</span>
+                      <span className="text-sm text-gray-400 ml-2">/{tenant.slug}</span>
+                    </div>
+                    <Badge variant={tenant.is_active !== false ? "default" : "secondary"}>
+                      {tenant.is_active !== false ? (
+                        <><Check className="h-3 w-3 mr-1" /> Active</>
+                      ) : (
+                        <><X className="h-3 w-3 mr-1" /> Inactive</>
+                      )}
+                    </Badge>
+                    <Button variant="ghost" size="icon" onClick={() => handleEdit(tenant)}>
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(tenant.id)}>
+                      <Trash2 className="h-4 w-4 text-red-500" />
+                    </Button>
                   </div>
-                  <Badge variant={tenant.is_active !== false ? "default" : "secondary"}>
-                    {tenant.is_active !== false ? (
-                      <><Check className="h-3 w-3 mr-1" /> Active</>
-                    ) : (
-                      <><X className="h-3 w-3 mr-1" /> Inactive</>
-                    )}
-                  </Badge>
-                  <Button variant="ghost" size="icon" onClick={() => handleEdit(tenant)}>
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(tenant.id)}>
-                    <Trash2 className="h-4 w-4 text-red-500" />
-                  </Button>
+                  {expandedTenants.has(tenant.id) && (
+                    <div className="p-3 bg-gray-50 border-t">
+                      <TenantRoleManager tenantId={tenant.id} />
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
