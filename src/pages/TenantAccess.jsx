@@ -3,12 +3,15 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Loader2, CheckCircle, Clock, XCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Loader2, CheckCircle, Clock, XCircle, Search, Building2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function TenantAccess() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedTenant, setSelectedTenant] = useState(null);
   
   const urlParams = new URLSearchParams(window.location.search);
   const tenantSlug = urlParams.get("tenant");
@@ -22,15 +25,30 @@ export default function TenantAccess() {
     return () => { mounted = false; };
   }, []);
 
-  // Find tenant by slug
-  const { data: tenants = [], isLoading: loadingTenant } = useQuery({
+  // Fetch all active tenants for browsing
+  const { data: allTenants = [], isLoading: loadingAllTenants } = useQuery({
+    queryKey: ["allTenants"],
+    queryFn: () => base44.entities.Tenant.filter({ is_active: true }),
+    enabled: !loading && !!user,
+    retry: false,
+  });
+
+  // Find tenant by slug if provided in URL
+  const { data: tenantsBySlug = [], isLoading: loadingTenant } = useQuery({
     queryKey: ["tenantBySlug", tenantSlug],
     queryFn: () => base44.entities.Tenant.filter({ slug: tenantSlug }),
     enabled: !!tenantSlug && !loading,
     retry: false,
   });
 
-  const tenant = tenants[0];
+  // Use URL tenant, or selected tenant from search
+  const tenant = tenantSlug ? tenantsBySlug[0] : selectedTenant;
+
+  // Filter tenants by search query
+  const filteredTenants = allTenants.filter(t => 
+    t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    t.slug.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   // Check if user already has access
   const { data: userRoles = [], isLoading: loadingRoles } = useQuery({
@@ -79,12 +97,61 @@ export default function TenantAccess() {
     );
   }
 
-  if (!tenantSlug) {
+  // Show tenant browser if no slug provided or tenant not found
+  if (!tenantSlug && !selectedTenant) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
-        <Card className="max-w-md w-full">
-          <CardContent className="pt-6 text-center">
-            <p className="text-gray-500">Invalid access link. Please use a valid tenant URL.</p>
+        <Card className="max-w-lg w-full">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Building2 className="h-5 w-5" />
+              Find Your Organization
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {!user ? (
+              <>
+                <p className="text-gray-600">Sign in to browse and request access to organizations.</p>
+                <Button className="w-full" onClick={() => base44.auth.redirectToLogin()}>
+                  Sign In
+                </Button>
+              </>
+            ) : (
+              <>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder="Search by name or ID..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+                
+                {loadingAllTenants ? (
+                  <div className="flex justify-center py-8">
+                    <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+                  </div>
+                ) : filteredTenants.length === 0 ? (
+                  <p className="text-center text-gray-500 py-4">
+                    {searchQuery ? "No organizations found" : "No organizations available"}
+                  </p>
+                ) : (
+                  <div className="space-y-2 max-h-64 overflow-y-auto">
+                    {filteredTenants.map((t) => (
+                      <button
+                        key={t.id}
+                        onClick={() => setSelectedTenant(t)}
+                        className="w-full text-left p-3 rounded-lg border hover:bg-gray-50 transition-colors"
+                      >
+                        <div className="font-medium">{t.name}</div>
+                        <div className="text-sm text-gray-500">{t.slug}</div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
           </CardContent>
         </Card>
       </div>
