@@ -14,7 +14,10 @@ export default function TenantAccess() {
   const tenantSlug = urlParams.get("tenant");
 
   useEffect(() => {
-    base44.auth.me().then(setUser).finally(() => setLoading(false));
+    base44.auth.me()
+      .then(setUser)
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false));
   }, []);
 
   // Find tenant by slug
