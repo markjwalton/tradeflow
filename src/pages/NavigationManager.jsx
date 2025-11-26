@@ -313,6 +313,9 @@ export default function NavigationManager() {
                                   onToggleVisibility={handleToggleVisibility}
                                   dragHandleProps={provided.dragHandleProps}
                                   depth={0}
+                                  onDropInto={handleDropIntoItem}
+                                  canDropInto={canDropIntoItem(draggingItemId, item)}
+                                  isDragging={draggingItemId === item.id}
                                 />
                               </div>
                             )}
@@ -327,14 +330,17 @@ export default function NavigationManager() {
                               {(provided) => (
                                 <div ref={provided.innerRef} {...provided.draggableProps}>
                                   <NavigationItemRow
-                                    item={child}
-                                    onEdit={handleEdit}
-                                    onDelete={(item) => deleteMutation.mutate(item.id)}
-                                    onToggleVisibility={handleToggleVisibility}
-                                    dragHandleProps={provided.dragHandleProps}
-                                    depth={1}
-                                    parentName={item.name}
-                                  />
+                                                  item={child}
+                                                  onEdit={handleEdit}
+                                                  onDelete={(item) => deleteMutation.mutate(item.id)}
+                                                  onToggleVisibility={handleToggleVisibility}
+                                                  dragHandleProps={provided.dragHandleProps}
+                                                  depth={1}
+                                                  parentName={item.name}
+                                                  onDropInto={handleDropIntoItem}
+                                                  canDropInto={canDropIntoItem(draggingItemId, child)}
+                                                  isDragging={draggingItemId === child.id}
+                                                />
                                 </div>
                               )}
                             </Draggable>
@@ -348,14 +354,17 @@ export default function NavigationManager() {
                                 {(provided) => (
                                   <div ref={provided.innerRef} {...provided.draggableProps}>
                                     <NavigationItemRow
-                                      item={grandchild}
-                                      onEdit={handleEdit}
-                                      onDelete={(item) => deleteMutation.mutate(item.id)}
-                                      onToggleVisibility={handleToggleVisibility}
-                                      dragHandleProps={provided.dragHandleProps}
-                                      depth={2}
-                                      parentName={child.name}
-                                    />
+                                                        item={grandchild}
+                                                        onEdit={handleEdit}
+                                                        onDelete={(item) => deleteMutation.mutate(item.id)}
+                                                        onToggleVisibility={handleToggleVisibility}
+                                                        dragHandleProps={provided.dragHandleProps}
+                                                        depth={2}
+                                                        parentName={child.name}
+                                                        onDropInto={handleDropIntoItem}
+                                                        canDropInto={canDropIntoItem(draggingItemId, grandchild)}
+                                                        isDragging={draggingItemId === grandchild.id}
+                                                      />
                                   </div>
                                 )}
                               </Draggable>
