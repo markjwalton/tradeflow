@@ -26,15 +26,17 @@ const pages = [
 
 export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
-  const [checkingAccess, setCheckingAccess] = useState(true);
-  const [hasAccess, setHasAccess] = useState(false);
-  
-  // Hide layout for TenantAccess page
-  if (currentPageName === "TenantAccess") {
-    return <>{children}</>;
-  }
+  const [checkingAccess, setCheckingAccess] = useState(currentPageName !== "TenantAccess");
+  const [hasAccess, setHasAccess] = useState(currentPageName === "TenantAccess");
 
   useEffect(() => {
+    // Skip access check for TenantAccess page
+    if (currentPageName === "TenantAccess") {
+      setCheckingAccess(false);
+      setHasAccess(true);
+      return;
+    }
+    
     const checkTenantAccess = async () => {
       try {
         const user = await base44.auth.me();
@@ -55,6 +57,11 @@ export default function Layout({ children, currentPageName }) {
     
     checkTenantAccess();
   }, []);
+
+  // TenantAccess page - no layout
+  if (currentPageName === "TenantAccess") {
+    return <>{children}</>;
+  }
 
   // Show loading while checking
   if (checkingAccess) {
