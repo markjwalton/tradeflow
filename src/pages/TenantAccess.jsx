@@ -14,10 +14,12 @@ export default function TenantAccess() {
   const tenantSlug = urlParams.get("tenant");
 
   useEffect(() => {
+    let mounted = true;
     base44.auth.me()
-      .then(setUser)
-      .catch(() => setUser(null))
-      .finally(() => setLoading(false));
+      .then(u => { if (mounted) setUser(u); })
+      .catch(() => { if (mounted) setUser(null); })
+      .finally(() => { if (mounted) setLoading(false); });
+    return () => { mounted = false; };
   }, []);
 
   // Find tenant by slug
