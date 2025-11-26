@@ -97,10 +97,7 @@ export default function TenantAccess() {
             <p className="text-gray-600">Please sign in to request access to this organization.</p>
             <Button 
               className="w-full" 
-              onClick={() => {
-                const returnUrl = `${window.location.origin}/TenantAccess?tenant=${tenantSlug}`;
-                base44.auth.redirectToLogin(returnUrl);
-              }}
+              onClick={() => base44.auth.redirectToLogin(window.location.href)}
             >
               Sign In
             </Button>
