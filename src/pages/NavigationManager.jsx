@@ -85,20 +85,6 @@ export default function NavigationManager() {
     },
   });
 
-  // Helper to get item depth
-  const getItemDepth = (itemId, items) => {
-    const item = items.find(i => i.id === itemId);
-    if (!item || !item.parent_id) return 0;
-    return 1 + getItemDepth(item.parent_id, items);
-  };
-
-  // Helper to get max depth of children
-  const getMaxChildDepth = (itemId, items, currentDepth = 0) => {
-    const children = items.filter(i => i.parent_id === itemId);
-    if (children.length === 0) return currentDepth;
-    return Math.max(...children.map(c => getMaxChildDepth(c.id, items, currentDepth + 1)));
-  };
-
   // Get depth of an item's deepest child
   const getMaxChildDepth = (itemId, items, currentDepth = 0) => {
     const children = items.filter(i => i.parent_id === itemId);
