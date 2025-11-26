@@ -87,16 +87,51 @@ export default function NavigationManager() {
   const handleDragEnd = async (result) => {
     if (!result.destination) return;
 
-    const items = Array.from(navItems);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
+    // Build flat list in display order with depth info
+    const buildFlatList = () => {
+      const list = [];
+      const topLevel = navItems.filter(i => !i.parent_id).sort((a, b) => a.order - b.order);
+      const getChildren = (parentId) => navItems.filter(i => i.parent_id === parentId).sort((a, b) => a.order - b.order);
+      
+      topLevel.forEach(item => {
+        list.push({ ...item, depth: 0 });
+        getChildren(item.id).forEach(child => {
+          list.push({ ...child, depth: 1 });
+          getChildren(child.id).forEach(grandchild => {
+            list.push({ ...grandchild, depth: 2 });
+          });
+        });
+      });
+      return list;
+    };
 
-    // Update order for all affected items
-    const updates = items.map((item, index) => 
-      base44.entities.NavigationItem.update(item.id, { order: index })
-    );
-    await Promise.all(updates);
-    queryClient.invalidateQueries({ queryKey: ["navigationItems", selectedTenantId] });
+    const flatList = buildFlatList();
+    const [movedItem] = flatList.splice(result.source.index, 1);
+    flatList.splice(result.destination.index, 0, movedItem);
+
+    // Recalculate order for items at the same parent level
+    const orderUpdates = [];
+    const groupedByParent = {};
+    
+    flatList.forEach((item, displayIndex) => {
+      const parentKey = item.parent_id || "__root__";
+      if (!groupedByParent[parentKey]) groupedByParent[parentKey] = [];
+      groupedByParent[parentKey].push({ id: item.id, displayIndex });
+    });
+
+    Object.values(groupedByParent).forEach(group => {
+      group.forEach((item, orderInGroup) => {
+        const original = navItems.find(n => n.id === item.id);
+        if (original && original.order !== orderInGroup) {
+          orderUpdates.push(base44.entities.NavigationItem.update(item.id, { order: orderInGroup }));
+        }
+      });
+    });
+
+    if (orderUpdates.length > 0) {
+      await Promise.all(orderUpdates);
+      queryClient.invalidateQueries({ queryKey: ["navigationItems", selectedTenantId] });
+    }
   };
 
   const handleSubmit = (formData) => {
