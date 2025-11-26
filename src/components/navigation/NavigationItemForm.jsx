@@ -29,7 +29,8 @@ export default function NavigationItemForm({
 }) {
   const [formData, setFormData] = React.useState({
     name: "",
-    page_slug: "",
+    item_type: "page",
+    page_url: "",
     icon: "",
     is_visible: true,
     parent_id: "",
@@ -40,7 +41,8 @@ export default function NavigationItemForm({
     if (item) {
       setFormData({
         name: item.name || "",
-        page_slug: item.page_slug || "",
+        item_type: item.item_type || (item.page_slug || item.page_url ? "page" : "folder"),
+        page_url: item.page_url || item.page_slug || "",
         icon: item.icon || "",
         is_visible: item.is_visible !== false,
         parent_id: item.parent_id || "",
@@ -49,7 +51,8 @@ export default function NavigationItemForm({
     } else {
       setFormData({
         name: "",
-        page_slug: "",
+        item_type: "page",
+        page_url: "",
         icon: "",
         is_visible: true,
         parent_id: "",
@@ -81,16 +84,35 @@ export default function NavigationItemForm({
             />
           </div>
           
+          {/* Type Selection */}
           <div className="space-y-2">
-            <Label htmlFor="page_slug">Page Slug</Label>
-            <Input
-              id="page_slug"
-              value={formData.page_slug}
-              onChange={(e) => setFormData({ ...formData, page_slug: e.target.value })}
-              placeholder="dashboard"
-              required
-            />
+            <Label>Type</Label>
+            <Select 
+              value={formData.item_type} 
+              onValueChange={(val) => setFormData({ ...formData, item_type: val })}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="page">Page (has URL)</SelectItem>
+                <SelectItem value="folder">Folder (container only)</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
+
+          {formData.item_type === "page" && (
+            <div className="space-y-2">
+              <Label htmlFor="page_url">Page URL</Label>
+              <Input
+                id="page_url"
+                value={formData.page_url}
+                onChange={(e) => setFormData({ ...formData, page_url: e.target.value })}
+                placeholder="/dashboard or /settings/profile"
+                required
+              />
+            </div>
+          )}
           
           <div className="space-y-2">
             <Label htmlFor="icon">Icon (Lucide icon name)</Label>

@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import { GripVertical, Pencil, Trash2, Home, Settings, Users, FileText, LayoutDashboard, FolderOpen, ChevronRight } from "lucide-react";
+import { GripVertical, Pencil, Trash2, Home, Settings, Users, FileText, LayoutDashboard, FolderOpen, ChevronRight, Folder } from "lucide-react";
 
 const iconMap = {
   Home,
@@ -39,9 +39,17 @@ export default function NavigationItemRow({
       )}
       
       <div className="flex items-center gap-2 flex-1">
-        {IconComponent && <IconComponent className="h-4 w-4 text-gray-500" />}
+        {IconComponent ? (
+          <IconComponent className="h-4 w-4 text-gray-500" />
+        ) : item.item_type === "folder" ? (
+          <Folder className="h-4 w-4 text-amber-500" />
+        ) : null}
         <span className="font-medium">{item.name}</span>
-        <span className="text-sm text-gray-400">/{item.page_slug}</span>
+        {item.item_type === "folder" ? (
+          <Badge variant="outline" className="text-xs text-amber-600">Folder</Badge>
+        ) : (
+          <span className="text-sm text-gray-400">{item.page_url || item.page_slug}</span>
+        )}
         {parentName && (
           <span className="text-xs text-gray-400">(child of {parentName})</span>
         )}
