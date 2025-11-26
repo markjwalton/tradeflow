@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { base44 } from "@/api/base44Client";
 import { 
   Home, 
   Navigation, 
   Building2, 
   RefreshCw,
-  ChevronDown
+  ChevronDown,
+  Loader2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,10 +26,49 @@ const pages = [
 
 export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
+  const [checkingAccess, setCheckingAccess] = useState(true);
+  const [hasAccess, setHasAccess] = useState(false);
   
   // Hide layout for TenantAccess page
   if (currentPageName === "TenantAccess") {
     return <>{children}</>;
+  }
+
+  useEffect(() => {
+    const checkTenantAccess = async () => {
+      try {
+        const user = await base44.auth.me();
+        if (!user) {
+          setHasAccess(false);
+          setCheckingAccess(false);
+          return;
+        }
+        
+        // Check if user has access to any tenant
+        const userRoles = await base44.entities.TenantUserRole.filter({ user_id: user.id });
+        setHasAccess(userRoles.length > 0);
+      } catch (e) {
+        setHasAccess(false);
+      }
+      setCheckingAccess(false);
+    };
+    
+    checkTenantAccess();
+  }, []);
+
+  // Show loading while checking
+  if (checkingAccess) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+      </div>
+    );
+  }
+
+  // Redirect to TenantAccess if no access
+  if (!hasAccess) {
+    window.location.href = createPageUrl("TenantAccess");
+    return null;
   }
   
   const currentPage = pages.find(p => p.slug === currentPageName) || pages[0];
