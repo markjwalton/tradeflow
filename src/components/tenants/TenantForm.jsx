@@ -11,10 +11,21 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 
+// Generate random 6-character company ID
+const generateCompanyId = () => {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let result = "";
+  for (let i = 0; i < 6; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+};
+
 export default function TenantForm({ isOpen, onClose, onSubmit, tenant = null }) {
   const [formData, setFormData] = React.useState({
     name: "",
     slug: "",
+    company_id: "",
     is_active: true,
   });
 
@@ -23,12 +34,14 @@ export default function TenantForm({ isOpen, onClose, onSubmit, tenant = null })
       setFormData({
         name: tenant.name || "",
         slug: tenant.slug || "",
+        company_id: tenant.company_id || "",
         is_active: tenant.is_active !== false,
       });
     } else {
       setFormData({
         name: "",
         slug: "",
+        company_id: generateCompanyId(),
         is_active: true,
       });
     }
@@ -75,6 +88,17 @@ export default function TenantForm({ isOpen, onClose, onSubmit, tenant = null })
               placeholder="acme-corp"
               required
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="company_id">Company ID</Label>
+            <Input
+              id="company_id"
+              value={formData.company_id}
+              readOnly
+              className="bg-gray-50 font-mono"
+            />
+            <p className="text-xs text-gray-500">Share this ID with users to let them find your organization</p>
           </div>
 
           <div className="flex items-center justify-between">

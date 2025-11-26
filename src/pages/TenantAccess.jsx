@@ -4,14 +4,18 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, CheckCircle, Clock, XCircle, Search, Building2 } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Loader2, CheckCircle, Clock, Building2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function TenantAccess() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [companyIdInput, setCompanyIdInput] = useState("");
+  const [lookupLoading, setLookupLoading] = useState(false);
   const [selectedTenant, setSelectedTenant] = useState(null);
+  const [manualName, setManualName] = useState("");
+  const [manualEmail, setManualEmail] = useState("");
   
   const urlParams = new URLSearchParams(window.location.search);
   const tenantSlug = urlParams.get("tenant");
@@ -80,8 +84,8 @@ export default function TenantAccess() {
     mutationFn: () => base44.entities.AccessRequest.create({
       tenant_id: tenant.id,
       user_id: user.id,
-      user_email: user.email,
-      user_name: user.full_name,
+      user_email: manualEmail.trim(),
+      user_name: manualName.trim(),
       status: "pending"
     }),
     onSuccess: () => {
@@ -98,7 +102,20 @@ export default function TenantAccess() {
     );
   }
 
-  // Show tenant browser if no slug provided or tenant not found
+  // Lookup tenant by company ID
+  const handleCompanyIdLookup = async () => {
+    if (!companyIdInput.trim()) return;
+    setLookupLoading(true);
+    const results = await base44.entities.Tenant.filter({ company_id: companyIdInput.trim().toUpperCase() });
+    if (results.length > 0) {
+      setSelectedTenant(results[0]);
+    } else {
+      toast.error("No organization found with that Company ID");
+    }
+    setLookupLoading(false);
+  };
+
+  // Show tenant lookup if no slug provided or tenant not found
   if (!tenantSlug && !selectedTenant) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
@@ -112,45 +129,29 @@ export default function TenantAccess() {
           <CardContent className="space-y-4">
             {!user ? (
               <>
-                <p className="text-gray-600">Sign in to browse and request access to organizations.</p>
+                <p className="text-gray-600">Sign in to request access to your organization.</p>
                 <Button className="w-full" onClick={() => base44.auth.redirectToLogin()}>
                   Sign In
                 </Button>
               </>
             ) : (
               <>
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                  <Input
-                    placeholder="Search by name or ID..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10"
-                  />
+                <div className="space-y-2">
+                  <Label>Enter your Company ID</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="e.g. ABC123"
+                      value={companyIdInput}
+                      onChange={(e) => setCompanyIdInput(e.target.value.toUpperCase())}
+                      className="font-mono"
+                      maxLength={6}
+                    />
+                    <Button onClick={handleCompanyIdLookup} disabled={lookupLoading || !companyIdInput.trim()}>
+                      {lookupLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Find"}
+                    </Button>
+                  </div>
+                  <p className="text-xs text-gray-500">Your administrator should have provided you with a 6-character Company ID</p>
                 </div>
-                
-                {loadingAllTenants ? (
-                  <div className="flex justify-center py-8">
-                    <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
-                  </div>
-                ) : filteredTenants.length === 0 ? (
-                  <p className="text-center text-gray-500 py-4">
-                    {searchQuery ? "No organizations found" : "No organizations available"}
-                  </p>
-                ) : (
-                  <div className="space-y-2 max-h-64 overflow-y-auto">
-                    {filteredTenants.map((t) => (
-                      <button
-                        key={t.id}
-                        onClick={() => setSelectedTenant(t)}
-                        className="w-full text-left p-3 rounded-lg border hover:bg-gray-50 transition-colors"
-                      >
-                        <div className="font-medium">{t.name}</div>
-                        <div className="text-sm text-gray-500">{t.slug}</div>
-                      </button>
-                    ))}
-                  </div>
-                )}
               </>
             )}
           </CardContent>
@@ -235,6 +236,14 @@ export default function TenantAccess() {
     );
   }
 
+  const handleRequestAccess = () => {
+    if (!manualName.trim() || !manualEmail.trim()) {
+      toast.error("Please enter your name and email");
+      return;
+    }
+    requestMutation.mutate();
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
       <Card className="max-w-md w-full">
@@ -245,14 +254,33 @@ export default function TenantAccess() {
           <p className="text-gray-600">
             You're requesting access to <strong>{tenant.name}</strong>.
           </p>
-          <div className="bg-gray-50 p-3 rounded-lg text-sm">
-            <div><strong>Name:</strong> {user.full_name}</div>
-            <div><strong>Email:</strong> {user.email}</div>
+          
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <Label htmlFor="name">Your Name</Label>
+              <Input
+                id="name"
+                placeholder="Enter your full name"
+                value={manualName}
+                onChange={(e) => setManualName(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Your Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="Enter your email"
+                value={manualEmail}
+                onChange={(e) => setManualEmail(e.target.value)}
+              />
+            </div>
           </div>
+
           <Button 
             className="w-full" 
-            onClick={() => requestMutation.mutate()}
-            disabled={requestMutation.isPending}
+            onClick={handleRequestAccess}
+            disabled={requestMutation.isPending || !manualName.trim() || !manualEmail.trim()}
           >
             {requestMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
             Request Access
