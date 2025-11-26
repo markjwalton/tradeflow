@@ -63,9 +63,6 @@ export default function NavigationItemRow({
         {item.item_type === "folder" && (
           <Badge variant="outline" className="text-xs text-amber-600 border-amber-300 bg-amber-50">Folder</Badge>
         )}
-        {item.item_type !== "folder" && item.page_url && (
-          <span className="text-sm text-gray-400">{item.page_url}</span>
-        )}
       </div>
 
       {item.roles?.length > 0 && (
