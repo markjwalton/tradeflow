@@ -30,14 +30,6 @@ export default function TenantAccess() {
     return () => { mounted = false; };
   }, []);
 
-  // Fetch all active tenants for browsing
-  const { data: allTenants = [], isLoading: loadingAllTenants } = useQuery({
-    queryKey: ["allTenants"],
-    queryFn: () => base44.entities.Tenant.filter({ is_active: true }),
-    enabled: !loading && !!user,
-    retry: false,
-  });
-
   // Find tenant by slug if provided in URL
   const { data: tenantsBySlug = [], isLoading: loadingTenant } = useQuery({
     queryKey: ["tenantBySlug", tenantSlug],
@@ -48,6 +40,27 @@ export default function TenantAccess() {
 
   // Use URL tenant, or selected tenant from search
   const tenant = tenantSlug ? tenantsBySlug[0] : selectedTenant;
+
+  // Check if user has ANY pending request (to show on initial screen)
+  const { data: allPendingRequests = [], isLoading: loadingAllPending } = useQuery({
+    queryKey: ["allMyPendingRequests", user?.id],
+    queryFn: async () => {
+      const requests = await base44.entities.AccessRequest.filter({ 
+        user_id: user?.id,
+        status: "pending"
+      });
+      // Fetch tenant names for each request
+      const tenantIds = [...new Set(requests.map(r => r.tenant_id))];
+      const tenants = await Promise.all(
+        tenantIds.map(id => base44.entities.Tenant.filter({ id }))
+      );
+      const tenantMap = {};
+      tenants.flat().forEach(t => { tenantMap[t.id] = t; });
+      return requests.map(r => ({ ...r, tenant: tenantMap[r.tenant_id] }));
+    },
+    enabled: !loading && !!user?.id,
+    retry: false,
+  });
 
   // Check if user already has access
   const { data: userRoles = [], isLoading: loadingRoles } = useQuery({
@@ -60,7 +73,7 @@ export default function TenantAccess() {
     retry: false,
   });
 
-  // Check if user has pending request (only pending ones block new requests)
+  // Check if user has pending request for selected tenant
   const { data: existingRequests = [], isLoading: loadingRequests } = useQuery({
     queryKey: ["myAccessRequest", tenant?.id, user?.id],
     queryFn: () => base44.entities.AccessRequest.filter({ 
@@ -89,7 +102,7 @@ export default function TenantAccess() {
     },
   });
 
-  if (loading || loadingTenant) {
+  if (loading || loadingTenant || loadingAllPending) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
@@ -165,6 +178,31 @@ export default function TenantAccess() {
               </div>
               <p className="text-xs text-gray-500">Your administrator should have provided you with a 6-character Company ID</p>
             </div>
+
+            {/* Show pending requests */}
+            {user && allPendingRequests.length > 0 && (
+              <>
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-white px-2 text-gray-500">Pending Requests</span>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  {allPendingRequests.map(req => (
+                    <div key={req.id} className="flex items-center gap-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                      <Clock className="h-5 w-5 text-amber-500 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm truncate">{req.tenant?.name || "Unknown"}</p>
+                        <p className="text-xs text-gray-500">Awaiting approval</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
           </CardContent>
         </Card>
       </div>
