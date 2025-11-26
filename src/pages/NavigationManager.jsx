@@ -303,7 +303,7 @@ export default function NavigationManager() {
                   <div
                     {...provided.droppableProps}
                     ref={provided.innerRef}
-                    className="space-y-1"
+                    className="space-y-2"
                   >
                     {(() => {
                       const topLevel = navItems.filter(i => !i.parent_id).sort((a, b) => (a.order || 0) - (b.order || 0));
@@ -332,7 +332,7 @@ export default function NavigationManager() {
                                     onToggleVisibility={handleToggleVisibility}
                                     dragHandleProps={provided.dragHandleProps}
                                     depth={depth}
-                                    parentName={parentName}
+                                    
                                     isDragging={snapshot.isDragging}
                                   />
                                 </div>
@@ -344,7 +344,7 @@ export default function NavigationManager() {
                                         {...childProvided.droppableProps}
                                         ref={childProvided.innerRef}
                                         className={`transition-all duration-150 ${
-                                          children.length > 0 ? 'mt-1 space-y-1' : ''
+                                          children.length > 0 ? 'mt-2 space-y-2' : ''
                                         } ${
                                           childSnapshot.isDraggingOver && !snapshot.isDragging
                                             ? 'bg-blue-50/50 rounded-lg py-2 min-h-[40px]' 

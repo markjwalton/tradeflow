@@ -2,16 +2,18 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import { GripVertical, Pencil, Trash2, Home, Settings, Users, FileText, LayoutDashboard, FolderOpen, ChevronRight, Folder } from "lucide-react";
+import { GripVertical, Pencil, Trash2, Home, Settings, Users, FileText, LayoutDashboard, FolderOpen, Folder, ShoppingCart, Mail, Calendar, Bell, Search, Heart, Star, Bookmark, Clock, Globe, Lock, Key, Shield, Zap, Database, Server, Code, Terminal, Cpu, Monitor, Smartphone, Tablet, Camera, Image, Video, Music, Mic, Phone, MessageSquare, Send, Inbox, Archive, Trash, Edit, PenTool, Layers, Grid, List, BarChart, PieChart, TrendingUp, DollarSign, CreditCard, Wallet, Gift, Tag, Package, Truck, MapPin, Navigation, Compass, Map, Flag, Award, Target, Crosshair } from "lucide-react";
 
 const iconMap = {
-  Home,
-  Settings,
-  Users,
-  FileText,
-  LayoutDashboard,
-  FolderOpen,
-  Dashboard: LayoutDashboard
+  Home, Settings, Users, FileText, LayoutDashboard, FolderOpen, 
+  Dashboard: LayoutDashboard, ShoppingCart, Mail, Calendar, Bell, 
+  Search, Heart, Star, Bookmark, Clock, Globe, Lock, Key, Shield, 
+  Zap, Database, Server, Code, Terminal, Cpu, Monitor, Smartphone, 
+  Tablet, Camera, Image, Video, Music, Mic, Phone, MessageSquare, 
+  Send, Inbox, Archive, Trash, Edit, PenTool, Layers, Grid, List, 
+  BarChart, PieChart, TrendingUp, DollarSign, CreditCard, Wallet, 
+  Gift, Tag, Package, Truck, MapPin, Navigation, Compass, Map, 
+  Flag, Award, Target, Crosshair
 };
 
 export default function NavigationItemRow({ 
@@ -21,24 +23,19 @@ export default function NavigationItemRow({
   onToggleVisibility,
   dragHandleProps = {},
   depth = 0,
-  parentName = null,
   isDragging = false
 }) {
   const IconComponent = item.icon ? iconMap[item.icon] : null;
 
   return (
     <div 
-      className={`flex items-center gap-3 p-3 bg-white border rounded-lg shadow-sm transition-all duration-150 ${
-        isDragging ? "shadow-lg ring-2 ring-blue-400 bg-blue-50" : "hover:shadow-md"
+      className={`flex items-center gap-3 p-3 bg-white border rounded-lg transition-all duration-150 ${
+        isDragging ? "shadow-md ring-2 ring-blue-400 bg-blue-50" : "hover:bg-gray-50"
       }`}
     >
       <div {...dragHandleProps} className="cursor-grab">
         <GripVertical className="h-5 w-5 text-gray-400" />
       </div>
-      
-      {depth > 0 && (
-        <ChevronRight className="h-4 w-4 text-gray-300" />
-      )}
       
       <div className="flex items-center gap-2 flex-1">
         {IconComponent ? (
@@ -47,13 +44,11 @@ export default function NavigationItemRow({
           <Folder className="h-4 w-4 text-amber-500" />
         ) : null}
         <span className="font-medium">{item.name}</span>
-        {item.item_type === "folder" ? (
-          <Badge variant="outline" className="text-xs text-amber-600">Folder</Badge>
-        ) : (
-          <span className="text-sm text-gray-400">{item.page_url || item.page_slug}</span>
+        {item.item_type === "folder" && (
+          <Badge variant="outline" className="text-xs text-amber-600 border-amber-300 bg-amber-50">Folder</Badge>
         )}
-        {parentName && (
-          <span className="text-xs text-gray-400">(child of {parentName})</span>
+        {item.item_type !== "folder" && item.page_url && (
+          <span className="text-sm text-gray-400">{item.page_url}</span>
         )}
       </div>
 

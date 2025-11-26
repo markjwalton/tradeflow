@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import { X } from "lucide-react";
+import { X, Home, Settings, Users, FileText, LayoutDashboard, FolderOpen, ShoppingCart, Mail, Calendar, Bell, Search, Heart, Star, Bookmark, Clock, Globe, Lock, Key, Shield, Zap, Database, Server, Code, Terminal, Cpu, Monitor, Smartphone, Tablet, Camera, Image, Video, Music, Mic, Phone, MessageSquare, Send, Inbox, Archive, Trash, Edit, PenTool, Layers, Grid, List, BarChart, PieChart, TrendingUp, DollarSign, CreditCard, Wallet, Gift, Tag, Package, Truck, MapPin, Navigation, Compass, Map, Flag, Award, Target, Crosshair } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -19,6 +19,76 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+const iconOptions = [
+  { name: "Home", icon: Home },
+  { name: "Settings", icon: Settings },
+  { name: "Users", icon: Users },
+  { name: "FileText", icon: FileText },
+  { name: "LayoutDashboard", icon: LayoutDashboard },
+  { name: "FolderOpen", icon: FolderOpen },
+  { name: "ShoppingCart", icon: ShoppingCart },
+  { name: "Mail", icon: Mail },
+  { name: "Calendar", icon: Calendar },
+  { name: "Bell", icon: Bell },
+  { name: "Search", icon: Search },
+  { name: "Heart", icon: Heart },
+  { name: "Star", icon: Star },
+  { name: "Bookmark", icon: Bookmark },
+  { name: "Clock", icon: Clock },
+  { name: "Globe", icon: Globe },
+  { name: "Lock", icon: Lock },
+  { name: "Key", icon: Key },
+  { name: "Shield", icon: Shield },
+  { name: "Zap", icon: Zap },
+  { name: "Database", icon: Database },
+  { name: "Server", icon: Server },
+  { name: "Code", icon: Code },
+  { name: "Terminal", icon: Terminal },
+  { name: "Cpu", icon: Cpu },
+  { name: "Monitor", icon: Monitor },
+  { name: "Smartphone", icon: Smartphone },
+  { name: "Tablet", icon: Tablet },
+  { name: "Camera", icon: Camera },
+  { name: "Image", icon: Image },
+  { name: "Video", icon: Video },
+  { name: "Music", icon: Music },
+  { name: "Mic", icon: Mic },
+  { name: "Phone", icon: Phone },
+  { name: "MessageSquare", icon: MessageSquare },
+  { name: "Send", icon: Send },
+  { name: "Inbox", icon: Inbox },
+  { name: "Archive", icon: Archive },
+  { name: "Trash", icon: Trash },
+  { name: "Edit", icon: Edit },
+  { name: "PenTool", icon: PenTool },
+  { name: "Layers", icon: Layers },
+  { name: "Grid", icon: Grid },
+  { name: "List", icon: List },
+  { name: "BarChart", icon: BarChart },
+  { name: "PieChart", icon: PieChart },
+  { name: "TrendingUp", icon: TrendingUp },
+  { name: "DollarSign", icon: DollarSign },
+  { name: "CreditCard", icon: CreditCard },
+  { name: "Wallet", icon: Wallet },
+  { name: "Gift", icon: Gift },
+  { name: "Tag", icon: Tag },
+  { name: "Package", icon: Package },
+  { name: "Truck", icon: Truck },
+  { name: "MapPin", icon: MapPin },
+  { name: "Navigation", icon: Navigation },
+  { name: "Compass", icon: Compass },
+  { name: "Map", icon: Map },
+  { name: "Flag", icon: Flag },
+  { name: "Award", icon: Award },
+  { name: "Target", icon: Target },
+  { name: "Crosshair", icon: Crosshair },
+];
 
 export default function NavigationItemForm({ 
   isOpen, 
@@ -115,13 +185,51 @@ export default function NavigationItemForm({
           )}
           
           <div className="space-y-2">
-            <Label htmlFor="icon">Icon (Lucide icon name)</Label>
-            <Input
-              id="icon"
-              value={formData.icon}
-              onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-              placeholder="Home"
-            />
+            <Label>Icon</Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="w-full justify-start gap-2">
+                  {formData.icon ? (
+                    <>
+                      {(() => {
+                        const IconComp = iconOptions.find(i => i.name === formData.icon)?.icon;
+                        return IconComp ? <IconComp className="h-4 w-4" /> : null;
+                      })()}
+                      {formData.icon}
+                    </>
+                  ) : (
+                    <span className="text-gray-500">Select an icon...</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-2" align="start">
+                <div className="grid grid-cols-8 gap-1 max-h-48 overflow-y-auto">
+                  {iconOptions.map(({ name, icon: IconComp }) => (
+                    <button
+                      key={name}
+                      type="button"
+                      onClick={() => setFormData({ ...formData, icon: name })}
+                      className={`p-2 rounded hover:bg-gray-100 transition-colors ${
+                        formData.icon === name ? 'bg-blue-100 ring-1 ring-blue-400' : ''
+                      }`}
+                      title={name}
+                    >
+                      <IconComp className="h-4 w-4" />
+                    </button>
+                  ))}
+                </div>
+                {formData.icon && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="w-full mt-2 text-gray-500"
+                    onClick={() => setFormData({ ...formData, icon: '' })}
+                  >
+                    Clear icon
+                  </Button>
+                )}
+              </PopoverContent>
+            </Popover>
           </div>
 
           {/* Parent Selection - supports up to 2 levels of nesting */}
