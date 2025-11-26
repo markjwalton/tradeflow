@@ -311,6 +311,7 @@ export default function NavigationManager() {
 
                       const renderNestedItem = (item, index, depth, parentName = null) => {
                         const children = getChildren(item.id);
+                        const canHaveChildren = depth < 2;
 
                         return (
                           <Draggable key={item.id} draggableId={item.id} index={index}>
@@ -318,32 +319,38 @@ export default function NavigationManager() {
                               <div 
                                 ref={provided.innerRef} 
                                 {...provided.draggableProps}
-                                style={provided.draggableProps.style}
+                                style={{
+                                  ...provided.draggableProps.style,
+                                  marginLeft: 0
+                                }}
                               >
-                                <NavigationItemRow
-                                  item={item}
-                                  onEdit={handleEdit}
-                                  onDelete={(item) => deleteMutation.mutate(item.id)}
-                                  onToggleVisibility={handleToggleVisibility}
-                                  dragHandleProps={provided.dragHandleProps}
-                                  depth={depth}
-                                  parentName={parentName}
-                                  isDragging={snapshot.isDragging}
-                                />
+                                <div style={{ marginLeft: depth * 24 }}>
+                                  <NavigationItemRow
+                                    item={item}
+                                    onEdit={handleEdit}
+                                    onDelete={(item) => deleteMutation.mutate(item.id)}
+                                    onToggleVisibility={handleToggleVisibility}
+                                    dragHandleProps={provided.dragHandleProps}
+                                    depth={depth}
+                                    parentName={parentName}
+                                    isDragging={snapshot.isDragging}
+                                  />
+                                </div>
                                 
-                                {depth < 2 && (
+                                {canHaveChildren && (
                                   <Droppable droppableId={`children-${item.id}`} type="mixed">
                                     {(childProvided, childSnapshot) => (
                                       <div
                                         {...childProvided.droppableProps}
                                         ref={childProvided.innerRef}
-                                        className={`ml-6 transition-all duration-150 ${
+                                        className={`transition-all duration-150 ${
                                           children.length > 0 ? 'mt-1 space-y-1' : ''
                                         } ${
                                           childSnapshot.isDraggingOver && !snapshot.isDragging
                                             ? 'bg-blue-50/50 rounded-lg py-2 min-h-[40px]' 
                                             : ''
                                         }`}
+                                        style={{ marginLeft: (depth + 1) * 24 }}
                                       >
                                         {children.map((child, childIndex) => 
                                           renderNestedItem(child, childIndex, depth + 1, item.name)
