@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import TenantForm from "@/components/tenants/TenantForm";
 import TenantRoleManager from "@/components/tenants/TenantRoleManager";
 import TenantUserManager from "@/components/tenants/TenantUserManager";
+import TenantAccessRequests from "@/components/tenants/TenantAccessRequests";
 
 export default function TenantManager() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -127,8 +128,15 @@ export default function TenantManager() {
                   </div>
                   {expandedTenants.has(tenant.id) && (
                     <div className="p-3 bg-gray-50 border-t space-y-4">
+                      <TenantAccessRequests tenantId={tenant.id} />
                       <TenantRoleManager tenantId={tenant.id} />
                       <TenantUserManager tenantId={tenant.id} />
+                      <div className="text-sm text-gray-500 bg-white p-3 rounded border">
+                        <strong>Invite Link:</strong>{" "}
+                        <code className="bg-gray-100 px-2 py-1 rounded">
+                          {window.location.origin}/TenantAccess?tenant={tenant.slug}
+                        </code>
+                      </div>
                     </div>
                   )}
                 </div>
