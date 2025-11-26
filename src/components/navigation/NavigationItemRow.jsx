@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
@@ -22,41 +22,15 @@ export default function NavigationItemRow({
   dragHandleProps = {},
   depth = 0,
   parentName = null,
-  onDropInto = null,
-  canDropInto = false,
   isDragging = false
 }) {
   const IconComponent = item.icon ? iconMap[item.icon] : null;
-  const [isDropTarget, setIsDropTarget] = useState(false);
-
-  const handleDragOver = (e) => {
-    if (canDropInto && onDropInto) {
-      e.preventDefault();
-      setIsDropTarget(true);
-    }
-  };
-
-  const handleDragLeave = () => {
-    setIsDropTarget(false);
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    setIsDropTarget(false);
-    if (onDropInto) {
-      onDropInto(item);
-    }
-  };
 
   return (
     <div 
-      className={`flex items-center gap-3 p-3 bg-white border rounded-lg shadow-sm transition-all ${
-        isDropTarget ? "border-blue-500 border-2 bg-blue-50" : ""
+      className={`flex items-center gap-3 p-3 bg-white border rounded-lg shadow-sm transition-all duration-150 ${
+        isDragging ? "shadow-lg ring-2 ring-blue-400 bg-blue-50" : "hover:shadow-md"
       }`}
-      style={{ marginLeft: depth * 24 }}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
     >
       <div {...dragHandleProps} className="cursor-grab">
         <GripVertical className="h-5 w-5 text-gray-400" />

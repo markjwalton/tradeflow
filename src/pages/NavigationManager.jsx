@@ -299,13 +299,11 @@ export default function NavigationManager() {
           ) : (
             <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
               <Droppable droppableId="top-level" type="mixed">
-                {(provided, snapshot) => (
+                {(provided) => (
                   <div
                     {...provided.droppableProps}
                     ref={provided.innerRef}
-                    className={`space-y-2 min-h-[50px] p-2 rounded-lg transition-colors ${
-                      snapshot.isDraggingOver ? 'bg-blue-50 border-2 border-dashed border-blue-300' : ''
-                    }`}
+                    className="space-y-1"
                   >
                     {(() => {
                       const topLevel = navItems.filter(i => !i.parent_id).sort((a, b) => (a.order || 0) - (b.order || 0));
@@ -313,7 +311,6 @@ export default function NavigationManager() {
 
                       const renderNestedItem = (item, index, depth, parentName = null) => {
                         const children = getChildren(item.id);
-                        const hasChildren = children.length > 0;
 
                         return (
                           <Draggable key={item.id} draggableId={item.id} index={index}>
@@ -321,7 +318,7 @@ export default function NavigationManager() {
                               <div 
                                 ref={provided.innerRef} 
                                 {...provided.draggableProps}
-                                className={snapshot.isDragging ? 'opacity-50' : ''}
+                                style={provided.draggableProps.style}
                               >
                                 <NavigationItemRow
                                   item={item}
@@ -331,28 +328,27 @@ export default function NavigationManager() {
                                   dragHandleProps={provided.dragHandleProps}
                                   depth={depth}
                                   parentName={parentName}
-                                  onDropInto={handleDropIntoItem}
-                                  canDropInto={canDropIntoItem(draggingItemId, item)}
-                                  isDragging={draggingItemId === item.id}
+                                  isDragging={snapshot.isDragging}
                                 />
                                 
-                                {/* Nested droppable for children */}
                                 {depth < 2 && (
                                   <Droppable droppableId={`children-${item.id}`} type="mixed">
-                                    {(provided, snapshot) => (
+                                    {(childProvided, childSnapshot) => (
                                       <div
-                                        {...provided.droppableProps}
-                                        ref={provided.innerRef}
-                                        className={`ml-6 mt-1 min-h-[8px] rounded transition-colors ${
-                                          snapshot.isDraggingOver 
-                                            ? 'bg-green-50 border-2 border-dashed border-green-300 min-h-[40px]' 
-                                            : hasChildren ? '' : 'border border-dashed border-gray-200'
+                                        {...childProvided.droppableProps}
+                                        ref={childProvided.innerRef}
+                                        className={`ml-6 transition-all duration-150 ${
+                                          children.length > 0 ? 'mt-1 space-y-1' : ''
+                                        } ${
+                                          childSnapshot.isDraggingOver && !snapshot.isDragging
+                                            ? 'bg-blue-50/50 rounded-lg py-2 min-h-[40px]' 
+                                            : ''
                                         }`}
                                       >
                                         {children.map((child, childIndex) => 
                                           renderNestedItem(child, childIndex, depth + 1, item.name)
                                         )}
-                                        {provided.placeholder}
+                                        {childProvided.placeholder}
                                       </div>
                                     )}
                                   </Droppable>
