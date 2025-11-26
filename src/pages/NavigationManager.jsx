@@ -153,93 +153,63 @@ export default function NavigationManager() {
     setDraggingItemId(null);
     
     if (!result.destination) return;
+    if (result.source.index === result.destination.index) return;
 
     const { source, destination, draggableId } = result;
     
-    // Parse parent IDs from droppable IDs
-    const sourceParentId = source.droppableId === 'top-level' ? null : source.droppableId.replace('children-', '');
-    const destParentId = destination.droppableId === 'top-level' ? null : destination.droppableId.replace('children-', '');
+    // Build flat list to match display order
+    const flatList = [];
+    const topLevel = navItems.filter(i => !i.parent_id).sort((a, b) => (a.order || 0) - (b.order || 0));
+    const getChildren = (parentId) => navItems.filter(i => i.parent_id === parentId).sort((a, b) => (a.order || 0) - (b.order || 0));
     
-    const draggedItem = navItems.find(item => item.id === draggableId);
+    const addItems = (items, depth) => {
+      items.forEach(item => {
+        flatList.push({ ...item, depth });
+        addItems(getChildren(item.id), depth + 1);
+      });
+    };
+    addItems(topLevel, 0);
+
+    const draggedItem = flatList[source.index];
+    const destItem = flatList[destination.index];
+    
     if (!draggedItem) return;
 
-    // Check depth limit when moving to a new parent
-    if (sourceParentId !== destParentId && destParentId) {
-      const destParentDepth = getItemDepth(destParentId, navItems);
-      const draggedChildDepth = getMaxChildDepth(draggableId, navItems);
-      const newTotalDepth = destParentDepth + 1 + draggedChildDepth;
-      
-      if (newTotalDepth > 2) {
-        toast.error("Cannot move here - would exceed 3 level nesting limit");
-        return;
-      }
-      
-      // Check for circular nesting
-      const isDescendant = (parentId, itemId) => {
-        if (!parentId) return false;
-        if (parentId === itemId) return true;
-        const parent = navItems.find(i => i.id === parentId);
-        return parent ? isDescendant(parent.parent_id, itemId) : false;
-      };
-      if (isDescendant(destParentId, draggableId)) {
-        toast.error("Cannot nest a parent inside its own children");
-        return;
-      }
+    // Only allow reordering within same parent level
+    const draggedParentId = draggedItem.parent_id || null;
+    const destParentId = destItem?.parent_id || null;
+
+    if (draggedParentId !== destParentId) {
+      toast.info("Use the edit form to change parent. Drag to reorder within same level.");
+      return;
     }
 
-    const updates = [];
+    // Get siblings and reorder
+    const siblings = navItems
+      .filter(item => (item.parent_id || null) === draggedParentId)
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
 
-    if (sourceParentId !== destParentId) {
-      // Moving between different parents
-      const destChildren = navItems
-        .filter(item => (item.parent_id || null) === destParentId && item.id !== draggableId)
-        .sort((a, b) => (a.order || 0) - (b.order || 0));
-      
-      destChildren.splice(destination.index, 0, draggedItem);
-      
-      destChildren.forEach((item, index) => {
-        if (item.id === draggedItem.id) {
-          updates.push(
-            base44.entities.NavigationItem.update(item.id, {
-              parent_id: destParentId,
-              order: index
-            })
-          );
-        } else if (item.order !== index) {
-          updates.push(
-            base44.entities.NavigationItem.update(item.id, { order: index })
-          );
-        }
-      });
-    } else {
-      // Reordering within same parent
-      if (source.index === destination.index) return;
-      
-      const siblings = navItems
-        .filter(item => (item.parent_id || null) === sourceParentId)
-        .sort((a, b) => (a.order || 0) - (b.order || 0));
-      
-      const reordered = Array.from(siblings);
-      const [removed] = reordered.splice(source.index, 1);
-      reordered.splice(destination.index, 0, removed);
+    const sourceIdx = siblings.findIndex(s => s.id === draggedItem.id);
+    const destIdx = siblings.findIndex(s => s.id === destItem?.id);
 
-      reordered.forEach((item, index) => {
+    if (sourceIdx === -1 || destIdx === -1 || sourceIdx === destIdx) return;
+
+    const reordered = Array.from(siblings);
+    const [removed] = reordered.splice(sourceIdx, 1);
+    reordered.splice(destIdx, 0, removed);
+
+    const updates = reordered
+      .map((item, index) => {
         if (item.order !== index) {
-          updates.push(
-            base44.entities.NavigationItem.update(item.id, { order: index })
-          );
+          return base44.entities.NavigationItem.update(item.id, { order: index });
         }
-      });
-    }
+        return null;
+      })
+      .filter(Boolean);
 
     if (updates.length > 0) {
-      try {
-        await Promise.all(updates);
-        queryClient.invalidateQueries({ queryKey: ["navigationItems", selectedTenantId] });
-        toast.success("Order updated");
-      } catch (error) {
-        toast.error("Failed to update order");
-      }
+      await Promise.all(updates);
+      queryClient.invalidateQueries({ queryKey: ["navigationItems", selectedTenantId] });
     }
   };
 
@@ -298,7 +268,7 @@ export default function NavigationManager() {
             </div>
           ) : (
             <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-              <Droppable droppableId="top-level" type="mixed">
+              <Droppable droppableId="nav-list">
                 {(provided) => (
                   <div
                     {...provided.droppableProps}
@@ -306,67 +276,42 @@ export default function NavigationManager() {
                     className="space-y-2"
                   >
                     {(() => {
+                      // Build flat list with depth info for display
+                      const flatList = [];
                       const topLevel = navItems.filter(i => !i.parent_id).sort((a, b) => (a.order || 0) - (b.order || 0));
                       const getChildren = (parentId) => navItems.filter(i => i.parent_id === parentId).sort((a, b) => (a.order || 0) - (b.order || 0));
 
-                      const renderNestedItem = (item, index, depth, parentName = null) => {
-                        const children = getChildren(item.id);
-                        const canHaveChildren = depth < 2;
-
-                        return (
-                          <Draggable key={item.id} draggableId={item.id} index={index}>
-                            {(provided, snapshot) => (
-                              <div 
-                                ref={provided.innerRef} 
-                                {...provided.draggableProps}
-                                style={{
-                                  ...provided.draggableProps.style,
-                                  marginLeft: 0
-                                }}
-                              >
-                                <div style={{ marginLeft: depth * 24 }}>
-                                  <NavigationItemRow
-                                    item={item}
-                                    onEdit={handleEdit}
-                                    onDelete={(item) => deleteMutation.mutate(item.id)}
-                                    onToggleVisibility={handleToggleVisibility}
-                                    dragHandleProps={provided.dragHandleProps}
-                                    depth={depth}
-                                    
-                                    isDragging={snapshot.isDragging}
-                                  />
-                                </div>
-                                
-                                {canHaveChildren && (
-                                  <Droppable droppableId={`children-${item.id}`} type="mixed">
-                                    {(childProvided, childSnapshot) => (
-                                      <div
-                                        {...childProvided.droppableProps}
-                                        ref={childProvided.innerRef}
-                                        className={`transition-all duration-150 ${
-                                          children.length > 0 ? 'mt-2 space-y-2' : ''
-                                        } ${
-                                          childSnapshot.isDraggingOver && !snapshot.isDragging
-                                            ? 'bg-blue-50/50 rounded-lg py-2 min-h-[40px]' 
-                                            : ''
-                                        }`}
-                                        style={{ marginLeft: (depth + 1) * 24 }}
-                                      >
-                                        {children.map((child, childIndex) => 
-                                          renderNestedItem(child, childIndex, depth + 1, item.name)
-                                        )}
-                                        {childProvided.placeholder}
-                                      </div>
-                                    )}
-                                  </Droppable>
-                                )}
-                              </div>
-                            )}
-                          </Draggable>
-                        );
+                      const addItems = (items, depth) => {
+                        items.forEach(item => {
+                          flatList.push({ ...item, depth });
+                          addItems(getChildren(item.id), depth + 1);
+                        });
                       };
+                      addItems(topLevel, 0);
 
-                      return topLevel.map((item, index) => renderNestedItem(item, index, 0));
+                      return flatList.map((item, index) => (
+                        <Draggable key={item.id} draggableId={item.id} index={index}>
+                          {(provided, snapshot) => (
+                            <div 
+                              ref={provided.innerRef} 
+                              {...provided.draggableProps}
+                              style={provided.draggableProps.style}
+                            >
+                              <div style={{ marginLeft: item.depth * 24 }}>
+                                <NavigationItemRow
+                                  item={item}
+                                  onEdit={handleEdit}
+                                  onDelete={(item) => deleteMutation.mutate(item.id)}
+                                  onToggleVisibility={handleToggleVisibility}
+                                  dragHandleProps={provided.dragHandleProps}
+                                  depth={item.depth}
+                                  isDragging={snapshot.isDragging}
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </Draggable>
+                      ));
                     })()}
                     {provided.placeholder}
                   </div>
