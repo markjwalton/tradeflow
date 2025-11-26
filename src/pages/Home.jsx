@@ -41,9 +41,9 @@ export default function Home() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button variant="outline" className="w-full" disabled>
-                Coming in Sprint 2
-              </Button>
+              <Link to={createPageUrl("TenantManager")}>
+                <Button className="w-full">Open Tenant Manager</Button>
+              </Link>
             </CardContent>
           </Card>
         </div>
