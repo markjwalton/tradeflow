@@ -25,6 +25,11 @@ const pages = [
 export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
   
+  // Hide layout for TenantAccess page
+  if (currentPageName === "TenantAccess") {
+    return <>{children}</>;
+  }
+  
   const currentPage = pages.find(p => p.slug === currentPageName) || pages[0];
   const CurrentIcon = currentPage?.icon || Home;
 

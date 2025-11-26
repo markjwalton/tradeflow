@@ -61,12 +61,13 @@ export default function TenantAccess() {
     retry: false,
   });
 
-  // Check if user has pending request
+  // Check if user has pending request (only pending ones block new requests)
   const { data: existingRequests = [], isLoading: loadingRequests } = useQuery({
     queryKey: ["myAccessRequest", tenant?.id, user?.id],
     queryFn: () => base44.entities.AccessRequest.filter({ 
       tenant_id: tenant?.id, 
-      user_id: user?.id 
+      user_id: user?.id,
+      status: "pending"
     }),
     enabled: !!tenant?.id && !!user?.id,
     retry: false,
@@ -218,29 +219,16 @@ export default function TenantAccess() {
     );
   }
 
-  if (existingRequest) {
+  if (existingRequest && existingRequest.status === "pending") {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
         <Card className="max-w-md w-full">
           <CardContent className="pt-6 text-center space-y-4">
-            {existingRequest.status === "pending" && (
-              <>
-                <Clock className="h-12 w-12 text-amber-500 mx-auto" />
-                <div>
-                  <h2 className="text-xl font-semibold">Request Pending</h2>
-                  <p className="text-gray-500">Your request to join {tenant.name} is awaiting approval.</p>
-                </div>
-              </>
-            )}
-            {existingRequest.status === "denied" && (
-              <>
-                <XCircle className="h-12 w-12 text-red-500 mx-auto" />
-                <div>
-                  <h2 className="text-xl font-semibold">Request Denied</h2>
-                  <p className="text-gray-500">Your request to join {tenant.name} was not approved.</p>
-                </div>
-              </>
-            )}
+            <Clock className="h-12 w-12 text-amber-500 mx-auto" />
+            <div>
+              <h2 className="text-xl font-semibold">Request Pending</h2>
+              <p className="text-gray-500">Your request to join {tenant.name} is awaiting approval.</p>
+            </div>
           </CardContent>
         </Card>
       </div>
