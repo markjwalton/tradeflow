@@ -199,12 +199,20 @@ export default function Layout({ children, currentPageName }) {
           setHasAccess(true);
           setAccessChecked(true);
           accessCheckedRef.current = true;
+          setCheckingAccess(false);
+          return;
         }
+        
+        // Page not in any category - deny access
+        setHasAccess(false);
+        setAccessDeniedReason("unknown_page");
+        setCheckingAccess(false);
       } catch (e) {
+        console.error("Access check error:", e);
         setHasAccess(false);
         setAccessDeniedReason("error");
+        setCheckingAccess(false);
       }
-      setCheckingAccess(false);
     };
     
     checkAccess();
