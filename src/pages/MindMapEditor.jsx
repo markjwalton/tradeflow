@@ -122,10 +122,7 @@ export default function MindMapEditor() {
   const getFocusedBranchNodeIds = (branchId) => {
     if (!branchId) return null;
     const ids = new Set([branchId]);
-    // Find central node to include
-    const centralNode = nodes.find(n => n.node_type === "central");
-    if (centralNode) ids.add(centralNode.id);
-    // Get all descendants
+    // Get all descendants (no central node for cleaner view)
     const getChildren = (nodeId) => {
       connections.filter(c => c.source_node_id === nodeId).forEach(c => {
         ids.add(c.target_node_id);
