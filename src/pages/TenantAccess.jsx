@@ -131,11 +131,9 @@ export default function TenantAccess() {
 
   // If user has access, redirect appropriately (only if coming directly to TenantAccess)
   if (user && !tenantSlug && !selectedTenant) {
-    // Global admins go to MindMapEditor (their main tool)
+    // Global admins - don't auto-redirect, let them choose
     if (user.is_global_admin === true) {
-      console.log("TenantAccess: redirecting global admin to MindMapEditor");
-      window.location.href = createPageUrl("MindMapEditor");
-      return null;
+      // Don't redirect - show TenantAccess page for global admins too
     }
     // Regular users go to their first tenant's Navigation Manager (if admin) or Home
     if (userTenantAccess.length > 0) {
