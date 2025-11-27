@@ -133,6 +133,7 @@ export default function TenantAccess() {
   if (user && !tenantSlug && !selectedTenant) {
     // Global admins go to MindMapEditor (their main tool)
     if (user.is_global_admin === true) {
+      console.log("TenantAccess: redirecting global admin to MindMapEditor");
       window.location.href = createPageUrl("MindMapEditor");
       return null;
     }
