@@ -37,6 +37,8 @@ export default function MindMapEditor() {
   const [editingNode, setEditingNode] = useState(null);
   const [newMapName, setNewMapName] = useState("");
   const [newMapDescription, setNewMapDescription] = useState("");
+  const [newMapSuggestions, setNewMapSuggestions] = useState("");
+  const [editingContext, setEditingContext] = useState({ description: "", node_suggestions: "" });
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSuggesting, setIsSuggesting] = useState(false);
 
@@ -95,6 +97,7 @@ export default function MindMapEditor() {
       setShowNewMapDialog(false);
       setNewMapName("");
       setNewMapDescription("");
+      setNewMapSuggestions("");
       toast.success("Mind map created");
     },
   });
@@ -306,9 +309,13 @@ export default function MindMapEditor() {
         parent: connections.find(c => c.target_node_id === n.id)?.source_node_id || null
       }));
       
+      const userSuggestions = selectedMindMap?.node_suggestions || "";
+      
       const prompt = `You are analyzing a mind map for business process planning.
 
 Business Context: ${context}
+
+User's Node Suggestions (prioritize these!): ${userSuggestions}
 
 Current Mind Map Structure:
 ${JSON.stringify(nodesSummary, null, 2)}
@@ -323,7 +330,7 @@ Return a JSON object with a "suggestions" array where each item has:
 - "text": the label for the new node
 - "node_type": one of the allowed types
 
-Focus on gaps in the current structure and relevant additions based on the business context.`;
+IMPORTANT: If the user has provided node suggestions, prioritize adding those first. Place them under the most logical parent nodes. Then fill in any gaps based on the business context.`;
 
       const result = await base44.integrations.Core.InvokeLLM({
         prompt,
@@ -557,17 +564,26 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
               />
             </div>
             <div>
-              <label className="text-sm font-medium">Business Context</label>
-              <Textarea
-                value={newMapDescription}
-                onChange={(e) => setNewMapDescription(e.target.value)}
-                placeholder="Describe the business context, model, operations..."
-                rows={6}
-              />
-            </div>
-            <Button
+                              <label className="text-sm font-medium">Business Context</label>
+                              <Textarea
+                                value={newMapDescription}
+                                onChange={(e) => setNewMapDescription(e.target.value)}
+                                placeholder="Describe the business context, model, operations..."
+                                rows={4}
+                              />
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium">Node Suggestions for AI</label>
+                              <Textarea
+                                value={newMapSuggestions}
+                                onChange={(e) => setNewMapSuggestions(e.target.value)}
+                                placeholder="List nodes you want the AI to add, e.g.:&#10;- User Management&#10;- Payment Processing&#10;- Email Notifications"
+                                rows={4}
+                              />
+                            </div>
+                            <Button
               className="w-full"
-              onClick={() => createMapMutation.mutate({ name: newMapName, description: newMapDescription })}
+              onClick={() => createMapMutation.mutate({ name: newMapName, description: newMapDescription, node_suggestions: newMapSuggestions })}
               disabled={!newMapName || createMapMutation.isPending}
             >
               {createMapMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
@@ -601,22 +617,53 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
       </Dialog>
 
       {/* Business Context Dialog */}
-      <Dialog open={showBusinessContext} onOpenChange={setShowBusinessContext}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Business Context</DialogTitle>
-          </DialogHeader>
-          <div className="prose prose-sm max-w-none">
-            {selectedMindMap?.description ? (
-              <pre className="whitespace-pre-wrap text-sm bg-gray-50 p-4 rounded-lg">
-                {selectedMindMap.description}
-              </pre>
-            ) : (
-              <p className="text-gray-500">No business context defined for this mind map.</p>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
+                <Dialog open={showBusinessContext} onOpenChange={(open) => {
+                  setShowBusinessContext(open);
+                  if (open && selectedMindMap) {
+                    setEditingContext({
+                      description: selectedMindMap.description || "",
+                      node_suggestions: selectedMindMap.node_suggestions || ""
+                    });
+                  }
+                }}>
+                  <DialogContent className="max-w-2xl">
+                    <DialogHeader>
+                      <DialogTitle>Business Context & Node Suggestions</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-sm font-medium">Business Context</label>
+                        <Textarea
+                          value={editingContext.description}
+                          onChange={(e) => setEditingContext({ ...editingContext, description: e.target.value })}
+                          placeholder="Describe the business context, model, operations..."
+                          rows={5}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium">Node Suggestions for AI</label>
+                        <Textarea
+                          value={editingContext.node_suggestions}
+                          onChange={(e) => setEditingContext({ ...editingContext, node_suggestions: e.target.value })}
+                          placeholder="List nodes you want the AI to add, e.g.:&#10;- User Management&#10;- Payment Processing&#10;- Email Notifications"
+                          rows={5}
+                        />
+                        <p className="text-xs text-gray-500 mt-1">The AI Suggest feature will prioritize adding these nodes.</p>
+                      </div>
+                      <Button
+                        className="w-full"
+                        onClick={async () => {
+                          await base44.entities.MindMap.update(selectedMindMapId, editingContext);
+                          queryClient.invalidateQueries({ queryKey: ["mindmaps"] });
+                          setShowBusinessContext(false);
+                          toast.success("Context updated");
+                        }}
+                      >
+                        Save
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
     </div>
   );
 }
