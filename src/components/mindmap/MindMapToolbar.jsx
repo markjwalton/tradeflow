@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -7,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Trash2, Link, LayoutGrid, FileText, Sparkles, Lightbulb, Rocket } from "lucide-react";
+import { Plus, Trash2, Link, LayoutGrid, FileText, Sparkles, Lightbulb, Rocket, GitFork, Lock, History } from "lucide-react";
 
 const nodeTypes = [
   { value: "central", label: "Central Topic" },
@@ -30,6 +31,12 @@ const colors = [
   { value: "#84cc16", label: "Lime" },
 ];
 
+const statusColors = {
+  draft: "bg-yellow-100 text-yellow-700",
+  published: "bg-green-100 text-green-700",
+  archived: "bg-gray-100 text-gray-700",
+};
+
 export default function MindMapToolbar({
   onAddNode,
   onDeleteSelected,
@@ -48,7 +55,12 @@ export default function MindMapToolbar({
   isGenerating,
   isSuggesting,
   isGeneratingApp,
+  currentMindMap,
+  onForkVersion,
+  onPublishVersion,
+  onShowHistory,
 }) {
+  const isPublished = currentMindMap?.status === "published";
   return (
     <div className="flex flex-wrap items-center gap-2 p-2 bg-white border-b">
       <Button size="sm" onClick={onAddNode}>
@@ -151,10 +163,47 @@ export default function MindMapToolbar({
 
       <div className="flex-1" />
 
-      <Button size="sm" variant="outline" onClick={onShowBusinessContext}>
+      {/* Version info and controls */}
+      {currentMindMap && (
+        <div className="flex items-center gap-2 mr-2">
+          <Badge className={statusColors[currentMindMap.status || "draft"]}>
+            v{currentMindMap.version || 1} - {currentMindMap.status || "draft"}
+          </Badge>
+        </div>
+      )}
+
+      <Button size="sm" variant="outline" onClick={onShowHistory}>
+        <History className="h-4 w-4 mr-1" />
+        History
+      </Button>
+
+      <Button 
+        size="sm" 
+        variant="outline" 
+        onClick={onForkVersion}
+        disabled={isGenerating || isSuggesting || isGeneratingApp}
+      >
+        <GitFork className="h-4 w-4 mr-1" />
+        Fork
+      </Button>
+
+      {!isPublished && (
+        <Button 
+          size="sm" 
+          variant="outline"
+          onClick={onPublishVersion}
+          disabled={isGenerating || isSuggesting || isGeneratingApp}
+          className="text-green-600 border-green-200 hover:bg-green-50"
+        >
+          <Lock className="h-4 w-4 mr-1" />
+          Publish
+        </Button>
+      )}
+
+      <Button size="sm" variant="outline" onClick={onShowBusinessContext} disabled={isPublished}>
         <FileText className="h-4 w-4 mr-1" />
         Business Context
       </Button>
-    </div>
+      </div>
   );
 }

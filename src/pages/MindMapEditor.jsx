@@ -25,6 +25,9 @@ import { toast } from "sonner";
 import MindMapCanvas from "@/components/mindmap/MindMapCanvas";
 import MindMapToolbar from "@/components/mindmap/MindMapToolbar";
 import GeneratedSpecDialog from "@/components/mindmap/GeneratedSpecDialog";
+import VersionHistoryPanel from "@/components/mindmap/VersionHistoryPanel";
+import ForkVersionDialog from "@/components/mindmap/ForkVersionDialog";
+import PublishVersionDialog from "@/components/mindmap/PublishVersionDialog";
 
 export default function MindMapEditor() {
   const queryClient = useQueryClient();
@@ -51,6 +54,11 @@ export default function MindMapEditor() {
   const [isGeneratingApp, setIsGeneratingApp] = useState(false);
   const [showGeneratedSpec, setShowGeneratedSpec] = useState(false);
   const [generatedSpec, setGeneratedSpec] = useState(null);
+  const [showVersionHistory, setShowVersionHistory] = useState(false);
+  const [showForkDialog, setShowForkDialog] = useState(false);
+  const [showPublishDialog, setShowPublishDialog] = useState(false);
+  const [isForkingVersion, setIsForkingVersion] = useState(false);
+  const [isPublishingVersion, setIsPublishingVersion] = useState(false);
 
   // Fetch mindmaps
   const { data: mindMaps = [], isLoading: loadingMaps } = useQuery({
@@ -169,6 +177,99 @@ export default function MindMapEditor() {
       queryClient.refetchQueries({ queryKey: ["mindmaps"] });
     },
   });
+
+  // Fork version handler
+  const handleForkVersion = async ({ changeNotes, newVersion }) => {
+    if (!selectedMindMap) return;
+    
+    setIsForkingVersion(true);
+    try {
+      // Create new mindmap as fork
+      const newMap = await base44.entities.MindMap.create({
+        name: selectedMindMap.name,
+        description: selectedMindMap.description,
+        node_suggestions: selectedMindMap.node_suggestions,
+        tenant_id: selectedMindMap.tenant_id,
+        version: newVersion,
+        status: "draft",
+        parent_version_id: selectedMindMap.id,
+        change_notes: changeNotes,
+      });
+
+      // Copy all nodes
+      const nodeIdMap = {};
+      for (const node of nodes) {
+        const newNode = await base44.entities.MindMapNode.create({
+          mind_map_id: newMap.id,
+          text: node.text,
+          node_type: node.node_type,
+          color: node.color,
+          position_x: node.position_x,
+          position_y: node.position_y,
+          is_collapsed: node.is_collapsed,
+        });
+        nodeIdMap[node.id] = newNode.id;
+      }
+
+      // Copy all connections with updated node IDs
+      for (const conn of connections) {
+        await base44.entities.MindMapConnection.create({
+          mind_map_id: newMap.id,
+          source_node_id: nodeIdMap[conn.source_node_id],
+          target_node_id: nodeIdMap[conn.target_node_id],
+          label: conn.label,
+          style: conn.style,
+          color: conn.color,
+        });
+      }
+
+      queryClient.invalidateQueries({ queryKey: ["mindmaps"] });
+      setSelectedMindMapId(newMap.id);
+      
+      // Update URL
+      const url = new URL(window.location.href);
+      url.searchParams.set("map", newMap.id);
+      window.history.replaceState({}, "", url);
+      
+      setShowForkDialog(false);
+      toast.success(`Created v${newVersion}`);
+    } catch (error) {
+      toast.error("Failed to fork version");
+    } finally {
+      setIsForkingVersion(false);
+    }
+  };
+
+  // Publish version handler
+  const handlePublishVersion = async ({ changeNotes }) => {
+    if (!selectedMindMapId) return;
+    
+    setIsPublishingVersion(true);
+    try {
+      await base44.entities.MindMap.update(selectedMindMapId, {
+        status: "published",
+        published_date: new Date().toISOString(),
+        change_notes: changeNotes,
+      });
+      
+      queryClient.invalidateQueries({ queryKey: ["mindmaps"] });
+      setShowPublishDialog(false);
+      toast.success(`Published v${selectedMindMap?.version || 1}`);
+    } catch (error) {
+      toast.error("Failed to publish version");
+    } finally {
+      setIsPublishingVersion(false);
+    }
+  };
+
+  // Switch to a different version
+  const handleSelectVersion = (versionId) => {
+    setSelectedMindMapId(versionId);
+    const url = new URL(window.location.href);
+    url.searchParams.set("map", versionId);
+    window.history.replaceState({}, "", url);
+    setShowVersionHistory(false);
+  };
 
   // Handlers
   const handleAddNode = () => {
@@ -706,11 +807,15 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
           isGenerating={isGenerating}
           isSuggesting={isSuggesting}
           isGeneratingApp={isGeneratingApp}
+          currentMindMap={selectedMindMap}
+          onForkVersion={() => setShowForkDialog(true)}
+          onPublishVersion={() => setShowPublishDialog(true)}
+          onShowHistory={() => setShowVersionHistory(true)}
         />
       )}
 
-      {/* Canvas */}
-      <div className="flex-1">
+      {/* Canvas and History Panel */}
+      <div className="flex-1 flex">
         {!selectedMindMapId ? (
           <div className="h-full flex items-center justify-center text-gray-500">
             Select or create a mind map to get started
@@ -740,8 +845,18 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
               }
             }}
           />
-        )}
-      </div>
+          )}
+          </div>
+
+          {/* Version History Panel */}
+          {showVersionHistory && (
+          <VersionHistoryPanel
+          currentMindMap={selectedMindMap}
+          onSelectVersion={handleSelectVersion}
+          onClose={() => setShowVersionHistory(false)}
+          />
+          )}
+          </div>
 
       {/* New Mind Map Dialog */}
       <Dialog open={showNewMapDialog} onOpenChange={setShowNewMapDialog}>
@@ -816,6 +931,24 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
           open={showGeneratedSpec}
           onOpenChange={setShowGeneratedSpec}
           spec={generatedSpec}
+        />
+
+        {/* Fork Version Dialog */}
+        <ForkVersionDialog
+          open={showForkDialog}
+          onOpenChange={setShowForkDialog}
+          currentMindMap={selectedMindMap}
+          onFork={handleForkVersion}
+          isPending={isForkingVersion}
+        />
+
+        {/* Publish Version Dialog */}
+        <PublishVersionDialog
+          open={showPublishDialog}
+          onOpenChange={setShowPublishDialog}
+          currentMindMap={selectedMindMap}
+          onPublish={handlePublishVersion}
+          isPending={isPublishingVersion}
         />
 
         {/* Business Context Dialog */}
