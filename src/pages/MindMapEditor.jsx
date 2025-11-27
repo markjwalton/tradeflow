@@ -30,6 +30,7 @@ import ForkVersionDialog from "@/components/mindmap/ForkVersionDialog";
 import PublishVersionDialog from "@/components/mindmap/PublishVersionDialog";
 import EntityDetailDialog from "@/components/mindmap/EntityDetailDialog";
 import EntityRelationshipDiagram from "@/components/mindmap/EntityRelationshipDiagram";
+import WorkflowDialog from "@/components/mindmap/WorkflowDialog";
 
 export default function MindMapEditor() {
   const queryClient = useQueryClient();
@@ -63,6 +64,7 @@ export default function MindMapEditor() {
   const [isPublishingVersion, setIsPublishingVersion] = useState(false);
   const [showEntityDialog, setShowEntityDialog] = useState(false);
   const [showERDDialog, setShowERDDialog] = useState(false);
+  const [showWorkflowDialog, setShowWorkflowDialog] = useState(false);
 
   // Fetch mindmaps
   const { data: mindMaps = [], isLoading: loadingMaps } = useQuery({
@@ -821,6 +823,7 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
           onPublishVersion={() => setShowPublishDialog(true)}
           onShowHistory={() => setShowVersionHistory(true)}
           onShowERD={() => setShowERDDialog(true)}
+          onShowWorkflows={() => setShowWorkflowDialog(true)}
           selectedNodeIsEntity={selectedNode?.node_type === "entity"}
           onEditEntity={() => setShowEntityDialog(true)}
         />
@@ -981,6 +984,15 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
           onOpenChange={setShowERDDialog}
           nodes={nodes}
           connections={connections}
+        />
+
+        {/* Workflow Dialog */}
+        <WorkflowDialog
+          open={showWorkflowDialog}
+          onOpenChange={setShowWorkflowDialog}
+          nodes={nodes}
+          connections={connections}
+          businessContext={selectedMindMap?.description}
         />
 
         {/* Business Context Dialog */}
