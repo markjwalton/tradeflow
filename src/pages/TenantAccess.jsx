@@ -129,11 +129,11 @@ export default function TenantAccess() {
     );
   }
 
-  // If user has access, redirect appropriately
+  // If user has access, redirect appropriately (only if coming directly to TenantAccess)
   if (user && !tenantSlug && !selectedTenant) {
-    // Global admins go to Tenant Manager
+    // Global admins go to MindMapEditor (their main tool)
     if (user.is_global_admin === true) {
-      window.location.href = createPageUrl("TenantManager");
+      window.location.href = createPageUrl("MindMapEditor");
       return null;
     }
     // Regular users go to their first tenant's Navigation Manager (if admin) or Home
@@ -141,9 +141,14 @@ export default function TenantAccess() {
       const firstTenant = userTenantAccess[0].tenant;
       const roles = userTenantAccess[0].roles || [];
       if (firstTenant?.slug) {
-        const targetPage = roles.includes("admin") ? "NavigationManager" : "Home";
+        const targetPage = roles.includes("admin") ? "MindMapEditor" : "Home";
         const url = createPageUrl(targetPage);
-        window.location.href = url + (url.includes("?") ? "&" : "?") + `tenant=${firstTenant.slug}`;
+        // Only add tenant param for Home page
+        if (targetPage === "Home") {
+          window.location.href = url + (url.includes("?") ? "&" : "?") + `tenant=${firstTenant.slug}`;
+        } else {
+          window.location.href = url;
+        }
         return null;
       }
     }
