@@ -49,6 +49,7 @@ export default function Layout({ children, currentPageName }) {
   // Determine if this is an admin page or tenant page
   const isAdminPage = adminPages.some(p => p.slug === currentPageName);
   const isTenantPage = tenantPages.some(p => p.slug === currentPageName);
+  const [isUserAdmin, setIsUserAdmin] = useState(false);
 
   useEffect(() => {
     // Skip access check for TenantAccess page
@@ -68,10 +69,13 @@ export default function Layout({ children, currentPageName }) {
         }
         setCurrentUser(user);
         
-        // Admin pages: just need to be logged in with any tenant access
+        // For admin pages: need to have admin role in at least one tenant
         if (isAdminPage) {
           const userRolesAny = await base44.entities.TenantUserRole.filter({ user_id: user.id });
-          setHasAccess(userRolesAny.length > 0);
+          // Check if user has admin role in any tenant
+          const hasAdminRole = userRolesAny.some(r => r.roles?.includes("admin"));
+          setIsUserAdmin(hasAdminRole);
+          setHasAccess(hasAdminRole);
           setCheckingAccess(false);
           return;
         }
@@ -105,7 +109,9 @@ export default function Layout({ children, currentPageName }) {
           }
           
           setCurrentTenant(tenant);
-          setUserRoles(roles[0]?.roles || []);
+          const userRoleList = roles[0]?.roles || [];
+          setUserRoles(userRoleList);
+          setIsUserAdmin(userRoleList.includes("admin"));
           setHasAccess(true);
         }
       } catch (e) {
@@ -143,8 +149,13 @@ export default function Layout({ children, currentPageName }) {
     return null;
   }
 
-  // Determine which pages to show in nav based on context
-  const displayPages = isAdminPage ? adminPages : (currentTenant ? [...tenantPages, ...adminPages] : tenantPages);
+  // Determine which pages to show in nav based on context and user role
+  // Only show admin pages to users with admin role
+  const displayPages = isAdminPage 
+    ? adminPages 
+    : (currentTenant 
+        ? (isUserAdmin ? [...tenantPages, ...adminPages] : tenantPages) 
+        : tenantPages);
   const currentPage = displayPages.find(p => p.slug === currentPageName) || displayPages[0];
   const CurrentIcon = currentPage?.icon || Home;
 
