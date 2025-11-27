@@ -209,7 +209,7 @@ export default function Layout({ children, currentPageName }) {
             <Button 
                             variant="ghost" 
                             size="sm" 
-                            onClick={() => base44.auth.logout(window.location.origin + createPageUrl("TenantAccess"))}
+                            onClick={() => base44.auth.logout()}
                             className="gap-2 text-gray-600"
                           >
                             <LogOut className="h-4 w-4" />
