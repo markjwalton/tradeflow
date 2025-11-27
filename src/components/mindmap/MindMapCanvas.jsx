@@ -21,13 +21,19 @@ export default function MindMapCanvas({
   const [isPanning, setIsPanning] = useState(false);
   const [panStart, setPanStart] = useState({ x: 0, y: 0 });
 
+  // Use refs to track current values for the window event listener
+  const draggingRef = useRef(null);
+  const dragPositionRef = useRef({ x: 0, y: 0 });
+
   const handleDragStart = (e, node) => {
     e.preventDefault();
     const rect = canvasRef.current.getBoundingClientRect();
     const nodeX = node.position_x || 0;
     const nodeY = node.position_y || 0;
     setDragging(node.id);
+    draggingRef.current = node.id;
     setDragPosition({ x: nodeX, y: nodeY });
+    dragPositionRef.current = { x: nodeX, y: nodeY };
     setOffset({
       x: e.clientX - rect.left - pan.x - nodeX,
       y: e.clientY - rect.top - pan.y - nodeY,
@@ -48,13 +54,15 @@ export default function MindMapCanvas({
     const newX = e.clientX - rect.left - pan.x - offset.x;
     const newY = e.clientY - rect.top - pan.y - offset.y;
     setDragPosition({ x: newX, y: newY });
+    dragPositionRef.current = { x: newX, y: newY };
   };
 
   const handleMouseUp = () => {
-    if (dragging && dragPosition) {
-      onUpdateNodePosition(dragging, dragPosition.x, dragPosition.y);
+    if (draggingRef.current && dragPositionRef.current) {
+      onUpdateNodePosition(draggingRef.current, dragPositionRef.current.x, dragPositionRef.current.y);
     }
     setDragging(null);
+    draggingRef.current = null;
     setIsPanning(false);
   };
 
@@ -72,7 +80,7 @@ export default function MindMapCanvas({
   useEffect(() => {
     window.addEventListener("mouseup", handleMouseUp);
     return () => window.removeEventListener("mouseup", handleMouseUp);
-  }, []);
+  }, [onUpdateNodePosition]);
 
   return (
     <div
