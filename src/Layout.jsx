@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, createContext, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
@@ -10,6 +10,10 @@ import {
   ChevronDown,
   Loader2
 } from "lucide-react";
+
+// Tenant Context
+export const TenantContext = createContext(null);
+export const useTenant = () => useContext(TenantContext);
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -28,6 +32,11 @@ export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
   const [checkingAccess, setCheckingAccess] = useState(currentPageName !== "TenantAccess");
   const [hasAccess, setHasAccess] = useState(currentPageName === "TenantAccess");
+  const [currentTenant, setCurrentTenant] = useState(null);
+  const [userRoles, setUserRoles] = useState([]);
+  
+  const urlParams = new URLSearchParams(window.location.search);
+  const tenantSlug = urlParams.get("tenant");
 
   useEffect(() => {
     // Skip access check for TenantAccess page
@@ -46,9 +55,34 @@ export default function Layout({ children, currentPageName }) {
           return;
         }
         
-        // Check if user has access to any tenant
-        const userRoles = await base44.entities.TenantUserRole.filter({ user_id: user.id });
-        setHasAccess(userRoles.length > 0);
+        // If tenant slug provided, verify access to that tenant
+        if (tenantSlug) {
+          const tenants = await base44.entities.Tenant.filter({ slug: tenantSlug });
+          if (tenants.length === 0) {
+            setHasAccess(false);
+            setCheckingAccess(false);
+            return;
+          }
+          
+          const tenant = tenants[0];
+          const roles = await base44.entities.TenantUserRole.filter({ 
+            tenant_id: tenant.id, 
+            user_id: user.id 
+          });
+          
+          if (roles.length === 0) {
+            setHasAccess(false);
+            setCheckingAccess(false);
+            return;
+          }
+          
+          setCurrentTenant(tenant);
+          setUserRoles(roles[0]?.roles || []);
+          setHasAccess(true);
+        } else {
+          // No tenant specified - redirect to TenantAccess to pick one
+          setHasAccess(false);
+        }
       } catch (e) {
         setHasAccess(false);
       }
@@ -56,7 +90,7 @@ export default function Layout({ children, currentPageName }) {
     };
     
     checkTenantAccess();
-  }, []);
+  }, [tenantSlug]);
 
   // TenantAccess page - no layout
   if (currentPageName === "TenantAccess") {
@@ -85,13 +119,22 @@ export default function Layout({ children, currentPageName }) {
     window.location.reload();
   };
 
+  const tenantContextValue = {
+    tenant: currentTenant,
+    tenantId: currentTenant?.id,
+    tenantSlug: currentTenant?.slug,
+    tenantName: currentTenant?.name,
+    userRoles,
+  };
+
   return (
+    <TenantContext.Provider value={tenantContextValue}>
     <div className="min-h-screen flex">
       {/* Sidebar */}
       <aside className="w-64 bg-slate-900 text-white flex flex-col">
         <div className="p-4 border-b border-slate-700">
-          <h1 className="text-lg font-bold">App Architect</h1>
-          <p className="text-xs text-slate-400">Navigation Planner</p>
+          <h1 className="text-lg font-bold">{currentTenant?.name || "App Architect"}</h1>
+          <p className="text-xs text-slate-400">{currentTenant ? "Tenant Portal" : "Navigation Planner"}</p>
         </div>
         <nav className="flex-1 p-3 space-y-1">
           {pages.map((page) => {
@@ -159,5 +202,6 @@ export default function Layout({ children, currentPageName }) {
         </main>
       </div>
     </div>
+    </TenantContext.Provider>
   );
 }
