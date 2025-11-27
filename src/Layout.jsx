@@ -66,9 +66,9 @@ export default function Layout({ children, currentPageName }) {
   const isGlobalAdminPage = globalAdminPages.some(p => p.slug === currentPageName);
   const isTenantPage = tenantPages.some(p => p.slug === currentPageName);
 
-  // Track if we've already checked access for this session
-  const [accessChecked, setAccessChecked] = useState(false);
+  // Track if we've already checked access for this user session
   const accessCheckedRef = React.useRef(false);
+  const lastCheckedUserRef = React.useRef(null);
 
   useEffect(() => {
     // Skip access check for public pages
@@ -78,8 +78,8 @@ export default function Layout({ children, currentPageName }) {
       return;
     }
     
-    // If we already checked access this session, skip (using ref to avoid stale closure)
-    if (accessCheckedRef.current) {
+    // If we already checked access for this user, just grant access without refetching
+    if (accessCheckedRef.current && hasAccess) {
       setCheckingAccess(false);
       return;
     }
@@ -224,7 +224,7 @@ export default function Layout({ children, currentPageName }) {
     };
     
     checkAccess();
-  }, [tenantSlug, currentPageName, isGlobalAdminPage, isTenantPage]);
+  }, [currentPageName]);
 
   // Pages without layout wrapper
   if (currentPageName === "TenantAccess" || currentPageName === "Setup") {
