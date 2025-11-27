@@ -4,6 +4,7 @@ import TenantManager from './pages/TenantManager';
 import TenantAccess from './pages/TenantAccess';
 import Setup from './pages/Setup';
 import ArchitecturePackages from './pages/ArchitecturePackages';
+import MindMapEditor from './pages/MindMapEditor';
 import __Layout from './Layout.jsx';
 
 
@@ -14,6 +15,7 @@ export const PAGES = {
     "TenantAccess": TenantAccess,
     "Setup": Setup,
     "ArchitecturePackages": ArchitecturePackages,
+    "MindMapEditor": MindMapEditor,
 }
 
 export const pagesConfig = {
