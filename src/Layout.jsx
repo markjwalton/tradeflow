@@ -80,8 +80,9 @@ export default function Layout({ children, currentPageName }) {
           setUserRoles(roles[0]?.roles || []);
           setHasAccess(true);
         } else {
-          // No tenant specified - redirect to TenantAccess to pick one
-          setHasAccess(false);
+          // No tenant specified - check if user has access to any tenant (for admin pages)
+          const userRolesAny = await base44.entities.TenantUserRole.filter({ user_id: user.id });
+          setHasAccess(userRolesAny.length > 0);
         }
       } catch (e) {
         setHasAccess(false);
