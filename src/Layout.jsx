@@ -109,7 +109,6 @@ export default function Layout({ children, currentPageName }) {
         setIsGlobalAdmin(user.is_global_admin === true);
         sessionStorage.setItem('layout_user', JSON.stringify(user));
         sessionStorage.setItem('layout_is_global_admin', user.is_global_admin === true ? 'true' : 'false');
-        hasCheckedRef.current = true;
         
         // Global admin pages: for is_global_admin OR tenant admins (with tenant context)
         if (isGlobalAdminPage) {
