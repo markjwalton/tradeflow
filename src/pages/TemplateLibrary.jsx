@@ -19,8 +19,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Search, Pencil, Trash2, Loader2, Library, Copy } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Loader2, Library, Copy, Settings, Sparkles } from "lucide-react";
 import { toast } from "sonner";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/textarea";
 
 const nodeTypes = [
   { value: "central", label: "Central Topic", color: "#3b82f6" },
@@ -42,18 +44,7 @@ const categoryColors = {
   note: "bg-lime-100 text-lime-700",
 };
 
-const defaultFunctionalAreas = [
-  "User Management",
-  "Authentication",
-  "Finance",
-  "Operations",
-  "Reporting",
-  "Communications",
-  "Inventory",
-  "CRM",
-  "HR",
-  "Project Management",
-];
+
 
 export default function TemplateLibrary() {
   const queryClient = useQueryClient();
@@ -72,6 +63,13 @@ export default function TemplateLibrary() {
     is_global: true,
   });
   const [tagInput, setTagInput] = useState("");
+  
+  // Functional area management state
+  const [showAreaManager, setShowAreaManager] = useState(false);
+  const [newAreaName, setNewAreaName] = useState("");
+  const [newAreaDescription, setNewAreaDescription] = useState("");
+  const [isGeneratingAreas, setIsGeneratingAreas] = useState(false);
+  const [aiAreaPrompt, setAiAreaPrompt] = useState("");
 
   const { data: templates = [], isLoading } = useQuery({
     queryKey: ["nodeTemplates"],
@@ -106,6 +104,85 @@ export default function TemplateLibrary() {
       toast.success("Template deleted");
     },
   });
+
+  // Functional Areas
+  const { data: functionalAreas = [] } = useQuery({
+    queryKey: ["functionalAreas"],
+    queryFn: () => base44.entities.FunctionalArea.list(),
+  });
+
+  const createAreaMutation = useMutation({
+    mutationFn: (data) => base44.entities.FunctionalArea.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["functionalAreas"] });
+      setNewAreaName("");
+      setNewAreaDescription("");
+      toast.success("Functional area added");
+    },
+  });
+
+  const deleteAreaMutation = useMutation({
+    mutationFn: (id) => base44.entities.FunctionalArea.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["functionalAreas"] });
+      toast.success("Functional area deleted");
+    },
+  });
+
+  const handleAISuggestAreas = async () => {
+    if (!aiAreaPrompt) return;
+    
+    setIsGeneratingAreas(true);
+    try {
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `Based on this business context: "${aiAreaPrompt}"
+        
+Suggest 5-8 functional areas that would be useful for organizing a mind map for business process planning.
+
+Existing areas: ${functionalAreas.map(a => a.name).join(", ")}
+
+Return a JSON object with a "suggestions" array where each item has:
+- name: Short functional area name (1-3 words)
+- description: Brief description of what this area covers`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            suggestions: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  description: { type: "string" }
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // Add suggested areas that don't already exist
+      const existingNames = functionalAreas.map(a => a.name.toLowerCase());
+      const newAreas = (result.suggestions || []).filter(
+        s => !existingNames.includes(s.name.toLowerCase())
+      );
+
+      for (const area of newAreas) {
+        await base44.entities.FunctionalArea.create({
+          name: area.name,
+          description: area.description,
+        });
+      }
+
+      queryClient.invalidateQueries({ queryKey: ["functionalAreas"] });
+      setAiAreaPrompt("");
+      toast.success(`Added ${newAreas.length} new functional areas`);
+    } catch (error) {
+      toast.error("Failed to generate areas");
+    } finally {
+      setIsGeneratingAreas(false);
+    }
+  };
 
   const resetForm = () => {
     setFormData({
@@ -172,9 +249,8 @@ export default function TemplateLibrary() {
     setFormData({ ...formData, tags: formData.tags.filter(t => t !== tag) });
   };
 
-  // Get unique functional areas from existing templates
-  const existingAreas = [...new Set(templates.map(t => t.functional_area).filter(Boolean))];
-  const allAreas = [...new Set([...defaultFunctionalAreas, ...existingAreas])].sort();
+  // Get all functional area names
+  const allAreas = functionalAreas.map(a => a.name).sort();
 
   const filteredTemplates = templates.filter(t => {
     const matchesSearch = !search || 
@@ -213,10 +289,16 @@ export default function TemplateLibrary() {
             Create and manage reusable node templates with functional specifications
           </p>
         </div>
-        <Button onClick={() => { resetForm(); setEditingTemplate(null); setShowForm(true); }}>
-          <Plus className="h-4 w-4 mr-2" />
-          New Template
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setShowAreaManager(true)}>
+            <Settings className="h-4 w-4 mr-2" />
+            Manage Areas
+          </Button>
+          <Button onClick={() => { resetForm(); setEditingTemplate(null); setShowForm(true); }}>
+            <Plus className="h-4 w-4 mr-2" />
+            New Template
+          </Button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -413,6 +495,100 @@ export default function TemplateLibrary() {
               )}
               {editingTemplate ? "Update Template" : "Create Template"}
             </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Functional Area Manager Dialog */}
+      <Dialog open={showAreaManager} onOpenChange={setShowAreaManager}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Settings className="h-5 w-5" />
+              Manage Functional Areas
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            {/* AI Suggest */}
+            <div className="p-3 bg-purple-50 rounded-lg space-y-2">
+              <label className="text-sm font-medium flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-purple-600" />
+                AI Suggest Areas
+              </label>
+              <Textarea
+                value={aiAreaPrompt}
+                onChange={(e) => setAiAreaPrompt(e.target.value)}
+                placeholder="Describe your business context to get area suggestions..."
+                rows={2}
+              />
+              <Button 
+                size="sm" 
+                onClick={handleAISuggestAreas}
+                disabled={!aiAreaPrompt || isGeneratingAreas}
+                className="w-full"
+              >
+                {isGeneratingAreas ? (
+                  <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Generating...</>
+                ) : (
+                  <><Sparkles className="h-4 w-4 mr-2" />Generate Suggestions</>
+                )}
+              </Button>
+            </div>
+
+            {/* Manual Add */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Add New Area</label>
+              <div className="flex gap-2">
+                <Input
+                  value={newAreaName}
+                  onChange={(e) => setNewAreaName(e.target.value)}
+                  placeholder="Area name..."
+                  className="flex-1"
+                />
+                <Button 
+                  onClick={() => createAreaMutation.mutate({ name: newAreaName, description: newAreaDescription })}
+                  disabled={!newAreaName || createAreaMutation.isPending}
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+              <Input
+                value={newAreaDescription}
+                onChange={(e) => setNewAreaDescription(e.target.value)}
+                placeholder="Description (optional)..."
+              />
+            </div>
+
+            {/* Area List */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Current Areas ({functionalAreas.length})</label>
+              <ScrollArea className="h-48 border rounded-lg">
+                <div className="p-2 space-y-1">
+                  {functionalAreas.length === 0 ? (
+                    <p className="text-sm text-gray-500 text-center py-4">No areas yet. Add some above.</p>
+                  ) : (
+                    functionalAreas.map(area => (
+                      <div key={area.id} className="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
+                        <div>
+                          <span className="font-medium text-sm">{area.name}</span>
+                          {area.description && (
+                            <p className="text-xs text-gray-500">{area.description}</p>
+                          )}
+                        </div>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-7 w-7 text-red-500"
+                          onClick={() => deleteAreaMutation.mutate(area.id)}
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </ScrollArea>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

@@ -77,8 +77,13 @@ export default function AddNodeDialog({
     queryFn: () => base44.entities.NodeTemplate.list(),
   });
 
-  // Get unique functional areas
-  const functionalAreas = [...new Set(templates.map(t => t.functional_area).filter(Boolean))];
+  // Fetch functional areas
+  const { data: functionalAreasData = [] } = useQuery({
+    queryKey: ["functionalAreas"],
+    queryFn: () => base44.entities.FunctionalArea.list(),
+  });
+  
+  const functionalAreas = functionalAreasData.map(a => a.name);
 
   // Filter templates
   const filteredTemplates = templates.filter(t => {
