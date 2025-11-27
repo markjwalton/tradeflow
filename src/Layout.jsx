@@ -37,6 +37,9 @@ const globalAdminPages = [
   { name: "Navigation Manager", slug: "NavigationManager", icon: Navigation },
 ];
 
+// Pages that don't require tenant context but need to preserve query params
+const standalonePages = ["MindMapEditor", "ArchitecturePackages", "TenantManager"];
+
 // Tenant pages - for users with tenant access
 const tenantPages = [];
 
@@ -255,14 +258,7 @@ export default function Layout({ children, currentPageName }) {
             const Icon = page.icon;
             const isActive = currentPageName === page.slug;
             const isGlobalLink = globalAdminPages.some(p => p.slug === page.slug);
-            // Preserve existing query params for same page, or use tenant for tenant pages
-            let pageUrl = createPageUrl(page.slug);
-            if (page.slug === currentPageName) {
-              // Same page - preserve all query params
-              pageUrl = pageUrl + window.location.search;
-            } else if (!isGlobalLink && tenantSlug) {
-              pageUrl = pageUrl + `?tenant=${tenantSlug}`;
-            }
+            const pageUrl = createPageUrl(page.slug);
             return (
               <Link
                 key={page.slug}
@@ -309,12 +305,7 @@ export default function Layout({ children, currentPageName }) {
                 {displayPages.map((page) => {
                   const Icon = page.icon;
                   const isGlobalLink = globalAdminPages.some(p => p.slug === page.slug);
-                  let pageUrl = createPageUrl(page.slug);
-                  if (page.slug === currentPageName) {
-                    pageUrl = pageUrl + window.location.search;
-                  } else if (!isGlobalLink && tenantSlug) {
-                    pageUrl = pageUrl + `?tenant=${tenantSlug}`;
-                  }
+                  const pageUrl = createPageUrl(page.slug);
                   return (
                     <DropdownMenuItem
                       key={page.slug}
