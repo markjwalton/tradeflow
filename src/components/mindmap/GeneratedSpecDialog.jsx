@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { base44 } from "@/api/base44Client";
 import {
   Dialog,
   DialogContent,
@@ -12,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Database, Layout, Zap, Copy, Check, Loader2, Plus } from "lucide-react";
+import { Database, Layout, Zap, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 
 export default function GeneratedSpecDialog({
@@ -23,8 +22,6 @@ export default function GeneratedSpecDialog({
   const [selectedEntities, setSelectedEntities] = useState([]);
   const [copiedJson, setCopiedJson] = useState(null);
   const [copiedAll, setCopiedAll] = useState(false);
-  const [isCreating, setIsCreating] = useState(false);
-  const [createdEntities, setCreatedEntities] = useState([]);
 
   if (!spec) return null;
 
@@ -72,54 +69,22 @@ export default function GeneratedSpecDialog({
     toast.success("Full specification copied to clipboard");
   };
 
-  const createEntities = async () => {
-    const entitiesToCreate = entities.filter(
-      (e) => selectedEntities.includes(e.name) && !createdEntities.includes(e.name)
-    );
+  const copyForChat = () => {
+    const entitiesToCopy = selectedEntities.length > 0 
+      ? entities.filter(e => selectedEntities.includes(e.name))
+      : entities;
     
-    if (entitiesToCreate.length === 0) {
-      toast.error("No new entities selected to create");
-      return;
-    }
+    const message = `Please create these entities for my app:
 
-    setIsCreating(true);
-    const created = [];
-    
-    for (const entity of entitiesToCreate) {
-      try {
-        // Create the entity using Base44's entity creation
-        // The schema needs to have proper structure
-        const schema = {
-          name: entity.name,
-          type: "object",
-          properties: entity.schema?.properties || {},
-          required: entity.schema?.required || []
-        };
-        
-        // Use the LLM to create a properly formatted entity file
-        await base44.integrations.Core.InvokeLLM({
-          prompt: `Create an entity file for: ${entity.name}
-          
-Description: ${entity.description}
+${entitiesToCopy.map(e => `## ${e.name}
+${e.description}
 
-Schema: ${JSON.stringify(schema, null, 2)}
-
-Just respond with "Entity ${entity.name} specification ready" - the entity will be created separately.`
-        });
-        
-        created.push(entity.name);
-      } catch (error) {
-        console.error(`Failed to create ${entity.name}:`, error);
-        toast.error(`Failed to create ${entity.name}`);
-      }
-    }
+\`\`\`json
+${JSON.stringify(e.schema, null, 2)}
+\`\`\``).join("\n\n")}`;
     
-    if (created.length > 0) {
-      setCreatedEntities([...createdEntities, ...created]);
-      toast.success(`Created ${created.length} entities: ${created.join(", ")}. Copy the schemas and paste in chat to finalize.`);
-    }
-    
-    setIsCreating(false);
+    navigator.clipboard.writeText(message);
+    toast.success("Copied! Paste into chat to create entities");
   };
 
   return (
@@ -170,16 +135,12 @@ Just respond with "Entity ${entity.name} specification ready" - the entity will 
                   Copy {selectedEntities.length > 0 ? "Selected" : "All"} Schemas
                 </Button>
                 <Button
-                  onClick={createEntities}
-                  disabled={selectedEntities.length === 0 || isCreating}
+                  onClick={copyForChat}
                   size="sm"
+                  className="bg-green-600 hover:bg-green-700"
                 >
-                  {isCreating ? (
-                    <Loader2 className="h-4 w-4 mr-1 animate-spin" />
-                  ) : (
-                    <Plus className="h-4 w-4 mr-1" />
-                  )}
-                  Create Selected
+                  <Copy className="h-4 w-4 mr-1" />
+                  Copy for Chat
                 </Button>
               </div>
             </div>
@@ -198,11 +159,6 @@ Just respond with "Entity ${entity.name} specification ready" - the entity will 
                         <div className="flex-1">
                           <CardTitle className="text-base flex items-center gap-2">
                             {entity.name}
-                            {createdEntities.includes(entity.name) && (
-                              <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
-                                Created
-                              </Badge>
-                            )}
                             <Button
                               variant="ghost"
                               size="sm"
