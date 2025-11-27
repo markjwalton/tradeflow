@@ -15,8 +15,7 @@ export default function TenantAccess() {
   const [companyIdInput, setCompanyIdInput] = useState("");
   const [lookupLoading, setLookupLoading] = useState(false);
   const [selectedTenant, setSelectedTenant] = useState(null);
-  const [manualName, setManualName] = useState("");
-  const [manualEmail, setManualEmail] = useState("");
+
   const [requestSubmitted, setRequestSubmitted] = useState(false);
   
   const urlParams = new URLSearchParams(window.location.search);
@@ -112,8 +111,8 @@ export default function TenantAccess() {
     mutationFn: () => base44.entities.AccessRequest.create({
       tenant_id: tenant.id,
       user_id: user.id,
-      user_email: manualEmail.trim(),
-      user_name: manualName.trim(),
+      user_email: user.email,
+      user_name: user.full_name || user.email,
       status: "pending"
     }),
     onSuccess: () => {
@@ -319,10 +318,6 @@ export default function TenantAccess() {
   }
 
   const handleRequestAccess = () => {
-    if (!manualName.trim() || !manualEmail.trim()) {
-      toast.error("Please enter your name and email");
-      return;
-    }
     requestMutation.mutate();
   };
 
@@ -339,22 +334,19 @@ export default function TenantAccess() {
           
           <div className="space-y-3">
             <div className="space-y-2">
-              <Label htmlFor="name">Your Name</Label>
+              <Label>Your Name</Label>
               <Input
-                id="name"
-                placeholder="Enter your full name"
-                value={manualName}
-                onChange={(e) => setManualName(e.target.value)}
+                value={user.full_name || ""}
+                disabled
+                className="bg-gray-50"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Your Email</Label>
+              <Label>Your Email</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                value={manualEmail}
-                onChange={(e) => setManualEmail(e.target.value)}
+                value={user.email}
+                disabled
+                className="bg-gray-50"
               />
             </div>
           </div>
@@ -362,7 +354,7 @@ export default function TenantAccess() {
           <Button 
             className="w-full" 
             onClick={handleRequestAccess}
-            disabled={requestMutation.isPending || !manualName.trim() || !manualEmail.trim()}
+            disabled={requestMutation.isPending}
           >
             {requestMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
             Request Access
