@@ -106,13 +106,13 @@ export default function Layout({ children, currentPageName }) {
         setIsGlobalAdmin(user.is_global_admin === true);
         sessionStorage.setItem('layout_user', JSON.stringify(user));
         sessionStorage.setItem('layout_is_global_admin', user.is_global_admin === true ? 'true' : 'false');
+        hasCheckedRef.current = true;
         
         // Global admin pages: for is_global_admin OR tenant admins (with tenant context)
         if (isGlobalAdminPage) {
           // Global admins always have access
           if (user.is_global_admin === true) {
             setHasAccess(true);
-            accessCheckedRef.current = true;
             sessionStorage.setItem('layout_access_checked', 'true');
             setCheckingAccess(false);
             return;
@@ -124,7 +124,6 @@ export default function Layout({ children, currentPageName }) {
             const hasAnyAdminRole = userRolesAll.some(r => r.roles?.includes("admin"));
             if (hasAnyAdminRole) {
               setHasAccess(true);
-              accessCheckedRef.current = true;
               sessionStorage.setItem('layout_access_checked', 'true');
               setCheckingAccess(false);
               return;
@@ -145,7 +144,6 @@ export default function Layout({ children, currentPageName }) {
                 setUserRoles(roles[0].roles);
                 setIsTenantAdmin(true);
                 setHasAccess(true);
-                accessCheckedRef.current = true;
                 sessionStorage.setItem('layout_access_checked', 'true');
                 setCheckingAccess(false);
                 return;
@@ -184,7 +182,6 @@ export default function Layout({ children, currentPageName }) {
             setUserRoles(["admin"]);
             setIsTenantAdmin(true);
             setHasAccess(true);
-            accessCheckedRef.current = true;
             sessionStorage.setItem('layout_access_checked', 'true');
             setCheckingAccess(false);
             return;
@@ -208,7 +205,6 @@ export default function Layout({ children, currentPageName }) {
           setUserRoles(userRoleList);
           setIsTenantAdmin(userRoleList.includes("admin"));
           setHasAccess(true);
-          accessCheckedRef.current = true;
           sessionStorage.setItem('layout_access_checked', 'true');
           setCheckingAccess(false);
           return;
@@ -217,7 +213,6 @@ export default function Layout({ children, currentPageName }) {
         // Page not in any category - global admins still get access
         if (user.is_global_admin === true) {
           setHasAccess(true);
-          accessCheckedRef.current = true;
           sessionStorage.setItem('layout_access_checked', 'true');
           setCheckingAccess(false);
           return;
