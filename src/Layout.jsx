@@ -93,7 +93,6 @@ export default function Layout({ children, currentPageName }) {
           // Global admins always have access
           if (user.is_global_admin === true) {
             setHasAccess(true);
-            sessionStorage.setItem('layout_access_checked', 'true');
             setCheckingAccess(false);
             return;
           }
@@ -162,7 +161,6 @@ export default function Layout({ children, currentPageName }) {
             setUserRoles(["admin"]);
             setIsTenantAdmin(true);
             setHasAccess(true);
-            sessionStorage.setItem('layout_access_checked', 'true');
             setCheckingAccess(false);
             return;
           }
