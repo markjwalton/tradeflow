@@ -978,7 +978,17 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
             onClose={() => setShowVersionHistory(false)}
           />
         )}
-      </div>
+
+        {/* Node Detail Panel */}
+        {selectedNode && !showVersionHistory && (
+          <NodeDetailPanel
+            node={selectedNode}
+            onUpdate={(id, data) => updateNodeMutation.mutate({ id, data })}
+            onClose={() => setSelectedNodeId(null)}
+            onEditEntity={() => setShowEntityDialog(true)}
+          />
+        )}
+        </div>
 
       {/* New Mind Map Dialog */}
       <Dialog open={showNewMapDialog} onOpenChange={setShowNewMapDialog}>
