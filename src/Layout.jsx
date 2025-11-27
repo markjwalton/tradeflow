@@ -131,6 +131,7 @@ export default function Layout({ children, currentPageName }) {
                 setUserRoles(roles[0].roles);
                 setIsTenantAdmin(true);
                 setHasAccess(true);
+                setAccessChecked(true);
                 setCheckingAccess(false);
                 return;
               }
