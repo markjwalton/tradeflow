@@ -207,14 +207,14 @@ export default function Layout({ children, currentPageName }) {
               <RefreshCw className="h-4 w-4" />
             </Button>
             <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={() => base44.auth.logout(createPageUrl("TenantAccess"))}
-              className="gap-2 text-gray-600"
-            >
-              <LogOut className="h-4 w-4" />
-              Logout
-            </Button>
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => base44.auth.logout(window.location.origin + createPageUrl("TenantAccess"))}
+                            className="gap-2 text-gray-600"
+                          >
+                            <LogOut className="h-4 w-4" />
+                            Logout
+                          </Button>
           </div>
           </header>
 
