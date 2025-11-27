@@ -1,6 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTenant } from "@/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Copy, ChevronDown, ChevronRight } from "lucide-react";
@@ -12,8 +13,21 @@ import NavigationItemRow from "@/components/navigation/NavigationItemRow";
 import TenantSelector from "@/components/navigation/TenantSelector";
 
 export default function NavigationManager() {
-  // Default to global template for global admins
-  const [selectedTenantId, setSelectedTenantId] = useState("__global__");
+  const tenantContext = useTenant();
+  const [currentUser, setCurrentUser] = useState(null);
+  
+  // For tenant admins, lock to their tenant. For global admins, default to global template.
+  const [selectedTenantId, setSelectedTenantId] = useState(
+    tenantContext?.tenantId || "__global__"
+  );
+  
+  // Check if user is global admin
+  useEffect(() => {
+    base44.auth.me().then(setCurrentUser).catch(() => {});
+  }, []);
+  
+  const isGlobalAdmin = currentUser?.is_global_admin === true;
+  const isTenantAdminOnly = tenantContext?.isTenantAdmin && !isGlobalAdmin;
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [draggingItemId, setDraggingItemId] = useState(null);
@@ -330,11 +344,18 @@ export default function NavigationManager() {
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Navigation Manager</CardTitle>
           <div className="flex items-center gap-4">
-            <TenantSelector
-              tenants={tenants}
-              selectedTenantId={selectedTenantId}
-              onSelectTenant={setSelectedTenantId}
-            />
+            {/* Only show tenant selector for global admins */}
+                              {isGlobalAdmin ? (
+                                <TenantSelector
+                                  tenants={tenants}
+                                  selectedTenantId={selectedTenantId}
+                                  onSelectTenant={setSelectedTenantId}
+                                />
+                              ) : (
+                                <span className="text-sm text-gray-500">
+                                  Editing: {tenantContext?.tenantName || "Your Tenant"}
+                                </span>
+                              )}
             {selectedTenantId !== "__global__" && navItems.length === 0 && (
               <Button 
                 variant="outline" 
