@@ -825,38 +825,39 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
             <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
           </div>
         ) : (
-          <MindMapCanvas
-            nodes={visibleNodes}
-            connections={visibleConnections}
-            allConnections={connections}
-            selectedNodeId={selectedNodeId}
-            selectedConnectionId={selectedConnectionId}
-            onSelectNode={handleSelectNode}
-            onSelectConnection={setSelectedConnectionId}
-            onUpdateNodePosition={handleUpdateNodePosition}
-            onDoubleClickNode={handleDoubleClickNode}
-            onToggleCollapse={handleToggleCollapse}
-            onCanvasClick={() => {
-              setSelectedNodeId(null);
-              setSelectedConnectionId(null);
-              if (isConnecting) {
-                setIsConnecting(false);
-                setConnectionSource(null);
-              }
-            }}
-          />
-          )}
+          <div className="flex-1">
+            <MindMapCanvas
+              nodes={visibleNodes}
+              connections={visibleConnections}
+              allConnections={connections}
+              selectedNodeId={selectedNodeId}
+              selectedConnectionId={selectedConnectionId}
+              onSelectNode={handleSelectNode}
+              onSelectConnection={setSelectedConnectionId}
+              onUpdateNodePosition={handleUpdateNodePosition}
+              onDoubleClickNode={handleDoubleClickNode}
+              onToggleCollapse={handleToggleCollapse}
+              onCanvasClick={() => {
+                setSelectedNodeId(null);
+                setSelectedConnectionId(null);
+                if (isConnecting) {
+                  setIsConnecting(false);
+                  setConnectionSource(null);
+                }
+              }}
+            />
           </div>
+        )}
 
-          {/* Version History Panel */}
-          {showVersionHistory && (
+        {/* Version History Panel */}
+        {showVersionHistory && (
           <VersionHistoryPanel
-          currentMindMap={selectedMindMap}
-          onSelectVersion={handleSelectVersion}
-          onClose={() => setShowVersionHistory(false)}
+            currentMindMap={selectedMindMap}
+            onSelectVersion={handleSelectVersion}
+            onClose={() => setShowVersionHistory(false)}
           />
-          )}
-          </div>
+        )}
+      </div>
 
       {/* New Mind Map Dialog */}
       <Dialog open={showNewMapDialog} onOpenChange={setShowNewMapDialog}>
