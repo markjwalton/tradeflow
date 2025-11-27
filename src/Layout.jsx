@@ -95,6 +95,17 @@ export default function Layout({ children, currentPageName }) {
             return;
           }
           
+          // Standalone pages (MindMapEditor, ArchitecturePackages, TenantManager) - check if user has any tenant admin access
+          if (standalonePages.includes(currentPageName)) {
+            const userRolesAll = await base44.entities.TenantUserRole.filter({ user_id: user.id });
+            const hasAnyAdminRole = userRolesAll.some(r => r.roles?.includes("admin"));
+            if (hasAnyAdminRole) {
+              setHasAccess(true);
+              setCheckingAccess(false);
+              return;
+            }
+          }
+          
           // Tenant admins can access NavigationManager with tenant context
           if (currentPageName === "NavigationManager" && tenantSlug) {
             const tenants = await base44.entities.Tenant.filter({ slug: tenantSlug });
