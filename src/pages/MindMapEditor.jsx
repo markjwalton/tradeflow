@@ -901,23 +901,18 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
           onAISuggest={handleAISuggest}
           onGenerateApp={handleGenerateApp}
           onShowBusinessContext={async () => {
-                // Fetch fresh data when opening
-                const freshMaps = await base44.entities.MindMap.filter({ id: selectedMindMapId });
-                const freshMap = freshMaps[0];
-                if (freshMap) {
-                  setEditingContext({
-                    description: freshMap.description || "",
-                    node_suggestions: freshMap.node_suggestions || ""
-                  });
-                }
-                setShowBusinessContext(true);
-              }}
+            const freshMaps = await base44.entities.MindMap.filter({ id: selectedMindMapId });
+            const freshMap = freshMaps[0];
+            if (freshMap) {
+              setEditingContext({
+                description: freshMap.description || "",
+                node_suggestions: freshMap.node_suggestions || ""
+              });
+            }
+            setShowBusinessContext(true);
+          }}
           isConnecting={isConnecting}
           hasSelection={!!selectedNodeId || !!selectedConnectionId}
-          selectedNodeType={selectedNode?.node_type}
-          onChangeNodeType={handleChangeNodeType}
-          selectedColor={selectedNode?.color}
-          onChangeColor={handleChangeColor}
           isGenerating={isGenerating}
           isSuggesting={isSuggesting}
           isGeneratingApp={isGeneratingApp}
@@ -927,12 +922,11 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
           onShowHistory={() => setShowVersionHistory(true)}
           onShowERD={() => setShowERDDialog(true)}
           onShowWorkflows={() => setShowWorkflowDialog(true)}
-          selectedNodeIsEntity={selectedNode?.node_type === "entity"}
-          onEditEntity={() => setShowEntityDialog(true)}
+          onForkToTenant={() => setShowTenantForkDialog(true)}
           focusedBranchId={focusedBranchId}
           onFocusBranch={setFocusedBranchId}
           mainBranches={nodes.filter(n => n.node_type === "main_branch")}
-          />
+        />
       )}
 
       {/* Canvas and History Panel */}
