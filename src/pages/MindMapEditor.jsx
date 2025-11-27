@@ -158,6 +158,13 @@ export default function MindMapEditor() {
     },
   });
 
+  const updateMindMapMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.MindMap.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["mindmaps"] });
+    },
+  });
+
   // Handlers
   const handleAddNode = () => {
     if (!selectedMindMapId) return;
@@ -674,26 +681,34 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
                       </div>
                       <Button
                         className="w-full"
-                        disabled={!selectedMindMapId}
-                        onClick={async () => {
+                        disabled={!selectedMindMapId || updateMindMapMutation.isPending}
+                        onClick={() => {
                           if (!selectedMindMapId) {
                             toast.error("No mindmap selected");
                             return;
                           }
-                          try {
-                            await base44.entities.MindMap.update(selectedMindMapId, {
-                              description: editingContext.description,
-                              node_suggestions: editingContext.node_suggestions
-                            });
-                            queryClient.invalidateQueries({ queryKey: ["mindmaps"] });
-                            setShowBusinessContext(false);
-                            toast.success("Context updated");
-                          } catch (error) {
-                            console.error("Save error:", error);
-                            toast.error("Failed to save: " + error.message);
-                          }
+                          updateMindMapMutation.mutate(
+                            { 
+                              id: selectedMindMapId, 
+                              data: {
+                                description: editingContext.description,
+                                node_suggestions: editingContext.node_suggestions
+                              }
+                            },
+                            {
+                              onSuccess: () => {
+                                setShowBusinessContext(false);
+                                toast.success("Context updated");
+                              },
+                              onError: (error) => {
+                                console.error("Save error:", error);
+                                toast.error("Failed to save: " + error.message);
+                              }
+                            }
+                          );
                         }}
                       >
+                        {updateMindMapMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                         Save
                       </Button>
                     </div>
