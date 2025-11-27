@@ -32,6 +32,7 @@ import EntityDetailDialog from "@/components/mindmap/EntityDetailDialog";
 import EntityRelationshipDiagram from "@/components/mindmap/EntityRelationshipDiagram";
 import WorkflowDialog from "@/components/mindmap/WorkflowDialog";
 import TenantForkDialog from "@/components/mindmap/TenantForkDialog";
+import AddNodeDialog from "@/components/mindmap/AddNodeDialog";
 
 export default function MindMapEditor() {
   const queryClient = useQueryClient();
@@ -67,6 +68,7 @@ export default function MindMapEditor() {
   const [showERDDialog, setShowERDDialog] = useState(false);
   const [showWorkflowDialog, setShowWorkflowDialog] = useState(false);
   const [showTenantForkDialog, setShowTenantForkDialog] = useState(false);
+  const [showAddNodeDialog, setShowAddNodeDialog] = useState(false);
 
   // Fetch mindmaps
   const { data: mindMaps = [], isLoading: loadingMaps } = useQuery({
@@ -287,13 +289,33 @@ export default function MindMapEditor() {
   // Handlers
   const handleAddNode = () => {
     if (!selectedMindMapId) return;
+    setShowAddNodeDialog(true);
+  };
+
+  const handleAddCustomNode = (nodeData) => {
+    if (!selectedMindMapId) return;
     createNodeMutation.mutate({
       mind_map_id: selectedMindMapId,
-      text: "New Node",
-      node_type: "sub_branch",
+      text: nodeData.text,
+      node_type: nodeData.node_type,
+      specification_notes: nodeData.specification_notes,
+      color: nodeData.color,
       position_x: 400 + Math.random() * 100,
       position_y: 300 + Math.random() * 100,
-      color: "#3b82f6",
+    });
+  };
+
+  const handleAddTemplateNode = (nodeData) => {
+    if (!selectedMindMapId) return;
+    createNodeMutation.mutate({
+      mind_map_id: selectedMindMapId,
+      text: nodeData.text,
+      node_type: nodeData.node_type,
+      specification_notes: nodeData.specification_notes,
+      color: nodeData.color,
+      template_id: nodeData.template_id,
+      position_x: 400 + Math.random() * 100,
+      position_y: 300 + Math.random() * 100,
     });
   };
 
@@ -1012,6 +1034,14 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
             window.history.replaceState({}, "", url);
             toast.success(`Forked to tenant successfully`);
           }}
+        />
+
+        {/* Add Node Dialog */}
+        <AddNodeDialog
+          open={showAddNodeDialog}
+          onOpenChange={setShowAddNodeDialog}
+          onAddCustomNode={handleAddCustomNode}
+          onAddTemplateNode={handleAddTemplateNode}
         />
 
         {/* Business Context Dialog */}

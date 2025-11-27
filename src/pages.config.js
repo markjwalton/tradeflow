@@ -12,6 +12,7 @@ import Team from './pages/Team';
 import Estimates from './pages/Estimates';
 import Calendar from './pages/Calendar';
 import ProjectDetail from './pages/ProjectDetail';
+import TemplateLibrary from './pages/TemplateLibrary';
 import __Layout from './Layout.jsx';
 
 
@@ -30,6 +31,7 @@ export const PAGES = {
     "Estimates": Estimates,
     "Calendar": Calendar,
     "ProjectDetail": ProjectDetail,
+    "TemplateLibrary": TemplateLibrary,
 }
 
 export const pagesConfig = {
