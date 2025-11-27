@@ -57,8 +57,8 @@ export default function Layout({ children, currentPageName }) {
   const isTenantPage = tenantPages.some(p => p.slug === currentPageName);
 
   useEffect(() => {
-    // Skip access check for TenantAccess page
-    if (currentPageName === "TenantAccess") {
+    // Skip access check for public pages
+    if (currentPageName === "TenantAccess" || currentPageName === "Setup") {
       setCheckingAccess(false);
       setHasAccess(true);
       return;
@@ -146,8 +146,8 @@ export default function Layout({ children, currentPageName }) {
     checkAccess();
   }, [tenantSlug, currentPageName, isGlobalAdminPage, isTenantPage]);
 
-  // TenantAccess page - no layout
-  if (currentPageName === "TenantAccess") {
+  // Pages without layout wrapper
+  if (currentPageName === "TenantAccess" || currentPageName === "Setup") {
     return <>{children}</>;
   }
 
