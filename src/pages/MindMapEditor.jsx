@@ -444,6 +444,7 @@ IMPORTANT: If the user has provided node suggestions, prioritize adding those fi
       const freshMindMap = freshMaps[0];
       
       const context = freshMindMap?.description || "";
+      const nodeSuggestions = freshMindMap?.node_suggestions || "";
       
       // Build node hierarchy with types
       const nodesSummary = nodes.map(n => ({
@@ -460,29 +461,30 @@ IMPORTANT: If the user has provided node suggestions, prioritize adding those fi
       // Find feature nodes
       const featureNodes = nodes.filter(n => n.node_type === "feature");
 
-      const prompt = `You are an expert app architect. Based on this mind map, generate a complete app specification.
+      const prompt = `You are an expert app architect. Based on this mind map AND the detailed feature requirements, generate a complete app specification.
 
-Business Context: ${context}
+BUSINESS CONTEXT:
+${context}
 
-Mind Map Structure:
+DETAILED FEATURE REQUIREMENTS (PRIORITIZE THESE - this is the user's comprehensive feature list):
+${nodeSuggestions}
+
+CURRENT MIND MAP STRUCTURE:
 ${JSON.stringify(nodesSummary, null, 2)}
 
-Entity Nodes (these should become database entities):
-${entityNodes.map(n => n.text).join(", ") || "None specified"}
+Nodes marked as Entity type: ${entityNodes.map(n => n.text).join(", ") || "None specified"}
+Nodes marked as Page type: ${pageNodes.map(n => n.text).join(", ") || "None specified"}
+Nodes marked as Feature type: ${featureNodes.map(n => n.text).join(", ") || "None specified"}
 
-Page Nodes (these should become app pages):
-${pageNodes.map(n => n.text).join(", ") || "None specified"}
-
-Feature Nodes (these are features to implement):
-${featureNodes.map(n => n.text).join(", ") || "None specified"}
+IMPORTANT: The "Detailed Feature Requirements" above contains a comprehensive list of features the user wants. You MUST include entities, pages, and features to support ALL of these requirements. The mind map structure shows the high-level organization, but the detailed requirements are the primary source of truth.
 
 Generate a complete app specification with:
 
-1. ENTITIES: For each entity, provide a JSON schema with realistic properties based on the business context. Include relationships between entities where logical.
+1. ENTITIES: Create database entities to support ALL features in the requirements. Include proper relationships between entities.
 
-2. PAGES: For each page, describe what it should display and what functionality it needs.
+2. PAGES: Create pages that implement the functionality described in the requirements.
 
-3. FEATURES: List the key features and which pages/entities they relate to.
+3. FEATURES: Map ALL the detailed requirements to specific features, pages, and entities.
 
 Return a JSON object with this structure:
 {
@@ -516,7 +518,7 @@ Return a JSON object with this structure:
   ]
 }
 
-Be thorough and realistic based on the business context. Infer additional entities and pages if they're implied but not explicitly marked.`;
+Be thorough - include ALL entities and features needed to implement the detailed requirements. Do not skip any requirements.`;
 
       const result = await base44.integrations.Core.InvokeLLM({
         prompt,
