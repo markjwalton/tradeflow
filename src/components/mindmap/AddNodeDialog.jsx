@@ -49,6 +49,7 @@ export default function AddNodeDialog({
   onOpenChange,
   onAddCustomNode,
   onAddTemplateNode,
+  businessContext,
 }) {
   const [activeTab, setActiveTab] = useState("custom");
   
@@ -129,6 +130,7 @@ export default function AddNodeDialog({
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `You are helping to create node templates for a mind map application used in business process planning.
 
+${businessContext ? `BUSINESS CONTEXT:\n${businessContext}\n` : ""}
 Based on this user request: "${aiPrompt}"
 Category: ${nodeTypes.find(t => t.value === aiCategory)?.label || aiCategory}
 ${aiArea ? `Functional Area: ${aiArea}` : ""}

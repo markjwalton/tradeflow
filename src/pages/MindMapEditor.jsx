@@ -1042,6 +1042,7 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
           onOpenChange={setShowAddNodeDialog}
           onAddCustomNode={handleAddCustomNode}
           onAddTemplateNode={handleAddTemplateNode}
+          businessContext={selectedMindMap?.description}
         />
 
         {/* Business Context Dialog */}
