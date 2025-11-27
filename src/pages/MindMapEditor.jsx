@@ -28,18 +28,11 @@ import MindMapToolbar from "@/components/mindmap/MindMapToolbar";
 export default function MindMapEditor() {
   const queryClient = useQueryClient();
   
-  // Get mindmap ID from URL params - check on every render
-  const urlParams = new URLSearchParams(window.location.search);
-  const mapIdFromUrl = urlParams.get("map");
-  
-  const [selectedMindMapId, setSelectedMindMapId] = useState(mapIdFromUrl);
-  
-  // Sync state with URL when URL changes
-  React.useEffect(() => {
-    if (mapIdFromUrl !== selectedMindMapId) {
-      setSelectedMindMapId(mapIdFromUrl);
-    }
-  }, [mapIdFromUrl]);
+  // Get mindmap ID from URL params once on mount
+  const [selectedMindMapId, setSelectedMindMapId] = useState(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get("map") || null;
+  });
   const [selectedNodeId, setSelectedNodeId] = useState(null);
   const [selectedConnectionId, setSelectedConnectionId] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
