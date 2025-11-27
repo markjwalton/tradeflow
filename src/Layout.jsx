@@ -83,8 +83,8 @@ export default function Layout({ children, currentPageName }) {
   useEffect(() => {
     // Skip access check for public pages
     if (currentPageName === "TenantAccess" || currentPageName === "Setup") {
-      setCheckingAccess(false);
-      setHasAccess(true);
+      if (checkingAccess) setCheckingAccess(false);
+      if (!hasAccess) setHasAccess(true);
       return;
     }
     
@@ -92,6 +92,9 @@ export default function Layout({ children, currentPageName }) {
     if (hasCheckedRef.current) {
       return;
     }
+    
+    // Mark as checked immediately to prevent race conditions
+    hasCheckedRef.current = true;
     
     const checkAccess = async () => {
       try {
