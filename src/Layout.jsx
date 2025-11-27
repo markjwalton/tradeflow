@@ -68,6 +68,7 @@ export default function Layout({ children, currentPageName }) {
 
   // Track if we've already checked access for this session
   const [accessChecked, setAccessChecked] = useState(false);
+  const accessCheckedRef = React.useRef(false);
 
   useEffect(() => {
     // Skip access check for public pages
@@ -77,8 +78,8 @@ export default function Layout({ children, currentPageName }) {
       return;
     }
     
-    // If we already have access, don't re-check (prevents reload on page name changes)
-    if (hasAccess && accessChecked) {
+    // If we already checked access this session, skip (using ref to avoid stale closure)
+    if (accessCheckedRef.current) {
       setCheckingAccess(false);
       return;
     }
