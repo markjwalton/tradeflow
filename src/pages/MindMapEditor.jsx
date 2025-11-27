@@ -24,6 +24,7 @@ import { toast } from "sonner";
 
 import MindMapCanvas from "@/components/mindmap/MindMapCanvas";
 import MindMapToolbar from "@/components/mindmap/MindMapToolbar";
+import GeneratedSpecDialog from "@/components/mindmap/GeneratedSpecDialog";
 
 export default function MindMapEditor() {
   const queryClient = useQueryClient();
@@ -808,7 +809,21 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
         </DialogContent>
       </Dialog>
 
-      {/* Business Context Dialog */}
+      {/* Generated Spec Dialog */}
+        <GeneratedSpecDialog
+          open={showGeneratedSpec}
+          onOpenChange={setShowGeneratedSpec}
+          spec={generatedSpec}
+          onCreateEntities={async (entities) => {
+            // This would create actual entity files
+            // For now, just show what would be created
+            toast.success(`Would create ${entities.length} entities: ${entities.map(e => e.name).join(", ")}`);
+            // TODO: Integrate with Base44 to actually create entity files
+          }}
+          isCreating={false}
+        />
+
+        {/* Business Context Dialog */}
                 <Dialog open={showBusinessContext} onOpenChange={setShowBusinessContext}>
                   <DialogContent className="max-w-2xl" aria-describedby={undefined}>
                     <DialogHeader>
