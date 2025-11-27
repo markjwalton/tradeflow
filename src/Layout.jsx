@@ -105,12 +105,13 @@ export default function Layout({ children, currentPageName }) {
             return;
           }
           
-          // Standalone pages (MindMapEditor, ArchitecturePackages, TenantManager) - check if user has any tenant admin access
+          // Standalone pages (MindMapEditor, PackageLibrary, TenantManager) - check if user has any tenant admin access
           if (standalonePages.includes(currentPageName)) {
             const userRolesAll = await base44.entities.TenantUserRole.filter({ user_id: user.id });
             const hasAnyAdminRole = userRolesAll.some(r => r.roles?.includes("admin"));
             if (hasAnyAdminRole) {
               setHasAccess(true);
+              setAccessChecked(true);
               setCheckingAccess(false);
               return;
             }
