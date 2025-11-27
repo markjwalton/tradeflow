@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Trash2, Link, LayoutGrid, FileText, Sparkles, Lightbulb, Rocket, GitFork, Lock, History, Database, Play, Building2 } from "lucide-react";
+import { Plus, Trash2, Link, LayoutGrid, FileText, Sparkles, Lightbulb, Rocket, GitFork, Lock, History, Database, Play, Building2, Focus, X } from "lucide-react";
 
 const nodeTypes = [
   { value: "central", label: "Central Topic" },
@@ -64,6 +64,9 @@ export default function MindMapToolbar({
   onForkToTenant,
   selectedNodeIsEntity,
   onEditEntity,
+  focusedBranchId,
+  onFocusBranch,
+  mainBranches = [],
 }) {
   const isPublished = currentMindMap?.status === "published";
   return (
@@ -100,6 +103,35 @@ export default function MindMapToolbar({
         <LayoutGrid className="h-4 w-4 mr-1" />
         Auto Layout
       </Button>
+
+      {/* Focus Mode */}
+      {focusedBranchId ? (
+        <Button
+          size="sm"
+          variant="default"
+          onClick={() => onFocusBranch(null)}
+          className="bg-amber-500 hover:bg-amber-600"
+        >
+          <X className="h-4 w-4 mr-1" />
+          Exit Focus
+        </Button>
+      ) : mainBranches.length > 0 && (
+        <Select value="" onValueChange={(id) => onFocusBranch(id)}>
+          <SelectTrigger className="w-36 h-8">
+            <div className="flex items-center gap-1">
+              <Focus className="h-4 w-4" />
+              <span>Focus Branch</span>
+            </div>
+          </SelectTrigger>
+          <SelectContent>
+            {mainBranches.map((branch) => (
+              <SelectItem key={branch.id} value={branch.id}>
+                {branch.text}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
 
       <Button
         size="sm"

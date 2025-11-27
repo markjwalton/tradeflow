@@ -69,6 +69,7 @@ export default function MindMapEditor() {
   const [showWorkflowDialog, setShowWorkflowDialog] = useState(false);
   const [showTenantForkDialog, setShowTenantForkDialog] = useState(false);
   const [showAddNodeDialog, setShowAddNodeDialog] = useState(false);
+  const [focusedBranchId, setFocusedBranchId] = useState(null);
 
   // Fetch mindmaps
   const { data: mindMaps = [], isLoading: loadingMaps } = useQuery({
@@ -117,10 +118,36 @@ export default function MindMapEditor() {
     getDescendantIds(nodeId, connections).forEach(id => hiddenNodeIds.add(id));
   });
 
-  const visibleNodes = nodes.filter(n => !hiddenNodeIds.has(n.id));
-  const visibleConnections = connections.filter(c => 
-    !hiddenNodeIds.has(c.source_node_id) && !hiddenNodeIds.has(c.target_node_id)
-  );
+  // Filter for focused branch if active
+  const getFocusedBranchNodeIds = (branchId) => {
+    if (!branchId) return null;
+    const ids = new Set([branchId]);
+    // Find central node to include
+    const centralNode = nodes.find(n => n.node_type === "central");
+    if (centralNode) ids.add(centralNode.id);
+    // Get all descendants
+    const getChildren = (nodeId) => {
+      connections.filter(c => c.source_node_id === nodeId).forEach(c => {
+        ids.add(c.target_node_id);
+        getChildren(c.target_node_id);
+      });
+    };
+    getChildren(branchId);
+    return ids;
+  };
+
+  const focusedNodeIds = getFocusedBranchNodeIds(focusedBranchId);
+
+  const visibleNodes = nodes.filter(n => {
+    if (hiddenNodeIds.has(n.id)) return false;
+    if (focusedNodeIds && !focusedNodeIds.has(n.id)) return false;
+    return true;
+  });
+  const visibleConnections = connections.filter(c => {
+    if (hiddenNodeIds.has(c.source_node_id) || hiddenNodeIds.has(c.target_node_id)) return false;
+    if (focusedNodeIds && (!focusedNodeIds.has(c.source_node_id) || !focusedNodeIds.has(c.target_node_id))) return false;
+    return true;
+  });
 
   // Mutations
   const createMapMutation = useMutation({
@@ -850,7 +877,10 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
           onShowWorkflows={() => setShowWorkflowDialog(true)}
           selectedNodeIsEntity={selectedNode?.node_type === "entity"}
           onEditEntity={() => setShowEntityDialog(true)}
-        />
+          focusedBranchId={focusedBranchId}
+          onFocusBranch={setFocusedBranchId}
+          mainBranches={nodes.filter(n => n.node_type === "main_branch")}
+          />
       )}
 
       {/* Canvas and History Panel */}
