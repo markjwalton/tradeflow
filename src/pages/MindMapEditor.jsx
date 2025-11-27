@@ -38,6 +38,7 @@ export default function MindMapEditor() {
   const [newMapName, setNewMapName] = useState("");
   const [newMapDescription, setNewMapDescription] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isSuggesting, setIsSuggesting] = useState(false);
 
   // Fetch mindmaps
   const { data: mindMaps = [], isLoading: loadingMaps } = useQuery({
@@ -289,6 +290,108 @@ export default function MindMapEditor() {
     toast.success("Layout applied");
   };
 
+  const handleAISuggest = async () => {
+    if (nodes.length === 0) {
+      toast.error("Add some nodes first");
+      return;
+    }
+    
+    setIsSuggesting(true);
+    try {
+      const context = selectedMindMap?.description || "";
+      const nodesSummary = nodes.map(n => ({
+        id: n.id,
+        text: n.text,
+        type: n.node_type,
+        parent: connections.find(c => c.target_node_id === n.id)?.source_node_id || null
+      }));
+      
+      const prompt = `You are analyzing a mind map for business process planning.
+
+Business Context: ${context}
+
+Current Mind Map Structure:
+${JSON.stringify(nodesSummary, null, 2)}
+
+Analyze this mind map and suggest 3-5 NEW nodes that would add value. For each suggestion:
+1. Identify the BEST existing node to attach it to (as a child)
+2. Provide a short label (2-4 words)
+3. Suggest a node type: main_branch, sub_branch, feature, entity, page, or note
+
+Return a JSON object with a "suggestions" array where each item has:
+- "parent_node_id": the ID of the existing node to connect to
+- "text": the label for the new node
+- "node_type": one of the allowed types
+
+Focus on gaps in the current structure and relevant additions based on the business context.`;
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            suggestions: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  parent_node_id: { type: "string" },
+                  text: { type: "string" },
+                  node_type: { type: "string" }
+                }
+              }
+            }
+          }
+        }
+      });
+
+      const suggestions = result.suggestions || [];
+      let addedCount = 0;
+      
+      for (const suggestion of suggestions) {
+        const parentNode = nodes.find(n => n.id === suggestion.parent_node_id);
+        if (!parentNode) continue;
+        
+        // Find existing children of this parent to position new node
+        const siblingConnections = connections.filter(c => c.source_node_id === parentNode.id);
+        const siblingCount = siblingConnections.length;
+        
+        // Position new node relative to parent
+        const angle = (Math.PI / 4) + (Math.PI / 2 * siblingCount) / Math.max(siblingCount, 1);
+        const radius = 150;
+        const x = (parentNode.position_x || 400) + radius * Math.cos(angle);
+        const y = (parentNode.position_y || 300) + radius * Math.sin(angle);
+        
+        const newNode = await base44.entities.MindMapNode.create({
+          mind_map_id: selectedMindMapId,
+          text: suggestion.text,
+          node_type: suggestion.node_type || "sub_branch",
+          position_x: x,
+          position_y: y,
+          color: parentNode.color || "#3b82f6",
+          parent_node_id: suggestion.parent_node_id,
+        });
+        
+        await base44.entities.MindMapConnection.create({
+          mind_map_id: selectedMindMapId,
+          source_node_id: suggestion.parent_node_id,
+          target_node_id: newNode.id,
+          style: "solid",
+        });
+        
+        addedCount++;
+      }
+      
+      queryClient.invalidateQueries({ queryKey: ["mindmapNodes", selectedMindMapId] });
+      queryClient.invalidateQueries({ queryKey: ["mindmapConnections", selectedMindMapId] });
+      toast.success(`Added ${addedCount} suggested nodes`);
+    } catch (error) {
+      toast.error("Failed to generate suggestions");
+    } finally {
+      setIsSuggesting(false);
+    }
+  };
+
   const handleAIGenerate = async () => {
     if (!selectedNodeId || !selectedNode) return;
     
@@ -391,6 +494,7 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
           onStartConnection={handleStartConnection}
           onAutoLayout={handleAutoLayout}
           onAIGenerate={handleAIGenerate}
+          onAISuggest={handleAISuggest}
           onShowBusinessContext={() => setShowBusinessContext(true)}
           isConnecting={isConnecting}
           hasSelection={!!selectedNodeId || !!selectedConnectionId}
@@ -399,6 +503,7 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
           selectedColor={selectedNode?.color}
           onChangeColor={handleChangeColor}
           isGenerating={isGenerating}
+          isSuggesting={isSuggesting}
         />
       )}
 
