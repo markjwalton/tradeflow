@@ -38,6 +38,11 @@ const tenantPages = [
   { name: "Home", slug: "Home", icon: Home },
 ];
 
+// Tenant admin pages - for users with admin role in a tenant
+const tenantAdminPages = [
+  { name: "Navigation Manager", slug: "NavigationManager", icon: Navigation },
+];
+
 export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
   const [checkingAccess, setCheckingAccess] = useState(true);
@@ -76,14 +81,37 @@ export default function Layout({ children, currentPageName }) {
         setCurrentUser(user);
         setIsGlobalAdmin(user.is_global_admin === true);
         
-        // Global admin pages: ONLY for is_global_admin users
+        // Global admin pages: for is_global_admin OR tenant admins (with tenant context)
         if (isGlobalAdminPage) {
+          // Global admins always have access
           if (user.is_global_admin === true) {
             setHasAccess(true);
-          } else {
-            setHasAccess(false);
-            setAccessDeniedReason("not_global_admin");
+            setCheckingAccess(false);
+            return;
           }
+          
+          // Tenant admins can access NavigationManager with tenant context
+          if (currentPageName === "NavigationManager" && tenantSlug) {
+            const tenants = await base44.entities.Tenant.filter({ slug: tenantSlug });
+            if (tenants.length > 0) {
+              const tenant = tenants[0];
+              const roles = await base44.entities.TenantUserRole.filter({ 
+                tenant_id: tenant.id, 
+                user_id: user.id 
+              });
+              if (roles.length > 0 && roles[0]?.roles?.includes("admin")) {
+                setCurrentTenant(tenant);
+                setUserRoles(roles[0].roles);
+                setIsTenantAdmin(true);
+                setHasAccess(true);
+                setCheckingAccess(false);
+                return;
+              }
+            }
+          }
+          
+          setHasAccess(false);
+          setAccessDeniedReason("not_global_admin");
           setCheckingAccess(false);
           return;
         }
@@ -174,15 +202,19 @@ export default function Layout({ children, currentPageName }) {
   // Build navigation based on context
   let displayPages = [];
   
-  if (isGlobalAdminPage) {
-    // On global admin pages, show global admin nav
+  if (isGlobalAdminPage && !currentTenant) {
+    // On global admin pages without tenant context, show global admin nav
     displayPages = globalAdminPages;
   } else if (currentTenant) {
     // On tenant pages, show tenant nav
     displayPages = [...tenantPages];
-    // Global admins can always access admin pages from tenant context
+    // Tenant admins can access tenant admin pages
+    if (isTenantAdmin) {
+      displayPages = [...displayPages, ...tenantAdminPages];
+    }
+    // Global admins can access all admin pages
     if (isGlobalAdmin) {
-      displayPages = [...displayPages, ...globalAdminPages];
+      displayPages = [...tenantPages, ...globalAdminPages];
     }
   }
 
