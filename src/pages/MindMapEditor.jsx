@@ -33,6 +33,7 @@ import EntityRelationshipDiagram from "@/components/mindmap/EntityRelationshipDi
 import WorkflowDialog from "@/components/mindmap/WorkflowDialog";
 import TenantForkDialog from "@/components/mindmap/TenantForkDialog";
 import AddNodeDialog from "@/components/mindmap/AddNodeDialog";
+import NodeDetailPanel from "@/components/mindmap/NodeDetailPanel";
 
 export default function MindMapEditor() {
   const queryClient = useQueryClient();
