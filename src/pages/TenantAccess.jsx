@@ -129,12 +129,20 @@ export default function TenantAccess() {
     );
   }
 
-  // If user has access to a tenant, redirect to main app
-  if (user && !tenantSlug && !selectedTenant && userTenantAccess.length > 0) {
-    const firstTenant = userTenantAccess[0].tenant;
-    if (firstTenant?.slug) {
-      window.location.href = createPageUrl("Home") + (createPageUrl("Home").includes("?") ? "&" : "?") + `tenant=${firstTenant.slug}`;
+  // If user has access, redirect appropriately
+  if (user && !tenantSlug && !selectedTenant) {
+    // Global admins go to Tenant Manager
+    if (user.is_global_admin === true) {
+      window.location.href = createPageUrl("TenantManager");
       return null;
+    }
+    // Regular users go to their first tenant
+    if (userTenantAccess.length > 0) {
+      const firstTenant = userTenantAccess[0].tenant;
+      if (firstTenant?.slug) {
+        window.location.href = createPageUrl("Home") + (createPageUrl("Home").includes("?") ? "&" : "?") + `tenant=${firstTenant.slug}`;
+        return null;
+      }
     }
   }
 

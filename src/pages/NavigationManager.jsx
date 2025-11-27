@@ -12,6 +12,7 @@ import NavigationItemRow from "@/components/navigation/NavigationItemRow";
 import TenantSelector from "@/components/navigation/TenantSelector";
 
 export default function NavigationManager() {
+  // Default to global template for global admins
   const [selectedTenantId, setSelectedTenantId] = useState("__global__");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);

@@ -10,27 +10,30 @@ import {
   ChevronDown,
   Loader2,
   LogOut,
-  User
+  User,
+  Shield
 } from "lucide-react";
 
 // Tenant Context
 export const TenantContext = createContext(null);
 export const useTenant = () => useContext(TenantContext);
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
-// Admin pages - no tenant context required
-const adminPages = [
-  { name: "Navigation Manager", slug: "NavigationManager", icon: Navigation },
+// Global admin pages - only for is_global_admin users
+const globalAdminPages = [
   { name: "Tenant Manager", slug: "TenantManager", icon: Building2 },
+  { name: "Navigation Manager", slug: "NavigationManager", icon: Navigation },
 ];
 
-// Tenant pages - require tenant context
+// Tenant pages - for users with tenant access
 const tenantPages = [
   { name: "Home", slug: "Home", icon: Home },
 ];
@@ -39,17 +42,19 @@ export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
   const [checkingAccess, setCheckingAccess] = useState(true);
   const [hasAccess, setHasAccess] = useState(false);
+  const [accessDeniedReason, setAccessDeniedReason] = useState(null);
   const [currentTenant, setCurrentTenant] = useState(null);
   const [userRoles, setUserRoles] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const [isGlobalAdmin, setIsGlobalAdmin] = useState(false);
+  const [isTenantAdmin, setIsTenantAdmin] = useState(false);
   
   const urlParams = new URLSearchParams(window.location.search);
   const tenantSlug = urlParams.get("tenant");
   
-  // Determine if this is an admin page or tenant page
-  const isAdminPage = adminPages.some(p => p.slug === currentPageName);
+  // Determine page type
+  const isGlobalAdminPage = globalAdminPages.some(p => p.slug === currentPageName);
   const isTenantPage = tenantPages.some(p => p.slug === currentPageName);
-  const [isUserAdmin, setIsUserAdmin] = useState(false);
 
   useEffect(() => {
     // Skip access check for TenantAccess page
@@ -64,18 +69,21 @@ export default function Layout({ children, currentPageName }) {
         const user = await base44.auth.me();
         if (!user) {
           setHasAccess(false);
+          setAccessDeniedReason("not_logged_in");
           setCheckingAccess(false);
           return;
         }
         setCurrentUser(user);
+        setIsGlobalAdmin(user.is_global_admin === true);
         
-        // For admin pages: need to have admin role in at least one tenant
-        if (isAdminPage) {
-          const userRolesAny = await base44.entities.TenantUserRole.filter({ user_id: user.id });
-          // Check if user has admin role in any tenant
-          const hasAdminRole = userRolesAny.some(r => r.roles?.includes("admin"));
-          setIsUserAdmin(hasAdminRole);
-          setHasAccess(hasAdminRole);
+        // Global admin pages: ONLY for is_global_admin users
+        if (isGlobalAdminPage) {
+          if (user.is_global_admin === true) {
+            setHasAccess(true);
+          } else {
+            setHasAccess(false);
+            setAccessDeniedReason("not_global_admin");
+          }
           setCheckingAccess(false);
           return;
         }
@@ -83,8 +91,8 @@ export default function Layout({ children, currentPageName }) {
         // Tenant pages: need tenant slug and access to that tenant
         if (isTenantPage) {
           if (!tenantSlug) {
-            // No tenant specified - redirect to TenantAccess
             setHasAccess(false);
+            setAccessDeniedReason("no_tenant");
             setCheckingAccess(false);
             return;
           }
@@ -92,11 +100,24 @@ export default function Layout({ children, currentPageName }) {
           const tenants = await base44.entities.Tenant.filter({ slug: tenantSlug });
           if (tenants.length === 0) {
             setHasAccess(false);
+            setAccessDeniedReason("tenant_not_found");
             setCheckingAccess(false);
             return;
           }
           
           const tenant = tenants[0];
+          
+          // Global admins have access to all tenants
+          if (user.is_global_admin === true) {
+            setCurrentTenant(tenant);
+            setUserRoles(["admin"]);
+            setIsTenantAdmin(true);
+            setHasAccess(true);
+            setCheckingAccess(false);
+            return;
+          }
+          
+          // Check tenant-specific access
           const roles = await base44.entities.TenantUserRole.filter({ 
             tenant_id: tenant.id, 
             user_id: user.id 
@@ -104,6 +125,7 @@ export default function Layout({ children, currentPageName }) {
           
           if (roles.length === 0) {
             setHasAccess(false);
+            setAccessDeniedReason("no_tenant_access");
             setCheckingAccess(false);
             return;
           }
@@ -111,17 +133,18 @@ export default function Layout({ children, currentPageName }) {
           setCurrentTenant(tenant);
           const userRoleList = roles[0]?.roles || [];
           setUserRoles(userRoleList);
-          setIsUserAdmin(userRoleList.includes("admin"));
+          setIsTenantAdmin(userRoleList.includes("admin"));
           setHasAccess(true);
         }
       } catch (e) {
         setHasAccess(false);
+        setAccessDeniedReason("error");
       }
       setCheckingAccess(false);
     };
     
     checkAccess();
-  }, [tenantSlug, currentPageName, isAdminPage, isTenantPage]);
+  }, [tenantSlug, currentPageName, isGlobalAdminPage, isTenantPage]);
 
   // TenantAccess page - no layout
   if (currentPageName === "TenantAccess") {
@@ -140,7 +163,6 @@ export default function Layout({ children, currentPageName }) {
   // Redirect to TenantAccess if no access
   if (!hasAccess) {
     const accessUrl = createPageUrl("TenantAccess");
-    // Preserve tenant slug if present
     if (tenantSlug) {
       window.location.href = accessUrl + (accessUrl.includes("?") ? "&" : "?") + `tenant=${tenantSlug}`;
     } else {
@@ -149,13 +171,21 @@ export default function Layout({ children, currentPageName }) {
     return null;
   }
 
-  // Determine which pages to show in nav based on context and user role
-  // Only show admin pages to users with admin role
-  const displayPages = isAdminPage 
-    ? adminPages 
-    : (currentTenant 
-        ? (isUserAdmin ? [...tenantPages, ...adminPages] : tenantPages) 
-        : tenantPages);
+  // Build navigation based on context
+  let displayPages = [];
+  
+  if (isGlobalAdminPage) {
+    // On global admin pages, show global admin nav
+    displayPages = globalAdminPages;
+  } else if (currentTenant) {
+    // On tenant pages, show tenant nav
+    displayPages = [...tenantPages];
+    // Global admins can always access admin pages from tenant context
+    if (isGlobalAdmin) {
+      displayPages = [...displayPages, ...globalAdminPages];
+    }
+  }
+
   const currentPage = displayPages.find(p => p.slug === currentPageName) || displayPages[0];
   const CurrentIcon = currentPage?.icon || Home;
 
@@ -169,6 +199,8 @@ export default function Layout({ children, currentPageName }) {
     tenantSlug: currentTenant?.slug,
     tenantName: currentTenant?.name,
     userRoles,
+    isGlobalAdmin,
+    isTenantAdmin,
   };
 
   return (
@@ -177,16 +209,20 @@ export default function Layout({ children, currentPageName }) {
       {/* Sidebar */}
       <aside className="w-64 bg-slate-900 text-white flex flex-col">
         <div className="p-4 border-b border-slate-700">
-          <h1 className="text-lg font-bold">{currentTenant?.name || "App Architect"}</h1>
-          <p className="text-xs text-slate-400">{currentTenant ? "Tenant Portal" : "Navigation Planner"}</p>
+          <h1 className="text-lg font-bold">
+            {isGlobalAdminPage ? "Admin Console" : (currentTenant?.name || "App")}
+          </h1>
+          <p className="text-xs text-slate-400">
+            {isGlobalAdminPage ? "Global Administration" : "Tenant Portal"}
+          </p>
         </div>
         <nav className="flex-1 p-3 space-y-1">
           {displayPages.map((page) => {
             const Icon = page.icon;
             const isActive = currentPageName === page.slug;
-            // Admin pages don't need tenant param, tenant pages do
-            const isAdminLink = adminPages.some(p => p.slug === page.slug);
-            const pageUrl = isAdminLink 
+            const isGlobalLink = globalAdminPages.some(p => p.slug === page.slug);
+            // Global admin pages don't need tenant param
+            const pageUrl = isGlobalLink 
               ? createPageUrl(page.slug) 
               : createPageUrl(page.slug) + (tenantSlug ? `?tenant=${tenantSlug}` : '');
             return (
@@ -205,6 +241,16 @@ export default function Layout({ children, currentPageName }) {
             );
           })}
         </nav>
+        
+        {/* Global Admin indicator */}
+        {isGlobalAdmin && (
+          <div className="p-3 border-t border-slate-700">
+            <div className="flex items-center gap-2 text-xs text-amber-400">
+              <Shield className="h-3 w-3" />
+              Global Admin
+            </div>
+          </div>
+        )}
       </aside>
 
       {/* Main Content */}
@@ -223,22 +269,22 @@ export default function Layout({ children, currentPageName }) {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 {displayPages.map((page) => {
-                        const Icon = page.icon;
-                        const isAdminLink = adminPages.some(p => p.slug === page.slug);
-                        const pageUrl = isAdminLink 
-                          ? createPageUrl(page.slug) 
-                          : createPageUrl(page.slug) + (tenantSlug ? `?tenant=${tenantSlug}` : '');
-                        return (
-                          <DropdownMenuItem
-                            key={page.slug}
-                            onClick={() => navigate(pageUrl)}
-                            className="gap-2"
-                          >
-                            <Icon className="h-4 w-4" />
-                            {page.name}
-                          </DropdownMenuItem>
-                        );
-                      })}
+                  const Icon = page.icon;
+                  const isGlobalLink = globalAdminPages.some(p => p.slug === page.slug);
+                  const pageUrl = isGlobalLink 
+                    ? createPageUrl(page.slug) 
+                    : createPageUrl(page.slug) + (tenantSlug ? `?tenant=${tenantSlug}` : '');
+                  return (
+                    <DropdownMenuItem
+                      key={page.slug}
+                      onClick={() => navigate(pageUrl)}
+                      className="gap-2"
+                    >
+                      <Icon className="h-4 w-4" />
+                      {page.name}
+                    </DropdownMenuItem>
+                  );
+                })}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -255,19 +301,19 @@ export default function Layout({ children, currentPageName }) {
               <RefreshCw className="h-4 w-4" />
             </Button>
             <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            onClick={() => {
-                              const tenantAccessUrl = createPageUrl("TenantAccess");
-                              base44.auth.logout(window.location.origin + tenantAccessUrl);
-                            }}
-                            className="gap-2 text-gray-600"
-                          >
-                            <LogOut className="h-4 w-4" />
-                            Logout
-                          </Button>
+              variant="ghost" 
+              size="sm" 
+              onClick={() => {
+                const tenantAccessUrl = createPageUrl("TenantAccess");
+                base44.auth.logout(window.location.origin + tenantAccessUrl);
+              }}
+              className="gap-2 text-gray-600"
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
+            </Button>
           </div>
-          </header>
+        </header>
 
         {/* Page Content */}
         <main className="flex-1 bg-gray-50 overflow-auto">
