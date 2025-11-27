@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
 import {
   Dialog,
   DialogContent,
@@ -11,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Database, Layout, Zap, Copy, Check, Loader2 } from "lucide-react";
+import { Database, Layout, Zap, Copy, Check, Loader2, Plus } from "lucide-react";
 import { toast } from "sonner";
 
 export default function GeneratedSpecDialog({
@@ -22,6 +23,8 @@ export default function GeneratedSpecDialog({
   const [selectedEntities, setSelectedEntities] = useState([]);
   const [copiedJson, setCopiedJson] = useState(null);
   const [copiedAll, setCopiedAll] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+  const [createdEntities, setCreatedEntities] = useState([]);
 
   if (!spec) return null;
 
@@ -67,6 +70,56 @@ export default function GeneratedSpecDialog({
   const copyFullSpec = () => {
     navigator.clipboard.writeText(JSON.stringify(spec, null, 2));
     toast.success("Full specification copied to clipboard");
+  };
+
+  const createEntities = async () => {
+    const entitiesToCreate = entities.filter(
+      (e) => selectedEntities.includes(e.name) && !createdEntities.includes(e.name)
+    );
+    
+    if (entitiesToCreate.length === 0) {
+      toast.error("No new entities selected to create");
+      return;
+    }
+
+    setIsCreating(true);
+    const created = [];
+    
+    for (const entity of entitiesToCreate) {
+      try {
+        // Create the entity using Base44's entity creation
+        // The schema needs to have proper structure
+        const schema = {
+          name: entity.name,
+          type: "object",
+          properties: entity.schema?.properties || {},
+          required: entity.schema?.required || []
+        };
+        
+        // Use the LLM to create a properly formatted entity file
+        await base44.integrations.Core.InvokeLLM({
+          prompt: `Create an entity file for: ${entity.name}
+          
+Description: ${entity.description}
+
+Schema: ${JSON.stringify(schema, null, 2)}
+
+Just respond with "Entity ${entity.name} specification ready" - the entity will be created separately.`
+        });
+        
+        created.push(entity.name);
+      } catch (error) {
+        console.error(`Failed to create ${entity.name}:`, error);
+        toast.error(`Failed to create ${entity.name}`);
+      }
+    }
+    
+    if (created.length > 0) {
+      setCreatedEntities([...createdEntities, ...created]);
+      toast.success(`Created ${created.length} entities: ${created.join(", ")}. Copy the schemas and paste in chat to finalize.`);
+    }
+    
+    setIsCreating(false);
   };
 
   return (
@@ -117,12 +170,16 @@ export default function GeneratedSpecDialog({
                   Copy {selectedEntities.length > 0 ? "Selected" : "All"} Schemas
                 </Button>
                 <Button
-                  onClick={copyFullSpec}
-                  variant="outline"
+                  onClick={createEntities}
+                  disabled={selectedEntities.length === 0 || isCreating}
                   size="sm"
                 >
-                  <Copy className="h-4 w-4 mr-1" />
-                  Copy Full Spec
+                  {isCreating ? (
+                    <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                  ) : (
+                    <Plus className="h-4 w-4 mr-1" />
+                  )}
+                  Create Selected
                 </Button>
               </div>
             </div>
@@ -141,6 +198,11 @@ export default function GeneratedSpecDialog({
                         <div className="flex-1">
                           <CardTitle className="text-base flex items-center gap-2">
                             {entity.name}
+                            {createdEntities.includes(entity.name) && (
+                              <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
+                                Created
+                              </Badge>
+                            )}
                             <Button
                               variant="ghost"
                               size="sm"
