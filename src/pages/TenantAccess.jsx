@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, CheckCircle, Clock, Building2 } from "lucide-react";
 import { toast } from "sonner";
+import { createPageUrl } from "@/utils";
 
 export default function TenantAccess() {
   const [user, setUser] = useState(null);
@@ -171,11 +172,11 @@ export default function TenantAccess() {
                   : "Already have an account? Sign in to access your organization."}
               </p>
               {user ? (
-                <Button variant="outline" className="w-full" onClick={() => base44.auth.logout(window.location.href)}>
+                <Button variant="outline" className="w-full" onClick={() => base44.auth.logout(createPageUrl("TenantAccess"))}>
                   Sign Out / Use Different Account
                 </Button>
               ) : (
-                <Button className="w-full" onClick={() => base44.auth.redirectToLogin(window.location.href)}>
+                <Button className="w-full" onClick={() => base44.auth.redirectToLogin(createPageUrl("TenantAccess"))}>
                   Sign In to My Account
                 </Button>
               )}
