@@ -9,6 +9,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -58,7 +59,7 @@ export default function MindMapEditor() {
   const { data: mindMaps = [], isLoading: loadingMaps } = useQuery({
     queryKey: ["mindmaps"],
     queryFn: () => base44.entities.MindMap.list(),
-    staleTime: 0, // Always refetch to get latest data
+    staleTime: 30000, // Cache for 30 seconds to prevent unnecessary refetches
   });
 
   // Fetch nodes for selected mindmap
@@ -573,7 +574,7 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
 
       {/* New Mind Map Dialog */}
       <Dialog open={showNewMapDialog} onOpenChange={setShowNewMapDialog}>
-        <DialogContent>
+        <DialogContent aria-describedby={undefined}>
           <DialogHeader>
             <DialogTitle>Create New Mind Map</DialogTitle>
           </DialogHeader>
@@ -618,7 +619,7 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
 
       {/* Edit Node Dialog */}
       <Dialog open={showEditNodeDialog} onOpenChange={setShowEditNodeDialog}>
-        <DialogContent>
+        <DialogContent aria-describedby={undefined}>
           <DialogHeader>
             <DialogTitle>Edit Node</DialogTitle>
           </DialogHeader>
@@ -649,7 +650,7 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
                     });
                   }
                 }}>
-                  <DialogContent className="max-w-2xl">
+                  <DialogContent className="max-w-2xl" aria-describedby={undefined}>
                     <DialogHeader>
                       <DialogTitle>Business Context & Node Suggestions</DialogTitle>
                     </DialogHeader>
