@@ -49,9 +49,6 @@ const tenantAdminPages = [
 ];
 
 export default function Layout({ children, currentPageName }) {
-  // Debug: log what page we're on
-  console.log("Layout currentPageName:", currentPageName);
-  
   const navigate = useNavigate();
   const [checkingAccess, setCheckingAccess] = useState(true);
   const [hasAccess, setHasAccess] = useState(false);
