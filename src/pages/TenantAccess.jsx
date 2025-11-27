@@ -304,7 +304,7 @@ export default function TenantAccess() {
               <p className="text-gray-500">You can now use {tenant.name}</p>
             </div>
             <Button onClick={() => {
-              const url = createPageUrl("Home");
+              const url = createPageUrl("NavigationManager");
               window.location.href = url + (url.includes("?") ? "&" : "?") + `tenant=${tenant.slug}`;
             }}>
               Continue to App
