@@ -26,7 +26,12 @@ import MindMapToolbar from "@/components/mindmap/MindMapToolbar";
 
 export default function MindMapEditor() {
   const queryClient = useQueryClient();
-  const [selectedMindMapId, setSelectedMindMapId] = useState(null);
+  
+  // Get mindmap ID from URL params
+  const urlParams = new URLSearchParams(window.location.search);
+  const initialMapId = urlParams.get("map");
+  
+  const [selectedMindMapId, setSelectedMindMapId] = useState(initialMapId);
   const [selectedNodeId, setSelectedNodeId] = useState(null);
   const [selectedConnectionId, setSelectedConnectionId] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
@@ -94,6 +99,10 @@ export default function MindMapEditor() {
     onSuccess: (newMap) => {
       queryClient.invalidateQueries({ queryKey: ["mindmaps"] });
       setSelectedMindMapId(newMap.id);
+      // Update URL to persist selection
+      const url = new URL(window.location.href);
+      url.searchParams.set("map", newMap.id);
+      window.history.replaceState({}, "", url);
       setShowNewMapDialog(false);
       setNewMapName("");
       setNewMapDescription("");
@@ -474,7 +483,13 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
       <div className="flex items-center gap-4 p-4 bg-white border-b">
         <h1 className="text-xl font-bold">Mind Map Editor</h1>
         
-        <Select value={selectedMindMapId || ""} onValueChange={setSelectedMindMapId}>
+        <Select value={selectedMindMapId || ""} onValueChange={(id) => {
+          setSelectedMindMapId(id);
+          // Update URL to persist selection
+          const url = new URL(window.location.href);
+          url.searchParams.set("map", id);
+          window.history.replaceState({}, "", url);
+        }}>
           <SelectTrigger className="w-64">
             <SelectValue placeholder="Select a mind map..." />
           </SelectTrigger>
