@@ -34,9 +34,7 @@ const globalAdminPages = [
 ];
 
 // Tenant pages - for users with tenant access
-const tenantPages = [
-  { name: "Home", slug: "Home", icon: Home },
-];
+const tenantPages = [];
 
 // Tenant admin pages - for users with admin role in a tenant
 const tenantAdminPages = [
