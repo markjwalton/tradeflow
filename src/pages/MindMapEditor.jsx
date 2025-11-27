@@ -647,14 +647,19 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
       </Dialog>
 
       {/* Business Context Dialog */}
-                <Dialog open={showBusinessContext} onOpenChange={(open) => {
-                  setShowBusinessContext(open);
-                  if (open && selectedMindMap) {
-                    setEditingContext({
-                      description: selectedMindMap.description || "",
-                      node_suggestions: selectedMindMap.node_suggestions || ""
-                    });
+                <Dialog open={showBusinessContext} onOpenChange={async (open) => {
+                  if (open) {
+                    // Fetch fresh data when opening
+                    const freshMaps = await base44.entities.MindMap.filter({ id: selectedMindMapId });
+                    const freshMap = freshMaps[0];
+                    if (freshMap) {
+                      setEditingContext({
+                        description: freshMap.description || "",
+                        node_suggestions: freshMap.node_suggestions || ""
+                      });
+                    }
                   }
+                  setShowBusinessContext(open);
                 }}>
                   <DialogContent className="max-w-2xl" aria-describedby={undefined}>
                     <DialogHeader>
