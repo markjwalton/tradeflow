@@ -77,7 +77,7 @@ export default function Layout({ children, currentPageName }) {
   const isGlobalAdminPage = globalAdminPages.some(p => p.slug === currentPageName);
   const isTenantPage = tenantPages.some(p => p.slug === currentPageName);
 
-  // Track if we've run access check this mount
+  // Track if we've run access check - initialized from sessionStorage
   const hasCheckedRef = React.useRef(sessionStorage.getItem('layout_access_checked') === 'true');
 
   useEffect(() => {
