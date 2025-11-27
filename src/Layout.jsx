@@ -192,6 +192,7 @@ export default function Layout({ children, currentPageName }) {
           setUserRoles(userRoleList);
           setIsTenantAdmin(userRoleList.includes("admin"));
           setHasAccess(true);
+          setAccessChecked(true);
         }
       } catch (e) {
         setHasAccess(false);
