@@ -204,8 +204,8 @@ export default function Layout({ children, currentPageName }) {
     );
   }
 
-  // Redirect to TenantAccess if no access
-  if (!hasAccess) {
+  // Redirect to TenantAccess if no access (but not while still checking)
+  if (!hasAccess && !checkingAccess) {
     const accessUrl = createPageUrl("TenantAccess");
     if (tenantSlug) {
       window.location.href = accessUrl + (accessUrl.includes("?") ? "&" : "?") + `tenant=${tenantSlug}`;
