@@ -50,8 +50,13 @@ const tenantAdminPages = [
 
 export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
-  const [checkingAccess, setCheckingAccess] = useState(true);
-  const [hasAccess, setHasAccess] = useState(false);
+  const [checkingAccess, setCheckingAccess] = useState(() => {
+    // Check if we already have access from a previous render
+    return !sessionStorage.getItem('layout_access_checked');
+  });
+  const [hasAccess, setHasAccess] = useState(() => {
+    return sessionStorage.getItem('layout_access_checked') === 'true';
+  });
   const [accessDeniedReason, setAccessDeniedReason] = useState(null);
   const [currentTenant, setCurrentTenant] = useState(null);
   const [userRoles, setUserRoles] = useState([]);
@@ -78,9 +83,10 @@ export default function Layout({ children, currentPageName }) {
       return;
     }
     
-    // If we already checked access for this user, just grant access without refetching
-    if (accessCheckedRef.current && hasAccess) {
+    // If we already checked access (via ref or sessionStorage), skip
+    if (accessCheckedRef.current || sessionStorage.getItem('layout_access_checked') === 'true') {
       setCheckingAccess(false);
+      setHasAccess(true);
       return;
     }
     
@@ -102,6 +108,7 @@ export default function Layout({ children, currentPageName }) {
           if (user.is_global_admin === true) {
             setHasAccess(true);
             accessCheckedRef.current = true;
+            sessionStorage.setItem('layout_access_checked', 'true');
             setCheckingAccess(false);
             return;
           }
@@ -113,6 +120,7 @@ export default function Layout({ children, currentPageName }) {
             if (hasAnyAdminRole) {
               setHasAccess(true);
               accessCheckedRef.current = true;
+              sessionStorage.setItem('layout_access_checked', 'true');
               setCheckingAccess(false);
               return;
             }
@@ -133,6 +141,7 @@ export default function Layout({ children, currentPageName }) {
                 setIsTenantAdmin(true);
                 setHasAccess(true);
                 accessCheckedRef.current = true;
+                sessionStorage.setItem('layout_access_checked', 'true');
                 setCheckingAccess(false);
                 return;
               }
@@ -171,6 +180,7 @@ export default function Layout({ children, currentPageName }) {
             setIsTenantAdmin(true);
             setHasAccess(true);
             accessCheckedRef.current = true;
+            sessionStorage.setItem('layout_access_checked', 'true');
             setCheckingAccess(false);
             return;
           }
@@ -194,6 +204,7 @@ export default function Layout({ children, currentPageName }) {
           setIsTenantAdmin(userRoleList.includes("admin"));
           setHasAccess(true);
           accessCheckedRef.current = true;
+          sessionStorage.setItem('layout_access_checked', 'true');
           setCheckingAccess(false);
           return;
         }
@@ -202,6 +213,7 @@ export default function Layout({ children, currentPageName }) {
         if (user.is_global_admin === true) {
           setHasAccess(true);
           accessCheckedRef.current = true;
+          sessionStorage.setItem('layout_access_checked', 'true');
           setCheckingAccess(false);
           return;
         }
