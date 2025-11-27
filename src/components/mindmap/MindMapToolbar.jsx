@@ -8,34 +8,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { Plus, Trash2, Link, LayoutGrid, FileText, Sparkles, Lightbulb, Rocket, GitFork, Lock, History, Database, Play, Building2, Focus, X } from "lucide-react";
-
-const nodeTypes = [
-  { value: "central", label: "Central Topic" },
-  { value: "main_branch", label: "Main Branch" },
-  { value: "sub_branch", label: "Sub Branch" },
-  { value: "feature", label: "Feature" },
-  { value: "entity", label: "Entity" },
-  { value: "page", label: "Page" },
-  { value: "note", label: "Note" },
-];
-
-const colors = [
-  { value: "#3b82f6", label: "Blue" },
-  { value: "#10b981", label: "Green" },
-  { value: "#f59e0b", label: "Amber" },
-  { value: "#ef4444", label: "Red" },
-  { value: "#8b5cf6", label: "Purple" },
-  { value: "#ec4899", label: "Pink" },
-  { value: "#06b6d4", label: "Cyan" },
-  { value: "#84cc16", label: "Lime" },
-];
 
 const statusColors = {
   draft: "bg-yellow-100 text-yellow-700",
   published: "bg-green-100 text-green-700",
   archived: "bg-gray-100 text-gray-700",
 };
+
+const ToolbarGroup = ({ children, label }) => (
+  <div className="flex items-center gap-1">
+    {label && <span className="text-[10px] text-gray-400 uppercase tracking-wider mr-1 hidden lg:inline">{label}</span>}
+    {children}
+  </div>
+);
+
+const ToolbarDivider = () => (
+  <Separator orientation="vertical" className="h-6 mx-2" />
+);
 
 export default function MindMapToolbar({
   onAddNode,
@@ -48,10 +39,6 @@ export default function MindMapToolbar({
   onShowBusinessContext,
   isConnecting,
   hasSelection,
-  selectedNodeType,
-  onChangeNodeType,
-  selectedColor,
-  onChangeColor,
   isGenerating,
   isSuggesting,
   isGeneratingApp,
@@ -62,226 +49,183 @@ export default function MindMapToolbar({
   onShowERD,
   onShowWorkflows,
   onForkToTenant,
-  selectedNodeIsEntity,
-  onEditEntity,
   focusedBranchId,
   onFocusBranch,
   mainBranches = [],
 }) {
   const isPublished = currentMindMap?.status === "published";
+  
   return (
-    <div className="flex flex-wrap items-center gap-2 p-2 bg-white border-b">
-      <Button size="sm" onClick={onAddNode}>
-        <Plus className="h-4 w-4 mr-1" />
-        Add Node
-      </Button>
+    <div className="bg-white border-b">
+      {/* Main Toolbar Row */}
+      <div className="flex items-center gap-1 px-3 py-2">
+        
+        {/* Edit Group */}
+        <ToolbarGroup>
+          <Button size="sm" onClick={onAddNode} className="h-8">
+            <Plus className="h-4 w-4 mr-1" />
+            Add
+          </Button>
+          <Button
+            size="sm"
+            variant={isConnecting ? "default" : "ghost"}
+            onClick={onStartConnection}
+            className="h-8"
+          >
+            <Link className="h-4 w-4" />
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={onDeleteSelected}
+            disabled={!hasSelection}
+            className="h-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </ToolbarGroup>
 
-      <Button
-        size="sm"
-        variant={isConnecting ? "default" : "outline"}
-        onClick={onStartConnection}
-      >
-        <Link className="h-4 w-4 mr-1" />
-        {isConnecting ? "Click Target" : "Connect"}
-      </Button>
+        <ToolbarDivider />
 
-      <Button
-        size="sm"
-        variant="outline"
-        onClick={onDeleteSelected}
-        disabled={!hasSelection}
-      >
-        <Trash2 className="h-4 w-4 mr-1" />
-        Delete
-      </Button>
+        {/* View Group */}
+        <ToolbarGroup>
+          <Button size="sm" variant="ghost" onClick={onAutoLayout} className="h-8">
+            <LayoutGrid className="h-4 w-4 mr-1" />
+            Layout
+          </Button>
+          {focusedBranchId ? (
+            <Button
+              size="sm"
+              onClick={() => onFocusBranch(null)}
+              className="h-8 bg-amber-500 hover:bg-amber-600 text-white"
+            >
+              <X className="h-4 w-4 mr-1" />
+              Exit Focus
+            </Button>
+          ) : mainBranches.length > 0 && (
+            <Select value="" onValueChange={(id) => onFocusBranch(id)}>
+              <SelectTrigger className="h-8 w-32 border-dashed">
+                <Focus className="h-4 w-4 mr-1" />
+                <span className="text-xs">Focus</span>
+              </SelectTrigger>
+              <SelectContent>
+                {mainBranches.map((branch) => (
+                  <SelectItem key={branch.id} value={branch.id}>
+                    {branch.text}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        </ToolbarGroup>
 
-      <Button
-        size="sm"
-        variant="outline"
-        onClick={onAutoLayout}
-      >
-        <LayoutGrid className="h-4 w-4 mr-1" />
-        Auto Layout
-      </Button>
+        <ToolbarDivider />
 
-      {/* Focus Mode */}
-      {focusedBranchId ? (
+        {/* AI Group */}
+        <ToolbarGroup>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={onAIGenerate}
+            disabled={!hasSelection || isGenerating || isSuggesting}
+            className="h-8"
+          >
+            <Sparkles className={`h-4 w-4 mr-1 ${isGenerating ? "animate-pulse text-purple-500" : ""}`} />
+            Expand
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={onAISuggest}
+            disabled={isGenerating || isSuggesting || isGeneratingApp}
+            className="h-8"
+          >
+            <Lightbulb className={`h-4 w-4 mr-1 ${isSuggesting ? "animate-pulse text-yellow-500" : ""}`} />
+            Suggest
+          </Button>
+        </ToolbarGroup>
+
+        <ToolbarDivider />
+
+        {/* Diagrams Group */}
+        <ToolbarGroup>
+          <Button size="sm" variant="ghost" onClick={onShowERD} className="h-8">
+            <Database className="h-4 w-4 mr-1" />
+            ERD
+          </Button>
+          <Button size="sm" variant="ghost" onClick={onShowWorkflows} className="h-8">
+            <Play className="h-4 w-4 mr-1" />
+            Flows
+          </Button>
+        </ToolbarGroup>
+
+        <ToolbarDivider />
+
+        {/* Generate App - Primary Action */}
         <Button
           size="sm"
-          variant="default"
-          onClick={() => onFocusBranch(null)}
-          className="bg-amber-500 hover:bg-amber-600"
-        >
-          <X className="h-4 w-4 mr-1" />
-          Exit Focus
-        </Button>
-      ) : mainBranches.length > 0 && (
-        <Select value="" onValueChange={(id) => onFocusBranch(id)}>
-          <SelectTrigger className="w-36 h-8">
-            <div className="flex items-center gap-1">
-              <Focus className="h-4 w-4" />
-              <span>Focus Branch</span>
-            </div>
-          </SelectTrigger>
-          <SelectContent>
-            {mainBranches.map((branch) => (
-              <SelectItem key={branch.id} value={branch.id}>
-                {branch.text}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      )}
-
-      <Button
-        size="sm"
-        variant="outline"
-        onClick={onAIGenerate}
-        disabled={!hasSelection || isGenerating || isSuggesting}
-      >
-        <Sparkles className={`h-4 w-4 mr-1 ${isGenerating ? "animate-pulse" : ""}`} />
-        {isGenerating ? "Generating..." : "AI Expand"}
-      </Button>
-
-      {selectedNodeIsEntity && (
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={onEditEntity}
-          className="text-purple-600 border-purple-200 hover:bg-purple-50"
-        >
-          <Database className="h-4 w-4 mr-1" />
-          Edit Entity
-        </Button>
-      )}
-
-      <Button
-        size="sm"
-        variant="outline"
-        onClick={onShowERD}
-      >
-        <Database className="h-4 w-4 mr-1" />
-        ERD
-      </Button>
-
-      <Button
-        size="sm"
-        variant="outline"
-        onClick={onShowWorkflows}
-      >
-        <Play className="h-4 w-4 mr-1" />
-        Workflows
-      </Button>
-
-      <Button
-        size="sm"
-        variant="outline"
-        onClick={onAISuggest}
-        disabled={isGenerating || isSuggesting || isGeneratingApp}
-      >
-        <Lightbulb className={`h-4 w-4 mr-1 ${isSuggesting ? "animate-pulse" : ""}`} />
-        {isSuggesting ? "Suggesting..." : "AI Suggest"}
-      </Button>
-
-      <Button
-        size="sm"
-        variant="default"
-        onClick={onGenerateApp}
-        disabled={isGenerating || isSuggesting || isGeneratingApp}
-        className="bg-green-600 hover:bg-green-700"
-      >
-        <Rocket className={`h-4 w-4 mr-1 ${isGeneratingApp ? "animate-pulse" : ""}`} />
-        {isGeneratingApp ? "Generating..." : "Generate App"}
-      </Button>
-
-      <div className="w-px h-6 bg-gray-200 mx-2" />
-
-      <Select value={selectedNodeType || ""} onValueChange={onChangeNodeType} disabled={!hasSelection}>
-        <SelectTrigger className="w-36 h-8">
-          <SelectValue placeholder="Node Type" />
-        </SelectTrigger>
-        <SelectContent>
-          {nodeTypes.map((type) => (
-            <SelectItem key={type.value} value={type.value}>
-              {type.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-
-      <Select value={selectedColor || ""} onValueChange={onChangeColor} disabled={!hasSelection}>
-        <SelectTrigger className="w-28 h-8">
-          <SelectValue placeholder="Color" />
-        </SelectTrigger>
-        <SelectContent>
-          {colors.map((color) => (
-            <SelectItem key={color.value} value={color.value}>
-              <div className="flex items-center gap-2">
-                <div
-                  className="w-3 h-3 rounded-full"
-                  style={{ backgroundColor: color.value }}
-                />
-                {color.label}
-              </div>
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-
-      <div className="flex-1" />
-
-      {/* Version info and controls */}
-      {currentMindMap && (
-        <div className="flex items-center gap-2 mr-2">
-          <Badge className={statusColors[currentMindMap.status || "draft"]}>
-            v{currentMindMap.version || 1} - {currentMindMap.status || "draft"}
-          </Badge>
-        </div>
-      )}
-
-      <Button size="sm" variant="outline" onClick={onShowHistory}>
-        <History className="h-4 w-4 mr-1" />
-        History
-      </Button>
-
-      <Button 
-        size="sm" 
-        variant="outline" 
-        onClick={onForkVersion}
-        disabled={isGenerating || isSuggesting || isGeneratingApp}
-      >
-        <GitFork className="h-4 w-4 mr-1" />
-        Fork
-      </Button>
-
-      <Button 
-        size="sm" 
-        variant="outline"
-        onClick={onForkToTenant}
-        disabled={isGenerating || isSuggesting || isGeneratingApp}
-        className="text-indigo-600 border-indigo-200 hover:bg-indigo-50"
-      >
-        <Building2 className="h-4 w-4 mr-1" />
-        Fork to Tenant
-      </Button>
-
-      {!isPublished && (
-        <Button 
-          size="sm" 
-          variant="outline"
-          onClick={onPublishVersion}
+          onClick={onGenerateApp}
           disabled={isGenerating || isSuggesting || isGeneratingApp}
-          className="text-green-600 border-green-200 hover:bg-green-50"
+          className="h-8 bg-green-600 hover:bg-green-700"
         >
-          <Lock className="h-4 w-4 mr-1" />
-          Publish
+          <Rocket className={`h-4 w-4 mr-1 ${isGeneratingApp ? "animate-pulse" : ""}`} />
+          Generate App
         </Button>
-      )}
 
-      <Button size="sm" variant="outline" onClick={onShowBusinessContext} disabled={isPublished}>
-        <FileText className="h-4 w-4 mr-1" />
-        Business Context
-      </Button>
+        <div className="flex-1" />
+
+        {/* Version Status */}
+        {currentMindMap && (
+          <Badge className={`${statusColors[currentMindMap.status || "draft"]} mr-2`}>
+            v{currentMindMap.version || 1}
+          </Badge>
+        )}
+
+        {/* Version Controls */}
+        <ToolbarGroup>
+          <Button size="sm" variant="ghost" onClick={onShowHistory} className="h-8">
+            <History className="h-4 w-4" />
+          </Button>
+          <Button 
+            size="sm" 
+            variant="ghost"
+            onClick={onForkVersion}
+            disabled={isGenerating || isSuggesting || isGeneratingApp}
+            className="h-8"
+          >
+            <GitFork className="h-4 w-4" />
+          </Button>
+          <Button 
+            size="sm" 
+            variant="ghost"
+            onClick={onForkToTenant}
+            disabled={isGenerating || isSuggesting || isGeneratingApp}
+            className="h-8 text-indigo-600 hover:bg-indigo-50"
+          >
+            <Building2 className="h-4 w-4" />
+          </Button>
+          {!isPublished && (
+            <Button 
+              size="sm" 
+              variant="ghost"
+              onClick={onPublishVersion}
+              disabled={isGenerating || isSuggesting || isGeneratingApp}
+              className="h-8 text-green-600 hover:bg-green-50"
+            >
+              <Lock className="h-4 w-4" />
+            </Button>
+          )}
+          <Button 
+            size="sm" 
+            variant="ghost" 
+            onClick={onShowBusinessContext} 
+            disabled={isPublished}
+            className="h-8"
+          >
+            <FileText className="h-4 w-4" />
+          </Button>
+        </ToolbarGroup>
       </div>
+    </div>
   );
 }
