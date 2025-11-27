@@ -142,7 +142,11 @@ export default function TenantAccess() {
                   ? `Signed in as ${user.email}` 
                   : "Already have an account? Sign in to access your organization."}
               </p>
-              {!user && (
+              {user ? (
+                <Button variant="outline" className="w-full" onClick={() => base44.auth.logout()}>
+                  Sign Out / Use Different Account
+                </Button>
+              ) : (
                 <Button className="w-full" onClick={() => base44.auth.redirectToLogin()}>
                   Sign In to My Account
                 </Button>
