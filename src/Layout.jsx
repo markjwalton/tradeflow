@@ -88,8 +88,8 @@ export default function Layout({ children, currentPageName }) {
       return;
     }
     
-    // If we already checked access, skip entirely - don't make any API calls
-    if (hasCheckedRef.current) {
+    // If we already checked access and have valid cached user, skip
+    if (hasCheckedRef.current && currentUser?.email) {
       return;
     }
     
