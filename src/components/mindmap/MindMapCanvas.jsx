@@ -16,16 +16,21 @@ export default function MindMapCanvas({
   const canvasRef = useRef(null);
   const [dragging, setDragging] = useState(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [dragPosition, setDragPosition] = useState({ x: 0, y: 0 });
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isPanning, setIsPanning] = useState(false);
   const [panStart, setPanStart] = useState({ x: 0, y: 0 });
 
   const handleDragStart = (e, node) => {
+    e.preventDefault();
     const rect = canvasRef.current.getBoundingClientRect();
+    const nodeX = node.position_x || 0;
+    const nodeY = node.position_y || 0;
     setDragging(node.id);
+    setDragPosition({ x: nodeX, y: nodeY });
     setOffset({
-      x: e.clientX - rect.left - pan.x - (node.position_x || 0),
-      y: e.clientY - rect.top - pan.y - (node.position_y || 0),
+      x: e.clientX - rect.left - pan.x - nodeX,
+      y: e.clientY - rect.top - pan.y - nodeY,
     });
   };
 
@@ -42,10 +47,13 @@ export default function MindMapCanvas({
     const rect = canvasRef.current.getBoundingClientRect();
     const newX = e.clientX - rect.left - pan.x - offset.x;
     const newY = e.clientY - rect.top - pan.y - offset.y;
-    onUpdateNodePosition(dragging, newX, newY);
+    setDragPosition({ x: newX, y: newY });
   };
 
   const handleMouseUp = () => {
+    if (dragging && dragPosition) {
+      onUpdateNodePosition(dragging, dragPosition.x, dragPosition.y);
+    }
     setDragging(null);
     setIsPanning(false);
   };
@@ -101,17 +109,22 @@ export default function MindMapCanvas({
         className="absolute inset-0"
         style={{ transform: `translate(${pan.x}px, ${pan.y}px)` }}
       >
-        {nodes.map((node) => (
-          <MindMapNodeComponent
-            key={node.id}
-            node={node}
-            isSelected={selectedNodeId === node.id}
-            onSelect={onSelectNode}
-            onDragStart={handleDragStart}
-            onDragEnd={handleMouseUp}
-            onDoubleClick={onDoubleClickNode}
-          />
-        ))}
+        {nodes.map((node) => {
+          const displayNode = dragging === node.id 
+            ? { ...node, position_x: dragPosition.x, position_y: dragPosition.y }
+            : node;
+          return (
+            <MindMapNodeComponent
+              key={node.id}
+              node={displayNode}
+              isSelected={selectedNodeId === node.id}
+              onSelect={onSelectNode}
+              onDragStart={handleDragStart}
+              onDragEnd={handleMouseUp}
+              onDoubleClick={onDoubleClickNode}
+            />
+          );
+        })}
       </div>
     </div>
   );
