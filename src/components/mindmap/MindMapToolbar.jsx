@@ -48,7 +48,7 @@ export default function MindMapToolbar({
   isSuggesting,
 }) {
   return (
-    <div className="flex items-center gap-2 p-2 bg-white border-b">
+    <div className="flex flex-wrap items-center gap-2 p-2 bg-white border-b">
       <Button size="sm" onClick={onAddNode}>
         <Plus className="h-4 w-4 mr-1" />
         Add Node
