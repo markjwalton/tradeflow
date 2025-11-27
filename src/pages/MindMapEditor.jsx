@@ -189,6 +189,75 @@ export default function MindMapEditor() {
     }
   };
 
+  const handleAutoLayout = async () => {
+    if (nodes.length === 0) return;
+
+    // Find central node or use first node as center
+    const centralNode = nodes.find(n => n.node_type === "central") || nodes[0];
+    const otherNodes = nodes.filter(n => n.id !== centralNode.id);
+
+    // Center position
+    const centerX = 500;
+    const centerY = 350;
+
+    // Update central node to center
+    await updateNodeMutation.mutateAsync({ 
+      id: centralNode.id, 
+      data: { position_x: centerX, position_y: centerY } 
+    });
+
+    // Find main branches (nodes connected directly to central)
+    const mainBranchIds = connections
+      .filter(c => c.source_node_id === centralNode.id)
+      .map(c => c.target_node_id);
+    
+    const mainBranches = otherNodes.filter(n => mainBranchIds.includes(n.id));
+    const remainingNodes = otherNodes.filter(n => !mainBranchIds.includes(n.id));
+
+    // Arrange main branches in a circle around center
+    const radius = 200;
+    const mainPromises = mainBranches.map((node, i) => {
+      const angle = (2 * Math.PI * i) / mainBranches.length - Math.PI / 2;
+      const x = centerX + radius * Math.cos(angle);
+      const y = centerY + radius * Math.sin(angle);
+      return updateNodeMutation.mutateAsync({ id: node.id, data: { position_x: x, position_y: y } });
+    });
+
+    await Promise.all(mainPromises);
+
+    // Arrange sub-branches around their parent
+    const subRadius = 120;
+    for (const mainBranch of mainBranches) {
+      const childIds = connections
+        .filter(c => c.source_node_id === mainBranch.id)
+        .map(c => c.target_node_id);
+      
+      const children = remainingNodes.filter(n => childIds.includes(n.id));
+      const mainIdx = mainBranches.indexOf(mainBranch);
+      const mainAngle = (2 * Math.PI * mainIdx) / mainBranches.length - Math.PI / 2;
+      
+      const childPromises = children.map((child, i) => {
+        const spreadAngle = Math.PI / 3; // 60 degree spread
+        const startAngle = mainAngle - spreadAngle / 2;
+        const childAngle = children.length > 1 
+          ? startAngle + (spreadAngle * i) / (children.length - 1)
+          : mainAngle;
+        
+        const parentX = centerX + radius * Math.cos(mainAngle);
+        const parentY = centerY + radius * Math.sin(mainAngle);
+        const x = parentX + subRadius * Math.cos(childAngle);
+        const y = parentY + subRadius * Math.sin(childAngle);
+        
+        return updateNodeMutation.mutateAsync({ id: child.id, data: { position_x: x, position_y: y } });
+      });
+      
+      await Promise.all(childPromises);
+    }
+
+    queryClient.invalidateQueries({ queryKey: ["mindmapNodes", selectedMindMapId] });
+    toast.success("Layout applied");
+  };
+
   return (
     <div className="h-screen flex flex-col">
       {/* Header */}
@@ -220,6 +289,7 @@ export default function MindMapEditor() {
           onAddNode={handleAddNode}
           onDeleteSelected={handleDeleteSelected}
           onStartConnection={handleStartConnection}
+          onAutoLayout={handleAutoLayout}
           onShowBusinessContext={() => setShowBusinessContext(true)}
           isConnecting={isConnecting}
           hasSelection={!!selectedNodeId || !!selectedConnectionId}

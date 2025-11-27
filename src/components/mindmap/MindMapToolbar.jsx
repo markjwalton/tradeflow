@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Trash2, Link, Unlink, ZoomIn, ZoomOut, FileText } from "lucide-react";
+import { Plus, Trash2, Link, LayoutGrid, FileText } from "lucide-react";
 
 const nodeTypes = [
   { value: "central", label: "Central Topic" },
@@ -34,6 +34,7 @@ export default function MindMapToolbar({
   onAddNode,
   onDeleteSelected,
   onStartConnection,
+  onAutoLayout,
   onShowBusinessContext,
   isConnecting,
   hasSelection,
@@ -66,6 +67,15 @@ export default function MindMapToolbar({
       >
         <Trash2 className="h-4 w-4 mr-1" />
         Delete
+      </Button>
+
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={onAutoLayout}
+      >
+        <LayoutGrid className="h-4 w-4 mr-1" />
+        Auto Layout
       </Button>
 
       <div className="w-px h-6 bg-gray-200 mx-2" />
