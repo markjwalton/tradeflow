@@ -41,7 +41,14 @@ const globalAdminPages = [
 const standalonePages = ["MindMapEditor", "PackageLibrary", "TenantManager"];
 
 // Tenant pages - for users with tenant access
-const tenantPages = [];
+const tenantPages = [
+  { name: "Projects", slug: "Projects", icon: Building2 },
+  { name: "Tasks", slug: "Tasks", icon: GitBranch },
+  { name: "Customers", slug: "Customers", icon: User },
+  { name: "Team", slug: "Team", icon: Shield },
+  { name: "Estimates", slug: "Estimates", icon: Package },
+  { name: "Calendar", slug: "Calendar", icon: Navigation },
+];
 
 // Tenant admin pages - for users with admin role in a tenant
 const tenantAdminPages = [
