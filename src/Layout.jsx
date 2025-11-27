@@ -12,7 +12,8 @@ import {
   LogOut,
   User,
   Shield,
-  Package
+  Package,
+  GitBranch
 } from "lucide-react";
 
 // Tenant Context
@@ -30,6 +31,7 @@ import {
 
 // Global admin pages - only for is_global_admin users
 const globalAdminPages = [
+  { name: "Mind Map Editor", slug: "MindMapEditor", icon: GitBranch },
   { name: "Architecture Packages", slug: "ArchitecturePackages", icon: Package },
   { name: "Tenant Manager", slug: "TenantManager", icon: Building2 },
   { name: "Navigation Manager", slug: "NavigationManager", icon: Navigation },
