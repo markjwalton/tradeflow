@@ -532,7 +532,18 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
           onAutoLayout={handleAutoLayout}
           onAIGenerate={handleAIGenerate}
           onAISuggest={handleAISuggest}
-          onShowBusinessContext={() => setShowBusinessContext(true)}
+          onShowBusinessContext={async () => {
+                // Fetch fresh data when opening
+                const freshMaps = await base44.entities.MindMap.filter({ id: selectedMindMapId });
+                const freshMap = freshMaps[0];
+                if (freshMap) {
+                  setEditingContext({
+                    description: freshMap.description || "",
+                    node_suggestions: freshMap.node_suggestions || ""
+                  });
+                }
+                setShowBusinessContext(true);
+              }}
           isConnecting={isConnecting}
           hasSelection={!!selectedNodeId || !!selectedConnectionId}
           selectedNodeType={selectedNode?.node_type}
@@ -647,20 +658,7 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
       </Dialog>
 
       {/* Business Context Dialog */}
-                <Dialog open={showBusinessContext} onOpenChange={async (open) => {
-                  if (open) {
-                    // Fetch fresh data when opening
-                    const freshMaps = await base44.entities.MindMap.filter({ id: selectedMindMapId });
-                    const freshMap = freshMaps[0];
-                    if (freshMap) {
-                      setEditingContext({
-                        description: freshMap.description || "",
-                        node_suggestions: freshMap.node_suggestions || ""
-                      });
-                    }
-                  }
-                  setShowBusinessContext(open);
-                }}>
+                <Dialog open={showBusinessContext} onOpenChange={setShowBusinessContext}>
                   <DialogContent className="max-w-2xl" aria-describedby={undefined}>
                     <DialogHeader>
                       <DialogTitle>Business Context & Node Suggestions</DialogTitle>
