@@ -24,22 +24,31 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const pages = [
-  { name: "Home", slug: "Home", icon: Home },
+// Admin pages - no tenant context required
+const adminPages = [
   { name: "Navigation Manager", slug: "NavigationManager", icon: Navigation },
   { name: "Tenant Manager", slug: "TenantManager", icon: Building2 },
 ];
 
+// Tenant pages - require tenant context
+const tenantPages = [
+  { name: "Home", slug: "Home", icon: Home },
+];
+
 export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
-  const [checkingAccess, setCheckingAccess] = useState(currentPageName !== "TenantAccess");
-  const [hasAccess, setHasAccess] = useState(currentPageName === "TenantAccess");
+  const [checkingAccess, setCheckingAccess] = useState(true);
+  const [hasAccess, setHasAccess] = useState(false);
   const [currentTenant, setCurrentTenant] = useState(null);
   const [userRoles, setUserRoles] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   
   const urlParams = new URLSearchParams(window.location.search);
   const tenantSlug = urlParams.get("tenant");
+  
+  // Determine if this is an admin page or tenant page
+  const isAdminPage = adminPages.some(p => p.slug === currentPageName);
+  const isTenantPage = tenantPages.some(p => p.slug === currentPageName);
 
   useEffect(() => {
     // Skip access check for TenantAccess page
@@ -49,7 +58,7 @@ export default function Layout({ children, currentPageName }) {
       return;
     }
     
-    const checkTenantAccess = async () => {
+    const checkAccess = async () => {
       try {
         const user = await base44.auth.me();
         if (!user) {
@@ -59,8 +68,23 @@ export default function Layout({ children, currentPageName }) {
         }
         setCurrentUser(user);
         
-        // If tenant slug provided, verify access to that tenant
-        if (tenantSlug) {
+        // Admin pages: just need to be logged in with any tenant access
+        if (isAdminPage) {
+          const userRolesAny = await base44.entities.TenantUserRole.filter({ user_id: user.id });
+          setHasAccess(userRolesAny.length > 0);
+          setCheckingAccess(false);
+          return;
+        }
+        
+        // Tenant pages: need tenant slug and access to that tenant
+        if (isTenantPage) {
+          if (!tenantSlug) {
+            // No tenant specified - redirect to TenantAccess
+            setHasAccess(false);
+            setCheckingAccess(false);
+            return;
+          }
+          
           const tenants = await base44.entities.Tenant.filter({ slug: tenantSlug });
           if (tenants.length === 0) {
             setHasAccess(false);
@@ -83,10 +107,6 @@ export default function Layout({ children, currentPageName }) {
           setCurrentTenant(tenant);
           setUserRoles(roles[0]?.roles || []);
           setHasAccess(true);
-        } else {
-          // No tenant specified - check if user has access to any tenant (for admin pages)
-          const userRolesAny = await base44.entities.TenantUserRole.filter({ user_id: user.id });
-          setHasAccess(userRolesAny.length > 0);
         }
       } catch (e) {
         setHasAccess(false);
@@ -94,8 +114,8 @@ export default function Layout({ children, currentPageName }) {
       setCheckingAccess(false);
     };
     
-    checkTenantAccess();
-  }, [tenantSlug]);
+    checkAccess();
+  }, [tenantSlug, currentPageName, isAdminPage, isTenantPage]);
 
   // TenantAccess page - no layout
   if (currentPageName === "TenantAccess") {
@@ -122,8 +142,10 @@ export default function Layout({ children, currentPageName }) {
     }
     return null;
   }
-  
-  const currentPage = pages.find(p => p.slug === currentPageName) || pages[0];
+
+  // Determine which pages to show in nav based on context
+  const displayPages = isAdminPage ? adminPages : (currentTenant ? [...tenantPages, ...adminPages] : tenantPages);
+  const currentPage = displayPages.find(p => p.slug === currentPageName) || displayPages[0];
   const CurrentIcon = currentPage?.icon || Home;
 
   const handleRefresh = () => {
@@ -148,13 +170,18 @@ export default function Layout({ children, currentPageName }) {
           <p className="text-xs text-slate-400">{currentTenant ? "Tenant Portal" : "Navigation Planner"}</p>
         </div>
         <nav className="flex-1 p-3 space-y-1">
-          {pages.map((page) => {
+          {displayPages.map((page) => {
             const Icon = page.icon;
             const isActive = currentPageName === page.slug;
+            // Admin pages don't need tenant param, tenant pages do
+            const isAdminLink = adminPages.some(p => p.slug === page.slug);
+            const pageUrl = isAdminLink 
+              ? createPageUrl(page.slug) 
+              : createPageUrl(page.slug) + (tenantSlug ? `?tenant=${tenantSlug}` : '');
             return (
               <Link
                 key={page.slug}
-                to={createPageUrl(page.slug)}
+                to={pageUrl}
                 className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
                   isActive 
                     ? "bg-slate-700 text-white" 
@@ -184,19 +211,23 @@ export default function Layout({ children, currentPageName }) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                {pages.map((page) => {
-                  const Icon = page.icon;
-                  return (
-                    <DropdownMenuItem
-                      key={page.slug}
-                      onClick={() => navigate(createPageUrl(page.slug))}
-                      className="gap-2"
-                    >
-                      <Icon className="h-4 w-4" />
-                      {page.name}
-                    </DropdownMenuItem>
-                  );
-                })}
+                {displayPages.map((page) => {
+                        const Icon = page.icon;
+                        const isAdminLink = adminPages.some(p => p.slug === page.slug);
+                        const pageUrl = isAdminLink 
+                          ? createPageUrl(page.slug) 
+                          : createPageUrl(page.slug) + (tenantSlug ? `?tenant=${tenantSlug}` : '');
+                        return (
+                          <DropdownMenuItem
+                            key={page.slug}
+                            onClick={() => navigate(pageUrl)}
+                            className="gap-2"
+                          >
+                            <Icon className="h-4 w-4" />
+                            {page.name}
+                          </DropdownMenuItem>
+                        );
+                      })}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
