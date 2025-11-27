@@ -100,6 +100,7 @@ export default function Layout({ children, currentPageName }) {
           // Global admins always have access
           if (user.is_global_admin === true) {
             setHasAccess(true);
+            setAccessChecked(true);
             setCheckingAccess(false);
             return;
           }
