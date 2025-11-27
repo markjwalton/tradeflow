@@ -669,13 +669,22 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
                       </div>
                       <Button
                         className="w-full"
+                        disabled={!selectedMindMapId}
                         onClick={async () => {
+                          if (!selectedMindMapId) {
+                            toast.error("No mindmap selected");
+                            return;
+                          }
                           try {
-                            await base44.entities.MindMap.update(selectedMindMapId, editingContext);
+                            await base44.entities.MindMap.update(selectedMindMapId, {
+                              description: editingContext.description,
+                              node_suggestions: editingContext.node_suggestions
+                            });
                             queryClient.invalidateQueries({ queryKey: ["mindmaps"] });
                             setShowBusinessContext(false);
                             toast.success("Context updated");
                           } catch (error) {
+                            console.error("Save error:", error);
                             toast.error("Failed to save: " + error.message);
                           }
                         }}
