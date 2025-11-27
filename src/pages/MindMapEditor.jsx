@@ -325,7 +325,11 @@ export default function MindMapEditor() {
     
     setIsSuggesting(true);
     try {
-      const context = selectedMindMap?.description || "";
+      // Fetch fresh mindmap data to get latest business context
+      const freshMaps = await base44.entities.MindMap.filter({ id: selectedMindMapId });
+      const freshMindMap = freshMaps[0];
+      
+      const context = freshMindMap?.description || "";
       const nodesSummary = nodes.map(n => ({
         id: n.id,
         text: n.text,
@@ -333,7 +337,7 @@ export default function MindMapEditor() {
         parent: connections.find(c => c.target_node_id === n.id)?.source_node_id || null
       }));
       
-      const userSuggestions = selectedMindMap?.node_suggestions || "";
+      const userSuggestions = freshMindMap?.node_suggestions || "";
       
       const prompt = `You are analyzing a mind map for business process planning.
 
