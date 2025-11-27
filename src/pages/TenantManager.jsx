@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,12 @@ export default function TenantManager() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTenant, setEditingTenant] = useState(null);
   const [expandedTenants, setExpandedTenants] = useState(new Set());
+  const [currentUser, setCurrentUser] = useState(null);
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    base44.auth.me().then(setCurrentUser).catch(() => {});
+  }, []);
 
   const toggleExpand = (tenantId) => {
     setExpandedTenants(prev => {
@@ -36,11 +41,38 @@ export default function TenantManager() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Tenant.create(data),
+    mutationFn: async (data) => {
+      // Create the tenant
+      const tenant = await base44.entities.Tenant.create(data);
+      
+      // Auto-add current user as admin of new tenant
+      if (currentUser) {
+        // Ensure "admin" role exists for this tenant (or use global)
+        const existingRoles = await base44.entities.TenantRole.filter({ tenant_id: tenant.id });
+        if (existingRoles.length === 0) {
+          // Create default admin role for tenant
+          await base44.entities.TenantRole.create({
+            tenant_id: tenant.id,
+            name: "admin",
+            description: "Full access administrator"
+          });
+        }
+        
+        // Add current user to tenant with admin role
+        await base44.entities.TenantUserRole.create({
+          tenant_id: tenant.id,
+          user_id: currentUser.id,
+          user_email: currentUser.email,
+          roles: ["admin"]
+        });
+      }
+      
+      return tenant;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tenants"] });
       setIsFormOpen(false);
-      toast.success("Tenant created");
+      toast.success("Tenant created - you've been added as admin");
     },
   });
 
