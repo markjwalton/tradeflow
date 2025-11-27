@@ -90,16 +90,45 @@ export default function NavigationManager() {
   const copyGlobalMutation = useMutation({
     mutationFn: async (tenantId) => {
       const globalItems = await base44.entities.NavigationItem.filter({ tenant_id: "__global__" }, "order");
-      const itemsToCreate = globalItems.map((item, index) => ({
-        tenant_id: tenantId,
-        name: item.name,
-        page_slug: item.page_slug,
-        icon: item.icon,
-        order: index,
-        is_visible: item.is_visible,
-        roles: item.roles || []
-      }));
-      return base44.entities.NavigationItem.bulkCreate(itemsToCreate);
+      
+      // First, create top-level items (no parent)
+      const topLevelItems = globalItems.filter(i => !i.parent_id);
+      const oldIdToNewId = {};
+      
+      // Create top-level items first
+      for (const item of topLevelItems) {
+        const created = await base44.entities.NavigationItem.create({
+          tenant_id: tenantId,
+          name: item.name,
+          item_type: item.item_type || "page",
+          page_url: item.page_url || item.page_slug || "",
+          icon: item.icon,
+          order: item.order,
+          is_visible: item.is_visible,
+          roles: item.roles || []
+        });
+        oldIdToNewId[item.id] = created.id;
+      }
+      
+      // Now create children with correct parent_id mapping
+      const childItems = globalItems.filter(i => i.parent_id);
+      for (const item of childItems) {
+        const newParentId = oldIdToNewId[item.parent_id];
+        const created = await base44.entities.NavigationItem.create({
+          tenant_id: tenantId,
+          name: item.name,
+          item_type: item.item_type || "page",
+          page_url: item.page_url || item.page_slug || "",
+          icon: item.icon,
+          order: item.order,
+          is_visible: item.is_visible,
+          parent_id: newParentId,
+          roles: item.roles || []
+        });
+        oldIdToNewId[item.id] = created.id;
+      }
+      
+      return true;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["navigationItems", selectedTenantId] });
