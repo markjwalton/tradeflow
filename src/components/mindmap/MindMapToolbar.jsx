@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Trash2, Link, LayoutGrid, FileText } from "lucide-react";
+import { Plus, Trash2, Link, LayoutGrid, FileText, Sparkles } from "lucide-react";
 
 const nodeTypes = [
   { value: "central", label: "Central Topic" },
@@ -35,6 +35,7 @@ export default function MindMapToolbar({
   onDeleteSelected,
   onStartConnection,
   onAutoLayout,
+  onAIGenerate,
   onShowBusinessContext,
   isConnecting,
   hasSelection,
@@ -42,6 +43,7 @@ export default function MindMapToolbar({
   onChangeNodeType,
   selectedColor,
   onChangeColor,
+  isGenerating,
 }) {
   return (
     <div className="flex items-center gap-2 p-2 bg-white border-b">
@@ -76,6 +78,16 @@ export default function MindMapToolbar({
       >
         <LayoutGrid className="h-4 w-4 mr-1" />
         Auto Layout
+      </Button>
+
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={onAIGenerate}
+        disabled={!hasSelection || isGenerating}
+      >
+        <Sparkles className={`h-4 w-4 mr-1 ${isGenerating ? "animate-pulse" : ""}`} />
+        {isGenerating ? "Generating..." : "AI Expand"}
       </Button>
 
       <div className="w-px h-6 bg-gray-200 mx-2" />

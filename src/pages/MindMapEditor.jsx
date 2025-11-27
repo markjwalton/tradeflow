@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Save, Loader2 } from "lucide-react";
+import { Plus, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import MindMapCanvas from "@/components/mindmap/MindMapCanvas";
@@ -37,6 +37,7 @@ export default function MindMapEditor() {
   const [editingNode, setEditingNode] = useState(null);
   const [newMapName, setNewMapName] = useState("");
   const [newMapDescription, setNewMapDescription] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
 
   // Fetch mindmaps
   const { data: mindMaps = [], isLoading: loadingMaps } = useQuery({
@@ -258,6 +259,75 @@ export default function MindMapEditor() {
     toast.success("Layout applied");
   };
 
+  const handleAIGenerate = async () => {
+    if (!selectedNodeId || !selectedNode) return;
+    
+    setIsGenerating(true);
+    try {
+      const context = selectedMindMap?.description || "";
+      const prompt = `You are helping to expand a mind map for business process planning.
+      
+Business Context: ${context}
+
+The user has selected a node labeled "${selectedNode.text}" (type: ${selectedNode.node_type}).
+
+Generate 3-5 relevant child nodes/sub-topics that would logically branch from this node. These should be specific, actionable items or sub-categories relevant to the business context.
+
+Return ONLY a JSON array of strings, each being a short label (2-4 words max) for a child node.`;
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            nodes: {
+              type: "array",
+              items: { type: "string" }
+            }
+          }
+        }
+      });
+
+      const newNodes = result.nodes || [];
+      const parentX = selectedNode.position_x || 400;
+      const parentY = selectedNode.position_y || 300;
+      
+      // Create nodes in a fan pattern
+      for (let i = 0; i < newNodes.length; i++) {
+        const angle = (Math.PI / 4) + (Math.PI / 2 * i) / (newNodes.length - 1 || 1);
+        const radius = 150;
+        const x = parentX + radius * Math.cos(angle);
+        const y = parentY + radius * Math.sin(angle);
+        
+        const newNode = await base44.entities.MindMapNode.create({
+          mind_map_id: selectedMindMapId,
+          text: newNodes[i],
+          node_type: "sub_branch",
+          position_x: x,
+          position_y: y,
+          color: selectedNode.color || "#3b82f6",
+          parent_node_id: selectedNodeId,
+        });
+        
+        // Create connection from parent to new node
+        await base44.entities.MindMapConnection.create({
+          mind_map_id: selectedMindMapId,
+          source_node_id: selectedNodeId,
+          target_node_id: newNode.id,
+          style: "solid",
+        });
+      }
+      
+      queryClient.invalidateQueries({ queryKey: ["mindmapNodes", selectedMindMapId] });
+      queryClient.invalidateQueries({ queryKey: ["mindmapConnections", selectedMindMapId] });
+      toast.success(`Generated ${newNodes.length} child nodes`);
+    } catch (error) {
+      toast.error("Failed to generate nodes");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
     <div className="h-screen flex flex-col">
       {/* Header */}
@@ -290,6 +360,7 @@ export default function MindMapEditor() {
           onDeleteSelected={handleDeleteSelected}
           onStartConnection={handleStartConnection}
           onAutoLayout={handleAutoLayout}
+          onAIGenerate={handleAIGenerate}
           onShowBusinessContext={() => setShowBusinessContext(true)}
           isConnecting={isConnecting}
           hasSelection={!!selectedNodeId || !!selectedConnectionId}
@@ -297,6 +368,7 @@ export default function MindMapEditor() {
           onChangeNodeType={handleChangeNodeType}
           selectedColor={selectedNode?.color}
           onChangeColor={handleChangeColor}
+          isGenerating={isGenerating}
         />
       )}
 
