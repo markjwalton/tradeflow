@@ -1,4 +1,5 @@
 import React from "react";
+import { ChevronRight, ChevronDown } from "lucide-react";
 
 const nodeTypeStyles = {
   central: "bg-blue-600 text-white font-bold px-6 py-3 rounded-lg shadow-lg border-2 border-blue-700",
@@ -16,7 +17,9 @@ export default function MindMapNodeComponent({
   onSelect, 
   onDragStart,
   onDragEnd,
-  onDoubleClick 
+  onDoubleClick,
+  hasChildren,
+  onToggleCollapse,
 }) {
   const baseStyle = nodeTypeStyles[node.node_type] || nodeTypeStyles.sub_branch;
   const borderColor = node.color || "#3b82f6";
@@ -46,7 +49,27 @@ export default function MindMapNodeComponent({
         }
       }}
     >
-      {node.text}
+      <div className="flex items-center gap-1">
+        {hasChildren && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleCollapse(node.id);
+            }}
+            className="p-0.5 -ml-1 hover:bg-black/10 rounded"
+          >
+            {node.is_collapsed ? (
+              <ChevronRight className="h-3 w-3" />
+            ) : (
+              <ChevronDown className="h-3 w-3" />
+            )}
+          </button>
+        )}
+        <span>{node.text}</span>
+        {node.is_collapsed && hasChildren && (
+          <span className="ml-1 text-xs opacity-60">...</span>
+        )}
+      </div>
     </div>
   );
 }

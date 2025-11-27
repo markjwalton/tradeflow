@@ -62,6 +62,29 @@ export default function MindMapEditor() {
   const selectedMindMap = mindMaps.find((m) => m.id === selectedMindMapId);
   const selectedNode = nodes.find((n) => n.id === selectedNodeId);
 
+  // Get all descendant node IDs of collapsed nodes
+  const getDescendantIds = (nodeId, conns, visited = new Set()) => {
+    if (visited.has(nodeId)) return [];
+    visited.add(nodeId);
+    const childIds = conns.filter(c => c.source_node_id === nodeId).map(c => c.target_node_id);
+    let descendants = [...childIds];
+    childIds.forEach(childId => {
+      descendants = [...descendants, ...getDescendantIds(childId, conns, visited)];
+    });
+    return descendants;
+  };
+
+  const collapsedNodeIds = nodes.filter(n => n.is_collapsed).map(n => n.id);
+  const hiddenNodeIds = new Set();
+  collapsedNodeIds.forEach(nodeId => {
+    getDescendantIds(nodeId, connections).forEach(id => hiddenNodeIds.add(id));
+  });
+
+  const visibleNodes = nodes.filter(n => !hiddenNodeIds.has(n.id));
+  const visibleConnections = connections.filter(c => 
+    !hiddenNodeIds.has(c.source_node_id) && !hiddenNodeIds.has(c.target_node_id)
+  );
+
   // Mutations
   const createMapMutation = useMutation({
     mutationFn: (data) => base44.entities.MindMap.create(data),
@@ -187,6 +210,13 @@ export default function MindMapEditor() {
   const handleChangeColor = (color) => {
     if (selectedNodeId) {
       updateNodeMutation.mutate({ id: selectedNodeId, data: { color } });
+    }
+  };
+
+  const handleToggleCollapse = (nodeId) => {
+    const node = nodes.find(n => n.id === nodeId);
+    if (node) {
+      updateNodeMutation.mutate({ id: nodeId, data: { is_collapsed: !node.is_collapsed } });
     }
   };
 
@@ -384,14 +414,15 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
           </div>
         ) : (
           <MindMapCanvas
-            nodes={nodes}
-            connections={connections}
+            nodes={visibleNodes}
+            connections={visibleConnections}
             selectedNodeId={selectedNodeId}
             selectedConnectionId={selectedConnectionId}
             onSelectNode={handleSelectNode}
             onSelectConnection={setSelectedConnectionId}
             onUpdateNodePosition={handleUpdateNodePosition}
             onDoubleClickNode={handleDoubleClickNode}
+            onToggleCollapse={handleToggleCollapse}
             onCanvasClick={() => {
               setSelectedNodeId(null);
               setSelectedConnectionId(null);

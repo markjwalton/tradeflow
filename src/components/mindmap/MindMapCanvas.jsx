@@ -12,6 +12,8 @@ export default function MindMapCanvas({
   onUpdateNodePosition,
   onDoubleClickNode,
   onCanvasClick,
+  onToggleCollapse,
+  collapsedNodeIds = [],
 }) {
   const canvasRef = useRef(null);
   const [dragging, setDragging] = useState(null);
@@ -121,6 +123,10 @@ export default function MindMapCanvas({
           const displayNode = dragging === node.id 
             ? { ...node, position_x: dragPosition.x, position_y: dragPosition.y }
             : node;
+          
+          // Check if this node has children
+          const hasChildren = connections.some(c => c.source_node_id === node.id);
+          
           return (
             <MindMapNodeComponent
               key={node.id}
@@ -130,6 +136,8 @@ export default function MindMapCanvas({
               onDragStart={handleDragStart}
               onDragEnd={handleMouseUp}
               onDoubleClick={onDoubleClickNode}
+              hasChildren={hasChildren}
+              onToggleCollapse={onToggleCollapse}
             />
           );
         })}
