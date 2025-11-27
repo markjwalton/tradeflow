@@ -232,7 +232,7 @@ export default function Layout({ children, currentPageName }) {
     };
     
     checkAccess();
-  }, [currentPageName]);
+  }, []); // Empty deps - only run once on mount
 
   // Pages without layout wrapper
   if (currentPageName === "TenantAccess" || currentPageName === "Setup") {
