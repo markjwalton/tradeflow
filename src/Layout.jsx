@@ -113,7 +113,13 @@ export default function Layout({ children, currentPageName }) {
 
   // Redirect to TenantAccess if no access
   if (!hasAccess) {
-    window.location.href = createPageUrl("TenantAccess");
+    const accessUrl = createPageUrl("TenantAccess");
+    // Preserve tenant slug if present
+    if (tenantSlug) {
+      window.location.href = accessUrl + (accessUrl.includes("?") ? "&" : "?") + `tenant=${tenantSlug}`;
+    } else {
+      window.location.href = accessUrl;
+    }
     return null;
   }
   

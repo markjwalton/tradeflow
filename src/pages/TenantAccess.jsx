@@ -133,7 +133,7 @@ export default function TenantAccess() {
   if (user && !tenantSlug && !selectedTenant && userTenantAccess.length > 0) {
     const firstTenant = userTenantAccess[0].tenant;
     if (firstTenant?.slug) {
-      window.location.href = createPageUrl("Home") + `?tenant=${firstTenant.slug}`;
+      window.location.href = createPageUrl("Home") + (createPageUrl("Home").includes("?") ? "&" : "?") + `tenant=${firstTenant.slug}`;
       return null;
     }
   }
@@ -292,7 +292,10 @@ export default function TenantAccess() {
               <h2 className="text-xl font-semibold">You have access!</h2>
               <p className="text-gray-500">You can now use {tenant.name}</p>
             </div>
-            <Button onClick={() => window.location.href = createPageUrl("Home") + `?tenant=${tenant.slug}`}>
+            <Button onClick={() => {
+              const url = createPageUrl("Home");
+              window.location.href = url + (url.includes("?") ? "&" : "?") + `tenant=${tenant.slug}`;
+            }}>
               Continue to App
             </Button>
           </CardContent>
