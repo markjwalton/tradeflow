@@ -5,6 +5,13 @@ import TenantAccess from './pages/TenantAccess';
 import Setup from './pages/Setup';
 import MindMapEditor from './pages/MindMapEditor';
 import PackageLibrary from './pages/PackageLibrary';
+import Projects from './pages/Projects';
+import Tasks from './pages/Tasks';
+import Customers from './pages/Customers';
+import Team from './pages/Team';
+import Estimates from './pages/Estimates';
+import Calendar from './pages/Calendar';
+import ProjectDetail from './pages/ProjectDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -16,6 +23,13 @@ export const PAGES = {
     "Setup": Setup,
     "MindMapEditor": MindMapEditor,
     "PackageLibrary": PackageLibrary,
+    "Projects": Projects,
+    "Tasks": Tasks,
+    "Customers": Customers,
+    "Team": Team,
+    "Estimates": Estimates,
+    "Calendar": Calendar,
+    "ProjectDetail": ProjectDetail,
 }
 
 export const pagesConfig = {
