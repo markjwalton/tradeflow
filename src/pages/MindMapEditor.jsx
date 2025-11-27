@@ -681,6 +681,7 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
           onAutoLayout={handleAutoLayout}
           onAIGenerate={handleAIGenerate}
           onAISuggest={handleAISuggest}
+          onGenerateApp={handleGenerateApp}
           onShowBusinessContext={async () => {
                 // Fetch fresh data when opening
                 const freshMaps = await base44.entities.MindMap.filter({ id: selectedMindMapId });
@@ -701,6 +702,7 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
           onChangeColor={handleChangeColor}
           isGenerating={isGenerating}
           isSuggesting={isSuggesting}
+          isGeneratingApp={isGeneratingApp}
         />
       )}
 
