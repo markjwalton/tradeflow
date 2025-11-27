@@ -693,12 +693,14 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
                             toast.error("No mindmap selected");
                             return;
                           }
+                          console.log("Saving context:", selectedMindMapId, editingContext);
                           try {
-                            await base44.entities.MindMap.update(selectedMindMapId, {
+                            const result = await base44.entities.MindMap.update(selectedMindMapId, {
                               description: editingContext.description,
                               node_suggestions: editingContext.node_suggestions
                             });
-                            await queryClient.refetchQueries({ queryKey: ["mindmaps"] });
+                            console.log("Save result:", result);
+                            queryClient.invalidateQueries({ queryKey: ["mindmaps"] });
                             setShowBusinessContext(false);
                             toast.success("Context updated");
                           } catch (error) {
