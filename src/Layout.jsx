@@ -101,7 +101,6 @@ export default function Layout({ children, currentPageName }) {
           // Global admins always have access
           if (user.is_global_admin === true) {
             setHasAccess(true);
-            setAccessChecked(true);
             accessCheckedRef.current = true;
             setCheckingAccess(false);
             return;
@@ -113,7 +112,6 @@ export default function Layout({ children, currentPageName }) {
             const hasAnyAdminRole = userRolesAll.some(r => r.roles?.includes("admin"));
             if (hasAnyAdminRole) {
               setHasAccess(true);
-              setAccessChecked(true);
               accessCheckedRef.current = true;
               setCheckingAccess(false);
               return;
@@ -134,7 +132,6 @@ export default function Layout({ children, currentPageName }) {
                 setUserRoles(roles[0].roles);
                 setIsTenantAdmin(true);
                 setHasAccess(true);
-                setAccessChecked(true);
                 accessCheckedRef.current = true;
                 setCheckingAccess(false);
                 return;
@@ -173,7 +170,6 @@ export default function Layout({ children, currentPageName }) {
             setUserRoles(["admin"]);
             setIsTenantAdmin(true);
             setHasAccess(true);
-            setAccessChecked(true);
             accessCheckedRef.current = true;
             setCheckingAccess(false);
             return;
@@ -197,7 +193,6 @@ export default function Layout({ children, currentPageName }) {
           setUserRoles(userRoleList);
           setIsTenantAdmin(userRoleList.includes("admin"));
           setHasAccess(true);
-          setAccessChecked(true);
           accessCheckedRef.current = true;
           setCheckingAccess(false);
           return;
@@ -206,7 +201,6 @@ export default function Layout({ children, currentPageName }) {
         // Page not in any category - global admins still get access
         if (user.is_global_admin === true) {
           setHasAccess(true);
-          setAccessChecked(true);
           accessCheckedRef.current = true;
           setCheckingAccess(false);
           return;
