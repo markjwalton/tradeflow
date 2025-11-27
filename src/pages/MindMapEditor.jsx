@@ -490,52 +490,49 @@ export default function MindMapEditor() {
     toast.success("Layout applied");
   };
 
-  // Layout a single branch with all descendants in a tree structure
+  // Layout a single branch with all descendants in a vertical stack
   const layoutBranch = async (branchId) => {
     const branchNode = nodes.find(n => n.id === branchId);
     if (!branchNode) return;
 
-    const centerX = 400;
-    const startY = 100;
+    const startX = 400;
+    const startY = 80;
+    const verticalSpacing = 80;
+    const indentSpacing = 200;
 
-    // Position the main branch node at top center
+    // Position the main branch node at top
     await updateNodeMutation.mutateAsync({
       id: branchId,
-      data: { position_x: centerX, position_y: startY }
+      data: { position_x: startX, position_y: startY }
     });
 
-    // Recursively layout children in a tree structure
-    const layoutChildren = async (parentId, parentX, parentY, level = 1) => {
+    // Collect all nodes in order with their depth
+    const orderedNodes = [];
+    const collectNodes = (parentId, depth = 1) => {
       const childIds = connections
         .filter(c => c.source_node_id === parentId)
         .map(c => c.target_node_id);
       
-      if (childIds.length === 0) return;
-
       const children = nodes.filter(n => childIds.includes(n.id));
-      const levelY = parentY + 120;
-      const spacing = Math.max(180, 400 / Math.pow(1.5, level - 1));
-      const totalWidth = (children.length - 1) * spacing;
-      const startX = parentX - totalWidth / 2;
-
-      const promises = children.map((child, i) => {
-        const x = startX + i * spacing;
-        return updateNodeMutation.mutateAsync({
-          id: child.id,
-          data: { position_x: x, position_y: levelY }
-        });
+      children.forEach(child => {
+        orderedNodes.push({ node: child, depth });
+        collectNodes(child.id, depth + 1);
       });
-
-      await Promise.all(promises);
-
-      // Layout grandchildren
-      for (let i = 0; i < children.length; i++) {
-        const childX = startX + i * spacing;
-        await layoutChildren(children[i].id, childX, levelY, level + 1);
-      }
     };
 
-    await layoutChildren(branchId, centerX, startY);
+    collectNodes(branchId);
+
+    // Position all nodes in a vertical stack with indentation
+    const promises = orderedNodes.map((item, i) => {
+      const x = startX + (item.depth * indentSpacing);
+      const y = startY + ((i + 1) * verticalSpacing);
+      return updateNodeMutation.mutateAsync({
+        id: item.node.id,
+        data: { position_x: x, position_y: y }
+      });
+    });
+
+    await Promise.all(promises);
 
     queryClient.invalidateQueries({ queryKey: ["mindmapNodes", selectedMindMapId] });
     toast.success("Branch layout applied");
