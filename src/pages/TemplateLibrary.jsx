@@ -22,7 +22,6 @@ import {
 import { Plus, Search, Pencil, Trash2, Loader2, Library, Copy, Settings, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Textarea } from "@/components/ui/textarea";
 
 const nodeTypes = [
   { value: "central", label: "Central Topic", color: "#3b82f6" },
