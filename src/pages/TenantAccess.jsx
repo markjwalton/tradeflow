@@ -136,11 +136,14 @@ export default function TenantAccess() {
       window.location.href = createPageUrl("TenantManager");
       return null;
     }
-    // Regular users go to their first tenant
+    // Regular users go to their first tenant's Navigation Manager (if admin) or Home
     if (userTenantAccess.length > 0) {
       const firstTenant = userTenantAccess[0].tenant;
+      const roles = userTenantAccess[0].roles || [];
       if (firstTenant?.slug) {
-        window.location.href = createPageUrl("Home") + (createPageUrl("Home").includes("?") ? "&" : "?") + `tenant=${firstTenant.slug}`;
+        const targetPage = roles.includes("admin") ? "NavigationManager" : "Home";
+        const url = createPageUrl(targetPage);
+        window.location.href = url + (url.includes("?") ? "&" : "?") + `tenant=${firstTenant.slug}`;
         return null;
       }
     }
