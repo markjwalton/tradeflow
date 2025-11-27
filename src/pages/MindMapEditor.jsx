@@ -162,6 +162,7 @@ export default function MindMapEditor() {
     mutationFn: ({ id, data }) => base44.entities.MindMap.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["mindmaps"] });
+      queryClient.refetchQueries({ queryKey: ["mindmaps"] });
     },
   });
 
