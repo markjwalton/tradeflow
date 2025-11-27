@@ -305,11 +305,18 @@ export default function Layout({ children, currentPageName }) {
             const Icon = page.icon;
             const isActive = currentPageName === page.slug;
             const isGlobalLink = globalAdminPages.some(p => p.slug === page.slug);
-            const pageUrl = createPageUrl(page.slug);
-            return (
-              <Link
-                key={page.slug}
-                to={pageUrl}
+            // Preserve map param for MindMapEditor
+                      let pageUrl = createPageUrl(page.slug);
+                      if (page.slug === "MindMapEditor") {
+                        const currentMap = new URLSearchParams(window.location.search).get("map");
+                        if (currentMap) {
+                          pageUrl = pageUrl + (pageUrl.includes("?") ? "&" : "?") + `map=${currentMap}`;
+                        }
+                      }
+                      return (
+                        <Link
+                          key={page.slug}
+                          to={pageUrl}
                 className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
                   isActive 
                     ? "bg-slate-700 text-white" 
@@ -355,10 +362,20 @@ export default function Layout({ children, currentPageName }) {
                   const pageUrl = createPageUrl(page.slug);
                   return (
                     <DropdownMenuItem
-                      key={page.slug}
-                      onClick={() => navigate(pageUrl)}
-                      className="gap-2"
-                    >
+                          key={page.slug}
+                          onClick={() => {
+                            // Preserve map param for MindMapEditor
+                            let navUrl = pageUrl;
+                            if (page.slug === "MindMapEditor") {
+                              const currentMap = new URLSearchParams(window.location.search).get("map");
+                              if (currentMap) {
+                                navUrl = navUrl + (navUrl.includes("?") ? "&" : "?") + `map=${currentMap}`;
+                              }
+                            }
+                            navigate(navUrl);
+                          }}
+                          className="gap-2"
+                        >
                       <Icon className="h-4 w-4" />
                       {page.name}
                     </DropdownMenuItem>
