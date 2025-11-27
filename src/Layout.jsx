@@ -135,6 +135,7 @@ export default function Layout({ children, currentPageName }) {
                 setIsTenantAdmin(true);
                 setHasAccess(true);
                 setAccessChecked(true);
+                accessCheckedRef.current = true;
                 setCheckingAccess(false);
                 return;
               }
