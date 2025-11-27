@@ -50,9 +50,10 @@ const tenantAdminPages = [
 
 export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
+  
+  // Read cached values once on mount
   const [checkingAccess, setCheckingAccess] = useState(() => {
-    // Check if we already have access from a previous render
-    return !sessionStorage.getItem('layout_access_checked');
+    return sessionStorage.getItem('layout_access_checked') !== 'true';
   });
   const [hasAccess, setHasAccess] = useState(() => {
     return sessionStorage.getItem('layout_access_checked') === 'true';
@@ -60,8 +61,13 @@ export default function Layout({ children, currentPageName }) {
   const [accessDeniedReason, setAccessDeniedReason] = useState(null);
   const [currentTenant, setCurrentTenant] = useState(null);
   const [userRoles, setUserRoles] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [isGlobalAdmin, setIsGlobalAdmin] = useState(false);
+  const [currentUser, setCurrentUser] = useState(() => {
+    const cached = sessionStorage.getItem('layout_user');
+    return cached ? JSON.parse(cached) : null;
+  });
+  const [isGlobalAdmin, setIsGlobalAdmin] = useState(() => {
+    return sessionStorage.getItem('layout_is_global_admin') === 'true';
+  });
   const [isTenantAdmin, setIsTenantAdmin] = useState(false);
   
   const urlParams = new URLSearchParams(window.location.search);
@@ -71,9 +77,8 @@ export default function Layout({ children, currentPageName }) {
   const isGlobalAdminPage = globalAdminPages.some(p => p.slug === currentPageName);
   const isTenantPage = tenantPages.some(p => p.slug === currentPageName);
 
-  // Track if we've already checked access for this user session
-  const accessCheckedRef = React.useRef(false);
-  const lastCheckedUserRef = React.useRef(null);
+  // Track if we've run access check this mount
+  const hasCheckedRef = React.useRef(sessionStorage.getItem('layout_access_checked') === 'true');
 
   useEffect(() => {
     // Skip access check for public pages
@@ -83,10 +88,8 @@ export default function Layout({ children, currentPageName }) {
       return;
     }
     
-    // If we already checked access (via ref or sessionStorage), skip
-    if (accessCheckedRef.current || sessionStorage.getItem('layout_access_checked') === 'true') {
-      setCheckingAccess(false);
-      setHasAccess(true);
+    // If we already checked access, skip entirely - don't make any API calls
+    if (hasCheckedRef.current) {
       return;
     }
     
@@ -101,6 +104,8 @@ export default function Layout({ children, currentPageName }) {
         }
         setCurrentUser(user);
         setIsGlobalAdmin(user.is_global_admin === true);
+        sessionStorage.setItem('layout_user', JSON.stringify(user));
+        sessionStorage.setItem('layout_is_global_admin', user.is_global_admin === true ? 'true' : 'false');
         
         // Global admin pages: for is_global_admin OR tenant admins (with tenant context)
         if (isGlobalAdminPage) {
