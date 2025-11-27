@@ -234,7 +234,7 @@ export default function Layout({ children, currentPageName }) {
     }
   }
 
-  const currentPage = displayPages.find(p => p.slug === currentPageName) || displayPages[0];
+  const currentPage = displayPages.find(p => p.slug === currentPageName);
   const CurrentIcon = currentPage?.icon || Home;
 
   const handleRefresh = () => {
