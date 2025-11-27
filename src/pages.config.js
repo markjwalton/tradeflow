@@ -2,6 +2,7 @@ import NavigationManager from './pages/NavigationManager';
 import Home from './pages/Home';
 import TenantManager from './pages/TenantManager';
 import TenantAccess from './pages/TenantAccess';
+import Setup from './pages/Setup';
 import __Layout from './Layout.jsx';
 
 
@@ -10,6 +11,7 @@ export const PAGES = {
     "Home": Home,
     "TenantManager": TenantManager,
     "TenantAccess": TenantAccess,
+    "Setup": Setup,
 }
 
 export const pagesConfig = {
