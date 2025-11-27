@@ -5,6 +5,7 @@ import MindMapConnectionComponent from "./MindMapConnection";
 export default function MindMapCanvas({
   nodes,
   connections,
+  allConnections,
   selectedNodeId,
   selectedConnectionId,
   onSelectNode,
@@ -13,7 +14,6 @@ export default function MindMapCanvas({
   onDoubleClickNode,
   onCanvasClick,
   onToggleCollapse,
-  collapsedNodeIds = [],
 }) {
   const canvasRef = useRef(null);
   const [dragging, setDragging] = useState(null);
@@ -124,8 +124,8 @@ export default function MindMapCanvas({
             ? { ...node, position_x: dragPosition.x, position_y: dragPosition.y }
             : node;
           
-          // Check if this node has children
-          const hasChildren = connections.some(c => c.source_node_id === node.id);
+          // Check if this node has children (use allConnections to include hidden ones)
+          const hasChildren = (allConnections || connections).some(c => c.source_node_id === node.id);
           
           return (
             <MindMapNodeComponent
