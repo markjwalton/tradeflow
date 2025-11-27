@@ -203,7 +203,15 @@ export default function Layout({ children, currentPageName }) {
           return;
         }
         
-        // Page not in any category - deny access
+        // Page not in any category - global admins still get access
+        if (user.is_global_admin === true) {
+          setHasAccess(true);
+          setAccessChecked(true);
+          accessCheckedRef.current = true;
+          setCheckingAccess(false);
+          return;
+        }
+
         setHasAccess(false);
         setAccessDeniedReason("unknown_page");
         setCheckingAccess(false);
