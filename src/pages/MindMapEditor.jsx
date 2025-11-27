@@ -47,6 +47,9 @@ export default function MindMapEditor() {
   const [editingContext, setEditingContext] = useState({ description: "", node_suggestions: "" });
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSuggesting, setIsSuggesting] = useState(false);
+  const [isGeneratingApp, setIsGeneratingApp] = useState(false);
+  const [showGeneratedSpec, setShowGeneratedSpec] = useState(false);
+  const [generatedSpec, setGeneratedSpec] = useState(null);
 
   // Fetch mindmaps
   const { data: mindMaps = [], isLoading: loadingMaps } = useQuery({
@@ -424,6 +427,148 @@ IMPORTANT: If the user has provided node suggestions, prioritize adding those fi
       toast.error("Failed to generate suggestions");
     } finally {
       setIsSuggesting(false);
+    }
+  };
+
+  const handleGenerateApp = async () => {
+    if (nodes.length === 0) {
+      toast.error("Add nodes to your mindmap first");
+      return;
+    }
+
+    setIsGeneratingApp(true);
+    try {
+      // Fetch fresh mindmap data
+      const freshMaps = await base44.entities.MindMap.filter({ id: selectedMindMapId });
+      const freshMindMap = freshMaps[0];
+      
+      const context = freshMindMap?.description || "";
+      
+      // Build node hierarchy with types
+      const nodesSummary = nodes.map(n => ({
+        id: n.id,
+        text: n.text,
+        type: n.node_type,
+        parent: connections.find(c => c.target_node_id === n.id)?.source_node_id || null
+      }));
+
+      // Find entity nodes
+      const entityNodes = nodes.filter(n => n.node_type === "entity");
+      // Find page nodes
+      const pageNodes = nodes.filter(n => n.node_type === "page");
+      // Find feature nodes
+      const featureNodes = nodes.filter(n => n.node_type === "feature");
+
+      const prompt = `You are an expert app architect. Based on this mind map, generate a complete app specification.
+
+Business Context: ${context}
+
+Mind Map Structure:
+${JSON.stringify(nodesSummary, null, 2)}
+
+Entity Nodes (these should become database entities):
+${entityNodes.map(n => n.text).join(", ") || "None specified"}
+
+Page Nodes (these should become app pages):
+${pageNodes.map(n => n.text).join(", ") || "None specified"}
+
+Feature Nodes (these are features to implement):
+${featureNodes.map(n => n.text).join(", ") || "None specified"}
+
+Generate a complete app specification with:
+
+1. ENTITIES: For each entity, provide a JSON schema with realistic properties based on the business context. Include relationships between entities where logical.
+
+2. PAGES: For each page, describe what it should display and what functionality it needs.
+
+3. FEATURES: List the key features and which pages/entities they relate to.
+
+Return a JSON object with this structure:
+{
+  "entities": [
+    {
+      "name": "EntityName",
+      "description": "What this entity represents",
+      "schema": {
+        "name": "EntityName",
+        "type": "object",
+        "properties": { ... },
+        "required": [...]
+      }
+    }
+  ],
+  "pages": [
+    {
+      "name": "PageName",
+      "description": "What this page does",
+      "features": ["feature1", "feature2"],
+      "entities_used": ["Entity1", "Entity2"]
+    }
+  ],
+  "features": [
+    {
+      "name": "FeatureName",
+      "description": "What this feature does",
+      "page": "PageName or null",
+      "entities": ["Entity1"]
+    }
+  ]
+}
+
+Be thorough and realistic based on the business context. Infer additional entities and pages if they're implied but not explicitly marked.`;
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            entities: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  description: { type: "string" },
+                  schema: { type: "object" }
+                }
+              }
+            },
+            pages: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  description: { type: "string" },
+                  features: { type: "array", items: { type: "string" } },
+                  entities_used: { type: "array", items: { type: "string" } }
+                }
+              }
+            },
+            features: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  description: { type: "string" },
+                  page: { type: "string" },
+                  entities: { type: "array", items: { type: "string" } }
+                }
+              }
+            }
+          }
+        }
+      });
+
+      setGeneratedSpec(result);
+      setShowGeneratedSpec(true);
+      toast.success("App specification generated!");
+    } catch (error) {
+      console.error("Generate app error:", error);
+      toast.error("Failed to generate app specification");
+    } finally {
+      setIsGeneratingApp(false);
     }
   };
 
