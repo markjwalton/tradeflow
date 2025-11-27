@@ -667,16 +667,20 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
                         <p className="text-xs text-gray-500 mt-1">The AI Suggest feature will prioritize adding these nodes.</p>
                       </div>
                       <Button
-                        className="w-full"
-                        onClick={async () => {
-                          await base44.entities.MindMap.update(selectedMindMapId, editingContext);
-                          queryClient.invalidateQueries({ queryKey: ["mindmaps"] });
-                          setShowBusinessContext(false);
-                          toast.success("Context updated");
-                        }}
-                      >
-                        Save
-                      </Button>
+                                        className="w-full"
+                                        onClick={async () => {
+                                          try {
+                                            await base44.entities.MindMap.update(selectedMindMapId, editingContext);
+                                            await queryClient.invalidateQueries({ queryKey: ["mindmaps"] });
+                                            setShowBusinessContext(false);
+                                            toast.success("Context updated");
+                                          } catch (error) {
+                                            toast.error("Failed to save: " + error.message);
+                                          }
+                                        }}
+                                      >
+                                        Save
+                                      </Button>
                     </div>
                   </DialogContent>
                 </Dialog>
