@@ -52,7 +52,8 @@ export default function MindMapEditor() {
   const { data: mindMaps = [], isLoading: loadingMaps } = useQuery({
     queryKey: ["mindmaps"],
     queryFn: () => base44.entities.MindMap.list(),
-    staleTime: 30000, // Cache for 30 seconds to prevent unnecessary refetches
+    staleTime: 60000, // Cache for 60 seconds
+    refetchOnWindowFocus: false, // Don't refetch on tab switch
   });
 
   // Fetch nodes for selected mindmap
@@ -60,6 +61,8 @@ export default function MindMapEditor() {
     queryKey: ["mindmapNodes", selectedMindMapId],
     queryFn: () => base44.entities.MindMapNode.filter({ mind_map_id: selectedMindMapId }),
     enabled: !!selectedMindMapId,
+    staleTime: 60000,
+    refetchOnWindowFocus: false,
   });
 
   // Fetch connections for selected mindmap
@@ -67,6 +70,8 @@ export default function MindMapEditor() {
     queryKey: ["mindmapConnections", selectedMindMapId],
     queryFn: () => base44.entities.MindMapConnection.filter({ mind_map_id: selectedMindMapId }),
     enabled: !!selectedMindMapId,
+    staleTime: 60000,
+    refetchOnWindowFocus: false,
   });
 
   const selectedMindMap = mindMaps.find((m) => m.id === selectedMindMapId);
