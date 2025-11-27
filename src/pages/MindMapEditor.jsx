@@ -683,30 +683,23 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
                       <Button
                         className="w-full"
                         disabled={!selectedMindMapId || updateMindMapMutation.isPending}
-                        onClick={() => {
+                        onClick={async () => {
                           if (!selectedMindMapId) {
                             toast.error("No mindmap selected");
                             return;
                           }
-                          updateMindMapMutation.mutate(
-                            { 
-                              id: selectedMindMapId, 
-                              data: {
-                                description: editingContext.description,
-                                node_suggestions: editingContext.node_suggestions
-                              }
-                            },
-                            {
-                              onSuccess: () => {
-                                setShowBusinessContext(false);
-                                toast.success("Context updated");
-                              },
-                              onError: (error) => {
-                                console.error("Save error:", error);
-                                toast.error("Failed to save: " + error.message);
-                              }
-                            }
-                          );
+                          try {
+                            await base44.entities.MindMap.update(selectedMindMapId, {
+                              description: editingContext.description,
+                              node_suggestions: editingContext.node_suggestions
+                            });
+                            await queryClient.refetchQueries({ queryKey: ["mindmaps"] });
+                            setShowBusinessContext(false);
+                            toast.success("Context updated");
+                          } catch (error) {
+                            console.error("Save error:", error);
+                            toast.error("Failed to save: " + (error.message || "Unknown error"));
+                          }
                         }}
                       >
                         {updateMindMapMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
