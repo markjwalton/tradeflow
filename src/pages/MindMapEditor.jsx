@@ -51,6 +51,7 @@ export default function MindMapEditor() {
   const { data: mindMaps = [], isLoading: loadingMaps } = useQuery({
     queryKey: ["mindmaps"],
     queryFn: () => base44.entities.MindMap.list(),
+    staleTime: 0, // Always refetch to get latest data
   });
 
   // Fetch nodes for selected mindmap
