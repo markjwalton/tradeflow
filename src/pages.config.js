@@ -3,6 +3,7 @@ import Home from './pages/Home';
 import TenantManager from './pages/TenantManager';
 import TenantAccess from './pages/TenantAccess';
 import Setup from './pages/Setup';
+import ArchitecturePackages from './pages/ArchitecturePackages';
 import __Layout from './Layout.jsx';
 
 
@@ -12,6 +13,7 @@ export const PAGES = {
     "TenantManager": TenantManager,
     "TenantAccess": TenantAccess,
     "Setup": Setup,
+    "ArchitecturePackages": ArchitecturePackages,
 }
 
 export const pagesConfig = {
