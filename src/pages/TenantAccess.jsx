@@ -62,6 +62,25 @@ export default function TenantAccess() {
     retry: false,
   });
 
+  // Check if user has access to ANY tenant (to redirect to main app)
+  const { data: userTenantAccess = [], isLoading: loadingUserAccess } = useQuery({
+    queryKey: ["userTenantAccess", user?.id],
+    queryFn: async () => {
+      const roles = await base44.entities.TenantUserRole.filter({ user_id: user?.id });
+      if (roles.length === 0) return [];
+      // Fetch tenant info
+      const tenantIds = [...new Set(roles.map(r => r.tenant_id))];
+      const tenants = await Promise.all(
+        tenantIds.map(id => base44.entities.Tenant.filter({ id }))
+      );
+      const tenantMap = {};
+      tenants.flat().forEach(t => { tenantMap[t.id] = t; });
+      return roles.map(r => ({ ...r, tenant: tenantMap[r.tenant_id] }));
+    },
+    enabled: !loading && !!user?.id && !tenantSlug,
+    retry: false,
+  });
+
   // Check if user already has access
   const { data: userRoles = [], isLoading: loadingRoles } = useQuery({
     queryKey: ["myTenantRoles", tenant?.id, user?.id],
@@ -102,12 +121,21 @@ export default function TenantAccess() {
     },
   });
 
-  if (loading || loadingTenant || loadingAllPending) {
+  if (loading || loadingTenant || loadingAllPending || loadingUserAccess) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
       </div>
     );
+  }
+
+  // If user has access to a tenant, redirect to main app
+  if (user && !tenantSlug && !selectedTenant && userTenantAccess.length > 0) {
+    const firstTenant = userTenantAccess[0].tenant;
+    if (firstTenant?.slug) {
+      window.location.href = `/?tenant=${firstTenant.slug}`;
+      return null;
+    }
   }
 
   // Lookup tenant by company ID
@@ -143,11 +171,11 @@ export default function TenantAccess() {
                   : "Already have an account? Sign in to access your organization."}
               </p>
               {user ? (
-                <Button variant="outline" className="w-full" onClick={() => base44.auth.logout()}>
+                <Button variant="outline" className="w-full" onClick={() => base44.auth.logout(window.location.href)}>
                   Sign Out / Use Different Account
                 </Button>
               ) : (
-                <Button className="w-full" onClick={() => base44.auth.redirectToLogin()}>
+                <Button className="w-full" onClick={() => base44.auth.redirectToLogin(window.location.href)}>
                   Sign In to My Account
                 </Button>
               )}
