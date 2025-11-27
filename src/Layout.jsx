@@ -102,6 +102,7 @@ export default function Layout({ children, currentPageName }) {
           if (user.is_global_admin === true) {
             setHasAccess(true);
             setAccessChecked(true);
+            accessCheckedRef.current = true;
             setCheckingAccess(false);
             return;
           }
@@ -113,6 +114,7 @@ export default function Layout({ children, currentPageName }) {
             if (hasAnyAdminRole) {
               setHasAccess(true);
               setAccessChecked(true);
+              accessCheckedRef.current = true;
               setCheckingAccess(false);
               return;
             }
