@@ -18,11 +18,10 @@ export default function GeneratedSpecDialog({
   open,
   onOpenChange,
   spec,
-  onCreateEntities,
-  isCreating,
 }) {
   const [selectedEntities, setSelectedEntities] = useState([]);
   const [copiedJson, setCopiedJson] = useState(null);
+  const [copiedAll, setCopiedAll] = useState(false);
 
   if (!spec) return null;
 
@@ -51,11 +50,23 @@ export default function GeneratedSpecDialog({
     toast.success(`${entity.name} schema copied`);
   };
 
-  const handleCreateSelected = () => {
-    const entitiesToCreate = entities.filter((e) =>
-      selectedEntities.includes(e.name)
-    );
-    onCreateEntities(entitiesToCreate);
+  const copyAllSchemas = () => {
+    const schemas = entities
+      .filter((e) => selectedEntities.length === 0 || selectedEntities.includes(e.name))
+      .map((e) => ({
+        name: e.name,
+        description: e.description,
+        schema: e.schema
+      }));
+    navigator.clipboard.writeText(JSON.stringify(schemas, null, 2));
+    setCopiedAll(true);
+    setTimeout(() => setCopiedAll(false), 2000);
+    toast.success(`Copied ${schemas.length} entity schemas`);
+  };
+
+  const copyFullSpec = () => {
+    navigator.clipboard.writeText(JSON.stringify(spec, null, 2));
+    toast.success("Full specification copied to clipboard");
   };
 
   return (
@@ -92,14 +103,28 @@ export default function GeneratedSpecDialog({
                   {selectedEntities.length} selected
                 </span>
               </div>
-              <Button
-                onClick={handleCreateSelected}
-                disabled={selectedEntities.length === 0 || isCreating}
-                size="sm"
-              >
-                {isCreating && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                Create Selected Entities
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  onClick={copyAllSchemas}
+                  variant="outline"
+                  size="sm"
+                >
+                  {copiedAll ? (
+                    <Check className="h-4 w-4 mr-1 text-green-500" />
+                  ) : (
+                    <Copy className="h-4 w-4 mr-1" />
+                  )}
+                  Copy {selectedEntities.length > 0 ? "Selected" : "All"} Schemas
+                </Button>
+                <Button
+                  onClick={copyFullSpec}
+                  variant="outline"
+                  size="sm"
+                >
+                  <Copy className="h-4 w-4 mr-1" />
+                  Copy Full Spec
+                </Button>
+              </div>
             </div>
 
             <ScrollArea className="h-[400px]">
