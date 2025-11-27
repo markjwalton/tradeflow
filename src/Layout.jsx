@@ -255,10 +255,14 @@ export default function Layout({ children, currentPageName }) {
             const Icon = page.icon;
             const isActive = currentPageName === page.slug;
             const isGlobalLink = globalAdminPages.some(p => p.slug === page.slug);
-            // Global admin pages don't need tenant param
-            const pageUrl = isGlobalLink 
-              ? createPageUrl(page.slug) 
-              : createPageUrl(page.slug) + (tenantSlug ? `?tenant=${tenantSlug}` : '');
+            // Preserve existing query params for same page, or use tenant for tenant pages
+            let pageUrl = createPageUrl(page.slug);
+            if (page.slug === currentPageName) {
+              // Same page - preserve all query params
+              pageUrl = pageUrl + window.location.search;
+            } else if (!isGlobalLink && tenantSlug) {
+              pageUrl = pageUrl + `?tenant=${tenantSlug}`;
+            }
             return (
               <Link
                 key={page.slug}
@@ -305,9 +309,12 @@ export default function Layout({ children, currentPageName }) {
                 {displayPages.map((page) => {
                   const Icon = page.icon;
                   const isGlobalLink = globalAdminPages.some(p => p.slug === page.slug);
-                  const pageUrl = isGlobalLink 
-                    ? createPageUrl(page.slug) 
-                    : createPageUrl(page.slug) + (tenantSlug ? `?tenant=${tenantSlug}` : '');
+                  let pageUrl = createPageUrl(page.slug);
+                  if (page.slug === currentPageName) {
+                    pageUrl = pageUrl + window.location.search;
+                  } else if (!isGlobalLink && tenantSlug) {
+                    pageUrl = pageUrl + `?tenant=${tenantSlug}`;
+                  }
                   return (
                     <DropdownMenuItem
                       key={page.slug}
