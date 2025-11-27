@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Trash2, Link, LayoutGrid, FileText, Sparkles, Lightbulb, Rocket, GitFork, Lock, History, Database, Play } from "lucide-react";
+import { Plus, Trash2, Link, LayoutGrid, FileText, Sparkles, Lightbulb, Rocket, GitFork, Lock, History, Database, Play, Building2 } from "lucide-react";
 
 const nodeTypes = [
   { value: "central", label: "Central Topic" },
@@ -61,6 +61,7 @@ export default function MindMapToolbar({
   onShowHistory,
   onShowERD,
   onShowWorkflows,
+  onForkToTenant,
   selectedNodeIsEntity,
   onEditEntity,
 }) {
@@ -219,6 +220,17 @@ export default function MindMapToolbar({
       >
         <GitFork className="h-4 w-4 mr-1" />
         Fork
+      </Button>
+
+      <Button 
+        size="sm" 
+        variant="outline"
+        onClick={onForkToTenant}
+        disabled={isGenerating || isSuggesting || isGeneratingApp}
+        className="text-indigo-600 border-indigo-200 hover:bg-indigo-50"
+      >
+        <Building2 className="h-4 w-4 mr-1" />
+        Fork to Tenant
       </Button>
 
       {!isPublished && (

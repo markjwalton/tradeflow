@@ -31,6 +31,7 @@ import PublishVersionDialog from "@/components/mindmap/PublishVersionDialog";
 import EntityDetailDialog from "@/components/mindmap/EntityDetailDialog";
 import EntityRelationshipDiagram from "@/components/mindmap/EntityRelationshipDiagram";
 import WorkflowDialog from "@/components/mindmap/WorkflowDialog";
+import TenantForkDialog from "@/components/mindmap/TenantForkDialog";
 
 export default function MindMapEditor() {
   const queryClient = useQueryClient();
@@ -65,6 +66,7 @@ export default function MindMapEditor() {
   const [showEntityDialog, setShowEntityDialog] = useState(false);
   const [showERDDialog, setShowERDDialog] = useState(false);
   const [showWorkflowDialog, setShowWorkflowDialog] = useState(false);
+  const [showTenantForkDialog, setShowTenantForkDialog] = useState(false);
 
   // Fetch mindmaps
   const { data: mindMaps = [], isLoading: loadingMaps } = useQuery({
@@ -993,6 +995,23 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
           nodes={nodes}
           connections={connections}
           businessContext={selectedMindMap?.description}
+        />
+
+        {/* Tenant Fork Dialog */}
+        <TenantForkDialog
+          open={showTenantForkDialog}
+          onOpenChange={setShowTenantForkDialog}
+          currentMindMap={selectedMindMap}
+          nodes={nodes}
+          connections={connections}
+          onForkComplete={(newMap) => {
+            queryClient.invalidateQueries({ queryKey: ["mindmaps"] });
+            setSelectedMindMapId(newMap.id);
+            const url = new URL(window.location.href);
+            url.searchParams.set("map", newMap.id);
+            window.history.replaceState({}, "", url);
+            toast.success(`Forked to tenant successfully`);
+          }}
         />
 
         {/* Business Context Dialog */}
