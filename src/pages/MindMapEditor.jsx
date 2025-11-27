@@ -28,6 +28,8 @@ import GeneratedSpecDialog from "@/components/mindmap/GeneratedSpecDialog";
 import VersionHistoryPanel from "@/components/mindmap/VersionHistoryPanel";
 import ForkVersionDialog from "@/components/mindmap/ForkVersionDialog";
 import PublishVersionDialog from "@/components/mindmap/PublishVersionDialog";
+import EntityDetailDialog from "@/components/mindmap/EntityDetailDialog";
+import EntityRelationshipDiagram from "@/components/mindmap/EntityRelationshipDiagram";
 
 export default function MindMapEditor() {
   const queryClient = useQueryClient();
@@ -59,6 +61,8 @@ export default function MindMapEditor() {
   const [showPublishDialog, setShowPublishDialog] = useState(false);
   const [isForkingVersion, setIsForkingVersion] = useState(false);
   const [isPublishingVersion, setIsPublishingVersion] = useState(false);
+  const [showEntityDialog, setShowEntityDialog] = useState(false);
+  const [showERDDialog, setShowERDDialog] = useState(false);
 
   // Fetch mindmaps
   const { data: mindMaps = [], isLoading: loadingMaps } = useQuery({
@@ -269,6 +273,11 @@ export default function MindMapEditor() {
     url.searchParams.set("map", versionId);
     window.history.replaceState({}, "", url);
     setShowVersionHistory(false);
+  };
+
+  // Update node with entity schema
+  const handleUpdateNodeWithSchema = (nodeId, data) => {
+    updateNodeMutation.mutate({ id: nodeId, data });
   };
 
   // Handlers
@@ -811,6 +820,9 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
           onForkVersion={() => setShowForkDialog(true)}
           onPublishVersion={() => setShowPublishDialog(true)}
           onShowHistory={() => setShowVersionHistory(true)}
+          onShowERD={() => setShowERDDialog(true)}
+          selectedNodeIsEntity={selectedNode?.node_type === "entity"}
+          onEditEntity={() => setShowEntityDialog(true)}
         />
       )}
 
@@ -950,6 +962,25 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
           currentMindMap={selectedMindMap}
           onPublish={handlePublishVersion}
           isPending={isPublishingVersion}
+        />
+
+        {/* Entity Detail Dialog */}
+        <EntityDetailDialog
+          open={showEntityDialog}
+          onOpenChange={setShowEntityDialog}
+          node={selectedNode}
+          allNodes={nodes}
+          connections={connections}
+          onUpdateNode={handleUpdateNodeWithSchema}
+          businessContext={selectedMindMap?.description}
+        />
+
+        {/* Entity Relationship Diagram */}
+        <EntityRelationshipDiagram
+          open={showERDDialog}
+          onOpenChange={setShowERDDialog}
+          nodes={nodes}
+          connections={connections}
         />
 
         {/* Business Context Dialog */}

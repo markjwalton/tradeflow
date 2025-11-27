@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Trash2, Link, LayoutGrid, FileText, Sparkles, Lightbulb, Rocket, GitFork, Lock, History } from "lucide-react";
+import { Plus, Trash2, Link, LayoutGrid, FileText, Sparkles, Lightbulb, Rocket, GitFork, Lock, History, Database } from "lucide-react";
 
 const nodeTypes = [
   { value: "central", label: "Central Topic" },
@@ -59,6 +59,9 @@ export default function MindMapToolbar({
   onForkVersion,
   onPublishVersion,
   onShowHistory,
+  onShowERD,
+  selectedNodeIsEntity,
+  onEditEntity,
 }) {
   const isPublished = currentMindMap?.status === "published";
   return (
@@ -104,6 +107,27 @@ export default function MindMapToolbar({
       >
         <Sparkles className={`h-4 w-4 mr-1 ${isGenerating ? "animate-pulse" : ""}`} />
         {isGenerating ? "Generating..." : "AI Expand"}
+      </Button>
+
+      {selectedNodeIsEntity && (
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={onEditEntity}
+          className="text-purple-600 border-purple-200 hover:bg-purple-50"
+        >
+          <Database className="h-4 w-4 mr-1" />
+          Edit Entity
+        </Button>
+      )}
+
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={onShowERD}
+      >
+        <Database className="h-4 w-4 mr-1" />
+        ERD
       </Button>
 
       <Button
