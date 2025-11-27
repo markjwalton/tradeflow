@@ -418,6 +418,12 @@ export default function MindMapEditor() {
   const handleAutoLayout = async () => {
     if (nodes.length === 0) return;
 
+    // If focused on a branch, do branch-specific layout
+    if (focusedBranchId) {
+      await layoutBranch(focusedBranchId);
+      return;
+    }
+
     // Find central node or use first node as center
     const centralNode = nodes.find(n => n.node_type === "central") || nodes[0];
     const otherNodes = nodes.filter(n => n.id !== centralNode.id);
@@ -482,6 +488,57 @@ export default function MindMapEditor() {
 
     queryClient.invalidateQueries({ queryKey: ["mindmapNodes", selectedMindMapId] });
     toast.success("Layout applied");
+  };
+
+  // Layout a single branch with all descendants in a tree structure
+  const layoutBranch = async (branchId) => {
+    const branchNode = nodes.find(n => n.id === branchId);
+    if (!branchNode) return;
+
+    const centerX = 400;
+    const startY = 100;
+
+    // Position the main branch node at top center
+    await updateNodeMutation.mutateAsync({
+      id: branchId,
+      data: { position_x: centerX, position_y: startY }
+    });
+
+    // Recursively layout children in a tree structure
+    const layoutChildren = async (parentId, parentX, parentY, level = 1) => {
+      const childIds = connections
+        .filter(c => c.source_node_id === parentId)
+        .map(c => c.target_node_id);
+      
+      if (childIds.length === 0) return;
+
+      const children = nodes.filter(n => childIds.includes(n.id));
+      const levelY = parentY + 120;
+      const spacing = Math.max(180, 400 / Math.pow(1.5, level - 1));
+      const totalWidth = (children.length - 1) * spacing;
+      const startX = parentX - totalWidth / 2;
+
+      const promises = children.map((child, i) => {
+        const x = startX + i * spacing;
+        return updateNodeMutation.mutateAsync({
+          id: child.id,
+          data: { position_x: x, position_y: levelY }
+        });
+      });
+
+      await Promise.all(promises);
+
+      // Layout grandchildren
+      for (let i = 0; i < children.length; i++) {
+        const childX = startX + i * spacing;
+        await layoutChildren(children[i].id, childX, levelY, level + 1);
+      }
+    };
+
+    await layoutChildren(branchId, centerX, startY);
+
+    queryClient.invalidateQueries({ queryKey: ["mindmapNodes", selectedMindMapId] });
+    toast.success("Branch layout applied");
   };
 
   const handleAISuggest = async () => {
