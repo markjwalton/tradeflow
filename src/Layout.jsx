@@ -8,7 +8,9 @@ import {
   Building2, 
   RefreshCw,
   ChevronDown,
-  Loader2
+  Loader2,
+  LogOut,
+  User
 } from "lucide-react";
 
 // Tenant Context
@@ -34,6 +36,7 @@ export default function Layout({ children, currentPageName }) {
   const [hasAccess, setHasAccess] = useState(currentPageName === "TenantAccess");
   const [currentTenant, setCurrentTenant] = useState(null);
   const [userRoles, setUserRoles] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
   
   const urlParams = new URLSearchParams(window.location.search);
   const tenantSlug = urlParams.get("tenant");
@@ -54,6 +57,7 @@ export default function Layout({ children, currentPageName }) {
           setCheckingAccess(false);
           return;
         }
+        setCurrentUser(user);
         
         // If tenant slug provided, verify access to that tenant
         if (tenantSlug) {
@@ -191,11 +195,28 @@ export default function Layout({ children, currentPageName }) {
             </DropdownMenu>
           </div>
 
-          {/* Refresh Button */}
-          <Button variant="ghost" size="icon" onClick={handleRefresh}>
-            <RefreshCw className="h-4 w-4" />
-          </Button>
-        </header>
+          {/* User Info & Logout */}
+          <div className="flex items-center gap-3">
+            {currentUser && (
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <User className="h-4 w-4" />
+                <span>{currentUser.email}</span>
+              </div>
+            )}
+            <Button variant="ghost" size="icon" onClick={handleRefresh}>
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => base44.auth.logout(createPageUrl("TenantAccess"))}
+              className="gap-2 text-gray-600"
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
+            </Button>
+          </div>
+          </header>
 
         {/* Page Content */}
         <main className="flex-1 bg-gray-50 overflow-auto">
