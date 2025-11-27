@@ -66,11 +66,20 @@ export default function Layout({ children, currentPageName }) {
   const isGlobalAdminPage = globalAdminPages.some(p => p.slug === currentPageName);
   const isTenantPage = tenantPages.some(p => p.slug === currentPageName);
 
+  // Track if we've already checked access for this session
+  const [accessChecked, setAccessChecked] = useState(false);
+
   useEffect(() => {
     // Skip access check for public pages
     if (currentPageName === "TenantAccess" || currentPageName === "Setup") {
       setCheckingAccess(false);
       setHasAccess(true);
+      return;
+    }
+    
+    // If we already have access, don't re-check (prevents reload on page name changes)
+    if (hasAccess && accessChecked) {
+      setCheckingAccess(false);
       return;
     }
     
