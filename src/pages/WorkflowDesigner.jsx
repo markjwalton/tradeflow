@@ -310,18 +310,26 @@ export default function WorkflowDesigner() {
             {viewMode === "ai-generator" ? "Back to Canvas" : "AI Generate"}
           </Button>
           <Button
-                            size="sm"
-                            onClick={() => {
-                              updateWorkflowMutation.mutate({
-                                id: workflowId,
-                                data: { isActive: true },
-                              });
-                            }}
-                            disabled={!workflow || updateWorkflowMutation.isPending}
-                          >
-                            <Save className="h-4 w-4 mr-1" />
-                            Save & Publish
-                          </Button>
+            size="sm"
+            onClick={() => {
+              if (!workflowId) {
+                toast.error("Create a workflow first");
+                return;
+              }
+              updateWorkflowMutation.mutate({
+                id: workflowId,
+                data: { isActive: true },
+              });
+            }}
+            disabled={!workflowId || updateWorkflowMutation.isPending}
+          >
+            {updateWorkflowMutation.isPending ? (
+              <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+            ) : (
+              <Save className="h-4 w-4 mr-1" />
+            )}
+            Save & Publish
+          </Button>
         </div>
       </div>
 
