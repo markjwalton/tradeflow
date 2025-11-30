@@ -21,11 +21,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Search, Database, Sparkles, Trash2, Edit, Copy, Loader2 } from "lucide-react";
+import { Plus, Search, Database, Sparkles, Trash2, Edit, Copy, Loader2, Star, BookmarkPlus, Folder } from "lucide-react";
 import { toast } from "sonner";
 import EntityBuilder from "@/components/library/EntityBuilder";
+import CustomProjectSelector from "@/components/library/CustomProjectSelector";
 
-const categories = ["Core", "CRM", "Finance", "Operations", "HR", "Inventory", "Communication", "Other"];
+const categories = ["Core", "CRM", "Finance", "Operations", "HR", "Inventory", "Communication", "Custom", "Other"];
 
 const categoryColors = {
   Core: "bg-blue-100 text-blue-800",
@@ -35,6 +36,7 @@ const categoryColors = {
   HR: "bg-pink-100 text-pink-800",
   Inventory: "bg-orange-100 text-orange-800",
   Communication: "bg-cyan-100 text-cyan-800",
+  Custom: "bg-indigo-100 text-indigo-800",
   Other: "bg-gray-100 text-gray-800",
 };
 
@@ -47,10 +49,16 @@ export default function EntityLibrary() {
   const [showAIDialog, setShowAIDialog] = useState(false);
   const [aiPrompt, setAiPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
 
   const { data: entities = [], isLoading } = useQuery({
     queryKey: ["entityTemplates"],
     queryFn: () => base44.entities.EntityTemplate.list(),
+  });
+
+  const { data: projects = [] } = useQuery({
+    queryKey: ["customProjects"],
+    queryFn: () => base44.entities.CustomProject.list(),
   });
 
   const createMutation = useMutation({
@@ -81,11 +89,19 @@ export default function EntityLibrary() {
     },
   });
 
+  // Filter entities based on project selection
   const filteredEntities = entities.filter((entity) => {
     const matchesSearch = entity.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       entity.description?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === "all" || entity.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    
+    // Project filter
+    if (selectedProjectId) {
+      return matchesSearch && matchesCategory && entity.custom_project_id === selectedProjectId;
+    } else {
+      // Default library - show non-custom or global items
+      return matchesSearch && matchesCategory && !entity.custom_project_id;
+    }
   });
 
   const groupedEntities = filteredEntities.reduce((acc, entity) => {
@@ -96,11 +112,34 @@ export default function EntityLibrary() {
   }, {});
 
   const handleSaveEntity = (entityData) => {
-    if (editingEntity) {
-      updateMutation.mutate({ id: editingEntity.id, data: entityData });
+    // Add project info if custom project selected
+    const dataToSave = {
+      ...entityData,
+      custom_project_id: selectedProjectId || null,
+      is_custom: !!selectedProjectId,
+      category: selectedProjectId ? "Custom" : entityData.category
+    };
+    
+    if (editingEntity?.id) {
+      updateMutation.mutate({ id: editingEntity.id, data: dataToSave });
     } else {
-      createMutation.mutate(entityData);
+      createMutation.mutate(dataToSave);
     }
+  };
+
+  const handleSaveToLibrary = (entity) => {
+    const libraryEntity = {
+      ...entity,
+      custom_project_id: null,
+      is_custom: false,
+      is_global: true,
+      name: entity.name + " (Library)"
+    };
+    delete libraryEntity.id;
+    delete libraryEntity.created_date;
+    delete libraryEntity.updated_date;
+    createMutation.mutate(libraryEntity);
+    toast.success("Saved to default library");
   };
 
   const handleAIGenerate = async () => {
@@ -153,7 +192,9 @@ Return a JSON object with:
     const duplicate = {
       ...entity,
       name: entity.name + " Copy",
-      schema: { ...entity.schema, name: entity.name + " Copy" }
+      schema: { ...entity.schema, name: entity.name + " Copy" },
+      custom_project_id: selectedProjectId || entity.custom_project_id,
+      is_custom: !!selectedProjectId || entity.is_custom
     };
     delete duplicate.id;
     delete duplicate.created_date;
@@ -161,14 +202,28 @@ Return a JSON object with:
     createMutation.mutate(duplicate);
   };
 
+  const currentProject = projects.find(p => p.id === selectedProjectId);
+
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Entity Library</h1>
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            Entity Library
+            {currentProject && (
+              <Badge className="bg-indigo-100 text-indigo-800">
+                <Folder className="h-3 w-3 mr-1" />
+                {currentProject.name}
+              </Badge>
+            )}
+          </h1>
           <p className="text-gray-500">Reusable entity templates for business applications</p>
         </div>
         <div className="flex gap-2">
+          <CustomProjectSelector
+            selectedProjectId={selectedProjectId}
+            onSelectProject={setSelectedProjectId}
+          />
           <Button variant="outline" onClick={() => setShowAIDialog(true)}>
             <Sparkles className="h-4 w-4 mr-2" />
             AI Generate
@@ -232,6 +287,9 @@ Return a JSON object with:
                           <CardTitle className="text-base flex items-center gap-2">
                             <Database className="h-4 w-4 text-purple-600" />
                             {entity.name}
+                            {entity.is_custom && (
+                              <Badge variant="outline" className="text-xs">Custom</Badge>
+                            )}
                           </CardTitle>
                           <p className="text-sm text-gray-500 mt-1">{entity.description}</p>
                         </div>
@@ -262,6 +320,16 @@ Return a JSON object with:
                         >
                           <Copy className="h-3 w-3" />
                         </Button>
+                        {entity.is_custom && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleSaveToLibrary(entity)}
+                            title="Save to default library"
+                          >
+                            <BookmarkPlus className="h-3 w-3" />
+                          </Button>
+                        )}
                         <Button
                           size="sm"
                           variant="ghost"
@@ -284,7 +352,12 @@ Return a JSON object with:
       <Dialog open={showBuilder} onOpenChange={setShowBuilder}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
           <DialogHeader>
-            <DialogTitle>{editingEntity?.id ? "Edit Entity" : "Create Entity"}</DialogTitle>
+            <DialogTitle>
+              {editingEntity?.id ? "Edit Entity" : "Create Entity"}
+              {selectedProjectId && currentProject && (
+                <Badge className="ml-2 bg-indigo-100 text-indigo-800">{currentProject.name}</Badge>
+              )}
+            </DialogTitle>
           </DialogHeader>
           <EntityBuilder
             initialData={editingEntity}

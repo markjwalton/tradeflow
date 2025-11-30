@@ -20,11 +20,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Search, Layout, Sparkles, Trash2, Edit, Copy, Loader2 } from "lucide-react";
+import { Plus, Search, Layout, Sparkles, Trash2, Edit, Copy, Loader2, BookmarkPlus, Folder } from "lucide-react";
 import { toast } from "sonner";
 import PageBuilder from "@/components/library/PageBuilder";
+import CustomProjectSelector from "@/components/library/CustomProjectSelector";
 
-const categories = ["Dashboard", "List", "Detail", "Form", "Report", "Settings", "Other"];
+const categories = ["Dashboard", "List", "Detail", "Form", "Report", "Settings", "Custom", "Other"];
 
 const categoryColors = {
   Dashboard: "bg-blue-100 text-blue-800",
@@ -33,6 +34,7 @@ const categoryColors = {
   Form: "bg-yellow-100 text-yellow-800",
   Report: "bg-orange-100 text-orange-800",
   Settings: "bg-gray-100 text-gray-800",
+  Custom: "bg-indigo-100 text-indigo-800",
   Other: "bg-slate-100 text-slate-800",
 };
 
@@ -45,6 +47,7 @@ export default function PageLibrary() {
   const [showAIDialog, setShowAIDialog] = useState(false);
   const [aiPrompt, setAiPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
 
   const { data: pages = [], isLoading } = useQuery({
     queryKey: ["pageTemplates"],
@@ -54,6 +57,11 @@ export default function PageLibrary() {
   const { data: entities = [] } = useQuery({
     queryKey: ["entityTemplates"],
     queryFn: () => base44.entities.EntityTemplate.list(),
+  });
+
+  const { data: projects = [] } = useQuery({
+    queryKey: ["customProjects"],
+    queryFn: () => base44.entities.CustomProject.list(),
   });
 
   const createMutation = useMutation({
@@ -88,7 +96,12 @@ export default function PageLibrary() {
     const matchesSearch = page.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       page.description?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === "all" || page.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    
+    if (selectedProjectId) {
+      return matchesSearch && matchesCategory && page.custom_project_id === selectedProjectId;
+    } else {
+      return matchesSearch && matchesCategory && !page.custom_project_id;
+    }
   });
 
   const groupedPages = filteredPages.reduce((acc, page) => {
@@ -99,11 +112,33 @@ export default function PageLibrary() {
   }, {});
 
   const handleSavePage = (pageData) => {
+    const dataToSave = {
+      ...pageData,
+      custom_project_id: selectedProjectId || null,
+      is_custom: !!selectedProjectId,
+      category: selectedProjectId ? "Custom" : pageData.category
+    };
+    
     if (editingPage?.id) {
-      updateMutation.mutate({ id: editingPage.id, data: pageData });
+      updateMutation.mutate({ id: editingPage.id, data: dataToSave });
     } else {
-      createMutation.mutate(pageData);
+      createMutation.mutate(dataToSave);
     }
+  };
+
+  const handleSaveToLibrary = (page) => {
+    const libraryPage = {
+      ...page,
+      custom_project_id: null,
+      is_custom: false,
+      is_global: true,
+      name: page.name + " (Library)"
+    };
+    delete libraryPage.id;
+    delete libraryPage.created_date;
+    delete libraryPage.updated_date;
+    createMutation.mutate(libraryPage);
+    toast.success("Saved to default library");
   };
 
   const handleAIGenerate = async () => {
@@ -158,21 +193,40 @@ Return a JSON object with:
   };
 
   const handleDuplicate = (page) => {
-    const duplicate = { ...page, name: page.name + " Copy" };
+    const duplicate = { 
+      ...page, 
+      name: page.name + " Copy",
+      custom_project_id: selectedProjectId || page.custom_project_id,
+      is_custom: !!selectedProjectId || page.is_custom
+    };
     delete duplicate.id;
     delete duplicate.created_date;
     delete duplicate.updated_date;
     createMutation.mutate(duplicate);
   };
 
+  const currentProject = projects.find(p => p.id === selectedProjectId);
+
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Page Library</h1>
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            Page Library
+            {currentProject && (
+              <Badge className="bg-indigo-100 text-indigo-800">
+                <Folder className="h-3 w-3 mr-1" />
+                {currentProject.name}
+              </Badge>
+            )}
+          </h1>
           <p className="text-gray-500">Reusable page templates for applications</p>
         </div>
         <div className="flex gap-2">
+          <CustomProjectSelector
+            selectedProjectId={selectedProjectId}
+            onSelectProject={setSelectedProjectId}
+          />
           <Button variant="outline" onClick={() => setShowAIDialog(true)}>
             <Sparkles className="h-4 w-4 mr-2" />
             AI Generate
@@ -231,6 +285,9 @@ Return a JSON object with:
                       <CardTitle className="text-base flex items-center gap-2">
                         <Layout className="h-4 w-4 text-blue-600" />
                         {page.name}
+                        {page.is_custom && (
+                          <Badge variant="outline" className="text-xs">Custom</Badge>
+                        )}
                       </CardTitle>
                       <p className="text-sm text-gray-500 mt-1">{page.description}</p>
                     </CardHeader>
@@ -250,6 +307,11 @@ Return a JSON object with:
                         <Button size="sm" variant="ghost" onClick={() => handleDuplicate(page)}>
                           <Copy className="h-3 w-3" />
                         </Button>
+                        {page.is_custom && (
+                          <Button size="sm" variant="ghost" onClick={() => handleSaveToLibrary(page)} title="Save to default library">
+                            <BookmarkPlus className="h-3 w-3" />
+                          </Button>
+                        )}
                         <Button size="sm" variant="ghost" className="text-red-600" onClick={() => deleteMutation.mutate(page.id)}>
                           <Trash2 className="h-3 w-3" />
                         </Button>
@@ -266,7 +328,12 @@ Return a JSON object with:
       <Dialog open={showBuilder} onOpenChange={setShowBuilder}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
           <DialogHeader>
-            <DialogTitle>{editingPage?.id ? "Edit Page" : "Create Page"}</DialogTitle>
+            <DialogTitle>
+              {editingPage?.id ? "Edit Page" : "Create Page"}
+              {selectedProjectId && currentProject && (
+                <Badge className="ml-2 bg-indigo-100 text-indigo-800">{currentProject.name}</Badge>
+              )}
+            </DialogTitle>
           </DialogHeader>
           <PageBuilder
             initialData={editingPage}

@@ -19,11 +19,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Search, Zap, Sparkles, Trash2, Edit, Copy, Loader2 } from "lucide-react";
+import { Plus, Search, Zap, Sparkles, Trash2, Edit, Copy, Loader2, BookmarkPlus, Folder } from "lucide-react";
 import { toast } from "sonner";
 import FeatureBuilder from "@/components/library/FeatureBuilder";
+import CustomProjectSelector from "@/components/library/CustomProjectSelector";
 
-const categories = ["Communication", "Automation", "Integration", "Reporting", "Security", "Workflow", "UI/UX", "Other"];
+const categories = ["Communication", "Automation", "Integration", "Reporting", "Security", "Workflow", "UI/UX", "Custom", "Other"];
 
 const categoryColors = {
   Communication: "bg-blue-100 text-blue-800",
@@ -33,6 +34,7 @@ const categoryColors = {
   Security: "bg-red-100 text-red-800",
   Workflow: "bg-orange-100 text-orange-800",
   "UI/UX": "bg-pink-100 text-pink-800",
+  Custom: "bg-indigo-100 text-indigo-800",
   Other: "bg-gray-100 text-gray-800",
 };
 
@@ -51,6 +53,7 @@ export default function FeatureLibrary() {
   const [showAIDialog, setShowAIDialog] = useState(false);
   const [aiPrompt, setAiPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
 
   const { data: features = [], isLoading } = useQuery({
     queryKey: ["featureTemplates"],
@@ -60,6 +63,11 @@ export default function FeatureLibrary() {
   const { data: entities = [] } = useQuery({
     queryKey: ["entityTemplates"],
     queryFn: () => base44.entities.EntityTemplate.list(),
+  });
+
+  const { data: projects = [] } = useQuery({
+    queryKey: ["customProjects"],
+    queryFn: () => base44.entities.CustomProject.list(),
   });
 
   const createMutation = useMutation({
@@ -94,7 +102,12 @@ export default function FeatureLibrary() {
     const matchesSearch = feature.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       feature.description?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === "all" || feature.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    
+    if (selectedProjectId) {
+      return matchesSearch && matchesCategory && feature.custom_project_id === selectedProjectId;
+    } else {
+      return matchesSearch && matchesCategory && !feature.custom_project_id;
+    }
   });
 
   const groupedFeatures = filteredFeatures.reduce((acc, feature) => {
@@ -105,11 +118,33 @@ export default function FeatureLibrary() {
   }, {});
 
   const handleSaveFeature = (featureData) => {
+    const dataToSave = {
+      ...featureData,
+      custom_project_id: selectedProjectId || null,
+      is_custom: !!selectedProjectId,
+      category: selectedProjectId ? "Custom" : featureData.category
+    };
+    
     if (editingFeature?.id) {
-      updateMutation.mutate({ id: editingFeature.id, data: featureData });
+      updateMutation.mutate({ id: editingFeature.id, data: dataToSave });
     } else {
-      createMutation.mutate(featureData);
+      createMutation.mutate(dataToSave);
     }
+  };
+
+  const handleSaveToLibrary = (feature) => {
+    const libraryFeature = {
+      ...feature,
+      custom_project_id: null,
+      is_custom: false,
+      is_global: true,
+      name: feature.name + " (Library)"
+    };
+    delete libraryFeature.id;
+    delete libraryFeature.created_date;
+    delete libraryFeature.updated_date;
+    createMutation.mutate(libraryFeature);
+    toast.success("Saved to default library");
   };
 
   const handleAIGenerate = async () => {
@@ -166,21 +201,40 @@ Return a JSON object with:
   };
 
   const handleDuplicate = (feature) => {
-    const duplicate = { ...feature, name: feature.name + " Copy" };
+    const duplicate = { 
+      ...feature, 
+      name: feature.name + " Copy",
+      custom_project_id: selectedProjectId || feature.custom_project_id,
+      is_custom: !!selectedProjectId || feature.is_custom
+    };
     delete duplicate.id;
     delete duplicate.created_date;
     delete duplicate.updated_date;
     createMutation.mutate(duplicate);
   };
 
+  const currentProject = projects.find(p => p.id === selectedProjectId);
+
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Feature Library</h1>
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            Feature Library
+            {currentProject && (
+              <Badge className="bg-indigo-100 text-indigo-800">
+                <Folder className="h-3 w-3 mr-1" />
+                {currentProject.name}
+              </Badge>
+            )}
+          </h1>
           <p className="text-gray-500">Reusable feature templates for applications</p>
         </div>
         <div className="flex gap-2">
+          <CustomProjectSelector
+            selectedProjectId={selectedProjectId}
+            onSelectProject={setSelectedProjectId}
+          />
           <Button variant="outline" onClick={() => setShowAIDialog(true)}>
             <Sparkles className="h-4 w-4 mr-2" />
             AI Generate
@@ -240,6 +294,9 @@ Return a JSON object with:
                         <CardTitle className="text-base flex items-center gap-2">
                           <Zap className="h-4 w-4 text-amber-600" />
                           {feature.name}
+                          {feature.is_custom && (
+                            <Badge variant="outline" className="text-xs">Custom</Badge>
+                          )}
                         </CardTitle>
                         <Badge className={complexityColors[feature.complexity || "medium"]} variant="secondary">
                           {feature.complexity || "medium"}
@@ -263,6 +320,11 @@ Return a JSON object with:
                         <Button size="sm" variant="ghost" onClick={() => handleDuplicate(feature)}>
                           <Copy className="h-3 w-3" />
                         </Button>
+                        {feature.is_custom && (
+                          <Button size="sm" variant="ghost" onClick={() => handleSaveToLibrary(feature)} title="Save to default library">
+                            <BookmarkPlus className="h-3 w-3" />
+                          </Button>
+                        )}
                         <Button size="sm" variant="ghost" className="text-red-600" onClick={() => deleteMutation.mutate(feature.id)}>
                           <Trash2 className="h-3 w-3" />
                         </Button>
@@ -279,7 +341,12 @@ Return a JSON object with:
       <Dialog open={showBuilder} onOpenChange={setShowBuilder}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
           <DialogHeader>
-            <DialogTitle>{editingFeature?.id ? "Edit Feature" : "Create Feature"}</DialogTitle>
+            <DialogTitle>
+              {editingFeature?.id ? "Edit Feature" : "Create Feature"}
+              {selectedProjectId && currentProject && (
+                <Badge className="ml-2 bg-indigo-100 text-indigo-800">{currentProject.name}</Badge>
+              )}
+            </DialogTitle>
           </DialogHeader>
           <FeatureBuilder
             initialData={editingFeature}
