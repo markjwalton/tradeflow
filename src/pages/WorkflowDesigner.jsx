@@ -51,7 +51,7 @@ export default function WorkflowDesigner() {
   const [selectedStepId, setSelectedStepId] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [showNewDialog, setShowNewDialog] = useState(!workflowId);
-  const [showAIGenerator, setShowAIGenerator] = useState(false);
+  const [viewMode, setViewMode] = useState("canvas"); // "canvas" or "ai-generator"
   const [newWorkflow, setNewWorkflow] = useState({
     name: "",
     code: "",
@@ -302,14 +302,14 @@ export default function WorkflowDesigner() {
             Settings
           </Button>
           <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setShowAIGenerator(true)}
-                          >
-                            <Sparkles className="h-4 w-4 mr-1" />
-                            AI Generate
-                          </Button>
-                          <Button
+            variant={viewMode === "ai-generator" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setViewMode(viewMode === "ai-generator" ? "canvas" : "ai-generator")}
+          >
+            <Sparkles className="h-4 w-4 mr-1" />
+            {viewMode === "ai-generator" ? "Back to Canvas" : "AI Generate"}
+          </Button>
+          <Button
                             size="sm"
                             onClick={() => {
                               updateWorkflowMutation.mutate({
@@ -327,17 +327,19 @@ export default function WorkflowDesigner() {
 
       {/* Main Content */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Step Palette */}
-        <WorkflowStepPalette onAddStep={handleAddStep} />
+        {viewMode === "canvas" ? (
+          <>
+            {/* Step Palette */}
+            <WorkflowStepPalette onAddStep={handleAddStep} />
 
-        {/* Canvas */}
-        <div className="flex-1 overflow-auto p-4">
-          {loadingWorkflow || loadingSteps ? (
-            <div className="h-full flex items-center justify-center">
-              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-            </div>
-          ) : (
-            <WorkflowCanvas
+            {/* Canvas */}
+            <div className="flex-1 overflow-auto p-4">
+              {loadingWorkflow || loadingSteps ? (
+                <div className="h-full flex items-center justify-center">
+                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                </div>
+              ) : (
+                <WorkflowCanvas
                   steps={steps.sort((a, b) => a.stepNumber - b.stepNumber)}
                   selectedStepId={selectedStepId}
                   onSelectStep={setSelectedStepId}
@@ -346,19 +348,30 @@ export default function WorkflowDesigner() {
                   formTemplates={formTemplates}
                   checklistTemplates={checklistTemplates}
                 />
-          )}
-        </div>
+              )}
+            </div>
 
-        {/* Step Editor Panel */}
-        {selectedStep && (
-          <WorkflowStepEditor
-            step={selectedStep}
-            formTemplates={formTemplates}
-            checklistTemplates={checklistTemplates}
-            allSteps={steps}
-            onUpdate={(data) => handleUpdateStep(selectedStep.id, data)}
-            onDelete={() => handleDeleteStep(selectedStep.id)}
-            onClose={() => setSelectedStepId(null)}
+            {/* Step Editor Panel */}
+            {selectedStep && (
+              <WorkflowStepEditor
+                step={selectedStep}
+                formTemplates={formTemplates}
+                checklistTemplates={checklistTemplates}
+                allSteps={steps}
+                onUpdate={(data) => handleUpdateStep(selectedStep.id, data)}
+                onDelete={() => handleDeleteStep(selectedStep.id)}
+                onClose={() => setSelectedStepId(null)}
+              />
+            )}
+          </>
+        ) : (
+          <AIWorkflowGenerator
+            embedded={true}
+            onGenerate={(generated) => {
+              handleAIGenerate(generated);
+              setViewMode("canvas");
+            }}
+            onCancel={() => setViewMode("canvas")}
           />
         )}
       </div>
@@ -496,12 +509,6 @@ export default function WorkflowDesigner() {
         }
       />
 
-      {/* AI Generator */}
-      <AIWorkflowGenerator
-        open={showAIGenerator}
-        onOpenChange={setShowAIGenerator}
-        onGenerate={handleAIGenerate}
-      />
     </div>
   );
 }
