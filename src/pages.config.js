@@ -18,6 +18,8 @@ import GeneratedApps from './pages/GeneratedApps';
 import EntityLibrary from './pages/EntityLibrary';
 import PageLibrary from './pages/PageLibrary';
 import FeatureLibrary from './pages/FeatureLibrary';
+import WorkflowDesigner from './pages/WorkflowDesigner';
+import WorkflowLibrary from './pages/WorkflowLibrary';
 import __Layout from './Layout.jsx';
 
 
@@ -42,6 +44,8 @@ export const PAGES = {
     "EntityLibrary": EntityLibrary,
     "PageLibrary": PageLibrary,
     "FeatureLibrary": FeatureLibrary,
+    "WorkflowDesigner": WorkflowDesigner,
+    "WorkflowLibrary": WorkflowLibrary,
 }
 
 export const pagesConfig = {
