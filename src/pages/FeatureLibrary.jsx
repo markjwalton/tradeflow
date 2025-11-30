@@ -54,6 +54,7 @@ export default function FeatureLibrary() {
   const [aiPrompt, setAiPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
+  const [addToProjectItem, setAddToProjectItem] = useState(null);
 
   const { data: features = [], isLoading } = useQuery({
     queryKey: ["featureTemplates"],
@@ -314,18 +315,23 @@ Return a JSON object with:
                         {feature.entities_used?.length || 0} entities · {feature.integrations?.length || 0} integrations
                       </div>
                       <div className="flex gap-1">
-                        <Button size="sm" variant="ghost" onClick={() => { setEditingFeature(feature); setShowBuilder(true); }}>
+                        <Button size="sm" variant="ghost" onClick={() => { setEditingFeature(feature); setShowBuilder(true); }} title="Edit">
                           <Edit className="h-3 w-3" />
                         </Button>
-                        <Button size="sm" variant="ghost" onClick={() => handleDuplicate(feature)}>
+                        <Button size="sm" variant="ghost" onClick={() => handleDuplicate(feature)} title="Duplicate">
                           <Copy className="h-3 w-3" />
                         </Button>
+                        {!feature.custom_project_id && projects.length > 0 && (
+                          <Button size="sm" variant="ghost" onClick={() => setAddToProjectItem(feature)} title="Add to Project" className="text-indigo-600">
+                            <Folder className="h-3 w-3" />
+                          </Button>
+                        )}
                         {feature.is_custom && (
                           <Button size="sm" variant="ghost" onClick={() => handleSaveToLibrary(feature)} title="Save to default library">
                             <BookmarkPlus className="h-3 w-3" />
                           </Button>
                         )}
-                        <Button size="sm" variant="ghost" className="text-red-600" onClick={() => deleteMutation.mutate(feature.id)}>
+                        <Button size="sm" variant="ghost" className="text-red-600" onClick={() => deleteMutation.mutate(feature.id)} title="Delete">
                           <Trash2 className="h-3 w-3" />
                         </Button>
                       </div>
@@ -355,6 +361,43 @@ Return a JSON object with:
             onCancel={() => { setShowBuilder(false); setEditingFeature(null); }}
             isSaving={createMutation.isPending || updateMutation.isPending}
           />
+        </DialogContent>
+      </Dialog>
+
+      {/* Add to Project Dialog */}
+      <Dialog open={!!addToProjectItem} onOpenChange={(v) => !v && setAddToProjectItem(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Folder className="h-5 w-5 text-indigo-600" />
+              Add "{addToProjectItem?.name}" to Project
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-gray-600">Select a custom project:</p>
+            <div className="space-y-2">
+              {projects.map((project) => (
+                <Button
+                  key={project.id}
+                  variant="outline"
+                  className="w-full justify-start"
+                  onClick={() => {
+                    const copy = { ...addToProjectItem, custom_project_id: project.id, is_custom: true, category: "Custom" };
+                    delete copy.id;
+                    delete copy.created_date;
+                    delete copy.updated_date;
+                    createMutation.mutate(copy);
+                    setAddToProjectItem(null);
+                    toast.success(`Added to ${project.name}`);
+                  }}
+                >
+                  <Folder className="h-4 w-4 mr-2" />
+                  {project.name}
+                </Button>
+              ))}
+            </div>
+            <Button variant="outline" className="w-full" onClick={() => setAddToProjectItem(null)}>Cancel</Button>
+          </div>
         </DialogContent>
       </Dialog>
 
