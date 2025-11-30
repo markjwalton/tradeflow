@@ -34,7 +34,7 @@ import WorkflowDialog from "@/components/mindmap/WorkflowDialog";
 import TenantForkDialog from "@/components/mindmap/TenantForkDialog";
 import AddNodeDialog from "@/components/mindmap/AddNodeDialog";
 import NodeDetailPanel from "@/components/mindmap/NodeDetailPanel";
-import NewMindMapDialog from "@/components/mindmap/NewMindMapDialog";
+import NewMindMapDialog from "@/components/mindmap/NewMindMapDialog.jsx";
 
 export default function MindMapEditor() {
   const queryClient = useQueryClient();
