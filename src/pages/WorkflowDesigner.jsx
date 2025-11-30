@@ -338,12 +338,14 @@ export default function WorkflowDesigner() {
             </div>
           ) : (
             <WorkflowCanvas
-              steps={steps.sort((a, b) => a.stepNumber - b.stepNumber)}
-              selectedStepId={selectedStepId}
-              onSelectStep={setSelectedStepId}
-              onReorderSteps={handleReorderSteps}
-              onDeleteStep={handleDeleteStep}
-            />
+                  steps={steps.sort((a, b) => a.stepNumber - b.stepNumber)}
+                  selectedStepId={selectedStepId}
+                  onSelectStep={setSelectedStepId}
+                  onReorderSteps={handleReorderSteps}
+                  onDeleteStep={handleDeleteStep}
+                  formTemplates={formTemplates}
+                  checklistTemplates={checklistTemplates}
+                />
           )}
         </div>
 
