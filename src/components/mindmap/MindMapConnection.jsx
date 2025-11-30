@@ -9,14 +9,24 @@ export default function MindMapConnectionComponent({
 }) {
   if (!sourceNode || !targetNode) return null;
 
-  // Get node center positions
+  // Get node center positions (use consistent center point)
   const x1 = (sourceNode.position_x || 0) + 70;
   const y1 = (sourceNode.position_y || 0) + 20;
   const x2 = (targetNode.position_x || 0) + 70;
   const y2 = (targetNode.position_y || 0) + 20;
 
-  // Simple straight line path
-  const pathD = `M ${x1} ${y1} L ${x2} ${y2}`;
+  // Calculate control points for a curved line
+  const midX = (x1 + x2) / 2;
+  const midY = (y1 + y2) / 2;
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  
+  // Create a gentle curve
+  const curvature = 0.15;
+  const cx = midX - dy * curvature;
+  const cy = midY + dx * curvature;
+
+  const pathD = `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`;
   const color = connection.color || "#94a3b8";
 
   return (

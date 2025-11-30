@@ -122,8 +122,37 @@ export default function MindMapCanvas({
     return { minX, minY, maxX, maxY };
   }, [nodes]);
 
-  // Fit to view - zoom to 100% and center
+  // Compact/Fit - zoom and pan to fit all nodes in view
   const handleFitToView = useCallback(() => {
+    const bounds = getNodeBounds();
+    if (!bounds || !canvasRef.current) return;
+    
+    const rect = canvasRef.current.getBoundingClientRect();
+    const padding = 60;
+    const { minX, minY, maxX, maxY } = bounds;
+    
+    const contentWidth = maxX - minX;
+    const contentHeight = maxY - minY;
+    const viewWidth = rect.width - padding * 2;
+    const viewHeight = rect.height - padding * 2;
+    
+    // Calculate zoom to fit all content
+    const scaleX = viewWidth / contentWidth;
+    const scaleY = viewHeight / contentHeight;
+    const newZoom = Math.min(scaleX, scaleY, 1.2); // cap at 120%
+    
+    const centerX = (minX + maxX) / 2;
+    const centerY = (minY + maxY) / 2;
+    const newPanX = rect.width / 2 - centerX * newZoom;
+    const newPanY = rect.height / 2 - centerY * newZoom;
+    
+    setZoom(Math.max(newZoom, 0.2));
+    setPan({ x: newPanX, y: newPanY });
+    setIsExpanded(false);
+  }, [getNodeBounds]);
+
+  // Expand - zoom to 100% and center on content
+  const handleExpandView = useCallback(() => {
     const bounds = getNodeBounds();
     if (!bounds || !canvasRef.current) return;
     
@@ -136,34 +165,6 @@ export default function MindMapCanvas({
     const newPanY = rect.height / 2 - centerY;
     
     setZoom(1);
-    setPan({ x: newPanX, y: newPanY });
-    setIsExpanded(false);
-  }, [getNodeBounds]);
-
-  // Expand view - zoom out to show all nodes
-  const handleExpandView = useCallback(() => {
-    const bounds = getNodeBounds();
-    if (!bounds || !canvasRef.current) return;
-    
-    const rect = canvasRef.current.getBoundingClientRect();
-    const padding = 80;
-    const { minX, minY, maxX, maxY } = bounds;
-    
-    const contentWidth = maxX - minX;
-    const contentHeight = maxY - minY;
-    const viewWidth = rect.width - padding * 2;
-    const viewHeight = rect.height - padding * 2;
-    
-    const scaleX = viewWidth / contentWidth;
-    const scaleY = viewHeight / contentHeight;
-    const newZoom = Math.min(scaleX, scaleY, 1);
-    
-    const centerX = (minX + maxX) / 2;
-    const centerY = (minY + maxY) / 2;
-    const newPanX = rect.width / 2 - centerX * newZoom;
-    const newPanY = rect.height / 2 - centerY * newZoom;
-    
-    setZoom(Math.max(newZoom, 0.2));
     setPan({ x: newPanX, y: newPanY });
     setIsExpanded(true);
   }, [getNodeBounds]);
