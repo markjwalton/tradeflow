@@ -20,7 +20,7 @@ import { toast } from "sonner";
 
 const STORAGE_KEY = "ai_workflow_generator_draft";
 
-export default function AIWorkflowGenerator({ open, onOpenChange, onGenerate }) {
+export default function AIWorkflowGenerator({ open, onOpenChange, onGenerate, embedded = false, onCancel }) {
   const [steps, setSteps] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
@@ -229,7 +229,14 @@ Return a JSON object with this structure:
   const handleApply = () => {
     onGenerate(generatedSteps);
     localStorage.removeItem(STORAGE_KEY);
-    handleClearAndClose();
+    if (embedded) {
+      setSteps([{ name: "", narrative: "" }]);
+      setAdditionalContext("");
+      setPhase("input");
+      setGeneratedSteps([]);
+    } else {
+      handleClearAndClose();
+    }
   };
 
   const handleClose = () => {
@@ -256,23 +263,22 @@ Return a JSON object with this structure:
     wait: "bg-gray-100 text-gray-800",
   };
 
-  return (
-    <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-amber-500" />
-            AI Workflow Generator
-          </DialogTitle>
-          <DialogDescription>
-            {phase === "input" && "Describe your workflow steps and let AI build the details"}
-            {phase === "context" && "Add any additional context for the AI"}
-            {phase === "generating" && "AI is generating your workflow..."}
-            {phase === "result" && "Review and apply the generated workflow"}
-          </DialogDescription>
-        </DialogHeader>
+  const content = (
+    <>
+      <div className={embedded ? "mb-4" : ""}>
+        <div className="flex items-center gap-2 mb-1">
+          <Sparkles className="h-5 w-5 text-amber-500" />
+          <h2 className="text-lg font-semibold">AI Workflow Generator</h2>
+        </div>
+        <p className="text-sm text-gray-500">
+          {phase === "input" && "Describe your workflow steps and let AI build the details"}
+          {phase === "context" && "Add any additional context for the AI"}
+          {phase === "generating" && "AI is generating your workflow..."}
+          {phase === "result" && "Review and apply the generated workflow"}
+        </p>
+      </div>
 
-        <ScrollArea className="flex-1 pr-4">
+      <ScrollArea className={embedded ? "flex-1" : "flex-1 pr-4"}>
           {/* Phase 1: Input Steps */}
           {phase === "input" && (
             <div className="space-y-4">
@@ -344,8 +350,8 @@ Return a JSON object with this structure:
               </Button>
 
               <div className="flex justify-between pt-4">
-                <Button variant="outline" onClick={handleClearAndClose} className="text-gray-500">
-                  Clear & Close
+                <Button variant="outline" onClick={embedded ? onCancel : handleClearAndClose} className="text-gray-500">
+                  {embedded ? "Cancel" : "Clear & Close"}
                 </Button>
                 <Button onClick={handleFinishInput}>
                   Continue
@@ -499,8 +505,23 @@ Return a JSON object with this structure:
               </div>
             </div>
           )}
-        </ScrollArea>
-      </DialogContent>
-    </Dialog>
-  );
-}
+          </ScrollArea>
+          </>
+          );
+
+          if (embedded) {
+          return (
+          <div className="flex-1 flex flex-col p-6 bg-white overflow-auto">
+          {content}
+          </div>
+          );
+          }
+
+          return (
+          <Dialog open={open} onOpenChange={handleClose}>
+          <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
+          {content}
+          </DialogContent>
+          </Dialog>
+          );
+          }
