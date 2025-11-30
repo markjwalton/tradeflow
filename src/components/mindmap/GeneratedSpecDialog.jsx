@@ -6,22 +6,30 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Database, Layout, Zap, Copy, Check } from "lucide-react";
+import { Database, Layout, Zap, Copy, Check, Save, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { base44 } from "@/api/base44Client";
 
 export default function GeneratedSpecDialog({
   open,
   onOpenChange,
   spec,
+  mindMap,
 }) {
   const [selectedEntities, setSelectedEntities] = useState([]);
   const [copiedJson, setCopiedJson] = useState(null);
   const [copiedAll, setCopiedAll] = useState(false);
+  const [showSaveForm, setShowSaveForm] = useState(false);
+  const [saveName, setSaveName] = useState("");
+  const [saveDescription, setSaveDescription] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   if (!spec) return null;
 
@@ -87,12 +95,97 @@ ${JSON.stringify(e.schema, null, 2)}
     toast.success("Copied! Paste into chat to create entities");
   };
 
+  const handleSaveGeneratedApp = async () => {
+    if (!saveName.trim()) {
+      toast.error("Please enter a name");
+      return;
+    }
+    
+    setIsSaving(true);
+    try {
+      await base44.entities.GeneratedApp.create({
+        mind_map_id: mindMap?.id,
+        mind_map_name: mindMap?.name,
+        mind_map_version: mindMap?.version || 1,
+        name: saveName,
+        description: saveDescription,
+        specification: spec,
+        status: "draft"
+      });
+      
+      toast.success("Generated app saved!");
+      setShowSaveForm(false);
+      setSaveName("");
+      setSaveDescription("");
+    } catch (error) {
+      toast.error("Failed to save: " + (error.message || "Unknown error"));
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[85vh]">
         <DialogHeader>
-          <DialogTitle>Generated App Specification</DialogTitle>
+          <DialogTitle className="flex items-center justify-between">
+            <span>Generated App Specification</span>
+            {!showSaveForm && (
+              <Button 
+                onClick={() => {
+                  setSaveName(mindMap?.name ? `${mindMap.name} App` : "New App");
+                  setShowSaveForm(true);
+                }}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                <Save className="h-4 w-4 mr-2" />
+                Save as Generated App
+              </Button>
+            )}
+          </DialogTitle>
         </DialogHeader>
+
+        {showSaveForm && (
+          <div className="border rounded-lg p-4 bg-blue-50 space-y-3 mb-4">
+            <div>
+              <label className="text-sm font-medium">App Name</label>
+              <Input
+                value={saveName}
+                onChange={(e) => setSaveName(e.target.value)}
+                placeholder="Enter a name for this generated app..."
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Description (optional)</label>
+              <Textarea
+                value={saveDescription}
+                onChange={(e) => setSaveDescription(e.target.value)}
+                placeholder="Describe this generated app..."
+                rows={2}
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button
+                onClick={handleSaveGeneratedApp}
+                disabled={isSaving || !saveName.trim()}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                {isSaving && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                Save
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowSaveForm(false);
+                  setSaveName("");
+                  setSaveDescription("");
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        )}
 
         <Tabs defaultValue="entities" className="flex-1">
           <TabsList className="grid w-full grid-cols-3">
