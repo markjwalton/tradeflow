@@ -100,36 +100,94 @@ export default function NewMindMapDialog({
 
     setIsGenerating(true);
     try {
+      // Fetch all entities, pages, and features for this template's custom project
+      let projectEntities = [];
+      let projectPages = [];
+      let projectFeatures = [];
+      
+      if (selectedTemplate.custom_project_id) {
+        // Fetch from custom project
+        const [entities, pages, features] = await Promise.all([
+          base44.entities.EntityTemplate.filter({ custom_project_id: selectedTemplate.custom_project_id }),
+          base44.entities.PageTemplate.filter({ custom_project_id: selectedTemplate.custom_project_id }),
+          base44.entities.FeatureTemplate.filter({ custom_project_id: selectedTemplate.custom_project_id }),
+        ]);
+        projectEntities = entities;
+        projectPages = pages;
+        projectFeatures = features;
+      } else if (selectedTemplate.entities?.length || selectedTemplate.pages?.length || selectedTemplate.features?.length) {
+        // Use embedded data in template
+        projectEntities = selectedTemplate.entities || [];
+        projectPages = selectedTemplate.pages || [];
+        projectFeatures = selectedTemplate.features || [];
+      }
+
       // Create the mindmap first
       const newMap = await base44.entities.MindMap.create({
         name: mapName,
-        description: selectedTemplate.specification,
+        description: selectedTemplate.summary || selectedTemplate.description || "",
         node_suggestions: "",
       });
 
-      // Use AI to generate the mind map structure from the template
+      // Build comprehensive context from actual project data
+      const entityList = projectEntities.map(e => ({
+        name: e.name,
+        description: e.description,
+        fields: Object.keys(e.schema?.properties || {}).slice(0, 10).join(", "),
+        relationships: e.relationships?.map(r => r.target_entity).join(", ") || ""
+      }));
+      
+      const pageList = projectPages.map(p => ({
+        name: p.name,
+        description: p.description,
+        category: p.category,
+        entities_used: p.entities_used || []
+      }));
+      
+      const featureList = projectFeatures.map(f => ({
+        name: f.name,
+        description: f.description,
+        category: f.category,
+        entities_used: f.entities_used || []
+      }));
+
+      // Use AI to generate the mind map structure from the actual project data
       const result = await base44.integrations.Core.InvokeLLM({
-        prompt: `You are creating a mind map structure from a detailed business specification.
+        prompt: `You are creating a mind map structure from a business application project.
 
-BUSINESS TEMPLATE: ${selectedTemplate.name}
+PROJECT NAME: ${selectedTemplate.name}
+DESCRIPTION: ${selectedTemplate.summary || selectedTemplate.description || ""}
 
-DETAILED SPECIFICATION:
-${selectedTemplate.specification}
+ENTITIES (${projectEntities.length}):
+${JSON.stringify(entityList, null, 2)}
 
-Generate a complete mind map structure with:
-1. A central node representing the main system/business
-2. Main branches for each major module/area (e.g., "Project Management", "Customer Relations")
-3. Sub-branches for features, entities, and pages
-4. Mark nodes appropriately with their type
+PAGES (${projectPages.length}):
+${JSON.stringify(pageList, null, 2)}
+
+FEATURES (${projectFeatures.length}):
+${JSON.stringify(featureList, null, 2)}
+
+Generate a COMPLETE mind map structure that includes ALL entities, pages, and features listed above.
+
+Structure:
+1. Central node: "${mapName}" 
+2. Main branches: Group items by functional area (e.g., "Customer Management", "Project Management", "Reports", etc.)
+3. Under each main branch, include the relevant entities, pages, and features
+
+IMPORTANT: 
+- Include EVERY entity as a node with node_type "entity"
+- Include EVERY page as a node with node_type "page"  
+- Include EVERY feature as a node with node_type "feature"
+- Group them logically under main branches
 
 Return a JSON object with a "nodes" array where each node has:
-- "text": the node label
-- "node_type": one of "central", "main_branch", "sub_branch", "feature", "entity", "page"
+- "text": the node label (use exact names from the lists above)
+- "node_type": one of "central", "main_branch", "entity", "page", "feature"
 - "parent_index": index of parent node in array (null for central node)
-- "color": suggested hex color
-- "specification_notes": detailed notes for this node based on the specification
+- "color": hex color (#22c55e for entities, #3b82f6 for pages, #f59e0b for features, #6366f1 for main branches)
+- "specification_notes": description or notes
 
-Structure the nodes hierarchically, starting with the central node at index 0.`,
+Start with central node at index 0.`,
         response_json_schema: {
           type: "object",
           properties: {
