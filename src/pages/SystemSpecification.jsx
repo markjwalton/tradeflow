@@ -21,6 +21,7 @@ import {
   Settings,
   ChevronRight,
   Clock,
+  Sparkles,
 } from "lucide-react";
 
 const SPEC_VERSION = "1.0.0";
@@ -320,10 +321,28 @@ const specSections = [
         "Checklist generation from requirements",
         "Mind map generation from business templates",
         "Specification document generation",
-      ],
-    },
-  },
-];
+        "Dependency analysis for business templates",
+        ],
+        },
+        },
+        {
+        id: "dependency-analyzer",
+        title: "AI Dependency Analyzer",
+        icon: Sparkles,
+        content: {
+        description: "Intelligent analysis of selected entities, pages, and features to identify gaps and suggest missing components.",
+        features: [
+        "Analyzes entity relationships to find missing referenced entities",
+        "Suggests essential pages for each entity (list, detail, form)",
+        "Recommends features based on entity types",
+        "Identifies workflow dependencies (forms, checklists)",
+        "Highlights logical gaps in application design",
+        "Severity ratings (critical, recommended, optional)",
+        "One-click application of selected suggestions",
+        ],
+        },
+        },
+        ];
 
 const surveyDataSpec = {
   name: "SurveyData",
