@@ -34,6 +34,7 @@ import WorkflowDialog from "@/components/mindmap/WorkflowDialog";
 import TenantForkDialog from "@/components/mindmap/TenantForkDialog";
 import AddNodeDialog from "@/components/mindmap/AddNodeDialog";
 import NodeDetailPanel from "@/components/mindmap/NodeDetailPanel";
+import NewMindMapDialog from "@/components/mindmap/NewMindMapDialog";
 
 export default function MindMapEditor() {
   const queryClient = useQueryClient();

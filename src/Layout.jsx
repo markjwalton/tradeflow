@@ -33,6 +33,7 @@ import {
 const globalAdminPages = [
   { name: "Mind Map Editor", slug: "MindMapEditor", icon: GitBranch },
   { name: "Template Library", slug: "TemplateLibrary", icon: Package },
+  { name: "Business Templates", slug: "BusinessTemplates", icon: Building2 },
   { name: "Tenant Manager", slug: "TenantManager", icon: Building2 },
   { name: "Navigation Manager", slug: "NavigationManager", icon: Navigation },
   { name: "Package Library", slug: "PackageLibrary", icon: Package },
@@ -45,7 +46,7 @@ const globalAdminPages = [
 ];
 
 // Pages that don't require tenant context but need to preserve query params
-const standalonePages = ["MindMapEditor", "PackageLibrary", "TenantManager", "Projects", "Tasks", "Customers", "Team", "Estimates", "Calendar", "ProjectDetail"];
+const standalonePages = ["MindMapEditor", "PackageLibrary", "TenantManager", "BusinessTemplates", "Projects", "Tasks", "Customers", "Team", "Estimates", "Calendar", "ProjectDetail"];
 
 // Tenant pages - for users with tenant access
 const tenantPages = [
