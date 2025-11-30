@@ -50,6 +50,7 @@ export default function EntityLibrary() {
   const [aiPrompt, setAiPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
+  const [addToProjectEntity, setAddToProjectEntity] = useState(null);
 
   const { data: entities = [], isLoading } = useQuery({
     queryKey: ["entityTemplates"],
@@ -310,6 +311,7 @@ Return a JSON object with:
                           size="sm"
                           variant="ghost"
                           onClick={() => { setEditingEntity(entity); setShowBuilder(true); }}
+                          title="Edit"
                         >
                           <Edit className="h-3 w-3" />
                         </Button>
@@ -317,9 +319,21 @@ Return a JSON object with:
                           size="sm"
                           variant="ghost"
                           onClick={() => handleDuplicate(entity)}
+                          title="Duplicate"
                         >
                           <Copy className="h-3 w-3" />
                         </Button>
+                        {!entity.custom_project_id && projects.length > 0 && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setAddToProjectEntity(entity)}
+                            title="Add to Project"
+                            className="text-indigo-600"
+                          >
+                            <Folder className="h-3 w-3" />
+                          </Button>
+                        )}
                         {entity.is_custom && (
                           <Button
                             size="sm"
@@ -335,6 +349,7 @@ Return a JSON object with:
                           variant="ghost"
                           className="text-red-600 hover:text-red-700"
                           onClick={() => deleteMutation.mutate(entity.id)}
+                          title="Delete"
                         >
                           <Trash2 className="h-3 w-3" />
                         </Button>
@@ -365,6 +380,53 @@ Return a JSON object with:
             onCancel={() => { setShowBuilder(false); setEditingEntity(null); }}
             isSaving={createMutation.isPending || updateMutation.isPending}
           />
+        </DialogContent>
+      </Dialog>
+
+      {/* Add to Project Dialog */}
+      <Dialog open={!!addToProjectEntity} onOpenChange={(v) => !v && setAddToProjectEntity(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Folder className="h-5 w-5 text-indigo-600" />
+              Add "{addToProjectEntity?.name}" to Project
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-gray-600">
+              Select a custom project to add this entity to:
+            </p>
+            <div className="space-y-2">
+              {projects.map((project) => (
+                <Button
+                  key={project.id}
+                  variant="outline"
+                  className="w-full justify-start"
+                  onClick={() => {
+                    const copy = {
+                      ...addToProjectEntity,
+                      custom_project_id: project.id,
+                      is_custom: true,
+                      category: "Custom",
+                      name: addToProjectEntity.name
+                    };
+                    delete copy.id;
+                    delete copy.created_date;
+                    delete copy.updated_date;
+                    createMutation.mutate(copy);
+                    setAddToProjectEntity(null);
+                    toast.success(`Added to ${project.name}`);
+                  }}
+                >
+                  <Folder className="h-4 w-4 mr-2" />
+                  {project.name}
+                </Button>
+              ))}
+            </div>
+            <Button variant="outline" className="w-full" onClick={() => setAddToProjectEntity(null)}>
+              Cancel
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
 
