@@ -9,29 +9,14 @@ export default function MindMapConnectionComponent({
 }) {
   if (!sourceNode || !targetNode) return null;
 
-  // Offset to connect from center of nodes
-  const sourceWidth = sourceNode.node_type === 'central' ? 180 : 140;
-  const sourceHeight = sourceNode.node_type === 'central' ? 50 : 36;
-  const targetWidth = targetNode.node_type === 'central' ? 180 : 140;
-  const targetHeight = targetNode.node_type === 'central' ? 50 : 36;
+  // Get node center positions
+  const x1 = (sourceNode.position_x || 0) + 70;
+  const y1 = (sourceNode.position_y || 0) + 20;
+  const x2 = (targetNode.position_x || 0) + 70;
+  const y2 = (targetNode.position_y || 0) + 20;
 
-  const x1 = (sourceNode.position_x || 0) + sourceWidth / 2;
-  const y1 = (sourceNode.position_y || 0) + sourceHeight / 2;
-  const x2 = (targetNode.position_x || 0) + targetWidth / 2;
-  const y2 = (targetNode.position_y || 0) + targetHeight / 2;
-
-  // Calculate control points for a curved line
-  const midX = (x1 + x2) / 2;
-  const midY = (y1 + y2) / 2;
-  const dx = x2 - x1;
-  const dy = y2 - y1;
-  
-  // Create a gentle curve
-  const curvature = 0.15;
-  const cx = midX - dy * curvature;
-  const cy = midY + dx * curvature;
-
-  const pathD = `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`;
+  // Simple straight line path
+  const pathD = `M ${x1} ${y1} L ${x2} ${y2}`;
   const color = connection.color || "#94a3b8";
 
   return (
