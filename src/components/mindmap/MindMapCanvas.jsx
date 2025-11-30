@@ -74,13 +74,22 @@ export default function MindMapCanvas({
   };
 
   const handleCanvasMouseDown = (e) => {
-    if (e.target === canvasRef.current || e.target.tagName === "svg") {
+    // Check if clicking on canvas background (not on a node)
+    const isCanvasClick = e.target === canvasRef.current || 
+                          e.target.tagName === "svg" || 
+                          e.target.closest("[data-canvas-background]");
+    
+    if (isCanvasClick || panMode) {
       if (e.button === 1 || (e.button === 0 && e.altKey) || (e.button === 0 && panMode)) {
+        e.preventDefault();
         setIsPanning(true);
         setPanStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
-      } else {
-        onCanvasClick();
+        return;
       }
+    }
+    
+    if (isCanvasClick) {
+      onCanvasClick();
     }
   };
 
@@ -190,6 +199,7 @@ export default function MindMapCanvas({
     <div
       ref={canvasRef}
       className="relative w-full h-full overflow-hidden bg-slate-50"
+      data-canvas-background="true"
       style={{ 
         backgroundImage: "radial-gradient(circle, #cbd5e1 1px, transparent 1px)",
         backgroundSize: `${20 * zoom}px ${20 * zoom}px`,
