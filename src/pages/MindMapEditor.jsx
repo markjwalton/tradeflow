@@ -457,7 +457,7 @@ export default function MindMapEditor() {
     };
 
     // Calculate main branch positions
-    const mainRadius = 400;
+    const mainRadius = 450;
     mainBranches.forEach((node, i) => {
       const angle = (2 * Math.PI * i) / mainBranches.length - Math.PI / 2;
       const x = centerX + mainRadius * Math.cos(angle);
@@ -483,7 +483,7 @@ export default function MindMapEditor() {
       
       for (const depth of depths) {
         const nodesAtDepth = depthGroups[depth];
-        const layerRadius = 220 + (depth - 1) * 180;
+        const layerRadius = 250 + (depth - 1) * 200;
         
         const byParent = {};
         nodesAtDepth.forEach(d => {
@@ -492,7 +492,8 @@ export default function MindMapEditor() {
         });
 
         const totalNodes = nodesAtDepth.length;
-        const baseSpread = Math.min(Math.PI * 0.8, Math.PI / 3 + (totalNodes * 0.08));
+        // Increase spread angle significantly, especially for branches with many nodes
+        const baseSpread = Math.min(Math.PI * 0.95, Math.PI / 2.5 + (totalNodes * 0.12));
         const startAngle = mainAngle - baseSpread / 2;
         
         let nodeIndex = 0;
