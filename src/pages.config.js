@@ -13,6 +13,7 @@ import Estimates from './pages/Estimates';
 import Calendar from './pages/Calendar';
 import ProjectDetail from './pages/ProjectDetail';
 import TemplateLibrary from './pages/TemplateLibrary';
+import BusinessTemplates from './pages/BusinessTemplates';
 import __Layout from './Layout.jsx';
 
 
@@ -32,6 +33,7 @@ export const PAGES = {
     "Calendar": Calendar,
     "ProjectDetail": ProjectDetail,
     "TemplateLibrary": TemplateLibrary,
+    "BusinessTemplates": BusinessTemplates,
 }
 
 export const pagesConfig = {
