@@ -1,0 +1,321 @@
+import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Plus, Search, Zap, Sparkles, Trash2, Edit, Copy, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import FeatureBuilder from "@/components/library/FeatureBuilder";
+
+const categories = ["Communication", "Automation", "Integration", "Reporting", "Security", "Workflow", "UI/UX", "Other"];
+
+const categoryColors = {
+  Communication: "bg-blue-100 text-blue-800",
+  Automation: "bg-green-100 text-green-800",
+  Integration: "bg-purple-100 text-purple-800",
+  Reporting: "bg-yellow-100 text-yellow-800",
+  Security: "bg-red-100 text-red-800",
+  Workflow: "bg-orange-100 text-orange-800",
+  "UI/UX": "bg-pink-100 text-pink-800",
+  Other: "bg-gray-100 text-gray-800",
+};
+
+const complexityColors = {
+  simple: "bg-green-100 text-green-700",
+  medium: "bg-yellow-100 text-yellow-700",
+  complex: "bg-red-100 text-red-700",
+};
+
+export default function FeatureLibrary() {
+  const queryClient = useQueryClient();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [showBuilder, setShowBuilder] = useState(false);
+  const [editingFeature, setEditingFeature] = useState(null);
+  const [showAIDialog, setShowAIDialog] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const { data: features = [], isLoading } = useQuery({
+    queryKey: ["featureTemplates"],
+    queryFn: () => base44.entities.FeatureTemplate.list(),
+  });
+
+  const { data: entities = [] } = useQuery({
+    queryKey: ["entityTemplates"],
+    queryFn: () => base44.entities.EntityTemplate.list(),
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (data) => base44.entities.FeatureTemplate.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["featureTemplates"] });
+      setShowBuilder(false);
+      setEditingFeature(null);
+      toast.success("Feature template saved");
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.FeatureTemplate.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["featureTemplates"] });
+      setShowBuilder(false);
+      setEditingFeature(null);
+      toast.success("Feature template updated");
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities.FeatureTemplate.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["featureTemplates"] });
+      toast.success("Feature template deleted");
+    },
+  });
+
+  const filteredFeatures = features.filter((feature) => {
+    const matchesSearch = feature.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      feature.description?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === "all" || feature.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  const groupedFeatures = filteredFeatures.reduce((acc, feature) => {
+    const cat = feature.category || "Other";
+    if (!acc[cat]) acc[cat] = [];
+    acc[cat].push(feature);
+    return acc;
+  }, {});
+
+  const handleSaveFeature = (featureData) => {
+    if (editingFeature?.id) {
+      updateMutation.mutate({ id: editingFeature.id, data: featureData });
+    } else {
+      createMutation.mutate(featureData);
+    }
+  };
+
+  const handleAIGenerate = async () => {
+    if (!aiPrompt.trim()) return;
+    
+    setIsGenerating(true);
+    try {
+      const entityList = entities.map(e => e.name).join(", ");
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are a software architect. Based on this description, generate a feature template:
+
+"${aiPrompt}"
+
+Available entities: ${entityList || "None defined yet"}
+
+Return a JSON object with:
+- name: Feature name (e.g., "Email Notifications", "PDF Export")
+- description: Clear description of what the feature does
+- category: One of [Communication, Automation, Integration, Reporting, Security, Workflow, UI/UX, Other]
+- complexity: One of [simple, medium, complex]
+- entities_used: Array of entity names this feature uses
+- triggers: Array of what triggers this feature (e.g., "user_action", "schedule", "event")
+- integrations: Array of external integrations needed
+- requirements: Array of technical requirements
+- user_stories: Array of user stories this addresses
+- tags: Array of relevant tags`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            description: { type: "string" },
+            category: { type: "string" },
+            complexity: { type: "string" },
+            entities_used: { type: "array", items: { type: "string" } },
+            triggers: { type: "array", items: { type: "string" } },
+            integrations: { type: "array", items: { type: "string" } },
+            requirements: { type: "array", items: { type: "string" } },
+            user_stories: { type: "array", items: { type: "string" } },
+            tags: { type: "array", items: { type: "string" } }
+          }
+        }
+      });
+
+      setEditingFeature(result);
+      setShowAIDialog(false);
+      setShowBuilder(true);
+      setAiPrompt("");
+      toast.success("Feature generated! Review and save.");
+    } catch (error) {
+      toast.error("Failed to generate feature");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleDuplicate = (feature) => {
+    const duplicate = { ...feature, name: feature.name + " Copy" };
+    delete duplicate.id;
+    delete duplicate.created_date;
+    delete duplicate.updated_date;
+    createMutation.mutate(duplicate);
+  };
+
+  return (
+    <div className="p-6">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold">Feature Library</h1>
+          <p className="text-gray-500">Reusable feature templates for applications</p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setShowAIDialog(true)}>
+            <Sparkles className="h-4 w-4 mr-2" />
+            AI Generate
+          </Button>
+          <Button onClick={() => { setEditingFeature(null); setShowBuilder(true); }}>
+            <Plus className="h-4 w-4 mr-2" />
+            New Feature
+          </Button>
+        </div>
+      </div>
+
+      <div className="flex gap-4 mb-6">
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Input
+            placeholder="Search features..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="Category" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Categories</SelectItem>
+            {categories.map((cat) => (
+              <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {isLoading ? (
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+        </div>
+      ) : filteredFeatures.length === 0 ? (
+        <div className="text-center py-12 text-gray-500">
+          <Zap className="h-12 w-12 mx-auto mb-4 opacity-50" />
+          <p>No feature templates found</p>
+        </div>
+      ) : (
+        <div className="space-y-8">
+          {Object.entries(groupedFeatures).map(([category, categoryFeatures]) => (
+            <div key={category}>
+              <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                <Badge className={categoryColors[category]}>{category}</Badge>
+                <span className="text-gray-400 text-sm font-normal">({categoryFeatures.length})</span>
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {categoryFeatures.map((feature) => (
+                  <Card key={feature.id} className="hover:shadow-md transition-shadow">
+                    <CardHeader className="pb-2">
+                      <div className="flex items-start justify-between">
+                        <CardTitle className="text-base flex items-center gap-2">
+                          <Zap className="h-4 w-4 text-amber-600" />
+                          {feature.name}
+                        </CardTitle>
+                        <Badge className={complexityColors[feature.complexity || "medium"]} variant="secondary">
+                          {feature.complexity || "medium"}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-gray-500 mt-1">{feature.description}</p>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <div className="flex flex-wrap gap-1 mb-3">
+                        {feature.tags?.slice(0, 3).map((tag) => (
+                          <Badge key={tag} variant="outline" className="text-xs">{tag}</Badge>
+                        ))}
+                      </div>
+                      <div className="text-xs text-gray-500 mb-3">
+                        {feature.entities_used?.length || 0} entities · {feature.integrations?.length || 0} integrations
+                      </div>
+                      <div className="flex gap-1">
+                        <Button size="sm" variant="ghost" onClick={() => { setEditingFeature(feature); setShowBuilder(true); }}>
+                          <Edit className="h-3 w-3" />
+                        </Button>
+                        <Button size="sm" variant="ghost" onClick={() => handleDuplicate(feature)}>
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                        <Button size="sm" variant="ghost" className="text-red-600" onClick={() => deleteMutation.mutate(feature.id)}>
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <Dialog open={showBuilder} onOpenChange={setShowBuilder}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle>{editingFeature?.id ? "Edit Feature" : "Create Feature"}</DialogTitle>
+          </DialogHeader>
+          <FeatureBuilder
+            initialData={editingFeature}
+            entities={entities}
+            onSave={handleSaveFeature}
+            onCancel={() => { setShowBuilder(false); setEditingFeature(null); }}
+            isSaving={createMutation.isPending || updateMutation.isPending}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showAIDialog} onOpenChange={setShowAIDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-purple-600" />
+              Generate Feature with AI
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Textarea
+              placeholder="Describe the feature you need...&#10;&#10;Example: Send email notifications when a task is assigned or its status changes"
+              value={aiPrompt}
+              onChange={(e) => setAiPrompt(e.target.value)}
+              rows={5}
+            />
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setShowAIDialog(false)}>Cancel</Button>
+              <Button onClick={handleAIGenerate} disabled={isGenerating || !aiPrompt.trim()}>
+                {isGenerating && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                Generate
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
