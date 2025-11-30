@@ -31,6 +31,7 @@ import {
   Trash2,
   Copy,
   Eye,
+  Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
 import { createPageUrl } from "@/utils";
@@ -40,6 +41,7 @@ import WorkflowCanvas from "@/components/workflow/WorkflowCanvas";
 import WorkflowStepPalette from "@/components/workflow/WorkflowStepPalette";
 import WorkflowStepEditor from "@/components/workflow/WorkflowStepEditor";
 import WorkflowSettings from "@/components/workflow/WorkflowSettings";
+import AIWorkflowGenerator from "@/components/workflow/AIWorkflowGenerator";
 
 export default function WorkflowDesigner() {
   const queryClient = useQueryClient();
@@ -49,6 +51,7 @@ export default function WorkflowDesigner() {
   const [selectedStepId, setSelectedStepId] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [showNewDialog, setShowNewDialog] = useState(!workflowId);
+  const [showAIGenerator, setShowAIGenerator] = useState(false);
   const [newWorkflow, setNewWorkflow] = useState({
     name: "",
     code: "",
@@ -172,6 +175,75 @@ export default function WorkflowDesigner() {
     queryClient.invalidateQueries({ queryKey: ["workflowSteps", workflowId] });
   };
 
+  const handleAIGenerate = async (generated) => {
+    if (!workflowId) {
+      // Create workflow first
+      const newWf = await base44.entities.Workflow.create({
+        name: generated.workflowName,
+        code: generated.workflowName.toLowerCase().replace(/\s+/g, "_"),
+        description: generated.workflowDescription,
+        category: generated.category || "project",
+        estimatedDurationDays: generated.estimatedTotalDays,
+      });
+      const url = new URL(window.location.href);
+      url.searchParams.set("id", newWf.id);
+      window.history.replaceState({}, "", url);
+      
+      // Create steps
+      for (let i = 0; i < generated.steps.length; i++) {
+        const step = generated.steps[i];
+        await base44.entities.WorkflowStep.create({
+          workflowId: newWf.id,
+          name: step.name,
+          code: step.code,
+          description: step.description,
+          stepNumber: i + 1,
+          stepType: step.stepType || "task",
+          assigneeType: step.assigneeType || "user",
+          assigneeValue: step.assigneeRole || "",
+          estimatedDurationHours: step.estimatedDurationHours,
+          instructions: step.instructions,
+          isRequired: step.isRequired !== false,
+          canSkip: step.canSkip === true,
+          decisionOptions: step.decisionOptions,
+          triggers: step.triggers?.map(t => ({
+            triggerId: `trigger_${Date.now()}_${Math.random()}`,
+            event: t.event,
+            actions: [{ actionId: `action_${Date.now()}`, type: t.action, config: {} }],
+            isActive: true,
+          })),
+        });
+      }
+      
+      queryClient.invalidateQueries({ queryKey: ["workflow"] });
+      queryClient.invalidateQueries({ queryKey: ["workflowSteps"] });
+      setShowNewDialog(false);
+      toast.success("Workflow generated!");
+    } else {
+      // Add steps to existing workflow
+      const startNumber = steps.length + 1;
+      for (let i = 0; i < generated.steps.length; i++) {
+        const step = generated.steps[i];
+        await base44.entities.WorkflowStep.create({
+          workflowId,
+          name: step.name,
+          code: step.code,
+          description: step.description,
+          stepNumber: startNumber + i,
+          stepType: step.stepType || "task",
+          assigneeType: step.assigneeType || "user",
+          assigneeValue: step.assigneeRole || "",
+          estimatedDurationHours: step.estimatedDurationHours,
+          instructions: step.instructions,
+          isRequired: step.isRequired !== false,
+          canSkip: step.canSkip === true,
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ["workflowSteps", workflowId] });
+      toast.success(`Added ${generated.steps.length} steps!`);
+    }
+  };
+
   if (!workflowId && !showNewDialog) {
     return (
       <div className="h-screen flex items-center justify-center">
@@ -230,18 +302,26 @@ export default function WorkflowDesigner() {
             Settings
           </Button>
           <Button
-            size="sm"
-            onClick={() => {
-              updateWorkflowMutation.mutate({
-                id: workflowId,
-                data: { isActive: true },
-              });
-            }}
-            disabled={!workflow || updateWorkflowMutation.isPending}
-          >
-            <Save className="h-4 w-4 mr-1" />
-            Save & Publish
-          </Button>
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setShowAIGenerator(true)}
+                          >
+                            <Sparkles className="h-4 w-4 mr-1" />
+                            AI Generate
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={() => {
+                              updateWorkflowMutation.mutate({
+                                id: workflowId,
+                                data: { isActive: true },
+                              });
+                            }}
+                            disabled={!workflow || updateWorkflowMutation.isPending}
+                          >
+                            <Save className="h-4 w-4 mr-1" />
+                            Save & Publish
+                          </Button>
         </div>
       </div>
 
@@ -412,6 +492,13 @@ export default function WorkflowDesigner() {
         onUpdate={(data) =>
           updateWorkflowMutation.mutate({ id: workflowId, data })
         }
+      />
+
+      {/* AI Generator */}
+      <AIWorkflowGenerator
+        open={showAIGenerator}
+        onOpenChange={setShowAIGenerator}
+        onGenerate={handleAIGenerate}
       />
     </div>
   );
