@@ -21,11 +21,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Search, Database, Sparkles, Trash2, Edit, Copy, Loader2, Star, BookmarkPlus, Folder, Layout, Zap, Check } from "lucide-react";
+import { Plus, Search, Database, Sparkles, Trash2, Edit, Copy, Loader2, Star, BookmarkPlus, Folder, Layout, Zap, Check, FolderPlus } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import EntityBuilder from "@/components/library/EntityBuilder";
 import CustomProjectSelector from "@/components/library/CustomProjectSelector";
+import AddGroupToProjectDialog from "@/components/library/AddGroupToProjectDialog";
 
 const categories = ["Core", "CRM", "Finance", "Operations", "HR", "Inventory", "Communication", "Custom", "Other"];
 
@@ -56,6 +57,7 @@ export default function EntityLibrary() {
   const [addToProjectSelectedPages, setAddToProjectSelectedPages] = useState([]);
   const [addToProjectSelectedFeatures, setAddToProjectSelectedFeatures] = useState([]);
   const [addToProjectTargetId, setAddToProjectTargetId] = useState(null);
+  const [addGroupToProject, setAddGroupToProject] = useState(null);
 
   const { data: entities = [], isLoading } = useQuery({
     queryKey: ["entityTemplates"],
@@ -307,10 +309,23 @@ Return a JSON object with:
         <div className="space-y-8">
           {Object.entries(groupedEntities).map(([groupName, groupEntities]) => (
             <div key={groupName}>
-              <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                <Badge className={categoryColors[groupName] || "bg-slate-100 text-slate-800"}>{groupName}</Badge>
-                <span className="text-gray-400 text-sm font-normal">({groupEntities.length})</span>
-              </h2>
+              <div className="flex items-center gap-2 mb-3">
+                <h2 className="text-lg font-semibold flex items-center gap-2">
+                  <Badge className={categoryColors[groupName] || "bg-slate-100 text-slate-800"}>{groupName}</Badge>
+                  <span className="text-gray-400 text-sm font-normal">({groupEntities.length})</span>
+                </h2>
+                {!selectedProjectId && projects.length > 0 && availableGroups.includes(groupName) && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-7 text-xs gap-1"
+                    onClick={() => setAddGroupToProject(groupName)}
+                  >
+                    <FolderPlus className="h-3 w-3" />
+                    Add Group
+                  </Button>
+                )}
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {groupEntities.map((entity) => (
                   <Card key={entity.id} className="hover:shadow-md transition-shadow">
@@ -577,6 +592,20 @@ Return a JSON object with:
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Add Group to Project Dialog */}
+      <AddGroupToProjectDialog
+        open={!!addGroupToProject}
+        onOpenChange={(v) => !v && setAddGroupToProject(null)}
+        groupName={addGroupToProject}
+        entities={entities.filter(e => e.group === addGroupToProject && !e.custom_project_id)}
+        pages={pageTemplates.filter(p => p.group === addGroupToProject && !p.custom_project_id)}
+        features={featureTemplates.filter(f => f.group === addGroupToProject && !f.custom_project_id)}
+        projects={projects}
+        allEntities={entities}
+        allPages={pageTemplates}
+        allFeatures={featureTemplates}
+      />
 
       {/* AI Generate Dialog */}
       <Dialog open={showAIDialog} onOpenChange={setShowAIDialog}>
