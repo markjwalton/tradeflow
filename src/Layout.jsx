@@ -14,7 +14,9 @@ import {
   Shield,
   Package,
   GitBranch,
-  Database
+  Database,
+  Layout,
+  Zap
 } from "lucide-react";
 
 // Tenant Context
@@ -35,6 +37,8 @@ const globalAdminPages = [
   { name: "Mind Map Editor", slug: "MindMapEditor", icon: GitBranch },
   { name: "Generated Apps", slug: "GeneratedApps", icon: Package },
   { name: "Entity Library", slug: "EntityLibrary", icon: Database },
+  { name: "Page Library", slug: "PageLibrary", icon: Layout },
+  { name: "Feature Library", slug: "FeatureLibrary", icon: Zap },
   { name: "Template Library", slug: "TemplateLibrary", icon: Package },
   { name: "Business Templates", slug: "BusinessTemplates", icon: Building2 },
   { name: "Tenant Manager", slug: "TenantManager", icon: Building2 },
@@ -49,7 +53,7 @@ const globalAdminPages = [
 ];
 
 // Pages that don't require tenant context but need to preserve query params
-const standalonePages = ["MindMapEditor", "GeneratedApps", "EntityLibrary", "PackageLibrary", "TenantManager", "BusinessTemplates", "Projects", "Tasks", "Customers", "Team", "Estimates", "Calendar", "ProjectDetail"];
+const standalonePages = ["MindMapEditor", "GeneratedApps", "EntityLibrary", "PageLibrary", "FeatureLibrary", "PackageLibrary", "TenantManager", "BusinessTemplates", "Projects", "Tasks", "Customers", "Team", "Estimates", "Calendar", "ProjectDetail"];
 
 // Tenant pages - for users with tenant access
 const tenantPages = [
