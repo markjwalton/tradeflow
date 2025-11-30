@@ -993,50 +993,7 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
         )}
         </div>
 
-      {/* New Mind Map Dialog */}
-      <Dialog open={showNewMapDialog} onOpenChange={setShowNewMapDialog}>
-        <DialogContent aria-describedby={undefined}>
-          <DialogHeader>
-            <DialogTitle>Create New Mind Map</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">Name</label>
-              <Input
-                value={newMapName}
-                onChange={(e) => setNewMapName(e.target.value)}
-                placeholder="e.g., Paragon Oak App Scope"
-              />
-            </div>
-            <div>
-                              <label className="text-sm font-medium">Business Context</label>
-                              <Textarea
-                                value={newMapDescription}
-                                onChange={(e) => setNewMapDescription(e.target.value)}
-                                placeholder="Describe the business context, model, operations..."
-                                rows={4}
-                              />
-                            </div>
-                            <div>
-                              <label className="text-sm font-medium">Node Suggestions for AI</label>
-                              <Textarea
-                                value={newMapSuggestions}
-                                onChange={(e) => setNewMapSuggestions(e.target.value)}
-                                placeholder="List nodes you want the AI to add, e.g.:&#10;- User Management&#10;- Payment Processing&#10;- Email Notifications"
-                                rows={4}
-                              />
-                            </div>
-                            <Button
-              className="w-full"
-              onClick={() => createMapMutation.mutate({ name: newMapName, description: newMapDescription, node_suggestions: newMapSuggestions })}
-              disabled={!newMapName || createMapMutation.isPending}
-            >
-              {createMapMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-              Create Mind Map
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+
 
       {/* Edit Node Dialog */}
       <Dialog open={showEditNodeDialog} onOpenChange={setShowEditNodeDialog}>
