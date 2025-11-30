@@ -157,9 +157,6 @@ export default function MindMapEditor() {
       url.searchParams.set("map", newMap.id);
       window.history.replaceState({}, "", url);
       setShowNewMapDialog(false);
-      setNewMapName("");
-      setNewMapDescription("");
-      setNewMapSuggestions("");
       toast.success("Mind map created");
     },
   });
