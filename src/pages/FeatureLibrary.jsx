@@ -19,7 +19,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Search, Zap, Sparkles, Trash2, Edit, Copy, Loader2, BookmarkPlus, Folder } from "lucide-react";
+import { Plus, Search, Zap, Sparkles, Trash2, Edit, Copy, Loader2, BookmarkPlus, Folder, Database, Check } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import FeatureBuilder from "@/components/library/FeatureBuilder";
 import CustomProjectSelector from "@/components/library/CustomProjectSelector";
@@ -56,6 +57,10 @@ export default function FeatureLibrary() {
   const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [selectedGroup, setSelectedGroup] = useState("all");
   const [addToProjectItem, setAddToProjectItem] = useState(null);
+  const [showBulkAIDialog, setShowBulkAIDialog] = useState(false);
+  const [isBulkGenerating, setIsBulkGenerating] = useState(false);
+  const [bulkGeneratedFeatures, setBulkGeneratedFeatures] = useState([]);
+  const [selectedBulkFeatures, setSelectedBulkFeatures] = useState([]);
 
   const { data: features = [], isLoading } = useQuery({
     queryKey: ["featureTemplates"],
@@ -221,6 +226,104 @@ Return a JSON object with:
 
   const currentProject = projects.find(p => p.id === selectedProjectId);
 
+  // Get entities for current project
+  const projectEntities = selectedProjectId 
+    ? entities.filter(e => e.custom_project_id === selectedProjectId)
+    : entities.filter(e => !e.custom_project_id);
+
+  const handleBulkAIGenerate = async () => {
+    if (projectEntities.length === 0) {
+      toast.error("No entities found to generate features from");
+      return;
+    }
+    
+    setIsBulkGenerating(true);
+    setBulkGeneratedFeatures([]);
+    setSelectedBulkFeatures([]);
+    
+    try {
+      const entitySummary = projectEntities.map(e => ({
+        name: e.name,
+        description: e.description,
+        fields: Object.keys(e.schema?.properties || {}).join(", "),
+        relationships: e.relationships?.map(r => r.target_entity).join(", ") || "none"
+      }));
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are a software architect. Analyze these entities and generate useful feature templates for a business application.
+
+ENTITIES:
+${JSON.stringify(entitySummary, null, 2)}
+
+Generate features that would enhance this application. Consider:
+- CRUD operations and bulk actions
+- Search and filtering capabilities
+- Export/Import functionality
+- Notifications and alerts
+- Automation and scheduling
+- Reporting and analytics
+- Integration with external services
+- Workflow automation based on entity relationships
+
+For each feature, specify which entities it uses.
+
+Return a JSON object with a "features" array containing feature templates.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            features: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  description: { type: "string" },
+                  category: { type: "string" },
+                  complexity: { type: "string" },
+                  entities_used: { type: "array", items: { type: "string" } },
+                  triggers: { type: "array", items: { type: "string" } },
+                  integrations: { type: "array", items: { type: "string" } },
+                  requirements: { type: "array", items: { type: "string" } },
+                  user_stories: { type: "array", items: { type: "string" } },
+                  tags: { type: "array", items: { type: "string" } }
+                }
+              }
+            }
+          }
+        }
+      });
+
+      const generated = result.features || [];
+      setBulkGeneratedFeatures(generated);
+      setSelectedBulkFeatures(generated.map((_, i) => i));
+      toast.success(`Generated ${generated.length} feature suggestions`);
+    } catch (error) {
+      toast.error("Failed to generate features");
+    } finally {
+      setIsBulkGenerating(false);
+    }
+  };
+
+  const handleSaveBulkFeatures = async () => {
+    const featuresToSave = selectedBulkFeatures.map(i => bulkGeneratedFeatures[i]);
+    
+    for (const feature of featuresToSave) {
+      const featureData = {
+        ...feature,
+        custom_project_id: selectedProjectId || null,
+        is_custom: !!selectedProjectId,
+        category: selectedProjectId ? "Custom" : feature.category
+      };
+      await base44.entities.FeatureTemplate.create(featureData);
+    }
+    
+    queryClient.invalidateQueries({ queryKey: ["featureTemplates"] });
+    toast.success(`Saved ${featuresToSave.length} features`);
+    setShowBulkAIDialog(false);
+    setBulkGeneratedFeatures([]);
+    setSelectedBulkFeatures([]);
+  };
+
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
@@ -241,6 +344,10 @@ Return a JSON object with:
             selectedProjectId={selectedProjectId}
             onSelectProject={setSelectedProjectId}
           />
+          <Button variant="outline" onClick={() => setShowBulkAIDialog(true)} disabled={projectEntities.length === 0}>
+            <Database className="h-4 w-4 mr-2" />
+            AI from Entities ({projectEntities.length})
+          </Button>
           <Button variant="outline" onClick={() => setShowAIDialog(true)}>
             <Sparkles className="h-4 w-4 mr-2" />
             AI Generate
@@ -440,6 +547,103 @@ Return a JSON object with:
                 Generate
               </Button>
             </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Bulk AI Generate Dialog */}
+      <Dialog open={showBulkAIDialog} onOpenChange={setShowBulkAIDialog}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Database className="h-5 w-5 text-amber-600" />
+              Generate Features from Entities
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 overflow-auto space-y-4">
+            {bulkGeneratedFeatures.length === 0 ? (
+              <>
+                <p className="text-sm text-gray-600">
+                  AI will analyze your {projectEntities.length} entities and suggest relevant features.
+                </p>
+                <div className="bg-slate-50 rounded-lg p-3">
+                  <p className="text-sm font-medium mb-2">Entities to analyze:</p>
+                  <div className="flex flex-wrap gap-1">
+                    {projectEntities.map(e => (
+                      <Badge key={e.id} variant="outline">{e.name}</Badge>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={() => setShowBulkAIDialog(false)}>Cancel</Button>
+                  <Button onClick={handleBulkAIGenerate} disabled={isBulkGenerating}>
+                    {isBulkGenerating && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                    Generate Features
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-gray-600">
+                    Select features to add ({selectedBulkFeatures.length}/{bulkGeneratedFeatures.length} selected)
+                  </p>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedBulkFeatures(
+                      selectedBulkFeatures.length === bulkGeneratedFeatures.length 
+                        ? [] 
+                        : bulkGeneratedFeatures.map((_, i) => i)
+                    )}
+                  >
+                    {selectedBulkFeatures.length === bulkGeneratedFeatures.length ? "Deselect All" : "Select All"}
+                  </Button>
+                </div>
+                <div className="space-y-2 max-h-96 overflow-auto">
+                  {bulkGeneratedFeatures.map((feature, index) => (
+                    <div 
+                      key={index} 
+                      className={`p-3 border rounded-lg cursor-pointer transition-colors ${
+                        selectedBulkFeatures.includes(index) ? "border-amber-500 bg-amber-50" : "hover:bg-gray-50"
+                      }`}
+                      onClick={() => setSelectedBulkFeatures(prev => 
+                        prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
+                      )}
+                    >
+                      <div className="flex items-start gap-3">
+                        <Checkbox checked={selectedBulkFeatures.includes(index)} />
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <Zap className="h-4 w-4 text-amber-600" />
+                            <span className="font-medium">{feature.name}</span>
+                            <Badge className={categoryColors[feature.category] || "bg-slate-100"}>{feature.category}</Badge>
+                            <Badge className={complexityColors[feature.complexity || "medium"]}>{feature.complexity || "medium"}</Badge>
+                          </div>
+                          <p className="text-sm text-gray-500 mt-1">{feature.description}</p>
+                          {feature.entities_used?.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-2">
+                              {feature.entities_used.map(e => (
+                                <Badge key={e} variant="outline" className="text-xs">{e}</Badge>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex justify-end gap-2 pt-2 border-t">
+                  <Button variant="outline" onClick={() => { setBulkGeneratedFeatures([]); setSelectedBulkFeatures([]); }}>
+                    Regenerate
+                  </Button>
+                  <Button onClick={handleSaveBulkFeatures} disabled={selectedBulkFeatures.length === 0}>
+                    <Check className="h-4 w-4 mr-2" />
+                    Save {selectedBulkFeatures.length} Features
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
         </DialogContent>
       </Dialog>
