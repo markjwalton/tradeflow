@@ -17,11 +17,21 @@ import { Plus, Trash2, Loader2 } from "lucide-react";
 const categories = ["Dashboard", "List", "Detail", "Form", "Report", "Settings", "Other"];
 const layouts = ["full-width", "centered", "sidebar", "split"];
 const componentTypes = ["Table", "Form", "Chart", "Card", "List", "Modal", "Tabs", "Filter", "Search", "Button", "Stats"];
+const defaultGroups = [
+  "Admin Pages",
+  "Customer Portal",
+  "Reports",
+  "Settings",
+  "Dashboards",
+  "CRUD Pages",
+  "Other"
+];
 
 export default function PageBuilder({ initialData, entities = [], onSave, onCancel, isSaving }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Other");
+  const [group, setGroup] = useState("");
   const [layout, setLayout] = useState("full-width");
   const [entitiesUsed, setEntitiesUsed] = useState([]);
   const [features, setFeatures] = useState([]);
@@ -37,6 +47,7 @@ export default function PageBuilder({ initialData, entities = [], onSave, onCanc
       setName(initialData.name || "");
       setDescription(initialData.description || "");
       setCategory(initialData.category || "Other");
+      setGroup(initialData.group || "");
       setLayout(initialData.layout || "full-width");
       setEntitiesUsed(initialData.entities_used || []);
       setFeatures(initialData.features || []);
@@ -91,6 +102,7 @@ export default function PageBuilder({ initialData, entities = [], onSave, onCanc
       name,
       description,
       category,
+      group: group || null,
       layout,
       entities_used: entitiesUsed,
       features,
@@ -121,8 +133,14 @@ export default function PageBuilder({ initialData, entities = [], onSave, onCanc
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-sm font-medium">Description</label>
-            <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="What does this page do?" rows={2} />
+            <label className="text-sm font-medium">Group</label>
+            <Select value={group} onValueChange={setGroup}>
+              <SelectTrigger><SelectValue placeholder="Select a group..." /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value={null}>No Group</SelectItem>
+                {defaultGroups.map((g) => <SelectItem key={g} value={g}>{g}</SelectItem>)}
+              </SelectContent>
+            </Select>
           </div>
           <div>
             <label className="text-sm font-medium">Layout</label>
@@ -133,6 +151,11 @@ export default function PageBuilder({ initialData, entities = [], onSave, onCanc
               </SelectContent>
             </Select>
           </div>
+        </div>
+
+        <div>
+          <label className="text-sm font-medium">Description</label>
+          <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="What does this page do?" rows={2} />
         </div>
 
         {/* Entities Used */}

@@ -15,11 +15,22 @@ import { Loader2 } from "lucide-react";
 
 const categories = ["Communication", "Automation", "Integration", "Reporting", "Security", "Workflow", "UI/UX", "Other"];
 const complexities = ["simple", "medium", "complex"];
+const defaultGroups = [
+  "Email",
+  "Notifications",
+  "Data Export",
+  "Data Import",
+  "Scheduling",
+  "Approvals",
+  "Analytics",
+  "Other"
+];
 
 export default function FeatureBuilder({ initialData, entities = [], onSave, onCancel, isSaving }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Other");
+  const [group, setGroup] = useState("");
   const [complexity, setComplexity] = useState("medium");
   const [entitiesUsed, setEntitiesUsed] = useState([]);
   const [triggers, setTriggers] = useState([]);
@@ -38,6 +49,7 @@ export default function FeatureBuilder({ initialData, entities = [], onSave, onC
       setName(initialData.name || "");
       setDescription(initialData.description || "");
       setCategory(initialData.category || "Other");
+      setGroup(initialData.group || "");
       setComplexity(initialData.complexity || "medium");
       setEntitiesUsed(initialData.entities_used || []);
       setTriggers(initialData.triggers || []);
@@ -73,6 +85,7 @@ export default function FeatureBuilder({ initialData, entities = [], onSave, onC
       name,
       description,
       category,
+      group: group || null,
       complexity,
       entities_used: entitiesUsed,
       triggers,
@@ -119,8 +132,14 @@ export default function FeatureBuilder({ initialData, entities = [], onSave, onC
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-sm font-medium">Description</label>
-            <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="What does this feature do?" rows={2} />
+            <label className="text-sm font-medium">Group</label>
+            <Select value={group} onValueChange={setGroup}>
+              <SelectTrigger><SelectValue placeholder="Select a group..." /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value={null}>No Group</SelectItem>
+                {defaultGroups.map((g) => <SelectItem key={g} value={g}>{g}</SelectItem>)}
+              </SelectContent>
+            </Select>
           </div>
           <div>
             <label className="text-sm font-medium">Complexity</label>
@@ -131,6 +150,11 @@ export default function FeatureBuilder({ initialData, entities = [], onSave, onC
               </SelectContent>
             </Select>
           </div>
+        </div>
+
+        <div>
+          <label className="text-sm font-medium">Description</label>
+          <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="What does this feature do?" rows={2} />
         </div>
 
         {/* Entities Used */}
