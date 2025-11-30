@@ -24,6 +24,9 @@ import FormBuilder from './pages/FormBuilder';
 import FormTemplates from './pages/FormTemplates';
 import ChecklistBuilder from './pages/ChecklistBuilder';
 import ChecklistTemplates from './pages/ChecklistTemplates';
+import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
+import AppointmentHub from './pages/AppointmentHub';
+import AppointmentConfirm from './pages/AppointmentConfirm';
 import __Layout from './Layout.jsx';
 
 
@@ -54,6 +57,9 @@ export const PAGES = {
     "FormTemplates": FormTemplates,
     "ChecklistBuilder": ChecklistBuilder,
     "ChecklistTemplates": ChecklistTemplates,
+    "WebsiteEnquiryForm": WebsiteEnquiryForm,
+    "AppointmentHub": AppointmentHub,
+    "AppointmentConfirm": AppointmentConfirm,
 }
 
 export const pagesConfig = {
