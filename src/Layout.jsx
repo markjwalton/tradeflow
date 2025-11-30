@@ -46,13 +46,15 @@ const globalAdminPages = [
   { name: "Workflow Designer", slug: "WorkflowDesigner", icon: Workflow },
   { name: "Form Templates", slug: "FormTemplates", icon: LayoutIcon },
   { name: "Form Builder", slug: "FormBuilder", icon: LayoutIcon },
+  { name: "Checklist Templates", slug: "ChecklistTemplates", icon: LayoutIcon },
+  { name: "Checklist Builder", slug: "ChecklistBuilder", icon: LayoutIcon },
   { name: "Tenant Manager", slug: "TenantManager", icon: Building2 },
   { name: "Navigation Manager", slug: "NavigationManager", icon: Navigation },
   { name: "Package Library", slug: "PackageLibrary", icon: Package },
 ];
 
 // Pages that don't require tenant context but need to preserve query params
-const standalonePages = ["MindMapEditor", "GeneratedApps", "EntityLibrary", "PageLibrary", "FeatureLibrary", "PackageLibrary", "TenantManager", "BusinessTemplates", "WorkflowLibrary", "WorkflowDesigner", "FormTemplates", "FormBuilder"];
+const standalonePages = ["MindMapEditor", "GeneratedApps", "EntityLibrary", "PageLibrary", "FeatureLibrary", "PackageLibrary", "TenantManager", "BusinessTemplates", "WorkflowLibrary", "WorkflowDesigner", "FormTemplates", "FormBuilder", "ChecklistTemplates", "ChecklistBuilder"];
 
 // Tenant pages - for users with tenant access
 const tenantPages = [];

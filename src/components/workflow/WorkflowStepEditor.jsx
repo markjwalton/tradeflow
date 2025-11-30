@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { X, Plus, Trash2, Save } from "lucide-react";
+import TriggerEditor from "./TriggerEditor";
 
 export default function WorkflowStepEditor({
   step,
@@ -380,81 +381,10 @@ export default function WorkflowStepEditor({
 
           {/* Actions Tab */}
           <TabsContent value="actions" className="space-y-4 mt-4">
-            <div className="flex items-center justify-between mb-2">
-              <Label>Triggers & Actions</Label>
-              <Button size="sm" variant="outline" onClick={addTrigger}>
-                <Plus className="h-3 w-3 mr-1" />
-                Add
-              </Button>
-            </div>
-
-            <div className="space-y-3">
-              {(editedStep.triggers || []).map((trigger, i) => (
-                <Card key={i} className="p-3">
-                  <div className="space-y-2">
-                    <div>
-                      <Label className="text-xs">When</Label>
-                      <Select
-                        value={trigger.event || "on_complete"}
-                        onValueChange={(v) => updateTrigger(i, "event", v)}
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="on_complete">Step Completes</SelectItem>
-                          <SelectItem value="on_start">Step Starts</SelectItem>
-                          <SelectItem value="on_overdue">Step Overdue</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div>
-                      <Label className="text-xs">Then</Label>
-                      <Select
-                        value={trigger.action || "send_notification"}
-                        onValueChange={(v) => updateTrigger(i, "action", v)}
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="send_notification">
-                            Send Notification
-                          </SelectItem>
-                          <SelectItem value="send_email">Send Email</SelectItem>
-                          <SelectItem value="update_entity">Update Entity</SelectItem>
-                          <SelectItem value="create_task">Create Task</SelectItem>
-                          <SelectItem value="create_purchase_order">
-                            Create Purchase Order
-                          </SelectItem>
-                          <SelectItem value="schedule_resource">
-                            Schedule Resource
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="w-full text-red-500"
-                      onClick={() => removeTrigger(i)}
-                    >
-                      <Trash2 className="h-3 w-3 mr-1" />
-                      Remove
-                    </Button>
-                  </div>
-                </Card>
-              ))}
-
-              {(!editedStep.triggers || editedStep.triggers.length === 0) && (
-                <p className="text-sm text-gray-500 text-center py-4">
-                  No triggers configured. Add triggers to automate actions when
-                  this step starts or completes.
-                </p>
-              )}
-            </div>
+            <TriggerEditor
+              triggers={editedStep.triggers || []}
+              onChange={(triggers) => handleChange("triggers", triggers)}
+            />
           </TabsContent>
         </Tabs>
       </ScrollArea>
