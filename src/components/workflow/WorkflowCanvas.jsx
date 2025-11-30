@@ -48,7 +48,11 @@ export default function WorkflowCanvas({
   onSelectStep,
   onReorderSteps,
   onDeleteStep,
+  formTemplates = [],
+  checklistTemplates = [],
 }) {
+  const getFormName = (id) => formTemplates.find(f => f.id === id)?.name || "Form";
+  const getChecklistName = (id) => checklistTemplates.find(c => c.id === id)?.name || "Checklist";
   const handleDragEnd = (result) => {
     if (!result.destination) return;
 
@@ -150,17 +154,19 @@ export default function WorkflowCanvas({
                                   {step.formTemplateId && (
                                     <Badge
                                       variant="secondary"
-                                      className="text-xs bg-cyan-100"
+                                      className="text-xs bg-cyan-100 flex items-center gap-1"
                                     >
-                                      Has Form
+                                      <FileText className="h-3 w-3" />
+                                      {getFormName(step.formTemplateId)}
                                     </Badge>
                                   )}
                                   {step.checklistTemplateId && (
                                     <Badge
                                       variant="secondary"
-                                      className="text-xs bg-indigo-100"
+                                      className="text-xs bg-indigo-100 flex items-center gap-1"
                                     >
-                                      Has Checklist
+                                      <ListChecks className="h-3 w-3" />
+                                      {getChecklistName(step.checklistTemplateId)}
                                     </Badge>
                                   )}
                                 </div>
