@@ -32,7 +32,9 @@ import {
   GripVertical,
   Trash2,
   CheckSquare,
+  Sparkles,
 } from "lucide-react";
+import AIChecklistGenerator from "@/components/checklists/AIChecklistGenerator";
 import { toast } from "sonner";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
@@ -43,6 +45,7 @@ export default function ChecklistBuilder() {
 
   const [showNewDialog, setShowNewDialog] = useState(!checklistId);
   const [showSettings, setShowSettings] = useState(false);
+  const [showAIGenerator, setShowAIGenerator] = useState(false);
   const [editingItemIndex, setEditingItemIndex] = useState(null);
   const [checklistData, setChecklistData] = useState({
     name: "",
@@ -145,6 +148,18 @@ export default function ChecklistBuilder() {
     setChecklistData({ ...checklistData, items: newItems });
   };
 
+  const handleAIGenerate = (generated) => {
+    setChecklistData({
+      ...checklistData,
+      name: generated.checklistName || checklistData.name,
+      description: generated.checklistDescription || checklistData.description,
+      category: generated.category || checklistData.category,
+      requireAllItems: generated.requireAllItems !== false,
+      items: [...checklistData.items, ...(generated.items || [])],
+    });
+    toast.success(`Added ${generated.items?.length || 0} items!`);
+  };
+
   if (!checklistId && !showNewDialog) {
     return (
       <div className="h-screen flex items-center justify-center">
@@ -188,6 +203,10 @@ export default function ChecklistBuilder() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={() => setShowAIGenerator(true)}>
+            <Sparkles className="h-4 w-4 mr-1" />
+            AI Generate
+          </Button>
           <Button variant="outline" size="sm" onClick={() => setShowSettings(true)}>
             <Settings className="h-4 w-4 mr-1" />
             Settings
@@ -452,11 +471,18 @@ export default function ChecklistBuilder() {
               />
             </div>
             <Button onClick={() => setShowSettings(false)} className="w-full">
-              Done
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
-}
+                        Done
+                      </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+
+                  {/* AI Generator */}
+                  <AIChecklistGenerator
+                    open={showAIGenerator}
+                    onOpenChange={setShowAIGenerator}
+                    onGenerate={handleAIGenerate}
+                  />
+                </div>
+              );
+            }
