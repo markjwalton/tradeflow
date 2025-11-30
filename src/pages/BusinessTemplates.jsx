@@ -18,7 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Edit2, Trash2, Building2, Search, Database, Layout, Zap, GitBranch, Loader2 } from "lucide-react";
+import { Plus, Edit2, Trash2, Building2, Search, Database, Layout, Zap, GitBranch, Loader2, Star, Folder } from "lucide-react";
+import CustomProjectSelector from "@/components/library/CustomProjectSelector";
 import { toast } from "sonner";
 import BusinessTemplateBuilder from "@/components/templates/BusinessTemplateBuilder";
 
@@ -31,6 +32,7 @@ const categories = [
   "Manufacturing",
   "Finance",
   "Education",
+  "Custom",
   "Other"
 ];
 
@@ -43,6 +45,7 @@ const categoryColors = {
   "Manufacturing": "bg-orange-100 text-orange-700",
   "Finance": "bg-emerald-100 text-emerald-700",
   "Education": "bg-cyan-100 text-cyan-700",
+  "Custom": "bg-indigo-100 text-indigo-700",
   "Other": "bg-gray-100 text-gray-700",
 };
 
@@ -52,6 +55,12 @@ export default function BusinessTemplates() {
   const [editingTemplate, setEditingTemplate] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState("all");
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
+
+  const { data: projects = [] } = useQuery({
+    queryKey: ["customProjects"],
+    queryFn: () => base44.entities.CustomProject.list(),
+  });
 
   const { data: templates = [], isLoading } = useQuery({
     queryKey: ["businessTemplates"],
@@ -95,11 +104,25 @@ export default function BusinessTemplates() {
   };
 
   const handleSave = (data) => {
+    const dataToSave = {
+      ...data,
+      custom_project_id: selectedProjectId || null,
+      category: selectedProjectId ? "Custom" : data.category
+    };
+    
     if (editingTemplate) {
-      updateMutation.mutate({ id: editingTemplate.id, data });
+      updateMutation.mutate({ id: editingTemplate.id, data: dataToSave });
     } else {
-      createMutation.mutate(data);
+      createMutation.mutate(dataToSave);
     }
+  };
+
+  const toggleStar = async (template) => {
+    await base44.entities.BusinessTemplate.update(template.id, {
+      is_starred: !template.is_starred
+    });
+    queryClient.invalidateQueries({ queryKey: ["businessTemplates"] });
+    toast.success(template.is_starred ? "Removed from featured" : "Added to featured");
   };
 
   const filteredTemplates = templates.filter(t => {
@@ -107,8 +130,16 @@ export default function BusinessTemplates() {
       t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       t.description?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = filterCategory === "all" || t.category === filterCategory;
-    return matchesSearch && matchesCategory;
+    
+    // Project filter
+    if (selectedProjectId) {
+      return matchesSearch && matchesCategory && t.custom_project_id === selectedProjectId;
+    } else {
+      return matchesSearch && matchesCategory && !t.custom_project_id;
+    }
   });
+
+  const currentProject = projects.find(p => p.id === selectedProjectId);
 
   if (isLoading) {
     return (
@@ -125,15 +156,27 @@ export default function BusinessTemplates() {
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Building2 className="h-6 w-6" />
             Business Templates
+            {currentProject && (
+              <Badge className="bg-indigo-100 text-indigo-800">
+                <Folder className="h-3 w-3 mr-1" />
+                {currentProject.name}
+              </Badge>
+            )}
           </h1>
           <p className="text-gray-500 mt-1">
             Pre-defined templates with entities, pages, and features
           </p>
         </div>
-        <Button onClick={() => setShowBuilder(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          New Template
-        </Button>
+        <div className="flex gap-2">
+          <CustomProjectSelector
+            selectedProjectId={selectedProjectId}
+            onSelectProject={setSelectedProjectId}
+          />
+          <Button onClick={() => setShowBuilder(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            New Template
+          </Button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -167,7 +210,10 @@ export default function BusinessTemplates() {
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <CardTitle className="text-lg">{template.name}</CardTitle>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    {template.is_starred && <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />}
+                    {template.name}
+                  </CardTitle>
                   {template.category && (
                     <Badge className={`mt-1 ${categoryColors[template.category]}`}>
                       {template.category}
@@ -175,6 +221,14 @@ export default function BusinessTemplates() {
                   )}
                 </div>
                 <div className="flex gap-1">
+                  <Button 
+                    size="icon" 
+                    variant="ghost" 
+                    onClick={() => toggleStar(template)}
+                    title={template.is_starred ? "Remove from featured" : "Add to featured"}
+                  >
+                    <Star className={`h-4 w-4 ${template.is_starred ? "fill-yellow-500 text-yellow-500" : ""}`} />
+                  </Button>
                   <Button size="icon" variant="ghost" onClick={() => handleEdit(template)}>
                     <Edit2 className="h-4 w-4" />
                   </Button>
