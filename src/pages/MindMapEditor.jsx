@@ -422,8 +422,8 @@ export default function MindMapEditor() {
     const centralNode = nodes.find(n => n.node_type === "central") || nodes[0];
 
     // Center position
-    const centerX = 500;
-    const centerY = 400;
+    const centerX = 600;
+    const centerY = 500;
 
     // Collect all position updates
     const positionUpdates = [];
@@ -439,14 +439,16 @@ export default function MindMapEditor() {
     const mainBranches = nodes.filter(n => mainBranchIds.includes(n.id));
 
     // Get all descendants of a node recursively
-    const getDescendants = (nodeId) => {
+    const getDescendants = (nodeId, visited = new Set()) => {
+      if (visited.has(nodeId)) return [];
+      visited.add(nodeId);
       const childIds = connections
         .filter(c => c.source_node_id === nodeId)
         .map(c => c.target_node_id);
       
       let descendants = [...childIds];
       for (const childId of childIds) {
-        descendants = [...descendants, ...getDescendants(childId)];
+        descendants = [...descendants, ...getDescendants(childId, visited)];
       }
       return descendants;
     };
@@ -456,10 +458,12 @@ export default function MindMapEditor() {
       branch,
       weight: 1 + getDescendants(branch.id).length
     }));
-    const totalWeight = branchWeights.reduce((sum, b) => sum + b.weight, 0);
+    const totalWeight = branchWeights.reduce((sum, b) => sum + b.weight, 0) || 1;
 
-    // Position main branches around center with weighted angles
-    const mainRadius = 280;
+    // Scale radius based on total node count
+    const baseRadius = 300;
+    const mainRadius = baseRadius + Math.min(nodes.length * 3, 200);
+    
     let currentAngle = -Math.PI / 2; // Start at top
 
     for (const { branch, weight } of branchWeights) {
@@ -471,8 +475,8 @@ export default function MindMapEditor() {
       const y = centerY + mainRadius * Math.sin(branchAngle);
       positionUpdates.push({ id: branch.id, x, y });
 
-      // Position descendants in a tree structure extending outward
-      const layoutDescendants = (parentId, parentX, parentY, parentAngle, depth) => {
+      // Position descendants in a hierarchical tree extending outward
+      const layoutDescendants = (parentId, parentX, parentY, parentAngle, depth, sectorStart, sectorEnd) => {
         const childIds = connections
           .filter(c => c.source_node_id === parentId)
           .map(c => c.target_node_id);
@@ -480,34 +484,56 @@ export default function MindMapEditor() {
         const children = nodes.filter(n => childIds.includes(n.id));
         if (children.length === 0) return;
 
-        const spacing = 120; // Horizontal spacing between siblings
-        const depthSpacing = 140; // Distance from parent
-
-        // Spread children around the parent's angle
-        const spreadAngle = Math.min(Math.PI / 3, children.length * 0.25);
-        const startAngle = parentAngle - spreadAngle / 2;
-        const angleStep = children.length > 1 ? spreadAngle / (children.length - 1) : 0;
-
+        // Increase spacing based on depth and node count
+        const depthSpacing = 160 + (depth * 20);
+        const sectorWidth = sectorEnd - sectorStart;
+        
         children.forEach((child, i) => {
-          const childAngle = startAngle + i * angleStep;
+          // Distribute children evenly in the sector
+          const childSectorWidth = sectorWidth / children.length;
+          const childSectorStart = sectorStart + (i * childSectorWidth);
+          const childSectorEnd = childSectorStart + childSectorWidth;
+          const childAngle = childSectorStart + childSectorWidth / 2;
+          
           const childX = parentX + depthSpacing * Math.cos(childAngle);
           const childY = parentY + depthSpacing * Math.sin(childAngle);
           
           positionUpdates.push({ id: child.id, x: childX, y: childY });
-          layoutDescendants(child.id, childX, childY, childAngle, depth + 1);
+          layoutDescendants(child.id, childX, childY, childAngle, depth + 1, childSectorStart, childSectorEnd);
         });
       };
 
-      layoutDescendants(branch.id, x, y, branchAngle, 1);
+      // Each branch gets its angle span as sector
+      const sectorStart = currentAngle;
+      const sectorEnd = currentAngle + angleSpan;
+      layoutDescendants(branch.id, x, y, branchAngle, 1, sectorStart, sectorEnd);
       currentAngle += angleSpan;
     }
 
-    // Update nodes one at a time with delay to avoid rate limiting
+    // Handle orphan nodes (not connected to central)
+    const positionedIds = new Set(positionUpdates.map(p => p.id));
+    const orphanNodes = nodes.filter(n => !positionedIds.has(n.id));
+    
+    if (orphanNodes.length > 0) {
+      const orphanStartY = centerY + mainRadius + 200;
+      orphanNodes.forEach((node, i) => {
+        positionUpdates.push({
+          id: node.id,
+          x: 100 + (i % 5) * 250,
+          y: orphanStartY + Math.floor(i / 5) * 100
+        });
+      });
+    }
+
+    // Update nodes - batch for better performance
+    toast.info(`Laying out ${positionUpdates.length} nodes...`);
+    
     for (let i = 0; i < positionUpdates.length; i++) {
       const { id, x, y } = positionUpdates[i];
       await updateNodeMutation.mutateAsync({ id, data: { position_x: x, position_y: y } });
-      if (i < positionUpdates.length - 1) {
-        await new Promise(resolve => setTimeout(resolve, 150));
+      // Smaller delay for faster layout
+      if (i < positionUpdates.length - 1 && i % 5 === 4) {
+        await new Promise(resolve => setTimeout(resolve, 100));
       }
     }
 
