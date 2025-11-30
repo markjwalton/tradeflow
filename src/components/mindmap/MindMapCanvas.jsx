@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import MindMapNodeComponent from "./MindMapNode";
 import MindMapConnectionComponent from "./MindMapConnection";
 import { Button } from "@/components/ui/button";
-import { ZoomIn, ZoomOut, Maximize2, Minimize2, RotateCcw } from "lucide-react";
+import { ZoomIn, ZoomOut, Maximize2, Minimize2, RotateCcw, Hand, MousePointer2 } from "lucide-react";
 
 export default function MindMapCanvas({
   nodes,
@@ -26,6 +26,7 @@ export default function MindMapCanvas({
   const [panStart, setPanStart] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [panMode, setPanMode] = useState(false); // Hand/pan mode toggle
 
   // Use refs to track current values for the window event listener
   const draggingRef = useRef(null);
@@ -74,7 +75,7 @@ export default function MindMapCanvas({
 
   const handleCanvasMouseDown = (e) => {
     if (e.target === canvasRef.current || e.target.tagName === "svg") {
-      if (e.button === 1 || (e.button === 0 && e.altKey)) {
+      if (e.button === 1 || (e.button === 0 && e.altKey) || (e.button === 0 && panMode)) {
         setIsPanning(true);
         setPanStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
       } else {
@@ -192,6 +193,7 @@ export default function MindMapCanvas({
       style={{ 
         backgroundImage: "radial-gradient(circle, #cbd5e1 1px, transparent 1px)",
         backgroundSize: `${20 * zoom}px ${20 * zoom}px`,
+        cursor: panMode ? (isPanning ? "grabbing" : "grab") : "default",
       }}
       onMouseMove={handleMouseMove}
       onMouseDown={handleCanvasMouseDown}
@@ -237,7 +239,17 @@ export default function MindMapCanvas({
         >
           <RotateCcw className="h-4 w-4" />
         </Button>
-      </div>
+        <div className="w-px h-5 bg-gray-200 mx-1" />
+        <Button
+          size="sm"
+          variant={panMode ? "default" : "ghost"}
+          onClick={() => setPanMode(!panMode)}
+          className={`h-8 w-8 p-0 ${panMode ? "bg-blue-600 hover:bg-blue-700 text-white" : ""}`}
+          title={panMode ? "Switch to Select Mode" : "Switch to Pan Mode"}
+        >
+          {panMode ? <Hand className="h-4 w-4" /> : <MousePointer2 className="h-4 w-4" />}
+        </Button>
+        </div>
 
       {/* SVG layer for connections */}
       <svg

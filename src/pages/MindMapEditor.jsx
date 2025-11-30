@@ -483,7 +483,7 @@ export default function MindMapEditor() {
       
       for (const depth of depths) {
         const nodesAtDepth = depthGroups[depth];
-        const layerRadius = 140 + (depth - 1) * 120;
+        const layerRadius = 180 + (depth - 1) * 150;
         
         const byParent = {};
         nodesAtDepth.forEach(d => {
