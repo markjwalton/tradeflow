@@ -3,7 +3,6 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -19,9 +18,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, Edit2, Trash2, Building2, Search, FileText, Loader2 } from "lucide-react";
+import { Plus, Edit2, Trash2, Building2, Search, Database, Layout, Zap, GitBranch, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import BusinessTemplateBuilder from "@/components/templates/BusinessTemplateBuilder";
 
 const categories = [
   "Professional Services",
@@ -49,19 +48,10 @@ const categoryColors = {
 
 export default function BusinessTemplates() {
   const queryClient = useQueryClient();
-  const [showForm, setShowForm] = useState(false);
+  const [showBuilder, setShowBuilder] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState("all");
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    specification: "",
-    category: "Other",
-    tags: [],
-    is_active: true,
-  });
-  const [tagInput, setTagInput] = useState("");
 
   const { data: templates = [], isLoading } = useQuery({
     queryKey: ["businessTemplates"],
@@ -95,54 +85,21 @@ export default function BusinessTemplates() {
   });
 
   const resetForm = () => {
-    setFormData({
-      name: "",
-      description: "",
-      specification: "",
-      category: "Other",
-      tags: [],
-      is_active: true,
-    });
-    setTagInput("");
     setEditingTemplate(null);
-    setShowForm(false);
+    setShowBuilder(false);
   };
 
   const handleEdit = (template) => {
     setEditingTemplate(template);
-    setFormData({
-      name: template.name,
-      description: template.description || "",
-      specification: template.specification,
-      category: template.category || "Other",
-      tags: template.tags || [],
-      is_active: template.is_active !== false,
-    });
-    setShowForm(true);
+    setShowBuilder(true);
   };
 
-  const handleSubmit = () => {
-    if (!formData.name || !formData.specification) {
-      toast.error("Name and specification are required");
-      return;
-    }
-
+  const handleSave = (data) => {
     if (editingTemplate) {
-      updateMutation.mutate({ id: editingTemplate.id, data: formData });
+      updateMutation.mutate({ id: editingTemplate.id, data });
     } else {
-      createMutation.mutate(formData);
+      createMutation.mutate(data);
     }
-  };
-
-  const addTag = () => {
-    if (tagInput && !formData.tags.includes(tagInput)) {
-      setFormData({ ...formData, tags: [...formData.tags, tagInput] });
-      setTagInput("");
-    }
-  };
-
-  const removeTag = (tag) => {
-    setFormData({ ...formData, tags: formData.tags.filter(t => t !== tag) });
   };
 
   const filteredTemplates = templates.filter(t => {
@@ -170,10 +127,10 @@ export default function BusinessTemplates() {
             Business Templates
           </h1>
           <p className="text-gray-500 mt-1">
-            Pre-defined specifications for different business types
+            Pre-defined templates with entities, pages, and features
           </p>
         </div>
-        <Button onClick={() => setShowForm(true)}>
+        <Button onClick={() => setShowBuilder(true)}>
           <Plus className="h-4 w-4 mr-2" />
           New Template
         </Button>
@@ -233,17 +190,44 @@ export default function BusinessTemplates() {
               </div>
             </CardHeader>
             <CardContent>
-              {template.description && (
+              {template.summary ? (
+                <p className="text-sm text-gray-600 mb-3 line-clamp-3">
+                  {template.summary}
+                </p>
+              ) : template.description && (
                 <p className="text-sm text-gray-600 mb-3 line-clamp-2">
                   {template.description}
                 </p>
               )}
-              <div className="flex items-center gap-2 text-xs text-gray-500">
-                <FileText className="h-3 w-3" />
-                <span>{template.specification?.length || 0} characters</span>
+              
+              {/* Stats */}
+              <div className="flex items-center gap-4 text-xs text-gray-500 mb-3">
+                <span className="flex items-center gap-1">
+                  <Database className="h-3 w-3" />
+                  {template.entities?.length || 0} entities
+                </span>
+                <span className="flex items-center gap-1">
+                  <Layout className="h-3 w-3" />
+                  {template.pages?.length || 0} pages
+                </span>
+                <span className="flex items-center gap-1">
+                  <Zap className="h-3 w-3" />
+                  {template.features?.length || 0} features
+                </span>
               </div>
+              
+              {/* Relationships & Workflows */}
+              {(template.entity_relationships?.length > 0 || template.workflows?.length > 0) && (
+                <div className="flex items-center gap-2 text-xs text-purple-600 mb-3">
+                  <GitBranch className="h-3 w-3" />
+                  <span>
+                    {template.entity_relationships?.length || 0} relationships, {template.workflows?.length || 0} workflows
+                  </span>
+                </div>
+              )}
+              
               {template.tags?.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-2">
+                <div className="flex flex-wrap gap-1">
                   {template.tags.slice(0, 3).map(tag => (
                     <Badge key={tag} variant="outline" className="text-xs">
                       {tag}
@@ -264,120 +248,27 @@ export default function BusinessTemplates() {
           <div className="col-span-full text-center py-12 text-gray-500">
             <Building2 className="h-12 w-12 mx-auto mb-3 opacity-30" />
             <p>No templates found</p>
-            <Button variant="link" onClick={() => setShowForm(true)}>
+            <Button variant="link" onClick={() => setShowBuilder(true)}>
               Create your first template
             </Button>
           </div>
         )}
       </div>
 
-      {/* Form Dialog */}
-      <Dialog open={showForm} onOpenChange={(open) => !open && resetForm()}>
-        <DialogContent className="max-w-3xl max-h-[90vh]">
+      {/* Builder Dialog */}
+      <Dialog open={showBuilder} onOpenChange={(open) => !open && resetForm()}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
           <DialogHeader>
             <DialogTitle>
               {editingTemplate ? "Edit Template" : "New Business Template"}
             </DialogTitle>
           </DialogHeader>
-
-          <ScrollArea className="max-h-[70vh] pr-4">
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium">Name *</label>
-                  <Input
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="e.g., Construction Company"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium">Category</label>
-                  <Select 
-                    value={formData.category} 
-                    onValueChange={(v) => setFormData({ ...formData, category: v })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories.map(cat => (
-                        <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium">Description</label>
-                <Input
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Brief description of this business type"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm font-medium">Tags</label>
-                <div className="flex gap-2">
-                  <Input
-                    value={tagInput}
-                    onChange={(e) => setTagInput(e.target.value)}
-                    placeholder="Add tag..."
-                    onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addTag())}
-                  />
-                  <Button type="button" variant="outline" onClick={addTag}>
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-                {formData.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    {formData.tags.map(tag => (
-                      <Badge 
-                        key={tag} 
-                        variant="secondary"
-                        className="cursor-pointer"
-                        onClick={() => removeTag(tag)}
-                      >
-                        {tag} ×
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div>
-                <label className="text-sm font-medium">Specification *</label>
-                <Textarea
-                  value={formData.specification}
-                  onChange={(e) => setFormData({ ...formData, specification: e.target.value })}
-                  placeholder="Paste the detailed business specification including entities, pages, workflows..."
-                  rows={20}
-                  className="font-mono text-sm"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  Include detailed entity definitions, page structures, and workflow descriptions. 
-                  The AI will use this to generate the complete mind map.
-                </p>
-              </div>
-
-              <div className="flex justify-end gap-3 pt-4">
-                <Button variant="outline" onClick={resetForm}>
-                  Cancel
-                </Button>
-                <Button 
-                  onClick={handleSubmit}
-                  disabled={createMutation.isPending || updateMutation.isPending}
-                >
-                  {(createMutation.isPending || updateMutation.isPending) && (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  )}
-                  {editingTemplate ? "Update" : "Create"} Template
-                </Button>
-              </div>
-            </div>
-          </ScrollArea>
+          <BusinessTemplateBuilder
+            initialData={editingTemplate}
+            onSave={handleSave}
+            onCancel={resetForm}
+            isSaving={createMutation.isPending || updateMutation.isPending}
+          />
         </DialogContent>
       </Dialog>
     </div>
