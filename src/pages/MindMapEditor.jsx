@@ -426,11 +426,11 @@ export default function MindMapEditor() {
     const centerX = 600;
     const centerY = 450;
 
-    // Update central node to center
-    await updateNodeMutation.mutateAsync({ 
-      id: centralNode.id, 
-      data: { position_x: centerX, position_y: centerY } 
-    });
+    // Collect all position updates first, then batch them
+    const positionUpdates = [];
+
+    // Central node position
+    positionUpdates.push({ id: centralNode.id, x: centerX, y: centerY });
 
     // Find main branches (nodes connected directly to central)
     const mainBranchIds = connections
@@ -456,25 +456,22 @@ export default function MindMapEditor() {
       return descendants;
     };
 
-    // Arrange main branches in a circle around center with more space
+    // Calculate main branch positions
     const mainRadius = 280;
-    const mainPromises = mainBranches.map((node, i) => {
+    mainBranches.forEach((node, i) => {
       const angle = (2 * Math.PI * i) / mainBranches.length - Math.PI / 2;
       const x = centerX + mainRadius * Math.cos(angle);
       const y = centerY + mainRadius * Math.sin(angle);
-      return updateNodeMutation.mutateAsync({ id: node.id, data: { position_x: x, position_y: y } });
+      positionUpdates.push({ id: node.id, x, y });
     });
 
-    await Promise.all(mainPromises);
-
-    // Layout all descendants for each main branch
+    // Calculate all descendant positions
     for (let branchIdx = 0; branchIdx < mainBranches.length; branchIdx++) {
       const mainBranch = mainBranches[branchIdx];
       const mainAngle = (2 * Math.PI * branchIdx) / mainBranches.length - Math.PI / 2;
       const branchX = centerX + mainRadius * Math.cos(mainAngle);
       const branchY = centerY + mainRadius * Math.sin(mainAngle);
       
-      // Get all descendants grouped by depth
       const allDescendants = getDescendants(mainBranch.id);
       const depthGroups = {};
       allDescendants.forEach(d => {
@@ -482,29 +479,24 @@ export default function MindMapEditor() {
         depthGroups[d.depth].push(d);
       });
 
-      // Position each depth level
       const depths = Object.keys(depthGroups).map(Number).sort((a, b) => a - b);
       
       for (const depth of depths) {
         const nodesAtDepth = depthGroups[depth];
-        const layerRadius = 140 + (depth - 1) * 120; // Increasing radius per depth
+        const layerRadius = 140 + (depth - 1) * 120;
         
-        // Group nodes by their parent for better organization
         const byParent = {};
         nodesAtDepth.forEach(d => {
           if (!byParent[d.parentId]) byParent[d.parentId] = [];
           byParent[d.parentId].push(d);
         });
 
-        const parentIds = Object.keys(byParent);
         const totalNodes = nodesAtDepth.length;
-        
-        // Calculate spread angle based on number of nodes (more nodes = wider spread)
         const baseSpread = Math.min(Math.PI * 0.8, Math.PI / 3 + (totalNodes * 0.08));
         const startAngle = mainAngle - baseSpread / 2;
         
         let nodeIndex = 0;
-        for (const parentId of parentIds) {
+        for (const parentId of Object.keys(byParent)) {
           const siblings = byParent[parentId];
           
           for (let i = 0; i < siblings.length; i++) {
@@ -517,14 +509,25 @@ export default function MindMapEditor() {
             const x = branchX + layerRadius * Math.cos(angle);
             const y = branchY + layerRadius * Math.sin(angle);
             
-            await updateNodeMutation.mutateAsync({ 
-              id: node.id, 
-              data: { position_x: x, position_y: y } 
-            });
-            
+            positionUpdates.push({ id: node.id, x, y });
             nodeIndex++;
           }
         }
+      }
+    }
+
+    // Batch updates in chunks of 10 to avoid rate limiting
+    const chunkSize = 10;
+    for (let i = 0; i < positionUpdates.length; i += chunkSize) {
+      const chunk = positionUpdates.slice(i, i + chunkSize);
+      await Promise.all(
+        chunk.map(({ id, x, y }) => 
+          updateNodeMutation.mutateAsync({ id, data: { position_x: x, position_y: y } })
+        )
+      );
+      // Small delay between chunks to avoid rate limiting
+      if (i + chunkSize < positionUpdates.length) {
+        await new Promise(resolve => setTimeout(resolve, 100));
       }
     }
 
