@@ -1018,6 +1018,7 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
           open={showGeneratedSpec}
           onOpenChange={setShowGeneratedSpec}
           spec={generatedSpec}
+          mindMap={selectedMindMap}
         />
 
         {/* Fork Version Dialog */}
