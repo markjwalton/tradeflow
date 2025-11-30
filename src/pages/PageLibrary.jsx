@@ -48,6 +48,7 @@ export default function PageLibrary() {
   const [aiPrompt, setAiPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
+  const [selectedGroup, setSelectedGroup] = useState("all");
   const [addToProjectItem, setAddToProjectItem] = useState(null);
 
   const { data: pages = [], isLoading } = useQuery({
@@ -93,22 +94,26 @@ export default function PageLibrary() {
     },
   });
 
+  // Get unique groups from pages
+  const availableGroups = [...new Set(pages.filter(p => p.group).map(p => p.group))].sort();
+
   const filteredPages = pages.filter((page) => {
     const matchesSearch = page.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       page.description?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === "all" || page.category === selectedCategory;
+    const matchesGroup = selectedGroup === "all" || page.group === selectedGroup || (selectedGroup === "ungrouped" && !page.group);
     
     if (selectedProjectId) {
-      return matchesSearch && matchesCategory && page.custom_project_id === selectedProjectId;
+      return matchesSearch && matchesCategory && matchesGroup && page.custom_project_id === selectedProjectId;
     } else {
-      return matchesSearch && matchesCategory && !page.custom_project_id;
+      return matchesSearch && matchesCategory && matchesGroup && !page.custom_project_id;
     }
   });
 
   const groupedPages = filteredPages.reduce((acc, page) => {
-    const cat = page.category || "Other";
-    if (!acc[cat]) acc[cat] = [];
-    acc[cat].push(page);
+    const groupKey = page.group || page.category || "Other";
+    if (!acc[groupKey]) acc[groupKey] = [];
+    acc[groupKey].push(page);
     return acc;
   }, {});
 
@@ -260,6 +265,18 @@ Return a JSON object with:
             ))}
           </SelectContent>
         </Select>
+        <Select value={selectedGroup} onValueChange={setSelectedGroup}>
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="Group" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Groups</SelectItem>
+            <SelectItem value="ungrouped">Ungrouped</SelectItem>
+            {availableGroups.map((grp) => (
+              <SelectItem key={grp} value={grp}>{grp}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {isLoading ? (
@@ -273,14 +290,14 @@ Return a JSON object with:
         </div>
       ) : (
         <div className="space-y-8">
-          {Object.entries(groupedPages).map(([category, categoryPages]) => (
-            <div key={category}>
+          {Object.entries(groupedPages).map(([groupName, groupPages]) => (
+            <div key={groupName}>
               <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                <Badge className={categoryColors[category]}>{category}</Badge>
-                <span className="text-gray-400 text-sm font-normal">({categoryPages.length})</span>
+                <Badge className={categoryColors[groupName] || "bg-slate-100 text-slate-800"}>{groupName}</Badge>
+                <span className="text-gray-400 text-sm font-normal">({groupPages.length})</span>
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {categoryPages.map((page) => (
+                {groupPages.map((page) => (
                   <Card key={page.id} className="hover:shadow-md transition-shadow">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-base flex items-center gap-2">

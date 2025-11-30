@@ -54,6 +54,7 @@ export default function FeatureLibrary() {
   const [aiPrompt, setAiPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
+  const [selectedGroup, setSelectedGroup] = useState("all");
   const [addToProjectItem, setAddToProjectItem] = useState(null);
 
   const { data: features = [], isLoading } = useQuery({
@@ -99,22 +100,26 @@ export default function FeatureLibrary() {
     },
   });
 
+  // Get unique groups from features
+  const availableGroups = [...new Set(features.filter(f => f.group).map(f => f.group))].sort();
+
   const filteredFeatures = features.filter((feature) => {
     const matchesSearch = feature.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       feature.description?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === "all" || feature.category === selectedCategory;
+    const matchesGroup = selectedGroup === "all" || feature.group === selectedGroup || (selectedGroup === "ungrouped" && !feature.group);
     
     if (selectedProjectId) {
-      return matchesSearch && matchesCategory && feature.custom_project_id === selectedProjectId;
+      return matchesSearch && matchesCategory && matchesGroup && feature.custom_project_id === selectedProjectId;
     } else {
-      return matchesSearch && matchesCategory && !feature.custom_project_id;
+      return matchesSearch && matchesCategory && matchesGroup && !feature.custom_project_id;
     }
   });
 
   const groupedFeatures = filteredFeatures.reduce((acc, feature) => {
-    const cat = feature.category || "Other";
-    if (!acc[cat]) acc[cat] = [];
-    acc[cat].push(feature);
+    const groupKey = feature.group || feature.category || "Other";
+    if (!acc[groupKey]) acc[groupKey] = [];
+    acc[groupKey].push(feature);
     return acc;
   }, {});
 
@@ -268,6 +273,18 @@ Return a JSON object with:
             ))}
           </SelectContent>
         </Select>
+        <Select value={selectedGroup} onValueChange={setSelectedGroup}>
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="Group" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Groups</SelectItem>
+            <SelectItem value="ungrouped">Ungrouped</SelectItem>
+            {availableGroups.map((grp) => (
+              <SelectItem key={grp} value={grp}>{grp}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {isLoading ? (
@@ -281,14 +298,14 @@ Return a JSON object with:
         </div>
       ) : (
         <div className="space-y-8">
-          {Object.entries(groupedFeatures).map(([category, categoryFeatures]) => (
-            <div key={category}>
+          {Object.entries(groupedFeatures).map(([groupName, groupFeatures]) => (
+            <div key={groupName}>
               <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                <Badge className={categoryColors[category]}>{category}</Badge>
-                <span className="text-gray-400 text-sm font-normal">({categoryFeatures.length})</span>
+                <Badge className={categoryColors[groupName] || "bg-slate-100 text-slate-800"}>{groupName}</Badge>
+                <span className="text-gray-400 text-sm font-normal">({groupFeatures.length})</span>
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {categoryFeatures.map((feature) => (
+                {groupFeatures.map((feature) => (
                   <Card key={feature.id} className="hover:shadow-md transition-shadow">
                     <CardHeader className="pb-2">
                       <div className="flex items-start justify-between">
