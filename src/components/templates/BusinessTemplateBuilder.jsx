@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import TemplateEntityEditor from "./TemplateEntityEditor";
 import TemplatePageEditor from "./TemplatePageEditor";
 import TemplateFeatureEditor from "./TemplateFeatureEditor";
+import AIDependencyAnalyzer from "@/components/generated-app/AIDependencyAnalyzer";
 
 const categories = [
   "Professional Services",
@@ -72,6 +73,21 @@ export default function BusinessTemplateBuilder({ initialData, onSave, onCancel,
   const { data: featureTemplates = [] } = useQuery({
     queryKey: ["featureTemplates"],
     queryFn: () => base44.entities.FeatureTemplate.list(),
+  });
+
+  const { data: workflowTemplates = [] } = useQuery({
+    queryKey: ["workflowTemplates"],
+    queryFn: () => base44.entities.Workflow.list(),
+  });
+
+  const { data: formTemplates = [] } = useQuery({
+    queryKey: ["formTemplates"],
+    queryFn: () => base44.entities.FormTemplate.list(),
+  });
+
+  const { data: checklistTemplates = [] } = useQuery({
+    queryKey: ["checklistTemplates"],
+    queryFn: () => base44.entities.ChecklistTemplate.list(),
   });
 
   useEffect(() => {
@@ -414,6 +430,59 @@ Also suggest optimal workflows for this business type.`,
               />
             </TabsContent>
           </Tabs>
+
+          {/* AI Dependency Analyzer */}
+          {selectedEntities.length >= 1 && (
+            <AIDependencyAnalyzer
+              selectedEntities={selectedEntities}
+              selectedPages={selectedPages}
+              selectedFeatures={selectedFeatures}
+              selectedWorkflows={workflows}
+              allEntities={entityTemplates}
+              allPages={pageTemplates}
+              allFeatures={featureTemplates}
+              allWorkflows={workflowTemplates}
+              allForms={formTemplates}
+              allChecklists={checklistTemplates}
+              onApplySuggestions={(suggestions) => {
+                if (suggestions.entities?.length > 0) {
+                  const newEntities = suggestions.entities.map(e => ({
+                    template_id: e.id,
+                    name: e.name,
+                    description: e.description,
+                    category: e.category,
+                    schema: e.schema,
+                    relationships: e.relationships || []
+                  }));
+                  setSelectedEntities([...selectedEntities, ...newEntities]);
+                }
+                if (suggestions.pages?.length > 0) {
+                  const newPages = suggestions.pages.map(p => ({
+                    template_id: p.id,
+                    name: p.name,
+                    description: p.description,
+                    category: p.category,
+                    layout: p.layout,
+                    entities_used: p.entities_used || [],
+                    features: p.features || [],
+                  }));
+                  setSelectedPages([...selectedPages, ...newPages]);
+                }
+                if (suggestions.features?.length > 0) {
+                  const newFeatures = suggestions.features.map(f => ({
+                    template_id: f.id,
+                    name: f.name,
+                    description: f.description,
+                    category: f.category,
+                    complexity: f.complexity,
+                    entities_used: f.entities_used || [],
+                  }));
+                  setSelectedFeatures([...selectedFeatures, ...newFeatures]);
+                }
+                toast.success("Suggestions applied");
+              }}
+            />
+          )}
 
           {/* AI Organize Section */}
           {selectedEntities.length >= 2 && (
