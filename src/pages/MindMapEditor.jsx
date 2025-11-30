@@ -517,8 +517,8 @@ export default function MindMapEditor() {
       }
     }
 
-    // Batch updates in chunks of 10 to avoid rate limiting
-    const chunkSize = 10;
+    // Batch updates in chunks of 5 with longer delays to avoid rate limiting
+    const chunkSize = 5;
     for (let i = 0; i < positionUpdates.length; i += chunkSize) {
       const chunk = positionUpdates.slice(i, i + chunkSize);
       await Promise.all(
@@ -526,9 +526,9 @@ export default function MindMapEditor() {
           updateNodeMutation.mutateAsync({ id, data: { position_x: x, position_y: y } })
         )
       );
-      // Small delay between chunks to avoid rate limiting
+      // Longer delay between chunks to avoid rate limiting
       if (i + chunkSize < positionUpdates.length) {
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 300));
       }
     }
 
