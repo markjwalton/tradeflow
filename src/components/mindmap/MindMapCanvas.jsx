@@ -138,18 +138,38 @@ export default function MindMapCanvas({
   const handleExpandView = useCallback(() => {
     if (nodes.length === 0 || !canvasRef.current) return;
     
-    // Calculate bounds and set zoom to show all at 100%
-    let minX = Infinity, minY = Infinity;
+    const rect = canvasRef.current.getBoundingClientRect();
+    const padding = 60;
+    
+    // Calculate bounds of all nodes
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
     nodes.forEach(node => {
       const x = node.position_x || 0;
       const y = node.position_y || 0;
       minX = Math.min(minX, x);
       minY = Math.min(minY, y);
+      maxX = Math.max(maxX, x + 180); // approximate node width
+      maxY = Math.max(maxY, y + 60);  // approximate node height
     });
     
-    // Pan to show content from top-left with some padding
-    setZoom(1);
-    setPan({ x: -minX + 50, y: -minY + 50 });
+    const contentWidth = maxX - minX;
+    const contentHeight = maxY - minY;
+    const viewWidth = rect.width - padding * 2;
+    const viewHeight = rect.height - padding * 2;
+    
+    // Calculate zoom to fit all nodes, allowing zoom out below 100% if needed
+    const scaleX = viewWidth / contentWidth;
+    const scaleY = viewHeight / contentHeight;
+    const newZoom = Math.min(scaleX, scaleY, 1); // cap at 100%, allow smaller
+    
+    // Calculate pan to center the content
+    const centerX = (minX + maxX) / 2;
+    const centerY = (minY + maxY) / 2;
+    const newPanX = rect.width / 2 - centerX * newZoom;
+    const newPanY = rect.height / 2 - centerY * newZoom;
+    
+    setZoom(Math.max(newZoom, 0.2)); // minimum 20% zoom
+    setPan({ x: newPanX, y: newPanY });
     setIsExpanded(true);
   }, [nodes]);
 
