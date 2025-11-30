@@ -100,6 +100,8 @@ Return a JSON object with this structure:
   "aiNotes": "any additional recommendations or insights"
 }`;
 
+      console.log("Sending prompt to AI:", prompt);
+      
       const result = await base44.integrations.Core.InvokeLLM({
         prompt,
         response_json_schema: {
@@ -136,8 +138,15 @@ Return a JSON object with this structure:
         },
       });
 
+      console.log("AI result:", result);
+
+      if (!result || !result.steps || result.steps.length === 0) {
+        throw new Error("AI returned empty or invalid response");
+      }
+
       setGeneratedSteps(result);
       setPhase("result");
+      toast.success(`Generated ${result.steps.length} workflow steps`);
     } catch (error) {
       console.error("AI generation failed:", error);
       toast.error("Failed to generate workflow. Please try again.");
