@@ -20,6 +20,8 @@ import PageLibrary from './pages/PageLibrary';
 import FeatureLibrary from './pages/FeatureLibrary';
 import WorkflowDesigner from './pages/WorkflowDesigner';
 import WorkflowLibrary from './pages/WorkflowLibrary';
+import FormBuilder from './pages/FormBuilder';
+import FormTemplates from './pages/FormTemplates';
 import __Layout from './Layout.jsx';
 
 
@@ -46,6 +48,8 @@ export const PAGES = {
     "FeatureLibrary": FeatureLibrary,
     "WorkflowDesigner": WorkflowDesigner,
     "WorkflowLibrary": WorkflowLibrary,
+    "FormBuilder": FormBuilder,
+    "FormTemplates": FormTemplates,
 }
 
 export const pagesConfig = {
