@@ -36,6 +36,7 @@ import {
 // Global admin pages - only for is_global_admin users
 const globalAdminPages = [
   { name: "Mind Map Editor", slug: "MindMapEditor", icon: GitBranch },
+  { name: "ERD Editor", slug: "ERDEditor", icon: Database },
   { name: "Generated Apps", slug: "GeneratedApps", icon: Package },
   { name: "Entity Library", slug: "EntityLibrary", icon: Database },
   { name: "Page Library", slug: "PageLibrary", icon: LayoutIcon },
