@@ -457,7 +457,7 @@ export default function MindMapEditor() {
     };
 
     // Calculate main branch positions
-    const mainRadius = 280;
+    const mainRadius = 350;
     mainBranches.forEach((node, i) => {
       const angle = (2 * Math.PI * i) / mainBranches.length - Math.PI / 2;
       const x = centerX + mainRadius * Math.cos(angle);
