@@ -441,76 +441,47 @@ Return a JSON object with:
                   <Button variant="ghost" size="sm" className="ml-auto h-6 text-xs" onClick={() => setAddToProjectTargetId(null)}>Change</Button>
                 </div>
 
-                {/* Related Pages */}
+                {/* Related Entities (from relationships) */}
                 {(() => {
-                  const relatedPages = pageTemplates.filter(p => 
-                    p.entities_used?.includes(addToProjectEntity?.name) && !p.custom_project_id
+                  const relationships = addToProjectEntity?.relationships || [];
+                  const relatedEntityNames = relationships.map(r => r.target_entity);
+                  const relatedEntities = entities.filter(e => 
+                    relatedEntityNames.includes(e.name) && !e.custom_project_id
                   );
-                  if (relatedPages.length === 0) return null;
+                  if (relatedEntities.length === 0) return null;
                   return (
                     <div>
                       <label className="text-sm font-medium flex items-center gap-2 mb-2">
-                        <Layout className="h-4 w-4 text-blue-600" />
-                        Related Pages ({relatedPages.length})
+                        <Database className="h-4 w-4 text-purple-600" />
+                        Related Entities ({relatedEntities.length})
                       </label>
                       <div className="space-y-1 max-h-32 overflow-auto border rounded p-2">
-                        {relatedPages.map((page) => (
-                          <div key={page.id} className="flex items-center gap-2">
-                            <Checkbox
-                              id={`page-${page.id}`}
-                              checked={addToProjectSelectedPages.includes(page.id)}
-                              onCheckedChange={(checked) => {
-                                setAddToProjectSelectedPages(prev => 
-                                  checked ? [...prev, page.id] : prev.filter(id => id !== page.id)
-                                );
-                              }}
-                            />
-                            <label htmlFor={`page-${page.id}`} className="text-sm cursor-pointer flex-1">{page.name}</label>
-                            <Badge variant="outline" className="text-xs">{page.category}</Badge>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })()}
-
-                {/* Related Features */}
-                {(() => {
-                  const relatedFeatures = featureTemplates.filter(f => 
-                    f.entities_used?.includes(addToProjectEntity?.name) && !f.custom_project_id
-                  );
-                  if (relatedFeatures.length === 0) return null;
-                  return (
-                    <div>
-                      <label className="text-sm font-medium flex items-center gap-2 mb-2">
-                        <Zap className="h-4 w-4 text-amber-600" />
-                        Related Features ({relatedFeatures.length})
-                      </label>
-                      <div className="space-y-1 max-h-32 overflow-auto border rounded p-2">
-                        {relatedFeatures.map((feature) => (
-                          <div key={feature.id} className="flex items-center gap-2">
-                            <Checkbox
-                              id={`feature-${feature.id}`}
-                              checked={addToProjectSelectedFeatures.includes(feature.id)}
-                              onCheckedChange={(checked) => {
-                                setAddToProjectSelectedFeatures(prev => 
-                                  checked ? [...prev, feature.id] : prev.filter(id => id !== feature.id)
-                                );
-                              }}
-                            />
-                            <label htmlFor={`feature-${feature.id}`} className="text-sm cursor-pointer flex-1">{feature.name}</label>
-                            <Badge variant="outline" className="text-xs">{feature.category}</Badge>
-                          </div>
-                        ))}
+                        {relatedEntities.map((entity) => {
+                          const rel = relationships.find(r => r.target_entity === entity.name);
+                          return (
+                            <div key={entity.id} className="flex items-center gap-2">
+                              <Checkbox
+                                id={`entity-${entity.id}`}
+                                checked={addToProjectSelectedPages.includes(`entity-${entity.id}`)}
+                                onCheckedChange={(checked) => {
+                                  setAddToProjectSelectedPages(prev => 
+                                    checked ? [...prev, `entity-${entity.id}`] : prev.filter(id => id !== `entity-${entity.id}`)
+                                  );
+                                }}
+                              />
+                              <label htmlFor={`entity-${entity.id}`} className="text-sm cursor-pointer flex-1">{entity.name}</label>
+                              <Badge variant="outline" className="text-xs">{rel?.relationship_type || "related"}</Badge>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   );
                 })()}
 
                 {/* No related items message */}
-                {pageTemplates.filter(p => p.entities_used?.includes(addToProjectEntity?.name) && !p.custom_project_id).length === 0 &&
-                 featureTemplates.filter(f => f.entities_used?.includes(addToProjectEntity?.name) && !f.custom_project_id).length === 0 && (
-                  <p className="text-sm text-gray-500 italic">No related pages or features found for this entity.</p>
+                {(!addToProjectEntity?.relationships || addToProjectEntity.relationships.length === 0) && (
+                  <p className="text-sm text-gray-500 italic">No direct relationships defined for this entity. Use AI Dependency Analyzer in Business Templates to find suggested connections.</p>
                 )}
 
                 <div className="flex gap-2 pt-2">
@@ -533,36 +504,26 @@ Return a JSON object with:
                     delete entityCopy.updated_date;
                     await base44.entities.EntityTemplate.create(entityCopy);
                     
-                    // Add selected pages
-                    for (const pageId of addToProjectSelectedPages) {
-                      const page = pageTemplates.find(p => p.id === pageId);
-                      if (page) {
-                        const pageCopy = { ...page, custom_project_id: projectId, is_custom: true, category: "Custom" };
-                        delete pageCopy.id;
-                        delete pageCopy.created_date;
-                        delete pageCopy.updated_date;
-                        await base44.entities.PageTemplate.create(pageCopy);
-                      }
-                    }
-                    
-                    // Add selected features
-                    for (const featureId of addToProjectSelectedFeatures) {
-                      const feature = featureTemplates.find(f => f.id === featureId);
-                      if (feature) {
-                        const featureCopy = { ...feature, custom_project_id: projectId, is_custom: true, category: "Custom" };
-                        delete featureCopy.id;
-                        delete featureCopy.created_date;
-                        delete featureCopy.updated_date;
-                        await base44.entities.FeatureTemplate.create(featureCopy);
+                    // Add selected related entities
+                    let addedCount = 1;
+                    for (const selectedId of addToProjectSelectedPages) {
+                      if (selectedId.startsWith('entity-')) {
+                        const entityId = selectedId.replace('entity-', '');
+                        const relatedEntity = entities.find(e => e.id === entityId);
+                        if (relatedEntity) {
+                          const relEntityCopy = { ...relatedEntity, custom_project_id: projectId, is_custom: true, category: "Custom" };
+                          delete relEntityCopy.id;
+                          delete relEntityCopy.created_date;
+                          delete relEntityCopy.updated_date;
+                          await base44.entities.EntityTemplate.create(relEntityCopy);
+                          addedCount++;
+                        }
                       }
                     }
                     
                     queryClient.invalidateQueries({ queryKey: ["entityTemplates"] });
-                    queryClient.invalidateQueries({ queryKey: ["pageTemplates"] });
-                    queryClient.invalidateQueries({ queryKey: ["featureTemplates"] });
                     
-                    const count = 1 + addToProjectSelectedPages.length + addToProjectSelectedFeatures.length;
-                    toast.success(`Added ${count} item${count > 1 ? 's' : ''} to ${projectName}`);
+                    toast.success(`Added ${addedCount} entit${addedCount > 1 ? 'ies' : 'y'} to ${projectName}`);
                     
                     setAddToProjectEntity(null);
                     setAddToProjectSelectedPages([]);
