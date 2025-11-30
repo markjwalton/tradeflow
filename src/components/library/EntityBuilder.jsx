@@ -18,10 +18,22 @@ const categories = ["Core", "CRM", "Finance", "Operations", "HR", "Inventory", "
 const fieldTypes = ["string", "number", "boolean", "array", "object"];
 const stringFormats = ["none", "date", "date-time", "email", "uri"];
 
+const defaultGroups = [
+  "Workflow System",
+  "Appointments",
+  "Forms & Checklists",
+  "Templates",
+  "CRM & Sales",
+  "Project Management",
+  "Documents",
+  "Other"
+];
+
 export default function EntityBuilder({ initialData, onSave, onCancel, isSaving }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Other");
+  const [group, setGroup] = useState("");
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
   const [fields, setFields] = useState([]);
@@ -32,6 +44,7 @@ export default function EntityBuilder({ initialData, onSave, onCancel, isSaving 
       setName(initialData.name || "");
       setDescription(initialData.description || "");
       setCategory(initialData.category || "Other");
+      setGroup(initialData.group || "");
       setTags(initialData.tags || []);
       setRelationships(initialData.relationships || []);
       
@@ -148,6 +161,7 @@ export default function EntityBuilder({ initialData, onSave, onCancel, isSaving 
       name,
       description,
       category,
+      group: group || null,
       tags,
       relationships: relationships.filter((r) => r.target_entity.trim()),
       schema: {
@@ -187,6 +201,22 @@ export default function EntityBuilder({ initialData, onSave, onCancel, isSaving 
               </SelectContent>
             </Select>
           </div>
+        </div>
+
+        <div>
+          <label className="text-sm font-medium">Group</label>
+          <Select value={group} onValueChange={setGroup}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select a group..." />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={null}>No Group</SelectItem>
+              {defaultGroups.map((g) => (
+                <SelectItem key={g} value={g}>{g}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-gray-500 mt-1">Group related entities together within a category</p>
         </div>
 
         <div>
