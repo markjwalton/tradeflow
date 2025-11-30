@@ -891,6 +891,14 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
         </Button>
       </div>
 
+      {/* New Mind Map Dialog */}
+      <NewMindMapDialog
+        open={showNewMapDialog}
+        onOpenChange={setShowNewMapDialog}
+        onCreateMap={(data) => createMapMutation.mutate(data)}
+        isPending={createMapMutation.isPending}
+      />
+
       {/* Toolbar */}
       {selectedMindMapId && (
         <MindMapToolbar
