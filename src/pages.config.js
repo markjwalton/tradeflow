@@ -22,6 +22,8 @@ import WorkflowDesigner from './pages/WorkflowDesigner';
 import WorkflowLibrary from './pages/WorkflowLibrary';
 import FormBuilder from './pages/FormBuilder';
 import FormTemplates from './pages/FormTemplates';
+import ChecklistBuilder from './pages/ChecklistBuilder';
+import ChecklistTemplates from './pages/ChecklistTemplates';
 import __Layout from './Layout.jsx';
 
 
@@ -50,6 +52,8 @@ export const PAGES = {
     "WorkflowLibrary": WorkflowLibrary,
     "FormBuilder": FormBuilder,
     "FormTemplates": FormTemplates,
+    "ChecklistBuilder": ChecklistBuilder,
+    "ChecklistTemplates": ChecklistTemplates,
 }
 
 export const pagesConfig = {
