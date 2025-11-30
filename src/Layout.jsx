@@ -15,7 +15,7 @@ import {
   Package,
   GitBranch,
   Database,
-  Layout,
+  Layout as LayoutIcon,
   Zap
 } from "lucide-react";
 
@@ -37,7 +37,7 @@ const globalAdminPages = [
   { name: "Mind Map Editor", slug: "MindMapEditor", icon: GitBranch },
   { name: "Generated Apps", slug: "GeneratedApps", icon: Package },
   { name: "Entity Library", slug: "EntityLibrary", icon: Database },
-  { name: "Page Library", slug: "PageLibrary", icon: Layout },
+  { name: "Page Library", slug: "PageLibrary", icon: LayoutIcon },
   { name: "Feature Library", slug: "FeatureLibrary", icon: Zap },
   { name: "Template Library", slug: "TemplateLibrary", icon: Package },
   { name: "Business Templates", slug: "BusinessTemplates", icon: Building2 },
