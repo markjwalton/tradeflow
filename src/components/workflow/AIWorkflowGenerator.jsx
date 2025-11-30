@@ -126,10 +126,31 @@ Return a JSON object with this structure:
                   instructions: { type: "string" },
                   isRequired: { type: "boolean" },
                   canSkip: { type: "boolean" },
-                  suggestedForm: { type: "object" },
-                  suggestedChecklist: { type: "object" },
-                  decisionOptions: { type: "array" },
-                  triggers: { type: "array" },
+                  suggestedFormName: { type: "string" },
+                  suggestedFormFields: { type: "array", items: { type: "string" } },
+                  suggestedChecklistName: { type: "string" },
+                  suggestedChecklistItems: { type: "array", items: { type: "string" } },
+                  decisionOptions: { 
+                    type: "array", 
+                    items: { 
+                      type: "object",
+                      properties: {
+                        label: { type: "string" },
+                        description: { type: "string" }
+                      }
+                    } 
+                  },
+                  triggers: { 
+                    type: "array", 
+                    items: { 
+                      type: "object",
+                      properties: {
+                        event: { type: "string" },
+                        action: { type: "string" },
+                        description: { type: "string" }
+                      }
+                    } 
+                  },
                 },
               },
             },
