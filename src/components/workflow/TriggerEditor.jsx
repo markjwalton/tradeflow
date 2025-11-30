@@ -93,7 +93,7 @@ export default function TriggerEditor({ triggers = [], onChange }) {
         return (
           <div className="space-y-2 mt-2">
             <div>
-              <Label className="text-xs">To (use {{assignee.email}} for dynamic)</Label>
+              <Label className="text-xs">To (use {"{"}assignee.email{"}"} for dynamic)</Label>
               <Input
                 value={action.config?.to || ""}
                 onChange={(e) =>
