@@ -52,9 +52,7 @@ export default function MindMapEditor() {
   const [showEditNodeDialog, setShowEditNodeDialog] = useState(false);
   const [showBusinessContext, setShowBusinessContext] = useState(false);
   const [editingNode, setEditingNode] = useState(null);
-  const [newMapName, setNewMapName] = useState("");
-  const [newMapDescription, setNewMapDescription] = useState("");
-  const [newMapSuggestions, setNewMapSuggestions] = useState("");
+
   const [editingContext, setEditingContext] = useState({ description: "", node_suggestions: "" });
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSuggesting, setIsSuggesting] = useState(false);
