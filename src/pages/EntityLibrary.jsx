@@ -51,6 +51,7 @@ export default function EntityLibrary() {
   const [aiPrompt, setAiPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
+  const [selectedGroup, setSelectedGroup] = useState("all");
   const [addToProjectEntity, setAddToProjectEntity] = useState(null);
   const [addToProjectSelectedPages, setAddToProjectSelectedPages] = useState([]);
   const [addToProjectSelectedFeatures, setAddToProjectSelectedFeatures] = useState([]);
@@ -104,25 +105,30 @@ export default function EntityLibrary() {
     },
   });
 
+  // Get unique groups from entities
+  const availableGroups = [...new Set(entities.filter(e => e.group).map(e => e.group))].sort();
+
   // Filter entities based on project selection
   const filteredEntities = entities.filter((entity) => {
     const matchesSearch = entity.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       entity.description?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === "all" || entity.category === selectedCategory;
+    const matchesGroup = selectedGroup === "all" || entity.group === selectedGroup || (selectedGroup === "ungrouped" && !entity.group);
     
     // Project filter
     if (selectedProjectId) {
-      return matchesSearch && matchesCategory && entity.custom_project_id === selectedProjectId;
+      return matchesSearch && matchesCategory && matchesGroup && entity.custom_project_id === selectedProjectId;
     } else {
       // Default library - show non-custom or global items
-      return matchesSearch && matchesCategory && !entity.custom_project_id;
+      return matchesSearch && matchesCategory && matchesGroup && !entity.custom_project_id;
     }
   });
 
   const groupedEntities = filteredEntities.reduce((acc, entity) => {
-    const cat = entity.category || "Other";
-    if (!acc[cat]) acc[cat] = [];
-    acc[cat].push(entity);
+    // Group by entity group first, then by category if no group
+    const groupKey = entity.group || entity.category || "Other";
+    if (!acc[groupKey]) acc[groupKey] = [];
+    acc[groupKey].push(entity);
     return acc;
   }, {});
 
@@ -272,6 +278,18 @@ Return a JSON object with:
             ))}
           </SelectContent>
         </Select>
+        <Select value={selectedGroup} onValueChange={setSelectedGroup}>
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="Group" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Groups</SelectItem>
+            <SelectItem value="ungrouped">Ungrouped</SelectItem>
+            {availableGroups.map((grp) => (
+              <SelectItem key={grp} value={grp}>{grp}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Entity Grid */}
@@ -287,14 +305,14 @@ Return a JSON object with:
         </div>
       ) : (
         <div className="space-y-8">
-          {Object.entries(groupedEntities).map(([category, categoryEntities]) => (
-            <div key={category}>
+          {Object.entries(groupedEntities).map(([groupName, groupEntities]) => (
+            <div key={groupName}>
               <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                <Badge className={categoryColors[category]}>{category}</Badge>
-                <span className="text-gray-400 text-sm font-normal">({categoryEntities.length})</span>
+                <Badge className={categoryColors[groupName] || "bg-slate-100 text-slate-800"}>{groupName}</Badge>
+                <span className="text-gray-400 text-sm font-normal">({groupEntities.length})</span>
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {categoryEntities.map((entity) => (
+                {groupEntities.map((entity) => (
                   <Card key={entity.id} className="hover:shadow-md transition-shadow">
                     <CardHeader className="pb-2">
                       <div className="flex items-start justify-between">
