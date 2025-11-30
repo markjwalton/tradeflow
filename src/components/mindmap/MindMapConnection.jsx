@@ -9,11 +9,11 @@ export default function MindMapConnectionComponent({
 }) {
   if (!sourceNode || !targetNode) return null;
 
-  // Get node center positions (use consistent center point)
-  const x1 = (sourceNode.position_x || 0) + 70;
-  const y1 = (sourceNode.position_y || 0) + 20;
-  const x2 = (targetNode.position_x || 0) + 70;
-  const y2 = (targetNode.position_y || 0) + 20;
+  // Node positions are already the center point (nodes use transform: translate(-50%, -50%))
+  const x1 = sourceNode.position_x || 0;
+  const y1 = sourceNode.position_y || 0;
+  const x2 = targetNode.position_x || 0;
+  const y2 = targetNode.position_y || 0;
 
   // Calculate control points for a curved line
   const midX = (x1 + x2) / 2;
