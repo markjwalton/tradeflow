@@ -32,6 +32,7 @@ import {
 // Global admin pages - only for is_global_admin users
 const globalAdminPages = [
   { name: "Mind Map Editor", slug: "MindMapEditor", icon: GitBranch },
+  { name: "Generated Apps", slug: "GeneratedApps", icon: Package },
   { name: "Template Library", slug: "TemplateLibrary", icon: Package },
   { name: "Business Templates", slug: "BusinessTemplates", icon: Building2 },
   { name: "Tenant Manager", slug: "TenantManager", icon: Building2 },
@@ -46,7 +47,7 @@ const globalAdminPages = [
 ];
 
 // Pages that don't require tenant context but need to preserve query params
-const standalonePages = ["MindMapEditor", "PackageLibrary", "TenantManager", "BusinessTemplates", "Projects", "Tasks", "Customers", "Team", "Estimates", "Calendar", "ProjectDetail"];
+const standalonePages = ["MindMapEditor", "GeneratedApps", "PackageLibrary", "TenantManager", "BusinessTemplates", "Projects", "Tasks", "Customers", "Team", "Estimates", "Calendar", "ProjectDetail"];
 
 // Tenant pages - for users with tenant access
 const tenantPages = [

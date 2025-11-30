@@ -14,6 +14,7 @@ import Calendar from './pages/Calendar';
 import ProjectDetail from './pages/ProjectDetail';
 import TemplateLibrary from './pages/TemplateLibrary';
 import BusinessTemplates from './pages/BusinessTemplates';
+import GeneratedApps from './pages/GeneratedApps';
 import __Layout from './Layout.jsx';
 
 
@@ -34,6 +35,7 @@ export const PAGES = {
     "ProjectDetail": ProjectDetail,
     "TemplateLibrary": TemplateLibrary,
     "BusinessTemplates": BusinessTemplates,
+    "GeneratedApps": GeneratedApps,
 }
 
 export const pagesConfig = {
