@@ -32,6 +32,7 @@ import {
   GripVertical,
   Trash2,
   Copy,
+  Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
@@ -40,6 +41,7 @@ import FormFieldPalette from "@/components/forms/FormFieldPalette";
 import FormFieldEditor from "@/components/forms/FormFieldEditor";
 import DynamicFormRenderer from "@/components/forms/DynamicFormRenderer";
 import FormSettings from "@/components/forms/FormSettings";
+import AIFormGenerator from "@/components/forms/AIFormGenerator";
 
 export default function FormBuilder() {
   const queryClient = useQueryClient();
@@ -50,6 +52,7 @@ export default function FormBuilder() {
   const [showSettings, setShowSettings] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [showNewDialog, setShowNewDialog] = useState(!formId);
+  const [showAIGenerator, setShowAIGenerator] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     code: "",
@@ -173,6 +176,17 @@ export default function FormBuilder() {
     setFormData({ ...formData, fields: newFields });
   };
 
+  const handleAIGenerate = (generated) => {
+    setFormData({
+      ...formData,
+      name: generated.formName || formData.name,
+      description: generated.formDescription || formData.description,
+      category: generated.category || formData.category,
+      fields: [...formData.fields, ...(generated.fields || [])],
+    });
+    toast.success(`Added ${generated.fields?.length || 0} fields!`);
+  };
+
   const selectedField = selectedFieldIndex !== null ? formData.fields[selectedFieldIndex] : null;
 
   if (!formId && !showNewDialog) {
@@ -218,6 +232,10 @@ export default function FormBuilder() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={() => setShowAIGenerator(true)}>
+            <Sparkles className="h-4 w-4 mr-1" />
+            AI Generate
+          </Button>
           <Button variant="outline" size="sm" onClick={() => setShowPreview(true)}>
             <Eye className="h-4 w-4 mr-1" />
             Preview
@@ -439,6 +457,13 @@ export default function FormBuilder() {
         onOpenChange={setShowSettings}
         formData={formData}
         onUpdate={(updates) => setFormData({ ...formData, ...updates })}
+      />
+
+      {/* AI Generator */}
+      <AIFormGenerator
+        open={showAIGenerator}
+        onOpenChange={setShowAIGenerator}
+        onGenerate={handleAIGenerate}
       />
     </div>
   );
