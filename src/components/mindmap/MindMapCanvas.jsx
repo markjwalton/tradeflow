@@ -141,15 +141,18 @@ export default function MindMapCanvas({
     const rect = canvasRef.current.getBoundingClientRect();
     const padding = 60;
     
-    // Calculate bounds of all nodes
+    // Calculate bounds of all nodes including their full dimensions
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
     nodes.forEach(node => {
       const x = node.position_x || 0;
       const y = node.position_y || 0;
-      minX = Math.min(minX, x);
-      minY = Math.min(minY, y);
-      maxX = Math.max(maxX, x + 180); // approximate node width
-      maxY = Math.max(maxY, y + 60);  // approximate node height
+      // Use larger node dimensions to ensure full visibility
+      const nodeWidth = node.node_type === 'central' ? 200 : 160;
+      const nodeHeight = node.node_type === 'central' ? 80 : 50;
+      minX = Math.min(minX, x - 20); // extra margin on left
+      minY = Math.min(minY, y - 20); // extra margin on top
+      maxX = Math.max(maxX, x + nodeWidth + 20);
+      maxY = Math.max(maxY, y + nodeHeight + 20);
     });
     
     const contentWidth = maxX - minX;
@@ -157,10 +160,10 @@ export default function MindMapCanvas({
     const viewWidth = rect.width - padding * 2;
     const viewHeight = rect.height - padding * 2;
     
-    // Calculate zoom to fit all nodes, allowing zoom out below 100% if needed
+    // Calculate zoom to fit all nodes, allowing zoom out as needed
     const scaleX = viewWidth / contentWidth;
     const scaleY = viewHeight / contentHeight;
-    const newZoom = Math.min(scaleX, scaleY, 1); // cap at 100%, allow smaller
+    const newZoom = Math.min(scaleX, scaleY); // no cap, zoom out as needed
     
     // Calculate pan to center the content
     const centerX = (minX + maxX) / 2;
@@ -168,7 +171,7 @@ export default function MindMapCanvas({
     const newPanX = rect.width / 2 - centerX * newZoom;
     const newPanY = rect.height / 2 - centerY * newZoom;
     
-    setZoom(Math.max(newZoom, 0.2)); // minimum 20% zoom
+    setZoom(Math.max(newZoom, 0.15)); // minimum 15% zoom for very large maps
     setPan({ x: newPanX, y: newPanY });
     setIsExpanded(true);
   }, [nodes]);
