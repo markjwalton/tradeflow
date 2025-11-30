@@ -20,7 +20,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Search, Layout, Sparkles, Trash2, Edit, Copy, Loader2, BookmarkPlus, Folder } from "lucide-react";
+import { Plus, Search, Layout, Sparkles, Trash2, Edit, Copy, Loader2, BookmarkPlus, Folder, Database, Check } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import PageBuilder from "@/components/library/PageBuilder";
 import CustomProjectSelector from "@/components/library/CustomProjectSelector";
@@ -50,6 +51,10 @@ export default function PageLibrary() {
   const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [selectedGroup, setSelectedGroup] = useState("all");
   const [addToProjectItem, setAddToProjectItem] = useState(null);
+  const [showBulkAIDialog, setShowBulkAIDialog] = useState(false);
+  const [isBulkGenerating, setIsBulkGenerating] = useState(false);
+  const [bulkGeneratedPages, setBulkGeneratedPages] = useState([]);
+  const [selectedBulkPages, setSelectedBulkPages] = useState([]);
 
   const { data: pages = [], isLoading } = useQuery({
     queryKey: ["pageTemplates"],
@@ -213,6 +218,100 @@ Return a JSON object with:
 
   const currentProject = projects.find(p => p.id === selectedProjectId);
 
+  // Get entities for current project
+  const projectEntities = selectedProjectId 
+    ? entities.filter(e => e.custom_project_id === selectedProjectId)
+    : entities.filter(e => !e.custom_project_id);
+
+  const handleBulkAIGenerate = async () => {
+    if (projectEntities.length === 0) {
+      toast.error("No entities found to generate pages from");
+      return;
+    }
+    
+    setIsBulkGenerating(true);
+    setBulkGeneratedPages([]);
+    setSelectedBulkPages([]);
+    
+    try {
+      const entitySummary = projectEntities.map(e => ({
+        name: e.name,
+        description: e.description,
+        fields: Object.keys(e.schema?.properties || {}).join(", "),
+        relationships: e.relationships?.map(r => r.target_entity).join(", ") || "none"
+      }));
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are a UI/UX expert. Analyze these entities and generate appropriate page templates for a business application.
+
+ENTITIES:
+${JSON.stringify(entitySummary, null, 2)}
+
+Generate pages that would be useful for managing these entities. Include:
+- List pages for viewing/managing records
+- Detail pages for viewing individual records
+- Dashboard pages for overviews
+- Form pages where appropriate
+- Any specialized pages based on entity relationships
+
+For each page, determine which entities it uses based on the entity relationships.
+
+Return a JSON object with a "pages" array containing page templates.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            pages: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  description: { type: "string" },
+                  category: { type: "string" },
+                  layout: { type: "string" },
+                  entities_used: { type: "array", items: { type: "string" } },
+                  features: { type: "array", items: { type: "string" } },
+                  components: { type: "array", items: { type: "object" } },
+                  actions: { type: "array", items: { type: "string" } },
+                  tags: { type: "array", items: { type: "string" } }
+                }
+              }
+            }
+          }
+        }
+      });
+
+      const generated = result.pages || [];
+      setBulkGeneratedPages(generated);
+      setSelectedBulkPages(generated.map((_, i) => i));
+      toast.success(`Generated ${generated.length} page suggestions`);
+    } catch (error) {
+      toast.error("Failed to generate pages");
+    } finally {
+      setIsBulkGenerating(false);
+    }
+  };
+
+  const handleSaveBulkPages = async () => {
+    const pagesToSave = selectedBulkPages.map(i => bulkGeneratedPages[i]);
+    
+    for (const page of pagesToSave) {
+      const pageData = {
+        ...page,
+        custom_project_id: selectedProjectId || null,
+        is_custom: !!selectedProjectId,
+        category: selectedProjectId ? "Custom" : page.category
+      };
+      await base44.entities.PageTemplate.create(pageData);
+    }
+    
+    queryClient.invalidateQueries({ queryKey: ["pageTemplates"] });
+    toast.success(`Saved ${pagesToSave.length} pages`);
+    setShowBulkAIDialog(false);
+    setBulkGeneratedPages([]);
+    setSelectedBulkPages([]);
+  };
+
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
@@ -233,6 +332,10 @@ Return a JSON object with:
             selectedProjectId={selectedProjectId}
             onSelectProject={setSelectedProjectId}
           />
+          <Button variant="outline" onClick={() => setShowBulkAIDialog(true)} disabled={projectEntities.length === 0}>
+            <Database className="h-4 w-4 mr-2" />
+            AI from Entities ({projectEntities.length})
+          </Button>
           <Button variant="outline" onClick={() => setShowAIDialog(true)}>
             <Sparkles className="h-4 w-4 mr-2" />
             AI Generate
@@ -427,6 +530,102 @@ Return a JSON object with:
                 Generate
               </Button>
             </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Bulk AI Generate Dialog */}
+      <Dialog open={showBulkAIDialog} onOpenChange={setShowBulkAIDialog}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Database className="h-5 w-5 text-blue-600" />
+              Generate Pages from Entities
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 overflow-auto space-y-4">
+            {bulkGeneratedPages.length === 0 ? (
+              <>
+                <p className="text-sm text-gray-600">
+                  AI will analyze your {projectEntities.length} entities and suggest relevant pages.
+                </p>
+                <div className="bg-slate-50 rounded-lg p-3">
+                  <p className="text-sm font-medium mb-2">Entities to analyze:</p>
+                  <div className="flex flex-wrap gap-1">
+                    {projectEntities.map(e => (
+                      <Badge key={e.id} variant="outline">{e.name}</Badge>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={() => setShowBulkAIDialog(false)}>Cancel</Button>
+                  <Button onClick={handleBulkAIGenerate} disabled={isBulkGenerating}>
+                    {isBulkGenerating && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                    Generate Pages
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-gray-600">
+                    Select pages to add ({selectedBulkPages.length}/{bulkGeneratedPages.length} selected)
+                  </p>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedBulkPages(
+                      selectedBulkPages.length === bulkGeneratedPages.length 
+                        ? [] 
+                        : bulkGeneratedPages.map((_, i) => i)
+                    )}
+                  >
+                    {selectedBulkPages.length === bulkGeneratedPages.length ? "Deselect All" : "Select All"}
+                  </Button>
+                </div>
+                <div className="space-y-2 max-h-96 overflow-auto">
+                  {bulkGeneratedPages.map((page, index) => (
+                    <div 
+                      key={index} 
+                      className={`p-3 border rounded-lg cursor-pointer transition-colors ${
+                        selectedBulkPages.includes(index) ? "border-blue-500 bg-blue-50" : "hover:bg-gray-50"
+                      }`}
+                      onClick={() => setSelectedBulkPages(prev => 
+                        prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
+                      )}
+                    >
+                      <div className="flex items-start gap-3">
+                        <Checkbox checked={selectedBulkPages.includes(index)} />
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <Layout className="h-4 w-4 text-blue-600" />
+                            <span className="font-medium">{page.name}</span>
+                            <Badge className={categoryColors[page.category] || "bg-slate-100"}>{page.category}</Badge>
+                          </div>
+                          <p className="text-sm text-gray-500 mt-1">{page.description}</p>
+                          {page.entities_used?.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-2">
+                              {page.entities_used.map(e => (
+                                <Badge key={e} variant="outline" className="text-xs">{e}</Badge>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex justify-end gap-2 pt-2 border-t">
+                  <Button variant="outline" onClick={() => { setBulkGeneratedPages([]); setSelectedBulkPages([]); }}>
+                    Regenerate
+                  </Button>
+                  <Button onClick={handleSaveBulkPages} disabled={selectedBulkPages.length === 0}>
+                    <Check className="h-4 w-4 mr-2" />
+                    Save {selectedBulkPages.length} Pages
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
         </DialogContent>
       </Dialog>
