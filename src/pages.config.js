@@ -27,6 +27,8 @@ import ChecklistTemplates from './pages/ChecklistTemplates';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import AppointmentHub from './pages/AppointmentHub';
 import AppointmentConfirm from './pages/AppointmentConfirm';
+import AppointmentManager from './pages/AppointmentManager';
+import InterestOptionsManager from './pages/InterestOptionsManager';
 import __Layout from './Layout.jsx';
 
 
@@ -60,6 +62,8 @@ export const PAGES = {
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
     "AppointmentHub": AppointmentHub,
     "AppointmentConfirm": AppointmentConfirm,
+    "AppointmentManager": AppointmentManager,
+    "InterestOptionsManager": InterestOptionsManager,
 }
 
 export const pagesConfig = {
