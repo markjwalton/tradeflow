@@ -13,7 +13,8 @@ import {
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, Trash2, Sparkles, Loader2, ArrowRight, Lightbulb } from "lucide-react";
+import { Plus, Trash2, Sparkles, Loader2, ArrowRight, Lightbulb, GripVertical } from "lucide-react";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 
@@ -38,6 +39,14 @@ export default function AIWorkflowGenerator({ open, onOpenChange, onGenerate }) 
     if (steps.length > 1) {
       setSteps(steps.filter((_, i) => i !== index));
     }
+  };
+
+  const handleDragEnd = (result) => {
+    if (!result.destination) return;
+    const reordered = Array.from(steps);
+    const [moved] = reordered.splice(result.source.index, 1);
+    reordered.splice(result.destination.index, 0, moved);
+    setSteps(reordered);
   };
 
   const handleFinishInput = () => {
@@ -222,43 +231,66 @@ Return a JSON object with this structure:
           {phase === "input" && (
             <div className="space-y-4">
               <p className="text-sm text-gray-600">
-                Enter the key steps of your workflow. Don't worry about details - just describe what needs to happen.
+                Enter the key steps of your workflow. Drag to reorder. Don't worry about details - just describe what needs to happen.
               </p>
 
-              {steps.map((step, index) => (
-                <Card key={index} className="p-4">
-                  <div className="flex items-start gap-3">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 font-semibold text-sm flex-shrink-0">
-                      {index + 1}
+              <DragDropContext onDragEnd={handleDragEnd}>
+                <Droppable droppableId="workflow-input-steps">
+                  {(provided) => (
+                    <div ref={provided.innerRef} {...provided.droppableProps} className="space-y-3">
+                      {steps.map((step, index) => (
+                        <Draggable key={index} draggableId={`step-${index}`} index={index}>
+                          {(provided, snapshot) => (
+                            <Card 
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              className={`p-4 ${snapshot.isDragging ? "shadow-lg ring-2 ring-blue-300" : ""}`}
+                            >
+                              <div className="flex items-start gap-3">
+                                <div 
+                                  {...provided.dragHandleProps}
+                                  className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 font-semibold text-sm flex-shrink-0 cursor-grab active:cursor-grabbing"
+                                >
+                                  <GripVertical className="h-4 w-4" />
+                                </div>
+                                <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-gray-600 font-semibold text-xs flex-shrink-0">
+                                  {index + 1}
+                                </div>
+                                <div className="flex-1 space-y-2">
+                                  <Input
+                                    value={step.name}
+                                    onChange={(e) => updateStep(index, "name", e.target.value)}
+                                    placeholder="Step name (e.g., Book Site Visit, Design Review, Customer Approval)"
+                                    className="font-medium"
+                                  />
+                                  <Textarea
+                                    value={step.narrative}
+                                    onChange={(e) => updateStep(index, "narrative", e.target.value)}
+                                    placeholder="Optional: Add any details, requirements, or context for this step..."
+                                    rows={2}
+                                    className="text-sm"
+                                  />
+                                </div>
+                                {steps.length > 1 && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="text-red-500 h-8 w-8 p-0"
+                                    onClick={() => removeStep(index)}
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                )}
+                              </div>
+                            </Card>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
                     </div>
-                    <div className="flex-1 space-y-2">
-                      <Input
-                        value={step.name}
-                        onChange={(e) => updateStep(index, "name", e.target.value)}
-                        placeholder="Step name (e.g., Book Site Visit, Design Review, Customer Approval)"
-                        className="font-medium"
-                      />
-                      <Textarea
-                        value={step.narrative}
-                        onChange={(e) => updateStep(index, "narrative", e.target.value)}
-                        placeholder="Optional: Add any details, requirements, or context for this step..."
-                        rows={2}
-                        className="text-sm"
-                      />
-                    </div>
-                    {steps.length > 1 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-red-500 h-8 w-8 p-0"
-                        onClick={() => removeStep(index)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    )}
-                  </div>
-                </Card>
-              ))}
+                  )}
+                </Droppable>
+              </DragDropContext>
 
               <Button variant="outline" onClick={addStep} className="w-full">
                 <Plus className="h-4 w-4 mr-2" />
