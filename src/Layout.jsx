@@ -48,6 +48,7 @@ const globalAdminPages = [
   { name: "Form Builder", slug: "FormBuilder", icon: LayoutIcon },
   { name: "Checklist Templates", slug: "ChecklistTemplates", icon: LayoutIcon },
   { name: "Checklist Builder", slug: "ChecklistBuilder", icon: LayoutIcon },
+  { name: "System Specification", slug: "SystemSpecification", icon: Package },
 
   { name: "Tenant Manager", slug: "TenantManager", icon: Building2 },
   { name: "Navigation Manager", slug: "NavigationManager", icon: Navigation },

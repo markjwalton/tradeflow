@@ -29,6 +29,7 @@ import AppointmentHub from './pages/AppointmentHub';
 import AppointmentConfirm from './pages/AppointmentConfirm';
 import AppointmentManager from './pages/AppointmentManager';
 import InterestOptionsManager from './pages/InterestOptionsManager';
+import SystemSpecification from './pages/SystemSpecification';
 import __Layout from './Layout.jsx';
 
 
@@ -64,6 +65,7 @@ export const PAGES = {
     "AppointmentConfirm": AppointmentConfirm,
     "AppointmentManager": AppointmentManager,
     "InterestOptionsManager": InterestOptionsManager,
+    "SystemSpecification": SystemSpecification,
 }
 
 export const pagesConfig = {
