@@ -1,0 +1,365 @@
+import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Card, CardContent } from "@/components/ui/card";
+import { Loader2, FileText, Building2, Sparkles, Plus } from "lucide-react";
+import { toast } from "sonner";
+
+const categoryColors = {
+  "Professional Services": "bg-blue-100 text-blue-700",
+  "Construction": "bg-amber-100 text-amber-700",
+  "Retail": "bg-pink-100 text-pink-700",
+  "Healthcare": "bg-green-100 text-green-700",
+  "Technology": "bg-purple-100 text-purple-700",
+  "Manufacturing": "bg-orange-100 text-orange-700",
+  "Finance": "bg-emerald-100 text-emerald-700",
+  "Education": "bg-cyan-100 text-cyan-700",
+  "Other": "bg-gray-100 text-gray-700",
+};
+
+export default function NewMindMapDialog({
+  open,
+  onOpenChange,
+  onCreateMap,
+  isPending,
+}) {
+  const [activeTab, setActiveTab] = useState("blank");
+  const [mapName, setMapName] = useState("");
+  const [mapDescription, setMapDescription] = useState("");
+  const [mapSuggestions, setMapSuggestions] = useState("");
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const { data: templates = [] } = useQuery({
+    queryKey: ["businessTemplates"],
+    queryFn: () => base44.entities.BusinessTemplate.filter({ is_active: true }),
+  });
+
+  const handleCreateBlank = () => {
+    if (!mapName) {
+      toast.error("Please enter a name");
+      return;
+    }
+    onCreateMap({
+      name: mapName,
+      description: mapDescription,
+      node_suggestions: mapSuggestions,
+    });
+    resetForm();
+  };
+
+  const handleCreateFromTemplate = async () => {
+    if (!selectedTemplate || !mapName) {
+      toast.error("Please select a template and enter a name");
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      // Create the mindmap first
+      const newMap = await base44.entities.MindMap.create({
+        name: mapName,
+        description: selectedTemplate.specification,
+        node_suggestions: "",
+      });
+
+      // Use AI to generate the mind map structure from the template
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are creating a mind map structure from a detailed business specification.
+
+BUSINESS TEMPLATE: ${selectedTemplate.name}
+
+DETAILED SPECIFICATION:
+${selectedTemplate.specification}
+
+Generate a complete mind map structure with:
+1. A central node representing the main system/business
+2. Main branches for each major module/area (e.g., "Project Management", "Customer Relations")
+3. Sub-branches for features, entities, and pages
+4. Mark nodes appropriately with their type
+
+Return a JSON object with a "nodes" array where each node has:
+- "text": the node label
+- "node_type": one of "central", "main_branch", "sub_branch", "feature", "entity", "page"
+- "parent_index": index of parent node in array (null for central node)
+- "color": suggested hex color
+- "specification_notes": detailed notes for this node based on the specification
+
+Structure the nodes hierarchically, starting with the central node at index 0.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            nodes: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  text: { type: "string" },
+                  node_type: { type: "string" },
+                  parent_index: { type: "number" },
+                  color: { type: "string" },
+                  specification_notes: { type: "string" }
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // Create nodes and connections
+      const nodeIdMap = {};
+      const generatedNodes = result.nodes || [];
+
+      // First pass: create all nodes with positions
+      for (let i = 0; i < generatedNodes.length; i++) {
+        const nodeData = generatedNodes[i];
+        
+        // Calculate position based on type and index
+        let x = 500, y = 350;
+        if (nodeData.node_type === "central") {
+          x = 500; y = 350;
+        } else if (nodeData.node_type === "main_branch") {
+          const mainBranchCount = generatedNodes.filter((n, idx) => 
+            n.node_type === "main_branch" && idx < i
+          ).length;
+          const totalMainBranches = generatedNodes.filter(n => n.node_type === "main_branch").length;
+          const angle = (2 * Math.PI * mainBranchCount) / totalMainBranches - Math.PI / 2;
+          x = 500 + 200 * Math.cos(angle);
+          y = 350 + 200 * Math.sin(angle);
+        } else {
+          // Position relative to parent
+          const parentIdx = nodeData.parent_index;
+          if (parentIdx !== null && nodeIdMap[parentIdx]) {
+            const siblingCount = generatedNodes.filter((n, idx) => 
+              n.parent_index === parentIdx && idx < i
+            ).length;
+            const angle = Math.PI / 4 + (siblingCount * Math.PI / 6);
+            x = 500 + 350 * Math.cos(angle) + Math.random() * 50;
+            y = 350 + 250 * Math.sin(angle) + Math.random() * 50;
+          }
+        }
+
+        const createdNode = await base44.entities.MindMapNode.create({
+          mind_map_id: newMap.id,
+          text: nodeData.text,
+          node_type: nodeData.node_type,
+          color: nodeData.color || "#3b82f6",
+          position_x: x,
+          position_y: y,
+          specification_notes: nodeData.specification_notes,
+        });
+
+        nodeIdMap[i] = createdNode.id;
+      }
+
+      // Second pass: create connections
+      for (let i = 0; i < generatedNodes.length; i++) {
+        const nodeData = generatedNodes[i];
+        if (nodeData.parent_index !== null && nodeData.parent_index !== undefined) {
+          const sourceId = nodeIdMap[nodeData.parent_index];
+          const targetId = nodeIdMap[i];
+          if (sourceId && targetId) {
+            await base44.entities.MindMapConnection.create({
+              mind_map_id: newMap.id,
+              source_node_id: sourceId,
+              target_node_id: targetId,
+              style: "solid",
+            });
+          }
+        }
+      }
+
+      toast.success(`Created mind map with ${generatedNodes.length} nodes from template`);
+      onOpenChange(false);
+      
+      // Navigate to the new map
+      const url = new URL(window.location.href);
+      url.searchParams.set("map", newMap.id);
+      window.location.href = url.toString();
+      
+    } catch (error) {
+      console.error("Error generating from template:", error);
+      toast.error("Failed to generate mind map from template");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const resetForm = () => {
+    setMapName("");
+    setMapDescription("");
+    setMapSuggestions("");
+    setSelectedTemplate(null);
+    setActiveTab("blank");
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={(v) => { if (!v) resetForm(); onOpenChange(v); }}>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Plus className="h-5 w-5" />
+            Create New Mind Map
+          </DialogTitle>
+        </DialogHeader>
+
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="blank" className="gap-2">
+              <FileText className="h-4 w-4" />
+              Blank Map
+            </TabsTrigger>
+            <TabsTrigger value="template" className="gap-2">
+              <Building2 className="h-4 w-4" />
+              From Template
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Blank Map Tab */}
+          <TabsContent value="blank" className="space-y-4 mt-4">
+            <div>
+              <label className="text-sm font-medium">Name *</label>
+              <Input
+                value={mapName}
+                onChange={(e) => setMapName(e.target.value)}
+                placeholder="e.g., Paragon Oak App Scope"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Business Context</label>
+              <Textarea
+                value={mapDescription}
+                onChange={(e) => setMapDescription(e.target.value)}
+                placeholder="Describe the business context, model, operations..."
+                rows={4}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Node Suggestions for AI</label>
+              <Textarea
+                value={mapSuggestions}
+                onChange={(e) => setMapSuggestions(e.target.value)}
+                placeholder="List nodes you want the AI to add..."
+                rows={4}
+              />
+            </div>
+            <Button
+              className="w-full"
+              onClick={handleCreateBlank}
+              disabled={!mapName || isPending}
+            >
+              {isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              Create Blank Mind Map
+            </Button>
+          </TabsContent>
+
+          {/* Template Tab */}
+          <TabsContent value="template" className="space-y-4 mt-4">
+            <div>
+              <label className="text-sm font-medium">Name *</label>
+              <Input
+                value={mapName}
+                onChange={(e) => setMapName(e.target.value)}
+                placeholder="e.g., My Construction Project"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium">Select Business Template</label>
+              <ScrollArea className="h-64 border rounded-lg p-2 mt-1">
+                <div className="space-y-2">
+                  {templates.length === 0 ? (
+                    <div className="text-center py-8 text-gray-500">
+                      <Building2 className="h-10 w-10 mx-auto mb-2 opacity-30" />
+                      <p>No templates available</p>
+                      <p className="text-xs">Create templates in Business Templates page</p>
+                    </div>
+                  ) : (
+                    templates.map((template) => (
+                      <Card
+                        key={template.id}
+                        className={`cursor-pointer transition-all ${
+                          selectedTemplate?.id === template.id
+                            ? "ring-2 ring-blue-500 bg-blue-50"
+                            : "hover:bg-gray-50"
+                        }`}
+                        onClick={() => setSelectedTemplate(template)}
+                      >
+                        <CardContent className="p-3">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <p className="font-medium">{template.name}</p>
+                              {template.category && (
+                                <Badge className={`mt-1 text-xs ${categoryColors[template.category]}`}>
+                                  {template.category}
+                                </Badge>
+                              )}
+                              {template.description && (
+                                <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                                  {template.description}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))
+                  )}
+                </div>
+              </ScrollArea>
+            </div>
+
+            {selectedTemplate && (
+              <div className="bg-blue-50 rounded-lg p-3 text-sm">
+                <div className="flex items-center gap-2 text-blue-700 font-medium">
+                  <Sparkles className="h-4 w-4" />
+                  AI will generate the complete mind map structure
+                </div>
+                <p className="text-blue-600 mt-1">
+                  Including entities, pages, features, and relationships from the template specification.
+                </p>
+              </div>
+            )}
+
+            <Button
+              className="w-full"
+              onClick={handleCreateFromTemplate}
+              disabled={!mapName || !selectedTemplate || isGenerating}
+            >
+              {isGenerating ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Generating Mind Map...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Generate from Template
+                </>
+              )}
+            </Button>
+          </TabsContent>
+        </Tabs>
+      </DialogContent>
+    </Dialog>
+  );
+}
