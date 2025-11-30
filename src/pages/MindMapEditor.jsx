@@ -423,8 +423,8 @@ export default function MindMapEditor() {
     const otherNodes = nodes.filter(n => n.id !== centralNode.id);
 
     // Center position
-    const centerX = 500;
-    const centerY = 350;
+    const centerX = 600;
+    const centerY = 450;
 
     // Update central node to center
     await updateNodeMutation.mutateAsync({ 
@@ -438,46 +438,94 @@ export default function MindMapEditor() {
       .map(c => c.target_node_id);
     
     const mainBranches = otherNodes.filter(n => mainBranchIds.includes(n.id));
-    const remainingNodes = otherNodes.filter(n => !mainBranchIds.includes(n.id));
 
-    // Arrange main branches in a circle around center
-    const radius = 200;
+    // Build a map of all descendants for each node
+    const getDescendants = (nodeId, depth = 0) => {
+      const childIds = connections
+        .filter(c => c.source_node_id === nodeId)
+        .map(c => c.target_node_id);
+      
+      let descendants = [];
+      for (const childId of childIds) {
+        const childNode = nodes.find(n => n.id === childId);
+        if (childNode) {
+          descendants.push({ node: childNode, depth: depth + 1, parentId: nodeId });
+          descendants = [...descendants, ...getDescendants(childId, depth + 1)];
+        }
+      }
+      return descendants;
+    };
+
+    // Arrange main branches in a circle around center with more space
+    const mainRadius = 280;
     const mainPromises = mainBranches.map((node, i) => {
       const angle = (2 * Math.PI * i) / mainBranches.length - Math.PI / 2;
-      const x = centerX + radius * Math.cos(angle);
-      const y = centerY + radius * Math.sin(angle);
+      const x = centerX + mainRadius * Math.cos(angle);
+      const y = centerY + mainRadius * Math.sin(angle);
       return updateNodeMutation.mutateAsync({ id: node.id, data: { position_x: x, position_y: y } });
     });
 
     await Promise.all(mainPromises);
 
-    // Arrange sub-branches around their parent
-    const subRadius = 120;
-    for (const mainBranch of mainBranches) {
-      const childIds = connections
-        .filter(c => c.source_node_id === mainBranch.id)
-        .map(c => c.target_node_id);
+    // Layout all descendants for each main branch
+    for (let branchIdx = 0; branchIdx < mainBranches.length; branchIdx++) {
+      const mainBranch = mainBranches[branchIdx];
+      const mainAngle = (2 * Math.PI * branchIdx) / mainBranches.length - Math.PI / 2;
+      const branchX = centerX + mainRadius * Math.cos(mainAngle);
+      const branchY = centerY + mainRadius * Math.sin(mainAngle);
       
-      const children = remainingNodes.filter(n => childIds.includes(n.id));
-      const mainIdx = mainBranches.indexOf(mainBranch);
-      const mainAngle = (2 * Math.PI * mainIdx) / mainBranches.length - Math.PI / 2;
-      
-      const childPromises = children.map((child, i) => {
-        const spreadAngle = Math.PI / 3; // 60 degree spread
-        const startAngle = mainAngle - spreadAngle / 2;
-        const childAngle = children.length > 1 
-          ? startAngle + (spreadAngle * i) / (children.length - 1)
-          : mainAngle;
-        
-        const parentX = centerX + radius * Math.cos(mainAngle);
-        const parentY = centerY + radius * Math.sin(mainAngle);
-        const x = parentX + subRadius * Math.cos(childAngle);
-        const y = parentY + subRadius * Math.sin(childAngle);
-        
-        return updateNodeMutation.mutateAsync({ id: child.id, data: { position_x: x, position_y: y } });
+      // Get all descendants grouped by depth
+      const allDescendants = getDescendants(mainBranch.id);
+      const depthGroups = {};
+      allDescendants.forEach(d => {
+        if (!depthGroups[d.depth]) depthGroups[d.depth] = [];
+        depthGroups[d.depth].push(d);
       });
+
+      // Position each depth level
+      const depths = Object.keys(depthGroups).map(Number).sort((a, b) => a - b);
       
-      await Promise.all(childPromises);
+      for (const depth of depths) {
+        const nodesAtDepth = depthGroups[depth];
+        const layerRadius = 140 + (depth - 1) * 120; // Increasing radius per depth
+        
+        // Group nodes by their parent for better organization
+        const byParent = {};
+        nodesAtDepth.forEach(d => {
+          if (!byParent[d.parentId]) byParent[d.parentId] = [];
+          byParent[d.parentId].push(d);
+        });
+
+        const parentIds = Object.keys(byParent);
+        const totalNodes = nodesAtDepth.length;
+        
+        // Calculate spread angle based on number of nodes (more nodes = wider spread)
+        const baseSpread = Math.min(Math.PI * 0.8, Math.PI / 3 + (totalNodes * 0.08));
+        const startAngle = mainAngle - baseSpread / 2;
+        
+        let nodeIndex = 0;
+        for (const parentId of parentIds) {
+          const siblings = byParent[parentId];
+          
+          for (let i = 0; i < siblings.length; i++) {
+            const { node } = siblings[i];
+            const angleOffset = totalNodes > 1 
+              ? (baseSpread * nodeIndex) / (totalNodes - 1)
+              : 0;
+            const angle = startAngle + angleOffset;
+            
+            const x = branchX + layerRadius * Math.cos(angle);
+            const y = branchY + layerRadius * Math.sin(angle);
+            
+            await updateNodeMutation.mutateAsync({ 
+              id: node.id, 
+              data: { position_x: x, position_y: y } 
+            });
+            
+            nodeIndex++;
+          }
+        }
+      }
     }
 
     queryClient.invalidateQueries({ queryKey: ["mindmapNodes", selectedMindMapId] });
