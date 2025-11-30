@@ -16,7 +16,8 @@ import {
   GitBranch,
   Database,
   Layout as LayoutIcon,
-  Zap
+  Zap,
+  Workflow
 } from "lucide-react";
 
 // Tenant Context
@@ -41,13 +42,15 @@ const globalAdminPages = [
   { name: "Feature Library", slug: "FeatureLibrary", icon: Zap },
   { name: "Template Library", slug: "TemplateLibrary", icon: Package },
   { name: "Business Templates", slug: "BusinessTemplates", icon: Building2 },
+  { name: "Workflow Library", slug: "WorkflowLibrary", icon: Workflow },
+  { name: "Workflow Designer", slug: "WorkflowDesigner", icon: Workflow },
   { name: "Tenant Manager", slug: "TenantManager", icon: Building2 },
   { name: "Navigation Manager", slug: "NavigationManager", icon: Navigation },
   { name: "Package Library", slug: "PackageLibrary", icon: Package },
 ];
 
 // Pages that don't require tenant context but need to preserve query params
-const standalonePages = ["MindMapEditor", "GeneratedApps", "EntityLibrary", "PageLibrary", "FeatureLibrary", "PackageLibrary", "TenantManager", "BusinessTemplates"];
+const standalonePages = ["MindMapEditor", "GeneratedApps", "EntityLibrary", "PageLibrary", "FeatureLibrary", "PackageLibrary", "TenantManager", "BusinessTemplates", "WorkflowLibrary", "WorkflowDesigner"];
 
 // Tenant pages - for users with tenant access
 const tenantPages = [];
