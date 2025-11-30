@@ -546,39 +546,40 @@ export default function MindMapEditor() {
     const verticalSpacing = 80;
     const indentSpacing = 200;
 
-    // Position the main branch node at top
-    await updateNodeMutation.mutateAsync({
-      id: branchId,
-      data: { position_x: startX, position_y: startY }
-    });
+    // Collect all position updates
+    const positionUpdates = [{ id: branchId, x: startX, y: startY }];
 
     // Collect all nodes in order with their depth
-    const orderedNodes = [];
-    const collectNodes = (parentId, depth = 1) => {
+    const collectNodes = (parentId, depth = 1, index = { value: 0 }) => {
       const childIds = connections
         .filter(c => c.source_node_id === parentId)
         .map(c => c.target_node_id);
       
       const children = nodes.filter(n => childIds.includes(n.id));
       children.forEach(child => {
-        orderedNodes.push({ node: child, depth });
-        collectNodes(child.id, depth + 1);
+        index.value++;
+        const x = startX + (depth * indentSpacing);
+        const y = startY + (index.value * verticalSpacing);
+        positionUpdates.push({ id: child.id, x, y });
+        collectNodes(child.id, depth + 1, index);
       });
     };
 
     collectNodes(branchId);
 
-    // Position all nodes in a vertical stack with indentation
-    const promises = orderedNodes.map((item, i) => {
-      const x = startX + (item.depth * indentSpacing);
-      const y = startY + ((i + 1) * verticalSpacing);
-      return updateNodeMutation.mutateAsync({
-        id: item.node.id,
-        data: { position_x: x, position_y: y }
-      });
-    });
-
-    await Promise.all(promises);
+    // Batch updates in chunks to avoid rate limiting
+    const chunkSize = 5;
+    for (let i = 0; i < positionUpdates.length; i += chunkSize) {
+      const chunk = positionUpdates.slice(i, i + chunkSize);
+      await Promise.all(
+        chunk.map(({ id, x, y }) => 
+          updateNodeMutation.mutateAsync({ id, data: { position_x: x, position_y: y } })
+        )
+      );
+      if (i + chunkSize < positionUpdates.length) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
+    }
 
     queryClient.invalidateQueries({ queryKey: ["mindmapNodes", selectedMindMapId] });
     toast.success("Branch layout applied");
