@@ -420,13 +420,12 @@ export default function MindMapEditor() {
 
     // Find central node or use first node as center
     const centralNode = nodes.find(n => n.node_type === "central") || nodes[0];
-    const otherNodes = nodes.filter(n => n.id !== centralNode.id);
 
     // Center position
-    const centerX = 600;
-    const centerY = 450;
+    const centerX = 500;
+    const centerY = 400;
 
-    // Collect all position updates first, then batch them
+    // Collect all position updates
     const positionUpdates = [];
 
     // Central node position
@@ -437,93 +436,78 @@ export default function MindMapEditor() {
       .filter(c => c.source_node_id === centralNode.id)
       .map(c => c.target_node_id);
     
-    const mainBranches = otherNodes.filter(n => mainBranchIds.includes(n.id));
+    const mainBranches = nodes.filter(n => mainBranchIds.includes(n.id));
 
-    // Build a map of all descendants for each node
-    const getDescendants = (nodeId, depth = 0) => {
+    // Get all descendants of a node recursively
+    const getDescendants = (nodeId) => {
       const childIds = connections
         .filter(c => c.source_node_id === nodeId)
         .map(c => c.target_node_id);
       
-      let descendants = [];
+      let descendants = [...childIds];
       for (const childId of childIds) {
-        const childNode = nodes.find(n => n.id === childId);
-        if (childNode) {
-          descendants.push({ node: childNode, depth: depth + 1, parentId: nodeId });
-          descendants = [...descendants, ...getDescendants(childId, depth + 1)];
-        }
+        descendants = [...descendants, ...getDescendants(childId)];
       }
       return descendants;
     };
 
-    // Calculate main branch positions
-    const mainRadius = 450;
-    mainBranches.forEach((node, i) => {
-      const angle = (2 * Math.PI * i) / mainBranches.length - Math.PI / 2;
-      const x = centerX + mainRadius * Math.cos(angle);
-      const y = centerY + mainRadius * Math.sin(angle);
-      positionUpdates.push({ id: node.id, x, y });
-    });
+    // Calculate weight (descendant count) for each main branch to allocate space
+    const branchWeights = mainBranches.map(branch => ({
+      branch,
+      weight: 1 + getDescendants(branch.id).length
+    }));
+    const totalWeight = branchWeights.reduce((sum, b) => sum + b.weight, 0);
 
-    // Calculate all descendant positions
-    for (let branchIdx = 0; branchIdx < mainBranches.length; branchIdx++) {
-      const mainBranch = mainBranches[branchIdx];
-      const mainAngle = (2 * Math.PI * branchIdx) / mainBranches.length - Math.PI / 2;
-      const branchX = centerX + mainRadius * Math.cos(mainAngle);
-      const branchY = centerY + mainRadius * Math.sin(mainAngle);
+    // Position main branches around center with weighted angles
+    const mainRadius = 280;
+    let currentAngle = -Math.PI / 2; // Start at top
+
+    for (const { branch, weight } of branchWeights) {
+      // Allocate angle based on weight
+      const angleSpan = (2 * Math.PI * weight) / totalWeight;
+      const branchAngle = currentAngle + angleSpan / 2;
       
-      const allDescendants = getDescendants(mainBranch.id);
-      const depthGroups = {};
-      allDescendants.forEach(d => {
-        if (!depthGroups[d.depth]) depthGroups[d.depth] = [];
-        depthGroups[d.depth].push(d);
-      });
+      const x = centerX + mainRadius * Math.cos(branchAngle);
+      const y = centerY + mainRadius * Math.sin(branchAngle);
+      positionUpdates.push({ id: branch.id, x, y });
 
-      const depths = Object.keys(depthGroups).map(Number).sort((a, b) => a - b);
-      
-      for (const depth of depths) {
-        const nodesAtDepth = depthGroups[depth];
-        const layerRadius = 250 + (depth - 1) * 200;
+      // Position descendants in a tree structure extending outward
+      const layoutDescendants = (parentId, parentX, parentY, parentAngle, depth) => {
+        const childIds = connections
+          .filter(c => c.source_node_id === parentId)
+          .map(c => c.target_node_id);
         
-        const byParent = {};
-        nodesAtDepth.forEach(d => {
-          if (!byParent[d.parentId]) byParent[d.parentId] = [];
-          byParent[d.parentId].push(d);
-        });
+        const children = nodes.filter(n => childIds.includes(n.id));
+        if (children.length === 0) return;
 
-        const totalNodes = nodesAtDepth.length;
-        // Increase spread angle significantly, especially for branches with many nodes
-        const baseSpread = Math.min(Math.PI * 0.95, Math.PI / 2.5 + (totalNodes * 0.12));
-        const startAngle = mainAngle - baseSpread / 2;
-        
-        let nodeIndex = 0;
-        for (const parentId of Object.keys(byParent)) {
-          const siblings = byParent[parentId];
+        const spacing = 120; // Horizontal spacing between siblings
+        const depthSpacing = 140; // Distance from parent
+
+        // Spread children around the parent's angle
+        const spreadAngle = Math.min(Math.PI / 3, children.length * 0.25);
+        const startAngle = parentAngle - spreadAngle / 2;
+        const angleStep = children.length > 1 ? spreadAngle / (children.length - 1) : 0;
+
+        children.forEach((child, i) => {
+          const childAngle = startAngle + i * angleStep;
+          const childX = parentX + depthSpacing * Math.cos(childAngle);
+          const childY = parentY + depthSpacing * Math.sin(childAngle);
           
-          for (let i = 0; i < siblings.length; i++) {
-            const { node } = siblings[i];
-            const angleOffset = totalNodes > 1 
-              ? (baseSpread * nodeIndex) / (totalNodes - 1)
-              : 0;
-            const angle = startAngle + angleOffset;
-            
-            const x = branchX + layerRadius * Math.cos(angle);
-            const y = branchY + layerRadius * Math.sin(angle);
-            
-            positionUpdates.push({ id: node.id, x, y });
-            nodeIndex++;
-          }
-        }
-      }
+          positionUpdates.push({ id: child.id, x: childX, y: childY });
+          layoutDescendants(child.id, childX, childY, childAngle, depth + 1);
+        });
+      };
+
+      layoutDescendants(branch.id, x, y, branchAngle, 1);
+      currentAngle += angleSpan;
     }
 
     // Update nodes one at a time with delay to avoid rate limiting
     for (let i = 0; i < positionUpdates.length; i++) {
       const { id, x, y } = positionUpdates[i];
       await updateNodeMutation.mutateAsync({ id, data: { position_x: x, position_y: y } });
-      // Delay between each update
       if (i < positionUpdates.length - 1) {
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise(resolve => setTimeout(resolve, 150));
       }
     }
 
