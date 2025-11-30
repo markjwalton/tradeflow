@@ -21,7 +21,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2, FileText, Building2, Sparkles, Plus } from "lucide-react";
+import { Loader2, FileText, Building2, Sparkles, Plus, Star, Filter } from "lucide-react";
 import { toast } from "sonner";
 
 const categoryColors = {
@@ -33,8 +33,23 @@ const categoryColors = {
   "Manufacturing": "bg-orange-100 text-orange-700",
   "Finance": "bg-emerald-100 text-emerald-700",
   "Education": "bg-cyan-100 text-cyan-700",
+  "Custom": "bg-indigo-100 text-indigo-700",
   "Other": "bg-gray-100 text-gray-700",
 };
+
+const categories = [
+  "All",
+  "Professional Services",
+  "Construction", 
+  "Retail",
+  "Healthcare",
+  "Technology",
+  "Manufacturing",
+  "Finance",
+  "Education",
+  "Custom",
+  "Other"
+];
 
 export default function NewMindMapDialog({
   open,
@@ -48,10 +63,20 @@ export default function NewMindMapDialog({
   const [mapSuggestions, setMapSuggestions] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [templateFilter, setTemplateFilter] = useState("All");
 
-  const { data: templates = [] } = useQuery({
+  const { data: allTemplates = [] } = useQuery({
     queryKey: ["businessTemplates"],
     queryFn: () => base44.entities.BusinessTemplate.filter({ is_active: true }),
+  });
+
+  // Filter templates: show starred templates OR filter by category (Custom only shows when specifically selected)
+  const templates = allTemplates.filter(t => {
+    if (templateFilter === "All") {
+      // Show all starred templates + non-Custom templates
+      return t.is_starred || t.category !== "Custom";
+    }
+    return t.category === templateFilter;
   });
 
   const handleCreateBlank = () => {
@@ -284,8 +309,21 @@ Structure the nodes hierarchically, starting with the central node at index 0.`,
             </div>
 
             <div>
-              <label className="text-sm font-medium">Select Business Template</label>
-              <ScrollArea className="h-64 border rounded-lg p-2 mt-1">
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-sm font-medium">Select Business Template</label>
+                <Select value={templateFilter} onValueChange={setTemplateFilter}>
+                  <SelectTrigger className="w-40 h-8">
+                    <Filter className="h-3 w-3 mr-1" />
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map(cat => (
+                      <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <ScrollArea className="h-64 border rounded-lg p-2">
                 <div className="space-y-2">
                   {templates.length === 0 ? (
                     <div className="text-center py-8 text-gray-500">
@@ -306,16 +344,21 @@ Structure the nodes hierarchically, starting with the central node at index 0.`,
                       >
                         <CardContent className="p-3">
                           <div className="flex items-start justify-between">
-                            <div>
-                              <p className="font-medium">{template.name}</p>
+                            <div className="flex-1">
+                              <p className="font-medium flex items-center gap-2">
+                                {template.is_starred && (
+                                  <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
+                                )}
+                                {template.name}
+                              </p>
                               {template.category && (
-                                <Badge className={`mt-1 text-xs ${categoryColors[template.category]}`}>
+                                <Badge className={`mt-1 text-xs ${categoryColors[template.category] || categoryColors.Other}`}>
                                   {template.category}
                                 </Badge>
                               )}
-                              {template.description && (
+                              {(template.summary || template.description) && (
                                 <p className="text-sm text-gray-500 mt-1 line-clamp-2">
-                                  {template.description}
+                                  {template.summary || template.description}
                                 </p>
                               )}
                             </div>
