@@ -497,33 +497,54 @@ Return a JSON object with:
                     const projectId = addToProjectTargetId;
                     const projectName = projects.find(p => p.id === projectId)?.name;
                     
-                    // Add entity
-                    const entityCopy = { ...addToProjectEntity, custom_project_id: projectId, is_custom: true, category: "Custom" };
-                    delete entityCopy.id;
-                    delete entityCopy.created_date;
-                    delete entityCopy.updated_date;
-                    await base44.entities.EntityTemplate.create(entityCopy);
+                    // Get existing entities in project to avoid duplicates
+                    const existingInProject = entities.filter(e => e.custom_project_id === projectId);
+                    const existingNames = existingInProject.map(e => e.name);
                     
-                    // Add selected related entities
-                    let addedCount = 1;
+                    let addedCount = 0;
+                    let skippedCount = 0;
+                    
+                    // Add main entity if not already in project
+                    if (!existingNames.includes(addToProjectEntity.name)) {
+                      const entityCopy = { ...addToProjectEntity, custom_project_id: projectId, is_custom: true, category: "Custom" };
+                      delete entityCopy.id;
+                      delete entityCopy.created_date;
+                      delete entityCopy.updated_date;
+                      await base44.entities.EntityTemplate.create(entityCopy);
+                      addedCount++;
+                    } else {
+                      skippedCount++;
+                    }
+                    
+                    // Add selected related entities (skip if already exists)
                     for (const selectedId of addToProjectSelectedPages) {
                       if (selectedId.startsWith('entity-')) {
                         const entityId = selectedId.replace('entity-', '');
                         const relatedEntity = entities.find(e => e.id === entityId);
                         if (relatedEntity) {
-                          const relEntityCopy = { ...relatedEntity, custom_project_id: projectId, is_custom: true, category: "Custom" };
-                          delete relEntityCopy.id;
-                          delete relEntityCopy.created_date;
-                          delete relEntityCopy.updated_date;
-                          await base44.entities.EntityTemplate.create(relEntityCopy);
-                          addedCount++;
+                          if (!existingNames.includes(relatedEntity.name)) {
+                            const relEntityCopy = { ...relatedEntity, custom_project_id: projectId, is_custom: true, category: "Custom" };
+                            delete relEntityCopy.id;
+                            delete relEntityCopy.created_date;
+                            delete relEntityCopy.updated_date;
+                            await base44.entities.EntityTemplate.create(relEntityCopy);
+                            addedCount++;
+                          } else {
+                            skippedCount++;
+                          }
                         }
                       }
                     }
                     
                     queryClient.invalidateQueries({ queryKey: ["entityTemplates"] });
                     
-                    toast.success(`Added ${addedCount} entit${addedCount > 1 ? 'ies' : 'y'} to ${projectName}`);
+                    if (addedCount > 0 && skippedCount > 0) {
+                      toast.success(`Added ${addedCount} entit${addedCount > 1 ? 'ies' : 'y'} to ${projectName} (${skippedCount} already existed)`);
+                    } else if (addedCount > 0) {
+                      toast.success(`Added ${addedCount} entit${addedCount > 1 ? 'ies' : 'y'} to ${projectName}`);
+                    } else {
+                      toast.info(`All entities already exist in ${projectName}`);
+                    }
                     
                     setAddToProjectEntity(null);
                     setAddToProjectSelectedPages([]);
