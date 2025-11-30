@@ -15,6 +15,7 @@ import ProjectDetail from './pages/ProjectDetail';
 import TemplateLibrary from './pages/TemplateLibrary';
 import BusinessTemplates from './pages/BusinessTemplates';
 import GeneratedApps from './pages/GeneratedApps';
+import EntityLibrary from './pages/EntityLibrary';
 import __Layout from './Layout.jsx';
 
 
@@ -36,6 +37,7 @@ export const PAGES = {
     "TemplateLibrary": TemplateLibrary,
     "BusinessTemplates": BusinessTemplates,
     "GeneratedApps": GeneratedApps,
+    "EntityLibrary": EntityLibrary,
 }
 
 export const pagesConfig = {
