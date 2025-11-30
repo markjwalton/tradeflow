@@ -18,12 +18,52 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 
+const STORAGE_KEY = "ai_workflow_generator_draft";
+
 export default function AIWorkflowGenerator({ open, onOpenChange, onGenerate }) {
-  const [steps, setSteps] = useState([{ name: "", narrative: "" }]);
-  const [additionalContext, setAdditionalContext] = useState("");
+  const [steps, setSteps] = useState(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return parsed.steps || [{ name: "", narrative: "" }];
+      } catch (e) {}
+    }
+    return [{ name: "", narrative: "" }];
+  });
+  const [additionalContext, setAdditionalContext] = useState(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return parsed.additionalContext || "";
+      } catch (e) {}
+    }
+    return "";
+  });
   const [isGenerating, setIsGenerating] = useState(false);
-  const [phase, setPhase] = useState("input"); // input, context, generating, result
+  const [phase, setPhase] = useState(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return parsed.phase || "input";
+      } catch (e) {}
+    }
+    return "input";
+  });
   const [generatedSteps, setGeneratedSteps] = useState([]);
+
+  // Save to localStorage whenever state changes
+  React.useEffect(() => {
+    if (phase !== "generating" && phase !== "result") {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        steps,
+        additionalContext,
+        phase
+      }));
+    }
+  }, [steps, additionalContext, phase]);
 
   const addStep = () => {
     setSteps([...steps, { name: "", narrative: "" }]);
@@ -188,14 +228,20 @@ Return a JSON object with this structure:
 
   const handleApply = () => {
     onGenerate(generatedSteps);
-    handleClose();
+    localStorage.removeItem(STORAGE_KEY);
+    handleClearAndClose();
   };
 
   const handleClose = () => {
+    onOpenChange(false);
+  };
+
+  const handleClearAndClose = () => {
     setSteps([{ name: "", narrative: "" }]);
     setAdditionalContext("");
     setPhase("input");
     setGeneratedSteps([]);
+    localStorage.removeItem(STORAGE_KEY);
     onOpenChange(false);
   };
 
@@ -297,7 +343,10 @@ Return a JSON object with this structure:
                 Add Another Step
               </Button>
 
-              <div className="flex justify-end pt-4">
+              <div className="flex justify-between pt-4">
+                <Button variant="outline" onClick={handleClearAndClose} className="text-gray-500">
+                  Clear & Close
+                </Button>
                 <Button onClick={handleFinishInput}>
                   Continue
                   <ArrowRight className="h-4 w-4 ml-2" />
