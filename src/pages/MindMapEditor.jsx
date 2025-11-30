@@ -517,18 +517,13 @@ export default function MindMapEditor() {
       }
     }
 
-    // Batch updates in chunks of 5 with longer delays to avoid rate limiting
-    const chunkSize = 5;
-    for (let i = 0; i < positionUpdates.length; i += chunkSize) {
-      const chunk = positionUpdates.slice(i, i + chunkSize);
-      await Promise.all(
-        chunk.map(({ id, x, y }) => 
-          updateNodeMutation.mutateAsync({ id, data: { position_x: x, position_y: y } })
-        )
-      );
-      // Longer delay between chunks to avoid rate limiting
-      if (i + chunkSize < positionUpdates.length) {
-        await new Promise(resolve => setTimeout(resolve, 300));
+    // Update nodes one at a time with delay to avoid rate limiting
+    for (let i = 0; i < positionUpdates.length; i++) {
+      const { id, x, y } = positionUpdates[i];
+      await updateNodeMutation.mutateAsync({ id, data: { position_x: x, position_y: y } });
+      // Delay between each update
+      if (i < positionUpdates.length - 1) {
+        await new Promise(resolve => setTimeout(resolve, 200));
       }
     }
 
@@ -567,17 +562,12 @@ export default function MindMapEditor() {
 
     collectNodes(branchId);
 
-    // Batch updates in chunks to avoid rate limiting
-    const chunkSize = 5;
-    for (let i = 0; i < positionUpdates.length; i += chunkSize) {
-      const chunk = positionUpdates.slice(i, i + chunkSize);
-      await Promise.all(
-        chunk.map(({ id, x, y }) => 
-          updateNodeMutation.mutateAsync({ id, data: { position_x: x, position_y: y } })
-        )
-      );
-      if (i + chunkSize < positionUpdates.length) {
-        await new Promise(resolve => setTimeout(resolve, 300));
+    // Update nodes one at a time with delay to avoid rate limiting
+    for (let i = 0; i < positionUpdates.length; i++) {
+      const { id, x, y } = positionUpdates[i];
+      await updateNodeMutation.mutateAsync({ id, data: { position_x: x, position_y: y } });
+      if (i < positionUpdates.length - 1) {
+        await new Promise(resolve => setTimeout(resolve, 200));
       }
     }
 
