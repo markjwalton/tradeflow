@@ -21,7 +21,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Search, Database, Sparkles, Trash2, Edit, Copy, Loader2, Star, BookmarkPlus, Folder } from "lucide-react";
+import { Plus, Search, Database, Sparkles, Trash2, Edit, Copy, Loader2, Star, BookmarkPlus, Folder, Layout, Zap, Check } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import EntityBuilder from "@/components/library/EntityBuilder";
 import CustomProjectSelector from "@/components/library/CustomProjectSelector";
@@ -51,6 +52,9 @@ export default function EntityLibrary() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [addToProjectEntity, setAddToProjectEntity] = useState(null);
+  const [addToProjectSelectedPages, setAddToProjectSelectedPages] = useState([]);
+  const [addToProjectSelectedFeatures, setAddToProjectSelectedFeatures] = useState([]);
+  const [addToProjectTargetId, setAddToProjectTargetId] = useState(null);
 
   const { data: entities = [], isLoading } = useQuery({
     queryKey: ["entityTemplates"],
@@ -60,6 +64,16 @@ export default function EntityLibrary() {
   const { data: projects = [] } = useQuery({
     queryKey: ["customProjects"],
     queryFn: () => base44.entities.CustomProject.list(),
+  });
+
+  const { data: pageTemplates = [] } = useQuery({
+    queryKey: ["pageTemplates"],
+    queryFn: () => base44.entities.PageTemplate.list(),
+  });
+
+  const { data: featureTemplates = [] } = useQuery({
+    queryKey: ["featureTemplates"],
+    queryFn: () => base44.entities.FeatureTemplate.list(),
   });
 
   const createMutation = useMutation({
@@ -384,8 +398,15 @@ Return a JSON object with:
       </Dialog>
 
       {/* Add to Project Dialog */}
-      <Dialog open={!!addToProjectEntity} onOpenChange={(v) => !v && setAddToProjectEntity(null)}>
-        <DialogContent>
+      <Dialog open={!!addToProjectEntity} onOpenChange={(v) => {
+        if (!v) {
+          setAddToProjectEntity(null);
+          setAddToProjectSelectedPages([]);
+          setAddToProjectSelectedFeatures([]);
+          setAddToProjectTargetId(null);
+        }
+      }}>
+        <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Folder className="h-5 w-5 text-indigo-600" />
@@ -393,39 +414,166 @@ Return a JSON object with:
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <p className="text-sm text-gray-600">
-              Select a custom project to add this entity to:
-            </p>
-            <div className="space-y-2">
-              {projects.map((project) => (
-                <Button
-                  key={project.id}
-                  variant="outline"
-                  className="w-full justify-start"
-                  onClick={() => {
-                    const copy = {
-                      ...addToProjectEntity,
-                      custom_project_id: project.id,
-                      is_custom: true,
-                      category: "Custom",
-                      name: addToProjectEntity.name
-                    };
-                    delete copy.id;
-                    delete copy.created_date;
-                    delete copy.updated_date;
-                    createMutation.mutate(copy);
+            {/* Step 1: Select Project */}
+            {!addToProjectTargetId ? (
+              <>
+                <p className="text-sm text-gray-600">Select a custom project:</p>
+                <div className="space-y-2">
+                  {projects.map((project) => (
+                    <Button
+                      key={project.id}
+                      variant="outline"
+                      className="w-full justify-start"
+                      onClick={() => setAddToProjectTargetId(project.id)}
+                    >
+                      <Folder className="h-4 w-4 mr-2" />
+                      {project.name}
+                    </Button>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Step 2: Select Related Items */}
+                <div className="flex items-center gap-2 text-sm text-gray-600 bg-indigo-50 p-2 rounded">
+                  <Check className="h-4 w-4 text-indigo-600" />
+                  Adding to: <strong>{projects.find(p => p.id === addToProjectTargetId)?.name}</strong>
+                  <Button variant="ghost" size="sm" className="ml-auto h-6 text-xs" onClick={() => setAddToProjectTargetId(null)}>Change</Button>
+                </div>
+
+                {/* Related Pages */}
+                {(() => {
+                  const relatedPages = pageTemplates.filter(p => 
+                    p.entities_used?.includes(addToProjectEntity?.name) && !p.custom_project_id
+                  );
+                  if (relatedPages.length === 0) return null;
+                  return (
+                    <div>
+                      <label className="text-sm font-medium flex items-center gap-2 mb-2">
+                        <Layout className="h-4 w-4 text-blue-600" />
+                        Related Pages ({relatedPages.length})
+                      </label>
+                      <div className="space-y-1 max-h-32 overflow-auto border rounded p-2">
+                        {relatedPages.map((page) => (
+                          <div key={page.id} className="flex items-center gap-2">
+                            <Checkbox
+                              id={`page-${page.id}`}
+                              checked={addToProjectSelectedPages.includes(page.id)}
+                              onCheckedChange={(checked) => {
+                                setAddToProjectSelectedPages(prev => 
+                                  checked ? [...prev, page.id] : prev.filter(id => id !== page.id)
+                                );
+                              }}
+                            />
+                            <label htmlFor={`page-${page.id}`} className="text-sm cursor-pointer flex-1">{page.name}</label>
+                            <Badge variant="outline" className="text-xs">{page.category}</Badge>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* Related Features */}
+                {(() => {
+                  const relatedFeatures = featureTemplates.filter(f => 
+                    f.entities_used?.includes(addToProjectEntity?.name) && !f.custom_project_id
+                  );
+                  if (relatedFeatures.length === 0) return null;
+                  return (
+                    <div>
+                      <label className="text-sm font-medium flex items-center gap-2 mb-2">
+                        <Zap className="h-4 w-4 text-amber-600" />
+                        Related Features ({relatedFeatures.length})
+                      </label>
+                      <div className="space-y-1 max-h-32 overflow-auto border rounded p-2">
+                        {relatedFeatures.map((feature) => (
+                          <div key={feature.id} className="flex items-center gap-2">
+                            <Checkbox
+                              id={`feature-${feature.id}`}
+                              checked={addToProjectSelectedFeatures.includes(feature.id)}
+                              onCheckedChange={(checked) => {
+                                setAddToProjectSelectedFeatures(prev => 
+                                  checked ? [...prev, feature.id] : prev.filter(id => id !== feature.id)
+                                );
+                              }}
+                            />
+                            <label htmlFor={`feature-${feature.id}`} className="text-sm cursor-pointer flex-1">{feature.name}</label>
+                            <Badge variant="outline" className="text-xs">{feature.category}</Badge>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* No related items message */}
+                {pageTemplates.filter(p => p.entities_used?.includes(addToProjectEntity?.name) && !p.custom_project_id).length === 0 &&
+                 featureTemplates.filter(f => f.entities_used?.includes(addToProjectEntity?.name) && !f.custom_project_id).length === 0 && (
+                  <p className="text-sm text-gray-500 italic">No related pages or features found for this entity.</p>
+                )}
+
+                <div className="flex gap-2 pt-2">
+                  <Button variant="outline" className="flex-1" onClick={() => {
                     setAddToProjectEntity(null);
-                    toast.success(`Added to ${project.name}`);
-                  }}
-                >
-                  <Folder className="h-4 w-4 mr-2" />
-                  {project.name}
-                </Button>
-              ))}
-            </div>
-            <Button variant="outline" className="w-full" onClick={() => setAddToProjectEntity(null)}>
-              Cancel
-            </Button>
+                    setAddToProjectSelectedPages([]);
+                    setAddToProjectSelectedFeatures([]);
+                    setAddToProjectTargetId(null);
+                  }}>
+                    Cancel
+                  </Button>
+                  <Button className="flex-1" onClick={async () => {
+                    const projectId = addToProjectTargetId;
+                    const projectName = projects.find(p => p.id === projectId)?.name;
+                    
+                    // Add entity
+                    const entityCopy = { ...addToProjectEntity, custom_project_id: projectId, is_custom: true, category: "Custom" };
+                    delete entityCopy.id;
+                    delete entityCopy.created_date;
+                    delete entityCopy.updated_date;
+                    await base44.entities.EntityTemplate.create(entityCopy);
+                    
+                    // Add selected pages
+                    for (const pageId of addToProjectSelectedPages) {
+                      const page = pageTemplates.find(p => p.id === pageId);
+                      if (page) {
+                        const pageCopy = { ...page, custom_project_id: projectId, is_custom: true, category: "Custom" };
+                        delete pageCopy.id;
+                        delete pageCopy.created_date;
+                        delete pageCopy.updated_date;
+                        await base44.entities.PageTemplate.create(pageCopy);
+                      }
+                    }
+                    
+                    // Add selected features
+                    for (const featureId of addToProjectSelectedFeatures) {
+                      const feature = featureTemplates.find(f => f.id === featureId);
+                      if (feature) {
+                        const featureCopy = { ...feature, custom_project_id: projectId, is_custom: true, category: "Custom" };
+                        delete featureCopy.id;
+                        delete featureCopy.created_date;
+                        delete featureCopy.updated_date;
+                        await base44.entities.FeatureTemplate.create(featureCopy);
+                      }
+                    }
+                    
+                    queryClient.invalidateQueries({ queryKey: ["entityTemplates"] });
+                    queryClient.invalidateQueries({ queryKey: ["pageTemplates"] });
+                    queryClient.invalidateQueries({ queryKey: ["featureTemplates"] });
+                    
+                    const count = 1 + addToProjectSelectedPages.length + addToProjectSelectedFeatures.length;
+                    toast.success(`Added ${count} item${count > 1 ? 's' : ''} to ${projectName}`);
+                    
+                    setAddToProjectEntity(null);
+                    setAddToProjectSelectedPages([]);
+                    setAddToProjectSelectedFeatures([]);
+                    setAddToProjectTargetId(null);
+                  }}>
+                    Add to Project
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
         </DialogContent>
       </Dialog>
