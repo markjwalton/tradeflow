@@ -31,6 +31,9 @@ import AppointmentManager from './pages/AppointmentManager';
 import InterestOptionsManager from './pages/InterestOptionsManager';
 import SystemSpecification from './pages/SystemSpecification';
 import ERDEditor from './pages/ERDEditor';
+import ProjectDetails from './pages/ProjectDetails';
+import ProjectForm from './pages/ProjectForm';
+import ProjectsOverview from './pages/ProjectsOverview';
 import __Layout from './Layout.jsx';
 
 
@@ -68,6 +71,9 @@ export const PAGES = {
     "InterestOptionsManager": InterestOptionsManager,
     "SystemSpecification": SystemSpecification,
     "ERDEditor": ERDEditor,
+    "ProjectDetails": ProjectDetails,
+    "ProjectForm": ProjectForm,
+    "ProjectsOverview": ProjectsOverview,
 }
 
 export const pagesConfig = {
