@@ -181,8 +181,7 @@ export default function EntityBuilder({ initialData, onSave, onCancel, isSaving,
   };
 
   return (
-    <ScrollArea className="flex-1 -mx-6 px-6">
-      <div className="space-y-6 pb-4">
+    <div className="space-y-6 pb-4">
         {/* Basic Info */}
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -402,7 +401,6 @@ export default function EntityBuilder({ initialData, onSave, onCancel, isSaving,
             Save Entity
           </Button>
         </div>
-      </div>
-    </ScrollArea>
+    </div>
   );
 }

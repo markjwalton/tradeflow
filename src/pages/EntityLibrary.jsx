@@ -412,7 +412,7 @@ Return a JSON object with:
 
       {/* Entity Builder Dialog */}
       <Dialog open={showBuilder} onOpenChange={setShowBuilder}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+        <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {editingEntity?.id ? "Edit Entity" : "Create Entity"}
