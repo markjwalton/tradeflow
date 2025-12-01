@@ -41,6 +41,7 @@ import CustomProjectSelector from "@/components/library/CustomProjectSelector";
 import ERDCanvas from "@/components/erd/ERDCanvas";
 import ERDEntityEditor from "@/components/erd/ERDEntityEditor";
 import ERDRelationshipEditor from "@/components/erd/ERDRelationshipEditor";
+import AddFromLibraryDialog from "@/components/erd/AddFromLibraryDialog";
 
 export default function ERDEditor() {
   const queryClient = useQueryClient();
@@ -53,6 +54,8 @@ export default function ERDEditor() {
   const [connectionSource, setConnectionSource] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [erdPositions, setErdPositions] = useState({});
+  const [showLibraryDialog, setShowLibraryDialog] = useState(false);
+  const [isAddingFromLibrary, setIsAddingFromLibrary] = useState(false);
 
   // Fetch entities for selected project
   const { data: entities = [], isLoading } = useQuery({
@@ -276,6 +279,32 @@ Only suggest NEW relationships not already in existingRelationships.`,
     setShowEntityEditor(true);
   };
 
+  // Add entities from library
+  const handleAddFromLibrary = async (libraryEntities) => {
+    setIsAddingFromLibrary(true);
+    try {
+      for (const entity of libraryEntities) {
+        await createEntityMutation.mutateAsync({
+          name: entity.name,
+          description: entity.description,
+          category: entity.category,
+          group: entity.group,
+          schema: entity.schema,
+          relationships: entity.relationships || [],
+          tags: entity.tags || [],
+          custom_project_id: selectedProjectId || null,
+          is_custom: !!selectedProjectId,
+        });
+      }
+      toast.success(`Added ${libraryEntities.length} entities from library`);
+      setShowLibraryDialog(false);
+    } catch (error) {
+      toast.error("Failed to add entities");
+    } finally {
+      setIsAddingFromLibrary(false);
+    }
+  };
+
   // Save entity from editor
   const handleSaveEntity = (entityData) => {
     const data = {
@@ -353,6 +382,10 @@ Only suggest NEW relationships not already in existingRelationships.`,
         <Button size="sm" onClick={handleAddEntity}>
           <Plus className="h-4 w-4 mr-1" />
           Add Entity
+        </Button>
+        <Button size="sm" variant="outline" onClick={() => setShowLibraryDialog(true)}>
+          <Database className="h-4 w-4 mr-1" />
+          From Library
         </Button>
         <Button 
           size="sm" 
@@ -477,6 +510,15 @@ Only suggest NEW relationships not already in existingRelationships.`,
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Add from Library Dialog */}
+      <AddFromLibraryDialog
+        open={showLibraryDialog}
+        onOpenChange={setShowLibraryDialog}
+        onAddEntity={handleAddFromLibrary}
+        existingEntityNames={entities.map(e => e.name)}
+        isAdding={isAddingFromLibrary}
+      />
     </div>
   );
 }
