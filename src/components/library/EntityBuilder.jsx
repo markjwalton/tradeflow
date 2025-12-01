@@ -25,11 +25,12 @@ const defaultGroups = [
   "Templates",
   "CRM & Sales",
   "Project Management",
+  "Team Management",
   "Documents",
   "Other"
 ];
 
-export default function EntityBuilder({ initialData, onSave, onCancel, isSaving }) {
+export default function EntityBuilder({ initialData, onSave, onCancel, isSaving, existingGroups = [] }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Other");
@@ -38,6 +39,10 @@ export default function EntityBuilder({ initialData, onSave, onCancel, isSaving 
   const [tagInput, setTagInput] = useState("");
   const [fields, setFields] = useState([]);
   const [relationships, setRelationships] = useState([]);
+  const [customGroupInput, setCustomGroupInput] = useState("");
+
+  // Merge default groups with existing groups from library
+  const allGroups = [...new Set([...defaultGroups, ...existingGroups])].sort();
 
   useEffect(() => {
     if (initialData) {
@@ -205,18 +210,46 @@ export default function EntityBuilder({ initialData, onSave, onCancel, isSaving 
 
         <div>
           <label className="text-sm font-medium">Group</label>
-          <Select value={group} onValueChange={setGroup}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select a group..." />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={null}>No Group</SelectItem>
-              {defaultGroups.map((g) => (
-                <SelectItem key={g} value={g}>{g}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <p className="text-xs text-gray-500 mt-1">Group related entities together within a category</p>
+          <div className="flex gap-2">
+            <Select value={group} onValueChange={setGroup} className="flex-1">
+              <SelectTrigger>
+                <SelectValue placeholder="Select a group..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={null}>No Group</SelectItem>
+                {allGroups.map((g) => (
+                  <SelectItem key={g} value={g}>{g}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Input
+              value={customGroupInput}
+              onChange={(e) => setCustomGroupInput(e.target.value)}
+              placeholder="Or type new..."
+              className="w-40"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && customGroupInput.trim()) {
+                  e.preventDefault();
+                  setGroup(customGroupInput.trim());
+                  setCustomGroupInput("");
+                }
+              }}
+            />
+            {customGroupInput.trim() && (
+              <Button 
+                type="button" 
+                variant="outline" 
+                size="sm"
+                onClick={() => {
+                  setGroup(customGroupInput.trim());
+                  setCustomGroupInput("");
+                }}
+              >
+                Set
+              </Button>
+            )}
+          </div>
+          <p className="text-xs text-gray-500 mt-1">Select existing group or type a new one</p>
         </div>
 
         <div>

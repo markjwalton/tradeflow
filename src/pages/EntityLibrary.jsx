@@ -426,6 +426,7 @@ Return a JSON object with:
             onSave={handleSaveEntity}
             onCancel={() => { setShowBuilder(false); setEditingEntity(null); }}
             isSaving={createMutation.isPending || updateMutation.isPending}
+            existingGroups={availableGroups}
           />
         </DialogContent>
       </Dialog>
