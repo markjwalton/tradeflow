@@ -116,52 +116,36 @@ export default function ERDCanvas({
     }
   };
 
-  // Calculate connection points for relationships
+  // Calculate connection points for relationships - always connect to header
   const getConnectionPoints = (sourceEntity, targetEntity, sourceIndex, targetIndex) => {
     const sourcePos = getEntityPosition(sourceEntity.id, sourceIndex);
     const targetPos = getEntityPosition(targetEntity.id, targetIndex);
     
     const sourceWidth = 280;
-    const sourceExpanded = expandedEntityIds.has(sourceEntity.id);
-    const targetExpanded = expandedEntityIds.has(targetEntity.id);
-    const sourceHeight = sourceExpanded ? 40 + Object.keys(sourceEntity.schema?.properties || {}).length * 28 : 36;
     const targetWidth = 280;
-    const targetHeight = targetExpanded ? 40 + Object.keys(targetEntity.schema?.properties || {}).length * 28 : 36;
+    // Always use header height for connection points
+    const headerHeight = 36;
     
     const sourceCenterX = sourcePos.x + sourceWidth / 2;
-    const sourceCenterY = sourcePos.y + sourceHeight / 2;
+    const sourceCenterY = sourcePos.y + headerHeight / 2;
     const targetCenterX = targetPos.x + targetWidth / 2;
-    const targetCenterY = targetPos.y + targetHeight / 2;
+    const targetCenterY = targetPos.y + headerHeight / 2;
     
-    // Determine which sides to connect
+    // Determine which sides to connect - always to header
     const dx = targetCenterX - sourceCenterX;
-    const dy = targetCenterY - sourceCenterY;
     
     let startX, startY, endX, endY;
     
-    if (Math.abs(dx) > Math.abs(dy)) {
-      // Horizontal connection
-      if (dx > 0) {
-        startX = sourcePos.x + sourceWidth;
-        endX = targetPos.x;
-      } else {
-        startX = sourcePos.x;
-        endX = targetPos.x + targetWidth;
-      }
-      startY = sourceCenterY;
-      endY = targetCenterY;
+    // Connect horizontally from header sides
+    if (dx > 0) {
+      startX = sourcePos.x + sourceWidth;
+      endX = targetPos.x;
     } else {
-      // Vertical connection
-      if (dy > 0) {
-        startY = sourcePos.y + sourceHeight;
-        endY = targetPos.y;
-      } else {
-        startY = sourcePos.y;
-        endY = targetPos.y + targetHeight;
-      }
-      startX = sourceCenterX;
-      endX = targetCenterX;
+      startX = sourcePos.x;
+      endX = targetPos.x + targetWidth;
     }
+    startY = sourceCenterY;
+    endY = targetCenterY;
     
     return { startX, startY, endX, endY };
   };
@@ -233,10 +217,6 @@ export default function ERDCanvas({
             const sourceEntity = entities.find(e => e.name === rel.sourceEntity);
             const targetEntity = entities.find(e => e.name === rel.targetEntity);
             if (!sourceEntity || !targetEntity) return null;
-            
-            // Only show relationship if both entities are expanded
-            const bothExpanded = expandedEntityIds.has(sourceEntity.id) && expandedEntityIds.has(targetEntity.id);
-            if (!bothExpanded) return null;
             
             const sourceIndex = entities.findIndex(e => e.id === sourceEntity.id);
             const targetIndex = entities.findIndex(e => e.id === targetEntity.id);
