@@ -127,8 +127,13 @@ export default function EntityLibrary() {
   });
 
   const groupedEntities = filteredEntities.reduce((acc, entity) => {
-    // Group by entity group first, then by category if no group
-    const groupKey = entity.group || entity.category || "Other";
+    // Group by "Category / Group" for better organization
+    let groupKey;
+    if (entity.group && entity.category) {
+      groupKey = `${entity.category} / ${entity.group}`;
+    } else {
+      groupKey = entity.category || entity.group || "Other";
+    }
     if (!acc[groupKey]) acc[groupKey] = [];
     acc[groupKey].push(entity);
     return acc;
