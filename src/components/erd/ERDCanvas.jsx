@@ -4,6 +4,9 @@ import { ZoomIn, ZoomOut, Maximize2, RotateCcw } from "lucide-react";
 import ERDEntityBox from "./ERDEntityBox";
 import ERDRelationshipLine from "./ERDRelationshipLine";
 
+// Track expanded state globally so canvas can access it
+const expandedEntities = new Set();
+
 export default function ERDCanvas({
   entities,
   relationships,
@@ -22,6 +25,19 @@ export default function ERDCanvas({
   const [panStart, setPanStart] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [expandedEntityIds, setExpandedEntityIds] = useState(new Set());
+
+  const handleToggleExpand = (entityId) => {
+    setExpandedEntityIds(prev => {
+      const next = new Set(prev);
+      if (next.has(entityId)) {
+        next.delete(entityId);
+      } else {
+        next.add(entityId);
+      }
+      return next;
+    });
+  };
 
   // Get entity position (from positions map or default)
   const getEntityPosition = (entityId, index) => {
@@ -106,9 +122,11 @@ export default function ERDCanvas({
     const targetPos = getEntityPosition(targetEntity.id, targetIndex);
     
     const sourceWidth = 280;
-    const sourceHeight = 40 + Object.keys(sourceEntity.schema?.properties || {}).length * 28;
+    const sourceExpanded = expandedEntityIds.has(sourceEntity.id);
+    const targetExpanded = expandedEntityIds.has(targetEntity.id);
+    const sourceHeight = sourceExpanded ? 40 + Object.keys(sourceEntity.schema?.properties || {}).length * 28 : 36;
     const targetWidth = 280;
-    const targetHeight = 40 + Object.keys(targetEntity.schema?.properties || {}).length * 28;
+    const targetHeight = targetExpanded ? 40 + Object.keys(targetEntity.schema?.properties || {}).length * 28 : 36;
     
     const sourceCenterX = sourcePos.x + sourceWidth / 2;
     const sourceCenterY = sourcePos.y + sourceHeight / 2;
@@ -216,6 +234,10 @@ export default function ERDCanvas({
             const targetEntity = entities.find(e => e.name === rel.targetEntity);
             if (!sourceEntity || !targetEntity) return null;
             
+            // Only show relationship if both entities are expanded
+            const bothExpanded = expandedEntityIds.has(sourceEntity.id) && expandedEntityIds.has(targetEntity.id);
+            if (!bothExpanded) return null;
+            
             const sourceIndex = entities.findIndex(e => e.id === sourceEntity.id);
             const targetIndex = entities.findIndex(e => e.id === targetEntity.id);
             const points = getConnectionPoints(sourceEntity, targetEntity, sourceIndex, targetIndex);
@@ -249,6 +271,8 @@ export default function ERDCanvas({
               position={pos}
               isSelected={selectedEntityId === entity.id}
               isConnecting={isConnecting}
+              isExpanded={expandedEntityIds.has(entity.id)}
+              onToggleExpand={() => handleToggleExpand(entity.id)}
               onSelect={() => onSelectEntity(entity.id)}
               onDragStart={(e) => handleEntityDragStart(entity.id, e)}
               onDoubleClick={() => onDoubleClickEntity(entity.id)}

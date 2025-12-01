@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Key, Link2, ChevronDown, ChevronRight } from "lucide-react";
 
@@ -15,11 +15,12 @@ export default function ERDEntityBox({
   position,
   isSelected,
   isConnecting,
+  isExpanded,
+  onToggleExpand,
   onSelect,
   onDragStart,
   onDoubleClick,
 }) {
-  const [isExpanded, setIsExpanded] = useState(false);
   const properties = entity.schema?.properties || {};
   const required = entity.schema?.required || [];
   const fields = Object.entries(properties);
@@ -58,7 +59,7 @@ export default function ERDEntityBox({
         className={`bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-3 py-2 ${isExpanded ? 'rounded-t-md' : 'rounded-md'} flex items-center justify-between`}
         onClick={(e) => {
           e.stopPropagation();
-          setIsExpanded(!isExpanded);
+          onToggleExpand();
           onSelect();
         }}
       >
