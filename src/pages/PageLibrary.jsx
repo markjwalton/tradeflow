@@ -457,7 +457,7 @@ Return a JSON object with a "pages" array containing page templates.`,
       )}
 
       <Dialog open={showBuilder} onOpenChange={setShowBuilder}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+        <DialogContent className="max-w-4xl h-[90vh] overflow-hidden flex flex-col">
           <DialogHeader>
             <DialogTitle>
               {editingPage?.id ? "Edit Page" : "Create Page"}
