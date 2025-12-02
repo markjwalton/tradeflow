@@ -6,11 +6,15 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   ArrowLeft, Play, CheckCircle2, XCircle, Circle, 
-  Loader2, Zap, Sparkles
+  Loader2, Zap, Sparkles, Edit, ArrowUpCircle
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
+import PlaygroundEditor from "@/components/playground/PlaygroundEditor";
+import VersionHistory from "@/components/playground/VersionHistory";
+import PlaygroundJournalPanel from "@/components/playground/PlaygroundJournalPanel";
+import PromoteToLibraryDialog from "@/components/playground/PromoteToLibraryDialog";
 
 const complexityColors = {
   simple: "bg-green-100 text-green-700",
@@ -26,6 +30,8 @@ export default function PlaygroundFeature() {
   
   const [isRunning, setIsRunning] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [showEditor, setShowEditor] = useState(false);
+  const [showPromote, setShowPromote] = useState(false);
 
   const { data: item, isLoading } = useQuery({
     queryKey: ["playgroundItem", itemId],
@@ -43,6 +49,12 @@ export default function PlaygroundFeature() {
 
   const template = featureTemplates.find(t => t.id === item?.source_id);
 
+  const { data: journalEntries = [] } = useQuery({
+    queryKey: ["playgroundJournal", itemId],
+    queryFn: () => base44.entities.PlaygroundJournal.filter({ playground_item_id: itemId }, "-created_date"),
+    enabled: !!itemId
+  });
+
   const updateMutation = useMutation({
     mutationFn: (data) => base44.entities.PlaygroundItem.update(itemId, data),
     onSuccess: () => {
@@ -50,6 +62,58 @@ export default function PlaygroundFeature() {
       toast.success("Updated");
     },
   });
+
+  const handleSaveVersion = (newData, changeSummary) => {
+    const currentVersion = item.current_version || 1;
+    const newVersion = currentVersion + 1;
+    const versions = item.versions || [];
+    
+    if (!versions.find(v => v.version === currentVersion)) {
+      versions.push({
+        version: currentVersion,
+        data: item.working_data || template,
+        saved_date: new Date().toISOString(),
+        change_summary: "Initial version"
+      });
+    }
+    
+    versions.push({
+      version: newVersion,
+      data: newData,
+      saved_date: new Date().toISOString(),
+      change_summary: changeSummary
+    });
+
+    updateMutation.mutate({
+      working_data: newData,
+      current_version: newVersion,
+      versions: versions,
+      test_status: "pending"
+    });
+    
+    base44.entities.PlaygroundJournal.create({
+      playground_item_id: itemId,
+      content: changeSummary,
+      entry_type: "version_note",
+      version_reference: newVersion,
+      entry_date: new Date().toISOString()
+    });
+    
+    setShowEditor(false);
+    toast.success(`Saved as version ${newVersion}`);
+  };
+
+  const handleRevert = (version) => {
+    const versionData = item.versions?.find(v => v.version === version);
+    if (!versionData) return;
+    
+    updateMutation.mutate({
+      working_data: versionData.data,
+      current_version: version,
+      test_status: "pending"
+    });
+    toast.success(`Reverted to version ${version}`);
+  };
 
   const runTests = async () => {
     if (!template) return;
@@ -163,6 +227,7 @@ Return as JSON with a "suggestions" array of strings.`,
           <p className="text-gray-500">Feature Playground</p>
         </div>
         <div className="flex items-center gap-2">
+          <Badge variant="outline">v{item.current_version || 1}</Badge>
           {statusIcon}
           <Badge className={
             item.test_status === "passed" ? "bg-green-100 text-green-800" :
@@ -172,6 +237,27 @@ Return as JSON with a "suggestions" array of strings.`,
             {item.test_status}
           </Badge>
         </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex gap-2 mb-6">
+        <Button onClick={() => setShowEditor(true)}>
+          <Edit className="h-4 w-4 mr-2" />
+          Edit
+        </Button>
+        <Button variant="outline" onClick={runTests} disabled={isRunning}>
+          {isRunning ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Play className="h-4 w-4 mr-2" />}
+          Run Tests
+        </Button>
+        <Button 
+          variant="outline" 
+          className="text-green-700 border-green-300 hover:bg-green-50"
+          onClick={() => setShowPromote(true)}
+          disabled={item.test_status !== "passed"}
+        >
+          <ArrowUpCircle className="h-4 w-4 mr-2" />
+          Promote to Library
+        </Button>
       </div>
 
       {/* Feature Summary */}
@@ -223,9 +309,9 @@ Return as JSON with a "suggestions" array of strings.`,
         </Card>
       )}
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-3 gap-6">
         {/* Requirements & User Stories */}
-        <Card>
+        <Card className="col-span-2">
           <CardHeader>
             <CardTitle className="text-lg">Requirements & User Stories</CardTitle>
           </CardHeader>
@@ -267,37 +353,49 @@ Return as JSON with a "suggestions" array of strings.`,
           </CardContent>
         </Card>
 
-        {/* Unit Tests */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg">Unit Tests</CardTitle>
-            <Button onClick={runTests} disabled={isRunning}>
-              {isRunning ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Play className="h-4 w-4 mr-2" />}
-              Run Tests
-            </Button>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {item.test_definition?.tests?.map((test, i) => {
-                const isPassed = item.test_results?.passed?.includes(test.name);
-                const isFailed = item.test_results?.failed?.includes(test.name);
-                return (
-                  <div 
-                    key={i} 
-                    className={`flex items-center justify-between p-2 rounded ${
-                      isPassed ? "bg-green-50" : isFailed ? "bg-red-50" : "bg-gray-50"
-                    }`}
-                  >
-                    <span className="text-sm">{test.name}</span>
-                    {isPassed && <CheckCircle2 className="h-4 w-4 text-green-600" />}
-                    {isFailed && <XCircle className="h-4 w-4 text-red-600" />}
-                    {!isPassed && !isFailed && <Circle className="h-4 w-4 text-gray-400" />}
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
+        {/* Unit Tests & Version History */}
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Unit Tests</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {item.test_definition?.tests?.map((test, i) => {
+                  const isPassed = item.test_results?.passed?.includes(test.name);
+                  const isFailed = item.test_results?.failed?.includes(test.name);
+                  return (
+                    <div 
+                      key={i} 
+                      className={`flex items-center justify-between p-2 rounded ${
+                        isPassed ? "bg-green-50" : isFailed ? "bg-red-50" : "bg-gray-50"
+                      }`}
+                    >
+                      <span className="text-sm">{test.name}</span>
+                      {isPassed && <CheckCircle2 className="h-4 w-4 text-green-600" />}
+                      {isFailed && <XCircle className="h-4 w-4 text-red-600" />}
+                      {!isPassed && !isFailed && <Circle className="h-4 w-4 text-gray-400" />}
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+
+          <VersionHistory 
+            versions={item.versions || []}
+            currentVersion={item.current_version || 1}
+            onRevert={handleRevert}
+          />
+        </div>
+      </div>
+
+      {/* Journal Panel */}
+      <div className="mt-6">
+        <PlaygroundJournalPanel 
+          playgroundItemId={itemId} 
+          currentVersion={item.current_version || 1}
+        />
       </div>
 
       {/* AI Suggestions */}
@@ -327,6 +425,30 @@ Return as JSON with a "suggestions" array of strings.`,
           )}
         </CardContent>
       </Card>
+
+      {/* Editor Dialog */}
+      {showEditor && (
+        <PlaygroundEditor
+          item={item}
+          template={template}
+          workingData={item.working_data}
+          onSave={handleSaveVersion}
+          onClose={() => setShowEditor(false)}
+          type="feature"
+        />
+      )}
+
+      {/* Promote Dialog */}
+      {showPromote && (
+        <PromoteToLibraryDialog
+          item={item}
+          template={template}
+          workingData={item.working_data}
+          journalEntries={journalEntries}
+          onClose={() => setShowPromote(false)}
+          type="feature"
+        />
+      )}
     </div>
   );
 }
