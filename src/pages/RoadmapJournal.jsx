@@ -97,6 +97,7 @@ export default function RoadmapJournal() {
     mutationFn: (data) => base44.entities.RoadmapItem.update(itemId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["roadmapItem", itemId] });
+      queryClient.invalidateQueries({ queryKey: ["roadmapItems"] });
       toast.success("Item updated");
     }
   });
