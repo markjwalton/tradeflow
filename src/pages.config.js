@@ -37,6 +37,7 @@ import ProjectsOverview from './pages/ProjectsOverview';
 import PromptSettings from './pages/PromptSettings';
 import RoadmapManager from './pages/RoadmapManager';
 import RoadmapJournal from './pages/RoadmapJournal';
+import SprintManager from './pages/SprintManager';
 import __Layout from './Layout.jsx';
 
 
@@ -80,6 +81,7 @@ export const PAGES = {
     "PromptSettings": PromptSettings,
     "RoadmapManager": RoadmapManager,
     "RoadmapJournal": RoadmapJournal,
+    "SprintManager": SprintManager,
 }
 
 export const pagesConfig = {

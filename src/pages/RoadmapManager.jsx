@@ -44,8 +44,13 @@ const priorities = [
 const statuses = [
   { value: "backlog", label: "Backlog" },
   { value: "planned", label: "Planned" },
+  { value: "ai_review", label: "AI Review" },
+  { value: "ready", label: "Ready" },
+  { value: "in_sprint", label: "In Sprint" },
   { value: "in_progress", label: "In Progress" },
+  { value: "testing", label: "Testing" },
   { value: "completed", label: "Completed" },
+  { value: "archived", label: "Archived" },
   { value: "on_hold", label: "On Hold" },
 ];
 
@@ -200,9 +205,10 @@ export default function RoadmapManager() {
     });
   }, [items, filterCategory, searchQuery]);
 
-  // Split into roadmap (backlog/on_hold) and development (planned/in_progress/completed)
+  // Split into roadmap, development, and completed/archived
   const roadmapItems = processedItems.filter(i => ["backlog", "on_hold"].includes(i.status));
-  const developmentItems = processedItems.filter(i => ["planned", "in_progress", "completed"].includes(i.status));
+  const developmentItems = processedItems.filter(i => ["planned", "ai_review", "ready", "in_sprint", "in_progress", "testing"].includes(i.status));
+  const completedItems = processedItems.filter(i => ["completed", "archived"].includes(i.status));
 
   const focusedItem = items.find(i => i.is_focused);
 
@@ -308,6 +314,9 @@ export default function RoadmapManager() {
             <TabsTrigger value="development">
               Development ({developmentItems.length})
             </TabsTrigger>
+            <TabsTrigger value="completed">
+              Completed ({completedItems.length})
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="roadmap" className="mt-6">
@@ -329,16 +338,41 @@ export default function RoadmapManager() {
               </div>
             ) : (
               <div className="space-y-6">
-                {["planned", "in_progress", "completed"].map(status => {
+                {["planned", "ai_review", "ready", "in_sprint", "in_progress", "testing"].map(status => {
                   const statusItems = developmentItems.filter(i => i.status === status);
                   if (statusItems.length === 0) return null;
                   return (
                     <div key={status}>
                       <h3 className="text-lg font-semibold mb-3 capitalize flex items-center gap-2">
-                        {status.replace("_", " ")}
+                        {status.replace(/_/g, " ")}
                         <Badge variant="secondary">{statusItems.length}</Badge>
                       </h3>
                       <ItemList items={statusItems} showDevPrompt />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="completed" className="mt-6">
+            {completedItems.length === 0 ? (
+              <div className="text-center py-12 text-gray-500">
+                <Code className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <p>No completed items yet.</p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {["completed", "archived"].map(status => {
+                  const statusItems = completedItems.filter(i => i.status === status);
+                  if (statusItems.length === 0) return null;
+                  return (
+                    <div key={status}>
+                      <h3 className="text-lg font-semibold mb-3 capitalize flex items-center gap-2">
+                        {status}
+                        <Badge variant="secondary">{statusItems.length}</Badge>
+                      </h3>
+                      <ItemList items={statusItems} />
                     </div>
                   );
                 })}
