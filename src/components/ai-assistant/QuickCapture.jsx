@@ -54,14 +54,45 @@ export default function QuickCapture({ isOpen, onClose }) {
     queryFn: () => base44.entities.RoadmapItem.list("-created_date"),
   });
 
-  // Get focused item first, then starred items
+  // Find or create "Live Chat Journal" item
+  const liveJournalItem = roadmapItems.find(i => i.title === "Live Chat Journal" && i.category === "discussion_note");
+  
+  // Get focused item first, then starred items, then others (excluding hidden live journal from general list)
   const sortedItems = [...roadmapItems].sort((a, b) => {
+    // Live Chat Journal always first
+    if (a.title === "Live Chat Journal" && a.category === "discussion_note") return -1;
+    if (b.title === "Live Chat Journal" && b.category === "discussion_note") return 1;
     if (a.is_focused && !b.is_focused) return -1;
     if (!a.is_focused && b.is_focused) return 1;
     if (a.is_starred && !b.is_starred) return -1;
     if (!a.is_starred && b.is_starred) return 1;
     return 0;
   });
+
+  // Auto-create Live Chat Journal if it doesn't exist
+  useEffect(() => {
+    const createLiveJournal = async () => {
+      if (isOpen && roadmapItems.length > 0 && !liveJournalItem) {
+        try {
+          await base44.entities.RoadmapItem.create({
+            title: "Live Chat Journal",
+            description: "Captures from live AI chat sessions - hidden from main roadmap",
+            category: "discussion_note",
+            priority: "medium",
+            status: "on_hold",
+            source: "user",
+            tags: ["live-chat", "hidden"],
+            is_starred: false,
+            is_focused: false
+          });
+          queryClient.invalidateQueries({ queryKey: ["roadmapItems"] });
+        } catch (e) {
+          // Ignore if already exists
+        }
+      }
+    };
+    createLiveJournal();
+  }, [isOpen, roadmapItems.length, liveJournalItem]);
 
   const handleFileUpload = async (e) => {
     const files = Array.from(e.target.files);
@@ -150,14 +181,31 @@ export default function QuickCapture({ isOpen, onClose }) {
                 <SelectValue placeholder="Select item..." />
               </SelectTrigger>
               <SelectContent>
-                {sortedItems.map(item => (
-                  <SelectItem key={item.id} value={item.id}>
-                    <div className="flex items-center gap-2">
-                      {item.is_focused && <span className="text-purple-600">●</span>}
-                      {item.is_starred && <span className="text-yellow-500">★</span>}
-                      {item.title}
-                    </div>
-                  </SelectItem>
+                {sortedItems.map((item, index) => (
+                  <React.Fragment key={item.id}>
+                    {item.title === "Live Chat Journal" && item.category === "discussion_note" && (
+                      <>
+                        <SelectItem value={item.id}>
+                          <div className="flex items-center gap-2">
+                            <MessageSquare className="h-3 w-3 text-blue-500" />
+                            <span className="font-medium text-blue-700">Live Chat Journal</span>
+                          </div>
+                        </SelectItem>
+                        {sortedItems.length > 1 && (
+                          <div className="px-2 py-1 text-xs text-gray-400 border-b mb-1">Other Items</div>
+                        )}
+                      </>
+                    )}
+                    {!(item.title === "Live Chat Journal" && item.category === "discussion_note") && (
+                      <SelectItem value={item.id}>
+                        <div className="flex items-center gap-2">
+                          {item.is_focused && <span className="text-purple-600">●</span>}
+                          {item.is_starred && <span className="text-yellow-500">★</span>}
+                          {item.title}
+                        </div>
+                      </SelectItem>
+                    )}
+                  </React.Fragment>
                 ))}
               </SelectContent>
             </Select>

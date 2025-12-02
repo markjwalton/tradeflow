@@ -216,6 +216,10 @@ export default function RoadmapManager() {
   // Filter and sort items
   const processedItems = useMemo(() => {
     let filtered = items.filter(item => {
+      // Hide "Live Chat Journal" from main roadmap
+      if (item.title === "Live Chat Journal" && item.category === "discussion_note") {
+        return false;
+      }
       const matchesCategory = filterCategory === "all" || item.category === filterCategory;
       const matchesSearch = !searchQuery || 
         item.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
