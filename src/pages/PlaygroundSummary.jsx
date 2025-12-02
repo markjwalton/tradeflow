@@ -224,6 +224,12 @@ export default function PlaygroundSummary() {
           <p className="text-gray-500">Test, modify, and validate templates before deployment</p>
         </div>
         <div className="flex gap-2">
+          <Link to={createPageUrl("LivePreview")}>
+            <Button variant="outline">
+              <Eye className="h-4 w-4 mr-2" />
+              View Live Pages
+            </Button>
+          </Link>
           <Button variant="outline" onClick={syncLibraryToPlayground} disabled={isSyncing}>
             {isSyncing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <RefreshCw className="h-4 w-4 mr-2" />}
             Sync Library
