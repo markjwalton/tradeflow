@@ -33,6 +33,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import GlobalAIAssistant from "@/components/ai-assistant/GlobalAIAssistant";
 
 // Global admin pages - only for is_global_admin users
 const globalAdminPages = [
