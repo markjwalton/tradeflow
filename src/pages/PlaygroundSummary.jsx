@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/select";
 import { 
   Play, Search, Database, Layout, Zap, CheckCircle2, XCircle, 
-  Circle, Loader2, RefreshCw, Plus, Trash2, Eye
+  Circle, Loader2, RefreshCw, Eye, Lightbulb, ArrowRight, Edit,
+  FlaskConical, Beaker
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -34,210 +35,175 @@ const typeIcons = {
   feature: <Zap className="h-4 w-4 text-amber-600" />,
 };
 
+const itemStatusColors = {
+  synced: "bg-gray-100 text-gray-700",
+  modified: "bg-blue-100 text-blue-700",
+  testing: "bg-yellow-100 text-yellow-700",
+  ready: "bg-green-100 text-green-700",
+  promoted: "bg-purple-100 text-purple-700",
+};
+
 export default function PlaygroundSummary() {
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
-  const [filterGroup, setFilterGroup] = useState("all");
-  const [isRunningAll, setIsRunningAll] = useState(false);
+  const [activeTab, setActiveTab] = useState("overview");
+  const [isSyncing, setIsSyncing] = useState(false);
 
   const { data: playgroundItems = [], isLoading } = useQuery({
     queryKey: ["playgroundItems"],
     queryFn: () => base44.entities.PlaygroundItem.list("-created_date"),
   });
 
+  const { data: conceptItems = [] } = useQuery({
+    queryKey: ["conceptItems"],
+    queryFn: () => base44.entities.ConceptItem.list("-created_date"),
+  });
+
   const { data: entityTemplates = [] } = useQuery({
     queryKey: ["entityTemplates"],
-    queryFn: () => base44.entities.EntityTemplate.list(),
+    queryFn: () => base44.entities.EntityTemplate.filter({ is_custom: false }),
   });
 
   const { data: pageTemplates = [] } = useQuery({
     queryKey: ["pageTemplates"],
-    queryFn: () => base44.entities.PageTemplate.list(),
+    queryFn: () => base44.entities.PageTemplate.filter({ is_custom: false }),
   });
 
   const { data: featureTemplates = [] } = useQuery({
     queryKey: ["featureTemplates"],
-    queryFn: () => base44.entities.FeatureTemplate.list(),
+    queryFn: () => base44.entities.FeatureTemplate.filter({ is_custom: false }),
   });
 
-  const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.PlaygroundItem.create(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["playgroundItems"] });
-      toast.success("Added to playground");
-    },
-  });
+  // Auto-sync library items to playground
+  const syncLibraryToPlayground = async () => {
+    setIsSyncing(true);
+    let added = 0;
 
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.PlaygroundItem.update(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["playgroundItems"] });
-    },
-  });
+    const existingSourceIds = playgroundItems
+      .filter(p => p.item_origin === "library")
+      .map(p => p.source_id);
 
-  const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.PlaygroundItem.delete(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["playgroundItems"] });
-      toast.success("Removed from playground");
-    },
-  });
+    // Sync entities
+    for (const template of entityTemplates.filter(t => !t.custom_project_id)) {
+      if (!existingSourceIds.includes(template.id)) {
+        await base44.entities.PlaygroundItem.create({
+          source_type: "entity",
+          source_id: template.id,
+          source_name: template.name,
+          group: template.group || template.category,
+          item_origin: "library",
+          status: "synced",
+          current_version: 1,
+          test_definition: generateDefaultTests("entity", template),
+        });
+        added++;
+      }
+    }
 
-  // Get unique groups
-  const groups = [...new Set(playgroundItems.filter(i => i.group).map(i => i.group))].sort();
+    // Sync pages
+    for (const template of pageTemplates.filter(t => !t.custom_project_id)) {
+      if (!existingSourceIds.includes(template.id)) {
+        await base44.entities.PlaygroundItem.create({
+          source_type: "page",
+          source_id: template.id,
+          source_name: template.name,
+          group: template.group || template.category,
+          item_origin: "library",
+          status: "synced",
+          current_version: 1,
+          test_definition: generateDefaultTests("page", template),
+        });
+        added++;
+      }
+    }
 
-  const filteredItems = playgroundItems.filter(item => {
-    const matchesSearch = item.source_name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesType = filterType === "all" || item.source_type === filterType;
-    const matchesStatus = filterStatus === "all" || item.test_status === filterStatus;
-    const matchesGroup = filterGroup === "all" || item.group === filterGroup;
-    return matchesSearch && matchesType && matchesStatus && matchesGroup;
-  });
-
-  const groupedItems = filteredItems.reduce((acc, item) => {
-    const key = item.group || item.source_type;
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(item);
-    return acc;
-  }, {});
-
-  // Stats
-  const stats = {
-    total: playgroundItems.length,
-    passed: playgroundItems.filter(i => i.test_status === "passed").length,
-    failed: playgroundItems.filter(i => i.test_status === "failed").length,
-    pending: playgroundItems.filter(i => i.test_status === "pending").length,
-  };
-
-  const importFromLibrary = async (type) => {
-    let templates = [];
-    if (type === "entity") templates = entityTemplates;
-    else if (type === "page") templates = pageTemplates;
-    else if (type === "feature") templates = featureTemplates;
-
-    const existingIds = playgroundItems.filter(i => i.source_type === type).map(i => i.source_id);
-    const newItems = templates.filter(t => !existingIds.includes(t.id));
-
-    for (const template of newItems) {
-      await base44.entities.PlaygroundItem.create({
-        source_type: type,
-        source_id: template.id,
-        source_name: template.name,
-        group: template.group || template.category,
-        test_status: "pending",
-        test_definition: generateDefaultTests(type, template),
-      });
+    // Sync features
+    for (const template of featureTemplates.filter(t => !t.custom_project_id)) {
+      if (!existingSourceIds.includes(template.id)) {
+        await base44.entities.PlaygroundItem.create({
+          source_type: "feature",
+          source_id: template.id,
+          source_name: template.name,
+          group: template.group || template.category,
+          item_origin: "library",
+          status: "synced",
+          current_version: 1,
+          test_definition: generateDefaultTests("feature", template),
+        });
+        added++;
+      }
     }
 
     queryClient.invalidateQueries({ queryKey: ["playgroundItems"] });
-    toast.success(`Imported ${newItems.length} ${type} templates`);
+    setIsSyncing(false);
+    if (added > 0) {
+      toast.success(`Synced ${added} new items from library`);
+    } else {
+      toast.info("Playground is up to date with library");
+    }
   };
 
   const generateDefaultTests = (type, template) => {
     if (type === "entity") {
       return {
         tests: [
-          { name: "Has valid name", check: "name !== undefined && name.length > 0" },
-          { name: "Has schema defined", check: "schema !== undefined" },
-          { name: "Schema has properties", check: "Object.keys(schema.properties || {}).length > 0" },
-          { name: "Has required fields", check: "Array.isArray(schema.required)" },
+          { name: "Has valid name", check: "name" },
+          { name: "Has schema defined", check: "schema" },
+          { name: "Schema has properties", check: "schema.properties" },
+          { name: "Has required fields", check: "schema.required" },
         ]
       };
     } else if (type === "page") {
       return {
         tests: [
-          { name: "Has valid name", check: "name !== undefined" },
-          { name: "Has category", check: "category !== undefined" },
-          { name: "Has components defined", check: "Array.isArray(components)" },
-          { name: "Has entities assigned", check: "Array.isArray(entities_used)" },
+          { name: "Has valid name", check: "name" },
+          { name: "Has category", check: "category" },
+          { name: "Has components defined", check: "components" },
+          { name: "Has entities assigned", check: "entities_used" },
         ]
       };
     } else if (type === "feature") {
       return {
         tests: [
-          { name: "Has valid name", check: "name !== undefined" },
-          { name: "Has description", check: "description && description.length > 10" },
-          { name: "Has complexity defined", check: "complexity !== undefined" },
-          { name: "Has user stories", check: "Array.isArray(user_stories) && user_stories.length > 0" },
+          { name: "Has valid name", check: "name" },
+          { name: "Has description", check: "description" },
+          { name: "Has complexity defined", check: "complexity" },
+          { name: "Has user stories", check: "user_stories" },
         ]
       };
     }
     return { tests: [] };
   };
 
-  const runTests = async (item) => {
-    let template = null;
-    if (item.source_type === "entity") {
-      template = entityTemplates.find(t => t.id === item.source_id);
-    } else if (item.source_type === "page") {
-      template = pageTemplates.find(t => t.id === item.source_id);
-    } else if (item.source_type === "feature") {
-      template = featureTemplates.find(t => t.id === item.source_id);
-    }
+  // Filter playground items
+  const filteredItems = playgroundItems.filter(item => {
+    const matchesSearch = item.source_name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesType = filterType === "all" || item.source_type === filterType;
+    const matchesStatus = filterStatus === "all" || item.status === filterStatus;
+    return matchesSearch && matchesType && matchesStatus;
+  });
 
-    if (!template) {
-      updateMutation.mutate({
-        id: item.id,
-        data: { 
-          test_status: "failed",
-          test_results: { passed: [], failed: [], errors: ["Template not found"] },
-          last_test_date: new Date().toISOString()
-        }
-      });
-      return;
-    }
+  // Items being actively worked on (modified, testing, ready)
+  const activeItems = playgroundItems.filter(i => 
+    ["modified", "testing", "ready"].includes(i.status)
+  );
 
-    const tests = item.test_definition?.tests || [];
-    const passed = [];
-    const failed = [];
-    const errors = [];
+  // Concepts in progress
+  const activeConcepts = conceptItems.filter(c => 
+    ["draft", "review", "approved"].includes(c.status)
+  );
 
-    for (const test of tests) {
-      try {
-        // Simple evaluation based on template properties
-        let result = false;
-        const { name, description, category, schema, components, entities_used, complexity, user_stories } = template;
-        
-        if (test.check.includes("name")) result = name !== undefined && name.length > 0;
-        else if (test.check.includes("schema.properties")) result = Object.keys(schema?.properties || {}).length > 0;
-        else if (test.check.includes("schema.required")) result = Array.isArray(schema?.required);
-        else if (test.check.includes("schema")) result = schema !== undefined;
-        else if (test.check.includes("category")) result = category !== undefined;
-        else if (test.check.includes("components")) result = Array.isArray(components);
-        else if (test.check.includes("entities_used")) result = Array.isArray(entities_used);
-        else if (test.check.includes("description")) result = description && description.length > 10;
-        else if (test.check.includes("complexity")) result = complexity !== undefined;
-        else if (test.check.includes("user_stories")) result = Array.isArray(user_stories) && user_stories.length > 0;
-        else result = true; // Default pass for unknown checks
-
-        if (result) passed.push(test.name);
-        else failed.push(test.name);
-      } catch (e) {
-        errors.push(`${test.name}: ${e.message}`);
-      }
-    }
-
-    const status = errors.length > 0 || failed.length > 0 ? "failed" : "passed";
-    
-    updateMutation.mutate({
-      id: item.id,
-      data: {
-        test_status: status,
-        test_results: { passed, failed, errors },
-        last_test_date: new Date().toISOString()
-      }
-    });
-  };
-
-  const runAllTests = async () => {
-    setIsRunningAll(true);
-    for (const item of playgroundItems) {
-      await runTests(item);
-    }
-    setIsRunningAll(false);
-    toast.success("All tests completed");
+  // Stats
+  const stats = {
+    total: playgroundItems.length,
+    synced: playgroundItems.filter(i => i.status === "synced").length,
+    modified: playgroundItems.filter(i => i.status === "modified").length,
+    ready: playgroundItems.filter(i => i.status === "ready").length,
+    concepts: conceptItems.filter(c => c.status !== "pushed_to_library").length,
+    testsPassed: playgroundItems.filter(i => i.test_status === "passed").length,
+    testsFailed: playgroundItems.filter(i => i.test_status === "failed").length,
   };
 
   const getDetailUrl = (item) => {
@@ -251,178 +217,315 @@ export default function PlaygroundSummary() {
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Development Playground</h1>
-          <p className="text-gray-500">Test and validate templates from the library</p>
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            <FlaskConical className="h-6 w-6 text-purple-600" />
+            Development Playground
+          </h1>
+          <p className="text-gray-500">Test, modify, and validate templates before deployment</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={runAllTests} disabled={isRunningAll || playgroundItems.length === 0}>
-            {isRunningAll ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Play className="h-4 w-4 mr-2" />}
-            Run All Tests
+          <Button variant="outline" onClick={syncLibraryToPlayground} disabled={isSyncing}>
+            {isSyncing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <RefreshCw className="h-4 w-4 mr-2" />}
+            Sync Library
           </Button>
+          <Link to={createPageUrl("ConceptWorkbench")}>
+            <Button className="bg-amber-600 hover:bg-amber-700">
+              <Lightbulb className="h-4 w-4 mr-2" />
+              New Concept
+            </Button>
+          </Link>
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
-        <Card>
-          <CardContent className="pt-4">
-            <div className="text-2xl font-bold">{stats.total}</div>
-            <div className="text-sm text-gray-500">Total Items</div>
-          </CardContent>
-        </Card>
-        <Card className="border-green-200 bg-green-50">
-          <CardContent className="pt-4">
-            <div className="text-2xl font-bold text-green-700">{stats.passed}</div>
-            <div className="text-sm text-green-600">Passed</div>
-          </CardContent>
-        </Card>
-        <Card className="border-red-200 bg-red-50">
-          <CardContent className="pt-4">
-            <div className="text-2xl font-bold text-red-700">{stats.failed}</div>
-            <div className="text-sm text-red-600">Failed</div>
-          </CardContent>
-        </Card>
-        <Card className="border-gray-200 bg-gray-50">
-          <CardContent className="pt-4">
-            <div className="text-2xl font-bold text-gray-700">{stats.pending}</div>
-            <div className="text-sm text-gray-600">Pending</div>
-          </CardContent>
-        </Card>
-      </div>
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList>
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="playground">
+            Playground ({playgroundItems.length})
+          </TabsTrigger>
+          <TabsTrigger value="concepts">
+            Concepts ({activeConcepts.length})
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Import Buttons */}
-      <div className="flex gap-2 mb-6">
-        <Button variant="outline" onClick={() => importFromLibrary("entity")}>
-          <Database className="h-4 w-4 mr-2" />
-          Import Entities ({entityTemplates.length})
-        </Button>
-        <Button variant="outline" onClick={() => importFromLibrary("page")}>
-          <Layout className="h-4 w-4 mr-2" />
-          Import Pages ({pageTemplates.length})
-        </Button>
-        <Button variant="outline" onClick={() => importFromLibrary("feature")}>
-          <Zap className="h-4 w-4 mr-2" />
-          Import Features ({featureTemplates.length})
-        </Button>
-      </div>
+        {/* Overview Tab */}
+        <TabsContent value="overview" className="space-y-6">
+          {/* Stats Cards */}
+          <div className="grid grid-cols-4 gap-4">
+            <Card>
+              <CardContent className="pt-4">
+                <div className="text-2xl font-bold">{stats.total}</div>
+                <div className="text-sm text-gray-500">Library Items</div>
+              </CardContent>
+            </Card>
+            <Card className="border-blue-200 bg-blue-50">
+              <CardContent className="pt-4">
+                <div className="text-2xl font-bold text-blue-700">{stats.modified}</div>
+                <div className="text-sm text-blue-600">Being Modified</div>
+              </CardContent>
+            </Card>
+            <Card className="border-green-200 bg-green-50">
+              <CardContent className="pt-4">
+                <div className="text-2xl font-bold text-green-700">{stats.ready}</div>
+                <div className="text-sm text-green-600">Ready to Promote</div>
+              </CardContent>
+            </Card>
+            <Card className="border-amber-200 bg-amber-50">
+              <CardContent className="pt-4">
+                <div className="text-2xl font-bold text-amber-700">{stats.concepts}</div>
+                <div className="text-sm text-amber-600">Active Concepts</div>
+              </CardContent>
+            </Card>
+          </div>
 
-      {/* Filters */}
-      <div className="flex gap-4 mb-6 flex-wrap">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <Input
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-        <Select value={filterType} onValueChange={setFilterType}>
-          <SelectTrigger className="w-36">
-            <SelectValue placeholder="Type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Types</SelectItem>
-            <SelectItem value="entity">Entities</SelectItem>
-            <SelectItem value="page">Pages</SelectItem>
-            <SelectItem value="feature">Features</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={filterStatus} onValueChange={setFilterStatus}>
-          <SelectTrigger className="w-36">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="passed">Passed</SelectItem>
-            <SelectItem value="failed">Failed</SelectItem>
-            <SelectItem value="pending">Pending</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={filterGroup} onValueChange={setFilterGroup}>
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder="Group" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Groups</SelectItem>
-            {groups.map(g => (
-              <SelectItem key={g} value={g}>{g}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+          {/* Active Work Summary */}
+          <div className="grid grid-cols-2 gap-6">
+            {/* Items Being Worked On */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Edit className="h-5 w-5 text-blue-600" />
+                  Items Being Modified ({activeItems.length})
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {activeItems.length === 0 ? (
+                  <p className="text-gray-500 text-center py-4">No items currently being modified</p>
+                ) : (
+                  <div className="space-y-2">
+                    {activeItems.slice(0, 5).map(item => (
+                      <Link key={item.id} to={getDetailUrl(item)}>
+                        <div className="flex items-center justify-between p-2 rounded hover:bg-gray-50">
+                          <div className="flex items-center gap-2">
+                            {typeIcons[item.source_type]}
+                            <span className="font-medium">{item.source_name}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge className={itemStatusColors[item.status]}>{item.status}</Badge>
+                            {statusIcons[item.test_status]}
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                    {activeItems.length > 5 && (
+                      <p className="text-sm text-gray-500 text-center">+{activeItems.length - 5} more</p>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
-      {/* Items List */}
-      {isLoading ? (
-        <div className="flex justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-        </div>
-      ) : filteredItems.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
-          <Play className="h-12 w-12 mx-auto mb-4 opacity-50" />
-          <p>No playground items yet</p>
-          <p className="text-sm mt-1">Import templates from the library to get started</p>
-        </div>
-      ) : (
-        <div className="space-y-6">
-          {Object.entries(groupedItems).map(([groupName, items]) => (
-            <div key={groupName}>
-              <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                <Badge variant="outline">{groupName}</Badge>
-                <span className="text-gray-400 text-sm font-normal">({items.length})</span>
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {items.map(item => (
-                  <Card key={item.id} className="hover:shadow-md transition-shadow">
-                    <CardHeader className="pb-2">
-                      <div className="flex items-start justify-between">
-                        <CardTitle className="text-base flex items-center gap-2">
-                          {typeIcons[item.source_type]}
-                          {item.source_name}
-                        </CardTitle>
+            {/* Active Concepts */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Lightbulb className="h-5 w-5 text-amber-600" />
+                  Active Concepts ({activeConcepts.length})
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {activeConcepts.length === 0 ? (
+                  <div className="text-center py-4">
+                    <p className="text-gray-500 mb-2">No concepts in progress</p>
+                    <Link to={createPageUrl("ConceptWorkbench")}>
+                      <Button size="sm" variant="outline">
+                        <Lightbulb className="h-4 w-4 mr-2" />
+                        Create New Concept
+                      </Button>
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {activeConcepts.slice(0, 5).map(concept => (
+                      <Link key={concept.id} to={createPageUrl("ConceptWorkbench") + `?id=${concept.id}`}>
+                        <div className="flex items-center justify-between p-2 rounded hover:bg-gray-50">
+                          <div className="flex items-center gap-2">
+                            {typeIcons[concept.item_type]}
+                            <span className="font-medium">{concept.name}</span>
+                          </div>
+                          <Badge variant="outline">{concept.status}</Badge>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Workflow Guide */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Development Workflow</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between text-sm">
+                <div className="flex flex-col items-center p-4 bg-amber-50 rounded-lg flex-1">
+                  <Beaker className="h-8 w-8 text-amber-600 mb-2" />
+                  <span className="font-medium">Concept</span>
+                  <span className="text-gray-500 text-xs">New ideas</span>
+                </div>
+                <ArrowRight className="h-5 w-5 text-gray-400" />
+                <div className="flex flex-col items-center p-4 bg-purple-50 rounded-lg flex-1">
+                  <FlaskConical className="h-8 w-8 text-purple-600 mb-2" />
+                  <span className="font-medium">Playground</span>
+                  <span className="text-gray-500 text-xs">Test & refine</span>
+                </div>
+                <ArrowRight className="h-5 w-5 text-gray-400" />
+                <div className="flex flex-col items-center p-4 bg-blue-50 rounded-lg flex-1">
+                  <Database className="h-8 w-8 text-blue-600 mb-2" />
+                  <span className="font-medium">Library</span>
+                  <span className="text-gray-500 text-xs">Production ready</span>
+                </div>
+                <ArrowRight className="h-5 w-5 text-gray-400" />
+                <div className="flex flex-col items-center p-4 bg-green-50 rounded-lg flex-1">
+                  <Play className="h-8 w-8 text-green-600 mb-2" />
+                  <span className="font-medium">Sprint</span>
+                  <span className="text-gray-500 text-xs">Implementation</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Playground Tab */}
+        <TabsContent value="playground" className="space-y-4">
+          {/* Filters */}
+          <div className="flex gap-4 flex-wrap">
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Select value={filterType} onValueChange={setFilterType}>
+              <SelectTrigger className="w-36">
+                <SelectValue placeholder="Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Types</SelectItem>
+                <SelectItem value="entity">Entities</SelectItem>
+                <SelectItem value="page">Pages</SelectItem>
+                <SelectItem value="feature">Features</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={filterStatus} onValueChange={setFilterStatus}>
+              <SelectTrigger className="w-36">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="synced">Synced</SelectItem>
+                <SelectItem value="modified">Modified</SelectItem>
+                <SelectItem value="ready">Ready</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Items Grid */}
+          {isLoading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            </div>
+          ) : filteredItems.length === 0 ? (
+            <div className="text-center py-12 text-gray-500">
+              <FlaskConical className="h-12 w-12 mx-auto mb-4 opacity-50" />
+              <p>No items match your filters</p>
+              <Button variant="outline" className="mt-4" onClick={syncLibraryToPlayground}>
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Sync from Library
+              </Button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredItems.map(item => (
+                <Card key={item.id} className="hover:shadow-md transition-shadow">
+                  <CardHeader className="pb-2">
+                    <div className="flex items-start justify-between">
+                      <CardTitle className="text-base flex items-center gap-2">
+                        {typeIcons[item.source_type]}
+                        {item.source_name}
+                      </CardTitle>
+                      <div className="flex items-center gap-1">
+                        <Badge className={itemStatusColors[item.status]}>{item.status}</Badge>
                         {statusIcons[item.test_status]}
                       </div>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                      {item.test_results && (
-                        <div className="text-xs text-gray-500 mb-3">
-                          <span className="text-green-600">{item.test_results.passed?.length || 0} passed</span>
-                          {" · "}
-                          <span className="text-red-600">{item.test_results.failed?.length || 0} failed</span>
-                        </div>
-                      )}
-                      <div className="flex gap-1">
-                        <Link to={getDetailUrl(item)}>
-                          <Button size="sm" variant="ghost" title="View Details">
-                            <Eye className="h-3 w-3" />
-                          </Button>
-                        </Link>
-                        <Button 
-                          size="sm" 
-                          variant="ghost" 
-                          onClick={() => runTests(item)}
-                          title="Run Tests"
-                        >
-                          <Play className="h-3 w-3" />
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          variant="ghost" 
-                          className="text-red-600"
-                          onClick={() => deleteMutation.mutate(item.id)}
-                          title="Remove"
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
+                      <span>v{item.current_version || 1}</span>
+                      {item.group && <Badge variant="outline">{item.group}</Badge>}
+                    </div>
+                    <Link to={getDetailUrl(item)}>
+                      <Button size="sm" variant="outline" className="w-full">
+                        <Eye className="h-3 w-3 mr-2" />
+                        Open
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
-          ))}
-        </div>
-      )}
+          )}
+        </TabsContent>
+
+        {/* Concepts Tab */}
+        <TabsContent value="concepts" className="space-y-4">
+          <div className="flex justify-between items-center">
+            <p className="text-gray-500">New concepts being developed before adding to playground</p>
+            <Link to={createPageUrl("ConceptWorkbench")}>
+              <Button>
+                <Lightbulb className="h-4 w-4 mr-2" />
+                New Concept
+              </Button>
+            </Link>
+          </div>
+
+          {conceptItems.length === 0 ? (
+            <div className="text-center py-12 text-gray-500">
+              <Lightbulb className="h-12 w-12 mx-auto mb-4 opacity-50" />
+              <p>No concepts yet</p>
+              <p className="text-sm mt-1">Create a new entity, page, or feature concept</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {conceptItems.map(concept => (
+                <Card key={concept.id} className="hover:shadow-md transition-shadow border-amber-200">
+                  <CardHeader className="pb-2">
+                    <div className="flex items-start justify-between">
+                      <CardTitle className="text-base flex items-center gap-2">
+                        {typeIcons[concept.item_type]}
+                        {concept.name}
+                      </CardTitle>
+                      <Badge variant="outline">{concept.status}</Badge>
+                    </div>
+                    <p className="text-sm text-gray-500">{concept.description}</p>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <div className="flex items-center gap-2 mb-3">
+                      {statusIcons[concept.test_status]}
+                      <span className="text-xs text-gray-500">
+                        {concept.test_status === "passed" ? "Tests passed" : 
+                         concept.test_status === "failed" ? "Tests failed" : "Not tested"}
+                      </span>
+                    </div>
+                    <Link to={createPageUrl("ConceptWorkbench") + `?id=${concept.id}`}>
+                      <Button size="sm" variant="outline" className="w-full">
+                        <Edit className="h-3 w-3 mr-2" />
+                        Edit Concept
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

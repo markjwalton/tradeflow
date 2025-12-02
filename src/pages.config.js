@@ -43,6 +43,7 @@ import PlaygroundSummary from './pages/PlaygroundSummary';
 import PlaygroundEntity from './pages/PlaygroundEntity';
 import PlaygroundPage from './pages/PlaygroundPage';
 import PlaygroundFeature from './pages/PlaygroundFeature';
+import ConceptWorkbench from './pages/ConceptWorkbench';
 import __Layout from './Layout.jsx';
 
 
@@ -92,6 +93,7 @@ export const PAGES = {
     "PlaygroundEntity": PlaygroundEntity,
     "PlaygroundPage": PlaygroundPage,
     "PlaygroundFeature": PlaygroundFeature,
+    "ConceptWorkbench": ConceptWorkbench,
 }
 
 export const pagesConfig = {
