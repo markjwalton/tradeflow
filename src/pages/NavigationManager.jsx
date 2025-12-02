@@ -478,24 +478,23 @@ export default function NavigationManager() {
             </DragDropContext>
           )}
         </CardContent>
+        <NavigationItemForm
+          isOpen={isFormOpen}
+          onClose={() => { setIsFormOpen(false); setEditingItem(null); }}
+          onSubmit={handleSubmit}
+          item={editingItem}
+          tenantId={selectedTenantId}
+          parentOptions={(() => {
+            // Allow selecting top-level items or level-1 items as parents (max 2 levels deep)
+            const topLevel = navItems.filter(i => !i.parent_id);
+            const level1 = navItems.filter(i => i.parent_id && topLevel.some(t => t.id === i.parent_id));
+            return [
+              ...topLevel.map(i => ({ ...i, depth: 0 })),
+              ...level1.map(i => ({ ...i, depth: 1 }))
+            ];
+          })()}
+        />
       </Card>
-
-      <NavigationItemForm
-        isOpen={isFormOpen}
-        onClose={() => { setIsFormOpen(false); setEditingItem(null); }}
-        onSubmit={handleSubmit}
-        item={editingItem}
-        tenantId={selectedTenantId}
-        parentOptions={(() => {
-          // Allow selecting top-level items or level-1 items as parents (max 2 levels deep)
-          const topLevel = navItems.filter(i => !i.parent_id);
-          const level1 = navItems.filter(i => i.parent_id && topLevel.some(t => t.id === i.parent_id));
-          return [
-            ...topLevel.map(i => ({ ...i, depth: 0 })),
-            ...level1.map(i => ({ ...i, depth: 1 }))
-          ];
-        })()}
-      />
       )}
     </div>
   );
