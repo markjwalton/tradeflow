@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,11 +11,29 @@ import AIInputAssistant from "./AIInputAssistant";
 import ChatHighlightCapture from "./ChatHighlightCapture";
 import QuickCapture from "./QuickCapture";
 
+import { toast } from "sonner";
+
 export default function GlobalAIAssistant() {
   const [isInputOpen, setIsInputOpen] = useState(false);
   const [isCaptureOpen, setIsCaptureOpen] = useState(false);
   const [isQuickCaptureOpen, setIsQuickCaptureOpen] = useState(false);
   const [lastOutput, setLastOutput] = useState("");
+
+  // Reminder timer every 10 minutes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      toast("📝 Capture Reminder", {
+        description: "Time to save any chat highlights to your journal!",
+        action: {
+          label: "Quick Capture",
+          onClick: () => setIsQuickCaptureOpen(true)
+        },
+        duration: 10000
+      });
+    }, 10 * 60 * 1000); // 10 minutes
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleApply = (text) => {
     setLastOutput(text);
