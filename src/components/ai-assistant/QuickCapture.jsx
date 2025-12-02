@@ -20,7 +20,7 @@ import {
 import { 
   Loader2, Brain, HelpCircle, Lightbulb, 
   MessageSquare, AlertTriangle, CheckCircle, Code,
-  Zap, Save
+  Zap, Save, Paperclip, X, FileText
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -40,6 +40,8 @@ export default function QuickCapture({ isOpen, onClose }) {
   const [entryType, setEntryType] = useState("update");
   const [selectedRoadmapItem, setSelectedRoadmapItem] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [attachments, setAttachments] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
 
   // Remember last used roadmap item
   useEffect(() => {
@@ -61,6 +63,32 @@ export default function QuickCapture({ isOpen, onClose }) {
     return 0;
   });
 
+  const handleFileUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+    
+    setIsUploading(true);
+    try {
+      for (const file of files) {
+        const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        setAttachments(prev => [...prev, {
+          url: file_url,
+          friendly_name: file.name.replace(/\.[^/.]+$/, ""),
+          original_name: file.name
+        }]);
+      }
+    } catch (error) {
+      toast.error("Failed to upload file");
+    } finally {
+      setIsUploading(false);
+      e.target.value = "";
+    }
+  };
+
+  const removeAttachment = (index) => {
+    setAttachments(prev => prev.filter((_, i) => i !== index));
+  };
+
   const handleSave = async () => {
     if (!content.trim()) {
       toast.error("Please enter content");
@@ -77,7 +105,8 @@ export default function QuickCapture({ isOpen, onClose }) {
         roadmap_item_id: selectedRoadmapItem,
         content: content.trim(),
         entry_type: entryType,
-        entry_date: new Date().toISOString()
+        entry_date: new Date().toISOString(),
+        attachments: attachments.length > 0 ? attachments : null
       });
 
       localStorage.setItem("quickCapture_lastRoadmapItem", selectedRoadmapItem);
@@ -85,6 +114,7 @@ export default function QuickCapture({ isOpen, onClose }) {
       queryClient.invalidateQueries({ queryKey: ["allRoadmapJournals"] });
       toast.success("Saved to journal");
       setContent("");
+      setAttachments([]);
       onClose();
     } catch (error) {
       toast.error("Failed to save");
@@ -95,6 +125,7 @@ export default function QuickCapture({ isOpen, onClose }) {
 
   const handleClose = () => {
     setContent("");
+    setAttachments([]);
     onClose();
   };
 
@@ -167,6 +198,41 @@ export default function QuickCapture({ isOpen, onClose }) {
               rows={6}
               autoFocus
             />
+          </div>
+
+          {/* Attachments */}
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <label className="cursor-pointer">
+                <input 
+                  type="file" 
+                  multiple 
+                  className="hidden" 
+                  onChange={handleFileUpload}
+                  disabled={isUploading}
+                />
+                <Button variant="outline" size="sm" asChild disabled={isUploading}>
+                  <span>
+                    {isUploading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Paperclip className="h-4 w-4 mr-2" />}
+                    Attach Files
+                  </span>
+                </Button>
+              </label>
+            </div>
+            
+            {attachments.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {attachments.map((att, index) => (
+                  <div key={index} className="flex items-center gap-1 bg-slate-100 rounded px-2 py-1 text-sm">
+                    <FileText className="h-3 w-3 text-slate-500" />
+                    <span className="max-w-32 truncate">{att.friendly_name}</span>
+                    <Button variant="ghost" size="icon" className="h-5 w-5 text-red-500" onClick={() => removeAttachment(index)}>
+                      <X className="h-3 w-3" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Save Button */}
