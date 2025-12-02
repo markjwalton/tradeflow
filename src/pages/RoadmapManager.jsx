@@ -21,9 +21,9 @@ import {
 } from "@/components/ui/dialog";
 import { Plus, Loader2, Lightbulb, Code, Focus } from "lucide-react";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 import RoadmapItemCard from "@/components/roadmap/RoadmapItemCard";
-import JournalDialog from "@/components/roadmap/JournalDialog";
-import DevelopmentPromptDialog from "@/components/roadmap/DevelopmentPromptDialog";
 
 const categories = [
   { value: "idea", label: "Idea" },
@@ -70,6 +70,7 @@ const emptyItem = {
 };
 
 export default function RoadmapManager() {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [showDialog, setShowDialog] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
@@ -77,8 +78,6 @@ export default function RoadmapManager() {
   const [filterCategory, setFilterCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [tagInput, setTagInput] = useState("");
-  const [journalItem, setJournalItem] = useState(null);
-  const [devPromptItem, setDevPromptItem] = useState(null);
   const [activeTab, setActiveTab] = useState("roadmap");
 
   const { data: items = [], isLoading } = useQuery({
@@ -207,6 +206,10 @@ export default function RoadmapManager() {
 
   const focusedItem = items.find(i => i.is_focused);
 
+  const handleOpenJournal = (item) => {
+    navigate(createPageUrl("RoadmapJournal") + `?item=${item.id}`);
+  };
+
   const ItemList = ({ items: listItems, showDevPrompt = false }) => (
     <div className="space-y-3">
       {listItems.map(item => (
@@ -218,7 +221,6 @@ export default function RoadmapManager() {
               onDelete={(id) => deleteMutation.mutate(id)}
               onToggleStar={handleToggleStar}
               onToggleFocus={handleToggleFocus}
-              onViewJournal={setJournalItem}
               journalCount={journalCounts[item.id] || 0}
             />
           </div>
@@ -226,8 +228,8 @@ export default function RoadmapManager() {
             <Button 
               variant="outline" 
               size="icon"
-              onClick={() => setDevPromptItem(item)}
-              title="Generate Development Prompt"
+              onClick={() => handleOpenJournal(item)}
+              title="Open Journal & Dev Prompt"
             >
               <Code className="h-4 w-4" />
             </Button>
@@ -265,11 +267,8 @@ export default function RoadmapManager() {
             <p className="text-purple-700 text-sm mt-1">{focusedItem.description}</p>
           )}
           <div className="flex gap-2 mt-3">
-            <Button size="sm" variant="outline" onClick={() => setJournalItem(focusedItem)}>
-              Journal
-            </Button>
-            <Button size="sm" variant="outline" onClick={() => setDevPromptItem(focusedItem)}>
-              <Code className="h-3 w-3 mr-1" /> Dev Prompt
+            <Button size="sm" variant="outline" onClick={() => handleOpenJournal(focusedItem)}>
+              <Code className="h-3 w-3 mr-1" /> Journal & Dev Prompt
             </Button>
           </div>
         </div>
@@ -477,20 +476,6 @@ export default function RoadmapManager() {
         </DialogContent>
       </Dialog>
 
-      {/* Journal Dialog */}
-      <JournalDialog 
-        isOpen={!!journalItem} 
-        onClose={() => setJournalItem(null)} 
-        item={journalItem} 
-      />
-
-      {/* Development Prompt Dialog */}
-      <DevelopmentPromptDialog
-        isOpen={!!devPromptItem}
-        onClose={() => setDevPromptItem(null)}
-        item={devPromptItem}
-        journalEntries={allJournals.filter(j => j.roadmap_item_id === devPromptItem?.id)}
-      />
     </div>
   );
 }

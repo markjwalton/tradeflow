@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -41,10 +43,14 @@ export default function RoadmapItemCard({
   onDelete, 
   onToggleStar, 
   onToggleFocus,
-  onViewJournal,
   journalCount = 0
 }) {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleViewJournal = () => {
+    navigate(createPageUrl("RoadmapJournal") + `?item=${item.id}`);
+  };
   const catInfo = categories[item.category] || categories.idea;
   const priInfo = priorities[item.priority] || priorities.medium;
   const CatIcon = catInfo.icon;
@@ -79,10 +85,10 @@ export default function RoadmapItemCard({
                   {item.is_focused ? "Remove Focus" : "Set Focus"}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => onViewJournal(item)}>
-                  <MessageSquare className="h-4 w-4 mr-2" />
-                  Journal ({journalCount})
-                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleViewJournal}>
+                    <MessageSquare className="h-4 w-4 mr-2" />
+                    Journal ({journalCount})
+                  </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => onEdit(item)}>
                   <Edit className="h-4 w-4 mr-2" /> Edit
                 </DropdownMenuItem>
@@ -124,10 +130,10 @@ export default function RoadmapItemCard({
               <p className="text-xs text-gray-500 mt-2 italic">{item.notes}</p>
             )}
             <div className="flex gap-2 mt-3">
-              <Button size="sm" variant="outline" onClick={() => onViewJournal(item)}>
-                <MessageSquare className="h-3 w-3 mr-1" /> Journal
-              </Button>
-            </div>
+                <Button size="sm" variant="outline" onClick={handleViewJournal}>
+                  <MessageSquare className="h-3 w-3 mr-1" /> Journal
+                </Button>
+              </div>
           </CardContent>
         </CollapsibleContent>
       </Card>
