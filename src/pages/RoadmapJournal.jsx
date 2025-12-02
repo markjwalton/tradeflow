@@ -88,6 +88,20 @@ export default function RoadmapJournal() {
     enabled: !!itemId
   });
 
+  // Fetch Live Chat Journal entries
+  const { data: allRoadmapItems = [] } = useQuery({
+    queryKey: ["roadmapItems"],
+    queryFn: () => base44.entities.RoadmapItem.list(),
+  });
+
+  const liveJournalItem = allRoadmapItems.find(i => i.title === "Live Chat Journal" && i.category === "discussion_note");
+
+  const { data: liveChatEntries = [], isLoading: liveChatLoading } = useQuery({
+    queryKey: ["liveChatJournal", liveJournalItem?.id],
+    queryFn: () => base44.entities.RoadmapJournal.filter({ roadmap_item_id: liveJournalItem.id }, "-created_date"),
+    enabled: !!liveJournalItem?.id
+  });
+
   const { data: sprints = [] } = useQuery({
     queryKey: ["sprints"],
     queryFn: () => base44.entities.DevelopmentSprint.list("-created_date"),
@@ -459,6 +473,7 @@ Return as JSON:
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
         <TabsList>
           <TabsTrigger value="journal">Journal</TabsTrigger>
+          <TabsTrigger value="livechat">Live Chat Journal</TabsTrigger>
           <TabsTrigger value="development">Development</TabsTrigger>
           <TabsTrigger value="context">Context Items</TabsTrigger>
         </TabsList>
@@ -690,6 +705,74 @@ Return as JSON:
               })
             )}
           </div>
+        </TabsContent>
+
+        {/* Live Chat Journal Tab */}
+        <TabsContent value="livechat" className="space-y-6">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <MessageSquare className="h-5 w-5 text-blue-500" />
+                Live Chat Journal
+              </CardTitle>
+              <p className="text-sm text-gray-500">Quick captures from AI chat sessions (hidden from main roadmap)</p>
+            </CardHeader>
+            <CardContent>
+              {liveChatLoading ? (
+                <div className="flex justify-center py-8">
+                  <Loader2 className="h-6 w-6 animate-spin" />
+                </div>
+              ) : !liveJournalItem ? (
+                <p className="text-center text-gray-500 py-8">No Live Chat Journal found. Use Quick Capture to create entries.</p>
+              ) : liveChatEntries.length === 0 ? (
+                <p className="text-center text-gray-500 py-8">No live chat entries yet. Use Quick Capture to add notes.</p>
+              ) : (
+                <div className="space-y-4">
+                  {liveChatEntries.map(entry => {
+                    const typeInfo = getTypeInfo(entry.entry_type);
+                    const TypeIcon = typeInfo.icon;
+                    
+                    return (
+                      <Card key={entry.id} className="border-l-4 border-l-blue-300">
+                        <CardContent className="pt-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <Badge className={typeInfo.color}>
+                                <TypeIcon className="h-3 w-3 mr-1" />
+                                {typeInfo.label}
+                              </Badge>
+                              <span className="text-sm text-gray-500">
+                                {moment(entry.entry_date || entry.created_date).format("DD MMM YYYY, HH:mm")}
+                              </span>
+                            </div>
+                          </div>
+                          
+                          <p className="text-sm whitespace-pre-wrap mb-3">{entry.content}</p>
+                          
+                          {entry.attachments?.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                              {entry.attachments.map((att, i) => (
+                                <a 
+                                  key={i} 
+                                  href={att.url} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-1 bg-blue-50 text-blue-700 rounded px-2 py-1 text-sm hover:bg-blue-100"
+                                >
+                                  <FileText className="h-3 w-3" />
+                                  {att.friendly_name}
+                                </a>
+                              ))}
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Development Tab */}
