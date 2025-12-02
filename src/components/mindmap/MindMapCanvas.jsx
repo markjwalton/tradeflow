@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import MindMapNodeComponent from "./MindMapNode";
 import MindMapConnectionComponent from "./MindMapConnection";
 import { Button } from "@/components/ui/button";
-import { ZoomIn, ZoomOut, Maximize2, Minimize2, RotateCcw, Hand, MousePointer2 } from "lucide-react";
+import { ZoomIn, ZoomOut, Maximize2, Minimize2, RotateCcw, Hand, MousePointer2, GitGraph } from "lucide-react";
+import { layoutMindMapNodes } from "./layoutMindMapNodes";
 
 export default function MindMapCanvas({
   nodes,
@@ -104,6 +105,14 @@ export default function MindMapCanvas({
   const handleResetView = () => {
     setZoom(1);
     setPan({ x: 0, y: 0 });
+  };
+
+  const handleAutoLayout = () => {
+    const newLayoutNodes = layoutMindMapNodes(nodes, allConnections || connections);
+    newLayoutNodes.forEach(node => {
+      onUpdateNodePosition(node.id, node.position_x, node.position_y);
+    });
+    setTimeout(() => handleFitToView(), 100);
   };
 
   // Calculate bounds helper
@@ -212,6 +221,16 @@ export default function MindMapCanvas({
           title="Zoom In"
         >
           <ZoomIn className="h-4 w-4" />
+        </Button>
+        <div className="w-px h-5 bg-gray-200 mx-1" />
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={handleAutoLayout}
+          className="h-8 w-8 p-0"
+          title="Auto Arrange Layout"
+        >
+          <GitGraph className="h-4 w-4" />
         </Button>
         <div className="w-px h-5 bg-gray-200 mx-1" />
         <Button
