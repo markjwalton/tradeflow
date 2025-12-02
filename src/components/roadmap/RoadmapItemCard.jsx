@@ -90,11 +90,13 @@ export default function RoadmapItemCard({
                     Journal ({journalCount})
                   </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => onEdit(item)}>
-                  <Edit className="h-4 w-4 mr-2" /> Edit
-                </DropdownMenuItem>
-                <DropdownMenuItem className="text-red-600" onClick={() => onDelete(item.id)}>
-                  <Trash2 className="h-4 w-4 mr-2" /> Delete
-                </DropdownMenuItem>
+                                        <Edit className="h-4 w-4 mr-2" /> Edit
+                                      </DropdownMenuItem>
+                                      {onDelete && (
+                                        <DropdownMenuItem className="text-red-600" onClick={() => onDelete(item.id)}>
+                                          <Trash2 className="h-4 w-4 mr-2" /> Delete
+                                        </DropdownMenuItem>
+                                      )}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
