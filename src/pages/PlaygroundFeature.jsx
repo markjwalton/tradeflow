@@ -154,7 +154,7 @@ export default function PlaygroundFeature() {
   };
 
   const generateAISuggestions = async () => {
-    if (!template) return;
+    if (!template || isGenerating) return;
     setIsGenerating(true);
 
     try {
@@ -192,7 +192,11 @@ Return as JSON with a "suggestions" array of strings.`,
       updateMutation.mutate({ ai_suggestions: result.suggestions || [] });
       toast.success("AI suggestions generated");
     } catch (error) {
-      toast.error("Failed to generate suggestions");
+      if (error.message?.includes("Rate limit")) {
+        toast.error("Please wait a moment before trying again");
+      } else {
+        toast.error("Failed to generate suggestions");
+      }
     } finally {
       setIsGenerating(false);
     }
