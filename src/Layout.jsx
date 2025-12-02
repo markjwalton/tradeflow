@@ -422,6 +422,9 @@ export default function Layout({ children, currentPageName }) {
           {children}
         </main>
       </div>
+
+      {/* Global AI Assistant */}
+      <GlobalAIAssistant />
     </div>
     </TenantContext.Provider>
   );
