@@ -6,13 +6,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Sparkles, BookOpen, Mic } from "lucide-react";
+import { Sparkles, BookOpen, Mic, Zap } from "lucide-react";
 import AIInputAssistant from "./AIInputAssistant";
 import ChatHighlightCapture from "./ChatHighlightCapture";
+import QuickCapture from "./QuickCapture";
 
 export default function GlobalAIAssistant() {
   const [isInputOpen, setIsInputOpen] = useState(false);
   const [isCaptureOpen, setIsCaptureOpen] = useState(false);
+  const [isQuickCaptureOpen, setIsQuickCaptureOpen] = useState(false);
   const [lastOutput, setLastOutput] = useState("");
 
   const handleApply = (text) => {
@@ -32,13 +34,17 @@ export default function GlobalAIAssistant() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="mb-2">
-          <DropdownMenuItem onClick={() => setIsInputOpen(true)}>
-            <Mic className="h-4 w-4 mr-2" />
-            Voice Input
+          <DropdownMenuItem onClick={() => setIsQuickCaptureOpen(true)}>
+            <Zap className="h-4 w-4 mr-2" />
+            Quick Capture
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setIsCaptureOpen(true)}>
             <BookOpen className="h-4 w-4 mr-2" />
-            Capture Chat Highlights
+            AI Chat Analysis
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setIsInputOpen(true)}>
+            <Mic className="h-4 w-4 mr-2" />
+            Voice Input
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -55,6 +61,11 @@ export default function GlobalAIAssistant() {
       <ChatHighlightCapture
         isOpen={isCaptureOpen}
         onClose={() => setIsCaptureOpen(false)}
+      />
+
+      <QuickCapture
+        isOpen={isQuickCaptureOpen}
+        onClose={() => setIsQuickCaptureOpen(false)}
       />
     </>
   );
