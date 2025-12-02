@@ -39,11 +39,14 @@ import GlobalAIAssistant from "@/components/ai-assistant/GlobalAIAssistant";
 // Global admin pages - only for is_global_admin users
 import { BookOpen } from "lucide-react";
 
+import { FlaskConical } from "lucide-react";
+
 const globalAdminPages = [
   { name: "Roadmap", slug: "RoadmapManager", icon: Lightbulb },
   { name: "Journal", slug: "RoadmapJournal", icon: Lightbulb },
   { name: "Sprints", slug: "SprintManager", icon: Lightbulb },
   { name: "Rule Book", slug: "RuleBook", icon: BookOpen },
+  { name: "Playground", slug: "PlaygroundSummary", icon: FlaskConical },
   { name: "Mind Map Editor", slug: "MindMapEditor", icon: GitBranch },
   { name: "ERD Editor", slug: "ERDEditor", icon: Database },
   { name: "Generated Apps", slug: "GeneratedApps", icon: Package },
@@ -67,7 +70,7 @@ const globalAdminPages = [
 ];
 
 // Pages that don't require tenant context but need to preserve query params
-const standalonePages = ["RoadmapManager", "RoadmapJournal", "SprintManager", "RuleBook", "MindMapEditor", "GeneratedApps", "EntityLibrary", "PageLibrary", "FeatureLibrary", "PackageLibrary", "TenantManager", "BusinessTemplates", "WorkflowLibrary", "WorkflowDesigner", "FormTemplates", "FormBuilder", "ChecklistTemplates", "ChecklistBuilder", "PromptSettings"];
+const standalonePages = ["RoadmapManager", "RoadmapJournal", "SprintManager", "RuleBook", "PlaygroundSummary", "PlaygroundEntity", "PlaygroundPage", "PlaygroundFeature", "MindMapEditor", "GeneratedApps", "EntityLibrary", "PageLibrary", "FeatureLibrary", "PackageLibrary", "TenantManager", "BusinessTemplates", "WorkflowLibrary", "WorkflowDesigner", "FormTemplates", "FormBuilder", "ChecklistTemplates", "ChecklistBuilder", "PromptSettings"];
 
 // Tenant pages - for users with tenant access
 const tenantPages = [];
