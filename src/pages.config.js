@@ -36,6 +36,7 @@ import ProjectForm from './pages/ProjectForm';
 import ProjectsOverview from './pages/ProjectsOverview';
 import PromptSettings from './pages/PromptSettings';
 import RoadmapManager from './pages/RoadmapManager';
+import RoadmapJournal from './pages/RoadmapJournal';
 import __Layout from './Layout.jsx';
 
 
@@ -78,6 +79,7 @@ export const PAGES = {
     "ProjectsOverview": ProjectsOverview,
     "PromptSettings": PromptSettings,
     "RoadmapManager": RoadmapManager,
+    "RoadmapJournal": RoadmapJournal,
 }
 
 export const pagesConfig = {
