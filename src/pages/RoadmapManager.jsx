@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -19,29 +19,26 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Plus, Edit, Trash2, Loader2, Lightbulb, CheckCircle, Clock, MoreVertical, Sparkles, MessageSquare, Filter } from "lucide-react";
+import { Plus, Loader2, Lightbulb, Code, Focus } from "lucide-react";
 import { toast } from "sonner";
+import RoadmapItemCard from "@/components/roadmap/RoadmapItemCard";
+import JournalDialog from "@/components/roadmap/JournalDialog";
+import DevelopmentPromptDialog from "@/components/roadmap/DevelopmentPromptDialog";
 
 const categories = [
-  { value: "idea", label: "Idea", icon: Lightbulb, color: "bg-yellow-100 text-yellow-800" },
-  { value: "requirement", label: "Requirement", icon: CheckCircle, color: "bg-blue-100 text-blue-800" },
-  { value: "feature", label: "Feature", icon: Sparkles, color: "bg-purple-100 text-purple-800" },
-  { value: "improvement", label: "Improvement", icon: Clock, color: "bg-green-100 text-green-800" },
-  { value: "bug_fix", label: "Bug Fix", icon: Clock, color: "bg-red-100 text-red-800" },
-  { value: "discussion_note", label: "Discussion Note", icon: MessageSquare, color: "bg-gray-100 text-gray-800" },
+  { value: "idea", label: "Idea" },
+  { value: "requirement", label: "Requirement" },
+  { value: "feature", label: "Feature" },
+  { value: "improvement", label: "Improvement" },
+  { value: "bug_fix", label: "Bug Fix" },
+  { value: "discussion_note", label: "Discussion Note" },
 ];
 
 const priorities = [
-  { value: "low", label: "Low", color: "bg-slate-100 text-slate-600" },
-  { value: "medium", label: "Medium", color: "bg-blue-100 text-blue-600" },
-  { value: "high", label: "High", color: "bg-orange-100 text-orange-600" },
-  { value: "critical", label: "Critical", color: "bg-red-100 text-red-600" },
+  { value: "low", label: "Low" },
+  { value: "medium", label: "Medium" },
+  { value: "high", label: "High" },
+  { value: "critical", label: "Critical" },
 ];
 
 const statuses = [
@@ -67,7 +64,9 @@ const emptyItem = {
   source: "user",
   tags: [],
   notes: "",
-  target_phase: ""
+  target_phase: "",
+  is_starred: false,
+  is_focused: false
 };
 
 export default function RoadmapManager() {
@@ -76,14 +75,29 @@ export default function RoadmapManager() {
   const [editingItem, setEditingItem] = useState(null);
   const [formData, setFormData] = useState(emptyItem);
   const [filterCategory, setFilterCategory] = useState("all");
-  const [filterStatus, setFilterStatus] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [tagInput, setTagInput] = useState("");
+  const [journalItem, setJournalItem] = useState(null);
+  const [devPromptItem, setDevPromptItem] = useState(null);
+  const [activeTab, setActiveTab] = useState("roadmap");
 
   const { data: items = [], isLoading } = useQuery({
     queryKey: ["roadmapItems"],
     queryFn: () => base44.entities.RoadmapItem.list("-created_date"),
   });
+
+  const { data: allJournals = [] } = useQuery({
+    queryKey: ["allRoadmapJournals"],
+    queryFn: () => base44.entities.RoadmapJournal.list(),
+  });
+
+  const journalCounts = useMemo(() => {
+    const counts = {};
+    allJournals.forEach(j => {
+      counts[j.roadmap_item_id] = (counts[j.roadmap_item_id] || 0) + 1;
+    });
+    return counts;
+  }, [allJournals]);
 
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.RoadmapItem.create(data),
@@ -141,6 +155,21 @@ export default function RoadmapManager() {
     }
   };
 
+  const handleToggleStar = (item) => {
+    updateMutation.mutate({ id: item.id, data: { ...item, is_starred: !item.is_starred } });
+  };
+
+  const handleToggleFocus = async (item) => {
+    // Clear focus from all other items first
+    if (!item.is_focused) {
+      const focusedItems = items.filter(i => i.is_focused && i.id !== item.id);
+      for (const fi of focusedItems) {
+        await base44.entities.RoadmapItem.update(fi.id, { is_focused: false });
+      }
+    }
+    updateMutation.mutate({ id: item.id, data: { ...item, is_focused: !item.is_focused } });
+  };
+
   const handleAddTag = () => {
     if (tagInput.trim() && !formData.tags?.includes(tagInput.trim())) {
       setFormData({ ...formData, tags: [...(formData.tags || []), tagInput.trim()] });
@@ -152,22 +181,61 @@ export default function RoadmapManager() {
     setFormData({ ...formData, tags: formData.tags.filter(t => t !== tag) });
   };
 
-  const filteredItems = items.filter(item => {
-    const matchesCategory = filterCategory === "all" || item.category === filterCategory;
-    const matchesStatus = filterStatus === "all" || item.status === filterStatus;
-    const matchesSearch = !searchQuery || 
-      item.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.description?.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesStatus && matchesSearch;
-  });
+  // Filter and sort items
+  const processedItems = useMemo(() => {
+    let filtered = items.filter(item => {
+      const matchesCategory = filterCategory === "all" || item.category === filterCategory;
+      const matchesSearch = !searchQuery || 
+        item.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description?.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
 
-  const groupedByStatus = statuses.reduce((acc, status) => {
-    acc[status.value] = filteredItems.filter(item => item.status === status.value);
-    return acc;
-  }, {});
+    // Sort: focused first, then starred, then by date
+    return filtered.sort((a, b) => {
+      if (a.is_focused && !b.is_focused) return -1;
+      if (!a.is_focused && b.is_focused) return 1;
+      if (a.is_starred && !b.is_starred) return -1;
+      if (!a.is_starred && b.is_starred) return 1;
+      return new Date(b.created_date) - new Date(a.created_date);
+    });
+  }, [items, filterCategory, searchQuery]);
 
-  const getCategoryInfo = (cat) => categories.find(c => c.value === cat) || categories[0];
-  const getPriorityInfo = (pri) => priorities.find(p => p.value === pri) || priorities[1];
+  // Split into roadmap (backlog/on_hold) and development (planned/in_progress/completed)
+  const roadmapItems = processedItems.filter(i => ["backlog", "on_hold"].includes(i.status));
+  const developmentItems = processedItems.filter(i => ["planned", "in_progress", "completed"].includes(i.status));
+
+  const focusedItem = items.find(i => i.is_focused);
+
+  const ItemList = ({ items: listItems, showDevPrompt = false }) => (
+    <div className="space-y-3">
+      {listItems.map(item => (
+        <div key={item.id} className="flex gap-2">
+          <div className="flex-1">
+            <RoadmapItemCard
+              item={item}
+              onEdit={handleOpenDialog}
+              onDelete={(id) => deleteMutation.mutate(id)}
+              onToggleStar={handleToggleStar}
+              onToggleFocus={handleToggleFocus}
+              onViewJournal={setJournalItem}
+              journalCount={journalCounts[item.id] || 0}
+            />
+          </div>
+          {showDevPrompt && (
+            <Button 
+              variant="outline" 
+              size="icon"
+              onClick={() => setDevPromptItem(item)}
+              title="Generate Development Prompt"
+            >
+              <Code className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <div className="p-6">
@@ -177,13 +245,35 @@ export default function RoadmapManager() {
             <Lightbulb className="h-6 w-6 text-yellow-600" />
             Roadmap Manager
           </h1>
-          <p className="text-gray-500">Track ideas, requirements, and discussion notes</p>
+          <p className="text-gray-500">Track ideas, requirements, and development tasks</p>
         </div>
         <Button onClick={() => handleOpenDialog()}>
           <Plus className="h-4 w-4 mr-2" />
           Add Item
         </Button>
       </div>
+
+      {/* Focused Item Banner */}
+      {focusedItem && (
+        <div className="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+          <div className="flex items-center gap-2 mb-2">
+            <Focus className="h-5 w-5 text-purple-600" />
+            <span className="font-semibold text-purple-800">Current Focus</span>
+          </div>
+          <p className="text-purple-900 font-medium">{focusedItem.title}</p>
+          {focusedItem.description && (
+            <p className="text-purple-700 text-sm mt-1">{focusedItem.description}</p>
+          )}
+          <div className="flex gap-2 mt-3">
+            <Button size="sm" variant="outline" onClick={() => setJournalItem(focusedItem)}>
+              Journal
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => setDevPromptItem(focusedItem)}>
+              <Code className="h-3 w-3 mr-1" /> Dev Prompt
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Filters */}
       <div className="flex gap-4 mb-6 flex-wrap">
@@ -204,109 +294,64 @@ export default function RoadmapManager() {
             ))}
           </SelectContent>
         </Select>
-        <Select value={filterStatus} onValueChange={setFilterStatus}>
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Statuses</SelectItem>
-            {statuses.map(s => (
-              <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
       </div>
 
       {isLoading ? (
         <div className="flex justify-center py-12">
           <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
         </div>
-      ) : filteredItems.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
-          <Lightbulb className="h-12 w-12 mx-auto mb-4 opacity-50" />
-          <p>No items yet. Add your first idea or requirement!</p>
-        </div>
       ) : (
-        <div className="space-y-8">
-          {statuses.map(status => {
-            const statusItems = groupedByStatus[status.value];
-            if (statusItems.length === 0) return null;
-            return (
-              <div key={status.value}>
-                <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                  {status.label}
-                  <Badge variant="secondary">{statusItems.length}</Badge>
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {statusItems.map(item => {
-                    const catInfo = getCategoryInfo(item.category);
-                    const priInfo = getPriorityInfo(item.priority);
-                    const CatIcon = catInfo.icon;
-                    return (
-                      <Card key={item.id} className="hover:shadow-md transition-shadow">
-                        <CardHeader className="pb-2">
-                          <div className="flex items-start justify-between">
-                            <CardTitle className="text-base flex items-center gap-2">
-                              <CatIcon className="h-4 w-4" />
-                              {item.title}
-                            </CardTitle>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-8 w-8">
-                                  <MoreVertical className="h-4 w-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={() => handleOpenDialog(item)}>
-                                  <Edit className="h-4 w-4 mr-2" /> Edit
-                                </DropdownMenuItem>
-                                <DropdownMenuItem 
-                                  className="text-red-600"
-                                  onClick={() => deleteMutation.mutate(item.id)}
-                                >
-                                  <Trash2 className="h-4 w-4 mr-2" /> Delete
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
-                        </CardHeader>
-                        <CardContent>
-                          {item.description && (
-                            <p className="text-sm text-gray-600 mb-3 line-clamp-2">{item.description}</p>
-                          )}
-                          <div className="flex flex-wrap gap-1 mb-2">
-                            <Badge className={catInfo.color}>{catInfo.label}</Badge>
-                            <Badge className={priInfo.color}>{priInfo.label}</Badge>
-                            {item.source === "ai_assistant" && (
-                              <Badge variant="outline" className="gap-1">
-                                <Sparkles className="h-3 w-3" /> AI
-                              </Badge>
-                            )}
-                          </div>
-                          {item.tags?.length > 0 && (
-                            <div className="flex flex-wrap gap-1">
-                              {item.tags.map(tag => (
-                                <Badge key={tag} variant="outline" className="text-xs">{tag}</Badge>
-                              ))}
-                            </div>
-                          )}
-                          {item.target_phase && (
-                            <p className="text-xs text-gray-500 mt-2">Phase: {item.target_phase}</p>
-                          )}
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList>
+            <TabsTrigger value="roadmap">
+              Roadmap ({roadmapItems.length})
+            </TabsTrigger>
+            <TabsTrigger value="development">
+              Development ({developmentItems.length})
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="roadmap" className="mt-6">
+            {roadmapItems.length === 0 ? (
+              <div className="text-center py-12 text-gray-500">
+                <Lightbulb className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <p>No items in roadmap. Add your first idea!</p>
               </div>
-            );
-          })}
-        </div>
+            ) : (
+              <ItemList items={roadmapItems} />
+            )}
+          </TabsContent>
+
+          <TabsContent value="development" className="mt-6">
+            {developmentItems.length === 0 ? (
+              <div className="text-center py-12 text-gray-500">
+                <Code className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <p>No items in development. Set items to "Planned" to move them here.</p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {["planned", "in_progress", "completed"].map(status => {
+                  const statusItems = developmentItems.filter(i => i.status === status);
+                  if (statusItems.length === 0) return null;
+                  return (
+                    <div key={status}>
+                      <h3 className="text-lg font-semibold mb-3 capitalize flex items-center gap-2">
+                        {status.replace("_", " ")}
+                        <Badge variant="secondary">{statusItems.length}</Badge>
+                      </h3>
+                      <ItemList items={statusItems} showDevPrompt />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
       )}
 
       {/* Add/Edit Dialog */}
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingItem ? "Edit Item" : "Add Roadmap Item"}</DialogTitle>
           </DialogHeader>
@@ -431,6 +476,21 @@ export default function RoadmapManager() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Journal Dialog */}
+      <JournalDialog 
+        isOpen={!!journalItem} 
+        onClose={() => setJournalItem(null)} 
+        item={journalItem} 
+      />
+
+      {/* Development Prompt Dialog */}
+      <DevelopmentPromptDialog
+        isOpen={!!devPromptItem}
+        onClose={() => setDevPromptItem(null)}
+        item={devPromptItem}
+        journalEntries={allJournals.filter(j => j.roadmap_item_id === devPromptItem?.id)}
+      />
     </div>
   );
 }
