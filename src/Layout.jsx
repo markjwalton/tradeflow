@@ -18,7 +18,8 @@ import {
   Layout as LayoutIcon,
   Zap,
   Workflow,
-  Settings
+  Settings,
+  Lightbulb
 } from "lucide-react";
 
 // Tenant Context
@@ -37,6 +38,7 @@ import GlobalAIAssistant from "@/components/ai-assistant/GlobalAIAssistant";
 
 // Global admin pages - only for is_global_admin users
 const globalAdminPages = [
+  { name: "Roadmap", slug: "RoadmapManager", icon: Lightbulb },
   { name: "Mind Map Editor", slug: "MindMapEditor", icon: GitBranch },
   { name: "ERD Editor", slug: "ERDEditor", icon: Database },
   { name: "Generated Apps", slug: "GeneratedApps", icon: Package },
@@ -60,7 +62,7 @@ const globalAdminPages = [
 ];
 
 // Pages that don't require tenant context but need to preserve query params
-const standalonePages = ["MindMapEditor", "GeneratedApps", "EntityLibrary", "PageLibrary", "FeatureLibrary", "PackageLibrary", "TenantManager", "BusinessTemplates", "WorkflowLibrary", "WorkflowDesigner", "FormTemplates", "FormBuilder", "ChecklistTemplates", "ChecklistBuilder", "PromptSettings"];
+const standalonePages = ["RoadmapManager", "MindMapEditor", "GeneratedApps", "EntityLibrary", "PageLibrary", "FeatureLibrary", "PackageLibrary", "TenantManager", "BusinessTemplates", "WorkflowLibrary", "WorkflowDesigner", "FormTemplates", "FormBuilder", "ChecklistTemplates", "ChecklistBuilder", "PromptSettings"];
 
 // Tenant pages - for users with tenant access
 const tenantPages = [];
