@@ -38,6 +38,7 @@ export default function RoadmapJournal() {
 
   const [newEntry, setNewEntry] = useState("");
   const [entryType, setEntryType] = useState("update");
+  const [continueFromEntry, setContinueFromEntry] = useState(null);
   const [isGeneratingPrompt, setIsGeneratingPrompt] = useState(false);
   const [isGeneratingDevPrompt, setIsGeneratingDevPrompt] = useState(false);
   const [devPrompt, setDevPrompt] = useState("");
@@ -62,12 +63,14 @@ export default function RoadmapJournal() {
       return base44.entities.RoadmapJournal.create({
         ...data,
         roadmap_item_id: itemId,
+        parent_entry_id: continueFromEntry?.id || null,
         entry_date: new Date().toISOString()
       });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["roadmapJournal", itemId] });
       setNewEntry("");
+      setContinueFromEntry(null);
       toast.success("Journal entry added");
     }
   });
@@ -234,25 +237,57 @@ Format the prompt clearly with sections. Output only the prompt text.`
           <CardTitle className="text-lg">Add Journal Entry</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <Select value={entryType} onValueChange={setEntryType}>
-            <SelectTrigger className="w-48">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {entryTypes.map(t => (
-                <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="flex gap-3 flex-wrap">
+            <Select value={entryType} onValueChange={setEntryType}>
+              <SelectTrigger className="w-48">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {entryTypes.map(t => (
+                  <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            
+            <Select 
+              value={continueFromEntry?.id || "none"} 
+              onValueChange={(v) => setContinueFromEntry(v === "none" ? null : entries.find(e => e.id === v))}
+            >
+              <SelectTrigger className="w-64">
+                <SelectValue placeholder="Continue from..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">New thread</SelectItem>
+                {entries.map(e => (
+                  <SelectItem key={e.id} value={e.id}>
+                    {e.content.substring(0, 40)}...
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          {continueFromEntry && (
+            <div className="bg-slate-50 border-l-4 border-slate-300 p-3 rounded text-sm">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs text-slate-500 font-medium">Continuing from:</span>
+                <Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => setContinueFromEntry(null)}>
+                  Clear
+                </Button>
+              </div>
+              <p className="text-slate-700">{continueFromEntry.content.substring(0, 150)}{continueFromEntry.content.length > 150 ? "..." : ""}</p>
+            </div>
+          )}
+          
           <Textarea
             value={newEntry}
             onChange={(e) => setNewEntry(e.target.value)}
-            placeholder="Add a journal entry..."
+            placeholder={continueFromEntry ? "Continue the discussion..." : "Add a journal entry..."}
             rows={4}
           />
           <Button onClick={handleAddEntry} disabled={!newEntry.trim() || createMutation.isPending}>
             {createMutation.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Plus className="h-4 w-4 mr-2" />}
-            Add Entry
+            {continueFromEntry ? "Add Follow-up" : "Add Entry"}
           </Button>
         </CardContent>
       </Card>
@@ -271,11 +306,14 @@ Format the prompt clearly with sections. Output only the prompt text.`
           entries.map(entry => {
             const typeInfo = getTypeInfo(entry.entry_type);
             const TypeIcon = typeInfo.icon;
+            const isFollowUp = !!entry.parent_entry_id;
+            const parentEntry = isFollowUp ? entries.find(e => e.id === entry.parent_entry_id) : null;
+            
             return (
-              <Card key={entry.id}>
+              <Card key={entry.id} className={isFollowUp ? "ml-8 border-l-4 border-l-slate-300" : ""}>
                 <CardContent className="pt-4">
                   <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <Badge className={typeInfo.color}>
                         <TypeIcon className="h-3 w-3 mr-1" />
                         {typeInfo.label}
@@ -283,15 +321,30 @@ Format the prompt clearly with sections. Output only the prompt text.`
                       <span className="text-sm text-gray-500">
                         {moment(entry.entry_date || entry.created_date).format("DD MMM YYYY, HH:mm")}
                       </span>
+                      {isFollowUp && parentEntry && (
+                        <span className="text-xs text-slate-500 italic">
+                          ↳ follows: "{parentEntry.content.substring(0, 30)}..."
+                        </span>
+                      )}
                     </div>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-8 w-8 text-red-500 hover:text-red-700" 
-                      onClick={() => deleteMutation.mutate(entry.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <div className="flex items-center gap-1">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        className="h-8 px-2 text-xs"
+                        onClick={() => setContinueFromEntry(entry)}
+                      >
+                        Continue
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8 text-red-500 hover:text-red-700" 
+                        onClick={() => deleteMutation.mutate(entry.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                   
                   <p className="text-sm whitespace-pre-wrap mb-4">{entry.content}</p>
@@ -302,16 +355,17 @@ Format the prompt clearly with sections. Output only the prompt text.`
                       variant="outline" 
                       onClick={() => generateAIPrompt(entry)}
                       disabled={isGeneratingPrompt}
+                      title="Generate a prompt to continue this specific discussion thread"
                     >
                       {isGeneratingPrompt ? <Loader2 className="h-3 w-3 mr-1 animate-spin" /> : <Sparkles className="h-3 w-3 mr-1" />}
-                      Generate Prompt
+                      Continue with AI
                     </Button>
                   </div>
                   
                   {entry.ai_generated_prompt && (
                     <div className="mt-4 bg-purple-50 border border-purple-200 rounded-lg p-4">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium text-purple-700">AI Generated Prompt</span>
+                        <span className="text-sm font-medium text-purple-700">Prompt to continue this discussion</span>
                         <Button size="sm" variant="ghost" onClick={() => copyToClipboard(entry.ai_generated_prompt)}>
                           <Copy className="h-3 w-3 mr-1" /> Copy
                         </Button>
