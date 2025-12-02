@@ -1,0 +1,284 @@
+import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { 
+  ArrowLeft, Play, CheckCircle2, XCircle, Circle, 
+  Loader2, Database, Sparkles, Copy
+} from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import { toast } from "sonner";
+
+export default function PlaygroundEntity() {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const urlParams = new URLSearchParams(window.location.search);
+  const itemId = urlParams.get("id");
+  
+  const [isRunning, setIsRunning] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const { data: item, isLoading } = useQuery({
+    queryKey: ["playgroundItem", itemId],
+    queryFn: async () => {
+      const items = await base44.entities.PlaygroundItem.filter({ id: itemId });
+      return items[0];
+    },
+    enabled: !!itemId
+  });
+
+  const { data: entityTemplates = [] } = useQuery({
+    queryKey: ["entityTemplates"],
+    queryFn: () => base44.entities.EntityTemplate.list(),
+  });
+
+  const template = entityTemplates.find(t => t.id === item?.source_id);
+
+  const updateMutation = useMutation({
+    mutationFn: (data) => base44.entities.PlaygroundItem.update(itemId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["playgroundItem", itemId] });
+      toast.success("Updated");
+    },
+  });
+
+  const runTests = async () => {
+    if (!template) return;
+    setIsRunning(true);
+
+    const tests = item.test_definition?.tests || [];
+    const passed = [];
+    const failed = [];
+    const errors = [];
+
+    for (const test of tests) {
+      try {
+        const { name, description, category, schema } = template;
+        let result = false;
+        
+        if (test.check.includes("name")) result = name !== undefined && name.length > 0;
+        else if (test.check.includes("schema.properties")) result = Object.keys(schema?.properties || {}).length > 0;
+        else if (test.check.includes("schema.required")) result = Array.isArray(schema?.required);
+        else if (test.check.includes("schema")) result = schema !== undefined;
+        else result = true;
+
+        if (result) passed.push(test.name);
+        else failed.push(test.name);
+      } catch (e) {
+        errors.push(`${test.name}: ${e.message}`);
+      }
+    }
+
+    const status = errors.length > 0 || failed.length > 0 ? "failed" : "passed";
+    
+    updateMutation.mutate({
+      test_status: status,
+      test_results: { passed, failed, errors },
+      last_test_date: new Date().toISOString()
+    });
+    
+    setIsRunning(false);
+  };
+
+  const generateAISuggestions = async () => {
+    if (!template) return;
+    setIsGenerating(true);
+
+    try {
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `Analyze this entity template and suggest improvements:
+
+Entity Name: ${template.name}
+Description: ${template.description || "None"}
+Category: ${template.category}
+Fields: ${JSON.stringify(template.schema?.properties || {}, null, 2)}
+Relationships: ${JSON.stringify(template.relationships || [], null, 2)}
+
+Provide 3-5 specific suggestions to improve this entity:
+- Additional fields that might be useful
+- Missing relationships
+- Data validation improvements
+- Best practices for this type of entity
+
+Return as JSON with a "suggestions" array of strings.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            suggestions: { type: "array", items: { type: "string" } }
+          }
+        }
+      });
+
+      updateMutation.mutate({ ai_suggestions: result.suggestions || [] });
+      toast.success("AI suggestions generated");
+    } catch (error) {
+      toast.error("Failed to generate suggestions");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  if (isLoading || !item) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  const statusIcon = {
+    passed: <CheckCircle2 className="h-5 w-5 text-green-600" />,
+    failed: <XCircle className="h-5 w-5 text-red-600" />,
+    pending: <Circle className="h-5 w-5 text-gray-400" />,
+  }[item.test_status];
+
+  return (
+    <div className="p-6 max-w-4xl mx-auto">
+      {/* Header */}
+      <div className="flex items-center gap-4 mb-6">
+        <Button variant="ghost" size="icon" onClick={() => navigate(createPageUrl("PlaygroundSummary"))}>
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <div className="flex-1">
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            <Database className="h-6 w-6 text-purple-600" />
+            {item.source_name}
+          </h1>
+          <p className="text-gray-500">Entity Playground</p>
+        </div>
+        <div className="flex items-center gap-2">
+          {statusIcon}
+          <Badge className={
+            item.test_status === "passed" ? "bg-green-100 text-green-800" :
+            item.test_status === "failed" ? "bg-red-100 text-red-800" :
+            "bg-gray-100 text-gray-800"
+          }>
+            {item.test_status}
+          </Badge>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-6">
+        {/* Schema */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Entity Schema</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {template ? (
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-sm font-medium text-gray-500 mb-2">Fields ({Object.keys(template.schema?.properties || {}).length})</h4>
+                  <div className="space-y-2">
+                    {Object.entries(template.schema?.properties || {}).map(([key, value]) => (
+                      <div key={key} className="flex items-center justify-between bg-slate-50 p-2 rounded">
+                        <span className="font-mono text-sm">{key}</span>
+                        <Badge variant="outline">{value.type}</Badge>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {template.schema?.required?.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500 mb-2">Required Fields</h4>
+                    <div className="flex flex-wrap gap-1">
+                      {template.schema.required.map(f => (
+                        <Badge key={f} className="bg-red-100 text-red-800">{f}</Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {template.relationships?.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-500 mb-2">Relationships</h4>
+                    <div className="space-y-1">
+                      {template.relationships.map((rel, i) => (
+                        <div key={i} className="text-sm bg-purple-50 p-2 rounded">
+                          {rel.field_name} → {rel.target_entity} ({rel.relationship_type})
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <p className="text-gray-500">Template not found</p>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Unit Tests */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-lg">Unit Tests</CardTitle>
+            <Button onClick={runTests} disabled={isRunning}>
+              {isRunning ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Play className="h-4 w-4 mr-2" />}
+              Run Tests
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {item.test_definition?.tests?.map((test, i) => {
+                const isPassed = item.test_results?.passed?.includes(test.name);
+                const isFailed = item.test_results?.failed?.includes(test.name);
+                return (
+                  <div 
+                    key={i} 
+                    className={`flex items-center justify-between p-2 rounded ${
+                      isPassed ? "bg-green-50" : isFailed ? "bg-red-50" : "bg-gray-50"
+                    }`}
+                  >
+                    <span className="text-sm">{test.name}</span>
+                    {isPassed && <CheckCircle2 className="h-4 w-4 text-green-600" />}
+                    {isFailed && <XCircle className="h-4 w-4 text-red-600" />}
+                    {!isPassed && !isFailed && <Circle className="h-4 w-4 text-gray-400" />}
+                  </div>
+                );
+              })}
+            </div>
+            {item.test_results?.errors?.length > 0 && (
+              <div className="mt-4 p-3 bg-red-50 rounded-lg">
+                <h4 className="text-sm font-medium text-red-800 mb-2">Errors</h4>
+                {item.test_results.errors.map((err, i) => (
+                  <p key={i} className="text-sm text-red-700">{err}</p>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* AI Suggestions */}
+      <Card className="mt-6">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-purple-600" />
+            AI Suggestions
+          </CardTitle>
+          <Button onClick={generateAISuggestions} disabled={isGenerating} variant="outline">
+            {isGenerating ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
+            Generate Suggestions
+          </Button>
+        </CardHeader>
+        <CardContent>
+          {item.ai_suggestions?.length > 0 ? (
+            <ul className="space-y-2">
+              {item.ai_suggestions.map((suggestion, i) => (
+                <li key={i} className="flex items-start gap-2 p-3 bg-purple-50 rounded-lg">
+                  <span className="text-purple-600 font-bold">{i + 1}.</span>
+                  <span className="text-sm">{suggestion}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-500 text-center py-4">No suggestions yet. Click "Generate Suggestions" to get AI-powered improvements.</p>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

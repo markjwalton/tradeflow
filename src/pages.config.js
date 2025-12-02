@@ -39,6 +39,10 @@ import RoadmapManager from './pages/RoadmapManager';
 import RoadmapJournal from './pages/RoadmapJournal';
 import SprintManager from './pages/SprintManager';
 import RuleBook from './pages/RuleBook';
+import PlaygroundSummary from './pages/PlaygroundSummary';
+import PlaygroundEntity from './pages/PlaygroundEntity';
+import PlaygroundPage from './pages/PlaygroundPage';
+import PlaygroundFeature from './pages/PlaygroundFeature';
 import __Layout from './Layout.jsx';
 
 
@@ -84,6 +88,10 @@ export const PAGES = {
     "RoadmapJournal": RoadmapJournal,
     "SprintManager": SprintManager,
     "RuleBook": RuleBook,
+    "PlaygroundSummary": PlaygroundSummary,
+    "PlaygroundEntity": PlaygroundEntity,
+    "PlaygroundPage": PlaygroundPage,
+    "PlaygroundFeature": PlaygroundFeature,
 }
 
 export const pagesConfig = {
