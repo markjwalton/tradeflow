@@ -19,13 +19,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Loader2, Lightbulb, Code, Focus } from "lucide-react";
+import { Plus, Loader2, Lightbulb, Code, Focus, Settings } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import RoadmapItemCard from "@/components/roadmap/RoadmapItemCard";
+import RoadmapSettingsDialog, { defaultSettings } from "@/components/roadmap/RoadmapSettingsDialog";
+import Pagination from "@/components/ui/Pagination";
 
-const categories = [
+const defaultCategories = [
   { value: "idea", label: "Idea" },
   { value: "requirement", label: "Requirement" },
   { value: "feature", label: "Feature" },
@@ -34,24 +36,24 @@ const categories = [
   { value: "discussion_note", label: "Discussion Note" },
 ];
 
-const priorities = [
+const defaultPriorities = [
   { value: "low", label: "Low" },
   { value: "medium", label: "Medium" },
   { value: "high", label: "High" },
   { value: "critical", label: "Critical" },
 ];
 
-const statuses = [
-  { value: "backlog", label: "Backlog" },
-  { value: "planned", label: "Planned" },
-  { value: "ai_review", label: "AI Review" },
-  { value: "ready", label: "Ready" },
-  { value: "in_sprint", label: "In Sprint" },
-  { value: "in_progress", label: "In Progress" },
-  { value: "testing", label: "Testing" },
-  { value: "completed", label: "Completed" },
-  { value: "archived", label: "Archived" },
-  { value: "on_hold", label: "On Hold" },
+const defaultStatuses = [
+  { value: "backlog", label: "Backlog", tab: "roadmap" },
+  { value: "on_hold", label: "On Hold", tab: "roadmap" },
+  { value: "planned", label: "Planned", tab: "development" },
+  { value: "ai_review", label: "AI Review", tab: "development" },
+  { value: "ready", label: "Ready", tab: "development" },
+  { value: "in_sprint", label: "In Sprint", tab: "development" },
+  { value: "in_progress", label: "In Progress", tab: "development" },
+  { value: "testing", label: "Testing", tab: "development" },
+  { value: "completed", label: "Completed", tab: "completed" },
+  { value: "archived", label: "Archived", tab: "completed" },
 ];
 
 const sources = [
@@ -78,17 +80,43 @@ export default function RoadmapManager() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [showDialog, setShowDialog] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [formData, setFormData] = useState(emptyItem);
   const [filterCategory, setFilterCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [tagInput, setTagInput] = useState("");
   const [activeTab, setActiveTab] = useState("roadmap");
+  const [currentPage, setCurrentPage] = useState({ roadmap: 1, development: 1, completed: 1 });
 
   const { data: items = [], isLoading } = useQuery({
     queryKey: ["roadmapItems"],
     queryFn: () => base44.entities.RoadmapItem.list("-created_date"),
   });
+
+  const { data: settingsData = [] } = useQuery({
+    queryKey: ["roadmapSettings"],
+    queryFn: () => base44.entities.RoadmapSettings.list(),
+  });
+
+  const settings = settingsData[0] || defaultSettings;
+  const categories = settings.categories || defaultCategories;
+  const priorities = settings.priorities || defaultPriorities;
+  const statuses = settings.statuses || defaultStatuses;
+  const visibleTabs = settings.visible_tabs || ["roadmap", "development", "completed"];
+  const allowDelete = settings.allow_delete !== false;
+  const itemsPerPage = settings.items_per_page || 10;
+  const pageSizeOptions = settings.page_size_options || [10, 20, 30, 50];
+  const [pageSize, setPageSize] = useState(itemsPerPage);
+
+  const saveSettings = async (newSettings) => {
+    if (settingsData[0]) {
+      await base44.entities.RoadmapSettings.update(settingsData[0].id, newSettings);
+    } else {
+      await base44.entities.RoadmapSettings.create(newSettings);
+    }
+    queryClient.invalidateQueries({ queryKey: ["roadmapSettings"] });
+  };
 
   const { data: allJournals = [] } = useQuery({
     queryKey: ["allRoadmapJournals"],
@@ -205,10 +233,21 @@ export default function RoadmapManager() {
     });
   }, [items, filterCategory, searchQuery]);
 
-  // Split into roadmap, development, and completed/archived
-  const roadmapItems = processedItems.filter(i => ["backlog", "on_hold"].includes(i.status));
-  const developmentItems = processedItems.filter(i => ["planned", "ai_review", "ready", "in_sprint", "in_progress", "testing"].includes(i.status));
-  const completedItems = processedItems.filter(i => ["completed", "archived"].includes(i.status));
+  // Split into tabs based on settings
+  const roadmapStatuses = statuses.filter(s => s.tab === "roadmap").map(s => s.value);
+  const developmentStatuses = statuses.filter(s => s.tab === "development").map(s => s.value);
+  const completedStatuses = statuses.filter(s => s.tab === "completed").map(s => s.value);
+  
+  const roadmapItems = processedItems.filter(i => roadmapStatuses.includes(i.status));
+  const developmentItems = processedItems.filter(i => developmentStatuses.includes(i.status));
+  const completedItems = processedItems.filter(i => completedStatuses.includes(i.status));
+  
+  // Paginate
+  const paginateItems = (items, tab) => {
+    const page = currentPage[tab] || 1;
+    const start = (page - 1) * pageSize;
+    return items.slice(start, start + pageSize);
+  };
 
   const focusedItem = items.find(i => i.is_focused);
 
@@ -224,7 +263,7 @@ export default function RoadmapManager() {
             <RoadmapItemCard
               item={item}
               onEdit={handleOpenDialog}
-              onDelete={(id) => deleteMutation.mutate(id)}
+              onDelete={allowDelete ? (id) => deleteMutation.mutate(id) : null}
               onToggleStar={handleToggleStar}
               onToggleFocus={handleToggleFocus}
               journalCount={journalCounts[item.id] || 0}
@@ -255,10 +294,15 @@ export default function RoadmapManager() {
           </h1>
           <p className="text-gray-500">Track ideas, requirements, and development tasks</p>
         </div>
-        <Button onClick={() => handleOpenDialog()}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Item
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" size="icon" onClick={() => setShowSettings(true)}>
+            <Settings className="h-4 w-4" />
+          </Button>
+          <Button onClick={() => handleOpenDialog()}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add Item
+          </Button>
+        </div>
       </div>
 
       {/* Focused Item Banner */}
@@ -308,15 +352,21 @@ export default function RoadmapManager() {
       ) : (
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList>
-            <TabsTrigger value="roadmap">
-              Roadmap ({roadmapItems.length})
-            </TabsTrigger>
-            <TabsTrigger value="development">
-              Development ({developmentItems.length})
-            </TabsTrigger>
-            <TabsTrigger value="completed">
-              Completed ({completedItems.length})
-            </TabsTrigger>
+            {visibleTabs.includes("roadmap") && (
+              <TabsTrigger value="roadmap">
+                Roadmap ({roadmapItems.length})
+              </TabsTrigger>
+            )}
+            {visibleTabs.includes("development") && (
+              <TabsTrigger value="development">
+                Development ({developmentItems.length})
+              </TabsTrigger>
+            )}
+            {visibleTabs.includes("completed") && (
+              <TabsTrigger value="completed">
+                Completed ({completedItems.length})
+              </TabsTrigger>
+            )}
           </TabsList>
 
           <TabsContent value="roadmap" className="mt-6">
@@ -326,7 +376,17 @@ export default function RoadmapManager() {
                 <p>No items in roadmap. Add your first idea!</p>
               </div>
             ) : (
-              <ItemList items={roadmapItems} />
+              <>
+                <ItemList items={paginateItems(roadmapItems, "roadmap")} />
+                <Pagination
+                  currentPage={currentPage.roadmap}
+                  totalItems={roadmapItems.length}
+                  itemsPerPage={pageSize}
+                  onPageChange={(p) => setCurrentPage({ ...currentPage, roadmap: p })}
+                  onItemsPerPageChange={setPageSize}
+                  pageSizeOptions={pageSizeOptions}
+                />
+              </>
             )}
           </TabsContent>
 
@@ -337,21 +397,32 @@ export default function RoadmapManager() {
                 <p>No items in development. Set items to "Planned" to move them here.</p>
               </div>
             ) : (
-              <div className="space-y-6">
-                {["planned", "ai_review", "ready", "in_sprint", "in_progress", "testing"].map(status => {
-                  const statusItems = developmentItems.filter(i => i.status === status);
-                  if (statusItems.length === 0) return null;
-                  return (
-                    <div key={status}>
-                      <h3 className="text-lg font-semibold mb-3 capitalize flex items-center gap-2">
-                        {status.replace(/_/g, " ")}
-                        <Badge variant="secondary">{statusItems.length}</Badge>
-                      </h3>
-                      <ItemList items={statusItems} showDevPrompt />
-                    </div>
-                  );
-                })}
-              </div>
+              <>
+                <div className="space-y-6">
+                  {developmentStatuses.map(status => {
+                    const statusItems = developmentItems.filter(i => i.status === status);
+                    if (statusItems.length === 0) return null;
+                    const statusLabel = statuses.find(s => s.value === status)?.label || status;
+                    return (
+                      <div key={status}>
+                        <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                          {statusLabel}
+                          <Badge variant="secondary">{statusItems.length}</Badge>
+                        </h3>
+                        <ItemList items={statusItems} showDevPrompt />
+                      </div>
+                    );
+                  })}
+                </div>
+                <Pagination
+                  currentPage={currentPage.development}
+                  totalItems={developmentItems.length}
+                  itemsPerPage={pageSize}
+                  onPageChange={(p) => setCurrentPage({ ...currentPage, development: p })}
+                  onItemsPerPageChange={setPageSize}
+                  pageSizeOptions={pageSizeOptions}
+                />
+              </>
             )}
           </TabsContent>
 
@@ -362,21 +433,32 @@ export default function RoadmapManager() {
                 <p>No completed items yet.</p>
               </div>
             ) : (
-              <div className="space-y-6">
-                {["completed", "archived"].map(status => {
-                  const statusItems = completedItems.filter(i => i.status === status);
-                  if (statusItems.length === 0) return null;
-                  return (
-                    <div key={status}>
-                      <h3 className="text-lg font-semibold mb-3 capitalize flex items-center gap-2">
-                        {status}
-                        <Badge variant="secondary">{statusItems.length}</Badge>
-                      </h3>
-                      <ItemList items={statusItems} />
-                    </div>
-                  );
-                })}
-              </div>
+              <>
+                <div className="space-y-6">
+                  {completedStatuses.map(status => {
+                    const statusItems = completedItems.filter(i => i.status === status);
+                    if (statusItems.length === 0) return null;
+                    const statusLabel = statuses.find(s => s.value === status)?.label || status;
+                    return (
+                      <div key={status}>
+                        <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                          {statusLabel}
+                          <Badge variant="secondary">{statusItems.length}</Badge>
+                        </h3>
+                        <ItemList items={statusItems} />
+                      </div>
+                    );
+                  })}
+                </div>
+                <Pagination
+                  currentPage={currentPage.completed}
+                  totalItems={completedItems.length}
+                  itemsPerPage={pageSize}
+                  onPageChange={(p) => setCurrentPage({ ...currentPage, completed: p })}
+                  onItemsPerPageChange={setPageSize}
+                  pageSizeOptions={pageSizeOptions}
+                />
+              </>
             )}
           </TabsContent>
         </Tabs>
@@ -510,6 +592,12 @@ export default function RoadmapManager() {
         </DialogContent>
       </Dialog>
 
+      <RoadmapSettingsDialog
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+        settings={settings}
+        onSave={saveSettings}
+      />
     </div>
   );
 }
