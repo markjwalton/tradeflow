@@ -25,6 +25,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import PageBuilder from "@/components/library/PageBuilder";
 import CustomProjectSelector from "@/components/library/CustomProjectSelector";
+import PagePreview from "@/components/library/PagePreview";
 
 const categories = ["Dashboard", "List", "Detail", "Form", "Report", "Settings", "Custom", "Other"];
 
@@ -635,87 +636,47 @@ Return a JSON object with a "pages" array containing page templates.`,
       </Dialog>
       {/* Preview Dialog */}
       <Dialog open={!!previewPage} onOpenChange={(v) => !v && setPreviewPage(null)}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-auto">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Layout className="h-5 w-5 text-blue-600" />
               {previewPage?.name}
+              {previewPage?.category && (
+                <Badge className={categoryColors[previewPage.category]}>{previewPage.category}</Badge>
+              )}
             </DialogTitle>
           </DialogHeader>
           {previewPage && (
             <div className="space-y-4">
-              <div>
-                <p className="text-gray-600">{previewPage.description}</p>
-              </div>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="text-gray-500">Category:</span>
-                  <Badge className={`ml-2 ${categoryColors[previewPage.category]}`}>{previewPage.category}</Badge>
-                </div>
-                <div>
-                  <span className="text-gray-500">Layout:</span>
-                  <Badge variant="outline" className="ml-2">{previewPage.layout || "full-width"}</Badge>
-                </div>
-              </div>
+              <p className="text-gray-600 text-sm">{previewPage.description}</p>
               
-              {previewPage.entities_used?.length > 0 && (
-                <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Entities Used</h4>
-                  <div className="flex flex-wrap gap-1">
-                    {previewPage.entities_used.map(e => (
-                      <Badge key={e} variant="outline">{e}</Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
+              {/* Visual Preview */}
+              <PagePreview page={previewPage} />
 
-              {previewPage.features?.length > 0 && (
-                <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Features</h4>
-                  <div className="flex flex-wrap gap-1">
-                    {previewPage.features.map(f => (
-                      <Badge key={f} className="bg-purple-100 text-purple-800">{f}</Badge>
-                    ))}
+              {/* Details Grid */}
+              <div className="grid grid-cols-2 gap-4">
+                {previewPage.entities_used?.length > 0 && (
+                  <div>
+                    <h4 className="text-xs font-medium text-gray-500 mb-1">Entities</h4>
+                    <div className="flex flex-wrap gap-1">
+                      {previewPage.entities_used.map(e => (
+                        <Badge key={e} variant="outline" className="text-xs">{e}</Badge>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {previewPage.components?.length > 0 && (
-                <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Components ({previewPage.components.length})</h4>
-                  <div className="space-y-2">
-                    {previewPage.components.map((comp, i) => (
-                      <div key={i} className="p-2 bg-slate-50 rounded text-sm">
-                        <span className="font-medium">{comp.name}</span>
-                        {comp.type && <Badge variant="outline" className="ml-2 text-xs">{comp.type}</Badge>}
-                        {comp.description && <p className="text-gray-500 text-xs mt-1">{comp.description}</p>}
-                      </div>
-                    ))}
+                {previewPage.features?.length > 0 && (
+                  <div>
+                    <h4 className="text-xs font-medium text-gray-500 mb-1">Features</h4>
+                    <div className="flex flex-wrap gap-1">
+                      {previewPage.features.map(f => (
+                        <Badge key={f} className="bg-purple-100 text-purple-800 text-xs">{f}</Badge>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
-
-              {previewPage.actions?.length > 0 && (
-                <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Actions</h4>
-                  <div className="flex flex-wrap gap-1">
-                    {previewPage.actions.map(a => (
-                      <Badge key={a} variant="secondary">{a}</Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {previewPage.tags?.length > 0 && (
-                <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Tags</h4>
-                  <div className="flex flex-wrap gap-1">
-                    {previewPage.tags.map(t => (
-                      <Badge key={t} variant="outline" className="text-xs">{t}</Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
+                )}
+              </div>
 
               <div className="flex justify-end gap-2 pt-4 border-t">
                 <Button variant="outline" onClick={() => setPreviewPage(null)}>Close</Button>
