@@ -4,13 +4,15 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTenant } from "@/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Copy, ChevronDown, ChevronRight } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Plus, Copy, ChevronDown, ChevronRight, Settings } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { toast } from "sonner";
 
 import NavigationItemForm from "@/components/navigation/NavigationItemForm";
 import NavigationItemRow from "@/components/navigation/NavigationItemRow";
 import TenantSelector from "@/components/navigation/TenantSelector";
+import AdminConsoleNavEditor from "@/components/navigation/AdminConsoleNavEditor";
 
 export default function NavigationManager() {
   const tenantContext = useTenant();
@@ -28,6 +30,7 @@ export default function NavigationManager() {
   
   const isGlobalAdmin = currentUser?.is_global_admin === true;
   const isTenantAdminOnly = tenantContext?.isTenantAdmin && !isGlobalAdmin;
+  const [activeTab, setActiveTab] = useState("tenant");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [draggingItemId, setDraggingItemId] = useState(null);
@@ -340,6 +343,18 @@ export default function NavigationManager() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
+      {isGlobalAdmin && (
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+          <TabsList>
+            <TabsTrigger value="tenant">Tenant Navigation</TabsTrigger>
+            <TabsTrigger value="admin">Admin Console</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      )}
+
+      {activeTab === "admin" && isGlobalAdmin ? (
+        <AdminConsoleNavEditor />
+      ) : (
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Navigation Manager</CardTitle>
@@ -481,6 +496,7 @@ export default function NavigationManager() {
           ];
         })()}
       />
+      )}
     </div>
   );
 }
