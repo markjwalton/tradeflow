@@ -13,9 +13,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { 
   ArrowLeft, Plus, Loader2, Sparkles, Copy, Trash2, 
-  Brain, HelpCircle, Lightbulb, MessageSquare, AlertTriangle, CheckCircle, Code 
+  Brain, HelpCircle, Lightbulb, MessageSquare, AlertTriangle, CheckCircle, Code,
+  Paperclip, X, FileText, Send, Pencil, Check
 } from "lucide-react";
 import { toast } from "sonner";
 import moment from "moment";
@@ -42,6 +44,10 @@ export default function RoadmapJournal() {
   const [isGeneratingPrompt, setIsGeneratingPrompt] = useState(false);
   const [isGeneratingDevPrompt, setIsGeneratingDevPrompt] = useState(false);
   const [devPrompt, setDevPrompt] = useState("");
+  const [attachments, setAttachments] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const [editingAttachmentIndex, setEditingAttachmentIndex] = useState(null);
+  const [editingName, setEditingName] = useState("");
 
   const { data: item, isLoading: itemLoading } = useQuery({
     queryKey: ["roadmapItem", itemId],
@@ -64,6 +70,7 @@ export default function RoadmapJournal() {
         ...data,
         roadmap_item_id: itemId,
         parent_entry_id: continueFromEntry?.id || null,
+        attachments: attachments.length > 0 ? attachments : null,
         entry_date: new Date().toISOString()
       });
     },
@@ -71,9 +78,51 @@ export default function RoadmapJournal() {
       queryClient.invalidateQueries({ queryKey: ["roadmapJournal", itemId] });
       setNewEntry("");
       setContinueFromEntry(null);
+      setAttachments([]);
       toast.success("Journal entry added");
     }
   });
+
+  const handleFileUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+    
+    setIsUploading(true);
+    try {
+      for (const file of files) {
+        const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        setAttachments(prev => [...prev, {
+          url: file_url,
+          friendly_name: file.name.replace(/\.[^/.]+$/, ""),
+          original_name: file.name
+        }]);
+      }
+    } catch (error) {
+      toast.error("Failed to upload file");
+    } finally {
+      setIsUploading(false);
+      e.target.value = "";
+    }
+  };
+
+  const removeAttachment = (index) => {
+    setAttachments(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const startEditingName = (index) => {
+    setEditingAttachmentIndex(index);
+    setEditingName(attachments[index].friendly_name);
+  };
+
+  const saveAttachmentName = () => {
+    if (editingAttachmentIndex !== null) {
+      setAttachments(prev => prev.map((att, i) => 
+        i === editingAttachmentIndex ? { ...att, friendly_name: editingName } : att
+      ));
+      setEditingAttachmentIndex(null);
+      setEditingName("");
+    }
+  };
 
   const deleteMutation = useMutation({
     mutationFn: (id) => base44.entities.RoadmapJournal.delete(id),
@@ -123,9 +172,28 @@ Output only the prompt text, nothing else.`
   const generateDevPrompt = async () => {
     setIsGeneratingDevPrompt(true);
     try {
+      // Auto-set status to planned
+      if (item && item.status === "backlog") {
+        await base44.entities.RoadmapItem.update(item.id, { status: "planned" });
+        queryClient.invalidateQueries({ queryKey: ["roadmapItem", itemId] });
+      }
+
+      // Collect all attachments from all entries
+      const allAttachments = entries.flatMap(e => e.attachments || []);
+      
       const journalContext = entries.length > 0 
-        ? entries.map(e => `[${e.entry_type}] ${e.content}`).join("\n\n")
+        ? entries.map(e => {
+            let entryText = `[${e.entry_type}] ${e.content}`;
+            if (e.attachments?.length > 0) {
+              entryText += `\n  Attachments: ${e.attachments.map(a => a.friendly_name).join(", ")}`;
+            }
+            return entryText;
+          }).join("\n\n")
         : "No journal entries";
+
+      const attachmentContext = allAttachments.length > 0
+        ? `\n\nAttachments for reference (${allAttachments.length} files):\n${allAttachments.map(a => `- ${a.friendly_name} (${a.url})`).join("\n")}`
+        : "";
 
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `You are helping structure a development task for an AI coding assistant.
@@ -137,7 +205,7 @@ Priority: ${item.priority}
 Target Phase: ${item.target_phase || "Not specified"}
 
 Journal History:
-${journalContext}
+${journalContext}${attachmentContext}
 
 Generate a comprehensive, well-structured development prompt that can be pasted into an AI coding assistant chat. The prompt should:
 
@@ -145,18 +213,36 @@ Generate a comprehensive, well-structured development prompt that can be pasted 
 2. List specific requirements and acceptance criteria
 3. Reference any decisions or insights from the journal
 4. Include technical considerations if mentioned
-5. Specify what deliverables are expected
-6. Be actionable and ready to implement
+5. Reference any attached files/documents that should be reviewed
+6. Specify what deliverables are expected
+7. Be actionable and ready to implement
 
 Format the prompt clearly with sections. Output only the prompt text.`
       });
       
       setDevPrompt(result);
+      toast.success("Prompt generated - status set to Planned");
     } catch (error) {
       toast.error("Failed to generate prompt");
     } finally {
       setIsGeneratingDevPrompt(false);
     }
+  };
+
+  const sendToChat = (prompt) => {
+    // Collect all attachment URLs
+    const allAttachments = entries.flatMap(e => e.attachments || []);
+    const attachmentUrls = allAttachments.map(a => a.url);
+    
+    // Create the message with attachments info
+    let message = prompt;
+    if (attachmentUrls.length > 0) {
+      message += `\n\n---\nAttachments to review:\n${allAttachments.map(a => `- ${a.friendly_name}: ${a.url}`).join("\n")}`;
+    }
+    
+    // Copy to clipboard and notify
+    navigator.clipboard.writeText(message);
+    toast.success("Copied to clipboard with attachments - paste into Base44 chat");
   };
 
   const copyToClipboard = (text) => {
@@ -208,25 +294,30 @@ Format the prompt clearly with sections. Output only the prompt text.`
         </CardHeader>
         <CardContent>
           <Button onClick={generateDevPrompt} disabled={isGeneratingDevPrompt} className="mb-3">
-            {isGeneratingDevPrompt ? (
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-            ) : (
-              <Sparkles className="h-4 w-4 mr-2" />
-            )}
-            Generate Development Prompt
+          {isGeneratingDevPrompt ? (
+          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+          ) : (
+          <Sparkles className="h-4 w-4 mr-2" />
+          )}
+          Generate Development Prompt
           </Button>
           {devPrompt && (
-            <>
-              <Textarea
-                value={devPrompt}
-                onChange={(e) => setDevPrompt(e.target.value)}
-                rows={10}
-                className="font-mono text-sm mb-3"
-              />
-              <Button onClick={() => copyToClipboard(devPrompt)} variant="outline">
-                <Copy className="h-4 w-4 mr-2" /> Copy to Clipboard
-              </Button>
-            </>
+          <>
+          <Textarea
+          value={devPrompt}
+          onChange={(e) => setDevPrompt(e.target.value)}
+          rows={10}
+          className="font-mono text-sm mb-3"
+          />
+          <div className="flex gap-2">
+          <Button onClick={() => copyToClipboard(devPrompt)} variant="outline">
+            <Copy className="h-4 w-4 mr-2" /> Copy
+          </Button>
+          <Button onClick={() => sendToChat(devPrompt)} className="bg-purple-600 hover:bg-purple-700">
+            <Send className="h-4 w-4 mr-2" /> Send to Chat
+          </Button>
+          </div>
+          </>
           )}
         </CardContent>
       </Card>
@@ -285,6 +376,61 @@ Format the prompt clearly with sections. Output only the prompt text.`
             placeholder={continueFromEntry ? "Continue the discussion..." : "Add a journal entry..."}
             rows={4}
           />
+          
+          {/* Attachments */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <label className="cursor-pointer">
+                <input 
+                  type="file" 
+                  multiple 
+                  className="hidden" 
+                  onChange={handleFileUpload}
+                  disabled={isUploading}
+                />
+                <Button variant="outline" size="sm" asChild disabled={isUploading}>
+                  <span>
+                    {isUploading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Paperclip className="h-4 w-4 mr-2" />}
+                    Attach Files
+                  </span>
+                </Button>
+              </label>
+            </div>
+            
+            {attachments.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {attachments.map((att, index) => (
+                  <div key={index} className="flex items-center gap-1 bg-slate-100 rounded px-2 py-1 text-sm">
+                    <FileText className="h-3 w-3 text-slate-500" />
+                    {editingAttachmentIndex === index ? (
+                      <>
+                        <Input
+                          value={editingName}
+                          onChange={(e) => setEditingName(e.target.value)}
+                          className="h-6 w-32 text-xs"
+                          onKeyDown={(e) => e.key === "Enter" && saveAttachmentName()}
+                        />
+                        <Button variant="ghost" size="icon" className="h-5 w-5" onClick={saveAttachmentName}>
+                          <Check className="h-3 w-3" />
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <span>{att.friendly_name}</span>
+                        <Button variant="ghost" size="icon" className="h-5 w-5" onClick={() => startEditingName(index)}>
+                          <Pencil className="h-3 w-3" />
+                        </Button>
+                      </>
+                    )}
+                    <Button variant="ghost" size="icon" className="h-5 w-5 text-red-500" onClick={() => removeAttachment(index)}>
+                      <X className="h-3 w-3" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          
           <Button onClick={handleAddEntry} disabled={!newEntry.trim() || createMutation.isPending}>
             {createMutation.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Plus className="h-4 w-4 mr-2" />}
             {continueFromEntry ? "Add Follow-up" : "Add Entry"}
@@ -347,7 +493,24 @@ Format the prompt clearly with sections. Output only the prompt text.`
                     </div>
                   </div>
                   
-                  <p className="text-sm whitespace-pre-wrap mb-4">{entry.content}</p>
+                  <p className="text-sm whitespace-pre-wrap mb-3">{entry.content}</p>
+                  
+                  {entry.attachments?.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {entry.attachments.map((att, i) => (
+                        <a 
+                          key={i} 
+                          href={att.url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1 bg-blue-50 text-blue-700 rounded px-2 py-1 text-sm hover:bg-blue-100"
+                        >
+                          <FileText className="h-3 w-3" />
+                          {att.friendly_name}
+                        </a>
+                      ))}
+                    </div>
+                  )}
                   
                   <div className="flex gap-2">
                     <Button 
@@ -366,9 +529,14 @@ Format the prompt clearly with sections. Output only the prompt text.`
                     <div className="mt-4 bg-purple-50 border border-purple-200 rounded-lg p-4">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-sm font-medium text-purple-700">Prompt to continue this discussion</span>
-                        <Button size="sm" variant="ghost" onClick={() => copyToClipboard(entry.ai_generated_prompt)}>
-                          <Copy className="h-3 w-3 mr-1" /> Copy
-                        </Button>
+                        <div className="flex gap-1">
+                          <Button size="sm" variant="ghost" onClick={() => copyToClipboard(entry.ai_generated_prompt)}>
+                            <Copy className="h-3 w-3 mr-1" /> Copy
+                          </Button>
+                          <Button size="sm" variant="ghost" className="text-purple-700" onClick={() => sendToChat(entry.ai_generated_prompt)}>
+                            <Send className="h-3 w-3 mr-1" /> Send
+                          </Button>
+                        </div>
                       </div>
                       <p className="text-sm text-purple-900 whitespace-pre-wrap">{entry.ai_generated_prompt}</p>
                     </div>
