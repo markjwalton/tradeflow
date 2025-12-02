@@ -19,7 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Search, Zap, Sparkles, Trash2, Edit, Copy, Loader2, BookmarkPlus, Folder, Database, Check } from "lucide-react";
+import { Plus, Search, Zap, Sparkles, Trash2, Edit, Copy, Loader2, BookmarkPlus, Folder, Database, Check, Eye } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import FeatureBuilder from "@/components/library/FeatureBuilder";
@@ -61,6 +61,7 @@ export default function FeatureLibrary() {
   const [isBulkGenerating, setIsBulkGenerating] = useState(false);
   const [bulkGeneratedFeatures, setBulkGeneratedFeatures] = useState([]);
   const [selectedBulkFeatures, setSelectedBulkFeatures] = useState([]);
+  const [previewFeature, setPreviewFeature] = useState(null);
 
   const { data: features = [], isLoading } = useQuery({
     queryKey: ["featureTemplates"],
@@ -439,6 +440,9 @@ Return a JSON object with a "features" array containing feature templates.`,
                         {feature.entities_used?.length || 0} entities · {feature.integrations?.length || 0} integrations
                       </div>
                       <div className="flex gap-1">
+                        <Button size="sm" variant="ghost" onClick={() => setPreviewFeature(feature)} title="Preview">
+                          <Eye className="h-3 w-3" />
+                        </Button>
                         <Button size="sm" variant="ghost" onClick={() => { setEditingFeature(feature); setShowBuilder(true); }} title="Edit">
                           <Edit className="h-3 w-3" />
                         </Button>
@@ -645,6 +649,108 @@ Return a JSON object with a "features" array containing feature templates.`,
               </>
             )}
           </div>
+        </DialogContent>
+      </Dialog>
+      {/* Preview Dialog */}
+      <Dialog open={!!previewFeature} onOpenChange={(v) => !v && setPreviewFeature(null)}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Zap className="h-5 w-5 text-amber-600" />
+              {previewFeature?.name}
+            </DialogTitle>
+          </DialogHeader>
+          {previewFeature && (
+            <div className="space-y-4">
+              <div>
+                <p className="text-gray-600">{previewFeature.description}</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="text-gray-500">Category:</span>
+                  <Badge className={`ml-2 ${categoryColors[previewFeature.category]}`}>{previewFeature.category}</Badge>
+                </div>
+                <div>
+                  <span className="text-gray-500">Complexity:</span>
+                  <Badge className={`ml-2 ${complexityColors[previewFeature.complexity || "medium"]}`}>{previewFeature.complexity || "medium"}</Badge>
+                </div>
+              </div>
+              
+              {previewFeature.entities_used?.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">Entities Used</h4>
+                  <div className="flex flex-wrap gap-1">
+                    {previewFeature.entities_used.map(e => (
+                      <Badge key={e} variant="outline">{e}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {previewFeature.triggers?.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">Triggers</h4>
+                  <div className="flex flex-wrap gap-1">
+                    {previewFeature.triggers.map(t => (
+                      <Badge key={t} className="bg-blue-100 text-blue-800">{t}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {previewFeature.integrations?.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">Integrations</h4>
+                  <div className="flex flex-wrap gap-1">
+                    {previewFeature.integrations.map(i => (
+                      <Badge key={i} className="bg-purple-100 text-purple-800">{i}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {previewFeature.requirements?.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">Requirements</h4>
+                  <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                    {previewFeature.requirements.map((r, i) => (
+                      <li key={i}>{r}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {previewFeature.user_stories?.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">User Stories</h4>
+                  <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                    {previewFeature.user_stories.map((s, i) => (
+                      <li key={i}>{s}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {previewFeature.tags?.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">Tags</h4>
+                  <div className="flex flex-wrap gap-1">
+                    {previewFeature.tags.map(t => (
+                      <Badge key={t} variant="outline" className="text-xs">{t}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex justify-end gap-2 pt-4 border-t">
+                <Button variant="outline" onClick={() => setPreviewFeature(null)}>Close</Button>
+                <Button onClick={() => { setEditingFeature(previewFeature); setShowBuilder(true); setPreviewFeature(null); }}>
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit Feature
+                </Button>
+              </div>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>
