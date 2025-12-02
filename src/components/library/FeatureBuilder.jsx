@@ -112,8 +112,8 @@ export default function FeatureBuilder({ initialData, entities = [], onSave, onC
   );
 
   return (
-    <ScrollArea className="flex-1 -mx-6 px-6">
-      <div className="space-y-6 pb-4">
+    <ScrollArea className="flex-1 -mx-6 px-6 max-h-[70vh]">
+      <div className="space-y-6 pb-4 pr-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="text-sm font-medium">Feature Name *</label>
