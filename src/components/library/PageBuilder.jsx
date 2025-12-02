@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,11 +14,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Trash2, Loader2 } from "lucide-react";
+import { Plus, Trash2, Loader2, FileText, CheckSquare } from "lucide-react";
 
 const categories = ["Dashboard", "List", "Detail", "Form", "Report", "Settings", "Other"];
 const layouts = ["full-width", "centered", "sidebar", "split"];
-const componentTypes = ["Table", "Form", "Chart", "Card", "List", "Modal", "Tabs", "Filter", "Search", "Button", "Stats"];
+const componentTypes = ["Table", "Form", "Chart", "Card", "List", "Modal", "Tabs", "Filter", "Search", "Button", "Stats", "Checklist"];
 const defaultGroups = [
   "Admin Pages",
   "Customer Portal",
@@ -41,6 +43,17 @@ export default function PageBuilder({ initialData, entities = [], onSave, onCanc
   const [actionInput, setActionInput] = useState("");
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
+
+  // Fetch form and checklist templates
+  const { data: formTemplates = [] } = useQuery({
+    queryKey: ["formTemplates"],
+    queryFn: () => base44.entities.FormTemplate.list(),
+  });
+
+  const { data: checklistTemplates = [] } = useQuery({
+    queryKey: ["checklistTemplates"],
+    queryFn: () => base44.entities.ChecklistTemplate.list(),
+  });
 
   useEffect(() => {
     if (initialData) {
@@ -197,16 +210,75 @@ export default function PageBuilder({ initialData, entities = [], onSave, onCanc
           </div>
           <div className="space-y-2">
             {components.map((comp, index) => (
-              <div key={index} className="flex gap-2 items-center p-3 bg-gray-50 rounded-lg">
-                <Input value={comp.name} onChange={(e) => updateComponent(index, { name: e.target.value })} placeholder="Component name" className="flex-1" />
-                <Select value={comp.type} onValueChange={(v) => updateComponent(index, { type: v })}>
-                  <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    {componentTypes.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-                <Input value={comp.description} onChange={(e) => updateComponent(index, { description: e.target.value })} placeholder="Description" className="flex-1" />
-                <Button size="sm" variant="ghost" className="text-red-600" onClick={() => setComponents(components.filter((_, i) => i !== index))}><Trash2 className="h-3 w-3" /></Button>
+              <div key={index} className="p-3 bg-gray-50 rounded-lg space-y-2">
+                <div className="flex gap-2 items-center">
+                  <Select value={comp.type} onValueChange={(v) => updateComponent(index, { type: v, linkedTemplateId: null, linkedTemplateName: null })}>
+                    <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {componentTypes.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                  <Input value={comp.name} onChange={(e) => updateComponent(index, { name: e.target.value })} placeholder="Component name" className="flex-1" />
+                  <Button size="sm" variant="ghost" className="text-red-600" onClick={() => setComponents(components.filter((_, i) => i !== index))}><Trash2 className="h-3 w-3" /></Button>
+                </div>
+
+                {/* Show Form Template selector when type is Form */}
+                {comp.type === "Form" && formTemplates.length > 0 && (
+                  <div className="flex items-center gap-2 pl-2">
+                    <FileText className="h-4 w-4 text-blue-500" />
+                    <Select 
+                      value={comp.linkedTemplateId || "none"} 
+                      onValueChange={(v) => {
+                        const template = formTemplates.find(f => f.id === v);
+                        updateComponent(index, { 
+                          linkedTemplateId: v === "none" ? null : v,
+                          linkedTemplateName: template?.name || null,
+                          name: template?.name || comp.name
+                        });
+                      }}
+                    >
+                      <SelectTrigger className="flex-1">
+                        <SelectValue placeholder="Link to Form Template..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">No linked template</SelectItem>
+                        {formTemplates.map((f) => (
+                          <SelectItem key={f.id} value={f.id}>{f.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
+                {/* Show Checklist Template selector when type is Checklist */}
+                {comp.type === "Checklist" && checklistTemplates.length > 0 && (
+                  <div className="flex items-center gap-2 pl-2">
+                    <CheckSquare className="h-4 w-4 text-green-500" />
+                    <Select 
+                      value={comp.linkedTemplateId || "none"} 
+                      onValueChange={(v) => {
+                        const template = checklistTemplates.find(c => c.id === v);
+                        updateComponent(index, { 
+                          linkedTemplateId: v === "none" ? null : v,
+                          linkedTemplateName: template?.name || null,
+                          name: template?.name || comp.name
+                        });
+                      }}
+                    >
+                      <SelectTrigger className="flex-1">
+                        <SelectValue placeholder="Link to Checklist Template..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">No linked template</SelectItem>
+                        {checklistTemplates.map((c) => (
+                          <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
+                <Input value={comp.description} onChange={(e) => updateComponent(index, { description: e.target.value })} placeholder="Description" className="text-sm" />
               </div>
             ))}
           </div>
