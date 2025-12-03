@@ -71,6 +71,7 @@ export default function TestDataManager() {
   const [verifyingItem, setVerifyingItem] = useState(null);
     const [bulkVerificationReport, setBulkVerificationReport] = useState(null);
     const [isVerifyingBulk, setIsVerifyingBulk] = useState(false);
+    const [verificationErrorReport, setVerificationErrorReport] = useState(null);
   
   // Save settings to localStorage
   const handleSettingsChange = (newSettings) => {
@@ -752,8 +753,88 @@ Return as JSON with entity names as keys and arrays of records as values.`,
       {/* Dashboard Cards */}
       <TestDataDashboard stats={stats} onCardClick={handleCardClick} />
 
-      {/* Progress Card - Shows when generating or has progress items */}
-          {(isGenerating || generationProgress.items.length > 0) && (
+      {/* Verification Error Report - Inline */}
+                  {verificationErrorReport && (
+                    <Card className="border-red-200 bg-red-50">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <CardTitle className="text-lg flex items-center gap-2 text-red-800">
+                            <AlertTriangle className="h-5 w-5" />
+                            Verification Error Report
+                          </CardTitle>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="destructive">{verificationErrorReport.errors.length} errors</Badge>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => setVerificationErrorReport(null)}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <p className="text-sm text-red-700">
+                          The following items could not be marked as verified. Review the errors and decide how to proceed.
+                        </p>
+                        <div className="max-h-64 overflow-y-auto border border-red-200 rounded-lg bg-white">
+                          <table className="w-full text-sm">
+                            <thead className="bg-red-100 sticky top-0">
+                              <tr>
+                                <th className="text-left p-3 font-medium">Item Name</th>
+                                <th className="text-left p-3 font-medium">Type</th>
+                                <th className="text-left p-3 font-medium">Error</th>
+                                <th className="text-left p-3 font-medium">Action</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-red-100">
+                              {verificationErrorReport.errors.map((item, idx) => (
+                                <tr key={idx} className="hover:bg-red-50">
+                                  <td className="p-3 font-medium">{item.name}</td>
+                                  <td className="p-3">
+                                    <Badge variant="outline" className="capitalize">{item.type}</Badge>
+                                  </td>
+                                  <td className="p-3 text-red-600">{item.error}</td>
+                                  <td className="p-3">
+                                    <Button 
+                                      variant="outline" 
+                                      size="sm"
+                                      onClick={() => {
+                                        const fullItem = itemStatusList.find(i => i.id === item.id);
+                                        if (fullItem) setVerifyingItem(fullItem);
+                                      }}
+                                    >
+                                      Retry
+                                    </Button>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                        <div className="flex justify-between items-center pt-2 border-t">
+                          <span className="text-sm text-green-700">
+                            ✓ {verificationErrorReport.success.length} items were successfully verified
+                          </span>
+                          <div className="flex gap-2">
+                            <Button 
+                              variant="outline"
+                              onClick={() => {
+                                queryClient.invalidateQueries({ queryKey: ["testData"] });
+                                setVerificationErrorReport(null);
+                              }}
+                            >
+                              Dismiss & Refresh
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {/* Progress Card - Shows when generating or has progress items */}
+                  {(isGenerating || generationProgress.items.length > 0) && (
             <SeedDataProgress
           isRunning={isGenerating}
           progress={generationProgress}
@@ -850,16 +931,20 @@ Return as JSON with entity names as keys and arrays of records as values.`,
                   />
 
                   {/* Bulk Verification Dialog */}
-                  <BulkVerificationDialog
-                    isOpen={isVerifyingBulk}
-                    onClose={() => setIsVerifyingBulk(false)}
-                    items={itemStatusList}
-                    testDataSets={testDataSets}
-                    entityTemplates={entityTemplates}
-                    onComplete={() => {
-                      queryClient.invalidateQueries({ queryKey: ["testData"] });
-                    }}
-                  />
+                                  <BulkVerificationDialog
+                                    isOpen={isVerifyingBulk}
+                                    onClose={() => setIsVerifyingBulk(false)}
+                                    items={itemStatusList}
+                                    testDataSets={testDataSets}
+                                    entityTemplates={entityTemplates}
+                                    onComplete={() => {
+                                      queryClient.invalidateQueries({ queryKey: ["testData"] });
+                                    }}
+                                    onErrorReport={(report) => {
+                                      setVerificationErrorReport(report);
+                                      setIsVerifyingBulk(false);
+                                    }}
+                                  />
     </div>
   );
 }
