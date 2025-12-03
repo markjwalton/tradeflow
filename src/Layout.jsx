@@ -8,6 +8,7 @@ import {
   Building2, 
   RefreshCw,
   ChevronDown,
+  ChevronRight,
   Loader2,
   LogOut,
   User,
@@ -20,7 +21,9 @@ import {
   Workflow,
   Settings,
   Lightbulb,
-  Globe
+  Globe,
+  Folder,
+  FolderOpen
 } from "lucide-react";
 
 // Tenant Context
@@ -102,6 +105,7 @@ export default function Layout({ children, currentPageName }) {
   const [isGlobalAdmin, setIsGlobalAdmin] = useState(false);
   const [isTenantAdmin, setIsTenantAdmin] = useState(false);
   const [customAdminNav, setCustomAdminNav] = useState(null);
+  const [expandedFolders, setExpandedFolders] = useState(new Set());
   
   const urlParams = new URLSearchParams(window.location.search);
   const tenantSlug = urlParams.get("tenant");
@@ -346,7 +350,95 @@ export default function Layout({ children, currentPageName }) {
   // Icon map for custom nav items
   const iconMap = {
     Home, Navigation, Building2, Shield, Package, GitBranch, Database, 
-    Layout: LayoutIcon, Zap, Workflow, Settings, Lightbulb, Globe, Key, Gauge, BookOpen, FlaskConical
+    Layout: LayoutIcon, Zap, Workflow, Settings, Lightbulb, Globe, Key, Gauge, BookOpen, FlaskConical,
+    Folder, FolderOpen
+  };
+
+  // Toggle folder expansion
+  const toggleFolder = (folderId) => {
+    setExpandedFolders(prev => {
+      const next = new Set(prev);
+      if (next.has(folderId)) next.delete(folderId);
+      else next.add(folderId);
+      return next;
+    });
+  };
+
+  // Get children of a nav item
+  const getNavChildren = (parentId, items) => {
+    return items
+      .filter(item => (item.parent_id === parentId || item.parent_id === item.slug) && item.is_visible !== false)
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
+  };
+
+  // Get top-level items
+  const getTopLevelItems = (items) => {
+    return items
+      .filter(item => !item.parent_id && item.is_visible !== false)
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
+  };
+
+  // Recursive nav renderer
+  const renderNavItems = (items, allItems, depth = 0) => {
+    return items.map((item) => {
+      const isFolder = item.item_type === "folder";
+      const folderId = item._id || item.slug;
+      const children = getNavChildren(folderId, allItems);
+      const hasChildren = children.length > 0;
+      const isExpanded = expandedFolders.has(folderId);
+      const Icon = iconMap[item.icon] || (isFolder ? Folder : Home);
+      const isActive = currentPageName === item.slug;
+
+      if (isFolder) {
+        return (
+          <div key={folderId}>
+            <button
+              onClick={() => toggleFolder(folderId)}
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-slate-300 hover:bg-slate-800 hover:text-white`}
+              style={{ paddingLeft: depth * 12 + 12 }}
+            >
+              {hasChildren ? (
+                isExpanded ? <ChevronDown className="h-4 w-4 text-slate-400" /> : <ChevronRight className="h-4 w-4 text-slate-400" />
+              ) : (
+                <div className="w-4" />
+              )}
+              {isExpanded ? <FolderOpen className="h-4 w-4 text-amber-400" /> : <Folder className="h-4 w-4 text-amber-400" />}
+              <span className="flex-1 text-left">{item.name}</span>
+            </button>
+            {isExpanded && hasChildren && (
+              <div className="border-l border-slate-700 ml-5">
+                {renderNavItems(children, allItems, depth + 1)}
+              </div>
+            )}
+          </div>
+        );
+      }
+
+      // Page item
+      let pageUrl = createPageUrl(item.slug);
+      if (item.slug === "MindMapEditor") {
+        const currentMap = new URLSearchParams(window.location.search).get("map");
+        if (currentMap) {
+          pageUrl = pageUrl + (pageUrl.includes("?") ? "&" : "?") + `map=${currentMap}`;
+        }
+      }
+
+      return (
+        <Link
+          key={item._id || item.slug}
+          to={pageUrl}
+          className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+            isActive
+              ? "bg-slate-700 text-white"
+              : "text-slate-300 hover:bg-slate-800 hover:text-white"
+          }`}
+          style={{ paddingLeft: depth * 12 + 12 }}
+        >
+          <Icon className="h-4 w-4" />
+          {item.name}
+        </Link>
+      );
+    });
   };
   
   if (isGlobalAdminPage && !currentTenant) {
@@ -406,34 +498,38 @@ export default function Layout({ children, currentPageName }) {
             {isGlobalAdminPage ? "Global Administration" : "Tenant Portal"}
           </p>
         </div>
-        <nav className="flex-1 p-3 space-y-1">
-          {displayPages.map((page) => {
-            const Icon = page.icon;
-            const isActive = currentPageName === page.slug;
-            const isGlobalLink = globalAdminPages.some(p => p.slug === page.slug);
-            // Preserve map param for MindMapEditor
-                      let pageUrl = createPageUrl(page.slug);
-                      if (page.slug === "MindMapEditor") {
-                        const currentMap = new URLSearchParams(window.location.search).get("map");
-                        if (currentMap) {
-                          pageUrl = pageUrl + (pageUrl.includes("?") ? "&" : "?") + `map=${currentMap}`;
-                        }
-                      }
-                      return (
-                        <Link
-                          key={page.slug}
-                          to={pageUrl}
-                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
-                  isActive 
-                    ? "bg-slate-700 text-white" 
-                    : "text-slate-300 hover:bg-slate-800 hover:text-white"
-                }`}
-              >
-                <Icon className="h-4 w-4" />
-                {page.name}
-              </Link>
-            );
-          })}
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+          {customAdminNav && customAdminNav.length > 0 ? (
+            // Render hierarchical navigation from config
+            renderNavItems(getTopLevelItems(customAdminNav), customAdminNav, 0)
+          ) : (
+            // Fallback to flat displayPages
+            displayPages.map((page) => {
+              const Icon = page.icon;
+              const isActive = currentPageName === page.slug;
+              let pageUrl = createPageUrl(page.slug);
+              if (page.slug === "MindMapEditor") {
+                const currentMap = new URLSearchParams(window.location.search).get("map");
+                if (currentMap) {
+                  pageUrl = pageUrl + (pageUrl.includes("?") ? "&" : "?") + `map=${currentMap}`;
+                }
+              }
+              return (
+                <Link
+                  key={page.slug}
+                  to={pageUrl}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+                    isActive 
+                      ? "bg-slate-700 text-white" 
+                      : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  {page.name}
+                </Link>
+              );
+            })
+          )}
         </nav>
         
         {/* Global Admin indicator */}
