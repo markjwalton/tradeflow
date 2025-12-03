@@ -162,6 +162,7 @@ export default function PlaygroundSummary() {
           { name: "Has category", check: "category" },
           { name: "Has components defined", check: "components" },
           { name: "Has entities assigned", check: "entities_used" },
+          { name: "Has test data set", check: "test_data" },
         ]
       };
     } else if (type === "feature") {
@@ -171,6 +172,7 @@ export default function PlaygroundSummary() {
           { name: "Has description", check: "description" },
           { name: "Has complexity defined", check: "complexity" },
           { name: "Has user stories", check: "user_stories" },
+          { name: "Has test data set", check: "test_data" },
         ]
       };
     }
