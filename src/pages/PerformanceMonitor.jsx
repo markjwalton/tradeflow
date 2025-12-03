@@ -978,97 +978,13 @@ Provide:
               </CardContent>
             </Card>
           ) : (
-            <div className="space-y-4">
-              {filteredIssues.map(issue => (
-                <Card key={issue.id} className={
-                  issue.status === "resolved" ? "opacity-60" :
-                  issue.severity === "critical" ? "border-red-200" :
-                  issue.severity === "high" ? "border-orange-200" : ""
-                }>
-                  <CardContent className="py-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-medium">{issue.resource_name}</h3>
-                          <Badge className={severityColors[issue.severity]}>{issue.severity}</Badge>
-                          <Badge variant="outline">{issue.issue_type.replace("_", " ")}</Badge>
-                          <Badge variant="outline">{issue.status}</Badge>
-                        </div>
-                        <p className="text-sm text-gray-600 mb-2">{issue.description}</p>
-                        
-                        {issue.ai_recommendation && (
-                          <div className="bg-purple-50 p-3 rounded-lg mt-2">
-                            <div className="flex items-center gap-2 text-purple-700 text-sm font-medium mb-1">
-                              <Sparkles className="h-4 w-4" />
-                              AI Recommendation
-                            </div>
-                            <p className="text-sm text-purple-900">{issue.ai_recommendation}</p>
-                            {issue.suggested_actions?.length > 0 && (
-                              <ul className="mt-2 space-y-1">
-                                {issue.suggested_actions.map((action, i) => (
-                                  <li key={i} className="text-sm text-purple-800 flex items-start gap-2">
-                                    <ArrowRight className="h-3 w-3 mt-1 flex-shrink-0" />
-                                    {action}
-                                  </li>
-                                ))}
-                              </ul>
-                            )}
-                          </div>
-                        )}
-
-                        {issue.roadmap_item_id && (
-                          <div className="mt-2">
-                            <Link to={createPageUrl("RoadmapManager") + `?item=${issue.roadmap_item_id}`}>
-                              <Badge className="bg-blue-100 text-blue-700 cursor-pointer">
-                                <Lightbulb className="h-3 w-3 mr-1" />
-                                View in Roadmap
-                              </Badge>
-                            </Link>
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="flex flex-col gap-2 ml-4">
-                        {!issue.ai_recommendation && (
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            onClick={() => generateAIRecommendation(issue)}
-                            disabled={isGeneratingRecommendations}
-                          >
-                            {isGeneratingRecommendations ? (
-                              <Loader2 className="h-3 w-3 mr-1 animate-spin" />
-                            ) : (
-                              <Sparkles className="h-3 w-3 mr-1" />
-                            )}
-                            Get AI Fix
-                          </Button>
-                        )}
-                        {!issue.roadmap_item_id && issue.status === "open" && (
-                          <Button 
-                            size="sm"
-                            onClick={() => createRoadmapMutation.mutate(issue)}
-                          >
-                            <Flag className="h-3 w-3 mr-1" />
-                            Add to Roadmap
-                          </Button>
-                        )}
-                        {issue.status === "open" && (
-                          <Button 
-                            size="sm" 
-                            variant="ghost"
-                            onClick={() => updateIssueMutation.mutate({ id: issue.id, data: { status: "resolved", resolved_date: new Date().toISOString() } })}
-                          >
-                            <CheckCircle2 className="h-3 w-3 mr-1" />
-                            Resolve
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            <IssuesGroupedView 
+              issues={filteredIssues} 
+              generateAIRecommendation={generateAIRecommendation}
+              isGeneratingRecommendations={isGeneratingRecommendations}
+              createRoadmapMutation={createRoadmapMutation}
+              updateIssueMutation={updateIssueMutation}
+            />
           )}
         </TabsContent>
 
