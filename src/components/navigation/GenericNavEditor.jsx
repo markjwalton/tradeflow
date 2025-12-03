@@ -576,7 +576,7 @@ export default function GenericNavEditor({
                 <SelectContent>
                   <SelectItem value="__none__">No parent (top level)</SelectItem>
                   {getParentOptions().map(parent => (
-                    <SelectItem key={parent.slug} value={parent.slug}>{parent.name}</SelectItem>
+                    <SelectItem key={parent._id} value={parent._id}>{parent.name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
