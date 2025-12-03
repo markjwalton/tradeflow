@@ -149,32 +149,40 @@ export default function LivePreview() {
     );
   }
 
-  // Recursive nav items renderer component
-  const NavItemsRenderer = ({ items, allItems, playgroundItems, selectedItemId, setSelectedItemId, expandedFolders, toggleFolder, findPlaygroundItem, statusColors, depth = 0 }) => {
-    const getChildren = (parentId) => {
-      return allItems
-        .filter(item => (item.parent_id === parentId || item.parent_id === item.slug) && item.is_visible !== false)
-        .sort((a, b) => (a.order || 0) - (b.order || 0));
-    };
+  // Get children of a nav item
+  const getNavChildren = (parentId) => {
+    return navItems
+      .filter(item => (item.parent_id === parentId) && item.is_visible !== false)
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
+  };
 
-    return items.map(navItem => {
+  // Get top-level items
+  const getTopLevelItems = () => {
+    return navItems
+      .filter(item => !item.parent_id && item.is_visible !== false)
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
+  };
+
+  // Recursive nav renderer - matches Layout.js styling exactly
+  const renderNavItems = (items, depth = 0) => {
+    return items.map((navItem) => {
       const isFolder = navItem.item_type === "folder";
       const folderId = navItem._id || navItem.slug;
-      const children = getChildren(folderId);
-      const hasChildren = children.length > 0 || isFolder;
+      const children = getNavChildren(folderId);
+      const hasChildren = children.length > 0;
       const isExpanded = expandedFolders.has(folderId);
+      const isFeature = navItem.slug?.startsWith("feature:");
       
       // For pages/features, find the corresponding playground item
       const playgroundItem = !isFolder ? findPlaygroundItem(navItem.slug || navItem.name) : null;
       const isSelected = playgroundItem && selectedItemId === playgroundItem.id;
-      const isFeature = navItem.slug?.startsWith("feature:");
 
       if (isFolder) {
         return (
           <div key={folderId}>
             <button
               onClick={() => toggleFolder(folderId)}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
+              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-slate-300 hover:bg-slate-800 hover:text-white"
               style={{ paddingLeft: depth * 12 + 12 }}
             >
               {hasChildren ? (
@@ -182,30 +190,12 @@ export default function LivePreview() {
               ) : (
                 <div className="w-4" />
               )}
-              {isExpanded ? (
-                <FolderOpen className="h-4 w-4 text-amber-400" />
-              ) : (
-                <Folder className="h-4 w-4 text-amber-400" />
-              )}
-              <span className="flex-1 text-left font-medium">{navItem.name}</span>
-              {children.length > 0 && (
-                <Badge className="bg-slate-700 text-slate-300 text-xs">{children.length}</Badge>
-              )}
+              {isExpanded ? <FolderOpen className="h-4 w-4 text-amber-400" /> : <Folder className="h-4 w-4 text-amber-400" />}
+              <span className="flex-1 text-left">{navItem.name}</span>
             </button>
-            {isExpanded && children.length > 0 && (
+            {isExpanded && hasChildren && (
               <div className="border-l border-slate-700 ml-5">
-                <NavItemsRenderer
-                  items={children}
-                  allItems={allItems}
-                  playgroundItems={playgroundItems}
-                  selectedItemId={selectedItemId}
-                  setSelectedItemId={setSelectedItemId}
-                  expandedFolders={expandedFolders}
-                  toggleFolder={toggleFolder}
-                  findPlaygroundItem={findPlaygroundItem}
-                  statusColors={statusColors}
-                  depth={depth + 1}
-                />
+                {renderNavItems(children, depth + 1)}
               </div>
             )}
           </div>
@@ -218,7 +208,7 @@ export default function LivePreview() {
           key={navItem._id || navItem.slug}
           onClick={() => playgroundItem && setSelectedItemId(playgroundItem.id)}
           disabled={!playgroundItem}
-          className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm ${
+          className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
             isSelected
               ? "bg-slate-700 text-white"
               : playgroundItem
@@ -228,10 +218,7 @@ export default function LivePreview() {
           style={{ paddingLeft: depth * 12 + 12 }}
         >
           {isFeature ? <Zap className="h-4 w-4" /> : <Layout className="h-4 w-4" />}
-          <span className="flex-1 text-left truncate">{navItem.name}</span>
-          {playgroundItem && (
-            <span className={statusColors[playgroundItem.test_status || "pending"]}>●</span>
-          )}
+          {navItem.name}
         </button>
       );
     });
@@ -260,22 +247,10 @@ export default function LivePreview() {
           </Link>
         </div>
 
-        <ScrollArea className="flex-1 p-3">
-          <nav className="space-y-1">
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
             {navItems.length > 0 ? (
-              // Use configured navigation structure
-              <NavItemsRenderer 
-                items={topLevelNavItems}
-                allItems={navItems}
-                playgroundItems={playgroundItems}
-                selectedItemId={selectedItemId}
-                setSelectedItemId={setSelectedItemId}
-                expandedFolders={expandedFolders}
-                toggleFolder={toggleFolder}
-                findPlaygroundItem={findPlaygroundItem}
-                statusColors={statusColors}
-                depth={0}
-              />
+              // Use configured navigation structure - matches Layout.js exactly
+              renderNavItems(getTopLevelItems(), 0)
             ) : (
               // Fallback: Show pages and features separately
               <>
@@ -359,8 +334,7 @@ export default function LivePreview() {
                 </div>
               </>
             )}
-          </nav>
-        </ScrollArea>
+        </nav>
 
         {/* Bottom Actions */}
         <div className="p-3 border-t border-slate-700">
