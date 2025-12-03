@@ -18,15 +18,30 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { 
   ArrowLeft, Database, Plus, Save, Loader2, Sparkles, Wand2,
-  Trash2, Edit, Layout, Zap, Eye, Copy, CheckCircle2, XCircle, Circle
+  Trash2, Edit, Layout, Zap, Eye, Copy, CheckCircle2, XCircle, Circle,
+  AlertTriangle, Shield, RefreshCw
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export default function TestDataManager() {
   const navigate = useNavigate();
