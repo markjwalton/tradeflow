@@ -371,15 +371,36 @@ export default function TestDataManager() {
 
       const entities = item.entities || [];
       if (entities.length === 0) {
-        console.log(`Item ${item.name} has no entities, marking as error`);
-        errorCount++;
-        setGenerationProgress(prev => ({
-          ...prev,
-          current: i + 1,
-          items: prev.items.map((it, idx) => 
-            idx === i ? { ...it, status: "error", error: "No entities found" } : it
-          )
-        }));
+        console.log(`Item ${item.name} has no entities, creating placeholder`);
+        // Create placeholder test data for items without entities
+        try {
+          await base44.entities.TestData.create({
+            name: "Default Test Data",
+            playground_item_id: item.id,
+            entity_data: {},
+            is_default: true,
+            test_status: "pending",
+            notes: "No entities defined for this item"
+          });
+          successCount++;
+          queryClient.invalidateQueries({ queryKey: ["testData"] });
+          setGenerationProgress(prev => ({
+            ...prev,
+            current: i + 1,
+            items: prev.items.map((it, idx) => 
+              idx === i ? { ...it, status: "success", recordsGenerated: 0 } : it
+            )
+          }));
+        } catch (e) {
+          errorCount++;
+          setGenerationProgress(prev => ({
+            ...prev,
+            current: i + 1,
+            items: prev.items.map((it, idx) => 
+              idx === i ? { ...it, status: "error", error: e.message } : it
+            )
+          }));
+        }
         continue;
       }
 
