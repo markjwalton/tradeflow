@@ -413,10 +413,10 @@ export default function GenericNavEditor({
                                       Move to top level
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
-                                    {topLevelItems.filter(p => p.slug !== item.slug && p.slug !== item.parent_id).map(parent => (
+                                    {getValidParents().filter(p => p._id !== item._id && p._id !== item.parent_id).map(parent => (
                                       <DropdownMenuItem 
-                                        key={parent.slug}
-                                        onClick={() => handleMoveToParent(item, parent.slug)}
+                                        key={parent._id}
+                                        onClick={() => handleMoveToParent(item, parent._id)}
                                         className="gap-2"
                                       >
                                         <CornerDownRight className="h-4 w-4" />
