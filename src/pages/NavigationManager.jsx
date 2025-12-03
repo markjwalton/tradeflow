@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTenant } from "@/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Settings, FileCode, Eye, Wand2, FolderOpen, ChevronDown, ChevronRight, Loader2 } from "lucide-react";
+import { Settings, FileCode, Eye, Wand2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import GenericNavEditor from "@/components/navigation/GenericNavEditor";
