@@ -78,12 +78,17 @@ export default function NavigationManager() {
     queryFn: () => base44.entities.Tenant.list(),
   });
 
-  // Fetch navigation items - Live Pages uses "__live_pages__", Tenant uses selectedTenantId
-  const effectiveTenantId = activeTab === "live" ? "__live_pages__" : selectedTenantId;
+  // Compute effective tenant ID based on active tab
+  const getEffectiveTenantId = () => {
+    if (activeTab === "live") return "__live_pages__";
+    return selectedTenantId;
+  };
+  const effectiveTenantId = getEffectiveTenantId();
   
   const { data: navItems = [], isLoading } = useQuery({
-    queryKey: ["navigationItems", effectiveTenantId, activeTab],
+    queryKey: ["navigationItems", activeTab, effectiveTenantId],
     queryFn: () => base44.entities.NavigationItem.filter({ tenant_id: effectiveTenantId }, "order"),
+    enabled: activeTab !== "admin", // Don't fetch for admin tab - it uses its own component
   });
 
   // Find unallocated pages
