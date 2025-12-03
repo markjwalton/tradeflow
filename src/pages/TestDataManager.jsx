@@ -424,9 +424,13 @@ Return as JSON with entity names as keys and arrays of records as values.`,
             </div>
 
             <div className="flex justify-end">
-              <Button variant="outline" onClick={generateAllTestData} disabled={isGenerating || selectedEntities.length === 0}>
+              <Button 
+                onClick={generateAllTestData} 
+                disabled={isGenerating || selectedEntities.length === 0}
+                className="bg-purple-600 hover:bg-purple-700"
+              >
                 {isGenerating ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
-                AI Generate All
+                AI Generate All Test Data
               </Button>
             </div>
 
