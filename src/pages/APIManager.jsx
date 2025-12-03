@@ -31,8 +31,9 @@ import {
 import { 
   Key, Plus, Trash2, Edit, RefreshCw, CheckCircle2, XCircle, 
   AlertCircle, Loader2, Activity, BarChart3, Clock, Zap,
-  Eye, EyeOff, Copy, Search, Filter
+  Eye, EyeOff, Copy, Search, Filter, Globe, Building2, DollarSign
 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import {
@@ -66,16 +67,32 @@ const commonProviders = [
 export default function APIManager() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("apis");
+  const [apiViewMode, setApiViewMode] = useState("global"); // "global" or "tenant"
+  const [selectedTenantId, setSelectedTenantId] = useState("");
   const [showEditor, setShowEditor] = useState(false);
   const [editingApi, setEditingApi] = useState(null);
   const [showKey, setShowKey] = useState({});
-  const [logFilters, setLogFilters] = useState({ api: "all", status: "all", search: "" });
+  const [logFilters, setLogFilters] = useState({ api: "all", status: "all", search: "", tenant: "all" });
   const [formData, setFormData] = useState({
     name: "",
     provider: "",
     api_key: "",
     base_url: "",
+    is_global: true,
+    tenant_id: "",
+    token_rate: 0,
+    billing_unit: "per_call",
     settings: {}
+  });
+
+  const { data: tenants = [] } = useQuery({
+    queryKey: ["tenants"],
+    queryFn: () => base44.entities.Tenant.list()
+  });
+
+  const { data: usageSummaries = [] } = useQuery({
+    queryKey: ["apiUsageSummaries"],
+    queryFn: () => base44.entities.APIUsageSummary.list("-period", 100)
   });
 
   const { data: apiConfigs = [], isLoading: loadingApis } = useQuery({
@@ -179,6 +196,12 @@ export default function APIManager() {
     }
   });
 
+  // Filter APIs by global/tenant
+  const globalApis = apiConfigs.filter(a => a.is_global);
+  const tenantApis = apiConfigs.filter(a => !a.is_global);
+  const displayedApis = apiViewMode === "global" ? globalApis : 
+    selectedTenantId ? tenantApis.filter(a => a.tenant_id === selectedTenantId) : tenantApis;
+
   const openEditor = (api = null) => {
     if (api) {
       setEditingApi(api);
@@ -187,11 +210,25 @@ export default function APIManager() {
         provider: api.provider || "",
         api_key: "",
         base_url: api.base_url || "",
+        is_global: api.is_global !== false,
+        tenant_id: api.tenant_id || "",
+        token_rate: api.token_rate || 0,
+        billing_unit: api.billing_unit || "per_call",
         settings: api.settings || {}
       });
     } else {
       setEditingApi(null);
-      setFormData({ name: "", provider: "", api_key: "", base_url: "", settings: {} });
+      setFormData({ 
+        name: "", 
+        provider: "", 
+        api_key: "", 
+        base_url: "", 
+        is_global: apiViewMode === "global",
+        tenant_id: selectedTenantId || "",
+        token_rate: 0,
+        billing_unit: "per_call",
+        settings: {} 
+      });
     }
     setShowEditor(true);
   };
@@ -299,11 +336,43 @@ export default function APIManager() {
             <BarChart3 className="h-4 w-4" />
             Analytics
           </TabsTrigger>
+          <TabsTrigger value="billing" className="gap-2">
+            <DollarSign className="h-4 w-4" />
+            Usage & Billing
+          </TabsTrigger>
         </TabsList>
 
         {/* API Configurations Tab */}
         <TabsContent value="apis" className="space-y-4">
-          <div className="flex justify-end">
+          {/* Global vs Tenant Toggle */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Tabs value={apiViewMode} onValueChange={setApiViewMode}>
+                <TabsList>
+                  <TabsTrigger value="global" className="gap-2">
+                    <Globe className="h-4 w-4" />
+                    Global APIs
+                  </TabsTrigger>
+                  <TabsTrigger value="tenant" className="gap-2">
+                    <Building2 className="h-4 w-4" />
+                    Tenant APIs
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+              {apiViewMode === "tenant" && (
+                <Select value={selectedTenantId} onValueChange={setSelectedTenantId}>
+                  <SelectTrigger className="w-48">
+                    <SelectValue placeholder="All tenants" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={null}>All Tenants</SelectItem>
+                    {tenants.map(t => (
+                      <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
             <Button onClick={() => openEditor()}>
               <Plus className="h-4 w-4 mr-2" />
               Add API
@@ -314,11 +383,11 @@ export default function APIManager() {
             <div className="flex justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
             </div>
-          ) : apiConfigs.length === 0 ? (
+          ) : displayedApis.length === 0 ? (
             <Card>
               <CardContent className="py-12 text-center text-gray-500">
                 <Key className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>No API configurations yet</p>
+                <p>No {apiViewMode === "global" ? "global" : "tenant"} API configurations yet</p>
                 <Button className="mt-4" onClick={() => openEditor()}>
                   <Plus className="h-4 w-4 mr-2" />
                   Add Your First API
@@ -327,14 +396,22 @@ export default function APIManager() {
             </Card>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {apiConfigs.map(api => (
+              {displayedApis.map(api => (
                 <Card key={api.id} className={
                   api.status === "error" ? "border-red-200" :
                   api.status === "inactive" ? "border-gray-300" : ""
                 }>
                   <CardHeader className="pb-2">
                     <div className="flex items-start justify-between">
-                      <CardTitle className="text-base">{api.name}</CardTitle>
+                      <div className="flex items-center gap-2">
+                        <CardTitle className="text-base">{api.name}</CardTitle>
+                        {api.is_global && (
+                          <Badge variant="outline" className="text-xs">
+                            <Globe className="h-3 w-3 mr-1" />
+                            Global
+                          </Badge>
+                        )}
+                      </div>
                       <Badge className={
                         api.status === "active" ? "bg-green-100 text-green-700" :
                         api.status === "error" ? "bg-red-100 text-red-700" :
@@ -345,6 +422,11 @@ export default function APIManager() {
                         {api.status}
                       </Badge>
                     </div>
+                    {!api.is_global && api.tenant_id && (
+                      <p className="text-xs text-gray-500">
+                        {tenants.find(t => t.id === api.tenant_id)?.name || "Unknown tenant"}
+                      </p>
+                    )}
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2 text-sm">
@@ -390,6 +472,14 @@ export default function APIManager() {
                       {api.last_error && (
                         <div className="text-xs text-red-600 bg-red-50 p-2 rounded">
                           {api.last_error}
+                        </div>
+                      )}
+                      {api.token_rate > 0 && (
+                        <div className="flex justify-between text-xs mt-2 pt-2 border-t">
+                          <span className="text-gray-500">Rate</span>
+                          <span className="font-medium">
+                            £{api.token_rate} / {api.billing_unit?.replace("_", " ")}
+                          </span>
                         </div>
                       )}
                     </div>
@@ -647,15 +737,144 @@ export default function APIManager() {
             </CardContent>
           </Card>
         </TabsContent>
+
+        {/* Usage & Billing Tab */}
+        <TabsContent value="billing" className="space-y-6">
+          <div className="flex items-center gap-4 mb-4">
+            <Select 
+              value={logFilters.tenant} 
+              onValueChange={(v) => setLogFilters({ ...logFilters, tenant: v })}
+            >
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="All Tenants" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Tenants</SelectItem>
+                {tenants.map(t => (
+                  <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Usage Summary Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {tenants.map(tenant => {
+              const tenantLogs = apiLogs.filter(l => l.tenant_id === tenant.id && l.is_global_api);
+              const totalCalls = tenantLogs.length;
+              const totalTokens = tenantLogs.reduce((sum, l) => sum + (l.tokens_used || 0), 0);
+              const totalCost = tenantLogs.reduce((sum, l) => sum + (l.cost || 0), 0);
+              
+              if (logFilters.tenant !== "all" && logFilters.tenant !== tenant.id) return null;
+              
+              return (
+                <Card key={tenant.id}>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <Building2 className="h-4 w-4" />
+                      {tenant.name}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">API Calls (Global)</span>
+                        <span className="font-medium">{totalCalls}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">Tokens Used</span>
+                        <span className="font-medium">{totalTokens.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between pt-2 border-t">
+                        <span className="text-gray-500">Estimated Cost</span>
+                        <span className="font-bold text-green-600">£{totalCost.toFixed(4)}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+
+          {/* Detailed Logs with Token/Cost Info */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Global API Usage by Tenant</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Time</TableHead>
+                    <TableHead>Tenant</TableHead>
+                    <TableHead>API</TableHead>
+                    <TableHead>Endpoint</TableHead>
+                    <TableHead>Tokens</TableHead>
+                    <TableHead>Cost</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {apiLogs
+                    .filter(l => l.is_global_api && (logFilters.tenant === "all" || l.tenant_id === logFilters.tenant))
+                    .slice(0, 50)
+                    .map(log => (
+                      <TableRow key={log.id}>
+                        <TableCell className="text-xs">
+                          {format(new Date(log.created_date), "MMM d, HH:mm")}
+                        </TableCell>
+                        <TableCell>
+                          {tenants.find(t => t.id === log.tenant_id)?.name || "-"}
+                        </TableCell>
+                        <TableCell className="font-medium">{log.api_name}</TableCell>
+                        <TableCell className="font-mono text-xs">{log.endpoint}</TableCell>
+                        <TableCell>{log.tokens_used || 0}</TableCell>
+                        <TableCell className="text-green-600">
+                          £{(log.cost || 0).toFixed(4)}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
 
       {/* Editor Dialog */}
       <Dialog open={showEditor} onOpenChange={setShowEditor}>
-        <DialogContent>
+        <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>{editingApi ? "Edit API Configuration" : "Add API Configuration"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
+            {/* Global vs Tenant Toggle */}
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-2">
+                <Globe className="h-4 w-4 text-blue-600" />
+                <Label>Global API (available to all tenants)</Label>
+              </div>
+              <Switch
+                checked={formData.is_global}
+                onCheckedChange={(v) => setFormData({ ...formData, is_global: v, tenant_id: v ? "" : formData.tenant_id })}
+              />
+            </div>
+
+            {!formData.is_global && (
+              <div>
+                <Label>Tenant</Label>
+                <Select value={formData.tenant_id} onValueChange={(v) => setFormData({ ...formData, tenant_id: v })}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select tenant..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {tenants.map(t => (
+                      <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
             <div>
               <Label>Name *</Label>
               <Input
@@ -704,6 +923,42 @@ export default function APIManager() {
                 placeholder="https://api.example.com"
               />
             </div>
+
+            {/* Billing Settings (only for global APIs) */}
+            {formData.is_global && (
+              <div className="border-t pt-4 mt-4">
+                <h4 className="font-medium mb-3 flex items-center gap-2">
+                  <DollarSign className="h-4 w-4" />
+                  Billing Settings (for tenant charging)
+                </h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>Rate (£)</Label>
+                    <Input
+                      type="number"
+                      step="0.0001"
+                      value={formData.token_rate}
+                      onChange={(e) => setFormData({ ...formData, token_rate: parseFloat(e.target.value) || 0 })}
+                      placeholder="0.00"
+                    />
+                  </div>
+                  <div>
+                    <Label>Billing Unit</Label>
+                    <Select value={formData.billing_unit} onValueChange={(v) => setFormData({ ...formData, billing_unit: v })}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="per_call">Per Call</SelectItem>
+                        <SelectItem value="per_token">Per Token</SelectItem>
+                        <SelectItem value="per_1k_tokens">Per 1K Tokens</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="flex justify-end gap-2 pt-4">
               <Button variant="outline" onClick={closeEditor}>Cancel</Button>
               <Button onClick={handleSave} disabled={createMutation.isPending || updateMutation.isPending}>
