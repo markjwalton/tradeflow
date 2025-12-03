@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { GripVertical, Pencil, Trash2, Home, Settings, Users, FileText, LayoutDashboard, FolderOpen, Folder, ShoppingCart, Mail, Calendar, Bell, Search, Heart, Star, Bookmark, Clock, Globe, Lock, Key, Shield, Zap, Database, Server, Code, Terminal, Cpu, Monitor, Smartphone, Tablet, Camera, Image, Video, Music, Mic, Phone, MessageSquare, Send, Inbox, Archive, Trash, Edit, PenTool, Layers, Grid, List, BarChart, PieChart, TrendingUp, DollarSign, CreditCard, Wallet, Gift, Tag, Package, Truck, MapPin, Navigation, Compass, Map, Flag, Award, Target, Crosshair, MoveRight, CornerDownRight } from "lucide-react";
+import { GripVertical, Pencil, Trash2, Copy, Home, Settings, Users, FileText, LayoutDashboard, FolderOpen, Folder, ShoppingCart, Mail, Calendar, Bell, Search, Heart, Star, Bookmark, Clock, Globe, Lock, Key, Shield, Zap, Database, Server, Code, Terminal, Cpu, Monitor, Smartphone, Tablet, Camera, Image, Video, Music, Mic, Phone, MessageSquare, Send, Inbox, Archive, Trash, Edit, PenTool, Layers, Grid, List, BarChart, PieChart, TrendingUp, DollarSign, CreditCard, Wallet, Gift, Tag, Package, Truck, MapPin, Navigation, Compass, Map, Flag, Award, Target, Crosshair, MoveRight, CornerDownRight } from "lucide-react";
 
 const iconMap = {
   Home, Settings, Users, FileText, LayoutDashboard, FolderOpen, 
@@ -29,6 +29,7 @@ export default function NavigationItemRow({
   onDelete, 
   onToggleVisibility,
   onMoveToParent,
+  onDuplicate,
   parentOptions = [],
   dragHandleProps = {},
   depth = 0,
@@ -107,6 +108,12 @@ export default function NavigationItemRow({
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
+      )}
+
+      {onDuplicate && (
+        <Button variant="ghost" size="icon" onClick={onDuplicate} title="Duplicate">
+          <Copy className="h-4 w-4" />
+        </Button>
       )}
 
       <Button variant="ghost" size="icon" onClick={() => onEdit(item)}>
