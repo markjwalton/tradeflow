@@ -78,10 +78,12 @@ export default function NavigationManager() {
     queryFn: () => base44.entities.Tenant.list(),
   });
 
-  // Fetch navigation items for selected tenant
+  // Fetch navigation items for selected tenant OR global for live pages
+  const effectiveTenantId = activeTab === "live" ? "__global__" : selectedTenantId;
+  
   const { data: navItems = [], isLoading } = useQuery({
-    queryKey: ["navigationItems", selectedTenantId],
-    queryFn: () => base44.entities.NavigationItem.filter({ tenant_id: selectedTenantId }, "order"),
+    queryKey: ["navigationItems", effectiveTenantId],
+    queryFn: () => base44.entities.NavigationItem.filter({ tenant_id: effectiveTenantId }, "order"),
   });
 
   // Find unallocated pages
@@ -128,11 +130,11 @@ export default function NavigationManager() {
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.NavigationItem.create({
       ...data,
-      tenant_id: selectedTenantId,
+      tenant_id: effectiveTenantId,
       order: navItems.length
     }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["navigationItems", selectedTenantId] });
+      queryClient.invalidateQueries({ queryKey: ["navigationItems", effectiveTenantId] });
       setIsFormOpen(false);
       toast.success("Navigation item created");
     },
@@ -141,7 +143,7 @@ export default function NavigationManager() {
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.NavigationItem.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["navigationItems", selectedTenantId] });
+      queryClient.invalidateQueries({ queryKey: ["navigationItems", effectiveTenantId] });
       setIsFormOpen(false);
       setEditingItem(null);
       toast.success("Navigation item updated");
@@ -151,7 +153,7 @@ export default function NavigationManager() {
   const deleteMutation = useMutation({
     mutationFn: (id) => base44.entities.NavigationItem.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["navigationItems", selectedTenantId] });
+      queryClient.invalidateQueries({ queryKey: ["navigationItems", effectiveTenantId] });
       toast.success("Navigation item deleted");
     },
   });
@@ -159,7 +161,7 @@ export default function NavigationManager() {
   const duplicateMutation = useMutation({
     mutationFn: async (item) => {
       return base44.entities.NavigationItem.create({
-        tenant_id: selectedTenantId,
+        tenant_id: effectiveTenantId,
         name: `${item.name} (Copy)`,
         item_type: item.item_type,
         page_url: item.page_url,
@@ -170,7 +172,7 @@ export default function NavigationManager() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["navigationItems", selectedTenantId] });
+      queryClient.invalidateQueries({ queryKey: ["navigationItems", effectiveTenantId] });
       toast.success("Item duplicated");
     },
   });
@@ -299,7 +301,7 @@ export default function NavigationManager() {
 
     if (updates.length > 0) {
       await Promise.all(updates);
-      queryClient.invalidateQueries({ queryKey: ["navigationItems", selectedTenantId] });
+      queryClient.invalidateQueries({ queryKey: ["navigationItems", effectiveTenantId] });
     }
   };
 
@@ -330,7 +332,7 @@ export default function NavigationManager() {
       parent_id: newParentId,
       order: newSiblings.length
     });
-    queryClient.invalidateQueries({ queryKey: ["navigationItems", selectedTenantId] });
+    queryClient.invalidateQueries({ queryKey: ["navigationItems", effectiveTenantId] });
     toast.success(newParentId ? "Item moved" : "Moved to top level");
   };
 
@@ -384,7 +386,7 @@ export default function NavigationManager() {
   const renderNavigationEditor = (mode = "tenant") => (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>{mode === "live" ? "Live Pages Navigation" : "Tenant Navigation"}</CardTitle>
+        <CardTitle>{mode === "live" ? "Live Pages Navigation (Global)" : "Tenant Navigation"}</CardTitle>
         <div className="flex items-center gap-4">
           {mode === "tenant" && isGlobalAdmin && (
             <TenantSelector
@@ -540,7 +542,7 @@ export default function NavigationManager() {
         onClose={() => { setIsFormOpen(false); setEditingItem(null); }}
         onSubmit={handleSubmit}
         item={editingItem}
-        tenantId={selectedTenantId}
+        tenantId={effectiveTenantId}
         parentOptions={getParentOptions(editingItem)}
       />
     </Card>
