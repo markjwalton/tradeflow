@@ -202,12 +202,15 @@ export default function LivePreview() {
       }
 
       // Page or feature item
+      const isChild = depth > 0;
       return (
         <button
           key={navItem._id || navItem.slug}
           onClick={() => playgroundItem && setSelectedItemId(playgroundItem.id)}
           disabled={!playgroundItem}
-          className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+          className={`w-full flex items-center gap-2 px-3 rounded-lg transition-colors truncate ${
+            isChild ? "py-1.5 text-xs" : "py-2 text-sm"
+          } ${
             isSelected
               ? "bg-slate-700 text-white"
               : playgroundItem
@@ -215,8 +218,8 @@ export default function LivePreview() {
                 : "text-slate-500 cursor-not-allowed"
           }`}
         >
-          {isFeature ? <Zap className="h-4 w-4" /> : <Layout className="h-4 w-4" />}
-          {navItem.name}
+          {!isChild && (isFeature ? <Zap className="h-4 w-4 flex-shrink-0" /> : <Layout className="h-4 w-4 flex-shrink-0" />)}
+          <span className="truncate">{navItem.name}</span>
         </button>
       );
     });
