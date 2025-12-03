@@ -364,15 +364,20 @@ export default function NavigationItemForm({
           </div>
 
           {formData.item_type === "folder" && (
-            <div className="flex items-center justify-between">
-              <Label htmlFor="default_collapsed">Default Collapsed</Label>
-              <Switch
-                id="default_collapsed"
-                checked={formData.default_collapsed}
-                onCheckedChange={(checked) => setFormData({ ...formData, default_collapsed: checked })}
-              />
-            </div>
-          )}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="default_collapsed">Default Collapsed</Label>
+                  <Switch
+                    id="default_collapsed"
+                    checked={formData.default_collapsed}
+                    onCheckedChange={(checked) => setFormData({ ...formData, default_collapsed: checked })}
+                  />
+                </div>
+                <p className="text-xs text-amber-600 bg-amber-50 p-2 rounded">
+                  ⚠️ Note: Page settings "Auto-expand all items" will override this setting when enabled.
+                </p>
+              </div>
+            )}
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose}>
