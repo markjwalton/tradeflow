@@ -41,6 +41,7 @@ import AIQualityReport from "@/components/test-data/AIQualityReport";
 import EntitySchemaValidator from "@/components/test-data/EntitySchemaValidator";
 import TestDataSettingsDialog from "@/components/test-data/TestDataSettingsDialog";
 import TestVerificationDialog from "@/components/test-data/TestVerificationDialog";
+import BulkVerificationDialog from "@/components/test-data/BulkVerificationDialog";
 
 export default function TestDataManager() {
   const queryClient = useQueryClient();
@@ -672,9 +673,18 @@ Return as JSON with entity names as keys and arrays of records as values.`,
             <div className="flex flex-col gap-2">
               <div className="flex gap-2">
                 <Button variant="secondary" onClick={runValidation} className="bg-white text-purple-700 hover:bg-purple-50">
-                  <Shield className="h-4 w-4 mr-2" />
-                  Validate Schemas
-                </Button>
+                                        <Shield className="h-4 w-4 mr-2" />
+                                        Validate Schemas
+                                      </Button>
+                                      <Button 
+                                        variant="secondary" 
+                                        onClick={() => setIsVerifyingBulk(true)}
+                                        disabled={stats.withTestData === 0}
+                                        className="bg-white text-purple-700 hover:bg-purple-50"
+                                      >
+                                        <Play className="h-4 w-4 mr-2" />
+                                        Bulk Verify ({stats.withTestData})
+                                      </Button>
                 <Button 
                   variant="secondary" 
                   onClick={() => setShowSettings(true)} 
@@ -818,17 +828,29 @@ Return as JSON with entity names as keys and arrays of records as values.`,
       />
 
       {/* Verification Dialog */}
-      <TestVerificationDialog
-        isOpen={!!verifyingItem}
-        onClose={() => setVerifyingItem(null)}
-        item={verifyingItem}
-        testData={testDataSets.find(td => td.playground_item_id === verifyingItem?.id)}
-        entityTemplates={entityTemplates}
-        onVerified={() => {
-          queryClient.invalidateQueries({ queryKey: ["testData"] });
-          setVerifyingItem(null);
-        }}
-      />
+                  <TestVerificationDialog
+                    isOpen={!!verifyingItem}
+                    onClose={() => setVerifyingItem(null)}
+                    item={verifyingItem}
+                    testData={testDataSets.find(td => td.playground_item_id === verifyingItem?.id)}
+                    entityTemplates={entityTemplates}
+                    onVerified={() => {
+                      queryClient.invalidateQueries({ queryKey: ["testData"] });
+                      setVerifyingItem(null);
+                    }}
+                  />
+
+                  {/* Bulk Verification Dialog */}
+                  <BulkVerificationDialog
+                    isOpen={isVerifyingBulk}
+                    onClose={() => setIsVerifyingBulk(false)}
+                    items={itemStatusList}
+                    testDataSets={testDataSets}
+                    entityTemplates={entityTemplates}
+                    onComplete={() => {
+                      queryClient.invalidateQueries({ queryKey: ["testData"] });
+                    }}
+                  />
     </div>
   );
 }
