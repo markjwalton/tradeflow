@@ -183,7 +183,6 @@ export default function LivePreview() {
             <button
               onClick={() => toggleFolder(folderId)}
               className="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-slate-300 hover:bg-slate-800 hover:text-white"
-              style={{ paddingLeft: depth * 12 + 12 }}
             >
               {hasChildren ? (
                 isExpanded ? <ChevronDown className="h-4 w-4 text-slate-400" /> : <ChevronRight className="h-4 w-4 text-slate-400" />
@@ -194,7 +193,7 @@ export default function LivePreview() {
               <span className="flex-1 text-left">{navItem.name}</span>
             </button>
             {isExpanded && hasChildren && (
-              <div className="border-l border-slate-700 ml-5">
+              <div>
                 {renderNavItems(children, depth + 1)}
               </div>
             )}
@@ -215,7 +214,6 @@ export default function LivePreview() {
                 ? "text-slate-300 hover:bg-slate-800 hover:text-white"
                 : "text-slate-500 cursor-not-allowed"
           }`}
-          style={{ paddingLeft: depth * 12 + 12 }}
         >
           {isFeature ? <Zap className="h-4 w-4" /> : <Layout className="h-4 w-4" />}
           {navItem.name}

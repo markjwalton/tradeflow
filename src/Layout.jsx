@@ -394,8 +394,7 @@ export default function Layout({ children, currentPageName }) {
           <div key={folderId}>
             <button
               onClick={() => toggleFolder(folderId)}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-slate-300 hover:bg-slate-800 hover:text-white`}
-              style={{ paddingLeft: depth * 12 + 12 }}
+              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-slate-300 hover:bg-slate-800 hover:text-white"
             >
               {hasChildren ? (
                 isExpanded ? <ChevronDown className="h-4 w-4 text-slate-400" /> : <ChevronRight className="h-4 w-4 text-slate-400" />
@@ -406,7 +405,7 @@ export default function Layout({ children, currentPageName }) {
               <span className="flex-1 text-left">{item.name}</span>
             </button>
             {isExpanded && hasChildren && (
-              <div className="border-l border-slate-700 ml-5">
+              <div>
                 {renderNavItems(children, allItems, depth + 1)}
               </div>
             )}
@@ -432,7 +431,6 @@ export default function Layout({ children, currentPageName }) {
               ? "bg-slate-700 text-white"
               : "text-slate-300 hover:bg-slate-800 hover:text-white"
           }`}
-          style={{ paddingLeft: depth * 12 + 12 }}
         >
           <Icon className="h-4 w-4" />
           {item.name}

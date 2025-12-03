@@ -311,7 +311,7 @@ export default function GenericNavEditor({
   };
 
   const handleMoveToParent = (item, newParentId) => {
-        // Update by _id, set new parent_id - ensure _id is preserved
+        // Update by _id, set new parent_id - use parent's _id for linking
         const newItems = items.map((i) => {
           if (i._id === item._id) {
             return { ...i, _id: i._id, parent_id: newParentId || null };
