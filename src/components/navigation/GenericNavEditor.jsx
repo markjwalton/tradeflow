@@ -316,14 +316,12 @@ export default function GenericNavEditor({
   };
 
   const handleMoveToParent = (item, newParentId) => {
-        // Update by _id, set new parent_id - use parent's _id for linking
-        const newItems = items.map((i) => {
-          if (i._id === item._id) {
-            return { ...i, _id: i._id, parent_id: newParentId || null };
-          }
-          return i;
-        });
-        saveMutation.mutate(newItems);
+    // Update by _id, set new parent_id - preserve ALL existing fields including _id
+    const newItems = items.map((i) => ({
+      ...i,
+      parent_id: i._id === item._id ? (newParentId || null) : i.parent_id
+    }));
+    saveMutation.mutate(newItems);
     // Auto-expand the new parent to show the moved item
     if (newParentId) {
       setExpandedParents(prev => new Set([...prev, newParentId]));
