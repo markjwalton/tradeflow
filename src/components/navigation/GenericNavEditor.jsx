@@ -202,17 +202,16 @@ export default function GenericNavEditor({
   };
 
   const handleEdit = (item) => {
-    const idx = findItemIndex(item.slug, item.parent_id);
-    setEditingItem(idx);
-    setFormData(item);
+    // Use _id for editing reference
+    setEditingItem(item._id);
+    setFormData({ ...item });
     setShowDialog(true);
   };
 
   const handleDelete = (item) => {
-    // Remove item and its children
+    // Remove by _id and remove children by parent_id
     const newItems = items.filter(i => 
-      !(i.slug === item.slug && (i.parent_id || null) === (item.parent_id || null)) &&
-      i.parent_id !== item.slug
+      i._id !== item._id && i.parent_id !== item._id
     );
     saveMutation.mutate(newItems);
   };
@@ -220,6 +219,7 @@ export default function GenericNavEditor({
   const handleDuplicate = (item) => {
     const duplicate = { 
       ...item, 
+      _id: generateId(),
       name: `${item.name} (Copy)`,
       parent_id: null,
       order: items.length
@@ -230,7 +230,7 @@ export default function GenericNavEditor({
 
   const handleToggleVisibility = (item) => {
     const newItems = items.map((i) => {
-      if (i.slug === item.slug && (i.parent_id || null) === (item.parent_id || null)) {
+      if (i._id === item._id) {
         return { ...i, is_visible: !i.is_visible };
       }
       return i;
@@ -238,15 +238,16 @@ export default function GenericNavEditor({
     saveMutation.mutate(newItems);
   };
 
-  const handleMoveToParent = (item, newParentSlug) => {
+  const handleMoveToParent = (item, newParentId) => {
+    // Update by _id, set new parent_id
     const newItems = items.map((i) => {
-      if (i.slug === item.slug && (i.parent_id || null) === (item.parent_id || null)) {
-        return { ...i, parent_id: newParentSlug || null };
+      if (i._id === item._id) {
+        return { ...i, parent_id: newParentId || null };
       }
       return i;
     });
     saveMutation.mutate(newItems);
-    toast.success(newParentSlug ? "Item moved" : "Moved to top level");
+    toast.success(newParentId ? "Item moved" : "Moved to top level");
   };
 
   const handleAllocate = (slug) => {
