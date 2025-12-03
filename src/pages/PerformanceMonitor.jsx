@@ -204,6 +204,8 @@ export default function PerformanceMonitor() {
       { name: "Page Templates", type: "pages", status: "pending" },
       { name: "Feature Templates", type: "features", status: "pending" },
       { name: "Entity Templates", type: "entities", status: "pending" },
+      { name: "Database Sizes", type: "database", status: "pending" },
+      { name: "API Response Times", type: "api", status: "pending" },
       { name: "Analyzing Complexity", type: "complexity", status: "pending" },
       { name: "Checking Thresholds", type: "thresholds", status: "pending" },
       { name: "Creating Issues", type: "issues", status: "pending" },
