@@ -44,6 +44,8 @@ import {
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
+import { ChevronDown, ChevronRight, Folder, FolderOpen } from "lucide-react";
+
 const COLORS = ["#22c55e", "#f59e0b", "#ef4444", "#3b82f6", "#8b5cf6"];
 
 const metricTypeIcons = {
