@@ -371,6 +371,7 @@ export default function TestDataManager() {
       }));
 
       try {
+        console.log(`Calling InvokeLLM for ${item.name}...`);
         const result = await base44.integrations.Core.InvokeLLM({
           prompt: `Generate realistic test data for "${item.name}". Create 3 records for EACH entity:
 ${entitySchemas.map(e => `Entity: ${e.name}\nProperties: ${JSON.stringify(e.properties)}`).join('\n---\n')}
