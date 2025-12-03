@@ -273,13 +273,14 @@ function LivePagesNavEditor({ pageTemplates = [], featureTemplates = [] }) {
       // First pass: Create folder objects with stable IDs
       const folderMap = {};
       for (const category of allCategories.sort()) {
+        // Use slug field to store the folder ID since _id may not persist
         const folderId = `folder_${category.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
         folderMap[category] = folderId;
 
         newItems.push({
           _id: folderId,
+          slug: folderId,  // Store ID in slug too so we can reference it
           name: category,
-          slug: "",
           icon: "FolderOpen",
           is_visible: true,
           parent_id: null,
