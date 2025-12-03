@@ -830,72 +830,19 @@ Provide:
 
         {/* Metrics Tab */}
         <TabsContent value="metrics">
-          <Card>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Resource</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Value</TableHead>
-                  <TableHead>Threshold</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Trend</TableHead>
-                  <TableHead>Last Measured</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {loadingMetrics ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8">
-                      <Loader2 className="h-6 w-6 animate-spin mx-auto" />
-                    </TableCell>
-                  </TableRow>
-                ) : filteredMetrics.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-gray-500">
-                      No metrics yet. Run a scan to collect data.
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  filteredMetrics.map(metric => {
-                    const Icon = metricTypeIcons[metric.metric_type] || Activity;
-                    const threshold = getThreshold(metric.metric_type);
-                    return (
-                      <TableRow key={metric.id}>
-                        <TableCell>
-                          <div className="font-medium">{metric.resource_name}</div>
-                          <div className="text-xs text-gray-500">{metric.resource_path}</div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline" className="gap-1">
-                            <Icon className="h-3 w-3" />
-                            {metric.metric_type.replace("_", " ")}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="font-mono">
-                          {metric.value} {metric.unit}
-                        </TableCell>
-                        <TableCell className="text-gray-500">
-                          {threshold.warning} / {threshold.critical}
-                        </TableCell>
-                        <TableCell>
-                          <Badge className={statusColors[metric.status || "ok"]}>
-                            {metric.status || "ok"}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          {trendIcons[metric.trend || "stable"]}
-                        </TableCell>
-                        <TableCell className="text-sm text-gray-500">
-                          {metric.measured_at ? format(new Date(metric.measured_at), "MMM d, HH:mm") : "-"}
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })
-                )}
-              </TableBody>
-            </Table>
-          </Card>
+          {loadingMetrics ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          ) : filteredMetrics.length === 0 ? (
+            <Card>
+              <CardContent className="py-12 text-center text-gray-500">
+                No metrics yet. Run a scan to collect data.
+              </CardContent>
+            </Card>
+          ) : (
+            <MetricsGroupedView metrics={filteredMetrics} getThreshold={getThreshold} />
+          )}
         </TabsContent>
 
         {/* Issues Tab */}
