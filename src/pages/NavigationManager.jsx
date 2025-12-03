@@ -392,9 +392,9 @@ export default function NavigationManager() {
   };
 
   const renderNavigationEditor = (mode = "tenant") => (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>{mode === "live" ? "Live Pages Navigation (Global)" : "Tenant Navigation"}</CardTitle>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>{mode === "live" ? "App Pages Navigation (Global)" : "Tenant Navigation"}</CardTitle>
         <div className="flex items-center gap-4">
           {mode === "tenant" && isGlobalAdmin && (
             <TenantSelector
@@ -566,7 +566,7 @@ export default function NavigationManager() {
                 <TabsTrigger value="admin">Admin Console</TabsTrigger>
                 <TabsTrigger value="live">
                   <FileCode className="h-4 w-4 mr-2" />
-                  Live Pages
+                  App Pages
                 </TabsTrigger>
                 <TabsTrigger value="tenant">Tenant Navigation</TabsTrigger>
               </TabsList>

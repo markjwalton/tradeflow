@@ -135,8 +135,16 @@ export default function AdminConsoleNavEditor() {
     
     let newItems;
     if (editingItem !== null) {
-      // Update existing
-      newItems = items.map((item, i) => i === editingItem ? formData : item);
+      // Update existing - find by slug AND parent_id
+      const originalItem = items[editingItem];
+      newItems = items.map((item) => {
+        const itemParent = item.parent_id || null;
+        const origParent = originalItem.parent_id || null;
+        if (item.slug === originalItem.slug && itemParent === origParent) {
+          return formData;
+        }
+        return item;
+      });
     } else {
       // Add new
       newItems = [...items, formData];
