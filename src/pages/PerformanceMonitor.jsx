@@ -487,6 +487,78 @@ Focus on code refactoring, component splitting, and performance optimization bes
     }
   };
 
+  // Generate full system AI review
+  const generateSystemReview = async () => {
+    setIsGeneratingSystemReview(true);
+    try {
+      const systemSummary = {
+        pages: pageTemplates.length,
+        features: featureTemplates.length,
+        entities: entityTemplates.length,
+        openIssues: issues.filter(i => i.status === "open").length,
+        criticalIssues: issues.filter(i => i.severity === "critical" || i.severity === "high").length,
+        metrics: {
+          ok: metrics.filter(m => m.status === "ok").length,
+          warning: metrics.filter(m => m.status === "warning").length,
+          critical: metrics.filter(m => m.status === "critical").length
+        },
+        apiStats: apiLogs.length > 0 ? {
+          totalCalls: apiLogs.length,
+          avgResponseTime: Math.round(apiLogs.reduce((a, b) => a + (b.response_time_ms || 0), 0) / apiLogs.length),
+          errorRate: Math.round((apiLogs.filter(l => !l.success).length / apiLogs.length) * 100)
+        } : null,
+        issueTypes: issues.reduce((acc, i) => {
+          acc[i.issue_type] = (acc[i.issue_type] || 0) + 1;
+          return acc;
+        }, {})
+      };
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are a senior software architect reviewing a web application's performance. Analyze this system data and provide a comprehensive performance review:
+
+SYSTEM OVERVIEW:
+- ${systemSummary.pages} pages, ${systemSummary.features} features, ${systemSummary.entities} entities
+- ${systemSummary.openIssues} open performance issues (${systemSummary.criticalIssues} critical/high)
+- Metrics: ${systemSummary.metrics.ok} OK, ${systemSummary.metrics.warning} warnings, ${systemSummary.metrics.critical} critical
+
+${systemSummary.apiStats ? `API PERFORMANCE:
+- ${systemSummary.apiStats.totalCalls} total API calls tracked
+- Average response time: ${systemSummary.apiStats.avgResponseTime}ms
+- Error rate: ${systemSummary.apiStats.errorRate}%` : 'No API data available yet.'}
+
+ISSUE BREAKDOWN:
+${Object.entries(systemSummary.issueTypes).map(([type, count]) => `- ${type}: ${count}`).join('\n') || 'No issues tracked'}
+
+Provide:
+1. Overall assessment (grade A-F with explanation)
+2. Top 3 priority areas needing attention
+3. 5-7 specific, actionable recommendations for performance improvement
+4. Quick wins (things that can be fixed immediately)
+5. Long-term improvements (architectural changes needed)
+6. Estimated performance improvement potential (percentage)`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            grade: { type: "string" },
+            gradeExplanation: { type: "string" },
+            priorityAreas: { type: "array", items: { type: "object", properties: { area: { type: "string" }, reason: { type: "string" } } } },
+            recommendations: { type: "array", items: { type: "object", properties: { title: { type: "string" }, description: { type: "string" }, effort: { type: "string" }, impact: { type: "string" } } } },
+            quickWins: { type: "array", items: { type: "string" } },
+            longTermImprovements: { type: "array", items: { type: "string" } },
+            improvementPotential: { type: "string" }
+          }
+        }
+      });
+
+      setAiSystemReview(result);
+      toast.success("AI system review generated");
+    } catch (error) {
+      toast.error("Failed to generate system review");
+    } finally {
+      setIsGeneratingSystemReview(false);
+    }
+  };
+
   // Filter metrics/issues by view mode
   const filteredMetrics = metrics.filter(m => {
     if (viewMode === "global") return m.is_global !== false;
