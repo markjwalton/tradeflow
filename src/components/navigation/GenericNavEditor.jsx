@@ -426,7 +426,7 @@ export default function GenericNavEditor({
                                       Move to top level
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
-                                    {getValidParents().filter(p => p._id !== item._id && p._id !== item.parent_id).map(parent => (
+                                    {getValidParents(item._id).filter(p => p._id !== item.parent_id).map(parent => (
                                       <DropdownMenuItem 
                                         key={parent._id}
                                         onClick={() => handleMoveToParent(item, parent._id)}
