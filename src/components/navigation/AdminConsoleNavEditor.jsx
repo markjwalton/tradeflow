@@ -218,14 +218,25 @@ export default function AdminConsoleNavEditor() {
     ? [...unallocatedSlugs, items[editingItem]?.slug].filter(Boolean)
     : unallocatedSlugs;
 
-  // Build flat list for drag/drop
+  // Build flat list for drag/drop - support 3 levels
   const flatList = [];
+  const addItemsToFlatList = (parentSlug, depth) => {
+    if (depth > 2) return; // Max 3 levels
+    const children = getChildren(parentSlug);
+    children.forEach(child => {
+      const hasGrandchildren = getChildren(child.slug).length > 0;
+      flatList.push({ ...child, isParent: hasGrandchildren, depth, hasChildren: hasGrandchildren });
+      if (expandedParents.has(child.slug)) {
+        addItemsToFlatList(child.slug, depth + 1);
+      }
+    });
+  };
+  
   parentItems.forEach(parent => {
-    flatList.push({ ...parent, isParent: true, hasChildren: getChildren(parent.slug).length > 0 });
+    const hasChildren = getChildren(parent.slug).length > 0;
+    flatList.push({ ...parent, isParent: true, hasChildren, depth: 0 });
     if (expandedParents.has(parent.slug)) {
-      getChildren(parent.slug).forEach(child => {
-        flatList.push({ ...child, isParent: false, depth: 1 });
-      });
+      addItemsToFlatList(parent.slug, 1);
     }
   });
 
@@ -303,7 +314,7 @@ export default function AdminConsoleNavEditor() {
                                         <MoveRight className="h-4 w-4" />
                                       </Button>
                                     </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end" className="w-48">
+                                    <DropdownMenuContent align="end" className="w-56">
                                       <DropdownMenuItem 
                                         onClick={() => handleMoveToParent(itemIndex, null)}
                                         disabled={!item.parent_id}
@@ -321,6 +332,16 @@ export default function AdminConsoleNavEditor() {
                                         >
                                           <CornerDownRight className="h-4 w-4" />
                                           {parent.name}
+                                        </DropdownMenuItem>
+                                      ))}
+                                      {getLevel1Items().filter(l => l.slug !== item.slug && l.slug !== item.parent_id).map(level1 => (
+                                        <DropdownMenuItem 
+                                          key={level1.slug}
+                                          onClick={() => handleMoveToParent(itemIndex, level1.slug)}
+                                          className="gap-2 pl-6"
+                                        >
+                                          <CornerDownRight className="h-4 w-4" />
+                                          └─ {level1.name}
                                         </DropdownMenuItem>
                                       ))}
                                     </DropdownMenuContent>
@@ -430,7 +451,7 @@ export default function AdminConsoleNavEditor() {
               </div>
             )}
             <div>
-              <Label>Parent (optional)</Label>
+              <Label>Parent (optional, up to 3 levels)</Label>
               <Select 
                 value={formData.parent_id || "__none__"} 
                 onValueChange={(v) => setFormData({ ...formData, parent_id: v === "__none__" ? null : v })}
@@ -442,6 +463,9 @@ export default function AdminConsoleNavEditor() {
                   <SelectItem value="__none__">No parent (top level)</SelectItem>
                   {parentItems.filter(p => p.slug !== formData.slug).map(parent => (
                     <SelectItem key={parent.slug} value={parent.slug}>{parent.name}</SelectItem>
+                  ))}
+                  {getLevel1Items().filter(p => p.slug !== formData.slug).map(item => (
+                    <SelectItem key={item.slug} value={item.slug}>└─ {item.name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
