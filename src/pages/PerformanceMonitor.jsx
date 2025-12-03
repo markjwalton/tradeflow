@@ -94,6 +94,8 @@ export default function PerformanceMonitor() {
   const [isScanning, setIsScanning] = useState(false);
   const [scanProgress, setScanProgress] = useState({ current: 0, total: 0, items: [] });
   const [isGeneratingRecommendations, setIsGeneratingRecommendations] = useState(false);
+  const [aiSystemReview, setAiSystemReview] = useState(null);
+  const [isGeneratingSystemReview, setIsGeneratingSystemReview] = useState(false);
 
   const { data: metrics = [], isLoading: loadingMetrics } = useQuery({
     queryKey: ["performanceMetrics"],
