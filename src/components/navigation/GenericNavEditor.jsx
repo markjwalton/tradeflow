@@ -137,8 +137,14 @@ export default function GenericNavEditor({
   const allocatedSlugs = items.map(i => i.slug).filter(Boolean);
   const unallocatedSlugs = sourceSlugs.filter(slug => !allocatedSlugs.includes(slug));
 
-  // Hierarchy helpers - parent_id now refers to _id of parent
+  // Hierarchy helpers - parent_id refers to _id OR slug of parent (slug used as fallback for folders)
   const getItemsByParent = (parentId) => items.filter(i => (i.parent_id || null) === parentId);
+  
+  // Find parent by checking both _id and slug (folders use slug as stable ID)
+  const findParentItem = (parentId) => {
+    if (!parentId) return null;
+    return items.find(i => i._id === parentId || i.slug === parentId);
+  };
   const topLevelItems = getItemsByParent(null);
   
   // Get all potential parent items (folders or any item can be a parent)
