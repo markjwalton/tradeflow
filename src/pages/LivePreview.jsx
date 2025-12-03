@@ -53,11 +53,38 @@ export default function LivePreview() {
     queryFn: () => base44.entities.TestData.list(),
   });
 
-  // Build navigation structure
+  // Fetch navigation config for live pages
+  const { data: navConfigs = [] } = useQuery({
+    queryKey: ["navConfig", "live_pages_source"],
+    queryFn: () => base44.entities.NavigationConfig.filter({ config_type: "live_pages_source" }),
+  });
+
+  const navItems = navConfigs[0]?.items || [];
+
+  // Build navigation structure from config
   const pageItems = playgroundItems.filter(item => item.source_type === "page");
   const featureItems = playgroundItems.filter(item => item.source_type === "feature");
 
-  // Group features by category
+  // Helper to find playground item by name
+  const findPlaygroundItem = (name) => {
+    // Check if it's a feature (prefixed with "feature:")
+    if (name.startsWith("feature:")) {
+      const featureName = name.replace("feature:", "");
+      return playgroundItems.find(p => p.source_type === "feature" && p.source_name === featureName);
+    }
+    return playgroundItems.find(p => p.source_type === "page" && p.source_name === name);
+  };
+
+  // Build hierarchical nav from config
+  const getNavItemsByParent = (parentId) => {
+    return navItems
+      .filter(item => (item.parent_id || null) === parentId && item.is_visible !== false)
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
+  };
+
+  const topLevelNavItems = getNavItemsByParent(null);
+
+  // Fallback: Group features by category if no nav config
   const featuresByCategory = featureItems.reduce((acc, item) => {
     const template = featureTemplates.find(t => t.id === item.source_id);
     const category = item.group || template?.category || "Other";
@@ -122,6 +149,94 @@ export default function LivePreview() {
     );
   }
 
+  // Recursive nav items renderer component
+  const NavItemsRenderer = ({ items, allItems, playgroundItems, selectedItemId, setSelectedItemId, expandedFolders, toggleFolder, findPlaygroundItem, statusColors, depth = 0 }) => {
+    const getChildren = (parentId) => {
+      return allItems
+        .filter(item => (item.parent_id === parentId || item.parent_id === item.slug) && item.is_visible !== false)
+        .sort((a, b) => (a.order || 0) - (b.order || 0));
+    };
+
+    return items.map(navItem => {
+      const isFolder = navItem.item_type === "folder";
+      const folderId = navItem._id || navItem.slug;
+      const children = getChildren(folderId);
+      const hasChildren = children.length > 0 || isFolder;
+      const isExpanded = expandedFolders.has(folderId);
+      
+      // For pages/features, find the corresponding playground item
+      const playgroundItem = !isFolder ? findPlaygroundItem(navItem.slug || navItem.name) : null;
+      const isSelected = playgroundItem && selectedItemId === playgroundItem.id;
+      const isFeature = navItem.slug?.startsWith("feature:");
+
+      if (isFolder) {
+        return (
+          <div key={folderId}>
+            <button
+              onClick={() => toggleFolder(folderId)}
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
+              style={{ paddingLeft: depth * 12 + 12 }}
+            >
+              {hasChildren ? (
+                isExpanded ? <ChevronDown className="h-4 w-4 text-slate-400" /> : <ChevronRight className="h-4 w-4 text-slate-400" />
+              ) : (
+                <div className="w-4" />
+              )}
+              {isExpanded ? (
+                <FolderOpen className="h-4 w-4 text-amber-400" />
+              ) : (
+                <Folder className="h-4 w-4 text-amber-400" />
+              )}
+              <span className="flex-1 text-left font-medium">{navItem.name}</span>
+              {children.length > 0 && (
+                <Badge className="bg-slate-700 text-slate-300 text-xs">{children.length}</Badge>
+              )}
+            </button>
+            {isExpanded && children.length > 0 && (
+              <div className="border-l border-slate-700 ml-5">
+                <NavItemsRenderer
+                  items={children}
+                  allItems={allItems}
+                  playgroundItems={playgroundItems}
+                  selectedItemId={selectedItemId}
+                  setSelectedItemId={setSelectedItemId}
+                  expandedFolders={expandedFolders}
+                  toggleFolder={toggleFolder}
+                  findPlaygroundItem={findPlaygroundItem}
+                  statusColors={statusColors}
+                  depth={depth + 1}
+                />
+              </div>
+            )}
+          </div>
+        );
+      }
+
+      // Page or feature item
+      return (
+        <button
+          key={navItem._id || navItem.slug}
+          onClick={() => playgroundItem && setSelectedItemId(playgroundItem.id)}
+          disabled={!playgroundItem}
+          className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm ${
+            isSelected
+              ? "bg-slate-700 text-white"
+              : playgroundItem
+                ? "text-slate-300 hover:bg-slate-800 hover:text-white"
+                : "text-slate-500 cursor-not-allowed"
+          }`}
+          style={{ paddingLeft: depth * 12 + 12 }}
+        >
+          {isFeature ? <Zap className="h-4 w-4" /> : <Layout className="h-4 w-4" />}
+          <span className="flex-1 text-left truncate">{navItem.name}</span>
+          {playgroundItem && (
+            <span className={statusColors[playgroundItem.test_status || "pending"]}>●</span>
+          )}
+        </button>
+      );
+    });
+  };
+
   return (
     <div className="flex h-[calc(100vh-56px)]">
       {/* Left Navigation Panel - Dark sidebar matching main layout */}
@@ -146,88 +261,105 @@ export default function LivePreview() {
         </div>
 
         <ScrollArea className="flex-1 p-3">
-          {/* Pages Section */}
-          <div className="mb-4">
-            <div className="flex items-center gap-2 mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wide">
-              <Layout className="h-3 w-3" />
-              Pages
-            </div>
-            <nav className="space-y-1">
-              {pageItems.map(item => (
-                <button
-                  key={item.id}
-                  onClick={() => setSelectedItemId(item.id)}
-                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm ${
-                    selectedItemId === item.id 
-                      ? "bg-slate-700 text-white" 
-                      : "text-slate-300 hover:bg-slate-800 hover:text-white"
-                  }`}
-                >
-                  <Layout className="h-4 w-4" />
-                  <span className="flex-1 text-left truncate">{item.source_name}</span>
-                  <span className={statusColors[item.test_status || "pending"]}>●</span>
-                </button>
-              ))}
-              {pageItems.length === 0 && (
-                <p className="text-xs text-slate-500 px-3 py-2">No pages synced</p>
-              )}
-            </nav>
-          </div>
-
-          {/* Features Section - Grouped by Category */}
-          <div>
-            <div className="flex items-center gap-2 mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wide">
-              <Zap className="h-3 w-3" />
-              Features
-            </div>
-            <nav className="space-y-1">
-              {Object.entries(featuresByCategory).map(([category, items]) => (
-                <div key={category}>
-                  <button
-                    onClick={() => toggleFolder(category)}
-                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
-                  >
-                    {expandedFolders.has(category) ? (
-                      <ChevronDown className="h-4 w-4 text-slate-400" />
-                    ) : (
-                      <ChevronRight className="h-4 w-4 text-slate-400" />
-                    )}
-                    {expandedFolders.has(category) ? (
-                      <FolderOpen className="h-4 w-4 text-amber-400" />
-                    ) : (
-                      <Folder className="h-4 w-4 text-amber-400" />
-                    )}
-                    <span className="flex-1 text-left font-medium">{category}</span>
-                    <Badge className="bg-slate-700 text-slate-300 text-xs">
-                      {items.length}
-                    </Badge>
-                  </button>
-                  {expandedFolders.has(category) && (
-                    <div className="ml-4 pl-3 border-l border-slate-700 space-y-1 mt-1">
-                      {items.map(item => (
-                        <button
-                          key={item.id}
-                          onClick={() => setSelectedItemId(item.id)}
-                          className={`w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                            selectedItemId === item.id 
-                              ? "bg-slate-700 text-white" 
-                              : "text-slate-400 hover:bg-slate-800 hover:text-white"
-                          }`}
-                        >
-                          <Zap className="h-3 w-3" />
-                          <span className="flex-1 text-left truncate">{item.source_name}</span>
-                          <span className={statusColors[item.test_status || "pending"]}>●</span>
-                        </button>
-                      ))}
-                    </div>
+          <nav className="space-y-1">
+            {navItems.length > 0 ? (
+              // Use configured navigation structure
+              <NavItemsRenderer 
+                items={topLevelNavItems}
+                allItems={navItems}
+                playgroundItems={playgroundItems}
+                selectedItemId={selectedItemId}
+                setSelectedItemId={setSelectedItemId}
+                expandedFolders={expandedFolders}
+                toggleFolder={toggleFolder}
+                findPlaygroundItem={findPlaygroundItem}
+                statusColors={statusColors}
+                depth={0}
+              />
+            ) : (
+              // Fallback: Show pages and features separately
+              <>
+                {/* Pages Section */}
+                <div className="mb-4">
+                  <div className="flex items-center gap-2 mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wide">
+                    <Layout className="h-3 w-3" />
+                    Pages
+                  </div>
+                  {pageItems.map(item => (
+                    <button
+                      key={item.id}
+                      onClick={() => setSelectedItemId(item.id)}
+                      className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm ${
+                        selectedItemId === item.id 
+                          ? "bg-slate-700 text-white" 
+                          : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                      }`}
+                    >
+                      <Layout className="h-4 w-4" />
+                      <span className="flex-1 text-left truncate">{item.source_name}</span>
+                      <span className={statusColors[item.test_status || "pending"]}>●</span>
+                    </button>
+                  ))}
+                  {pageItems.length === 0 && (
+                    <p className="text-xs text-slate-500 px-3 py-2">No pages synced</p>
                   )}
                 </div>
-              ))}
-              {Object.keys(featuresByCategory).length === 0 && (
-                <p className="text-xs text-slate-500 px-3 py-2">No features synced</p>
-              )}
-            </nav>
-          </div>
+
+                {/* Features Section - Grouped by Category */}
+                <div>
+                  <div className="flex items-center gap-2 mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wide">
+                    <Zap className="h-3 w-3" />
+                    Features
+                  </div>
+                  {Object.entries(featuresByCategory).map(([category, items]) => (
+                    <div key={category}>
+                      <button
+                        onClick={() => toggleFolder(category)}
+                        className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
+                      >
+                        {expandedFolders.has(category) ? (
+                          <ChevronDown className="h-4 w-4 text-slate-400" />
+                        ) : (
+                          <ChevronRight className="h-4 w-4 text-slate-400" />
+                        )}
+                        {expandedFolders.has(category) ? (
+                          <FolderOpen className="h-4 w-4 text-amber-400" />
+                        ) : (
+                          <Folder className="h-4 w-4 text-amber-400" />
+                        )}
+                        <span className="flex-1 text-left font-medium">{category}</span>
+                        <Badge className="bg-slate-700 text-slate-300 text-xs">
+                          {items.length}
+                        </Badge>
+                      </button>
+                      {expandedFolders.has(category) && (
+                        <div className="ml-4 pl-3 border-l border-slate-700 space-y-1 mt-1">
+                          {items.map(item => (
+                            <button
+                              key={item.id}
+                              onClick={() => setSelectedItemId(item.id)}
+                              className={`w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                                selectedItemId === item.id 
+                                  ? "bg-slate-700 text-white" 
+                                  : "text-slate-400 hover:bg-slate-800 hover:text-white"
+                              }`}
+                            >
+                              <Zap className="h-3 w-3" />
+                              <span className="flex-1 text-left truncate">{item.source_name}</span>
+                              <span className={statusColors[item.test_status || "pending"]}>●</span>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  {Object.keys(featuresByCategory).length === 0 && (
+                    <p className="text-xs text-slate-500 px-3 py-2">No features synced</p>
+                  )}
+                </div>
+              </>
+            )}
+          </nav>
         </ScrollArea>
 
         {/* Bottom Actions */}
