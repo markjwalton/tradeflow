@@ -111,13 +111,15 @@ export default function GenericNavEditor({
   const items = itemsWithIds;
   
   // Auto-save items with generated IDs so they persist
-  React.useEffect(() => {
-    if (itemsNeedIds && config && itemsWithIds.length > 0) {
-      base44.entities.NavigationConfig.update(config.id, { items: itemsWithIds }).then(() => {
-        queryClient.invalidateQueries({ queryKey: ["navConfig", configType] });
-      });
-    }
-  }, [itemsNeedIds, config?.id, itemsWithIds]);
+  // DISABLED: This was causing issues by generating random IDs that break parent_id references
+  // IDs should be set explicitly when creating items, not auto-generated
+  // React.useEffect(() => {
+  //   if (itemsNeedIds && config && itemsWithIds.length > 0) {
+  //     base44.entities.NavigationConfig.update(config.id, { items: itemsWithIds }).then(() => {
+  //       queryClient.invalidateQueries({ queryKey: ["navConfig", configType] });
+  //     });
+  //   }
+  // }, [itemsNeedIds, config?.id, itemsWithIds]);
   
   // Respect default_collapsed setting on initial load - start with empty set (all collapsed)
   React.useEffect(() => {
