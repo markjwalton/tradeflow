@@ -13,10 +13,11 @@ import {
 } from "@/components/ui/dialog";
 import {
   CheckCircle2, XCircle, Eye, Edit, Trash2, ArrowUp, Sparkles,
-  BarChart3, Info, Zap, Table, PieChart
+  BarChart3, Info, Zap, Table, PieChart, Settings
 } from "lucide-react";
 import { toast } from "sonner";
 import WidgetRenderer from "./WidgetRenderer";
+import WidgetConfigEditor from "./WidgetConfigEditor";
 
 const widgetTypeIcons = {
   stat_card: BarChart3,
