@@ -186,11 +186,38 @@ export default function PerformanceMonitor() {
   // Scan and analyze performance
   const runPerformanceScan = async () => {
     setIsScanning(true);
+    
+    // Build scan items list
+    const scanItems = [
+      { name: "Page Templates", type: "pages", status: "pending" },
+      { name: "Feature Templates", type: "features", status: "pending" },
+      { name: "Entity Templates", type: "entities", status: "pending" },
+      { name: "Analyzing Complexity", type: "complexity", status: "pending" },
+      { name: "Checking Thresholds", type: "thresholds", status: "pending" },
+      { name: "Creating Issues", type: "issues", status: "pending" },
+      { name: "Saving Metrics", type: "save", status: "pending" },
+    ];
+    
+    setScanProgress({ current: 0, total: scanItems.length, items: scanItems });
+    
+    const updateProgress = (index, status, details = "") => {
+      setScanProgress(prev => ({
+        ...prev,
+        current: index + 1,
+        items: prev.items.map((item, i) => 
+          i === index ? { ...item, status, details } : item
+        )
+      }));
+    };
+
     try {
       const newMetrics = [];
       const newIssues = [];
 
-      // Simulate scanning pages and components
+      // Step 1: Scan page templates
+      updateProgress(0, "running", `Found ${pageTemplates.length} pages`);
+      await new Promise(r => setTimeout(r, 300));
+      
       for (const page of pageTemplates) {
         const componentCount = page.components?.length || 0;
         const estimatedLines = 50 + (componentCount * 30);
@@ -223,13 +250,80 @@ export default function PerformanceMonitor() {
           });
         }
       }
+      updateProgress(0, "done", `${pageTemplates.length} pages scanned`);
 
-      // Save metrics
-      for (const metric of newMetrics) {
-        await base44.entities.PerformanceMetric.create(metric);
+      // Step 2: Scan feature templates
+      updateProgress(1, "running", `Found ${featureTemplates.length} features`);
+      await new Promise(r => setTimeout(r, 300));
+      
+      for (const feature of featureTemplates) {
+        const complexity = feature.complexity || "medium";
+        const estimatedLines = complexity === "high" ? 300 : complexity === "medium" ? 150 : 80;
+        const threshold = getThreshold("component_size");
+        
+        const status = estimatedLines >= threshold.critical ? "critical" :
+                       estimatedLines >= threshold.warning ? "warning" : "ok";
+
+        newMetrics.push({
+          metric_type: "component_size",
+          resource_name: feature.name,
+          resource_path: `features/${feature.name}`,
+          value: estimatedLines,
+          unit: "lines",
+          threshold: threshold.warning,
+          status,
+          is_global: true,
+          measured_at: new Date().toISOString()
+        });
+
+        if (status !== "ok") {
+          newIssues.push({
+            resource_name: feature.name,
+            resource_path: `features/${feature.name}`,
+            issue_type: "complexity_high",
+            severity: status === "critical" ? "high" : "medium",
+            description: `Feature "${feature.name}" estimated at ${estimatedLines} lines (${complexity} complexity)`,
+            is_global: true,
+            status: "open"
+          });
+        }
       }
+      updateProgress(1, "done", `${featureTemplates.length} features scanned`);
 
-      // Save issues
+      // Step 3: Scan entity templates
+      updateProgress(2, "running", `Checking ${entityTemplates.length} entities`);
+      await new Promise(r => setTimeout(r, 300));
+      
+      for (const entity of entityTemplates) {
+        const propCount = Object.keys(entity.schema?.properties || {}).length;
+        
+        newMetrics.push({
+          metric_type: "component_size",
+          resource_name: entity.name,
+          resource_path: `entities/${entity.name}`,
+          value: propCount,
+          unit: "properties",
+          status: propCount > 20 ? "warning" : "ok",
+          is_global: true,
+          measured_at: new Date().toISOString()
+        });
+      }
+      updateProgress(2, "done", `${entityTemplates.length} entities checked`);
+
+      // Step 4: Analyze complexity
+      updateProgress(3, "running", "Calculating complexity scores");
+      await new Promise(r => setTimeout(r, 400));
+      updateProgress(3, "done", `${newMetrics.length} metrics calculated`);
+
+      // Step 5: Check thresholds
+      updateProgress(4, "running", "Comparing against thresholds");
+      await new Promise(r => setTimeout(r, 300));
+      const warningCount = newMetrics.filter(m => m.status === "warning").length;
+      const criticalCount = newMetrics.filter(m => m.status === "critical").length;
+      updateProgress(4, "done", `${warningCount} warnings, ${criticalCount} critical`);
+
+      // Step 6: Create issues
+      updateProgress(5, "running", `Creating ${newIssues.length} issues`);
       for (const issue of newIssues) {
         const existing = issues.find(i => 
           i.resource_name === issue.resource_name && 
@@ -240,6 +334,14 @@ export default function PerformanceMonitor() {
           await base44.entities.PerformanceIssue.create(issue);
         }
       }
+      updateProgress(5, "done", `${newIssues.length} issues created`);
+
+      // Step 7: Save metrics
+      updateProgress(6, "running", `Saving ${newMetrics.length} metrics`);
+      for (const metric of newMetrics) {
+        await base44.entities.PerformanceMetric.create(metric);
+      }
+      updateProgress(6, "done", `${newMetrics.length} metrics saved`);
 
       queryClient.invalidateQueries({ queryKey: ["performanceMetrics"] });
       queryClient.invalidateQueries({ queryKey: ["performanceIssues"] });
@@ -248,6 +350,8 @@ export default function PerformanceMonitor() {
       toast.error("Scan failed: " + error.message);
     } finally {
       setIsScanning(false);
+      // Keep progress visible for a moment
+      setTimeout(() => setScanProgress({ current: 0, total: 0, items: [] }), 3000);
     }
   };
 
