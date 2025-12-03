@@ -265,6 +265,33 @@ Return as JSON:
             </Select>
           </div>
 
+          {/* AI Capture Button */}
+          <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="font-medium text-purple-900 flex items-center gap-2">
+                  <Sparkles className="h-4 w-4" />
+                  AI Capture from Clipboard
+                </h4>
+                <p className="text-sm text-purple-700 mt-1">
+                  Copy chat content, then click to auto-summarize
+                </p>
+              </div>
+              <Button 
+                onClick={handleAICapture}
+                disabled={isAICapturing}
+                className="bg-purple-600 hover:bg-purple-700"
+              >
+                {isAICapturing ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <ClipboardPaste className="h-4 w-4 mr-2" />
+                )}
+                {isAICapturing ? "Analyzing..." : "Capture & Summarize"}
+              </Button>
+            </div>
+          </div>
+
           {/* Entry Type Pills */}
           <div>
             <label className="text-sm font-medium mb-2 block">Type</label>
@@ -290,15 +317,14 @@ Return as JSON:
             </div>
           </div>
 
-          {/* Content */}
+          {/* Content - now shows AI result or manual entry */}
           <div>
-            <label className="text-sm font-medium mb-2 block">Content</label>
+            <label className="text-sm font-medium mb-2 block">Content {content && "(AI generated - edit as needed)"}</label>
             <Textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Paste or type your note..."
+              placeholder="Click 'Capture & Summarize' above or type manually..."
               rows={6}
-              autoFocus
             />
           </div>
 
