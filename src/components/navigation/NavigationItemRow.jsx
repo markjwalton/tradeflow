@@ -47,11 +47,11 @@ export default function NavigationItemRow({
 
   return (
     <div 
-      className={`flex items-center gap-3 p-3 bg-white border rounded-lg transition-all duration-150 ${
+      className={`group flex items-center gap-3 p-3 bg-white border rounded-lg transition-all duration-150 ${
         isDragging ? "shadow-md ring-2 ring-blue-400 bg-blue-50" : "hover:bg-gray-50"
       }`}
     >
-      <div {...dragHandleProps} className="cursor-grab">
+      <div {...dragHandleProps} className="cursor-grab opacity-0 group-hover:opacity-100 transition-opacity">
         <GripVertical className="h-5 w-5 text-gray-400" />
       </div>
       
@@ -83,56 +83,59 @@ export default function NavigationItemRow({
         onCheckedChange={() => onToggleVisibility(item)}
       />
 
-      {onMoveToParent && (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" title="Move to...">
-              <MoveRight className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuItem 
-              onClick={() => onMoveToParent(item, null)}
-              disabled={!item.parent_id}
-              className="gap-2"
-            >
-              <CornerDownRight className="h-4 w-4 rotate-180" />
-              Move to top level
-            </DropdownMenuItem>
-            {validParentOptions.length > 0 && <DropdownMenuSeparator />}
-            {validParentOptions.map(parent => (
+      {/* Action icons - hidden until hover */}
+      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        {onMoveToParent && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" title="Move to...">
+                <MoveRight className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
               <DropdownMenuItem 
-                key={parent.id}
-                onClick={() => onMoveToParent(item, parent.id)}
+                onClick={() => onMoveToParent(item, null)}
+                disabled={!item.parent_id}
                 className="gap-2"
               >
-                <CornerDownRight className="h-4 w-4" />
-                {parent.depth > 0 ? '└─ ' : ''}{parent.name}
+                <CornerDownRight className="h-4 w-4 rotate-180" />
+                Move to top level
               </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )}
+              {validParentOptions.length > 0 && <DropdownMenuSeparator />}
+              {validParentOptions.map(parent => (
+                <DropdownMenuItem 
+                  key={parent.id}
+                  onClick={() => onMoveToParent(item, parent.id)}
+                  className="gap-2"
+                >
+                  <CornerDownRight className="h-4 w-4" />
+                  {parent.depth > 0 ? '└─ ' : ''}{parent.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
 
-      {onDuplicate && (
-        <Button variant="ghost" size="icon" onClick={onDuplicate} title="Duplicate">
-          <Copy className="h-4 w-4" />
+        {onDuplicate && (
+          <Button variant="ghost" size="icon" onClick={onDuplicate} title="Duplicate">
+            <Copy className="h-4 w-4" />
+          </Button>
+        )}
+
+        <Button variant="ghost" size="icon" onClick={() => onEdit(item)} title="Edit">
+          <Pencil className="h-4 w-4" />
         </Button>
-      )}
 
-      <Button variant="ghost" size="icon" onClick={() => onEdit(item)}>
-        <Pencil className="h-4 w-4" />
-      </Button>
+        {onUnallocate && (
+          <Button variant="ghost" size="icon" onClick={() => onUnallocate(item)} title="Remove from navigation">
+            <Power className="h-4 w-4 text-green-500" />
+          </Button>
+        )}
 
-      {onUnallocate && (
-        <Button variant="ghost" size="icon" onClick={() => onUnallocate(item)} title="Remove from navigation">
-          <Power className="h-4 w-4 text-green-500" />
+        <Button variant="ghost" size="icon" onClick={() => onDelete(item)} title="Delete">
+          <Trash2 className="h-4 w-4 text-red-500" />
         </Button>
-      )}
-
-      <Button variant="ghost" size="icon" onClick={() => onDelete(item)}>
-        <Trash2 className="h-4 w-4 text-red-500" />
-      </Button>
+      </div>
     </div>
   );
 }
