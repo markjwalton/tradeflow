@@ -132,7 +132,8 @@ export default function NavigationItemForm({
     icon: "",
     is_visible: true,
     parent_id: "",
-    roles: []
+    roles: [],
+    default_collapsed: false
   });
 
   React.useEffect(() => {
@@ -144,7 +145,8 @@ export default function NavigationItemForm({
         icon: item.icon || "",
         is_visible: item.is_visible !== false,
         parent_id: item.parent_id || "",
-        roles: item.roles || []
+        roles: item.roles || [],
+        default_collapsed: item.default_collapsed || false
       });
     } else {
       setFormData({
@@ -154,7 +156,8 @@ export default function NavigationItemForm({
         icon: "",
         is_visible: true,
         parent_id: "",
-        roles: []
+        roles: [],
+        default_collapsed: false
       });
     }
   }, [item, isOpen]);
@@ -279,7 +282,7 @@ export default function NavigationItemForm({
 
           {/* Parent Selection - supports up to 2 levels of nesting */}
           <div className="space-y-2">
-            <Label>Parent Item (optional, up to 2 levels deep)</Label>
+            <Label>Parent Item (optional, up to 3 levels deep)</Label>
             <Select 
               value={formData.parent_id || "none"} 
               onValueChange={(val) => setFormData({ ...formData, parent_id: val === "none" ? "" : val })}
@@ -298,7 +301,7 @@ export default function NavigationItemForm({
                   ))}
               </SelectContent>
             </Select>
-            <p className="text-xs text-gray-500">Items can be nested up to 2 levels deep</p>
+            <p className="text-xs text-gray-500">Items can be nested up to 3 levels deep</p>
           </div>
 
           {/* Roles */}
@@ -359,6 +362,17 @@ export default function NavigationItemForm({
               onCheckedChange={(checked) => setFormData({ ...formData, is_visible: checked })}
             />
           </div>
+
+          {formData.item_type === "folder" && (
+            <div className="flex items-center justify-between">
+              <Label htmlFor="default_collapsed">Default Collapsed</Label>
+              <Switch
+                id="default_collapsed"
+                checked={formData.default_collapsed}
+                onCheckedChange={(checked) => setFormData({ ...formData, default_collapsed: checked })}
+              />
+            </div>
+          )}
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose}>
