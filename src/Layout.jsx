@@ -367,37 +367,37 @@ export default function Layout({ children, currentPageName }) {
   };
 
   // Get children of a nav item - match parent_id against _id only
-  const getNavChildren = (item, items) => {
-    const itemId = item._id;
-    if (!itemId) return [];
-    return items
-      .filter(child => child.parent_id === itemId && child.is_visible !== false)
+  const getNavChildren = (parentItem, allItems) => {
+    const parentId = parentItem._id;
+    if (!parentId) return [];
+    return allItems
+      .filter(child => child.parent_id === parentId && child.is_visible !== false)
       .sort((a, b) => (a.order || 0) - (b.order || 0));
   };
 
   // Get top-level items
-  const getTopLevelItems = (items) => {
-    return items
+  const getTopLevelItems = (allItems) => {
+    return allItems
       .filter(item => !item.parent_id && item.is_visible !== false)
       .sort((a, b) => (a.order || 0) - (b.order || 0));
   };
 
   // Recursive nav renderer
-  const renderNavItems = (items, allItems, depth = 0) => {
-    return items.map((item) => {
+  const renderNavItems = (itemsToRender, allItems, depth = 0) => {
+    return itemsToRender.map((item) => {
       const isFolder = item.item_type === "folder";
-      const folderId = item._id || item.slug || item.name;
+      const itemId = item._id;
       const children = getNavChildren(item, allItems);
       const hasChildren = children.length > 0;
-      const isExpanded = expandedFolders.has(folderId);
+      const isExpanded = expandedFolders.has(itemId);
       const Icon = iconMap[item.icon] || (isFolder ? Folder : Home);
       const isActive = currentPageName === item.slug;
 
       if (isFolder) {
         return (
-          <div key={folderId}>
+          <div key={itemId}>
             <button
-              onClick={() => toggleFolder(folderId)}
+              onClick={() => toggleFolder(itemId)}
               className="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-slate-300 hover:bg-slate-800 hover:text-white"
             >
               {hasChildren ? (
@@ -409,7 +409,7 @@ export default function Layout({ children, currentPageName }) {
               <span className="flex-1 text-left">{item.name}</span>
             </button>
             {isExpanded && hasChildren && (
-              <div>
+              <div className="ml-4">
                 {renderNavItems(children, allItems, depth + 1)}
               </div>
             )}
@@ -417,7 +417,8 @@ export default function Layout({ children, currentPageName }) {
         );
       }
 
-      // Page item
+      // Page item - child items get smaller styling
+      const isChild = depth > 0;
       let pageUrl = createPageUrl(item.slug);
       if (item.slug === "MindMapEditor") {
         const currentMap = new URLSearchParams(window.location.search).get("map");
@@ -428,16 +429,18 @@ export default function Layout({ children, currentPageName }) {
 
       return (
         <Link
-          key={item._id || item.slug}
+          key={itemId || item.slug}
           to={pageUrl}
-          className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+          className={`flex items-center gap-2 px-3 rounded-lg transition-colors ${
+            isChild ? "py-1.5 text-sm" : "py-2"
+          } ${
             isActive
               ? "bg-slate-700 text-white"
               : "text-slate-300 hover:bg-slate-800 hover:text-white"
           }`}
         >
-          <Icon className="h-4 w-4" />
-          {item.name}
+          {!isChild && <Icon className="h-4 w-4 flex-shrink-0" />}
+          <span className="truncate">{item.name}</span>
         </Link>
       );
     });
