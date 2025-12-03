@@ -38,7 +38,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { toast } from "sonner";
-import { v4 as uuidv4 } from "uuid";
 
 // Generate unique ID for items
 const generateId = () => Math.random().toString(36).substr(2, 9);
