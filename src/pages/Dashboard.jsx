@@ -52,17 +52,26 @@ export default function Dashboard() {
     customers: { count: customers.length }
   };
 
-  // Initialize visible widgets when data loads
+  // Initialize visible widgets when data loads - include any new widgets
   useEffect(() => {
-    if (widgets.length > 0 && visibleWidgetIds === null) {
+    if (widgets.length > 0) {
       const savedIds = localStorage.getItem(`${SETTINGS_KEY}_visible`);
       if (savedIds) {
-        setVisibleWidgetIds(JSON.parse(savedIds));
+        const parsed = JSON.parse(savedIds);
+        // Add any new widgets that aren't in the saved list
+        const allWidgetIds = widgets.map(w => w.id);
+        const newWidgetIds = allWidgetIds.filter(id => !parsed.includes(id));
+        if (newWidgetIds.length > 0) {
+          const updated = [...parsed, ...newWidgetIds];
+          setVisibleWidgetIds(updated);
+        } else if (visibleWidgetIds === null) {
+          setVisibleWidgetIds(parsed);
+        }
       } else {
         setVisibleWidgetIds(widgets.map(w => w.id));
       }
     }
-  }, [widgets, visibleWidgetIds]);
+  }, [widgets]);
 
   // Initialize order
   useEffect(() => {
