@@ -75,9 +75,9 @@ export default function TestDataManager() {
   
   // Generation State
   const [isGenerating, setIsGenerating] = useState(false);
-  const [isInserting, setIsInserting] = useState(false);
-  const [seedComplete, setSeedComplete] = useState(false);
-  const [seedResult, setSeedResult] = useState(null);
+  const [isSeeding, setIsSeeding] = useState(false);
+  const [seedQueue, setSeedQueue] = useState([]);
+  const [seedSuccess, setSeedSuccess] = useState(null);
 
   const [generationProgress, setGenerationProgress] = useState({
     current: 0,
