@@ -139,7 +139,7 @@ export default function SeedDataProgress({
                   ) : (
                     <Database className="h-3 w-3 mr-1" />
                   )}
-                  Insert to Real DB
+                  Seed Database
                 </Button>
               )}
             </div>

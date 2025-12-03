@@ -392,11 +392,14 @@ Return as JSON with entity names as keys and arrays of records as values.`,
     
     setIsInserting(false);
     if (errors.length > 0) {
-      toast.error(`Inserted ${totalInserted} records. Errors: ${errors.slice(0, 3).join(", ")}`);
+      toast.error(`Seeded ${totalInserted} records with some errors: ${errors.slice(0, 3).join(", ")}`);
     } else if (totalInserted === 0) {
-      toast.warning("No records to insert");
+      toast.warning("No records to seed");
     } else {
-      toast.success(`Inserted ${totalInserted} records into real database`);
+      toast.success(`Database seeded successfully! ${totalInserted} records created across all entities.`, {
+        duration: 5000,
+        icon: "✅"
+      });
     }
   };
 
@@ -563,6 +566,7 @@ Return as JSON with entity names as keys and arrays of records as values.`,
             description={filterView ? "Click dashboard cards to change filter" : "Complete status of all testable items"}
             onGenerateData={handleGenerateForItem}
             onRunTest={(item) => toast.info("Test runner coming soon")}
+            groupByCategory={true}
           />
         </TabsContent>
 
