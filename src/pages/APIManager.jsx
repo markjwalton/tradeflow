@@ -53,9 +53,12 @@ import {
 
 const COLORS = ["#22c55e", "#ef4444", "#f59e0b", "#3b82f6"];
 
+import { MapPin, Mail, Phone } from "lucide-react";
+
 const commonProviders = [
   { value: "openai", label: "OpenAI", baseUrl: "https://api.openai.com/v1" },
   { value: "stripe", label: "Stripe", baseUrl: "https://api.stripe.com/v1" },
+  { value: "ideal_postcodes", label: "Ideal Postcodes", baseUrl: "https://api.ideal-postcodes.co.uk/v1" },
   { value: "twilio", label: "Twilio", baseUrl: "https://api.twilio.com" },
   { value: "sendgrid", label: "SendGrid", baseUrl: "https://api.sendgrid.com/v3" },
   { value: "mailchimp", label: "Mailchimp", baseUrl: "https://api.mailchimp.com/3.0" },
@@ -103,6 +106,11 @@ export default function APIManager() {
   const { data: apiLogs = [], isLoading: loadingLogs } = useQuery({
     queryKey: ["apiLogs"],
     queryFn: () => base44.entities.APILog.list("-created_date", 500)
+  });
+
+  const { data: lookupLogs = [] } = useQuery({
+    queryKey: ["lookupLogs"],
+    queryFn: () => base44.entities.LookupLog.list("-created_date", 500)
   });
 
   const createMutation = useMutation({
@@ -339,6 +347,10 @@ export default function APIManager() {
           <TabsTrigger value="billing" className="gap-2">
             <DollarSign className="h-4 w-4" />
             Usage & Billing
+          </TabsTrigger>
+          <TabsTrigger value="lookups" className="gap-2">
+            <MapPin className="h-4 w-4" />
+            Lookup Stats
           </TabsTrigger>
         </TabsList>
 
@@ -838,6 +850,11 @@ export default function APIManager() {
             </CardContent>
           </Card>
         </TabsContent>
+
+        {/* Lookup Stats Tab */}
+        <TabsContent value="lookups" className="space-y-6">
+          <LookupStatsTab lookupLogs={lookupLogs} tenants={tenants} />
+        </TabsContent>
       </Tabs>
 
       {/* Editor Dialog */}
@@ -969,6 +986,231 @@ export default function APIManager() {
           </div>
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+// Lookup Stats Tab Component
+function LookupStatsTab({ lookupLogs, tenants }) {
+  const [selectedTenant, setSelectedTenant] = useState("all");
+
+  const filteredLogs = selectedTenant === "all" 
+    ? lookupLogs 
+    : lookupLogs.filter(l => l.tenant_id === selectedTenant);
+
+  const stats = useMemo(() => {
+    const last24h = filteredLogs.filter(l => 
+      new Date(l.created_date) > new Date(Date.now() - 24 * 60 * 60 * 1000)
+    );
+    const last7d = filteredLogs.filter(l => 
+      new Date(l.created_date) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+    );
+
+    const byType = {};
+    filteredLogs.forEach(l => {
+      if (!byType[l.lookup_type]) byType[l.lookup_type] = { count: 0, cost: 0 };
+      byType[l.lookup_type].count++;
+      byType[l.lookup_type].cost += l.cost || 0;
+    });
+
+    const totalCost = filteredLogs.reduce((sum, l) => sum + (l.cost || 0), 0);
+    const successRate = filteredLogs.length > 0 
+      ? ((filteredLogs.filter(l => l.success).length / filteredLogs.length) * 100).toFixed(1)
+      : 100;
+
+    return { total24h: last24h.length, total7d: last7d.length, byType, totalCost, successRate };
+  }, [filteredLogs]);
+
+  const lookupTypeLabels = {
+    address_autocomplete: { label: "Address Autocomplete", icon: MapPin, color: "text-blue-600" },
+    address_lookup: { label: "Address Lookup", icon: MapPin, color: "text-blue-600" },
+    postcode_lookup: { label: "Postcode Lookup", icon: MapPin, color: "text-green-600" },
+    email_validation: { label: "Email Validation", icon: Mail, color: "text-purple-600" },
+    phone_validation: { label: "Phone Validation", icon: Phone, color: "text-amber-600" }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold flex items-center gap-2">
+          <MapPin className="h-5 w-5" />
+          Lookup Statistics (Address, Email, Phone)
+        </h2>
+        <Select value={selectedTenant} onValueChange={setSelectedTenant}>
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="All Tenants" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Tenants</SelectItem>
+            {tenants.map(t => (
+              <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="pt-4">
+            <div className="text-sm text-gray-500">Lookups (24h)</div>
+            <div className="text-2xl font-bold">{stats.total24h}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4">
+            <div className="text-sm text-gray-500">Lookups (7d)</div>
+            <div className="text-2xl font-bold">{stats.total7d}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4">
+            <div className="text-sm text-gray-500">Success Rate</div>
+            <div className={`text-2xl font-bold ${parseFloat(stats.successRate) >= 95 ? "text-green-600" : "text-amber-600"}`}>
+              {stats.successRate}%
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4">
+            <div className="text-sm text-gray-500">Total Cost</div>
+            <div className="text-2xl font-bold text-green-600">£{stats.totalCost.toFixed(4)}</div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Breakdown by Type */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Lookups by Type</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {Object.entries(stats.byType).map(([type, data]) => {
+              const config = lookupTypeLabels[type] || { label: type, icon: MapPin, color: "text-gray-600" };
+              const Icon = config.icon;
+              return (
+                <div key={type} className="flex items-center gap-4">
+                  <div className={`flex items-center gap-2 w-48 ${config.color}`}>
+                    <Icon className="h-4 w-4" />
+                    <span className="font-medium">{config.label}</span>
+                  </div>
+                  <div className="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-blue-500" 
+                      style={{ width: `${filteredLogs.length > 0 ? (data.count / filteredLogs.length * 100) : 0}%` }}
+                    />
+                  </div>
+                  <span className="w-20 text-right text-sm">{data.count} calls</span>
+                  <span className="w-24 text-right text-sm text-green-600">£{data.cost.toFixed(4)}</span>
+                </div>
+              );
+            })}
+            {Object.keys(stats.byType).length === 0 && (
+              <p className="text-gray-500 text-center py-8">No lookup data yet</p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Tenant Breakdown */}
+      {selectedTenant === "all" && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Usage by Tenant (for billing)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Tenant</TableHead>
+                  <TableHead>Address Lookups</TableHead>
+                  <TableHead>Email Validations</TableHead>
+                  <TableHead>Phone Validations</TableHead>
+                  <TableHead>Total Cost</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {tenants.map(tenant => {
+                  const tenantLogs = lookupLogs.filter(l => l.tenant_id === tenant.id);
+                  const addressCount = tenantLogs.filter(l => l.lookup_type?.includes("address") || l.lookup_type?.includes("postcode")).length;
+                  const emailCount = tenantLogs.filter(l => l.lookup_type === "email_validation").length;
+                  const phoneCount = tenantLogs.filter(l => l.lookup_type === "phone_validation").length;
+                  const cost = tenantLogs.reduce((sum, l) => sum + (l.cost || 0), 0);
+                  
+                  if (tenantLogs.length === 0) return null;
+                  
+                  return (
+                    <TableRow key={tenant.id}>
+                      <TableCell className="font-medium">{tenant.name}</TableCell>
+                      <TableCell>{addressCount}</TableCell>
+                      <TableCell>{emailCount}</TableCell>
+                      <TableCell>{phoneCount}</TableCell>
+                      <TableCell className="text-green-600 font-medium">£{cost.toFixed(4)}</TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Recent Lookups */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Recent Lookups</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Time</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Query</TableHead>
+                <TableHead>Tenant</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Cost</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredLogs.slice(0, 50).map(log => {
+                const config = lookupTypeLabels[log.lookup_type] || { label: log.lookup_type, icon: MapPin, color: "text-gray-600" };
+                const Icon = config.icon;
+                return (
+                  <TableRow key={log.id}>
+                    <TableCell className="text-xs">
+                      {format(new Date(log.created_date), "MMM d, HH:mm")}
+                    </TableCell>
+                    <TableCell>
+                      <div className={`flex items-center gap-1 ${config.color}`}>
+                        <Icon className="h-3 w-3" />
+                        <span className="text-xs">{config.label}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-mono text-xs max-w-[200px] truncate">
+                      {log.query}
+                    </TableCell>
+                    <TableCell className="text-xs">
+                      {tenants.find(t => t.id === log.tenant_id)?.name || "-"}
+                    </TableCell>
+                    <TableCell>
+                      {log.success ? (
+                        <Badge className="bg-green-100 text-green-700">Success</Badge>
+                      ) : (
+                        <Badge className="bg-red-100 text-red-700">Failed</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-green-600 text-xs">
+                      £{(log.cost || 0).toFixed(4)}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   );
 }
