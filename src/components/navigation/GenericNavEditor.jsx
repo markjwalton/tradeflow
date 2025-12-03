@@ -321,25 +321,8 @@ export default function GenericNavEditor({
     return result;
   };
 
-  // Get valid parent options (exclude self and descendants)
-  const getParentOptions = () => {
-    const currentId = editingItem;
-    // Get all descendants of current item to exclude
-    const getDescendants = (id, acc = new Set()) => {
-      items.filter(i => i.parent_id === id).forEach(child => {
-        acc.add(child._id);
-        getDescendants(child._id, acc);
-      });
-      return acc;
-    };
-    const descendants = currentId ? getDescendants(currentId) : new Set();
-    
-    return items.filter(i => 
-      (i.item_type === "folder" || getItemsByParent(i._id).length > 0) &&
-      i._id !== currentId &&
-      !descendants.has(i._id)
-    );
-  };
+  // Get valid parent options for the form dialog
+  const getParentOptions = () => getValidParents(editingItem);
 
   const flatList = buildFlatList();
 
