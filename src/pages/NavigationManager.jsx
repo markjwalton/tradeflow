@@ -13,7 +13,7 @@ import PageSettingsDialog from "@/components/common/PageSettingsDialog";
 
 // Admin Console page slugs - hardcoded in Layout.js
 const ADMIN_CONSOLE_SLUGS = [
-  "DashboardManager", "CMSManager", "APIManager", "SecurityMonitor", "PerformanceMonitor",
+  "Dashboard", "DashboardManager", "CMSManager", "APIManager", "SecurityMonitor", "PerformanceMonitor",
   "RoadmapManager", "RoadmapJournal", "SprintManager", "RuleBook",
   "PlaygroundSummary", "TestDataManager", "MindMapEditor", "ERDEditor",
   "GeneratedApps", "EntityLibrary", "PageLibrary", "FeatureLibrary",

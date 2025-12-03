@@ -54,6 +54,7 @@ import NavigationManager from './pages/NavigationManager';
 import CommunityLibrary from './pages/CommunityLibrary';
 import CommunityPublish from './pages/CommunityPublish';
 import DashboardManager from './pages/DashboardManager';
+import Dashboard from './pages/Dashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -114,6 +115,7 @@ export const PAGES = {
     "CommunityLibrary": CommunityLibrary,
     "CommunityPublish": CommunityPublish,
     "DashboardManager": DashboardManager,
+    "Dashboard": Dashboard,
 }
 
 export const pagesConfig = {
