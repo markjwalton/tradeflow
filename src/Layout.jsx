@@ -23,7 +23,9 @@ import {
   Lightbulb,
   Globe,
   Folder,
-  FolderOpen
+  FolderOpen,
+  Menu,
+  X
 } from "lucide-react";
 
 // Tenant Context
