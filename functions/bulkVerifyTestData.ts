@@ -24,35 +24,23 @@ Deno.serve(async (req) => {
 
     const verifiedDate = new Date().toISOString();
 
-    // Process with longer delays to avoid rate limits - 1 update per second
+    // Process updates with minimal delay
     for (let i = 0; i < testDataIds.length; i++) {
       const id = testDataIds[i];
       
-      let retries = 0;
-      const maxRetries = 3;
-      
-      while (retries < maxRetries) {
-        try {
-          await base44.asServiceRole.entities.TestData.update(id, {
-            test_status: "verified",
-            verified_date: verifiedDate
-          });
-          results.success.push(id);
-          break;
-        } catch (e) {
-          retries++;
-          if (retries < maxRetries) {
-            // Exponential backoff: 3s, 6s, 12s
-            await sleep(3000 * Math.pow(2, retries - 1));
-          } else {
-            results.failed.push({ id, error: e.message });
-          }
-        }
+      try {
+        await base44.asServiceRole.entities.TestData.update(id, {
+          test_status: "verified",
+          verified_date: verifiedDate
+        });
+        results.success.push(id);
+      } catch (e) {
+        results.failed.push({ id, error: e.message });
       }
       
-      // 1 second delay between each update
-      if (i < testDataIds.length - 1) {
-        await sleep(1000);
+      // Small delay every 5 updates
+      if ((i + 1) % 5 === 0 && i < testDataIds.length - 1) {
+        await sleep(100);
       }
     }
 
