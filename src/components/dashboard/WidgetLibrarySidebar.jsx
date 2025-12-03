@@ -56,7 +56,7 @@ export default function WidgetLibrarySidebar({
 
   if (isCollapsed) {
     return (
-      <div className="w-12 bg-white border-r flex flex-col items-center py-4">
+      <div className="w-12 bg-white border-r flex flex-col items-center py-4 flex-shrink-0">
         <Button variant="ghost" size="icon" onClick={onToggleCollapse}>
           <ChevronRight className="h-4 w-4" />
         </Button>
@@ -72,7 +72,7 @@ export default function WidgetLibrarySidebar({
   }
 
   return (
-    <div className="w-64 bg-white border-r flex flex-col">
+    <div className="w-64 bg-white border-r flex flex-col flex-shrink-0">
       {/* Header */}
       <div className="p-3 border-b flex items-center justify-between">
         <h3 className="font-medium text-sm">Widget Library</h3>
