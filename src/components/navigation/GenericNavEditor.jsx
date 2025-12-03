@@ -308,16 +308,20 @@ export default function GenericNavEditor({
     return Icon ? <Icon className="h-4 w-4" /> : <Home className="h-4 w-4" />;
   };
 
-  // Build flat list for rendering
+  // Build flat list for rendering - recalculates hasChildren from current items array
   const buildFlatList = () => {
     const result = [];
+    // Pre-calculate which items have children
+    const parentIds = new Set(items.map(i => i.parent_id).filter(Boolean));
+    
     const addItems = (parentId, depth) => {
-      if (depth > 2) return;
+      if (depth > 3) return; // Allow 3 levels of nesting
       const children = getItemsByParent(parentId).sort((a, b) => (a.order || 0) - (b.order || 0));
       children.forEach(child => {
-        const hasChildren = getItemsByParent(child._id).length > 0;
+        const hasChildren = parentIds.has(child._id);
         result.push({ ...child, depth, hasChildren });
-        if (expandedParents.has(child._id)) {
+        // Always recurse if has children and expanded
+        if (hasChildren && expandedParents.has(child._id)) {
           addItems(child._id, depth + 1);
         }
       });
