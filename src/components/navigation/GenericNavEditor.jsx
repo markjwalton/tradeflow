@@ -126,12 +126,9 @@ export default function GenericNavEditor({
     },
   });
 
-  // Find item by slug and parent
-  const findItemIndex = (targetSlug, targetParentId) => {
-    return items.findIndex(i => 
-      i.slug === targetSlug && (i.parent_id || null) === (targetParentId || null)
-    );
-  };
+  // Find item by unique _id
+  const findItemById = (id) => items.find(i => i._id === id);
+  const findItemIndexById = (id) => items.findIndex(i => i._id === id);
 
   const handleDragEnd = (result) => {
     if (!result.destination) return;
