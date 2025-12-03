@@ -547,28 +547,30 @@ export default function NavigationManager() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      {isGlobalAdmin && (
-        <div className="flex items-center justify-between mb-6">
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList>
-              <TabsTrigger value="admin">Admin Console</TabsTrigger>
-              <TabsTrigger value="live" className="gap-2">
-                <FileCode className="h-4 w-4" />
-                Live Pages
-              </TabsTrigger>
-              <TabsTrigger value="tenant">Tenant Navigation</TabsTrigger>
-            </TabsList>
-          </Tabs>
-          <Button variant="ghost" size="icon" onClick={() => setShowSettings(true)}>
-            <Settings className="h-5 w-5" />
-          </Button>
-        </div>
-      )}
+      {isGlobalAdmin ? (
+        <>
+          <div className="flex items-center justify-between mb-6">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <div className="flex items-center justify-between">
+                <TabsList>
+                  <TabsTrigger value="admin">Admin Console</TabsTrigger>
+                  <TabsTrigger value="live" className="gap-2">
+                    <FileCode className="h-4 w-4" />
+                    Live Pages
+                  </TabsTrigger>
+                  <TabsTrigger value="tenant">Tenant Navigation</TabsTrigger>
+                </TabsList>
+                <Button variant="ghost" size="icon" onClick={() => setShowSettings(true)}>
+                  <Settings className="h-5 w-5" />
+                </Button>
+              </div>
+            </Tabs>
+          </div>
 
-      {activeTab === "admin" && isGlobalAdmin ? (
-        <AdminConsoleNavEditor />
-      ) : activeTab === "live" && isGlobalAdmin ? (
-        renderNavigationEditor()
+          {activeTab === "admin" && <AdminConsoleNavEditor key="admin" />}
+          {activeTab === "live" && renderNavigationEditor()}
+          {activeTab === "tenant" && renderNavigationEditor()}
+        </>
       ) : (
         renderNavigationEditor()
       )}
