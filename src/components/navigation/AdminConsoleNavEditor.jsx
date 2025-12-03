@@ -297,6 +297,34 @@ export default function AdminConsoleNavEditor() {
                                   <Button variant="ghost" size="icon" onClick={() => handleToggleVisibility(itemIndex)}>
                                     {item.is_visible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4 text-gray-400" />}
                                   </Button>
+                                  <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                      <Button variant="ghost" size="icon" title="Move to...">
+                                        <MoveRight className="h-4 w-4" />
+                                      </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end" className="w-48">
+                                      <DropdownMenuItem 
+                                        onClick={() => handleMoveToParent(itemIndex, null)}
+                                        disabled={!item.parent_id}
+                                        className="gap-2"
+                                      >
+                                        <CornerDownRight className="h-4 w-4 rotate-180" />
+                                        Move to top level
+                                      </DropdownMenuItem>
+                                      {parentItems.filter(p => p.slug !== item.slug && p.slug !== item.parent_id).length > 0 && <DropdownMenuSeparator />}
+                                      {parentItems.filter(p => p.slug !== item.slug && p.slug !== item.parent_id).map(parent => (
+                                        <DropdownMenuItem 
+                                          key={parent.slug}
+                                          onClick={() => handleMoveToParent(itemIndex, parent.slug)}
+                                          className="gap-2"
+                                        >
+                                          <CornerDownRight className="h-4 w-4" />
+                                          {parent.name}
+                                        </DropdownMenuItem>
+                                      ))}
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
                                   <Button variant="ghost" size="icon" onClick={() => handleDuplicate(itemIndex)}>
                                     <Copy className="h-4 w-4" />
                                   </Button>
