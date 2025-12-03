@@ -62,6 +62,8 @@ export default function TestDataManager() {
   const [bulkProgress, setBulkProgress] = useState({ current: 0, total: 0, items: [] });
   const [batchSize, setBatchSize] = useState(10);
   const [isInserting, setIsInserting] = useState(false);
+  const [validationResults, setValidationResults] = useState(null);
+  const [showValidationDialog, setShowValidationDialog] = useState(false);
 
   const { data: playgroundItems = [] } = useQuery({
     queryKey: ["playgroundItems"],
