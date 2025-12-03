@@ -107,10 +107,24 @@ export default function GenericNavEditor({
   const getItemsByParent = (parentId) => items.filter(i => (i.parent_id || null) === parentId);
   const topLevelItems = getItemsByParent(null);
   
-  // Get all potential parent items (folders or items with children)
-  const getValidParents = () => items.filter(i => 
-    i.item_type === "folder" || getItemsByParent(i._id).length > 0
-  );
+  // Get all potential parent items (folders can always be parents)
+  const getValidParents = (excludeId = null) => {
+    // Get all descendants to exclude
+    const getDescendants = (id, acc = new Set()) => {
+      items.filter(i => i.parent_id === id).forEach(child => {
+        acc.add(child._id);
+        getDescendants(child._id, acc);
+      });
+      return acc;
+    };
+    const descendants = excludeId ? getDescendants(excludeId) : new Set();
+    
+    return items.filter(i => 
+      i.item_type === "folder" &&
+      i._id !== excludeId &&
+      !descendants.has(i._id)
+    );
+  };
 
   const saveMutation = useMutation({
     mutationFn: async (newItems) => {
