@@ -455,6 +455,44 @@ Focus on code refactoring, component splitting, and performance optimization bes
         </div>
       </div>
 
+      {/* Scan Progress Indicator */}
+      {scanProgress.total > 0 && (
+        <Card className="mb-6 border-blue-200 bg-blue-50">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base flex items-center gap-2">
+              <Loader2 className={`h-4 w-4 ${isScanning ? "animate-spin" : ""}`} />
+              {isScanning ? "Scanning..." : "Scan Complete"}
+              <span className="text-sm font-normal text-gray-500">
+                ({scanProgress.current}/{scanProgress.total})
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {scanProgress.items.map((item, idx) => (
+                <div key={item.type} className="flex items-center gap-3 text-sm">
+                  <div className="w-5">
+                    {item.status === "pending" && <Circle className="h-4 w-4 text-gray-300" />}
+                    {item.status === "running" && <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />}
+                    {item.status === "done" && <CheckCircle2 className="h-4 w-4 text-green-500" />}
+                  </div>
+                  <span className={item.status === "pending" ? "text-gray-400" : "text-gray-700"}>
+                    {item.name}
+                  </span>
+                  {item.details && (
+                    <span className="text-gray-400 text-xs">— {item.details}</span>
+                  )}
+                </div>
+              ))}
+            </div>
+            <Progress 
+              value={(scanProgress.current / scanProgress.total) * 100} 
+              className="mt-4 h-2" 
+            />
+          </CardContent>
+        </Card>
+      )}
+
       {/* View Mode Toggle */}
       <div className="flex items-center gap-4 mb-6">
         <Tabs value={viewMode} onValueChange={setViewMode}>
