@@ -463,42 +463,57 @@ Return as JSON with entity names as keys and arrays of records as values.`,
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Test Data Manager</h1>
-          <p className="text-gray-500">Generate, validate, and manage test data for functional testing</p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={runValidation}>
-            <Shield className="h-4 w-4 mr-2" />
-            Validate Schemas
-          </Button>
-          <Select value={batchSize.toString()} onValueChange={(v) => setBatchSize(parseInt(v))}>
-            <SelectTrigger className="w-32">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="5">5 items</SelectItem>
-              <SelectItem value="10">10 items</SelectItem>
-              <SelectItem value="25">25 items</SelectItem>
-              <SelectItem value="50">50 items</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button 
-            onClick={startBulkGeneration}
-            disabled={isGenerating || stats.withoutTestData === 0}
-            className="bg-purple-600 hover:bg-purple-700"
-          >
-            {isGenerating ? (
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-            ) : (
-              <Sparkles className="h-4 w-4 mr-2" />
-            )}
-            Generate Missing Data ({stats.withoutTestData})
-          </Button>
-        </div>
-      </div>
+      {/* Hero Header */}
+      <Card className="bg-gradient-to-r from-purple-600 to-blue-600 text-white border-0">
+        <CardContent className="py-6">
+          <div className="flex items-start justify-between">
+            <div className="flex items-start gap-4">
+              <div className="p-3 bg-white/20 rounded-xl">
+                <FlaskConical className="h-8 w-8" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold">Test Data Manager</h1>
+                <p className="text-purple-100 mt-1 max-w-2xl">
+                  Comprehensive test data generation and validation for functional & UI testing. 
+                  Ensure every page and feature has realistic test data for complete application coverage.
+                </p>
+                <div className="flex gap-4 mt-4">
+                  <div className="flex items-center gap-2 bg-white/20 px-3 py-1.5 rounded-lg">
+                    <Target className="h-4 w-4" />
+                    <span className="text-sm font-medium">{stats.total} Pages/Features</span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-white/20 px-3 py-1.5 rounded-lg">
+                    <CheckCircle2 className="h-4 w-4" />
+                    <span className="text-sm font-medium">{stats.withTestData} With Data</span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-white/20 px-3 py-1.5 rounded-lg">
+                    <AlertTriangle className="h-4 w-4" />
+                    <span className="text-sm font-medium">{stats.withoutTestData} Missing</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <Button variant="secondary" onClick={runValidation} className="bg-white text-purple-700 hover:bg-purple-50">
+                <Shield className="h-4 w-4 mr-2" />
+                Validate Schemas
+              </Button>
+              <Button 
+                onClick={startBulkGeneration}
+                disabled={isGenerating || stats.withoutTestData === 0}
+                className="bg-white/20 hover:bg-white/30 border-white/30"
+              >
+                {isGenerating ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Sparkles className="h-4 w-4 mr-2" />
+                )}
+                Generate All Missing
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Dashboard Cards */}
       <TestDataDashboard stats={stats} onCardClick={handleCardClick} />
