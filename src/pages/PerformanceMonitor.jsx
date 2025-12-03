@@ -397,19 +397,19 @@ export default function PerformanceMonitor() {
       updateProgress(4, "done", `${Object.keys(apiByEndpoint).length} APIs analyzed`);
 
       // Step 6: Analyze complexity
-      updateProgress(3, "running", "Calculating complexity scores");
+      updateProgress(5, "running", "Calculating complexity scores");
       await new Promise(r => setTimeout(r, 400));
-      updateProgress(3, "done", `${newMetrics.length} metrics calculated`);
+      updateProgress(5, "done", `${newMetrics.length} metrics calculated`);
 
-      // Step 5: Check thresholds
-      updateProgress(4, "running", "Comparing against thresholds");
+      // Step 7: Check thresholds
+      updateProgress(6, "running", "Comparing against thresholds");
       await new Promise(r => setTimeout(r, 300));
       const warningCount = newMetrics.filter(m => m.status === "warning").length;
       const criticalCount = newMetrics.filter(m => m.status === "critical").length;
-      updateProgress(4, "done", `${warningCount} warnings, ${criticalCount} critical`);
+      updateProgress(6, "done", `${warningCount} warnings, ${criticalCount} critical`);
 
-      // Step 6: Create issues
-      updateProgress(5, "running", `Creating ${newIssues.length} issues`);
+      // Step 8: Create issues
+      updateProgress(7, "running", `Creating ${newIssues.length} issues`);
       for (const issue of newIssues) {
         const existing = issues.find(i => 
           i.resource_name === issue.resource_name && 
@@ -420,14 +420,14 @@ export default function PerformanceMonitor() {
           await base44.entities.PerformanceIssue.create(issue);
         }
       }
-      updateProgress(5, "done", `${newIssues.length} issues created`);
+      updateProgress(7, "done", `${newIssues.length} issues created`);
 
-      // Step 7: Save metrics
-      updateProgress(6, "running", `Saving ${newMetrics.length} metrics`);
+      // Step 9: Save metrics
+      updateProgress(8, "running", `Saving ${newMetrics.length} metrics`);
       for (const metric of newMetrics) {
         await base44.entities.PerformanceMetric.create(metric);
       }
-      updateProgress(6, "done", `${newMetrics.length} metrics saved`);
+      updateProgress(8, "done", `${newMetrics.length} metrics saved`);
 
       queryClient.invalidateQueries({ queryKey: ["performanceMetrics"] });
       queryClient.invalidateQueries({ queryKey: ["performanceIssues"] });
