@@ -515,15 +515,28 @@ Return as JSON with entity names as keys and arrays of records as values.`,
   // Helper to get entities for a single item (for generation)
   const getEntitiesForItemById = (itemId) => {
     const item = playgroundItems.find(p => p.id === itemId);
-    if (!item) return [];
+    if (!item) {
+      console.log(`getEntitiesForItemById: item not found for id ${itemId}`);
+      return [];
+    }
 
     let entitiesUsed = [];
     if (item.source_type === "page") {
       const template = pageTemplates.find(t => t.id === item.source_id);
       entitiesUsed = item.working_data?.entities_used || template?.data?.entities_used || template?.entities_used || [];
+      console.log(`getEntitiesForItemById (page): ${item.source_name}`, { 
+        working_data: item.working_data,
+        template: template ? { entities_used: template.entities_used, data: template.data } : null,
+        entitiesUsed 
+      });
     } else if (item.source_type === "feature") {
       const template = featureTemplates.find(t => t.id === item.source_id);
       entitiesUsed = item.working_data?.entities_used || template?.data?.entities_used || template?.entities_used || [];
+      console.log(`getEntitiesForItemById (feature): ${item.source_name}`, { 
+        working_data: item.working_data,
+        template: template ? { entities_used: template.entities_used, data: template.data } : null,
+        entitiesUsed 
+      });
     }
 
     return entitiesUsed.map(name => {
