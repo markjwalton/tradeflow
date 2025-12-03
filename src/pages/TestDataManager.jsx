@@ -409,59 +409,11 @@ Return as JSON with entity names as keys and arrays of records as values.`,
             <p className="mb-4">Select a page or feature to manage its test data</p>
             <p className="text-sm mb-6">Or generate test data for all playground items at once:</p>
             <Button 
-              onClick={async () => {
-                if (previewableItems.length === 0) {
-                  toast.error("No pages or features found in playground");
-                  return;
-                }
-                setIsGenerating(true);
-                let generated = 0;
-                for (const item of previewableItems) {
-                  const entities = getEntitiesForItem(item.id);
-                  if (entities.length === 0) continue;
-                  
-                  // Check if test data already exists
-                  const existingData = testDataSets.find(td => td.playground_item_id === item.id);
-                  if (existingData) continue;
-
-                  const entitySchemas = entities.map(e => ({
-                    name: e.name,
-                    properties: e.schema?.properties || {},
-                    required: e.schema?.required || []
-                  }));
-
-                  try {
-                    const result = await base44.integrations.Core.InvokeLLM({
-                      prompt: `Generate realistic test data for "${item.source_name}". Create 3 records for EACH entity:
-${entitySchemas.map(e => `Entity: ${e.name}\nProperties: ${JSON.stringify(e.properties)}`).join('\n---\n')}
-Return as JSON with entity names as keys and arrays of records as values.`,
-                      response_json_schema: {
-                        type: "object",
-                        properties: {
-                          data: { type: "object", additionalProperties: { type: "array", items: { type: "object" } } }
-                        }
-                      }
-                    });
-
-                    await base44.entities.TestData.create({
-                      name: "Default Test Data",
-                      playground_item_id: item.id,
-                      entity_data: result.data || {},
-                      is_default: true
-                    });
-                    generated++;
-                  } catch (e) {
-                    console.error(`Failed for ${item.source_name}:`, e);
-                  }
-                }
-                queryClient.invalidateQueries({ queryKey: ["testData"] });
-                setIsGenerating(false);
-                toast.success(`Generated test data for ${generated} items`);
-              }}
+              onClick={() => setShowBulkGeneration(true)}
               disabled={isGenerating}
               className="bg-purple-600 hover:bg-purple-700"
             >
-              {isGenerating ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
+              <Sparkles className="h-4 w-4 mr-2" />
               AI Generate All Test Data
             </Button>
           </CardContent>
