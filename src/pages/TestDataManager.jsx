@@ -68,6 +68,8 @@ export default function TestDataManager() {
   const [validationResults, setValidationResults] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [verifyingItem, setVerifyingItem] = useState(null);
+    const [bulkVerificationReport, setBulkVerificationReport] = useState(null);
+    const [isVerifyingBulk, setIsVerifyingBulk] = useState(false);
   
   // Save settings to localStorage
   const handleSettingsChange = (newSettings) => {
