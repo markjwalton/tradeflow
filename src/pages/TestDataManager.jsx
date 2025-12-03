@@ -317,7 +317,9 @@ export default function TestDataManager() {
       entities: item.entities || getEntitiesForItemById(item.id)
     }));
 
+    console.log("Setting isGenerating to true, enrichedItems:", enrichedItems.length);
     setIsGenerating(true);
+    console.log("isGenerating set, setting progress...");
     setGenerationProgress({
       current: 0,
       total: itemsToProcess.length,
