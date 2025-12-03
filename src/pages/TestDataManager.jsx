@@ -156,13 +156,17 @@ export default function TestDataManager() {
 
       let entitiesUsed = [];
       if (item.source_type === "page") {
-            const template = pageTemplates.find(t => t.id === item.source_id);
+            const sourceId = item.source_id || item.data?.source_id;
+            const template = pageTemplates.find(t => t.id === sourceId);
             entitiesUsed = item.working_data?.entities_used 
+              || item.data?.working_data?.entities_used
               || template?.data?.entities_used 
               || [];
       } else if (item.source_type === "feature") {
-            const template = featureTemplates.find(t => t.id === item.source_id);
+            const sourceId = item.source_id || item.data?.source_id;
+            const template = featureTemplates.find(t => t.id === sourceId);
             entitiesUsed = item.working_data?.entities_used 
+              || item.data?.working_data?.entities_used
               || template?.data?.entities_used 
               || [];
       }
