@@ -24,7 +24,8 @@ import {
 } from "@/components/ui/dialog";
 import {
   Database, Layout, Zap, FileText, CheckSquare, Workflow, Building2,
-  Upload, Globe, RefreshCw, Package, ArrowUp, Loader2, Send, Eye
+  Upload, Globe, RefreshCw, Package, ArrowUp, Loader2, Send, Eye,
+  ChevronDown, ChevronRight, Folder, FolderOpen
 } from "lucide-react";
 import { toast } from "sonner";
 
