@@ -285,7 +285,7 @@ function LivePagesNavEditor({ pageTemplates = [], featureTemplates = [] }) {
           is_visible: true,
           parent_id: null,
           item_type: "folder",
-          default_collapsed: false,
+          default_collapsed: true,
           order: order++
         });
       }
