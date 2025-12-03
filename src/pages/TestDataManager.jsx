@@ -44,20 +44,41 @@ import TestDataSettingsDialog from "@/components/test-data/TestDataSettingsDialo
 export default function TestDataManager() {
   const queryClient = useQueryClient();
   
+  // Settings with localStorage persistence
+  const [settings, setSettings] = useState(() => {
+    const saved = localStorage.getItem("testDataManagerSettings");
+    return saved ? JSON.parse(saved) : {
+      batchSize: 10,
+      recordsPerEntity: 3,
+      expandCategoriesByDefault: false,
+      compactView: false,
+      defaultTab: "overview",
+      confirmBeforeSeed: true,
+      autoSeedOnGeneration: false
+    };
+  });
+  
   // UI State
-  const [activeTab, setActiveTab] = useState("overview");
-  const [filterView, setFilterView] = useState(null); // null, "withData", "withoutData", "tested", "pending"
+  const [activeTab, setActiveTab] = useState(settings.defaultTab || "overview");
+  const [filterView, setFilterView] = useState(null);
   const [showEditor, setShowEditor] = useState(false);
   const [editingData, setEditingData] = useState(null);
   const [showValidation, setShowValidation] = useState(false);
   const [validationResults, setValidationResults] = useState(null);
+  const [showSettings, setShowSettings] = useState(false);
+  
+  // Save settings to localStorage
+  const handleSettingsChange = (newSettings) => {
+    setSettings(newSettings);
+    localStorage.setItem("testDataManagerSettings", JSON.stringify(newSettings));
+  };
   
   // Generation State
   const [isGenerating, setIsGenerating] = useState(false);
   const [isInserting, setIsInserting] = useState(false);
   const [seedComplete, setSeedComplete] = useState(false);
   const [seedResult, setSeedResult] = useState(null);
-  const [batchSize, setBatchSize] = useState(10);
+
   const [generationProgress, setGenerationProgress] = useState({
     current: 0,
     total: 0,
@@ -502,10 +523,20 @@ Return as JSON with entity names as keys and arrays of records as values.`,
               </div>
             </div>
             <div className="flex flex-col gap-2">
-              <Button variant="secondary" onClick={runValidation} className="bg-white text-purple-700 hover:bg-purple-50">
-                <Shield className="h-4 w-4 mr-2" />
-                Validate Schemas
-              </Button>
+              <div className="flex gap-2">
+                <Button variant="secondary" onClick={runValidation} className="bg-white text-purple-700 hover:bg-purple-50">
+                  <Shield className="h-4 w-4 mr-2" />
+                  Validate Schemas
+                </Button>
+                <Button 
+                  variant="secondary" 
+                  onClick={() => setShowSettings(true)} 
+                  className="bg-white/20 hover:bg-white/30 text-white"
+                  size="icon"
+                >
+                  <Settings className="h-4 w-4" />
+                </Button>
+              </div>
               <Button 
                 onClick={startBulkGeneration}
                 disabled={isGenerating || stats.withoutTestData === 0}
