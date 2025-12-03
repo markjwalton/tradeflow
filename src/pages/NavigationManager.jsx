@@ -304,13 +304,29 @@ export default function NavigationManager() {
 
   const getParentOptions = (currentItem) => {
     // Support 3 levels: top level can have children, children can have grandchildren
-    const topLevel = navItems.filter(i => !i.parent_id && i.id !== currentItem?.id);
-    const level1 = navItems.filter(i => i.parent_id && topLevel.some(t => t.id === i.parent_id) && i.id !== currentItem?.id);
-    const level2 = navItems.filter(i => i.parent_id && level1.some(l => l.id === i.parent_id) && i.id !== currentItem?.id);
+    // Exclude the current item and its descendants
+    const isDescendantOf = (item, ancestorId) => {
+      if (!item.parent_id) return false;
+      if (item.parent_id === ancestorId) return true;
+      const parent = navItems.find(i => i.id === item.parent_id);
+      return parent ? isDescendantOf(parent, ancestorId) : false;
+    };
+    
+    const topLevel = navItems.filter(i => 
+      !i.parent_id && 
+      i.id !== currentItem?.id && 
+      !isDescendantOf(i, currentItem?.id)
+    );
+    const level1 = navItems.filter(i => 
+      i.parent_id && 
+      topLevel.some(t => t.id === i.parent_id) && 
+      i.id !== currentItem?.id &&
+      !isDescendantOf(i, currentItem?.id)
+    );
+    
     return [
       ...topLevel.map(i => ({ ...i, depth: 0 })),
-      ...level1.map(i => ({ ...i, depth: 1 })),
-      ...level2.map(i => ({ ...i, depth: 2 }))
+      ...level1.map(i => ({ ...i, depth: 1 }))
     ];
   };
 
