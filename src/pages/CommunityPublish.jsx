@@ -70,6 +70,7 @@ export default function CommunityPublish() {
     change_notes: "",
     is_update: false
   });
+  const [expandedCategories, setExpandedCategories] = useState(new Set());
 
   const isGlobalAdmin = tenantContext?.isGlobalAdmin;
 
