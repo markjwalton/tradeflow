@@ -138,18 +138,24 @@ export default function TestVerificationDialog({
     updateStep("preview", { status: "running" });
     await new Promise(r => setTimeout(r, 800));
     
-    // For now, mark as passed if we have data
+    // Pass if we have data OR if there are no entities (nothing to preview is valid)
+    const entityCount = Object.keys(entityData).length;
     if (totalRecords > 0) {
       updateStep("preview", { 
         status: "passed", 
         details: ["Ready for visual verification"] 
       });
+    } else if (entityCount === 0) {
+      updateStep("preview", { 
+        status: "passed", 
+        details: ["No entities required - preview ready"] 
+      });
     } else {
       updateStep("preview", { 
-        status: "failed", 
-        details: ["No data to preview"] 
+        status: "warning", 
+        details: ["No test records to preview"] 
       });
-      allPassed = false;
+      warnings++;
     }
 
     // Set overall result
