@@ -126,96 +126,98 @@ export default function LivePreview() {
 
   return (
     <div className="flex h-[calc(100vh-56px)]">
-      {/* Left Navigation Panel */}
-      <aside className="w-72 bg-white border-r flex flex-col">
-        {/* Back to Main Navigation */}
-        <div className="p-3 border-b bg-slate-50">
+      {/* Left Navigation Panel - Dark sidebar matching main layout */}
+      <aside className="w-64 bg-slate-900 text-white flex flex-col">
+        {/* Header */}
+        <div className="p-4 border-b border-slate-700">
+          <h1 className="text-lg font-bold flex items-center gap-2">
+            <Eye className="h-5 w-5" />
+            Live Preview
+          </h1>
+          <p className="text-xs text-slate-400">Preview pages & features</p>
+        </div>
+
+        {/* Back Button */}
+        <div className="p-3 border-b border-slate-700">
           <Link to={createPageUrl("PlaygroundSummary")}>
-            <Button variant="outline" size="sm" className="w-full justify-start">
+            <Button variant="outline" size="sm" className="w-full justify-start bg-slate-800 border-slate-600 text-white hover:bg-slate-700 hover:text-white">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Main
+              Back to Playground
             </Button>
           </Link>
         </div>
 
-        <div className="p-3 border-b">
-          <h2 className="font-semibold flex items-center gap-2">
-            <Eye className="h-5 w-5 text-purple-600" />
-            Live Preview
-          </h2>
-          <p className="text-xs text-gray-500 mt-1">Preview pages & features</p>
-        </div>
-
-        <ScrollArea className="flex-1">
+        <ScrollArea className="flex-1 p-3">
           {/* Pages Section */}
-          <div className="p-3">
-            <div className="flex items-center gap-2 mb-2 text-xs font-semibold text-gray-500 uppercase">
+          <div className="mb-4">
+            <div className="flex items-center gap-2 mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wide">
               <Layout className="h-3 w-3" />
               Pages
             </div>
-            <div className="space-y-0.5">
+            <nav className="space-y-1">
               {pageItems.map(item => (
                 <button
                   key={item.id}
                   onClick={() => setSelectedItemId(item.id)}
-                  className={`w-full text-left px-3 py-2 rounded-lg text-sm flex items-center justify-between transition-colors ${
+                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm ${
                     selectedItemId === item.id 
-                      ? "bg-blue-100 text-blue-800 font-medium" 
-                      : "hover:bg-gray-100"
+                      ? "bg-slate-700 text-white" 
+                      : "text-slate-300 hover:bg-slate-800 hover:text-white"
                   }`}
                 >
-                  <span className="truncate">{item.source_name}</span>
+                  <Layout className="h-4 w-4" />
+                  <span className="flex-1 text-left truncate">{item.source_name}</span>
                   <span className={statusColors[item.test_status || "pending"]}>●</span>
                 </button>
               ))}
               {pageItems.length === 0 && (
-                <p className="text-xs text-gray-400 px-3 py-2">No pages synced</p>
+                <p className="text-xs text-slate-500 px-3 py-2">No pages synced</p>
               )}
-            </div>
+            </nav>
           </div>
 
           {/* Features Section - Grouped by Category */}
-          <div className="p-3 border-t">
-            <div className="flex items-center gap-2 mb-2 text-xs font-semibold text-gray-500 uppercase">
+          <div>
+            <div className="flex items-center gap-2 mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wide">
               <Zap className="h-3 w-3" />
               Features
             </div>
-            <div className="space-y-0.5">
+            <nav className="space-y-1">
               {Object.entries(featuresByCategory).map(([category, items]) => (
                 <div key={category}>
                   <button
                     onClick={() => toggleFolder(category)}
-                    className="w-full text-left px-3 py-2 rounded-lg text-sm flex items-center gap-2 hover:bg-gray-100"
+                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
                   >
                     {expandedFolders.has(category) ? (
-                      <>
-                        <ChevronDown className="h-4 w-4 text-gray-400" />
-                        <FolderOpen className="h-4 w-4 text-amber-500" />
-                      </>
+                      <ChevronDown className="h-4 w-4 text-slate-400" />
                     ) : (
-                      <>
-                        <ChevronRight className="h-4 w-4 text-gray-400" />
-                        <Folder className="h-4 w-4 text-amber-500" />
-                      </>
+                      <ChevronRight className="h-4 w-4 text-slate-400" />
                     )}
-                    <span className="flex-1 font-medium">{category}</span>
-                    <Badge variant="secondary" className="text-xs">
+                    {expandedFolders.has(category) ? (
+                      <FolderOpen className="h-4 w-4 text-amber-400" />
+                    ) : (
+                      <Folder className="h-4 w-4 text-amber-400" />
+                    )}
+                    <span className="flex-1 text-left font-medium">{category}</span>
+                    <Badge className="bg-slate-700 text-slate-300 text-xs">
                       {items.length}
                     </Badge>
                   </button>
                   {expandedFolders.has(category) && (
-                    <div className="ml-6 space-y-0.5 mt-0.5">
+                    <div className="ml-4 pl-3 border-l border-slate-700 space-y-1 mt-1">
                       {items.map(item => (
                         <button
                           key={item.id}
                           onClick={() => setSelectedItemId(item.id)}
-                          className={`w-full text-left px-3 py-1.5 rounded-lg text-sm flex items-center justify-between transition-colors ${
+                          className={`w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors ${
                             selectedItemId === item.id 
-                              ? "bg-amber-100 text-amber-800 font-medium" 
-                              : "text-gray-600 hover:bg-gray-100"
+                              ? "bg-slate-700 text-white" 
+                              : "text-slate-400 hover:bg-slate-800 hover:text-white"
                           }`}
                         >
-                          <span className="truncate">{item.source_name}</span>
+                          <Zap className="h-3 w-3" />
+                          <span className="flex-1 text-left truncate">{item.source_name}</span>
                           <span className={statusColors[item.test_status || "pending"]}>●</span>
                         </button>
                       ))}
@@ -224,16 +226,16 @@ export default function LivePreview() {
                 </div>
               ))}
               {Object.keys(featuresByCategory).length === 0 && (
-                <p className="text-xs text-gray-400 px-3 py-2">No features synced</p>
+                <p className="text-xs text-slate-500 px-3 py-2">No features synced</p>
               )}
-            </div>
+            </nav>
           </div>
         </ScrollArea>
 
         {/* Bottom Actions */}
-        <div className="p-3 border-t space-y-2">
+        <div className="p-3 border-t border-slate-700">
           <Link to={createPageUrl("TestDataManager")}>
-            <Button variant="outline" size="sm" className="w-full">
+            <Button variant="outline" size="sm" className="w-full bg-slate-800 border-slate-600 text-white hover:bg-slate-700 hover:text-white">
               <Database className="h-4 w-4 mr-2" />
               Manage Test Data
             </Button>
