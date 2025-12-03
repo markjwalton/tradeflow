@@ -366,20 +366,12 @@ export default function Layout({ children, currentPageName }) {
     });
   };
 
-  // Get children of a nav item - match parent_id against _id, slug, or name (for folders without _id)
+  // Get children of a nav item - match parent_id against _id only
   const getNavChildren = (item, items) => {
     const itemId = item._id;
-    const itemSlug = item.slug;
-    const itemName = item.name;
+    if (!itemId) return [];
     return items
-      .filter(child => {
-        if (!child.parent_id) return false;
-        // Match parent_id against _id, slug, or name of the parent
-        return child.parent_id === itemId || 
-               (itemSlug && child.parent_id === itemSlug) ||
-               (itemName && child.parent_id === itemName);
-      })
-      .filter(child => child.is_visible !== false)
+      .filter(child => child.parent_id === itemId && child.is_visible !== false)
       .sort((a, b) => (a.order || 0) - (b.order || 0));
   };
 
