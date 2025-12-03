@@ -196,6 +196,9 @@ export default function WidgetStaging({ widgets = [], onEdit }) {
                     <Button size="sm" variant="ghost" onClick={() => setPreviewWidget(widget)}>
                       <Eye className="h-3 w-3" />
                     </Button>
+                    <Button size="sm" variant="ghost" onClick={() => setConfigWidget(widget)} title="Settings">
+                      <Settings className="h-3 w-3" />
+                    </Button>
                     <Button size="sm" variant="ghost" onClick={() => onEdit?.(widget)}>
                       <Edit className="h-3 w-3" />
                     </Button>
