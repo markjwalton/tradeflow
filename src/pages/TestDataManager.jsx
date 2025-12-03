@@ -390,6 +390,35 @@ Return as JSON with entity names as keys and arrays of records as values.`,
                     </div>
                     {td.notes && <p className="text-sm text-gray-500 mb-3">{td.notes}</p>}
                     <div className="flex gap-2">
+                      <Button 
+                        size="sm" 
+                        variant="default"
+                        className="bg-green-600 hover:bg-green-700"
+                        onClick={async () => {
+                          const entityData = td.entity_data || {};
+                          let totalInserted = 0;
+                          let errors = [];
+                          
+                          for (const [entityName, records] of Object.entries(entityData)) {
+                            if (!Array.isArray(records) || records.length === 0) continue;
+                            try {
+                              await base44.entities[entityName].bulkCreate(records);
+                              totalInserted += records.length;
+                            } catch (e) {
+                              errors.push(`${entityName}: ${e.message}`);
+                            }
+                          }
+                          
+                          if (errors.length > 0) {
+                            toast.error(`Inserted ${totalInserted} records. Errors: ${errors.join(", ")}`);
+                          } else {
+                            toast.success(`Inserted ${totalInserted} records into database`);
+                          }
+                        }}
+                      >
+                        <Plus className="h-3 w-3 mr-1" />
+                        Insert to DB
+                      </Button>
                       <Button size="sm" variant="outline" onClick={() => openEditor(td)}>
                         <Edit className="h-3 w-3 mr-1" />
                         Edit
