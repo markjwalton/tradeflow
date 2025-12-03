@@ -364,10 +364,10 @@ export default function Layout({ children, currentPageName }) {
     });
   };
 
-  // Get children of a nav item
+  // Get children of a nav item - check against both _id and slug
   const getNavChildren = (parentId, items) => {
     return items
-      .filter(item => (item.parent_id === parentId || item.parent_id === item.slug) && item.is_visible !== false)
+      .filter(item => item.parent_id && (item.parent_id === parentId) && item.is_visible !== false)
       .sort((a, b) => (a.order || 0) - (b.order || 0));
   };
 

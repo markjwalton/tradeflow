@@ -131,13 +131,18 @@ export default function GenericNavEditor({
   const allocatedSlugs = items.map(i => i.slug).filter(Boolean);
   const unallocatedSlugs = sourceSlugs.filter(slug => !allocatedSlugs.includes(slug));
 
-  // Hierarchy helpers - parent_id refers to _id OR slug of parent (slug used as fallback for folders)
-  const getItemsByParent = (parentId) => items.filter(i => (i.parent_id || null) === parentId);
-  
-  // Find parent by checking both _id and slug (folders use slug as stable ID)
+  // Hierarchy helpers - parent_id refers to _id of parent
+  const getItemsByParent = (parentId) => {
+    if (parentId === null) {
+      return items.filter(i => !i.parent_id);
+    }
+    return items.filter(i => i.parent_id === parentId);
+  };
+
+  // Find parent by _id
   const findParentItem = (parentId) => {
     if (!parentId) return null;
-    return items.find(i => i._id === parentId || i.slug === parentId);
+    return items.find(i => i._id === parentId);
   };
   const topLevelItems = getItemsByParent(null);
   
@@ -372,45 +377,23 @@ export default function GenericNavEditor({
   const buildFlatList = () => {
     const result = [];
     // Pre-calculate which items have children by checking parent_id references
-    // Check both _id and slug since folders use slug as stable ID
     const itemIdsWithChildren = new Set();
     items.forEach(i => {
       if (i.parent_id) {
         itemIdsWithChildren.add(i.parent_id);
       }
     });
-    
-    // Also check if any item's parent_id matches another item's slug (folder case)
-    items.forEach(i => {
-      if (i.slug && i.item_type === "folder") {
-        const hasChildrenBySlug = items.some(child => child.parent_id === i.slug);
-        if (hasChildrenBySlug) {
-          itemIdsWithChildren.add(i._id);
-          itemIdsWithChildren.add(i.slug);
-        }
-      }
-    });
-    
+
     const addItems = (parentId, depth) => {
       if (depth > 3) return; // Allow 3 levels of nesting
       const children = getItemsByParent(parentId).sort((a, b) => (a.order || 0) - (b.order || 0));
       children.forEach(child => {
-        const hasChildren = itemIdsWithChildren.has(child._id) || itemIdsWithChildren.has(child.slug);
+        const hasChildren = itemIdsWithChildren.has(child._id);
         result.push({ ...child, depth, hasChildren });
-        // Always recurse if has children and expanded - check both _id and slug
-        const isExpanded = expandedParents.has(child._id) || expandedParents.has(child.slug);
+        // Recurse if has children and expanded
+        const isExpanded = expandedParents.has(child._id);
         if (hasChildren && isExpanded) {
-          // Try to find children by both _id and slug
           addItems(child._id, depth + 1);
-          if (child.slug && child.slug !== child._id) {
-            const slugChildren = items.filter(i => i.parent_id === child.slug);
-            slugChildren.sort((a, b) => (a.order || 0) - (b.order || 0)).forEach(slugChild => {
-              if (!result.find(r => r._id === slugChild._id)) {
-                const slugChildHasChildren = itemIdsWithChildren.has(slugChild._id) || itemIdsWithChildren.has(slugChild.slug);
-                result.push({ ...slugChild, depth: depth + 1, hasChildren: slugChildHasChildren });
-              }
-            });
-          }
         }
       });
     };
