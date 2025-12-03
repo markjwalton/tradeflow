@@ -286,7 +286,7 @@ export default function TestDataManager() {
   const startBulkGeneration = async () => {
     const itemsToProcess = itemStatusList
       .filter(i => !i.hasTestData && i.entityCount > 0)
-      .slice(0, batchSize);
+      .slice(0, settings.batchSize);
 
     if (itemsToProcess.length === 0) {
       toast.info("All items already have test data");
@@ -378,7 +378,7 @@ Return as JSON with entity names as keys and arrays of records as values.`,
     }
 
     setIsGenerating(false);
-    const remaining = itemStatusList.filter(i => !i.hasTestData && i.entityCount > 0).length - batchSize;
+    const remaining = itemStatusList.filter(i => !i.hasTestData && i.entityCount > 0).length - settings.batchSize;
     if (remaining > 0) {
       toast.success(`Batch complete: ${successCount} succeeded, ${errorCount} failed. ${remaining} items remaining.`);
     } else {
@@ -582,6 +582,7 @@ Return as JSON with entity names as keys and arrays of records as values.`,
               description="These pages need test data generated"
               filter={(i) => !i.hasTestData}
               onGenerateData={handleGenerateForItem}
+              defaultExpanded={settings.expandCategoriesByDefault}
             />
 
             {/* Recently Generated */}
@@ -591,6 +592,7 @@ Return as JSON with entity names as keys and arrays of records as values.`,
               description="Test data generated but not yet verified"
               filter={(i) => i.hasTestData && i.testStatus !== "verified"}
               onRunTest={(item) => toast.info("Test runner coming soon")}
+              defaultExpanded={settings.expandCategoriesByDefault}
             />
           </div>
         </TabsContent>
@@ -603,12 +605,13 @@ Return as JSON with entity names as keys and arrays of records as values.`,
             onGenerateData={handleGenerateForItem}
             onRunTest={(item) => toast.info("Test runner coming soon")}
             groupByCategory={true}
+            defaultExpanded={settings.expandCategoriesByDefault}
           />
         </TabsContent>
 
         <TabsContent value="progress" className="space-y-6">
-          {/* Progress Card - Always visible when running or has items */}
-          {(isGenerating || generationProgress.items.length > 0) && (
+          {/* Progress Card - Always at top when active */}
+          {(isGenerating || generationProgress.items.length > 0) ? (
             <SeedDataProgress
               isRunning={isGenerating}
               progress={generationProgress}
@@ -621,32 +624,7 @@ Return as JSON with entity names as keys and arrays of records as values.`,
               seedComplete={seedComplete}
               seedResult={seedResult}
             />
-          )}
-
-          {/* Show other sections only when NOT generating */}
-          {!isGenerating && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <TestDataStatusTable
-                items={itemStatusList}
-                title="Pages Without Test Data"
-                description="These pages need test data generated"
-                filter={(i) => !i.hasTestData}
-                onGenerateData={handleGenerateForItem}
-                groupByCategory={true}
-              />
-              <TestDataStatusTable
-                items={itemStatusList}
-                title="Pending Verification"
-                description="Test data generated but not yet verified"
-                filter={(i) => i.hasTestData && i.testStatus !== "verified"}
-                onRunTest={(item) => toast.info("Test runner coming soon")}
-                groupByCategory={true}
-              />
-            </div>
-          )}
-
-          {/* Empty state when no generation has started */}
-          {!isGenerating && generationProgress.items.length === 0 && (
+          ) : (
             <Card>
               <CardContent className="py-12 text-center">
                 <Database className="h-12 w-12 mx-auto mb-4 text-gray-300" />
@@ -684,6 +662,14 @@ Return as JSON with entity names as keys and arrays of records as values.`,
         onClose={() => setShowValidation(false)}
         validationResults={validationResults}
         onRevalidate={runValidation}
+      />
+
+      {/* Settings Dialog */}
+      <TestDataSettingsDialog
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+        settings={settings}
+        onSettingsChange={handleSettingsChange}
       />
     </div>
   );
