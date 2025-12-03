@@ -338,7 +338,10 @@ Return as JSON with entity names as keys and arrays of records as values.`,
 
           {/* Test Data Sets */}
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">Test Data Sets</h2>
+            <div>
+              <h2 className="text-lg font-semibold">Test Data Sets</h2>
+              <p className="text-sm text-gray-500">For Live Preview testing. Use "Insert to Real DB" to add data to actual entities.</p>
+            </div>
             <div className="flex gap-2">
               <Button 
                 onClick={async () => {
@@ -350,7 +353,7 @@ Return as JSON with entity names as keys and arrays of records as values.`,
                 className="bg-purple-600 hover:bg-purple-700"
               >
                 {isGenerating ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
-                AI Generate Test Data
+                AI Generate for Preview
               </Button>
               <Button onClick={() => openEditor()} disabled={selectedEntities.length === 0}>
                 <Plus className="h-4 w-4 mr-2" />
@@ -389,10 +392,9 @@ Return as JSON with entity names as keys and arrays of records as values.`,
                       ))}
                     </div>
                     {td.notes && <p className="text-sm text-gray-500 mb-3">{td.notes}</p>}
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
                       <Button 
                         size="sm" 
-                        variant="default"
                         className="bg-green-600 hover:bg-green-700"
                         onClick={async () => {
                           const entityData = td.entity_data || {};
@@ -412,12 +414,12 @@ Return as JSON with entity names as keys and arrays of records as values.`,
                           if (errors.length > 0) {
                             toast.error(`Inserted ${totalInserted} records. Errors: ${errors.join(", ")}`);
                           } else {
-                            toast.success(`Inserted ${totalInserted} records into database`);
+                            toast.success(`Inserted ${totalInserted} records into real database`);
                           }
                         }}
                       >
-                        <Plus className="h-3 w-3 mr-1" />
-                        Insert to DB
+                        <Database className="h-3 w-3 mr-1" />
+                        Insert to Real DB
                       </Button>
                       <Button size="sm" variant="outline" onClick={() => openEditor(td)}>
                         <Edit className="h-3 w-3 mr-1" />
@@ -465,9 +467,16 @@ Return as JSON with entity names as keys and arrays of records as values.`,
           
           {bulkProgress.total === 0 ? (
             <div className="space-y-4">
+              <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                <p className="text-amber-800 text-sm font-medium mb-1">For Live Preview Only</p>
+                <p className="text-amber-700 text-sm">
+                  This generates mock data for the Live Preview feature. To insert data into real database entities, 
+                  use the "Insert to Real DB" button on individual test data sets after generation.
+                </p>
+              </div>
               <p className="text-gray-600">
-                This will generate test data for pages and features that don't have test data yet.
-                Items are saved immediately - if page refreshes, completed items won't be reprocessed.
+                Generates test data only for pages/features that don't have test data yet.
+                Items are saved immediately - completed items won't be reprocessed if you run again.
               </p>
               
               <div className="flex items-center gap-4 p-3 bg-blue-50 rounded-lg">
