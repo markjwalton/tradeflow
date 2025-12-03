@@ -203,24 +203,27 @@ export default function TestDataManager() {
     );
 
     return previewableItems.map(item => {
-      const entities = getEntitiesForItem(item);
-      const testData = testDataSets.find(td => td.playground_item_id === item.id);
-      const recordCount = testData ? 
-        Object.values(testData.entity_data || {}).reduce((sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0) : 0;
+            const entities = getEntitiesForItem(item);
+            const testData = testDataSets.find(td => td.playground_item_id === item.id);
+            const recordCount = testData ? 
+              Object.values(testData.entity_data || {}).reduce((sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0) : 0;
 
-      return {
-        id: item.id,
-        name: item.source_name,
-        type: item.source_type,
-        entityCount: entities.length,
-        recordCount,
-        hasTestData: !!testData,
-        testDataId: testData?.id,
-        dataStatus: testData ? (recordCount > 0 ? "complete" : "pending") : "missing",
-        testStatus: testData?.test_status || "pending",
-        entities
-      };
-    });
+            // Get test status from TestData record
+            const testStatus = testData?.test_status || "pending";
+
+            return {
+              id: item.id,
+              name: item.source_name,
+              type: item.source_type,
+              entityCount: entities.length,
+              recordCount,
+              hasTestData: !!testData,
+              testDataId: testData?.id,
+              dataStatus: testData ? (recordCount > 0 || entities.length === 0 ? "complete" : "pending") : "missing",
+              testStatus: testStatus,
+              entities
+            };
+          });
   }, [playgroundItems, testDataSets, entityTemplates, pageTemplates, featureTemplates]);
 
   // Calculate stats
