@@ -177,6 +177,14 @@ export default function AdminConsoleNavEditor() {
     saveMutation.mutate(newItems);
   };
 
+  const handleMoveToParent = (index, newParentSlug) => {
+    const newItems = items.map((item, i) => 
+      i === index ? { ...item, parent_id: newParentSlug } : item
+    );
+    saveMutation.mutate(newItems);
+    toast.success(newParentSlug ? "Item moved" : "Moved to top level");
+  };
+
   const handleAllocate = (slug) => {
     // Add unallocated page to nav
     const name = slug.replace(/([A-Z])/g, ' $1').trim(); // Convert camelCase to spaces
