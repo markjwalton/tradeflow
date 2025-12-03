@@ -64,6 +64,9 @@ export default function NavigationItemRow({
         {item.item_type === "folder" && (
           <Badge variant="outline" className="text-xs text-amber-600 border-amber-300 bg-amber-50">Folder</Badge>
         )}
+        {item.item_type === "folder" && item.default_collapsed && (
+          <Badge variant="outline" className="text-xs text-gray-500">Collapsed</Badge>
+        )}
       </div>
 
       {item.roles?.length > 0 && (

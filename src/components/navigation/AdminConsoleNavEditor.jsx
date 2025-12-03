@@ -65,7 +65,7 @@ export default function AdminConsoleNavEditor() {
   const queryClient = useQueryClient();
   const [showDialog, setShowDialog] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
-  const [formData, setFormData] = useState({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null, item_type: "page" });
+  const [formData, setFormData] = useState({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null, item_type: "page", default_collapsed: false });
   const [expandedParents, setExpandedParents] = useState(new Set());
 
   const { data: navConfig = [], isLoading } = useQuery({
@@ -143,7 +143,7 @@ export default function AdminConsoleNavEditor() {
     saveMutation.mutate(newItems);
     setShowDialog(false);
     setEditingItem(null);
-    setFormData({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null, item_type: "page" });
+    setFormData({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null, item_type: "page", default_collapsed: false });
   };
 
   const handleEdit = (index) => {
@@ -235,7 +235,7 @@ export default function AdminConsoleNavEditor() {
         <CardTitle>Admin Console Navigation</CardTitle>
         <Button onClick={() => { 
           setEditingItem(null); 
-          setFormData({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null, item_type: "page" }); 
+          setFormData({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null, item_type: "page", default_collapsed: false }); 
           setShowDialog(true); 
         }}>
           <Plus className="h-4 w-4 mr-2" />
@@ -471,6 +471,15 @@ export default function AdminConsoleNavEditor() {
               />
               <Label>Visible</Label>
             </div>
+            {formData.item_type === "folder" && (
+              <div className="flex items-center gap-2">
+                <Switch
+                  checked={formData.default_collapsed}
+                  onCheckedChange={(v) => setFormData({ ...formData, default_collapsed: v })}
+                />
+                <Label>Default Collapsed</Label>
+              </div>
+            )}
             <div className="flex justify-end gap-2 pt-4">
               <Button variant="outline" onClick={() => setShowDialog(false)}>Cancel</Button>
               <Button onClick={handleSaveItem}>Save</Button>
