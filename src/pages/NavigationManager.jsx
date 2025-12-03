@@ -494,30 +494,31 @@ export default function NavigationManager() {
                     {unallocatedSlugs.map(slug => (
                       <div 
                         key={slug} 
-                        className="flex items-center gap-3 p-3 bg-gray-50 border border-dashed border-gray-300 rounded-lg"
+                        className="group flex items-center gap-3 p-3 bg-gray-50 border border-dashed border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"
                       >
                         <div className="w-5" /> {/* Spacer for alignment */}
                         <div className="flex items-center gap-2 flex-1">
                           <FileCode className="h-4 w-4 text-gray-400" />
                           <span className="font-medium text-gray-600">{slug.replace(/([A-Z])/g, ' $1').trim()}</span>
-                          <span className="text-xs text-gray-400">({slug})</span>
                         </div>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          onClick={() => handleAllocateClick(slug)}
-                          title="Edit allocation"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          onClick={() => handleAllocateClick(slug)}
-                          title="Allocate to navigation"
-                        >
-                          <Power className="h-4 w-4 text-red-500" />
-                        </Button>
+                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            onClick={() => handleAllocateClick(slug)}
+                            title="Edit allocation"
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            onClick={() => handleAllocateClick(slug)}
+                            title="Allocate to navigation"
+                          >
+                            <Power className="h-4 w-4 text-red-500" />
+                          </Button>
+                        </div>
                       </div>
                     ))}
                   </div>
