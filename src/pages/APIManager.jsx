@@ -31,7 +31,7 @@ import {
 import { 
   Key, Plus, Trash2, Edit, RefreshCw, CheckCircle2, XCircle, 
   AlertCircle, Loader2, Activity, BarChart3, Clock, Zap,
-  Eye, EyeOff, Copy, Search, Filter, Globe, Building2, DollarSign
+  Eye, EyeOff, Copy, Search, Filter, Globe, Building2, DollarSign, Shield, Link2
 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
@@ -67,6 +67,16 @@ const commonProviders = [
   { value: "custom", label: "Custom API", baseUrl: "" },
 ];
 
+// Known Base44 secrets that map to API providers
+const BASE44_SECRET_MAPPINGS = [
+  { secretName: "IDEAL_POSTCODES_API_KEY", provider: "ideal_postcodes", name: "Ideal Postcodes", baseUrl: "https://api.ideal-postcodes.co.uk/v1" },
+  { secretName: "GOOGLE_CLOUD_API_KEY", provider: "google", name: "Google Cloud", baseUrl: "https://maps.googleapis.com" },
+  { secretName: "OPENAI_API_KEY", provider: "openai", name: "OpenAI", baseUrl: "https://api.openai.com/v1" },
+  { secretName: "STRIPE_API_KEY", provider: "stripe", name: "Stripe", baseUrl: "https://api.stripe.com/v1" },
+  { secretName: "TWILIO_API_KEY", provider: "twilio", name: "Twilio", baseUrl: "https://api.twilio.com" },
+  { secretName: "SENDGRID_API_KEY", provider: "sendgrid", name: "SendGrid", baseUrl: "https://api.sendgrid.com/v3" },
+];
+
 export default function APIManager() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("apis");
@@ -87,6 +97,9 @@ export default function APIManager() {
     billing_unit: "per_call",
     settings: {}
   });
+  
+  // Base44 secrets that are set (passed from platform)
+  const base44Secrets = ["IDEAL_POSTCODES_API_KEY", "GOOGLE_CLOUD_API_KEY"];
 
   const { data: tenants = [] } = useQuery({
     queryKey: ["tenants"],
@@ -332,6 +345,10 @@ export default function APIManager() {
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
+          <TabsTrigger value="secrets" className="gap-2">
+            <Shield className="h-4 w-4" />
+            Base44 Secrets
+          </TabsTrigger>
           <TabsTrigger value="apis" className="gap-2">
             <Key className="h-4 w-4" />
             API Configurations
@@ -353,6 +370,97 @@ export default function APIManager() {
             Lookup Stats
           </TabsTrigger>
         </TabsList>
+
+        {/* Base44 Secrets Tab */}
+        <TabsContent value="secrets" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="h-5 w-5 text-purple-600" />
+                Base44 Platform Secrets
+              </CardTitle>
+              <p className="text-sm text-gray-500">
+                These secrets are configured in your Base44 app settings and available for use in backend functions.
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {BASE44_SECRET_MAPPINGS.map(mapping => {
+                  const isConfigured = base44Secrets.includes(mapping.secretName);
+                  const existingApi = apiConfigs.find(a => a.provider === mapping.provider && a.is_global);
+                  
+                  return (
+                    <div 
+                      key={mapping.secretName} 
+                      className={`flex items-center justify-between p-4 rounded-lg border ${
+                        isConfigured ? "bg-green-50 border-green-200" : "bg-gray-50 border-gray-200"
+                      }`}
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className={`p-2 rounded-lg ${isConfigured ? "bg-green-100" : "bg-gray-200"}`}>
+                          {isConfigured ? (
+                            <CheckCircle2 className="h-5 w-5 text-green-600" />
+                          ) : (
+                            <XCircle className="h-5 w-5 text-gray-400" />
+                          )}
+                        </div>
+                        <div>
+                          <div className="font-medium flex items-center gap-2">
+                            {mapping.name}
+                            {isConfigured && <Badge className="bg-green-100 text-green-700">Configured</Badge>}
+                          </div>
+                          <code className="text-xs text-gray-500">{mapping.secretName}</code>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {isConfigured && !existingApi && (
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => {
+                              setFormData({
+                                name: mapping.name,
+                                provider: mapping.provider,
+                                api_key: `{{${mapping.secretName}}}`,
+                                base_url: mapping.baseUrl,
+                                is_global: true,
+                                tenant_id: "",
+                                token_rate: 0,
+                                billing_unit: "per_call",
+                                settings: { uses_base44_secret: true, secret_name: mapping.secretName }
+                              });
+                              setShowEditor(true);
+                            }}
+                          >
+                            <Link2 className="h-3 w-3 mr-1" />
+                            Create API Config
+                          </Button>
+                        )}
+                        {existingApi && (
+                          <Badge variant="outline" className="gap-1">
+                            <Link2 className="h-3 w-3" />
+                            Linked to API Config
+                          </Badge>
+                        )}
+                        {!isConfigured && (
+                          <span className="text-xs text-gray-500">Not configured in Base44 settings</span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              
+              <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                <h4 className="font-medium text-blue-800 mb-2">How to add secrets</h4>
+                <p className="text-sm text-blue-700">
+                  Secrets are added via the Base44 dashboard under Settings → Environment Variables. 
+                  Once added, they appear here and can be used in backend functions.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         {/* API Configurations Tab */}
         <TabsContent value="apis" className="space-y-4">
