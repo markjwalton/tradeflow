@@ -53,6 +53,7 @@ import LookupTestForms from './pages/LookupTestForms';
 import NavigationManager from './pages/NavigationManager';
 import CommunityLibrary from './pages/CommunityLibrary';
 import CommunityPublish from './pages/CommunityPublish';
+import DashboardManager from './pages/DashboardManager';
 import __Layout from './Layout.jsx';
 
 
@@ -112,6 +113,7 @@ export const PAGES = {
     "NavigationManager": NavigationManager,
     "CommunityLibrary": CommunityLibrary,
     "CommunityPublish": CommunityPublish,
+    "DashboardManager": DashboardManager,
 }
 
 export const pagesConfig = {
