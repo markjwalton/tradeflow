@@ -182,19 +182,18 @@ export default function NavigationManager() {
           )}
 
           {activeTab === "live" && (
-            <div>
-              <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-700">
-                <strong>Live Pages</strong> come from the PageTemplate entity (Page Library). 
-                These are used by LivePreview for testing with sample data. 
-                They are separate from the hardcoded App Pages.
-              </div>
-              <GenericNavEditor
-                title="Live Pages Navigation (Preview System)"
-                configType="live_pages_source"
-                sourceSlugs={livePagesSlugs}
-              />
-            </div>
-          )}
+                          <div>
+                            <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-700">
+                              <strong>Live Pages</strong> come from PageTemplate and FeatureTemplate entities. 
+                              Click "Auto-Generate with Categories" to create folder structure based on template categories.
+                            </div>
+                            <LivePagesNavEditor 
+                              pageTemplates={pageTemplates}
+                            />
+                          </div>
+                        )}</
+
+
 
           {activeTab === "tenant" && (
             <div className="space-y-4">
