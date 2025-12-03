@@ -41,6 +41,7 @@ export default function WidgetStaging({ widgets = [], onEdit }) {
   const [showApproveDialog, setShowApproveDialog] = useState(false);
   const [selectedWidget, setSelectedWidget] = useState(null);
   const [approvalNotes, setApprovalNotes] = useState("");
+  const [configWidget, setConfigWidget] = useState(null);
 
   const stagingWidgets = widgets.filter(w => 
     ["draft", "staging", "approved"].includes(w.status)
