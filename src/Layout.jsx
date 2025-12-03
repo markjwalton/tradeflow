@@ -73,13 +73,15 @@ const globalAdminPages = [
 
   { name: "Tenant Manager", slug: "TenantManager", icon: Building2 },
   { name: "Navigation Manager", slug: "NavigationManager", icon: Navigation },
+  { name: "Community Library", slug: "CommunityLibrary", icon: Package },
+  { name: "Community Publish", slug: "CommunityPublish", icon: Package },
   { name: "Package Library", slug: "PackageLibrary", icon: Package },
   { name: "Prompt Settings", slug: "PromptSettings", icon: Settings },
   { name: "Lookup Test", slug: "LookupTestForms", icon: Key },
 ];
 
 // Pages that don't require tenant context but need to preserve query params
-const standalonePages = ["CMSManager", "APIManager", "SecurityMonitor", "PerformanceMonitor", "RoadmapManager", "RoadmapJournal", "SprintManager", "RuleBook", "PlaygroundSummary", "PlaygroundEntity", "PlaygroundPage", "PlaygroundFeature", "ConceptWorkbench", "TestDataManager", "LivePreview", "MindMapEditor", "GeneratedApps", "EntityLibrary", "PageLibrary", "FeatureLibrary", "PackageLibrary", "TenantManager", "BusinessTemplates", "WorkflowLibrary", "WorkflowDesigner", "FormTemplates", "FormBuilder", "ChecklistTemplates", "ChecklistBuilder", "PromptSettings", "LookupTestForms"];
+const standalonePages = ["CMSManager", "APIManager", "SecurityMonitor", "PerformanceMonitor", "RoadmapManager", "RoadmapJournal", "SprintManager", "RuleBook", "PlaygroundSummary", "PlaygroundEntity", "PlaygroundPage", "PlaygroundFeature", "ConceptWorkbench", "TestDataManager", "LivePreview", "MindMapEditor", "GeneratedApps", "EntityLibrary", "PageLibrary", "FeatureLibrary", "PackageLibrary", "TenantManager", "BusinessTemplates", "WorkflowLibrary", "WorkflowDesigner", "FormTemplates", "FormBuilder", "ChecklistTemplates", "ChecklistBuilder", "PromptSettings", "LookupTestForms", "CommunityLibrary", "CommunityPublish"];
 
 // Pages that render their own navigation (no layout sidebar)
 const fullscreenPages = ["LivePreview"];
