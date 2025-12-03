@@ -335,10 +335,24 @@ Return as JSON with entity names as keys and arrays of records as values.`,
           {/* Test Data Sets */}
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Test Data Sets</h2>
-            <Button onClick={() => openEditor()} disabled={selectedEntities.length === 0}>
-              <Plus className="h-4 w-4 mr-2" />
-              New Test Data
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                onClick={async () => {
+                  openEditor();
+                  // Small delay to let the editor open, then auto-generate
+                  setTimeout(() => generateAllTestData(), 100);
+                }} 
+                disabled={selectedEntities.length === 0 || isGenerating}
+                className="bg-purple-600 hover:bg-purple-700"
+              >
+                {isGenerating ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
+                AI Generate Test Data
+              </Button>
+              <Button onClick={() => openEditor()} disabled={selectedEntities.length === 0}>
+                <Plus className="h-4 w-4 mr-2" />
+                New Test Data
+              </Button>
+            </div>
           </div>
 
           {filteredTestData.length === 0 ? (
