@@ -3,18 +3,21 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { CheckCircle2, XCircle, Loader2, MapPin } from "lucide-react";
+import { base44 } from "@/api/base44Client";
 
 /**
  * PostcodeLookupField - UK Postcode lookup using Ideal Postcodes API
  * 
  * Props:
- * - apiKey: Ideal Postcodes API key
+ * - apiKey: Ideal Postcodes API key (optional - uses backend function if not provided)
+ * - useBackend: boolean - if true, uses backend function with secret
  * - onAddressSelect: callback with selected address
  * - required: boolean
  * - disabled: boolean
  */
 export default function PostcodeLookupField({
   apiKey,
+  useBackend = true,
   onAddressSelect,
   required = false,
   disabled = false,
@@ -36,15 +39,28 @@ export default function PostcodeLookupField({
 
     try {
       const cleanPostcode = postcode.replace(/\s/g, "").toUpperCase();
-      const response = await fetch(
-        `https://api.ideal-postcodes.co.uk/v1/postcodes/${encodeURIComponent(cleanPostcode)}?api_key=${apiKey}`
-      );
-      const data = await response.json();
+      let data;
+      
+      if (useBackend) {
+        // Use backend function which has access to the secret
+        const response = await base44.functions.invoke('postcodeLookup', { postcode: cleanPostcode });
+        data = response.data;
+      } else if (apiKey) {
+        // Direct API call with provided key
+        const response = await fetch(
+          `https://api.ideal-postcodes.co.uk/v1/postcodes/${encodeURIComponent(cleanPostcode)}?api_key=${apiKey}`
+        );
+        data = await response.json();
+      } else {
+        setError("No API key configured");
+        setIsLoading(false);
+        return;
+      }
 
       console.log("Postcode API response:", data);
 
       // Check for successful response with results
-      if (response.ok && data.result && Array.isArray(data.result) && data.result.length > 0) {
+      if (data.result && Array.isArray(data.result) && data.result.length > 0) {
         setAddresses(data.result);
       } else if (data.code === 4040 || data.code === "4040") {
         setError("Postcode not found");
@@ -56,6 +72,8 @@ export default function PostcodeLookupField({
         setError("Daily limit reached");
       } else if (data.code === 4022 || data.code === "4022") {
         setError("API key not active for this service");
+      } else if (data.error) {
+        setError(data.error);
       } else if (data.message) {
         setError(data.message);
       } else {

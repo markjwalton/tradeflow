@@ -9,10 +9,10 @@ import AddressFinderField from "@/components/forms/AddressFinderField";
 import EmailValidationField from "@/components/forms/EmailValidationField";
 import PhoneValidationField from "@/components/forms/PhoneValidationField";
 
-// API Keys - set these in Base44 secrets
-// Your key from screenshot: ak_m1u6ttm2uN0oMRMQZH87dYy2s
+// API Keys are now managed via Base44 secrets and backend functions
+// The postcode lookup uses a backend function that accesses IDEAL_POSTCODES_API_KEY secret
 const API_KEYS = {
-  postcode: "ak_m1u6ttm2uN0oMRMQZH87dYy2s", // IDEAL_POSTCODES_API_KEY - Active (50 credits)
+  postcode: null, // Uses backend function with IDEAL_POSTCODES_API_KEY secret
   address: "", // IDEAL_POSTCODES_ADDRESS_KEY - Pending
   email: "", // IDEAL_POSTCODES_EMAIL_KEY - Pending
   phone: "", // IDEAL_POSTCODES_PHONE_KEY - Pending
@@ -70,7 +70,7 @@ export default function LookupTestForms() {
             </CardHeader>
             <CardContent className="space-y-4">
               <PostcodeLookupField
-                apiKey={API_KEYS.postcode}
+                useBackend={true}
                 onAddressSelect={(addr) => setPostcodeResult(addr)}
                 required
               />
