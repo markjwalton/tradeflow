@@ -305,25 +305,32 @@ export default function GenericNavEditor({
   };
 
   const handleAllocate = (slug) => {
-    const name = slug.replace(/([A-Z])/g, ' $1').trim();
-    const newItem = {
-      _id: generateId(),
-      name,
-      slug,
-      icon: "File",
-      is_visible: true,
-      parent_id: null,
-      item_type: "page",
-      order: items.length
-    };
-    saveMutation.mutate([...items, newItem]);
-    toast.success(`${name} added`);
-  };
+        const name = slug.replace(/([A-Z])/g, ' $1').trim();
+        const newId = generateId();
+        const newItem = {
+          _id: newId,
+          name,
+          slug,
+          icon: "File",
+          is_visible: true,
+          parent_id: null,
+          item_type: "page",
+          order: items.length
+        };
+        // Ensure all existing items keep their _id
+        const existingItems = items.map(i => ({ ...i, _id: i._id || generateId() }));
+        saveMutation.mutate([...existingItems, newItem]);
+        toast.success(`${name} added`);
+      };
 
   const handleUnallocate = (item) => {
-    handleDelete(item);
-    toast.success(`${item.name} removed from navigation`);
-  };
+        // Remove by _id and remove children by parent_id, ensuring all remaining items keep _id
+        const newItems = items
+          .filter(i => i._id !== item._id && i.parent_id !== item._id)
+          .map(i => ({ ...i, _id: i._id || generateId() }));
+        saveMutation.mutate(newItems);
+        toast.success(`${item.name} removed from navigation`);
+      };
 
   const toggleParent = (slug) => {
     setExpandedParents(prev => {
