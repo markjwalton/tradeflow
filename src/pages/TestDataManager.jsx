@@ -301,7 +301,6 @@ export default function TestDataManager() {
     }
 
     setIsGenerating(true);
-    setActiveTab("progress");
     setGenerationProgress({
       current: 0,
       total: itemsToProcess.length,
@@ -610,19 +609,24 @@ Return as JSON with entity names as keys and arrays of records as values.`,
       {/* Dashboard Cards */}
       <TestDataDashboard stats={stats} onCardClick={handleCardClick} />
 
+      {/* Progress Card - Shows only when generating */}
+      {isGenerating && (
+        <SeedDataProgress
+          isRunning={isGenerating}
+          progress={generationProgress}
+          onRetry={() => {
+            const failedItems = generationProgress.items.filter(i => i.status === "error");
+            toast.info(`Retry for ${failedItems.length} failed items coming soon`);
+          }}
+          seedQueueCount={seedQueue.length}
+        />
+      )}
+
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="status">Page Status</TabsTrigger>
-          <TabsTrigger value="progress">
-            Generation Progress
-            {generationProgress.items.length > 0 && (
-              <Badge className="ml-2 h-5 px-1.5" variant="secondary">
-                {generationProgress.items.filter(i => i.status === "success").length}/{generationProgress.total}
-              </Badge>
-            )}
-          </TabsTrigger>
           <TabsTrigger value="quality">AI Quality Report</TabsTrigger>
         </TabsList>
 
@@ -660,39 +664,6 @@ Return as JSON with entity names as keys and arrays of records as values.`,
             groupByCategory={true}
             defaultExpanded={settings.expandCategoriesByDefault}
           />
-        </TabsContent>
-
-        <TabsContent value="progress" className="space-y-6">
-          {/* Progress Card - Always at top when active */}
-          {(isGenerating || generationProgress.items.length > 0) ? (
-            <SeedDataProgress
-              isRunning={isGenerating}
-              progress={generationProgress}
-              onRetry={() => {
-                const failedItems = generationProgress.items.filter(i => i.status === "error");
-                toast.info(`Retry for ${failedItems.length} failed items coming soon`);
-              }}
-              seedQueueCount={seedQueue.length}
-            />
-          ) : (
-            <Card>
-              <CardContent className="py-12 text-center">
-                <Database className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                <h3 className="font-medium text-lg mb-2">No Generation in Progress</h3>
-                <p className="text-gray-500 mb-4">
-                  Click "Generate All Missing" to start batch generation of test data
-                </p>
-                <Button 
-                  onClick={startBulkGeneration}
-                  disabled={stats.withoutTestData === 0}
-                  className="bg-purple-600 hover:bg-purple-700"
-                >
-                  <Sparkles className="h-4 w-4 mr-2" />
-                  Generate Missing Data ({stats.withoutTestData})
-                </Button>
-              </CardContent>
-            </Card>
-          )}
         </TabsContent>
 
         <TabsContent value="quality">
