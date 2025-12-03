@@ -107,9 +107,9 @@ export default function GenericNavEditor({
   const getItemsByParent = (parentId) => items.filter(i => (i.parent_id || null) === parentId);
   const topLevelItems = getItemsByParent(null);
   
-  // Get all potential parent items (folders can always be parents)
+  // Get all potential parent items (folders or any item can be a parent)
   const getValidParents = (excludeId = null) => {
-    // Get all descendants to exclude
+    // Get all descendants to exclude (can't move item into its own children)
     const getDescendants = (id, acc = new Set()) => {
       items.filter(i => i.parent_id === id).forEach(child => {
         acc.add(child._id);
@@ -119,8 +119,9 @@ export default function GenericNavEditor({
     };
     const descendants = excludeId ? getDescendants(excludeId) : new Set();
     
+    // Any item can be a parent (for nesting), but prefer folders
+    // Exclude: self, descendants of self
     return items.filter(i => 
-      i.item_type === "folder" &&
       i._id !== excludeId &&
       !descendants.has(i._id)
     );
