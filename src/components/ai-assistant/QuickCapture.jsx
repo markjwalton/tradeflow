@@ -20,7 +20,7 @@ import {
 import { 
   Loader2, Brain, HelpCircle, Lightbulb, 
   MessageSquare, AlertTriangle, CheckCircle, Code,
-  Zap, Save, Paperclip, X, FileText
+  Zap, Save, Paperclip, X, FileText, Sparkles, ClipboardPaste
 } from "lucide-react";
 import { toast } from "sonner";
 
