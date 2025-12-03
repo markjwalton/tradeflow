@@ -505,16 +505,24 @@ export default function Layout({ children, currentPageName }) {
     <TenantContext.Provider value={tenantContextValue}>
     <div className="min-h-screen flex">
       {/* Sidebar */}
-      <aside className="w-64 bg-slate-900 text-white flex flex-col">
-        <div className="p-4 border-b border-slate-700">
-          <h1 className="text-lg font-bold">
-            {isGlobalAdminPage ? "Admin Console" : (currentTenant?.name || "App")}
-          </h1>
-          <p className="text-xs text-slate-400">
-            {isGlobalAdminPage ? "Global Administration" : "Tenant Portal"}
-          </p>
+      <aside className={`${sidebarCollapsed ? "w-0" : "w-64"} bg-slate-900 text-white flex flex-col transition-all duration-300 overflow-hidden`}>
+        <div className="p-4 border-b border-slate-700 flex items-center justify-between min-w-64">
+          <div>
+            <h1 className="text-lg font-bold">
+              {isGlobalAdminPage ? "Admin Console" : (currentTenant?.name || "App")}
+            </h1>
+            <p className="text-xs text-slate-400">
+              {isGlobalAdminPage ? "Global Administration" : "Tenant Portal"}
+            </p>
+          </div>
+          <button 
+            onClick={() => setSidebarCollapsed(true)}
+            className="p-1 rounded hover:bg-slate-700 transition-colors"
+          >
+            <X className="h-5 w-5 text-slate-400" />
+          </button>
         </div>
-        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto min-w-64">
           {customAdminNav && customAdminNav.length > 0 ? (
             // Render hierarchical navigation from config
             renderNavItems(getTopLevelItems(customAdminNav), customAdminNav, 0)
