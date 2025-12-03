@@ -7,7 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { 
   FileText, ShoppingBag, BookOpen, FormInput, Key, 
-  Plus, Eye, Pencil, Trash2, Copy, Loader2, Inbox
+  Plus, Eye, Pencil, Trash2, Copy, Loader2, Inbox,
+  Navigation, Image, Layout
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTenant } from "@/Layout";
@@ -17,13 +18,21 @@ import CMSBlogEditor from "@/components/cms/CMSBlogEditor";
 import CMSFormEditor from "@/components/cms/CMSFormEditor";
 import CMSApiKeyManager from "@/components/cms/CMSApiKeyManager";
 import CMSSubmissions from "@/components/cms/CMSSubmissions";
+import CMSNavigationEditor from "@/components/cms/CMSNavigationEditor";
+import CMSAssetManager from "@/components/cms/CMSAssetManager";
+import CMSTemplateManager from "@/components/cms/CMSTemplateManager";
+import CMSTenantSelector from "@/components/cms/CMSTenantSelector";
 
 export default function CMSManager() {
-  const { tenantId } = useTenant() || {};
+  const { tenantId: contextTenantId, isGlobalAdmin } = useTenant() || {};
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("pages");
   const [editingItem, setEditingItem] = useState(null);
   const [showEditor, setShowEditor] = useState(false);
+  const [selectedTenantId, setSelectedTenantId] = useState(contextTenantId || "");
+  
+  // Use selected tenant for global admins, context tenant otherwise
+  const tenantId = isGlobalAdmin ? (selectedTenantId === "__all__" ? null : selectedTenantId) : contextTenantId;
 
   const { data: pages = [], isLoading: loadingPages } = useQuery({
     queryKey: ["cmsPages", tenantId],
@@ -164,6 +173,12 @@ export default function CMSManager() {
           <h1 className="text-2xl font-bold">CMS</h1>
           <p className="text-gray-500">Manage content for external websites</p>
         </div>
+        {isGlobalAdmin && (
+          <CMSTenantSelector 
+            value={selectedTenantId} 
+            onChange={setSelectedTenantId} 
+          />
+        )}
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -187,6 +202,18 @@ export default function CMSManager() {
           <TabsTrigger value="submissions" className="gap-2">
             <Inbox className="h-4 w-4" />
             Submissions
+          </TabsTrigger>
+          <TabsTrigger value="navigation" className="gap-2">
+            <Navigation className="h-4 w-4" />
+            Navigation
+          </TabsTrigger>
+          <TabsTrigger value="assets" className="gap-2">
+            <Image className="h-4 w-4" />
+            Assets
+          </TabsTrigger>
+          <TabsTrigger value="templates" className="gap-2">
+            <Layout className="h-4 w-4" />
+            Templates
           </TabsTrigger>
           <TabsTrigger value="api" className="gap-2">
             <Key className="h-4 w-4" />
@@ -256,6 +283,18 @@ export default function CMSManager() {
 
         <TabsContent value="submissions">
           <CMSSubmissions tenantId={tenantId} />
+        </TabsContent>
+
+        <TabsContent value="navigation">
+          <CMSNavigationEditor tenantId={tenantId} />
+        </TabsContent>
+
+        <TabsContent value="assets">
+          <CMSAssetManager tenantId={tenantId} />
+        </TabsContent>
+
+        <TabsContent value="templates">
+          <CMSTemplateManager tenantId={tenantId} />
         </TabsContent>
 
         <TabsContent value="api">
