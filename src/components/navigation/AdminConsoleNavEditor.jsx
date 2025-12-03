@@ -67,6 +67,7 @@ export default function AdminConsoleNavEditor() {
   const [editingItem, setEditingItem] = useState(null);
   const [formData, setFormData] = useState({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null, item_type: "page", default_collapsed: false });
   const [expandedParents, setExpandedParents] = useState(new Set());
+  const [unallocatedExpanded, setUnallocatedExpanded] = useState(true);
 
   const { data: navConfig = [], isLoading } = useQuery({
     queryKey: ["adminConsoleNav"],
@@ -372,11 +373,19 @@ export default function AdminConsoleNavEditor() {
             {/* Unallocated Pages */}
             {unallocatedSlugs.length > 0 && (
               <div className="border-t pt-4">
-                <h3 className="text-sm font-medium text-gray-600 mb-3 flex items-center gap-2">
+                <button 
+                  onClick={() => setUnallocatedExpanded(!unallocatedExpanded)}
+                  className="flex items-center gap-2 text-sm font-medium text-gray-600 mb-3 hover:text-gray-800"
+                >
+                  {unallocatedExpanded ? (
+                    <ChevronDown className="h-4 w-4" />
+                  ) : (
+                    <ChevronRight className="h-4 w-4" />
+                  )}
                   <FolderOpen className="h-4 w-4" />
                   Unallocated Pages ({unallocatedSlugs.length})
-                </h3>
-                <div className="space-y-2">
+                </button>
+                {unallocatedExpanded && <div className="space-y-2">
                   {unallocatedSlugs.map(slug => (
                     <div 
                       key={slug} 
@@ -412,7 +421,7 @@ export default function AdminConsoleNavEditor() {
                       </div>
                     </div>
                   ))}
-                </div>
+                </div>}
               </div>
             )}
 
