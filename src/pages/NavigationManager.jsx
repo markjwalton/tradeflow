@@ -78,11 +78,11 @@ export default function NavigationManager() {
     queryFn: () => base44.entities.Tenant.list(),
   });
 
-  // Fetch navigation items for selected tenant OR global for live pages
-  const effectiveTenantId = activeTab === "live" ? "__global__" : selectedTenantId;
+  // Fetch navigation items - Live Pages uses "__live_pages__", Tenant uses selectedTenantId
+  const effectiveTenantId = activeTab === "live" ? "__live_pages__" : selectedTenantId;
   
   const { data: navItems = [], isLoading } = useQuery({
-    queryKey: ["navigationItems", effectiveTenantId],
+    queryKey: ["navigationItems", effectiveTenantId, activeTab],
     queryFn: () => base44.entities.NavigationItem.filter({ tenant_id: effectiveTenantId }, "order"),
   });
 

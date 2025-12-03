@@ -179,9 +179,11 @@ export default function AdminConsoleNavEditor() {
     saveMutation.mutate(newItems);
   };
 
-  const handleMoveToParent = (index, newParentSlug) => {
-    const newItems = items.map((item, i) => 
-      i === index ? { ...item, parent_id: newParentSlug } : item
+  const handleMoveToParent = (itemSlug, currentParentId, newParentSlug) => {
+    const newItems = items.map((item) => 
+      (item.slug === itemSlug && item.parent_id === currentParentId) 
+        ? { ...item, parent_id: newParentSlug } 
+        : item
     );
     saveMutation.mutate(newItems);
     toast.success(newParentSlug ? "Item moved" : "Moved to top level");
@@ -313,7 +315,7 @@ export default function AdminConsoleNavEditor() {
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end" className="w-56">
                                       <DropdownMenuItem 
-                                        onClick={() => handleMoveToParent(itemIndex, null)}
+                                        onClick={() => handleMoveToParent(item.slug, item.parent_id, null)}
                                         disabled={!item.parent_id}
                                         className="gap-2"
                                       >
@@ -324,7 +326,7 @@ export default function AdminConsoleNavEditor() {
                                       {parentItems.filter(p => p.slug !== item.slug && p.slug !== item.parent_id).map(parent => (
                                         <DropdownMenuItem 
                                           key={parent.slug}
-                                          onClick={() => handleMoveToParent(itemIndex, parent.slug)}
+                                          onClick={() => handleMoveToParent(item.slug, item.parent_id, parent.slug)}
                                           className="gap-2"
                                         >
                                           <CornerDownRight className="h-4 w-4" />
@@ -334,7 +336,7 @@ export default function AdminConsoleNavEditor() {
                                       {getLevel1Items().filter(l => l.slug !== item.slug && l.slug !== item.parent_id).map(level1 => (
                                         <DropdownMenuItem 
                                           key={level1.slug}
-                                          onClick={() => handleMoveToParent(itemIndex, level1.slug)}
+                                          onClick={() => handleMoveToParent(item.slug, item.parent_id, level1.slug)}
                                           className="gap-2 pl-6"
                                         >
                                           <CornerDownRight className="h-4 w-4" />
