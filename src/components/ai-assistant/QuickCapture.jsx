@@ -121,6 +121,59 @@ export default function QuickCapture({ isOpen, onClose }) {
     setAttachments(prev => prev.filter((_, i) => i !== index));
   };
 
+  // AI Capture from clipboard
+  const handleAICapture = async () => {
+    setIsAICapturing(true);
+    try {
+      // Read from clipboard
+      const clipboardText = await navigator.clipboard.readText();
+      
+      if (!clipboardText.trim()) {
+        toast.error("Clipboard is empty. Copy some chat content first!");
+        setIsAICapturing(false);
+        return;
+      }
+
+      // Use AI to analyze and summarize
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are analyzing content from a development chat session. Create a clear, concise journal entry from this content.
+
+Content to analyze:
+${clipboardText}
+
+Instructions:
+1. Determine the most appropriate type: brainstorming, question, advice, idea, decision, update, or blocker
+2. Write a clear, actionable summary (2-4 sentences) that captures the key points
+3. Focus on what was discussed, decided, or needs to be done
+
+Return as JSON:
+{
+  "type": "brainstorming|question|advice|idea|decision|update|blocker",
+  "content": "Clear summary of the key points..."
+}`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            type: { type: "string" },
+            content: { type: "string" }
+          }
+        }
+      });
+
+      setEntryType(result.type || "update");
+      setContent(result.content || "");
+      toast.success("AI captured and summarized from clipboard!");
+    } catch (error) {
+      if (error.name === "NotAllowedError") {
+        toast.error("Clipboard access denied. Please allow clipboard access.");
+      } else {
+        toast.error("Failed to capture from clipboard");
+      }
+    } finally {
+      setIsAICapturing(false);
+    }
+  };
+
   const handleSave = async () => {
     if (!content.trim()) {
       toast.error("Please enter content");
