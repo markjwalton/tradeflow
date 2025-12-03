@@ -49,7 +49,7 @@ export default function NavigationManager() {
   const [editingItem, setEditingItem] = useState(null);
   const [expandedItems, setExpandedItems] = useState(new Set());
   const [showSettings, setShowSettings] = useState(false);
-  const [unallocatedExpanded, setUnallocatedExpanded] = useState(true);
+  const [unallocatedExpanded, setUnallocatedExpanded] = useState(false);
   const [unallocationItem, setUnallocationItem] = useState(null);
   const [allocatingSlug, setAllocatingSlug] = useState(null);
   const [pageSettings, setPageSettings] = useState(() => {

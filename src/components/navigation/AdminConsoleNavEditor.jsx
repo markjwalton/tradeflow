@@ -67,7 +67,7 @@ export default function AdminConsoleNavEditor() {
   const [editingItem, setEditingItem] = useState(null);
   const [formData, setFormData] = useState({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null, item_type: "page", default_collapsed: false });
   const [expandedParents, setExpandedParents] = useState(new Set());
-  const [unallocatedExpanded, setUnallocatedExpanded] = useState(true);
+  const [unallocatedExpanded, setUnallocatedExpanded] = useState(false);
 
   const { data: navConfig = [], isLoading } = useQuery({
     queryKey: ["adminConsoleNav"],
@@ -304,11 +304,6 @@ export default function AdminConsoleNavEditor() {
                                   )}
                                 </div>
 
-                                <Switch
-                                  checked={item.is_visible !== false}
-                                  onCheckedChange={() => handleToggleVisibility(itemIndex)}
-                                />
-                                
                                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                   <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
@@ -357,8 +352,14 @@ export default function AdminConsoleNavEditor() {
                                   <Button variant="ghost" size="icon" className="text-red-500" onClick={() => handleDelete(itemIndex)} title="Delete">
                                     <Trash2 className="h-4 w-4" />
                                   </Button>
-                                </div>
-                              </div>
+                                  </div>
+
+                                  <Switch
+                                  checked={item.is_visible !== false}
+                                  onCheckedChange={() => handleToggleVisibility(itemIndex)}
+                                  className={item.is_visible !== false ? "data-[state=checked]:bg-green-500" : "data-[state=unchecked]:bg-red-500"}
+                                  />
+                                  </div>
                             )}
                           </Draggable>
                         );
