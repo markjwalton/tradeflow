@@ -572,6 +572,13 @@ export default function Layout({ children, currentPageName }) {
         {/* Top Bar */}
         <header className="h-14 bg-white border-b flex items-center justify-between px-4">
           <div className="flex items-center gap-3">
+            {/* Burger Menu */}
+            <button 
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <Menu className="h-5 w-5 text-gray-600" />
+            </button>
             {/* Page Selector Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
