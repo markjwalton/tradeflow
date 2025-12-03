@@ -160,29 +160,45 @@ export default function BulkVerificationDialog({
   };
 
   const [isMarkingVerified, setIsMarkingVerified] = useState(false);
+  const [markProgress, setMarkProgress] = useState({ current: 0, total: 0 });
 
   const markAllVerified = async () => {
     const passedItems = results.filter(r => r.status === "passed" || r.status === "warning");
     if (passedItems.length === 0) return;
 
     setIsMarkingVerified(true);
+    setMarkProgress({ current: 0, total: passedItems.length });
+    
     let successCount = 0;
     let errorCount = 0;
+    const batchSize = 10; // Process 10 at a time
 
     try {
-      for (const item of passedItems) {
-        const testData = testDataSets.find(td => td.playground_item_id === item.id);
-        if (testData) {
-          try {
-            await base44.entities.TestData.update(testData.id, {
-              test_status: "verified",
-              verified_date: new Date().toISOString()
-            });
-            successCount++;
-          } catch (e) {
-            errorCount++;
+      for (let i = 0; i < passedItems.length; i += batchSize) {
+        const batch = passedItems.slice(i, i + batchSize);
+        
+        // Process batch in parallel
+        const promises = batch.map(async (item) => {
+          const testData = testDataSets.find(td => td.playground_item_id === item.id);
+          if (testData) {
+            try {
+              await base44.entities.TestData.update(testData.id, {
+                test_status: "verified",
+                verified_date: new Date().toISOString()
+              });
+              return { success: true };
+            } catch (e) {
+              return { success: false };
+            }
           }
-        }
+          return { success: false };
+        });
+
+        const results = await Promise.all(promises);
+        successCount += results.filter(r => r.success).length;
+        errorCount += results.filter(r => !r.success).length;
+        
+        setMarkProgress({ current: Math.min(i + batchSize, passedItems.length), total: passedItems.length });
       }
       
       if (errorCount > 0) {
@@ -196,6 +212,7 @@ export default function BulkVerificationDialog({
       toast.error("Failed to update items");
     } finally {
       setIsMarkingVerified(false);
+      setMarkProgress({ current: 0, total: 0 });
     }
   };
 
@@ -350,14 +367,19 @@ export default function BulkVerificationDialog({
                     <Button 
                       onClick={markAllVerified} 
                       disabled={isMarkingVerified}
-                      className="bg-green-600 hover:bg-green-700"
+                      className="bg-green-600 hover:bg-green-700 min-w-[180px]"
                     >
                       {isMarkingVerified ? (
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          {markProgress.current}/{markProgress.total}
+                        </>
                       ) : (
-                        <CheckCircle2 className="h-4 w-4 mr-2" />
+                        <>
+                          <CheckCircle2 className="h-4 w-4 mr-2" />
+                          Mark {summary.passed + summary.warnings} Verified
+                        </>
                       )}
-                      Mark {summary.passed + summary.warnings} Verified
                     </Button>
                   )}
                 </>
