@@ -93,25 +93,34 @@ export default function EmailValidationField({
       return;
     }
 
-    // If API key provided, do advanced validation
+    // If API key provided, use Ideal Postcodes Email Validation API
     if (apiKey) {
       setIsValidating(true);
       try {
-        // This is a placeholder for email validation API integration
-        // Common services: ZeroBounce, NeverBounce, Hunter.io, etc.
-        // For now, we'll use basic validation
+        const response = await fetch(
+          `https://api.ideal-postcodes.co.uk/v1/emails/${encodeURIComponent(email)}?api_key=${apiKey}`
+        );
+        const data = await response.json();
         
-        // Example API call structure (uncomment and modify for your chosen service):
-        // const response = await fetch(`https://api.emailvalidation.com/validate?email=${encodeURIComponent(email)}&api_key=${apiKey}`);
-        // const data = await response.json();
-        
-        // Simulate API response for now
-        await new Promise(r => setTimeout(r, 500));
-        
-        setValidationState("valid");
-        setValidationMessage("Email looks valid");
-        setSuggestion(null);
-        if (onValidationResult) onValidationResult({ valid: true });
+        if (data.result) {
+          const result = data.result;
+          if (result.valid) {
+            setValidationState("valid");
+            setValidationMessage("Email verified");
+            setSuggestion(null);
+            if (onValidationResult) onValidationResult({ valid: true, deliverable: result.deliverable });
+          } else {
+            setValidationState("invalid");
+            setValidationMessage(result.reason || "Invalid email address");
+            setSuggestion(null);
+            if (onValidationResult) onValidationResult({ valid: false, reason: result.reason });
+          }
+        } else {
+          // API returned no result - basic validation passed
+          setValidationState("valid");
+          setValidationMessage("");
+          if (onValidationResult) onValidationResult({ valid: true });
+        }
       } catch (err) {
         // Fall back to basic validation on API error
         setValidationState("valid");
