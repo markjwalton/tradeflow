@@ -106,15 +106,25 @@ export default function TestDataManager() {
     let entitiesUsed = [];
     if (item.source_type === "page") {
       const template = pageTemplates.find(t => t.id === item.source_id);
-      entitiesUsed = item.working_data?.entities_used || template?.entities_used || [];
+      // Page templates store entities_used in data object
+      entitiesUsed = item.working_data?.entities_used || template?.data?.entities_used || template?.entities_used || [];
     } else if (item.source_type === "feature") {
       const template = featureTemplates.find(t => t.id === item.source_id);
-      entitiesUsed = item.working_data?.entities_used || template?.entities_used || [];
+      // Feature templates store entities_used in data object
+      entitiesUsed = item.working_data?.entities_used || template?.data?.entities_used || template?.entities_used || [];
     }
 
     return entitiesUsed.map(name => {
-      const entity = entityTemplates.find(e => e.name === name);
-      return entity || { name, schema: { properties: {} } };
+      // EntityTemplates store schema in data.schema
+      const entity = entityTemplates.find(e => e.name === name || e.data?.name === name);
+      if (entity) {
+        // Normalize the structure - schema is in entity.data.schema
+        return {
+          name: entity.data?.name || entity.name || name,
+          schema: entity.data?.schema || entity.schema || { properties: {} }
+        };
+      }
+      return { name, schema: { properties: {} } };
     });
   };
 
