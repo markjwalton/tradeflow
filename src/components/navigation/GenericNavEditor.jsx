@@ -363,7 +363,7 @@ export default function GenericNavEditor({
                   {(provided) => (
                     <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-1 mb-6">
                       {flatList.map((item, index) => (
-                        <Draggable key={`${item.slug}-${item.parent_id || 'root'}`} draggableId={`${item.slug}-${item.parent_id || 'root'}`} index={index}>
+                        <Draggable key={item._id} draggableId={item._id} index={index}>
                           {(provided) => (
                             <div
                               ref={provided.innerRef}
@@ -379,8 +379,8 @@ export default function GenericNavEditor({
                               </div>
                               
                               {item.hasChildren && (
-                                <button onClick={() => toggleParent(item.slug)} className="p-0.5">
-                                  {expandedParents.has(item.slug) ? 
+                                <button onClick={() => toggleParent(item._id)} className="p-0.5">
+                                  {expandedParents.has(item._id) ? 
                                     <ChevronDown className="h-4 w-4 text-gray-400" /> : 
                                     <ChevronRight className="h-4 w-4 text-gray-400" />
                                   }
