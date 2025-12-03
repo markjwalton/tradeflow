@@ -29,7 +29,7 @@ import {
   Database, Plus, Save, Loader2, Sparkles, Wand2,
   Trash2, Edit, Layout, Zap, Shield, Play, RefreshCw,
   ChevronDown, ChevronRight, CheckCircle2, AlertTriangle,
-  Clock, Target, FlaskConical
+  Clock, Target, FlaskConical, Settings
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -39,6 +39,7 @@ import TestDataStatusTable from "@/components/test-data/TestDataStatusTable";
 import SeedDataProgress from "@/components/test-data/SeedDataProgress";
 import AIQualityReport from "@/components/test-data/AIQualityReport";
 import EntitySchemaValidator from "@/components/test-data/EntitySchemaValidator";
+import TestDataSettingsDialog from "@/components/test-data/TestDataSettingsDialog";
 
 export default function TestDataManager() {
   const queryClient = useQueryClient();

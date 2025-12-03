@@ -40,9 +40,10 @@ export default function TestDataStatusTable({
   onViewItem,
   showActions = true,
   filter = null,
-  groupByCategory = true
+  groupByCategory = true,
+  defaultExpanded = false
 }) {
-  const [expandedGroups, setExpandedGroups] = useState(new Set(["Pages", "Features"]));
+  const [expandedGroups, setExpandedGroups] = useState(new Set(defaultExpanded ? ["Pages", "Features"] : []));
   const filteredItems = filter ? items.filter(filter) : items;
 
   // Group items by type (Pages vs Features)
