@@ -51,6 +51,8 @@ import PerformanceMonitor from './pages/PerformanceMonitor';
 import SecurityMonitor from './pages/SecurityMonitor';
 import LookupTestForms from './pages/LookupTestForms';
 import NavigationManager from './pages/NavigationManager';
+import CommunityLibrary from './pages/CommunityLibrary';
+import CommunityPublish from './pages/CommunityPublish';
 import __Layout from './Layout.jsx';
 
 
@@ -108,6 +110,8 @@ export const PAGES = {
     "SecurityMonitor": SecurityMonitor,
     "LookupTestForms": LookupTestForms,
     "NavigationManager": NavigationManager,
+    "CommunityLibrary": CommunityLibrary,
+    "CommunityPublish": CommunityPublish,
 }
 
 export const pagesConfig = {
