@@ -154,10 +154,14 @@ export default function LivePreview() {
     );
   }
 
-  // Get children of a nav item
+  // Get children of a nav item - match parent_id against _id OR slug (for folders that use slug as ID)
   const getNavChildren = (parentId) => {
     return navItems
-      .filter(item => (item.parent_id === parentId) && item.is_visible !== false)
+      .filter(item => {
+        const itemParent = item.parent_id;
+        // Match against _id or slug (folders use slug as their identifier)
+        return itemParent === parentId && item.is_visible !== false;
+      })
       .sort((a, b) => (a.order || 0) - (b.order || 0));
   };
 
