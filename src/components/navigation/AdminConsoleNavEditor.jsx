@@ -57,7 +57,7 @@ export default function AdminConsoleNavEditor() {
   const queryClient = useQueryClient();
   const [showDialog, setShowDialog] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
-  const [formData, setFormData] = useState({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null });
+  const [formData, setFormData] = useState({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null, item_type: "page" });
   const [expandedParents, setExpandedParents] = useState(new Set());
 
   const { data: navConfig = [], isLoading } = useQuery({
@@ -114,8 +114,12 @@ export default function AdminConsoleNavEditor() {
   };
 
   const handleSaveItem = () => {
-    if (!formData.name.trim() || !formData.slug.trim()) {
-      toast.error("Name and page slug are required");
+    if (!formData.name.trim()) {
+      toast.error("Name is required");
+      return;
+    }
+    if (formData.item_type === "page" && !formData.slug.trim()) {
+      toast.error("Page slug is required for page items");
       return;
     }
     
@@ -131,7 +135,7 @@ export default function AdminConsoleNavEditor() {
     saveMutation.mutate(newItems);
     setShowDialog(false);
     setEditingItem(null);
-    setFormData({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null });
+    setFormData({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null, item_type: "page" });
   };
 
   const handleEdit = (index) => {
@@ -215,7 +219,7 @@ export default function AdminConsoleNavEditor() {
         <CardTitle>Admin Console Navigation</CardTitle>
         <Button onClick={() => { 
           setEditingItem(null); 
-          setFormData({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null }); 
+          setFormData({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null, item_type: "page" }); 
           setShowDialog(true); 
         }}>
           <Plus className="h-4 w-4 mr-2" />
@@ -263,7 +267,11 @@ export default function AdminConsoleNavEditor() {
                                 <div className="flex items-center gap-2 flex-1">
                                   {getIcon(item.icon)}
                                   <span className="font-medium">{item.name}</span>
-                                  <Badge variant="outline" className="text-xs">{item.slug}</Badge>
+                                  {item.item_type === "folder" ? (
+                                    <Badge className="text-xs bg-amber-100 text-amber-700">Folder</Badge>
+                                  ) : (
+                                    <Badge variant="outline" className="text-xs">{item.slug}</Badge>
+                                  )}
                                   {item.parent_id && (
                                     <Badge className="text-xs bg-blue-100 text-blue-700">Child of {item.parent_id}</Badge>
                                   )}
@@ -343,26 +351,40 @@ export default function AdminConsoleNavEditor() {
               />
             </div>
             <div>
-              <Label>Page Slug *</Label>
-              {availableSlugsForDropdown.length > 0 ? (
-                <Select value={formData.slug} onValueChange={(v) => setFormData({ ...formData, slug: v })}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select page..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {availableSlugsForDropdown.map(slug => (
-                      <SelectItem key={slug} value={slug}>{slug}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              ) : (
-                <Input
-                  value={formData.slug}
-                  onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                  placeholder="e.g., RoadmapManager"
-                />
-              )}
+              <Label>Type</Label>
+              <Select value={formData.item_type || "page"} onValueChange={(v) => setFormData({ ...formData, item_type: v, slug: v === "folder" ? "" : formData.slug })}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="page">Page (has URL)</SelectItem>
+                  <SelectItem value="folder">Folder (container only)</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
+            {formData.item_type !== "folder" && (
+              <div>
+                <Label>Page Slug *</Label>
+                {availableSlugsForDropdown.length > 0 ? (
+                  <Select value={formData.slug} onValueChange={(v) => setFormData({ ...formData, slug: v })}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select page..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableSlugsForDropdown.map(slug => (
+                        <SelectItem key={slug} value={slug}>{slug}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Input
+                    value={formData.slug}
+                    onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                    placeholder="e.g., RoadmapManager"
+                  />
+                )}
+              </div>
+            )}
             <div>
               <Label>Parent (optional)</Label>
               <Select 
