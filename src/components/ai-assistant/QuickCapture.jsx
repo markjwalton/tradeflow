@@ -42,6 +42,7 @@ export default function QuickCapture({ isOpen, onClose }) {
   const [isSaving, setIsSaving] = useState(false);
   const [attachments, setAttachments] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [isAICapturing, setIsAICapturing] = useState(false);
 
   // Remember last used roadmap item
   useEffect(() => {
