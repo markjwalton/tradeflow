@@ -21,7 +21,8 @@ export default function BulkVerificationDialog({
   items,
   testDataSets,
   entityTemplates,
-  onComplete
+  onComplete,
+  onErrorReport
 }) {
   const [isRunning, setIsRunning] = useState(false);
   const [progress, setProgress] = useState({ current: 0, total: 0 });
