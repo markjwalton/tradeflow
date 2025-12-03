@@ -269,9 +269,12 @@ function LivePagesNavEditor({ pageTemplates = [], featureTemplates = [] }) {
       const newItems = [];
       let order = 0;
 
-      // Create category folders and their children
+      // Create category folders first, store folder IDs by category name
+      const categoryFolderIds = {};
+      
       for (const category of allCategories.sort()) {
         const folderId = generateId();
+        categoryFolderIds[category] = folderId;
         
         // Add folder
         newItems.push({
@@ -285,7 +288,12 @@ function LivePagesNavEditor({ pageTemplates = [], featureTemplates = [] }) {
           default_collapsed: true,
           order: order++
         });
+      }
 
+      // Now add pages using the stored folder IDs
+      for (const category of allCategories.sort()) {
+        const folderId = categoryFolderIds[category];
+        
         // Add pages in this category
         const pagesInCategory = pageTemplates.filter(p => p.category === category);
         for (const page of pagesInCategory.sort((a, b) => a.name.localeCompare(b.name))) {
