@@ -192,8 +192,8 @@ export default function BulkVerificationDialog({
         }
       }
 
-      // Process in batches of 20 to avoid timeout
-      const BATCH_SIZE = 20;
+      // Process in batches of 50 to reduce API calls
+      const BATCH_SIZE = 50;
       let processed = 0;
       
       for (let i = 0; i < testDataToUpdate.length; i += BATCH_SIZE) {
