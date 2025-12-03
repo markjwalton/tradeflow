@@ -389,7 +389,9 @@ export default function Layout({ children, currentPageName }) {
   const renderNavItems = (itemsToRender, allItems, depth = 0) => {
     return itemsToRender.map((item) => {
       const isFolder = item.item_type === "folder";
-      const itemId = item._id;
+      // Use _id if present, otherwise generate stable ID for folders
+      const itemId = item._id || 
+        (isFolder ? `folder_${item.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}` : item.slug);
       const children = getNavChildren(item, allItems);
       const hasChildren = children.length > 0;
       const isExpanded = expandedFolders.has(itemId);
