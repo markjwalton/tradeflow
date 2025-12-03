@@ -932,19 +932,23 @@ Return as JSON with entity names as keys and arrays of records as values.`,
 
                   {/* Bulk Verification Dialog */}
                                   <BulkVerificationDialog
-                                    isOpen={isVerifyingBulk}
-                                    onClose={() => setIsVerifyingBulk(false)}
-                                    items={itemStatusList}
-                                    testDataSets={testDataSets}
-                                    entityTemplates={entityTemplates}
-                                    onComplete={() => {
-                                      queryClient.invalidateQueries({ queryKey: ["testData"] });
-                                    }}
-                                    onErrorReport={(report) => {
-                                      setVerificationErrorReport(report);
-                                      setIsVerifyingBulk(false);
-                                    }}
-                                  />
+                                                    isOpen={isVerifyingBulk}
+                                                    onClose={() => {
+                                                      setIsVerifyingBulk(false);
+                                                      queryClient.invalidateQueries({ queryKey: ["testData"] });
+                                                    }}
+                                                    items={itemStatusList}
+                                                    testDataSets={testDataSets}
+                                                    entityTemplates={entityTemplates}
+                                                    onComplete={() => {
+                                                      queryClient.invalidateQueries({ queryKey: ["testData"] });
+                                                    }}
+                                                    onErrorReport={(report) => {
+                                                      setVerificationErrorReport(report);
+                                                      setIsVerifyingBulk(false);
+                                                      queryClient.invalidateQueries({ queryKey: ["testData"] });
+                                                    }}
+                                                  />
     </div>
   );
 }

@@ -208,6 +208,8 @@ export default function BulkVerificationDialog({
         }
       }
       
+      onComplete?.(); // Always refresh data
+      
       if (errorItems.length > 0) {
         const report = {
           success: successItems,
@@ -215,11 +217,9 @@ export default function BulkVerificationDialog({
           timestamp: new Date().toISOString()
         };
         toast.warning(`${successItems.length} verified, ${errorItems.length} failed`);
-        onComplete?.();
         onErrorReport?.(report);
       } else {
         toast.success(`${successItems.length} items marked as verified`);
-        onComplete?.();
         onClose();
       }
     } catch (e) {
