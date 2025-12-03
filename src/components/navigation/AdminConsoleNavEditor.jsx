@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -20,12 +21,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { 
-  Plus, GripVertical, Pencil, Trash2, Eye, EyeOff, Download,
+  Plus, GripVertical, Pencil, Trash2, Eye, EyeOff, Copy, FolderOpen,
   Home, Lightbulb, GitBranch, Database, Package, Building2, 
   Navigation, Workflow, Layout, Zap, Settings, FileText,
   Users, Calendar, Mail, Bell, Search, Star, Heart,
   Folder, File, Image, Video, Music, Map, Globe, Shield,
-  Key, Gauge, BookOpen, FlaskConical
+  Key, Gauge, BookOpen, FlaskConical, ChevronDown, ChevronRight
 } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { toast } from "sonner";
@@ -35,50 +36,29 @@ const iconMap = {
   Navigation, Workflow, Layout, Zap, Settings, FileText,
   Users, Calendar, Mail, Bell, Search, Star, Heart,
   Folder, File, Image, Video, Music, Map, Globe, Shield,
-  Key, Gauge, BookOpen, FlaskConical
+  Key, Gauge, BookOpen, FlaskConical, FolderOpen
 };
 
 const iconOptions = Object.keys(iconMap);
 
-// Default admin pages from Layout.js - used to seed initial config
-const defaultAdminPages = [
-  { name: "CMS", slug: "CMSManager", icon: "Globe", is_visible: true },
-  { name: "API Manager", slug: "APIManager", icon: "Key", is_visible: true },
-  { name: "Security", slug: "SecurityMonitor", icon: "Shield", is_visible: true },
-  { name: "Performance", slug: "PerformanceMonitor", icon: "Gauge", is_visible: true },
-  { name: "Roadmap", slug: "RoadmapManager", icon: "Lightbulb", is_visible: true },
-  { name: "Journal", slug: "RoadmapJournal", icon: "Lightbulb", is_visible: true },
-  { name: "Sprints", slug: "SprintManager", icon: "Lightbulb", is_visible: true },
-  { name: "Rule Book", slug: "RuleBook", icon: "BookOpen", is_visible: true },
-  { name: "Playground", slug: "PlaygroundSummary", icon: "FlaskConical", is_visible: true },
-  { name: "Test Data Manager", slug: "TestDataManager", icon: "Database", is_visible: true },
-  { name: "Mind Map Editor", slug: "MindMapEditor", icon: "GitBranch", is_visible: true },
-  { name: "ERD Editor", slug: "ERDEditor", icon: "Database", is_visible: true },
-  { name: "Generated Apps", slug: "GeneratedApps", icon: "Package", is_visible: true },
-  { name: "Entity Library", slug: "EntityLibrary", icon: "Database", is_visible: true },
-  { name: "Page Library", slug: "PageLibrary", icon: "Layout", is_visible: true },
-  { name: "Feature Library", slug: "FeatureLibrary", icon: "Zap", is_visible: true },
-  { name: "Template Library", slug: "TemplateLibrary", icon: "Package", is_visible: true },
-  { name: "Business Templates", slug: "BusinessTemplates", icon: "Building2", is_visible: true },
-  { name: "Workflow Library", slug: "WorkflowLibrary", icon: "Workflow", is_visible: true },
-  { name: "Workflow Designer", slug: "WorkflowDesigner", icon: "Workflow", is_visible: true },
-  { name: "Form Templates", slug: "FormTemplates", icon: "Layout", is_visible: true },
-  { name: "Form Builder", slug: "FormBuilder", icon: "Layout", is_visible: true },
-  { name: "Checklist Templates", slug: "ChecklistTemplates", icon: "Layout", is_visible: true },
-  { name: "Checklist Builder", slug: "ChecklistBuilder", icon: "Layout", is_visible: true },
-  { name: "System Specification", slug: "SystemSpecification", icon: "Package", is_visible: true },
-  { name: "Tenant Manager", slug: "TenantManager", icon: "Building2", is_visible: true },
-  { name: "Navigation Manager", slug: "NavigationManager", icon: "Navigation", is_visible: true },
-  { name: "Package Library", slug: "PackageLibrary", icon: "Package", is_visible: true },
-  { name: "Prompt Settings", slug: "PromptSettings", icon: "Settings", is_visible: true },
-  { name: "Lookup Test", slug: "LookupTestForms", icon: "Key", is_visible: true },
+// All known page slugs - new pages will auto-add to unallocated
+const ALL_PAGE_SLUGS = [
+  "CMSManager", "APIManager", "SecurityMonitor", "PerformanceMonitor",
+  "RoadmapManager", "RoadmapJournal", "SprintManager", "RuleBook",
+  "PlaygroundSummary", "TestDataManager", "MindMapEditor", "ERDEditor",
+  "GeneratedApps", "EntityLibrary", "PageLibrary", "FeatureLibrary",
+  "TemplateLibrary", "BusinessTemplates", "WorkflowLibrary", "WorkflowDesigner",
+  "FormTemplates", "FormBuilder", "ChecklistTemplates", "ChecklistBuilder",
+  "SystemSpecification", "TenantManager", "NavigationManager", "PackageLibrary",
+  "PromptSettings", "LookupTestForms"
 ];
 
 export default function AdminConsoleNavEditor() {
   const queryClient = useQueryClient();
   const [showDialog, setShowDialog] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
-  const [formData, setFormData] = useState({ name: "", slug: "", icon: "Home", is_visible: true });
+  const [formData, setFormData] = useState({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null });
+  const [expandedParents, setExpandedParents] = useState(new Set());
 
   const { data: navConfig = [], isLoading } = useQuery({
     queryKey: ["adminConsoleNav"],
@@ -87,6 +67,14 @@ export default function AdminConsoleNavEditor() {
 
   const config = navConfig[0];
   const items = config?.items || [];
+
+  // Find unallocated pages (slugs not in items)
+  const allocatedSlugs = items.map(i => i.slug);
+  const unallocatedSlugs = ALL_PAGE_SLUGS.filter(slug => !allocatedSlugs.includes(slug));
+
+  // Get parent items (items without parent_id)
+  const parentItems = items.filter(i => !i.parent_id);
+  const getChildren = (parentId) => items.filter(i => i.parent_id === parentId);
 
   const saveMutation = useMutation({
     mutationFn: async (newItems) => {
@@ -107,9 +95,21 @@ export default function AdminConsoleNavEditor() {
 
   const handleDragEnd = (result) => {
     if (!result.destination) return;
-    const reordered = Array.from(items);
-    const [removed] = reordered.splice(result.source.index, 1);
-    reordered.splice(result.destination.index, 0, removed);
+    
+    const sourceIndex = result.source.index;
+    const destIndex = result.destination.index;
+    
+    // Build flat ordered list
+    const orderedItems = [];
+    parentItems.forEach(parent => {
+      orderedItems.push(parent);
+      getChildren(parent.slug).forEach(child => orderedItems.push(child));
+    });
+    
+    const reordered = Array.from(orderedItems);
+    const [removed] = reordered.splice(sourceIndex, 1);
+    reordered.splice(destIndex, 0, removed);
+    
     saveMutation.mutate(reordered);
   };
 
@@ -121,15 +121,17 @@ export default function AdminConsoleNavEditor() {
     
     let newItems;
     if (editingItem !== null) {
+      // Update existing
       newItems = items.map((item, i) => i === editingItem ? formData : item);
     } else {
+      // Add new
       newItems = [...items, formData];
     }
     
     saveMutation.mutate(newItems);
     setShowDialog(false);
     setEditingItem(null);
-    setFormData({ name: "", slug: "", icon: "Home", is_visible: true });
+    setFormData({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null });
   };
 
   const handleEdit = (index) => {
@@ -139,8 +141,21 @@ export default function AdminConsoleNavEditor() {
   };
 
   const handleDelete = (index) => {
-    const newItems = items.filter((_, i) => i !== index);
+    const itemToDelete = items[index];
+    // Also remove children if deleting a parent
+    const newItems = items.filter((item, i) => i !== index && item.parent_id !== itemToDelete.slug);
     saveMutation.mutate(newItems);
+  };
+
+  const handleDuplicate = (index) => {
+    const original = items[index];
+    const duplicate = { 
+      ...original, 
+      name: `${original.name} (Copy)`,
+      parent_id: null // Duplicates go to top level
+    };
+    saveMutation.mutate([...items, duplicate]);
+    toast.success("Item duplicated");
   };
 
   const handleToggleVisibility = (index) => {
@@ -150,9 +165,27 @@ export default function AdminConsoleNavEditor() {
     saveMutation.mutate(newItems);
   };
 
-  const seedFromLayout = () => {
-    saveMutation.mutate(defaultAdminPages);
-    toast.success("Navigation seeded from Layout defaults");
+  const handleAllocate = (slug) => {
+    // Add unallocated page to nav
+    const name = slug.replace(/([A-Z])/g, ' $1').trim(); // Convert camelCase to spaces
+    const newItem = {
+      name,
+      slug,
+      icon: "File",
+      is_visible: true,
+      parent_id: null
+    };
+    saveMutation.mutate([...items, newItem]);
+    toast.success(`${name} added to navigation`);
+  };
+
+  const toggleParent = (parentSlug) => {
+    setExpandedParents(prev => {
+      const next = new Set(prev);
+      if (next.has(parentSlug)) next.delete(parentSlug);
+      else next.add(parentSlug);
+      return next;
+    });
   };
 
   const getIcon = (iconName) => {
@@ -160,84 +193,138 @@ export default function AdminConsoleNavEditor() {
     return Icon ? <Icon className="h-4 w-4" /> : <Home className="h-4 w-4" />;
   };
 
+  // Available slugs for dropdown (unallocated + current item's slug if editing)
+  const availableSlugsForDropdown = editingItem !== null 
+    ? [...unallocatedSlugs, items[editingItem]?.slug].filter(Boolean)
+    : unallocatedSlugs;
+
+  // Build flat list for drag/drop
+  const flatList = [];
+  parentItems.forEach(parent => {
+    flatList.push({ ...parent, isParent: true, hasChildren: getChildren(parent.slug).length > 0 });
+    if (expandedParents.has(parent.slug)) {
+      getChildren(parent.slug).forEach(child => {
+        flatList.push({ ...child, isParent: false, depth: 1 });
+      });
+    }
+  });
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Admin Console Navigation</CardTitle>
-        <div className="flex gap-2">
-          {items.length === 0 && (
-            <Button variant="outline" onClick={seedFromLayout}>
-              <Download className="h-4 w-4 mr-2" />
-              Seed from Layout
-            </Button>
-          )}
-          <Button onClick={() => { setEditingItem(null); setFormData({ name: "", slug: "", icon: "Home", is_visible: true }); setShowDialog(true); }}>
-            <Plus className="h-4 w-4 mr-2" />
-            Add Item
-          </Button>
-        </div>
+        <Button onClick={() => { 
+          setEditingItem(null); 
+          setFormData({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null }); 
+          setShowDialog(true); 
+        }}>
+          <Plus className="h-4 w-4 mr-2" />
+          Add Item
+        </Button>
       </CardHeader>
       <CardContent>
         {isLoading ? (
           <div className="text-center py-8 text-gray-500">Loading...</div>
-        ) : items.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            <p className="mb-4">No navigation items configured.</p>
-            <Button onClick={seedFromLayout}>
-              <Download className="h-4 w-4 mr-2" />
-              Seed from Layout Defaults
-            </Button>
-            <p className="text-xs mt-2">This will copy all current admin pages so you can manage them here.</p>
-          </div>
         ) : (
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <Droppable droppableId="admin-nav">
-              {(provided) => (
-                <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
-                  {items.map((item, index) => (
-                    <Draggable key={index} draggableId={`item-${index}`} index={index}>
-                      {(provided) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          className={`flex items-center gap-3 p-3 border rounded-lg bg-white ${!item.is_visible ? "opacity-50" : ""}`}
-                        >
-                          <div {...provided.dragHandleProps} className="cursor-grab">
-                            <GripVertical className="h-4 w-4 text-gray-400" />
-                          </div>
-                          <div className="flex items-center gap-2 flex-1">
-                            {getIcon(item.icon)}
-                            <span className="font-medium">{item.name}</span>
-                            <Badge variant="outline" className="text-xs">{item.slug}</Badge>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Button variant="ghost" size="icon" onClick={() => handleToggleVisibility(index)}>
-                              {item.is_visible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4 text-gray-400" />}
-                            </Button>
-                            <Button variant="ghost" size="icon" onClick={() => handleEdit(index)}>
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                            <Button variant="ghost" size="icon" className="text-red-500" onClick={() => handleDelete(index)}>
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
-        )}
+          <>
+            {/* Allocated Items */}
+            {items.length > 0 && (
+              <DragDropContext onDragEnd={handleDragEnd}>
+                <Droppable droppableId="admin-nav">
+                  {(provided) => (
+                    <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-1 mb-6">
+                      {flatList.map((item, index) => {
+                        const itemIndex = items.findIndex(i => i.slug === item.slug && i.parent_id === item.parent_id);
+                        return (
+                          <Draggable key={`${item.slug}-${item.parent_id || 'root'}`} draggableId={`${item.slug}-${item.parent_id || 'root'}`} index={index}>
+                            {(provided) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                style={{ 
+                                  ...provided.draggableProps.style,
+                                  marginLeft: item.depth ? item.depth * 24 : 0 
+                                }}
+                                className={`flex items-center gap-2 p-3 border rounded-lg bg-white ${!item.is_visible ? "opacity-50" : ""}`}
+                              >
+                                <div {...provided.dragHandleProps} className="cursor-grab">
+                                  <GripVertical className="h-4 w-4 text-gray-400" />
+                                </div>
+                                
+                                {item.hasChildren && (
+                                  <button onClick={() => toggleParent(item.slug)} className="p-0.5">
+                                    {expandedParents.has(item.slug) ? 
+                                      <ChevronDown className="h-4 w-4 text-gray-400" /> : 
+                                      <ChevronRight className="h-4 w-4 text-gray-400" />
+                                    }
+                                  </button>
+                                )}
+                                
+                                <div className="flex items-center gap-2 flex-1">
+                                  {getIcon(item.icon)}
+                                  <span className="font-medium">{item.name}</span>
+                                  <Badge variant="outline" className="text-xs">{item.slug}</Badge>
+                                  {item.parent_id && (
+                                    <Badge className="text-xs bg-blue-100 text-blue-700">Child of {item.parent_id}</Badge>
+                                  )}
+                                </div>
+                                
+                                <div className="flex items-center gap-1">
+                                  <Button variant="ghost" size="icon" onClick={() => handleToggleVisibility(itemIndex)}>
+                                    {item.is_visible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4 text-gray-400" />}
+                                  </Button>
+                                  <Button variant="ghost" size="icon" onClick={() => handleDuplicate(itemIndex)}>
+                                    <Copy className="h-4 w-4" />
+                                  </Button>
+                                  <Button variant="ghost" size="icon" onClick={() => handleEdit(itemIndex)}>
+                                    <Pencil className="h-4 w-4" />
+                                  </Button>
+                                  <Button variant="ghost" size="icon" className="text-red-500" onClick={() => handleDelete(itemIndex)}>
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            )}
+                          </Draggable>
+                        );
+                      })}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
+            )}
 
-        {items.length > 0 && (
-          <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-sm text-green-800">
-              <strong>Active:</strong> This navigation is being used. Drag to reorder, toggle visibility, or edit items.
-            </p>
-          </div>
+            {/* Unallocated Pages */}
+            {unallocatedSlugs.length > 0 && (
+              <div className="border-t pt-4">
+                <h3 className="text-sm font-medium text-gray-600 mb-3 flex items-center gap-2">
+                  <FolderOpen className="h-4 w-4" />
+                  Unallocated Pages ({unallocatedSlugs.length})
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {unallocatedSlugs.map(slug => (
+                    <Button 
+                      key={slug} 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleAllocate(slug)}
+                      className="gap-1"
+                    >
+                      <Plus className="h-3 w-3" />
+                      {slug.replace(/([A-Z])/g, ' $1').trim()}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {items.length === 0 && unallocatedSlugs.length === 0 && (
+              <div className="text-center py-8 text-gray-500">
+                No pages available.
+              </div>
+            )}
+          </>
         )}
       </CardContent>
 
@@ -248,7 +335,7 @@ export default function AdminConsoleNavEditor() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium">Name *</label>
+              <Label>Name *</Label>
               <Input
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -256,16 +343,45 @@ export default function AdminConsoleNavEditor() {
               />
             </div>
             <div>
-              <label className="text-sm font-medium">Page Slug *</label>
-              <Input
-                value={formData.slug}
-                onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                placeholder="e.g., RoadmapManager"
-              />
-              <p className="text-xs text-gray-500 mt-1">Must match the page file name exactly</p>
+              <Label>Page Slug *</Label>
+              {availableSlugsForDropdown.length > 0 ? (
+                <Select value={formData.slug} onValueChange={(v) => setFormData({ ...formData, slug: v })}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select page..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {availableSlugsForDropdown.map(slug => (
+                      <SelectItem key={slug} value={slug}>{slug}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <Input
+                  value={formData.slug}
+                  onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                  placeholder="e.g., RoadmapManager"
+                />
+              )}
             </div>
             <div>
-              <label className="text-sm font-medium">Icon</label>
+              <Label>Parent (optional)</Label>
+              <Select 
+                value={formData.parent_id || "__none__"} 
+                onValueChange={(v) => setFormData({ ...formData, parent_id: v === "__none__" ? null : v })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="No parent (top level)" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">No parent (top level)</SelectItem>
+                  {parentItems.filter(p => p.slug !== formData.slug).map(parent => (
+                    <SelectItem key={parent.slug} value={parent.slug}>{parent.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Icon</Label>
               <Select value={formData.icon} onValueChange={(v) => setFormData({ ...formData, icon: v })}>
                 <SelectTrigger>
                   <SelectValue />
@@ -287,7 +403,7 @@ export default function AdminConsoleNavEditor() {
                 checked={formData.is_visible}
                 onCheckedChange={(v) => setFormData({ ...formData, is_visible: v })}
               />
-              <label className="text-sm">Visible</label>
+              <Label>Visible</Label>
             </div>
             <div className="flex justify-end gap-2 pt-4">
               <Button variant="outline" onClick={() => setShowDialog(false)}>Cancel</Button>
