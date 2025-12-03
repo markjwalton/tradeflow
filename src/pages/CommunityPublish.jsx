@@ -226,64 +226,130 @@ export default function CommunityPublish() {
     setShowPublishDialog(true);
   };
 
+  const toggleCategory = (category) => {
+    setExpandedCategories(prev => {
+      const next = new Set(prev);
+      if (next.has(category)) next.delete(category);
+      else next.add(category);
+      return next;
+    });
+  };
+
+  const renderItemCard = (item, itemType, Icon) => {
+    const published = isPublished(item, itemType);
+    const version = getPublishedVersion(item, itemType);
+    
+    return (
+      <Card key={item.id} className={published ? "border-green-200" : ""}>
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className={`p-2 rounded-lg ${published ? "bg-green-100" : "bg-gray-100"}`}>
+                <Icon className={`h-5 w-5 ${published ? "text-green-600" : "text-gray-600"}`} />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="font-medium">{item.name}</h3>
+                  {published && (
+                    <Badge className="bg-green-100 text-green-700 text-xs">
+                      <Globe className="h-3 w-3 mr-1" />
+                      v{version}
+                    </Badge>
+                  )}
+                </div>
+                <p className="text-sm text-gray-500 line-clamp-1">{item.description}</p>
+              </div>
+            </div>
+            <Button 
+              size="sm"
+              variant={published ? "outline" : "default"}
+              onClick={() => handlePublishClick(item, itemType)}
+            >
+              {published ? (
+                <>
+                  <ArrowUp className="h-4 w-4 mr-1" />
+                  Update
+                </>
+              ) : (
+                <>
+                  <Upload className="h-4 w-4 mr-1" />
+                  Publish
+                </>
+              )}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
   const renderItemList = (items, itemType) => {
     const Icon = itemTypeIcons[itemType];
     
+    if (items.length === 0) {
+      return (
+        <div className="text-center py-8 text-gray-500">
+          No {itemTypeLabels[itemType].toLowerCase()}s found
+        </div>
+      );
+    }
+
+    // Group items by category
+    const grouped = items.reduce((acc, item) => {
+      const category = item.category || item.group || "Uncategorized";
+      if (!acc[category]) acc[category] = [];
+      acc[category].push(item);
+      return acc;
+    }, {});
+
+    const categories = Object.keys(grouped).sort();
+
+    // If only one category or no grouping makes sense, show flat list
+    if (categories.length <= 1) {
+      return (
+        <div className="grid gap-3">
+          {items.map(item => renderItemCard(item, itemType, Icon))}
+        </div>
+      );
+    }
+
     return (
-      <div className="grid gap-3">
-        {items.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            No {itemTypeLabels[itemType].toLowerCase()}s found
-          </div>
-        ) : (
-          items.map(item => {
-            const published = isPublished(item, itemType);
-            const version = getPublishedVersion(item, itemType);
-            
-            return (
-              <Card key={item.id} className={published ? "border-green-200" : ""}>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-lg ${published ? "bg-green-100" : "bg-gray-100"}`}>
-                        <Icon className={`h-5 w-5 ${published ? "text-green-600" : "text-gray-600"}`} />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-medium">{item.name}</h3>
-                          {published && (
-                            <Badge className="bg-green-100 text-green-700 text-xs">
-                              <Globe className="h-3 w-3 mr-1" />
-                              v{version}
-                            </Badge>
-                          )}
-                        </div>
-                        <p className="text-sm text-gray-500">{item.description}</p>
-                      </div>
-                    </div>
-                    <Button 
-                      size="sm"
-                      variant={published ? "outline" : "default"}
-                      onClick={() => handlePublishClick(item, itemType)}
-                    >
-                      {published ? (
-                        <>
-                          <ArrowUp className="h-4 w-4 mr-1" />
-                          Publish Update
-                        </>
-                      ) : (
-                        <>
-                          <Upload className="h-4 w-4 mr-1" />
-                          Publish
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })
-        )}
+      <div className="space-y-2">
+        {categories.map(category => {
+          const categoryItems = grouped[category];
+          const categoryKey = `${itemType}_${category}`;
+          const isExpanded = expandedCategories.has(categoryKey);
+          const publishedCount = categoryItems.filter(item => isPublished(item, itemType)).length;
+
+          return (
+            <div key={category} className={isExpanded ? "bg-gray-50 rounded-lg" : ""}>
+              <button
+                onClick={() => toggleCategory(categoryKey)}
+                className="w-full flex items-center gap-3 px-3 py-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                {isExpanded ? (
+                  <ChevronDown className="h-4 w-4 text-gray-400" />
+                ) : (
+                  <ChevronRight className="h-4 w-4 text-gray-400" />
+                )}
+                {isExpanded ? (
+                  <FolderOpen className="h-4 w-4 text-amber-500" />
+                ) : (
+                  <Folder className="h-4 w-4 text-amber-500" />
+                )}
+                <span className="font-medium flex-1 text-left">{category}</span>
+                <Badge variant="secondary" className="text-xs">
+                  {publishedCount}/{categoryItems.length}
+                </Badge>
+              </button>
+              {isExpanded && (
+                <div className="grid gap-2 p-3 pt-1">
+                  {categoryItems.map(item => renderItemCard(item, itemType, Icon))}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     );
   };
