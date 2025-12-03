@@ -21,9 +21,8 @@ export default function GlobalAIAssistant() {
 
   // Reminder timer every 10 minutes
   useEffect(() => {
-    // Show first reminder after 10 minutes
     const showReminder = () => {
-      toast.info("📝 Capture Reminder", {
+      toast("📝 Capture Reminder", {
         description: "Time to save any chat highlights to your journal!",
         action: {
           label: "Quick Capture",
@@ -33,14 +32,16 @@ export default function GlobalAIAssistant() {
       });
     };
 
-    const interval = setInterval(showReminder, 10 * 60 * 1000); // 10 minutes
-    
-    // Also show after 1 minute for testing (remove in production)
-    // const initialTimeout = setTimeout(showReminder, 60 * 1000);
+    // Show first reminder after 10 minutes, then every 10 minutes
+    const initialTimeout = setTimeout(() => {
+      showReminder();
+    }, 10 * 60 * 1000);
+
+    const interval = setInterval(showReminder, 10 * 60 * 1000);
 
     return () => {
+      clearTimeout(initialTimeout);
       clearInterval(interval);
-      // clearTimeout(initialTimeout);
     };
   }, []);
 
