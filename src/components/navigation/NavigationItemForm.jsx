@@ -201,7 +201,7 @@ export default function NavigationItemForm({
 
           {formData.item_type === "page" && (
             <div className="space-y-2">
-              <Label htmlFor="page_url">Page</Label>
+              <Label htmlFor="page_url">Page Slug *</Label>
               <Select 
                 value={formData.page_url} 
                 onValueChange={(val) => setFormData({ ...formData, page_url: val })}
