@@ -111,10 +111,8 @@ export default function LivePreview() {
     });
   };
 
-  // Auto-expand all folders on load
-  useEffect(() => {
-    setExpandedFolders(new Set(Object.keys(featuresByCategory)));
-  }, [featureTemplates.length]);
+  // Start with folders collapsed
+  // No auto-expand - folders start closed
 
   if (isLoading) {
     return (
