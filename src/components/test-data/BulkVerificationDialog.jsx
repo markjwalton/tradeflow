@@ -161,6 +161,7 @@ export default function BulkVerificationDialog({
 
   const [isMarkingVerified, setIsMarkingVerified] = useState(false);
   const [markProgress, setMarkProgress] = useState({ current: 0, total: 0 });
+  const [markReport, setMarkReport] = useState(null);
 
   const markAllVerified = async () => {
     const passedItems = results.filter(r => r.status === "passed" || r.status === "warning");
@@ -168,48 +169,57 @@ export default function BulkVerificationDialog({
 
     setIsMarkingVerified(true);
     setMarkProgress({ current: 0, total: passedItems.length });
+    setMarkReport(null);
     
-    let successCount = 0;
-    let errorCount = 0;
-    const batchSize = 10; // Process 10 at a time
+    const successItems = [];
+    const errorItems = [];
+    const batchSize = 10;
 
     try {
       for (let i = 0; i < passedItems.length; i += batchSize) {
         const batch = passedItems.slice(i, i + batchSize);
         
-        // Process batch in parallel
         const promises = batch.map(async (item) => {
-          const testData = testDataSets.find(td => td.playground_item_id === item.id);
+          const testData = testDataSets.find(td => 
+            td.playground_item_id === item.id || td.data?.playground_item_id === item.id
+          );
           if (testData) {
             try {
               await base44.entities.TestData.update(testData.id, {
                 test_status: "verified",
                 verified_date: new Date().toISOString()
               });
-              return { success: true };
+              return { success: true, item };
             } catch (e) {
-              return { success: false };
+              return { success: false, item, error: e.message };
             }
           }
-          return { success: false };
+          return { success: false, item, error: "No test data found" };
         });
 
-        const results = await Promise.all(promises);
-        successCount += results.filter(r => r.success).length;
-        errorCount += results.filter(r => !r.success).length;
+        const batchResults = await Promise.all(promises);
+        batchResults.forEach(r => {
+          if (r.success) successItems.push(r.item);
+          else errorItems.push({ ...r.item, error: r.error });
+        });
         
         setMarkProgress({ current: Math.min(i + batchSize, passedItems.length), total: passedItems.length });
       }
       
-      if (errorCount > 0) {
-        toast.warning(`${successCount} verified, ${errorCount} failed`);
+      if (errorItems.length > 0) {
+        setMarkReport({
+          success: successItems,
+          errors: errorItems,
+          timestamp: new Date().toISOString()
+        });
+        toast.warning(`${successItems.length} verified, ${errorItems.length} failed - see report`);
       } else {
-        toast.success(`${successCount} items marked as verified`);
+        toast.success(`${successItems.length} items marked as verified`);
+        onComplete?.();
+        onClose();
       }
-      onComplete?.();
-      onClose();
     } catch (e) {
-      toast.error("Failed to update items");
+      toast.error("Failed to update items: " + e.message);
     } finally {
       setIsMarkingVerified(false);
       setMarkProgress({ current: 0, total: 0 });
@@ -262,8 +272,60 @@ export default function BulkVerificationDialog({
             </div>
           )}
 
-          {/* Results Table */}
-          {results.length > 0 && (
+          {/* Error Report */}
+                        {markReport && markReport.errors.length > 0 && (
+                          <div className="bg-red-50 border border-red-200 rounded-lg p-4 space-y-3">
+                            <div className="flex items-center justify-between">
+                              <h4 className="font-medium text-red-800 flex items-center gap-2">
+                                <XCircle className="h-4 w-4" />
+                                Update Errors Report
+                              </h4>
+                              <Badge variant="destructive">{markReport.errors.length} failed</Badge>
+                            </div>
+                            <div className="text-sm text-red-700">
+                              The following items could not be marked as verified:
+                            </div>
+                            <div className="max-h-40 overflow-y-auto border border-red-200 rounded bg-white">
+                              <table className="w-full text-sm">
+                                <thead className="bg-red-100 sticky top-0">
+                                  <tr>
+                                    <th className="text-left p-2 font-medium">Item</th>
+                                    <th className="text-left p-2 font-medium">Type</th>
+                                    <th className="text-left p-2 font-medium">Error</th>
+                                  </tr>
+                                </thead>
+                                <tbody className="divide-y divide-red-100">
+                                  {markReport.errors.map((item, idx) => (
+                                    <tr key={idx}>
+                                      <td className="p-2">{item.name}</td>
+                                      <td className="p-2 capitalize">{item.type}</td>
+                                      <td className="p-2 text-red-600">{item.error}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                            <div className="flex justify-between items-center pt-2">
+                              <span className="text-xs text-red-600">
+                                {markReport.success.length} items were successfully updated
+                              </span>
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                onClick={() => {
+                                  setMarkReport(null);
+                                  onComplete?.();
+                                  onClose();
+                                }}
+                              >
+                                Close & Refresh
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Results Table */}
+                        {results.length > 0 && !markReport && (
             <div className="flex-1 overflow-auto border rounded-lg">
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 sticky top-0">
