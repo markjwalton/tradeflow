@@ -49,6 +49,7 @@ import { Gauge } from "lucide-react";
 const globalAdminPages = [
   { name: "CMS", slug: "CMSManager", icon: Globe },
   { name: "API Manager", slug: "APIManager", icon: Key },
+  { name: "Security", slug: "SecurityMonitor", icon: Shield },
   { name: "Performance", slug: "PerformanceMonitor", icon: Gauge },
   { name: "Roadmap", slug: "RoadmapManager", icon: Lightbulb },
   { name: "Journal", slug: "RoadmapJournal", icon: Lightbulb },
