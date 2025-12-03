@@ -94,13 +94,17 @@ export default function GenericNavEditor({
   });
 
   const config = navConfigs[0];
-  const items = config?.items || [];
+  // Ensure all items have unique IDs
+  const items = (config?.items || []).map(item => ({
+    ...item,
+    _id: item._id || generateId()
+  }));
 
   // Calculate unallocated slugs
   const allocatedSlugs = items.map(i => i.slug).filter(Boolean);
   const unallocatedSlugs = sourceSlugs.filter(slug => !allocatedSlugs.includes(slug));
 
-  // Hierarchy helpers
+  // Hierarchy helpers - use _id for parent matching
   const getItemsByParent = (parentId) => items.filter(i => (i.parent_id || null) === parentId);
   const topLevelItems = getItemsByParent(null);
 
