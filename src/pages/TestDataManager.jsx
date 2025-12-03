@@ -495,6 +495,9 @@ Return as JSON with entity names as keys and arrays of records as values.`,
                       }))
                     });
 
+                    let successCount = 0;
+                    let errorCount = 0;
+
                     for (let i = 0; i < itemsToProcess.length; i++) {
                       const item = itemsToProcess[i];
                       
@@ -526,12 +529,18 @@ Return as JSON with entity names as keys and arrays of records as values.`,
                           }
                         });
 
+                        // Save immediately after each successful generation
                         await base44.entities.TestData.create({
                           name: "Default Test Data",
                           playground_item_id: item.id,
                           entity_data: result.data || {},
                           is_default: true
                         });
+
+                        successCount++;
+                        
+                        // Invalidate after each save so data persists even if page refreshes
+                        queryClient.invalidateQueries({ queryKey: ["testData"] });
 
                         setBulkProgress(prev => ({
                           ...prev,
@@ -542,6 +551,7 @@ Return as JSON with entity names as keys and arrays of records as values.`,
                         }));
                       } catch (e) {
                         console.error(`Failed for ${item.source_name}:`, e);
+                        errorCount++;
                         setBulkProgress(prev => ({
                           ...prev,
                           current: i + 1,
@@ -549,13 +559,14 @@ Return as JSON with entity names as keys and arrays of records as values.`,
                             idx === i ? { ...it, status: "error", error: e.message } : it
                           )
                         }));
+                        
+                        // Add a small delay after errors to avoid rate limits
+                        await new Promise(resolve => setTimeout(resolve, 1000));
                       }
                     }
 
-                    queryClient.invalidateQueries({ queryKey: ["testData"] });
                     setIsGenerating(false);
-                    const successCount = bulkProgress.items.filter(i => i.status === "success").length + 1;
-                    toast.success(`Generated test data for ${successCount} items`);
+                    toast.success(`Generated: ${successCount} succeeded, ${errorCount} failed`);
                   }}
                 >
                   <Sparkles className="h-4 w-4 mr-2" />

@@ -42,8 +42,11 @@ import { BookOpen } from "lucide-react";
 
 import { FlaskConical } from "lucide-react";
 
+import { Key } from "lucide-react";
+
 const globalAdminPages = [
   { name: "CMS", slug: "CMSManager", icon: Globe },
+  { name: "API Manager", slug: "APIManager", icon: Key },
   { name: "Roadmap", slug: "RoadmapManager", icon: Lightbulb },
   { name: "Journal", slug: "RoadmapJournal", icon: Lightbulb },
   { name: "Sprints", slug: "SprintManager", icon: Lightbulb },
@@ -73,7 +76,7 @@ const globalAdminPages = [
 ];
 
 // Pages that don't require tenant context but need to preserve query params
-const standalonePages = ["CMSManager", "RoadmapManager", "RoadmapJournal", "SprintManager", "RuleBook", "PlaygroundSummary", "PlaygroundEntity", "PlaygroundPage", "PlaygroundFeature", "ConceptWorkbench", "TestDataManager", "LivePreview", "MindMapEditor", "GeneratedApps", "EntityLibrary", "PageLibrary", "FeatureLibrary", "PackageLibrary", "TenantManager", "BusinessTemplates", "WorkflowLibrary", "WorkflowDesigner", "FormTemplates", "FormBuilder", "ChecklistTemplates", "ChecklistBuilder", "PromptSettings"];
+const standalonePages = ["CMSManager", "APIManager", "RoadmapManager", "RoadmapJournal", "SprintManager", "RuleBook", "PlaygroundSummary", "PlaygroundEntity", "PlaygroundPage", "PlaygroundFeature", "ConceptWorkbench", "TestDataManager", "LivePreview", "MindMapEditor", "GeneratedApps", "EntityLibrary", "PageLibrary", "FeatureLibrary", "PackageLibrary", "TenantManager", "BusinessTemplates", "WorkflowLibrary", "WorkflowDesigner", "FormTemplates", "FormBuilder", "ChecklistTemplates", "ChecklistBuilder", "PromptSettings"];
 
 // Pages that render their own navigation (no layout sidebar)
 const fullscreenPages = ["LivePreview"];
