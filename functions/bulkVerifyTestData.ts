@@ -24,36 +24,35 @@ Deno.serve(async (req) => {
 
     const verifiedDate = new Date().toISOString();
 
-    // Process with delays to avoid rate limits - 1 update per 500ms
+    // Process with longer delays to avoid rate limits - 1 update per second
     for (let i = 0; i < testDataIds.length; i++) {
       const id = testDataIds[i];
-      try {
-        await base44.asServiceRole.entities.TestData.update(id, {
-          test_status: "verified",
-          verified_date: verifiedDate
-        });
-        results.success.push(id);
-      } catch (e) {
-        // If rate limited, wait longer and retry once
-        if (e.message?.includes('Rate limit') || e.message?.includes('rate limit')) {
-          await sleep(2000);
-          try {
-            await base44.asServiceRole.entities.TestData.update(id, {
-              test_status: "verified",
-              verified_date: verifiedDate
-            });
-            results.success.push(id);
-          } catch (retryError) {
-            results.failed.push({ id, error: retryError.message });
+      
+      let retries = 0;
+      const maxRetries = 3;
+      
+      while (retries < maxRetries) {
+        try {
+          await base44.asServiceRole.entities.TestData.update(id, {
+            test_status: "verified",
+            verified_date: verifiedDate
+          });
+          results.success.push(id);
+          break;
+        } catch (e) {
+          retries++;
+          if (retries < maxRetries) {
+            // Exponential backoff: 3s, 6s, 12s
+            await sleep(3000 * Math.pow(2, retries - 1));
+          } else {
+            results.failed.push({ id, error: e.message });
           }
-        } else {
-          results.failed.push({ id, error: e.message });
         }
       }
       
-      // Delay after each update
+      // 1 second delay between each update
       if (i < testDataIds.length - 1) {
-        await sleep(300);
+        await sleep(1000);
       }
     }
 
