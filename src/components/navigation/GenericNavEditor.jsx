@@ -21,7 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { 
-  Plus, GripVertical, Pencil, Trash2, Copy, FolderOpen, Power,
+  Plus, GripVertical, Pencil, Trash2, Copy, FolderOpen, Power, Sparkles, Loader2,
   Home, Lightbulb, GitBranch, Database, Package, Building2, 
   Navigation, Workflow, Layout, Zap, Settings, FileText,
   Users, Calendar, Mail, Bell, Search, Star, Heart,
@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { toast } from "sonner";
+import { base44 } from "@/api/base44Client";
 
 // Generate unique ID for items
 const generateId = () => Math.random().toString(36).substr(2, 9);
@@ -86,6 +87,8 @@ export default function GenericNavEditor({
   const [expandedParents, setExpandedParents] = useState(new Set());
   const [unallocatedExpanded, setUnallocatedExpanded] = useState(false);
   const [initialExpandDone, setInitialExpandDone] = useState(false);
+  const [aiRecommendations, setAiRecommendations] = useState({});
+  const [loadingRecommendations, setLoadingRecommendations] = useState(false);
 
   // Fetch config for this type
   const { data: navConfigs = [], isLoading } = useQuery({
@@ -561,8 +564,39 @@ export default function GenericNavEditor({
                   Unallocated Pages ({unallocatedSlugs.length})
                 </button>
                 {unallocatedExpanded && (
-                  <div className="space-y-2">
-                    {unallocatedSlugs.map(slug => (
+                        <div className="space-y-2">
+                          {/* AI Recommend All Button */}
+                          {unallocatedSlugs.length > 0 && (
+                            <div className="flex justify-end mb-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={async () => {
+                                  setLoadingRecommendations(true);
+                                  try {
+                                    const folders = items.filter(i => i.item_type === "folder").map(f => f.name);
+                                    const result = await base44.integrations.Core.InvokeLLM({
+                                      prompt: `Given these folder categories: ${folders.join(", ")}\n\nRecommend the best folder for each of these items:\n${unallocatedSlugs.join("\n")}\n\nReturn a JSON object mapping each item name to the recommended folder name.`,
+                                      response_json_schema: {
+                                        type: "object",
+                                        additionalProperties: { type: "string" }
+                                      }
+                                    });
+                                    setAiRecommendations(result);
+                                  } catch (e) {
+                                    toast.error("Failed to get recommendations");
+                                  }
+                                  setLoadingRecommendations(false);
+                                }}
+                                disabled={loadingRecommendations}
+                                className="gap-2"
+                              >
+                                {loadingRecommendations ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3" />}
+                                AI Recommend All
+                              </Button>
+                            </div>
+                          )}
+                          {unallocatedSlugs.map(slug => (
                       <div 
                         key={slug} 
                         className="group flex items-center gap-3 p-3 bg-gray-50 border border-dashed border-gray-300 rounded-lg hover:bg-gray-100"
@@ -571,6 +605,12 @@ export default function GenericNavEditor({
                         <div className="flex items-center gap-2 flex-1">
                           <File className="h-4 w-4 text-gray-400" />
                           <span className="font-medium text-gray-600">{slug.replace(/([A-Z])/g, ' $1').trim()}</span>
+                          {aiRecommendations[slug] && (
+                            <Badge className="bg-purple-100 text-purple-700 text-xs">
+                              <Sparkles className="h-3 w-3 mr-1" />
+                              {aiRecommendations[slug]}
+                            </Badge>
+                          )}
                         </div>
                         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100">
                           <Button 
