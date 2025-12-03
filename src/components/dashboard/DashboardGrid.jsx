@@ -143,16 +143,16 @@ export default function DashboardGrid({
   };
 
   const renderWidgetGrid = (widgetPlacements, droppableId) => (
-    <Droppable droppableId={droppableId} direction="horizontal">
+    <Droppable droppableId={droppableId}>
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
           {...provided.droppableProps}
-          className={`grid gap-4 ${snapshot.isDraggingOver ? "bg-blue-50 rounded-lg" : ""}`}
-          style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
+          className={`grid gap-4 ${snapshot.isDraggingOver ? "bg-blue-50/50 rounded-lg p-2" : ""}`}
+          style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
         >
           {widgetPlacements.map((placement, index) => {
-            const span = placement.col_span || placement.widget?.default_col_span || 1;
+            const span = Math.min(placement.col_span || placement.widget?.default_col_span || 1, columns);
             return (
               <Draggable 
                 key={placement.widget_id} 
@@ -164,27 +164,27 @@ export default function DashboardGrid({
                   <div
                     ref={provided.innerRef}
                     {...provided.draggableProps}
+                    className={`${snapshot.isDragging ? "opacity-70 z-50" : ""}`}
                     style={{
+                      gridColumn: snapshot.isDragging ? 'span 1' : `span ${span}`,
                       ...provided.draggableProps.style,
-                      gridColumn: `span ${span}`
                     }}
-                    className={snapshot.isDragging ? "opacity-50" : ""}
                   >
-                    <div className="relative group">
+                    <div className="relative group h-full">
                       {isEditing && (
                         <div 
                           {...provided.dragHandleProps}
-                          className="absolute -top-2 -left-2 z-10 p-1 bg-white rounded shadow opacity-0 group-hover:opacity-100 cursor-grab"
+                          className="absolute -top-2 -left-2 z-10 p-1.5 bg-white rounded-lg shadow-md opacity-0 group-hover:opacity-100 cursor-grab active:cursor-grabbing transition-opacity"
                         >
-                          <GripVertical className="h-4 w-4 text-gray-400" />
+                          <GripVertical className="h-4 w-4 text-gray-500" />
                         </div>
                       )}
                       {isEditing && (
-                        <div className="absolute -top-2 -right-2 z-10 flex gap-1 opacity-0 group-hover:opacity-100">
-                          <Button size="icon" variant="outline" className="h-6 w-6 bg-white">
+                        <div className="absolute -top-2 -right-2 z-10 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button size="icon" variant="outline" className="h-6 w-6 bg-white shadow-sm">
                             <Settings className="h-3 w-3" />
                           </Button>
-                          <Button size="icon" variant="outline" className="h-6 w-6 bg-white text-red-500">
+                          <Button size="icon" variant="outline" className="h-6 w-6 bg-white text-red-500 shadow-sm">
                             <Trash2 className="h-3 w-3" />
                           </Button>
                         </div>
