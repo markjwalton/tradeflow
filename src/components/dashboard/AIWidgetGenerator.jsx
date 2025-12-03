@@ -53,10 +53,17 @@ export default function AIWidgetGenerator({
     setGeneratedWidgets([]);
 
     try {
+      // Build context - handle cases where templates might not exist
       const context = {
-        entities: entities.map(e => ({ name: e.name, category: e.category, fields: Object.keys(e.schema?.properties || {}) })),
-        pages: pages.map(p => ({ name: p.name, category: p.category })),
-        features: features.map(f => ({ name: f.name, category: f.category }))
+        entities: entities.length > 0 
+          ? entities.map(e => ({ name: e.name, category: e.category, fields: Object.keys(e.schema?.properties || {}) }))
+          : ["Project", "Task", "Customer", "Appointment", "Estimate"].map(n => ({ name: n })),
+        pages: pages.length > 0 
+          ? pages.map(p => ({ name: p.name, category: p.category }))
+          : ["Dashboard", "Projects", "Tasks", "Customers", "Calendar"].map(n => ({ name: n })),
+        features: features.length > 0 
+          ? features.map(f => ({ name: f.name, category: f.category }))
+          : []
       };
 
       const result = await base44.integrations.Core.InvokeLLM({
@@ -73,9 +80,9 @@ Generate 5-8 recommended dashboard widgets. For each widget include:
 - config: Widget configuration object with appropriate fields for the type
 - reasoning: Why this widget would be valuable
 
-For stat_card: include title, value (use placeholder like "{{count}}"), change, changeType (up/down), color
-For quick_action: include title, actions array with label and url
-For ai_insight: include title, insight text, confidence, source
+For stat_card: include title, value (use a real number like "24" or "156"), change (like "+12%"), changeType (up/down), color (blue/green/purple/amber/red)
+For quick_action: include title, description, actions array with label and url
+For ai_insight: include title, insight text, confidence (0-1), source
 For chart: include title, chartType (bar/line/pie)
 For info_card: include title, content, variant (default/info/success/warning)
 
@@ -101,9 +108,15 @@ Return as JSON array.`,
         }
       });
 
-      setGeneratedWidgets(result.widgets || []);
+      if (result.widgets && result.widgets.length > 0) {
+        setGeneratedWidgets(result.widgets);
+        toast.success(`Generated ${result.widgets.length} widget recommendations`);
+      } else {
+        toast.error("No widgets generated - try again");
+      }
     } catch (error) {
-      toast.error("Failed to generate recommendations");
+      console.error("AI Generation error:", error);
+      toast.error("Failed to generate recommendations: " + (error.message || "Unknown error"));
     } finally {
       setIsGenerating(false);
     }
