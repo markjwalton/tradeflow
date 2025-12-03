@@ -550,26 +550,28 @@ export default function NavigationManager() {
       {isGlobalAdmin ? (
         <>
           <div className="flex items-center justify-between mb-6">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <div className="flex items-center justify-between">
-                <TabsList>
-                  <TabsTrigger value="admin">Admin Console</TabsTrigger>
-                  <TabsTrigger value="live" className="gap-2">
-                    <FileCode className="h-4 w-4" />
-                    Live Pages
-                  </TabsTrigger>
-                  <TabsTrigger value="tenant">Tenant Navigation</TabsTrigger>
-                </TabsList>
-                <Button variant="ghost" size="icon" onClick={() => setShowSettings(true)}>
-                  <Settings className="h-5 w-5" />
+            <div className="flex items-center gap-2">
+              {["admin", "live", "tenant"].map((tab) => (
+                <Button
+                  key={tab}
+                  variant={activeTab === tab ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setActiveTab(tab)}
+                  className="gap-2"
+                >
+                  {tab === "live" && <FileCode className="h-4 w-4" />}
+                  {tab === "admin" ? "Admin Console" : tab === "live" ? "Live Pages" : "Tenant Navigation"}
                 </Button>
-              </div>
-            </Tabs>
+              ))}
+            </div>
+            <Button variant="ghost" size="icon" onClick={() => setShowSettings(true)}>
+              <Settings className="h-5 w-5" />
+            </Button>
           </div>
 
           {activeTab === "admin" && <AdminConsoleNavEditor key="admin" />}
-          {activeTab === "live" && renderNavigationEditor()}
-          {activeTab === "tenant" && renderNavigationEditor()}
+          {activeTab === "live" && <div key="live">{renderNavigationEditor()}</div>}
+          {activeTab === "tenant" && <div key="tenant">{renderNavigationEditor()}</div>}
         </>
       ) : (
         renderNavigationEditor()
