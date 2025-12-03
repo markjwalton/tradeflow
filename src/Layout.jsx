@@ -36,6 +36,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import GlobalAIAssistant from "@/components/ai-assistant/GlobalAIAssistant";
+import NavigationBreadcrumb from "@/components/navigation/NavigationBreadcrumb";
 
 // Global admin pages - only for is_global_admin users
 import { BookOpen, FlaskConical, Key, Gauge } from "lucide-react";
@@ -518,6 +519,15 @@ export default function Layout({ children, currentPageName }) {
 
         {/* Page Content */}
         <main className="flex-1 bg-gray-50 overflow-auto">
+          {customAdminNav && customAdminNav.length > 0 && (
+            <div className="px-6 pt-4">
+              <NavigationBreadcrumb 
+                items={customAdminNav} 
+                currentPageSlug={currentPageName}
+                showHome={false}
+              />
+            </div>
+          )}
           {children}
         </main>
       </div>
