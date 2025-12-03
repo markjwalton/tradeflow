@@ -120,14 +120,20 @@ export default function GenericNavEditor({
   // Auto-expand all folders that have children on initial load
   React.useEffect(() => {
     if (!initialExpandDone && items.length > 0) {
-      const itemIdsWithChildren = new Set();
+      const parentIds = new Set();
       items.forEach(i => {
         if (i.parent_id) {
-          itemIdsWithChildren.add(i.parent_id);
+          parentIds.add(i.parent_id);
+          // Also find the actual parent item and add its _id
+          const parentItem = items.find(p => p._id === i.parent_id || p.slug === i.parent_id);
+          if (parentItem) {
+            parentIds.add(parentItem._id);
+            if (parentItem.slug) parentIds.add(parentItem.slug);
+          }
         }
       });
-      if (itemIdsWithChildren.size > 0) {
-        setExpandedParents(itemIdsWithChildren);
+      if (parentIds.size > 0) {
+        setExpandedParents(parentIds);
       }
       setInitialExpandDone(true);
     }
