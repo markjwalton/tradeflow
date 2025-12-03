@@ -47,6 +47,7 @@ import ConceptWorkbench from './pages/ConceptWorkbench';
 import LivePreview from './pages/LivePreview';
 import TestDataManager from './pages/TestDataManager';
 import CMSManager from './pages/CMSManager';
+import APIManager from './pages/APIManager';
 import __Layout from './Layout.jsx';
 
 
@@ -100,6 +101,7 @@ export const PAGES = {
     "LivePreview": LivePreview,
     "TestDataManager": TestDataManager,
     "CMSManager": CMSManager,
+    "APIManager": APIManager,
 }
 
 export const pagesConfig = {

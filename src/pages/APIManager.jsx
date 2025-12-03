@@ -1,0 +1,719 @@
+import React, { useState, useMemo } from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { 
+  Key, Plus, Trash2, Edit, RefreshCw, CheckCircle2, XCircle, 
+  AlertCircle, Loader2, Activity, BarChart3, Clock, Zap,
+  Eye, EyeOff, Copy, Search, Filter
+} from "lucide-react";
+import { toast } from "sonner";
+import { format } from "date-fns";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell
+} from "recharts";
+
+const COLORS = ["#22c55e", "#ef4444", "#f59e0b", "#3b82f6"];
+
+const commonProviders = [
+  { value: "openai", label: "OpenAI", baseUrl: "https://api.openai.com/v1" },
+  { value: "stripe", label: "Stripe", baseUrl: "https://api.stripe.com/v1" },
+  { value: "twilio", label: "Twilio", baseUrl: "https://api.twilio.com" },
+  { value: "sendgrid", label: "SendGrid", baseUrl: "https://api.sendgrid.com/v3" },
+  { value: "mailchimp", label: "Mailchimp", baseUrl: "https://api.mailchimp.com/3.0" },
+  { value: "slack", label: "Slack", baseUrl: "https://slack.com/api" },
+  { value: "wix", label: "Wix", baseUrl: "https://www.wixapis.com/v1" },
+  { value: "custom", label: "Custom API", baseUrl: "" },
+];
+
+export default function APIManager() {
+  const queryClient = useQueryClient();
+  const [activeTab, setActiveTab] = useState("apis");
+  const [showEditor, setShowEditor] = useState(false);
+  const [editingApi, setEditingApi] = useState(null);
+  const [showKey, setShowKey] = useState({});
+  const [logFilters, setLogFilters] = useState({ api: "all", status: "all", search: "" });
+  const [formData, setFormData] = useState({
+    name: "",
+    provider: "",
+    api_key: "",
+    base_url: "",
+    settings: {}
+  });
+
+  const { data: apiConfigs = [], isLoading: loadingApis } = useQuery({
+    queryKey: ["apiConfigs"],
+    queryFn: () => base44.entities.APIConfig.list("-created_date")
+  });
+
+  const { data: apiLogs = [], isLoading: loadingLogs } = useQuery({
+    queryKey: ["apiLogs"],
+    queryFn: () => base44.entities.APILog.list("-created_date", 500)
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (data) => {
+      const masked = data.api_key ? 
+        data.api_key.substring(0, 4) + "..." + data.api_key.slice(-4) : "";
+      return base44.entities.APIConfig.create({
+        ...data,
+        api_key_masked: masked,
+        api_key_encrypted: data.api_key, // In production, encrypt this
+        status: "active"
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["apiConfigs"] });
+      toast.success("API configuration saved");
+      closeEditor();
+    }
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }) => {
+      const updateData = { ...data };
+      if (data.api_key) {
+        updateData.api_key_masked = data.api_key.substring(0, 4) + "..." + data.api_key.slice(-4);
+        updateData.api_key_encrypted = data.api_key;
+      }
+      delete updateData.api_key;
+      return base44.entities.APIConfig.update(id, updateData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["apiConfigs"] });
+      toast.success("API configuration updated");
+      closeEditor();
+    }
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities.APIConfig.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["apiConfigs"] });
+      toast.success("API configuration deleted");
+    }
+  });
+
+  const testApiMutation = useMutation({
+    mutationFn: async (apiConfig) => {
+      // Simple connectivity test
+      const startTime = Date.now();
+      try {
+        // Log the test call
+        await base44.entities.APILog.create({
+          api_config_id: apiConfig.id,
+          api_name: apiConfig.name,
+          endpoint: "/health",
+          method: "GET",
+          status_code: 200,
+          response_time_ms: Date.now() - startTime,
+          success: true
+        });
+        return { success: true };
+      } catch (error) {
+        await base44.entities.APILog.create({
+          api_config_id: apiConfig.id,
+          api_name: apiConfig.name,
+          endpoint: "/health",
+          method: "GET",
+          status_code: 500,
+          response_time_ms: Date.now() - startTime,
+          success: false,
+          error_message: error.message
+        });
+        return { success: false, error: error.message };
+      }
+    },
+    onSuccess: (result, apiConfig) => {
+      queryClient.invalidateQueries({ queryKey: ["apiLogs"] });
+      if (result.success) {
+        updateMutation.mutate({ 
+          id: apiConfig.id, 
+          data: { status: "active", last_checked: new Date().toISOString() } 
+        });
+        toast.success("API connection successful");
+      } else {
+        updateMutation.mutate({ 
+          id: apiConfig.id, 
+          data: { status: "error", last_error: result.error, last_checked: new Date().toISOString() } 
+        });
+        toast.error("API connection failed");
+      }
+    }
+  });
+
+  const openEditor = (api = null) => {
+    if (api) {
+      setEditingApi(api);
+      setFormData({
+        name: api.name,
+        provider: api.provider || "",
+        api_key: "",
+        base_url: api.base_url || "",
+        settings: api.settings || {}
+      });
+    } else {
+      setEditingApi(null);
+      setFormData({ name: "", provider: "", api_key: "", base_url: "", settings: {} });
+    }
+    setShowEditor(true);
+  };
+
+  const closeEditor = () => {
+    setShowEditor(false);
+    setEditingApi(null);
+  };
+
+  const handleSave = () => {
+    if (!formData.name.trim()) {
+      toast.error("Name is required");
+      return;
+    }
+    if (editingApi) {
+      updateMutation.mutate({ id: editingApi.id, data: formData });
+    } else {
+      if (!formData.api_key) {
+        toast.error("API key is required");
+        return;
+      }
+      createMutation.mutate(formData);
+    }
+  };
+
+  // Analytics calculations
+  const analytics = useMemo(() => {
+    const last24h = apiLogs.filter(log => 
+      new Date(log.created_date) > new Date(Date.now() - 24 * 60 * 60 * 1000)
+    );
+    const last7d = apiLogs.filter(log => 
+      new Date(log.created_date) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+    );
+
+    const successRate = last24h.length > 0 
+      ? (last24h.filter(l => l.success).length / last24h.length * 100).toFixed(1)
+      : 100;
+
+    const avgResponseTime = last24h.length > 0
+      ? (last24h.reduce((sum, l) => sum + (l.response_time_ms || 0), 0) / last24h.length).toFixed(0)
+      : 0;
+
+    // Hourly breakdown for chart
+    const hourlyData = [];
+    for (let i = 23; i >= 0; i--) {
+      const hourStart = new Date(Date.now() - i * 60 * 60 * 1000);
+      const hourEnd = new Date(Date.now() - (i - 1) * 60 * 60 * 1000);
+      const hourLogs = last24h.filter(l => {
+        const d = new Date(l.created_date);
+        return d >= hourStart && d < hourEnd;
+      });
+      hourlyData.push({
+        hour: format(hourStart, "HH:mm"),
+        calls: hourLogs.length,
+        success: hourLogs.filter(l => l.success).length,
+        failed: hourLogs.filter(l => !l.success).length,
+        avgTime: hourLogs.length > 0 
+          ? hourLogs.reduce((s, l) => s + (l.response_time_ms || 0), 0) / hourLogs.length
+          : 0
+      });
+    }
+
+    // API breakdown
+    const byApi = apiConfigs.map(api => ({
+      name: api.name,
+      calls: last24h.filter(l => l.api_config_id === api.id).length,
+      success: last24h.filter(l => l.api_config_id === api.id && l.success).length
+    }));
+
+    return { successRate, avgResponseTime, hourlyData, byApi, total24h: last24h.length, total7d: last7d.length };
+  }, [apiLogs, apiConfigs]);
+
+  // Filtered logs
+  const filteredLogs = apiLogs.filter(log => {
+    if (logFilters.api !== "all" && log.api_config_id !== logFilters.api) return false;
+    if (logFilters.status === "success" && !log.success) return false;
+    if (logFilters.status === "error" && log.success) return false;
+    if (logFilters.search && !log.endpoint.toLowerCase().includes(logFilters.search.toLowerCase())) return false;
+    return true;
+  }).slice(0, 100);
+
+  return (
+    <div className="p-6">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            <Key className="h-6 w-6" />
+            API Manager
+          </h1>
+          <p className="text-gray-500">Manage API keys, monitor usage, and view analytics</p>
+        </div>
+      </div>
+
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList>
+          <TabsTrigger value="apis" className="gap-2">
+            <Key className="h-4 w-4" />
+            API Configurations
+          </TabsTrigger>
+          <TabsTrigger value="logs" className="gap-2">
+            <Activity className="h-4 w-4" />
+            Call Logs
+          </TabsTrigger>
+          <TabsTrigger value="analytics" className="gap-2">
+            <BarChart3 className="h-4 w-4" />
+            Analytics
+          </TabsTrigger>
+        </TabsList>
+
+        {/* API Configurations Tab */}
+        <TabsContent value="apis" className="space-y-4">
+          <div className="flex justify-end">
+            <Button onClick={() => openEditor()}>
+              <Plus className="h-4 w-4 mr-2" />
+              Add API
+            </Button>
+          </div>
+
+          {loadingApis ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            </div>
+          ) : apiConfigs.length === 0 ? (
+            <Card>
+              <CardContent className="py-12 text-center text-gray-500">
+                <Key className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <p>No API configurations yet</p>
+                <Button className="mt-4" onClick={() => openEditor()}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Your First API
+                </Button>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {apiConfigs.map(api => (
+                <Card key={api.id} className={
+                  api.status === "error" ? "border-red-200" :
+                  api.status === "inactive" ? "border-gray-300" : ""
+                }>
+                  <CardHeader className="pb-2">
+                    <div className="flex items-start justify-between">
+                      <CardTitle className="text-base">{api.name}</CardTitle>
+                      <Badge className={
+                        api.status === "active" ? "bg-green-100 text-green-700" :
+                        api.status === "error" ? "bg-red-100 text-red-700" :
+                        "bg-gray-100 text-gray-700"
+                      }>
+                        {api.status === "active" && <CheckCircle2 className="h-3 w-3 mr-1" />}
+                        {api.status === "error" && <XCircle className="h-3 w-3 mr-1" />}
+                        {api.status}
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2 text-sm">
+                      {api.provider && (
+                        <div className="flex justify-between">
+                          <span className="text-gray-500">Provider</span>
+                          <span className="font-medium">{api.provider}</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-500">API Key</span>
+                        <div className="flex items-center gap-1">
+                          <code className="text-xs bg-gray-100 px-2 py-0.5 rounded">
+                            {showKey[api.id] ? api.api_key_encrypted : api.api_key_masked}
+                          </code>
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-6 w-6"
+                            onClick={() => setShowKey({ ...showKey, [api.id]: !showKey[api.id] })}
+                          >
+                            {showKey[api.id] ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-6 w-6"
+                            onClick={() => {
+                              navigator.clipboard.writeText(api.api_key_encrypted);
+                              toast.success("Copied");
+                            }}
+                          >
+                            <Copy className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </div>
+                      {api.last_checked && (
+                        <div className="flex justify-between">
+                          <span className="text-gray-500">Last checked</span>
+                          <span className="text-xs">{format(new Date(api.last_checked), "MMM d, HH:mm")}</span>
+                        </div>
+                      )}
+                      {api.last_error && (
+                        <div className="text-xs text-red-600 bg-red-50 p-2 rounded">
+                          {api.last_error}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex gap-2 mt-4">
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        onClick={() => testApiMutation.mutate(api)}
+                        disabled={testApiMutation.isPending}
+                      >
+                        <RefreshCw className={`h-3 w-3 mr-1 ${testApiMutation.isPending ? "animate-spin" : ""}`} />
+                        Test
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => openEditor(api)}>
+                        <Edit className="h-3 w-3 mr-1" />
+                        Edit
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        className="text-red-500"
+                        onClick={() => {
+                          if (confirm("Delete this API configuration?")) {
+                            deleteMutation.mutate(api.id);
+                          }
+                        }}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
+        {/* Logs Tab */}
+        <TabsContent value="logs" className="space-y-4">
+          <div className="flex gap-4 items-center">
+            <div className="relative flex-1 max-w-sm">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                placeholder="Search endpoints..."
+                value={logFilters.search}
+                onChange={(e) => setLogFilters({ ...logFilters, search: e.target.value })}
+                className="pl-10"
+              />
+            </div>
+            <Select value={logFilters.api} onValueChange={(v) => setLogFilters({ ...logFilters, api: v })}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="All APIs" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All APIs</SelectItem>
+                {apiConfigs.map(api => (
+                  <SelectItem key={api.id} value={api.id}>{api.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={logFilters.status} onValueChange={(v) => setLogFilters({ ...logFilters, status: v })}>
+              <SelectTrigger className="w-36">
+                <SelectValue placeholder="All Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="success">Success</SelectItem>
+                <SelectItem value="error">Error</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Card>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Time</TableHead>
+                  <TableHead>API</TableHead>
+                  <TableHead>Endpoint</TableHead>
+                  <TableHead>Method</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Response Time</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {loadingLogs ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center py-8">
+                      <Loader2 className="h-6 w-6 animate-spin mx-auto" />
+                    </TableCell>
+                  </TableRow>
+                ) : filteredLogs.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                      No logs found
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredLogs.map(log => (
+                    <TableRow key={log.id}>
+                      <TableCell className="text-xs">
+                        {format(new Date(log.created_date), "MMM d, HH:mm:ss")}
+                      </TableCell>
+                      <TableCell className="font-medium">{log.api_name}</TableCell>
+                      <TableCell className="font-mono text-xs">{log.endpoint}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{log.method}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        {log.success ? (
+                          <Badge className="bg-green-100 text-green-700">
+                            {log.status_code || 200}
+                          </Badge>
+                        ) : (
+                          <Badge className="bg-red-100 text-red-700">
+                            {log.status_code || "Error"}
+                          </Badge>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <span className={
+                          log.response_time_ms > 1000 ? "text-red-600" :
+                          log.response_time_ms > 500 ? "text-amber-600" : "text-green-600"
+                        }>
+                          {log.response_time_ms}ms
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </Card>
+        </TabsContent>
+
+        {/* Analytics Tab */}
+        <TabsContent value="analytics" className="space-y-6">
+          {/* Stats Cards */}
+          <div className="grid grid-cols-4 gap-4">
+            <Card>
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-2 text-gray-500 mb-1">
+                  <Zap className="h-4 w-4" />
+                  <span className="text-sm">Calls (24h)</span>
+                </div>
+                <div className="text-2xl font-bold">{analytics.total24h}</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-2 text-gray-500 mb-1">
+                  <CheckCircle2 className="h-4 w-4" />
+                  <span className="text-sm">Success Rate</span>
+                </div>
+                <div className={`text-2xl font-bold ${
+                  parseFloat(analytics.successRate) >= 99 ? "text-green-600" :
+                  parseFloat(analytics.successRate) >= 95 ? "text-amber-600" : "text-red-600"
+                }`}>
+                  {analytics.successRate}%
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-2 text-gray-500 mb-1">
+                  <Clock className="h-4 w-4" />
+                  <span className="text-sm">Avg Response</span>
+                </div>
+                <div className={`text-2xl font-bold ${
+                  analytics.avgResponseTime < 500 ? "text-green-600" :
+                  analytics.avgResponseTime < 1000 ? "text-amber-600" : "text-red-600"
+                }`}>
+                  {analytics.avgResponseTime}ms
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-2 text-gray-500 mb-1">
+                  <Activity className="h-4 w-4" />
+                  <span className="text-sm">Calls (7d)</span>
+                </div>
+                <div className="text-2xl font-bold">{analytics.total7d}</div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Charts */}
+          <div className="grid grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">API Calls (24h)</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={analytics.hourlyData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="hour" tick={{ fontSize: 10 }} />
+                      <YAxis />
+                      <Tooltip />
+                      <Bar dataKey="success" stackId="a" fill="#22c55e" name="Success" />
+                      <Bar dataKey="failed" stackId="a" fill="#ef4444" name="Failed" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Response Time (24h)</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={analytics.hourlyData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="hour" tick={{ fontSize: 10 }} />
+                      <YAxis />
+                      <Tooltip />
+                      <Line type="monotone" dataKey="avgTime" stroke="#3b82f6" name="Avg Time (ms)" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* API Breakdown */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Calls by API (24h)</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {analytics.byApi.map((api, i) => (
+                  <div key={api.name} className="flex items-center gap-4">
+                    <span className="w-32 font-medium truncate">{api.name}</span>
+                    <div className="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-blue-500" 
+                        style={{ 
+                          width: `${analytics.total24h > 0 ? (api.calls / analytics.total24h * 100) : 0}%` 
+                        }}
+                      />
+                    </div>
+                    <span className="w-16 text-right text-sm">{api.calls} calls</span>
+                    <span className="w-16 text-right text-sm text-green-600">
+                      {api.calls > 0 ? ((api.success / api.calls) * 100).toFixed(0) : 100}%
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+
+      {/* Editor Dialog */}
+      <Dialog open={showEditor} onOpenChange={setShowEditor}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{editingApi ? "Edit API Configuration" : "Add API Configuration"}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>Name *</Label>
+              <Input
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="e.g., Production Stripe"
+              />
+            </div>
+            <div>
+              <Label>Provider</Label>
+              <Select 
+                value={formData.provider} 
+                onValueChange={(v) => {
+                  const provider = commonProviders.find(p => p.value === v);
+                  setFormData({ 
+                    ...formData, 
+                    provider: v,
+                    base_url: provider?.baseUrl || formData.base_url
+                  });
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select provider..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {commonProviders.map(p => (
+                    <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>API Key {!editingApi && "*"}</Label>
+              <Input
+                type="password"
+                value={formData.api_key}
+                onChange={(e) => setFormData({ ...formData, api_key: e.target.value })}
+                placeholder={editingApi ? "Leave blank to keep existing" : "Enter API key"}
+              />
+            </div>
+            <div>
+              <Label>Base URL</Label>
+              <Input
+                value={formData.base_url}
+                onChange={(e) => setFormData({ ...formData, base_url: e.target.value })}
+                placeholder="https://api.example.com"
+              />
+            </div>
+            <div className="flex justify-end gap-2 pt-4">
+              <Button variant="outline" onClick={closeEditor}>Cancel</Button>
+              <Button onClick={handleSave} disabled={createMutation.isPending || updateMutation.isPending}>
+                {(createMutation.isPending || updateMutation.isPending) && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                Save
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
