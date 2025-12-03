@@ -23,7 +23,7 @@ const iconMap = {
   Flag, Award, Target, Crosshair
 };
 
-// Navigation item row with hover actions
+// Navigation item row - icons appear on hover
 export default function NavigationItemRow({ 
   item, 
   onEdit, 
