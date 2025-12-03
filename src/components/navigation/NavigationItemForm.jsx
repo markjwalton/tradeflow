@@ -114,6 +114,13 @@ export default function NavigationItemForm({
     enabled: isOpen && tenantId !== "__global__",
   });
 
+  // Fetch page templates for dropdown
+  const { data: pageTemplates = [] } = useQuery({
+    queryKey: ["pageTemplates"],
+    queryFn: () => base44.entities.PageTemplate.list("name"),
+    enabled: isOpen,
+  });
+
   // Combine roles, tenant-specific first
   const availableRoles = tenantId === "__global__" 
     ? tenantRoles 
