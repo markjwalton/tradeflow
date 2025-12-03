@@ -400,10 +400,10 @@ export default function Layout({ children, currentPageName }) {
 
       if (isFolder) {
         return (
-          <div key={itemId}>
+          <div key={itemId} className={isExpanded && depth === 0 ? "bg-slate-800/50 rounded-lg mb-1" : ""}>
             <button
               onClick={() => toggleFolder(itemId)}
-              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-slate-300 hover:bg-slate-800 hover:text-white"
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-slate-300 hover:bg-slate-800 hover:text-white ${isExpanded ? "text-white" : ""}`}
             >
               {hasChildren ? (
                 isExpanded ? <ChevronDown className="h-4 w-4 text-slate-400" /> : <ChevronRight className="h-4 w-4 text-slate-400" />
@@ -414,7 +414,7 @@ export default function Layout({ children, currentPageName }) {
               <span className="flex-1 text-left">{item.name}</span>
             </button>
             {isExpanded && hasChildren && (
-              <div className="ml-4">
+              <div className="ml-4 pb-2">
                 {renderNavItems(children, allItems, depth + 1)}
               </div>
             )}
