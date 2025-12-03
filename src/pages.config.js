@@ -50,6 +50,7 @@ import APIManager from './pages/APIManager';
 import PerformanceMonitor from './pages/PerformanceMonitor';
 import SecurityMonitor from './pages/SecurityMonitor';
 import LookupTestForms from './pages/LookupTestForms';
+import NavigationManager from './pages/NavigationManager';
 import __Layout from './Layout.jsx';
 
 
@@ -106,6 +107,7 @@ export const PAGES = {
     "PerformanceMonitor": PerformanceMonitor,
     "SecurityMonitor": SecurityMonitor,
     "LookupTestForms": LookupTestForms,
+    "NavigationManager": NavigationManager,
 }
 
 export const pagesConfig = {
