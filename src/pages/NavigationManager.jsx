@@ -39,17 +39,26 @@ export default function NavigationManager() {
   
   const isGlobalAdmin = currentUser?.is_global_admin === true;
   const isTenantAdminOnly = tenantContext?.isTenantAdmin && !isGlobalAdmin;
-  const [activeTab, setActiveTab] = useState("admin");
+  const [activeTab, setActiveTab] = useState(() => {
+    const saved = localStorage.getItem("navManager_settings");
+    const settings = saved ? JSON.parse(saved) : {};
+    return settings.defaultTab || "admin";
+  });
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [expandedItems, setExpandedItems] = useState(new Set());
   const [showSettings, setShowSettings] = useState(false);
   const [pageSettings, setPageSettings] = useState(() => {
     const saved = localStorage.getItem("navManager_settings");
-    return saved ? JSON.parse(saved) : { autoExpandAll: false, showUnallocated: true };
+    return saved ? JSON.parse(saved) : { defaultTab: "admin", autoExpandAll: false, showUnallocated: true };
   });
 
   const settingsOptions = [
+    { key: "defaultTab", label: "Default Tab", type: "select", options: [
+      { value: "admin", label: "Admin Console" },
+      { value: "live", label: "Live Pages" },
+      { value: "tenant", label: "Tenant Navigation" }
+    ], description: "Which tab to show by default" },
     { key: "autoExpandAll", label: "Auto-expand all items", type: "boolean", description: "Automatically expand all parent items on load" },
     { key: "showUnallocated", label: "Show unallocated pages", type: "boolean", description: "Display unallocated pages section" }
   ];

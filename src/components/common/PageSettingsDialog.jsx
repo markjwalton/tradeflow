@@ -8,6 +8,13 @@ import {
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 /**
  * Reusable Page Settings Dialog
@@ -59,6 +66,21 @@ export default function PageSettingsDialog({
                   checked={localSettings[option.key] ?? option.default ?? false}
                   onCheckedChange={(v) => setLocalSettings({ ...localSettings, [option.key]: v })}
                 />
+              )}
+              {option.type === "select" && (
+                <Select
+                  value={localSettings[option.key] ?? option.default ?? option.options?.[0]?.value}
+                  onValueChange={(v) => setLocalSettings({ ...localSettings, [option.key]: v })}
+                >
+                  <SelectTrigger className="w-48">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {option.options?.map((opt) => (
+                      <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               )}
             </div>
           ))}
