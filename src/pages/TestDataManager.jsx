@@ -291,9 +291,13 @@ export default function TestDataManager() {
 
   // Generate test data for items without data
   const startBulkGeneration = async () => {
+    console.log("startBulkGeneration called", { itemStatusList: itemStatusList.length, stats });
+    
     const itemsToProcess = itemStatusList
       .filter(i => !i.hasTestData && i.entityCount > 0)
       .slice(0, settings.batchSize);
+
+    console.log("itemsToProcess", itemsToProcess);
 
     if (itemsToProcess.length === 0) {
       toast.info("All items already have test data");
