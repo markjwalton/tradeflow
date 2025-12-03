@@ -200,15 +200,23 @@ export default function GenericNavEditor({
       toast.error("Name is required");
       return;
     }
-    if (formData.item_type === "page" && !formData.slug?.trim()) {
+    
+    const itemType = formData.item_type || "page";
+    
+    if (itemType === "page" && !formData.slug?.trim()) {
       toast.error("Page slug is required");
       return;
     }
 
-    // Ensure item_type has a value
+    // Build the item to save with explicit values
     const itemToSave = {
-      ...formData,
-      item_type: formData.item_type || "page"
+      name: formData.name,
+      slug: itemType === "folder" ? "" : (formData.slug || ""),
+      icon: formData.icon || "Home",
+      is_visible: formData.is_visible !== false,
+      parent_id: formData.parent_id || null,
+      item_type: itemType,
+      default_collapsed: formData.default_collapsed || false
     };
 
     let newItems;
@@ -216,7 +224,7 @@ export default function GenericNavEditor({
       // Update by _id
       newItems = items.map((item) => {
         if (item._id === editingItem) {
-          return { ...itemToSave, _id: item._id, order: item.order };
+          return { ...itemToSave, _id: item._id, order: item.order ?? items.length };
         }
         return item;
       });
