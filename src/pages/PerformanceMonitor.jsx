@@ -86,6 +86,123 @@ const DEFAULT_THRESHOLDS = {
   bundle_size: { warning: 500, critical: 1000, unit: "kb" }
 };
 
+// Grouped Metrics View Component
+function MetricsGroupedView({ metrics, getThreshold }) {
+  const [expandedTypes, setExpandedTypes] = useState(new Set());
+
+  // Group metrics by type
+  const groupedMetrics = useMemo(() => {
+    const groups = {};
+    metrics.forEach(m => {
+      const type = m.metric_type;
+      if (!groups[type]) {
+        groups[type] = { metrics: [], ok: 0, warning: 0, critical: 0 };
+      }
+      groups[type].metrics.push(m);
+      groups[type][m.status || "ok"]++;
+    });
+    return groups;
+  }, [metrics]);
+
+  const toggleType = (type) => {
+    setExpandedTypes(prev => {
+      const next = new Set(prev);
+      if (next.has(type)) next.delete(type);
+      else next.add(type);
+      return next;
+    });
+  };
+
+  return (
+    <div className="space-y-2">
+      {Object.entries(groupedMetrics).map(([type, group]) => {
+        const Icon = metricTypeIcons[type] || Activity;
+        const isExpanded = expandedTypes.has(type);
+        const threshold = getThreshold(type);
+        
+        return (
+          <Card key={type}>
+            <button
+              onClick={() => toggleType(type)}
+              className="w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+            >
+              <div className="flex items-center gap-4">
+                {isExpanded ? (
+                  <ChevronDown className="h-5 w-5 text-gray-400" />
+                ) : (
+                  <ChevronRight className="h-5 w-5 text-gray-400" />
+                )}
+                <div className="flex items-center gap-2">
+                  <Icon className="h-5 w-5 text-blue-600" />
+                  <span className="font-medium capitalize">{type.replace(/_/g, " ")}</span>
+                </div>
+                <Badge variant="outline">{group.metrics.length} items</Badge>
+              </div>
+              
+              <div className="flex items-center gap-4">
+                <div className="flex gap-2">
+                  {group.ok > 0 && (
+                    <Badge className="bg-green-100 text-green-700">{group.ok} OK</Badge>
+                  )}
+                  {group.warning > 0 && (
+                    <Badge className="bg-amber-100 text-amber-700">{group.warning} Warning</Badge>
+                  )}
+                  {group.critical > 0 && (
+                    <Badge className="bg-red-100 text-red-700">{group.critical} Critical</Badge>
+                  )}
+                </div>
+                <div className="text-sm text-gray-500 w-32 text-right">
+                  Threshold: {threshold.warning}/{threshold.critical} {threshold.unit}
+                </div>
+              </div>
+            </button>
+            
+            {isExpanded && (
+              <div className="border-t">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Resource</TableHead>
+                      <TableHead>Value</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Trend</TableHead>
+                      <TableHead>Last Measured</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {group.metrics.map(metric => (
+                      <TableRow key={metric.id}>
+                        <TableCell>
+                          <div className="font-medium">{metric.resource_name}</div>
+                          <div className="text-xs text-gray-500">{metric.resource_path}</div>
+                        </TableCell>
+                        <TableCell className="font-mono">
+                          {metric.value} {metric.unit}
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={statusColors[metric.status || "ok"]}>
+                            {metric.status || "ok"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          {trendIcons[metric.trend || "stable"]}
+                        </TableCell>
+                        <TableCell className="text-sm text-gray-500">
+                          {metric.measured_at ? format(new Date(metric.measured_at), "MMM d, HH:mm") : "-"}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </Card>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function PerformanceMonitor() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("overview");
