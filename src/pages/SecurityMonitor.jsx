@@ -44,6 +44,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   LineChart, Line, PieChart, Pie, Cell, AreaChart, Area
 } from "recharts";
+import AuditLogCard from "@/components/monitoring/AuditLogCard";
 
 const COLORS = ["#22c55e", "#f59e0b", "#ef4444", "#3b82f6", "#8b5cf6"];
 
@@ -111,8 +112,15 @@ export default function SecurityMonitor() {
 
   const { data: securityAudits = [] } = useQuery({
     queryKey: ["securityAudits"],
-    queryFn: () => base44.entities.SecurityAudit.list("-audit_date", 10)
+    queryFn: () => base44.entities.SecurityAudit.list("-audit_date", 50)
   });
+
+  const { data: roadmapItems = [] } = useQuery({
+    queryKey: ["roadmapItems"],
+    queryFn: () => base44.entities.RoadmapItem.list()
+  });
+
+  const [isAddingToRoadmap, setIsAddingToRoadmap] = useState(false);
 
   const { data: tenants = [] } = useQuery({
     queryKey: ["tenants"],
@@ -183,6 +191,40 @@ export default function SecurityMonitor() {
       toast.success("Event updated");
     }
   });
+
+  // Add finding to roadmap
+  const addFindingToRoadmap = async (finding, auditId) => {
+    setIsAddingToRoadmap(true);
+    try {
+      const roadmapItem = await base44.entities.RoadmapItem.create({
+        title: `Security: ${finding.title}`,
+        description: finding.description,
+        category: "requirement",
+        priority: finding.severity === "critical" ? "critical" : finding.severity === "high" ? "high" : "medium",
+        status: "backlog",
+        source: "ai_assistant",
+        notes: finding.recommendation,
+        tags: ["security", finding.category || "audit"]
+      });
+
+      // Update the audit finding with the roadmap item ID
+      const audit = securityAudits.find(a => a.id === auditId);
+      if (audit) {
+        const updatedFindings = audit.findings.map(f => 
+          f.title === finding.title ? { ...f, roadmap_item_id: roadmapItem.id, status: "in_progress" } : f
+        );
+        await base44.entities.SecurityAudit.update(auditId, { findings: updatedFindings });
+      }
+
+      queryClient.invalidateQueries({ queryKey: ["securityAudits"] });
+      queryClient.invalidateQueries({ queryKey: ["roadmapItems"] });
+      toast.success("Added to roadmap");
+    } catch (error) {
+      toast.error("Failed to add to roadmap");
+    } finally {
+      setIsAddingToRoadmap(false);
+    }
+  };
 
   // Filter data by view mode
   const filteredEvents = securityEvents.filter(e => {
@@ -889,12 +931,12 @@ Provide:
         <TabsContent value="audit" className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold">AI Security Audit</h2>
-              <p className="text-sm text-gray-500">Comprehensive AI-powered security analysis</p>
+              <h2 className="text-lg font-semibold">AI Security Audit History</h2>
+              <p className="text-sm text-gray-500">Collapsible audit logs with roadmap integration</p>
             </div>
             <Button onClick={generateSecurityAudit} disabled={isGeneratingAudit} className="bg-purple-600 hover:bg-purple-700">
               {isGeneratingAudit ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
-              Run Security Audit
+              Run New Audit
             </Button>
           </div>
 
@@ -908,98 +950,26 @@ Provide:
             </Card>
           )}
 
-          {!isGeneratingAudit && latestAudit && (
-            <div className="space-y-6">
-              {/* Score Card */}
-              <Card className={
-                latestAudit.overall_score >= 80 ? "border-green-200 bg-green-50" :
-                latestAudit.overall_score >= 60 ? "border-amber-200 bg-amber-50" :
-                "border-red-200 bg-red-50"
-              }>
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-6">
-                    <div className="text-center">
-                      <div className={`text-6xl font-bold ${
-                        latestAudit.overall_score >= 80 ? "text-green-600" :
-                        latestAudit.overall_score >= 60 ? "text-amber-600" :
-                        "text-red-600"
-                      }`}>
-                        {latestAudit.grade}
-                      </div>
-                      <div className="text-2xl font-medium mt-1">{latestAudit.overall_score}/100</div>
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-lg">Security Score</h3>
-                      <p className="text-gray-600">{latestAudit.ai_summary}</p>
-                      <p className="text-xs text-gray-400 mt-2">
-                        Audit performed: {format(new Date(latestAudit.audit_date), "MMM d, yyyy HH:mm")}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Findings */}
-              {latestAudit.findings?.length > 0 && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <AlertTriangle className="h-5 w-5 text-amber-600" />
-                      Security Findings
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {latestAudit.findings.map((finding, i) => (
-                        <div key={i} className={`p-4 border rounded-lg ${
-                          finding.severity === "critical" ? "border-red-200 bg-red-50" :
-                          finding.severity === "high" ? "border-orange-200 bg-orange-50" :
-                          "border-amber-200 bg-amber-50"
-                        }`}>
-                          <div className="flex items-start justify-between mb-2">
-                            <h4 className="font-medium">{finding.title}</h4>
-                            <Badge className={severityColors[finding.severity]}>{finding.severity}</Badge>
-                          </div>
-                          <p className="text-sm text-gray-600 mb-2">{finding.description}</p>
-                          <div className="bg-white p-2 rounded text-sm">
-                            <strong>Recommendation:</strong> {finding.recommendation}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Recommendations */}
-              {latestAudit.recommendations?.length > 0 && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-green-600" />
-                      Recommendations
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2">
-                      {latestAudit.recommendations.map((rec, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm">
-                          <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                          {rec}
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              )}
+          {!isGeneratingAudit && securityAudits.length > 0 && (
+            <div className="space-y-3">
+              {securityAudits.map((audit, index) => (
+                <AuditLogCard
+                  key={audit.id}
+                  audit={audit}
+                  onAddToRoadmap={addFindingToRoadmap}
+                  roadmapItems={roadmapItems}
+                  isAddingToRoadmap={isAddingToRoadmap}
+                  defaultExpanded={index === 0}
+                />
+              ))}
             </div>
           )}
 
-          {!isGeneratingAudit && !latestAudit && (
+          {!isGeneratingAudit && securityAudits.length === 0 && (
             <Card>
               <CardContent className="py-12 text-center text-gray-500">
                 <Shield className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>No security audit yet</p>
+                <p>No security audits yet</p>
                 <p className="text-sm mt-2">Run an AI security audit to get comprehensive analysis</p>
               </CardContent>
             </Card>
