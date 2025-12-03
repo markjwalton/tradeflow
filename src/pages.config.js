@@ -46,6 +46,7 @@ import PlaygroundFeature from './pages/PlaygroundFeature';
 import ConceptWorkbench from './pages/ConceptWorkbench';
 import LivePreview from './pages/LivePreview';
 import TestDataManager from './pages/TestDataManager';
+import CMSManager from './pages/CMSManager';
 import __Layout from './Layout.jsx';
 
 
@@ -98,6 +99,7 @@ export const PAGES = {
     "ConceptWorkbench": ConceptWorkbench,
     "LivePreview": LivePreview,
     "TestDataManager": TestDataManager,
+    "CMSManager": CMSManager,
 }
 
 export const pagesConfig = {
