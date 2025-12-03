@@ -151,17 +151,36 @@ export default function TestDataManager() {
   // Build page/feature status list
   const itemStatusList = useMemo(() => {
     // Get entities for an item (inline to avoid stale closure)
-    const getEntitiesForItem = (itemId) => {
-      const item = playgroundItems.find(p => p.id === itemId);
+    const getEntitiesForItem = (item) => {
       if (!item) return [];
 
       let entitiesUsed = [];
       if (item.source_type === "page") {
         const template = pageTemplates.find(t => t.id === item.source_id);
-        entitiesUsed = item.working_data?.entities_used || template?.data?.entities_used || template?.entities_used || [];
+        // Check multiple possible locations for entities_used
+        entitiesUsed = item.working_data?.entities_used 
+          || template?.data?.entities_used 
+          || template?.entities_used 
+          || item.working_data?.components?.flatMap(c => c.entities || [])
+          || [];
       } else if (item.source_type === "feature") {
         const template = featureTemplates.find(t => t.id === item.source_id);
-        entitiesUsed = item.working_data?.entities_used || template?.data?.entities_used || template?.entities_used || [];
+        entitiesUsed = item.working_data?.entities_used 
+          || template?.data?.entities_used 
+          || template?.entities_used 
+          || [];
+      }
+
+      // Debug: log what we found
+      if (entitiesUsed.length === 0) {
+        console.log(`No entities found for ${item.source_name}:`, {
+          source_type: item.source_type,
+          source_id: item.source_id,
+          working_data: item.working_data,
+          templateFound: item.source_type === "page" 
+            ? pageTemplates.find(t => t.id === item.source_id)
+            : featureTemplates.find(t => t.id === item.source_id)
+        });
       }
 
       return entitiesUsed.map(name => {
@@ -181,7 +200,7 @@ export default function TestDataManager() {
     );
 
     return previewableItems.map(item => {
-      const entities = getEntitiesForItem(item.id);
+      const entities = getEntitiesForItem(item);
       const testData = testDataSets.find(td => td.playground_item_id === item.id);
       const recordCount = testData ? 
         Object.values(testData.entity_data || {}).reduce((sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0) : 0;
