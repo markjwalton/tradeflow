@@ -330,8 +330,83 @@ Return as JSON with entity names as keys and arrays of records as values.`;
     p.source_type === "page" || p.source_type === "feature"
   );
 
+  // Validate all entity schemas
+  const validateSchemas = () => {
+    const results = {
+      entities: [],
+      totalEntities: entityTemplates.length,
+      validEntities: 0,
+      invalidEntities: 0,
+      missingSchemas: 0,
+      timestamp: new Date().toISOString()
+    };
+
+    entityTemplates.forEach(entity => {
+      const name = entity.data?.name || entity.name;
+      const schema = entity.data?.schema || entity.schema;
+      const properties = schema?.properties || {};
+      const propertyCount = Object.keys(properties).length;
+      const requiredFields = schema?.required || [];
+      
+      const validation = {
+        name,
+        id: entity.id,
+        hasSchema: !!schema,
+        propertyCount,
+        requiredFields: requiredFields.length,
+        properties: Object.keys(properties),
+        status: propertyCount > 0 ? "valid" : "missing_schema",
+        issues: []
+      };
+
+      if (!schema) {
+        validation.issues.push("No schema defined");
+        validation.status = "missing_schema";
+        results.missingSchemas++;
+      } else if (propertyCount === 0) {
+        validation.issues.push("Schema has no properties");
+        validation.status = "empty_schema";
+        results.missingSchemas++;
+      } else {
+        results.validEntities++;
+      }
+
+      if (validation.status !== "valid") {
+        results.invalidEntities++;
+      }
+
+      results.entities.push(validation);
+    });
+
+    // Sort: invalid first, then by name
+    results.entities.sort((a, b) => {
+      if (a.status === "valid" && b.status !== "valid") return 1;
+      if (a.status !== "valid" && b.status === "valid") return -1;
+      return a.name.localeCompare(b.name);
+    });
+
+    return results;
+  };
+
+  const runValidation = () => {
+    const results = validateSchemas();
+    setValidationResults(results);
+    setShowValidationDialog(true);
+  };
+
   return (
     <div className="p-6">
+      {/* Header with Validation */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold">Test Data Manager</h1>
+          <p className="text-gray-500">Generate and manage test data for Live Preview</p>
+        </div>
+        <Button variant="outline" onClick={runValidation}>
+          <Shield className="h-4 w-4 mr-2" />
+          Validate All Schemas
+        </Button>
+      </div>
 
       {/* Item Selector */}
       <Card className="mb-6">
