@@ -282,6 +282,11 @@ export default function TestDataManager() {
     return results;
   };
 
+  // Add items to seed queue when generation completes
+  const addToSeedQueue = (items) => {
+    setSeedQueue(prev => [...prev, ...items.filter(i => !prev.some(p => p.id === i.id))]);
+  };
+
   // Generate test data for items without data
   const startBulkGeneration = async () => {
     const itemsToProcess = itemStatusList
@@ -387,11 +392,6 @@ Return as JSON with entity names as keys and arrays of records as values.`,
     } else {
       toast.success(`Generation complete: ${successCount} succeeded, ${errorCount} failed`);
     }
-  };
-
-  // Add items to seed queue when generation completes
-  const addToSeedQueue = (items) => {
-    setSeedQueue(prev => [...prev, ...items.filter(i => !prev.some(p => p.id === i.id))]);
   };
 
   // Seed database in batches (background-friendly)
