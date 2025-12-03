@@ -73,6 +73,77 @@ export default function TestDataStatusTable({
     return { total: items.length, withData, verified, missing: items.length - withData };
   };
 
+  const renderItemRow = (item) => {
+    const dataStatus = statusConfig[item.dataStatus] || statusConfig.missing;
+    const testStatus = statusConfig[item.testStatus] || statusConfig.pending;
+    const DataIcon = dataStatus.icon;
+    const TestIcon = testStatus.icon;
+
+    return (
+      <TableRow key={item.id}>
+        <TableCell>
+          {item.type === "page" ? (
+            <Layout className="h-4 w-4 text-blue-600" />
+          ) : (
+            <Zap className="h-4 w-4 text-amber-600" />
+          )}
+        </TableCell>
+        <TableCell className="font-medium">{item.name}</TableCell>
+        <TableCell className="text-center">
+          <Badge variant="outline">{item.entityCount}</Badge>
+        </TableCell>
+        <TableCell className="text-center">
+          <Badge variant={item.recordCount > 0 ? "secondary" : "outline"}>
+            {item.recordCount}
+          </Badge>
+        </TableCell>
+        <TableCell className="text-center">
+          <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${dataStatus.bg} ${dataStatus.color}`}>
+            <DataIcon className="h-3 w-3" />
+            {dataStatus.label}
+          </div>
+        </TableCell>
+        <TableCell className="text-center">
+          <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${testStatus.bg} ${testStatus.color}`}>
+            <TestIcon className="h-3 w-3" />
+            {testStatus.label}
+          </div>
+        </TableCell>
+        {showActions && (
+          <TableCell className="text-right">
+            <div className="flex justify-end gap-1">
+              <Link to={createPageUrl("LivePreview") + `?id=${item.id}`}>
+                <Button size="sm" variant="ghost" title="Preview">
+                  <Eye className="h-3 w-3" />
+                </Button>
+              </Link>
+              {item.dataStatus === "missing" && (
+                <Button 
+                  size="sm" 
+                  variant="ghost"
+                  onClick={() => onGenerateData?.(item)}
+                  title="Generate Test Data"
+                >
+                  <Database className="h-3 w-3" />
+                </Button>
+              )}
+              {item.dataStatus !== "missing" && item.testStatus !== "verified" && (
+                <Button 
+                  size="sm" 
+                  variant="ghost"
+                  onClick={() => onRunTest?.(item)}
+                  title="Run Test"
+                >
+                  <Play className="h-3 w-3" />
+                </Button>
+              )}
+            </div>
+          </TableCell>
+        )}
+      </TableRow>
+    );
+  };
+
   return (
     <Card>
       <CardHeader className="pb-3">
@@ -84,100 +155,79 @@ export default function TestDataStatusTable({
           <Badge variant="secondary">{filteredItems.length} items</Badge>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-3">
         {filteredItems.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
             <CheckCircle2 className="h-10 w-10 mx-auto mb-2 text-green-500" />
             <p>All items are complete!</p>
           </div>
         ) : (
-          <div className="border rounded-lg overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-gray-50">
-                  <TableHead className="w-10">Type</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead className="text-center">Entities</TableHead>
-                  <TableHead className="text-center">Records</TableHead>
-                  <TableHead className="text-center">Data Status</TableHead>
-                  <TableHead className="text-center">Test Status</TableHead>
-                  {showActions && <TableHead className="text-right">Actions</TableHead>}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredItems.map((item) => {
-                  const dataStatus = statusConfig[item.dataStatus] || statusConfig.missing;
-                  const testStatus = statusConfig[item.testStatus] || statusConfig.pending;
-                  const DataIcon = dataStatus.icon;
-                  const TestIcon = testStatus.icon;
+          Object.entries(groupedItems).map(([groupName, groupItems]) => {
+            const isExpanded = expandedGroups.has(groupName);
+            const stats = getGroupStats(groupItems);
+            const isPages = groupName === "Pages";
 
-                  return (
-                    <TableRow key={item.id}>
-                      <TableCell>
-                        {item.type === "page" ? (
-                          <Layout className="h-4 w-4 text-blue-600" />
-                        ) : (
-                          <Zap className="h-4 w-4 text-amber-600" />
-                        )}
-                      </TableCell>
-                      <TableCell className="font-medium">{item.name}</TableCell>
-                      <TableCell className="text-center">
-                        <Badge variant="outline">{item.entityCount}</Badge>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <Badge variant={item.recordCount > 0 ? "secondary" : "outline"}>
-                          {item.recordCount}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${dataStatus.bg} ${dataStatus.color}`}>
-                          <DataIcon className="h-3 w-3" />
-                          {dataStatus.label}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${testStatus.bg} ${testStatus.color}`}>
-                          <TestIcon className="h-3 w-3" />
-                          {testStatus.label}
-                        </div>
-                      </TableCell>
-                      {showActions && (
-                        <TableCell className="text-right">
-                          <div className="flex justify-end gap-1">
-                            <Link to={createPageUrl("LivePreview") + `?id=${item.id}`}>
-                              <Button size="sm" variant="ghost" title="Preview">
-                                <Eye className="h-3 w-3" />
-                              </Button>
-                            </Link>
-                            {item.dataStatus === "missing" && (
-                              <Button 
-                                size="sm" 
-                                variant="ghost"
-                                onClick={() => onGenerateData?.(item)}
-                                title="Generate Test Data"
-                              >
-                                <Database className="h-3 w-3" />
-                              </Button>
-                            )}
-                            {item.dataStatus !== "missing" && item.testStatus !== "verified" && (
-                              <Button 
-                                size="sm" 
-                                variant="ghost"
-                                onClick={() => onRunTest?.(item)}
-                                title="Run Test"
-                              >
-                                <Play className="h-3 w-3" />
-                              </Button>
-                            )}
-                          </div>
-                        </TableCell>
+            return (
+              <Collapsible key={groupName} open={isExpanded} onOpenChange={() => toggleGroup(groupName)}>
+                <CollapsibleTrigger asChild>
+                  <div className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors ${
+                    isExpanded ? "bg-gray-100" : "bg-gray-50 hover:bg-gray-100"
+                  }`}>
+                    <div className="flex items-center gap-3">
+                      {isExpanded ? (
+                        <ChevronDown className="h-4 w-4 text-gray-500" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4 text-gray-500" />
                       )}
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </div>
+                      {isExpanded ? (
+                        <FolderOpen className={`h-5 w-5 ${isPages ? "text-blue-600" : "text-amber-600"}`} />
+                      ) : (
+                        <Folder className={`h-5 w-5 ${isPages ? "text-blue-600" : "text-amber-600"}`} />
+                      )}
+                      <span className="font-medium">{groupName}</span>
+                      <Badge variant="secondary">{stats.total}</Badge>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1 text-xs">
+                        <CheckCircle2 className="h-3 w-3 text-green-600" />
+                        <span className="text-green-700">{stats.withData} with data</span>
+                      </div>
+                      {stats.missing > 0 && (
+                        <div className="flex items-center gap-1 text-xs">
+                          <AlertTriangle className="h-3 w-3 text-amber-600" />
+                          <span className="text-amber-700">{stats.missing} missing</span>
+                        </div>
+                      )}
+                      <div className="flex items-center gap-1 text-xs">
+                        <Clock className="h-3 w-3 text-blue-600" />
+                        <span className="text-blue-700">{stats.verified} verified</span>
+                      </div>
+                    </div>
+                  </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="border rounded-lg overflow-hidden mt-2">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="bg-gray-50">
+                          <TableHead className="w-10">Type</TableHead>
+                          <TableHead>Name</TableHead>
+                          <TableHead className="text-center">Entities</TableHead>
+                          <TableHead className="text-center">Records</TableHead>
+                          <TableHead className="text-center">Data Status</TableHead>
+                          <TableHead className="text-center">Test Status</TableHead>
+                          {showActions && <TableHead className="text-right">Actions</TableHead>}
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {groupItems.map(renderItemRow)}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            );
+          })
         )}
       </CardContent>
     </Card>
