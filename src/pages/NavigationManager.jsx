@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Copy, ChevronDown, ChevronRight, FolderOpen, FileCode, Settings } from "lucide-react";
+import { Plus, Copy, ChevronDown, ChevronRight, FolderOpen, FileCode, Settings, Power, Pencil, GripVertical } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { toast } from "sonner";
 
@@ -15,6 +15,7 @@ import NavigationItemRow from "@/components/navigation/NavigationItemRow";
 import TenantSelector from "@/components/navigation/TenantSelector";
 import AdminConsoleNavEditor from "@/components/navigation/AdminConsoleNavEditor";
 import PageSettingsDialog from "@/components/common/PageSettingsDialog";
+import UnallocationConfirmDialog from "@/components/navigation/UnallocationConfirmDialog";
 
 // All known live page slugs - these are actual app pages
 const ALL_LIVE_PAGE_SLUGS = [
@@ -48,6 +49,9 @@ export default function NavigationManager() {
   const [editingItem, setEditingItem] = useState(null);
   const [expandedItems, setExpandedItems] = useState(new Set());
   const [showSettings, setShowSettings] = useState(false);
+  const [unallocatedExpanded, setUnallocatedExpanded] = useState(true);
+  const [unallocationItem, setUnallocationItem] = useState(null);
+  const [allocatingSlug, setAllocatingSlug] = useState(null);
   const [pageSettings, setPageSettings] = useState(() => {
     const saved = localStorage.getItem("navManager_settings");
     return saved ? JSON.parse(saved) : { defaultTab: "admin", autoExpandAll: false, showUnallocated: true };
@@ -214,17 +218,32 @@ export default function NavigationManager() {
     },
   });
 
-  // Allocate unallocated page
-  const handleAllocate = (slug) => {
+  // Allocate unallocated page - opens form for configuration
+  const handleAllocateClick = (slug) => {
     const name = slug.replace(/([A-Z])/g, ' $1').trim();
-    createMutation.mutate({
-      name,
-      item_type: "page",
-      page_url: slug,
-      icon: "FileText",
+    setAllocatingSlug(slug);
+    setEditingItem({ 
+      name, 
+      item_type: "page", 
+      page_url: slug, 
+      icon: "FileText", 
       is_visible: true,
-      roles: []
+      roles: [],
+      _isNew: true
     });
+    setIsFormOpen(true);
+  };
+
+  // Unallocate - remove from navigation
+  const handleUnallocate = (item) => {
+    setUnallocationItem(item);
+  };
+
+  const confirmUnallocate = () => {
+    if (unallocationItem) {
+      deleteMutation.mutate(unallocationItem.id);
+      setUnallocationItem(null);
+    }
   };
 
   // Drag handlers
@@ -285,7 +304,11 @@ export default function NavigationManager() {
   };
 
   const handleSubmit = (formData) => {
-    if (editingItem) {
+    if (editingItem?._isNew || allocatingSlug) {
+      // Creating new item from unallocated
+      createMutation.mutate(formData);
+      setAllocatingSlug(null);
+    } else if (editingItem) {
       updateMutation.mutate({ id: editingItem.id, data: formData });
     } else {
       createMutation.mutate(formData);
@@ -432,6 +455,7 @@ export default function NavigationManager() {
                                     onToggleVisibility={handleToggleVisibility}
                                     onMoveToParent={handleMoveToParent}
                                     onDuplicate={() => duplicateMutation.mutate(item)}
+                                    onUnallocate={handleUnallocate}
                                     parentOptions={getParentOptions(item)}
                                     dragHandleProps={provided.dragHandleProps}
                                     depth={item.depth}
@@ -453,24 +477,51 @@ export default function NavigationManager() {
             {/* Unallocated Pages */}
             {pageSettings.showUnallocated && unallocatedSlugs.length > 0 && (
               <div className="border-t pt-4">
-                <h3 className="text-sm font-medium text-gray-600 mb-3 flex items-center gap-2">
+                <button 
+                  onClick={() => setUnallocatedExpanded(!unallocatedExpanded)}
+                  className="flex items-center gap-2 text-sm font-medium text-gray-600 mb-3 hover:text-gray-800"
+                >
+                  {unallocatedExpanded ? (
+                    <ChevronDown className="h-4 w-4" />
+                  ) : (
+                    <ChevronRight className="h-4 w-4" />
+                  )}
                   <FolderOpen className="h-4 w-4" />
                   Unallocated Pages ({unallocatedSlugs.length})
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {unallocatedSlugs.map(slug => (
-                    <Button 
-                      key={slug} 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => handleAllocate(slug)}
-                      className="gap-1"
-                    >
-                      <Plus className="h-3 w-3" />
-                      {slug.replace(/([A-Z])/g, ' $1').trim()}
-                    </Button>
-                  ))}
-                </div>
+                </button>
+                {unallocatedExpanded && (
+                  <div className="space-y-2">
+                    {unallocatedSlugs.map(slug => (
+                      <div 
+                        key={slug} 
+                        className="flex items-center gap-3 p-3 bg-gray-50 border border-dashed border-gray-300 rounded-lg"
+                      >
+                        <div className="w-5" /> {/* Spacer for alignment */}
+                        <div className="flex items-center gap-2 flex-1">
+                          <FileCode className="h-4 w-4 text-gray-400" />
+                          <span className="font-medium text-gray-600">{slug.replace(/([A-Z])/g, ' $1').trim()}</span>
+                          <span className="text-xs text-gray-400">({slug})</span>
+                        </div>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          onClick={() => handleAllocateClick(slug)}
+                          title="Edit allocation"
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          onClick={() => handleAllocateClick(slug)}
+                          title="Allocate to navigation"
+                        >
+                          <Power className="h-4 w-4 text-red-500" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
@@ -528,6 +579,13 @@ export default function NavigationManager() {
         onSave={handleSaveSettings}
         options={settingsOptions}
         title="Navigation Manager Settings"
+      />
+
+      <UnallocationConfirmDialog
+        isOpen={!!unallocationItem}
+        onClose={() => setUnallocationItem(null)}
+        onConfirm={confirmUnallocate}
+        itemName={unallocationItem?.name}
       />
     </div>
   );

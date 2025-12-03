@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { GripVertical, Pencil, Trash2, Copy, Home, Settings, Users, FileText, LayoutDashboard, FolderOpen, Folder, ShoppingCart, Mail, Calendar, Bell, Search, Heart, Star, Bookmark, Clock, Globe, Lock, Key, Shield, Zap, Database, Server, Code, Terminal, Cpu, Monitor, Smartphone, Tablet, Camera, Image, Video, Music, Mic, Phone, MessageSquare, Send, Inbox, Archive, Trash, Edit, PenTool, Layers, Grid, List, BarChart, PieChart, TrendingUp, DollarSign, CreditCard, Wallet, Gift, Tag, Package, Truck, MapPin, Navigation, Compass, Map, Flag, Award, Target, Crosshair, MoveRight, CornerDownRight } from "lucide-react";
+import { GripVertical, Pencil, Trash2, Copy, Home, Settings, Users, FileText, LayoutDashboard, FolderOpen, Folder, ShoppingCart, Mail, Calendar, Bell, Search, Heart, Star, Bookmark, Clock, Globe, Lock, Key, Shield, Zap, Database, Server, Code, Terminal, Cpu, Monitor, Smartphone, Tablet, Camera, Image, Video, Music, Mic, Phone, MessageSquare, Send, Inbox, Archive, Trash, Edit, PenTool, Layers, Grid, List, BarChart, PieChart, TrendingUp, DollarSign, CreditCard, Wallet, Gift, Tag, Package, Truck, MapPin, Navigation, Compass, Map, Flag, Award, Target, Crosshair, MoveRight, CornerDownRight, Power } from "lucide-react";
 
 const iconMap = {
   Home, Settings, Users, FileText, LayoutDashboard, FolderOpen, 
@@ -30,6 +30,7 @@ export default function NavigationItemRow({
   onToggleVisibility,
   onMoveToParent,
   onDuplicate,
+  onUnallocate,
   parentOptions = [],
   dragHandleProps = {},
   depth = 0,
@@ -122,6 +123,12 @@ export default function NavigationItemRow({
       <Button variant="ghost" size="icon" onClick={() => onEdit(item)}>
         <Pencil className="h-4 w-4" />
       </Button>
+
+      {onUnallocate && (
+        <Button variant="ghost" size="icon" onClick={() => onUnallocate(item)} title="Remove from navigation">
+          <Power className="h-4 w-4 text-green-500" />
+        </Button>
+      )}
 
       <Button variant="ghost" size="icon" onClick={() => onDelete(item)}>
         <Trash2 className="h-4 w-4 text-red-500" />
