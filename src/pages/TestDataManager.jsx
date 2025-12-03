@@ -291,6 +291,14 @@ export default function TestDataManager() {
 
   // Generate test data for items without data
   const startBulkGeneration = async () => {
+    // Debug: Log all items and their test data status
+    console.log("All itemStatusList:", itemStatusList.slice(0, 5).map(i => ({
+      name: i.name, 
+      hasTestData: i.hasTestData, 
+      testDataId: i.testDataId
+    })));
+    console.log("testDataSets count:", testDataSets.length);
+    
     // Include items even if entityCount is 0 - we'll generate placeholder data
     const itemsToProcess = itemStatusList
       .filter(i => !i.hasTestData)
