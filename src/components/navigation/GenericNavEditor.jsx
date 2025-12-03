@@ -486,7 +486,7 @@ export default function GenericNavEditor({
                             onClick={() => {
                               const name = slug.replace(/([A-Z])/g, ' $1').trim();
                               setEditingItem(null);
-                              setFormData({ name, slug, icon: "File", is_visible: true, parent_id: null, item_type: "page", default_collapsed: false });
+                              setFormData({ name, slug, icon: "File", is_visible: true, parent_id: null, item_type: "page", default_collapsed: false, _id: generateId() });
                               setShowDialog(true);
                             }}
                             title="Edit & allocate"
