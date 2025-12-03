@@ -297,10 +297,10 @@ export default function GenericNavEditor({
       if (depth > 2) return;
       const children = getItemsByParent(parentId).sort((a, b) => (a.order || 0) - (b.order || 0));
       children.forEach(child => {
-        const hasChildren = getItemsByParent(child.slug).length > 0;
+        const hasChildren = getItemsByParent(child._id).length > 0;
         result.push({ ...child, depth, hasChildren });
-        if (expandedParents.has(child.slug)) {
-          addItems(child.slug, depth + 1);
+        if (expandedParents.has(child._id)) {
+          addItems(child._id, depth + 1);
         }
       });
     };
@@ -310,10 +310,22 @@ export default function GenericNavEditor({
 
   // Get valid parent options (exclude self and descendants)
   const getParentOptions = () => {
-    const currentSlug = editingItem !== null ? items[editingItem]?.slug : null;
+    const currentId = editingItem;
+    // Get all descendants of current item to exclude
+    const getDescendants = (id, acc = new Set()) => {
+      items.filter(i => i.parent_id === id).forEach(child => {
+        acc.add(child._id);
+        getDescendants(child._id, acc);
+      });
+      return acc;
+    };
+    const descendants = currentId ? getDescendants(currentId) : new Set();
+    
     return items.filter(i => 
-      i.item_type === "folder" || getItemsByParent(i.slug).length > 0
-    ).filter(i => i.slug !== currentSlug);
+      (i.item_type === "folder" || getItemsByParent(i._id).length > 0) &&
+      i._id !== currentId &&
+      !descendants.has(i._id)
+    );
   };
 
   const flatList = buildFlatList();
