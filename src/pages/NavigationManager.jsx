@@ -79,17 +79,20 @@ export default function NavigationManager() {
   });
 
   // Compute effective tenant ID based on active tab
-  const getEffectiveTenantId = () => {
-    if (activeTab === "live") return "__live_pages__";
-    return selectedTenantId;
-  };
-  const effectiveTenantId = getEffectiveTenantId();
+  const effectiveTenantId = activeTab === "live" ? "__live_pages__" : selectedTenantId;
   
-  const { data: navItems = [], isLoading } = useQuery({
-    queryKey: ["navigationItems", activeTab, effectiveTenantId],
+  const { data: navItems = [], isLoading, refetch } = useQuery({
+    queryKey: ["navigationItems", effectiveTenantId],
     queryFn: () => base44.entities.NavigationItem.filter({ tenant_id: effectiveTenantId }, "order"),
     enabled: activeTab !== "admin", // Don't fetch for admin tab - it uses its own component
   });
+  
+  // Refetch when tab changes to ensure fresh data
+  useEffect(() => {
+    if (activeTab !== "admin") {
+      refetch();
+    }
+  }, [activeTab, refetch]);
 
   // Find unallocated pages
   const allocatedSlugs = navItems.map(i => i.page_url).filter(Boolean);

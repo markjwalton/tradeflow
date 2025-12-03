@@ -179,12 +179,16 @@ export default function AdminConsoleNavEditor() {
     saveMutation.mutate(newItems);
   };
 
-  const handleMoveToParent = (item, newParentSlug) => {
-    const newItems = items.map((i) => 
-      (i.slug === item.slug && (i.parent_id || null) === (item.parent_id || null)) 
-        ? { ...i, parent_id: newParentSlug || null } 
-        : i
-    );
+  const handleMoveToParent = (targetItem, newParentSlug) => {
+    // Find by matching slug AND current parent (handle undefined/null)
+    const currentParent = targetItem.parent_id || null;
+    const newItems = items.map((i) => {
+      const itemParent = i.parent_id || null;
+      if (i.slug === targetItem.slug && itemParent === currentParent) {
+        return { ...i, parent_id: newParentSlug || null };
+      }
+      return i;
+    });
     saveMutation.mutate(newItems);
     toast.success(newParentSlug ? "Item moved" : "Moved to top level");
   };
