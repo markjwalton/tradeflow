@@ -40,6 +40,7 @@ import SeedDataProgress from "@/components/test-data/SeedDataProgress";
 import AIQualityReport from "@/components/test-data/AIQualityReport";
 import EntitySchemaValidator from "@/components/test-data/EntitySchemaValidator";
 import TestDataSettingsDialog from "@/components/test-data/TestDataSettingsDialog";
+import TestVerificationDialog from "@/components/test-data/TestVerificationDialog";
 
 export default function TestDataManager() {
   const queryClient = useQueryClient();
@@ -66,6 +67,7 @@ export default function TestDataManager() {
   const [showValidation, setShowValidation] = useState(false);
   const [validationResults, setValidationResults] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [verifyingItem, setVerifyingItem] = useState(null);
   
   // Save settings to localStorage
   const handleSettingsChange = (newSettings) => {
@@ -642,7 +644,7 @@ Return as JSON with entity names as keys and arrays of records as values.`,
               title="Pending Verification"
               description="Test data generated but not yet verified"
               filter={(i) => i.hasTestData && i.testStatus !== "verified"}
-              onRunTest={(item) => toast.info("Test runner coming soon")}
+              onRunTest={(item) => setVerifyingItem(item)}
               defaultExpanded={settings.expandCategoriesByDefault}
             />
           </div>
@@ -654,7 +656,7 @@ Return as JSON with entity names as keys and arrays of records as values.`,
             title={filterView ? `Filtered: ${filterView}` : "All Pages & Features"}
             description={filterView ? "Click dashboard cards to change filter" : "Complete status of all testable items"}
             onGenerateData={handleGenerateForItem}
-            onRunTest={(item) => toast.info("Test runner coming soon")}
+            onRunTest={(item) => setVerifyingItem(item)}
             groupByCategory={true}
             defaultExpanded={settings.expandCategoriesByDefault}
           />
@@ -718,6 +720,19 @@ Return as JSON with entity names as keys and arrays of records as values.`,
         onClose={() => setShowSettings(false)}
         settings={settings}
         onSettingsChange={handleSettingsChange}
+      />
+
+      {/* Verification Dialog */}
+      <TestVerificationDialog
+        isOpen={!!verifyingItem}
+        onClose={() => setVerifyingItem(null)}
+        item={verifyingItem}
+        testData={testDataSets.find(td => td.playground_item_id === verifyingItem?.id)}
+        entityTemplates={entityTemplates}
+        onVerified={() => {
+          queryClient.invalidateQueries({ queryKey: ["testData"] });
+          setVerifyingItem(null);
+        }}
       />
     </div>
   );
