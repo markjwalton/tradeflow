@@ -207,28 +207,59 @@ Generate realistic, varied test data. Return as a JSON array of 3 objects.`,
     setIsGenerating(true);
 
     try {
-      const allData = {};
-      for (const entity of selectedEntities) {
-        const schema = entity.schema || {};
-        const result = await base44.integrations.Core.InvokeLLM({
-          prompt: `Generate 3 realistic sample records for "${entity.name}".
-Schema: ${JSON.stringify(schema.properties || {})}
-Return as JSON array.`,
-          response_json_schema: {
-            type: "object",
-            properties: {
-              records: { type: "array", items: { type: "object" } }
+      // Build a combined prompt for all entities for efficiency
+      const entitySchemas = selectedEntities.map(entity => ({
+        name: entity.name,
+        properties: entity.schema?.properties || {},
+        required: entity.schema?.required || []
+      }));
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `Generate realistic test data for a business application. Create 3 sample records for EACH entity below.
+
+Entities to generate data for:
+${entitySchemas.map(e => `
+Entity: ${e.name}
+Properties: ${JSON.stringify(e.properties, null, 2)}
+Required fields: ${JSON.stringify(e.required)}
+`).join('\n---\n')}
+
+Requirements:
+- Generate 3 realistic, varied records per entity
+- Fill ALL required fields
+- Fill optional fields with realistic data where appropriate
+- Use consistent relationships (e.g., if Customer and Project entities exist, projects should reference realistic customer data)
+- Use realistic names, dates, numbers, and statuses
+
+Return as JSON with entity names as keys and arrays of records as values.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            data: {
+              type: "object",
+              additionalProperties: {
+                type: "array",
+                items: { type: "object" }
+              }
             }
           }
-        });
-        allData[entity.name] = result.records || [];
-      }
+        }
+      });
+
+      const allData = result.data || {};
+      
+      // Ensure all entities have at least an empty array
+      selectedEntities.forEach(entity => {
+        if (!allData[entity.name]) {
+          allData[entity.name] = [];
+        }
+      });
 
       setFormData(prev => ({
         ...prev,
         entity_data: allData
       }));
-      toast.success("Generated all test data");
+      toast.success(`Generated test data for ${Object.keys(allData).length} entities`);
     } catch (error) {
       toast.error("Failed to generate test data");
     } finally {
