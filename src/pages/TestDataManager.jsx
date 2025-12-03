@@ -727,9 +727,9 @@ Return as JSON with entity names as keys and arrays of records as values.`,
       {/* Dashboard Cards */}
       <TestDataDashboard stats={stats} onCardClick={handleCardClick} />
 
-      {/* Progress Card - Shows only when generating */}
-      {isGenerating && (
-        <SeedDataProgress
+      {/* Progress Card - Shows when generating or has progress items */}
+          {(isGenerating || generationProgress.items.length > 0) && (
+            <SeedDataProgress
           isRunning={isGenerating}
           progress={generationProgress}
           onRetry={() => {
