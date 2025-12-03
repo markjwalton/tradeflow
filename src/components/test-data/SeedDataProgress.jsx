@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert";
 import { 
   CheckCircle2, XCircle, Loader2, Circle, Database,
-  AlertTriangle, RefreshCw
+  AlertTriangle, RefreshCw, PartyPopper
 } from "lucide-react";
 
 const statusIcons = {
@@ -27,7 +32,9 @@ export default function SeedDataProgress({
   progress,
   onRetry,
   onInsertToDb,
-  isInserting
+  isInserting,
+  seedComplete,
+  seedResult
 }) {
   const { current, total, items, phase } = progress;
   const percentage = total > 0 ? Math.round((current / total) * 100) : 0;
@@ -114,11 +121,23 @@ export default function SeedDataProgress({
           </div>
         )}
 
+        {/* Seed Complete Success Message */}
+        {seedComplete && seedResult && (
+          <Alert className="bg-green-50 border-green-200">
+            <PartyPopper className="h-4 w-4 text-green-600" />
+            <AlertTitle className="text-green-800">Database Seeded Successfully!</AlertTitle>
+            <AlertDescription className="text-green-700">
+              {seedResult.totalRecords} records have been created across {seedResult.entityCount} entities. 
+              Your test data is now available in the live database.
+            </AlertDescription>
+          </Alert>
+        )}
+
         {/* Action Buttons */}
-        {!isRunning && items.length > 0 && (
+        {!isRunning && items.length > 0 && !seedComplete && (
           <div className="flex justify-between items-center pt-2 border-t">
             <div className="text-sm text-gray-500">
-              {successCount > 0 && `${successCount} items ready for database insertion`}
+              {successCount > 0 && `${successCount} items ready for database seeding`}
             </div>
             <div className="flex gap-2">
               {errorCount > 0 && (
