@@ -98,17 +98,35 @@ export default function GenericNavEditor({
   const config = navConfigs[0];
   // Ensure all items have unique IDs - persist IDs if missing
   const rawItems = config?.items || [];
-  const itemsNeedIds = rawItems.some(item => !item._id);
   
   // Generate stable IDs for items that don't have them
+  // For folders, use a deterministic ID based on name to prevent orphaning children
   const itemsWithIds = React.useMemo(() => {
-    return rawItems.map(item => ({
-      ...item,
-      _id: item._id || generateId()
-    }));
+    return rawItems.map(item => {
+      if (item._id) return item;
+      // Generate stable ID for folders based on name
+      if (item.item_type === "folder") {
+        const stableId = `folder_${item.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
+        return { ...item, _id: stableId };
+      }
+      // For pages, generate stable ID based on slug
+      if (item.slug) {
+        const stableId = `page_${item.slug.toLowerCase()}`;
+        return { ...item, _id: stableId };
+      }
+      return { ...item, _id: generateId() };
+    });
   }, [rawItems]);
   
   const items = itemsWithIds;
+  
+  // Auto-save items with generated IDs so they persist
+  React.useEffect(() => {
+    const itemsNeedIds = rawItems.some(item => !item._id);
+    if (itemsNeedIds && config && itemsWithIds.length > 0) {
+      base44.entities.NavigationConfig.update(config.id, { items: itemsWithIds });
+    }
+  }, [rawItems, config?.id, itemsWithIds]);
   
   // Auto-save items with generated IDs so they persist
   // DISABLED: This was causing issues by generating random IDs that break parent_id references
