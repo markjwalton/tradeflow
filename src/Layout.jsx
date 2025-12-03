@@ -70,7 +70,10 @@ const globalAdminPages = [
 ];
 
 // Pages that don't require tenant context but need to preserve query params
-const standalonePages = ["RoadmapManager", "RoadmapJournal", "SprintManager", "RuleBook", "PlaygroundSummary", "PlaygroundEntity", "PlaygroundPage", "PlaygroundFeature", "ConceptWorkbench", "LivePreview", "TestDataManager", "MindMapEditor", "GeneratedApps", "EntityLibrary", "PageLibrary", "FeatureLibrary", "PackageLibrary", "TenantManager", "BusinessTemplates", "WorkflowLibrary", "WorkflowDesigner", "FormTemplates", "FormBuilder", "ChecklistTemplates", "ChecklistBuilder", "PromptSettings"];
+const standalonePages = ["RoadmapManager", "RoadmapJournal", "SprintManager", "RuleBook", "PlaygroundSummary", "PlaygroundEntity", "PlaygroundPage", "PlaygroundFeature", "ConceptWorkbench", "TestDataManager", "MindMapEditor", "GeneratedApps", "EntityLibrary", "PageLibrary", "FeatureLibrary", "PackageLibrary", "TenantManager", "BusinessTemplates", "WorkflowLibrary", "WorkflowDesigner", "FormTemplates", "FormBuilder", "ChecklistTemplates", "ChecklistBuilder", "PromptSettings"];
+
+// Pages that render their own navigation (no layout sidebar)
+const fullscreenPages = ["LivePreview"];
 
 // Tenant pages - for users with tenant access
 const tenantPages = [];
