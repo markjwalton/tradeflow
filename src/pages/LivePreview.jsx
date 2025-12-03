@@ -183,8 +183,12 @@ export default function LivePreview() {
       const isFeature = navItem.slug?.startsWith("feature:");
       
       // For pages/features, find the corresponding playground item
+      // Nav items use slug (e.g. "FormBuilder") which should match PlaygroundItem.source_name
       const playgroundItem = !isFolder ? findPlaygroundItem(navItem.slug || navItem.name) : null;
       const isSelected = playgroundItem && selectedItemId === playgroundItem.id;
+      
+      // Debug: log when we can't find a match
+      // if (!isFolder && !playgroundItem) console.log("No match for:", navItem.slug, navItem.name);
 
       if (isFolder) {
         return (
