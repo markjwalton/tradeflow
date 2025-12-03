@@ -38,13 +38,7 @@ import {
 import GlobalAIAssistant from "@/components/ai-assistant/GlobalAIAssistant";
 
 // Global admin pages - only for is_global_admin users
-import { BookOpen } from "lucide-react";
-
-import { FlaskConical } from "lucide-react";
-
-import { Key } from "lucide-react";
-
-import { Gauge } from "lucide-react";
+import { BookOpen, FlaskConical, Key, Gauge } from "lucide-react";
 
 const globalAdminPages = [
   { name: "CMS", slug: "CMSManager", icon: Globe },
@@ -106,6 +100,7 @@ export default function Layout({ children, currentPageName }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [isGlobalAdmin, setIsGlobalAdmin] = useState(false);
   const [isTenantAdmin, setIsTenantAdmin] = useState(false);
+  const [customAdminNav, setCustomAdminNav] = useState(null);
   
   const urlParams = new URLSearchParams(window.location.search);
   const tenantSlug = urlParams.get("tenant");
@@ -133,6 +128,18 @@ export default function Layout({ children, currentPageName }) {
         }
         setCurrentUser(user);
         setIsGlobalAdmin(user.is_global_admin === true);
+        
+        // Fetch custom admin nav config
+        if (user.is_global_admin === true) {
+          try {
+            const navConfigs = await base44.entities.NavigationConfig.filter({ config_type: "admin_console" });
+            if (navConfigs.length > 0 && navConfigs[0].items?.length > 0) {
+              setCustomAdminNav(navConfigs[0].items);
+            }
+          } catch (e) {
+            // Ignore errors, will use default nav
+          }
+        }
         
         // Global admin pages: for is_global_admin OR tenant admins (with tenant context)
         if (isGlobalAdminPage) {
@@ -335,9 +342,26 @@ export default function Layout({ children, currentPageName }) {
   // Build navigation based on context
   let displayPages = [];
   
+  // Icon map for custom nav items
+  const iconMap = {
+    Home, Navigation, Building2, Shield, Package, GitBranch, Database, 
+    Layout: LayoutIcon, Zap, Workflow, Settings, Lightbulb, Globe, Key, Gauge, BookOpen, FlaskConical
+  };
+  
   if (isGlobalAdminPage && !currentTenant) {
     // On global admin pages without tenant context, show global admin nav
-    displayPages = globalAdminPages;
+    // Use custom nav if available, otherwise use default
+    if (customAdminNav && customAdminNav.length > 0) {
+      displayPages = customAdminNav
+        .filter(item => item.is_visible !== false)
+        .map(item => ({
+          name: item.name,
+          slug: item.slug,
+          icon: iconMap[item.icon] || Home
+        }));
+    } else {
+      displayPages = globalAdminPages;
+    }
   } else if (currentTenant) {
     // On tenant pages, show tenant nav
     displayPages = [...tenantPages];
