@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Copy, ChevronDown, ChevronRight, FolderOpen, FileCode } from "lucide-react";
+import { Plus, Copy, ChevronDown, ChevronRight, FolderOpen, FileCode, Settings } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { toast } from "sonner";
 
@@ -14,6 +14,7 @@ import NavigationItemForm from "@/components/navigation/NavigationItemForm";
 import NavigationItemRow from "@/components/navigation/NavigationItemRow";
 import TenantSelector from "@/components/navigation/TenantSelector";
 import AdminConsoleNavEditor from "@/components/navigation/AdminConsoleNavEditor";
+import PageSettingsDialog from "@/components/common/PageSettingsDialog";
 
 // All known live page slugs - these are actual app pages
 const ALL_LIVE_PAGE_SLUGS = [
@@ -38,10 +39,25 @@ export default function NavigationManager() {
   
   const isGlobalAdmin = currentUser?.is_global_admin === true;
   const isTenantAdminOnly = tenantContext?.isTenantAdmin && !isGlobalAdmin;
-  const [activeTab, setActiveTab] = useState("tenant");
+  const [activeTab, setActiveTab] = useState("admin");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [expandedItems, setExpandedItems] = useState(new Set());
+  const [showSettings, setShowSettings] = useState(false);
+  const [pageSettings, setPageSettings] = useState(() => {
+    const saved = localStorage.getItem("navManager_settings");
+    return saved ? JSON.parse(saved) : { autoExpandAll: false, showUnallocated: true };
+  });
+
+  const settingsOptions = [
+    { key: "autoExpandAll", label: "Auto-expand all items", type: "boolean", description: "Automatically expand all parent items on load" },
+    { key: "showUnallocated", label: "Show unallocated pages", type: "boolean", description: "Display unallocated pages section" }
+  ];
+
+  const handleSaveSettings = (newSettings) => {
+    setPageSettings(newSettings);
+    localStorage.setItem("navManager_settings", JSON.stringify(newSettings));
+  };
 
   // Fetch tenants
   const { data: tenants = [] } = useQuery({
@@ -410,7 +426,7 @@ export default function NavigationManager() {
             )}
 
             {/* Unallocated Pages */}
-            {unallocatedSlugs.length > 0 && (
+            {pageSettings.showUnallocated && unallocatedSlugs.length > 0 && (
               <div className="border-t pt-4">
                 <h3 className="text-sm font-medium text-gray-600 mb-3 flex items-center gap-2">
                   <FolderOpen className="h-4 w-4" />
@@ -455,16 +471,21 @@ export default function NavigationManager() {
   return (
     <div className="p-6 max-w-4xl mx-auto">
       {isGlobalAdmin && (
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-          <TabsList>
-            <TabsTrigger value="tenant">Tenant Navigation</TabsTrigger>
-            <TabsTrigger value="live" className="gap-2">
-              <FileCode className="h-4 w-4" />
-              Live Pages
-            </TabsTrigger>
-            <TabsTrigger value="admin">Admin Console</TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <div className="flex items-center justify-between mb-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList>
+              <TabsTrigger value="admin">Admin Console</TabsTrigger>
+              <TabsTrigger value="live" className="gap-2">
+                <FileCode className="h-4 w-4" />
+                Live Pages
+              </TabsTrigger>
+              <TabsTrigger value="tenant">Tenant Navigation</TabsTrigger>
+            </TabsList>
+          </Tabs>
+          <Button variant="ghost" size="icon" onClick={() => setShowSettings(true)}>
+            <Settings className="h-5 w-5" />
+          </Button>
+        </div>
       )}
 
       {activeTab === "admin" && isGlobalAdmin ? (
@@ -474,6 +495,15 @@ export default function NavigationManager() {
       ) : (
         renderNavigationEditor()
       )}
+
+      <PageSettingsDialog
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+        settings={pageSettings}
+        onSave={handleSaveSettings}
+        options={settingsOptions}
+        title="Navigation Manager Settings"
+      />
     </div>
   );
 }
