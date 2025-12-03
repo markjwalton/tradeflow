@@ -26,8 +26,16 @@ import {
   Navigation, Workflow, Layout, Zap, Settings, FileText,
   Users, Calendar, Mail, Bell, Search, Star, Heart,
   Folder, File, Image, Video, Music, Map, Globe, Shield,
-  Key, Gauge, BookOpen, FlaskConical, ChevronDown, ChevronRight
+  Key, Gauge, BookOpen, FlaskConical, ChevronDown, ChevronRight,
+  MoveRight, CornerDownRight
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { toast } from "sonner";
 
