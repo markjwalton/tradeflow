@@ -266,6 +266,7 @@ function LivePagesNavEditor({ pageTemplates = [], featureTemplates = [] }) {
   const handleAutoGenerate = async () => {
     setGenerating(true);
     try {
+      // Build new items from scratch
       const newItems = [];
       let order = 0;
 
@@ -276,14 +277,14 @@ function LivePagesNavEditor({ pageTemplates = [], featureTemplates = [] }) {
         folderMap[category] = folderId;
 
         newItems.push({
-          _id: folderId,  // This _id MUST match what children reference in parent_id
+          _id: folderId,
           name: category,
           slug: "",
           icon: "FolderOpen",
           is_visible: true,
           parent_id: null,
           item_type: "folder",
-          default_collapsed: false,  // Start expanded so children are visible
+          default_collapsed: false,
           order: order++
         });
       }
@@ -322,13 +323,20 @@ function LivePagesNavEditor({ pageTemplates = [], featureTemplates = [] }) {
         }
       }
 
+      console.log("Generated items:", newItems.length, "Folders:", Object.keys(folderMap).length);
+      console.log("Sample folder:", newItems[0]);
+      console.log("Sample page with parent:", newItems.find(i => i.parent_id));
+
       // Fetch existing config
       const navConfigs = await base44.entities.NavigationConfig.filter({ config_type: "live_pages_source" });
       const config = navConfigs[0];
 
-      // Save
+      // Save - always replace all items
       if (config) {
-        await base44.entities.NavigationConfig.update(config.id, { items: newItems, source_slugs: allSlugs });
+        await base44.entities.NavigationConfig.update(config.id, { 
+          items: newItems, 
+          source_slugs: allSlugs 
+        });
       } else {
         await base44.entities.NavigationConfig.create({
           config_type: "live_pages_source",
@@ -337,9 +345,11 @@ function LivePagesNavEditor({ pageTemplates = [], featureTemplates = [] }) {
         });
       }
 
-      queryClient.invalidateQueries({ queryKey: ["navConfig", "live_pages_source"] });
-      toast.success(`Generated ${allCategories.length} category folders with ${newItems.length - allCategories.length} items`);
+      // Force refetch
+      await queryClient.invalidateQueries({ queryKey: ["navConfig", "live_pages_source"] });
+      toast.success(`Generated ${allCategories.length} folders with ${newItems.length - allCategories.length} child items`);
     } catch (err) {
+      console.error("Auto-generate error:", err);
       toast.error("Failed to generate: " + err.message);
     } finally {
       setGenerating(false);
