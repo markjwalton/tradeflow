@@ -145,22 +145,27 @@ export default function GenericNavEditor({
   };
 
   const saveMutation = useMutation({
-    mutationFn: async (newItems) => {
-      if (config) {
-        return base44.entities.NavigationConfig.update(config.id, { items: newItems });
-      } else {
-        return base44.entities.NavigationConfig.create({ 
-          config_type: configType, 
-          items: newItems,
-          source_slugs: sourceSlugs
-        });
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["navConfig", configType] });
-      toast.success("Navigation saved");
-    },
-  });
+        mutationFn: async (newItems) => {
+          // Ensure all items have _id before saving
+          const itemsWithIds = newItems.map(item => ({
+            ...item,
+            _id: item._id || generateId()
+          }));
+          if (config) {
+            return base44.entities.NavigationConfig.update(config.id, { items: itemsWithIds });
+          } else {
+            return base44.entities.NavigationConfig.create({ 
+              config_type: configType, 
+              items: itemsWithIds,
+              source_slugs: sourceSlugs
+            });
+          }
+        },
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["navConfig", configType] });
+          toast.success("Navigation saved");
+        },
+      });
 
   // Find item by unique _id
   const findItemById = (id) => items.find(i => i._id === id);
