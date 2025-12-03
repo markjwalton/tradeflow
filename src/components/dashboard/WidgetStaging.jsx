@@ -268,6 +268,20 @@ export default function WidgetStaging({ widgets = [], onEdit }) {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Config Editor Dialog */}
+      <WidgetConfigEditor
+        widget={configWidget}
+        isOpen={!!configWidget}
+        onClose={() => setConfigWidget(null)}
+        onSave={(updatedWidget) => {
+          updateMutation.mutate({
+            id: updatedWidget.id,
+            data: { config: updatedWidget.config }
+          });
+          setConfigWidget(null);
+        }}
+      />
     </div>
   );
 }
