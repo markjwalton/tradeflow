@@ -54,6 +54,8 @@ export default function TestDataManager() {
   // Generation State
   const [isGenerating, setIsGenerating] = useState(false);
   const [isInserting, setIsInserting] = useState(false);
+  const [seedComplete, setSeedComplete] = useState(false);
+  const [seedResult, setSeedResult] = useState(null);
   const [batchSize, setBatchSize] = useState(10);
   const [generationProgress, setGenerationProgress] = useState({
     current: 0,
@@ -365,8 +367,10 @@ Return as JSON with entity names as keys and arrays of records as values.`,
   // Insert all successful items to real DB
   const insertAllToDb = async () => {
     setIsInserting(true);
+    setSeedComplete(false);
     const successItems = generationProgress.items.filter(i => i.status === "success");
     let totalInserted = 0;
+    let entityCount = 0;
     let errors = [];
     
     const allTestData = await base44.entities.TestData.list();
@@ -381,6 +385,7 @@ Return as JSON with entity names as keys and arrays of records as values.`,
           if (base44.entities[entityName]) {
             await base44.entities[entityName].bulkCreate(records);
             totalInserted += records.length;
+            entityCount++;
           } else {
             errors.push(`${entityName}: Entity not found`);
           }
@@ -396,10 +401,9 @@ Return as JSON with entity names as keys and arrays of records as values.`,
     } else if (totalInserted === 0) {
       toast.warning("No records to seed");
     } else {
-      toast.success(`Database seeded successfully! ${totalInserted} records created across all entities.`, {
-        duration: 5000,
-        icon: "✅"
-      });
+      setSeedComplete(true);
+      setSeedResult({ totalRecords: totalInserted, entityCount });
+      toast.success(`Database seeded successfully!`, { duration: 5000, icon: "✅" });
     }
   };
 
@@ -570,17 +574,65 @@ Return as JSON with entity names as keys and arrays of records as values.`,
           />
         </TabsContent>
 
-        <TabsContent value="progress">
-          <SeedDataProgress
-            isRunning={isGenerating}
-            progress={generationProgress}
-            onRetry={() => {
-              const failedItems = generationProgress.items.filter(i => i.status === "error");
-              toast.info(`Retry for ${failedItems.length} failed items coming soon`);
-            }}
-            onInsertToDb={insertAllToDb}
-            isInserting={isInserting}
-          />
+        <TabsContent value="progress" className="space-y-6">
+          {/* Progress Card - Always visible when running or has items */}
+          {(isGenerating || generationProgress.items.length > 0) && (
+            <SeedDataProgress
+              isRunning={isGenerating}
+              progress={generationProgress}
+              onRetry={() => {
+                const failedItems = generationProgress.items.filter(i => i.status === "error");
+                toast.info(`Retry for ${failedItems.length} failed items coming soon`);
+              }}
+              onInsertToDb={insertAllToDb}
+              isInserting={isInserting}
+              seedComplete={seedComplete}
+              seedResult={seedResult}
+            />
+          )}
+
+          {/* Show other sections only when NOT generating */}
+          {!isGenerating && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <TestDataStatusTable
+                items={itemStatusList}
+                title="Pages Without Test Data"
+                description="These pages need test data generated"
+                filter={(i) => !i.hasTestData}
+                onGenerateData={handleGenerateForItem}
+                groupByCategory={true}
+              />
+              <TestDataStatusTable
+                items={itemStatusList}
+                title="Pending Verification"
+                description="Test data generated but not yet verified"
+                filter={(i) => i.hasTestData && i.testStatus !== "verified"}
+                onRunTest={(item) => toast.info("Test runner coming soon")}
+                groupByCategory={true}
+              />
+            </div>
+          )}
+
+          {/* Empty state when no generation has started */}
+          {!isGenerating && generationProgress.items.length === 0 && (
+            <Card>
+              <CardContent className="py-12 text-center">
+                <Database className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                <h3 className="font-medium text-lg mb-2">No Generation in Progress</h3>
+                <p className="text-gray-500 mb-4">
+                  Click "Generate All Missing" to start batch generation of test data
+                </p>
+                <Button 
+                  onClick={startBulkGeneration}
+                  disabled={stats.withoutTestData === 0}
+                  className="bg-purple-600 hover:bg-purple-700"
+                >
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Generate Missing Data ({stats.withoutTestData})
+                </Button>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
 
         <TabsContent value="quality">
