@@ -92,6 +92,7 @@ export default function PerformanceMonitor() {
   const [showThresholdEditor, setShowThresholdEditor] = useState(false);
   const [showIssueDetail, setShowIssueDetail] = useState(null);
   const [isScanning, setIsScanning] = useState(false);
+  const [scanProgress, setScanProgress] = useState({ current: 0, total: 0, items: [] });
   const [isGeneratingRecommendations, setIsGeneratingRecommendations] = useState(false);
 
   const { data: metrics = [], isLoading: loadingMetrics } = useQuery({
