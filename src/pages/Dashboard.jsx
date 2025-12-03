@@ -2,18 +2,16 @@ import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { 
-  Settings, ChevronDown, ChevronRight, Maximize2, Minimize2,
-  LayoutGrid, RefreshCw
+  Settings, LayoutGrid, RefreshCw, TrendingUp, TrendingDown,
+  Briefcase, CheckSquare, DollarSign, Users, Activity, Zap
 } from "lucide-react";
 import WidgetRenderer from "@/components/dashboard/WidgetRenderer";
 import WidgetConfigEditor from "@/components/dashboard/WidgetConfigEditor";
 
 export default function Dashboard() {
-  const [collapsedGroups, setCollapsedGroups] = useState(new Set());
   const [configWidget, setConfigWidget] = useState(null);
-  const [isCompact, setIsCompact] = useState(false);
 
   // Fetch published widgets
   const { data: widgets = [], isLoading, refetch } = useQuery({
@@ -29,14 +27,6 @@ export default function Dashboard() {
 
   const layout = layouts[0];
 
-  // Group widgets by category
-  const groupedWidgets = widgets.reduce((acc, widget) => {
-    const category = widget.category || "General";
-    if (!acc[category]) acc[category] = [];
-    acc[category].push(widget);
-    return acc;
-  }, {});
-
   // Get widget placement from layout or use defaults
   const getWidgetColSpan = (widget) => {
     if (layout?.widgets) {
@@ -46,23 +36,15 @@ export default function Dashboard() {
     return widget.default_col_span || 1;
   };
 
-  const toggleGroup = (category) => {
-    setCollapsedGroups(prev => {
-      const next = new Set(prev);
-      if (next.has(category)) next.delete(category);
-      else next.add(category);
-      return next;
-    });
-  };
+  // Sort widgets: stat_cards first, then others
+  const sortedWidgets = [...widgets].sort((a, b) => {
+    const order = { stat_card: 0, chart: 1, quick_action: 2, info_card: 3, table: 4, ai_insight: 5 };
+    return (order[a.widget_type] ?? 99) - (order[b.widget_type] ?? 99);
+  });
 
-  const colSpanClasses = {
-    1: "col-span-1",
-    2: "col-span-2",
-    3: "col-span-3",
-    4: "col-span-4",
-    5: "col-span-5",
-    6: "col-span-6",
-  };
+  // Separate stat cards from other widgets for the hero section
+  const statWidgets = sortedWidgets.filter(w => w.widget_type === "stat_card");
+  const otherWidgets = sortedWidgets.filter(w => w.widget_type !== "stat_card");
 
   if (isLoading) {
     return (
@@ -73,91 +55,69 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-sm text-gray-500">Welcome back! Here's your overview.</p>
+          <h1 className="text-3xl font-bold text-slate-900">Dashboard</h1>
+          <p className="text-slate-500 mt-1">Welcome back! Here's what's happening.</p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => refetch()}>
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Refresh
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => setIsCompact(!isCompact)}
-          >
-            {isCompact ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
-          </Button>
-        </div>
+        <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2">
+          <RefreshCw className="h-4 w-4" />
+          Refresh
+        </Button>
       </div>
 
-      {/* Widget Grid */}
-      {Object.keys(groupedWidgets).length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
-          <LayoutGrid className="h-12 w-12 mx-auto mb-4 opacity-30" />
-          <p className="text-lg">No widgets available</p>
-          <p className="text-sm mt-1">Widgets will appear here once published</p>
-        </div>
+      {widgets.length === 0 ? (
+        <Card className="border-dashed">
+          <CardContent className="py-16 text-center">
+            <LayoutGrid className="h-16 w-16 mx-auto mb-4 text-slate-300" />
+            <h3 className="text-xl font-medium text-slate-700">No widgets yet</h3>
+            <p className="text-slate-500 mt-2">
+              Publish widgets from the Dashboard Manager to see them here
+            </p>
+          </CardContent>
+        </Card>
       ) : (
-        <div className="space-y-6">
-          {Object.entries(groupedWidgets).map(([category, categoryWidgets]) => {
-            const isCollapsed = collapsedGroups.has(category);
-            
-            return (
-              <div key={category} className="bg-white rounded-xl shadow-sm border overflow-hidden">
-                {/* Group Header */}
-                <button
-                  onClick={() => toggleGroup(category)}
-                  className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    {isCollapsed ? (
-                      <ChevronRight className="h-5 w-5 text-gray-400" />
-                    ) : (
-                      <ChevronDown className="h-5 w-5 text-gray-400" />
-                    )}
-                    <h2 className="font-semibold text-gray-900">{category}</h2>
-                    <Badge variant="secondary" className="text-xs">
-                      {categoryWidgets.length}
-                    </Badge>
-                  </div>
-                </button>
+        <div className="space-y-8">
+          {/* Stat Cards Row - Hero Section */}
+          {statWidgets.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {statWidgets.map(widget => (
+                <div key={widget.id} className="group relative">
+                  <button
+                    onClick={() => setConfigWidget(widget)}
+                    className="absolute top-3 right-3 z-10 p-1.5 rounded-lg bg-white/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity shadow-sm hover:bg-white"
+                  >
+                    <Settings className="h-3.5 w-3.5 text-slate-500" />
+                  </button>
+                  <WidgetRenderer widget={widget} />
+                </div>
+              ))}
+            </div>
+          )}
 
-                {/* Widgets Grid */}
-                {!isCollapsed && (
-                  <div className={`p-4 pt-0 grid grid-cols-6 gap-4 ${isCompact ? "gap-2" : ""}`}>
-                    {categoryWidgets.map(widget => {
-                      const colSpan = getWidgetColSpan(widget);
-                      return (
-                        <div 
-                          key={widget.id} 
-                          className={`${colSpanClasses[colSpan]} group relative`}
-                        >
-                          {/* Settings button overlay */}
-                          <button
-                            onClick={() => setConfigWidget(widget)}
-                            className="absolute top-2 right-2 z-10 p-1.5 rounded-lg bg-white/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity shadow-sm hover:bg-white"
-                            title="Widget Settings"
-                          >
-                            <Settings className="h-3.5 w-3.5 text-gray-500" />
-                          </button>
-                          
-                          <WidgetRenderer 
-                            widget={widget} 
-                            compact={isCompact}
-                          />
-                        </div>
-                      );
-                    })}
+          {/* Main Widgets Grid */}
+          {otherWidgets.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {otherWidgets.map(widget => {
+                const colSpan = getWidgetColSpan(widget);
+                const spanClass = colSpan >= 2 ? "md:col-span-2" : "";
+                
+                return (
+                  <div key={widget.id} className={`group relative ${spanClass}`}>
+                    <button
+                      onClick={() => setConfigWidget(widget)}
+                      className="absolute top-3 right-3 z-10 p-1.5 rounded-lg bg-white/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity shadow-sm hover:bg-white"
+                    >
+                      <Settings className="h-3.5 w-3.5 text-slate-500" />
+                    </button>
+                    <WidgetRenderer widget={widget} />
                   </div>
-                )}
-              </div>
-            );
-          })}
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 
@@ -167,7 +127,6 @@ export default function Dashboard() {
         isOpen={!!configWidget}
         onClose={() => setConfigWidget(null)}
         onSave={(updatedWidget) => {
-          // For the dashboard view, we just close - actual saving would need mutation
           setConfigWidget(null);
         }}
       />
