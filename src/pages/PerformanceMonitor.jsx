@@ -1092,6 +1092,187 @@ Provide:
             </Card>
           )}
         </TabsContent>
+
+        {/* AI Review Tab */}
+        <TabsContent value="ai-review" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold">AI System Performance Review</h2>
+              <p className="text-sm text-gray-500">Get comprehensive AI-powered analysis and recommendations</p>
+            </div>
+            <Button 
+              onClick={generateSystemReview} 
+              disabled={isGeneratingSystemReview}
+              className="bg-purple-600 hover:bg-purple-700"
+            >
+              {isGeneratingSystemReview ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Sparkles className="h-4 w-4 mr-2" />
+              )}
+              Generate AI Review
+            </Button>
+          </div>
+
+          {!aiSystemReview && !isGeneratingSystemReview && (
+            <Card>
+              <CardContent className="py-12 text-center text-gray-500">
+                <Sparkles className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <p>Click "Generate AI Review" to get a comprehensive performance analysis</p>
+                <p className="text-sm mt-2">The AI will analyze your pages, features, APIs, and issues</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {isGeneratingSystemReview && (
+            <Card>
+              <CardContent className="py-12 text-center">
+                <Loader2 className="h-12 w-12 mx-auto mb-4 animate-spin text-purple-600" />
+                <p className="font-medium">Analyzing your system...</p>
+                <p className="text-sm text-gray-500 mt-2">This may take a few moments</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {aiSystemReview && !isGeneratingSystemReview && (
+            <div className="space-y-6">
+              {/* Grade Card */}
+              <Card className={
+                aiSystemReview.grade?.startsWith("A") ? "border-green-200 bg-green-50" :
+                aiSystemReview.grade?.startsWith("B") ? "border-blue-200 bg-blue-50" :
+                aiSystemReview.grade?.startsWith("C") ? "border-amber-200 bg-amber-50" :
+                "border-red-200 bg-red-50"
+              }>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-6">
+                    <div className={`text-6xl font-bold ${
+                      aiSystemReview.grade?.startsWith("A") ? "text-green-600" :
+                      aiSystemReview.grade?.startsWith("B") ? "text-blue-600" :
+                      aiSystemReview.grade?.startsWith("C") ? "text-amber-600" :
+                      "text-red-600"
+                    }`}>
+                      {aiSystemReview.grade}
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-lg">Overall Performance Grade</h3>
+                      <p className="text-gray-600">{aiSystemReview.gradeExplanation}</p>
+                      {aiSystemReview.improvementPotential && (
+                        <Badge className="mt-2 bg-purple-100 text-purple-700">
+                          {aiSystemReview.improvementPotential} improvement potential
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Priority Areas */}
+              {aiSystemReview.priorityAreas?.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <AlertTriangle className="h-5 w-5 text-amber-600" />
+                      Priority Areas
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {aiSystemReview.priorityAreas.map((area, i) => (
+                        <div key={i} className="flex items-start gap-3 p-3 bg-amber-50 rounded-lg">
+                          <span className="font-bold text-amber-600">{i + 1}</span>
+                          <div>
+                            <p className="font-medium">{area.area}</p>
+                            <p className="text-sm text-gray-600">{area.reason}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              <div className="grid grid-cols-2 gap-6">
+                {/* Quick Wins */}
+                {aiSystemReview.quickWins?.length > 0 && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2 text-green-700">
+                        <Zap className="h-5 w-5" />
+                        Quick Wins
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-2">
+                        {aiSystemReview.quickWins.map((win, i) => (
+                          <li key={i} className="flex items-start gap-2 text-sm">
+                            <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                            {win}
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Long-term Improvements */}
+                {aiSystemReview.longTermImprovements?.length > 0 && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2 text-blue-700">
+                        <TrendingUp className="h-5 w-5" />
+                        Long-term Improvements
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-2">
+                        {aiSystemReview.longTermImprovements.map((imp, i) => (
+                          <li key={i} className="flex items-start gap-2 text-sm">
+                            <ArrowRight className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                            {imp}
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+
+              {/* Detailed Recommendations */}
+              {aiSystemReview.recommendations?.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Lightbulb className="h-5 w-5 text-purple-600" />
+                      Detailed Recommendations
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {aiSystemReview.recommendations.map((rec, i) => (
+                        <div key={i} className="p-4 border rounded-lg">
+                          <div className="flex items-start justify-between mb-2">
+                            <h4 className="font-medium">{rec.title}</h4>
+                            <div className="flex gap-2">
+                              <Badge variant="outline">Effort: {rec.effort}</Badge>
+                              <Badge className={
+                                rec.impact === "high" ? "bg-green-100 text-green-700" :
+                                rec.impact === "medium" ? "bg-amber-100 text-amber-700" :
+                                "bg-gray-100 text-gray-700"
+                              }>
+                                Impact: {rec.impact}
+                              </Badge>
+                            </div>
+                          </div>
+                          <p className="text-sm text-gray-600">{rec.description}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          )}
+        </TabsContent>
       </Tabs>
 
       {/* Threshold Editor Dialog */}
