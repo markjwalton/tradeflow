@@ -322,8 +322,8 @@ export default function TestDataManager() {
     console.log("isGenerating set, setting progress...");
     setGenerationProgress({
       current: 0,
-      total: itemsToProcess.length,
-      items: itemsToProcess.map(item => ({
+      total: enrichedItems.length,
+      items: enrichedItems.map(item => ({
         id: item.id,
         name: item.name,
         type: item.type,
@@ -332,6 +332,8 @@ export default function TestDataManager() {
       })),
       phase: "Generating Test Data"
     });
+    
+    console.log("Progress set, starting loop...");
 
     let successCount = 0;
     let errorCount = 0;
