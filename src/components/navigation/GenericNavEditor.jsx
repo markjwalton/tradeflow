@@ -379,13 +379,15 @@ export default function GenericNavEditor({
                                 <GripVertical className="h-4 w-4 text-gray-400" />
                               </div>
                               
-                              {item.hasChildren && (
+                              {item.hasChildren ? (
                                 <button onClick={() => toggleParent(item._id)} className="p-0.5">
                                   {expandedParents.has(item._id) ? 
                                     <ChevronDown className="h-4 w-4 text-gray-400" /> : 
                                     <ChevronRight className="h-4 w-4 text-gray-400" />
                                   }
                                 </button>
+                              ) : (
+                                <div className="w-5" /> 
                               )}
                               
                               <div className="flex items-center gap-2 flex-1">
