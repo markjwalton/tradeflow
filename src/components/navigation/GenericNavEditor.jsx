@@ -117,24 +117,18 @@ export default function GenericNavEditor({
     }
   }, [itemsNeedIds, config?.id, itemsWithIds]);
   
-  // Auto-expand all folders that have children on initial load
+  // Auto-expand folders based on their default_collapsed setting on initial load
   React.useEffect(() => {
     if (!initialExpandDone && items.length > 0) {
-      const parentIds = new Set();
+      const expandedIds = new Set();
+      // Only expand folders that have default_collapsed: false
       items.forEach(i => {
-        if (i.parent_id) {
-          parentIds.add(i.parent_id);
-          // Also find the actual parent item and add its _id
-          const parentItem = items.find(p => p._id === i.parent_id || p.slug === i.parent_id);
-          if (parentItem) {
-            parentIds.add(parentItem._id);
-            if (parentItem.slug) parentIds.add(parentItem.slug);
-          }
+        if (i.item_type === "folder" && i.default_collapsed !== true) {
+          expandedIds.add(i._id);
+          if (i.slug) expandedIds.add(i.slug);
         }
       });
-      if (parentIds.size > 0) {
-        setExpandedParents(parentIds);
-      }
+      setExpandedParents(expandedIds);
       setInitialExpandDone(true);
     }
   }, [items, initialExpandDone]);
