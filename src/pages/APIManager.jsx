@@ -395,7 +395,7 @@ export default function APIManager() {
               </CardContent>
             </Card>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {displayedApis.map(api => (
                 <Card key={api.id} className={
                   api.status === "error" ? "border-red-200" :
