@@ -29,7 +29,7 @@ import {
   Database, Plus, Save, Loader2, Sparkles, Wand2,
   Trash2, Edit, Layout, Zap, Shield, Play, RefreshCw,
   ChevronDown, ChevronRight, CheckCircle2, AlertTriangle,
-  Clock, Target, FlaskConical, Settings
+  Clock, Target, FlaskConical, Settings, X
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -356,6 +356,9 @@ Return as JSON with entity names as keys and arrays of records as values.`,
         successCount++;
         queryClient.invalidateQueries({ queryKey: ["testData"] });
 
+        // Add to seed queue
+        addToSeedQueue([{ id: item.id, name: item.name }]);
+
         setGenerationProgress(prev => ({
           ...prev,
           current: i + 1,
@@ -386,46 +389,62 @@ Return as JSON with entity names as keys and arrays of records as values.`,
     }
   };
 
-  // Insert all successful items to real DB
-  const insertAllToDb = async () => {
-    setIsInserting(true);
-    setSeedComplete(false);
-    const successItems = generationProgress.items.filter(i => i.status === "success");
+  // Add items to seed queue when generation completes
+  const addToSeedQueue = (items) => {
+    setSeedQueue(prev => [...prev, ...items.filter(i => !prev.some(p => p.id === i.id))]);
+  };
+
+  // Seed database in batches (background-friendly)
+  const seedDatabase = async () => {
+    if (seedQueue.length === 0) return;
+    
+    setIsSeeding(true);
+    setSeedSuccess(null);
+    
     let totalInserted = 0;
     let entityCount = 0;
     let errors = [];
+    const batchSize = 5; // Process 5 items at a time
     
     const allTestData = await base44.entities.TestData.list();
+    const itemsToSeed = [...seedQueue];
     
-    for (const item of successItems) {
-      const testData = allTestData.find(td => td.playground_item_id === item.id);
-      if (!testData?.entity_data) continue;
+    for (let i = 0; i < itemsToSeed.length; i += batchSize) {
+      const batch = itemsToSeed.slice(i, i + batchSize);
       
-      for (const [entityName, records] of Object.entries(testData.entity_data)) {
-        if (!Array.isArray(records) || records.length === 0) continue;
-        try {
-          if (base44.entities[entityName]) {
-            await base44.entities[entityName].bulkCreate(records);
-            totalInserted += records.length;
-            entityCount++;
-          } else {
-            errors.push(`${entityName}: Entity not found`);
+      for (const item of batch) {
+        const testData = allTestData.find(td => td.playground_item_id === item.id);
+        if (!testData?.entity_data) continue;
+        
+        for (const [entityName, records] of Object.entries(testData.entity_data)) {
+          if (!Array.isArray(records) || records.length === 0) continue;
+          try {
+            if (base44.entities[entityName]) {
+              await base44.entities[entityName].bulkCreate(records);
+              totalInserted += records.length;
+              entityCount++;
+            } else {
+              errors.push(`${entityName}: Entity not found`);
+            }
+          } catch (e) {
+            errors.push(`${entityName}: ${e.message}`);
           }
-        } catch (e) {
-          errors.push(`${entityName}: ${e.message}`);
         }
+      }
+      
+      // Small delay between batches to prevent overwhelming the API
+      if (i + batchSize < itemsToSeed.length) {
+        await new Promise(resolve => setTimeout(resolve, 500));
       }
     }
     
-    setIsInserting(false);
+    setIsSeeding(false);
+    setSeedQueue([]); // Clear the queue
+    
     if (errors.length > 0) {
-      toast.error(`Seeded ${totalInserted} records with some errors: ${errors.slice(0, 3).join(", ")}`);
-    } else if (totalInserted === 0) {
-      toast.warning("No records to seed");
-    } else {
-      setSeedComplete(true);
-      setSeedResult({ totalRecords: totalInserted, entityCount });
-      toast.success(`Database seeded successfully!`, { duration: 5000, icon: "✅" });
+      toast.error(`Seeded ${totalInserted} records with some errors`);
+    } else if (totalInserted > 0) {
+      setSeedSuccess({ totalRecords: totalInserted, entityCount });
     }
   };
 
@@ -465,6 +484,9 @@ Return as JSON with entity names as keys and arrays of records as values.`,
         is_default: true,
         test_status: "pending"
       });
+
+      // Add to seed queue
+      addToSeedQueue([{ id: item.id, name: item.name }]);
 
       queryClient.invalidateQueries({ queryKey: ["testData"] });
       toast.success(`Generated test data for ${item.name}`);
@@ -549,6 +571,35 @@ Return as JSON with entity names as keys and arrays of records as values.`,
                 )}
                 Generate All Missing
               </Button>
+
+              {/* Seed Database Button or Success Notification */}
+              {seedSuccess ? (
+                <div className="flex items-center gap-2 bg-green-500 text-white px-3 py-2 rounded-lg">
+                  <CheckCircle2 className="h-4 w-4" />
+                  <span className="text-sm font-medium">
+                    Seeded {seedSuccess.totalRecords} records
+                  </span>
+                  <button 
+                    onClick={() => setSeedSuccess(null)}
+                    className="ml-auto hover:bg-green-600 rounded p-0.5"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              ) : seedQueue.length > 0 && (
+                <Button 
+                  onClick={seedDatabase}
+                  disabled={isSeeding}
+                  className="bg-green-500 hover:bg-green-600 text-white"
+                >
+                  {isSeeding ? (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    <Database className="h-4 w-4 mr-2" />
+                  )}
+                  Seed Database ({seedQueue.length} items)
+                </Button>
+              )}
             </div>
           </div>
         </CardContent>
@@ -619,10 +670,7 @@ Return as JSON with entity names as keys and arrays of records as values.`,
                 const failedItems = generationProgress.items.filter(i => i.status === "error");
                 toast.info(`Retry for ${failedItems.length} failed items coming soon`);
               }}
-              onInsertToDb={insertAllToDb}
-              isInserting={isInserting}
-              seedComplete={seedComplete}
-              seedResult={seedResult}
+              seedQueueCount={seedQueue.length}
             />
           ) : (
             <Card>

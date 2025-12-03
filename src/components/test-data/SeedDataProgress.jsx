@@ -3,14 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/components/ui/alert";
+
 import { 
   CheckCircle2, XCircle, Loader2, Circle, Database,
-  AlertTriangle, RefreshCw, PartyPopper
+  AlertTriangle, RefreshCw
 } from "lucide-react";
 
 const statusIcons = {
@@ -31,10 +27,7 @@ export default function SeedDataProgress({
   isRunning,
   progress,
   onRetry,
-  onInsertToDb,
-  isInserting,
-  seedComplete,
-  seedResult
+  seedQueueCount = 0
 }) {
   const { current, total, items, phase } = progress;
   const percentage = total > 0 ? Math.round((current / total) * 100) : 0;
@@ -121,23 +114,19 @@ export default function SeedDataProgress({
           </div>
         )}
 
-        {/* Seed Complete Success Message */}
-        {seedComplete && seedResult && (
-          <Alert className="bg-green-50 border-green-200">
-            <PartyPopper className="h-4 w-4 text-green-600" />
-            <AlertTitle className="text-green-800">Database Seeded Successfully!</AlertTitle>
-            <AlertDescription className="text-green-700">
-              {seedResult.totalRecords} records have been created across {seedResult.entityCount} entities. 
-              Your test data is now available in the live database.
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {/* Action Buttons */}
-        {!isRunning && items.length > 0 && !seedComplete && (
+        {/* Status Info */}
+        {!isRunning && items.length > 0 && (
           <div className="flex justify-between items-center pt-2 border-t">
             <div className="text-sm text-gray-500">
-              {successCount > 0 && `${successCount} items ready for database seeding`}
+              {successCount > 0 && seedQueueCount > 0 && (
+                <span className="flex items-center gap-2">
+                  <Database className="h-3 w-3 text-green-600" />
+                  {seedQueueCount} items queued for seeding
+                </span>
+              )}
+              {successCount > 0 && seedQueueCount === 0 && (
+                <span className="text-green-600">All items processed</span>
+              )}
             </div>
             <div className="flex gap-2">
               {errorCount > 0 && (
@@ -146,25 +135,10 @@ export default function SeedDataProgress({
                   Retry Failed ({errorCount})
                 </Button>
               )}
-              {successCount > 0 && (
-                <Button 
-                  size="sm" 
-                  className="bg-green-600 hover:bg-green-700"
-                  onClick={onInsertToDb}
-                  disabled={isInserting}
-                >
-                  {isInserting ? (
-                    <Loader2 className="h-3 w-3 mr-1 animate-spin" />
-                  ) : (
-                    <Database className="h-3 w-3 mr-1" />
-                  )}
-                  Seed Database
-                </Button>
-              )}
             </div>
           </div>
         )}
-      </CardContent>
-    </Card>
+        </CardContent>
+        </Card>
   );
 }
