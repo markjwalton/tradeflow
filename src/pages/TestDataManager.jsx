@@ -334,7 +334,19 @@ export default function TestDataManager() {
         )
       }));
 
-      const entitySchemas = item.entities.map(e => ({
+      const entities = item.entities || [];
+      if (entities.length === 0) {
+        setGenerationProgress(prev => ({
+          ...prev,
+          current: i + 1,
+          items: prev.items.map((it, idx) => 
+            idx === i ? { ...it, status: "error", error: "No entities found" } : it
+          )
+        }));
+        continue;
+      }
+
+      const entitySchemas = entities.map(e => ({
         name: e.name,
         properties: e.schema?.properties || {},
         required: e.schema?.required || []
@@ -393,6 +405,7 @@ Return as JSON with entity names as keys and arrays of records as values.`,
     }
 
     setIsGenerating(false);
+    queryClient.invalidateQueries({ queryKey: ["testData"] });
     const remaining = itemStatusList.filter(i => !i.hasTestData && i.entityCount > 0).length - settings.batchSize;
     if (remaining > 0) {
       toast.success(`Batch complete: ${successCount} succeeded, ${errorCount} failed. ${remaining} items remaining.`);
