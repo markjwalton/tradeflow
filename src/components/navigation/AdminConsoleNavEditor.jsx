@@ -277,9 +277,9 @@ export default function AdminConsoleNavEditor() {
                                   ...provided.draggableProps.style,
                                   marginLeft: item.depth ? item.depth * 24 : 0 
                                 }}
-                                className={`flex items-center gap-2 p-3 border rounded-lg bg-white ${!item.is_visible ? "opacity-50" : ""}`}
+                                className={`group flex items-center gap-2 p-3 border rounded-lg bg-white hover:bg-gray-50 transition-colors ${!item.is_visible ? "opacity-50" : ""}`}
                               >
-                                <div {...provided.dragHandleProps} className="cursor-grab">
+                                <div {...provided.dragHandleProps} className="cursor-grab opacity-0 group-hover:opacity-100 transition-opacity">
                                   <GripVertical className="h-4 w-4 text-gray-400" />
                                 </div>
                                 
@@ -295,20 +295,20 @@ export default function AdminConsoleNavEditor() {
                                 <div className="flex items-center gap-2 flex-1">
                                   {getIcon(item.icon)}
                                   <span className="font-medium">{item.name}</span>
-                                  {item.item_type === "folder" ? (
+                                  {item.item_type === "folder" && (
                                     <Badge className="text-xs bg-amber-100 text-amber-700">Folder</Badge>
-                                  ) : (
-                                    <Badge variant="outline" className="text-xs">{item.slug}</Badge>
                                   )}
-                                  {item.parent_id && (
-                                    <Badge className="text-xs bg-blue-100 text-blue-700">Child of {item.parent_id}</Badge>
+                                  {item.item_type === "folder" && item.default_collapsed && (
+                                    <Badge variant="outline" className="text-xs text-gray-500">Collapsed</Badge>
                                   )}
                                 </div>
+
+                                <Switch
+                                  checked={item.is_visible !== false}
+                                  onCheckedChange={() => handleToggleVisibility(itemIndex)}
+                                />
                                 
-                                <div className="flex items-center gap-1">
-                                  <Button variant="ghost" size="icon" onClick={() => handleToggleVisibility(itemIndex)}>
-                                    {item.is_visible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4 text-gray-400" />}
-                                  </Button>
+                                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                   <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                       <Button variant="ghost" size="icon" title="Move to...">
@@ -347,13 +347,13 @@ export default function AdminConsoleNavEditor() {
                                       ))}
                                     </DropdownMenuContent>
                                   </DropdownMenu>
-                                  <Button variant="ghost" size="icon" onClick={() => handleDuplicate(itemIndex)}>
+                                  <Button variant="ghost" size="icon" onClick={() => handleDuplicate(itemIndex)} title="Duplicate">
                                     <Copy className="h-4 w-4" />
                                   </Button>
-                                  <Button variant="ghost" size="icon" onClick={() => handleEdit(itemIndex)}>
+                                  <Button variant="ghost" size="icon" onClick={() => handleEdit(itemIndex)} title="Edit">
                                     <Pencil className="h-4 w-4" />
                                   </Button>
-                                  <Button variant="ghost" size="icon" className="text-red-500" onClick={() => handleDelete(itemIndex)}>
+                                  <Button variant="ghost" size="icon" className="text-red-500" onClick={() => handleDelete(itemIndex)} title="Delete">
                                     <Trash2 className="h-4 w-4" />
                                   </Button>
                                 </div>
