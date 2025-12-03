@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
 
     const verifiedDate = new Date().toISOString();
 
-    // Process with delays to avoid rate limits
+    // Process with delays to avoid rate limits - 1 update per 500ms
     for (let i = 0; i < testDataIds.length; i++) {
       const id = testDataIds[i];
       try {
@@ -34,12 +34,26 @@ Deno.serve(async (req) => {
         });
         results.success.push(id);
       } catch (e) {
-        results.failed.push({ id, error: e.message });
+        // If rate limited, wait longer and retry once
+        if (e.message?.includes('Rate limit') || e.message?.includes('rate limit')) {
+          await sleep(2000);
+          try {
+            await base44.asServiceRole.entities.TestData.update(id, {
+              test_status: "verified",
+              verified_date: verifiedDate
+            });
+            results.success.push(id);
+          } catch (retryError) {
+            results.failed.push({ id, error: retryError.message });
+          }
+        } else {
+          results.failed.push({ id, error: e.message });
+        }
       }
       
-      // Add delay every 3 updates to stay under rate limit
-      if ((i + 1) % 3 === 0 && i < testDataIds.length - 1) {
-        await sleep(1000);
+      // Delay after each update
+      if (i < testDataIds.length - 1) {
+        await sleep(300);
       }
     }
 
