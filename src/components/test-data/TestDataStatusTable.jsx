@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   Table,
   TableBody,
@@ -12,7 +17,8 @@ import {
 } from "@/components/ui/table";
 import { 
   CheckCircle2, XCircle, Clock, Layout, Zap, 
-  Database, Play, AlertTriangle, Eye
+  Database, Play, AlertTriangle, Eye, ChevronDown, 
+  ChevronRight, Folder, FolderOpen
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -33,9 +39,39 @@ export default function TestDataStatusTable({
   onRunTest,
   onViewItem,
   showActions = true,
-  filter = null
+  filter = null,
+  groupByCategory = true
 }) {
+  const [expandedGroups, setExpandedGroups] = useState(new Set(["Pages", "Features"]));
   const filteredItems = filter ? items.filter(filter) : items;
+
+  // Group items by type (Pages vs Features)
+  const groupedItems = useMemo(() => {
+    if (!groupByCategory) return { "All Items": filteredItems };
+    
+    const groups = {};
+    filteredItems.forEach(item => {
+      const groupName = item.type === "page" ? "Pages" : "Features";
+      if (!groups[groupName]) groups[groupName] = [];
+      groups[groupName].push(item);
+    });
+    return groups;
+  }, [filteredItems, groupByCategory]);
+
+  const toggleGroup = (groupName) => {
+    setExpandedGroups(prev => {
+      const next = new Set(prev);
+      if (next.has(groupName)) next.delete(groupName);
+      else next.add(groupName);
+      return next;
+    });
+  };
+
+  const getGroupStats = (items) => {
+    const withData = items.filter(i => i.dataStatus !== "missing").length;
+    const verified = items.filter(i => i.testStatus === "verified").length;
+    return { total: items.length, withData, verified, missing: items.length - withData };
+  };
 
   return (
     <Card>
