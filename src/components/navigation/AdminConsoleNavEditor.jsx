@@ -20,11 +20,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { 
-  Plus, GripVertical, Pencil, Trash2, Eye, EyeOff,
+  Plus, GripVertical, Pencil, Trash2, Eye, EyeOff, Download,
   Home, Lightbulb, GitBranch, Database, Package, Building2, 
   Navigation, Workflow, Layout, Zap, Settings, FileText,
   Users, Calendar, Mail, Bell, Search, Star, Heart,
-  Folder, File, Image, Video, Music, Map, Globe
+  Folder, File, Image, Video, Music, Map, Globe, Shield,
+  Key, Gauge, BookOpen, FlaskConical
 } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { toast } from "sonner";
@@ -33,10 +34,45 @@ const iconMap = {
   Home, Lightbulb, GitBranch, Database, Package, Building2, 
   Navigation, Workflow, Layout, Zap, Settings, FileText,
   Users, Calendar, Mail, Bell, Search, Star, Heart,
-  Folder, File, Image, Video, Music, Map, Globe
+  Folder, File, Image, Video, Music, Map, Globe, Shield,
+  Key, Gauge, BookOpen, FlaskConical
 };
 
 const iconOptions = Object.keys(iconMap);
+
+// Default admin pages from Layout.js - used to seed initial config
+const defaultAdminPages = [
+  { name: "CMS", slug: "CMSManager", icon: "Globe", is_visible: true },
+  { name: "API Manager", slug: "APIManager", icon: "Key", is_visible: true },
+  { name: "Security", slug: "SecurityMonitor", icon: "Shield", is_visible: true },
+  { name: "Performance", slug: "PerformanceMonitor", icon: "Gauge", is_visible: true },
+  { name: "Roadmap", slug: "RoadmapManager", icon: "Lightbulb", is_visible: true },
+  { name: "Journal", slug: "RoadmapJournal", icon: "Lightbulb", is_visible: true },
+  { name: "Sprints", slug: "SprintManager", icon: "Lightbulb", is_visible: true },
+  { name: "Rule Book", slug: "RuleBook", icon: "BookOpen", is_visible: true },
+  { name: "Playground", slug: "PlaygroundSummary", icon: "FlaskConical", is_visible: true },
+  { name: "Test Data Manager", slug: "TestDataManager", icon: "Database", is_visible: true },
+  { name: "Mind Map Editor", slug: "MindMapEditor", icon: "GitBranch", is_visible: true },
+  { name: "ERD Editor", slug: "ERDEditor", icon: "Database", is_visible: true },
+  { name: "Generated Apps", slug: "GeneratedApps", icon: "Package", is_visible: true },
+  { name: "Entity Library", slug: "EntityLibrary", icon: "Database", is_visible: true },
+  { name: "Page Library", slug: "PageLibrary", icon: "Layout", is_visible: true },
+  { name: "Feature Library", slug: "FeatureLibrary", icon: "Zap", is_visible: true },
+  { name: "Template Library", slug: "TemplateLibrary", icon: "Package", is_visible: true },
+  { name: "Business Templates", slug: "BusinessTemplates", icon: "Building2", is_visible: true },
+  { name: "Workflow Library", slug: "WorkflowLibrary", icon: "Workflow", is_visible: true },
+  { name: "Workflow Designer", slug: "WorkflowDesigner", icon: "Workflow", is_visible: true },
+  { name: "Form Templates", slug: "FormTemplates", icon: "Layout", is_visible: true },
+  { name: "Form Builder", slug: "FormBuilder", icon: "Layout", is_visible: true },
+  { name: "Checklist Templates", slug: "ChecklistTemplates", icon: "Layout", is_visible: true },
+  { name: "Checklist Builder", slug: "ChecklistBuilder", icon: "Layout", is_visible: true },
+  { name: "System Specification", slug: "SystemSpecification", icon: "Package", is_visible: true },
+  { name: "Tenant Manager", slug: "TenantManager", icon: "Building2", is_visible: true },
+  { name: "Navigation Manager", slug: "NavigationManager", icon: "Navigation", is_visible: true },
+  { name: "Package Library", slug: "PackageLibrary", icon: "Package", is_visible: true },
+  { name: "Prompt Settings", slug: "PromptSettings", icon: "Settings", is_visible: true },
+  { name: "Lookup Test", slug: "LookupTestForms", icon: "Key", is_visible: true },
+];
 
 export default function AdminConsoleNavEditor() {
   const queryClient = useQueryClient();
@@ -114,6 +150,11 @@ export default function AdminConsoleNavEditor() {
     saveMutation.mutate(newItems);
   };
 
+  const seedFromLayout = () => {
+    saveMutation.mutate(defaultAdminPages);
+    toast.success("Navigation seeded from Layout defaults");
+  };
+
   const getIcon = (iconName) => {
     const Icon = iconMap[iconName];
     return Icon ? <Icon className="h-4 w-4" /> : <Home className="h-4 w-4" />;
@@ -123,17 +164,30 @@ export default function AdminConsoleNavEditor() {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Admin Console Navigation</CardTitle>
-        <Button onClick={() => { setEditingItem(null); setFormData({ name: "", slug: "", icon: "Home", is_visible: true }); setShowDialog(true); }}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Item
-        </Button>
+        <div className="flex gap-2">
+          {items.length === 0 && (
+            <Button variant="outline" onClick={seedFromLayout}>
+              <Download className="h-4 w-4 mr-2" />
+              Seed from Layout
+            </Button>
+          )}
+          <Button onClick={() => { setEditingItem(null); setFormData({ name: "", slug: "", icon: "Home", is_visible: true }); setShowDialog(true); }}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add Item
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         {isLoading ? (
           <div className="text-center py-8 text-gray-500">Loading...</div>
         ) : items.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
-            No navigation items configured. The default layout navigation will be used.
+            <p className="mb-4">No navigation items configured.</p>
+            <Button onClick={seedFromLayout}>
+              <Download className="h-4 w-4 mr-2" />
+              Seed from Layout Defaults
+            </Button>
+            <p className="text-xs mt-2">This will copy all current admin pages so you can manage them here.</p>
           </div>
         ) : (
           <DragDropContext onDragEnd={handleDragEnd}>
@@ -178,12 +232,13 @@ export default function AdminConsoleNavEditor() {
           </DragDropContext>
         )}
 
-        <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-          <p className="text-sm text-amber-800">
-            <strong>Note:</strong> Changes here override the default admin console navigation in Layout.js. 
-            Leave empty to use the default navigation.
-          </p>
-        </div>
+        {items.length > 0 && (
+          <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-sm text-green-800">
+              <strong>Active:</strong> This navigation is being used. Drag to reorder, toggle visibility, or edit items.
+            </p>
+          </div>
+        )}
       </CardContent>
 
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
