@@ -691,6 +691,10 @@ Provide:
             )}
           </TabsTrigger>
           <TabsTrigger value="reports">Reports</TabsTrigger>
+          <TabsTrigger value="ai-review" className="gap-2">
+            <Sparkles className="h-4 w-4" />
+            AI Review
+          </TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
