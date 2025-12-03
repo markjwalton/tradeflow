@@ -364,10 +364,17 @@ export default function Layout({ children, currentPageName }) {
     });
   };
 
-  // Get children of a nav item - check against both _id and slug
-  const getNavChildren = (parentId, items) => {
+  // Get children of a nav item - match parent_id against both _id and slug (for folders without _id)
+  const getNavChildren = (item, items) => {
+    const itemId = item._id;
+    const itemSlug = item.slug;
     return items
-      .filter(item => item.parent_id && (item.parent_id === parentId) && item.is_visible !== false)
+      .filter(child => {
+        if (!child.parent_id) return false;
+        // Match parent_id against _id or slug of the parent
+        return child.parent_id === itemId || (itemSlug && child.parent_id === itemSlug);
+      })
+      .filter(child => child.is_visible !== false)
       .sort((a, b) => (a.order || 0) - (b.order || 0));
   };
 
@@ -382,8 +389,8 @@ export default function Layout({ children, currentPageName }) {
   const renderNavItems = (items, allItems, depth = 0) => {
     return items.map((item) => {
       const isFolder = item.item_type === "folder";
-      const folderId = item._id || item.slug;
-      const children = getNavChildren(folderId, allItems);
+      const folderId = item._id || item.slug || item.name;
+      const children = getNavChildren(item, allItems);
       const hasChildren = children.length > 0;
       const isExpanded = expandedFolders.has(folderId);
       const Icon = iconMap[item.icon] || (isFolder ? Folder : Home);
