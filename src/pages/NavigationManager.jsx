@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTenant } from "@/Layout";
 import { Button } from "@/components/ui/button";
 
-import { Settings, FileCode, Eye, Wand2, Loader2 } from "lucide-react";
+import { Settings, FileCode, Eye, Wand2, Loader2, Cog, Users } from "lucide-react";
 import { toast } from "sonner";
 
 import GenericNavEditor from "@/components/navigation/GenericNavEditor";
@@ -143,6 +143,7 @@ export default function NavigationManager() {
           <div className="flex items-center justify-between mb-6">
             <div className="flex gap-2 flex-wrap">
               <button className={tabStyle("admin")} onClick={() => setActiveTab("admin")}>
+                <Cog className="h-4 w-4 mr-2 inline" />
                 Admin Console
               </button>
               <button className={tabStyle("app")} onClick={() => setActiveTab("app")}>
@@ -154,6 +155,7 @@ export default function NavigationManager() {
                 Live Pages
               </button>
               <button className={tabStyle("tenant")} onClick={() => setActiveTab("tenant")}>
+                <Users className="h-4 w-4 mr-2 inline" />
                 Tenant Navigation
               </button>
             </div>
@@ -194,33 +196,48 @@ export default function NavigationManager() {
 
           {activeTab === "tenant" && (
             <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <TenantSelector
-                  tenants={tenants}
-                  selectedTenantId={selectedTenantId}
-                  onSelectTenant={setSelectedTenantId}
-                  showGlobal={false}
-                />
-                {selectedTenantId !== "__global__" && tenantNavItems.length === 0 && (
-                  <Button 
-                    variant="outline" 
-                    onClick={() => copyGlobalToTenant.mutate(selectedTenantId)}
-                    disabled={copyGlobalToTenant.isPending}
-                  >
-                    Copy from Global Template
-                  </Button>
-                )}
-              </div>
-              
+              <TenantSelector
+                tenants={tenants}
+                selectedTenantId={selectedTenantId}
+                onSelectTenant={setSelectedTenantId}
+                showGlobal={false}
+              />
+
               {selectedTenantId === "__global__" ? (
                 <div className="text-center py-12 text-gray-500">
                   Select a tenant to manage their navigation
                 </div>
               ) : (
-                <TenantNavEditor 
-                  tenantId={selectedTenantId} 
-                  items={tenantNavItems}
-                  isLoading={tenantLoading}
+                <GenericNavEditor
+                  title={`Tenant Navigation: ${tenants.find(t => t.id === selectedTenantId)?.name || 'Unknown'}`}
+                  configType={`tenant_nav_${selectedTenantId}`}
+                  sourceSlugs={APP_PAGES_SLUGS}
+                  showCopyButton={true}
+                  copyButtonLabel="Copy from App Pages Template"
+                  onCopyFromTemplate={async () => {
+                    try {
+                      const appConfigs = await base44.entities.NavigationConfig.filter({ config_type: "app_pages_source" });
+                      const appItems = appConfigs[0]?.items || [];
+                      if (appItems.length === 0) {
+                        toast.error("No App Pages template to copy from");
+                        return;
+                      }
+                      const tenantConfigs = await base44.entities.NavigationConfig.filter({ config_type: `tenant_nav_${selectedTenantId}` });
+                      if (tenantConfigs[0]) {
+                        await base44.entities.NavigationConfig.update(tenantConfigs[0].id, { items: appItems });
+                      } else {
+                        await base44.entities.NavigationConfig.create({
+                          config_type: `tenant_nav_${selectedTenantId}`,
+                          items: appItems,
+                          source_slugs: APP_PAGES_SLUGS
+                        });
+                      }
+                      queryClient.invalidateQueries({ queryKey: ["navConfig", `tenant_nav_${selectedTenantId}`] });
+                      toast.success("Copied from App Pages template");
+                    } catch (e) {
+                      toast.error("Failed to copy: " + e.message);
+                    }
+                  }}
                 />
               )}
             </div>
