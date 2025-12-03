@@ -104,9 +104,14 @@ export default function GenericNavEditor({
   const allocatedSlugs = items.map(i => i.slug).filter(Boolean);
   const unallocatedSlugs = sourceSlugs.filter(slug => !allocatedSlugs.includes(slug));
 
-  // Hierarchy helpers - use _id for parent matching
+  // Hierarchy helpers - parent_id now refers to _id of parent
   const getItemsByParent = (parentId) => items.filter(i => (i.parent_id || null) === parentId);
   const topLevelItems = getItemsByParent(null);
+  
+  // Get all potential parent items (folders or items with children)
+  const getValidParents = () => items.filter(i => 
+    i.item_type === "folder" || getItemsByParent(i._id).length > 0
+  );
 
   const saveMutation = useMutation({
     mutationFn: async (newItems) => {
