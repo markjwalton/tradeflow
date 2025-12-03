@@ -532,12 +532,12 @@ export default function GenericNavEditor({
                             <Pencil className="h-4 w-4" />
                           </Button>
                           <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            onClick={() => handleAllocate(slug)}
-                            title="Quick allocate"
-                          >
-                            <Plus className="h-4 w-4 text-green-500" />
+                                                            variant="ghost" 
+                                                            size="icon" 
+                                                            onClick={() => handleAllocate(slug)}
+                                                            title="Quick allocate"
+                                                          >
+                                                            <Power className="h-4 w-4 text-red-500" />
                           </Button>
                         </div>
                       </div>
