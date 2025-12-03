@@ -378,6 +378,7 @@ export default function GenericNavEditor({
   const buildFlatList = () => {
     const result = [];
     // Pre-calculate which items have children by checking parent_id references
+    // Check both _id and slug since folders use slug as stable ID
     const itemIdsWithChildren = new Set();
     items.forEach(i => {
       if (i.parent_id) {
@@ -385,15 +386,37 @@ export default function GenericNavEditor({
       }
     });
     
+    // Also check if any item's parent_id matches another item's slug (folder case)
+    items.forEach(i => {
+      if (i.slug && i.item_type === "folder") {
+        const hasChildrenBySlug = items.some(child => child.parent_id === i.slug);
+        if (hasChildrenBySlug) {
+          itemIdsWithChildren.add(i._id);
+          itemIdsWithChildren.add(i.slug);
+        }
+      }
+    });
+    
     const addItems = (parentId, depth) => {
       if (depth > 3) return; // Allow 3 levels of nesting
       const children = getItemsByParent(parentId).sort((a, b) => (a.order || 0) - (b.order || 0));
       children.forEach(child => {
-        const hasChildren = itemIdsWithChildren.has(child._id);
+        const hasChildren = itemIdsWithChildren.has(child._id) || itemIdsWithChildren.has(child.slug);
         result.push({ ...child, depth, hasChildren });
-        // Always recurse if has children and expanded
-        if (hasChildren && expandedParents.has(child._id)) {
+        // Always recurse if has children and expanded - check both _id and slug
+        const isExpanded = expandedParents.has(child._id) || expandedParents.has(child.slug);
+        if (hasChildren && isExpanded) {
+          // Try to find children by both _id and slug
           addItems(child._id, depth + 1);
+          if (child.slug && child.slug !== child._id) {
+            const slugChildren = items.filter(i => i.parent_id === child.slug);
+            slugChildren.sort((a, b) => (a.order || 0) - (b.order || 0)).forEach(slugChild => {
+              if (!result.find(r => r._id === slugChild._id)) {
+                const slugChildHasChildren = itemIdsWithChildren.has(slugChild._id) || itemIdsWithChildren.has(slugChild.slug);
+                result.push({ ...slugChild, depth: depth + 1, hasChildren: slugChildHasChildren });
+              }
+            });
+          }
         }
       });
     };
