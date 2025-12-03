@@ -272,30 +272,7 @@ Return as JSON with entity names as keys and arrays of records as values.`,
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Top Header Bar */}
-      <header className="h-14 bg-white border-b flex items-center justify-between px-4">
-        <div className="flex items-center gap-4">
-          <Link to={createPageUrl("PlaygroundSummary")}>
-            <Button variant="ghost" size="sm" className="gap-2">
-              <ArrowLeft className="h-4 w-4" />
-              Back to Playground
-            </Button>
-          </Link>
-          <div className="flex items-center gap-2">
-            <Database className="h-5 w-5 text-blue-600" />
-            <span className="font-semibold">Test Data Manager</span>
-          </div>
-        </div>
-        <Link to={createPageUrl("LivePreview")}>
-          <Button variant="outline" size="sm">
-            <Eye className="h-4 w-4 mr-2" />
-            Live Preview
-          </Button>
-        </Link>
-      </header>
-
-      <div className="p-6">
+    <div className="p-6">
 
       {/* Item Selector */}
       <Card className="mb-6">
@@ -507,7 +484,5 @@ Return as JSON with entity names as keys and arrays of records as values.`,
           </div>
         </DialogContent>
       </Dialog>
-      </div>
-    </div>
   );
 }
