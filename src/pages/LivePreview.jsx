@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Layout, Zap, Database, Edit, Eye, ChevronRight, ChevronDown, Loader2, 
-  FlaskConical, CheckCircle2, XCircle, Circle, Settings, GripVertical,
-  Plus, Folder, FolderOpen, Save
+  FlaskConical, CheckCircle2, ArrowLeft, Folder, FolderOpen
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { toast } from "sonner";
 
 // Dynamic page renderer based on template
 import LivePageRenderer from "@/components/playground/LivePageRenderer";
@@ -25,14 +22,11 @@ const statusColors = {
 };
 
 export default function LivePreview() {
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const urlParams = new URLSearchParams(window.location.search);
   const itemId = urlParams.get("id");
 
   const [selectedItemId, setSelectedItemId] = useState(itemId || null);
   const [expandedFolders, setExpandedFolders] = useState(new Set());
-  const [isEditingNav, setIsEditingNav] = useState(false);
 
   const { data: playgroundItems = [], isLoading } = useQuery({
     queryKey: ["playgroundItems"],
@@ -131,32 +125,43 @@ export default function LivePreview() {
   }
 
   return (
-    <div className="h-screen flex">
-      {/* Left Navigation Sidebar */}
-      <aside className="w-64 bg-slate-900 text-white flex flex-col">
-        <div className="p-4 border-b border-slate-700">
-          <h2 className="font-bold text-lg flex items-center gap-2">
-            <Eye className="h-5 w-5" />
+    <div className="flex h-[calc(100vh-56px)]">
+      {/* Left Navigation Panel */}
+      <aside className="w-72 bg-white border-r flex flex-col">
+        {/* Back to Main Navigation */}
+        <div className="p-3 border-b bg-slate-50">
+          <Link to={createPageUrl("PlaygroundSummary")}>
+            <Button variant="outline" size="sm" className="w-full justify-start">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Main
+            </Button>
+          </Link>
+        </div>
+
+        <div className="p-3 border-b">
+          <h2 className="font-semibold flex items-center gap-2">
+            <Eye className="h-5 w-5 text-purple-600" />
             Live Preview
           </h2>
+          <p className="text-xs text-gray-500 mt-1">Preview pages & features</p>
         </div>
 
         <ScrollArea className="flex-1">
           {/* Pages Section */}
-          <div className="p-2">
-            <div className="flex items-center gap-2 px-2 py-1 text-xs font-semibold text-slate-400 uppercase">
+          <div className="p-3">
+            <div className="flex items-center gap-2 mb-2 text-xs font-semibold text-gray-500 uppercase">
               <Layout className="h-3 w-3" />
               Pages
             </div>
-            <div className="space-y-0.5 mt-1">
+            <div className="space-y-0.5">
               {pageItems.map(item => (
                 <button
                   key={item.id}
                   onClick={() => setSelectedItemId(item.id)}
-                  className={`w-full text-left px-3 py-2 rounded text-sm flex items-center justify-between transition-colors ${
+                  className={`w-full text-left px-3 py-2 rounded-lg text-sm flex items-center justify-between transition-colors ${
                     selectedItemId === item.id 
-                      ? "bg-blue-600 text-white" 
-                      : "text-slate-300 hover:bg-slate-800"
+                      ? "bg-blue-100 text-blue-800 font-medium" 
+                      : "hover:bg-gray-100"
                   }`}
                 >
                   <span className="truncate">{item.source_name}</span>
@@ -164,44 +169,50 @@ export default function LivePreview() {
                 </button>
               ))}
               {pageItems.length === 0 && (
-                <p className="text-xs text-slate-500 px-3 py-2">No pages synced</p>
+                <p className="text-xs text-gray-400 px-3 py-2">No pages synced</p>
               )}
             </div>
           </div>
 
           {/* Features Section - Grouped by Category */}
-          <div className="p-2 border-t border-slate-700">
-            <div className="flex items-center gap-2 px-2 py-1 text-xs font-semibold text-slate-400 uppercase">
+          <div className="p-3 border-t">
+            <div className="flex items-center gap-2 mb-2 text-xs font-semibold text-gray-500 uppercase">
               <Zap className="h-3 w-3" />
               Features
             </div>
-            <div className="mt-1">
+            <div className="space-y-0.5">
               {Object.entries(featuresByCategory).map(([category, items]) => (
                 <div key={category}>
                   <button
                     onClick={() => toggleFolder(category)}
-                    className="w-full text-left px-3 py-2 rounded text-sm flex items-center gap-2 text-slate-300 hover:bg-slate-800"
+                    className="w-full text-left px-3 py-2 rounded-lg text-sm flex items-center gap-2 hover:bg-gray-100"
                   >
                     {expandedFolders.has(category) ? (
-                      <FolderOpen className="h-4 w-4 text-amber-500" />
+                      <>
+                        <ChevronDown className="h-4 w-4 text-gray-400" />
+                        <FolderOpen className="h-4 w-4 text-amber-500" />
+                      </>
                     ) : (
-                      <Folder className="h-4 w-4 text-amber-500" />
+                      <>
+                        <ChevronRight className="h-4 w-4 text-gray-400" />
+                        <Folder className="h-4 w-4 text-amber-500" />
+                      </>
                     )}
-                    <span className="flex-1">{category}</span>
-                    <Badge variant="secondary" className="text-xs h-5 bg-slate-700">
+                    <span className="flex-1 font-medium">{category}</span>
+                    <Badge variant="secondary" className="text-xs">
                       {items.length}
                     </Badge>
                   </button>
                   {expandedFolders.has(category) && (
-                    <div className="ml-4 space-y-0.5">
+                    <div className="ml-6 space-y-0.5 mt-0.5">
                       {items.map(item => (
                         <button
                           key={item.id}
                           onClick={() => setSelectedItemId(item.id)}
-                          className={`w-full text-left px-3 py-1.5 rounded text-sm flex items-center justify-between transition-colors ${
+                          className={`w-full text-left px-3 py-1.5 rounded-lg text-sm flex items-center justify-between transition-colors ${
                             selectedItemId === item.id 
-                              ? "bg-amber-600 text-white" 
-                              : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+                              ? "bg-amber-100 text-amber-800 font-medium" 
+                              : "text-gray-600 hover:bg-gray-100"
                           }`}
                         >
                           <span className="truncate">{item.source_name}</span>
@@ -213,24 +224,18 @@ export default function LivePreview() {
                 </div>
               ))}
               {Object.keys(featuresByCategory).length === 0 && (
-                <p className="text-xs text-slate-500 px-3 py-2">No features synced</p>
+                <p className="text-xs text-gray-400 px-3 py-2">No features synced</p>
               )}
             </div>
           </div>
         </ScrollArea>
 
         {/* Bottom Actions */}
-        <div className="p-3 border-t border-slate-700 space-y-2">
+        <div className="p-3 border-t space-y-2">
           <Link to={createPageUrl("TestDataManager")}>
-            <Button variant="outline" size="sm" className="w-full bg-slate-800 border-slate-600 text-slate-200 hover:bg-slate-700">
+            <Button variant="outline" size="sm" className="w-full">
               <Database className="h-4 w-4 mr-2" />
-              Test Data
-            </Button>
-          </Link>
-          <Link to={createPageUrl("PlaygroundSummary")}>
-            <Button variant="outline" size="sm" className="w-full bg-slate-800 border-slate-600 text-slate-200 hover:bg-slate-700">
-              <FlaskConical className="h-4 w-4 mr-2" />
-              Playground
+              Manage Test Data
             </Button>
           </Link>
         </div>
