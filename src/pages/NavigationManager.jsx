@@ -3,7 +3,8 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTenant } from "@/Layout";
 import { Button } from "@/components/ui/button";
-import { Settings, FileCode, Eye } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Settings, FileCode, Eye, Wand2, FolderOpen, ChevronDown, ChevronRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import GenericNavEditor from "@/components/navigation/GenericNavEditor";
@@ -29,6 +30,9 @@ const APP_PAGES_SLUGS = [
   "WebsiteEnquiryForm", "AppointmentHub", "AppointmentConfirm", "AppointmentManager",
   "InterestOptionsManager"
 ];
+
+// Generate unique ID for items
+const generateId = () => Math.random().toString(36).substr(2, 9);
 
 export default function NavigationManager() {
   const tenantContext = useTenant();
@@ -78,16 +82,17 @@ export default function NavigationManager() {
     queryFn: () => base44.entities.Tenant.list(),
   });
 
-  // Fetch PageTemplates for Live Pages tab (these come from PageTemplate entity)
+  // Fetch PageTemplates for Live Pages tab
   const { data: pageTemplates = [] } = useQuery({
-    queryKey: ["pageTemplates"],
-    queryFn: () => base44.entities.PageTemplate.list("name"),
+    queryKey: ["pageTemplatesNav"],
+    queryFn: () => base44.entities.PageTemplate.list("name", 300),
   });
 
-  // Extract slugs from PageTemplate entity
-  const livePagesSlugs = pageTemplates
-    .filter(p => p.name)
-    .map(p => p.name);
+  // Fetch FeatureTemplates for Live Pages tab
+  const { data: featureTemplates = [] } = useQuery({
+    queryKey: ["featureTemplatesNav"],
+    queryFn: () => base44.entities.FeatureTemplate.list("name", 300),
+  });
 
   // Copy global template to tenant
   const copyGlobalToTenant = useMutation({
@@ -95,7 +100,6 @@ export default function NavigationManager() {
       const globalConfigs = await base44.entities.NavigationConfig.filter({ config_type: "app_pages_source" });
       const globalItems = globalConfigs[0]?.items || [];
       
-      // Create NavigationItem records for the tenant
       for (const item of globalItems) {
         await base44.entities.NavigationItem.create({
           tenant_id: tenantId,
@@ -182,18 +186,11 @@ export default function NavigationManager() {
           )}
 
           {activeTab === "live" && (
-                          <div>
-                            <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-700">
-                              <strong>Live Pages</strong> come from PageTemplate and FeatureTemplate entities. 
-                              Click "Auto-Generate with Categories" to create folder structure based on template categories.
-                            </div>
-                            <LivePagesNavEditor 
-                              pageTemplates={pageTemplates}
-                            />
-                          </div>
-                        )}</
-
-
+            <LivePagesNavEditor 
+              pageTemplates={pageTemplates}
+              featureTemplates={featureTemplates}
+            />
+          )}
 
           {activeTab === "tenant" && (
             <div className="space-y-4">
@@ -230,7 +227,6 @@ export default function NavigationManager() {
           )}
         </>
       ) : (
-        // Tenant admin only sees their own tenant navigation
         <TenantNavEditor 
           tenantId={tenantContext?.tenantId} 
           items={tenantNavItems}
@@ -247,6 +243,194 @@ export default function NavigationManager() {
         title="Navigation Manager Settings"
       />
     </div>
+  );
+}
+
+// Live Pages Navigation Editor with auto-generate
+function LivePagesNavEditor({ pageTemplates = [], featureTemplates = [] }) {
+  const queryClient = useQueryClient();
+  const [generating, setGenerating] = useState(false);
+  const [expandedCategories, setExpandedCategories] = useState(new Set());
+
+  // Fetch existing config
+  const { data: navConfigs = [], isLoading } = useQuery({
+    queryKey: ["navConfig", "live_pages_source"],
+    queryFn: () => base44.entities.NavigationConfig.filter({ config_type: "live_pages_source" }),
+  });
+
+  const config = navConfigs[0];
+  const items = config?.items || [];
+
+  // Collect all unique categories from both page and feature templates
+  const pageCategories = [...new Set(pageTemplates.map(p => p.category).filter(Boolean))];
+  const featureCategories = [...new Set(featureTemplates.map(f => f.category).filter(Boolean))];
+  const allCategories = [...new Set([...pageCategories, ...featureCategories])];
+
+  // Count items per category
+  const categoryStats = {};
+  allCategories.forEach(cat => {
+    const pageCount = pageTemplates.filter(p => p.category === cat).length;
+    const featureCount = featureTemplates.filter(f => f.category === cat).length;
+    categoryStats[cat] = { pages: pageCount, features: featureCount, total: pageCount + featureCount };
+  });
+
+  // All slugs - pages use name directly, features use "feature:" prefix
+  const allSlugs = [
+    ...pageTemplates.map(p => p.name),
+    ...featureTemplates.map(f => `feature:${f.name}`)
+  ];
+
+  // Generate navigation with category folders
+  const handleAutoGenerate = async () => {
+    setGenerating(true);
+    try {
+      const newItems = [];
+      let order = 0;
+
+      // Create category folders and their children
+      for (const category of allCategories.sort()) {
+        const folderId = generateId();
+        
+        // Add folder
+        newItems.push({
+          _id: folderId,
+          name: category,
+          slug: "",
+          icon: "FolderOpen",
+          is_visible: true,
+          parent_id: null,
+          item_type: "folder",
+          default_collapsed: true,
+          order: order++
+        });
+
+        // Add pages in this category
+        const pagesInCategory = pageTemplates.filter(p => p.category === category);
+        for (const page of pagesInCategory.sort((a, b) => a.name.localeCompare(b.name))) {
+          newItems.push({
+            _id: generateId(),
+            name: page.name,
+            slug: page.name,
+            icon: "File",
+            is_visible: true,
+            parent_id: folderId,
+            item_type: "page",
+            order: order++
+          });
+        }
+
+        // Add features in this category
+        const featuresInCategory = featureTemplates.filter(f => f.category === category);
+        for (const feature of featuresInCategory.sort((a, b) => a.name.localeCompare(b.name))) {
+          newItems.push({
+            _id: generateId(),
+            name: feature.name,
+            slug: `feature:${feature.name}`,
+            icon: "Zap",
+            is_visible: true,
+            parent_id: folderId,
+            item_type: "page",
+            order: order++
+          });
+        }
+      }
+
+      // Save
+      if (config) {
+        await base44.entities.NavigationConfig.update(config.id, { items: newItems });
+      } else {
+        await base44.entities.NavigationConfig.create({
+          config_type: "live_pages_source",
+          items: newItems,
+          source_slugs: allSlugs
+        });
+      }
+
+      queryClient.invalidateQueries({ queryKey: ["navConfig", "live_pages_source"] });
+      toast.success(`Generated ${allCategories.length} category folders with ${allSlugs.length} items`);
+    } catch (err) {
+      toast.error("Failed to generate: " + err.message);
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const toggleCategory = (cat) => {
+    setExpandedCategories(prev => {
+      const next = new Set(prev);
+      if (next.has(cat)) next.delete(cat);
+      else next.add(cat);
+      return next;
+    });
+  };
+
+  if (isLoading) {
+    return <div className="text-center py-8"><Loader2 className="h-6 w-6 animate-spin mx-auto" /></div>;
+  }
+
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle>Live Pages Navigation</CardTitle>
+        <Button onClick={handleAutoGenerate} disabled={generating} className="gap-2">
+          {generating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
+          Auto-Generate with Categories
+        </Button>
+      </CardHeader>
+      <CardContent>
+        <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-700">
+          <strong>{pageTemplates.length} pages</strong> and <strong>{featureTemplates.length} features</strong> across <strong>{allCategories.length} categories</strong>. 
+          Click auto-generate to create folder structure.
+        </div>
+
+        {/* Category preview */}
+        <div className="space-y-2 mb-6">
+          <h4 className="font-medium text-sm text-gray-600">Categories Preview:</h4>
+          {allCategories.sort().map(cat => (
+            <div key={cat} className="border rounded-lg">
+              <button 
+                onClick={() => toggleCategory(cat)}
+                className="w-full flex items-center gap-2 p-3 hover:bg-gray-50 text-left"
+              >
+                {expandedCategories.has(cat) ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                <FolderOpen className="h-4 w-4 text-amber-500" />
+                <span className="font-medium">{cat}</span>
+                <span className="text-xs text-gray-500 ml-auto">
+                  {categoryStats[cat].pages} pages, {categoryStats[cat].features} features
+                </span>
+              </button>
+              {expandedCategories.has(cat) && (
+                <div className="border-t bg-gray-50 p-3 space-y-1 max-h-48 overflow-auto">
+                  {pageTemplates.filter(p => p.category === cat).map(p => (
+                    <div key={p.id} className="text-sm text-gray-600 flex items-center gap-2">
+                      <span className="w-2 h-2 bg-blue-400 rounded-full" />
+                      {p.name}
+                    </div>
+                  ))}
+                  {featureTemplates.filter(f => f.category === cat).map(f => (
+                    <div key={f.id} className="text-sm text-gray-600 flex items-center gap-2">
+                      <span className="w-2 h-2 bg-purple-400 rounded-full" />
+                      {f.name} <span className="text-xs text-gray-400">(feature)</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {items.length > 0 && (
+          <div className="pt-4 border-t">
+            <h4 className="font-medium text-sm text-gray-600 mb-2">Current Navigation ({items.length} items):</h4>
+            <GenericNavEditor
+              title=""
+              configType="live_pages_source"
+              sourceSlugs={allSlugs}
+            />
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
