@@ -192,38 +192,55 @@ export default function BulkVerificationDialog({
         }
       }
 
-      setMarkProgress({ current: 0, total: testDataToUpdate.length });
-
-      // Call backend function for bulk update (avoids rate limits)
-      if (testDataToUpdate.length > 0) {
-        const response = await base44.functions.invoke('bulkVerifyTestData', {
-          testDataIds: testDataToUpdate
-        });
+      // Process in batches of 20 to avoid timeout
+      const BATCH_SIZE = 20;
+      let processed = 0;
+      
+      for (let i = 0; i < testDataToUpdate.length; i += BATCH_SIZE) {
+        const batch = testDataToUpdate.slice(i, i + BATCH_SIZE);
         
-        const result = response.data;
-        
-        // Map results back to items
-        result.success?.forEach?.(id => {
-          const item = itemMap.get(id);
-          if (item) successItems.push(item);
-        });
-        
-        result.failedItems?.forEach?.(({ id, error }) => {
-          const item = itemMap.get(id);
-          if (item) errorItems.push({ ...item, error });
-        });
-        
-        // If response structure is different, handle counts
-        if (typeof result.verified === 'number' && !result.success) {
-          // All passed items succeeded
-          for (const [id, item] of itemMap) {
-            if (!result.failedItems?.some(f => f.id === id)) {
-              successItems.push(item);
+        try {
+          const response = await base44.functions.invoke('bulkVerifyTestData', {
+            testDataIds: batch
+          });
+          
+          const result = response.data;
+          
+          // Map results back to items
+          result.success?.forEach?.(id => {
+            const item = itemMap.get(id);
+            if (item) successItems.push(item);
+          });
+          
+          result.failedItems?.forEach?.(({ id, error }) => {
+            const item = itemMap.get(id);
+            if (item) errorItems.push({ ...item, error });
+          });
+          
+          // If response structure is different, handle counts
+          if (typeof result.verified === 'number' && !result.success) {
+            for (const id of batch) {
+              if (!result.failedItems?.some(f => f.id === id)) {
+                const item = itemMap.get(id);
+                if (item) successItems.push(item);
+              }
             }
+          }
+        } catch (batchError) {
+          // Mark all in batch as failed
+          for (const id of batch) {
+            const item = itemMap.get(id);
+            if (item) errorItems.push({ ...item, error: batchError.message });
           }
         }
         
-        setMarkProgress({ current: testDataToUpdate.length, total: testDataToUpdate.length });
+        processed += batch.length;
+        setMarkProgress({ current: processed, total: testDataToUpdate.length });
+        
+        // Small delay between batches
+        if (i + BATCH_SIZE < testDataToUpdate.length) {
+          await new Promise(r => setTimeout(r, 500));
+        }
       }
       
       onComplete?.(); // Always refresh data
