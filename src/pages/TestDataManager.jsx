@@ -204,12 +204,17 @@ export default function TestDataManager() {
 
     return previewableItems.map(item => {
             const entities = getEntitiesForItem(item);
-            const testData = testDataSets.find(td => td.playground_item_id === item.id);
-            const recordCount = testData ? 
-              Object.values(testData.entity_data || {}).reduce((sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0) : 0;
+            // Match by playground_item_id - check both direct and nested in data
+            const testData = testDataSets.find(td => 
+              td.playground_item_id === item.id || td.data?.playground_item_id === item.id
+            );
 
-            // Get test status from TestData record
-            const testStatus = testData?.test_status || "pending";
+            // Get entity_data - check both direct and nested
+            const entityData = testData?.entity_data || testData?.data?.entity_data || {};
+            const recordCount = Object.values(entityData).reduce((sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0);
+
+            // Get test status from TestData record - check both direct and nested
+            const testStatus = testData?.test_status || testData?.data?.test_status || "pending";
 
             return {
               id: item.id,
