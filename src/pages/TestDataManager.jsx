@@ -291,10 +291,9 @@ export default function TestDataManager() {
 
   // Generate test data for items without data
   const startBulkGeneration = async () => {
-    console.log("startBulkGeneration called", { itemStatusList: itemStatusList.length, stats });
-    
+    // Include items even if entityCount is 0 - we'll generate placeholder data
     const itemsToProcess = itemStatusList
-      .filter(i => !i.hasTestData && i.entityCount > 0)
+      .filter(i => !i.hasTestData)
       .slice(0, settings.batchSize);
 
     console.log("itemsToProcess", itemsToProcess);
@@ -410,7 +409,7 @@ Return as JSON with entity names as keys and arrays of records as values.`,
 
     setIsGenerating(false);
     queryClient.invalidateQueries({ queryKey: ["testData"] });
-    const remaining = itemStatusList.filter(i => !i.hasTestData && i.entityCount > 0).length - settings.batchSize;
+    const remaining = itemStatusList.filter(i => !i.hasTestData).length - settings.batchSize;
     if (remaining > 0) {
       toast.success(`Batch complete: ${successCount} succeeded, ${errorCount} failed. ${remaining} items remaining.`);
     } else {
