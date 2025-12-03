@@ -77,11 +77,6 @@ export default function NavigationItemRow({
         </div>
       )}
 
-      <Switch
-        checked={item.is_visible !== false}
-        onCheckedChange={() => onToggleVisibility(item)}
-      />
-
       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
         {onMoveToParent && (
           <DropdownMenu>
@@ -134,6 +129,12 @@ export default function NavigationItemRow({
           <Trash2 className="h-4 w-4 text-red-500" />
         </Button>
       </div>
+
+      <Switch
+        checked={item.is_visible !== false}
+        onCheckedChange={() => onToggleVisibility(item)}
+        className={item.is_visible !== false ? "data-[state=checked]:bg-green-500" : "data-[state=unchecked]:bg-red-500"}
+      />
     </div>
   );
 }
