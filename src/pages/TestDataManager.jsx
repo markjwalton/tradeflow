@@ -464,13 +464,17 @@ Return as JSON with entity names as keys and arrays of records as values.`,
     }
 
     setIsGenerating(false);
-    queryClient.invalidateQueries({ queryKey: ["testData"] });
-    const remaining = itemStatusList.filter(i => !i.hasTestData).length - settings.batchSize;
-    if (remaining > 0) {
-      toast.success(`Batch complete: ${successCount} succeeded, ${errorCount} failed. ${remaining} items remaining.`);
-    } else {
-      toast.success(`Generation complete: ${successCount} succeeded, ${errorCount} failed`);
-    }
+      // Clear progress after a delay so user can see final state
+      setTimeout(() => {
+        setGenerationProgress({ current: 0, total: 0, items: [], phase: "" });
+      }, 5000);
+      queryClient.invalidateQueries({ queryKey: ["testData"] });
+      const remaining = itemStatusList.filter(i => !i.hasTestData).length - settings.batchSize;
+      if (remaining > 0) {
+        toast.success(`Batch complete: ${successCount} succeeded, ${errorCount} failed. ${remaining} items remaining.`);
+      } else {
+        toast.success(`Generation complete: ${successCount} succeeded, ${errorCount} failed`);
+      }
   };
 
   // Seed database in batches (background-friendly)
