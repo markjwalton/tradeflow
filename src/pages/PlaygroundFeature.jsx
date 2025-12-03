@@ -115,6 +115,12 @@ export default function PlaygroundFeature() {
     toast.success(`Reverted to version ${version}`);
   };
 
+  const { data: testDataSets = [] } = useQuery({
+    queryKey: ["testData", itemId],
+    queryFn: () => base44.entities.TestData.filter({ playground_item_id: itemId }),
+    enabled: !!itemId
+  });
+
   const runTests = async () => {
     if (!template) return;
     setIsRunning(true);
@@ -133,6 +139,7 @@ export default function PlaygroundFeature() {
         else if (test.check.includes("description")) result = description && description.length > 10;
         else if (test.check.includes("complexity")) result = complexity !== undefined;
         else if (test.check.includes("user_stories")) result = Array.isArray(user_stories) && user_stories.length > 0;
+        else if (test.check.includes("test_data")) result = testDataSets.length > 0;
         else result = true;
 
         if (result) passed.push(test.name);

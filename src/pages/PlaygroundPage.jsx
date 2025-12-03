@@ -110,6 +110,12 @@ export default function PlaygroundPage() {
     toast.success(`Reverted to version ${version}`);
   };
 
+  const { data: testDataSets = [] } = useQuery({
+    queryKey: ["testData", itemId],
+    queryFn: () => base44.entities.TestData.filter({ playground_item_id: itemId }),
+    enabled: !!itemId
+  });
+
   const runTests = async () => {
     if (!template) return;
     setIsRunning(true);
@@ -128,6 +134,7 @@ export default function PlaygroundPage() {
         else if (test.check.includes("category")) result = category !== undefined;
         else if (test.check.includes("components")) result = Array.isArray(components);
         else if (test.check.includes("entities_used")) result = Array.isArray(entities_used);
+        else if (test.check.includes("test_data")) result = testDataSets.length > 0;
         else result = true;
 
         if (result) passed.push(test.name);
