@@ -253,6 +253,7 @@ export default function GenericNavEditor({
   const handleAllocate = (slug) => {
     const name = slug.replace(/([A-Z])/g, ' $1').trim();
     const newItem = {
+      _id: generateId(),
       name,
       slug,
       icon: "File",
