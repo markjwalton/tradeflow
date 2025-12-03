@@ -6,6 +6,7 @@ import {
   TrendingUp, TrendingDown, Minus, ExternalLink, BarChart3, 
   PieChart, LineChart, Table, Sparkles, Info, ArrowRight
 } from "lucide-react";
+import TestDataCoverageWidget from "./TestDataCoverageWidget";
 
 // Stat Card Widget
 function StatCard({ config }) {
@@ -190,6 +191,11 @@ function TableCard({ config }) {
 // Main Widget Renderer
 export default function WidgetRenderer({ widget, customConfig }) {
   const config = { ...widget.config, ...customConfig };
+  
+  // Special handling for test data coverage widget
+  if (config?.dataSource === "test_data_coverage") {
+    return <TestDataCoverageWidget />;
+  }
   
   switch (widget.widget_type) {
     case "stat_card":
