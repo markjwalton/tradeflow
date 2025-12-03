@@ -274,16 +274,16 @@ function LivePagesNavEditor({ pageTemplates = [], featureTemplates = [] }) {
       for (const category of allCategories.sort()) {
         const folderId = `folder_${category.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
         folderMap[category] = folderId;
-        
+
         newItems.push({
-          _id: folderId,
+          _id: folderId,  // This _id MUST match what children reference in parent_id
           name: category,
           slug: "",
           icon: "FolderOpen",
           is_visible: true,
           parent_id: null,
           item_type: "folder",
-          default_collapsed: true,
+          default_collapsed: false,  // Start expanded so children are visible
           order: order++
         });
       }
