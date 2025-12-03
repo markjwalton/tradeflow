@@ -67,14 +67,17 @@ const commonProviders = [
   { value: "custom", label: "Custom API", baseUrl: "" },
 ];
 
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+
 // Known Base44 secrets that map to API providers
 const BASE44_SECRET_MAPPINGS = [
-  { secretName: "IDEAL_POSTCODES_API_KEY", provider: "ideal_postcodes", name: "Ideal Postcodes", baseUrl: "https://api.ideal-postcodes.co.uk/v1" },
-  { secretName: "GOOGLE_CLOUD_API_KEY", provider: "google", name: "Google Cloud", baseUrl: "https://maps.googleapis.com" },
-  { secretName: "OPENAI_API_KEY", provider: "openai", name: "OpenAI", baseUrl: "https://api.openai.com/v1" },
-  { secretName: "STRIPE_API_KEY", provider: "stripe", name: "Stripe", baseUrl: "https://api.stripe.com/v1" },
-  { secretName: "TWILIO_API_KEY", provider: "twilio", name: "Twilio", baseUrl: "https://api.twilio.com" },
-  { secretName: "SENDGRID_API_KEY", provider: "sendgrid", name: "SendGrid", baseUrl: "https://api.sendgrid.com/v3" },
+  { secretName: "IDEAL_POSTCODES_API_KEY", provider: "ideal_postcodes", name: "Ideal Postcodes", baseUrl: "https://api.ideal-postcodes.co.uk/v1", hasTestForm: true },
+  { secretName: "GOOGLE_CLOUD_API_KEY", provider: "google", name: "Google Cloud", baseUrl: "https://maps.googleapis.com", hasTestForm: false },
+  { secretName: "OPENAI_API_KEY", provider: "openai", name: "OpenAI", baseUrl: "https://api.openai.com/v1", hasTestForm: false },
+  { secretName: "STRIPE_API_KEY", provider: "stripe", name: "Stripe", baseUrl: "https://api.stripe.com/v1", hasTestForm: false },
+  { secretName: "TWILIO_API_KEY", provider: "twilio", name: "Twilio", baseUrl: "https://api.twilio.com", hasTestForm: false },
+  { secretName: "SENDGRID_API_KEY", provider: "sendgrid", name: "SendGrid", baseUrl: "https://api.sendgrid.com/v3", hasTestForm: false },
 ];
 
 export default function APIManager() {
@@ -98,8 +101,11 @@ export default function APIManager() {
     settings: {}
   });
   
-  // Base44 secrets that are set (passed from platform)
+  // Base44 secrets that are set (from platform)
   const base44Secrets = ["IDEAL_POSTCODES_API_KEY", "GOOGLE_CLOUD_API_KEY"];
+  
+  // Check which secrets have test forms available
+  const secretsWithTestForms = BASE44_SECRET_MAPPINGS.filter(m => m.hasTestForm && base44Secrets.includes(m.secretName));
 
   const { data: tenants = [] } = useQuery({
     queryKey: ["tenants"],
@@ -442,6 +448,14 @@ export default function APIManager() {
                             Linked to API Config
                           </Badge>
                         )}
+                        {isConfigured && mapping.hasTestForm && (
+                          <Link to={createPageUrl("LookupTestForms")}>
+                            <Button size="sm" variant="outline">
+                              <Zap className="h-3 w-3 mr-1" />
+                              Test API
+                            </Button>
+                          </Link>
+                        )}
                         {!isConfigured && (
                           <span className="text-xs text-gray-500">Not configured in Base44 settings</span>
                         )}
@@ -450,6 +464,24 @@ export default function APIManager() {
                   );
                 })}
               </div>
+              
+              {/* Quick link to test forms */}
+              {secretsWithTestForms.length > 0 && (
+                <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-center justify-between">
+                  <div>
+                    <h4 className="font-medium text-amber-800">Test Your Lookups</h4>
+                    <p className="text-sm text-amber-700">
+                      Test Address, Email, and Phone validation APIs with the configured Ideal Postcodes key.
+                    </p>
+                  </div>
+                  <Link to={createPageUrl("LookupTestForms")}>
+                    <Button className="bg-amber-600 hover:bg-amber-700">
+                      <Zap className="h-4 w-4 mr-2" />
+                      Open Lookup Test Forms
+                    </Button>
+                  </Link>
+                </div>
+              )}
               
               <div className="mt-6 p-4 bg-blue-50 rounded-lg">
                 <h4 className="font-medium text-blue-800 mb-2">How to add secrets</h4>
@@ -613,6 +645,14 @@ export default function APIManager() {
                         <RefreshCw className={`h-3 w-3 mr-1 ${testApiMutation.isPending ? "animate-spin" : ""}`} />
                         Test
                       </Button>
+                      {api.provider === "ideal_postcodes" && (
+                        <Link to={createPageUrl("LookupTestForms")}>
+                          <Button size="sm" variant="outline">
+                            <Zap className="h-3 w-3 mr-1" />
+                            Test Lookups
+                          </Button>
+                        </Link>
+                      )}
                       <Button size="sm" variant="outline" onClick={() => openEditor(api)}>
                         <Edit className="h-3 w-3 mr-1" />
                         Edit
