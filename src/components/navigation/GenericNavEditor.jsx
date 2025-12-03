@@ -266,6 +266,10 @@ export default function GenericNavEditor({
       return i;
     });
     saveMutation.mutate(newItems);
+    // Auto-expand the new parent to show the moved item
+    if (newParentId) {
+      setExpandedParents(prev => new Set([...prev, newParentId]));
+    }
     toast.success(newParentId ? "Item moved" : "Moved to top level");
   };
 
