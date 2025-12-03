@@ -176,33 +176,54 @@ export default function BulkVerificationDialog({
     const errorItems = [];
 
     try {
-      // Process one at a time with delay to avoid rate limits
-      for (let i = 0; i < passedItems.length; i++) {
-        const item = passedItems[i];
+      // Collect all test data IDs to update
+      const testDataToUpdate = [];
+      const itemMap = new Map();
+      
+      for (const item of passedItems) {
         const testData = testDataSets.find(td => 
           td.playground_item_id === item.id || td.data?.playground_item_id === item.id
         );
-        
         if (testData) {
-          try {
-            await base44.entities.TestData.update(testData.id, {
-              test_status: "verified",
-              verified_date: new Date().toISOString()
-            });
-            successItems.push(item);
-          } catch (e) {
-            errorItems.push({ ...item, error: e.message });
-          }
+          testDataToUpdate.push(testData.id);
+          itemMap.set(testData.id, item);
         } else {
           errorItems.push({ ...item, error: "No test data found" });
         }
+      }
+
+      setMarkProgress({ current: 0, total: testDataToUpdate.length });
+
+      // Call backend function for bulk update (avoids rate limits)
+      if (testDataToUpdate.length > 0) {
+        const response = await base44.functions.invoke('bulkVerifyTestData', {
+          testDataIds: testDataToUpdate
+        });
         
-        setMarkProgress({ current: i + 1, total: passedItems.length });
+        const result = response.data;
         
-        // Delay between each update to avoid rate limiting
-        if (i < passedItems.length - 1) {
-          await new Promise(r => setTimeout(r, 200));
+        // Map results back to items
+        result.success?.forEach?.(id => {
+          const item = itemMap.get(id);
+          if (item) successItems.push(item);
+        });
+        
+        result.failedItems?.forEach?.(({ id, error }) => {
+          const item = itemMap.get(id);
+          if (item) errorItems.push({ ...item, error });
+        });
+        
+        // If response structure is different, handle counts
+        if (typeof result.verified === 'number' && !result.success) {
+          // All passed items succeeded
+          for (const [id, item] of itemMap) {
+            if (!result.failedItems?.some(f => f.id === id)) {
+              successItems.push(item);
+            }
+          }
         }
+        
+        setMarkProgress({ current: testDataToUpdate.length, total: testDataToUpdate.length });
       }
       
       onComplete?.(); // Always refresh data
