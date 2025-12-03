@@ -340,6 +340,7 @@ export default function TestDataManager() {
 
     for (let i = 0; i < enrichedItems.length; i++) {
       const item = enrichedItems[i];
+      console.log(`Processing item ${i}: ${item.name}, entities:`, item.entities?.length || 0);
       
       setGenerationProgress(prev => ({
         ...prev,
@@ -351,6 +352,8 @@ export default function TestDataManager() {
 
       const entities = item.entities || [];
       if (entities.length === 0) {
+        console.log(`Item ${item.name} has no entities, marking as error`);
+        errorCount++;
         setGenerationProgress(prev => ({
           ...prev,
           current: i + 1,
