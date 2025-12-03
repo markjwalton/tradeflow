@@ -269,14 +269,12 @@ function LivePagesNavEditor({ pageTemplates = [], featureTemplates = [] }) {
       const newItems = [];
       let order = 0;
 
-      // Create category folders first, store folder IDs by category name
-      const categoryFolderIds = {};
-      
+      // First pass: Create folder objects with stable IDs
+      const folderMap = {};
       for (const category of allCategories.sort()) {
-        const folderId = generateId();
-        categoryFolderIds[category] = folderId;
+        const folderId = `folder_${category.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
+        folderMap[category] = folderId;
         
-        // Add folder
         newItems.push({
           _id: folderId,
           name: category,
@@ -290,35 +288,34 @@ function LivePagesNavEditor({ pageTemplates = [], featureTemplates = [] }) {
         });
       }
 
-      // Now add pages using the stored folder IDs
-      for (const category of allCategories.sort()) {
-        const folderId = categoryFolderIds[category];
-        
-        // Add pages in this category
-        const pagesInCategory = pageTemplates.filter(p => p.category === category);
-        for (const page of pagesInCategory.sort((a, b) => a.name.localeCompare(b.name))) {
+      // Second pass: Add pages with correct parent_id references
+      for (const page of pageTemplates.filter(p => p.category).sort((a, b) => a.name.localeCompare(b.name))) {
+        const parentId = folderMap[page.category];
+        if (parentId) {
           newItems.push({
-            _id: generateId(),
+            _id: `page_${page.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}`,
             name: page.name,
             slug: page.name,
             icon: "File",
             is_visible: true,
-            parent_id: folderId,
+            parent_id: parentId,
             item_type: "page",
             order: order++
           });
         }
+      }
 
-        // Add features in this category
-        const featuresInCategory = featureTemplates.filter(f => f.category === category);
-        for (const feature of featuresInCategory.sort((a, b) => a.name.localeCompare(b.name))) {
+      // Third pass: Add features with correct parent_id references
+      for (const feature of featureTemplates.filter(f => f.category).sort((a, b) => a.name.localeCompare(b.name))) {
+        const parentId = folderMap[feature.category];
+        if (parentId) {
           newItems.push({
-            _id: generateId(),
+            _id: `feature_${feature.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}`,
             name: feature.name,
             slug: `feature:${feature.name}`,
             icon: "Zap",
             is_visible: true,
-            parent_id: folderId,
+            parent_id: parentId,
             item_type: "page",
             order: order++
           });
@@ -341,7 +338,7 @@ function LivePagesNavEditor({ pageTemplates = [], featureTemplates = [] }) {
       }
 
       queryClient.invalidateQueries({ queryKey: ["navConfig", "live_pages_source"] });
-      toast.success(`Generated ${allCategories.length} category folders with ${allSlugs.length} items`);
+      toast.success(`Generated ${allCategories.length} category folders with ${newItems.length - allCategories.length} items`);
     } catch (err) {
       toast.error("Failed to generate: " + err.message);
     } finally {
