@@ -1,5 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -20,16 +22,24 @@ Deno.serve(async (req) => {
       failed: []
     };
 
-    // Process in service role to avoid rate limits on individual user
-    for (const id of testDataIds) {
+    const verifiedDate = new Date().toISOString();
+
+    // Process with delays to avoid rate limits
+    for (let i = 0; i < testDataIds.length; i++) {
+      const id = testDataIds[i];
       try {
         await base44.asServiceRole.entities.TestData.update(id, {
           test_status: "verified",
-          verified_date: new Date().toISOString()
+          verified_date: verifiedDate
         });
         results.success.push(id);
       } catch (e) {
         results.failed.push({ id, error: e.message });
+      }
+      
+      // Add delay every 3 updates to stay under rate limit
+      if ((i + 1) % 3 === 0 && i < testDataIds.length - 1) {
+        await sleep(1000);
       }
     }
 
