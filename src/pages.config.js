@@ -49,6 +49,7 @@ import TestDataManager from './pages/TestDataManager';
 import CMSManager from './pages/CMSManager';
 import APIManager from './pages/APIManager';
 import PerformanceMonitor from './pages/PerformanceMonitor';
+import SecurityMonitor from './pages/SecurityMonitor';
 import __Layout from './Layout.jsx';
 
 
@@ -104,6 +105,7 @@ export const PAGES = {
     "CMSManager": CMSManager,
     "APIManager": APIManager,
     "PerformanceMonitor": PerformanceMonitor,
+    "SecurityMonitor": SecurityMonitor,
 }
 
 export const pagesConfig = {
