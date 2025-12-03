@@ -15,6 +15,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -22,7 +27,9 @@ import {
 } from "@/components/ui/dialog";
 import { 
   Database, Plus, Save, Loader2, Sparkles, Wand2,
-  Trash2, Edit, Layout, Zap, Shield, Play, RefreshCw
+  Trash2, Edit, Layout, Zap, Shield, Play, RefreshCw,
+  ChevronDown, ChevronRight, CheckCircle2, AlertTriangle,
+  Clock, Target, FlaskConical
 } from "lucide-react";
 import { toast } from "sonner";
 
