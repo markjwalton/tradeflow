@@ -86,6 +86,194 @@ const DEFAULT_THRESHOLDS = {
   bundle_size: { warning: 500, critical: 1000, unit: "kb" }
 };
 
+// Severity order for sorting
+const severityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
+
+// Grouped Issues View Component
+function IssuesGroupedView({ issues, generateAIRecommendation, isGeneratingRecommendations, createRoadmapMutation, updateIssueMutation }) {
+  const [expandedSeverities, setExpandedSeverities] = useState(new Set(["critical", "high"]));
+
+  // Group issues by severity
+  const groupedIssues = useMemo(() => {
+    const groups = {};
+    issues.forEach(issue => {
+      const severity = issue.severity || "medium";
+      if (!groups[severity]) {
+        groups[severity] = { issues: [], open: 0, resolved: 0, withAI: 0, inRoadmap: 0 };
+      }
+      groups[severity].issues.push(issue);
+      if (issue.status === "open") groups[severity].open++;
+      if (issue.status === "resolved") groups[severity].resolved++;
+      if (issue.ai_recommendation) groups[severity].withAI++;
+      if (issue.roadmap_item_id) groups[severity].inRoadmap++;
+    });
+    return groups;
+  }, [issues]);
+
+  const toggleSeverity = (severity) => {
+    setExpandedSeverities(prev => {
+      const next = new Set(prev);
+      if (next.has(severity)) next.delete(severity);
+      else next.add(severity);
+      return next;
+    });
+  };
+
+  // Sort by severity order
+  const sortedSeverities = Object.keys(groupedIssues).sort((a, b) => 
+    (severityOrder[a] ?? 99) - (severityOrder[b] ?? 99)
+  );
+
+  const severityIcons = {
+    critical: <XCircle className="h-5 w-5 text-red-600" />,
+    high: <AlertTriangle className="h-5 w-5 text-orange-600" />,
+    medium: <AlertTriangle className="h-5 w-5 text-amber-600" />,
+    low: <Circle className="h-5 w-5 text-blue-600" />
+  };
+
+  return (
+    <div className="space-y-2">
+      {sortedSeverities.map(severity => {
+        const group = groupedIssues[severity];
+        const isExpanded = expandedSeverities.has(severity);
+        
+        return (
+          <Card key={severity} className={
+            severity === "critical" ? "border-red-200" :
+            severity === "high" ? "border-orange-200" : ""
+          }>
+            <button
+              onClick={() => toggleSeverity(severity)}
+              className="w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+            >
+              <div className="flex items-center gap-4">
+                {isExpanded ? (
+                  <ChevronDown className="h-5 w-5 text-gray-400" />
+                ) : (
+                  <ChevronRight className="h-5 w-5 text-gray-400" />
+                )}
+                <div className="flex items-center gap-2">
+                  {severityIcons[severity]}
+                  <span className="font-medium capitalize">{severity} Severity</span>
+                </div>
+                <Badge variant="outline">{group.issues.length} issues</Badge>
+              </div>
+              
+              <div className="flex items-center gap-3">
+                {group.open > 0 && (
+                  <Badge className="bg-amber-100 text-amber-700">{group.open} Open</Badge>
+                )}
+                {group.resolved > 0 && (
+                  <Badge className="bg-green-100 text-green-700">{group.resolved} Resolved</Badge>
+                )}
+                {group.withAI > 0 && (
+                  <Badge className="bg-purple-100 text-purple-700">
+                    <Sparkles className="h-3 w-3 mr-1" />
+                    {group.withAI} AI
+                  </Badge>
+                )}
+                {group.inRoadmap > 0 && (
+                  <Badge className="bg-blue-100 text-blue-700">
+                    <Flag className="h-3 w-3 mr-1" />
+                    {group.inRoadmap} Roadmap
+                  </Badge>
+                )}
+              </div>
+            </button>
+            
+            {isExpanded && (
+              <div className="border-t divide-y">
+                {group.issues.map(issue => (
+                  <div key={issue.id} className={`p-4 ${issue.status === "resolved" ? "opacity-60 bg-gray-50" : ""}`}>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-medium">{issue.resource_name}</h3>
+                          <Badge variant="outline">{issue.issue_type.replace(/_/g, " ")}</Badge>
+                          <Badge variant="outline">{issue.status}</Badge>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-2">{issue.description}</p>
+                        
+                        {issue.ai_recommendation && (
+                          <div className="bg-purple-50 p-3 rounded-lg mt-2">
+                            <div className="flex items-center gap-2 text-purple-700 text-sm font-medium mb-1">
+                              <Sparkles className="h-4 w-4" />
+                              AI Recommendation
+                            </div>
+                            <p className="text-sm text-purple-900">{issue.ai_recommendation}</p>
+                            {issue.suggested_actions?.length > 0 && (
+                              <ul className="mt-2 space-y-1">
+                                {issue.suggested_actions.map((action, i) => (
+                                  <li key={i} className="text-sm text-purple-800 flex items-start gap-2">
+                                    <ArrowRight className="h-3 w-3 mt-1 flex-shrink-0" />
+                                    {action}
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
+                        )}
+
+                        {issue.roadmap_item_id && (
+                          <div className="mt-2">
+                            <Link to={createPageUrl("RoadmapManager") + `?item=${issue.roadmap_item_id}`}>
+                              <Badge className="bg-blue-100 text-blue-700 cursor-pointer">
+                                <Lightbulb className="h-3 w-3 mr-1" />
+                                View in Roadmap
+                              </Badge>
+                            </Link>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex flex-col gap-2 ml-4">
+                        {!issue.ai_recommendation && (
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={(e) => { e.stopPropagation(); generateAIRecommendation(issue); }}
+                            disabled={isGeneratingRecommendations}
+                          >
+                            {isGeneratingRecommendations ? (
+                              <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                            ) : (
+                              <Sparkles className="h-3 w-3 mr-1" />
+                            )}
+                            Get AI Fix
+                          </Button>
+                        )}
+                        {!issue.roadmap_item_id && issue.status === "open" && (
+                          <Button 
+                            size="sm"
+                            onClick={(e) => { e.stopPropagation(); createRoadmapMutation.mutate(issue); }}
+                          >
+                            <Flag className="h-3 w-3 mr-1" />
+                            Add to Roadmap
+                          </Button>
+                        )}
+                        {issue.status === "open" && (
+                          <Button 
+                            size="sm" 
+                            variant="ghost"
+                            onClick={(e) => { e.stopPropagation(); updateIssueMutation.mutate({ id: issue.id, data: { status: "resolved", resolved_date: new Date().toISOString() } }); }}
+                          >
+                            <CheckCircle2 className="h-3 w-3 mr-1" />
+                            Resolve
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
+        );
+      })}
+    </div>
+  );
+}
+
 // Grouped Metrics View Component
 function MetricsGroupedView({ metrics, getThreshold }) {
   const [expandedTypes, setExpandedTypes] = useState(new Set());
