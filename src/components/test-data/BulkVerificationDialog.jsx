@@ -174,37 +174,34 @@ export default function BulkVerificationDialog({
     
     const successItems = [];
     const errorItems = [];
-    const batchSize = 5; // Smaller batch to avoid rate limits
 
     try {
-      for (let i = 0; i < passedItems.length; i += batchSize) {
-        const batch = passedItems.slice(i, i + batchSize);
+      // Process one at a time with delay to avoid rate limits
+      for (let i = 0; i < passedItems.length; i++) {
+        const item = passedItems[i];
+        const testData = testDataSets.find(td => 
+          td.playground_item_id === item.id || td.data?.playground_item_id === item.id
+        );
         
-        // Process sequentially within batch to avoid rate limits
-        for (const item of batch) {
-          const testData = testDataSets.find(td => 
-            td.playground_item_id === item.id || td.data?.playground_item_id === item.id
-          );
-          if (testData) {
-            try {
-              await base44.entities.TestData.update(testData.id, {
-                test_status: "verified",
-                verified_date: new Date().toISOString()
-              });
-              successItems.push(item);
-            } catch (e) {
-              errorItems.push({ ...item, error: e.message });
-            }
-          } else {
-            errorItems.push({ ...item, error: "No test data found" });
+        if (testData) {
+          try {
+            await base44.entities.TestData.update(testData.id, {
+              test_status: "verified",
+              verified_date: new Date().toISOString()
+            });
+            successItems.push(item);
+          } catch (e) {
+            errorItems.push({ ...item, error: e.message });
           }
+        } else {
+          errorItems.push({ ...item, error: "No test data found" });
         }
         
-        setMarkProgress({ current: Math.min(i + batchSize, passedItems.length), total: passedItems.length });
+        setMarkProgress({ current: i + 1, total: passedItems.length });
         
-        // Delay between batches to avoid rate limiting
-        if (i + batchSize < passedItems.length) {
-          await new Promise(r => setTimeout(r, 500));
+        // Delay between each update to avoid rate limiting
+        if (i < passedItems.length - 1) {
+          await new Promise(r => setTimeout(r, 200));
         }
       }
       
