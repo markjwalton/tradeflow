@@ -356,7 +356,7 @@ export default function Layout({ children, currentPageName }) {
   const iconMap = {
     Home, Navigation, Building2, Shield, Package, GitBranch, Database, 
     Layout: LayoutIcon, Zap, Workflow, Settings, Lightbulb, Globe, Key, Gauge, BookOpen, FlaskConical,
-    Folder, FolderOpen
+    Folder, FolderOpen, LayoutDashboard
   };
 
   // Toggle folder expansion
