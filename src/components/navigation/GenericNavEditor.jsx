@@ -351,13 +351,18 @@ export default function GenericNavEditor({
       };
 
   const handleUnallocate = (item) => {
-        // Remove by _id and remove children by parent_id, ensuring all remaining items keep _id
-        const newItems = items
-          .filter(i => i._id !== item._id && i.parent_id !== item._id)
-          .map(i => ({ ...i, _id: i._id || generateId() }));
-        saveMutation.mutate(newItems);
-        toast.success(`${item.name} removed from navigation`);
-      };
+    // Remove only this item, move its children to top level (set parent_id to null)
+    const newItems = items
+      .filter(i => i._id !== item._id)
+      .map(i => ({
+        ...i,
+        _id: i._id || generateId(),
+        // If this child's parent was the removed item, move to top level
+        parent_id: i.parent_id === item._id ? null : i.parent_id
+      }));
+    saveMutation.mutate(newItems);
+    toast.success(`${item.name} removed from navigation`);
+  };
 
   const toggleParent = (slug) => {
     setExpandedParents(prev => {
