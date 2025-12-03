@@ -381,23 +381,24 @@ export default function NavigationManager() {
     return flatList;
   };
 
-  const renderNavigationEditor = () => (
+  const renderNavigationEditor = (mode = "tenant") => (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Navigation Manager</CardTitle>
+        <CardTitle>{mode === "live" ? "Live Pages Navigation" : "Tenant Navigation"}</CardTitle>
         <div className="flex items-center gap-4">
-          {isGlobalAdmin ? (
+          {mode === "tenant" && isGlobalAdmin && (
             <TenantSelector
               tenants={tenants}
               selectedTenantId={selectedTenantId}
               onSelectTenant={setSelectedTenantId}
             />
-          ) : (
+          )}
+          {mode === "tenant" && !isGlobalAdmin && (
             <span className="text-sm text-gray-500">
               Editing: {tenantContext?.tenantName || "Your Tenant"}
             </span>
           )}
-          {selectedTenantId !== "__global__" && navItems.length === 0 && (
+          {mode === "tenant" && selectedTenantId !== "__global__" && navItems.length === 0 && (
             <Button variant="outline" onClick={() => copyGlobalMutation.mutate(selectedTenantId)}>
               <Copy className="h-4 w-4 mr-2" />
               Copy from Global
@@ -550,31 +551,29 @@ export default function NavigationManager() {
       {isGlobalAdmin ? (
         <>
           <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              {["admin", "live", "tenant"].map((tab) => (
-                <Button
-                  key={tab}
-                  variant={activeTab === tab ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setActiveTab(tab)}
-                  className="gap-2"
-                >
-                  {tab === "live" && <FileCode className="h-4 w-4" />}
-                  {tab === "admin" ? "Admin Console" : tab === "live" ? "Live Pages" : "Tenant Navigation"}
-                </Button>
-              ))}
-            </div>
+            <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val)}>
+              <TabsList>
+                <TabsTrigger value="admin">Admin Console</TabsTrigger>
+                <TabsTrigger value="live">
+                  <FileCode className="h-4 w-4 mr-2" />
+                  Live Pages
+                </TabsTrigger>
+                <TabsTrigger value="tenant">Tenant Navigation</TabsTrigger>
+              </TabsList>
+            </Tabs>
             <Button variant="ghost" size="icon" onClick={() => setShowSettings(true)}>
               <Settings className="h-5 w-5" />
             </Button>
           </div>
 
-          {activeTab === "admin" && <AdminConsoleNavEditor key="admin" />}
-          {activeTab === "live" && <div key="live">{renderNavigationEditor()}</div>}
-          {activeTab === "tenant" && <div key="tenant">{renderNavigationEditor()}</div>}
+          <div>
+            {activeTab === "admin" && <AdminConsoleNavEditor />}
+            {activeTab === "live" && renderNavigationEditor("live")}
+            {activeTab === "tenant" && renderNavigationEditor("tenant")}
+          </div>
         </>
       ) : (
-        renderNavigationEditor()
+        renderNavigationEditor("tenant")
       )}
 
       <PageSettingsDialog
