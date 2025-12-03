@@ -204,21 +204,27 @@ export default function GenericNavEditor({
       toast.error("Page slug is required");
       return;
     }
-    
+
+    // Ensure item_type has a value
+    const itemToSave = {
+      ...formData,
+      item_type: formData.item_type || "page"
+    };
+
     let newItems;
     if (editingItem !== null) {
       // Update by _id
       newItems = items.map((item) => {
         if (item._id === editingItem) {
-          return { ...formData, _id: item._id, order: item.order };
+          return { ...itemToSave, _id: item._id, order: item.order };
         }
         return item;
       });
     } else {
       // Create new with unique _id
-      newItems = [...items, { ...formData, _id: generateId(), order: items.length }];
+      newItems = [...items, { ...itemToSave, _id: generateId(), order: items.length }];
     }
-    
+
     saveMutation.mutate(newItems);
     closeDialog();
   };
