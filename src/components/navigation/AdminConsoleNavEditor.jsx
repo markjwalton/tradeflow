@@ -376,18 +376,41 @@ export default function AdminConsoleNavEditor() {
                   <FolderOpen className="h-4 w-4" />
                   Unallocated Pages ({unallocatedSlugs.length})
                 </h3>
-                <div className="flex flex-wrap gap-2">
+                <div className="space-y-2">
                   {unallocatedSlugs.map(slug => (
-                    <Button 
+                    <div 
                       key={slug} 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => handleAllocate(slug)}
-                      className="gap-1"
+                      className="group flex items-center gap-3 p-3 bg-gray-50 border border-dashed border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"
                     >
-                      <Plus className="h-3 w-3" />
-                      {slug.replace(/([A-Z])/g, ' $1').trim()}
-                    </Button>
+                      <div className="w-5" />
+                      <div className="flex items-center gap-2 flex-1">
+                        <File className="h-4 w-4 text-gray-400" />
+                        <span className="font-medium text-gray-600">{slug.replace(/([A-Z])/g, ' $1').trim()}</span>
+                      </div>
+                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          onClick={() => {
+                            const name = slug.replace(/([A-Z])/g, ' $1').trim();
+                            setEditingItem(null);
+                            setFormData({ name, slug, icon: "File", is_visible: true, parent_id: null, item_type: "page", default_collapsed: false });
+                            setShowDialog(true);
+                          }}
+                          title="Edit allocation"
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          onClick={() => handleAllocate(slug)}
+                          title="Quick allocate"
+                        >
+                          <Plus className="h-4 w-4 text-green-500" />
+                        </Button>
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
