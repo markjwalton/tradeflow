@@ -201,14 +201,31 @@ export default function NavigationItemForm({
 
           {formData.item_type === "page" && (
             <div className="space-y-2">
-              <Label htmlFor="page_url">Page URL</Label>
-              <Input
-                id="page_url"
-                value={formData.page_url}
-                onChange={(e) => setFormData({ ...formData, page_url: e.target.value })}
-                placeholder="/dashboard or /settings/profile"
-                required
-              />
+              <Label htmlFor="page_url">Page</Label>
+              <Select 
+                value={formData.page_url} 
+                onValueChange={(val) => setFormData({ ...formData, page_url: val })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a page..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {pageTemplates.map((page) => (
+                    <SelectItem key={page.id} value={page.name}>
+                      {page.name}
+                      {page.category && <span className="text-gray-400 ml-2">({page.category})</span>}
+                    </SelectItem>
+                  ))}
+                  <SelectItem value="__custom__">Custom URL...</SelectItem>
+                </SelectContent>
+              </Select>
+              {formData.page_url === "__custom__" && (
+                <Input
+                  placeholder="/custom-page-url"
+                  onChange={(e) => setFormData({ ...formData, page_url: e.target.value })}
+                  className="mt-2"
+                />
+              )}
             </div>
           )}
           
