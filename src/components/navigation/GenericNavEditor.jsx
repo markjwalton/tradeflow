@@ -481,7 +481,7 @@ export default function GenericNavEditor({
                                       <MoveRight className="h-4 w-4" />
                                     </Button>
                                   </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end" className="w-56">
+                                  <DropdownMenuContent align="end" className="w-56 max-h-64 overflow-y-auto">
                                     <DropdownMenuItem 
                                       onClick={() => handleMoveToParent(item, null)}
                                       disabled={!item.parent_id}
