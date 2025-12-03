@@ -212,14 +212,26 @@ Generate realistic, varied test data. Return as a JSON array of 3 objects.`,
 
     try {
       // Build a combined prompt for all entities for efficiency
-      const entitySchemas = selectedEntities.map(entity => ({
-        name: entity.name,
-        properties: entity.schema?.properties || {},
-        required: entity.schema?.required || []
-      }));
+      const entitySchemas = selectedEntities.map(entity => {
+        // Try to get schema from entity template or working_data
+        const schema = entity.schema || entity.working_data?.schema || {};
+        return {
+          name: entity.name,
+          properties: schema.properties || {},
+          required: schema.required || []
+        };
+      });
 
-      const result = await base44.integrations.Core.InvokeLLM({
-        prompt: `Generate realistic test data for a business application. Create 3 sample records for EACH entity below.
+      // Check if we have any valid schemas
+      const hasValidSchemas = entitySchemas.some(e => Object.keys(e.properties).length > 0);
+      
+      if (!hasValidSchemas) {
+        // Generate generic test data if no schemas defined
+        toast.info("No entity schemas found - generating generic sample data");
+      }
+
+      const prompt = hasValidSchemas 
+        ? `Generate realistic test data for a business application. Create 3 sample records for EACH entity below.
 
 Entities to generate data for:
 ${entitySchemas.map(e => `
@@ -232,10 +244,18 @@ Requirements:
 - Generate 3 realistic, varied records per entity
 - Fill ALL required fields
 - Fill optional fields with realistic data where appropriate
-- Use consistent relationships (e.g., if Customer and Project entities exist, projects should reference realistic customer data)
+- Use consistent relationships
 - Use realistic names, dates, numbers, and statuses
 
-Return as JSON with entity names as keys and arrays of records as values.`,
+Return as JSON with entity names as keys and arrays of records as values.`
+        : `Generate realistic test data for these entities: ${entitySchemas.map(e => e.name).join(", ")}.
+
+For each entity, create 3 sample records with typical fields you'd expect (id, name, description, status, dates, etc.).
+
+Return as JSON with entity names as keys and arrays of records as values.`;
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
         response_json_schema: {
           type: "object",
           properties: {
@@ -250,7 +270,7 @@ Return as JSON with entity names as keys and arrays of records as values.`,
         }
       });
 
-      const allData = result.data || {};
+      const allData = result.data || result || {};
       
       // Ensure all entities have at least an empty array
       selectedEntities.forEach(entity => {
@@ -259,13 +279,20 @@ Return as JSON with entity names as keys and arrays of records as values.`,
         }
       });
 
-      setFormData(prev => ({
-        ...prev,
-        entity_data: allData
-      }));
-      toast.success(`Generated test data for ${Object.keys(allData).length} entities`);
+      const recordCount = Object.values(allData).reduce((sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0);
+      
+      if (recordCount === 0) {
+        toast.error("AI returned no data - try again");
+      } else {
+        setFormData(prev => ({
+          ...prev,
+          entity_data: allData
+        }));
+        toast.success(`Generated ${recordCount} records for ${Object.keys(allData).length} entities`);
+      }
     } catch (error) {
-      toast.error("Failed to generate test data");
+      console.error("AI generation error:", error);
+      toast.error("Failed to generate: " + (error.message || "Unknown error"));
     } finally {
       setIsGenerating(false);
     }
