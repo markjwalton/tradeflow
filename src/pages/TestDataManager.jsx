@@ -699,6 +699,42 @@ Return as JSON with entity names as keys and arrays of records as values.`,
                     </p>
                   )}
                   <div className="flex gap-2 ml-auto">
+                    <Button 
+                      className="bg-green-600 hover:bg-green-700"
+                      onClick={async () => {
+                        // Get all successfully generated items and insert their data
+                        const successItems = bulkProgress.items.filter(i => i.status === "success");
+                        let totalInserted = 0;
+                        let errors = [];
+                        
+                        // Refetch test data to get the latest
+                        const allTestData = await base44.entities.TestData.list();
+                        
+                        for (const item of successItems) {
+                          const testData = allTestData.find(td => td.playground_item_id === item.id);
+                          if (!testData?.entity_data) continue;
+                          
+                          for (const [entityName, records] of Object.entries(testData.entity_data)) {
+                            if (!Array.isArray(records) || records.length === 0) continue;
+                            try {
+                              await base44.entities[entityName].bulkCreate(records);
+                              totalInserted += records.length;
+                            } catch (e) {
+                              errors.push(`${entityName}: ${e.message}`);
+                            }
+                          }
+                        }
+                        
+                        if (errors.length > 0) {
+                          toast.error(`Inserted ${totalInserted} records. Errors: ${errors.slice(0, 3).join(", ")}${errors.length > 3 ? "..." : ""}`);
+                        } else {
+                          toast.success(`Inserted ${totalInserted} records into real database`);
+                        }
+                      }}
+                    >
+                      <Database className="h-4 w-4 mr-2" />
+                      Insert All to Real DB
+                    </Button>
                     {bulkProgress.remaining > 0 && (
                       <Button 
                         variant="outline"
