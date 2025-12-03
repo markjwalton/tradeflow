@@ -59,9 +59,25 @@ export default function NavigationManager() {
   const allocatedSlugs = navItems.map(i => i.page_url).filter(Boolean);
   const unallocatedSlugs = ALL_LIVE_PAGE_SLUGS.filter(slug => !allocatedSlugs.includes(slug));
 
-  // Get parent items
+  // Get parent items - support 3 levels
   const parentItems = navItems.filter(i => !i.parent_id);
   const getChildren = (parentId) => navItems.filter(i => i.parent_id === parentId).sort((a, b) => (a.order || 0) - (b.order || 0));
+  
+  // Get depth of an item (for limiting nesting to 3 levels)
+  const getItemDepth = (item) => {
+    let depth = 0;
+    let currentParentId = item.parent_id;
+    while (currentParentId && depth < 3) {
+      const parent = navItems.find(i => i.id === currentParentId);
+      if (parent) {
+        depth++;
+        currentParentId = parent.parent_id;
+      } else {
+        break;
+      }
+    }
+    return depth;
+  };
 
   const toggleExpand = (itemId) => {
     setExpandedItems(prev => {
@@ -271,20 +287,24 @@ export default function NavigationManager() {
   };
 
   const getParentOptions = (currentItem) => {
+    // Support 3 levels: top level can have children, children can have grandchildren
     const topLevel = navItems.filter(i => !i.parent_id && i.id !== currentItem?.id);
     const level1 = navItems.filter(i => i.parent_id && topLevel.some(t => t.id === i.parent_id) && i.id !== currentItem?.id);
+    const level2 = navItems.filter(i => i.parent_id && level1.some(l => l.id === i.parent_id) && i.id !== currentItem?.id);
     return [
       ...topLevel.map(i => ({ ...i, depth: 0 })),
-      ...level1.map(i => ({ ...i, depth: 1 }))
+      ...level1.map(i => ({ ...i, depth: 1 })),
+      ...level2.map(i => ({ ...i, depth: 2 }))
     ];
   };
 
-  // Build flat list for rendering
+  // Build flat list for rendering - support 3 levels
   const buildFlatList = () => {
     const flatList = [];
     const topLevel = navItems.filter(i => !i.parent_id).sort((a, b) => (a.order || 0) - (b.order || 0));
     
     const addItems = (items, depth) => {
+      if (depth > 2) return; // Max 3 levels (0, 1, 2)
       items.forEach(item => {
         const children = getChildren(item.id);
         flatList.push({ ...item, depth, hasChildren: children.length > 0 });
