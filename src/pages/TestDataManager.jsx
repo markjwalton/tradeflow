@@ -241,21 +241,30 @@ Return as JSON array.`,
   );
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
+    <div className="min-h-screen bg-gray-50">
+      {/* Top Header Bar */}
+      <header className="h-14 bg-white border-b flex items-center justify-between px-4">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate(createPageUrl("LivePreview"))}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-              <Database className="h-6 w-6 text-blue-600" />
-              Test Data Manager
-            </h1>
-            <p className="text-gray-500">Configure test data for live previews</p>
+          <Link to={createPageUrl("PlaygroundSummary")}>
+            <Button variant="ghost" size="sm" className="gap-2">
+              <ArrowLeft className="h-4 w-4" />
+              Back to Playground
+            </Button>
+          </Link>
+          <div className="flex items-center gap-2">
+            <Database className="h-5 w-5 text-blue-600" />
+            <span className="font-semibold">Test Data Manager</span>
           </div>
         </div>
-      </div>
+        <Link to={createPageUrl("LivePreview")}>
+          <Button variant="outline" size="sm">
+            <Eye className="h-4 w-4 mr-2" />
+            Live Preview
+          </Button>
+        </Link>
+      </header>
+
+      <div className="p-6">
 
       {/* Item Selector */}
       <Card className="mb-6">
@@ -467,6 +476,7 @@ Return as JSON array.`,
           </div>
         </DialogContent>
       </Dialog>
+      </div>
     </div>
   );
 }
