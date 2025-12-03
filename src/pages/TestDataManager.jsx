@@ -488,5 +488,6 @@ Return as JSON with entity names as keys and arrays of records as values.`,
           </div>
         </DialogContent>
       </Dialog>
+    </div>
   );
 }
