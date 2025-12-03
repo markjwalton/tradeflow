@@ -21,8 +21,9 @@ import {
 } from "@/components/ui/dialog";
 import { 
   ArrowLeft, Database, Plus, Save, Loader2, Sparkles, Wand2,
-  Trash2, Edit, Layout, Zap, Eye, Copy
+  Trash2, Edit, Layout, Zap, Eye, Copy, CheckCircle2, XCircle, Circle
 } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
@@ -42,6 +43,8 @@ export default function TestDataManager() {
     notes: ""
   });
   const [isGenerating, setIsGenerating] = useState(false);
+  const [showBulkGeneration, setShowBulkGeneration] = useState(false);
+  const [bulkProgress, setBulkProgress] = useState({ current: 0, total: 0, items: [] });
 
   const { data: playgroundItems = [] } = useQuery({
     queryKey: ["playgroundItems"],
@@ -419,6 +422,210 @@ Return as JSON with entity names as keys and arrays of records as values.`,
           </CardContent>
         </Card>
       )}
+
+      {/* Bulk Generation Dialog */}
+      <Dialog open={showBulkGeneration} onOpenChange={(o) => !isGenerating && setShowBulkGeneration(o)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-purple-600" />
+              AI Generate All Test Data
+            </DialogTitle>
+          </DialogHeader>
+          
+          {bulkProgress.total === 0 ? (
+            <div className="space-y-4">
+              <p className="text-gray-600">
+                This will generate test data for all pages and features that don't have test data yet.
+              </p>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <p className="text-sm font-medium mb-2">Items to process:</p>
+                <div className="max-h-60 overflow-y-auto space-y-1">
+                  {previewableItems.filter(item => {
+                    const entities = getEntitiesForItem(item.id);
+                    const hasTestData = testDataSets.some(td => td.playground_item_id === item.id);
+                    return entities.length > 0 && !hasTestData;
+                  }).map(item => (
+                    <div key={item.id} className="flex items-center gap-2 text-sm">
+                      {item.source_type === "page" ? (
+                        <Layout className="h-3 w-3 text-blue-600" />
+                      ) : (
+                        <Zap className="h-3 w-3 text-amber-600" />
+                      )}
+                      {item.source_name}
+                    </div>
+                  ))}
+                  {previewableItems.filter(item => {
+                    const entities = getEntitiesForItem(item.id);
+                    const hasTestData = testDataSets.some(td => td.playground_item_id === item.id);
+                    return entities.length > 0 && !hasTestData;
+                  }).length === 0 && (
+                    <p className="text-gray-500">All items already have test data!</p>
+                  )}
+                </div>
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setShowBulkGeneration(false)}>
+                  Cancel
+                </Button>
+                <Button 
+                  className="bg-purple-600 hover:bg-purple-700"
+                  onClick={async () => {
+                    const itemsToProcess = previewableItems.filter(item => {
+                      const entities = getEntitiesForItem(item.id);
+                      const hasTestData = testDataSets.some(td => td.playground_item_id === item.id);
+                      return entities.length > 0 && !hasTestData;
+                    });
+                    
+                    if (itemsToProcess.length === 0) {
+                      toast.info("All items already have test data");
+                      setShowBulkGeneration(false);
+                      return;
+                    }
+
+                    setIsGenerating(true);
+                    setBulkProgress({
+                      current: 0,
+                      total: itemsToProcess.length,
+                      items: itemsToProcess.map(item => ({
+                        id: item.id,
+                        name: item.source_name,
+                        type: item.source_type,
+                        status: "pending"
+                      }))
+                    });
+
+                    for (let i = 0; i < itemsToProcess.length; i++) {
+                      const item = itemsToProcess[i];
+                      
+                      setBulkProgress(prev => ({
+                        ...prev,
+                        current: i,
+                        items: prev.items.map((it, idx) => 
+                          idx === i ? { ...it, status: "processing" } : it
+                        )
+                      }));
+
+                      const entities = getEntitiesForItem(item.id);
+                      const entitySchemas = entities.map(e => ({
+                        name: e.name,
+                        properties: e.schema?.properties || {},
+                        required: e.schema?.required || []
+                      }));
+
+                      try {
+                        const result = await base44.integrations.Core.InvokeLLM({
+                          prompt: `Generate realistic test data for "${item.source_name}". Create 3 records for EACH entity:
+${entitySchemas.map(e => `Entity: ${e.name}\nProperties: ${JSON.stringify(e.properties)}`).join('\n---\n')}
+Return as JSON with entity names as keys and arrays of records as values.`,
+                          response_json_schema: {
+                            type: "object",
+                            properties: {
+                              data: { type: "object", additionalProperties: { type: "array", items: { type: "object" } } }
+                            }
+                          }
+                        });
+
+                        await base44.entities.TestData.create({
+                          name: "Default Test Data",
+                          playground_item_id: item.id,
+                          entity_data: result.data || {},
+                          is_default: true
+                        });
+
+                        setBulkProgress(prev => ({
+                          ...prev,
+                          current: i + 1,
+                          items: prev.items.map((it, idx) => 
+                            idx === i ? { ...it, status: "success" } : it
+                          )
+                        }));
+                      } catch (e) {
+                        console.error(`Failed for ${item.source_name}:`, e);
+                        setBulkProgress(prev => ({
+                          ...prev,
+                          current: i + 1,
+                          items: prev.items.map((it, idx) => 
+                            idx === i ? { ...it, status: "error", error: e.message } : it
+                          )
+                        }));
+                      }
+                    }
+
+                    queryClient.invalidateQueries({ queryKey: ["testData"] });
+                    setIsGenerating(false);
+                    const successCount = bulkProgress.items.filter(i => i.status === "success").length + 1;
+                    toast.success(`Generated test data for ${successCount} items`);
+                  }}
+                >
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Start Generation
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {/* Progress Bar */}
+              <div>
+                <div className="flex justify-between text-sm mb-2">
+                  <span>Progress</span>
+                  <span>{bulkProgress.current} / {bulkProgress.total}</span>
+                </div>
+                <Progress value={(bulkProgress.current / bulkProgress.total) * 100} className="h-3" />
+              </div>
+
+              {/* Items List with Status */}
+              <div className="max-h-80 overflow-y-auto border rounded-lg">
+                {bulkProgress.items.map((item, idx) => (
+                  <div 
+                    key={item.id} 
+                    className={`flex items-center justify-between p-3 border-b last:border-b-0 ${
+                      item.status === "processing" ? "bg-blue-50" : 
+                      item.status === "success" ? "bg-green-50" :
+                      item.status === "error" ? "bg-red-50" : ""
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      {item.type === "page" ? (
+                        <Layout className="h-4 w-4 text-blue-600" />
+                      ) : (
+                        <Zap className="h-4 w-4 text-amber-600" />
+                      )}
+                      <span className="font-medium">{item.name}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {item.status === "pending" && (
+                        <Circle className="h-4 w-4 text-gray-400" />
+                      )}
+                      {item.status === "processing" && (
+                        <Loader2 className="h-4 w-4 text-blue-600 animate-spin" />
+                      )}
+                      {item.status === "success" && (
+                        <CheckCircle2 className="h-4 w-4 text-green-600" />
+                      )}
+                      {item.status === "error" && (
+                        <XCircle className="h-4 w-4 text-red-600" />
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Done Button */}
+              {!isGenerating && (
+                <div className="flex justify-end">
+                  <Button onClick={() => {
+                    setShowBulkGeneration(false);
+                    setBulkProgress({ current: 0, total: 0, items: [] });
+                  }}>
+                    Done
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Editor Dialog */}
       <Dialog open={showEditor} onOpenChange={setShowEditor}>
