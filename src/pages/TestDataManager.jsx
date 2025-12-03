@@ -156,19 +156,15 @@ export default function TestDataManager() {
 
       let entitiesUsed = [];
       if (item.source_type === "page") {
-        const template = pageTemplates.find(t => t.id === item.source_id);
-        // Check multiple possible locations for entities_used
-        entitiesUsed = item.working_data?.entities_used 
-          || template?.data?.entities_used 
-          || template?.entities_used 
-          || item.working_data?.components?.flatMap(c => c.entities || [])
-          || [];
+            const template = pageTemplates.find(t => t.id === item.source_id);
+            entitiesUsed = item.working_data?.entities_used 
+              || template?.data?.entities_used 
+              || [];
       } else if (item.source_type === "feature") {
-        const template = featureTemplates.find(t => t.id === item.source_id);
-        entitiesUsed = item.working_data?.entities_used 
-          || template?.data?.entities_used 
-          || template?.entities_used 
-          || [];
+            const template = featureTemplates.find(t => t.id === item.source_id);
+            entitiesUsed = item.working_data?.entities_used 
+              || template?.data?.entities_used 
+              || [];
       }
 
       // Debug: log what we found
