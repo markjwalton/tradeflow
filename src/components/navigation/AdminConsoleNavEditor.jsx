@@ -80,9 +80,10 @@ export default function AdminConsoleNavEditor() {
   const allocatedSlugs = items.map(i => i.slug);
   const unallocatedSlugs = ALL_PAGE_SLUGS.filter(slug => !allocatedSlugs.includes(slug));
 
-  // Get parent items (items without parent_id)
+  // Get parent items (items without parent_id) - support 3 levels
   const parentItems = items.filter(i => !i.parent_id);
-  const getChildren = (parentId) => items.filter(i => i.parent_id === parentId);
+  const getChildren = (parentSlug) => items.filter(i => i.parent_id === parentSlug);
+  const getLevel1Items = () => items.filter(i => i.parent_id && parentItems.some(p => p.slug === i.parent_id));
 
   const saveMutation = useMutation({
     mutationFn: async (newItems) => {
