@@ -113,6 +113,7 @@ export default function Layout({ children, currentPageName }) {
   const [isTenantAdmin, setIsTenantAdmin] = useState(false);
   const [customAdminNav, setCustomAdminNav] = useState(null);
   const [expandedFolders, setExpandedFolders] = useState(new Set());
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   
   const urlParams = new URLSearchParams(window.location.search);
   const tenantSlug = urlParams.get("tenant");
