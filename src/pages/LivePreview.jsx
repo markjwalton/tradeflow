@@ -65,14 +65,19 @@ export default function LivePreview() {
   const pageItems = playgroundItems.filter(item => item.source_type === "page");
   const featureItems = playgroundItems.filter(item => item.source_type === "feature");
 
-  // Helper to find playground item by name
+  // Helper to find playground item by name (matches against source_name)
   const findPlaygroundItem = (name) => {
+    if (!name) return null;
     // Check if it's a feature (prefixed with "feature:")
     if (name.startsWith("feature:")) {
       const featureName = name.replace("feature:", "");
-      return playgroundItems.find(p => p.source_type === "feature" && p.source_name === featureName);
+      // Try exact match first, then case-insensitive
+      return playgroundItems.find(p => p.source_type === "feature" && p.source_name === featureName) ||
+             playgroundItems.find(p => p.source_type === "feature" && p.source_name?.toLowerCase() === featureName.toLowerCase());
     }
-    return playgroundItems.find(p => p.source_type === "page" && p.source_name === name);
+    // Try exact match first, then case-insensitive
+    return playgroundItems.find(p => p.source_type === "page" && p.source_name === name) ||
+           playgroundItems.find(p => p.source_type === "page" && p.source_name?.toLowerCase() === name.toLowerCase());
   };
 
   // Build hierarchical nav from config
