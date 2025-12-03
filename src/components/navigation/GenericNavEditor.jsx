@@ -179,15 +179,16 @@ export default function GenericNavEditor({
     
     let newItems;
     if (editingItem !== null) {
-      const originalItem = items[editingItem];
+      // Update by _id
       newItems = items.map((item) => {
-        if (item.slug === originalItem.slug && (item.parent_id || null) === (originalItem.parent_id || null)) {
-          return { ...formData, order: item.order };
+        if (item._id === editingItem) {
+          return { ...formData, _id: item._id, order: item.order };
         }
         return item;
       });
     } else {
-      newItems = [...items, { ...formData, order: items.length }];
+      // Create new with unique _id
+      newItems = [...items, { ...formData, _id: generateId(), order: items.length }];
     }
     
     saveMutation.mutate(newItems);
