@@ -250,6 +250,48 @@ export default function Layout({ children, currentPageName }) {
     return <>{children}</>;
   }
 
+  // Fullscreen pages with their own navigation
+  if (fullscreenPages.includes(currentPageName)) {
+    return (
+      <TenantContext.Provider value={tenantContextValue}>
+        <div className="min-h-screen flex flex-col">
+          {/* Minimal Top Bar */}
+          <header className="h-14 bg-white border-b flex items-center justify-between px-4">
+            <div className="flex items-center gap-3">
+              <span className="font-semibold text-gray-700">Admin Console</span>
+              <span className="text-gray-400">|</span>
+              <span className="text-gray-500">{currentPageName}</span>
+            </div>
+            <div className="flex items-center gap-3">
+              {currentUser && (
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <User className="h-4 w-4" />
+                  <span>{currentUser.email}</span>
+                </div>
+              )}
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => {
+                  const tenantAccessUrl = createPageUrl("TenantAccess");
+                  base44.auth.logout(window.location.origin + tenantAccessUrl);
+                }}
+                className="gap-2 text-gray-600"
+              >
+                <LogOut className="h-4 w-4" />
+                Logout
+              </Button>
+            </div>
+          </header>
+          <main className="flex-1 overflow-hidden">
+            {children}
+          </main>
+          <GlobalAIAssistant />
+        </div>
+      </TenantContext.Provider>
+    );
+  }
+
   // Show loading while checking
   if (checkingAccess) {
     return (
