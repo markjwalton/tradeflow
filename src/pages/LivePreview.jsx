@@ -214,25 +214,30 @@ export default function LivePreview() {
         );
       }
 
-      // Page or feature item
+      // Page or feature item - always clickable, just show different styling if no playground item
       const isChild = depth > 0;
       return (
         <button
           key={navItem._id || navItem.slug}
-          onClick={() => playgroundItem && setSelectedItemId(playgroundItem.id)}
-          disabled={!playgroundItem}
+          onClick={() => {
+            if (playgroundItem) {
+              setSelectedItemId(playgroundItem.id);
+            }
+          }}
           className={`w-full flex items-center gap-2 px-3 rounded-lg transition-colors truncate ${
             isChild ? "py-1.5 text-xs" : "py-2 text-sm"
           } ${
             isSelected
               ? "bg-slate-700 text-white"
               : playgroundItem
-                ? "text-slate-300 hover:bg-slate-800 hover:text-white"
-                : "text-slate-500 cursor-not-allowed"
+                ? "text-slate-300 hover:bg-slate-800 hover:text-white cursor-pointer"
+                : "text-slate-500 hover:bg-slate-800/50 hover:text-slate-400 cursor-pointer"
           }`}
+          title={!playgroundItem ? "Not synced to playground yet" : undefined}
         >
           {!isChild && (isFeature ? <Zap className="h-4 w-4 flex-shrink-0" /> : <Layout className="h-4 w-4 flex-shrink-0" />)}
           <span className="truncate">{navItem.name}</span>
+          {!playgroundItem && <span className="text-xs text-slate-600">•</span>}
         </button>
       );
     });
