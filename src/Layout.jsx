@@ -252,8 +252,17 @@ export default function Layout({ children, currentPageName }) {
 
   // Fullscreen pages with their own navigation
   if (fullscreenPages.includes(currentPageName)) {
+    const fullscreenContextValue = {
+      tenant: currentTenant,
+      tenantId: currentTenant?.id,
+      tenantSlug: currentTenant?.slug,
+      tenantName: currentTenant?.name,
+      userRoles,
+      isGlobalAdmin,
+      isTenantAdmin,
+    };
     return (
-      <TenantContext.Provider value={tenantContextValue}>
+      <TenantContext.Provider value={fullscreenContextValue}>
         <div className="min-h-screen flex flex-col">
           {/* Minimal Top Bar */}
           <header className="h-14 bg-white border-b flex items-center justify-between px-4">
