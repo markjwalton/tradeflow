@@ -44,7 +44,10 @@ import NavigationBreadcrumb from "@/components/navigation/NavigationBreadcrumb";
 // Global admin pages - only for is_global_admin users
 import { BookOpen, FlaskConical, Key, Gauge } from "lucide-react";
 
+import { LayoutDashboard } from "lucide-react";
+
 const globalAdminPages = [
+  { name: "Dashboard Manager", slug: "DashboardManager", icon: LayoutDashboard },
   { name: "CMS", slug: "CMSManager", icon: Globe },
   { name: "API Manager", slug: "APIManager", icon: Key },
   { name: "Security", slug: "SecurityMonitor", icon: Shield },
