@@ -224,19 +224,20 @@ export default function TestDataManager() {
   }, [playgroundItems, testDataSets, entityTemplates, pageTemplates, featureTemplates]);
 
   // Calculate stats
-  const stats = useMemo(() => {
-    const withTestData = itemStatusList.filter(i => i.hasTestData).length;
-    const tested = itemStatusList.filter(i => i.testStatus === "verified").length;
-    
-    return {
-      total: itemStatusList.length,
-      withTestData,
-      withoutTestData: itemStatusList.length - withTestData,
-      tested,
-      pending: withTestData - tested,
-      qualityScore: null // Set by AI analysis
-    };
-  }, [itemStatusList]);
+      const stats = useMemo(() => {
+        const withTestData = itemStatusList.filter(i => i.hasTestData).length;
+        const tested = itemStatusList.filter(i => i.testStatus === "verified").length;
+        const errors = itemStatusList.filter(i => i.testStatus === "failed").length;
+
+        return {
+          total: itemStatusList.length,
+          withTestData,
+          withoutTestData: itemStatusList.length - withTestData,
+          tested,
+          pending: withTestData - tested - errors,
+          errors
+        };
+      }, [itemStatusList]);
 
   // Filter items based on card click
   const getFilteredItems = () => {

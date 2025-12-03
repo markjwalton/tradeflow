@@ -159,25 +159,43 @@ export default function BulkVerificationDialog({
     setIsRunning(false);
   };
 
+  const [isMarkingVerified, setIsMarkingVerified] = useState(false);
+
   const markAllVerified = async () => {
     const passedItems = results.filter(r => r.status === "passed" || r.status === "warning");
     if (passedItems.length === 0) return;
+
+    setIsMarkingVerified(true);
+    let successCount = 0;
+    let errorCount = 0;
 
     try {
       for (const item of passedItems) {
         const testData = testDataSets.find(td => td.playground_item_id === item.id);
         if (testData) {
-          await base44.entities.TestData.update(testData.id, {
-            test_status: "verified",
-            verified_date: new Date().toISOString()
-          });
+          try {
+            await base44.entities.TestData.update(testData.id, {
+              test_status: "verified",
+              verified_date: new Date().toISOString()
+            });
+            successCount++;
+          } catch (e) {
+            errorCount++;
+          }
         }
       }
-      toast.success(`${passedItems.length} items marked as verified`);
+      
+      if (errorCount > 0) {
+        toast.warning(`${successCount} verified, ${errorCount} failed`);
+      } else {
+        toast.success(`${successCount} items marked as verified`);
+      }
       onComplete?.();
       onClose();
     } catch (e) {
-      toast.error("Failed to update some items");
+      toast.error("Failed to update items");
+    } finally {
+      setIsMarkingVerified(false);
     }
   };
 
@@ -329,8 +347,16 @@ export default function BulkVerificationDialog({
                     Re-run All
                   </Button>
                   {(summary.passed + summary.warnings) > 0 && (
-                    <Button onClick={markAllVerified} className="bg-green-600 hover:bg-green-700">
-                      <CheckCircle2 className="h-4 w-4 mr-2" />
+                    <Button 
+                      onClick={markAllVerified} 
+                      disabled={isMarkingVerified}
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      {isMarkingVerified ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <CheckCircle2 className="h-4 w-4 mr-2" />
+                      )}
                       Mark {summary.passed + summary.warnings} Verified
                     </Button>
                   )}
