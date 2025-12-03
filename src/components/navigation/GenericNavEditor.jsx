@@ -116,6 +116,22 @@ export default function GenericNavEditor({
       });
     }
   }, [itemsNeedIds, config?.id, itemsWithIds]);
+  
+  // Auto-expand all folders that have children on initial load
+  React.useEffect(() => {
+    if (!initialExpandDone && items.length > 0) {
+      const itemIdsWithChildren = new Set();
+      items.forEach(i => {
+        if (i.parent_id) {
+          itemIdsWithChildren.add(i.parent_id);
+        }
+      });
+      if (itemIdsWithChildren.size > 0) {
+        setExpandedParents(itemIdsWithChildren);
+      }
+      setInitialExpandDone(true);
+    }
+  }, [items, initialExpandDone]);
 
   // Calculate unallocated slugs
   const allocatedSlugs = items.map(i => i.slug).filter(Boolean);
