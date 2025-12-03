@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -22,7 +23,7 @@ import {
 } from "@/components/ui/dialog";
 import { 
   Plus, Trash2, GripVertical, Folder, FileText, Link as LinkIcon, 
-  ChevronRight, ChevronDown, Eye, EyeOff, Loader2, Save
+  ChevronRight, ChevronDown, Eye, EyeOff, Loader2, Save, Layout
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -32,13 +33,16 @@ const itemTypes = [
   { value: "link", label: "External Link", icon: LinkIcon },
   { value: "product_category", label: "Product Category", icon: FileText },
   { value: "blog_category", label: "Blog Category", icon: FileText },
+  { value: "view_page", label: "View Page", icon: Layout },
 ];
 
 export default function CMSNavigationEditor({ tenantId }) {
   const queryClient = useQueryClient();
+  const [activeTab, setActiveTab] = useState("cms");
   const [selectedNav, setSelectedNav] = useState(null);
   const [showAddNav, setShowAddNav] = useState(false);
   const [newNavName, setNewNavName] = useState("");
+  const [newNavType, setNewNavType] = useState("cms");
   const [expandedItems, setExpandedItems] = useState({});
   const [editingItem, setEditingItem] = useState(null);
 
@@ -51,6 +55,15 @@ export default function CMSNavigationEditor({ tenantId }) {
     queryKey: ["cmsPages", tenantId],
     queryFn: () => base44.entities.CMSPage.filter(tenantId ? { tenant_id: tenantId } : {})
   });
+
+  const { data: pageTemplates = [] } = useQuery({
+    queryKey: ["pageTemplates"],
+    queryFn: () => base44.entities.PageTemplate.list()
+  });
+
+  // Filter navigations by type
+  const cmsNavigations = navigations.filter(n => n.nav_type !== "view_pages");
+  const viewPagesNavigations = navigations.filter(n => n.nav_type === "view_pages");
 
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.CMSNavigation.create(data),
@@ -220,6 +233,8 @@ export default function CMSNavigationEditor({ tenantId }) {
     );
   };
 
+  const displayedNavigations = activeTab === "cms" ? cmsNavigations : viewPagesNavigations;
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -230,17 +245,30 @@ export default function CMSNavigationEditor({ tenantId }) {
         </Button>
       </CardHeader>
       <CardContent>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-4">
+          <TabsList>
+            <TabsTrigger value="cms" className="gap-2">
+              <FileText className="h-4 w-4" />
+              CMS Pages
+            </TabsTrigger>
+            <TabsTrigger value="view_pages" className="gap-2">
+              <Layout className="h-4 w-4" />
+              View Pages
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+
         <div className="grid grid-cols-3 gap-6">
           {/* Navigation List */}
           <div className="space-y-2">
             <Label>Select Navigation</Label>
             {isLoading ? (
               <Loader2 className="h-6 w-6 animate-spin" />
-            ) : navigations.length === 0 ? (
-              <p className="text-sm text-gray-500">No navigations yet</p>
+            ) : displayedNavigations.length === 0 ? (
+              <p className="text-sm text-gray-500">No {activeTab === "view_pages" ? "view page" : "CMS"} navigations yet</p>
             ) : (
               <div className="space-y-1">
-                {navigations.map(nav => (
+                {displayedNavigations.map(nav => (
                   <div 
                     key={nav.id}
                     className={`flex items-center justify-between p-2 rounded cursor-pointer ${
@@ -313,14 +341,30 @@ export default function CMSNavigationEditor({ tenantId }) {
                 placeholder="e.g., Main Menu"
               />
             </div>
+            <div>
+              <Label>Type</Label>
+              <Select value={newNavType} onValueChange={setNewNavType}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="cms">CMS Pages Navigation</SelectItem>
+                  <SelectItem value="view_pages">View Pages Navigation</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={() => setShowAddNav(false)}>Cancel</Button>
               <Button 
-                onClick={() => createMutation.mutate({ 
-                  tenant_id: tenantId, 
-                  name: newNavName, 
-                  items: [] 
-                })}
+                onClick={() => {
+                  createMutation.mutate({ 
+                    tenant_id: tenantId, 
+                    name: newNavName, 
+                    nav_type: newNavType,
+                    items: [] 
+                  });
+                  setNewNavType("cms");
+                }}
                 disabled={!newNavName.trim()}
               >
                 Create
@@ -363,7 +407,7 @@ export default function CMSNavigationEditor({ tenantId }) {
               </div>
               {editingItem.type === "page" && (
                 <div>
-                  <Label>Page</Label>
+                  <Label>CMS Page</Label>
                   <Select 
                     value={editingItem.page_slug || ""} 
                     onValueChange={(v) => setEditingItem({ ...editingItem, page_slug: v })}
@@ -374,6 +418,24 @@ export default function CMSNavigationEditor({ tenantId }) {
                     <SelectContent>
                       {pages.map(p => (
                         <SelectItem key={p.id} value={p.slug}>{p.title}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+              {editingItem.type === "view_page" && (
+                <div>
+                  <Label>View Page</Label>
+                  <Select 
+                    value={editingItem.view_page_name || ""} 
+                    onValueChange={(v) => setEditingItem({ ...editingItem, view_page_name: v })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select view page..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {pageTemplates.map(p => (
+                        <SelectItem key={p.id} value={p.name}>{p.name}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>

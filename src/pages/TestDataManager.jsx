@@ -45,6 +45,7 @@ export default function TestDataManager() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showBulkGeneration, setShowBulkGeneration] = useState(false);
   const [bulkProgress, setBulkProgress] = useState({ current: 0, total: 0, items: [] });
+  const [batchSize, setBatchSize] = useState(10);
 
   const { data: playgroundItems = [] } = useQuery({
     queryKey: ["playgroundItems"],
@@ -436,10 +437,29 @@ Return as JSON with entity names as keys and arrays of records as values.`,
           {bulkProgress.total === 0 ? (
             <div className="space-y-4">
               <p className="text-gray-600">
-                This will generate test data for all pages and features that don't have test data yet.
+                This will generate test data for pages and features that don't have test data yet.
+                Items are saved immediately - if page refreshes, completed items won't be reprocessed.
               </p>
+              
+              <div className="flex items-center gap-4 p-3 bg-blue-50 rounded-lg">
+                <label className="text-sm font-medium">Batch Size:</label>
+                <Select value={batchSize.toString()} onValueChange={(v) => setBatchSize(parseInt(v))}>
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="5">5 items</SelectItem>
+                    <SelectItem value="10">10 items</SelectItem>
+                    <SelectItem value="25">25 items</SelectItem>
+                    <SelectItem value="50">50 items</SelectItem>
+                    <SelectItem value="100">100 items</SelectItem>
+                  </SelectContent>
+                </Select>
+                <span className="text-xs text-gray-500">Smaller batches are safer but slower</span>
+              </div>
+
               <div className="bg-gray-50 p-4 rounded-lg">
-                <p className="text-sm font-medium mb-2">Items to process:</p>
+                <p className="text-sm font-medium mb-2">Items to process (without test data):</p>
                 <div className="max-h-60 overflow-y-auto space-y-1">
                   {previewableItems.filter(item => {
                     const entities = getEntitiesForItem(item.id);
@@ -483,23 +503,28 @@ Return as JSON with entity names as keys and arrays of records as values.`,
                       return;
                     }
 
+                    // Apply batch size limit
+                    const batchedItems = itemsToProcess.slice(0, batchSize);
+                    const remainingCount = itemsToProcess.length - batchSize;
+
                     setIsGenerating(true);
                     setBulkProgress({
                       current: 0,
-                      total: itemsToProcess.length,
-                      items: itemsToProcess.map(item => ({
+                      total: batchedItems.length,
+                      items: batchedItems.map(item => ({
                         id: item.id,
                         name: item.source_name,
                         type: item.source_type,
                         status: "pending"
-                      }))
+                      })),
+                      remaining: remainingCount > 0 ? remainingCount : 0
                     });
 
                     let successCount = 0;
                     let errorCount = 0;
 
-                    for (let i = 0; i < itemsToProcess.length; i++) {
-                      const item = itemsToProcess[i];
+                    for (let i = 0; i < batchedItems.length; i++) {
+                      const item = batchedItems[i];
                       
                       setBulkProgress(prev => ({
                         ...prev,
@@ -566,7 +591,12 @@ Return as JSON with entity names as keys and arrays of records as values.`,
                     }
 
                     setIsGenerating(false);
-                    toast.success(`Generated: ${successCount} succeeded, ${errorCount} failed`);
+                    const remaining = itemsToProcess.length - batchSize;
+                    if (remaining > 0) {
+                      toast.success(`Batch complete: ${successCount} succeeded, ${errorCount} failed. ${remaining} items remaining - run again to continue.`);
+                    } else {
+                      toast.success(`All done: ${successCount} succeeded, ${errorCount} failed`);
+                    }
                   }}
                 >
                   <Sparkles className="h-4 w-4 mr-2" />
@@ -622,15 +652,32 @@ Return as JSON with entity names as keys and arrays of records as values.`,
                 ))}
               </div>
 
-              {/* Done Button */}
+              {/* Done / Continue Buttons */}
               {!isGenerating && (
-                <div className="flex justify-end">
-                  <Button onClick={() => {
-                    setShowBulkGeneration(false);
-                    setBulkProgress({ current: 0, total: 0, items: [] });
-                  }}>
-                    Done
-                  </Button>
+                <div className="flex justify-between items-center">
+                  {bulkProgress.remaining > 0 && (
+                    <p className="text-sm text-amber-600">
+                      {bulkProgress.remaining} items remaining
+                    </p>
+                  )}
+                  <div className="flex gap-2 ml-auto">
+                    {bulkProgress.remaining > 0 && (
+                      <Button 
+                        variant="outline"
+                        onClick={() => {
+                          setBulkProgress({ current: 0, total: 0, items: [] });
+                        }}
+                      >
+                        Run Next Batch
+                      </Button>
+                    )}
+                    <Button onClick={() => {
+                      setShowBulkGeneration(false);
+                      setBulkProgress({ current: 0, total: 0, items: [] });
+                    }}>
+                      Done
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>
