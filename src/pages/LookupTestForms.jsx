@@ -2,23 +2,27 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Mail, Phone, CheckCircle2 } from "lucide-react";
+import { MapPin, Mail, Phone, CheckCircle2, Search, AlertTriangle } from "lucide-react";
 
+import PostcodeLookupField from "@/components/forms/PostcodeLookupField";
 import AddressFinderField from "@/components/forms/AddressFinderField";
 import EmailValidationField from "@/components/forms/EmailValidationField";
 import PhoneValidationField from "@/components/forms/PhoneValidationField";
 
-const API_KEY = "IDEAL_POSTCODES_API_KEY"; // Will use from secrets
+// API Keys - set these in Base44 secrets
+const API_KEYS = {
+  postcode: "ak_m5gn84f4gKvyFVmZHPWH3xYlod6vR", // IDEAL_POSTCODES_API_KEY - Active
+  address: "", // IDEAL_POSTCODES_ADDRESS_KEY - Pending
+  email: "", // IDEAL_POSTCODES_EMAIL_KEY - Pending
+  phone: "", // IDEAL_POSTCODES_PHONE_KEY - Pending
+};
 
 export default function LookupTestForms() {
+  const [postcodeResult, setPostcodeResult] = useState(null);
   const [addressValue, setAddressValue] = useState({});
   const [emailValue, setEmailValue] = useState("");
   const [phoneValue, setPhoneValue] = useState("");
   const [results, setResults] = useState({ address: null, email: null, phone: null });
-
-  // In production, get API key from backend/secrets
-  // For testing, we'll pass it directly - the components handle the API calls
-  const apiKey = "ak_m5gn84f4gKvyFVmZHPWH3xYlod6vR"; // Replace with your actual key or fetch from backend
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
@@ -30,8 +34,12 @@ export default function LookupTestForms() {
         <p className="text-gray-500">Test Address Finder, Email Validation, and Phone Validation APIs</p>
       </div>
 
-      <Tabs defaultValue="address" className="space-y-6">
-        <TabsList className="grid grid-cols-3 w-full">
+      <Tabs defaultValue="postcode" className="space-y-6">
+        <TabsList className="grid grid-cols-4 w-full">
+          <TabsTrigger value="postcode" className="gap-2">
+            <Search className="h-4 w-4" />
+            Postcode Lookup
+          </TabsTrigger>
           <TabsTrigger value="address" className="gap-2">
             <MapPin className="h-4 w-4" />
             Address Finder
@@ -46,6 +54,50 @@ export default function LookupTestForms() {
           </TabsTrigger>
         </TabsList>
 
+        {/* Postcode Lookup Test */}
+        <TabsContent value="postcode">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Search className="h-5 w-5 text-green-600" />
+                UK Postcode Lookup
+                <Badge className="bg-green-100 text-green-700">Active</Badge>
+              </CardTitle>
+              <p className="text-sm text-gray-500">
+                Enter a UK postcode to find all addresses at that location.
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <PostcodeLookupField
+                apiKey={API_KEYS.postcode}
+                onAddressSelect={(addr) => setPostcodeResult(addr)}
+                required
+              />
+
+              {postcodeResult && (
+                <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <h4 className="font-medium text-green-800 mb-2 flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4" />
+                    Selected Address
+                  </h4>
+                  <pre className="text-xs bg-white p-3 rounded overflow-auto">
+                    {JSON.stringify(postcodeResult, null, 2)}
+                  </pre>
+                </div>
+              )}
+
+              <div className="text-sm text-gray-500 space-y-1">
+                <p><strong>Test postcodes:</strong></p>
+                <ul className="list-disc list-inside space-y-1">
+                  <li><code>SW1A 1AA</code> - Buckingham Palace</li>
+                  <li><code>EC1A 1BB</code> - London</li>
+                  <li><code>M1 1AE</code> - Manchester</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         {/* Address Finder Test */}
         <TabsContent value="address">
           <Card>
@@ -53,14 +105,24 @@ export default function LookupTestForms() {
               <CardTitle className="flex items-center gap-2">
                 <MapPin className="h-5 w-5 text-blue-600" />
                 UK Address Finder
+                {!API_KEYS.address && <Badge className="bg-amber-100 text-amber-700">API Key Pending</Badge>}
               </CardTitle>
               <p className="text-sm text-gray-500">
                 Start typing an address or postcode to search. Uses Ideal Postcodes API.
               </p>
             </CardHeader>
             <CardContent className="space-y-4">
+              {!API_KEYS.address && (
+                <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-2">
+                  <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-amber-800">API Key Required</p>
+                    <p className="text-sm text-amber-700">Set IDEAL_POSTCODES_ADDRESS_KEY in Base44 secrets to enable this feature.</p>
+                  </div>
+                </div>
+              )}
               <AddressFinderField
-                apiKey={apiKey}
+                apiKey={API_KEYS.address}
                 value={addressValue}
                 onChange={setAddressValue}
                 onAddressSelect={(addr) => {
@@ -69,6 +131,7 @@ export default function LookupTestForms() {
                 }}
                 required
                 showManualEntry
+                disabled={!API_KEYS.address}
               />
 
               {results.address && (
@@ -93,14 +156,24 @@ export default function LookupTestForms() {
               <CardTitle className="flex items-center gap-2">
                 <Mail className="h-5 w-5 text-purple-600" />
                 Email Validation
+                {!API_KEYS.email && <Badge className="bg-amber-100 text-amber-700">API Key Pending</Badge>}
               </CardTitle>
               <p className="text-sm text-gray-500">
                 Enter an email address to validate. Includes typo detection and API verification.
               </p>
             </CardHeader>
             <CardContent className="space-y-4">
+              {!API_KEYS.email && (
+                <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-2">
+                  <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-amber-800">API Key Required</p>
+                    <p className="text-sm text-amber-700">Set IDEAL_POSTCODES_EMAIL_KEY in Base44 secrets. Basic validation still works without API.</p>
+                  </div>
+                </div>
+              )}
               <EmailValidationField
-                apiKey={apiKey}
+                apiKey={API_KEYS.email}
                 value={emailValue}
                 onChange={setEmailValue}
                 onValidationResult={(result) => setResults({ ...results, email: result })}
@@ -143,14 +216,24 @@ export default function LookupTestForms() {
               <CardTitle className="flex items-center gap-2">
                 <Phone className="h-5 w-5 text-amber-600" />
                 UK Phone Validation
+                {!API_KEYS.phone && <Badge className="bg-amber-100 text-amber-700">API Key Pending</Badge>}
               </CardTitle>
               <p className="text-sm text-gray-500">
                 Enter a UK phone number to validate. Supports mobile and landline formats.
               </p>
             </CardHeader>
             <CardContent className="space-y-4">
+              {!API_KEYS.phone && (
+                <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-2">
+                  <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-amber-800">API Key Required</p>
+                    <p className="text-sm text-amber-700">Set IDEAL_POSTCODES_PHONE_KEY in Base44 secrets. Basic format validation still works.</p>
+                  </div>
+                </div>
+              )}
               <PhoneValidationField
-                apiKey={apiKey}
+                apiKey={API_KEYS.phone}
                 value={phoneValue}
                 onChange={setPhoneValue}
                 onValidationResult={(result) => setResults({ ...results, phone: result })}
@@ -190,27 +273,29 @@ export default function LookupTestForms() {
       {/* API Info */}
       <Card className="mt-6">
         <CardHeader>
-          <CardTitle className="text-base">API Information</CardTitle>
+          <CardTitle className="text-base">API Keys Status</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-3 gap-4 text-sm">
-            <div className="p-3 bg-blue-50 rounded-lg">
-              <Badge className="bg-blue-100 text-blue-700 mb-2">Address</Badge>
-              <p className="text-xs text-gray-600">
-                Uses Ideal Postcodes Autocomplete API. Searches UK addresses by partial match.
-              </p>
+          <div className="grid grid-cols-4 gap-4 text-sm">
+            <div className="p-3 bg-green-50 rounded-lg border border-green-200">
+              <Badge className="bg-green-100 text-green-700 mb-2">Postcode</Badge>
+              <p className="text-xs text-gray-600 mb-1">IDEAL_POSTCODES_API_KEY</p>
+              <Badge className="bg-green-500 text-white text-xs">Active</Badge>
             </div>
-            <div className="p-3 bg-purple-50 rounded-lg">
-              <Badge className="bg-purple-100 text-purple-700 mb-2">Email</Badge>
-              <p className="text-xs text-gray-600">
-                Uses Ideal Postcodes Email API. Validates format and deliverability.
-              </p>
+            <div className="p-3 bg-amber-50 rounded-lg border border-amber-200">
+              <Badge className="bg-amber-100 text-amber-700 mb-2">Address</Badge>
+              <p className="text-xs text-gray-600 mb-1">IDEAL_POSTCODES_ADDRESS_KEY</p>
+              <Badge className="bg-amber-500 text-white text-xs">Pending</Badge>
             </div>
-            <div className="p-3 bg-amber-50 rounded-lg">
+            <div className="p-3 bg-amber-50 rounded-lg border border-amber-200">
+              <Badge className="bg-amber-100 text-amber-700 mb-2">Email</Badge>
+              <p className="text-xs text-gray-600 mb-1">IDEAL_POSTCODES_EMAIL_KEY</p>
+              <Badge className="bg-amber-500 text-white text-xs">Pending</Badge>
+            </div>
+            <div className="p-3 bg-amber-50 rounded-lg border border-amber-200">
               <Badge className="bg-amber-100 text-amber-700 mb-2">Phone</Badge>
-              <p className="text-xs text-gray-600">
-                Uses Ideal Postcodes Phone API. Validates UK phone numbers and detects type.
-              </p>
+              <p className="text-xs text-gray-600 mb-1">IDEAL_POSTCODES_PHONE_KEY</p>
+              <Badge className="bg-amber-500 text-white text-xs">Pending</Badge>
             </div>
           </div>
         </CardContent>

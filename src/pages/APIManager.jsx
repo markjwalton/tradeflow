@@ -72,7 +72,10 @@ import { createPageUrl } from "@/utils";
 
 // Known Base44 secrets that map to API providers
 const BASE44_SECRET_MAPPINGS = [
-  { secretName: "IDEAL_POSTCODES_API_KEY", provider: "ideal_postcodes", name: "Ideal Postcodes", baseUrl: "https://api.ideal-postcodes.co.uk/v1", hasTestForm: true },
+  { secretName: "IDEAL_POSTCODES_API_KEY", provider: "ideal_postcodes_postcode", name: "Ideal Postcodes - Postcode Lookup", baseUrl: "https://api.ideal-postcodes.co.uk/v1/postcodes", hasTestForm: true },
+  { secretName: "IDEAL_POSTCODES_ADDRESS_KEY", provider: "ideal_postcodes_address", name: "Ideal Postcodes - Address Finder", baseUrl: "https://api.ideal-postcodes.co.uk/v1/autocomplete", hasTestForm: true },
+  { secretName: "IDEAL_POSTCODES_EMAIL_KEY", provider: "ideal_postcodes_email", name: "Ideal Postcodes - Email Validation", baseUrl: "https://api.ideal-postcodes.co.uk/v1/emails", hasTestForm: true },
+  { secretName: "IDEAL_POSTCODES_PHONE_KEY", provider: "ideal_postcodes_phone", name: "Ideal Postcodes - Phone Validation", baseUrl: "https://api.ideal-postcodes.co.uk/v1/phone_numbers", hasTestForm: true },
   { secretName: "GOOGLE_CLOUD_API_KEY", provider: "google", name: "Google Cloud", baseUrl: "https://maps.googleapis.com", hasTestForm: false },
   { secretName: "OPENAI_API_KEY", provider: "openai", name: "OpenAI", baseUrl: "https://api.openai.com/v1", hasTestForm: false },
   { secretName: "STRIPE_API_KEY", provider: "stripe", name: "Stripe", baseUrl: "https://api.stripe.com/v1", hasTestForm: false },
@@ -102,7 +105,7 @@ export default function APIManager() {
   });
   
   // Base44 secrets that are set (from platform)
-  const base44Secrets = ["IDEAL_POSTCODES_API_KEY", "GOOGLE_CLOUD_API_KEY"];
+  const base44Secrets = ["IDEAL_POSTCODES_API_KEY", "IDEAL_POSTCODES_ADDRESS_KEY", "IDEAL_POSTCODES_EMAIL_KEY", "IDEAL_POSTCODES_PHONE_KEY", "GOOGLE_CLOUD_API_KEY"];
   
   // Check which secrets have test forms available
   const secretsWithTestForms = BASE44_SECRET_MAPPINGS.filter(m => m.hasTestForm && base44Secrets.includes(m.secretName));
