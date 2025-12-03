@@ -300,6 +300,12 @@ export default function TestDataManager() {
       return;
     }
 
+    // Enrich items with entities before starting
+    const enrichedItems = itemsToProcess.map(item => ({
+      ...item,
+      entities: item.entities || getEntitiesForItemById(item.id)
+    }));
+
     setIsGenerating(true);
     setGenerationProgress({
       current: 0,
@@ -317,8 +323,8 @@ export default function TestDataManager() {
     let successCount = 0;
     let errorCount = 0;
 
-    for (let i = 0; i < itemsToProcess.length; i++) {
-      const item = itemsToProcess[i];
+    for (let i = 0; i < enrichedItems.length; i++) {
+      const item = enrichedItems[i];
       
       setGenerationProgress(prev => ({
         ...prev,
