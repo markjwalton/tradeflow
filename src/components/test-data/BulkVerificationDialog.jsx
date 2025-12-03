@@ -174,13 +174,14 @@ export default function BulkVerificationDialog({
     
     const successItems = [];
     const errorItems = [];
-    const batchSize = 10;
+    const batchSize = 5; // Smaller batch to avoid rate limits
 
     try {
       for (let i = 0; i < passedItems.length; i += batchSize) {
         const batch = passedItems.slice(i, i + batchSize);
         
-        const promises = batch.map(async (item) => {
+        // Process sequentially within batch to avoid rate limits
+        for (const item of batch) {
           const testData = testDataSets.find(td => 
             td.playground_item_id === item.id || td.data?.playground_item_id === item.id
           );
@@ -190,21 +191,21 @@ export default function BulkVerificationDialog({
                 test_status: "verified",
                 verified_date: new Date().toISOString()
               });
-              return { success: true, item };
+              successItems.push(item);
             } catch (e) {
-              return { success: false, item, error: e.message };
+              errorItems.push({ ...item, error: e.message });
             }
+          } else {
+            errorItems.push({ ...item, error: "No test data found" });
           }
-          return { success: false, item, error: "No test data found" };
-        });
-
-        const batchResults = await Promise.all(promises);
-        batchResults.forEach(r => {
-          if (r.success) successItems.push(r.item);
-          else errorItems.push({ ...r.item, error: r.error });
-        });
+        }
         
         setMarkProgress({ current: Math.min(i + batchSize, passedItems.length), total: passedItems.length });
+        
+        // Delay between batches to avoid rate limiting
+        if (i + batchSize < passedItems.length) {
+          await new Promise(r => setTimeout(r, 500));
+        }
       }
       
       if (errorItems.length > 0) {
