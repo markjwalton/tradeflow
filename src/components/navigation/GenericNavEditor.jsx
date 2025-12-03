@@ -85,6 +85,7 @@ export default function GenericNavEditor({
   });
   const [expandedParents, setExpandedParents] = useState(new Set());
   const [unallocatedExpanded, setUnallocatedExpanded] = useState(false);
+  const [initialExpandDone, setInitialExpandDone] = useState(false);
 
   // Fetch config for this type
   const { data: navConfigs = [], isLoading } = useQuery({
