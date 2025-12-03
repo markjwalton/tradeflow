@@ -127,6 +127,16 @@ export default function PerformanceMonitor() {
     queryFn: () => base44.entities.FeatureTemplate.list()
   });
 
+  const { data: entityTemplates = [] } = useQuery({
+    queryKey: ["entityTemplates"],
+    queryFn: () => base44.entities.EntityTemplate.list()
+  });
+
+  const { data: apiLogs = [] } = useQuery({
+    queryKey: ["apiLogs"],
+    queryFn: () => base44.entities.APILog.list("-created_date", 100)
+  });
+
   const createIssueMutation = useMutation({
     mutationFn: (data) => base44.entities.PerformanceIssue.create(data),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["performanceIssues"] })
