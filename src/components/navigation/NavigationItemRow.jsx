@@ -23,6 +23,7 @@ const iconMap = {
   Flag, Award, Target, Crosshair
 };
 
+// Navigation item row with hover actions
 export default function NavigationItemRow({ 
   item, 
   onEdit, 
