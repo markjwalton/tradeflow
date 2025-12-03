@@ -30,7 +30,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { 
-  Activity, AlertTriangle, CheckCircle2, XCircle, Loader2, 
+  Activity, AlertTriangle, CheckCircle2, XCircle, Loader2, Circle,
   RefreshCw, Sparkles, ArrowRight, TrendingUp, TrendingDown, Minus,
   FileCode, Component, Zap, Clock, HardDrive, Globe, Building2,
   Settings, Flag, Lightbulb
