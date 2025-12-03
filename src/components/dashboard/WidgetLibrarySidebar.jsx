@@ -1,0 +1,179 @@
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  ChevronLeft, ChevronRight, Search, Plus, Sparkles,
+  BarChart3, Info, Zap, Table, PieChart, ArrowRight,
+  ChevronDown, Folder, FolderOpen
+} from "lucide-react";
+
+const widgetTypeIcons = {
+  stat_card: BarChart3,
+  info_card: Info,
+  quick_action: Zap,
+  ai_insight: Sparkles,
+  chart: PieChart,
+  table: Table,
+  custom: ArrowRight
+};
+
+export default function WidgetLibrarySidebar({ 
+  widgets, 
+  isCollapsed, 
+  onToggleCollapse, 
+  onAddWidget,
+  onGenerateAI 
+}) {
+  const [search, setSearch] = useState("");
+  const [expandedCategories, setExpandedCategories] = useState(new Set(["Quick Actions"]));
+
+  const toggleCategory = (cat) => {
+    setExpandedCategories(prev => {
+      const next = new Set(prev);
+      if (next.has(cat)) next.delete(cat);
+      else next.add(cat);
+      return next;
+    });
+  };
+
+  // Filter and group widgets
+  const filteredWidgets = widgets.filter(w => 
+    w.status === "published" &&
+    (w.name.toLowerCase().includes(search.toLowerCase()) ||
+     w.widget_type.toLowerCase().includes(search.toLowerCase()))
+  );
+
+  const grouped = filteredWidgets.reduce((acc, w) => {
+    const cat = w.category || "Uncategorized";
+    if (!acc[cat]) acc[cat] = [];
+    acc[cat].push(w);
+    return acc;
+  }, {});
+
+  const categories = Object.keys(grouped).sort();
+
+  if (isCollapsed) {
+    return (
+      <div className="w-12 bg-white border-r flex flex-col items-center py-4">
+        <Button variant="ghost" size="icon" onClick={onToggleCollapse}>
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+        <div className="mt-4 space-y-2">
+          {Object.values(widgetTypeIcons).slice(0, 5).map((Icon, i) => (
+            <div key={i} className="p-2 text-gray-400">
+              <Icon className="h-4 w-4" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-64 bg-white border-r flex flex-col">
+      {/* Header */}
+      <div className="p-3 border-b flex items-center justify-between">
+        <h3 className="font-medium text-sm">Widget Library</h3>
+        <Button variant="ghost" size="icon" onClick={onToggleCollapse}>
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* Search */}
+      <div className="p-3 border-b">
+        <div className="relative">
+          <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search widgets..."
+            className="pl-8 h-8 text-sm"
+          />
+        </div>
+      </div>
+
+      {/* AI Generate Button */}
+      <div className="p-3 border-b">
+        <Button 
+          onClick={onGenerateAI} 
+          className="w-full bg-purple-600 hover:bg-purple-700 text-sm"
+          size="sm"
+        >
+          <Sparkles className="h-4 w-4 mr-2" />
+          AI Recommend Widgets
+        </Button>
+      </div>
+
+      {/* Widget List */}
+      <ScrollArea className="flex-1">
+        <div className="p-2 space-y-1">
+          {categories.map(category => {
+            const catWidgets = grouped[category];
+            const isExpanded = expandedCategories.has(category);
+
+            return (
+              <div key={category}>
+                <button
+                  onClick={() => toggleCategory(category)}
+                  className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded hover:bg-gray-100"
+                >
+                  {isExpanded ? (
+                    <ChevronDown className="h-3 w-3 text-gray-400" />
+                  ) : (
+                    <ChevronRight className="h-3 w-3 text-gray-400" />
+                  )}
+                  {isExpanded ? (
+                    <FolderOpen className="h-3 w-3 text-amber-500" />
+                  ) : (
+                    <Folder className="h-3 w-3 text-amber-500" />
+                  )}
+                  <span className="flex-1 text-left font-medium">{category}</span>
+                  <Badge variant="secondary" className="text-xs h-5">
+                    {catWidgets.length}
+                  </Badge>
+                </button>
+
+                {isExpanded && (
+                  <div className="ml-4 mt-1 space-y-1">
+                    {catWidgets.map(widget => {
+                      const Icon = widgetTypeIcons[widget.widget_type] || Info;
+                      return (
+                        <div
+                          key={widget.id}
+                          className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-gray-100 cursor-pointer group"
+                          draggable
+                          onDragStart={(e) => {
+                            e.dataTransfer.setData("widget_id", widget.id);
+                          }}
+                        >
+                          <Icon className="h-3 w-3 text-gray-500" />
+                          <span className="text-sm flex-1 truncate">{widget.name}</span>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-5 w-5 opacity-0 group-hover:opacity-100"
+                            onClick={() => onAddWidget(widget)}
+                          >
+                            <Plus className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+
+          {categories.length === 0 && (
+            <div className="text-center py-8 text-gray-500 text-sm">
+              No widgets found
+            </div>
+          )}
+        </div>
+      </ScrollArea>
+    </div>
+  );
+}
