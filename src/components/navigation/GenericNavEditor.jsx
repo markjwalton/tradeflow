@@ -93,11 +93,20 @@ export default function GenericNavEditor({
   });
 
   const config = navConfigs[0];
-  // Ensure all items have unique IDs
-  const items = (config?.items || []).map(item => ({
+  // Ensure all items have unique IDs - persist IDs if missing
+  const rawItems = config?.items || [];
+  const itemsNeedIds = rawItems.some(item => !item._id);
+  const items = rawItems.map(item => ({
     ...item,
     _id: item._id || generateId()
   }));
+  
+  // Auto-save items with generated IDs so they persist
+  React.useEffect(() => {
+    if (itemsNeedIds && config && items.length > 0) {
+      base44.entities.NavigationConfig.update(config.id, { items });
+    }
+  }, [itemsNeedIds, config?.id]);
 
   // Calculate unallocated slugs
   const allocatedSlugs = items.map(i => i.slug).filter(Boolean);
