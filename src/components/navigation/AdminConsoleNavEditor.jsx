@@ -471,12 +471,13 @@ export default function AdminConsoleNavEditor() {
               <div>
                 <Label>Page Slug *</Label>
                 {availableSlugsForDropdown.length > 0 ? (
-                  <Select value={formData.slug} onValueChange={(v) => setFormData({ ...formData, slug: v })}>
+                  <Select value={formData.slug || "__none__"} onValueChange={(v) => setFormData({ ...formData, slug: v === "__none__" ? "" : v })}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select page..." />
                     </SelectTrigger>
                     <SelectContent>
-                      {availableSlugsForDropdown.map(slug => (
+                      <SelectItem value="__none__">Select page...</SelectItem>
+                      {availableSlugsForDropdown.filter(Boolean).map(slug => (
                         <SelectItem key={slug} value={slug}>{slug}</SelectItem>
                       ))}
                     </SelectContent>
