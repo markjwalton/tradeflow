@@ -41,15 +41,29 @@ export default function PostcodeLookupField({
       );
       const data = await response.json();
 
-      if (data.result && data.result.length > 0) {
+      console.log("Postcode API response:", data);
+
+      // Check for successful response with results
+      if (response.ok && data.result && Array.isArray(data.result) && data.result.length > 0) {
         setAddresses(data.result);
-      } else if (data.code === 4040) {
+      } else if (data.code === 4040 || data.code === "4040") {
         setError("Postcode not found");
+      } else if (data.code === 4010 || data.code === "4010") {
+        setError("Invalid API key");
+      } else if (data.code === 4020 || data.code === "4020") {
+        setError("API key exhausted - no credits remaining");
+      } else if (data.code === 4021 || data.code === "4021") {
+        setError("Daily limit reached");
+      } else if (data.code === 4022 || data.code === "4022") {
+        setError("API key not active for this service");
+      } else if (data.message) {
+        setError(data.message);
       } else {
-        setError(data.message || "Lookup failed");
+        setError("No addresses found for this postcode");
       }
     } catch (err) {
-      setError("Failed to lookup postcode");
+      console.error("Postcode lookup error:", err);
+      setError("Failed to lookup postcode: " + err.message);
     } finally {
       setIsLoading(false);
     }

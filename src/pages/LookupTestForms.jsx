@@ -10,8 +10,9 @@ import EmailValidationField from "@/components/forms/EmailValidationField";
 import PhoneValidationField from "@/components/forms/PhoneValidationField";
 
 // API Keys - set these in Base44 secrets
+// Your key from screenshot: ak_m1u6ttm2uN0oMRMQZH87dYy2s
 const API_KEYS = {
-  postcode: "ak_m5gn84f4gKvyFVmZHPWH3xYlod6vR", // IDEAL_POSTCODES_API_KEY - Active
+  postcode: "ak_m1u6ttm2uN0oMRMQZH87dYy2s", // IDEAL_POSTCODES_API_KEY - Active (50 credits)
   address: "", // IDEAL_POSTCODES_ADDRESS_KEY - Pending
   email: "", // IDEAL_POSTCODES_EMAIL_KEY - Pending
   phone: "", // IDEAL_POSTCODES_PHONE_KEY - Pending
