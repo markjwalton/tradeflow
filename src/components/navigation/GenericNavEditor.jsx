@@ -551,6 +551,7 @@ export default function GenericNavEditor({
                         <div className="flex items-center gap-2 flex-1">
                           <File className="h-4 w-4 text-muted-foreground" />
                           <span className="text-title text-muted-foreground">{slug.replace(/([A-Z])/g, ' $1').trim()}</span>
+                          <span className="text-xs text-muted-foreground font-mono">/{slug.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()}</span>
                           {aiRecommendations[slug] && (
                             <Badge className="bg-accent-100 text-accent-700 text-xs">
                               <Sparkles className="h-3 w-3 mr-1" />
