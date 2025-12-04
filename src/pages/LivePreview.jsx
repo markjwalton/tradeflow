@@ -15,6 +15,10 @@ import { createPageUrl } from "@/utils";
 // Dynamic page renderer based on template
 import LivePageRenderer from "@/components/playground/LivePageRenderer";
 
+// Standardized data providers
+import { NavigationDataProvider, useNavigation } from "@/components/navigation/NavigationDataProvider";
+import { TestDataProvider, useTestData } from "@/components/testing/TestDataProvider";
+
 const statusColors = {
   passed: "text-green-600",
   failed: "text-red-600",
@@ -104,7 +108,11 @@ export default function LivePreview() {
     ? pageTemplates.find(t => t.id === selectedItem.source_id)
     : featureTemplates.find(t => t.id === selectedItem?.source_id);
   const templateData = selectedItem?.working_data || selectedTemplate;
-  const itemTestData = testDataSets.find(td => td.playground_item_id === selectedItemId);
+  // Find test data by library source_id (consistent with TestDataManager)
+  const itemTestData = testDataSets.find(td => 
+    td.source_id === selectedItem?.source_id && 
+    td.source_type === selectedItem?.source_type
+  );
 
   // Get entities for the selected item
   const getEntitiesForItem = () => {
