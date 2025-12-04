@@ -32,15 +32,15 @@ import { DataList, KeyValue, StatusBadge, UserAvatar, ProgressBar, SimpleTable, 
 // Feedback
 import { SuccessAlert, ErrorAlert, WarningAlert, InfoAlert, LoadingSpinner, SkeletonLoader, ToastNotification, UploadProgress, StatusDot, EmptyPlaceholder } from "@/components/library/Feedback";
 
-// Tab definitions matching Figma
+// Tab definitions - each tab shows specific categories
 const tabs = [
-  { id: "library", label: "Library", icon: BookOpen },
-  { id: "figma", label: "Figma", icon: Figma },
-  { id: "ui", label: "UI", icon: Grid3X3 },
-  { id: "data", label: "Data", icon: Database },
-  { id: "layout", label: "Layout", icon: Layout },
-  { id: "interactive", label: "Interactive", icon: Sparkles },
-  { id: "utilities", label: "Utilities", icon: Wrench },
+  { id: "all", label: "All Components", icon: BookOpen, categories: ["typography", "buttons", "cards", "forms", "layouts", "navigation", "dataDisplay", "feedback"] },
+  { id: "ui", label: "UI Elements", icon: Grid3X3, categories: ["typography", "buttons", "cards"] },
+  { id: "forms", label: "Forms", icon: FormInput, categories: ["forms"] },
+  { id: "layout", label: "Layout", icon: Layout, categories: ["layouts"] },
+  { id: "navigation", label: "Navigation", icon: NavIcon, categories: ["navigation"] },
+  { id: "data", label: "Data Display", icon: Database, categories: ["dataDisplay"] },
+  { id: "feedback", label: "Feedback", icon: Bell, categories: ["feedback"] },
 ];
 
 // Component categories for navigation
