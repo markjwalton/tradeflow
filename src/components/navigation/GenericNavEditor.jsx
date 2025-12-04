@@ -48,7 +48,7 @@ import {
 const iconOptions = getIconOptions();
 
 /**
- * GenericNavEditor - A reusable navigation editor component
+ * GenericNavEditor - A reusable, multi-tenant navigation editor component
  * 
  * Props:
  * - title: string - Title for the card
@@ -57,6 +57,8 @@ const iconOptions = getIconOptions();
  * - onCopyFromTemplate: function - Optional callback to copy from another template
  * - showCopyButton: boolean - Whether to show the copy button
  * - copyButtonLabel: string - Label for the copy button
+ * - tenantId: string - Optional tenant ID for tenant-specific navigation
+ * - isGlobal: boolean - If true, edits global config; if false with tenantId, edits tenant-specific
  */
 export default function GenericNavEditor({
   title = "Navigation",
@@ -64,7 +66,9 @@ export default function GenericNavEditor({
   sourceSlugs = [],
   onCopyFromTemplate,
   showCopyButton = false,
-  copyButtonLabel = "Copy from Template"
+  copyButtonLabel = "Copy from Template",
+  tenantId = null,
+  isGlobal = true
 }) {
   const queryClient = useQueryClient();
   const [showDialog, setShowDialog] = useState(false);
@@ -84,10 +88,22 @@ export default function GenericNavEditor({
   const [aiRecommendations, setAiRecommendations] = useState({});
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
 
-  // Fetch config for this type
+  // Build the effective config type (tenant-prefixed if tenant-specific)
+  const effectiveConfigType = tenantId && !isGlobal 
+    ? `${configType}_tenant_${tenantId}` 
+    : configType;
+
+  // Fetch config for this type (tenant-specific or global)
   const { data: navConfigs = [], isLoading } = useQuery({
-    queryKey: ["navConfig", configType],
+    queryKey: ["navConfig", effectiveConfigType],
+    queryFn: () => base44.entities.NavigationConfig.filter({ config_type: effectiveConfigType }),
+  });
+
+  // Fetch global config as fallback/template for tenant configs
+  const { data: globalConfigs = [] } = useQuery({
+    queryKey: ["navConfig", configType, "global"],
     queryFn: () => base44.entities.NavigationConfig.filter({ config_type: configType }),
+    enabled: !!tenantId && !isGlobal, // Only fetch when editing tenant-specific
   });
 
   const config = navConfigs[0];
@@ -131,17 +147,31 @@ export default function GenericNavEditor({
             return base44.entities.NavigationConfig.update(config.id, { items: itemsWithIds });
           } else {
             return base44.entities.NavigationConfig.create({ 
-              config_type: configType, 
+              config_type: effectiveConfigType, 
               items: itemsWithIds,
               source_slugs: sourceSlugs
             });
           }
         },
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["navConfig", configType] });
+          queryClient.invalidateQueries({ queryKey: ["navConfig", effectiveConfigType] });
           toast.success("Navigation saved");
         },
       });
+
+  // Copy from global template to tenant config
+  const handleCopyFromGlobal = () => {
+    if (globalConfigs.length > 0 && globalConfigs[0].items?.length > 0) {
+      const copiedItems = globalConfigs[0].items.map(item => ({
+        ...item,
+        _id: generateId() // Generate new IDs for the copy
+      }));
+      saveMutation.mutate(copiedItems);
+      toast.success("Copied from global template");
+    } else {
+      toast.error("No global template to copy from");
+    }
+  };
 
   // Find item by unique _id
   const findItemById = (id) => items.find(i => i._id === id);
@@ -338,6 +368,13 @@ export default function GenericNavEditor({
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>{title}</CardTitle>
         <div className="flex gap-2">
+          {/* Copy from global template for tenant configs */}
+          {tenantId && !isGlobal && items.length === 0 && globalConfigs.length > 0 && (
+            <Button variant="outline" onClick={handleCopyFromGlobal}>
+              <Copy className="h-4 w-4 mr-2" />
+              Copy from Global
+            </Button>
+          )}
           {showCopyButton && onCopyFromTemplate && items.length === 0 && (
             <Button variant="outline" onClick={onCopyFromTemplate}>
               <Copy className="h-4 w-4 mr-2" />
