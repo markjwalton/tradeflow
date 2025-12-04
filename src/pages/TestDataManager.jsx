@@ -207,17 +207,15 @@ export default function TestDataManager() {
 
     return previewableItems.map(item => {
             const entities = getEntitiesForItem(item);
-            // Match by playground_item_id - check both flat and nested
-            const testData = testDataSets.find(td => 
-              (td.playground_item_id === item.id) || (td.data?.playground_item_id === item.id)
-            );
+            // Match by playground_item_id - data is flat
+            const testData = testDataSets.find(td => td.playground_item_id === item.id);
 
-            // Get entity_data - check both flat and nested
-            const entityData = testData?.entity_data || testData?.data?.entity_data || {};
+            // Get entity_data - data is flat
+            const entityData = testData?.entity_data || {};
             const recordCount = Object.values(entityData).reduce((sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0);
 
-            // Get test status from TestData record - check both flat and nested
-            const testStatus = testData?.test_status || testData?.data?.test_status || "pending";
+            // Get test status from TestData record - data is flat
+            const testStatus = testData?.test_status || "pending";
 
             return {
               id: item.id,
