@@ -1,109 +1,36 @@
 import React, { useState, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Progress } from "@/components/ui/progress";
 import { 
-  Database, Plus, Save, Loader2, Sparkles, Wand2,
-  Trash2, Edit, Layout, Zap, Shield, Play, RefreshCw,
-  ChevronDown, ChevronRight, CheckCircle2, AlertTriangle,
-  Clock, Target, FlaskConical, Settings, X
+  Database, Loader2, Sparkles, Layout, Zap, Play,
+  CheckCircle2, AlertTriangle, Clock, Target, FlaskConical, 
+  Settings, RefreshCw, Eye, XCircle
 } from "lucide-react";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 
-// Import professional components
-import TestDataDashboard from "@/components/test-data/TestDataDashboard";
-import TestDataStatusTable from "@/components/test-data/TestDataStatusTable";
-import SeedDataProgress from "@/components/test-data/SeedDataProgress";
-import AIQualityReport from "@/components/test-data/AIQualityReport";
-import EntitySchemaValidator from "@/components/test-data/EntitySchemaValidator";
-import TestDataSettingsDialog from "@/components/test-data/TestDataSettingsDialog";
-import TestVerificationDialog from "@/components/test-data/TestVerificationDialog";
-import BulkVerificationDialog from "@/components/test-data/BulkVerificationDialog";
+// Helper: safely get nested or flat property (single source of truth)
+const get = (obj, key) => obj?.[key] ?? obj?.data?.[key];
 
 export default function TestDataManager() {
   const queryClient = useQueryClient();
   
-  // Settings with localStorage persistence
-  const [settings, setSettings] = useState(() => {
-    const saved = localStorage.getItem("testDataManagerSettings");
-    return saved ? JSON.parse(saved) : {
-      batchSize: 10,
-      recordsPerEntity: 3,
-      expandCategoriesByDefault: false,
-      compactView: false,
-      defaultTab: "overview",
-      confirmBeforeSeed: true,
-      autoSeedOnGeneration: false
-    };
-  });
-  
-  // UI State
-  const [activeTab, setActiveTab] = useState(settings.defaultTab || "overview");
-  const [filterView, setFilterView] = useState(null);
-  const [showEditor, setShowEditor] = useState(false);
-  const [editingData, setEditingData] = useState(null);
-  const [showValidation, setShowValidation] = useState(false);
-  const [validationResults, setValidationResults] = useState(null);
-  const [showSettings, setShowSettings] = useState(false);
-  const [verifyingItem, setVerifyingItem] = useState(null);
-    const [isVerifyingBulk, setIsVerifyingBulk] = useState(false);
-  
-  // Save settings to localStorage
-  const handleSettingsChange = (newSettings) => {
-    setSettings(newSettings);
-    localStorage.setItem("testDataManagerSettings", JSON.stringify(newSettings));
-  };
-  
-  // Generation State
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [isSeeding, setIsSeeding] = useState(false);
-  const [seedQueue, setSeedQueue] = useState([]);
-  const [seedSuccess, setSeedSuccess] = useState(null);
-
-  const [generationProgress, setGenerationProgress] = useState({
-    current: 0,
-    total: 0,
-    items: [],
-    phase: ""
-  });
-  
-  // Form State
-  const [formData, setFormData] = useState({
-    name: "",
-    entity_data: {},
-    notes: ""
-  });
+  // Simple state
+  const [operation, setOperation] = useState({ type: null, progress: 0, total: 0, results: [] });
+  const [filter, setFilter] = useState("all");
 
   // Data Queries
-  const { data: playgroundItems = [], isLoading: loadingPlayground } = useQuery({
+  const { data: playgroundItems = [], isLoading: loadingPlayground, refetch: refetchPlayground } = useQuery({
     queryKey: ["playgroundItems"],
     queryFn: () => base44.entities.PlaygroundItem.list("-created_date"),
   });
 
-  const { data: testDataSets = [], isLoading } = useQuery({
+  const { data: testDataSets = [], isLoading: loadingTestData, refetch: refetchTestData } = useQuery({
     queryKey: ["testData"],
     queryFn: () => base44.entities.TestData.list("-created_date"),
   });
@@ -123,299 +50,166 @@ export default function TestDataManager() {
     queryFn: () => base44.entities.FeatureTemplate.list(),
   });
 
-  // Mutations
-  const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.TestData.create(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["testData"] });
-      toast.success("Test data created");
-      setShowEditor(false);
-    },
-  });
+  // Build unified item list - SINGLE SOURCE OF TRUTH
+  const items = useMemo(() => {
+    // Filter to pages and features only
+    const previewable = playgroundItems.filter(p => {
+      const type = get(p, "source_type");
+      return type === "page" || type === "feature";
+    });
 
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.TestData.update(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["testData"] });
-      toast.success("Test data updated");
-      setShowEditor(false);
-    },
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.TestData.delete(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["testData"] });
-      toast.success("Test data deleted");
-    },
-  });
-
-  // Helper: safely get nested or flat property
-  const get = (obj, key) => obj?.[key] ?? obj?.data?.[key];
-
-  // Build page/feature status list - CLEAN REFACTOR
-  const itemStatusList = useMemo(() => {
-
-    // Helper: get entities for a playground item
-    const getEntitiesForItem = (item) => {
-      const sourceType = get(item, "source_type");
+    return previewable.map(item => {
+      const type = get(item, "source_type");
+      const name = get(item, "source_name");
       const sourceId = get(item, "source_id");
-      const workingData = get(item, "working_data");
-
+      
+      // Find entities used
       let entitiesUsed = [];
-
-      if (sourceType === "page") {
+      const workingData = get(item, "working_data");
+      if (type === "page") {
         const template = pageTemplates.find(t => t.id === sourceId);
         entitiesUsed = workingData?.entities_used || get(template, "entities_used") || [];
-      } else if (sourceType === "feature") {
+      } else if (type === "feature") {
         const template = featureTemplates.find(t => t.id === sourceId);
         entitiesUsed = workingData?.entities_used || get(template, "entities_used") || [];
       }
 
-      return entitiesUsed.map(name => {
-        const entity = entityTemplates.find(e => get(e, "name") === name);
-        return {
-          name: get(entity, "name") || name,
-          schema: get(entity, "schema") || { properties: {} }
-        };
-      });
-    };
-
-    // Filter to pages and features only
-    const previewableItems = playgroundItems.filter(p => {
-      const sourceType = get(p, "source_type");
-      return sourceType === "page" || sourceType === "feature";
-    });
-
-    // Build status for each item
-    return previewableItems.map(item => {
-      const sourceType = get(item, "source_type");
-      const sourceName = get(item, "source_name");
-      const entities = getEntitiesForItem(item);
-
-      // Find matching TestData by playground_item_id
+      // Find test data
       const testData = testDataSets.find(td => get(td, "playground_item_id") === item.id);
-
-      // Extract data from TestData
       const entityData = get(testData, "entity_data") || {};
       const recordCount = Object.values(entityData).reduce(
-        (sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 
-        0
+        (sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0
       );
       const testStatus = get(testData, "test_status") || "pending";
 
       return {
         id: item.id,
-        name: sourceName,
-        type: sourceType,
-        entityCount: entities.length,
+        name,
+        type,
+        entityCount: entitiesUsed.length,
         recordCount,
         hasTestData: !!testData,
         testDataId: testData?.id,
-        dataStatus: testData ? (recordCount > 0 || entities.length === 0 ? "complete" : "pending") : "missing",
         testStatus,
-        entities
+        entities: entitiesUsed.map(eName => {
+          const entity = entityTemplates.find(e => get(e, "name") === eName);
+          return { name: eName, schema: get(entity, "schema") || {} };
+        })
       };
     });
   }, [playgroundItems, testDataSets, entityTemplates, pageTemplates, featureTemplates]);
 
-  // Calculate stats
+  // Stats
   const stats = useMemo(() => {
-    const withTestData = itemStatusList.filter(i => i.hasTestData).length;
-    const tested = itemStatusList.filter(i => i.testStatus === "verified").length;
-    const errors = itemStatusList.filter(i => i.testStatus === "failed").length;
-
+    const withData = items.filter(i => i.hasTestData).length;
+    const verified = items.filter(i => i.testStatus === "verified").length;
+    const pending = items.filter(i => i.hasTestData && i.testStatus === "pending").length;
     return {
-      total: itemStatusList.length,
-      withTestData,
-      withoutTestData: itemStatusList.length - withTestData,
-      tested,
-      pending: withTestData - tested - errors,
-      errors
+      total: items.length,
+      withData,
+      noData: items.length - withData,
+      verified,
+      pending
     };
-  }, [itemStatusList]);
+  }, [items]);
 
-  // Filter items based on card click
-  const getFilteredItems = () => {
-    switch (filterView) {
-      case "withData": return itemStatusList.filter(i => i.hasTestData);
-      case "withoutData": return itemStatusList.filter(i => !i.hasTestData);
-      case "tested": return itemStatusList.filter(i => i.testStatus === "verified");
-      case "pending": return itemStatusList.filter(i => i.hasTestData && i.testStatus !== "verified");
-      default: return itemStatusList;
+  // Filtered items
+  const filteredItems = useMemo(() => {
+    switch (filter) {
+      case "noData": return items.filter(i => !i.hasTestData);
+      case "pending": return items.filter(i => i.hasTestData && i.testStatus === "pending");
+      case "verified": return items.filter(i => i.testStatus === "verified");
+      default: return items;
     }
+  }, [items, filter]);
+
+  // Refresh all data
+  const refreshData = () => {
+    refetchPlayground();
+    refetchTestData();
   };
 
-  // Validate schemas
-  const validateSchemas = () => {
-    const results = {
-      entities: [],
-      totalEntities: entityTemplates.length,
-      validEntities: 0,
-      invalidEntities: 0,
-      missingSchemas: 0,
-      timestamp: new Date().toISOString()
-    };
-
-    entityTemplates.forEach(entity => {
-      const name = entity.data?.name || entity.name;
-      const schema = entity.data?.schema || entity.schema;
-      const properties = schema?.properties || {};
-      const propertyCount = Object.keys(properties).length;
-      const requiredFields = schema?.required || [];
-      
-      const validation = {
-        name,
-        id: entity.id,
-        hasSchema: !!schema,
-        propertyCount,
-        requiredFields: requiredFields.length,
-        properties: Object.keys(properties),
-        status: propertyCount > 0 ? "valid" : "missing_schema",
-        issues: []
-      };
-
-      if (!schema) {
-        validation.issues.push("No schema defined");
-        validation.status = "missing_schema";
-        results.missingSchemas++;
-      } else if (propertyCount === 0) {
-        validation.issues.push("Schema has no properties");
-        validation.status = "empty_schema";
-        results.missingSchemas++;
-      } else {
-        results.validEntities++;
-      }
-
-      if (validation.status !== "valid") {
-        results.invalidEntities++;
-      }
-
-      results.entities.push(validation);
-    });
-
-    results.entities.sort((a, b) => {
-      if (a.status === "valid" && b.status !== "valid") return 1;
-      if (a.status !== "valid" && b.status === "valid") return -1;
-      return a.name.localeCompare(b.name);
-    });
-
-    return results;
-  };
-
-  // Add items to seed queue when generation completes
-  const addToSeedQueue = (items) => {
-    setSeedQueue(prev => [...prev, ...items.filter(i => !prev.some(p => p.id === i.id))]);
-  };
-
-  // Generate test data for items without data
-  const startBulkGeneration = async () => {
-    // Debug: Log all items and their test data status
-    console.log("All itemStatusList:", itemStatusList.slice(0, 5).map(i => ({
-      name: i.name, 
-      hasTestData: i.hasTestData, 
-      testDataId: i.testDataId
-    })));
-    console.log("testDataSets count:", testDataSets.length);
-    
-    // Include items even if entityCount is 0 - we'll generate placeholder data
-    const itemsToProcess = itemStatusList
-      .filter(i => !i.hasTestData)
-      .slice(0, settings.batchSize);
-
-    console.log("itemsToProcess", itemsToProcess);
-
-    if (itemsToProcess.length === 0) {
-      toast.info("All items already have test data");
+  // BULK VERIFY - with rate limit handling
+  const bulkVerify = async () => {
+    const toVerify = items.filter(i => i.hasTestData && i.testStatus !== "verified");
+    if (toVerify.length === 0) {
+      toast.info("Nothing to verify");
       return;
     }
 
-    // Enrich items with entities before starting
-    const enrichedItems = itemsToProcess.map(item => ({
-      ...item,
-      entities: item.entities || getEntitiesForItemById(item.id)
-    }));
-
-    console.log("Setting isGenerating to true, enrichedItems:", enrichedItems.length);
-    setIsGenerating(true);
-    console.log("isGenerating set, setting progress...");
-    setGenerationProgress({
-      current: 0,
-      total: enrichedItems.length,
-      items: enrichedItems.map(item => ({
-        id: item.id,
-        name: item.name,
-        type: item.type,
-        entityCount: item.entityCount,
-        status: "pending"
-      })),
-      phase: "Generating Test Data"
-    });
+    setOperation({ type: "verify", progress: 0, total: toVerify.length, results: [] });
     
-    console.log("Progress set, starting loop...");
+    const results = [];
+    const BATCH_SIZE = 5;
+    const DELAY_BETWEEN_BATCHES = 2000; // 2 seconds between batches to avoid rate limit
 
-    let successCount = 0;
-    let errorCount = 0;
-
-    for (let i = 0; i < enrichedItems.length; i++) {
-      const item = enrichedItems[i];
-      console.log(`Processing item ${i}: ${item.name}, entities:`, item.entities?.length || 0);
+    for (let i = 0; i < toVerify.length; i += BATCH_SIZE) {
+      const batch = toVerify.slice(i, i + BATCH_SIZE);
       
-      setGenerationProgress(prev => ({
-        ...prev,
-        current: i,
-        items: prev.items.map((it, idx) => 
-          idx === i ? { ...it, status: "processing" } : it
-        )
-      }));
-
-      const entities = item.entities || [];
-      if (entities.length === 0) {
-        console.log(`Item ${item.name} has no entities, creating placeholder`);
-        // Create placeholder test data for items without entities
+      for (const item of batch) {
         try {
-          await base44.entities.TestData.create({
-            name: "Default Test Data",
-            playground_item_id: item.id,
-            entity_data: {},
-            is_default: true,
-            test_status: "pending",
-            notes: "No entities defined for this item"
-          });
-          successCount++;
-          queryClient.invalidateQueries({ queryKey: ["testData"] });
-          setGenerationProgress(prev => ({
-            ...prev,
-            current: i + 1,
-            items: prev.items.map((it, idx) => 
-              idx === i ? { ...it, status: "success", recordsGenerated: 0 } : it
-            )
-          }));
+          await base44.entities.TestData.update(item.testDataId, { test_status: "verified" });
+          results.push({ id: item.id, name: item.name, success: true });
         } catch (e) {
-          errorCount++;
-          setGenerationProgress(prev => ({
-            ...prev,
-            current: i + 1,
-            items: prev.items.map((it, idx) => 
-              idx === i ? { ...it, status: "error", error: e.message } : it
-            )
-          }));
+          results.push({ id: item.id, name: item.name, success: false, error: e.message });
         }
-        continue;
+        setOperation(prev => ({ ...prev, progress: results.length, results: [...results] }));
       }
 
-      const entitySchemas = entities.map(e => ({
-        name: e.name,
-        properties: e.schema?.properties || {},
-        required: e.schema?.required || []
-      }));
+      // Wait between batches to avoid rate limit
+      if (i + BATCH_SIZE < toVerify.length) {
+        await new Promise(r => setTimeout(r, DELAY_BETWEEN_BATCHES));
+      }
+    }
 
-      try {
-        console.log(`Calling InvokeLLM for ${item.name}...`);
+    const successCount = results.filter(r => r.success).length;
+    const failCount = results.filter(r => !r.success).length;
+    
+    if (failCount > 0) {
+      toast.warning(`${successCount} verified, ${failCount} failed`);
+    } else {
+      toast.success(`${successCount} items verified`);
+    }
+
+    setOperation({ type: "complete", progress: results.length, total: toVerify.length, results });
+    refreshData();
+  };
+
+  // SINGLE VERIFY
+  const verifySingle = async (item) => {
+    if (!item.testDataId) {
+      toast.error("No test data to verify");
+      return;
+    }
+    try {
+      await base44.entities.TestData.update(item.testDataId, { test_status: "verified" });
+      toast.success(`${item.name} verified`);
+      refreshData();
+    } catch (e) {
+      toast.error("Failed: " + e.message);
+    }
+  };
+
+  // GENERATE TEST DATA
+  const generateTestData = async (item) => {
+    setOperation({ type: "generating", progress: 0, total: 1, results: [], currentItem: item.name });
+    
+    try {
+      if (item.entities.length === 0) {
+        // No entities - create placeholder
+        await base44.entities.TestData.create({
+          playground_item_id: item.id,
+          name: "Default Test Data",
+          entity_data: {},
+          is_default: true,
+          test_status: "pending"
+        });
+      } else {
+        // Generate with AI
         const result = await base44.integrations.Core.InvokeLLM({
           prompt: `Generate realistic test data for "${item.name}". Create 3 records for EACH entity:
-${entitySchemas.map(e => `Entity: ${e.name}\nProperties: ${JSON.stringify(e.properties)}`).join('\n---\n')}
-Return as JSON with entity names as keys and arrays of records as values.`,
+${item.entities.map(e => `Entity: ${e.name}\nSchema: ${JSON.stringify(e.schema?.properties || {})}`).join('\n---\n')}
+Return JSON with entity names as keys and arrays of records as values.`,
           response_json_schema: {
             type: "object",
             properties: {
@@ -424,209 +218,43 @@ Return as JSON with entity names as keys and arrays of records as values.`,
           }
         });
 
-        const entityData = result.data || {};
-        const recordsGenerated = Object.values(entityData).reduce((sum, arr) => 
-          sum + (Array.isArray(arr) ? arr.length : 0), 0);
-
         await base44.entities.TestData.create({
-          name: "Default Test Data",
           playground_item_id: item.id,
-          entity_data: entityData,
+          name: "Default Test Data",
+          entity_data: result.data || {},
           is_default: true,
           test_status: "pending"
         });
-
-        successCount++;
-        queryClient.invalidateQueries({ queryKey: ["testData"] });
-
-        // Add to seed queue
-        addToSeedQueue([{ id: item.id, name: item.name }]);
-
-        setGenerationProgress(prev => ({
-          ...prev,
-          current: i + 1,
-          items: prev.items.map((it, idx) => 
-            idx === i ? { ...it, status: "success", recordsGenerated } : it
-          )
-        }));
-      } catch (e) {
-        console.error(`Failed for ${item.name}:`, e);
-        errorCount++;
-        setGenerationProgress(prev => ({
-          ...prev,
-          current: i + 1,
-          items: prev.items.map((it, idx) => 
-            idx === i ? { ...it, status: "error", error: e.message } : it
-          )
-        }));
-        await new Promise(resolve => setTimeout(resolve, 1000));
       }
-    }
 
-    setIsGenerating(false);
-      // Clear progress after a delay so user can see final state
-      setTimeout(() => {
-        setGenerationProgress({ current: 0, total: 0, items: [], phase: "" });
-      }, 5000);
-      queryClient.invalidateQueries({ queryKey: ["testData"] });
-      const remaining = itemStatusList.filter(i => !i.hasTestData).length - settings.batchSize;
-      if (remaining > 0) {
-        toast.success(`Batch complete: ${successCount} succeeded, ${errorCount} failed. ${remaining} items remaining.`);
-      } else {
-        toast.success(`Generation complete: ${successCount} succeeded, ${errorCount} failed`);
-      }
-  };
-
-  // Seed database in batches (background-friendly)
-  const seedDatabase = async () => {
-    if (seedQueue.length === 0) return;
-    
-    setIsSeeding(true);
-    setSeedSuccess(null);
-    
-    let totalInserted = 0;
-    let entityCount = 0;
-    let errors = [];
-    const batchSize = 5; // Process 5 items at a time
-    
-    const allTestData = await base44.entities.TestData.list();
-    const itemsToSeed = [...seedQueue];
-    
-    for (let i = 0; i < itemsToSeed.length; i += batchSize) {
-      const batch = itemsToSeed.slice(i, i + batchSize);
-      
-      for (const item of batch) {
-        const testData = allTestData.find(td => td.data?.playground_item_id === item.id);
-        if (!testData?.data?.entity_data) continue;
-        
-        for (const [entityName, records] of Object.entries(testData.data.entity_data)) {
-          if (!Array.isArray(records) || records.length === 0) continue;
-          try {
-            if (base44.entities[entityName]) {
-              await base44.entities[entityName].bulkCreate(records);
-              totalInserted += records.length;
-              entityCount++;
-            } else {
-              errors.push(`${entityName}: Entity not found`);
-            }
-          } catch (e) {
-            errors.push(`${entityName}: ${e.message}`);
-          }
-        }
-      }
-      
-      // Small delay between batches to prevent overwhelming the API
-      if (i + batchSize < itemsToSeed.length) {
-        await new Promise(resolve => setTimeout(resolve, 500));
-      }
-    }
-    
-    setIsSeeding(false);
-    setSeedQueue([]); // Clear the queue
-    
-    if (errors.length > 0) {
-      toast.error(`Seeded ${totalInserted} records with some errors`);
-    } else if (totalInserted > 0) {
-      setSeedSuccess({ totalRecords: totalInserted, entityCount });
-    }
-  };
-
-  // Handle card clicks
-  const handleCardClick = (cardId) => {
-    setFilterView(filterView === cardId ? null : cardId);
-    setActiveTab("status");
-  };
-
-  // Helper to get entities for a single item (for generation)
-  const getEntitiesForItemById = (itemId) => {
-    const item = playgroundItems.find(p => p.id === itemId);
-    if (!item) return [];
-
-    const sourceType = get(item, "source_type");
-    const sourceId = get(item, "source_id");
-    const workingData = get(item, "working_data");
-
-    let entitiesUsed = [];
-    if (sourceType === "page") {
-      const template = pageTemplates.find(t => t.id === sourceId);
-      entitiesUsed = workingData?.entities_used || get(template, "entities_used") || [];
-    } else if (sourceType === "feature") {
-      const template = featureTemplates.find(t => t.id === sourceId);
-      entitiesUsed = workingData?.entities_used || get(template, "entities_used") || [];
-    }
-
-    return entitiesUsed.map(name => {
-      const entity = entityTemplates.find(e => get(e, "name") === name);
-      return {
-        name: get(entity, "name") || name,
-        schema: get(entity, "schema") || { properties: {} }
-      };
-    });
-  };
-
-  // Handle single item generation
-  const handleGenerateForItem = async (item) => {
-    setIsGenerating(true);
-    
-    const entities = item.entities || getEntitiesForItemById(item.id);
-    const entitySchemas = entities.map(e => ({
-      name: e.name,
-      properties: e.schema?.properties || {},
-      required: e.schema?.required || []
-    }));
-
-    try {
-      const result = await base44.integrations.Core.InvokeLLM({
-        prompt: `Generate realistic test data for "${item.name}". Create 3 records for EACH entity:
-${entitySchemas.map(e => `Entity: ${e.name}\nProperties: ${JSON.stringify(e.properties)}`).join('\n---\n')}
-Return as JSON with entity names as keys and arrays of records as values.`,
-        response_json_schema: {
-          type: "object",
-          properties: {
-            data: { type: "object", additionalProperties: { type: "array", items: { type: "object" } } }
-          }
-        }
-      });
-
-      await base44.entities.TestData.create({
-        name: "Default Test Data",
-        playground_item_id: item.id,
-        entity_data: result.data || {},
-        is_default: true,
-        test_status: "pending"
-      });
-
-      // Add to seed queue
-      addToSeedQueue([{ id: item.id, name: item.name }]);
-
-      queryClient.invalidateQueries({ queryKey: ["testData"] });
       toast.success(`Generated test data for ${item.name}`);
+      refreshData();
     } catch (e) {
       toast.error("Generation failed: " + e.message);
-    } finally {
-      setIsGenerating(false);
     }
+    
+    setOperation({ type: null, progress: 0, total: 0, results: [] });
   };
 
-  // Run validation
-  const runValidation = () => {
-    const results = validateSchemas();
-    setValidationResults(results);
-    setShowValidation(true);
+  // Close operation panel
+  const closeOperation = () => {
+    setOperation({ type: null, progress: 0, total: 0, results: [] });
   };
 
-  if (isLoading || loadingPlayground) {
+  const isLoading = loadingPlayground || loadingTestData;
+  const isOperating = operation.type === "verify" || operation.type === "generating";
+
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-        <span className="ml-2 text-gray-500">Loading {loadingPlayground ? "playground items" : "test data"}...</span>
       </div>
     );
   }
 
   return (
     <div className="p-6 space-y-6">
-      {/* Hero Header */}
+      {/* Header */}
       <Card className="bg-gradient-to-r from-purple-600 to-blue-600 text-white border-0">
         <CardContent className="py-6">
           <div className="flex items-start justify-between">
@@ -636,213 +264,184 @@ Return as JSON with entity names as keys and arrays of records as values.`,
               </div>
               <div>
                 <h1 className="text-2xl font-bold">Test Data Manager</h1>
-                <p className="text-purple-100 mt-1 max-w-2xl">
-                  Comprehensive test data generation and validation for functional & UI testing. 
-                  Ensure every page and feature has realistic test data for complete application coverage.
-                </p>
-                <div className="flex gap-4 mt-4">
-                  <div className="flex items-center gap-2 bg-white/20 px-3 py-1.5 rounded-lg">
-                    <Target className="h-4 w-4" />
-                    <span className="text-sm font-medium">{stats.total} Pages/Features</span>
-                  </div>
-                  <div className="flex items-center gap-2 bg-white/20 px-3 py-1.5 rounded-lg">
-                    <CheckCircle2 className="h-4 w-4" />
-                    <span className="text-sm font-medium">{stats.withTestData} With Data</span>
-                  </div>
-                  <div className="flex items-center gap-2 bg-white/20 px-3 py-1.5 rounded-lg">
-                    <AlertTriangle className="h-4 w-4" />
-                    <span className="text-sm font-medium">{stats.withoutTestData} Missing</span>
-                  </div>
+                <p className="text-purple-100 mt-1">Manage test data for pages and features</p>
+                <div className="flex gap-3 mt-4">
+                  <Badge className="bg-white/20">{stats.total} Items</Badge>
+                  <Badge className="bg-green-500/80">{stats.verified} Verified</Badge>
+                  <Badge className="bg-amber-500/80">{stats.pending} Pending</Badge>
+                  <Badge className="bg-red-500/80">{stats.noData} No Data</Badge>
                 </div>
               </div>
             </div>
-            <div className="flex flex-col gap-2">
-              <div className="flex gap-2">
-                <Button variant="secondary" onClick={runValidation} className="bg-white text-purple-700 hover:bg-purple-50">
-                                        <Shield className="h-4 w-4 mr-2" />
-                                        Validate Schemas
-                                      </Button>
-                                      <Button 
-                                        variant="secondary" 
-                                        onClick={() => setIsVerifyingBulk(true)}
-                                        disabled={stats.withTestData === 0}
-                                        className="bg-white text-purple-700 hover:bg-purple-50"
-                                      >
-                                        <Play className="h-4 w-4 mr-2" />
-                                        Bulk Verify ({stats.withTestData})
-                                      </Button>
-                <Button 
-                  variant="secondary" 
-                  onClick={() => setShowSettings(true)} 
-                  className="bg-white/20 hover:bg-white/30 text-white"
-                  size="icon"
-                >
-                  <Settings className="h-4 w-4" />
-                </Button>
-              </div>
-              <Button 
-                onClick={startBulkGeneration}
-                disabled={isGenerating || stats.withoutTestData === 0}
-                className="bg-white/20 hover:bg-white/30 border-white/30"
-              >
-                {isGenerating ? (
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                ) : (
-                  <Sparkles className="h-4 w-4 mr-2" />
-                )}
-                Generate All Missing
+            <div className="flex gap-2">
+              <Button variant="secondary" size="icon" onClick={refreshData}>
+                <RefreshCw className="h-4 w-4" />
               </Button>
-
-              {/* Seed Database Button or Success Notification */}
-              {seedSuccess ? (
-                <div className="flex items-center gap-2 bg-green-500 text-white px-3 py-2 rounded-lg">
-                  <CheckCircle2 className="h-4 w-4" />
-                  <span className="text-sm font-medium">
-                    Seeded {seedSuccess.totalRecords} records
-                  </span>
-                  <button 
-                    onClick={() => setSeedSuccess(null)}
-                    className="ml-auto hover:bg-green-600 rounded p-0.5"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                </div>
-              ) : seedQueue.length > 0 && (
-                <Button 
-                  onClick={seedDatabase}
-                  disabled={isSeeding}
-                  className="bg-green-500 hover:bg-green-600 text-white"
-                >
-                  {isSeeding ? (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <Database className="h-4 w-4 mr-2" />
-                  )}
-                  Seed Database ({seedQueue.length} items)
-                </Button>
-              )}
+              <Button 
+                onClick={bulkVerify}
+                disabled={isOperating || stats.pending === 0}
+                className="bg-white text-purple-700 hover:bg-purple-50"
+              >
+                <CheckCircle2 className="h-4 w-4 mr-2" />
+                Verify All ({stats.pending})
+              </Button>
             </div>
           </div>
         </CardContent>
       </Card>
 
-
-
-      {/* Dashboard Cards */}
-      <TestDataDashboard stats={stats} onCardClick={handleCardClick} />
-
-
-
-                  {/* Progress Card - Shows when generating or has progress items */}
-                  {(isGenerating || generationProgress.items.length > 0) && (
-            <SeedDataProgress
-          isRunning={isGenerating}
-          progress={generationProgress}
-          onRetry={() => {
-            const failedItems = generationProgress.items.filter(i => i.status === "error");
-            toast.info(`Retry for ${failedItems.length} failed items coming soon`);
-          }}
-          seedQueueCount={seedQueue.length}
-        />
+      {/* Operation Progress */}
+      {(operation.type === "verify" || operation.type === "complete") && (
+        <Card className={operation.type === "complete" ? "border-green-200 bg-green-50" : ""}>
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg flex items-center gap-2">
+                {operation.type === "verify" ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                )}
+                {operation.type === "verify" ? "Verifying..." : "Verification Complete"}
+              </CardTitle>
+              {operation.type === "complete" && (
+                <Button variant="ghost" size="sm" onClick={closeOperation}>Close</Button>
+              )}
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex justify-between text-sm">
+                <span>{operation.progress} / {operation.total}</span>
+                <span>{Math.round((operation.progress / operation.total) * 100)}%</span>
+              </div>
+              <Progress value={(operation.progress / operation.total) * 100} />
+              
+              {operation.type === "complete" && operation.results.some(r => !r.success) && (
+                <div className="mt-3 max-h-40 overflow-auto border rounded p-2 bg-white">
+                  <p className="text-sm font-medium text-red-600 mb-2">Failed Items:</p>
+                  {operation.results.filter(r => !r.success).map((r, i) => (
+                    <div key={i} className="text-sm text-red-600">• {r.name}: {r.error}</div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       )}
 
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="status">Page Status</TabsTrigger>
-          <TabsTrigger value="quality">AI Quality Report</TabsTrigger>
-        </TabsList>
+      {/* Filters */}
+      <div className="flex gap-2">
+        {[
+          { key: "all", label: "All", count: stats.total },
+          { key: "noData", label: "No Data", count: stats.noData, color: "text-red-600" },
+          { key: "pending", label: "Pending", count: stats.pending, color: "text-amber-600" },
+          { key: "verified", label: "Verified", count: stats.verified, color: "text-green-600" },
+        ].map(f => (
+          <Button
+            key={f.key}
+            variant={filter === f.key ? "default" : "outline"}
+            size="sm"
+            onClick={() => setFilter(f.key)}
+            className={filter !== f.key ? f.color : ""}
+          >
+            {f.label} ({f.count})
+          </Button>
+        ))}
+      </div>
 
-        <TabsContent value="overview" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Items Without Data */}
-            <TestDataStatusTable
-              items={itemStatusList}
-              title="Pages Without Test Data"
-              description="These pages need test data generated"
-              filter={(i) => !i.hasTestData}
-              onGenerateData={handleGenerateForItem}
-              defaultExpanded={settings.expandCategoriesByDefault}
-            />
-
-            {/* Recently Generated */}
-            <TestDataStatusTable
-              items={itemStatusList}
-              title="Pending Verification"
-              description="Test data generated but not yet verified"
-              filter={(i) => i.hasTestData && i.testStatus !== "verified"}
-              onRunTest={(item) => setVerifyingItem(item)}
-              defaultExpanded={settings.expandCategoriesByDefault}
-            />
-          </div>
-        </TabsContent>
-
-        <TabsContent value="status">
-          <TestDataStatusTable
-            items={getFilteredItems()}
-            title={filterView ? `Filtered: ${filterView}` : "All Pages & Features"}
-            description={filterView ? "Click dashboard cards to change filter" : "Complete status of all testable items"}
-            onGenerateData={handleGenerateForItem}
-            onRunTest={(item) => setVerifyingItem(item)}
-            groupByCategory={true}
-            defaultExpanded={settings.expandCategoriesByDefault}
-          />
-        </TabsContent>
-
-        <TabsContent value="quality">
-          <AIQualityReport
-            testDataSets={testDataSets}
-            entityTemplates={entityTemplates}
-            onReportGenerated={(report) => {
-              // Could update stats.qualityScore here
-            }}
-          />
-        </TabsContent>
-      </Tabs>
-
-      {/* Schema Validation Dialog */}
-      <EntitySchemaValidator
-        isOpen={showValidation}
-        onClose={() => setShowValidation(false)}
-        validationResults={validationResults}
-        onRevalidate={runValidation}
-      />
-
-      {/* Settings Dialog */}
-      <TestDataSettingsDialog
-        isOpen={showSettings}
-        onClose={() => setShowSettings(false)}
-        settings={settings}
-        onSettingsChange={handleSettingsChange}
-      />
-
-      {/* Verification Dialog */}
-                  <TestVerificationDialog
-                    isOpen={!!verifyingItem}
-                    onClose={() => setVerifyingItem(null)}
-                    item={verifyingItem}
-                    testData={testDataSets.find(td => get(td, "playground_item_id") === verifyingItem?.id)}
-                    onVerified={() => {
-                      queryClient.invalidateQueries({ queryKey: ["testData"] });
-                      setVerifyingItem(null);
-                    }}
-                  />
-
-                  {/* Bulk Verification Dialog */}
-                  <BulkVerificationDialog
-                    isOpen={isVerifyingBulk}
-                    onClose={() => {
-                      setIsVerifyingBulk(false);
-                      queryClient.invalidateQueries({ queryKey: ["testData"] });
-                    }}
-                    items={itemStatusList}
-                    testDataSets={testDataSets}
-                    entityTemplates={entityTemplates}
-                    onComplete={() => {
-                      queryClient.invalidateQueries({ queryKey: ["testData"] });
-                    }}
-                  />
+      {/* Items Table */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg">
+            {filter === "all" ? "All Items" : `${filter.charAt(0).toUpperCase() + filter.slice(1)} Items`}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {filteredItems.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">
+              <CheckCircle2 className="h-10 w-10 mx-auto mb-2 text-green-500" />
+              <p>No items in this category</p>
+            </div>
+          ) : (
+            <div className="border rounded-lg overflow-hidden">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="text-left p-3">Type</th>
+                    <th className="text-left p-3">Name</th>
+                    <th className="text-center p-3">Entities</th>
+                    <th className="text-center p-3">Records</th>
+                    <th className="text-center p-3">Status</th>
+                    <th className="text-right p-3">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {filteredItems.map(item => (
+                    <tr key={item.id} className="hover:bg-gray-50">
+                      <td className="p-3">
+                        {item.type === "page" ? (
+                          <Layout className="h-4 w-4 text-blue-600" />
+                        ) : (
+                          <Zap className="h-4 w-4 text-amber-600" />
+                        )}
+                      </td>
+                      <td className="p-3 font-medium">{item.name}</td>
+                      <td className="p-3 text-center">{item.entityCount}</td>
+                      <td className="p-3 text-center">{item.recordCount}</td>
+                      <td className="p-3 text-center">
+                        {!item.hasTestData ? (
+                          <Badge variant="destructive" className="gap-1">
+                            <XCircle className="h-3 w-3" /> No Data
+                          </Badge>
+                        ) : item.testStatus === "verified" ? (
+                          <Badge className="bg-green-100 text-green-700 gap-1">
+                            <CheckCircle2 className="h-3 w-3" /> Verified
+                          </Badge>
+                        ) : (
+                          <Badge variant="secondary" className="gap-1">
+                            <Clock className="h-3 w-3" /> Pending
+                          </Badge>
+                        )}
+                      </td>
+                      <td className="p-3 text-right">
+                        <div className="flex justify-end gap-1">
+                          <Link to={createPageUrl("LivePreview") + `?id=${item.id}`} target="_blank">
+                            <Button size="sm" variant="ghost" title="Preview">
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                          </Link>
+                          {!item.hasTestData && (
+                            <Button 
+                              size="sm" 
+                              variant="ghost"
+                              onClick={() => generateTestData(item)}
+                              disabled={isOperating}
+                              title="Generate Data"
+                            >
+                              <Sparkles className="h-4 w-4" />
+                            </Button>
+                          )}
+                          {item.hasTestData && item.testStatus !== "verified" && (
+                            <Button 
+                              size="sm" 
+                              variant="ghost"
+                              onClick={() => verifySingle(item)}
+                              disabled={isOperating}
+                              title="Verify"
+                            >
+                              <CheckCircle2 className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
