@@ -381,11 +381,14 @@ export default function GenericNavEditor({
               {copyButtonLabel}
             </Button>
           )}
-          <Button onClick={() => { 
-            setEditingItem(null); 
-            setFormData({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null, item_type: "page", default_collapsed: false }); 
-            setShowDialog(true); 
-          }}>
+          <Button 
+            className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+            onClick={() => { 
+              setEditingItem(null); 
+              setFormData({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null, item_type: "page", default_collapsed: false }); 
+              setShowDialog(true); 
+            }}
+          >
             <Plus className="h-4 w-4 mr-2" />
             Add Item
           </Button>
@@ -412,9 +415,9 @@ export default function GenericNavEditor({
                                 ...provided.draggableProps.style,
                                 marginLeft: (item.depth || 0) * 24 
                               }}
-                              className={`draggable-item group ${!item.is_visible ? "opacity-50" : ""}`}
+                              className={`flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg hover:bg-[var(--color-primary)]/5 hover:border-[var(--color-primary)]/30 transition-all group ${!item.is_visible ? "opacity-50" : ""}`}
                             >
-                              <div {...provided.dragHandleProps} className="drag-handle">
+                              <div {...provided.dragHandleProps} className="cursor-grab text-gray-400 hover:text-gray-600">
                                 <GripVertical className="h-4 w-4" />
                               </div>
                               
@@ -437,7 +440,7 @@ export default function GenericNavEditor({
                                 )}
                               </div>
 
-                              <div className="action-buttons">
+                              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                 {/* Move Menu */}
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
@@ -503,7 +506,7 @@ export default function GenericNavEditor({
               <div className="border-t pt-4">
                 <button 
                   onClick={() => setUnallocatedExpanded(!unallocatedExpanded)}
-                  className="section-header mb-3"
+                  className="flex items-center gap-2 text-[var(--color-charcoal)] hover:text-[var(--color-midnight)] font-medium mb-3"
                 >
                   {unallocatedExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                   <FolderOpen className="h-4 w-4" />
@@ -545,7 +548,7 @@ export default function GenericNavEditor({
                           {unallocatedSlugs.map(slug => (
                       <div 
                         key={slug} 
-                        className="draggable-item group border-dashed"
+                        className="flex items-center gap-3 p-3 bg-white border border-dashed border-gray-300 rounded-lg hover:bg-gray-50 transition-all group"
                       >
                         <div className="w-5" />
                         <div className="flex items-center gap-2 flex-1">
@@ -559,7 +562,7 @@ export default function GenericNavEditor({
                             </Badge>
                           )}
                         </div>
-                        <div className="action-buttons">
+                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                           <Button 
                             variant="ghost" 
                             size="icon" 
@@ -697,7 +700,7 @@ export default function GenericNavEditor({
             )}
             <div className="flex justify-end gap-2 pt-4">
               <Button variant="outline" onClick={closeDialog}>Cancel</Button>
-              <Button onClick={handleSaveItem}>Save</Button>
+              <Button className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white" onClick={handleSaveItem}>Save</Button>
             </div>
           </div>
         </DialogContent>
