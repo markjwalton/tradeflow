@@ -1,0 +1,426 @@
+import React from "react";
+import { cn } from "@/lib/utils";
+import { Search, Eye, EyeOff, Calendar, Check } from "lucide-react";
+
+// Base input styles
+const inputBase = cn(
+  "w-full px-4 py-2.5 rounded-lg",
+  "bg-white border border-[#eceae5]",
+  "text-[#3b3b3b] placeholder:text-[#888888]",
+  "transition-all duration-200",
+  "focus:outline-none focus:ring-2 focus:ring-[#4A5D4E]/30 focus:border-[#4A5D4E]",
+  "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-[#f5f3ef]"
+);
+
+const labelBase = "block text-sm font-medium text-[#1b2a35] mb-1.5";
+const errorBase = "text-sm text-[#8b5b5b] mt-1";
+const hintBase = "text-sm text-[#6d6d6d] mt-1";
+
+// Text Field
+export function TextField({ 
+  label, 
+  placeholder, 
+  value, 
+  onChange, 
+  error,
+  hint,
+  required,
+  disabled,
+  className, 
+  ...props 
+}) {
+  return (
+    <div className={className}>
+      {label && (
+        <label className={labelBase}>
+          {label}
+          {required && <span className="text-[#8b5b5b] ml-1">*</span>}
+        </label>
+      )}
+      <input
+        type="text"
+        className={cn(inputBase, error && "border-[#8b5b5b] focus:ring-[#8b5b5b]/30")}
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => onChange?.(e.target.value)}
+        disabled={disabled}
+        {...props}
+      />
+      {error && <p className={errorBase}>{error}</p>}
+      {hint && !error && <p className={hintBase}>{hint}</p>}
+    </div>
+  );
+}
+
+// TextArea Field
+export function TextAreaField({ 
+  label, 
+  placeholder, 
+  value, 
+  onChange, 
+  rows = 4,
+  error,
+  hint,
+  required,
+  disabled,
+  className, 
+  ...props 
+}) {
+  return (
+    <div className={className}>
+      {label && (
+        <label className={labelBase}>
+          {label}
+          {required && <span className="text-[#8b5b5b] ml-1">*</span>}
+        </label>
+      )}
+      <textarea
+        className={cn(inputBase, "resize-none", error && "border-[#8b5b5b] focus:ring-[#8b5b5b]/30")}
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => onChange?.(e.target.value)}
+        rows={rows}
+        disabled={disabled}
+        {...props}
+      />
+      {error && <p className={errorBase}>{error}</p>}
+      {hint && !error && <p className={hintBase}>{hint}</p>}
+    </div>
+  );
+}
+
+// Select Field
+export function SelectField({ 
+  label, 
+  options = [], 
+  value, 
+  onChange, 
+  placeholder = "Select an option",
+  error,
+  hint,
+  required,
+  disabled,
+  className, 
+  ...props 
+}) {
+  return (
+    <div className={className}>
+      {label && (
+        <label className={labelBase}>
+          {label}
+          {required && <span className="text-[#8b5b5b] ml-1">*</span>}
+        </label>
+      )}
+      <select
+        className={cn(
+          inputBase, 
+          "appearance-none cursor-pointer",
+          "bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236d6d6d%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')]",
+          "bg-[position:right_12px_center] bg-no-repeat bg-[length:18px]",
+          error && "border-[#8b5b5b] focus:ring-[#8b5b5b]/30"
+        )}
+        value={value}
+        onChange={(e) => onChange?.(e.target.value)}
+        disabled={disabled}
+        {...props}
+      >
+        <option value="" disabled>{placeholder}</option>
+        {options.map((option, i) => (
+          <option key={i} value={typeof option === "string" ? option : option.value}>
+            {typeof option === "string" ? option : option.label}
+          </option>
+        ))}
+      </select>
+      {error && <p className={errorBase}>{error}</p>}
+      {hint && !error && <p className={hintBase}>{hint}</p>}
+    </div>
+  );
+}
+
+// Checkbox Field
+export function CheckboxField({ 
+  label, 
+  checked, 
+  onChange, 
+  description,
+  disabled,
+  className, 
+  ...props 
+}) {
+  return (
+    <label className={cn("flex items-start gap-3 cursor-pointer", disabled && "opacity-50 cursor-not-allowed", className)}>
+      <div className="relative mt-0.5">
+        <input
+          type="checkbox"
+          className="sr-only"
+          checked={checked}
+          onChange={(e) => onChange?.(e.target.checked)}
+          disabled={disabled}
+          {...props}
+        />
+        <div className={cn(
+          "w-5 h-5 rounded border-2 transition-all duration-200",
+          "flex items-center justify-center",
+          checked 
+            ? "bg-[#4A5D4E] border-[#4A5D4E]" 
+            : "bg-white border-[#d1d1d1] hover:border-[#4A5D4E]"
+        )}>
+          {checked && <Check className="h-3 w-3 text-white" />}
+        </div>
+      </div>
+      <div>
+        <span className="text-sm font-medium text-[#1b2a35]">{label}</span>
+        {description && <p className="text-sm text-[#6d6d6d] mt-0.5">{description}</p>}
+      </div>
+    </label>
+  );
+}
+
+// Radio Field
+export function RadioField({ 
+  label, 
+  options = [], 
+  value, 
+  onChange, 
+  disabled,
+  className, 
+  ...props 
+}) {
+  return (
+    <div className={className}>
+      {label && <p className={labelBase}>{label}</p>}
+      <div className="space-y-2">
+        {options.map((option, i) => {
+          const optionValue = typeof option === "string" ? option : option.value;
+          const optionLabel = typeof option === "string" ? option : option.label;
+          const isSelected = value === optionValue;
+          
+          return (
+            <label key={i} className={cn("flex items-center gap-3 cursor-pointer", disabled && "opacity-50 cursor-not-allowed")}>
+              <div className="relative">
+                <input
+                  type="radio"
+                  className="sr-only"
+                  checked={isSelected}
+                  onChange={() => onChange?.(optionValue)}
+                  disabled={disabled}
+                  {...props}
+                />
+                <div className={cn(
+                  "w-5 h-5 rounded-full border-2 transition-all duration-200",
+                  "flex items-center justify-center",
+                  isSelected 
+                    ? "border-[#4A5D4E]" 
+                    : "border-[#d1d1d1] hover:border-[#4A5D4E]"
+                )}>
+                  {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-[#4A5D4E]" />}
+                </div>
+              </div>
+              <span className="text-sm text-[#3b3b3b]">{optionLabel}</span>
+            </label>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// Switch Field
+export function SwitchField({ 
+  label, 
+  checked, 
+  onChange, 
+  description,
+  disabled,
+  className, 
+  ...props 
+}) {
+  return (
+    <label className={cn("flex items-start justify-between gap-4 cursor-pointer", disabled && "opacity-50 cursor-not-allowed", className)}>
+      <div>
+        <span className="text-sm font-medium text-[#1b2a35]">{label}</span>
+        {description && <p className="text-sm text-[#6d6d6d] mt-0.5">{description}</p>}
+      </div>
+      <div className="relative">
+        <input
+          type="checkbox"
+          className="sr-only"
+          checked={checked}
+          onChange={(e) => onChange?.(e.target.checked)}
+          disabled={disabled}
+          {...props}
+        />
+        <div className={cn(
+          "w-11 h-6 rounded-full transition-all duration-200",
+          checked ? "bg-[#4A5D4E]" : "bg-[#d1d1d1]"
+        )}>
+          <div className={cn(
+            "w-5 h-5 rounded-full bg-white shadow-sm transition-all duration-200",
+            "absolute top-0.5",
+            checked ? "left-[22px]" : "left-0.5"
+          )} />
+        </div>
+      </div>
+    </label>
+  );
+}
+
+// Search Field
+export function SearchField({ 
+  placeholder = "Search...", 
+  value, 
+  onChange, 
+  onSubmit,
+  disabled,
+  className, 
+  ...props 
+}) {
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && onSubmit) {
+      onSubmit(value);
+    }
+  };
+
+  return (
+    <div className={cn("relative", className)}>
+      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#888888]" />
+      <input
+        type="search"
+        className={cn(inputBase, "pl-10")}
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => onChange?.(e.target.value)}
+        onKeyDown={handleKeyDown}
+        disabled={disabled}
+        {...props}
+      />
+    </div>
+  );
+}
+
+// Email Field
+export function EmailField({ 
+  label, 
+  placeholder = "email@example.com", 
+  value, 
+  onChange, 
+  error,
+  required,
+  disabled,
+  className, 
+  ...props 
+}) {
+  return (
+    <div className={className}>
+      {label && (
+        <label className={labelBase}>
+          {label}
+          {required && <span className="text-[#8b5b5b] ml-1">*</span>}
+        </label>
+      )}
+      <input
+        type="email"
+        className={cn(inputBase, error && "border-[#8b5b5b] focus:ring-[#8b5b5b]/30")}
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => onChange?.(e.target.value)}
+        disabled={disabled}
+        {...props}
+      />
+      {error && <p className={errorBase}>{error}</p>}
+    </div>
+  );
+}
+
+// Password Field
+export function PasswordField({ 
+  label, 
+  placeholder = "••••••••", 
+  value, 
+  onChange, 
+  error,
+  required,
+  disabled,
+  className, 
+  ...props 
+}) {
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  return (
+    <div className={className}>
+      {label && (
+        <label className={labelBase}>
+          {label}
+          {required && <span className="text-[#8b5b5b] ml-1">*</span>}
+        </label>
+      )}
+      <div className="relative">
+        <input
+          type={showPassword ? "text" : "password"}
+          className={cn(inputBase, "pr-10", error && "border-[#8b5b5b] focus:ring-[#8b5b5b]/30")}
+          placeholder={placeholder}
+          value={value}
+          onChange={(e) => onChange?.(e.target.value)}
+          disabled={disabled}
+          {...props}
+        />
+        <button
+          type="button"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#888888] hover:text-[#3b3b3b]"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+        </button>
+      </div>
+      {error && <p className={errorBase}>{error}</p>}
+    </div>
+  );
+}
+
+// Date Picker Field
+export function DatePickerField({ 
+  label, 
+  value, 
+  onChange, 
+  error,
+  required,
+  disabled,
+  className, 
+  ...props 
+}) {
+  return (
+    <div className={className}>
+      {label && (
+        <label className={labelBase}>
+          {label}
+          {required && <span className="text-[#8b5b5b] ml-1">*</span>}
+        </label>
+      )}
+      <div className="relative">
+        <input
+          type="date"
+          className={cn(inputBase, error && "border-[#8b5b5b] focus:ring-[#8b5b5b]/30")}
+          value={value}
+          onChange={(e) => onChange?.(e.target.value)}
+          disabled={disabled}
+          {...props}
+        />
+        <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#888888] pointer-events-none" />
+      </div>
+      {error && <p className={errorBase}>{error}</p>}
+    </div>
+  );
+}
+
+export default {
+  TextField,
+  TextAreaField,
+  SelectField,
+  CheckboxField,
+  RadioField,
+  SwitchField,
+  SearchField,
+  EmailField,
+  PasswordField,
+  DatePickerField,
+};
