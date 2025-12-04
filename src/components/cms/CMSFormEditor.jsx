@@ -111,7 +111,7 @@ export default function CMSFormEditor({ form, tenantId, onClose }) {
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{form ? "Edit Form" : "New Form"}</DialogTitle>
+          <DialogTitle className="text-[var(--color-midnight)]">{form ? "Edit Form" : "New Form"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">

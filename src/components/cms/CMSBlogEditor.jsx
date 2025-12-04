@@ -84,7 +84,7 @@ export default function CMSBlogEditor({ post, tenantId, onClose }) {
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{post ? "Edit Blog Post" : "New Blog Post"}</DialogTitle>
+          <DialogTitle className="text-[var(--color-midnight)]">{post ? "Edit Blog Post" : "New Blog Post"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">

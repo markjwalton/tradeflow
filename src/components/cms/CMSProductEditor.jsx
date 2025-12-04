@@ -83,7 +83,7 @@ export default function CMSProductEditor({ product, tenantId, onClose }) {
     <Dialog open onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{product ? "Edit Product" : "New Product"}</DialogTitle>
+          <DialogTitle className="text-[var(--color-midnight)]">{product ? "Edit Product" : "New Product"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
