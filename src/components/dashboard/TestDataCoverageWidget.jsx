@@ -72,7 +72,7 @@ function ActionButton({ children, variant = "primary", className, ...props }) {
     <button className={cn(
       "w-full px-4 py-2 rounded-[var(--radius-lg)] text-sm font-medium",
       "flex items-center justify-center gap-2",
-      "transition-colors duration-[var(--transition-fast)]",
+      "transition-colors",
       variants[variant],
       className
     )} {...props}>

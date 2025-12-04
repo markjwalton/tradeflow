@@ -44,7 +44,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   LineChart, Line, PieChart, Pie, Cell, AreaChart, Area
 } from "recharts";
-import AuditLogCard from "@/components/monitoring/AuditLogCard";
+import AuditLogCard from "@/components/monitoring/AuditLogCard.js";
 
 const COLORS = ["#22c55e", "#f59e0b", "#ef4444", "#3b82f6", "#8b5cf6"];
 
