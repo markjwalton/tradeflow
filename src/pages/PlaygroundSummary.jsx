@@ -62,6 +62,8 @@ export default function PlaygroundSummary() {
   const [activeTab, setActiveTab] = useState("overview");
   const [isSyncing, setIsSyncing] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
+  const [syncProgress, setSyncProgress] = useState({ current: 0, total: 0 });
+  const [clearProgress, setClearProgress] = useState({ current: 0, total: 0 });
 
   const { data: playgroundItems = [], isLoading } = useQuery({
     queryKey: ["playgroundItems"],
@@ -93,17 +95,28 @@ export default function PlaygroundSummary() {
   // Clear all playground data
   const clearPlaygroundData = async () => {
     setIsClearing(true);
+    setClearProgress({ current: 0, total: 0 });
     try {
-      // Delete all PlaygroundItems
+      // Get all items to delete
       const allItems = await base44.entities.PlaygroundItem.list();
+      const allTestData = await base44.entities.TestData.list();
+      const total = allItems.length + allTestData.length;
+      setClearProgress({ current: 0, total });
+      
+      let deleted = 0;
+      
+      // Delete all PlaygroundItems
       for (const item of allItems) {
         await base44.entities.PlaygroundItem.delete(item.id);
+        deleted++;
+        setClearProgress({ current: deleted, total });
       }
       
       // Delete all TestData
-      const allTestData = await base44.entities.TestData.list();
       for (const td of allTestData) {
         await base44.entities.TestData.delete(td.id);
+        deleted++;
+        setClearProgress({ current: deleted, total });
       }
       
       queryClient.invalidateQueries({ queryKey: ["playgroundItems"] });
@@ -113,12 +126,14 @@ export default function PlaygroundSummary() {
       toast.error("Failed to clear: " + error.message);
     } finally {
       setIsClearing(false);
+      setClearProgress({ current: 0, total: 0 });
     }
   };
 
   // Sync library items to playground - checks by source_id to avoid duplicates
   const syncLibraryToPlayground = async () => {
     setIsSyncing(true);
+    setSyncProgress({ current: 0, total: 0 });
     let added = 0;
 
     // Get existing source_ids to prevent duplicates
@@ -126,49 +141,44 @@ export default function PlaygroundSummary() {
       playgroundItems.map(p => p.source_id)
     );
 
-    const BATCH_SIZE = 10;
-    const DELAY = 500; // ms between batches
-
     const allTemplates = [
       ...entityTemplates.filter(t => !t.custom_project_id).map(t => ({ ...t, _type: "entity" })),
       ...pageTemplates.filter(t => !t.custom_project_id).map(t => ({ ...t, _type: "page" })),
       ...featureTemplates.filter(t => !t.custom_project_id).map(t => ({ ...t, _type: "feature" })),
     ].filter(t => !existingSourceIds.has(t.id));
 
-    for (let i = 0; i < allTemplates.length; i += BATCH_SIZE) {
-      const batch = allTemplates.slice(i, i + BATCH_SIZE);
-      
-      for (const template of batch) {
-        try {
-          await base44.entities.PlaygroundItem.create({
-            source_type: template._type,
-            source_id: template.id,
-            source_name: template.name,
-            group: template.group || template.category,
-            item_origin: "library",
-            status: "synced",
-            current_version: 1,
-            test_definition: generateDefaultTests(template._type, template),
-          });
-          added++;
-        } catch (e) {
-          console.error("Failed to sync:", template.name, e.message);
-        }
+    setSyncProgress({ current: 0, total: allTemplates.length });
+
+    if (allTemplates.length === 0) {
+      toast.info("Playground is up to date with library");
+      setIsSyncing(false);
+      return;
+    }
+
+    for (let i = 0; i < allTemplates.length; i++) {
+      const template = allTemplates[i];
+      try {
+        await base44.entities.PlaygroundItem.create({
+          source_type: template._type,
+          source_id: template.id,
+          source_name: template.name,
+          group: template.group || template.category,
+          item_origin: "library",
+          status: "synced",
+          current_version: 1,
+          test_definition: generateDefaultTests(template._type, template),
+        });
+        added++;
+      } catch (e) {
+        console.error("Failed to sync:", template.name, e.message);
       }
-      
-      // Delay between batches to avoid rate limits
-      if (i + BATCH_SIZE < allTemplates.length) {
-        await new Promise(r => setTimeout(r, DELAY));
-      }
+      setSyncProgress({ current: i + 1, total: allTemplates.length });
     }
 
     queryClient.invalidateQueries({ queryKey: ["playgroundItems"] });
     setIsSyncing(false);
-    if (added > 0) {
-      toast.success(`Synced ${added} new items from library`);
-    } else {
-      toast.info("Playground is up to date with library");
-    }
+    setSyncProgress({ current: 0, total: 0 });
+    toast.success(`Synced ${added} new items from library`);
   };
 
   const generateDefaultTests = (type, template) => {
@@ -261,8 +271,17 @@ export default function PlaygroundSummary() {
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="outline" className="text-red-600 border-red-200 hover:bg-red-50" disabled={isClearing || playgroundItems.length === 0}>
-                {isClearing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Trash2 className="h-4 w-4 mr-2" />}
-                Clear All
+                {isClearing ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    {clearProgress.total > 0 ? `${clearProgress.current}/${clearProgress.total}` : "Clearing..."}
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Clear All
+                  </>
+                )}
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -284,9 +303,18 @@ export default function PlaygroundSummary() {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-          <Button variant="outline" onClick={syncLibraryToPlayground} disabled={isSyncing}>
-            {isSyncing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <RefreshCw className="h-4 w-4 mr-2" />}
-            Sync Library
+          <Button variant="outline" onClick={syncLibraryToPlayground} disabled={isSyncing || allLoading}>
+            {isSyncing ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                {syncProgress.total > 0 ? `${syncProgress.current}/${syncProgress.total}` : "Syncing..."}
+              </>
+            ) : (
+              <>
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Sync Library
+              </>
+            )}
           </Button>
           <Link to={createPageUrl("ConceptWorkbench")}>
             <Button className="bg-amber-600 hover:bg-amber-700">
