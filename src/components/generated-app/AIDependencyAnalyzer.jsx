@@ -265,29 +265,29 @@ For each suggestion, explain WHY it's needed.`;
   };
 
   const severityColors = {
-    critical: "bg-red-100 text-red-700 border-red-300",
-    recommended: "bg-amber-100 text-amber-700 border-amber-300",
-    optional: "bg-blue-100 text-blue-700 border-blue-300",
+    critical: "bg-[var(--color-destructive)]/10 text-[var(--color-destructive)] border-[var(--color-destructive)]/30",
+    recommended: "bg-[var(--color-warning)]/10 text-[var(--color-warning-dark)] border-[var(--color-warning)]/30",
+    optional: "bg-[var(--color-info)]/10 text-[var(--color-info-dark)] border-[var(--color-info)]/30",
   };
 
   const severityIcons = {
-    critical: <AlertTriangle className="h-4 w-4 text-red-500" />,
-    recommended: <Sparkles className="h-4 w-4 text-amber-500" />,
-    optional: <CheckCircle className="h-4 w-4 text-blue-500" />,
+    critical: <AlertTriangle className="h-4 w-4 text-[var(--color-destructive)]" />,
+    recommended: <Sparkles className="h-4 w-4 text-[var(--color-warning)]" />,
+    optional: <CheckCircle className="h-4 w-4 text-[var(--color-info)]" />,
   };
 
   if (!analysis) {
     return (
-      <Card className="border-dashed">
+      <Card className="border-dashed border-[var(--color-background-muted)]">
         <CardContent className="pt-6">
           <div className="text-center">
-            <Sparkles className="h-12 w-12 mx-auto text-purple-400 mb-4" />
-            <h3 className="font-semibold mb-2">AI Dependency Analyzer</h3>
-            <p className="text-sm text-gray-500 mb-4">
+            <Sparkles className="h-12 w-12 mx-auto text-[var(--color-accent)] mb-4" />
+            <h3 className="font-semibold mb-2 text-[var(--color-midnight)]">AI Dependency Analyzer</h3>
+            <p className="text-sm text-[var(--color-charcoal)] mb-4">
               Analyze your selection to find missing entities, suggest pages,
               and identify gaps in your application design.
             </p>
-            <Button onClick={runAnalysis} disabled={analyzing}>
+            <Button onClick={runAnalysis} disabled={analyzing} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
               {analyzing ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -320,14 +320,14 @@ For each suggestion, explain WHY it's needed.`;
   ].filter((i) => i.severity === "critical").length;
 
   return (
-    <Card className={criticalCount > 0 ? "border-red-200 bg-red-50/50" : "border-green-200 bg-green-50/50"}>
+    <Card className={criticalCount > 0 ? "border-[var(--color-destructive)]/30 bg-[var(--color-destructive)]/5" : "border-[var(--color-success)]/30 bg-[var(--color-success)]/5"}>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base flex items-center gap-2">
+          <CardTitle className="text-base flex items-center gap-2 text-[var(--color-midnight)]">
             {criticalCount > 0 ? (
-              <AlertTriangle className="h-5 w-5 text-red-500" />
+              <AlertTriangle className="h-5 w-5 text-[var(--color-destructive)]" />
             ) : (
-              <CheckCircle className="h-5 w-5 text-green-500" />
+              <CheckCircle className="h-5 w-5 text-[var(--color-success)]" />
             )}
             Analysis Results
           </CardTitle>
@@ -335,7 +335,7 @@ For each suggestion, explain WHY it's needed.`;
             {analyzing ? <Loader2 className="h-4 w-4 animate-spin" /> : "Re-analyze"}
           </Button>
         </div>
-        <p className="text-sm text-gray-600">{analysis.summary}</p>
+        <p className="text-sm text-[var(--color-charcoal)]">{analysis.summary}</p>
         <div className="flex gap-2 mt-2">
           <Badge className={severityColors.critical}>
             {criticalCount} Critical
@@ -388,9 +388,9 @@ For each suggestion, explain WHY it's needed.`;
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           {severityIcons[entity.severity]}
-                          <span className="font-medium">{entity.name}</span>
+                          <span className="font-medium text-[var(--color-midnight)]">{entity.name}</span>
                         </div>
-                        <p className="text-xs text-gray-600 mt-1">{entity.reason}</p>
+                        <p className="text-xs text-[var(--color-charcoal)] mt-1">{entity.reason}</p>
                         {entity.referencedBy && (
                           <Badge variant="outline" className="text-xs mt-1">
                             Referenced by: {entity.referencedBy}
@@ -400,8 +400,8 @@ For each suggestion, explain WHY it's needed.`;
                     </div>
                   ))
                 ) : (
-                  <div className="text-center py-8 text-gray-500">
-                    <CheckCircle className="h-8 w-8 mx-auto mb-2 text-green-500" />
+                  <div className="text-center py-8 text-[var(--color-charcoal)]">
+                    <CheckCircle className="h-8 w-8 mx-auto mb-2 text-[var(--color-success)]" />
                     <p className="text-sm">All entity dependencies satisfied</p>
                   </div>
                 )}
@@ -427,14 +427,14 @@ For each suggestion, explain WHY it's needed.`;
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           {severityIcons[page.severity]}
-                          <span className="font-medium">{page.name}</span>
+                          <span className="font-medium text-[var(--color-midnight)]">{page.name}</span>
                           {page.pageType && (
                             <Badge variant="secondary" className="text-xs">
                               {page.pageType}
                             </Badge>
                           )}
                         </div>
-                        <p className="text-xs text-gray-600 mt-1">{page.reason}</p>
+                        <p className="text-xs text-[var(--color-charcoal)] mt-1">{page.reason}</p>
                         {page.forEntity && (
                           <Badge variant="outline" className="text-xs mt-1">
                             For: {page.forEntity}
@@ -444,8 +444,8 @@ For each suggestion, explain WHY it's needed.`;
                     </div>
                   ))
                 ) : (
-                  <div className="text-center py-8 text-gray-500">
-                    <CheckCircle className="h-8 w-8 mx-auto mb-2 text-green-500" />
+                  <div className="text-center py-8 text-[var(--color-charcoal)]">
+                    <CheckCircle className="h-8 w-8 mx-auto mb-2 text-[var(--color-success)]" />
                     <p className="text-sm">All page requirements covered</p>
                   </div>
                 )}
@@ -471,9 +471,9 @@ For each suggestion, explain WHY it's needed.`;
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           {severityIcons[feature.severity]}
-                          <span className="font-medium">{feature.name}</span>
+                          <span className="font-medium text-[var(--color-midnight)]">{feature.name}</span>
                         </div>
-                        <p className="text-xs text-gray-600 mt-1">{feature.reason}</p>
+                        <p className="text-xs text-[var(--color-charcoal)] mt-1">{feature.reason}</p>
                         {feature.forEntities?.length > 0 && (
                           <div className="flex gap-1 mt-1">
                             {feature.forEntities.map((e) => (
@@ -487,8 +487,8 @@ For each suggestion, explain WHY it's needed.`;
                     </div>
                   ))
                 ) : (
-                  <div className="text-center py-8 text-gray-500">
-                    <CheckCircle className="h-8 w-8 mx-auto mb-2 text-green-500" />
+                  <div className="text-center py-8 text-[var(--color-charcoal)]">
+                    <CheckCircle className="h-8 w-8 mx-auto mb-2 text-[var(--color-success)]" />
                     <p className="text-sm">No additional features suggested</p>
                   </div>
                 )}
@@ -501,20 +501,20 @@ For each suggestion, explain WHY it's needed.`;
               <div className="space-y-4 pr-2">
                 {analysis.missingForms?.length > 0 && (
                   <div>
-                    <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
+                    <h4 className="text-sm font-medium mb-2 flex items-center gap-2 text-[var(--color-midnight)]">
                       <FileText className="h-4 w-4" />
                       Missing Forms
                     </h4>
                     <div className="space-y-2">
                       {analysis.missingForms.map((form) => (
-                        <div key={form.name} className="flex items-start gap-3 p-2 bg-white rounded border">
+                        <div key={form.name} className="flex items-start gap-3 p-2 bg-[var(--color-background-paper)] rounded border border-[var(--color-background-muted)]">
                           <Checkbox
                             checked={selectedSuggestions.forms.includes(form.name)}
                             onCheckedChange={() => toggleSelection("forms", form.name)}
                           />
                           <div>
-                            <span className="font-medium text-sm">{form.name}</span>
-                            <p className="text-xs text-gray-500">{form.reason}</p>
+                            <span className="font-medium text-sm text-[var(--color-midnight)]">{form.name}</span>
+                            <p className="text-xs text-[var(--color-charcoal)]">{form.reason}</p>
                           </div>
                         </div>
                       ))}
@@ -523,20 +523,20 @@ For each suggestion, explain WHY it's needed.`;
                 )}
                 {analysis.missingChecklists?.length > 0 && (
                   <div>
-                    <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
+                    <h4 className="text-sm font-medium mb-2 flex items-center gap-2 text-[var(--color-midnight)]">
                       <ListChecks className="h-4 w-4" />
                       Missing Checklists
                     </h4>
                     <div className="space-y-2">
                       {analysis.missingChecklists.map((checklist) => (
-                        <div key={checklist.name} className="flex items-start gap-3 p-2 bg-white rounded border">
+                        <div key={checklist.name} className="flex items-start gap-3 p-2 bg-[var(--color-background-paper)] rounded border border-[var(--color-background-muted)]">
                           <Checkbox
                             checked={selectedSuggestions.checklists.includes(checklist.name)}
                             onCheckedChange={() => toggleSelection("checklists", checklist.name)}
                           />
                           <div>
-                            <span className="font-medium text-sm">{checklist.name}</span>
-                            <p className="text-xs text-gray-500">{checklist.reason}</p>
+                            <span className="font-medium text-sm text-[var(--color-midnight)]">{checklist.name}</span>
+                            <p className="text-xs text-[var(--color-charcoal)]">{checklist.reason}</p>
                           </div>
                         </div>
                       ))}
@@ -544,8 +544,8 @@ For each suggestion, explain WHY it's needed.`;
                   </div>
                 )}
                 {!analysis.missingForms?.length && !analysis.missingChecklists?.length && (
-                  <div className="text-center py-8 text-gray-500">
-                    <CheckCircle className="h-8 w-8 mx-auto mb-2 text-green-500" />
+                  <div className="text-center py-8 text-[var(--color-charcoal)]">
+                    <CheckCircle className="h-8 w-8 mx-auto mb-2 text-[var(--color-success)]" />
                     <p className="text-sm">All workflow dependencies satisfied</p>
                   </div>
                 )}
@@ -564,17 +564,17 @@ For each suggestion, explain WHY it's needed.`;
                     >
                       <div className="flex items-center gap-2">
                         {severityIcons[gap.severity]}
-                        <span className="font-medium text-sm">{gap.issue}</span>
+                        <span className="font-medium text-sm text-[var(--color-midnight)]">{gap.issue}</span>
                       </div>
-                      <div className="flex items-start gap-2 mt-2 text-xs text-gray-600">
+                      <div className="flex items-start gap-2 mt-2 text-xs text-[var(--color-charcoal)]">
                         <ChevronRight className="h-3 w-3 mt-0.5 flex-shrink-0" />
                         <span>{gap.suggestion}</span>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <div className="text-center py-8 text-gray-500">
-                    <CheckCircle className="h-8 w-8 mx-auto mb-2 text-green-500" />
+                  <div className="text-center py-8 text-[var(--color-charcoal)]">
+                    <CheckCircle className="h-8 w-8 mx-auto mb-2 text-[var(--color-success)]" />
                     <p className="text-sm">No design gaps identified</p>
                   </div>
                 )}
@@ -583,8 +583,8 @@ For each suggestion, explain WHY it's needed.`;
           </TabsContent>
         </Tabs>
 
-        <div className="flex justify-between items-center mt-4 pt-4 border-t">
-          <div className="text-sm text-gray-500">
+        <div className="flex justify-between items-center mt-4 pt-4 border-t border-[var(--color-background-muted)]">
+          <div className="text-sm text-[var(--color-charcoal)]">
             {Object.values(selectedSuggestions).flat().length} items selected
           </div>
           <div className="flex gap-2">
@@ -603,7 +603,7 @@ For each suggestion, explain WHY it's needed.`;
             >
               Clear
             </Button>
-            <Button size="sm" onClick={handleApply}>
+            <Button size="sm" onClick={handleApply} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
               Apply Selected
             </Button>
           </div>

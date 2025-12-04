@@ -111,7 +111,7 @@ export default function AppNavigationManager({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Navigation Configuration</h3>
+        <h3 className="text-lg font-semibold text-[var(--color-midnight)]">Navigation Configuration</h3>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={() => setShowSettings(!showSettings)}>
             <Settings className="h-4 w-4 mr-1" />
@@ -128,11 +128,11 @@ export default function AppNavigationManager({
       </div>
 
       {showSettings && (
-        <Card className="bg-gray-50">
+        <Card className="bg-[var(--color-background)]">
           <CardContent className="pt-4 space-y-3">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium">App Name</label>
+                <label className="text-sm font-medium text-[var(--color-midnight)]">App Name</label>
                 <Input 
                   value={settings.app_name} 
                   onChange={(e) => setSettings({...settings, app_name: e.target.value})}
@@ -140,7 +140,7 @@ export default function AppNavigationManager({
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">Logo URL</label>
+                <label className="text-sm font-medium text-[var(--color-midnight)]">Logo URL</label>
                 <Input 
                   value={settings.logo_url} 
                   onChange={(e) => setSettings({...settings, logo_url: e.target.value})}
@@ -182,12 +182,12 @@ export default function AppNavigationManager({
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
-                      className={`flex items-center gap-3 p-3 bg-white border rounded-lg ${
+                      className={`flex items-center gap-3 p-3 bg-[var(--color-background-paper)] border border-[var(--color-background-muted)] rounded-lg ${
                         snapshot.isDragging ? 'shadow-lg' : ''
                       }`}
                     >
                       <div {...provided.dragHandleProps}>
-                        <GripVertical className="h-4 w-4 text-gray-400" />
+                        <GripVertical className="h-4 w-4 text-[var(--color-charcoal)]" />
                       </div>
                       
                       <Input
@@ -224,13 +224,13 @@ export default function AppNavigationManager({
                         size="icon"
                         onClick={() => updateItem(item.id, { is_visible: !item.is_visible })}
                       >
-                        {item.is_visible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4 text-gray-400" />}
+                        {item.is_visible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4 text-[var(--color-charcoal)]" />}
                       </Button>
                       
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-red-600"
+                        className="text-[var(--color-destructive)]"
                         onClick={() => removeItem(item.id)}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -246,7 +246,7 @@ export default function AppNavigationManager({
       </DragDropContext>
 
       {items.length === 0 && (
-        <div className="text-center py-8 text-gray-500 bg-gray-50 rounded-lg">
+        <div className="text-center py-8 text-[var(--color-charcoal)] bg-[var(--color-background)] rounded-lg">
           <p>No navigation items yet</p>
           <Button variant="link" onClick={autoGenerateFromPages}>
             Auto-generate from pages
@@ -255,7 +255,7 @@ export default function AppNavigationManager({
       )}
 
       <div className="flex justify-end pt-4">
-        <Button onClick={handleSave}>Save Navigation</Button>
+        <Button onClick={handleSave} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">Save Navigation</Button>
       </div>
     </div>
   );
