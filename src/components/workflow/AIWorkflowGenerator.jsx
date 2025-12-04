@@ -270,7 +270,7 @@ Return a JSON object with this structure:
           <Sparkles className="h-5 w-5 text-amber-500" />
           <h2 className="text-lg font-semibold">AI Workflow Generator</h2>
         </div>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-[var(--color-charcoal)]">
           {phase === "input" && "Describe your workflow steps and let AI build the details"}
           {phase === "context" && "Add any additional context for the AI"}
           {phase === "generating" && "AI is generating your workflow..."}
@@ -282,7 +282,7 @@ Return a JSON object with this structure:
           {/* Phase 1: Input Steps */}
           {phase === "input" && (
             <div className="space-y-4">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-[var(--color-charcoal)]">
                 Enter the key steps of your workflow. Drag to reorder. Don't worry about details - just describe what needs to happen.
               </p>
 
@@ -296,16 +296,16 @@ Return a JSON object with this structure:
                             <Card 
                               ref={provided.innerRef}
                               {...provided.draggableProps}
-                              className={`p-4 ${snapshot.isDragging ? "shadow-lg ring-2 ring-blue-300" : ""}`}
+                              className={`p-4 ${snapshot.isDragging ? "shadow-lg ring-2 ring-[var(--color-primary)]/30" : ""}`}
                             >
                               <div className="flex items-start gap-3">
                                 <div 
                                   {...provided.dragHandleProps}
-                                  className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 font-semibold text-sm flex-shrink-0 cursor-grab active:cursor-grabbing"
+                                  className="flex items-center justify-center w-8 h-8 rounded-full bg-[var(--color-primary)]/10 text-[var(--color-primary)] font-semibold text-sm flex-shrink-0 cursor-grab active:cursor-grabbing"
                                 >
                                   <GripVertical className="h-4 w-4" />
                                 </div>
-                                <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-gray-600 font-semibold text-xs flex-shrink-0">
+                                <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[var(--color-background)] text-[var(--color-charcoal)] font-semibold text-xs flex-shrink-0">
                                   {index + 1}
                                 </div>
                                 <div className="flex-1 space-y-2">
@@ -327,7 +327,7 @@ Return a JSON object with this structure:
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="text-red-500 h-8 w-8 p-0"
+                                    className="text-[var(--color-destructive)] h-8 w-8 p-0"
                                     onClick={() => removeStep(index)}
                                   >
                                     <Trash2 className="h-4 w-4" />
@@ -350,10 +350,10 @@ Return a JSON object with this structure:
               </Button>
 
               <div className="flex justify-between pt-4">
-                <Button variant="outline" onClick={embedded ? onCancel : handleClearAndClose} className="text-gray-500">
+                <Button variant="outline" onClick={embedded ? onCancel : handleClearAndClose} className="text-[var(--color-charcoal)]">
                   {embedded ? "Cancel" : "Clear & Close"}
                 </Button>
-                <Button onClick={handleFinishInput}>
+                <Button onClick={handleFinishInput} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
                   Continue
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
@@ -364,10 +364,10 @@ Return a JSON object with this structure:
           {/* Phase 2: Additional Context */}
           {phase === "context" && (
             <div className="space-y-4">
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="bg-[var(--color-info)]/10 border border-[var(--color-info)]/30 rounded-lg p-4">
                 <div className="flex items-start gap-2">
-                  <Lightbulb className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <div className="text-sm text-blue-800">
+                  <Lightbulb className="h-5 w-5 text-[var(--color-info)] flex-shrink-0 mt-0.5" />
+                  <div className="text-sm text-[var(--color-info-dark)]">
                     <p className="font-medium mb-1">You've added {steps.filter(s => s.name.trim()).length} steps:</p>
                     <ul className="list-disc list-inside space-y-0.5">
                       {steps.filter(s => s.name.trim()).map((s, i) => (
@@ -401,7 +401,7 @@ Return a JSON object with this structure:
                 <Button variant="outline" onClick={() => setPhase("input")}>
                   Back
                 </Button>
-                <Button onClick={handleGenerate}>
+                <Button onClick={handleGenerate} className="bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-dark)] text-white">
                   <Sparkles className="h-4 w-4 mr-2" />
                   Generate Workflow
                 </Button>
@@ -412,9 +412,9 @@ Return a JSON object with this structure:
           {/* Phase 3: Generating */}
           {phase === "generating" && (
             <div className="flex flex-col items-center justify-center py-12">
-              <Loader2 className="h-12 w-12 animate-spin text-blue-500 mb-4" />
-              <p className="text-lg font-medium">Generating your workflow...</p>
-              <p className="text-sm text-gray-500 mt-1">
+              <Loader2 className="h-12 w-12 animate-spin text-[var(--color-primary)] mb-4" />
+              <p className="text-lg font-medium text-[var(--color-midnight)]">Generating your workflow...</p>
+              <p className="text-sm text-[var(--color-charcoal)] mt-1">
                 AI is analyzing your steps and creating detailed configurations
               </p>
             </div>
@@ -423,9 +423,9 @@ Return a JSON object with this structure:
           {/* Phase 4: Result */}
           {phase === "result" && generatedSteps && (
             <div className="space-y-4">
-              <Card className="p-4 bg-gradient-to-r from-blue-50 to-purple-50">
-                <h3 className="font-semibold text-lg">{generatedSteps.workflowName}</h3>
-                <p className="text-sm text-gray-600 mt-1">{generatedSteps.workflowDescription}</p>
+              <Card className="p-4 bg-gradient-to-r from-[var(--color-primary)]/10 to-[var(--color-accent)]/10">
+                <h3 className="font-semibold text-lg text-[var(--color-midnight)]">{generatedSteps.workflowName}</h3>
+                <p className="text-sm text-[var(--color-charcoal)] mt-1">{generatedSteps.workflowDescription}</p>
                 <div className="flex gap-2 mt-2">
                   <Badge>{generatedSteps.category}</Badge>
                   <Badge variant="outline">~{generatedSteps.estimatedTotalDays} days</Badge>
@@ -438,17 +438,17 @@ Return a JSON object with this structure:
                 {generatedSteps.steps?.map((step, index) => (
                   <Card key={index} className="p-3">
                     <div className="flex items-start gap-3">
-                      <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-gray-600 font-semibold text-xs flex-shrink-0">
+                      <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[var(--color-background)] text-[var(--color-charcoal)] font-semibold text-xs flex-shrink-0">
                         {index + 1}
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <span className="font-medium">{step.name}</span>
+                          <span className="font-medium text-[var(--color-midnight)]">{step.name}</span>
                           <Badge className={stepTypeColors[step.stepType] || "bg-gray-100"}>
                             {step.stepType}
                           </Badge>
                         </div>
-                        <p className="text-sm text-gray-600 mt-1">{step.description}</p>
+                        <p className="text-sm text-[var(--color-charcoal)] mt-1">{step.description}</p>
                         <div className="flex flex-wrap gap-1 mt-2">
                           {step.assigneeRole && (
                             <Badge variant="outline" className="text-xs">
@@ -483,12 +483,12 @@ Return a JSON object with this structure:
               </div>
 
               {generatedSteps.aiNotes && (
-                <Card className="p-3 bg-amber-50 border-amber-200">
+                <Card className="p-3 bg-[var(--color-secondary)]/10 border-[var(--color-secondary)]/30">
                   <div className="flex items-start gap-2">
-                    <Lightbulb className="h-4 w-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                    <Lightbulb className="h-4 w-4 text-[var(--color-secondary)] flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-sm font-medium text-amber-800">AI Recommendations</p>
-                      <p className="text-sm text-amber-700 mt-1">{generatedSteps.aiNotes}</p>
+                      <p className="text-sm font-medium text-[var(--color-secondary-dark)]">AI Recommendations</p>
+                      <p className="text-sm text-[var(--color-secondary-dark)] mt-1">{generatedSteps.aiNotes}</p>
                     </div>
                   </div>
                 </Card>
@@ -498,7 +498,7 @@ Return a JSON object with this structure:
                 <Button variant="outline" onClick={() => setPhase("context")}>
                   Back & Refine
                 </Button>
-                <Button onClick={handleApply}>
+                <Button onClick={handleApply} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
                   <Sparkles className="h-4 w-4 mr-2" />
                   Apply Workflow
                 </Button>
@@ -511,7 +511,7 @@ Return a JSON object with this structure:
 
           if (embedded) {
           return (
-          <div className="flex-1 flex flex-col p-6 bg-white overflow-auto">
+          <div className="flex-1 flex flex-col p-6 bg-[var(--color-background-paper)] overflow-auto">
           {content}
           </div>
           );

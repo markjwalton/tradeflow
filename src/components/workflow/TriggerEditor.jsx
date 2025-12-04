@@ -357,7 +357,7 @@ export default function TriggerEditor({ triggers = [], onChange }) {
       </div>
 
       {triggers.length === 0 ? (
-        <div className="text-center py-4 text-gray-500 text-sm border rounded-lg bg-gray-50">
+        <div className="text-center py-4 text-[var(--color-charcoal)] text-sm border border-[var(--color-background-muted)] rounded-lg bg-[var(--color-background)]">
           No triggers configured
         </div>
       ) : (
@@ -365,14 +365,14 @@ export default function TriggerEditor({ triggers = [], onChange }) {
           {triggers.map((trigger, triggerIndex) => (
             <Card key={trigger.triggerId} className="overflow-hidden">
               <CardHeader
-                className="py-2 px-3 cursor-pointer hover:bg-gray-50"
+                className="py-2 px-3 cursor-pointer hover:bg-[var(--color-background)]"
                 onClick={() =>
                   setExpandedIndex(expandedIndex === triggerIndex ? null : triggerIndex)
                 }
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Zap className="h-4 w-4 text-amber-500" />
+                    <Zap className="h-4 w-4 text-[var(--color-secondary)]" />
                     <span className="font-medium text-sm">
                       {triggerEvents.find((e) => e.value === trigger.event)?.label || trigger.event}
                     </span>
@@ -389,7 +389,7 @@ export default function TriggerEditor({ triggers = [], onChange }) {
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="h-6 w-6 p-0 text-red-500"
+                      className="h-6 w-6 p-0 text-[var(--color-destructive)]"
                       onClick={(e) => {
                         e.stopPropagation();
                         deleteTrigger(triggerIndex);
@@ -438,7 +438,7 @@ export default function TriggerEditor({ triggers = [], onChange }) {
                       </div>
 
                       {(trigger.actions || []).length === 0 ? (
-                        <p className="text-xs text-gray-500">No actions configured</p>
+                        <p className="text-xs text-[var(--color-charcoal)]">No actions configured</p>
                       ) : (
                         <div className="space-y-2">
                           {(trigger.actions || []).map((action, actionIndex) => {
@@ -447,11 +447,11 @@ export default function TriggerEditor({ triggers = [], onChange }) {
                             return (
                               <div
                                 key={action.actionId}
-                                className="border rounded p-2 bg-gray-50"
+                                className="border border-[var(--color-background-muted)] rounded p-2 bg-[var(--color-background)]"
                               >
                                 <div className="flex items-center justify-between">
                                   <div className="flex items-center gap-2">
-                                    <Icon className="h-3 w-3 text-gray-500" />
+                                    <Icon className="h-3 w-3 text-[var(--color-charcoal)]" />
                                     <Select
                                       value={action.type}
                                       onValueChange={(v) =>
@@ -473,7 +473,7 @@ export default function TriggerEditor({ triggers = [], onChange }) {
                                   <Button
                                     size="sm"
                                     variant="ghost"
-                                    className="h-6 w-6 p-0 text-red-500"
+                                    className="h-6 w-6 p-0 text-[var(--color-destructive)]"
                                     onClick={() => deleteAction(triggerIndex, actionIndex)}
                                   >
                                     <Trash2 className="h-3 w-3" />
