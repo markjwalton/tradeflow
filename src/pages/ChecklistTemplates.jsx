@@ -90,11 +90,11 @@ export default function ChecklistTemplates() {
   });
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Checklist Templates</h1>
-          <p className="text-gray-500">Create and manage reusable checklists</p>
+          <h1 className="text-2xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>Checklist Templates</h1>
+          <p className="text-[var(--color-charcoal)]">Create and manage reusable checklists</p>
         </div>
         <Link to={createPageUrl("ChecklistBuilder")}>
           <Button>
@@ -132,13 +132,13 @@ export default function ChecklistTemplates() {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
         </div>
       ) : filteredChecklists.length === 0 ? (
         <div className="text-center py-12">
-          <ListChecks className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-          <h3 className="text-lg font-medium text-gray-600">No checklists found</h3>
-          <p className="text-gray-500 mb-4">
+          <ListChecks className="h-12 w-12 mx-auto text-[var(--color-charcoal)] opacity-30 mb-4" />
+          <h3 className="text-lg font-medium text-[var(--color-midnight)]">No checklists found</h3>
+          <p className="text-[var(--color-charcoal)] mb-4">
             {search || categoryFilter !== "all"
               ? "Try adjusting your filters"
               : "Create your first checklist template"}

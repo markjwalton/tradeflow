@@ -363,11 +363,11 @@ export default function SystemSpecification() {
   const currentSection = specSections.find((s) => s.id === activeSection);
 
   return (
-    <div className="h-full flex">
+    <div className="h-full flex bg-[var(--color-background)]">
       {/* Sidebar */}
-      <div className="w-64 border-r bg-white">
-        <div className="p-4 border-b">
-          <h2 className="font-semibold">System Specification</h2>
+      <div className="w-64 border-r border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+        <div className="p-4 border-b border-[var(--color-background-muted)]">
+          <h2 className="font-semibold text-[var(--color-midnight)]">System Specification</h2>
           <div className="flex items-center gap-2 mt-1">
             <Badge variant="outline">v{SPEC_VERSION}</Badge>
             <span className="text-xs text-gray-500">{LAST_UPDATED}</span>

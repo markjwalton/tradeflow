@@ -270,21 +270,21 @@ Return a JSON object with a "suggestions" array where each item has:
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+      <div className="flex items-center justify-center h-64 bg-[var(--color-background)]">
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
       </div>
     );
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
             <Library className="h-6 w-6" />
             Node Template Library
           </h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <p className="text-[var(--color-charcoal)] text-sm mt-1">
             Create and manage reusable node templates with functional specifications
           </p>
         </div>
@@ -337,7 +337,7 @@ Return a JSON object with a "suggestions" array where each item has:
 
       {/* Templates grouped by area */}
       {Object.keys(groupedTemplates).length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-[var(--color-charcoal)]">
           <Library className="h-16 w-16 mx-auto mb-4 opacity-30" />
           <p className="text-lg">No templates yet</p>
           <p className="text-sm">Create your first template to start building your library.</p>
