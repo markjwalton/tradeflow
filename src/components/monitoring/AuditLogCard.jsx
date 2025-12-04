@@ -10,12 +10,12 @@ import {
 import { format } from "date-fns";
 
 const severityColors = {
-  info: "bg-gray-100 text-gray-700",
-  low: "bg-blue-100 text-blue-700",
-  medium: "bg-amber-100 text-amber-700",
-  high: "bg-orange-100 text-orange-700",
-  critical: "bg-red-100 text-red-700",
-  warning: "bg-amber-100 text-amber-700"
+  info: "bg-[var(--color-charcoal)]/10 text-[var(--color-charcoal)]",
+  low: "bg-[var(--color-info)]/20 text-[var(--color-info-dark)]",
+  medium: "bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]",
+  high: "bg-[var(--color-secondary)]/20 text-[var(--color-secondary-dark)]",
+  critical: "bg-[var(--color-destructive)]/20 text-[var(--color-destructive)]",
+  warning: "bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]"
 };
 
 const severityOrder = { critical: 0, high: 1, medium: 2, warning: 3, low: 4, info: 5 };
@@ -85,19 +85,19 @@ export default function AuditLogCard({
 
   // Grade colors
   const getGradeColor = (grade) => {
-    if (!grade) return "text-gray-600";
-    if (grade.startsWith("A")) return "text-green-600";
-    if (grade.startsWith("B")) return "text-blue-600";
-    if (grade.startsWith("C")) return "text-amber-600";
-    return "text-red-600";
+    if (!grade) return "text-[var(--color-charcoal)]";
+    if (grade.startsWith("A")) return "text-[var(--color-success)]";
+    if (grade.startsWith("B")) return "text-[var(--color-info)]";
+    if (grade.startsWith("C")) return "text-[var(--color-warning)]";
+    return "text-[var(--color-destructive)]";
   };
 
   const getGradeBgColor = (grade) => {
-    if (!grade) return "bg-gray-50 border-gray-200";
-    if (grade.startsWith("A")) return "bg-green-50 border-green-200";
-    if (grade.startsWith("B")) return "bg-blue-50 border-blue-200";
-    if (grade.startsWith("C")) return "bg-amber-50 border-amber-200";
-    return "bg-red-50 border-red-200";
+    if (!grade) return "bg-[var(--color-background)] border-[var(--color-background-muted)]";
+    if (grade.startsWith("A")) return "bg-[var(--color-success)]/10 border-[var(--color-success)]/30";
+    if (grade.startsWith("B")) return "bg-[var(--color-info)]/10 border-[var(--color-info)]/30";
+    if (grade.startsWith("C")) return "bg-[var(--color-warning)]/10 border-[var(--color-warning)]/30";
+    return "bg-[var(--color-destructive)]/10 border-[var(--color-destructive)]/30";
   };
 
   return (
@@ -105,13 +105,13 @@ export default function AuditLogCard({
       {/* Collapsed Header */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full p-4 flex items-center justify-between hover:bg-gray-50/50 transition-colors"
+        className="w-full p-4 flex items-center justify-between hover:bg-[var(--color-background)]/50 transition-colors"
       >
         <div className="flex items-center gap-4">
           {isExpanded ? (
-            <ChevronDown className="h-5 w-5 text-gray-400" />
+            <ChevronDown className="h-5 w-5 text-[var(--color-charcoal)]" />
           ) : (
-            <ChevronRight className="h-5 w-5 text-gray-400" />
+            <ChevronRight className="h-5 w-5 text-[var(--color-charcoal)]" />
           )}
           
           {/* Grade Badge */}
@@ -121,10 +121,10 @@ export default function AuditLogCard({
           
           {/* Score */}
           <div className="text-left">
-            <div className="font-medium">
+            <div className="font-medium text-[var(--color-midnight)]">
               {audit.audit_type === "ai_review" ? "AI Security Audit" : "Security Audit"}
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-[var(--color-charcoal)]">
               Score: {audit.overall_score}/100 • {format(new Date(audit.audit_date), "MMM d, yyyy HH:mm")}
             </div>
           </div>
@@ -134,25 +134,25 @@ export default function AuditLogCard({
         <div className="flex items-center gap-3">
           {/* Issue counts */}
           {openFindings.length > 0 && (
-            <Badge className="bg-amber-100 text-amber-700">
+            <Badge className="bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]">
               <AlertTriangle className="h-3 w-3 mr-1" />
               {openFindings.length} Open
             </Badge>
           )}
           {resolvedFindings.length > 0 && (
-            <Badge className="bg-green-100 text-green-700">
+            <Badge className="bg-[var(--color-success)]/20 text-[var(--color-success-dark)]">
               <CheckCircle2 className="h-3 w-3 mr-1" />
               {resolvedFindings.length} Fixed
             </Badge>
           )}
           {inRoadmapFindings.length > 0 && (
-            <Badge className="bg-blue-100 text-blue-700">
+            <Badge className="bg-[var(--color-info)]/20 text-[var(--color-info-dark)]">
               <Flag className="h-3 w-3 mr-1" />
               {inRoadmapFindings.length} In Roadmap
             </Badge>
           )}
           {findings.length === 0 && (
-            <Badge className="bg-green-100 text-green-700">
+            <Badge className="bg-[var(--color-success)]/20 text-[var(--color-success-dark)]">
               <CheckCircle2 className="h-3 w-3 mr-1" />
               No Issues
             </Badge>
@@ -165,19 +165,20 @@ export default function AuditLogCard({
         <div className="border-t px-4 pb-4">
           {/* Summary */}
           {audit.ai_summary && (
-            <div className="py-4 border-b">
-              <p className="text-gray-700">{audit.ai_summary}</p>
+            <div className="py-4 border-b border-[var(--color-background-muted)]">
+              <p className="text-[var(--color-charcoal)]">{audit.ai_summary}</p>
             </div>
           )}
           
           {/* Bulk Actions */}
           {selectedFindings.size > 0 && (
-            <div className="py-3 border-b flex items-center gap-3 bg-blue-50 -mx-4 px-4">
+            <div className="py-3 border-b border-[var(--color-background-muted)] flex items-center gap-3 bg-[var(--color-info)]/10 -mx-4 px-4">
               <span className="text-sm font-medium">{selectedFindings.size} selected</span>
               <Button 
                 size="sm" 
                 onClick={addSelectedToRoadmap}
                 disabled={isAddingToRoadmap}
+                className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
               >
                 {isAddingToRoadmap ? (
                   <Loader2 className="h-3 w-3 mr-1 animate-spin" />
@@ -199,7 +200,7 @@ export default function AuditLogCard({
           {/* Findings List */}
           {sortedFindings.length > 0 && (
             <div className="mt-4 space-y-3">
-              <h4 className="font-medium text-sm text-gray-600 flex items-center justify-between">
+              <h4 className="font-medium text-sm text-[var(--color-charcoal)] flex items-center justify-between">
                 <span>Findings ({findings.length})</span>
                 {openFindings.length > 0 && (
                   <Button 
@@ -225,10 +226,10 @@ export default function AuditLogCard({
                   <div 
                     key={index} 
                     className={`p-4 rounded-lg border ${
-                      fixed ? "bg-green-50 border-green-200 opacity-75" :
-                      finding.severity === "critical" ? "bg-red-50 border-red-200" :
-                      finding.severity === "high" ? "bg-orange-50 border-orange-200" :
-                      "bg-white border-gray-200"
+                      fixed ? "bg-[var(--color-success)]/10 border-[var(--color-success)]/30 opacity-75" :
+                      finding.severity === "critical" ? "bg-[var(--color-destructive)]/10 border-[var(--color-destructive)]/30" :
+                      finding.severity === "high" ? "bg-[var(--color-secondary)]/10 border-[var(--color-secondary)]/30" :
+                      "bg-[var(--color-background-paper)] border-[var(--color-background-muted)]"
                     }`}
                   >
                     <div className="flex items-start gap-3">
@@ -244,20 +245,20 @@ export default function AuditLogCard({
                       {/* Status icon */}
                       <div className="mt-0.5">
                         {fixed ? (
-                          <CheckCircle2 className="h-5 w-5 text-green-600" />
+                          <CheckCircle2 className="h-5 w-5 text-[var(--color-success)]" />
                         ) : inRoadmap ? (
-                          <Clock className="h-5 w-5 text-blue-600" />
+                          <Clock className="h-5 w-5 text-[var(--color-info)]" />
                         ) : finding.severity === "critical" || finding.severity === "high" ? (
-                          <XCircle className="h-5 w-5 text-red-600" />
+                          <XCircle className="h-5 w-5 text-[var(--color-destructive)]" />
                         ) : (
-                          <AlertTriangle className="h-5 w-5 text-amber-600" />
+                          <AlertTriangle className="h-5 w-5 text-[var(--color-warning)]" />
                         )}
                       </div>
                       
                       {/* Content */}
                       <div className="flex-1">
                         <div className="flex items-start justify-between mb-1">
-                          <h5 className={`font-medium ${fixed ? "line-through text-gray-500" : ""}`}>
+                          <h5 className={`font-medium ${fixed ? "line-through text-[var(--color-charcoal)]" : "text-[var(--color-midnight)]"}`}>
                             {finding.title}
                           </h5>
                           <div className="flex items-center gap-2">
@@ -265,10 +266,10 @@ export default function AuditLogCard({
                               {finding.severity}
                             </Badge>
                             {fixed && (
-                              <Badge className="bg-green-100 text-green-700">Fixed</Badge>
+                              <Badge className="bg-[var(--color-success)]/20 text-[var(--color-success-dark)]">Fixed</Badge>
                             )}
                             {inRoadmap && !fixed && (
-                              <Badge className="bg-blue-100 text-blue-700">
+                              <Badge className="bg-[var(--color-info)]/20 text-[var(--color-info-dark)]">
                                 <Flag className="h-3 w-3 mr-1" />
                                 In Roadmap
                               </Badge>
@@ -276,7 +277,7 @@ export default function AuditLogCard({
                           </div>
                         </div>
                         
-                        <p className="text-sm text-gray-600 mb-2">{finding.description}</p>
+                        <p className="text-sm text-[var(--color-charcoal)] mb-2">{finding.description}</p>
                         
                         {finding.recommendation && (
                           <div className="bg-white/80 p-2 rounded text-sm">
@@ -313,11 +314,11 @@ export default function AuditLogCard({
           {/* Recommendations */}
           {audit.recommendations?.length > 0 && (
             <div className="mt-4">
-              <h4 className="font-medium text-sm text-gray-600 mb-2">Recommendations</h4>
+              <h4 className="font-medium text-sm text-[var(--color-charcoal)] mb-2">Recommendations</h4>
               <ul className="space-y-2">
                 {audit.recommendations.map((rec, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm">
-                    <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <li key={i} className="flex items-start gap-2 text-sm text-[var(--color-midnight)]">
+                    <CheckCircle2 className="h-4 w-4 text-[var(--color-success)] mt-0.5 flex-shrink-0" />
                     {rec}
                   </li>
                 ))}

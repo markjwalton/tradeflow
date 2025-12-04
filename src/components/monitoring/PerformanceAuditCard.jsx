@@ -12,10 +12,10 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
 const severityColors = {
-  low: "bg-blue-100 text-blue-700",
-  medium: "bg-amber-100 text-amber-700",
-  high: "bg-orange-100 text-orange-700",
-  critical: "bg-red-100 text-red-700"
+  low: "bg-[var(--color-info)]/20 text-[var(--color-info-dark)]",
+  medium: "bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]",
+  high: "bg-[var(--color-secondary)]/20 text-[var(--color-secondary-dark)]",
+  critical: "bg-[var(--color-destructive)]/20 text-[var(--color-destructive)]"
 };
 
 const severityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
@@ -82,19 +82,19 @@ export default function PerformanceAuditCard({
 
   // Grade colors
   const getGradeColor = (grade) => {
-    if (!grade) return "text-gray-600";
-    if (grade.startsWith("A")) return "text-green-600";
-    if (grade.startsWith("B")) return "text-blue-600";
-    if (grade.startsWith("C")) return "text-amber-600";
-    return "text-red-600";
+    if (!grade) return "text-[var(--color-charcoal)]";
+    if (grade.startsWith("A")) return "text-[var(--color-success)]";
+    if (grade.startsWith("B")) return "text-[var(--color-info)]";
+    if (grade.startsWith("C")) return "text-[var(--color-warning)]";
+    return "text-[var(--color-destructive)]";
   };
 
   const getGradeBgColor = (grade) => {
-    if (!grade) return "bg-gray-50 border-gray-200";
-    if (grade.startsWith("A")) return "bg-green-50 border-green-200";
-    if (grade.startsWith("B")) return "bg-blue-50 border-blue-200";
-    if (grade.startsWith("C")) return "bg-amber-50 border-amber-200";
-    return "bg-red-50 border-red-200";
+    if (!grade) return "bg-[var(--color-background)] border-[var(--color-background-muted)]";
+    if (grade.startsWith("A")) return "bg-[var(--color-success)]/10 border-[var(--color-success)]/30";
+    if (grade.startsWith("B")) return "bg-[var(--color-info)]/10 border-[var(--color-info)]/30";
+    if (grade.startsWith("C")) return "bg-[var(--color-warning)]/10 border-[var(--color-warning)]/30";
+    return "bg-[var(--color-destructive)]/10 border-[var(--color-destructive)]/30";
   };
 
   return (
@@ -102,13 +102,13 @@ export default function PerformanceAuditCard({
       {/* Collapsed Header */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full p-4 flex items-center justify-between hover:bg-gray-50/50 transition-colors"
+        className="w-full p-4 flex items-center justify-between hover:bg-[var(--color-background)]/50 transition-colors"
       >
         <div className="flex items-center gap-4">
           {isExpanded ? (
-            <ChevronDown className="h-5 w-5 text-gray-400" />
+            <ChevronDown className="h-5 w-5 text-[var(--color-charcoal)]" />
           ) : (
-            <ChevronRight className="h-5 w-5 text-gray-400" />
+            <ChevronRight className="h-5 w-5 text-[var(--color-charcoal)]" />
           )}
           
           {/* Grade Badge */}
@@ -118,11 +118,11 @@ export default function PerformanceAuditCard({
           
           {/* Info */}
           <div className="text-left">
-            <div className="font-medium flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-purple-600" />
+            <div className="font-medium flex items-center gap-2 text-[var(--color-midnight)]">
+              <Sparkles className="h-4 w-4 text-[var(--color-accent)]" />
               AI Performance Review
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-[var(--color-charcoal)]">
               {reviewDate ? format(new Date(reviewDate), "MMM d, yyyy HH:mm") : "Recent"}
               {review.improvementPotential && ` • ${review.improvementPotential} improvement potential`}
             </div>
@@ -132,19 +132,19 @@ export default function PerformanceAuditCard({
         {/* Summary Badges */}
         <div className="flex items-center gap-3">
           {openIssues.length > 0 && (
-            <Badge className="bg-amber-100 text-amber-700">
+            <Badge className="bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]">
               <AlertTriangle className="h-3 w-3 mr-1" />
               {openIssues.length} Open Issues
             </Badge>
           )}
           {resolvedIssues.length > 0 && (
-            <Badge className="bg-green-100 text-green-700">
+            <Badge className="bg-[var(--color-success)]/20 text-[var(--color-success-dark)]">
               <CheckCircle2 className="h-3 w-3 mr-1" />
               {resolvedIssues.length} Fixed
             </Badge>
           )}
           {inRoadmapIssues.length > 0 && (
-            <Badge className="bg-blue-100 text-blue-700">
+            <Badge className="bg-[var(--color-info)]/20 text-[var(--color-info-dark)]">
               <Flag className="h-3 w-3 mr-1" />
               {inRoadmapIssues.length} In Roadmap
             </Badge>
@@ -162,25 +162,25 @@ export default function PerformanceAuditCard({
         <div className="border-t px-4 pb-4">
           {/* Summary */}
           {review.gradeExplanation && (
-            <div className="py-4 border-b">
-              <p className="text-gray-700">{review.gradeExplanation}</p>
+            <div className="py-4 border-b border-[var(--color-background-muted)]">
+              <p className="text-[var(--color-charcoal)]">{review.gradeExplanation}</p>
             </div>
           )}
           
           {/* Priority Areas */}
           {priorityAreas.length > 0 && (
-            <div className="py-4 border-b">
-              <h4 className="font-medium text-sm text-amber-700 flex items-center gap-2 mb-3">
+            <div className="py-4 border-b border-[var(--color-background-muted)]">
+              <h4 className="font-medium text-sm text-[var(--color-warning-dark)] flex items-center gap-2 mb-3">
                 <AlertTriangle className="h-4 w-4" />
                 Priority Areas
               </h4>
               <div className="space-y-2">
                 {priorityAreas.map((area, i) => (
-                  <div key={i} className="flex items-start gap-3 p-3 bg-amber-50 rounded-lg">
-                    <span className="font-bold text-amber-600">{i + 1}</span>
+                  <div key={i} className="flex items-start gap-3 p-3 bg-[var(--color-warning)]/10 rounded-lg">
+                    <span className="font-bold text-[var(--color-warning)]">{i + 1}</span>
                     <div>
-                      <p className="font-medium">{area.area}</p>
-                      <p className="text-sm text-gray-600">{area.reason}</p>
+                      <p className="font-medium text-[var(--color-midnight)]">{area.area}</p>
+                      <p className="text-sm text-[var(--color-charcoal)]">{area.reason}</p>
                     </div>
                   </div>
                 ))}
@@ -190,17 +190,17 @@ export default function PerformanceAuditCard({
           
           {/* Quick Wins & Long Term side by side */}
           {(quickWins.length > 0 || longTermImprovements.length > 0) && (
-            <div className="py-4 border-b grid grid-cols-2 gap-4">
+            <div className="py-4 border-b border-[var(--color-background-muted)] grid grid-cols-2 gap-4">
               {quickWins.length > 0 && (
                 <div>
-                  <h4 className="font-medium text-sm text-green-700 flex items-center gap-2 mb-2">
+                  <h4 className="font-medium text-sm text-[var(--color-success-dark)] flex items-center gap-2 mb-2">
                     <CheckCircle2 className="h-4 w-4" />
                     Quick Wins
                   </h4>
                   <ul className="space-y-1">
                     {quickWins.map((win, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm">
-                        <CheckCircle2 className="h-3 w-3 text-green-600 mt-1 flex-shrink-0" />
+                      <li key={i} className="flex items-start gap-2 text-sm text-[var(--color-midnight)]">
+                        <CheckCircle2 className="h-3 w-3 text-[var(--color-success)] mt-1 flex-shrink-0" />
                         {win}
                       </li>
                     ))}
@@ -209,14 +209,14 @@ export default function PerformanceAuditCard({
               )}
               {longTermImprovements.length > 0 && (
                 <div>
-                  <h4 className="font-medium text-sm text-blue-700 flex items-center gap-2 mb-2">
+                  <h4 className="font-medium text-sm text-[var(--color-info-dark)] flex items-center gap-2 mb-2">
                     <TrendingUp className="h-4 w-4" />
                     Long-term Improvements
                   </h4>
                   <ul className="space-y-1">
                     {longTermImprovements.map((imp, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm">
-                        <TrendingUp className="h-3 w-3 text-blue-600 mt-1 flex-shrink-0" />
+                      <li key={i} className="flex items-start gap-2 text-sm text-[var(--color-midnight)]">
+                        <TrendingUp className="h-3 w-3 text-[var(--color-info)] mt-1 flex-shrink-0" />
                         {imp}
                       </li>
                     ))}
@@ -228,12 +228,13 @@ export default function PerformanceAuditCard({
           
           {/* Bulk Actions */}
           {selectedRecs.size > 0 && (
-            <div className="py-3 border-b flex items-center gap-3 bg-blue-50 -mx-4 px-4">
-              <span className="text-sm font-medium">{selectedRecs.size} selected</span>
+            <div className="py-3 border-b border-[var(--color-background-muted)] flex items-center gap-3 bg-[var(--color-info)]/10 -mx-4 px-4">
+              <span className="text-sm font-medium text-[var(--color-midnight)]">{selectedRecs.size} selected</span>
               <Button 
                 size="sm" 
                 onClick={addSelectedToRoadmap}
                 disabled={isAddingToRoadmap}
+                className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
               >
                 {isAddingToRoadmap ? (
                   <Loader2 className="h-3 w-3 mr-1 animate-spin" />
@@ -255,9 +256,9 @@ export default function PerformanceAuditCard({
           {/* Detailed Recommendations */}
           {recommendations.length > 0 && (
             <div className="mt-4 space-y-3">
-              <h4 className="font-medium text-sm text-gray-600 flex items-center justify-between">
+              <h4 className="font-medium text-sm text-[var(--color-charcoal)] flex items-center justify-between">
                 <span className="flex items-center gap-2">
-                  <Lightbulb className="h-4 w-4 text-purple-600" />
+                  <Lightbulb className="h-4 w-4 text-[var(--color-accent)]" />
                   Detailed Recommendations ({recommendations.length})
                 </span>
                 <Button 
@@ -281,7 +282,7 @@ export default function PerformanceAuditCard({
                   <div 
                     key={index} 
                     className={`p-4 rounded-lg border ${
-                      inRoadmap ? "bg-green-50 border-green-200 opacity-75" : "bg-white border-gray-200"
+                      inRoadmap ? "bg-[var(--color-success)]/10 border-[var(--color-success)]/30 opacity-75" : "bg-[var(--color-background-paper)] border-[var(--color-background-muted)]"
                     }`}
                   >
                     <div className="flex items-start gap-3">
@@ -297,36 +298,36 @@ export default function PerformanceAuditCard({
                       {/* Status icon */}
                       <div className="mt-0.5">
                         {inRoadmap ? (
-                          <CheckCircle2 className="h-5 w-5 text-green-600" />
+                          <CheckCircle2 className="h-5 w-5 text-[var(--color-success)]" />
                         ) : (
-                          <Lightbulb className="h-5 w-5 text-purple-600" />
+                          <Lightbulb className="h-5 w-5 text-[var(--color-accent)]" />
                         )}
                       </div>
                       
                       {/* Content */}
                       <div className="flex-1">
                         <div className="flex items-start justify-between mb-1">
-                          <h5 className={`font-medium ${inRoadmap ? "line-through text-gray-500" : ""}`}>
+                          <h5 className={`font-medium ${inRoadmap ? "line-through text-[var(--color-charcoal)]" : "text-[var(--color-midnight)]"}`}>
                             {rec.title}
                           </h5>
                           <div className="flex items-center gap-2">
                             {rec.effort && <Badge variant="outline">Effort: {rec.effort}</Badge>}
                             {rec.impact && (
                               <Badge className={
-                                rec.impact === "high" ? "bg-green-100 text-green-700" :
-                                rec.impact === "medium" ? "bg-amber-100 text-amber-700" :
-                                "bg-gray-100 text-gray-700"
+                                rec.impact === "high" ? "bg-[var(--color-success)]/20 text-[var(--color-success-dark)]" :
+                                rec.impact === "medium" ? "bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]" :
+                                "bg-[var(--color-charcoal)]/10 text-[var(--color-charcoal)]"
                               }>
                                 Impact: {rec.impact}
                               </Badge>
                             )}
                             {inRoadmap && (
-                              <Badge className="bg-green-100 text-green-700">In Roadmap</Badge>
+                              <Badge className="bg-[var(--color-success)]/20 text-[var(--color-success-dark)]">In Roadmap</Badge>
                             )}
                           </div>
                         </div>
                         
-                        <p className="text-sm text-gray-600">{rec.description}</p>
+                        <p className="text-sm text-[var(--color-charcoal)]">{rec.description}</p>
                         
                         {/* Add to Roadmap button */}
                         {!inRoadmap && onAddToRoadmap && (

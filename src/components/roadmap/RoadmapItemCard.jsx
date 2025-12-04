@@ -22,19 +22,19 @@ import {
 } from "lucide-react";
 
 const categories = {
-  idea: { label: "Idea", icon: Lightbulb, color: "bg-yellow-100 text-yellow-800" },
-  requirement: { label: "Requirement", icon: CheckCircle, color: "bg-blue-100 text-blue-800" },
-  feature: { label: "Feature", icon: Sparkles, color: "bg-purple-100 text-purple-800" },
-  improvement: { label: "Improvement", icon: Clock, color: "bg-green-100 text-green-800" },
-  bug_fix: { label: "Bug Fix", icon: Bug, color: "bg-red-100 text-red-800" },
-  discussion_note: { label: "Discussion", icon: MessageSquare, color: "bg-gray-100 text-gray-800" },
+  idea: { label: "Idea", icon: Lightbulb, color: "bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]" },
+  requirement: { label: "Requirement", icon: CheckCircle, color: "bg-[var(--color-info)]/20 text-[var(--color-info-dark)]" },
+  feature: { label: "Feature", icon: Sparkles, color: "bg-[var(--color-accent)]/20 text-[var(--color-accent-dark)]" },
+  improvement: { label: "Improvement", icon: Clock, color: "bg-[var(--color-success)]/20 text-[var(--color-success-dark)]" },
+  bug_fix: { label: "Bug Fix", icon: Bug, color: "bg-[var(--color-destructive)]/20 text-[var(--color-destructive)]" },
+  discussion_note: { label: "Discussion", icon: MessageSquare, color: "bg-[var(--color-charcoal)]/10 text-[var(--color-charcoal)]" },
 };
 
 const priorities = {
-  low: { label: "Low", color: "bg-slate-100 text-slate-600" },
-  medium: { label: "Medium", color: "bg-blue-100 text-blue-600" },
-  high: { label: "High", color: "bg-orange-100 text-orange-600" },
-  critical: { label: "Critical", color: "bg-red-100 text-red-600" },
+  low: { label: "Low", color: "bg-[var(--color-charcoal)]/10 text-[var(--color-charcoal)]" },
+  medium: { label: "Medium", color: "bg-[var(--color-info)]/20 text-[var(--color-info-dark)]" },
+  high: { label: "High", color: "bg-[var(--color-secondary)]/20 text-[var(--color-secondary-dark)]" },
+  critical: { label: "Critical", color: "bg-[var(--color-destructive)]/20 text-[var(--color-destructive)]" },
 };
 
 export default function RoadmapItemCard({ 
@@ -77,11 +77,11 @@ export default function RoadmapItemCard({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => onToggleStar(item)}>
-                  <Star className={`h-4 w-4 mr-2 ${item.is_starred ? "fill-yellow-500 text-yellow-500" : ""}`} />
+                  <Star className={`h-4 w-4 mr-2 ${item.is_starred ? "fill-[var(--color-warning)] text-[var(--color-warning)]" : ""}`} />
                   {item.is_starred ? "Unstar" : "Star"}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => onToggleFocus(item)}>
-                  <Focus className={`h-4 w-4 mr-2 ${item.is_focused ? "text-purple-600" : ""}`} />
+                  <Focus className={`h-4 w-4 mr-2 ${item.is_focused ? "text-[var(--color-accent-dark)]" : ""}`} />
                   {item.is_focused ? "Remove Focus" : "Set Focus"}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -93,7 +93,7 @@ export default function RoadmapItemCard({
                                         <Edit className="h-4 w-4 mr-2" /> Edit
                                       </DropdownMenuItem>
                                       {onDelete && (
-                                        <DropdownMenuItem className="text-red-600" onClick={() => onDelete(item.id)}>
+                                        <DropdownMenuItem className="text-[var(--color-destructive)]" onClick={() => onDelete(item.id)}>
                                           <Trash2 className="h-4 w-4 mr-2" /> Delete
                                         </DropdownMenuItem>
                                       )}
