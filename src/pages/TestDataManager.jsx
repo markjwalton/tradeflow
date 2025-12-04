@@ -730,16 +730,7 @@ Return as JSON with entity names as keys and arrays of records as values.`,
         </CardContent>
       </Card>
 
-      {/* Debug Info */}
-      <Card className="bg-blue-50 border-blue-200">
-        <CardContent className="py-4">
-          <p className="text-blue-800">
-            Debug: {testDataSets.length} TestData records. 
-            First TestData keys: {testDataSets.length > 0 ? Object.keys(testDataSets[0]).join(", ") : "none"}.
-            test_status location: {testDataSets.length > 0 ? (testDataSets[0].test_status || testDataSets[0].data?.test_status || "NOT FOUND") : "N/A"}
-          </p>
-        </CardContent>
-      </Card>
+
 
       {/* Dashboard Cards */}
       <TestDataDashboard stats={stats} onCardClick={handleCardClick} />
