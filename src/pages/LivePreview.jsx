@@ -236,7 +236,6 @@ export default function LivePreview() {
               </div>
             </div>
           )}
-        </div>
       </div>
     </div>
   );
