@@ -25,13 +25,13 @@ import {
 import { toast } from "sonner";
 
 const entryTypes = [
-  { value: "brainstorming", label: "Brainstorming", icon: Brain, color: "bg-purple-100 text-purple-800" },
-  { value: "question", label: "Question", icon: HelpCircle, color: "bg-blue-100 text-blue-800" },
-  { value: "advice", label: "Advice", icon: MessageSquare, color: "bg-green-100 text-green-800" },
-  { value: "idea", label: "Idea", icon: Lightbulb, color: "bg-yellow-100 text-yellow-800" },
-  { value: "decision", label: "Decision", icon: CheckCircle, color: "bg-emerald-100 text-emerald-800" },
-  { value: "update", label: "Update", icon: Code, color: "bg-gray-100 text-gray-800" },
-  { value: "blocker", label: "Blocker", icon: AlertTriangle, color: "bg-red-100 text-red-800" },
+  { value: "brainstorming", label: "Brainstorming", icon: Brain, color: "bg-[var(--color-accent)]/20 text-[var(--color-accent-dark)]" },
+  { value: "question", label: "Question", icon: HelpCircle, color: "bg-[var(--color-info)]/20 text-[var(--color-info-dark)]" },
+  { value: "advice", label: "Advice", icon: MessageSquare, color: "bg-[var(--color-success)]/20 text-[var(--color-success-dark)]" },
+  { value: "idea", label: "Idea", icon: Lightbulb, color: "bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]" },
+  { value: "decision", label: "Decision", icon: CheckCircle, color: "bg-[var(--color-primary)]/20 text-[var(--color-primary-dark)]" },
+  { value: "update", label: "Update", icon: Code, color: "bg-[var(--color-charcoal)]/10 text-[var(--color-charcoal)]" },
+  { value: "blocker", label: "Blocker", icon: AlertTriangle, color: "bg-[var(--color-destructive)]/20 text-[var(--color-destructive)]" },
 ];
 
 export default function ChatHighlightCapture({ isOpen, onClose }) {
@@ -174,7 +174,7 @@ Return as JSON:
           {!analysis ? (
             <>
               <div>
-                <label className="text-sm font-medium mb-2 block">
+                <label className="text-sm font-medium mb-2 block text-[var(--color-midnight)]">
                   Paste your chat conversation
                 </label>
                 <Textarea
@@ -186,7 +186,7 @@ Return as JSON:
                 />
               </div>
 
-              <Button onClick={analyzeChat} disabled={isAnalyzing || !chatContent.trim()} className="w-full">
+              <Button onClick={analyzeChat} disabled={isAnalyzing || !chatContent.trim()} className="w-full bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
                 {isAnalyzing ? (
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                 ) : (
@@ -198,14 +198,14 @@ Return as JSON:
           ) : (
             <>
               {analysis.overall_summary && (
-                <div className="bg-slate-50 p-3 rounded-lg">
-                  <p className="text-sm font-medium text-slate-700">Session Summary</p>
-                  <p className="text-sm text-slate-600">{analysis.overall_summary}</p>
+                <div className="bg-[var(--color-background)] border border-[var(--color-background-muted)] p-3 rounded-lg">
+                  <p className="text-sm font-medium text-[var(--color-midnight)]">Session Summary</p>
+                  <p className="text-sm text-[var(--color-charcoal)]">{analysis.overall_summary}</p>
                 </div>
               )}
 
               <div>
-                <label className="text-sm font-medium mb-2 block">
+                <label className="text-sm font-medium mb-2 block text-[var(--color-midnight)]">
                   Save to Roadmap Item *
                 </label>
                 <Select value={selectedRoadmapItem} onValueChange={setSelectedRoadmapItem}>
@@ -223,12 +223,12 @@ Return as JSON:
               </div>
 
               <div className="space-y-3">
-                <p className="text-sm font-medium">Extracted Highlights ({analysis.highlights?.length || 0})</p>
+                <p className="text-sm font-medium text-[var(--color-midnight)]">Extracted Highlights ({analysis.highlights?.length || 0})</p>
                 {analysis.highlights?.map((highlight, index) => {
                   const typeInfo = getTypeInfo(highlight.type);
                   const TypeIcon = typeInfo.icon;
                   return (
-                    <div key={index} className="border rounded-lg p-3 space-y-2">
+                    <div key={index} className="border border-[var(--color-background-muted)] rounded-lg p-3 space-y-2">
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex items-center gap-2 flex-wrap">
                           <Select 
@@ -258,13 +258,13 @@ Return as JSON:
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="text-red-500 h-8"
+                          className="text-[var(--color-destructive)] h-8"
                           onClick={() => removeHighlight(index)}
                         >
                           Remove
                         </Button>
                       </div>
-                      <p className="text-sm">{highlight.content}</p>
+                      <p className="text-sm text-[var(--color-midnight)]">{highlight.content}</p>
                     </div>
                   );
                 })}
@@ -277,7 +277,7 @@ Return as JSON:
                 <Button 
                   onClick={saveHighlights} 
                   disabled={isSaving || !selectedRoadmapItem}
-                  className="flex-1"
+                  className="flex-1 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
                 >
                   {isSaving ? (
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />

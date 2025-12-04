@@ -165,16 +165,16 @@ Generate the appropriate output for this field.`,
       <SheetContent className="w-[450px] sm:max-w-[450px] flex flex-col">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-purple-600" />
+            <Sparkles className="h-5 w-5 text-[var(--color-accent)]" />
             AI Input Assistant
           </SheetTitle>
-          <p className="text-sm text-gray-500">For: {fieldLabel}</p>
+          <p className="text-sm text-[var(--color-charcoal)]">For: {fieldLabel}</p>
         </SheetHeader>
 
         <div className="flex-1 flex flex-col gap-4 mt-4">
           {/* Prompt Selector */}
           <div>
-            <label className="text-sm font-medium mb-1 block">Reasoning Prompt</label>
+            <label className="text-sm font-medium mb-1 block text-[var(--color-midnight)]">Reasoning Prompt</label>
             <Select value={selectedPromptId || ""} onValueChange={setSelectedPromptId}>
               <SelectTrigger>
                 <SelectValue placeholder="Select a prompt..." />
@@ -191,7 +191,7 @@ Generate the appropriate output for this field.`,
               </SelectContent>
             </Select>
             {selectedPrompt && (
-              <p className="text-xs text-gray-500 mt-1">{selectedPrompt.description}</p>
+              <p className="text-xs text-[var(--color-charcoal)] mt-1">{selectedPrompt.description}</p>
             )}
           </div>
 
@@ -213,13 +213,13 @@ Generate the appropriate output for this field.`,
               )}
             </Button>
           </div>
-          <p className="text-center text-sm text-gray-500">
+          <p className="text-center text-sm text-[var(--color-charcoal)]">
             {isRecording ? "Recording... Click to stop" : isProcessing ? "Processing audio..." : "Click to start recording"}
           </p>
 
           {/* Transcript */}
           <div>
-            <label className="text-sm font-medium mb-1 block">Your Input</label>
+            <label className="text-sm font-medium mb-1 block text-[var(--color-midnight)]">Your Input</label>
             <Textarea
               value={transcript}
               onChange={(e) => setTranscript(e.target.value)}
@@ -229,7 +229,7 @@ Generate the appropriate output for this field.`,
           </div>
 
           {/* Generate Button */}
-          <Button onClick={generateOutput} disabled={!transcript.trim() || isGenerating}>
+          <Button onClick={generateOutput} disabled={!transcript.trim() || isGenerating} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
             {isGenerating ? (
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
             ) : (
@@ -241,16 +241,16 @@ Generate the appropriate output for this field.`,
           {/* AI Output */}
           {aiOutput && (
             <div className="flex-1">
-              <label className="text-sm font-medium mb-1 block">AI Output</label>
-              <ScrollArea className="h-32 border rounded-md p-3 bg-gray-50">
-                <p className="text-sm whitespace-pre-wrap">{aiOutput}</p>
+              <label className="text-sm font-medium mb-1 block text-[var(--color-midnight)]">AI Output</label>
+              <ScrollArea className="h-32 border border-[var(--color-background-muted)] rounded-md p-3 bg-[var(--color-background)]">
+                <p className="text-sm whitespace-pre-wrap text-[var(--color-midnight)]">{aiOutput}</p>
               </ScrollArea>
             </div>
           )}
         </div>
 
         {/* Actions */}
-        <div className="flex gap-2 pt-4 border-t mt-4">
+        <div className="flex gap-2 pt-4 border-t border-[var(--color-background-muted)] mt-4">
           <Button variant="outline" onClick={handleReset} className="gap-2">
             <RotateCcw className="h-4 w-4" />
             Reset
@@ -259,7 +259,7 @@ Generate the appropriate output for this field.`,
             <X className="h-4 w-4" />
             Cancel
           </Button>
-          <Button onClick={handleApply} disabled={!aiOutput} className="flex-1 gap-2">
+          <Button onClick={handleApply} disabled={!aiOutput} className="flex-1 gap-2 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
             <Check className="h-4 w-4" />
             Apply to Field
           </Button>
