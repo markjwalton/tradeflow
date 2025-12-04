@@ -205,9 +205,9 @@ export default function TestDataManager() {
 
     return previewableItems.map(item => {
             const entities = getEntitiesForItem(item);
-            // Match by playground_item_id - check both direct and nested in data
+            // Match by playground_item_id - data is nested under .data
             const testData = testDataSets.find(td => 
-              td.playground_item_id === item.id || td.data?.playground_item_id === item.id
+              td.data?.playground_item_id === item.id
             );
 
             // Get entity_data - check both direct and nested
