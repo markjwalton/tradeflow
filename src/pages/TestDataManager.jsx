@@ -215,16 +215,6 @@ export default function TestDataManager() {
             // Get test status from TestData record - nested under .data
             const testStatus = testData?.data?.test_status || "pending";
 
-            // Debug first few items
-            if (previewableItems.indexOf(item) < 3) {
-              console.log("item mapping:", {
-                id: item.id,
-                name: item.data?.source_name,
-                testDataFound: !!testData,
-                testStatus
-              });
-            }
-
             return {
               id: item.id,
               name: item.data?.source_name,
