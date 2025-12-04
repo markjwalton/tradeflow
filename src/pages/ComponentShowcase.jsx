@@ -816,7 +816,7 @@ export default function ComponentShowcase() {
               action={<PrimaryButton size="sm">Compose</PrimaryButton>}
             />
           </ComponentDemo>
-        </ShowcaseSection>
+        </ShowcaseSection>}
 
         {/* Category Cards Grid - Matching Figma Footer */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-12 pt-8 border-t border-[#eceae5]">
