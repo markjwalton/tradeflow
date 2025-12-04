@@ -115,16 +115,16 @@ export default function CMSManager() {
     if (isLoading) {
       return (
         <div className="flex justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
         </div>
       );
     }
 
     if (items.length === 0) {
       return (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-[var(--color-charcoal)]">
           <p>No {type} yet</p>
-          <Button className="mt-4" onClick={() => openEditor()}>
+          <Button className="mt-4 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white" onClick={() => openEditor()}>
             <Plus className="h-4 w-4 mr-2" />
             Create {type.slice(0, -1)}
           </Button>
@@ -135,11 +135,11 @@ export default function CMSManager() {
     return (
       <div className="space-y-2">
         {items.map(item => (
-          <div key={item.id} className="flex items-center justify-between p-4 bg-white rounded-lg border hover:shadow-sm">
+          <div key={item.id} className="flex items-center justify-between p-4 bg-[var(--color-background-paper)] rounded-[var(--radius-lg)] border border-[var(--color-background-muted)] hover:shadow-[var(--shadow-sm)] transition-shadow">
             <div>
-              <h3 className="font-medium">{item.title || item.name}</h3>
+              <h3 className="font-medium text-[var(--color-midnight)]">{item.title || item.name}</h3>
               <div className="flex items-center gap-2 mt-1">
-                <span className="text-sm text-gray-500">/{item.slug}</span>
+                <span className="text-sm text-[var(--color-charcoal)]">/{item.slug}</span>
                 {statusBadge(item.status)}
               </div>
             </div>
@@ -167,11 +167,11 @@ export default function CMSManager() {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold">CMS</h1>
-          <p className="text-gray-500">Manage content for external websites</p>
+          <h1 className="text-2xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>CMS</h1>
+          <p className="text-[var(--color-charcoal)]">Manage content for external websites</p>
         </div>
         {isGlobalAdmin && (
           <CMSTenantSelector 

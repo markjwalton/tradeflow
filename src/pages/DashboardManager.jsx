@@ -133,10 +133,10 @@ export default function DashboardManager() {
   return (
     <div className="h-[calc(100vh-56px)] flex flex-col">
       {/* Header */}
-      <div className="bg-white border-b px-4 py-3 flex items-center justify-between flex-shrink-0">
+      <div className="bg-[var(--color-background-paper)] border-b border-[var(--color-background-muted)] px-4 py-3 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-3">
-          <LayoutDashboard className="h-5 w-5 text-blue-600" />
-          <h1 className="font-bold text-lg">Dashboard Manager</h1>
+          <LayoutDashboard className="h-5 w-5 text-[var(--color-primary)]" />
+          <h1 className="font-light text-lg text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>Dashboard Manager</h1>
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="h-8">
               <TabsTrigger value="dashboard" className="text-xs px-3">
@@ -198,7 +198,7 @@ export default function DashboardManager() {
 
           <Button 
             size="sm" 
-            className="bg-purple-600 hover:bg-purple-700"
+            className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
             onClick={() => setShowAIGenerator(true)}
           >
             <Sparkles className="h-3 w-3 mr-1" />
@@ -223,26 +223,26 @@ export default function DashboardManager() {
             )}
 
             {/* Dashboard Grid */}
-            <div className="flex-1 overflow-auto p-6 bg-gray-50">
+            <div className="flex-1 overflow-auto p-6 bg-[var(--color-background)]">
               {widgetsLoading ? (
                 <div className="flex justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                  <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
                 </div>
               ) : publishedWidgets.length === 0 && !currentLayout?.widgets?.length ? (
-                <Card className="max-w-lg mx-auto mt-12">
+                <Card className="max-w-lg mx-auto mt-12 border-[var(--color-background-muted)]">
                   <CardContent className="py-12 text-center">
-                    <LayoutDashboard className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                    <h3 className="font-medium text-lg mb-2">No Widgets Yet</h3>
-                    <p className="text-gray-500 mb-4">
+                    <LayoutDashboard className="h-12 w-12 mx-auto mb-4 text-[var(--color-background-muted)]" />
+                    <h3 className="font-light text-lg mb-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>No Widgets Yet</h3>
+                    <p className="text-[var(--color-charcoal)] mb-4">
                       Create widgets in the staging area or use AI to generate recommendations.
                     </p>
                     <div className="flex justify-center gap-2">
-                      <Button variant="outline" onClick={() => setActiveTab("staging")}>
+                      <Button variant="outline" onClick={() => setActiveTab("staging")} className="border-[var(--color-background-muted)]">
                         <Plus className="h-4 w-4 mr-1" />
                         Create Widget
                       </Button>
                       <Button 
-                        className="bg-purple-600 hover:bg-purple-700"
+                        className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
                         onClick={() => setShowAIGenerator(true)}
                       >
                         <Sparkles className="h-4 w-4 mr-1" />
@@ -265,7 +265,7 @@ export default function DashboardManager() {
         )}
 
         {activeTab === "staging" && (
-          <div className="flex-1 overflow-auto p-6 bg-gray-50">
+          <div className="flex-1 overflow-auto p-6 bg-[var(--color-background)]">
             <WidgetStaging 
               widgets={widgets}
               onEdit={(widget) => {
@@ -277,7 +277,7 @@ export default function DashboardManager() {
         )}
 
         {activeTab === "library" && (
-          <div className="flex-1 overflow-auto p-6 bg-gray-50">
+          <div className="flex-1 overflow-auto p-6 bg-[var(--color-background)]">
             <WidgetLibraryManager widgets={widgets} />
           </div>
         )}
