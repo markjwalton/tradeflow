@@ -29,8 +29,8 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+      <div className="min-h-screen flex items-center justify-center bg-[var(--color-background)]">
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
       </div>
     );
   }
@@ -40,14 +40,16 @@ export default function Home() {
   const getChildren = (parentId) => navItems.filter(i => i.parent_id === parentId).sort((a, b) => (a.order || 0) - (b.order || 0));
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-[var(--color-background)] p-6">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-2">Welcome to {tenant?.name || "Your Portal"}</h1>
-        <p className="text-gray-600 mb-8">Select a section to get started</p>
+        <h1 className="text-3xl font-light mb-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
+          Welcome to {tenant?.name || "Your Portal"}
+        </h1>
+        <p className="text-[var(--color-charcoal)] mb-8">Select a section to get started</p>
         
         {navItems.length === 0 ? (
-          <Card>
-            <CardContent className="py-8 text-center text-gray-500">
+          <Card className="border-[var(--color-background-muted)]">
+            <CardContent className="py-8 text-center text-[var(--color-charcoal)]">
               No navigation items configured for this tenant yet.
             </CardContent>
           </Card>
@@ -62,10 +64,10 @@ export default function Home() {
                 : null;
 
               return (
-                <Card key={item.id} className="hover:shadow-md transition-shadow">
+                <Card key={item.id} className="hover:shadow-md transition-shadow border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg">
-                      <Icon className="h-5 w-5 text-slate-600" />
+                    <CardTitle className="flex items-center gap-2 text-lg text-[var(--color-midnight)]">
+                      <Icon className="h-5 w-5 text-[var(--color-primary)]" />
                       {item.name}
                     </CardTitle>
                   </CardHeader>
@@ -81,7 +83,7 @@ export default function Home() {
                             <li key={child.id}>
                               <Link 
                                 to={childUrl}
-                                className="flex items-center gap-2 text-sm text-gray-600 hover:text-slate-900 py-1"
+                                className="flex items-center gap-2 text-sm text-[var(--color-charcoal)] hover:text-[var(--color-midnight)] py-1"
                               >
                                 <ChevronRight className="h-4 w-4" />
                                 <ChildIcon className="h-4 w-4" />
@@ -94,12 +96,12 @@ export default function Home() {
                     ) : pageUrl ? (
                       <Link 
                         to={pageUrl}
-                        className="text-sm text-blue-600 hover:underline"
+                        className="text-sm text-[var(--color-primary)] hover:text-[var(--color-primary-dark)] hover:underline"
                       >
                         Open →
                       </Link>
                     ) : (
-                      <span className="text-sm text-gray-400">No content</span>
+                      <span className="text-sm text-[var(--color-charcoal)]/50">No content</span>
                     )}
                   </CardContent>
                 </Card>
