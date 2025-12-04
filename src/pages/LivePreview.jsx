@@ -13,7 +13,6 @@ import { createPageUrl } from "@/utils";
 import LivePageRenderer from "@/components/playground/LivePageRenderer";
 
 // Standardized components
-import { LivePreviewNavigation } from "@/components/testing/LivePreviewNavigation";
 import { ContentCard, InfoRow, StatCard } from "@/components/layout/PageLayout";
 
 const statusColors = {
