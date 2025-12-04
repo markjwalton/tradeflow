@@ -123,8 +123,8 @@ export default function TenantAccess() {
 
   if (loading || loadingTenant || loadingAllPending || loadingUserAccess) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+      <div className="min-h-screen flex items-center justify-center bg-[var(--color-background)]">
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
       </div>
     );
   }
@@ -170,10 +170,10 @@ export default function TenantAccess() {
   // Show tenant lookup if no slug provided or tenant not found
   if (!tenantSlug && !selectedTenant) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6">
-        <Card className="max-w-lg w-full">
+      <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--color-background)]">
+        <Card className="max-w-lg w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-[var(--color-midnight)]">
               <Building2 className="h-5 w-5" />
               {user ? "Find Your Organization" : "Welcome"}
             </CardTitle>
@@ -181,7 +181,7 @@ export default function TenantAccess() {
           <CardContent className="space-y-6">
             {/* Sign In option */}
             <div className="space-y-3">
-              <p className="text-gray-600">
+              <p className="text-[var(--color-charcoal)]">
                 {user 
                   ? `Signed in as ${user.email}` 
                   : "Already have an account? Sign in to access your organization."}
@@ -211,7 +211,7 @@ export default function TenantAccess() {
 
             {/* Company ID lookup */}
             <div className="space-y-2">
-              <Label>Enter your Company ID</Label>
+              <Label className="text-[var(--color-midnight)]">Enter your Company ID</Label>
               <div className="flex gap-2">
                 <Input
                   placeholder="e.g. ABC123"
@@ -224,7 +224,7 @@ export default function TenantAccess() {
                   {lookupLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Find"}
                 </Button>
               </div>
-              <p className="text-xs text-gray-500">Your administrator should have provided you with a 6-character Company ID</p>
+              <p className="text-xs text-[var(--color-charcoal)]">Your administrator should have provided you with a 6-character Company ID</p>
             </div>
 
             {/* Show pending requests */}
@@ -240,11 +240,11 @@ export default function TenantAccess() {
                 </div>
                 <div className="space-y-2">
                   {allPendingRequests.map(req => (
-                    <div key={req.id} className="flex items-center gap-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                      <Clock className="h-5 w-5 text-amber-500 flex-shrink-0" />
+                    <div key={req.id} className="flex items-center gap-3 p-3 bg-[var(--color-warning)]/10 border border-[var(--color-warning)]/30 rounded-lg">
+                      <Clock className="h-5 w-5 text-[var(--color-warning)] flex-shrink-0" />
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-sm truncate">{req.tenant?.name || "Unknown"}</p>
-                        <p className="text-xs text-gray-500">Awaiting approval</p>
+                        <p className="font-medium text-sm truncate text-[var(--color-midnight)]">{req.tenant?.name || "Unknown"}</p>
+                        <p className="text-xs text-[var(--color-charcoal)]">Awaiting approval</p>
                       </div>
                     </div>
                   ))}
@@ -259,13 +259,13 @@ export default function TenantAccess() {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6">
-        <Card className="max-w-md w-full">
+      <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--color-background)]">
+        <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
           <CardHeader>
-            <CardTitle>Sign In Required</CardTitle>
+            <CardTitle className="text-[var(--color-midnight)]">Sign In Required</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-gray-600">Please sign in to request access to this organization.</p>
+            <p className="text-[var(--color-charcoal)]">Please sign in to request access to this organization.</p>
             <Button 
               className="w-full" 
               onClick={() => base44.auth.redirectToLogin()}
@@ -280,10 +280,10 @@ export default function TenantAccess() {
 
   if (!tenant) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6">
-        <Card className="max-w-md w-full">
+      <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--color-background)]">
+        <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
           <CardContent className="pt-6 text-center">
-            <p className="text-gray-500">Organization not found.</p>
+            <p className="text-[var(--color-charcoal)]">Organization not found.</p>
           </CardContent>
         </Card>
       </div>
@@ -292,21 +292,21 @@ export default function TenantAccess() {
 
   if (loadingRoles || loadingRequests) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+      <div className="min-h-screen flex items-center justify-center bg-[var(--color-background)]">
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
       </div>
     );
   }
 
   if (hasAccess) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6">
-        <Card className="max-w-md w-full">
+      <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--color-background)]">
+        <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
           <CardContent className="pt-6 text-center space-y-4">
-            <CheckCircle className="h-12 w-12 text-green-500 mx-auto" />
+            <CheckCircle className="h-12 w-12 text-[var(--color-success)] mx-auto" />
             <div>
-              <h2 className="text-xl font-semibold">You have access!</h2>
-              <p className="text-gray-500">You can now use {tenant.name}</p>
+              <h2 className="text-xl font-semibold text-[var(--color-midnight)]">You have access!</h2>
+              <p className="text-[var(--color-charcoal)]">You can now use {tenant.name}</p>
             </div>
             <Button onClick={() => {
               const url = createPageUrl("NavigationManager");
@@ -322,13 +322,13 @@ export default function TenantAccess() {
 
   if (requestSubmitted || (existingRequest && existingRequest.status === "pending")) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6">
-        <Card className="max-w-md w-full">
+      <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--color-background)]">
+        <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
           <CardContent className="pt-6 text-center space-y-4">
-            <Clock className="h-12 w-12 text-amber-500 mx-auto" />
+            <Clock className="h-12 w-12 text-[var(--color-warning)] mx-auto" />
             <div>
-              <h2 className="text-xl font-semibold">Request Submitted</h2>
-              <p className="text-gray-500">Your request to join {tenant.name} is awaiting approval.</p>
+              <h2 className="text-xl font-semibold text-[var(--color-midnight)]">Request Submitted</h2>
+              <p className="text-[var(--color-charcoal)]">Your request to join {tenant.name} is awaiting approval.</p>
             </div>
           </CardContent>
         </Card>
@@ -341,13 +341,13 @@ export default function TenantAccess() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <Card className="max-w-md w-full">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--color-background)]">
+      <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
         <CardHeader>
-          <CardTitle>Request Access</CardTitle>
+          <CardTitle className="text-[var(--color-midnight)]">Request Access</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-gray-600">
+          <p className="text-[var(--color-charcoal)]">
             You're requesting access to <strong>{tenant.name}</strong>.
           </p>
           
