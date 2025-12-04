@@ -115,6 +115,13 @@ export default function ComponentShowcase() {
 
     const [activeCategory, setActiveCategory] = useState("typography");
     const [activeMainTab, setActiveMainTab] = useState(tabFromUrl);
+    
+    // Update tab when URL changes
+    React.useEffect(() => {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get("tab") || "all";
+      setActiveMainTab(tab);
+    }, [window.location.search]);
   
   // Get visible categories based on active tab
   const activeTabConfig = tabs.find(t => t.id === activeMainTab);
