@@ -231,7 +231,7 @@ export default function ComponentShowcase() {
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Typography Section */}
-        <ShowcaseSection
+        {visibleCategories.includes("typography") && <ShowcaseSection
           id="typography"
           title="Typography"
           count={13}
