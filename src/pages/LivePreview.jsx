@@ -118,23 +118,9 @@ export default function LivePreview() {
   }
 
   return (
-    <div className="flex h-full">
-      {/* Left Navigation Panel - Inside Layout's content area */}
-      <aside className="w-64 bg-slate-900 text-white flex flex-col flex-shrink-0">
-        {/* Navigation */}
-        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-          <LivePreviewNavigation
-            playgroundItems={playgroundItems}
-            selectedItemId={selectedItemId}
-            onSelectItem={setSelectedItemId}
-            fallbackPages={pageItems}
-            fallbackFeatures={featuresByCategory}
-          />
-        </nav>
-      </aside>
-
-      {/* Main Content Area */}
-      <main className="flex-1 bg-gray-50 overflow-auto flex flex-col">
+    <div className="p-6">
+      {/* Content Area */}
+      <div className="flex gap-6">
         {!selectedItem ? (
           <div className="h-full flex items-center justify-center text-gray-500">
             <div className="text-center">
