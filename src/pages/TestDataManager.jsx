@@ -152,92 +152,72 @@ export default function TestDataManager() {
     },
   });
 
-  // Build page/feature status list
+  // Build page/feature status list - CLEAN REFACTOR
   const itemStatusList = useMemo(() => {
-    // Get entities for an item (inline to avoid stale closure)
+    // Helper: safely get nested or flat property
+    const get = (obj, key) => obj?.[key] ?? obj?.data?.[key];
+
+    // Helper: get entities for a playground item
     const getEntitiesForItem = (item) => {
-      if (!item) return [];
+      const sourceType = get(item, "source_type");
+      const sourceId = get(item, "source_id");
+      const workingData = get(item, "working_data");
 
       let entitiesUsed = [];
-      const sourceType = item.source_type || item.data?.source_type;
-      const sourceId = item.source_id || item.data?.source_id;
-      const workingData = item.working_data || item.data?.working_data;
-      
-      if (sourceType === "page") {
-            const template = pageTemplates.find(t => t.id === sourceId);
-            entitiesUsed = workingData?.entities_used
-              || template?.entities_used
-              || template?.data?.entities_used 
-              || [];
-      } else if (sourceType === "feature") {
-            const template = featureTemplates.find(t => t.id === sourceId);
-            entitiesUsed = workingData?.entities_used
-              || template?.entities_used
-              || template?.data?.entities_used 
-              || [];
-      }
 
-      // Debug: log what we found
-      if (entitiesUsed.length === 0) {
-        console.log(`No entities found for ${item.source_name || item.data?.source_name}:`, {
-          source_type: sourceType,
-          source_id: sourceId,
-          working_data: workingData,
-          templateFound: sourceType === "page" 
-            ? pageTemplates.find(t => t.id === sourceId)
-            : featureTemplates.find(t => t.id === sourceId)
-        });
+      if (sourceType === "page") {
+        const template = pageTemplates.find(t => t.id === sourceId);
+        entitiesUsed = workingData?.entities_used || get(template, "entities_used") || [];
+      } else if (sourceType === "feature") {
+        const template = featureTemplates.find(t => t.id === sourceId);
+        entitiesUsed = workingData?.entities_used || get(template, "entities_used") || [];
       }
 
       return entitiesUsed.map(name => {
-        const entity = entityTemplates.find(e => e.name === name || e.data?.name === name);
-        if (entity) {
-          return {
-            name: entity.data?.name || entity.name || name,
-            schema: entity.data?.schema || entity.schema || { properties: {} }
-          };
-        }
-        return { name, schema: { properties: {} } };
+        const entity = entityTemplates.find(e => get(e, "name") === name);
+        return {
+          name: get(entity, "name") || name,
+          schema: get(entity, "schema") || { properties: {} }
+        };
       });
     };
 
+    // Filter to pages and features only
     const previewableItems = playgroundItems.filter(p => {
-      const sourceType = p.source_type || p.data?.source_type;
+      const sourceType = get(p, "source_type");
       return sourceType === "page" || sourceType === "feature";
     });
 
+    // Build status for each item
     return previewableItems.map(item => {
-            const entities = getEntitiesForItem(item);
-            // Match by playground_item_id - check both flat and nested
-            const testData = testDataSets.find(td => {
-              const tdPlaygroundId = td.playground_item_id || td.data?.playground_item_id;
-              return tdPlaygroundId === item.id;
-            });
+      const sourceType = get(item, "source_type");
+      const sourceName = get(item, "source_name");
+      const entities = getEntitiesForItem(item);
 
-            // Get entity_data - check both flat and nested
-            const entityData = testData?.entity_data || testData?.data?.entity_data || {};
-            const recordCount = Object.values(entityData).reduce((sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0);
+      // Find matching TestData by playground_item_id
+      const testData = testDataSets.find(td => get(td, "playground_item_id") === item.id);
 
-            // Get test status from TestData record - check both flat and nested
-            const testStatus = testData?.test_status || testData?.data?.test_status || "pending";
+      // Extract data from TestData
+      const entityData = get(testData, "entity_data") || {};
+      const recordCount = Object.values(entityData).reduce(
+        (sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 
+        0
+      );
+      const testStatus = get(testData, "test_status") || "pending";
 
-            // Get item properties - check both flat and nested
-            const itemSourceName = item.source_name || item.data?.source_name;
-            const itemSourceType = item.source_type || item.data?.source_type;
-
-            return {
-              id: item.id,
-              name: itemSourceName,
-              type: itemSourceType,
-              entityCount: entities.length,
-              recordCount,
-              hasTestData: !!testData,
-              testDataId: testData?.id,
-              dataStatus: testData ? (recordCount > 0 || entities.length === 0 ? "complete" : "pending") : "missing",
-              testStatus: testStatus,
-              entities
-            };
-          });
+      return {
+        id: item.id,
+        name: sourceName,
+        type: sourceType,
+        entityCount: entities.length,
+        recordCount,
+        hasTestData: !!testData,
+        testDataId: testData?.id,
+        dataStatus: testData ? (recordCount > 0 || entities.length === 0 ? "complete" : "pending") : "missing",
+        testStatus,
+        entities
+      };
+    });
   }, [playgroundItems, testDataSets, entityTemplates, pageTemplates, featureTemplates]);
 
   // Calculate stats
