@@ -653,10 +653,12 @@ export default function Layout({ children, currentPageName }) {
                           if (queryString) {
                             pageUrl = pageUrl + (pageUrl.includes("?") ? "&" : "?") + queryString;
                           }
+                          // Use a safe key - replace special chars
+                          const safeKey = `page_${item.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
                           
                           return [
                             <DropdownMenuItem
-                              key={itemId}
+                              key={safeKey}
                               onClick={() => navigate(pageUrl)}
                               className="gap-2"
                               style={{ paddingLeft: `${8 + depth * 12}px` }}
