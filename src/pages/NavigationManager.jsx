@@ -175,8 +175,8 @@ export default function NavigationManager() {
 
           {activeTab === "app" && (
             <div>
-              <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-700">
-                <strong>App Pages</strong> are hardcoded tenant-facing pages defined in Layout.js. 
+              <div className="mb-4 p-3 bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/30 rounded-lg text-sm text-[var(--color-midnight)]">
+                <strong>App Pages</strong> are tenant-facing pages. 
                 Use this to organize which pages appear in tenant navigation.
               </div>
               <GenericNavEditor
@@ -377,7 +377,7 @@ function LivePagesNavEditor({ pageTemplates = [], featureTemplates = [] }) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-700 flex-1 mr-4">
+        <div className="p-3 bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/30 rounded-lg text-sm text-[var(--color-midnight)] flex-1 mr-4">
           <strong>{pageTemplates.length} pages</strong> and <strong>{featureTemplates.length} features</strong> across <strong>{allCategories.length} categories</strong>.
         </div>
         <Button onClick={handleAutoGenerate} disabled={generating} className="gap-2 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">

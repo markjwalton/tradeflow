@@ -431,9 +431,9 @@ export default function GenericNavEditor({
                               
                               <div className="flex items-center gap-2 flex-1">
                                 {renderIcon(item.icon, "h-4 w-4")}
-                                <span className="text-title">{item.name}</span>
+                                <span className="font-medium text-[var(--color-midnight)]">{item.name}</span>
                                 {item.item_type === "folder" && (
-                                  <Badge className="text-xs bg-secondary-100 text-secondary-700">Folder</Badge>
+                                  <Badge className="text-xs bg-[var(--color-secondary)]/20 text-[var(--color-secondary-dark)]">Folder</Badge>
                                 )}
                               </div>
 
@@ -475,9 +475,9 @@ export default function GenericNavEditor({
                                   <Pencil className="h-4 w-4" />
                                 </Button>
                                 <Button variant="ghost" size="icon" onClick={() => handleUnallocate(item)} title="Remove">
-                                  <Power className="h-4 w-4 text-success" />
+                                  <Power className="h-4 w-4 text-[var(--color-success)]" />
                                 </Button>
-                                <Button variant="ghost" size="icon" className="text-destructive" onClick={() => handleDelete(item)} title="Delete">
+                                <Button variant="ghost" size="icon" className="text-[var(--color-destructive)]" onClick={() => handleDelete(item)} title="Delete">
                                   <Trash2 className="h-4 w-4" />
                                 </Button>
                               </div>
@@ -485,7 +485,7 @@ export default function GenericNavEditor({
                               <Switch
                                 checked={item.is_visible !== false}
                                 onCheckedChange={() => handleToggleVisibility(item)}
-                                className={item.is_visible !== false ? "data-[state=checked]:bg-success" : "data-[state=unchecked]:bg-destructive"}
+                                className={item.is_visible !== false ? "data-[state=checked]:bg-[var(--color-success)]" : "data-[state=unchecked]:bg-[var(--color-destructive)]"}
                               />
                             </div>
                           )}
@@ -549,11 +549,11 @@ export default function GenericNavEditor({
                       >
                         <div className="w-5" />
                         <div className="flex items-center gap-2 flex-1">
-                          <File className="h-4 w-4 text-muted-foreground" />
-                          <span className="text-title text-muted-foreground">{slug.replace(/([A-Z])/g, ' $1').trim()}</span>
-                          <span className="text-xs text-muted-foreground font-mono">/{slug.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()}</span>
+                          <File className="h-4 w-4 text-[var(--color-charcoal)]" />
+                          <span className="font-medium text-[var(--color-charcoal)]">{slug.replace(/([A-Z])/g, ' $1').trim()}</span>
+                          <span className="text-xs text-[var(--color-charcoal)] font-mono">/{slug.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()}</span>
                           {aiRecommendations[slug] && (
-                            <Badge className="bg-accent-100 text-accent-700 text-xs">
+                            <Badge className="bg-[var(--color-accent)]/20 text-[var(--color-accent-dark)] text-xs">
                               <Sparkles className="h-3 w-3 mr-1" />
                               {aiRecommendations[slug]}
                             </Badge>
@@ -579,7 +579,7 @@ export default function GenericNavEditor({
                             onClick={() => handleAllocate(slug)}
                             title="Quick allocate"
                           >
-                            <Power className="h-4 w-4 text-destructive" />
+                            <Power className="h-4 w-4 text-[var(--color-destructive)]" />
                           </Button>
                         </div>
                       </div>
