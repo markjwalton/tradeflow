@@ -111,31 +111,31 @@ export default function AddGroupToProjectDialog({
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Folder className="h-5 w-5 text-indigo-600" />
+            <Folder className="h-5 w-5 text-[var(--color-primary)]" />
             Add "{groupName}" Group to Project
           </DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4">
           {/* Summary of what will be added */}
-          <div className="bg-slate-50 rounded-lg p-3 space-y-2">
-            <p className="text-sm font-medium">This will add:</p>
+          <div className="bg-[var(--color-background)] rounded-lg p-3 space-y-2">
+            <p className="text-sm font-medium text-[var(--color-midnight)]">This will add:</p>
             <div className="flex flex-wrap gap-2">
               {entities.length > 0 && (
                 <Badge variant="outline" className="gap-1">
-                  <Database className="h-3 w-3 text-purple-600" />
+                  <Database className="h-3 w-3 text-[var(--color-accent-dark)]" />
                   {entities.length} entities
                 </Badge>
               )}
               {pages.length > 0 && (
                 <Badge variant="outline" className="gap-1">
-                  <Layout className="h-3 w-3 text-blue-600" />
+                  <Layout className="h-3 w-3 text-[var(--color-info)]" />
                   {pages.length} pages
                 </Badge>
               )}
               {features.length > 0 && (
                 <Badge variant="outline" className="gap-1">
-                  <Zap className="h-3 w-3 text-amber-600" />
+                  <Zap className="h-3 w-3 text-[var(--color-secondary)]" />
                   {features.length} features
                 </Badge>
               )}
@@ -145,7 +145,7 @@ export default function AddGroupToProjectDialog({
           {/* Project Selection */}
           {!selectedProjectId ? (
             <>
-              <p className="text-sm text-gray-600">Select a project:</p>
+              <p className="text-sm text-[var(--color-charcoal)]">Select a project:</p>
               <div className="space-y-2 max-h-48 overflow-auto">
                 {projects.map((project) => (
                   <Button
@@ -159,15 +159,15 @@ export default function AddGroupToProjectDialog({
                   </Button>
                 ))}
                 {projects.length === 0 && (
-                  <p className="text-sm text-gray-500 italic">No custom projects. Create one first.</p>
+                  <p className="text-sm text-[var(--color-charcoal)] italic">No custom projects. Create one first.</p>
                 )}
               </div>
             </>
           ) : (
             <>
-              <div className="flex items-center gap-2 text-sm text-gray-600 bg-indigo-50 p-2 rounded">
-                <Check className="h-4 w-4 text-indigo-600" />
-                Adding to: <strong>{projects.find(p => p.id === selectedProjectId)?.name}</strong>
+              <div className="flex items-center gap-2 text-sm text-[var(--color-charcoal)] bg-[var(--color-primary)]/10 p-2 rounded">
+                <Check className="h-4 w-4 text-[var(--color-primary)]" />
+                Adding to: <strong className="text-[var(--color-midnight)]">{projects.find(p => p.id === selectedProjectId)?.name}</strong>
                 <Button variant="ghost" size="sm" className="ml-auto h-6 text-xs" onClick={() => setSelectedProjectId(null)}>
                   Change
                 </Button>
@@ -177,7 +177,7 @@ export default function AddGroupToProjectDialog({
                 <Button variant="outline" className="flex-1" onClick={() => { onOpenChange(false); setSelectedProjectId(null); }}>
                   Cancel
                 </Button>
-                <Button className="flex-1" onClick={handleAddGroup} disabled={isAdding}>
+                <Button className="flex-1 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white" onClick={handleAddGroup} disabled={isAdding}>
                   {isAdding && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                   Add Group
                 </Button>

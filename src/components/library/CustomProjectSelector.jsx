@@ -76,7 +76,7 @@ export default function CustomProjectSelector({
           {projects.map((project) => (
             <SelectItem key={project.id} value={project.id}>
               <span className="flex items-center gap-2">
-                {project.is_starred && <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />}
+                {project.is_starred && <Star className="h-3 w-3 text-[var(--color-warning)] fill-[var(--color-warning)]" />}
                 {project.name}
               </span>
             </SelectItem>
@@ -97,7 +97,7 @@ export default function CustomProjectSelector({
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium">Project Name *</label>
+              <label className="text-sm font-medium text-[var(--color-midnight)]">Project Name *</label>
               <Input
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
@@ -105,7 +105,7 @@ export default function CustomProjectSelector({
               />
             </div>
             <div>
-              <label className="text-sm font-medium">Description</label>
+              <label className="text-sm font-medium text-[var(--color-midnight)]">Description</label>
               <Input
                 value={newDescription}
                 onChange={(e) => setNewDescription(e.target.value)}
@@ -114,7 +114,7 @@ export default function CustomProjectSelector({
             </div>
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={() => setShowCreate(false)}>Cancel</Button>
-              <Button onClick={handleCreate} disabled={createMutation.isPending}>
+              <Button onClick={handleCreate} disabled={createMutation.isPending} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
                 {createMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                 Create Project
               </Button>
