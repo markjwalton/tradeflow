@@ -388,10 +388,10 @@ export default function ComponentShowcase() {
               />
             </Grid>
           </ComponentDemo>
-        </ShowcaseSection>
+        </ShowcaseSection>}
 
         {/* Forms Section */}
-        <ShowcaseSection
+        {visibleCategories.includes("forms") && <ShowcaseSection
           id="forms"
           title="Forms"
           count={10}
