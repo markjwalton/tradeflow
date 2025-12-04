@@ -614,11 +614,13 @@ export default function Layout({ children, currentPageName }) {
                   // Render hierarchical navigation - flatten for dropdown
                   (() => {
                     // Helper to generate folder ID from name (matching the pattern used in parent_id)
+                    // Folders like "Design System" have parent_id references like "folder_design_system"
                     const getFolderId = (item) => {
                       if (item._id) return item._id;
                       if (item.item_type === "folder") {
-                        // Convert "System Tools" -> "folder_system_tools", "Multi-Tenant" -> "folder_multi_tenant"
-                        return `folder_${item.name.toLowerCase().replace(/[\s-]+/g, '_').replace(/[^a-z0-9_]/g, '')}`;
+                        // Convert "Design System" -> "folder_design_system", "System Tools" -> "folder_system_tools"
+                        const normalized = item.name.toLowerCase().replace(/[\s-]+/g, '_').replace(/[^a-z0-9_]/g, '');
+                        return `folder_${normalized}`;
                       }
                       return item.slug;
                     };
