@@ -45,6 +45,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
 import { ChevronDown, ChevronRight, Folder, FolderOpen } from "lucide-react";
+import PerformanceAuditCard from "@/components/monitoring/PerformanceAuditCard";
 
 const COLORS = ["#22c55e", "#f59e0b", "#ef4444", "#3b82f6", "#8b5cf6"];
 
@@ -403,6 +404,8 @@ export default function PerformanceMonitor() {
   const [isGeneratingRecommendations, setIsGeneratingRecommendations] = useState(false);
   const [aiSystemReview, setAiSystemReview] = useState(null);
   const [isGeneratingSystemReview, setIsGeneratingSystemReview] = useState(false);
+  const [aiReviewHistory, setAiReviewHistory] = useState([]);
+  const [isAddingRecToRoadmap, setIsAddingRecToRoadmap] = useState(false);
 
   const { data: metrics = [], isLoading: loadingMetrics } = useQuery({
     queryKey: ["performanceMetrics"],
@@ -858,6 +861,12 @@ Provide:
       });
 
       setAiSystemReview(result);
+      // Add to history
+      setAiReviewHistory(prev => [{
+        review: result,
+        date: new Date().toISOString(),
+        issueSnapshot: filteredIssues.map(i => ({ id: i.id, status: i.status, roadmap_item_id: i.roadmap_item_id }))
+      }, ...prev].slice(0, 10));
       toast.success("AI system review generated");
     } catch (error) {
       toast.error("Failed to generate system review");
@@ -882,6 +891,35 @@ Provide:
   const openIssues = filteredIssues.filter(i => i.status === "open");
   const criticalIssues = openIssues.filter(i => i.severity === "critical" || i.severity === "high");
 
+  // Add recommendation to roadmap
+  const addRecToRoadmap = async (rec) => {
+    setIsAddingRecToRoadmap(true);
+    try {
+      await base44.entities.RoadmapItem.create({
+        title: `Performance: ${rec.title}`,
+        description: rec.description,
+        category: "improvement",
+        priority: rec.impact === "high" ? "high" : "medium",
+        status: "backlog",
+        source: "ai_assistant",
+        notes: `Effort: ${rec.effort || "unknown"}`,
+        tags: ["performance", "refactoring"]
+      });
+      queryClient.invalidateQueries({ queryKey: ["roadmapItems"] });
+      toast.success("Added to roadmap");
+    } catch (error) {
+      toast.error("Failed to add to roadmap");
+    } finally {
+      setIsAddingRecToRoadmap(false);
+    }
+  };
+
+  // Get roadmap items for checking
+  const { data: roadmapItems = [] } = useQuery({
+    queryKey: ["roadmapItems"],
+    queryFn: () => base44.entities.RoadmapItem.list()
+  });
+
   // Stats
   const stats = useMemo(() => {
     const byType = {};
@@ -899,14 +937,14 @@ Provide:
   }, [filteredMetrics]);
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Activity className="h-6 w-6 text-blue-600" />
+          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
+            <Activity className="h-6 w-6 text-[var(--color-primary)]" />
             Performance Monitor
           </h1>
-          <p className="text-gray-500">Track page sizes, load times, and identify refactoring needs</p>
+          <p className="text-[var(--color-charcoal)]">Track page sizes, load times, and identify refactoring needs</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setShowThresholdEditor(true)}>
@@ -1267,8 +1305,8 @@ Provide:
         <TabsContent value="ai-review" className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold">AI System Performance Review</h2>
-              <p className="text-sm text-gray-500">Get comprehensive AI-powered analysis and recommendations</p>
+              <h2 className="text-lg font-semibold">AI Performance Review History</h2>
+              <p className="text-sm text-gray-500">Collapsible reviews with roadmap integration</p>
             </div>
             <Button 
               onClick={generateSystemReview} 
@@ -1280,19 +1318,9 @@ Provide:
               ) : (
                 <Sparkles className="h-4 w-4 mr-2" />
               )}
-              Generate AI Review
+              Run New Review
             </Button>
           </div>
-
-          {!aiSystemReview && !isGeneratingSystemReview && (
-            <Card>
-              <CardContent className="py-12 text-center text-gray-500">
-                <Sparkles className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>Click "Generate AI Review" to get a comprehensive performance analysis</p>
-                <p className="text-sm mt-2">The AI will analyze your pages, features, APIs, and issues</p>
-              </CardContent>
-            </Card>
-          )}
 
           {isGeneratingSystemReview && (
             <Card>
@@ -1304,143 +1332,45 @@ Provide:
             </Card>
           )}
 
-          {aiSystemReview && !isGeneratingSystemReview && (
-            <div className="space-y-6">
-              {/* Grade Card */}
-              <Card className={
-                aiSystemReview.grade?.startsWith("A") ? "border-green-200 bg-green-50" :
-                aiSystemReview.grade?.startsWith("B") ? "border-blue-200 bg-blue-50" :
-                aiSystemReview.grade?.startsWith("C") ? "border-amber-200 bg-amber-50" :
-                "border-red-200 bg-red-50"
-              }>
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-6">
-                    <div className={`text-6xl font-bold ${
-                      aiSystemReview.grade?.startsWith("A") ? "text-green-600" :
-                      aiSystemReview.grade?.startsWith("B") ? "text-blue-600" :
-                      aiSystemReview.grade?.startsWith("C") ? "text-amber-600" :
-                      "text-red-600"
-                    }`}>
-                      {aiSystemReview.grade}
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-lg">Overall Performance Grade</h3>
-                      <p className="text-gray-600">{aiSystemReview.gradeExplanation}</p>
-                      {aiSystemReview.improvementPotential && (
-                        <Badge className="mt-2 bg-purple-100 text-purple-700">
-                          {aiSystemReview.improvementPotential} improvement potential
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Priority Areas */}
-              {aiSystemReview.priorityAreas?.length > 0 && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <AlertTriangle className="h-5 w-5 text-amber-600" />
-                      Priority Areas
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      {aiSystemReview.priorityAreas.map((area, i) => (
-                        <div key={i} className="flex items-start gap-3 p-3 bg-amber-50 rounded-lg">
-                          <span className="font-bold text-amber-600">{i + 1}</span>
-                          <div>
-                            <p className="font-medium">{area.area}</p>
-                            <p className="text-sm text-gray-600">{area.reason}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+          {!isGeneratingSystemReview && (aiSystemReview || aiReviewHistory.length > 0) && (
+            <div className="space-y-3">
+              {/* Current review */}
+              {aiSystemReview && (
+                <PerformanceAuditCard
+                  review={aiSystemReview}
+                  issues={filteredIssues}
+                  onAddToRoadmap={addRecToRoadmap}
+                  roadmapItems={roadmapItems}
+                  isAddingToRoadmap={isAddingRecToRoadmap}
+                  defaultExpanded={true}
+                  reviewDate={new Date().toISOString()}
+                />
               )}
-
-              <div className="grid grid-cols-2 gap-6">
-                {/* Quick Wins */}
-                {aiSystemReview.quickWins?.length > 0 && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2 text-green-700">
-                        <Zap className="h-5 w-5" />
-                        Quick Wins
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-2">
-                        {aiSystemReview.quickWins.map((win, i) => (
-                          <li key={i} className="flex items-start gap-2 text-sm">
-                            <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                            {win}
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
-                )}
-
-                {/* Long-term Improvements */}
-                {aiSystemReview.longTermImprovements?.length > 0 && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2 text-blue-700">
-                        <TrendingUp className="h-5 w-5" />
-                        Long-term Improvements
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-2">
-                        {aiSystemReview.longTermImprovements.map((imp, i) => (
-                          <li key={i} className="flex items-start gap-2 text-sm">
-                            <ArrowRight className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                            {imp}
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
-
-              {/* Detailed Recommendations */}
-              {aiSystemReview.recommendations?.length > 0 && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Lightbulb className="h-5 w-5 text-purple-600" />
-                      Detailed Recommendations
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {aiSystemReview.recommendations.map((rec, i) => (
-                        <div key={i} className="p-4 border rounded-lg">
-                          <div className="flex items-start justify-between mb-2">
-                            <h4 className="font-medium">{rec.title}</h4>
-                            <div className="flex gap-2">
-                              <Badge variant="outline">Effort: {rec.effort}</Badge>
-                              <Badge className={
-                                rec.impact === "high" ? "bg-green-100 text-green-700" :
-                                rec.impact === "medium" ? "bg-amber-100 text-amber-700" :
-                                "bg-gray-100 text-gray-700"
-                              }>
-                                Impact: {rec.impact}
-                              </Badge>
-                            </div>
-                          </div>
-                          <p className="text-sm text-gray-600">{rec.description}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+              
+              {/* Historical reviews */}
+              {aiReviewHistory.slice(aiSystemReview ? 1 : 0).map((item, index) => (
+                <PerformanceAuditCard
+                  key={index}
+                  review={item.review}
+                  issues={filteredIssues}
+                  onAddToRoadmap={addRecToRoadmap}
+                  roadmapItems={roadmapItems}
+                  isAddingToRoadmap={isAddingRecToRoadmap}
+                  defaultExpanded={false}
+                  reviewDate={item.date}
+                />
+              ))}
             </div>
+          )}
+
+          {!isGeneratingSystemReview && !aiSystemReview && aiReviewHistory.length === 0 && (
+            <Card>
+              <CardContent className="py-12 text-center text-gray-500">
+                <Sparkles className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <p>No performance reviews yet</p>
+                <p className="text-sm mt-2">Run an AI review to get comprehensive analysis</p>
+              </CardContent>
+            </Card>
           )}
         </TabsContent>
       </Tabs>

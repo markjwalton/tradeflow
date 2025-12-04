@@ -418,14 +418,14 @@ Provide:
   const latestAudit = securityAudits[0];
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Shield className="h-6 w-6 text-green-600" />
+          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
+            <Shield className="h-6 w-6 text-[var(--color-success)]" />
             Security Monitor
           </h1>
-          <p className="text-gray-500">Monitor security events, policies, and compliance</p>
+          <p className="text-[var(--color-charcoal)]">Monitor security events, policies, and compliance</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setShowPolicyEditor(true)}>

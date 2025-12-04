@@ -289,14 +289,14 @@ export default function RoadmapManager() {
   );
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Lightbulb className="h-6 w-6 text-yellow-600" />
+          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
+            <Lightbulb className="h-6 w-6 text-[var(--color-secondary)]" />
             Roadmap Manager
           </h1>
-          <p className="text-gray-500">Track ideas, requirements, and development tasks</p>
+          <p className="text-[var(--color-charcoal)]">Track ideas, requirements, and development tasks</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="icon" onClick={() => setShowSettings(true)}>
@@ -311,12 +311,12 @@ export default function RoadmapManager() {
 
       {/* Focused Item Banner */}
       {focusedItem && (
-        <div className="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+        <div className="mb-6 p-4 bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/30 rounded-[var(--radius-lg)]">
           <div className="flex items-center gap-2 mb-2">
-            <Focus className="h-5 w-5 text-purple-600" />
-            <span className="font-semibold text-purple-800">Current Focus</span>
+            <Focus className="h-5 w-5 text-[var(--color-primary)]" />
+            <span className="font-semibold text-[var(--color-primary-dark)]">Current Focus</span>
           </div>
-          <p className="text-purple-900 font-medium">{focusedItem.title}</p>
+          <p className="text-[var(--color-midnight)] font-medium">{focusedItem.title}</p>
           {focusedItem.description && (
             <p className="text-purple-700 text-sm mt-1">{focusedItem.description}</p>
           )}
@@ -351,7 +351,7 @@ export default function RoadmapManager() {
 
       {isLoading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
         </div>
       ) : (
         <Tabs value={activeTab} onValueChange={setActiveTab}>
