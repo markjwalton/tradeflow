@@ -58,11 +58,11 @@ export default function TemplateFeatureEditor({ feature, entities = [], onSave, 
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium">Name</label>
+                <label className="text-sm font-medium text-[var(--color-midnight)]">Name</label>
                 <Input value={name} onChange={(e) => setName(e.target.value)} />
               </div>
               <div>
-                <label className="text-sm font-medium">Category</label>
+                <label className="text-sm font-medium text-[var(--color-midnight)]">Category</label>
                 <Select value={category} onValueChange={setCategory}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -74,11 +74,11 @@ export default function TemplateFeatureEditor({ feature, entities = [], onSave, 
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium">Description</label>
+                <label className="text-sm font-medium text-[var(--color-midnight)]">Description</label>
                 <Input value={description} onChange={(e) => setDescription(e.target.value)} />
               </div>
               <div>
-                <label className="text-sm font-medium">Complexity</label>
+                <label className="text-sm font-medium text-[var(--color-midnight)]">Complexity</label>
                 <Select value={complexity} onValueChange={setComplexity}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -89,8 +89,8 @@ export default function TemplateFeatureEditor({ feature, entities = [], onSave, 
             </div>
 
             <div>
-              <label className="text-sm font-medium">Entities Used</label>
-              <div className="flex flex-wrap gap-2 mt-2 p-3 bg-gray-50 rounded-lg">
+              <label className="text-sm font-medium text-[var(--color-midnight)]">Entities Used</label>
+              <div className="flex flex-wrap gap-2 mt-2 p-3 bg-[var(--color-background)] rounded-lg">
                 {entities.map((entity) => (
                   <Badge
                     key={entity.name}
@@ -105,34 +105,34 @@ export default function TemplateFeatureEditor({ feature, entities = [], onSave, 
             </div>
 
             <div>
-              <label className="text-sm font-medium">Triggers</label>
+              <label className="text-sm font-medium text-[var(--color-midnight)]">Triggers</label>
               <div className="flex gap-2 mt-1">
                 <Input value={triggerInput} onChange={(e) => setTriggerInput(e.target.value)} placeholder="Add trigger..." onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addItem(triggerInput, triggers, setTriggers, setTriggerInput))} />
                 <Button variant="outline" onClick={() => addItem(triggerInput, triggers, setTriggers, setTriggerInput)}>Add</Button>
               </div>
               <div className="flex flex-wrap gap-1 mt-2">
                 {triggers.map((t) => (
-                  <Badge key={t} variant="secondary" className="gap-1">{t}<button onClick={() => setTriggers(triggers.filter(x => x !== t))} className="hover:text-red-600">×</button></Badge>
+                  <Badge key={t} variant="secondary" className="gap-1">{t}<button onClick={() => setTriggers(triggers.filter(x => x !== t))} className="hover:text-[var(--color-destructive)]">×</button></Badge>
                 ))}
               </div>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Integrations</label>
+              <label className="text-sm font-medium text-[var(--color-midnight)]">Integrations</label>
               <div className="flex gap-2 mt-1">
                 <Input value={integrationInput} onChange={(e) => setIntegrationInput(e.target.value)} placeholder="Add integration..." onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addItem(integrationInput, integrations, setIntegrations, setIntegrationInput))} />
                 <Button variant="outline" onClick={() => addItem(integrationInput, integrations, setIntegrations, setIntegrationInput)}>Add</Button>
               </div>
               <div className="flex flex-wrap gap-1 mt-2">
                 {integrations.map((i) => (
-                  <Badge key={i} variant="secondary" className="gap-1">{i}<button onClick={() => setIntegrations(integrations.filter(x => x !== i))} className="hover:text-red-600">×</button></Badge>
+                  <Badge key={i} variant="secondary" className="gap-1">{i}<button onClick={() => setIntegrations(integrations.filter(x => x !== i))} className="hover:text-[var(--color-destructive)]">×</button></Badge>
                 ))}
               </div>
             </div>
 
             <div className="flex justify-end gap-2 pt-4">
               <Button variant="outline" onClick={onCancel}>Cancel</Button>
-              <Button onClick={handleSave}>Save Changes</Button>
+              <Button onClick={handleSave} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">Save Changes</Button>
             </div>
           </div>
         </ScrollArea>
