@@ -319,10 +319,10 @@ export default function ComponentShowcase() {
               </SplitButton>
             </Stack>
           </ComponentDemo>
-        </ShowcaseSection>
+        </ShowcaseSection>}
 
         {/* Cards Section */}
-        <ShowcaseSection
+        {visibleCategories.includes("cards") && <ShowcaseSection
           id="cards"
           title="Cards"
           count={8}
