@@ -30,11 +30,13 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import ThemeCreatorDialog from "@/components/design-system/ThemeCreatorDialog";
 
 export default function DesignSystemManager() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("packages");
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [showThemeCreator, setShowThemeCreator] = useState(false);
   const [editingPackage, setEditingPackage] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [formData, setFormData] = useState({
@@ -279,11 +281,19 @@ For each recommendation, provide:
             AI Analyze Updates
           </Button>
           <Button 
+            variant="outline"
             onClick={() => setShowCreateDialog(true)}
-            className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+            className="border-[var(--color-background-muted)]"
           >
             <Plus className="h-4 w-4 mr-2" />
-            Create Package
+            Core Package
+          </Button>
+          <Button 
+            onClick={() => setShowThemeCreator(true)}
+            className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+          >
+            <Palette className="h-4 w-4 mr-2" />
+            Create Custom Theme
           </Button>
         </div>
       </div>
@@ -884,6 +894,13 @@ For each recommendation, provide:
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Theme Creator Dialog */}
+      <ThemeCreatorDialog
+        open={showThemeCreator}
+        onOpenChange={setShowThemeCreator}
+        parentPackages={corePackages}
+      />
     </div>
   );
 }
