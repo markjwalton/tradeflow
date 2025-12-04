@@ -3,16 +3,15 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { 
-  Layout, Zap, Database, Edit, Eye, Loader2, CheckCircle2,
-  ChevronDown, ChevronRight, Clock, AlertCircle, ArrowLeft
+  Layout, Zap, Database, Edit, Eye, Loader2,
+  ChevronDown, ChevronRight, ArrowLeft
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
 import LivePageRenderer from "@/components/playground/LivePageRenderer";
-import { ContentCard, InfoRow } from "@/components/layout/PageLayout";
+import { PageHeader, ContentSection, StatCard, StatusBadge, DataRow } from "@/components/sturij";
 
 // Generate slug from name
 const toSlug = (name) => name?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || '';
@@ -20,8 +19,8 @@ const toSlug = (name) => name?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace
 export default function LivePreview() {
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(window.location.search);
-  const itemSlug = urlParams.get("page"); // Use slug param
-  const itemId = urlParams.get("id"); // Legacy support
+  const itemSlug = urlParams.get("page");
+  const itemId = urlParams.get("id");
   
   const [expandedCategories, setExpandedCategories] = useState(new Set(['Pages', 'Features']));
 
@@ -66,7 +65,6 @@ export default function LivePreview() {
     const pages = playgroundItems.filter(i => i.source_type === "page");
     const features = playgroundItems.filter(i => i.source_type === "feature");
     
-    // Group features by category
     const featuresByCategory = features.reduce((acc, item) => {
       const template = featureTemplates.find(t => t.id === item.source_id);
       const category = item.group || template?.category || "Other";
@@ -155,7 +153,7 @@ export default function LivePreview() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary-500" />
       </div>
     );
   }
@@ -163,107 +161,109 @@ export default function LivePreview() {
   // Detail view when item is selected
   if (selectedItem) {
     return (
-      <div className="p-6 space-y-6">
-        <Button variant="ghost" onClick={goBack} className="gap-2 mb-2">
+      <div className="p-6 space-y-6 bg-background-100 min-h-screen">
+        <Button variant="ghost" onClick={goBack} className="gap-2 text-charcoal-600 hover:text-midnight-900">
           <ArrowLeft className="h-4 w-4" />
           Back to Overview
         </Button>
 
-        <div className="bg-white border rounded-lg px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {selectedItem.source_type === "page" ? (
-              <Layout className="h-5 w-5 text-blue-600" />
-            ) : (
-              <Zap className="h-5 w-5 text-amber-600" />
-            )}
-            <div>
-              <h1 className="font-bold">{selectedItem.source_name}</h1>
-              <p className="text-xs text-gray-500">{templateData?.description}</p>
+        <PageHeader
+          icon={selectedItem.source_type === "page" 
+            ? <Layout className="h-6 w-6" />
+            : <Zap className="h-6 w-6" />
+          }
+          title={selectedItem.source_name}
+          description={templateData?.description}
+          badge={`v${selectedItem.current_version || 1}`}
+          actions={
+            <div className="flex gap-2">
+              <Badge variant="outline" className="font-mono text-xs">
+                /{toSlug(selectedItem.source_name)}
+              </Badge>
+              <Link to={createPageUrl("TestDataManager") + `?item=${selectedItem.id}`}>
+                <Button variant="outline" size="sm" className="gap-2">
+                  <Database className="h-4 w-4" />
+                  Test Data
+                </Button>
+              </Link>
+              <Link to={getDetailUrl(selectedItem)}>
+                <Button size="sm" className="gap-2 bg-primary-500 hover:bg-primary-600">
+                  <Edit className="h-4 w-4" />
+                  Edit in Playground
+                </Button>
+              </Link>
             </div>
-            <Badge variant="outline">v{selectedItem.current_version || 1}</Badge>
-            <Badge variant="secondary" className="text-xs font-mono">/{toSlug(selectedItem.source_name)}</Badge>
-          </div>
-          <div className="flex gap-2">
-            <Link to={createPageUrl("TestDataManager") + `?item=${selectedItem.id}`}>
-              <Button variant="outline" size="sm">
-                <Database className="h-4 w-4 mr-2" />
-                Test Data
-              </Button>
-            </Link>
-            <Link to={getDetailUrl(selectedItem)}>
-              <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
-                <Edit className="h-4 w-4 mr-2" />
-                Edit in Playground
-              </Button>
-            </Link>
-          </div>
-        </div>
+          }
+        />
 
         <div className="grid grid-cols-4 gap-6">
           <div className="col-span-3">
-            <ContentCard
-              title="Live Page"
+            <ContentSection
               icon={<Eye className="h-4 w-4" />}
-              noPadding
+              title="Live Preview"
+              description="Interactive page rendering with test data"
             >
-              <LivePageRenderer 
-                item={selectedItem}
-                template={templateData}
-                testData={itemTestData?.entity_data}
-                entities={getEntitiesForItem()}
-              />
-            </ContentCard>
+              <div className="-mx-4 -mb-4 mt-4 border-t border-background-200">
+                <LivePageRenderer 
+                  item={selectedItem}
+                  template={templateData}
+                  testData={itemTestData?.entity_data}
+                  entities={getEntitiesForItem()}
+                />
+              </div>
+            </ContentSection>
           </div>
 
           <div className="col-span-1 space-y-4">
-            <ContentCard title="User Stories">
-              {getUserStories().length > 0 ? (
+            <ContentSection
+              icon={<Layout className="h-4 w-4" />}
+              title="Details"
+            >
+              <div className="space-y-1">
+                <DataRow 
+                  label="Type" 
+                  value={<StatusBadge status={selectedItem.source_type} label={selectedItem.source_type} />}
+                />
+                <DataRow 
+                  label="Status" 
+                  value={<StatusBadge status={selectedItem.test_status || "pending"} />}
+                />
+                {templateData?.category && (
+                  <DataRow label="Category" value={templateData.category} />
+                )}
+              </div>
+            </ContentSection>
+
+            {getUserStories().length > 0 && (
+              <ContentSection
+                icon={<Zap className="h-4 w-4" />}
+                title="User Stories"
+              >
                 <ul className="space-y-2 text-sm">
                   {getUserStories().map((story, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                    <li key={i} className="flex items-start gap-2 text-charcoal-600">
+                      <span className="text-primary-500 mt-1">•</span>
                       <span>{story}</span>
                     </li>
                   ))}
                 </ul>
-              ) : (
-                <p className="text-gray-500 text-sm">No user stories defined</p>
-              )}
-            </ContentCard>
-
-            <ContentCard title="Details">
-              <div className="space-y-1">
-                <InfoRow 
-                  label="Type" 
-                  value={<Badge variant="outline">{selectedItem.source_type}</Badge>} 
-                />
-                <InfoRow 
-                  label="Status" 
-                  value={
-                    <Badge className={
-                      selectedItem.test_status === "passed" ? "bg-green-100 text-green-800" :
-                      selectedItem.test_status === "failed" ? "bg-red-100 text-red-800" :
-                      "bg-gray-100 text-gray-800"
-                    }>{selectedItem.test_status || "pending"}</Badge>
-                  } 
-                />
-                {templateData?.category && (
-                  <InfoRow label="Category" value={templateData.category} />
-                )}
-              </div>
-            </ContentCard>
+              </ContentSection>
+            )}
 
             {getEntitiesForItem().length > 0 && (
-              <ContentCard title="Entities">
-                <div className="flex flex-wrap gap-1">
+              <ContentSection
+                icon={<Database className="h-4 w-4" />}
+                title="Entities"
+              >
+                <div className="flex flex-wrap gap-1.5">
                   {getEntitiesForItem().map((e, i) => (
-                    <Badge key={i} variant="secondary" className="text-xs">
-                      <Database className="h-3 w-3 mr-1" />
+                    <Badge key={i} variant="secondary" className="text-xs gap-1">
+                      <Database className="h-3 w-3" />
                       {e.name}
                     </Badge>
                   ))}
                 </div>
-              </ContentCard>
+              </ContentSection>
             )}
           </div>
         </div>
@@ -273,180 +273,122 @@ export default function LivePreview() {
 
   // Overview dashboard
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Live Preview</h1>
+    <div className="p-6 space-y-6 bg-background-100 min-h-screen">
+      <PageHeader
+        icon={<Eye className="h-6 w-6" />}
+        title="Live Preview"
+        description="Browse and preview all playground pages and features with test data"
+      />
 
-      {/* Summary Cards */}
+      {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Layout className="h-5 w-5 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{stats.totalPages}</p>
-                <p className="text-xs text-gray-500">Pages</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-amber-100 rounded-lg">
-                <Zap className="h-5 w-5 text-amber-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{stats.totalFeatures}</p>
-                <p className="text-xs text-gray-500">Features</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Database className="h-5 w-5 text-purple-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{stats.withTestData}</p>
-                <p className="text-xs text-gray-500">With Test Data</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <CheckCircle2 className="h-5 w-5 text-green-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{stats.passed}</p>
-                <p className="text-xs text-gray-500">Passed</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gray-100 rounded-lg">
-                <Clock className="h-5 w-5 text-gray-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{stats.pending}</p>
-                <p className="text-xs text-gray-500">Pending</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <StatCard
+          icon={<Layout />}
+          label="Pages"
+          value={stats.totalPages}
+          color="primary"
+        />
+        <StatCard
+          icon={<Zap />}
+          label="Features"
+          value={stats.totalFeatures}
+          color="secondary"
+        />
+        <StatCard
+          icon={<Database />}
+          label="With Test Data"
+          value={stats.withTestData}
+          color="accent"
+        />
+        <StatCard
+          icon={<Layout />}
+          label="Passed"
+          value={stats.passed}
+          color="success"
+        />
+        <StatCard
+          icon={<Layout />}
+          label="Pending"
+          value={stats.pending}
+          color="neutral"
+        />
       </div>
 
       {/* Pages Section */}
-      <Card>
-        <button
-          onClick={() => toggleCategory('Pages')}
-          className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition-colors"
-        >
-          <div className="flex items-center gap-3">
-            {expandedCategories.has('Pages') ? (
-              <ChevronDown className="h-5 w-5 text-gray-400" />
-            ) : (
-              <ChevronRight className="h-5 w-5 text-gray-400" />
-            )}
-            <Layout className="h-5 w-5 text-blue-600" />
-            <span className="font-semibold">Pages</span>
-            <Badge variant="secondary">{groupedItems.pages.length}</Badge>
-          </div>
-        </button>
-        {expandedCategories.has('Pages') && (
-          <CardContent className="pt-0 pb-3">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-              {groupedItems.pages.map(item => (
-                <button
-                  key={item.id}
-                  onClick={() => selectItem(item)}
-                  className="flex items-center gap-3 p-3 rounded-lg border hover:bg-blue-50 hover:border-blue-200 transition-colors text-left"
-                >
-                  <Layout className="h-4 w-4 text-blue-600 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate">{item.source_name}</p>
-                    <p className="text-xs text-gray-500 font-mono">/{toSlug(item.source_name)}</p>
-                  </div>
-                  <Badge className={
-                    item.test_status === "passed" ? "bg-green-100 text-green-700" :
-                    item.test_status === "failed" ? "bg-red-100 text-red-700" :
-                    "bg-gray-100 text-gray-600"
-                  }>
-                    {item.test_status || "pending"}
-                  </Badge>
-                </button>
-              ))}
-              {groupedItems.pages.length === 0 && (
-                <p className="text-gray-500 text-sm col-span-full py-4 text-center">No pages synced yet</p>
-              )}
-            </div>
-          </CardContent>
-        )}
-      </Card>
+      <ContentSection
+        icon={<Layout className="h-4 w-4" />}
+        title="Pages"
+        description={`${groupedItems.pages.length} pages available`}
+        collapsible
+        defaultExpanded={expandedCategories.has('Pages')}
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-4">
+          {groupedItems.pages.map(item => (
+            <button
+              key={item.id}
+              onClick={() => selectItem(item)}
+              className="flex items-center gap-3 p-3 rounded-lg border border-background-200 bg-white hover:bg-primary-50 hover:border-primary-200 transition-all text-left group"
+            >
+              <div className="p-2 bg-primary-50 rounded-lg text-primary-600 group-hover:bg-primary-100">
+                <Layout className="h-4 w-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-midnight-900 truncate">{item.source_name}</p>
+                <p className="text-xs text-charcoal-400 font-mono">/{toSlug(item.source_name)}</p>
+              </div>
+              <StatusBadge status={item.test_status || "pending"} size="small" />
+            </button>
+          ))}
+          {groupedItems.pages.length === 0 && (
+            <p className="text-charcoal-400 text-sm col-span-full py-8 text-center">
+              No pages synced yet
+            </p>
+          )}
+        </div>
+      </ContentSection>
 
       {/* Features by Category */}
       {Object.entries(groupedItems.featuresByCategory).map(([category, items]) => (
-        <Card key={category}>
-          <button
-            onClick={() => toggleCategory(category)}
-            className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition-colors"
-          >
-            <div className="flex items-center gap-3">
-              {expandedCategories.has(category) ? (
-                <ChevronDown className="h-5 w-5 text-gray-400" />
-              ) : (
-                <ChevronRight className="h-5 w-5 text-gray-400" />
-              )}
-              <Zap className="h-5 w-5 text-amber-600" />
-              <span className="font-semibold">{category}</span>
-              <Badge variant="secondary">{items.length}</Badge>
-            </div>
-          </button>
-          {expandedCategories.has(category) && (
-            <CardContent className="pt-0 pb-3">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                {items.map(item => (
-                  <button
-                    key={item.id}
-                    onClick={() => selectItem(item)}
-                    className="flex items-center gap-3 p-3 rounded-lg border hover:bg-amber-50 hover:border-amber-200 transition-colors text-left"
-                  >
-                    <Zap className="h-4 w-4 text-amber-600 flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{item.source_name}</p>
-                      <p className="text-xs text-gray-500 font-mono">/{toSlug(item.source_name)}</p>
-                    </div>
-                    <Badge className={
-                      item.test_status === "passed" ? "bg-green-100 text-green-700" :
-                      item.test_status === "failed" ? "bg-red-100 text-red-700" :
-                      "bg-gray-100 text-gray-600"
-                    }>
-                      {item.test_status || "pending"}
-                    </Badge>
-                  </button>
-                ))}
-              </div>
-            </CardContent>
-          )}
-        </Card>
+        <ContentSection
+          key={category}
+          icon={<Zap className="h-4 w-4" />}
+          title={category}
+          description={`${items.length} features`}
+          collapsible
+          defaultExpanded={expandedCategories.has(category)}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-4">
+            {items.map(item => (
+              <button
+                key={item.id}
+                onClick={() => selectItem(item)}
+                className="flex items-center gap-3 p-3 rounded-lg border border-background-200 bg-white hover:bg-secondary-50 hover:border-secondary-200 transition-all text-left group"
+              >
+                <div className="p-2 bg-secondary-50 rounded-lg text-secondary-600 group-hover:bg-secondary-100">
+                  <Zap className="h-4 w-4" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-midnight-900 truncate">{item.source_name}</p>
+                  <p className="text-xs text-charcoal-400 font-mono">/{toSlug(item.source_name)}</p>
+                </div>
+                <StatusBadge status={item.test_status || "pending"} size="small" />
+              </button>
+            ))}
+          </div>
+        </ContentSection>
       ))}
 
       {Object.keys(groupedItems.featuresByCategory).length === 0 && (
-        <Card>
-          <CardContent className="py-8 text-center text-gray-500">
+        <ContentSection
+          icon={<Zap className="h-4 w-4" />}
+          title="Features"
+          description="No features synced yet"
+        >
+          <div className="py-8 text-center text-charcoal-400">
             <Zap className="h-10 w-10 mx-auto mb-2 opacity-30" />
-            <p>No features synced yet</p>
-          </CardContent>
-        </Card>
+            <p>Sync features from the Playground to see them here</p>
+          </div>
+        </ContentSection>
       )}
     </div>
   );
