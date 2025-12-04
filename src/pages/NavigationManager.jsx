@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTenant } from "@/Layout";
 import { Button } from "@/components/ui/button";
 
-import { Settings, FileCode, Eye, Wand2, Loader2, Cog, Users } from "lucide-react";
+import { Settings, FileCode, Loader2, Cog, Users } from "lucide-react";
 import { toast } from "sonner";
 
 import GenericNavEditor from "@/components/navigation/GenericNavEditor";
@@ -66,7 +66,6 @@ export default function NavigationManager() {
     { key: "defaultTab", label: "Default Tab", type: "select", options: [
       { value: "admin", label: "Admin Console" },
       { value: "app", label: "App Pages" },
-      { value: "live", label: "Live Pages (Preview)" },
       { value: "tenant", label: "Tenant Navigation" }
     ], description: "Which tab to show by default" }
   ];
@@ -80,18 +79,6 @@ export default function NavigationManager() {
   const { data: tenants = [] } = useQuery({
     queryKey: ["tenants"],
     queryFn: () => base44.entities.Tenant.list(),
-  });
-
-  // Fetch PageTemplates for Live Pages tab
-  const { data: pageTemplates = [] } = useQuery({
-    queryKey: ["pageTemplatesNav"],
-    queryFn: () => base44.entities.PageTemplate.list("name", 300),
-  });
-
-  // Fetch FeatureTemplates for Live Pages tab
-  const { data: featureTemplates = [] } = useQuery({
-    queryKey: ["featureTemplatesNav"],
-    queryFn: () => base44.entities.FeatureTemplate.list("name", 300),
   });
 
   // Copy global template to tenant
@@ -150,10 +137,6 @@ export default function NavigationManager() {
                 <FileCode className="h-4 w-4 mr-2 inline" />
                 App Pages
               </button>
-              <button className={tabStyle("live")} onClick={() => setActiveTab("live")}>
-                <Eye className="h-4 w-4 mr-2 inline" />
-                Live Pages
-              </button>
               <button className={tabStyle("tenant")} onClick={() => setActiveTab("tenant")}>
                 <Users className="h-4 w-4 mr-2 inline" />
                 Tenant Navigation
@@ -185,13 +168,6 @@ export default function NavigationManager() {
                 sourceSlugs={APP_PAGES_SLUGS}
               />
             </div>
-          )}
-
-          {activeTab === "live" && (
-            <LivePagesNavEditor 
-              pageTemplates={pageTemplates}
-              featureTemplates={featureTemplates}
-            />
           )}
 
           {activeTab === "tenant" && (
@@ -258,138 +234,6 @@ export default function NavigationManager() {
         onSave={handleSaveSettings}
         options={settingsOptions}
         title="Navigation Manager Settings"
-      />
-    </div>
-  );
-}
-
-// Live Pages Navigation Editor with auto-generate
-function LivePagesNavEditor({ pageTemplates = [], featureTemplates = [] }) {
-  const queryClient = useQueryClient();
-  const [generating, setGenerating] = useState(false);
-
-  // All slugs - pages use name directly, features use "feature:" prefix
-  const allSlugs = [
-    ...pageTemplates.map(p => p.name),
-    ...featureTemplates.map(f => `feature:${f.name}`)
-  ];
-
-  // Collect all unique categories
-  const pageCategories = [...new Set(pageTemplates.map(p => p.category).filter(Boolean))];
-  const featureCategories = [...new Set(featureTemplates.map(f => f.category).filter(Boolean))];
-  const allCategories = [...new Set([...pageCategories, ...featureCategories])];
-
-  // Generate navigation with category folders
-  const handleAutoGenerate = async () => {
-    setGenerating(true);
-    try {
-      // Build new items from scratch
-      const newItems = [];
-      let order = 0;
-
-      // First pass: Create folder objects with stable IDs
-      const folderMap = {};
-      for (const category of allCategories.sort()) {
-        // Use slug field to store the folder ID since _id may not persist
-        const folderId = `folder_${category.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
-        folderMap[category] = folderId;
-
-        newItems.push({
-          _id: folderId,
-          slug: folderId,  // Store ID in slug too so we can reference it
-          name: category,
-          icon: "FolderOpen",
-          is_visible: true,
-          parent_id: null,
-          item_type: "folder",
-          default_collapsed: true,
-          order: order++
-        });
-      }
-
-      // Second pass: Add pages with correct parent_id references
-      for (const page of pageTemplates.filter(p => p.category).sort((a, b) => a.name.localeCompare(b.name))) {
-        const parentId = folderMap[page.category];
-        if (parentId) {
-          newItems.push({
-            _id: `page_${page.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}`,
-            name: page.name,
-            slug: page.name,
-            icon: "File",
-            is_visible: true,
-            parent_id: parentId,
-            item_type: "page",
-            order: order++
-          });
-        }
-      }
-
-      // Third pass: Add features with correct parent_id references
-      for (const feature of featureTemplates.filter(f => f.category).sort((a, b) => a.name.localeCompare(b.name))) {
-        const parentId = folderMap[feature.category];
-        if (parentId) {
-          newItems.push({
-            _id: `feature_${feature.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}`,
-            name: feature.name,
-            slug: `feature:${feature.name}`,
-            icon: "Zap",
-            is_visible: true,
-            parent_id: parentId,
-            item_type: "page",
-            order: order++
-          });
-        }
-      }
-
-      console.log("Generated items:", newItems.length, "Folders:", Object.keys(folderMap).length);
-      console.log("Sample folder:", newItems[0]);
-      console.log("Sample page with parent:", newItems.find(i => i.parent_id));
-
-      // Fetch existing config
-      const navConfigs = await base44.entities.NavigationConfig.filter({ config_type: "live_pages_source" });
-      const config = navConfigs[0];
-
-      // Save - always replace all items
-      if (config) {
-        await base44.entities.NavigationConfig.update(config.id, { 
-          items: newItems, 
-          source_slugs: allSlugs 
-        });
-      } else {
-        await base44.entities.NavigationConfig.create({
-          config_type: "live_pages_source",
-          items: newItems,
-          source_slugs: allSlugs
-        });
-      }
-
-      // Force refetch
-      await queryClient.invalidateQueries({ queryKey: ["navConfig", "live_pages_source"] });
-      toast.success(`Generated ${allCategories.length} folders with ${newItems.length - allCategories.length} child items`);
-    } catch (err) {
-      console.error("Auto-generate error:", err);
-      toast.error("Failed to generate: " + err.message);
-    } finally {
-      setGenerating(false);
-    }
-  };
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="p-3 bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/30 rounded-lg text-sm text-[var(--color-midnight)] flex-1 mr-4">
-          <strong>{pageTemplates.length} pages</strong> and <strong>{featureTemplates.length} features</strong> across <strong>{allCategories.length} categories</strong>.
-        </div>
-        <Button onClick={handleAutoGenerate} disabled={generating} className="gap-2 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
-          {generating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
-          Auto-Generate
-        </Button>
-      </div>
-      
-      <GenericNavEditor
-        title="Live Pages Navigation"
-        configType="live_pages_source"
-        sourceSlugs={allSlugs}
       />
     </div>
   );
