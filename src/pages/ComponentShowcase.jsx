@@ -651,11 +651,13 @@ export default function ComponentShowcase() {
               </div>
             </Stack>
           </ComponentDemo>
-        </ShowcaseSection>}
+        </ShowcaseSection>
+        )}
 
         {/* Data Display Section */}
-        {visibleCategories.includes("dataDisplay") && <ShowcaseSection
-          id="dataDisplay"
+        {visibleCategories.includes("dataDisplay") && (
+          <ShowcaseSection
+            id="dataDisplay"
           title="Data Display"
           count={9}
           description="Components for showing information beautifully"
