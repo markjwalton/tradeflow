@@ -108,7 +108,11 @@ function ComponentDemo({ title, children, code }) {
 
 export default function ComponentShowcase() {
   const [activeCategory, setActiveCategory] = useState("typography");
-  const [activeMainTab, setActiveMainTab] = useState("library");
+  const [activeMainTab, setActiveMainTab] = useState("all");
+  
+  // Get visible categories based on active tab
+  const activeTabConfig = tabs.find(t => t.id === activeMainTab);
+  const visibleCategories = activeTabConfig?.categories || [];
   
   // Form states
   const [textValue, setTextValue] = useState("");
