@@ -200,7 +200,7 @@ export default function WidgetConfigEditor({ widget, isOpen, onClose, onSave }) 
     
     return (
       <AccordionItem value={title.toLowerCase()}>
-        <AccordionTrigger className="text-sm">
+        <AccordionTrigger className="text-sm text-[var(--color-midnight)]">
           <div className="flex items-center gap-2">
             {icon}
             {title}
@@ -210,7 +210,7 @@ export default function WidgetConfigEditor({ widget, isOpen, onClose, onSave }) 
           <div className="space-y-4 pt-2">
             {fields.map(field => (
               <div key={field.key}>
-                <Label className="text-xs text-[var(--color-charcoal)]">{field.label}</Label>
+                <Label className="text-xs text-[var(--color-midnight)]">{field.label}</Label>
                 {renderField(field)}
               </div>
             ))}
@@ -224,7 +224,7 @@ export default function WidgetConfigEditor({ widget, isOpen, onClose, onSave }) 
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-lg max-h-[80vh] overflow-hidden flex flex-col">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 text-[var(--color-midnight)]">
             <Settings className="h-5 w-5" />
             Widget Settings: {widget?.name}
           </DialogTitle>

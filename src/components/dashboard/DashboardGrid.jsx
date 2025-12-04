@@ -232,7 +232,7 @@ export default function DashboardGrid({
             >
               <button
                 onClick={() => toggleGroup(group.id)}
-                className="flex items-center gap-2 mb-3 text-sm font-medium text-[var(--color-charcoal)] hover:text-[var(--color-midnight)]"
+                className="flex items-center gap-2 mb-3 text-sm font-medium text-[var(--color-midnight)] hover:text-[var(--color-primary)]"
               >
                 {isCollapsed ? (
                   <ChevronRight className="h-4 w-4" />

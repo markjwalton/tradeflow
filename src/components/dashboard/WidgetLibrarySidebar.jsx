@@ -58,7 +58,7 @@ export default function WidgetLibrarySidebar({
     return (
       <div className="w-12 bg-[var(--color-background-paper)] border-r border-[var(--color-background-muted)] flex flex-col items-center py-4 flex-shrink-0">
         <Button variant="ghost" size="icon" onClick={onToggleCollapse}>
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight className="h-4 w-4 text-[var(--color-charcoal)]" />
         </Button>
         <div className="mt-4 space-y-2">
           {Object.values(widgetTypeIcons).slice(0, 5).map((Icon, i) => (
@@ -98,7 +98,7 @@ export default function WidgetLibrarySidebar({
       <div className="p-3 border-b border-[var(--color-background-muted)]">
         <Button 
           onClick={onGenerateAI} 
-          className="w-full bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] text-sm"
+          className="w-full bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] text-white text-sm"
           size="sm"
         >
           <Sparkles className="h-4 w-4 mr-2" />

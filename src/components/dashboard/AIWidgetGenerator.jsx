@@ -258,7 +258,7 @@ Return as JSON array with name, description, category, config (title, insight, c
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl max-h-[85vh] overflow-hidden flex flex-col">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 text-[var(--color-midnight)]">
             <Sparkles className="h-5 w-5 text-[var(--color-accent)]" />
             AI Widget Generator
           </DialogTitle>
@@ -303,7 +303,7 @@ Return as JSON array with name, description, category, config (title, insight, c
               <Button 
                 onClick={generateRecommendations} 
                 disabled={isGenerating}
-                className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)]"
+                className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] text-white"
               >
                 {isGenerating ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
                 Generate Recommendations
@@ -341,7 +341,7 @@ Return as JSON array with name, description, category, config (title, insight, c
               <Button 
                 onClick={generateCustomWidget} 
                 disabled={isGenerating}
-                className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)]"
+                className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] text-white"
               >
                 {isGenerating ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
                 Generate Widget
@@ -357,7 +357,7 @@ Return as JSON array with name, description, category, config (title, insight, c
               <Button 
                 onClick={generateInsightWidgets} 
                 disabled={isGenerating}
-                className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)]"
+                className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] text-white"
               >
                 {isGenerating ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
                 Generate Insight Widgets
@@ -373,7 +373,7 @@ Return as JSON array with name, description, category, config (title, insight, c
                 {generatedWidgets.map((widget, i) => (
                   <Card 
                     key={i} 
-                    className={`cursor-pointer transition-colors ${selectedWidgets.has(i) ? "border-[var(--color-primary)] bg-[var(--color-primary)]/10" : ""}`}
+                    className={`cursor-pointer transition-colors ${selectedWidgets.has(i) ? "border-[var(--color-primary)] bg-[var(--color-primary)]/10" : "border-[var(--color-background-muted)]"}`}
                     onClick={() => toggleSelect(i)}
                   >
                     <CardContent className="p-4">
@@ -389,7 +389,7 @@ Return as JSON array with name, description, category, config (title, insight, c
                           </div>
                           <p className="text-sm text-[var(--color-charcoal)] mt-1">{widget.description}</p>
                           {widget.reasoning && (
-                            <p className="text-xs text-[var(--color-accent)] mt-2">
+                            <p className="text-xs text-[var(--color-accent-dark)] mt-2">
                               <Lightbulb className="h-3 w-3 inline mr-1" />
                               {widget.reasoning}
                             </p>
