@@ -55,7 +55,7 @@ export default function GlobalAIAssistant() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg bg-purple-600 hover:bg-purple-700 z-50"
+            className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] z-50"
             size="icon"
           >
             <Sparkles className="h-6 w-6" />
