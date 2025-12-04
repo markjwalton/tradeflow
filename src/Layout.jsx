@@ -609,32 +609,84 @@ export default function Layout({ children, currentPageName }) {
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {displayPages.map((page) => {
-                  const Icon = page.icon;
-                  const isGlobalLink = globalAdminPages.some(p => p.slug === page.slug);
-                  const pageUrl = createPageUrl(page.slug);
-                  return (
-                    <DropdownMenuItem
-                          key={page.slug}
-                          onClick={() => {
-                            // Preserve map param for MindMapEditor
-                            let navUrl = pageUrl;
-                            if (page.slug === "MindMapEditor") {
-                              const currentMap = new URLSearchParams(window.location.search).get("map");
-                              if (currentMap) {
-                                navUrl = navUrl + (navUrl.includes("?") ? "&" : "?") + `map=${currentMap}`;
-                              }
+              <DropdownMenuContent className="max-h-96 overflow-y-auto">
+                {customAdminNav && customAdminNav.length > 0 ? (
+                  // Render hierarchical navigation - flatten for dropdown
+                  (() => {
+                    const renderDropdownItems = (items, depth = 0) => {
+                      return items
+                        .filter(item => item.is_visible !== false)
+                        .sort((a, b) => (a.order || 0) - (b.order || 0))
+                        .flatMap(item => {
+                          const isFolder = item.item_type === "folder";
+                          const itemId = item._id || 
+                            (isFolder ? `folder_${item.name.toLowerCase().replace(/[\s-]+/g, '_').replace(/[^a-z0-9_]/g, '')}` : item.slug);
+                          const children = customAdminNav.filter(child => 
+                            child.parent_id === itemId && child.is_visible !== false
+                          );
+                          
+                          if (isFolder) {
+                            // Render folder as label, then children
+                            return [
+                              <div key={itemId} className="px-2 py-1.5 text-xs font-semibold text-slate-500 uppercase tracking-wider" style={{ paddingLeft: `${8 + depth * 12}px` }}>
+                                {item.name}
+                              </div>,
+                              ...renderDropdownItems(children, depth + 1)
+                            ];
+                          }
+                          
+                          // Page item
+                          const Icon = iconMap[item.icon] || Home;
+                          const slugParts = item.slug?.split("?") || [""];
+                          const baseSlug = slugParts[0];
+                          const queryString = slugParts[1] || "";
+                          let pageUrl = createPageUrl(baseSlug);
+                          if (queryString) {
+                            pageUrl = pageUrl + (pageUrl.includes("?") ? "&" : "?") + queryString;
+                          }
+                          
+                          return [
+                            <DropdownMenuItem
+                              key={itemId}
+                              onClick={() => navigate(pageUrl)}
+                              className="gap-2"
+                              style={{ paddingLeft: `${8 + depth * 12}px` }}
+                            >
+                              <Icon className="h-4 w-4" />
+                              {item.name}
+                            </DropdownMenuItem>
+                          ];
+                        });
+                    };
+                    
+                    const topLevel = customAdminNav.filter(item => !item.parent_id && item.is_visible !== false);
+                    return renderDropdownItems(topLevel);
+                  })()
+                ) : (
+                  displayPages.map((page) => {
+                    const Icon = page.icon;
+                    const pageUrl = createPageUrl(page.slug);
+                    return (
+                      <DropdownMenuItem
+                        key={page.slug}
+                        onClick={() => {
+                          let navUrl = pageUrl;
+                          if (page.slug === "MindMapEditor") {
+                            const currentMap = new URLSearchParams(window.location.search).get("map");
+                            if (currentMap) {
+                              navUrl = navUrl + (navUrl.includes("?") ? "&" : "?") + `map=${currentMap}`;
                             }
-                            navigate(navUrl);
-                          }}
-                          className="gap-2"
-                        >
-                      <Icon className="h-4 w-4" />
-                      {page.name}
-                    </DropdownMenuItem>
-                  );
-                })}
+                          }
+                          navigate(navUrl);
+                        }}
+                        className="gap-2"
+                      >
+                        <Icon className="h-4 w-4" />
+                        {page.name}
+                      </DropdownMenuItem>
+                    );
+                  })
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
