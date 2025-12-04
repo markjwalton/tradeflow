@@ -205,6 +205,346 @@
   --transition-slow: 300ms ease;
 }
 
+/* ============================================
+   SEMANTIC CSS VARIABLES (Light Theme Default)
+   ============================================ */
+:root {
+  /* Semantic mappings */
+  --background: var(--color-background-100);
+  --foreground: var(--color-midnight-900);
+  --card: var(--color-background-50);
+  --card-foreground: var(--color-midnight-900);
+  --popover: var(--color-background-50);
+  --popover-foreground: var(--color-midnight-900);
+  --primary: var(--color-primary-500);
+  --primary-foreground: #ffffff;
+  --secondary: var(--color-secondary-400);
+  --secondary-foreground: var(--color-midnight-900);
+  --muted: var(--color-background-200);
+  --muted-foreground: var(--color-charcoal-600);
+  --accent: var(--color-accent-300);
+  --accent-foreground: var(--color-midnight-900);
+  --destructive: var(--color-destructive-600);
+  --destructive-foreground: #ffffff;
+  --border: var(--color-background-300);
+  --input: var(--color-background-300);
+  --ring: var(--color-primary-500);
+  --success: var(--color-success);
+  --warning: var(--color-warning);
+  --info: var(--color-info);
+  
+  /* Component-specific */
+  --header-height: 56px;
+  --sidebar-width: 256px;
+  --sidebar-collapsed-width: 64px;
+}
+
+/* ============================================
+   DARK THEME OVERRIDES
+   ============================================ */
+.dark {
+  --background: var(--color-midnight-900);
+  --foreground: var(--color-background-50);
+  --card: var(--color-midnight-800);
+  --card-foreground: var(--color-background-50);
+  --popover: var(--color-midnight-800);
+  --popover-foreground: var(--color-background-50);
+  --primary: var(--color-primary-400);
+  --primary-foreground: var(--color-midnight-900);
+  --secondary: var(--color-secondary-300);
+  --secondary-foreground: var(--color-midnight-900);
+  --muted: var(--color-midnight-800);
+  --muted-foreground: var(--color-charcoal-400);
+  --accent: var(--color-accent-400);
+  --accent-foreground: var(--color-midnight-900);
+  --border: var(--color-midnight-700);
+  --input: var(--color-midnight-700);
+  --ring: var(--color-primary-400);
+}
+
+/* ============================================
+   BASE LAYER - Typography & Defaults
+   ============================================ */
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  
+  body {
+    font-family: var(--font-family-body);
+    background-color: var(--background);
+    color: var(--foreground);
+    line-height: var(--line-height-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Headings use display font */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-family-display);
+    font-weight: 300;
+    color: var(--color-midnight-900);
+    letter-spacing: var(--tracking-tight);
+  }
+  
+  h1 { font-size: var(--font-size-4xl); line-height: var(--line-height-tight); }
+  h2 { font-size: var(--font-size-3xl); line-height: var(--line-height-tight); }
+  h3 { font-size: var(--font-size-2xl); line-height: var(--line-height-snug); }
+  h4 { font-size: var(--font-size-xl); line-height: var(--line-height-snug); }
+  h5 { font-size: var(--font-size-lg); line-height: var(--line-height-normal); }
+  h6 { font-size: var(--font-size-base); line-height: var(--line-height-normal); }
+  
+  /* Links */
+  a {
+    color: var(--primary);
+    transition: color var(--transition-fast);
+  }
+  
+  a:hover {
+    color: var(--color-primary-600);
+  }
+  
+  /* Selection */
+  ::selection {
+    background-color: var(--color-secondary-400);
+    color: white;
+  }
+  
+  /* Focus styles */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
+/* ============================================
+   COMPONENT LAYER - Sturij Components
+   ============================================ */
+@layer components {
+  /* Typography utilities */
+  .text-display {
+    font-family: var(--font-family-display);
+    letter-spacing: var(--tracking-airy);
+  }
+  
+  .text-body {
+    font-family: var(--font-family-body);
+  }
+  
+  .text-mono {
+    font-family: var(--font-family-mono);
+  }
+  
+  .text-title {
+    font-family: var(--font-family-display);
+    font-weight: 500;
+    font-size: var(--font-size-base);
+    letter-spacing: var(--tracking-tight);
+  }
+  
+  .text-subtitle {
+    font-family: var(--font-family-display);
+    font-weight: 400;
+    font-size: var(--font-size-sm);
+    letter-spacing: var(--tracking-normal);
+  }
+
+  /* Card styles */
+  .card-elevated {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .card-elevated:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Navigation item styles */
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-3);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-normal);
+    cursor: pointer;
+  }
+  
+  .nav-item:hover {
+    background-color: var(--color-primary-50);
+  }
+  
+  .nav-item.active {
+    background-color: var(--color-primary-100);
+    color: var(--color-primary-700);
+  }
+  
+  .nav-item-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--radius-lg);
+    background-color: var(--color-background-50);
+    border: 1px solid var(--border);
+  }
+
+  /* Section header pattern */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+  }
+  
+  .section-header-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--radius-lg);
+    background-color: var(--color-background-50);
+    border: 1px solid var(--border);
+  }
+  
+  .section-header-content {
+    flex: 1;
+    padding-left: var(--spacing-4);
+    border-left: 1px solid var(--border);
+  }
+  
+  .section-header-title {
+    font-family: var(--font-family-display);
+    font-weight: 500;
+    font-size: var(--font-size-base);
+  }
+  
+  .section-header-description {
+    font-size: var(--font-size-sm);
+    color: var(--muted-foreground);
+  }
+
+  /* Setting row pattern */
+  .setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-2);
+    border-radius: var(--radius-lg);
+    transition: background-color var(--transition-fast);
+  }
+  
+  .setting-row:hover {
+    background-color: var(--color-primary-50);
+  }
+  
+  .setting-row-content {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+  }
+  
+  .setting-row-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+  }
+
+  /* Draggable item styles */
+  .draggable-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-3);
+    background-color: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+  }
+  
+  .draggable-item:hover {
+    background-color: var(--color-primary-50);
+    border-color: var(--color-primary-200);
+  }
+  
+  .draggable-item.dragging {
+    box-shadow: var(--shadow-lg);
+    background-color: var(--color-primary-50);
+    border-color: var(--color-primary-400);
+  }
+  
+  .drag-handle {
+    cursor: grab;
+    color: var(--muted-foreground);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+  }
+  
+  .draggable-item:hover .drag-handle {
+    opacity: 1;
+  }
+  
+  .drag-handle:active {
+    cursor: grabbing;
+  }
+
+  /* Action button group */
+  .action-buttons {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+  }
+  
+  .draggable-item:hover .action-buttons,
+  .setting-row:hover .action-buttons {
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   UTILITY LAYER
+   ============================================ */
+@layer utilities {
+  /* Spacing utilities using tokens */
+  .gap-token-1 { gap: var(--spacing-1); }
+  .gap-token-2 { gap: var(--spacing-2); }
+  .gap-token-3 { gap: var(--spacing-3); }
+  .gap-token-4 { gap: var(--spacing-4); }
+  .gap-token-6 { gap: var(--spacing-6); }
+  .gap-token-8 { gap: var(--spacing-8); }
+  
+  .p-token-2 { padding: var(--spacing-2); }
+  .p-token-3 { padding: var(--spacing-3); }
+  .p-token-4 { padding: var(--spacing-4); }
+  .p-token-6 { padding: var(--spacing-6); }
+  
+  /* Shadow utilities */
+  .shadow-card { box-shadow: var(--shadow-sm); }
+  .shadow-dropdown { box-shadow: var(--shadow-lg); }
+  .shadow-modal { box-shadow: var(--shadow-xl); }
+  
+  /* Radius utilities */
+  .rounded-token-sm { border-radius: var(--radius-sm); }
+  .rounded-token-md { border-radius: var(--radius-md); }
+  .rounded-token-lg { border-radius: var(--radius-lg); }
+  .rounded-token-xl { border-radius: var(--radius-xl); }
+  
+  /* Transition utilities */
+  .transition-token-fast { transition: all var(--transition-fast); }
+  .transition-token-normal { transition: all var(--transition-normal); }
+  .transition-token-slow { transition: all var(--transition-slow); }
+  
+  /* Layout utilities */
+  .header-height { height: var(--header-height); }
+  .sidebar-width { width: var(--sidebar-width); }
+}
+
 /* Base Layer - Apply Sturij defaults */
 @layer base {
   body {
