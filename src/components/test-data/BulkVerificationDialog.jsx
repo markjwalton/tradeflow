@@ -455,9 +455,16 @@ export default function BulkVerificationDialog({
                     </Button>
                   )}
                   {batchState.batchComplete && batchState.queue.length === 0 && batchState.successItems.length > 0 && (
-                    <Badge className="bg-green-100 text-green-700 px-3 py-2">
-                      ✓ {batchState.successItems.length} verified
-                    </Badge>
+                    <Button 
+                      onClick={() => {
+                        onComplete?.();
+                        onClose();
+                      }}
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      <CheckCircle2 className="h-4 w-4 mr-2" />
+                      Done ({batchState.successItems.length} verified)
+                    </Button>
                   )}
                 </>
               )}
