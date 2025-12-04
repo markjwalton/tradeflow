@@ -637,12 +637,15 @@ export default function Layout({ children, currentPageName }) {
                           );
                           
                           if (isFolder) {
-                            // Render folder as label, then children
+                            // Render folder as label, then its children recursively
+                            const folderChildren = customAdminNav.filter(child => 
+                              child.parent_id === itemId && child.is_visible !== false
+                            );
                             return [
                               <div key={itemId} className="px-2 py-1.5 text-xs font-semibold text-slate-500 uppercase tracking-wider" style={{ paddingLeft: `${8 + depth * 12}px` }}>
                                 {item.name}
                               </div>,
-                              ...renderDropdownItems(children, depth + 1)
+                              ...renderDropdownItems(folderChildren, depth + 1)
                             ];
                           }
                           
