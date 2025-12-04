@@ -235,7 +235,7 @@ export default function CMSTemplateManager({ tenantId }) {
       <Dialog open={showEditor} onOpenChange={setShowEditor}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{editingTemplate ? "Edit Template" : "New Template"}</DialogTitle>
+            <DialogTitle className="text-[var(--color-midnight)]">{editingTemplate ? "Edit Template" : "New Template"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
@@ -334,7 +334,7 @@ export default function CMSTemplateManager({ tenantId }) {
       <Dialog open={showWixImport} onOpenChange={setShowWixImport}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Import from Wix</DialogTitle>
+            <DialogTitle className="text-[var(--color-midnight)]">Import from Wix</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="p-4 bg-[var(--color-warning)]/10 border border-[var(--color-warning)]/30 rounded-lg">

@@ -20,7 +20,7 @@ export default function CMSTenantSelector({ value, onChange, showLabel = true })
   return (
     <div className="flex items-center gap-3">
       {showLabel && (
-        <div className="flex items-center gap-2 text-sm font-medium text-[var(--color-charcoal)]">
+        <div className="flex items-center gap-2 text-sm font-medium text-[var(--color-midnight)]">
           <Building2 className="h-4 w-4" />
           Tenant:
         </div>

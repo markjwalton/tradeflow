@@ -321,7 +321,7 @@ export default function CMSAssetManager({ tenantId }) {
       <Dialog open={showNewFolder} onOpenChange={setShowNewFolder}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create Folder</DialogTitle>
+            <DialogTitle className="text-[var(--color-midnight)]">Create Folder</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
@@ -344,7 +344,7 @@ export default function CMSAssetManager({ tenantId }) {
       <Dialog open={!!selectedAsset} onOpenChange={(o) => !o && setSelectedAsset(null)}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Asset Details</DialogTitle>
+            <DialogTitle className="text-[var(--color-midnight)]">Asset Details</DialogTitle>
           </DialogHeader>
           {selectedAsset && (
             <div className="space-y-4">

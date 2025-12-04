@@ -330,7 +330,7 @@ export default function CMSNavigationEditor({ tenantId }) {
       <Dialog open={showAddNav} onOpenChange={setShowAddNav}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create Navigation</DialogTitle>
+            <DialogTitle className="text-[var(--color-midnight)]">Create Navigation</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
@@ -379,7 +379,7 @@ export default function CMSNavigationEditor({ tenantId }) {
       <Dialog open={!!editingItem} onOpenChange={(o) => !o && setEditingItem(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Navigation Item</DialogTitle>
+            <DialogTitle className="text-[var(--color-midnight)]">Edit Navigation Item</DialogTitle>
           </DialogHeader>
           {editingItem && (
             <div className="space-y-4">
