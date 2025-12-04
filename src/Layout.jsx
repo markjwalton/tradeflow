@@ -431,8 +431,15 @@ export default function Layout({ children, currentPageName }) {
 
       // Page item - child items get smaller styling
       const isChild = depth > 0;
-      let pageUrl = createPageUrl(item.slug);
-      if (item.slug === "MindMapEditor") {
+      // Handle slugs with query params (e.g., "ComponentShowcase?tab=tokens")
+      const slugParts = item.slug?.split("?") || [""];
+      const baseSlug = slugParts[0];
+      const queryString = slugParts[1] || "";
+      let pageUrl = createPageUrl(baseSlug);
+      if (queryString) {
+        pageUrl = pageUrl + (pageUrl.includes("?") ? "&" : "?") + queryString;
+      }
+      if (baseSlug === "MindMapEditor") {
         const currentMap = new URLSearchParams(window.location.search).get("map");
         if (currentMap) {
           pageUrl = pageUrl + (pageUrl.includes("?") ? "&" : "?") + `map=${currentMap}`;
