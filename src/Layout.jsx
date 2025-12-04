@@ -613,14 +613,23 @@ export default function Layout({ children, currentPageName }) {
                 {customAdminNav && customAdminNav.length > 0 ? (
                   // Render hierarchical navigation - flatten for dropdown
                   (() => {
+                    // Helper to generate folder ID from name (matching the pattern used in parent_id)
+                    const getFolderId = (item) => {
+                      if (item._id) return item._id;
+                      if (item.item_type === "folder") {
+                        // Convert "System Tools" -> "folder_system_tools", "Multi-Tenant" -> "folder_multi_tenant"
+                        return `folder_${item.name.toLowerCase().replace(/[\s-]+/g, '_').replace(/[^a-z0-9_]/g, '')}`;
+                      }
+                      return item.slug;
+                    };
+                    
                     const renderDropdownItems = (items, depth = 0) => {
                       return items
                         .filter(item => item.is_visible !== false)
                         .sort((a, b) => (a.order || 0) - (b.order || 0))
                         .flatMap(item => {
                           const isFolder = item.item_type === "folder";
-                          const itemId = item._id || 
-                            (isFolder ? `folder_${item.name.toLowerCase().replace(/[\s-]+/g, '_').replace(/[^a-z0-9_]/g, '')}` : item.slug);
+                          const itemId = getFolderId(item);
                           const children = customAdminNav.filter(child => 
                             child.parent_id === itemId && child.is_visible !== false
                           );
