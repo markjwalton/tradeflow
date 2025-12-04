@@ -196,11 +196,11 @@ export default function AppointmentManager() {
   ).sort((a, b) => a.appointmentDate.localeCompare(b.appointmentDate));
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Appointment Manager</h1>
-          <p className="text-gray-600">Manage appointment slots and bookings</p>
+          <h1 className="text-2xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>Appointment Manager</h1>
+          <p className="text-[var(--color-charcoal)]">Manage appointment slots and bookings</p>
         </div>
       </div>
 
@@ -218,9 +218,9 @@ export default function AppointmentManager() {
 
         {/* Diary Tab */}
         <TabsContent value="diary">
-          <Card>
+          <Card className="border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-[var(--color-midnight)]">
                 <Calendar className="h-5 w-5" />
                 Upcoming Appointments
               </CardTitle>
@@ -228,10 +228,10 @@ export default function AppointmentManager() {
             <CardContent>
               {loadingAppointments ? (
                 <div className="flex justify-center py-8">
-                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                  <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
                 </div>
               ) : upcomingAppointments.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-[var(--color-charcoal)]">
                   No upcoming appointments
                 </div>
               ) : (
@@ -255,15 +255,15 @@ export default function AppointmentManager() {
                           <div className="text-sm text-gray-500">{apt.appointmentTime}</div>
                         </TableCell>
                         <TableCell>
-                          <div>{apt.customerFirstName} {apt.customerLastName}</div>
-                          <div className="text-sm text-gray-500 flex items-center gap-1">
+                          <div className="text-[var(--color-midnight)]">{apt.customerFirstName} {apt.customerLastName}</div>
+                          <div className="text-sm text-[var(--color-charcoal)] flex items-center gap-1">
                             <Phone className="h-3 w-3" />
                             {apt.customerMobile}
                           </div>
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-1">
-                            <MapPin className="h-4 w-4 text-gray-400" />
+                          <div className="flex items-center gap-1 text-[var(--color-charcoal)]">
+                            <MapPin className="h-4 w-4" />
                             {apt.location}
                           </div>
                         </TableCell>
@@ -288,9 +288,9 @@ export default function AppointmentManager() {
 
         {/* Manage Slots Tab */}
         <TabsContent value="slots">
-          <Card>
+          <Card className="border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Appointment Slots</CardTitle>
+              <CardTitle className="text-[var(--color-midnight)]">Appointment Slots</CardTitle>
               <Button onClick={() => setShowBlockDialog(true)}>
                 <Plus className="h-4 w-4 mr-2" />
                 Add Slot
@@ -299,10 +299,10 @@ export default function AppointmentManager() {
             <CardContent>
               {loadingBlocks ? (
                 <div className="flex justify-center py-8">
-                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                  <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
                 </div>
               ) : blocks.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-[var(--color-charcoal)]">
                   No appointment slots configured
                 </div>
               ) : (
@@ -326,8 +326,8 @@ export default function AppointmentManager() {
                           {block.startTime} - {block.endTime || ""}
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-1">
-                            <MapPin className="h-4 w-4 text-gray-400" />
+                          <div className="flex items-center gap-1 text-[var(--color-charcoal)]">
+                            <MapPin className="h-4 w-4" />
                             {block.location}
                           </div>
                         </TableCell>
@@ -362,26 +362,26 @@ export default function AppointmentManager() {
 
         {/* Callbacks Tab */}
         <TabsContent value="callbacks">
-          <Card>
+          <Card className="border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
             <CardHeader>
-              <CardTitle>Callback Requests</CardTitle>
+              <CardTitle className="text-[var(--color-midnight)]">Callback Requests</CardTitle>
             </CardHeader>
             <CardContent>
               {enquiries.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-[var(--color-charcoal)]">
                   No pending callback requests
                 </div>
               ) : (
                 <div className="space-y-4">
                   {enquiries.map((enquiry) => (
-                    <Card key={enquiry.id} className="border">
+                    <Card key={enquiry.id} className="border border-[var(--color-background-muted)]">
                       <CardContent className="pt-4">
                         <div className="flex items-start justify-between">
                           <div>
-                            <h3 className="font-medium">
+                            <h3 className="font-medium text-[var(--color-midnight)]">
                               {enquiry.firstName} {enquiry.lastName}
                             </h3>
-                            <div className="text-sm text-gray-500 space-y-1 mt-1">
+                            <div className="text-sm text-[var(--color-charcoal)] space-y-1 mt-1">
                               <div className="flex items-center gap-2">
                                 <Phone className="h-4 w-4" />
                                 {enquiry.mobile}
@@ -491,7 +491,7 @@ export default function AppointmentManager() {
             <DialogTitle>Book Appointment for {selectedEnquiry?.firstName}</DialogTitle>
           </DialogHeader>
           {availableBlocks.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-[var(--color-charcoal)]">
               <Calendar className="h-12 w-12 mx-auto mb-2 opacity-30" />
               <p>No available slots</p>
               <Button
@@ -515,11 +515,11 @@ export default function AppointmentManager() {
                   className="w-full p-4 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all"
                 >
                   <div className="flex items-center justify-between">
-                    <div>
-                      <div className="font-medium">
-                        {format(new Date(block.date), "EEEE, d MMMM yyyy")}
-                      </div>
-                      <div className="text-sm text-gray-600 flex items-center gap-4 mt-1">
+                  <div>
+                    <div className="font-medium text-[var(--color-midnight)]">
+                      {format(new Date(block.date), "EEEE, d MMMM yyyy")}
+                    </div>
+                    <div className="text-sm text-[var(--color-charcoal)] flex items-center gap-4 mt-1">
                         <span className="flex items-center gap-1">
                           <Clock className="h-4 w-4" />
                           {block.startTime}
