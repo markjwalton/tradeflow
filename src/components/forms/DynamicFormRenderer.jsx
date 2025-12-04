@@ -92,7 +92,7 @@ export default function DynamicFormRenderer({
             value={value || ""}
             onChange={(e) => handleChange(field.fieldId, e.target.value)}
             placeholder={field.placeholder}
-            className={error ? "border-red-500" : ""}
+            className={error ? "border-[var(--color-destructive)]" : ""}
           />
         );
 
@@ -103,7 +103,7 @@ export default function DynamicFormRenderer({
             onChange={(e) => handleChange(field.fieldId, e.target.value)}
             placeholder={field.placeholder}
             rows={4}
-            className={error ? "border-red-500" : ""}
+            className={error ? "border-[var(--color-destructive)]" : ""}
           />
         );
 
@@ -116,7 +116,7 @@ export default function DynamicFormRenderer({
             placeholder={field.placeholder}
             min={field.validation?.min}
             max={field.validation?.max}
-            className={error ? "border-red-500" : ""}
+            className={error ? "border-[var(--color-destructive)]" : ""}
           />
         );
 
@@ -129,7 +129,7 @@ export default function DynamicFormRenderer({
                 className={cn(
                   "w-full justify-start text-left font-normal",
                   !value && "text-muted-foreground",
-                  error && "border-red-500"
+                  error && "border-[var(--color-destructive)]"
                 )}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
@@ -298,7 +298,7 @@ export default function DynamicFormRenderer({
                     )}
                     <button
                       onClick={() => removeFile(field.fieldId, i)}
-                      className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute -top-1 -right-1 bg-[var(--color-destructive)] text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
                     >
                       <X className="h-3 w-3" />
                     </button>
@@ -323,7 +323,7 @@ export default function DynamicFormRenderer({
                 <Star
                   className={cn(
                     "h-6 w-6",
-                    i < (value || 0) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+                    i < (value || 0) ? "fill-[var(--color-secondary)] text-[var(--color-secondary)]" : "text-[var(--color-charcoal)]/30"
                   )}
                 />
               </button>
@@ -333,14 +333,14 @@ export default function DynamicFormRenderer({
 
       case "section":
         return (
-          <div className="border-t pt-4 mt-4">
-            <h3 className="text-lg font-semibold">{field.label}</h3>
+          <div className="border-t border-[var(--color-background-muted)] pt-4 mt-4">
+            <h3 className="text-lg font-semibold text-[var(--color-midnight)]">{field.label}</h3>
           </div>
         );
 
       case "instructions":
         return (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
+          <div className="bg-[var(--color-info)]/10 border border-[var(--color-info)]/30 rounded-lg p-3 text-sm text-[var(--color-info-dark)]">
             {field.placeholder}
           </div>
         );
@@ -358,7 +358,7 @@ export default function DynamicFormRenderer({
 
   if (!formTemplate?.fields?.length) {
     return (
-      <div className="text-center text-gray-500 py-8">
+      <div className="text-center text-[var(--color-charcoal)] py-8">
         No fields configured for this form
       </div>
     );
@@ -371,20 +371,20 @@ export default function DynamicFormRenderer({
           {field.type !== "section" && field.type !== "instructions" && (
             <Label className="mb-1.5 block">
               {field.label}
-              {field.required && <span className="text-red-500 ml-1">*</span>}
+              {field.required && <span className="text-[var(--color-destructive)] ml-1">*</span>}
             </Label>
           )}
           {renderField(field)}
           {field.helpText && field.type !== "section" && field.type !== "instructions" && (
-            <p className="text-xs text-gray-500 mt-1">{field.helpText}</p>
+            <p className="text-xs text-[var(--color-charcoal)] mt-1">{field.helpText}</p>
           )}
           {errors[field.fieldId] && (
-            <p className="text-xs text-red-500 mt-1">{errors[field.fieldId]}</p>
+            <p className="text-xs text-[var(--color-destructive)] mt-1">{errors[field.fieldId]}</p>
           )}
         </div>
       ))}
 
-      <Button type="submit" className="w-full" disabled={isLoading}>
+      <Button type="submit" className="w-full bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white" disabled={isLoading}>
         {isLoading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
         {formTemplate.submitButtonText || "Submit"}
       </Button>
