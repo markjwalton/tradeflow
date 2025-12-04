@@ -403,7 +403,9 @@ export default function Layout({ children, currentPageName }) {
       const hasChildren = children.length > 0;
       const isExpanded = expandedFolders.has(itemId);
       const Icon = iconMap[item.icon] || (isFolder ? Folder : Home);
-      const isActive = currentPageName === item.slug;
+      // Handle slugs with query params for active state
+      const slugForActive = item.slug?.split("?")[0] || "";
+      const isActive = currentPageName === slugForActive;
 
       if (isFolder) {
         return (
