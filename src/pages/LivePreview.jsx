@@ -30,7 +30,7 @@ export default function LivePreview() {
   const itemId = urlParams.get("id");
 
   const [selectedItemId, setSelectedItemId] = useState(itemId || null);
-  const [expandedFolders, setExpandedFolders] = useState(new Set());
+
 
   const { data: playgroundItems = [], isLoading } = useQuery({
     queryKey: ["playgroundItems"],
@@ -123,14 +123,7 @@ export default function LivePreview() {
     return [];
   };
 
-  const toggleFolder = (category) => {
-    setExpandedFolders(prev => {
-      const next = new Set(prev);
-      if (next.has(category)) next.delete(category);
-      else next.add(category);
-      return next;
-    });
-  };
+
 
   if (isLoading) {
     return (
