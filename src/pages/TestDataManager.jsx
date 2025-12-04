@@ -15,7 +15,12 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
 // Helper: safely get nested or flat property (single source of truth)
-const get = (obj, key) => obj?.[key] ?? obj?.data?.[key];
+// Data from API comes with properties inside 'data' object
+const get = (obj, key) => {
+  if (!obj) return undefined;
+  // First check data.key, then top-level key
+  return obj.data?.[key] ?? obj[key];
+};
 
 export default function TestDataManager() {
   const queryClient = useQueryClient();
