@@ -429,7 +429,7 @@ export default function Layout({ children, currentPageName }) {
               <span className="flex-1 text-left">{item.name}</span>
             </button>
             {isExpanded && hasChildren && (
-              <div className="pb-2">
+              <div className="pb-2 space-y-0.5">
                 {renderNavItems(children, allItems, depth + 1)}
               </div>
             )}
