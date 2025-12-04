@@ -118,28 +118,11 @@ export default function LivePreview() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-56px)]">
-      {/* Left Navigation Panel - Matching global admin console */}
-      <aside className="w-64 bg-slate-900 text-white flex flex-col">
-        {/* Header - same as Layout.js */}
-        <div className="p-4 border-b border-slate-700">
-          <h1 className="text-lg font-bold">Live Preview</h1>
-          <p className="text-xs text-slate-400">Preview pages & features</p>
-        </div>
-
+    <div className="flex h-full">
+      {/* Left Navigation Panel - Inside Layout's content area */}
+      <aside className="w-64 bg-slate-900 text-white flex flex-col flex-shrink-0">
         {/* Navigation */}
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-          {/* Playground Link */}
-          <Link
-            to={createPageUrl("PlaygroundSummary")}
-            className="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-slate-300 hover:bg-slate-800 hover:text-white"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Playground
-          </Link>
-          
-          <div className="h-px bg-slate-700 my-2" />
-          
           <LivePreviewNavigation
             playgroundItems={playgroundItems}
             selectedItemId={selectedItemId}
