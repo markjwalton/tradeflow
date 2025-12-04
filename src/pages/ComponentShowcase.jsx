@@ -557,10 +557,10 @@ export default function ComponentShowcase() {
               action={<PrimaryButton><Plus className="h-4 w-4 mr-2" />Create Item</PrimaryButton>}
             />
           </ComponentDemo>
-        </ShowcaseSection>
+        </ShowcaseSection>}
 
         {/* Navigation Section */}
-        <ShowcaseSection
+        {visibleCategories.includes("navigation") && <ShowcaseSection
           id="navigation"
           title="Navigation"
           count={8}
