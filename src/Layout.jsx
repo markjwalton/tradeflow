@@ -377,9 +377,10 @@ export default function Layout({ children, currentPageName }) {
   // Get children of a nav item - match parent_id against _id
   // Also generate stable _id for folders if missing (based on folder name)
   const getNavChildren = (parentItem, allItems) => {
-    // Use _id if present, otherwise generate stable ID for folders
+    // Use _id if present, otherwise generate stable ID for folders based on name
+    // Match the format used in parent_id: "folder_website", "folder_system_tools", etc.
     const parentId = parentItem._id || 
-      (parentItem.item_type === "folder" ? `folder_${parentItem.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}` : null);
+      (parentItem.item_type === "folder" ? `folder_${parentItem.name.toLowerCase().replace(/[\s-]+/g, '_').replace(/[^a-z0-9_]/g, '')}` : null);
     if (!parentId) return [];
     return allItems
       .filter(child => child.parent_id === parentId && child.is_visible !== false)
