@@ -1,12 +1,85 @@
 import React from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { AlertTriangle, CheckCircle2, ArrowRight, Loader2, Flag } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+// Sturij-styled card wrapper
+function WidgetCard({ children, className, critical = false }) {
+  return (
+    <div className={cn(
+      "h-full bg-[var(--color-background-paper)] rounded-[var(--radius-xl)]",
+      "border border-[var(--color-background-muted)] shadow-[var(--shadow-md)]",
+      "overflow-hidden",
+      critical && "ring-2 ring-[var(--color-destructive)]/30",
+      className
+    )}>
+      {children}
+    </div>
+  );
+}
+
+// Status indicator bar at top
+function StatusBar({ critical }) {
+  return (
+    <div className={cn(
+      "h-1.5",
+      critical 
+        ? "bg-gradient-to-r from-[var(--color-destructive)] to-[var(--color-warning)]" 
+        : "bg-gradient-to-r from-[var(--color-success)] to-[var(--color-primary)]"
+    )} />
+  );
+}
+
+// Badge component using design tokens
+function StatusBadge({ children, variant = "critical" }) {
+  const variants = {
+    critical: "bg-[var(--color-destructive)]/10 text-[var(--color-destructive)]",
+    success: "bg-[var(--color-success)]/10 text-[var(--color-success)]",
+  };
+  return (
+    <span className={cn(
+      "px-2 py-0.5 rounded-[var(--radius-sm)] text-xs font-medium flex items-center gap-1",
+      variants[variant]
+    )}>
+      {children}
+    </span>
+  );
+}
+
+// Icon container
+function IconBox({ children, variant = "success" }) {
+  const variants = {
+    critical: "bg-[var(--color-destructive)]/10 text-[var(--color-destructive)]",
+    success: "bg-[var(--color-success)]/10 text-[var(--color-success)]",
+  };
+  return (
+    <div className={cn("p-2 rounded-[var(--radius-lg)]", variants[variant])}>
+      {children}
+    </div>
+  );
+}
+
+// Button using design tokens
+function ActionButton({ children, variant = "primary", className, ...props }) {
+  const variants = {
+    primary: "bg-[var(--color-destructive)] hover:bg-[var(--color-destructive-dark)] text-white",
+    outline: "border border-[var(--color-background-muted)] bg-transparent hover:bg-[var(--color-background-muted)] text-[var(--color-midnight)]",
+  };
+  return (
+    <button className={cn(
+      "w-full px-4 py-2 rounded-[var(--radius-lg)] text-sm font-medium",
+      "flex items-center justify-center gap-2",
+      "transition-colors duration-[var(--transition-fast)]",
+      variants[variant],
+      className
+    )} {...props}>
+      {children}
+    </button>
+  );
+}
 
 export default function TestDataCoverageWidget() {
   const { data: playgroundItems = [], isLoading: loadingItems } = useQuery({
@@ -39,82 +112,80 @@ export default function TestDataCoverageWidget() {
 
   if (isLoading) {
     return (
-      <Card className="h-full border-0 shadow-lg">
-        <CardContent className="p-5 flex items-center justify-center h-full">
-          <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
-        </CardContent>
-      </Card>
+      <WidgetCard>
+        <div className="p-5 flex items-center justify-center h-full">
+          <Loader2 className="h-6 w-6 animate-spin text-[var(--color-charcoal)]" />
+        </div>
+      </WidgetCard>
     );
   }
 
   return (
-    <Card className={`h-full border-0 shadow-lg overflow-hidden ${isCritical ? "ring-2 ring-red-200" : ""}`}>
-      <CardContent className="p-0">
-        <div className={`h-1.5 ${isCritical ? "bg-gradient-to-r from-red-500 to-orange-500" : "bg-gradient-to-r from-green-500 to-emerald-500"}`} />
-        <div className="p-5">
-          <div className="flex items-start justify-between">
-            <div>
-              <div className="flex items-center gap-2">
-                <p className="text-sm font-medium text-slate-500 uppercase tracking-wide">Test Data Coverage</p>
-                {isCritical && (
-                  <Badge className="bg-red-100 text-red-700 text-xs flex items-center gap-1">
-                    <Flag className="h-3 w-3" />
-                    Action Needed
-                  </Badge>
-                )}
-              </div>
-              <div className="flex items-baseline gap-2 mt-2">
-                <p className="text-3xl font-bold text-slate-900">{coveragePercent}%</p>
-                <span className="text-sm text-slate-500">covered</span>
-              </div>
+    <WidgetCard critical={isCritical}>
+      <StatusBar critical={isCritical} />
+      <div className="p-5">
+        {/* Header */}
+        <div className="flex items-start justify-between">
+          <div>
+            <div className="flex items-center gap-2">
+              <p 
+                className="text-sm font-medium text-[var(--color-charcoal)] uppercase tracking-wide"
+                style={{ fontFamily: 'var(--font-body)' }}
+              >
+                Test Data Coverage
+              </p>
+              {isCritical && (
+                <StatusBadge variant="critical">
+                  <Flag className="h-3 w-3" />
+                  Action Needed
+                </StatusBadge>
+              )}
             </div>
+            <div className="flex items-baseline gap-2 mt-2">
+              <p 
+                className="text-3xl font-light text-[var(--color-midnight)]"
+                style={{ fontFamily: 'var(--font-heading)' }}
+              >
+                {coveragePercent}%
+              </p>
+              <span className="text-sm text-[var(--color-charcoal)]">covered</span>
+            </div>
+          </div>
+          <IconBox variant={isCritical ? "critical" : "success"}>
             {isCritical ? (
-              <div className="p-2 bg-red-100 rounded-lg">
-                <AlertTriangle className="h-6 w-6 text-red-600" />
-              </div>
+              <AlertTriangle className="h-6 w-6" />
             ) : (
-              <div className="p-2 bg-green-100 rounded-lg">
-                <CheckCircle2 className="h-6 w-6 text-green-600" />
-              </div>
+              <CheckCircle2 className="h-6 w-6" />
             )}
+          </IconBox>
+        </div>
+
+        {/* Stats */}
+        <div className="mt-4 space-y-2">
+          <div className="flex justify-between text-sm">
+            <span className="text-[var(--color-charcoal)]">Pages/Features</span>
+            <span className="font-medium text-[var(--color-midnight)]">{previewableItems.length}</span>
           </div>
-
-          <div className="mt-4 space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-slate-600">Pages/Features</span>
-              <span className="font-medium">{previewableItems.length}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-slate-600">With Test Data</span>
-              <span className="font-medium text-green-600">{itemsWithData.length}</span>
-            </div>
-            {missingCount > 0 && (
-              <div className="flex justify-between text-sm">
-                <span className="text-red-600 font-medium">Missing Data</span>
-                <span className="font-bold text-red-600">{missingCount}</span>
-              </div>
-            )}
+          <div className="flex justify-between text-sm">
+            <span className="text-[var(--color-charcoal)]">With Test Data</span>
+            <span className="font-medium text-[var(--color-success)]">{itemsWithData.length}</span>
           </div>
-
-          {isCritical && (
-            <Link to={createPageUrl("TestDataManager")}>
-              <Button className="w-full mt-4 bg-red-600 hover:bg-red-700 gap-2">
-                Fix Now
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-          )}
-
-          {!isCritical && (
-            <Link to={createPageUrl("TestDataManager")}>
-              <Button variant="outline" className="w-full mt-4 gap-2">
-                View Details
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
+          {missingCount > 0 && (
+            <div className="flex justify-between text-sm">
+              <span className="text-[var(--color-destructive)] font-medium">Missing Data</span>
+              <span className="font-bold text-[var(--color-destructive)]">{missingCount}</span>
+            </div>
           )}
         </div>
-      </CardContent>
-    </Card>
+
+        {/* Action Button */}
+        <Link to={createPageUrl("TestDataManager")} className="block mt-4">
+          <ActionButton variant={isCritical ? "primary" : "outline"}>
+            {isCritical ? "Fix Now" : "View Details"}
+            <ArrowRight className="h-4 w-4" />
+          </ActionButton>
+        </Link>
+      </div>
+    </WidgetCard>
   );
 }
