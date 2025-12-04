@@ -200,7 +200,7 @@ export default function TestDataManager() {
     };
 
     const previewableItems = playgroundItems.filter(p => 
-      p.source_type === "page" || p.source_type === "feature"
+      p.data?.source_type === "page" || p.data?.source_type === "feature"
     );
 
     return previewableItems.map(item => {
