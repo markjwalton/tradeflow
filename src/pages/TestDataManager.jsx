@@ -214,12 +214,22 @@ export default function TestDataManager() {
               td.data?.playground_item_id === item.id
             );
 
-            // Get entity_data - check both direct and nested
-            const entityData = testData?.entity_data || testData?.data?.entity_data || {};
+            // Get entity_data from nested data
+            const entityData = testData?.data?.entity_data || {};
             const recordCount = Object.values(entityData).reduce((sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0);
 
-            // Get test status from TestData record - check both direct and nested
-            const testStatus = testData?.data?.test_status || testData?.test_status || "pending";
+            // Get test status from TestData record - nested under .data
+            const testStatus = testData?.data?.test_status || "pending";
+
+            // Debug first few items
+            if (previewableItems.indexOf(item) < 3) {
+              console.log("item mapping:", {
+                id: item.id,
+                name: item.data?.source_name,
+                testDataFound: !!testData,
+                testStatus
+              });
+            }
 
             return {
               id: item.id,
