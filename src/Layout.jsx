@@ -524,8 +524,10 @@ export default function Layout({ children, currentPageName }) {
   };
 
   return (
-    <TenantContext.Provider value={tenantContextValue}>
-    <div className="min-h-screen flex">
+        <TenantContext.Provider value={tenantContextValue}>
+        {/* Inject Sturij Design System CSS Variables */}
+        <style dangerouslySetInnerHTML={{ __html: cssVariables }} />
+        <div className="min-h-screen flex">
       {/* Sidebar */}
       <aside className={`${sidebarCollapsed ? "w-0" : "w-64"} bg-slate-900 text-white flex flex-col transition-all duration-300 overflow-hidden`}>
         <div className="p-4 border-b border-slate-700 flex items-center justify-between min-w-64">
