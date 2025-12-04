@@ -201,26 +201,34 @@ export default function TestDataManager() {
       });
     };
 
-    const previewableItems = playgroundItems.filter(p => 
-      p.source_type === "page" || p.source_type === "feature"
-    );
+    const previewableItems = playgroundItems.filter(p => {
+      const sourceType = p.source_type || p.data?.source_type;
+      return sourceType === "page" || sourceType === "feature";
+    });
 
     return previewableItems.map(item => {
             const entities = getEntitiesForItem(item);
-            // Match by playground_item_id - data is flat
-            const testData = testDataSets.find(td => td.playground_item_id === item.id);
+            // Match by playground_item_id - check both flat and nested
+            const testData = testDataSets.find(td => {
+              const tdPlaygroundId = td.playground_item_id || td.data?.playground_item_id;
+              return tdPlaygroundId === item.id;
+            });
 
-            // Get entity_data - data is flat
-            const entityData = testData?.entity_data || {};
+            // Get entity_data - check both flat and nested
+            const entityData = testData?.entity_data || testData?.data?.entity_data || {};
             const recordCount = Object.values(entityData).reduce((sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0);
 
-            // Get test status from TestData record - data is flat
-            const testStatus = testData?.test_status || "pending";
+            // Get test status from TestData record - check both flat and nested
+            const testStatus = testData?.test_status || testData?.data?.test_status || "pending";
+
+            // Get item properties - check both flat and nested
+            const itemSourceName = item.source_name || item.data?.source_name;
+            const itemSourceType = item.source_type || item.data?.source_type;
 
             return {
               id: item.id,
-              name: item.source_name,
-              type: item.source_type,
+              name: itemSourceName,
+              type: itemSourceType,
               entityCount: entities.length,
               recordCount,
               hasTestData: !!testData,
