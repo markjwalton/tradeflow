@@ -410,24 +410,34 @@ export default function BulkVerificationDialog({
                   <Button variant="outline" onClick={runBulkVerification}>
                     Re-run All
                   </Button>
-                  {(summary.passed + summary.warnings) > 0 && (
+  {(summary.passed + summary.warnings) > 0 && !batchState.batchComplete && !batchState.isProcessing && batchState.queue.length === 0 && batchState.successItems.length === 0 && (
                     <Button 
-                      onClick={markAllVerified} 
-                      disabled={isMarkingVerified}
+                      onClick={startBatchVerification}
                       className="bg-green-600 hover:bg-green-700 min-w-[180px]"
                     >
-                      {isMarkingVerified ? (
-                        <>
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          {markProgress.current}/{markProgress.total}
-                        </>
-                      ) : (
-                        <>
-                          <CheckCircle2 className="h-4 w-4 mr-2" />
-                          Mark {summary.passed + summary.warnings} Verified
-                        </>
-                      )}
+                      <CheckCircle2 className="h-4 w-4 mr-2" />
+                      Start Verification ({summary.passed + summary.warnings})
                     </Button>
+                  )}
+                  {batchState.isProcessing && (
+                    <Button disabled className="bg-green-600 min-w-[180px]">
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Processing {Math.min(BATCH_SIZE, batchState.queue.length)}...
+                    </Button>
+                  )}
+                  {batchState.batchComplete && batchState.queue.length > 0 && (
+                    <Button 
+                      onClick={continueNextBatch}
+                      className="bg-green-600 hover:bg-green-700 min-w-[180px]"
+                    >
+                      <CheckCircle2 className="h-4 w-4 mr-2" />
+                      Continue ({batchState.queue.length} remaining)
+                    </Button>
+                  )}
+                  {batchState.batchComplete && batchState.queue.length === 0 && batchState.successItems.length > 0 && (
+                    <Badge className="bg-green-100 text-green-700 px-3 py-2">
+                      ✓ {batchState.successItems.length} verified
+                    </Badge>
                   )}
                 </>
               )}
