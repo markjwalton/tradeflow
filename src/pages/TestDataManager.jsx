@@ -141,6 +141,9 @@ export default function TestDataManager() {
       return;
     }
 
+    console.log("Starting bulk verify for", toVerify.length, "items");
+    console.log("Items to verify:", toVerify.map(i => ({ name: i.name, testDataId: i.testDataId })));
+
     setOperation({ type: "verify", progress: 0, total: toVerify.length, results: [] });
     
     const results = [];
@@ -149,12 +152,23 @@ export default function TestDataManager() {
 
     for (let i = 0; i < toVerify.length; i += BATCH_SIZE) {
       const batch = toVerify.slice(i, i + BATCH_SIZE);
+      console.log(`Processing batch ${i / BATCH_SIZE + 1}, items:`, batch.map(b => b.name));
       
       for (const item of batch) {
+        if (!item.testDataId) {
+          console.log(`Skipping ${item.name} - no testDataId`);
+          results.push({ id: item.id, name: item.name, success: false, error: "No test data ID" });
+          setOperation(prev => ({ ...prev, progress: results.length, results: [...results] }));
+          continue;
+        }
+        
         try {
+          console.log(`Updating ${item.name} (testDataId: ${item.testDataId})`);
           await base44.entities.TestData.update(item.testDataId, { test_status: "verified" });
+          console.log(`Success: ${item.name}`);
           results.push({ id: item.id, name: item.name, success: true });
         } catch (e) {
+          console.log(`Failed: ${item.name}`, e.message);
           results.push({ id: item.id, name: item.name, success: false, error: e.message });
         }
         setOperation(prev => ({ ...prev, progress: results.length, results: [...results] }));
@@ -162,12 +176,15 @@ export default function TestDataManager() {
 
       // Wait between batches to avoid rate limit
       if (i + BATCH_SIZE < toVerify.length) {
+        console.log("Waiting 2 seconds before next batch...");
         await new Promise(r => setTimeout(r, DELAY_BETWEEN_BATCHES));
       }
     }
 
     const successCount = results.filter(r => r.success).length;
     const failCount = results.filter(r => !r.success).length;
+    
+    console.log(`Bulk verify complete: ${successCount} success, ${failCount} failed`);
     
     if (failCount > 0) {
       toast.warning(`${successCount} verified, ${failCount} failed`);
