@@ -259,16 +259,17 @@ Return as JSON array with name, description, category, config (title, insight, c
       <DialogContent className="max-w-3xl max-h-[85vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-purple-600" />
+            <Sparkles className="h-5 w-5 text-[var(--color-accent)]" />
             AI Widget Generator
           </DialogTitle>
         </DialogHeader>
 
-        <div className="flex gap-2 border-b pb-3">
+        <div className="flex gap-2 border-b border-[var(--color-background-muted)] pb-3">
           <Button
             variant={mode === "recommend" ? "default" : "outline"}
             size="sm"
             onClick={() => setMode("recommend")}
+            className={mode === "recommend" ? "bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)]" : ""}
           >
             <Lightbulb className="h-4 w-4 mr-1" />
             Recommend
@@ -277,6 +278,7 @@ Return as JSON array with name, description, category, config (title, insight, c
             variant={mode === "create" ? "default" : "outline"}
             size="sm"
             onClick={() => setMode("create")}
+            className={mode === "create" ? "bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)]" : ""}
           >
             <Plus className="h-4 w-4 mr-1" />
             Custom
@@ -285,6 +287,7 @@ Return as JSON array with name, description, category, config (title, insight, c
             variant={mode === "insight" ? "default" : "outline"}
             size="sm"
             onClick={() => setMode("insight")}
+            className={mode === "insight" ? "bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)]" : ""}
           >
             <Sparkles className="h-4 w-4 mr-1" />
             AI Insights
@@ -294,13 +297,13 @@ Return as JSON array with name, description, category, config (title, insight, c
         <div className="flex-1 overflow-auto">
           {mode === "recommend" && (
             <div className="space-y-4 p-1">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-[var(--color-charcoal)]">
                 AI will analyze your app's entities, pages, and features to recommend relevant dashboard widgets.
               </p>
               <Button 
                 onClick={generateRecommendations} 
                 disabled={isGenerating}
-                className="bg-purple-600 hover:bg-purple-700"
+                className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)]"
               >
                 {isGenerating ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
                 Generate Recommendations
@@ -311,7 +314,7 @@ Return as JSON array with name, description, category, config (title, insight, c
           {mode === "create" && (
             <div className="space-y-4 p-1">
               <div>
-                <Label>Widget Type</Label>
+                <Label className="text-[var(--color-midnight)]">Widget Type</Label>
                 <Select value={widgetType} onValueChange={setWidgetType}>
                   <SelectTrigger>
                     <SelectValue />
@@ -327,7 +330,7 @@ Return as JSON array with name, description, category, config (title, insight, c
                 </Select>
               </div>
               <div>
-                <Label>Describe your widget</Label>
+                <Label className="text-[var(--color-midnight)]">Describe your widget</Label>
                 <Textarea
                   value={customPrompt}
                   onChange={(e) => setCustomPrompt(e.target.value)}
@@ -338,7 +341,7 @@ Return as JSON array with name, description, category, config (title, insight, c
               <Button 
                 onClick={generateCustomWidget} 
                 disabled={isGenerating}
-                className="bg-purple-600 hover:bg-purple-700"
+                className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)]"
               >
                 {isGenerating ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
                 Generate Widget
@@ -348,13 +351,13 @@ Return as JSON array with name, description, category, config (title, insight, c
 
           {mode === "insight" && (
             <div className="space-y-4 p-1">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-[var(--color-charcoal)]">
                 Generate AI-powered insight widgets that provide intelligent analysis and recommendations.
               </p>
               <Button 
                 onClick={generateInsightWidgets} 
                 disabled={isGenerating}
-                className="bg-purple-600 hover:bg-purple-700"
+                className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)]"
               >
                 {isGenerating ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
                 Generate Insight Widgets
@@ -365,28 +368,28 @@ Return as JSON array with name, description, category, config (title, insight, c
           {/* Generated Widgets */}
           {generatedWidgets.length > 0 && (
             <div className="mt-6 space-y-3">
-              <h3 className="font-medium">Generated Widgets ({generatedWidgets.length})</h3>
+              <h3 className="font-medium text-[var(--color-midnight)]">Generated Widgets ({generatedWidgets.length})</h3>
               <div className="grid gap-3">
                 {generatedWidgets.map((widget, i) => (
                   <Card 
                     key={i} 
-                    className={`cursor-pointer transition-colors ${selectedWidgets.has(i) ? "border-purple-500 bg-purple-50" : ""}`}
+                    className={`cursor-pointer transition-colors ${selectedWidgets.has(i) ? "border-[var(--color-primary)] bg-[var(--color-primary)]/10" : ""}`}
                     onClick={() => toggleSelect(i)}
                   >
                     <CardContent className="p-4">
                       <div className="flex items-start gap-3">
-                        <div className={`mt-1 h-5 w-5 rounded border-2 flex items-center justify-center ${selectedWidgets.has(i) ? "bg-purple-600 border-purple-600" : "border-gray-300"}`}>
+                        <div className={`mt-1 h-5 w-5 rounded border-2 flex items-center justify-center ${selectedWidgets.has(i) ? "bg-[var(--color-primary)] border-[var(--color-primary)]" : "border-[var(--color-charcoal)]/30"}`}>
                           {selectedWidgets.has(i) && <CheckCircle2 className="h-3 w-3 text-white" />}
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <h4 className="font-medium">{widget.name}</h4>
+                            <h4 className="font-medium text-[var(--color-midnight)]">{widget.name}</h4>
                             <Badge variant="secondary">{widget.widget_type}</Badge>
                             {widget.category && <Badge variant="outline">{widget.category}</Badge>}
                           </div>
-                          <p className="text-sm text-gray-600 mt-1">{widget.description}</p>
+                          <p className="text-sm text-[var(--color-charcoal)] mt-1">{widget.description}</p>
                           {widget.reasoning && (
-                            <p className="text-xs text-purple-600 mt-2">
+                            <p className="text-xs text-[var(--color-accent)] mt-2">
                               <Lightbulb className="h-3 w-3 inline mr-1" />
                               {widget.reasoning}
                             </p>
@@ -402,8 +405,8 @@ Return as JSON array with name, description, category, config (title, insight, c
         </div>
 
         {generatedWidgets.length > 0 && (
-          <div className="flex justify-between items-center pt-4 border-t">
-            <span className="text-sm text-gray-500">
+          <div className="flex justify-between items-center pt-4 border-t border-[var(--color-background-muted)]">
+            <span className="text-sm text-[var(--color-charcoal)]">
               {selectedWidgets.size} of {generatedWidgets.length} selected
             </span>
             <div className="flex gap-2">
@@ -411,6 +414,7 @@ Return as JSON array with name, description, category, config (title, insight, c
               <Button 
                 onClick={handleCreate} 
                 disabled={selectedWidgets.size === 0 || createMutation.isPending}
+                className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
               >
                 {createMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                 Add to Staging ({selectedWidgets.size})

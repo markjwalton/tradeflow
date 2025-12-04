@@ -56,13 +56,13 @@ export default function WidgetLibrarySidebar({
 
   if (isCollapsed) {
     return (
-      <div className="w-12 bg-white border-r flex flex-col items-center py-4 flex-shrink-0">
+      <div className="w-12 bg-[var(--color-background-paper)] border-r border-[var(--color-background-muted)] flex flex-col items-center py-4 flex-shrink-0">
         <Button variant="ghost" size="icon" onClick={onToggleCollapse}>
           <ChevronRight className="h-4 w-4" />
         </Button>
         <div className="mt-4 space-y-2">
           {Object.values(widgetTypeIcons).slice(0, 5).map((Icon, i) => (
-            <div key={i} className="p-2 text-gray-400">
+            <div key={i} className="p-2 text-[var(--color-charcoal)]">
               <Icon className="h-4 w-4" />
             </div>
           ))}
@@ -72,19 +72,19 @@ export default function WidgetLibrarySidebar({
   }
 
   return (
-    <div className="w-64 bg-white border-r flex flex-col flex-shrink-0">
+    <div className="w-64 bg-[var(--color-background-paper)] border-r border-[var(--color-background-muted)] flex flex-col flex-shrink-0">
       {/* Header */}
-      <div className="p-3 border-b flex items-center justify-between">
-        <h3 className="font-medium text-sm">Widget Library</h3>
+      <div className="p-3 border-b border-[var(--color-background-muted)] flex items-center justify-between">
+        <h3 className="font-medium text-sm text-[var(--color-midnight)]">Widget Library</h3>
         <Button variant="ghost" size="icon" onClick={onToggleCollapse}>
           <ChevronLeft className="h-4 w-4" />
         </Button>
       </div>
 
       {/* Search */}
-      <div className="p-3 border-b">
+      <div className="p-3 border-b border-[var(--color-background-muted)]">
         <div className="relative">
-          <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-charcoal)]" />
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -95,10 +95,10 @@ export default function WidgetLibrarySidebar({
       </div>
 
       {/* AI Generate Button */}
-      <div className="p-3 border-b">
+      <div className="p-3 border-b border-[var(--color-background-muted)]">
         <Button 
           onClick={onGenerateAI} 
-          className="w-full bg-purple-600 hover:bg-purple-700 text-sm"
+          className="w-full bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] text-sm"
           size="sm"
         >
           <Sparkles className="h-4 w-4 mr-2" />
@@ -117,19 +117,19 @@ export default function WidgetLibrarySidebar({
               <div key={category}>
                 <button
                   onClick={() => toggleCategory(category)}
-                  className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded hover:bg-gray-100"
+                  className="w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded hover:bg-[var(--color-background)]"
                 >
                   {isExpanded ? (
-                    <ChevronDown className="h-3 w-3 text-gray-400" />
+                    <ChevronDown className="h-3 w-3 text-[var(--color-charcoal)]" />
                   ) : (
-                    <ChevronRight className="h-3 w-3 text-gray-400" />
+                    <ChevronRight className="h-3 w-3 text-[var(--color-charcoal)]" />
                   )}
                   {isExpanded ? (
-                    <FolderOpen className="h-3 w-3 text-amber-500" />
+                    <FolderOpen className="h-3 w-3 text-[var(--color-secondary)]" />
                   ) : (
-                    <Folder className="h-3 w-3 text-amber-500" />
+                    <Folder className="h-3 w-3 text-[var(--color-secondary)]" />
                   )}
-                  <span className="flex-1 text-left font-medium">{category}</span>
+                  <span className="flex-1 text-left font-medium text-[var(--color-midnight)]">{category}</span>
                   <Badge variant="secondary" className="text-xs h-5">
                     {catWidgets.length}
                   </Badge>
@@ -142,14 +142,14 @@ export default function WidgetLibrarySidebar({
                       return (
                         <div
                           key={widget.id}
-                          className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-gray-100 cursor-pointer group"
+                          className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-[var(--color-background)] cursor-pointer group"
                           draggable
                           onDragStart={(e) => {
                             e.dataTransfer.setData("widget_id", widget.id);
                           }}
                         >
-                          <Icon className="h-3 w-3 text-gray-500" />
-                          <span className="text-sm flex-1 truncate">{widget.name}</span>
+                          <Icon className="h-3 w-3 text-[var(--color-charcoal)]" />
+                          <span className="text-sm flex-1 truncate text-[var(--color-midnight)]">{widget.name}</span>
                           <Button
                             size="icon"
                             variant="ghost"
@@ -168,7 +168,7 @@ export default function WidgetLibrarySidebar({
           })}
 
           {categories.length === 0 && (
-            <div className="text-center py-8 text-gray-500 text-sm">
+            <div className="text-center py-8 text-[var(--color-charcoal)] text-sm">
               No widgets found
             </div>
           )}

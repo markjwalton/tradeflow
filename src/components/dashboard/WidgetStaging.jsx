@@ -29,10 +29,10 @@ const widgetTypeIcons = {
 };
 
 const statusColors = {
-  draft: "bg-gray-100 text-gray-700",
-  staging: "bg-amber-100 text-amber-700",
-  approved: "bg-green-100 text-green-700",
-  published: "bg-blue-100 text-blue-700"
+  draft: "bg-[var(--color-charcoal)]/10 text-[var(--color-charcoal)]",
+  staging: "bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]",
+  approved: "bg-[var(--color-success)]/20 text-[var(--color-success-dark)]",
+  published: "bg-[var(--color-info)]/20 text-[var(--color-info-dark)]"
 };
 
 export default function WidgetStaging({ widgets = [], onEdit }) {
@@ -121,13 +121,13 @@ export default function WidgetStaging({ widgets = [], onEdit }) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Widget Staging Area</h2>
+        <h2 className="text-lg font-semibold text-[var(--color-midnight)]">Widget Staging Area</h2>
         <Badge variant="secondary">{stagingWidgets.length} pending</Badge>
       </div>
 
       {stagingWidgets.length === 0 ? (
         <Card>
-          <CardContent className="py-8 text-center text-gray-500">
+          <CardContent className="py-8 text-center text-[var(--color-charcoal)]">
             <Sparkles className="h-10 w-10 mx-auto mb-3 opacity-50" />
             <p>No widgets in staging</p>
             <p className="text-sm mt-1">Create or AI-generate widgets to test here</p>
@@ -142,16 +142,16 @@ export default function WidgetStaging({ widgets = [], onEdit }) {
                 <CardHeader className="pb-2">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-2">
-                      <Icon className="h-4 w-4 text-gray-500" />
-                      <CardTitle className="text-base">{widget.name}</CardTitle>
+                      <Icon className="h-4 w-4 text-[var(--color-charcoal)]" />
+                      <CardTitle className="text-base text-[var(--color-midnight)]">{widget.name}</CardTitle>
                     </div>
                     <Badge className={statusColors[widget.status]}>
                       {widget.status}
                     </Badge>
                   </div>
-                  <p className="text-sm text-gray-500">{widget.description}</p>
+                  <p className="text-sm text-[var(--color-charcoal)]">{widget.description}</p>
                   {widget.ai_generated && (
-                    <div className="flex items-center gap-1 text-xs text-purple-600 mt-1">
+                    <div className="flex items-center gap-1 text-xs text-[var(--color-accent)] mt-1">
                       <Sparkles className="h-3 w-3" />
                       AI Generated
                     </div>
@@ -160,7 +160,7 @@ export default function WidgetStaging({ widgets = [], onEdit }) {
                 <CardContent>
                   {/* Preview area */}
                   <div 
-                    className="border rounded-lg p-2 mb-3 cursor-pointer hover:bg-gray-50"
+                    className="border border-[var(--color-background-muted)] rounded-lg p-2 mb-3 cursor-pointer hover:bg-[var(--color-background)]"
                     onClick={() => setPreviewWidget(widget)}
                   >
                     <div className="transform scale-75 origin-top-left">
@@ -171,14 +171,14 @@ export default function WidgetStaging({ widgets = [], onEdit }) {
                   {/* Actions */}
                   <div className="flex gap-2">
                     {widget.status === "draft" && (
-                      <Button size="sm" onClick={() => handleStage(widget)} className="flex-1">
+                      <Button size="sm" onClick={() => handleStage(widget)} className="flex-1 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)]">
                         <ArrowUp className="h-3 w-3 mr-1" />
                         Stage
                       </Button>
                     )}
                     {widget.status === "staging" && (
                       <>
-                        <Button size="sm" onClick={() => handleApprove(widget)} className="flex-1 bg-green-600 hover:bg-green-700">
+                        <Button size="sm" onClick={() => handleApprove(widget)} className="flex-1 bg-[var(--color-success)] hover:bg-[var(--color-success-dark)]">
                           <CheckCircle2 className="h-3 w-3 mr-1" />
                           Approve
                         </Button>
@@ -188,7 +188,7 @@ export default function WidgetStaging({ widgets = [], onEdit }) {
                       </>
                     )}
                     {widget.status === "approved" && (
-                      <Button size="sm" onClick={() => handleApprove(widget)} className="flex-1 bg-blue-600 hover:bg-blue-700">
+                      <Button size="sm" onClick={() => handleApprove(widget)} className="flex-1 bg-[var(--color-info)] hover:bg-[var(--color-info-dark)]">
                         <ArrowUp className="h-3 w-3 mr-1" />
                         Publish
                       </Button>
@@ -202,7 +202,7 @@ export default function WidgetStaging({ widgets = [], onEdit }) {
                     <Button size="sm" variant="ghost" onClick={() => onEdit?.(widget)}>
                       <Edit className="h-3 w-3" />
                     </Button>
-                    <Button size="sm" variant="ghost" className="text-red-500" onClick={() => deleteMutation.mutate(widget.id)}>
+                    <Button size="sm" variant="ghost" className="text-[var(--color-destructive)]" onClick={() => deleteMutation.mutate(widget.id)}>
                       <Trash2 className="h-3 w-3" />
                     </Button>
                   </div>
@@ -223,8 +223,8 @@ export default function WidgetStaging({ widgets = [], onEdit }) {
             <div className="p-4">
               <WidgetRenderer widget={previewWidget} />
               {previewWidget.ai_reasoning && (
-                <div className="mt-4 p-3 bg-purple-50 rounded-lg">
-                  <p className="text-sm text-purple-800">
+                <div className="mt-4 p-3 bg-[var(--color-accent)]/10 rounded-lg">
+                  <p className="text-sm text-[var(--color-accent-dark)]">
                     <strong>AI Reasoning:</strong> {previewWidget.ai_reasoning}
                   </p>
                 </div>
@@ -243,14 +243,14 @@ export default function WidgetStaging({ widgets = [], onEdit }) {
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-[var(--color-charcoal)]">
               {selectedWidget?.status === "staging"
                 ? "Approving will mark this widget as ready for publishing."
                 : "Publishing will make this widget available in the library for all dashboards."}
             </p>
             {selectedWidget?.status === "approved" && (
               <div>
-                <label className="text-sm font-medium">Version Notes</label>
+                <label className="text-sm font-medium text-[var(--color-midnight)]">Version Notes</label>
                 <Textarea
                   value={approvalNotes}
                   onChange={(e) => setApprovalNotes(e.target.value)}
@@ -261,7 +261,7 @@ export default function WidgetStaging({ widgets = [], onEdit }) {
             )}
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={() => setShowApproveDialog(false)}>Cancel</Button>
-              <Button onClick={confirmApproval}>
+              <Button onClick={confirmApproval} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
                 {selectedWidget?.status === "staging" ? "Approve" : "Publish"}
               </Button>
             </div>
