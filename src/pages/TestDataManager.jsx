@@ -100,7 +100,7 @@ export default function TestDataManager() {
   });
 
   // Data Queries
-  const { data: playgroundItems = [] } = useQuery({
+  const { data: playgroundItems = [], isLoading: loadingPlayground } = useQuery({
     queryKey: ["playgroundItems"],
     queryFn: () => base44.entities.PlaygroundItem.list("-created_date"),
   });
@@ -628,10 +628,11 @@ Return as JSON with entity names as keys and arrays of records as values.`,
     setShowValidation(true);
   };
 
-  if (isLoading) {
+  if (isLoading || loadingPlayground) {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+        <span className="ml-2 text-gray-500">Loading {loadingPlayground ? "playground items" : "test data"}...</span>
       </div>
     );
   }
