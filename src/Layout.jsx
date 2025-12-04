@@ -412,21 +412,21 @@ export default function Layout({ children, currentPageName }) {
 
       if (isFolder) {
         return (
-          <div key={itemId} className={isExpanded && depth === 0 ? "bg-slate-800/50 rounded-lg mb-1" : ""}>
+          <div key={itemId} className={isExpanded && depth === 0 ? "bg-white/5 rounded-lg mb-1" : ""}>
             <button
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 toggleFolder(itemId);
               }}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-slate-300 hover:bg-slate-800 hover:text-white ${isExpanded ? "text-white" : ""}`}
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-white/70 hover:bg-white/5 hover:text-white ${isExpanded ? "text-white" : ""}`}
             >
               {hasChildren ? (
-                isExpanded ? <ChevronDown className="h-4 w-4 text-slate-400" /> : <ChevronRight className="h-4 w-4 text-slate-400" />
+                isExpanded ? <ChevronDown className="h-4 w-4 text-white/50" /> : <ChevronRight className="h-4 w-4 text-white/50" />
               ) : (
                 <div className="w-4" />
               )}
-              {isExpanded ? <FolderOpen className="h-4 w-4 text-amber-400" /> : <Folder className="h-4 w-4 text-amber-400" />}
+              {isExpanded ? <FolderOpen className="h-4 w-4 text-[var(--color-secondary)]" /> : <Folder className="h-4 w-4 text-[var(--color-secondary)]" />}
               <span className="flex-1 text-left">{item.name}</span>
             </button>
             {isExpanded && hasChildren && (
@@ -468,8 +468,8 @@ export default function Layout({ children, currentPageName }) {
             isChild ? "py-1.5 text-sm ml-6" : "py-2"
           } ${
             isActive
-              ? "bg-slate-700 text-white"
-              : "text-slate-300 hover:bg-slate-800 hover:text-white"
+              ? "bg-white/10 text-white"
+              : "text-white/70 hover:bg-white/5 hover:text-white"
           }`}
         >
           {!isChild && <Icon className="h-4 w-4 flex-shrink-0" />}
@@ -524,104 +524,50 @@ export default function Layout({ children, currentPageName }) {
   };
 
   return (
-        <TenantContext.Provider value={tenantContextValue}>
-        {/* Inject Sturij Design System CSS Variables */}
-        <style dangerouslySetInnerHTML={{ __html: cssVariables }} />
-        <div className="min-h-screen flex">
-      {/* Sidebar */}
-      <aside className={`${sidebarCollapsed ? "w-0" : "w-64"} bg-slate-900 text-white flex flex-col transition-all duration-300 overflow-hidden`}>
-        <div className="p-4 border-b border-slate-700 flex items-center justify-between min-w-64">
-          <div>
-            <h1 className="text-lg font-bold">
-              {isGlobalAdminPage ? "Admin Console" : (currentTenant?.name || "App")}
-            </h1>
-            <p className="text-xs text-slate-400">
-              {isGlobalAdminPage ? "Global Administration" : "Tenant Portal"}
-            </p>
-          </div>
-          <button 
-            onClick={() => setSidebarCollapsed(true)}
-            className="p-1 rounded hover:bg-slate-700 transition-colors"
-          >
-            <X className="h-5 w-5 text-slate-400" />
-          </button>
-        </div>
-        <nav className="flex-1 p-3 space-y-1 overflow-y-auto min-w-64">
-          {customAdminNav && customAdminNav.length > 0 ? (
-            // Render hierarchical navigation from config
-            renderNavItems(getTopLevelItems(customAdminNav), customAdminNav, 0)
-          ) : (
-            // Fallback to flat displayPages
-            displayPages.map((page) => {
-              const Icon = page.icon;
-              const isActive = currentPageName === page.slug;
-              let pageUrl = createPageUrl(page.slug);
-              if (page.slug === "MindMapEditor") {
-                const currentMap = new URLSearchParams(window.location.search).get("map");
-                if (currentMap) {
-                  pageUrl = pageUrl + (pageUrl.includes("?") ? "&" : "?") + `map=${currentMap}`;
-                }
-              }
-              return (
-                <Link
-                  key={page.slug}
-                  to={pageUrl}
-                  className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
-                    isActive 
-                      ? "bg-slate-700 text-white" 
-                      : "text-slate-300 hover:bg-slate-800 hover:text-white"
-                  }`}
-                >
-                  <Icon className="h-4 w-4" />
-                  {page.name}
-                </Link>
-              );
-            })
-          )}
-        </nav>
-        
-        {/* Global Admin indicator */}
-        {isGlobalAdmin && (
-          <div className="p-3 border-t border-slate-700">
-            <div className="flex items-center gap-2 text-xs text-amber-400">
-              <Shield className="h-3 w-3" />
-              Global Admin
-            </div>
-          </div>
-        )}
-      </aside>
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Top Bar */}
-        <header className="h-14 bg-white border-b flex items-center justify-between px-4">
-          <div className="flex items-center gap-3">
+    <TenantContext.Provider value={tenantContextValue}>
+      {/* Inject Sturij Design System CSS Variables */}
+      <style dangerouslySetInnerHTML={{ __html: cssVariables }} />
+      <div className="min-h-screen flex flex-col bg-[var(--color-background)]">
+        {/* Full-width Header */}
+        <header className="h-14 bg-[var(--color-background-paper)] border-b border-[var(--color-background-muted)] flex items-center justify-between px-4 flex-shrink-0">
+          <div className="flex items-center gap-4">
             {/* Burger Menu */}
             <button 
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              className="p-2 rounded-lg hover:bg-[var(--color-background)] transition-colors"
             >
-              <Menu className="h-5 w-5 text-gray-600" />
+              <Menu className="h-5 w-5 text-[var(--color-charcoal)]" />
             </button>
+            
+            {/* Sturij Logo */}
+            <div className="flex items-center gap-3">
+              <img 
+                src="https://framerusercontent.com/images/XKDSOBYkjTdAvMPFrNk5WIrHI.png" 
+                alt="Sturij" 
+                className="h-8 w-auto"
+              />
+              <div className="hidden sm:block border-l border-[var(--color-background-muted)] pl-3">
+                <span className="text-sm font-medium text-[var(--color-charcoal)]">
+                  {isGlobalAdminPage ? "Admin Console" : (currentTenant?.name || "App")}
+                </span>
+              </div>
+            </div>
+
             {/* Page Selector Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="gap-2">
+                <Button variant="outline" className="gap-2 ml-2">
                   <CurrentIcon className="h-4 w-4" />
-                  {currentPage?.name || "Select Page"}
+                  <span className="hidden md:inline">{currentPage?.name || "Select Page"}</span>
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="max-h-96 overflow-y-auto">
                 {customAdminNav && customAdminNav.length > 0 ? (
-                  // Render hierarchical navigation - flatten for dropdown
                   (() => {
-                    // Helper to generate folder ID from name (matching the pattern used in parent_id)
-                    // Folders like "Design System" have parent_id references like "folder_design_system"
                     const getFolderId = (item) => {
                       if (item._id) return item._id;
                       if (item.item_type === "folder") {
-                        // Convert "Design System" -> "folder_design_system", "System Tools" -> "folder_system_tools"
                         const normalized = item.name.toLowerCase().replace(/[\s-]+/g, '_').replace(/[^a-z0-9_]/g, '');
                         return `folder_${normalized}`;
                       }
@@ -635,24 +581,19 @@ export default function Layout({ children, currentPageName }) {
                         .flatMap(item => {
                           const isFolder = item.item_type === "folder";
                           const itemId = getFolderId(item);
-                          const children = customAdminNav.filter(child => 
-                            child.parent_id === itemId && child.is_visible !== false
-                          );
                           
                           if (isFolder) {
-                            // Render folder as label, then its children recursively
                             const folderChildren = customAdminNav.filter(child => 
                               child.parent_id === itemId && child.is_visible !== false
                             );
                             return [
-                              <div key={itemId} className="px-2 py-1.5 text-xs font-semibold text-slate-500 uppercase tracking-wider" style={{ paddingLeft: `${8 + depth * 12}px` }}>
+                              <div key={itemId} className="px-2 py-1.5 text-xs font-semibold text-[var(--color-charcoal)] uppercase tracking-wider" style={{ paddingLeft: `${8 + depth * 12}px` }}>
                                 {item.name}
                               </div>,
                               ...renderDropdownItems(folderChildren, depth + 1)
                             ];
                           }
                           
-                          // Page item
                           const Icon = iconMap[item.icon] || Home;
                           const slugParts = item.slug?.split("?") || [""];
                           const baseSlug = slugParts[0];
@@ -661,7 +602,6 @@ export default function Layout({ children, currentPageName }) {
                           if (queryString) {
                             pageUrl = pageUrl + (pageUrl.includes("?") ? "&" : "?") + queryString;
                           }
-                          // Use a safe key - replace special chars
                           const safeKey = `page_${item.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
                           
                           return [
@@ -713,7 +653,7 @@ export default function Layout({ children, currentPageName }) {
           {/* User Info & Logout */}
           <div className="flex items-center gap-3">
             {currentUser && (
-              <div className="flex items-center gap-2 text-sm text-gray-600">
+              <div className="hidden sm:flex items-center gap-2 text-sm text-[var(--color-charcoal)]">
                 <User className="h-4 w-4" />
                 <span>{currentUser.email}</span>
               </div>
@@ -728,32 +668,79 @@ export default function Layout({ children, currentPageName }) {
                 const tenantAccessUrl = createPageUrl("TenantAccess");
                 base44.auth.logout(window.location.origin + tenantAccessUrl);
               }}
-              className="gap-2 text-gray-600"
+              className="gap-2 text-[var(--color-charcoal)]"
             >
               <LogOut className="h-4 w-4" />
-              Logout
+              <span className="hidden sm:inline">Logout</span>
             </Button>
           </div>
         </header>
 
-        {/* Page Content */}
-        <main className="flex-1 bg-gray-50 overflow-auto">
-          {customAdminNav && customAdminNav.length > 0 && (
-            <div className="px-6 pt-4">
-              <NavigationBreadcrumb 
-                items={customAdminNav} 
-                currentPageSlug={currentPageName}
-                showHome={false}
-              />
-            </div>
-          )}
-          {children}
-        </main>
-      </div>
+        {/* Content Area with Sidebar and Main */}
+        <div className="flex-1 flex overflow-hidden">
+          {/* Sidebar */}
+          <aside className={`${sidebarCollapsed ? "w-0" : "w-64"} bg-[var(--color-midnight)] text-white flex flex-col transition-all duration-300 overflow-hidden flex-shrink-0`}>
+            <nav className="flex-1 p-3 space-y-1 overflow-y-auto min-w-64">
+              {customAdminNav && customAdminNav.length > 0 ? (
+                renderNavItems(getTopLevelItems(customAdminNav), customAdminNav, 0)
+              ) : (
+                displayPages.map((page) => {
+                  const Icon = page.icon;
+                  const isActive = currentPageName === page.slug;
+                  let pageUrl = createPageUrl(page.slug);
+                  if (page.slug === "MindMapEditor") {
+                    const currentMap = new URLSearchParams(window.location.search).get("map");
+                    if (currentMap) {
+                      pageUrl = pageUrl + (pageUrl.includes("?") ? "&" : "?") + `map=${currentMap}`;
+                    }
+                  }
+                  return (
+                    <Link
+                      key={page.slug}
+                      to={pageUrl}
+                      className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
+                        isActive 
+                          ? "bg-white/10 text-white" 
+                          : "text-white/70 hover:bg-white/5 hover:text-white"
+                      }`}
+                    >
+                      <Icon className="h-4 w-4" />
+                      {page.name}
+                    </Link>
+                  );
+                })
+              )}
+            </nav>
+            
+            {/* Global Admin indicator */}
+            {isGlobalAdmin && (
+              <div className="p-3 border-t border-white/10">
+                <div className="flex items-center gap-2 text-xs text-[var(--color-secondary)]">
+                  <Shield className="h-3 w-3" />
+                  Global Admin
+                </div>
+              </div>
+            )}
+          </aside>
 
-      {/* Global AI Assistant */}
-      <GlobalAIAssistant />
-    </div>
+          {/* Main Content */}
+          <main className="flex-1 bg-[var(--color-background)] overflow-auto">
+            {customAdminNav && customAdminNav.length > 0 && (
+              <div className="px-6 pt-4">
+                <NavigationBreadcrumb 
+                  items={customAdminNav} 
+                  currentPageSlug={currentPageName}
+                  showHome={false}
+                />
+              </div>
+            )}
+            {children}
+          </main>
+        </div>
+
+        {/* Global AI Assistant */}
+        <GlobalAIAssistant />
+      </div>
     </TenantContext.Provider>
   );
 }
