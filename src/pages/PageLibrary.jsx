@@ -386,10 +386,10 @@ Return a JSON object with a "pages" array containing page templates.`,
 
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
         </div>
       ) : filteredPages.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-[var(--color-charcoal)]">
           <Layout className="h-12 w-12 mx-auto mb-4 opacity-50" />
           <p>No page templates found</p>
         </div>

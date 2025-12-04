@@ -405,26 +405,26 @@ export default function PlaygroundSummary() {
           <div className="grid grid-cols-4 gap-4">
             <Card>
               <CardContent className="pt-4">
-                <div className="text-2xl font-bold">{stats.total}</div>
-                <div className="text-sm text-gray-500">Library Items</div>
+                <div className="text-2xl font-bold text-[var(--color-midnight)]">{stats.total}</div>
+                <div className="text-sm text-[var(--color-charcoal)]">Library Items</div>
               </CardContent>
             </Card>
-            <Card className="border-blue-200 bg-blue-50">
+            <Card className="border-[var(--color-info)]/30 bg-[var(--color-info)]/10">
               <CardContent className="pt-4">
-                <div className="text-2xl font-bold text-blue-700">{stats.modified}</div>
-                <div className="text-sm text-blue-600">Being Modified</div>
+                <div className="text-2xl font-bold text-[var(--color-info)]">{stats.modified}</div>
+                <div className="text-sm text-[var(--color-info-dark)]">Being Modified</div>
               </CardContent>
             </Card>
-            <Card className="border-green-200 bg-green-50">
+            <Card className="border-[var(--color-success)]/30 bg-[var(--color-success)]/10">
               <CardContent className="pt-4">
-                <div className="text-2xl font-bold text-green-700">{stats.ready}</div>
-                <div className="text-sm text-green-600">Ready to Promote</div>
+                <div className="text-2xl font-bold text-[var(--color-success)]">{stats.ready}</div>
+                <div className="text-sm text-[var(--color-success-dark)]">Ready to Promote</div>
               </CardContent>
             </Card>
-            <Card className="border-amber-200 bg-amber-50">
+            <Card className="border-[var(--color-warning)]/30 bg-[var(--color-warning)]/10">
               <CardContent className="pt-4">
-                <div className="text-2xl font-bold text-amber-700">{stats.concepts}</div>
-                <div className="text-sm text-amber-600">Active Concepts</div>
+                <div className="text-2xl font-bold text-[var(--color-warning)]">{stats.concepts}</div>
+                <div className="text-sm text-[var(--color-warning-dark)]">Active Concepts</div>
               </CardContent>
             </Card>
           </div>
@@ -441,7 +441,7 @@ export default function PlaygroundSummary() {
               </CardHeader>
               <CardContent>
                 {activeItems.length === 0 ? (
-                  <p className="text-gray-500 text-center py-4">No items currently being modified</p>
+                  <p className="text-[var(--color-charcoal)] text-center py-4">No items currently being modified</p>
                 ) : (
                   <div className="space-y-2">
                     {activeItems.slice(0, 5).map(item => (
@@ -477,7 +477,7 @@ export default function PlaygroundSummary() {
               <CardContent>
                 {activeConcepts.length === 0 ? (
                   <div className="text-center py-4">
-                    <p className="text-gray-500 mb-2">No concepts in progress</p>
+                    <p className="text-[var(--color-charcoal)] mb-2">No concepts in progress</p>
                     <Link to={createPageUrl("ConceptWorkbench")}>
                       <Button size="sm" variant="outline">
                         <Lightbulb className="h-4 w-4 mr-2" />
@@ -579,10 +579,10 @@ export default function PlaygroundSummary() {
           {/* Items Grid */}
           {allLoading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
             </div>
           ) : filteredItems.length === 0 ? (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-[var(--color-charcoal)]">
               <FlaskConical className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p>No items match your filters</p>
               <Button variant="outline" className="mt-4" onClick={syncLibraryToPlayground}>
@@ -637,7 +637,7 @@ export default function PlaygroundSummary() {
           </div>
 
           {conceptItems.length === 0 ? (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-[var(--color-charcoal)]">
               <Lightbulb className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p>No concepts yet</p>
               <p className="text-sm mt-1">Create a new entity, page, or feature concept</p>
