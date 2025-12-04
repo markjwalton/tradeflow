@@ -163,13 +163,13 @@ export default function CMSTemplateManager({ tenantId }) {
       <CardContent>
         {isLoading ? (
           <div className="flex justify-center py-8">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
           </div>
         ) : templates.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-12 text-[var(--color-charcoal)]">
             <Layout className="h-12 w-12 mx-auto mb-4 opacity-50" />
             <p>No templates yet</p>
-            <Button className="mt-4" onClick={() => openEditor()}>
+            <Button className="mt-4 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white" onClick={() => openEditor()}>
               <Plus className="h-4 w-4 mr-2" />
               Create Template
             </Button>
@@ -180,7 +180,7 @@ export default function CMSTemplateManager({ tenantId }) {
               const Icon = group.icon;
               return (
                 <div key={group.value}>
-                  <h3 className="text-sm font-semibold text-gray-500 mb-3 flex items-center gap-2">
+                  <h3 className="text-sm font-semibold text-[var(--color-charcoal)] mb-3 flex items-center gap-2">
                     <Icon className="h-4 w-4" />
                     {group.label} Templates
                   </h3>
@@ -188,16 +188,16 @@ export default function CMSTemplateManager({ tenantId }) {
                     {group.templates.map(template => (
                       <div 
                         key={template.id}
-                        className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                        className="border border-[var(--color-background-muted)] rounded-lg p-4 hover:shadow-md transition-shadow"
                       >
                         <div className="flex items-start justify-between mb-2">
-                          <h4 className="font-medium">{template.name}</h4>
+                          <h4 className="font-medium text-[var(--color-midnight)]">{template.name}</h4>
                           {template.source === "wix_import" && (
-                            <Badge className="bg-purple-100 text-purple-700">Wix</Badge>
+                            <Badge className="bg-[var(--color-accent)]/20 text-[var(--color-accent-dark)]">Wix</Badge>
                           )}
                         </div>
                         {template.description && (
-                          <p className="text-sm text-gray-500 mb-3">{template.description}</p>
+                          <p className="text-sm text-[var(--color-charcoal)] mb-3">{template.description}</p>
                         )}
                         <div className="flex items-center justify-between">
                           <Badge variant="outline">
@@ -210,7 +210,7 @@ export default function CMSTemplateManager({ tenantId }) {
                             <Button 
                               variant="ghost" 
                               size="icon"
-                              className="text-red-500"
+                              className="text-[var(--color-destructive)]"
                               onClick={() => {
                                 if (confirm("Delete this template?")) {
                                   deleteMutation.mutate(template.id);
@@ -281,7 +281,7 @@ export default function CMSTemplateManager({ tenantId }) {
               </div>
               <div className="space-y-2">
                 {formData.fields.map((field, index) => (
-                  <div key={index} className="flex gap-2 items-center p-2 bg-gray-50 rounded">
+                  <div key={index} className="flex gap-2 items-center p-2 bg-[var(--color-background)] rounded">
                     <Input
                       placeholder="Field name"
                       value={field.name}
@@ -312,7 +312,7 @@ export default function CMSTemplateManager({ tenantId }) {
                       </SelectContent>
                     </Select>
                     <Button variant="ghost" size="icon" onClick={() => removeField(index)}>
-                      <Trash2 className="h-4 w-4 text-red-500" />
+                      <Trash2 className="h-4 w-4 text-[var(--color-destructive)]" />
                     </Button>
                   </div>
                 ))}
@@ -321,7 +321,7 @@ export default function CMSTemplateManager({ tenantId }) {
 
             <div className="flex justify-end gap-2 pt-4">
               <Button variant="outline" onClick={closeEditor}>Cancel</Button>
-              <Button onClick={handleSave} disabled={createMutation.isPending || updateMutation.isPending}>
+              <Button onClick={handleSave} disabled={createMutation.isPending || updateMutation.isPending} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
                 {(createMutation.isPending || updateMutation.isPending) && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                 {editingTemplate ? "Update" : "Create"}
               </Button>
@@ -337,15 +337,15 @@ export default function CMSTemplateManager({ tenantId }) {
             <DialogTitle>Import from Wix</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+            <div className="p-4 bg-[var(--color-warning)]/10 border border-[var(--color-warning)]/30 rounded-lg">
               <div className="flex gap-2">
-                <AlertCircle className="h-5 w-5 text-amber-600 flex-shrink-0" />
+                <AlertCircle className="h-5 w-5 text-[var(--color-warning)] flex-shrink-0" />
                 <div>
-                  <p className="font-medium text-amber-800">Wix API Integration Required</p>
-                  <p className="text-sm text-amber-700 mt-1">
+                  <p className="font-medium text-[var(--color-warning-dark)]">Wix API Integration Required</p>
+                  <p className="text-sm text-[var(--color-warning-dark)] mt-1">
                     To import templates from Wix, you need to:
                   </p>
-                  <ol className="list-decimal list-inside text-sm text-amber-700 mt-2 space-y-1">
+                  <ol className="list-decimal list-inside text-sm text-[var(--color-warning-dark)] mt-2 space-y-1">
                     <li>Enable Wix Dev Mode in your Wix site</li>
                     <li>Create a Wix API key with read access</li>
                     <li>Configure the API key in settings</li>
@@ -368,7 +368,7 @@ export default function CMSTemplateManager({ tenantId }) {
                 Import Templates
               </Button>
             </div>
-            <p className="text-xs text-gray-500 text-center">
+            <p className="text-xs text-[var(--color-charcoal)] text-center">
               Note: Wix template import is coming soon. Currently, you can manually recreate templates.
             </p>
           </div>

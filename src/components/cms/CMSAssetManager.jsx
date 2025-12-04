@@ -185,16 +185,16 @@ export default function CMSAssetManager({ tenantId }) {
           {/* Breadcrumbs */}
           <div className="flex items-center gap-1 text-sm">
             <button 
-              className="text-blue-600 hover:underline"
+              className="text-[var(--color-primary)] hover:underline"
               onClick={() => setCurrentFolder("/")}
             >
               Root
             </button>
             {breadcrumbs.map((crumb, i) => (
               <React.Fragment key={i}>
-                <span className="text-gray-400">/</span>
+                <span className="text-[var(--color-charcoal)]">/</span>
                 <button
-                  className="text-blue-600 hover:underline"
+                  className="text-[var(--color-primary)] hover:underline"
                   onClick={() => setCurrentFolder("/" + breadcrumbs.slice(0, i + 1).join("/"))}
                 >
                   {crumb}
@@ -232,7 +232,7 @@ export default function CMSAssetManager({ tenantId }) {
 
         {isLoading ? (
           <div className="flex justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
           </div>
         ) : (
           <>
@@ -243,11 +243,11 @@ export default function CMSAssetManager({ tenantId }) {
                   {subFolders.map(folder => (
                     <button
                       key={folder}
-                      className="flex items-center gap-2 px-3 py-2 bg-amber-50 rounded-lg hover:bg-amber-100"
+                      className="flex items-center gap-2 px-3 py-2 bg-[var(--color-secondary)]/10 rounded-lg hover:bg-[var(--color-secondary)]/20"
                       onClick={() => setCurrentFolder(folder)}
                     >
-                      <Folder className="h-4 w-4 text-amber-600" />
-                      <span className="text-sm font-medium">{folder.split("/").pop()}</span>
+                      <Folder className="h-4 w-4 text-[var(--color-secondary)]" />
+                      <span className="text-sm font-medium text-[var(--color-midnight)]">{folder.split("/").pop()}</span>
                     </button>
                   ))}
                 </div>
@@ -256,7 +256,7 @@ export default function CMSAssetManager({ tenantId }) {
 
             {/* Assets Grid/List */}
             {filteredAssets.filter(a => a.name !== ".folder").length === 0 ? (
-              <div className="text-center py-12 text-gray-500">
+              <div className="text-center py-12 text-[var(--color-charcoal)]">
                 <Image className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>No assets in this folder</p>
               </div>
@@ -267,18 +267,18 @@ export default function CMSAssetManager({ tenantId }) {
                   return (
                     <div
                       key={asset.id}
-                      className="border rounded-lg p-2 cursor-pointer hover:shadow-md transition-shadow"
+                      className="border border-[var(--color-background-muted)] rounded-lg p-2 cursor-pointer hover:shadow-md transition-shadow"
                       onClick={() => setSelectedAsset(asset)}
                     >
-                      <div className="aspect-square bg-gray-100 rounded flex items-center justify-center mb-2 overflow-hidden">
+                      <div className="aspect-square bg-[var(--color-background)] rounded flex items-center justify-center mb-2 overflow-hidden">
                         {asset.file_type === "image" ? (
                           <img src={asset.file_url} alt={asset.name} className="w-full h-full object-cover" />
                         ) : (
-                          <Icon className="h-8 w-8 text-gray-400" />
+                          <Icon className="h-8 w-8 text-[var(--color-charcoal)]" />
                         )}
                       </div>
-                      <p className="text-xs font-medium truncate">{asset.name}</p>
-                      <p className="text-xs text-gray-500">{formatSize(asset.size_bytes)}</p>
+                      <p className="text-xs font-medium truncate text-[var(--color-midnight)]">{asset.name}</p>
+                      <p className="text-xs text-[var(--color-charcoal)]">{formatSize(asset.size_bytes)}</p>
                     </div>
                   );
                 })}
@@ -290,19 +290,19 @@ export default function CMSAssetManager({ tenantId }) {
                   return (
                     <div
                       key={asset.id}
-                      className="flex items-center gap-3 p-2 rounded hover:bg-gray-50 cursor-pointer"
+                      className="flex items-center gap-3 p-2 rounded hover:bg-[var(--color-background)] cursor-pointer"
                       onClick={() => setSelectedAsset(asset)}
                     >
-                      <div className="w-10 h-10 bg-gray-100 rounded flex items-center justify-center overflow-hidden">
+                      <div className="w-10 h-10 bg-[var(--color-background)] rounded flex items-center justify-center overflow-hidden">
                         {asset.file_type === "image" ? (
                           <img src={asset.file_url} alt={asset.name} className="w-full h-full object-cover" />
                         ) : (
-                          <Icon className="h-5 w-5 text-gray-400" />
+                          <Icon className="h-5 w-5 text-[var(--color-charcoal)]" />
                         )}
                       </div>
                       <div className="flex-1">
-                        <p className="font-medium text-sm">{asset.name}</p>
-                        <p className="text-xs text-gray-500">{formatSize(asset.size_bytes)}</p>
+                        <p className="font-medium text-sm text-[var(--color-midnight)]">{asset.name}</p>
+                        <p className="text-xs text-[var(--color-charcoal)]">{formatSize(asset.size_bytes)}</p>
                       </div>
                       <Badge variant="outline">{asset.file_type}</Badge>
                       <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); copyUrl(asset.file_url); }}>
@@ -334,7 +334,7 @@ export default function CMSAssetManager({ tenantId }) {
             </div>
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={() => setShowNewFolder(false)}>Cancel</Button>
-              <Button onClick={createFolder}>Create</Button>
+              <Button onClick={createFolder} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">Create</Button>
             </div>
           </div>
         </DialogContent>
@@ -349,7 +349,7 @@ export default function CMSAssetManager({ tenantId }) {
           {selectedAsset && (
             <div className="space-y-4">
               {selectedAsset.file_type === "image" && (
-                <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
+                <div className="aspect-video bg-[var(--color-background)] rounded-lg overflow-hidden">
                   <img src={selectedAsset.file_url} alt={selectedAsset.name} className="w-full h-full object-contain" />
                 </div>
               )}
@@ -382,7 +382,7 @@ export default function CMSAssetManager({ tenantId }) {
               <div className="flex justify-between">
                 <Button 
                   variant="ghost" 
-                  className="text-red-500"
+                  className="text-[var(--color-destructive)]"
                   onClick={() => {
                     if (confirm("Delete this asset?")) {
                       deleteMutation.mutate(selectedAsset.id);
@@ -395,7 +395,7 @@ export default function CMSAssetManager({ tenantId }) {
                 <Button onClick={() => {
                   updateMutation.mutate({ id: selectedAsset.id, data: selectedAsset });
                   setSelectedAsset(null);
-                }}>
+                }} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
                   Save Changes
                 </Button>
               </div>

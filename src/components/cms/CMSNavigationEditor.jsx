@@ -175,32 +175,32 @@ export default function CMSNavigationEditor({ tenantId }) {
     return (
       <div key={item.id}>
         <div 
-          className={`flex items-center gap-2 p-2 rounded hover:bg-gray-50 ${
-            editingItem?.id === item.id ? "bg-blue-50 border border-blue-200" : ""
+          className={`flex items-center gap-2 p-2 rounded hover:bg-[var(--color-background)] ${
+            editingItem?.id === item.id ? "bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/30" : ""
           }`}
           style={{ paddingLeft: `${depth * 24 + 8}px` }}
         >
-          <GripVertical className="h-4 w-4 text-gray-400 cursor-grab" />
+          <GripVertical className="h-4 w-4 text-[var(--color-charcoal)] cursor-grab" />
           
           {(hasChildren || isFolder) && (
             <button onClick={() => toggleExpand(item.id)} className="p-0.5">
               {isExpanded ? (
-                <ChevronDown className="h-4 w-4 text-gray-500" />
+                <ChevronDown className="h-4 w-4 text-[var(--color-charcoal)]" />
               ) : (
-                <ChevronRight className="h-4 w-4 text-gray-500" />
+                <ChevronRight className="h-4 w-4 text-[var(--color-charcoal)]" />
               )}
             </button>
           )}
           {!hasChildren && !isFolder && <div className="w-5" />}
           
           <TypeIcon className={`h-4 w-4 ${
-            item.type === "folder" ? "text-amber-600" : 
-            item.type === "link" ? "text-blue-600" : "text-gray-600"
+            item.type === "folder" ? "text-[var(--color-secondary)]" : 
+            item.type === "link" ? "text-[var(--color-info)]" : "text-[var(--color-charcoal)]"
           }`} />
           
-          <span className="flex-1 text-sm font-medium">{item.label}</span>
+          <span className="flex-1 text-sm font-medium text-[var(--color-midnight)]">{item.label}</span>
           
-          {!item.is_visible && <EyeOff className="h-3 w-3 text-gray-400" />}
+          {!item.is_visible && <EyeOff className="h-3 w-3 text-[var(--color-charcoal)]" />}
           
           <Badge variant="outline" className="text-xs">{item.type}</Badge>
           
@@ -217,7 +217,7 @@ export default function CMSNavigationEditor({ tenantId }) {
           <Button 
             variant="ghost" 
             size="icon" 
-            className="h-6 w-6 text-red-500"
+            className="h-6 w-6 text-[var(--color-destructive)]"
             onClick={() => deleteItem(item.id)}
           >
             <Trash2 className="h-3 w-3" />
@@ -265,18 +265,18 @@ export default function CMSNavigationEditor({ tenantId }) {
             {isLoading ? (
               <Loader2 className="h-6 w-6 animate-spin" />
             ) : displayedNavigations.length === 0 ? (
-              <p className="text-sm text-gray-500">No {activeTab === "view_pages" ? "view page" : "CMS"} navigations yet</p>
+              <p className="text-sm text-[var(--color-charcoal)]">No {activeTab === "view_pages" ? "view page" : "CMS"} navigations yet</p>
             ) : (
               <div className="space-y-1">
                 {displayedNavigations.map(nav => (
                   <div 
                     key={nav.id}
                     className={`flex items-center justify-between p-2 rounded cursor-pointer ${
-                      selectedNav?.id === nav.id ? "bg-blue-100" : "hover:bg-gray-50"
+                      selectedNav?.id === nav.id ? "bg-[var(--color-primary)]/10" : "hover:bg-[var(--color-background)]"
                     }`}
                     onClick={() => setSelectedNav(nav)}
                   >
-                    <span className="font-medium">{nav.name}</span>
+                    <span className="font-medium text-[var(--color-midnight)]">{nav.name}</span>
                     <Badge variant="outline">{nav.items?.length || 0} items</Badge>
                   </div>
                 ))}
@@ -289,7 +289,7 @@ export default function CMSNavigationEditor({ tenantId }) {
             {selectedNav ? (
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-semibold">{selectedNav.name}</h3>
+                  <h3 className="font-semibold text-[var(--color-midnight)]">{selectedNav.name}</h3>
                   <div className="flex gap-2">
                     <Button variant="outline" size="sm" onClick={() => addItem()}>
                       <Plus className="h-4 w-4 mr-1" />
@@ -298,7 +298,7 @@ export default function CMSNavigationEditor({ tenantId }) {
                     <Button 
                       variant="ghost" 
                       size="sm" 
-                      className="text-red-500"
+                      className="text-[var(--color-destructive)]"
                       onClick={() => {
                         if (confirm("Delete this navigation?")) {
                           deleteMutation.mutate(selectedNav.id);
@@ -309,16 +309,16 @@ export default function CMSNavigationEditor({ tenantId }) {
                     </Button>
                   </div>
                 </div>
-                <div className="border rounded-lg max-h-96 overflow-auto">
+                <div className="border border-[var(--color-background-muted)] rounded-lg max-h-96 overflow-auto">
                   {selectedNav.items?.length > 0 ? (
                     selectedNav.items.map(item => renderItem(item))
                   ) : (
-                    <p className="text-center text-gray-500 py-8">No items. Click "Add Item" to start.</p>
+                    <p className="text-center text-[var(--color-charcoal)] py-8">No items. Click "Add Item" to start.</p>
                   )}
                 </div>
               </div>
             ) : (
-              <div className="flex items-center justify-center h-48 text-gray-500">
+              <div className="flex items-center justify-center h-48 text-[var(--color-charcoal)]">
                 Select a navigation to edit
               </div>
             )}
@@ -366,6 +366,7 @@ export default function CMSNavigationEditor({ tenantId }) {
                   setNewNavType("cms");
                 }}
                 disabled={!newNavName.trim()}
+                className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
               >
                 Create
               </Button>
@@ -463,7 +464,7 @@ export default function CMSNavigationEditor({ tenantId }) {
                 <Button onClick={() => {
                   updateItem(editingItem.id, editingItem);
                   setEditingItem(null);
-                }}>
+                }} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
                   <Save className="h-4 w-4 mr-2" />
                   Save
                 </Button>
