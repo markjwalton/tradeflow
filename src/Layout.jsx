@@ -2,6 +2,7 @@ import React, { useEffect, useState, createContext, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
+import { cssVariables } from "@/components/library/designTokens";
 import { 
   Home, 
   Navigation, 
