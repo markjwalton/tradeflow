@@ -98,14 +98,14 @@ export default function FeatureBuilder({ initialData, entities = [], onSave, onC
 
   const ArrayInput = ({ label, value, onChange, list, onAdd, onRemove, placeholder }) => (
     <div>
-      <label className="text-sm font-medium">{label}</label>
+      <label className="text-sm font-medium text-[var(--color-midnight)]">{label}</label>
       <div className="flex gap-2 mt-1">
         <Input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), onAdd())} />
         <Button type="button" variant="outline" onClick={onAdd}>Add</Button>
       </div>
       <div className="flex flex-wrap gap-1 mt-2">
         {list.map((item) => (
-          <Badge key={item} variant="secondary" className="gap-1">{item}<button onClick={() => onRemove(item)} className="hover:text-red-600">×</button></Badge>
+          <Badge key={item} variant="secondary" className="gap-1">{item}<button onClick={() => onRemove(item)} className="hover:text-[var(--color-destructive)]">×</button></Badge>
         ))}
       </div>
     </div>
@@ -116,11 +116,11 @@ export default function FeatureBuilder({ initialData, entities = [], onSave, onC
       <div className="space-y-6 pb-4 pr-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-sm font-medium">Feature Name *</label>
+            <label className="text-sm font-medium text-[var(--color-midnight)]">Feature Name *</label>
             <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g., Email Notifications, PDF Export" />
           </div>
           <div>
-            <label className="text-sm font-medium">Category</label>
+            <label className="text-sm font-medium text-[var(--color-midnight)]">Category</label>
             <Select value={category} onValueChange={setCategory}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -132,7 +132,7 @@ export default function FeatureBuilder({ initialData, entities = [], onSave, onC
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-sm font-medium">Group</label>
+            <label className="text-sm font-medium text-[var(--color-midnight)]">Group</label>
             <Select value={group} onValueChange={setGroup}>
               <SelectTrigger><SelectValue placeholder="Select a group..." /></SelectTrigger>
               <SelectContent>
@@ -142,7 +142,7 @@ export default function FeatureBuilder({ initialData, entities = [], onSave, onC
             </Select>
           </div>
           <div>
-            <label className="text-sm font-medium">Complexity</label>
+            <label className="text-sm font-medium text-[var(--color-midnight)]">Complexity</label>
             <Select value={complexity} onValueChange={setComplexity}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -153,14 +153,14 @@ export default function FeatureBuilder({ initialData, entities = [], onSave, onC
         </div>
 
         <div>
-          <label className="text-sm font-medium">Description</label>
+          <label className="text-sm font-medium text-[var(--color-midnight)]">Description</label>
           <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="What does this feature do?" rows={2} />
         </div>
 
         {/* Entities Used */}
         <div>
-          <label className="text-sm font-medium">Entities Used</label>
-          <div className="flex flex-wrap gap-2 mt-2 p-3 bg-gray-50 rounded-lg">
+          <label className="text-sm font-medium text-[var(--color-midnight)]">Entities Used</label>
+          <div className="flex flex-wrap gap-2 mt-2 p-3 bg-[var(--color-background)] rounded-lg">
             {entities.length > 0 ? entities.map((entity) => (
               <Badge
                 key={entity.id}
@@ -170,7 +170,7 @@ export default function FeatureBuilder({ initialData, entities = [], onSave, onC
               >
                 {entity.name}
               </Badge>
-            )) : <span className="text-sm text-gray-500">No entities available</span>}
+            )) : <span className="text-sm text-[var(--color-charcoal)]">No entities available</span>}
           </div>
         </div>
 
@@ -224,9 +224,9 @@ export default function FeatureBuilder({ initialData, entities = [], onSave, onC
           placeholder="Add tag..."
         />
 
-        <div className="flex justify-end gap-2 pt-4 border-t">
+        <div className="flex justify-end gap-2 pt-4 border-t border-[var(--color-background-muted)]">
           <Button variant="outline" onClick={onCancel}>Cancel</Button>
-          <Button onClick={handleSave} disabled={!name.trim() || isSaving}>
+          <Button onClick={handleSave} disabled={!name.trim() || isSaving} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
             {isSaving && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
             Save Feature
           </Button>

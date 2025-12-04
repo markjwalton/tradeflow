@@ -174,18 +174,18 @@ export default function PagePreview({ page }) {
   };
 
   return (
-    <div className="bg-slate-100 rounded-lg p-4 border">
+    <div className="bg-[var(--color-background)] rounded-lg p-4 border border-[var(--color-background-muted)]">
       {/* Browser Chrome */}
       <div className="bg-white rounded-lg shadow-sm overflow-hidden">
         {/* Header Bar */}
-        <div className="bg-slate-800 px-3 py-2 flex items-center gap-2">
+        <div className="bg-[var(--color-midnight)] px-3 py-2 flex items-center gap-2">
           <div className="flex gap-1">
-            <div className="w-2 h-2 rounded-full bg-red-400" />
-            <div className="w-2 h-2 rounded-full bg-yellow-400" />
-            <div className="w-2 h-2 rounded-full bg-green-400" />
+            <div className="w-2 h-2 rounded-full bg-[var(--color-destructive)]" />
+            <div className="w-2 h-2 rounded-full bg-[var(--color-warning)]" />
+            <div className="w-2 h-2 rounded-full bg-[var(--color-success)]" />
           </div>
-          <div className="flex-1 bg-slate-700 rounded h-4 mx-8 flex items-center px-2">
-            <span className="text-[8px] text-slate-400">/{page.name}</span>
+          <div className="flex-1 bg-[var(--color-midnight-light)] rounded h-4 mx-8 flex items-center px-2">
+            <span className="text-[8px] text-[var(--color-charcoal)]">/{page.name}</span>
           </div>
         </div>
 
@@ -209,7 +209,7 @@ export default function PagePreview({ page }) {
               </div>
               <div className="flex gap-1">
                 {hasCreate && (
-                  <div className="h-5 px-2 bg-blue-500 rounded flex items-center">
+                  <div className="h-5 px-2 bg-[var(--color-primary)] rounded flex items-center">
                     <Plus className="h-3 w-3 text-white" />
                   </div>
                 )}
@@ -257,20 +257,20 @@ export default function PagePreview({ page }) {
 
             {/* Action Bar for Detail/Form pages */}
             {(page.category === "Detail" || page.category === "Form") && actions.length > 0 && (
-              <div className="flex justify-end gap-1 mt-3 pt-2 border-t border-gray-100">
+              <div className="flex justify-end gap-1 mt-3 pt-2 border-t border-[var(--color-background-muted)]">
                 {actions.includes("edit") && (
-                  <div className="h-5 px-2 bg-gray-100 rounded flex items-center">
-                    <Edit className="h-3 w-3 text-gray-500" />
+                  <div className="h-5 px-2 bg-[var(--color-background)] rounded flex items-center">
+                    <Edit className="h-3 w-3 text-[var(--color-charcoal)]" />
                   </div>
                 )}
                 {actions.includes("delete") && (
-                  <div className="h-5 px-2 bg-red-100 rounded flex items-center">
-                    <Trash2 className="h-3 w-3 text-red-500" />
+                  <div className="h-5 px-2 bg-[var(--color-destructive)]/10 rounded flex items-center">
+                    <Trash2 className="h-3 w-3 text-[var(--color-destructive)]" />
                   </div>
                 )}
                 {actions.includes("view") && (
-                  <div className="h-5 px-2 bg-blue-100 rounded flex items-center">
-                    <Eye className="h-3 w-3 text-blue-500" />
+                  <div className="h-5 px-2 bg-[var(--color-info)]/10 rounded flex items-center">
+                    <Eye className="h-3 w-3 text-[var(--color-info)]" />
                   </div>
                 )}
               </div>
@@ -280,8 +280,8 @@ export default function PagePreview({ page }) {
       </div>
 
       {/* Legend */}
-      <div className="mt-3 flex flex-wrap gap-2 text-[10px] text-gray-500">
-        <span>Layout: <strong>{layout}</strong></span>
+      <div className="mt-3 flex flex-wrap gap-2 text-[10px] text-[var(--color-charcoal)]">
+        <span>Layout: <strong className="text-[var(--color-midnight)]">{layout}</strong></span>
         <span>•</span>
         <span>{components.length} components</span>
         <span>•</span>

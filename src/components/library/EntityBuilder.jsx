@@ -185,7 +185,7 @@ export default function EntityBuilder({ initialData, onSave, onCancel, isSaving,
         {/* Basic Info */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-sm font-medium">Entity Name *</label>
+            <label className="text-sm font-medium text-[var(--color-midnight)]">Entity Name *</label>
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -193,7 +193,7 @@ export default function EntityBuilder({ initialData, onSave, onCancel, isSaving,
             />
           </div>
           <div>
-            <label className="text-sm font-medium">Category</label>
+            <label className="text-sm font-medium text-[var(--color-midnight)]">Category</label>
             <Select value={category} onValueChange={setCategory}>
               <SelectTrigger>
                 <SelectValue />
@@ -208,7 +208,7 @@ export default function EntityBuilder({ initialData, onSave, onCancel, isSaving,
         </div>
 
         <div>
-          <label className="text-sm font-medium">Group</label>
+          <label className="text-sm font-medium text-[var(--color-midnight)]">Group</label>
           <div className="flex gap-2">
             <Select value={group} onValueChange={setGroup} className="flex-1">
               <SelectTrigger>
@@ -248,11 +248,11 @@ export default function EntityBuilder({ initialData, onSave, onCancel, isSaving,
               </Button>
             )}
           </div>
-          <p className="text-xs text-gray-500 mt-1">Select existing group or type a new one</p>
+          <p className="text-xs text-[var(--color-charcoal)] mt-1">Select existing group or type a new one</p>
         </div>
 
         <div>
-          <label className="text-sm font-medium">Description</label>
+          <label className="text-sm font-medium text-[var(--color-midnight)]">Description</label>
           <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -263,7 +263,7 @@ export default function EntityBuilder({ initialData, onSave, onCancel, isSaving,
 
         {/* Tags */}
         <div>
-          <label className="text-sm font-medium">Tags</label>
+          <label className="text-sm font-medium text-[var(--color-midnight)]">Tags</label>
           <div className="flex gap-2 mt-1">
             <Input
               value={tagInput}
@@ -278,7 +278,7 @@ export default function EntityBuilder({ initialData, onSave, onCancel, isSaving,
             {tags.map((tag) => (
               <Badge key={tag} variant="secondary" className="gap-1">
                 {tag}
-                <button onClick={() => removeTag(tag)} className="hover:text-red-600">×</button>
+                <button onClick={() => removeTag(tag)} className="hover:text-[var(--color-destructive)]">×</button>
               </Badge>
             ))}
           </div>
@@ -287,7 +287,7 @@ export default function EntityBuilder({ initialData, onSave, onCancel, isSaving,
         {/* Fields */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <label className="text-sm font-medium">Fields</label>
+            <label className="text-sm font-medium text-[var(--color-midnight)]">Fields</label>
             <Button size="sm" variant="outline" onClick={addField}>
               <Plus className="h-3 w-3 mr-1" />
               Add Field
@@ -295,7 +295,7 @@ export default function EntityBuilder({ initialData, onSave, onCancel, isSaving,
           </div>
           <div className="space-y-2">
             {fields.map((field, index) => (
-              <div key={index} className="flex gap-2 items-start p-3 bg-gray-50 rounded-lg">
+              <div key={index} className="flex gap-2 items-start p-3 bg-[var(--color-background)] rounded-lg">
                 <div className="flex-1 grid grid-cols-4 gap-2">
                   <Input
                     value={field.name}
@@ -322,13 +322,13 @@ export default function EntityBuilder({ initialData, onSave, onCancel, isSaving,
                       checked={field.required}
                       onCheckedChange={(c) => updateField(index, { required: c })}
                     />
-                    <span className="text-xs text-gray-500">Required</span>
+                    <span className="text-xs text-[var(--color-charcoal)]">Required</span>
                   </div>
                 </div>
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="text-red-600"
+                  className="text-[var(--color-destructive)]"
                   onClick={() => removeField(index)}
                   disabled={fields.length === 1}
                 >
@@ -342,7 +342,7 @@ export default function EntityBuilder({ initialData, onSave, onCancel, isSaving,
         {/* Relationships */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <label className="text-sm font-medium">Relationships</label>
+            <label className="text-sm font-medium text-[var(--color-midnight)]">Relationships</label>
             <Button size="sm" variant="outline" onClick={addRelationship}>
               <Plus className="h-3 w-3 mr-1" />
               Add Relationship
@@ -351,7 +351,7 @@ export default function EntityBuilder({ initialData, onSave, onCancel, isSaving,
           {relationships.length > 0 ? (
             <div className="space-y-2">
               {relationships.map((rel, index) => (
-                <div key={index} className="flex gap-2 items-center p-3 bg-gray-50 rounded-lg">
+                <div key={index} className="flex gap-2 items-center p-3 bg-[var(--color-background)] rounded-lg">
                   <Input
                     value={rel.target_entity}
                     onChange={(e) => updateRelationship(index, { target_entity: e.target.value })}
@@ -380,7 +380,7 @@ export default function EntityBuilder({ initialData, onSave, onCancel, isSaving,
                   <Button
                     size="sm"
                     variant="ghost"
-                    className="text-red-600"
+                    className="text-[var(--color-destructive)]"
                     onClick={() => removeRelationship(index)}
                   >
                     <Trash2 className="h-3 w-3" />
@@ -389,14 +389,14 @@ export default function EntityBuilder({ initialData, onSave, onCancel, isSaving,
               ))}
             </div>
           ) : (
-            <p className="text-sm text-gray-500">No relationships defined</p>
+            <p className="text-sm text-[var(--color-charcoal)]">No relationships defined</p>
           )}
         </div>
 
         {/* Actions */}
-        <div className="flex justify-end gap-2 pt-4 border-t">
+        <div className="flex justify-end gap-2 pt-4 border-t border-[var(--color-background-muted)]">
           <Button variant="outline" onClick={onCancel}>Cancel</Button>
-          <Button onClick={handleSave} disabled={!name.trim() || isSaving}>
+          <Button onClick={handleSave} disabled={!name.trim() || isSaving} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
             {isSaving && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
             Save Entity
           </Button>

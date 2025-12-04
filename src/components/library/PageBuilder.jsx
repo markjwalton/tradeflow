@@ -130,11 +130,11 @@ export default function PageBuilder({ initialData, entities = [], onSave, onCanc
       <div className="space-y-6 pb-4 pr-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-sm font-medium">Page Name *</label>
+            <label className="text-sm font-medium text-[var(--color-midnight)]">Page Name *</label>
             <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g., CustomerList, ProjectDashboard" />
           </div>
           <div>
-            <label className="text-sm font-medium">Category</label>
+            <label className="text-sm font-medium text-[var(--color-midnight)]">Category</label>
             <Select value={category} onValueChange={setCategory}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -146,7 +146,7 @@ export default function PageBuilder({ initialData, entities = [], onSave, onCanc
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-sm font-medium">Group</label>
+            <label className="text-sm font-medium text-[var(--color-midnight)]">Group</label>
             <Select value={group} onValueChange={setGroup}>
               <SelectTrigger><SelectValue placeholder="Select a group..." /></SelectTrigger>
               <SelectContent>
@@ -156,7 +156,7 @@ export default function PageBuilder({ initialData, entities = [], onSave, onCanc
             </Select>
           </div>
           <div>
-            <label className="text-sm font-medium">Layout</label>
+            <label className="text-sm font-medium text-[var(--color-midnight)]">Layout</label>
             <Select value={layout} onValueChange={setLayout}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -167,14 +167,14 @@ export default function PageBuilder({ initialData, entities = [], onSave, onCanc
         </div>
 
         <div>
-          <label className="text-sm font-medium">Description</label>
+          <label className="text-sm font-medium text-[var(--color-midnight)]">Description</label>
           <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="What does this page do?" rows={2} />
         </div>
 
         {/* Entities Used */}
         <div>
-          <label className="text-sm font-medium">Entities Used</label>
-          <div className="flex flex-wrap gap-2 mt-2 p-3 bg-gray-50 rounded-lg">
+          <label className="text-sm font-medium text-[var(--color-midnight)]">Entities Used</label>
+          <div className="flex flex-wrap gap-2 mt-2 p-3 bg-[var(--color-background)] rounded-lg">
             {entities.length > 0 ? entities.map((entity) => (
               <Badge
                 key={entity.id}
@@ -184,20 +184,20 @@ export default function PageBuilder({ initialData, entities = [], onSave, onCanc
               >
                 {entity.name}
               </Badge>
-            )) : <span className="text-sm text-gray-500">No entities available</span>}
+            )) : <span className="text-sm text-[var(--color-charcoal)]">No entities available</span>}
           </div>
         </div>
 
         {/* Features */}
         <div>
-          <label className="text-sm font-medium">Features</label>
+          <label className="text-sm font-medium text-[var(--color-midnight)]">Features</label>
           <div className="flex gap-2 mt-1">
             <Input value={featureInput} onChange={(e) => setFeatureInput(e.target.value)} placeholder="Add feature..." onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addFeature())} />
             <Button type="button" variant="outline" onClick={addFeature}>Add</Button>
           </div>
           <div className="flex flex-wrap gap-1 mt-2">
             {features.map((f) => (
-              <Badge key={f} variant="secondary" className="gap-1">{f}<button onClick={() => setFeatures(features.filter(x => x !== f))} className="hover:text-red-600">×</button></Badge>
+              <Badge key={f} variant="secondary" className="gap-1">{f}<button onClick={() => setFeatures(features.filter(x => x !== f))} className="hover:text-[var(--color-destructive)]">×</button></Badge>
             ))}
           </div>
         </div>
@@ -205,12 +205,12 @@ export default function PageBuilder({ initialData, entities = [], onSave, onCanc
         {/* Components */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <label className="text-sm font-medium">UI Components</label>
+            <label className="text-sm font-medium text-[var(--color-midnight)]">UI Components</label>
             <Button size="sm" variant="outline" onClick={addComponent}><Plus className="h-3 w-3 mr-1" />Add</Button>
           </div>
           <div className="space-y-2">
             {components.map((comp, index) => (
-              <div key={index} className="p-3 bg-gray-50 rounded-lg space-y-2">
+              <div key={index} className="p-3 bg-[var(--color-background)] rounded-lg space-y-2">
                 <div className="flex gap-2 items-center">
                   <Select value={comp.type} onValueChange={(v) => updateComponent(index, { type: v, linkedTemplateId: null, linkedTemplateName: null })}>
                     <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
@@ -219,13 +219,13 @@ export default function PageBuilder({ initialData, entities = [], onSave, onCanc
                     </SelectContent>
                   </Select>
                   <Input value={comp.name} onChange={(e) => updateComponent(index, { name: e.target.value })} placeholder="Component name" className="flex-1" />
-                  <Button size="sm" variant="ghost" className="text-red-600" onClick={() => setComponents(components.filter((_, i) => i !== index))}><Trash2 className="h-3 w-3" /></Button>
+                  <Button size="sm" variant="ghost" className="text-[var(--color-destructive)]" onClick={() => setComponents(components.filter((_, i) => i !== index))}><Trash2 className="h-3 w-3" /></Button>
                 </div>
 
                 {/* Show Form Template selector when type is Form */}
                 {comp.type === "Form" && formTemplates.length > 0 && (
                   <div className="flex items-center gap-2 pl-2">
-                    <FileText className="h-4 w-4 text-blue-500" />
+                    <FileText className="h-4 w-4 text-[var(--color-info)]" />
                     <Select 
                       value={comp.linkedTemplateId || "none"} 
                       onValueChange={(v) => {
@@ -253,7 +253,7 @@ export default function PageBuilder({ initialData, entities = [], onSave, onCanc
                 {/* Show Checklist Template selector when type is Checklist */}
                 {comp.type === "Checklist" && checklistTemplates.length > 0 && (
                   <div className="flex items-center gap-2 pl-2">
-                    <CheckSquare className="h-4 w-4 text-green-500" />
+                    <CheckSquare className="h-4 w-4 text-[var(--color-success)]" />
                     <Select 
                       value={comp.linkedTemplateId || "none"} 
                       onValueChange={(v) => {
@@ -286,35 +286,35 @@ export default function PageBuilder({ initialData, entities = [], onSave, onCanc
 
         {/* Actions */}
         <div>
-          <label className="text-sm font-medium">User Actions</label>
+          <label className="text-sm font-medium text-[var(--color-midnight)]">User Actions</label>
           <div className="flex gap-2 mt-1">
             <Input value={actionInput} onChange={(e) => setActionInput(e.target.value)} placeholder="Add action (e.g., create, edit, delete)..." onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addAction())} />
             <Button type="button" variant="outline" onClick={addAction}>Add</Button>
           </div>
           <div className="flex flex-wrap gap-1 mt-2">
             {actions.map((a) => (
-              <Badge key={a} variant="secondary" className="gap-1">{a}<button onClick={() => setActions(actions.filter(x => x !== a))} className="hover:text-red-600">×</button></Badge>
+              <Badge key={a} variant="secondary" className="gap-1">{a}<button onClick={() => setActions(actions.filter(x => x !== a))} className="hover:text-[var(--color-destructive)]">×</button></Badge>
             ))}
           </div>
         </div>
 
         {/* Tags */}
         <div>
-          <label className="text-sm font-medium">Tags</label>
+          <label className="text-sm font-medium text-[var(--color-midnight)]">Tags</label>
           <div className="flex gap-2 mt-1">
             <Input value={tagInput} onChange={(e) => setTagInput(e.target.value)} placeholder="Add tag..." onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addTag())} className="flex-1" />
             <Button type="button" variant="outline" onClick={addTag}>Add</Button>
           </div>
           <div className="flex flex-wrap gap-1 mt-2">
             {tags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="gap-1">{tag}<button onClick={() => setTags(tags.filter(t => t !== tag))} className="hover:text-red-600">×</button></Badge>
+              <Badge key={tag} variant="secondary" className="gap-1">{tag}<button onClick={() => setTags(tags.filter(t => t !== tag))} className="hover:text-[var(--color-destructive)]">×</button></Badge>
             ))}
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 pt-4 border-t">
+        <div className="flex justify-end gap-2 pt-4 border-t border-[var(--color-background-muted)]">
           <Button variant="outline" onClick={onCancel}>Cancel</Button>
-          <Button onClick={handleSave} disabled={!name.trim() || isSaving}>
+          <Button onClick={handleSave} disabled={!name.trim() || isSaving} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
             {isSaving && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
             Save Page
           </Button>
