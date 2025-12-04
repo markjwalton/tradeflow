@@ -37,10 +37,10 @@ import { toast } from "sonner";
 // Import shared nav utilities
 import { getIconOptions, getIconByName, renderIcon } from "./NavIconMap";
 import { 
-  generateId, 
+  generateNavId as generateId, 
   getChildren, 
   getTopLevelItems, 
-  getValidParentOptions,
+  getValidParents,
   buildFlatNavList,
   ensureItemIds
 } from "./NavTypes";
@@ -117,8 +117,8 @@ export default function GenericNavEditor({
   const unallocatedSlugs = sourceSlugs.filter(slug => !allocatedSlugs.includes(slug));
 
   // Use shared hierarchy helpers
-  const getItemsByParent = (parentId) => getChildren(items, parentId);
-  const getValidParents = (excludeId) => getValidParentOptions(items, excludeId);
+  const getItemsByParent = (parentId) => getChildren(parentId, items);
+  const getParentOptions = (excludeId) => getValidParents(excludeId, items);
 
   const saveMutation = useMutation({
         mutationFn: async (newItems) => {
@@ -329,7 +329,7 @@ export default function GenericNavEditor({
   const buildFlatList = () => buildFlatNavList(items, expandedParents);
 
   // Get valid parent options for the form dialog
-  const getParentOptions = () => getValidParents(editingItem);
+  const getFormParentOptions = () => getParentOptions(editingItem);
 
   const flatList = buildFlatList();
 
@@ -418,7 +418,7 @@ export default function GenericNavEditor({
                                       Move to top level
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
-                                    {getValidParents(item._id).filter(p => p._id !== item.parent_id).map(parent => (
+                                    {getParentOptions(item._id).filter(p => p._id !== item.parent_id).map(parent => (
                                       <DropdownMenuItem 
                                         key={parent._id}
                                         onClick={() => handleMoveToParent(item, parent._id)}
@@ -617,7 +617,7 @@ export default function GenericNavEditor({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="__none__">No parent (top level)</SelectItem>
-                  {getParentOptions().map(parent => (
+                  {getFormParentOptions().map(parent => (
                     <SelectItem key={parent._id} value={parent._id}>{parent.name}</SelectItem>
                   ))}
                 </SelectContent>
