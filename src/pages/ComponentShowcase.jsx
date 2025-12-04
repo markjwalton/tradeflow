@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { 
   Layout, Type, MousePointer, Square, FormInput, 
   Navigation as NavIcon, BarChart3, Bell, ChevronDown, ChevronRight,
-  Mail, Settings, Users, Home, Star, Zap, Package, Plus, Edit, Trash2
+  Mail, Settings, Users, Home, Star, Zap, Package, Plus, Edit, Trash2,
+  BookOpen, Figma, Database, Grid3X3, Sparkles, Wrench, Download, Eye,
+  Copy, Search, RefreshCw, ExternalLink
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 // Typography
 import { H1, H2, H3, H4, H5, H6, BodyText, MutedText, SmallText, LargeText, CodeText, LinkText, Caption } from "@/components/library/Typography";
@@ -29,46 +32,83 @@ import { DataList, KeyValue, StatusBadge, UserAvatar, ProgressBar, SimpleTable, 
 // Feedback
 import { SuccessAlert, ErrorAlert, WarningAlert, InfoAlert, LoadingSpinner, SkeletonLoader, ToastNotification, UploadProgress, StatusDot, EmptyPlaceholder } from "@/components/library/Feedback";
 
-// Component categories for navigation
-const categories = [
-  { id: "typography", label: "Typography", icon: Type, count: 13 },
-  { id: "buttons", label: "Buttons", icon: MousePointer, count: 11 },
-  { id: "cards", label: "Cards", icon: Square, count: 8 },
-  { id: "forms", label: "Forms", icon: FormInput, count: 10 },
-  { id: "layouts", label: "Layouts", icon: Layout, count: 12 },
-  { id: "navigation", label: "Navigation", icon: NavIcon, count: 8 },
-  { id: "dataDisplay", label: "Data Display", icon: BarChart3, count: 9 },
-  { id: "feedback", label: "Feedback", icon: Bell, count: 11 },
+// Tab definitions matching Figma
+const tabs = [
+  { id: "library", label: "Library", icon: BookOpen },
+  { id: "figma", label: "Figma", icon: Figma },
+  { id: "ui", label: "UI", icon: Grid3X3 },
+  { id: "data", label: "Data", icon: Database },
+  { id: "layout", label: "Layout", icon: Layout },
+  { id: "interactive", label: "Interactive", icon: Sparkles },
+  { id: "utilities", label: "Utilities", icon: Wrench },
 ];
 
-// Section wrapper component
-function ShowcaseSection({ id, title, description, children }) {
+// Component categories for navigation
+const categories = [
+  { id: "typography", label: "Typography", icon: Type, count: 13, color: "bg-[#4A5D4E]" },
+  { id: "buttons", label: "Buttons", icon: MousePointer, count: 11, color: "bg-[#D4A574]" },
+  { id: "cards", label: "Cards", icon: Square, count: 8, color: "bg-[#5a7a8b]" },
+  { id: "forms", label: "Forms", icon: FormInput, count: 10, color: "bg-[#d9b4a7]" },
+  { id: "layouts", label: "Layouts", icon: Layout, count: 12, color: "bg-[#4A5D4E]" },
+  { id: "navigation", label: "Navigation", icon: NavIcon, count: 8, color: "bg-[#D4A574]" },
+  { id: "dataDisplay", label: "Data Display", icon: BarChart3, count: 9, color: "bg-[#5a7a8b]" },
+  { id: "feedback", label: "Feedback", icon: Bell, count: 11, color: "bg-[#d9b4a7]" },
+];
+
+// Section wrapper component - Matching Figma style
+function ShowcaseSection({ id, title, description, count, children }) {
+  const [expanded, setExpanded] = useState(true);
+  
   return (
-    <section id={id} className="mb-16 scroll-mt-24">
-      <div className="mb-6 pb-4 border-b border-[#eceae5]">
-        <H3 className="mb-2">{title}</H3>
-        <MutedText>{description}</MutedText>
-      </div>
-      <div className="space-y-8">{children}</div>
+    <section id={id} className="mb-8 scroll-mt-24 bg-white rounded-xl border border-[#eceae5] overflow-hidden">
+      <button 
+        onClick={() => setExpanded(!expanded)}
+        className="w-full px-6 py-4 flex items-center justify-between hover:bg-[#faf9f7] transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <h3 className="text-base font-medium text-[#1b2a35]" style={{ fontFamily: 'var(--font-heading)' }}>
+            {title} {count && <span className="text-[#6d6d6d] font-normal">({count} Components)</span>}
+          </h3>
+        </div>
+        <ChevronDown className={cn("h-5 w-5 text-[#6d6d6d] transition-transform", !expanded && "-rotate-90")} />
+      </button>
+      {expanded && (
+        <div className="px-6 pb-6">
+          {description && <p className="text-sm text-[#6d6d6d] mb-4">{description}</p>}
+          <div className="space-y-6">{children}</div>
+          
+          {/* Import code snippet */}
+          <div className="mt-4 p-3 bg-[#1b2a35] rounded-lg">
+            <code className="text-sm text-[#a9c7b1] font-mono">
+              import {'{'} {title.replace(/\s/g, '')}Components {'}'} from "./components/library";
+            </code>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
 
-// Component demo wrapper
-function ComponentDemo({ title, children }) {
+// Component demo wrapper - Matching Figma card style
+function ComponentDemo({ title, children, code }) {
   return (
-    <div className="bg-white rounded-xl border border-[#eceae5] overflow-hidden">
-      <div className="px-4 py-3 bg-[#faf9f7] border-b border-[#eceae5]">
-        <p className="text-sm font-medium text-[#1b2a35]">{title}</p>
+    <div className="space-y-3">
+      {title && <p className="text-sm font-medium text-[#1b2a35]">{title}</p>}
+      <div className="p-4 bg-[#faf9f7] rounded-lg border border-[#eceae5]">
+        {children}
       </div>
-      <div className="p-6">{children}</div>
+      {code && (
+        <div className="p-3 bg-[#1b2a35] rounded-lg">
+          <code className="text-xs text-[#a9c7b1] font-mono">{code}</code>
+        </div>
+      )}
     </div>
   );
 }
 
 export default function ComponentShowcase() {
   const [activeCategory, setActiveCategory] = useState("typography");
-  const [expandedNav, setExpandedNav] = useState(true);
+  const [activeMainTab, setActiveMainTab] = useState("library");
   
   // Form states
   const [textValue, setTextValue] = useState("");
@@ -88,40 +128,110 @@ export default function ComponentShowcase() {
 
   return (
     <div className="min-h-screen bg-[#f5f3ef]">
-      {/* Header */}
-      <div className="bg-gradient-to-br from-[#4A5D4E] to-[#3a4a3e] text-white">
-        <Container size="xl" className="py-12">
-          <H1 className="!text-white mb-4">Sturij Component Library</H1>
-          <LargeText className="!text-white/80 max-w-2xl">
-            82 production-ready components following the Sturij design system. 
-            Built for the base44 platform.
-          </LargeText>
-          <div className="flex flex-wrap gap-3 mt-8">
-            {categories.map((cat) => (
+      {/* Header - Matching Figma */}
+      <div className="bg-white border-b border-[#eceae5]">
+        <div className="max-w-7xl mx-auto px-6">
+          {/* Top bar with title and actions */}
+          <div className="flex items-center justify-between py-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-[#4A5D4E] flex items-center justify-center">
+                <Package className="h-4 w-4 text-white" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-lg font-medium text-[#1b2a35]" style={{ fontFamily: 'var(--font-heading)' }}>
+                    Component Library
+                  </h1>
+                  <span className="px-2 py-0.5 text-xs bg-[#4A5D4E]/10 text-[#4A5D4E] rounded-full font-medium">
+                    v2.1.0
+                  </span>
+                </div>
+                <p className="text-sm text-[#6d6d6d]">
+                  Comprehensive collection of reusable components, patterns, and design tokens for the Sturij system
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <button className="flex items-center gap-2 px-3 py-2 text-sm text-[#6d6d6d] hover:bg-[#f5f3ef] rounded-lg transition-colors">
+                <Download className="h-4 w-4" />
+                Export Components
+              </button>
+              <button className="flex items-center gap-2 px-3 py-2 text-sm bg-[#4A5D4E] text-white rounded-lg hover:bg-[#3a4a3e] transition-colors">
+                <Eye className="h-4 w-4" />
+                View Documentation
+              </button>
+            </div>
+          </div>
+
+          {/* Tab Navigation - Matching Figma */}
+          <div className="flex items-center gap-1 -mb-px">
+            {tabs.map((tab) => (
               <button
-                key={cat.id}
-                onClick={() => scrollToSection(cat.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-                  activeCategory === cat.id
-                    ? "bg-white text-[#4A5D4E]"
-                    : "bg-white/10 hover:bg-white/20 text-white"
-                }`}
+                key={tab.id}
+                onClick={() => setActiveMainTab(tab.id)}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors",
+                  activeMainTab === tab.id
+                    ? "border-[#4A5D4E] text-[#4A5D4E]"
+                    : "border-transparent text-[#6d6d6d] hover:text-[#3b3b3b]"
+                )}
               >
-                <cat.icon className="h-4 w-4" />
-                <span className="text-sm font-medium">{cat.label}</span>
-                <span className="text-xs opacity-70">({cat.count})</span>
+                <tab.icon className="h-4 w-4" />
+                {tab.label}
               </button>
             ))}
           </div>
-        </Container>
+        </div>
       </div>
 
-      <Container size="xl" className="py-12">
+      {/* Production Ready Banner */}
+      <div className="bg-white border-b border-[#eceae5]">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-[#4A5D4E]/10 flex items-center justify-center">
+              <Sparkles className="h-4 w-4 text-[#4A5D4E]" />
+            </div>
+            <div>
+              <h2 className="text-base font-medium text-[#1b2a35]" style={{ fontFamily: 'var(--font-heading)' }}>
+                Production-Ready Component Library
+              </h2>
+              <p className="text-sm text-[#6d6d6d]">
+                82 fully functional components ready to use in your applications
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Complete Component Library Section */}
+      <div className="bg-[#faf9f7] border-b border-[#eceae5]">
+        <div className="max-w-7xl mx-auto px-6 py-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-base font-medium text-[#1b2a35]">Complete Component Library</h3>
+            <div className="flex items-center gap-2">
+              <button className="flex items-center gap-2 px-3 py-1.5 text-sm text-[#6d6d6d] border border-[#eceae5] rounded-lg hover:bg-white transition-colors">
+                <Download className="h-4 w-4" />
+                Download Docs
+              </button>
+              <button className="flex items-center gap-2 px-3 py-1.5 text-sm text-[#6d6d6d] border border-[#eceae5] rounded-lg hover:bg-white transition-colors">
+                <Eye className="h-4 w-4" />
+                View Source
+              </button>
+            </div>
+          </div>
+          <p className="text-sm text-[#6d6d6d] mb-1">
+            Import and use these components directly from: <code className="px-2 py-1 bg-white rounded text-[#4A5D4E] font-mono text-xs">./components/library</code>
+          </p>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Typography Section */}
         <ShowcaseSection
           id="typography"
           title="Typography"
-          description="13 text components for headings, body text, and special text styles"
+          count={13}
+          description="Semantic text components with consistent styling"
         >
           <ComponentDemo title="Headings (H1-H6)">
             <Stack spacing="md">
@@ -160,7 +270,8 @@ export default function ComponentShowcase() {
         <ShowcaseSection
           id="buttons"
           title="Buttons"
-          description="11 button components for various actions and states"
+          count={11}
+          description="All button variants with loading and disabled states"
         >
           <ComponentDemo title="Primary Buttons">
             <Row spacing="md" wrap>
@@ -210,7 +321,8 @@ export default function ComponentShowcase() {
         <ShowcaseSection
           id="cards"
           title="Cards"
-          description="8 card components for content display"
+          count={8}
+          description="Flexible card layouts for different use cases"
         >
           <ComponentDemo title="Basic & Action Cards">
             <Grid columns={2} gap="lg">
@@ -278,7 +390,8 @@ export default function ComponentShowcase() {
         <ShowcaseSection
           id="forms"
           title="Forms"
-          description="10 form components for user input"
+          count={10}
+          description="Form fields with labels and validation support"
         >
           <ComponentDemo title="Text Inputs">
             <Grid columns={2} gap="lg">
@@ -368,7 +481,8 @@ export default function ComponentShowcase() {
         <ShowcaseSection
           id="layouts"
           title="Layouts"
-          description="12 layout components for page structure"
+          count={12}
+          description="Responsive layout primitives for page structure"
         >
           <ComponentDemo title="Grid System">
             <Stack spacing="lg">
@@ -445,7 +559,8 @@ export default function ComponentShowcase() {
         <ShowcaseSection
           id="navigation"
           title="Navigation"
-          description="8 navigation components"
+          count={8}
+          description="Navigation patterns and wayfinding components"
         >
           <ComponentDemo title="Nav Items & Groups">
             <div className="max-w-xs bg-white rounded-lg border border-[#eceae5] p-3">
@@ -527,7 +642,8 @@ export default function ComponentShowcase() {
         <ShowcaseSection
           id="dataDisplay"
           title="Data Display"
-          description="9 components for displaying data"
+          count={9}
+          description="Components for showing information beautifully"
         >
           <ComponentDemo title="Metrics & Stats">
             <Grid columns={4} gap="md">
@@ -630,7 +746,8 @@ export default function ComponentShowcase() {
         <ShowcaseSection
           id="feedback"
           title="Feedback"
-          description="11 components for user feedback and states"
+          count={11}
+          description="User feedback and notification components"
         >
           <ComponentDemo title="Alerts">
             <Stack spacing="md">
@@ -697,13 +814,49 @@ export default function ComponentShowcase() {
           </ComponentDemo>
         </ShowcaseSection>
 
-        {/* Footer */}
-        <div className="text-center pt-8 border-t border-[#eceae5]">
-          <MutedText>
-            Sturij Component Library v2.1.0 • 82 Components • Built for base44
-          </MutedText>
+        {/* Category Cards Grid - Matching Figma Footer */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-12 pt-8 border-t border-[#eceae5]">
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => scrollToSection(cat.id)}
+              className={cn(
+                "p-4 rounded-xl text-left transition-all hover:shadow-md",
+                activeCategory === cat.id ? "ring-2 ring-[#4A5D4E]" : "",
+                "bg-white border border-[#eceae5]"
+              )}
+            >
+              <div className="text-2xl font-light text-[#4A5D4E] mb-1" style={{ fontFamily: 'var(--font-heading)' }}>
+                {cat.count}
+              </div>
+              <div className="text-sm text-[#6d6d6d]">{cat.label}</div>
+            </button>
+          ))}
         </div>
-      </Container>
+
+        {/* Footer */}
+        <div className="mt-12 pt-6 border-t border-[#eceae5]">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded bg-[#4A5D4E] flex items-center justify-center">
+                <span className="text-white text-xs font-bold">S</span>
+              </div>
+              <span className="text-sm text-[#6d6d6d]">
+                Intelligent navigation and design systems for modern applications.
+              </span>
+            </div>
+            <div className="flex items-center gap-4 text-sm text-[#6d6d6d]">
+              <a href="#" className="hover:text-[#4A5D4E]">Privacy Policy</a>
+              <a href="#" className="hover:text-[#4A5D4E]">Terms of Service</a>
+              <a href="#" className="hover:text-[#4A5D4E]">Help Center</a>
+              <a href="#" className="hover:text-[#4A5D4E]">Contact</a>
+            </div>
+          </div>
+          <div className="mt-4 text-xs text-[#888888]">
+            © 2025 Sturij. All rights reserved. • Version 2.1.6
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
