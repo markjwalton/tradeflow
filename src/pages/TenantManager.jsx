@@ -155,7 +155,7 @@ export default function TenantManager() {
                       <Pencil className="h-4 w-4" />
                     </Button>
                     <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(tenant.id)}>
-                      <Trash2 className="h-4 w-4 text-red-500" />
+                      <Trash2 className="h-4 w-4 text-[var(--color-destructive)]" />
                     </Button>
                   </div>
                   {expandedTenants.has(tenant.id) && (

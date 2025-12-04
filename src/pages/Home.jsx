@@ -42,7 +42,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[var(--color-background)] p-6">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-light mb-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
+        <h1 className="text-3xl font-light mb-2 text-[var(--color-midnight)] font-heading">
           Welcome to {tenant?.name || "Your Portal"}
         </h1>
         <p className="text-[var(--color-charcoal)] mb-8">Select a section to get started</p>

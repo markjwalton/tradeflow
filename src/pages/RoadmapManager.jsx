@@ -292,7 +292,7 @@ export default function RoadmapManager() {
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)] font-heading">
             <Lightbulb className="h-6 w-6 text-[var(--color-secondary)]" />
             Roadmap Manager
           </h1>
@@ -318,7 +318,7 @@ export default function RoadmapManager() {
           </div>
           <p className="text-[var(--color-midnight)] font-medium">{focusedItem.title}</p>
           {focusedItem.description && (
-            <p className="text-purple-700 text-sm mt-1">{focusedItem.description}</p>
+            <p className="text-[var(--color-primary-dark)] text-sm mt-1">{focusedItem.description}</p>
           )}
           <div className="flex gap-2 mt-3">
             <Button size="sm" variant="outline" onClick={() => handleOpenJournal(focusedItem)}>
@@ -375,7 +375,7 @@ export default function RoadmapManager() {
 
           <TabsContent value="roadmap" className="mt-6">
             {roadmapItems.length === 0 ? (
-              <div className="text-center py-12 text-gray-500">
+              <div className="text-center py-12 text-[var(--color-charcoal)]">
                 <Lightbulb className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>No items in roadmap. Add your first idea!</p>
               </div>
@@ -396,7 +396,7 @@ export default function RoadmapManager() {
 
           <TabsContent value="development" className="mt-6">
             {developmentItems.length === 0 ? (
-              <div className="text-center py-12 text-gray-500">
+              <div className="text-center py-12 text-[var(--color-charcoal)]">
                 <Code className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>No items in development. Set items to "Planned" to move them here.</p>
               </div>
@@ -432,7 +432,7 @@ export default function RoadmapManager() {
 
           <TabsContent value="completed" className="mt-6">
             {completedItems.length === 0 ? (
-              <div className="text-center py-12 text-gray-500">
+              <div className="text-center py-12 text-[var(--color-charcoal)]">
                 <Code className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>No completed items yet.</p>
               </div>

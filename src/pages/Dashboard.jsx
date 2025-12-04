@@ -80,7 +80,7 @@ export default function Dashboard() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-light text-[var(--color-midnight-900)]" style={{ fontFamily: 'var(--font-family-display)' }}>Dashboard</h1>
+          <h1 className="text-3xl font-light text-[var(--color-midnight-900)] font-heading">Dashboard</h1>
           <p className="text-[var(--color-charcoal-500)] mt-1">Welcome back! Here's what's happening.</p>
         </div>
         <div className="flex gap-2">
@@ -98,7 +98,7 @@ export default function Dashboard() {
         <Card className="border-dashed border-[var(--color-background-300)] bg-[var(--color-background-50)]">
           <CardContent className="py-16 text-center">
             <LayoutGrid className="h-16 w-16 mx-auto mb-4 text-[var(--color-background-400)]" />
-            <h3 className="text-xl font-medium text-[var(--color-midnight-700)]" style={{ fontFamily: 'var(--font-family-display)' }}>No widgets visible</h3>
+            <h3 className="text-xl font-medium text-[var(--color-midnight-700)] font-heading">No widgets visible</h3>
             <p className="text-[var(--color-charcoal-500)] mt-2">
               Click the settings button to add widgets
             </p>
