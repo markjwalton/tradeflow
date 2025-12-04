@@ -197,9 +197,15 @@ export default function TestDataManager() {
       });
     };
 
+    // Debug log
+    console.log("playgroundItems count:", playgroundItems.length);
+    console.log("sample item:", playgroundItems[0]);
+    
     const previewableItems = playgroundItems.filter(p => 
       p.data?.source_type === "page" || p.data?.source_type === "feature"
     );
+    
+    console.log("previewableItems count:", previewableItems.length);
 
     return previewableItems.map(item => {
             const entities = getEntitiesForItem(item);
