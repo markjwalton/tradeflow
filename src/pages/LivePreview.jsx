@@ -119,6 +119,7 @@ export default function LivePreview() {
 
   return (
     <div className="p-6">
+      <div className="flex gap-6">
         {/* Left Navigation Panel */}
         <aside className="w-64 bg-slate-900 text-white rounded-lg flex-shrink-0">
           <nav className="p-3 space-y-1 overflow-y-auto">
