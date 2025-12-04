@@ -523,10 +523,10 @@ Return as JSON with entity names as keys and arrays of records as values.`,
       const batch = itemsToSeed.slice(i, i + batchSize);
       
       for (const item of batch) {
-        const testData = allTestData.find(td => td.playground_item_id === item.id);
-        if (!testData?.entity_data) continue;
+        const testData = allTestData.find(td => td.data?.playground_item_id === item.id);
+        if (!testData?.data?.entity_data) continue;
         
-        for (const [entityName, records] of Object.entries(testData.entity_data)) {
+        for (const [entityName, records] of Object.entries(testData.data.entity_data)) {
           if (!Array.isArray(records) || records.length === 0) continue;
           try {
             if (base44.entities[entityName]) {
@@ -573,30 +573,20 @@ Return as JSON with entity names as keys and arrays of records as values.`,
     }
 
     let entitiesUsed = [];
-    if (item.source_type === "page") {
-      const template = pageTemplates.find(t => t.id === item.source_id);
-      entitiesUsed = item.working_data?.entities_used || template?.data?.entities_used || template?.entities_used || [];
-      console.log(`getEntitiesForItemById (page): ${item.source_name}`, { 
-        working_data: item.working_data,
-        template: template ? { entities_used: template.entities_used, data: template.data } : null,
-        entitiesUsed 
-      });
-    } else if (item.source_type === "feature") {
-      const template = featureTemplates.find(t => t.id === item.source_id);
-      entitiesUsed = item.working_data?.entities_used || template?.data?.entities_used || template?.entities_used || [];
-      console.log(`getEntitiesForItemById (feature): ${item.source_name}`, { 
-        working_data: item.working_data,
-        template: template ? { entities_used: template.entities_used, data: template.data } : null,
-        entitiesUsed 
-      });
+    if (item.data?.source_type === "page") {
+      const template = pageTemplates.find(t => t.id === item.data?.source_id);
+      entitiesUsed = item.data?.working_data?.entities_used || template?.data?.entities_used || [];
+    } else if (item.data?.source_type === "feature") {
+      const template = featureTemplates.find(t => t.id === item.data?.source_id);
+      entitiesUsed = item.data?.working_data?.entities_used || template?.data?.entities_used || [];
     }
 
     return entitiesUsed.map(name => {
-      const entity = entityTemplates.find(e => e.name === name || e.data?.name === name);
+      const entity = entityTemplates.find(e => e.data?.name === name);
       if (entity) {
         return {
-          name: entity.data?.name || entity.name || name,
-          schema: entity.data?.schema || entity.schema || { properties: {} }
+          name: entity.data?.name || name,
+          schema: entity.data?.schema || { properties: {} }
         };
       }
       return { name, schema: { properties: {} } };
