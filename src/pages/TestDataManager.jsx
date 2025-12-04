@@ -286,9 +286,9 @@ Return JSON with entity names as keys and arrays of records as values.`,
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 bg-[var(--color-background)] min-h-screen">
       {/* Header */}
-      <Card className="bg-gradient-to-r from-purple-600 to-blue-600 text-white border-0">
+      <Card className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-midnight)] text-white border-0">
         <CardContent className="py-6">
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-4">
