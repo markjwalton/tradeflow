@@ -455,11 +455,10 @@ export default function Layout({ children, currentPageName }) {
       }
 
       return (
-        <Link
+        <a
           key={itemId || item.slug}
-          to={pageUrl}
-          onClick={(e) => e.stopPropagation()}
-          className={`flex items-center gap-2 px-3 rounded-lg transition-colors cursor-pointer relative z-10 ${
+          href={pageUrl}
+          className={`flex items-center gap-2 px-3 rounded-lg transition-colors cursor-pointer ${
             isChild ? "py-1.5 text-sm ml-6" : "py-2"
           } ${
             isActive
@@ -469,7 +468,7 @@ export default function Layout({ children, currentPageName }) {
         >
           {!isChild && <Icon className="h-4 w-4 flex-shrink-0" />}
           <span className="truncate">{item.name}</span>
-        </Link>
+        </a>
       );
     });
   };
