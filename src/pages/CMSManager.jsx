@@ -170,7 +170,7 @@ export default function CMSManager() {
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>CMS</h1>
+          <h1 className="text-2xl font-light text-[var(--color-midnight)] font-heading">CMS</h1>
           <p className="text-[var(--color-charcoal)]">Manage content for external websites</p>
         </div>
         {isGlobalAdmin && (

@@ -344,7 +344,7 @@ export default function APIManager() {
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)] font-heading">
             <Key className="h-6 w-6 text-[var(--color-primary)]" />
             API Manager
           </h1>
@@ -884,7 +884,7 @@ export default function APIManager() {
                     <span className="w-32 font-medium truncate">{api.name}</span>
                     <div className="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-blue-500" 
+                        className="h-full bg-[var(--color-info)]" 
                         style={{ 
                           width: `${analytics.total24h > 0 ? (api.calls / analytics.total24h * 100) : 0}%` 
                         }}
@@ -1248,7 +1248,7 @@ function LookupStatsTab({ lookupLogs, tenants }) {
                   </div>
                   <div className="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-blue-500" 
+                      className="h-full bg-[var(--color-info)]" 
                       style={{ width: `${filteredLogs.length > 0 ? (data.count / filteredLogs.length * 100) : 0}%` }}
                     />
                   </div>
