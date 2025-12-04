@@ -486,11 +486,13 @@ export default function ComponentShowcase() {
               />
             </Grid>
           </ComponentDemo>
-        </ShowcaseSection>}
+        </ShowcaseSection>
+        )}
 
         {/* Layouts Section */}
-        {visibleCategories.includes("layouts") && <ShowcaseSection
-          id="layouts"
+        {visibleCategories.includes("layouts") && (
+          <ShowcaseSection
+            id="layouts"
           title="Layouts"
           count={12}
           description="Responsive layout primitives for page structure"
