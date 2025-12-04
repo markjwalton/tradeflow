@@ -111,7 +111,7 @@ export default function TenantUserManager({ tenantId }) {
   return (
     <Card>
       <CardHeader className="pb-3">
-        <CardTitle className="text-base flex items-center gap-2">
+        <CardTitle className="text-base flex items-center gap-2 text-[var(--color-midnight)]">
           <Users className="h-4 w-4" />
           User Assignments
         </CardTitle>

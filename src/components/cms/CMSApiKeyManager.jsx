@@ -199,7 +199,7 @@ export default function CMSApiKeyManager({ tenantId }) {
       <Dialog open={showCreate} onOpenChange={(o) => { setShowCreate(o); setNewKey(null); }}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create API Key</DialogTitle>
+            <DialogTitle className="text-[var(--color-midnight)]">Create API Key</DialogTitle>
           </DialogHeader>
           
           {newKey ? (

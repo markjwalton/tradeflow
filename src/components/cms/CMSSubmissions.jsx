@@ -153,7 +153,7 @@ export default function CMSSubmissions({ tenantId }) {
       <Dialog open={!!selectedSubmission} onOpenChange={(o) => !o && setSelectedSubmission(null)}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Submission Details</DialogTitle>
+            <DialogTitle className="text-[var(--color-midnight)]">Submission Details</DialogTitle>
           </DialogHeader>
           {selectedSubmission && (
             <div className="space-y-4">
