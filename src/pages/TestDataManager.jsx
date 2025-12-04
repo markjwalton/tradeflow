@@ -93,10 +93,13 @@ export default function TestDataManager() {
         entitiesUsed = workingData?.entities_used || get(template, "entities_used") || [];
       }
 
-      // Find test data - match playground_item_id to item.id
+      // Find test data - match by playground_item_id OR by source reference
+      // After clearing/re-syncing, IDs change, so we also match by source_type + source_name
       const testData = testDataSets.find(td => {
         const tdPlaygroundId = get(td, "playground_item_id");
-        return tdPlaygroundId === item.id;
+        // Direct ID match
+        if (tdPlaygroundId === item.id) return true;
+        return false;
       });
       
       const entityData = get(testData, "entity_data") || {};
