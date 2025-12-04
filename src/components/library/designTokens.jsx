@@ -263,56 +263,154 @@ export const zIndex = {
   tooltip: 1600,
 };
 
-// CSS custom properties export
+// CSS custom properties export - Complete Sturij Design System
 export const cssVariables = `
 :root {
-  /* Colors */
+  /* Primary palette (Forest Green) */
   --color-primary: ${colors.primary.DEFAULT};
   --color-primary-light: ${colors.primary.light};
   --color-primary-dark: ${colors.primary.dark};
-  
+  --color-primary-50: ${colors.primary[50]};
+  --color-primary-100: ${colors.primary[100]};
+  --color-primary-200: ${colors.primary[200]};
+  --color-primary-300: ${colors.primary[300]};
+  --color-primary-400: ${colors.primary[400]};
+  --color-primary-500: ${colors.primary[500]};
+  --color-primary-600: ${colors.primary[600]};
+  --color-primary-700: ${colors.primary[700]};
+  --color-primary-800: ${colors.primary[800]};
+  --color-primary-900: ${colors.primary[900]};
+
+  /* Secondary palette (Warm Copper/Tan) */
   --color-secondary: ${colors.secondary.DEFAULT};
   --color-secondary-light: ${colors.secondary.light};
   --color-secondary-dark: ${colors.secondary.dark};
-  
+  --color-secondary-50: ${colors.secondary[50]};
+  --color-secondary-100: ${colors.secondary[100]};
+  --color-secondary-200: ${colors.secondary[200]};
+  --color-secondary-300: ${colors.secondary[300]};
+  --color-secondary-400: ${colors.secondary[400]};
+  --color-secondary-500: ${colors.secondary[500]};
+  --color-secondary-600: ${colors.secondary[600]};
+  --color-secondary-700: ${colors.secondary[700]};
+  --color-secondary-800: ${colors.secondary[800]};
+  --color-secondary-900: ${colors.secondary[900]};
+
+  /* Accent palette (Soft Blush) */
   --color-accent: ${colors.accent.DEFAULT};
   --color-accent-light: ${colors.accent.light};
   --color-accent-dark: ${colors.accent.dark};
-  
+  --color-accent-50: ${colors.accent[50]};
+  --color-accent-100: ${colors.accent[100]};
+  --color-accent-200: ${colors.accent[200]};
+  --color-accent-300: ${colors.accent[300]};
+  --color-accent-400: ${colors.accent[400]};
+  --color-accent-500: ${colors.accent[500]};
+  --color-accent-600: ${colors.accent[600]};
+  --color-accent-700: ${colors.accent[700]};
+  --color-accent-800: ${colors.accent[800]};
+  --color-accent-900: ${colors.accent[900]};
+
+  /* Background palette */
   --color-background: ${colors.background.DEFAULT};
   --color-background-paper: ${colors.background.paper};
   --color-background-subtle: ${colors.background.subtle};
   --color-background-muted: ${colors.background.muted};
-  
+  --color-background-50: #faf9f7;
+  --color-background-100: #f5f3ef;
+  --color-background-200: #eceae5;
+  --color-background-300: #e0ded8;
+  --color-background-400: #d4d1ca;
+
+  /* Midnight palette (Dark Blue-Grey) */
   --color-midnight: ${colors.midnight.DEFAULT};
+  --color-midnight-light: ${colors.midnight.light};
+  --color-midnight-dark: ${colors.midnight.dark};
+  --color-midnight-50: ${colors.midnight[50]};
+  --color-midnight-100: ${colors.midnight[100]};
+  --color-midnight-200: ${colors.midnight[200]};
+  --color-midnight-300: ${colors.midnight[300]};
+  --color-midnight-400: ${colors.midnight[400]};
+  --color-midnight-500: ${colors.midnight[500]};
+  --color-midnight-600: ${colors.midnight[600]};
+  --color-midnight-700: ${colors.midnight[700]};
+  --color-midnight-800: ${colors.midnight[800]};
+  --color-midnight-900: ${colors.midnight[900]};
+
+  /* Charcoal palette */
   --color-charcoal: ${colors.charcoal.DEFAULT};
+  --color-charcoal-light: ${colors.charcoal.light};
+  --color-charcoal-dark: ${colors.charcoal.dark};
+  --color-charcoal-50: ${colors.charcoal[50]};
+  --color-charcoal-100: ${colors.charcoal[100]};
+  --color-charcoal-200: ${colors.charcoal[200]};
+  --color-charcoal-300: ${colors.charcoal[300]};
+  --color-charcoal-400: ${colors.charcoal[400]};
+  --color-charcoal-500: ${colors.charcoal[500]};
+  --color-charcoal-600: ${colors.charcoal[600]};
+  --color-charcoal-700: ${colors.charcoal[700]};
+  --color-charcoal-800: ${colors.charcoal[800]};
+  --color-charcoal-900: ${colors.charcoal[900]};
+
+  /* Destructive palette (Muted Red) */
   --color-destructive: ${colors.destructive.DEFAULT};
-  
+  --color-destructive-light: ${colors.destructive.light};
+  --color-destructive-dark: ${colors.destructive.dark};
+  --color-destructive-50: ${colors.destructive[50]};
+  --color-destructive-100: ${colors.destructive[100]};
+  --color-destructive-200: ${colors.destructive[200]};
+  --color-destructive-300: ${colors.destructive[300]};
+  --color-destructive-400: ${colors.destructive[400]};
+  --color-destructive-500: ${colors.destructive[500]};
+  --color-destructive-600: ${colors.destructive[600]};
+  --color-destructive-700: ${colors.destructive[700]};
+  --color-destructive-800: ${colors.destructive[800]};
+  --color-destructive-900: ${colors.destructive[900]};
+
+  /* Semantic colors */
   --color-success: ${colors.success.DEFAULT};
+  --color-success-light: ${colors.success.light};
+  --color-success-dark: ${colors.success.dark};
   --color-warning: ${colors.warning.DEFAULT};
+  --color-warning-light: ${colors.warning.light};
+  --color-warning-dark: ${colors.warning.dark};
   --color-info: ${colors.info.DEFAULT};
-  
+  --color-info-light: ${colors.info.light};
+  --color-info-dark: ${colors.info.dark};
+
   /* Typography */
   --font-heading: ${typography.fonts.heading};
   --font-body: ${typography.fonts.body};
   --font-mono: ${typography.fonts.mono};
-  
+  --font-family-display: ${typography.fonts.heading};
+
   /* Shadows */
+  --shadow-xs: ${shadows.xs};
   --shadow-sm: ${shadows.sm};
   --shadow-md: ${shadows.md};
   --shadow-lg: ${shadows.lg};
   --shadow-xl: ${shadows.xl};
-  
-  /* Radii */
+  --shadow-2xl: ${shadows['2xl']};
+  --shadow-inner: ${shadows.inner};
+  --shadow-primary: ${shadows.primary};
+  --shadow-secondary: ${shadows.secondary};
+  --shadow-accent: ${shadows.accent};
+
+  /* Border Radii */
+  --radius-none: ${radii.none};
   --radius-sm: ${radii.sm};
   --radius-md: ${radii.md};
   --radius-lg: ${radii.lg};
   --radius-xl: ${radii.xl};
-  
+  --radius-2xl: ${radii['2xl']};
+  --radius-3xl: ${radii['3xl']};
+  --radius-full: ${radii.full};
+
   /* Transitions */
   --transition-fast: ${transitions.fast};
   --transition-normal: ${transitions.normal};
   --transition-slow: ${transitions.slow};
+  --transition-slower: ${transitions.slower};
 }
 `;
 
