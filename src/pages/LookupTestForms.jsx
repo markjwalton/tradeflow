@@ -26,13 +26,13 @@ export default function LookupTestForms() {
   const [results, setResults] = useState({ address: null, email: null, phone: null });
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="p-6 max-w-4xl mx-auto bg-[var(--color-background)] min-h-screen">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
           <CheckCircle2 className="h-6 w-6 text-green-600" />
           Lookup API Test Forms
         </h1>
-        <p className="text-gray-500">Test Address Finder, Email Validation, and Phone Validation APIs</p>
+        <p className="text-[var(--color-charcoal)]">Test Address Finder, Email Validation, and Phone Validation APIs</p>
       </div>
 
       <Tabs defaultValue="postcode" className="space-y-6">
