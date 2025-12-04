@@ -124,13 +124,13 @@ export default function Calendar() {
   const selectedDateAbsences = selectedDate ? getAbsencesForDate(selectedDate) : [];
 
   if (isLoading) {
-    return <div className="flex items-center justify-center h-64"><Loader2 className="h-8 w-8 animate-spin text-gray-400" /></div>;
+    return <div className="flex items-center justify-center h-64 bg-[var(--color-background)]"><Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" /></div>;
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Calendar</h1>
+        <h1 className="text-2xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>Calendar</h1>
         <Select value={filterProject} onValueChange={setFilterProject}>
           <SelectTrigger className="w-48"><SelectValue placeholder="Filter by project" /></SelectTrigger>
           <SelectContent>
@@ -142,21 +142,21 @@ export default function Calendar() {
 
       <div className="flex gap-6">
         <div className="flex-1">
-          <Card>
+          <Card className="border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <Button variant="ghost" size="icon" onClick={() => setCurrentDate(subMonths(currentDate, 1))}><ChevronLeft className="h-4 w-4" /></Button>
-                <CardTitle>{format(currentDate, "MMMM yyyy")}</CardTitle>
+                <CardTitle className="text-[var(--color-midnight)]">{format(currentDate, "MMMM yyyy")}</CardTitle>
                 <Button variant="ghost" size="icon" onClick={() => setCurrentDate(addMonths(currentDate, 1))}><ChevronRight className="h-4 w-4" /></Button>
               </div>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-7 mb-2">
                 {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => (
-                  <div key={d} className="text-center text-sm font-medium text-gray-500 py-2">{d}</div>
+                  <div key={d} className="text-center text-sm font-medium text-[var(--color-charcoal)] py-2">{d}</div>
                 ))}
               </div>
-              <div className="border border-gray-200 rounded-lg overflow-hidden">{rows}</div>
+              <div className="border border-[var(--color-background-muted)] rounded-lg overflow-hidden">{rows}</div>
             </CardContent>
           </Card>
 
@@ -169,31 +169,31 @@ export default function Calendar() {
         </div>
 
         <div className="w-80">
-          <Card>
+          <Card className="border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
             <CardHeader>
-              <CardTitle className="text-lg">{selectedDate ? format(selectedDate, "EEEE, MMMM d") : "Select a date"}</CardTitle>
+              <CardTitle className="text-lg text-[var(--color-midnight)]">{selectedDate ? format(selectedDate, "EEEE, MMMM d") : "Select a date"}</CardTitle>
             </CardHeader>
             <CardContent>
               {selectedDate ? (
                 <div className="space-y-4">
                   {selectedDateTasks.length > 0 ? (
                     <div>
-                      <h3 className="text-sm font-medium mb-2">Tasks</h3>
+                      <h3 className="text-sm font-medium mb-2 text-[var(--color-midnight)]">Tasks</h3>
                       <div className="space-y-2">
                         {selectedDateTasks.map((task) => (
-                          <div key={task.id} className="p-2 bg-gray-50 rounded-lg">
+                          <div key={task.id} className="p-2 bg-[var(--color-background)] rounded-lg">
                             <div className="flex items-center gap-2">
                               <span className={`w-2 h-2 rounded-full ${statusColors[task.status]}`} />
-                              <span className="font-medium text-sm">{task.title}</span>
+                              <span className="font-medium text-sm text-[var(--color-midnight)]">{task.title}</span>
                             </div>
-                            <p className="text-xs text-gray-500 mt-1">{getProjectName(task.project_id)}</p>
+                            <p className="text-xs text-[var(--color-charcoal)] mt-1">{getProjectName(task.project_id)}</p>
                             <Badge className="mt-1 text-xs" variant="outline">{task.priority}</Badge>
                           </div>
                         ))}
                       </div>
                     </div>
                   ) : (
-                    <p className="text-sm text-gray-500">No tasks scheduled</p>
+                    <p className="text-sm text-[var(--color-charcoal)]">No tasks scheduled</p>
                   )}
                   {selectedDateAbsences.length > 0 && (
                     <div>
@@ -210,7 +210,7 @@ export default function Calendar() {
                   )}
                 </div>
               ) : (
-                <p className="text-sm text-gray-500">Click on a date to see details</p>
+                <p className="text-sm text-[var(--color-charcoal)]">Click on a date to see details</p>
               )}
             </CardContent>
           </Card>
