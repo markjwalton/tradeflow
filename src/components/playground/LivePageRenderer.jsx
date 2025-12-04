@@ -23,7 +23,7 @@ export default function LivePageRenderer({ item, template, testData, entities })
 
   if (!template) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-400">
+      <div className="flex items-center justify-center h-64 text-[var(--color-charcoal)]">
         No template data available
       </div>
     );
@@ -104,7 +104,7 @@ export default function LivePageRenderer({ item, template, testData, entities })
                   </TableBody>
                 </Table>
               ) : (
-                <div className="py-8 text-center text-gray-400">
+                <div className="py-8 text-center text-[var(--color-charcoal)]">
                   <FileText className="h-8 w-8 mx-auto mb-2 opacity-50" />
                   <p>No test data configured</p>
                   <p className="text-xs">Add test data to see a live preview</p>
@@ -127,7 +127,7 @@ export default function LivePageRenderer({ item, template, testData, entities })
               <Card key={i}>
                 <CardContent className="pt-4">
                   <div className={`text-2xl font-bold text-${stat.color}-600`}>{stat.value}</div>
-                  <div className="text-sm text-gray-500">{stat.label}</div>
+                  <div className="text-sm text-[var(--color-charcoal)]">{stat.label}</div>
                 </CardContent>
               </Card>
             ))}
@@ -190,9 +190,9 @@ export default function LivePageRenderer({ item, template, testData, entities })
             {(filteredData.length > 0 ? filteredData.slice(0, 6) : [1, 2, 3, 4, 5, 6]).map((item, i) => (
               <Card key={i} className="hover:shadow-md transition-shadow cursor-pointer">
                 <CardContent className="pt-4">
-                  <div className="font-medium">{item.name || item.title || `Item ${i + 1}`}</div>
-                  <div className="text-sm text-gray-500 mt-1">
-                    {item.description || item.status || "Description here"}
+                  <div className="font-medium text-[var(--color-midnight)]">{item.name || item.title || `Item ${i + 1}`}</div>
+                  <div className="text-sm text-[var(--color-charcoal)] mt-1">
+                   {item.description || item.status || "Description here"}
                   </div>
                   <div className="flex gap-2 mt-3">
                     <Badge variant="secondary">{item.category || "Category"}</Badge>
@@ -207,8 +207,8 @@ export default function LivePageRenderer({ item, template, testData, entities })
         return (
           <Card key={index}>
             <CardContent className="py-4">
-              <div className="text-sm text-gray-500">{comp.name || "Component"}</div>
-              <div className="text-xs text-gray-400">{comp.description || comp.type}</div>
+              <div className="text-sm text-[var(--color-charcoal)]">{comp.name || "Component"}</div>
+              <div className="text-xs text-[var(--color-charcoal)]/70">{comp.description || comp.type}</div>
             </CardContent>
           </Card>
         );
@@ -216,11 +216,11 @@ export default function LivePageRenderer({ item, template, testData, entities })
   };
 
   return (
-    <div className="bg-gray-50 min-h-[500px]">
+    <div className="bg-[var(--color-background)] min-h-[500px]">
       {/* Page Header */}
-      <div className="bg-white border-b px-6 py-4">
+      <div className="bg-[var(--color-background-paper)] border-b border-[var(--color-background-muted)] px-6 py-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold">{template.name}</h2>
+          <h2 className="text-xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>{template.name}</h2>
           <div className="flex gap-2">
             {hasCreate && (
               <Button size="sm">
@@ -242,7 +242,7 @@ export default function LivePageRenderer({ item, template, testData, entities })
           <div className="flex gap-3 mt-4">
             {hasSearch && (
               <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-charcoal)]" />
                 <Input
                   placeholder="Search..."
                   value={searchQuery}
@@ -310,7 +310,7 @@ export default function LivePageRenderer({ item, template, testData, entities })
               )}
               {!["Dashboard", "List", "Form", "Detail"].includes(template.category) && (
                 <Card>
-                  <CardContent className="py-12 text-center text-gray-400">
+                  <CardContent className="py-12 text-center text-[var(--color-charcoal)]">
                     <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p>Page content preview</p>
                     <p className="text-sm">Add components to see detailed preview</p>

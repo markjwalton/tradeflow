@@ -24,8 +24,8 @@ export default function Pagination({
   if (totalItems === 0) return null;
 
   return (
-    <div className="flex items-center justify-between py-4 border-t">
-      <div className="flex items-center gap-2 text-sm text-gray-600">
+    <div className="flex items-center justify-between py-4 border-t border-[var(--color-background-muted)]">
+      <div className="flex items-center gap-2 text-sm text-[var(--color-charcoal)]">
         <span>Show</span>
         <Select value={String(itemsPerPage)} onValueChange={(v) => onItemsPerPageChange(parseInt(v))}>
           <SelectTrigger className="w-16 h-8">
@@ -41,7 +41,7 @@ export default function Pagination({
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-[var(--color-charcoal)]">
           {startItem}-{endItem} of {totalItems}
         </span>
         <div className="flex gap-1">

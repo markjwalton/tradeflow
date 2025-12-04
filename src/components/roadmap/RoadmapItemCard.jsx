@@ -57,16 +57,16 @@ export default function RoadmapItemCard({
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <Card className={`hover:shadow-md transition-shadow ${item.is_focused ? "ring-2 ring-purple-500" : ""} ${item.is_starred ? "border-yellow-400" : ""}`}>
+      <Card className={`hover:shadow-md transition-shadow border-[var(--color-background-muted)] ${item.is_focused ? "ring-2 ring-[var(--color-accent-500)]" : ""} ${item.is_starred ? "border-[var(--color-warning)]" : ""}`}>
         <CardHeader className="pb-2">
           <div className="flex items-start justify-between">
             <CollapsibleTrigger className="flex items-center gap-2 text-left flex-1">
-              {isOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+              {isOpen ? <ChevronDown className="h-4 w-4 text-[var(--color-charcoal)]" /> : <ChevronRight className="h-4 w-4 text-[var(--color-charcoal)]" />}
               <div className="flex items-center gap-2">
-                {item.is_starred && <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />}
-                {item.is_focused && <Focus className="h-4 w-4 text-purple-600" />}
+                {item.is_starred && <Star className="h-4 w-4 text-[var(--color-warning)] fill-[var(--color-warning)]" />}
+                {item.is_focused && <Focus className="h-4 w-4 text-[var(--color-accent-600)]" />}
                 <CatIcon className="h-4 w-4" />
-                <CardTitle className="text-base">{item.title}</CardTitle>
+                <CardTitle className="text-base text-[var(--color-midnight)]">{item.title}</CardTitle>
               </div>
             </CollapsibleTrigger>
             <DropdownMenu>
@@ -116,7 +116,7 @@ export default function RoadmapItemCard({
         <CollapsibleContent>
           <CardContent className="pt-0">
             {item.description && (
-              <p className="text-sm text-gray-600 mb-3">{item.description}</p>
+              <p className="text-sm text-[var(--color-charcoal)] mb-3">{item.description}</p>
             )}
             {item.tags?.length > 0 && (
               <div className="flex flex-wrap gap-1 mb-2">
@@ -126,10 +126,10 @@ export default function RoadmapItemCard({
               </div>
             )}
             {item.target_phase && (
-              <p className="text-xs text-gray-500">Phase: {item.target_phase}</p>
+              <p className="text-xs text-[var(--color-charcoal)]">Phase: {item.target_phase}</p>
             )}
             {item.notes && (
-              <p className="text-xs text-gray-500 mt-2 italic">{item.notes}</p>
+              <p className="text-xs text-[var(--color-charcoal)] mt-2 italic">{item.notes}</p>
             )}
             <div className="flex gap-2 mt-3">
                 <Button size="sm" variant="outline" onClick={handleViewJournal}>

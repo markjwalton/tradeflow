@@ -49,16 +49,16 @@ export default function NavigationBreadcrumb({
   if (breadcrumbPath.length <= 1) return null;
 
   return (
-    <nav className="flex items-center gap-1 text-sm text-gray-500 mb-4 px-1">
+    <nav className="flex items-center gap-1 text-sm text-[var(--color-charcoal)] mb-4 px-1">
       {showHome && (
         <>
           <Link 
             to={createPageUrl("Home")} 
-            className="hover:text-gray-700 flex items-center gap-1"
+            className="hover:text-[var(--color-midnight)] flex items-center gap-1"
           >
             <Home className="h-3.5 w-3.5" />
           </Link>
-          <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
+          <ChevronRight className="h-3.5 w-3.5 text-[var(--color-charcoal)]/50" />
         </>
       )}
       {breadcrumbPath.map((item, index) => {
@@ -69,19 +69,19 @@ export default function NavigationBreadcrumb({
         return (
           <React.Fragment key={item.id || item.slug || index}>
             {isLast || isFolder ? (
-              <span className={isLast ? "text-gray-900 font-medium" : "text-gray-500"}>
+              <span className={isLast ? "text-[var(--color-midnight)] font-medium" : "text-[var(--color-charcoal)]"}>
                 {item.name}
               </span>
             ) : (
               <Link 
                 to={createPageUrl(pageUrl)}
-                className="hover:text-gray-700 hover:underline"
+                className="hover:text-[var(--color-midnight)] hover:underline"
               >
                 {item.name}
               </Link>
             )}
             {!isLast && (
-              <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
+              <ChevronRight className="h-3.5 w-3.5 text-[var(--color-charcoal)]/50" />
             )}
           </React.Fragment>
         );
