@@ -44,7 +44,7 @@ import GlobalAIAssistant from "@/components/ai-assistant/GlobalAIAssistant";
 import NavigationBreadcrumb from "@/components/navigation/NavigationBreadcrumb";
 
 // Global admin pages - only for is_global_admin users
-import { BookOpen, FlaskConical, Key, Gauge } from "lucide-react";
+import { BookOpen, FlaskConical, Key, Gauge, Palette, Sparkles, Type, MousePointer, Square, FormInput, BarChart3, Bell, Users, Upload, File, Eye } from "lucide-react";
 
 import { LayoutDashboard } from "lucide-react";
 
