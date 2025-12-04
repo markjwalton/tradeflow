@@ -739,6 +739,25 @@ Return as JSON with entity names as keys and arrays of records as values.`,
         </CardContent>
       </Card>
 
+      {/* Debug Info */}
+      {playgroundItems.length === 0 && (
+        <Card className="bg-amber-50 border-amber-200">
+          <CardContent className="py-4">
+            <p className="text-amber-800">No PlaygroundItem records found. Sync from library first.</p>
+          </CardContent>
+        </Card>
+      )}
+      {playgroundItems.length > 0 && itemStatusList.length === 0 && (
+        <Card className="bg-amber-50 border-amber-200">
+          <CardContent className="py-4">
+            <p className="text-amber-800">
+              {playgroundItems.length} PlaygroundItems loaded, but none are pages/features. 
+              First item source_type: {playgroundItems[0]?.data?.source_type || playgroundItems[0]?.source_type || "undefined"}
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Dashboard Cards */}
       <TestDataDashboard stats={stats} onCardClick={handleCardClick} />
 
