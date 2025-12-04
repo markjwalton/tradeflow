@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
@@ -92,6 +93,9 @@ export default function PlaygroundSummary() {
 
   const allLoading = isLoading || loadingEntities || loadingPages || loadingFeatures;
 
+  // Helper: delay between API calls to avoid rate limits
+  const delay = (ms) => new Promise(r => setTimeout(r, ms));
+
   // Clear all playground data
   const clearPlaygroundData = async () => {
     setIsClearing(true);
@@ -105,18 +109,20 @@ export default function PlaygroundSummary() {
       
       let deleted = 0;
       
-      // Delete all PlaygroundItems
+      // Delete all PlaygroundItems with delay
       for (const item of allItems) {
         await base44.entities.PlaygroundItem.delete(item.id);
         deleted++;
         setClearProgress({ current: deleted, total });
+        await delay(100); // 100ms between deletes
       }
       
-      // Delete all TestData
+      // Delete all TestData with delay
       for (const td of allTestData) {
         await base44.entities.TestData.delete(td.id);
         deleted++;
         setClearProgress({ current: deleted, total });
+        await delay(100);
       }
       
       queryClient.invalidateQueries({ queryKey: ["playgroundItems"] });
@@ -135,6 +141,7 @@ export default function PlaygroundSummary() {
     setIsSyncing(true);
     setSyncProgress({ current: 0, total: 0 });
     let added = 0;
+    let failed = 0;
 
     // Get existing source_ids to prevent duplicates
     const existingSourceIds = new Set(
@@ -157,28 +164,53 @@ export default function PlaygroundSummary() {
 
     for (let i = 0; i < allTemplates.length; i++) {
       const template = allTemplates[i];
-      try {
-        await base44.entities.PlaygroundItem.create({
-          source_type: template._type,
-          source_id: template.id,
-          source_name: template.name,
-          group: template.group || template.category,
-          item_origin: "library",
-          status: "synced",
-          current_version: 1,
-          test_definition: generateDefaultTests(template._type, template),
-        });
-        added++;
-      } catch (e) {
-        console.error("Failed to sync:", template.name, e.message);
+      
+      // Retry logic for rate limits
+      let retries = 3;
+      let success = false;
+      
+      while (retries > 0 && !success) {
+        try {
+          await base44.entities.PlaygroundItem.create({
+            source_type: template._type,
+            source_id: template.id,
+            source_name: template.name,
+            group: template.group || template.category,
+            item_origin: "library",
+            status: "synced",
+            current_version: 1,
+            test_definition: generateDefaultTests(template._type, template),
+          });
+          added++;
+          success = true;
+        } catch (e) {
+          if (e.message?.includes("Rate limit") && retries > 1) {
+            // Wait longer on rate limit
+            await delay(2000);
+            retries--;
+          } else {
+            console.error("Failed to sync:", template.name, e.message);
+            failed++;
+            break;
+          }
+        }
       }
+      
       setSyncProgress({ current: i + 1, total: allTemplates.length });
+      
+      // Add delay between creates to avoid rate limits
+      await delay(150);
     }
 
     queryClient.invalidateQueries({ queryKey: ["playgroundItems"] });
     setIsSyncing(false);
     setSyncProgress({ current: 0, total: 0 });
-    toast.success(`Synced ${added} new items from library`);
+    
+    if (failed > 0) {
+      toast.warning(`Synced ${added} items, ${failed} failed`);
+    } else {
+      toast.success(`Synced ${added} new items from library`);
+    }
   };
 
   const generateDefaultTests = (type, template) => {
@@ -324,6 +356,37 @@ export default function PlaygroundSummary() {
           </Link>
         </div>
       </div>
+
+      {/* Progress Banner */}
+      {(isSyncing || isClearing) && (syncProgress.total > 0 || clearProgress.total > 0) && (
+        <Card className="mb-6 border-blue-200 bg-blue-50">
+          <CardContent className="py-4">
+            <div className="flex items-center gap-4">
+              <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
+              <div className="flex-1">
+                <div className="flex justify-between mb-1 text-sm">
+                  <span className="font-medium">
+                    {isSyncing ? "Syncing library items..." : "Clearing playground data..."}
+                  </span>
+                  <span>
+                    {isSyncing 
+                      ? `${syncProgress.current} / ${syncProgress.total}`
+                      : `${clearProgress.current} / ${clearProgress.total}`
+                    }
+                  </span>
+                </div>
+                <Progress 
+                  value={isSyncing 
+                    ? (syncProgress.current / syncProgress.total) * 100
+                    : (clearProgress.current / clearProgress.total) * 100
+                  } 
+                  className="h-2"
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
