@@ -21,7 +21,7 @@ export default function VersionHistory({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-500 text-center py-4">No version history yet</p>
+          <p className="text-[var(--color-charcoal)] text-center py-4">No version history yet</p>
         </CardContent>
       </Card>
     );
@@ -43,8 +43,8 @@ export default function VersionHistory({
                 key={v.version} 
                 className={`p-3 rounded-lg border ${
                   v.version === currentVersion 
-                    ? "border-blue-500 bg-blue-50" 
-                    : "border-gray-200 hover:bg-gray-50"
+                    ? "border-[var(--color-primary)] bg-[var(--color-primary)]/10" 
+                    : "border-[var(--color-background-muted)] hover:bg-[var(--color-background)]"
                 }`}
               >
                 <div className="flex items-center justify-between mb-1">
@@ -53,17 +53,17 @@ export default function VersionHistory({
                       v{v.version}
                     </Badge>
                     {v.version === currentVersion && (
-                      <Badge className="bg-green-100 text-green-800">
+                      <Badge className="bg-[var(--color-success)]/20 text-[var(--color-success-dark)]">
                         <Check className="h-3 w-3 mr-1" />
                         Current
                       </Badge>
                     )}
                   </div>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-[var(--color-charcoal)]">
                     {moment(v.saved_date).format("DD MMM, HH:mm")}
                   </span>
                 </div>
-                <p className="text-sm text-gray-600">{v.change_summary || "No summary"}</p>
+                <p className="text-sm text-[var(--color-charcoal)]">{v.change_summary || "No summary"}</p>
                 {v.version !== currentVersion && (
                   <Button 
                     size="sm" 

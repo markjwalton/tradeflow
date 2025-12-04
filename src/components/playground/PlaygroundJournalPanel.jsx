@@ -21,12 +21,12 @@ import { toast } from "sonner";
 import moment from "moment";
 
 const entryTypes = [
-  { value: "change_request", label: "Change Request", icon: AlertCircle, color: "bg-orange-100 text-orange-800" },
-  { value: "enhancement", label: "Enhancement", icon: Lightbulb, color: "bg-yellow-100 text-yellow-800" },
-  { value: "bug", label: "Bug", icon: Bug, color: "bg-red-100 text-red-800" },
-  { value: "note", label: "Note", icon: MessageSquare, color: "bg-gray-100 text-gray-800" },
-  { value: "ai_suggestion", label: "AI Suggestion", icon: Wand2, color: "bg-purple-100 text-purple-800" },
-  { value: "version_note", label: "Version Note", icon: History, color: "bg-blue-100 text-blue-800" },
+  { value: "change_request", label: "Change Request", icon: AlertCircle, color: "bg-[var(--color-secondary)]/20 text-[var(--color-secondary-dark)]" },
+  { value: "enhancement", label: "Enhancement", icon: Lightbulb, color: "bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]" },
+  { value: "bug", label: "Bug", icon: Bug, color: "bg-[var(--color-destructive)]/20 text-[var(--color-destructive)]" },
+  { value: "note", label: "Note", icon: MessageSquare, color: "bg-[var(--color-charcoal)]/10 text-[var(--color-charcoal)]" },
+  { value: "ai_suggestion", label: "AI Suggestion", icon: Wand2, color: "bg-[var(--color-accent)]/20 text-[var(--color-accent-dark)]" },
+  { value: "version_note", label: "Version Note", icon: History, color: "bg-[var(--color-info)]/20 text-[var(--color-info-dark)]" },
 ];
 
 export default function PlaygroundJournalPanel({ playgroundItemId, currentVersion }) {
@@ -94,7 +94,7 @@ export default function PlaygroundJournalPanel({ playgroundItemId, currentVersio
                 ))}
               </SelectContent>
             </Select>
-            <span className="text-sm text-gray-500 self-center">v{currentVersion}</span>
+            <span className="text-sm text-[var(--color-charcoal)] self-center">v{currentVersion}</span>
           </div>
           <Textarea
             value={newEntry}
@@ -102,7 +102,7 @@ export default function PlaygroundJournalPanel({ playgroundItemId, currentVersio
             placeholder="Add a change request, enhancement idea, or note..."
             rows={3}
           />
-          <Button onClick={handleAdd} disabled={!newEntry.trim() || createMutation.isPending} size="sm">
+          <Button onClick={handleAdd} disabled={!newEntry.trim() || createMutation.isPending} size="sm" className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
             {createMutation.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Plus className="h-4 w-4 mr-2" />}
             Add Entry
           </Button>
@@ -115,14 +115,14 @@ export default function PlaygroundJournalPanel({ playgroundItemId, currentVersio
               <Loader2 className="h-5 w-5 animate-spin" />
             </div>
           ) : entries.length === 0 ? (
-            <p className="text-gray-500 text-center py-4 text-sm">No journal entries yet</p>
+            <p className="text-[var(--color-charcoal)] text-center py-4 text-sm">No journal entries yet</p>
           ) : (
             <div className="space-y-2">
               {entries.map(entry => {
                 const typeInfo = getTypeInfo(entry.entry_type);
                 const TypeIcon = typeInfo.icon;
                 return (
-                  <div key={entry.id} className="p-3 border rounded-lg">
+                  <div key={entry.id} className="p-3 border border-[var(--color-background-muted)] rounded-lg">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <Badge className={typeInfo.color}>
@@ -134,20 +134,20 @@ export default function PlaygroundJournalPanel({ playgroundItemId, currentVersio
                         )}
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-[var(--color-charcoal)]">
                           {moment(entry.entry_date || entry.created_date).format("DD MMM, HH:mm")}
                         </span>
                         <Button 
                           variant="ghost" 
                           size="icon" 
-                          className="h-6 w-6 text-red-500"
+                          className="h-6 w-6 text-[var(--color-destructive)]"
                           onClick={() => deleteMutation.mutate(entry.id)}
                         >
                           <Trash2 className="h-3 w-3" />
                         </Button>
                       </div>
                     </div>
-                    <p className="text-sm whitespace-pre-wrap">{entry.content}</p>
+                    <p className="text-sm whitespace-pre-wrap text-[var(--color-midnight)]">{entry.content}</p>
                   </div>
                 );
               })}

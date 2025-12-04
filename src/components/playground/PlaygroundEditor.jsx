@@ -110,14 +110,14 @@ Also provide a brief summary of what was changed.`,
   const renderEntityFields = () => (
     <div className="space-y-4">
       <div>
-        <label className="text-sm font-medium">Name</label>
+        <label className="text-sm font-medium text-[var(--color-midnight)]">Name</label>
         <Input 
           value={data.name || ""} 
           onChange={(e) => setData({ ...data, name: e.target.value })}
         />
       </div>
       <div>
-        <label className="text-sm font-medium">Description</label>
+        <label className="text-sm font-medium text-[var(--color-midnight)]">Description</label>
         <Textarea 
           value={data.description || ""} 
           onChange={(e) => setData({ ...data, description: e.target.value })}
@@ -125,7 +125,7 @@ Also provide a brief summary of what was changed.`,
         />
       </div>
       <div>
-        <label className="text-sm font-medium">Schema Properties (JSON)</label>
+        <label className="text-sm font-medium text-[var(--color-midnight)]">Schema Properties (JSON)</label>
         <Textarea 
           value={JSON.stringify(data.schema?.properties || {}, null, 2)} 
           onChange={(e) => {
@@ -145,14 +145,14 @@ Also provide a brief summary of what was changed.`,
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="text-sm font-medium">Name</label>
+          <label className="text-sm font-medium text-[var(--color-midnight)]">Name</label>
           <Input 
             value={data.name || ""} 
             onChange={(e) => setData({ ...data, name: e.target.value })}
           />
         </div>
         <div>
-          <label className="text-sm font-medium">Category</label>
+          <label className="text-sm font-medium text-[var(--color-midnight)]">Category</label>
           <Input 
             value={data.category || ""} 
             onChange={(e) => setData({ ...data, category: e.target.value })}
@@ -160,7 +160,7 @@ Also provide a brief summary of what was changed.`,
         </div>
       </div>
       <div>
-        <label className="text-sm font-medium">Description</label>
+        <label className="text-sm font-medium text-[var(--color-midnight)]">Description</label>
         <Textarea 
           value={data.description || ""} 
           onChange={(e) => setData({ ...data, description: e.target.value })}
@@ -168,7 +168,7 @@ Also provide a brief summary of what was changed.`,
         />
       </div>
       <div>
-        <label className="text-sm font-medium">Components (JSON)</label>
+        <label className="text-sm font-medium text-[var(--color-midnight)]">Components (JSON)</label>
         <Textarea 
           value={JSON.stringify(data.components || [], null, 2)} 
           onChange={(e) => {
@@ -187,14 +187,14 @@ Also provide a brief summary of what was changed.`,
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="text-sm font-medium">Name</label>
+          <label className="text-sm font-medium text-[var(--color-midnight)]">Name</label>
           <Input 
             value={data.name || ""} 
             onChange={(e) => setData({ ...data, name: e.target.value })}
           />
         </div>
         <div>
-          <label className="text-sm font-medium">Complexity</label>
+          <label className="text-sm font-medium text-[var(--color-midnight)]">Complexity</label>
           <Input 
             value={data.complexity || ""} 
             onChange={(e) => setData({ ...data, complexity: e.target.value })}
@@ -202,7 +202,7 @@ Also provide a brief summary of what was changed.`,
         </div>
       </div>
       <div>
-        <label className="text-sm font-medium">Description</label>
+        <label className="text-sm font-medium text-[var(--color-midnight)]">Description</label>
         <Textarea 
           value={data.description || ""} 
           onChange={(e) => setData({ ...data, description: e.target.value })}
@@ -210,7 +210,7 @@ Also provide a brief summary of what was changed.`,
         />
       </div>
       <div>
-        <label className="text-sm font-medium">User Stories (one per line)</label>
+        <label className="text-sm font-medium text-[var(--color-midnight)]">User Stories (one per line)</label>
         <Textarea 
           value={(data.user_stories || []).join("\n")} 
           onChange={(e) => setData({ ...data, user_stories: e.target.value.split("\n").filter(s => s.trim()) })}
@@ -218,7 +218,7 @@ Also provide a brief summary of what was changed.`,
         />
       </div>
       <div>
-        <label className="text-sm font-medium">Requirements (one per line)</label>
+        <label className="text-sm font-medium text-[var(--color-midnight)]">Requirements (one per line)</label>
         <Textarea 
           value={(data.requirements || []).join("\n")} 
           onChange={(e) => setData({ ...data, requirements: e.target.value.split("\n").filter(s => s.trim()) })}
@@ -249,7 +249,7 @@ Also provide a brief summary of what was changed.`,
 
           <TabsContent value="ai" className="flex-1 overflow-auto space-y-4">
             <div>
-              <label className="text-sm font-medium">Describe the changes you want</label>
+              <label className="text-sm font-medium text-[var(--color-midnight)]">Describe the changes you want</label>
               <Textarea
                 value={aiPrompt}
                 onChange={(e) => setAiPrompt(e.target.value)}
@@ -257,22 +257,22 @@ Also provide a brief summary of what was changed.`,
                 rows={4}
               />
             </div>
-            <Button onClick={applyAIChanges} disabled={isApplyingAI || !aiPrompt.trim()}>
+            <Button onClick={applyAIChanges} disabled={isApplyingAI || !aiPrompt.trim()} className="bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-dark)] text-white">
               {isApplyingAI ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Wand2 className="h-4 w-4 mr-2" />}
               Apply with AI
             </Button>
             
             {changeSummary && (
-              <div className="bg-green-50 p-3 rounded-lg">
-                <p className="text-sm text-green-800"><strong>Changes applied:</strong> {changeSummary}</p>
+              <div className="bg-[var(--color-success)]/10 p-3 rounded-lg">
+                <p className="text-sm text-[var(--color-success-dark)]"><strong>Changes applied:</strong> {changeSummary}</p>
               </div>
             )}
           </TabsContent>
         </Tabs>
 
-        <div className="border-t pt-4 space-y-3">
+        <div className="border-t border-[var(--color-background-muted)] pt-4 space-y-3">
           <div>
-            <label className="text-sm font-medium">Change Summary (required for save)</label>
+            <label className="text-sm font-medium text-[var(--color-midnight)]">Change Summary (required for save)</label>
             <Input
               value={changeSummary}
               onChange={(e) => setChangeSummary(e.target.value)}
@@ -281,7 +281,7 @@ Also provide a brief summary of what was changed.`,
           </div>
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={onClose}>Cancel</Button>
-            <Button onClick={handleManualSave} disabled={!changeSummary.trim()}>
+            <Button onClick={handleManualSave} disabled={!changeSummary.trim()} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
               <Save className="h-4 w-4 mr-2" />
               Save New Version
             </Button>

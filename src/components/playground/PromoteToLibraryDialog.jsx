@@ -149,45 +149,45 @@ Output only the prompt text.`
       <DialogContent className="max-w-2xl max-h-[85vh] overflow-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <ArrowUpCircle className="h-5 w-5 text-green-600" />
+            <ArrowUpCircle className="h-5 w-5 text-[var(--color-success)]" />
             Promote to Library & Sprint
           </DialogTitle>
         </DialogHeader>
 
         {step === 1 && (
           <div className="space-y-4">
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <h3 className="font-medium text-blue-900 mb-2">Ready to Promote</h3>
-              <p className="text-sm text-blue-800">
+            <div className="bg-[var(--color-info)]/10 p-4 rounded-lg">
+              <h3 className="font-medium text-[var(--color-info-dark)] mb-2">Ready to Promote</h3>
+              <p className="text-sm text-[var(--color-info-dark)]">
                 This will generate a development prompt based on your playground work 
                 and create a roadmap item for the sprint process.
               </p>
             </div>
 
             <div className="space-y-2">
-              <h4 className="font-medium">Summary</h4>
+              <h4 className="font-medium text-[var(--color-midnight)]">Summary</h4>
               <div className="grid grid-cols-2 gap-2 text-sm">
-                <div className="bg-slate-50 p-2 rounded">
-                  <span className="text-gray-500">Type:</span> {type}
+                <div className="bg-[var(--color-background)] p-2 rounded">
+                  <span className="text-[var(--color-charcoal)]">Type:</span> <span className="text-[var(--color-midnight)]">{type}</span>
                 </div>
-                <div className="bg-slate-50 p-2 rounded">
-                  <span className="text-gray-500">Version:</span> {item.current_version}
+                <div className="bg-[var(--color-background)] p-2 rounded">
+                  <span className="text-[var(--color-charcoal)]">Version:</span> <span className="text-[var(--color-midnight)]">{item.current_version}</span>
                 </div>
-                <div className="bg-slate-50 p-2 rounded">
-                  <span className="text-gray-500">Test Status:</span> 
+                <div className="bg-[var(--color-background)] p-2 rounded">
+                  <span className="text-[var(--color-charcoal)]">Test Status:</span> 
                   <Badge className={
-                    item.test_status === "passed" ? "ml-2 bg-green-100 text-green-800" :
-                    item.test_status === "failed" ? "ml-2 bg-red-100 text-red-800" :
-                    "ml-2 bg-gray-100 text-gray-800"
+                    item.test_status === "passed" ? "ml-2 bg-[var(--color-success)]/20 text-[var(--color-success-dark)]" :
+                    item.test_status === "failed" ? "ml-2 bg-[var(--color-destructive)]/20 text-[var(--color-destructive)]" :
+                    "ml-2 bg-[var(--color-charcoal)]/10 text-[var(--color-charcoal)]"
                   }>{item.test_status}</Badge>
                 </div>
-                <div className="bg-slate-50 p-2 rounded">
-                  <span className="text-gray-500">Journal Entries:</span> {journalEntries.length}
+                <div className="bg-[var(--color-background)] p-2 rounded">
+                  <span className="text-[var(--color-charcoal)]">Journal Entries:</span> <span className="text-[var(--color-midnight)]">{journalEntries.length}</span>
                 </div>
               </div>
             </div>
 
-            <Button onClick={generateDevPrompt} disabled={isGenerating} className="w-full">
+            <Button onClick={generateDevPrompt} disabled={isGenerating} className="w-full bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
               {isGenerating ? (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               ) : (
@@ -200,13 +200,13 @@ Output only the prompt text.`
 
         {step === 2 && (
           <div className="space-y-4">
-            <div className="flex items-center gap-2 text-green-700">
+            <div className="flex items-center gap-2 text-[var(--color-success)]">
               <CheckCircle2 className="h-5 w-5" />
               <span className="font-medium">Development Prompt Generated</span>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Development Prompt</label>
+              <label className="text-sm font-medium text-[var(--color-midnight)]">Development Prompt</label>
               <Textarea
                 value={devPrompt}
                 onChange={(e) => setDevPrompt(e.target.value)}
@@ -216,7 +216,7 @@ Output only the prompt text.`
             </div>
 
             <div>
-              <label className="text-sm font-medium">Assign to Sprint (optional)</label>
+              <label className="text-sm font-medium text-[var(--color-midnight)]">Assign to Sprint (optional)</label>
               <Select value={selectedSprintId} onValueChange={setSelectedSprintId}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select a sprint..." />
@@ -237,7 +237,7 @@ Output only the prompt text.`
               <Button 
                 onClick={() => createRoadmapItem.mutate()} 
                 disabled={createRoadmapItem.isPending}
-                className="flex-1"
+                className="flex-1 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
               >
                 {createRoadmapItem.isPending ? (
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
