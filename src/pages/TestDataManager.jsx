@@ -159,29 +159,33 @@ export default function TestDataManager() {
       if (!item) return [];
 
       let entitiesUsed = [];
-      if (item.data?.source_type === "page") {
-            const sourceId = item.data?.source_id;
+      const sourceType = item.source_type || item.data?.source_type;
+      const sourceId = item.source_id || item.data?.source_id;
+      const workingData = item.working_data || item.data?.working_data;
+      
+      if (sourceType === "page") {
             const template = pageTemplates.find(t => t.id === sourceId);
-            entitiesUsed = item.data?.working_data?.entities_used
+            entitiesUsed = workingData?.entities_used
+              || template?.entities_used
               || template?.data?.entities_used 
               || [];
-      } else if (item.data?.source_type === "feature") {
-            const sourceId = item.data?.source_id;
+      } else if (sourceType === "feature") {
             const template = featureTemplates.find(t => t.id === sourceId);
-            entitiesUsed = item.data?.working_data?.entities_used
+            entitiesUsed = workingData?.entities_used
+              || template?.entities_used
               || template?.data?.entities_used 
               || [];
       }
 
       // Debug: log what we found
       if (entitiesUsed.length === 0) {
-        console.log(`No entities found for ${item.data?.source_name}:`, {
-          source_type: item.data?.source_type,
-          source_id: item.data?.source_id,
-          working_data: item.data?.working_data,
-          templateFound: item.data?.source_type === "page" 
-            ? pageTemplates.find(t => t.id === item.data?.source_id)
-            : featureTemplates.find(t => t.id === item.data?.source_id)
+        console.log(`No entities found for ${item.source_name || item.data?.source_name}:`, {
+          source_type: sourceType,
+          source_id: sourceId,
+          working_data: workingData,
+          templateFound: sourceType === "page" 
+            ? pageTemplates.find(t => t.id === sourceId)
+            : featureTemplates.find(t => t.id === sourceId)
         });
       }
 
@@ -198,27 +202,27 @@ export default function TestDataManager() {
     };
 
     const previewableItems = playgroundItems.filter(p => 
-      p.data?.source_type === "page" || p.data?.source_type === "feature"
+      p.source_type === "page" || p.source_type === "feature"
     );
 
     return previewableItems.map(item => {
             const entities = getEntitiesForItem(item);
-            // Match by playground_item_id - data is nested under .data
+            // Match by playground_item_id - check both flat and nested
             const testData = testDataSets.find(td => 
-              td.data?.playground_item_id === item.id
+              (td.playground_item_id === item.id) || (td.data?.playground_item_id === item.id)
             );
 
-            // Get entity_data from nested data
-            const entityData = testData?.data?.entity_data || {};
+            // Get entity_data - check both flat and nested
+            const entityData = testData?.entity_data || testData?.data?.entity_data || {};
             const recordCount = Object.values(entityData).reduce((sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0);
 
-            // Get test status from TestData record - nested under .data
-            const testStatus = testData?.data?.test_status || "pending";
+            // Get test status from TestData record - check both flat and nested
+            const testStatus = testData?.test_status || testData?.data?.test_status || "pending";
 
             return {
               id: item.id,
-              name: item.data?.source_name,
-              type: item.data?.source_type,
+              name: item.source_name,
+              type: item.source_type,
               entityCount: entities.length,
               recordCount,
               hasTestData: !!testData,
