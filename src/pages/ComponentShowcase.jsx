@@ -744,10 +744,10 @@ export default function ComponentShowcase() {
               />
             </div>
           </ComponentDemo>
-        </ShowcaseSection>
+        </ShowcaseSection>}
 
         {/* Feedback Section */}
-        <ShowcaseSection
+        {visibleCategories.includes("feedback") && <ShowcaseSection
           id="feedback"
           title="Feedback"
           count={11}
