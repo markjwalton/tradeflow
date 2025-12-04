@@ -52,11 +52,25 @@ export default function TestDataManager() {
 
   // Build unified item list - SINGLE SOURCE OF TRUTH
   const items = useMemo(() => {
+    console.log("Building items list...");
+    console.log("playgroundItems count:", playgroundItems.length);
+    console.log("testDataSets count:", testDataSets.length);
+    
+    // Debug first few items
+    if (playgroundItems.length > 0) {
+      console.log("Sample PlaygroundItem:", JSON.stringify(playgroundItems[0], null, 2));
+    }
+    if (testDataSets.length > 0) {
+      console.log("Sample TestData:", JSON.stringify(testDataSets[0], null, 2));
+    }
+
     // Filter to pages and features only
     const previewable = playgroundItems.filter(p => {
       const type = get(p, "source_type");
       return type === "page" || type === "feature";
     });
+    
+    console.log("Previewable items:", previewable.length);
 
     return previewable.map(item => {
       const type = get(item, "source_type");
@@ -79,6 +93,7 @@ export default function TestDataManager() {
         const tdPlaygroundId = get(td, "playground_item_id");
         return tdPlaygroundId === item.id;
       });
+      
       const entityData = get(testData, "entity_data") || {};
       const recordCount = Object.values(entityData).reduce(
         (sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0
