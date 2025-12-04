@@ -458,7 +458,8 @@ export default function Layout({ children, currentPageName }) {
         <Link
           key={itemId || item.slug}
           to={pageUrl}
-          className={`flex items-center gap-2 px-3 rounded-lg transition-colors ${
+          onClick={(e) => e.stopPropagation()}
+          className={`flex items-center gap-2 px-3 rounded-lg transition-colors cursor-pointer relative z-10 ${
             isChild ? "py-1.5 text-sm ml-6" : "py-2"
           } ${
             isActive
