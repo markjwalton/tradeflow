@@ -74,12 +74,16 @@ export default function TestDataManager() {
         entitiesUsed = workingData?.entities_used || get(template, "entities_used") || [];
       }
 
-      // Find test data
-      const testData = testDataSets.find(td => get(td, "playground_item_id") === item.id);
+      // Find test data - match playground_item_id to item.id
+      const testData = testDataSets.find(td => {
+        const tdPlaygroundId = get(td, "playground_item_id");
+        return tdPlaygroundId === item.id;
+      });
       const entityData = get(testData, "entity_data") || {};
       const recordCount = Object.values(entityData).reduce(
         (sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0
       );
+      // test_status is stored on TestData entity, not PlaygroundItem
       const testStatus = get(testData, "test_status") || "pending";
 
       return {
