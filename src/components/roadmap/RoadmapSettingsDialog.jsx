@@ -165,7 +165,7 @@ export default function RoadmapSettingsDialog({ isOpen, onClose, settings, onSav
           {/* General Tab */}
           <TabsContent value="general" className="space-y-4 mt-4">
             <div>
-              <label className="text-sm font-medium">Visible Tabs</label>
+              <label className="text-sm font-medium text-[var(--color-midnight)]">Visible Tabs</label>
               <div className="flex gap-4 mt-2">
                 {["roadmap", "development", "completed"].map(tab => (
                   <label key={tab} className="flex items-center gap-2">
@@ -181,17 +181,17 @@ export default function RoadmapSettingsDialog({ isOpen, onClose, settings, onSav
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium">Days Until Auto-Archive</label>
+                <label className="text-sm font-medium text-[var(--color-midnight)]">Days Until Auto-Archive</label>
                 <Input
                   type="number"
                   value={formData.days_until_archive}
                   onChange={(e) => setFormData({ ...formData, days_until_archive: parseInt(e.target.value) || 30 })}
                   className="mt-1"
                 />
-                <p className="text-xs text-gray-500 mt-1">Completed items archive after this many days</p>
+                <p className="text-xs text-[var(--color-charcoal)] mt-1">Completed items archive after this many days</p>
               </div>
               <div>
-                <label className="text-sm font-medium">Default Items Per Page</label>
+                <label className="text-sm font-medium text-[var(--color-midnight)]">Default Items Per Page</label>
                 <Select 
                   value={String(formData.items_per_page)} 
                   onValueChange={(v) => setFormData({ ...formData, items_per_page: parseInt(v) })}
@@ -213,11 +213,11 @@ export default function RoadmapSettingsDialog({ isOpen, onClose, settings, onSav
                 checked={formData.allow_delete}
                 onCheckedChange={(v) => setFormData({ ...formData, allow_delete: v })}
               />
-              <label className="text-sm font-medium">Allow Delete</label>
+              <label className="text-sm font-medium text-[var(--color-midnight)]">Allow Delete</label>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Page Size Options</label>
+              <label className="text-sm font-medium text-[var(--color-midnight)]">Page Size Options</label>
               <div className="flex flex-wrap gap-2 mt-2">
                 {(formData.page_size_options || []).map((size, i) => (
                   <Badge key={i} variant="secondary" className="cursor-pointer" onClick={() => {
@@ -254,11 +254,11 @@ export default function RoadmapSettingsDialog({ isOpen, onClose, settings, onSav
           <TabsContent value="categories" className="space-y-4 mt-4">
             <div className="space-y-2">
               {formData.categories?.map((cat, index) => (
-                <div key={index} className="flex items-center gap-2 bg-slate-50 p-2 rounded">
-                  <GripVertical className="h-4 w-4 text-gray-400" />
-                  <span className="text-sm font-mono text-gray-500 w-32">{cat.value}</span>
-                  <span className="flex-1">{cat.label}</span>
-                  <Button variant="ghost" size="icon" className="h-6 w-6 text-red-500" onClick={() => removeCategory(index)}>
+                <div key={index} className="flex items-center gap-2 bg-[var(--color-background)] p-2 rounded-lg border border-[var(--color-background-muted)]">
+                  <GripVertical className="h-4 w-4 text-[var(--color-charcoal)]" />
+                  <span className="text-sm font-mono text-[var(--color-charcoal)] w-32">{cat.value}</span>
+                  <span className="flex-1 text-[var(--color-midnight)]">{cat.label}</span>
+                  <Button variant="ghost" size="icon" className="h-6 w-6 text-[var(--color-destructive)]" onClick={() => removeCategory(index)}>
                     <Trash2 className="h-3 w-3" />
                   </Button>
                 </div>
@@ -285,10 +285,10 @@ export default function RoadmapSettingsDialog({ isOpen, onClose, settings, onSav
           <TabsContent value="statuses" className="space-y-4 mt-4">
             <div className="space-y-2">
               {formData.statuses?.map((status, index) => (
-                <div key={index} className="flex items-center gap-2 bg-slate-50 p-2 rounded">
-                  <GripVertical className="h-4 w-4 text-gray-400" />
-                  <span className="text-sm font-mono text-gray-500 w-28">{status.value}</span>
-                  <span className="flex-1">{status.label}</span>
+                <div key={index} className="flex items-center gap-2 bg-[var(--color-background)] p-2 rounded-lg border border-[var(--color-background-muted)]">
+                  <GripVertical className="h-4 w-4 text-[var(--color-charcoal)]" />
+                  <span className="text-sm font-mono text-[var(--color-charcoal)] w-28">{status.value}</span>
+                  <span className="flex-1 text-[var(--color-midnight)]">{status.label}</span>
                   <Select value={status.tab} onValueChange={(v) => updateStatusTab(index, v)}>
                     <SelectTrigger className="w-32 h-7 text-xs">
                       <SelectValue />
@@ -299,7 +299,7 @@ export default function RoadmapSettingsDialog({ isOpen, onClose, settings, onSav
                       <SelectItem value="completed">Completed</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Button variant="ghost" size="icon" className="h-6 w-6 text-red-500" onClick={() => removeStatus(index)}>
+                  <Button variant="ghost" size="icon" className="h-6 w-6 text-[var(--color-destructive)]" onClick={() => removeStatus(index)}>
                     <Trash2 className="h-3 w-3" />
                   </Button>
                 </div>
@@ -336,11 +336,11 @@ export default function RoadmapSettingsDialog({ isOpen, onClose, settings, onSav
           <TabsContent value="priorities" className="space-y-4 mt-4">
             <div className="space-y-2">
               {formData.priorities?.map((pri, index) => (
-                <div key={index} className="flex items-center gap-2 bg-slate-50 p-2 rounded">
-                  <GripVertical className="h-4 w-4 text-gray-400" />
-                  <span className="text-sm font-mono text-gray-500 w-24">{pri.value}</span>
-                  <span className="flex-1">{pri.label}</span>
-                  <Button variant="ghost" size="icon" className="h-6 w-6 text-red-500" onClick={() => removePriority(index)}>
+                <div key={index} className="flex items-center gap-2 bg-[var(--color-background)] p-2 rounded-lg border border-[var(--color-background-muted)]">
+                  <GripVertical className="h-4 w-4 text-[var(--color-charcoal)]" />
+                  <span className="text-sm font-mono text-[var(--color-charcoal)] w-24">{pri.value}</span>
+                  <span className="flex-1 text-[var(--color-midnight)]">{pri.label}</span>
+                  <Button variant="ghost" size="icon" className="h-6 w-6 text-[var(--color-destructive)]" onClick={() => removePriority(index)}>
                     <Trash2 className="h-3 w-3" />
                   </Button>
                 </div>
@@ -364,9 +364,9 @@ export default function RoadmapSettingsDialog({ isOpen, onClose, settings, onSav
           </TabsContent>
         </Tabs>
 
-        <div className="flex justify-end gap-2 pt-4 border-t mt-4">
+        <div className="flex justify-end gap-2 pt-4 border-t border-[var(--color-background-muted)] mt-4">
           <Button variant="outline" onClick={onClose}>Cancel</Button>
-          <Button onClick={handleSave} disabled={isSaving}>
+          <Button onClick={handleSave} disabled={isSaving} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
             {isSaving && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
             Save Settings
           </Button>
