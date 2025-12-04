@@ -76,7 +76,7 @@ export default function WorkflowSettings({ open, onOpenChange, workflow, onUpdat
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Workflow Settings</DialogTitle>
+          <DialogTitle className="text-[var(--color-midnight)]">Workflow Settings</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
