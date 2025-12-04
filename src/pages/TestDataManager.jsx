@@ -743,9 +743,9 @@ Return as JSON with entity names as keys and arrays of records as values.`,
       <Card className="bg-blue-50 border-blue-200">
         <CardContent className="py-4">
           <p className="text-blue-800">
-            Debug: {playgroundItems.length} PlaygroundItems, {itemStatusList.length} in status list.
-            Pages: {playgroundItems.filter(p => p.data?.source_type === "page").length}, 
-            Features: {playgroundItems.filter(p => p.data?.source_type === "feature").length}
+            Debug: {playgroundItems.length} PlaygroundItems. 
+            First item keys: {playgroundItems.length > 0 ? Object.keys(playgroundItems[0]).join(", ") : "none"}.
+            source_type location: {playgroundItems.length > 0 ? (playgroundItems[0].source_type || playgroundItems[0].data?.source_type || "NOT FOUND") : "N/A"}
           </p>
         </CardContent>
       </Card>
