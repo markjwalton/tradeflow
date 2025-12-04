@@ -119,41 +119,41 @@ export default function CMSApiKeyManager({ tenantId }) {
       </CardHeader>
       <CardContent>
         {/* API Usage Info */}
-        <div className="mb-6 p-4 bg-blue-50 rounded-lg">
-          <h4 className="font-medium text-blue-900 mb-2">API Usage</h4>
-          <p className="text-sm text-blue-800 mb-2">
+        <div className="mb-6 p-4 bg-[var(--color-info)]/10 border border-[var(--color-info)]/30 rounded-lg">
+          <h4 className="font-medium text-[var(--color-info-dark)] mb-2">API Usage</h4>
+          <p className="text-sm text-[var(--color-info-dark)] mb-2">
             Use these headers when calling the CMS API:
           </p>
-          <code className="text-xs bg-blue-100 px-2 py-1 rounded block mb-1">
+          <code className="text-xs bg-[var(--color-info)]/20 px-2 py-1 rounded block mb-1 text-[var(--color-midnight)]">
             X-API-Key: your_api_key
           </code>
-          <code className="text-xs bg-blue-100 px-2 py-1 rounded block">
+          <code className="text-xs bg-[var(--color-info)]/20 px-2 py-1 rounded block text-[var(--color-midnight)]">
             X-Tenant-ID: {tenantId || "your_tenant_id"}
           </code>
         </div>
 
         {isLoading ? (
           <div className="flex justify-center py-8">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
           </div>
         ) : apiKeys.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
+          <div className="text-center py-8 text-[var(--color-charcoal)]">
             <Key className="h-12 w-12 mx-auto mb-4 opacity-50" />
             <p>No API keys yet</p>
           </div>
         ) : (
           <div className="space-y-3">
             {apiKeys.map(key => (
-              <div key={key.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div key={key.id} className="flex items-center justify-between p-4 bg-[var(--color-background)] rounded-lg">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-medium">{key.name}</h3>
-                    <Badge className={key.is_active ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700"}>
+                    <h3 className="font-medium text-[var(--color-midnight)]">{key.name}</h3>
+                    <Badge className={key.is_active ? "bg-[var(--color-success)]/20 text-[var(--color-success)]" : "bg-[var(--color-charcoal)]/10 text-[var(--color-charcoal)]"}>
                       {key.is_active ? "Active" : "Inactive"}
                     </Badge>
                   </div>
                   <div className="flex items-center gap-2 mt-1">
-                    <code className="text-xs bg-gray-200 px-2 py-1 rounded">
+                    <code className="text-xs bg-[var(--color-background-muted)] px-2 py-1 rounded text-[var(--color-midnight)]">
                       {key.api_key.substring(0, 15)}...
                     </code>
                     <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => copyToClipboard(key.api_key)}>
@@ -166,7 +166,7 @@ export default function CMSApiKeyManager({ tenantId }) {
                     ))}
                   </div>
                   {key.last_used && (
-                    <p className="text-xs text-gray-500 mt-2">
+                    <p className="text-xs text-[var(--color-charcoal)] mt-2">
                       Last used: {new Date(key.last_used).toLocaleDateString()}
                     </p>
                   )}
@@ -179,7 +179,7 @@ export default function CMSApiKeyManager({ tenantId }) {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-red-500"
+                    className="text-[var(--color-destructive)]"
                     onClick={() => {
                       if (confirm("Delete this API key?")) {
                         deleteMutation.mutate(key.id);
@@ -204,22 +204,22 @@ export default function CMSApiKeyManager({ tenantId }) {
           
           {newKey ? (
             <div className="space-y-4">
-              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <div className="p-4 bg-[var(--color-warning)]/10 border border-[var(--color-warning)]/30 rounded-lg">
                 <div className="flex items-start gap-2">
-                  <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5" />
+                  <AlertCircle className="h-5 w-5 text-[var(--color-warning)] mt-0.5" />
                   <div>
-                    <p className="font-medium text-yellow-800">Save this key now!</p>
-                    <p className="text-sm text-yellow-700">You won't be able to see it again.</p>
+                    <p className="font-medium text-[var(--color-warning-dark)]">Save this key now!</p>
+                    <p className="text-sm text-[var(--color-warning-dark)]">You won't be able to see it again.</p>
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-2 p-3 bg-gray-100 rounded-lg">
-                <code className="flex-1 text-sm break-all">{newKey}</code>
+              <div className="flex items-center gap-2 p-3 bg-[var(--color-background)] rounded-lg">
+                <code className="flex-1 text-sm break-all text-[var(--color-midnight)]">{newKey}</code>
                 <Button variant="ghost" size="icon" onClick={() => copyToClipboard(newKey)}>
                   <Copy className="h-4 w-4" />
                 </Button>
               </div>
-              <Button className="w-full" onClick={() => { setShowCreate(false); setNewKey(null); }}>
+              <Button className="w-full bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white" onClick={() => { setShowCreate(false); setNewKey(null); }}>
                 Done
               </Button>
             </div>
@@ -251,7 +251,7 @@ export default function CMSApiKeyManager({ tenantId }) {
                 <Button type="button" variant="outline" onClick={() => setShowCreate(false)}>
                   Cancel
                 </Button>
-                <Button type="submit" disabled={createMutation.isPending}>
+                <Button type="submit" disabled={createMutation.isPending} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
                   {createMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                   Create Key
                 </Button>

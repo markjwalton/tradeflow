@@ -152,8 +152,8 @@ export default function CMSFormEditor({ form, tenantId, onClose }) {
             </div>
             <div className="space-y-3">
               {formData.fields.map((field, index) => (
-                <div key={index} className="flex gap-2 items-start p-3 bg-gray-50 rounded-lg">
-                  <GripVertical className="h-5 w-5 text-gray-400 mt-2 cursor-grab" />
+                <div key={index} className="flex gap-2 items-start p-3 bg-[var(--color-background)] rounded-lg">
+                  <GripVertical className="h-5 w-5 text-[var(--color-charcoal)] mt-2 cursor-grab" />
                   <div className="flex-1 grid grid-cols-4 gap-2">
                     <Input
                       placeholder="Field name"
@@ -201,7 +201,7 @@ export default function CMSFormEditor({ form, tenantId, onClose }) {
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="text-red-500"
+                    className="text-[var(--color-destructive)]"
                     onClick={() => removeField(index)}
                   >
                     <Trash2 className="h-4 w-4" />
@@ -209,7 +209,7 @@ export default function CMSFormEditor({ form, tenantId, onClose }) {
                 </div>
               ))}
               {formData.fields.length === 0 && (
-                <p className="text-center text-gray-500 py-4">No fields yet. Click "Add Field" to start building your form.</p>
+                <p className="text-center text-[var(--color-charcoal)] py-4">No fields yet. Click "Add Field" to start building your form.</p>
               )}
             </div>
           </div>
@@ -257,7 +257,7 @@ export default function CMSFormEditor({ form, tenantId, onClose }) {
 
           <div className="flex justify-end gap-2 pt-4">
             <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
-            <Button type="submit" disabled={mutation.isPending}>
+            <Button type="submit" disabled={mutation.isPending} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
               {mutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
               {form ? "Update" : "Create"}
             </Button>

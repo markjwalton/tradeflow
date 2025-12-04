@@ -210,7 +210,7 @@ export default function CMSBlogEditor({ post, tenantId, onClose }) {
 
           <div className="flex justify-end gap-2 pt-4">
             <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
-            <Button type="submit" disabled={mutation.isPending}>
+            <Button type="submit" disabled={mutation.isPending} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
               {mutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
               {post ? "Update" : "Create"}
             </Button>
