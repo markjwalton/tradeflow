@@ -276,6 +276,26 @@ export default function BulkVerificationDialog({
         </DialogHeader>
 
         <div className="space-y-4 flex-1 overflow-hidden flex flex-col">
+          {/* Batch Progress */}
+          {(batchState.isProcessing || batchState.batchComplete) && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex justify-between text-sm mb-2">
+                <span className="font-medium">
+                  {batchState.isProcessing ? "Verifying batch..." : `Batch complete - ${batchState.queue.length} remaining`}
+                </span>
+                <span>{batchState.successItems.length} ✓ / {batchState.errorItems.length} ✗</span>
+              </div>
+              <Progress value={markProgress.total > 0 ? (markProgress.current / markProgress.total) * 100 : 0} className="h-2" />
+              {batchState.errorItems.length > 0 && (
+                <div className="mt-2 text-xs text-red-600">
+                  {batchState.errorItems.slice(-3).map((e, i) => (
+                    <div key={i}>• {e.name}: {e.error}</div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Progress */}
           {isRunning && (
             <div>
