@@ -16,8 +16,19 @@ import {
 import { 
   Play, Search, Database, Layout, Zap, CheckCircle2, XCircle, 
   Circle, Loader2, RefreshCw, Eye, Lightbulb, ArrowRight, Edit,
-  FlaskConical, Beaker
+  FlaskConical, Beaker, Trash2, AlertTriangle
 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
@@ -50,6 +61,7 @@ export default function PlaygroundSummary() {
   const [filterStatus, setFilterStatus] = useState("all");
   const [activeTab, setActiveTab] = useState("overview");
   const [isSyncing, setIsSyncing] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
 
   const { data: playgroundItems = [], isLoading } = useQuery({
     queryKey: ["playgroundItems"],
@@ -76,63 +88,75 @@ export default function PlaygroundSummary() {
     queryFn: () => base44.entities.FeatureTemplate.filter({ is_custom: false }),
   });
 
-  // Auto-sync library items to playground
+  // Clear all playground data
+  const clearPlaygroundData = async () => {
+    setIsClearing(true);
+    try {
+      // Delete all PlaygroundItems
+      const allItems = await base44.entities.PlaygroundItem.list();
+      for (const item of allItems) {
+        await base44.entities.PlaygroundItem.delete(item.id);
+      }
+      
+      // Delete all TestData
+      const allTestData = await base44.entities.TestData.list();
+      for (const td of allTestData) {
+        await base44.entities.TestData.delete(td.id);
+      }
+      
+      queryClient.invalidateQueries({ queryKey: ["playgroundItems"] });
+      queryClient.invalidateQueries({ queryKey: ["testData"] });
+      toast.success("Playground data cleared");
+    } catch (error) {
+      toast.error("Failed to clear: " + error.message);
+    } finally {
+      setIsClearing(false);
+    }
+  };
+
+  // Sync library items to playground - checks by source_id to avoid duplicates
   const syncLibraryToPlayground = async () => {
     setIsSyncing(true);
     let added = 0;
 
-    const existingSourceIds = playgroundItems
-      .filter(p => p.item_origin === "library")
-      .map(p => p.source_id);
+    // Get existing source_ids to prevent duplicates
+    const existingSourceIds = new Set(
+      playgroundItems.map(p => p.source_id)
+    );
 
-    // Sync entities
-    for (const template of entityTemplates.filter(t => !t.custom_project_id)) {
-      if (!existingSourceIds.includes(template.id)) {
-        await base44.entities.PlaygroundItem.create({
-          source_type: "entity",
-          source_id: template.id,
-          source_name: template.name,
-          group: template.group || template.category,
-          item_origin: "library",
-          status: "synced",
-          current_version: 1,
-          test_definition: generateDefaultTests("entity", template),
-        });
-        added++;
+    const BATCH_SIZE = 10;
+    const DELAY = 500; // ms between batches
+
+    const allTemplates = [
+      ...entityTemplates.filter(t => !t.custom_project_id).map(t => ({ ...t, _type: "entity" })),
+      ...pageTemplates.filter(t => !t.custom_project_id).map(t => ({ ...t, _type: "page" })),
+      ...featureTemplates.filter(t => !t.custom_project_id).map(t => ({ ...t, _type: "feature" })),
+    ].filter(t => !existingSourceIds.has(t.id));
+
+    for (let i = 0; i < allTemplates.length; i += BATCH_SIZE) {
+      const batch = allTemplates.slice(i, i + BATCH_SIZE);
+      
+      for (const template of batch) {
+        try {
+          await base44.entities.PlaygroundItem.create({
+            source_type: template._type,
+            source_id: template.id,
+            source_name: template.name,
+            group: template.group || template.category,
+            item_origin: "library",
+            status: "synced",
+            current_version: 1,
+            test_definition: generateDefaultTests(template._type, template),
+          });
+          added++;
+        } catch (e) {
+          console.error("Failed to sync:", template.name, e.message);
+        }
       }
-    }
-
-    // Sync pages
-    for (const template of pageTemplates.filter(t => !t.custom_project_id)) {
-      if (!existingSourceIds.includes(template.id)) {
-        await base44.entities.PlaygroundItem.create({
-          source_type: "page",
-          source_id: template.id,
-          source_name: template.name,
-          group: template.group || template.category,
-          item_origin: "library",
-          status: "synced",
-          current_version: 1,
-          test_definition: generateDefaultTests("page", template),
-        });
-        added++;
-      }
-    }
-
-    // Sync features
-    for (const template of featureTemplates.filter(t => !t.custom_project_id)) {
-      if (!existingSourceIds.includes(template.id)) {
-        await base44.entities.PlaygroundItem.create({
-          source_type: "feature",
-          source_id: template.id,
-          source_name: template.name,
-          group: template.group || template.category,
-          item_origin: "library",
-          status: "synced",
-          current_version: 1,
-          test_definition: generateDefaultTests("feature", template),
-        });
-        added++;
+      
+      // Delay between batches to avoid rate limits
+      if (i + BATCH_SIZE < allTemplates.length) {
+        await new Promise(r => setTimeout(r, DELAY));
       }
     }
 
@@ -232,6 +256,32 @@ export default function PlaygroundSummary() {
               View Live Pages
             </Button>
           </Link>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="outline" className="text-red-600 border-red-200 hover:bg-red-50" disabled={isClearing || playgroundItems.length === 0}>
+                {isClearing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Trash2 className="h-4 w-4 mr-2" />}
+                Clear All
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle className="flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5 text-red-600" />
+                  Clear Playground Data?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will delete all {playgroundItems.length} playground items and their test data. 
+                  Library templates will not be affected. You can re-sync from library afterwards.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={clearPlaygroundData} className="bg-red-600 hover:bg-red-700">
+                  Clear All Data
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
           <Button variant="outline" onClick={syncLibraryToPlayground} disabled={isSyncing}>
             {isSyncing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <RefreshCw className="h-4 w-4 mr-2" />}
             Sync Library
