@@ -143,17 +143,17 @@ export default function BusinessTemplates() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+      <div className="flex items-center justify-center h-64 bg-[var(--color-background)]">
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
       </div>
     );
   }
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6 max-w-6xl mx-auto bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
             <Building2 className="h-6 w-6" />
             Business Templates
             {currentProject && (
@@ -163,7 +163,7 @@ export default function BusinessTemplates() {
               </Badge>
             )}
           </h1>
-          <p className="text-gray-500 mt-1">
+          <p className="text-[var(--color-charcoal)] mt-1">
             Pre-defined templates with entities, pages, and features
           </p>
         </div>
@@ -299,7 +299,7 @@ export default function BusinessTemplates() {
         ))}
 
         {filteredTemplates.length === 0 && (
-          <div className="col-span-full text-center py-12 text-gray-500">
+          <div className="col-span-full text-center py-12 text-[var(--color-charcoal)]">
             <Building2 className="h-12 w-12 mx-auto mb-3 opacity-30" />
             <p>No templates found</p>
             <Button variant="link" onClick={() => setShowBuilder(true)}>
