@@ -23,7 +23,7 @@ export default function FormSettings({ open, onOpenChange, formData, onUpdate })
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Form Settings</DialogTitle>
+          <DialogTitle className="text-[var(--color-midnight)]">Form Settings</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
