@@ -2,10 +2,10 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { TrendingUp, TrendingDown, ArrowRight } from "lucide-react";
 
-// Base card styles using Sturij design tokens
+// Base card styles using Sturij design tokens (Tailwind v4)
 const cardBase = cn(
-  "bg-[var(--color-background-50)] rounded-xl",
-  "border border-[var(--color-background-300)]",
+  "bg-background-50 rounded-xl",
+  "border border-background-300",
   "transition-all duration-200"
 );
 
@@ -20,12 +20,12 @@ export function BasicCard({
   return (
     <div className={cn(cardBase, "p-6", className)} {...props}>
       {title && (
-        <h3 className="text-lg font-light text-[var(--color-midnight-900)] text-display mb-1">
+        <h3 className="text-lg font-light text-midnight-900 font-[family-name:var(--font-family-display)] mb-1">
           {title}
         </h3>
       )}
       {description && (
-        <p className="text-sm text-[var(--color-charcoal-500)] mb-4">{description}</p>
+        <p className="text-sm text-charcoal-500 mb-4">{description}</p>
       )}
       {children}
     </div>
@@ -47,9 +47,9 @@ export function ActionCard({
       className={cn(
         cardBase,
         "p-6 w-full text-left",
-        "hover:shadow-md hover:border-[var(--color-primary-200)]",
+        "hover:shadow-md hover:border-primary-200",
         "hover:-translate-y-0.5",
-        "focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-500)]/50 focus:ring-offset-2",
+        "focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:ring-offset-2",
         "group",
         className
       )}
@@ -57,19 +57,19 @@ export function ActionCard({
     >
       <div className="flex items-start gap-4">
         {icon && (
-          <div className="p-2 rounded-lg bg-[var(--color-primary-100)] text-[var(--color-primary-500)] group-hover:bg-[var(--color-primary-500)] group-hover:text-white transition-colors">
+          <div className="p-2 rounded-lg bg-primary-100 text-primary-500 group-hover:bg-primary-500 group-hover:text-white transition-colors">
             {icon}
           </div>
         )}
         <div className="flex-1">
-          <h3 className="text-lg font-light text-[var(--color-midnight-900)] text-display mb-1">
+          <h3 className="text-lg font-light text-midnight-900 font-[family-name:var(--font-family-display)] mb-1">
             {title}
           </h3>
           {description && (
-            <p className="text-sm text-[var(--color-charcoal-500)]">{description}</p>
+            <p className="text-sm text-charcoal-500">{description}</p>
           )}
         </div>
-        <ArrowRight className="h-5 w-5 text-[var(--color-charcoal-500)] group-hover:text-[var(--color-primary-500)] group-hover:translate-x-1 transition-all" />
+        <ArrowRight className="h-5 w-5 text-charcoal-500 group-hover:text-primary-500 group-hover:translate-x-1 transition-all" />
       </div>
     </button>
   );
@@ -89,7 +89,7 @@ export function FeatureCard({
       className={cn(
         cardBase,
         "p-6",
-        highlight && "border-[var(--color-primary-500)] bg-[var(--color-primary-50)]",
+        highlight && "border-primary-500 bg-primary-50",
         className
       )}
       {...props}
@@ -97,16 +97,16 @@ export function FeatureCard({
       {icon && (
         <div className={cn(
           "inline-flex p-3 rounded-lg mb-4",
-          highlight ? "bg-[var(--color-primary-500)] text-white" : "bg-[var(--color-secondary-200)] text-[var(--color-secondary-600)]"
+          highlight ? "bg-primary-500 text-white" : "bg-secondary-200 text-secondary-600"
         )}>
           {icon}
         </div>
       )}
-      <h3 className="text-xl font-light text-[var(--color-midnight-900)] text-display mb-2">
+      <h3 className="text-xl font-light text-midnight-900 font-[family-name:var(--font-family-display)] mb-2">
         {title}
       </h3>
       {description && (
-        <p className="text-[var(--color-charcoal-500)] text-body">{description}</p>
+        <p className="text-charcoal-500 font-[family-name:var(--font-family-body)]">{description}</p>
       )}
     </div>
   );
@@ -129,16 +129,16 @@ export function StatsCard({
     <div className={cn(cardBase, "p-6", className)} {...props}>
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm text-[var(--color-charcoal-500)] mb-1">{label}</p>
-          <p className="text-3xl font-light text-[var(--color-midnight-900)] text-display">
+          <p className="text-sm text-charcoal-500 mb-1">{label}</p>
+          <p className="text-3xl font-light text-midnight-900 font-[family-name:var(--font-family-display)]">
             {value}
           </p>
           {change !== undefined && (
             <div className={cn(
               "flex items-center gap-1 mt-2 text-sm",
-              isPositive && "text-[var(--color-success)]",
-              isNegative && "text-[var(--color-destructive-600)]",
-              !isPositive && !isNegative && "text-[var(--color-charcoal-500)]"
+              isPositive && "text-primary-500",
+              isNegative && "text-destructive-600",
+              !isPositive && !isNegative && "text-charcoal-500"
             )}>
               {isPositive && <TrendingUp className="h-4 w-4" />}
               {isNegative && <TrendingDown className="h-4 w-4" />}
@@ -147,7 +147,7 @@ export function StatsCard({
           )}
         </div>
         {icon && (
-          <div className="p-3 rounded-lg bg-[var(--color-background-200)] text-[var(--color-primary-500)]">
+          <div className="p-3 rounded-lg bg-background-200 text-primary-500">
             {icon}
           </div>
         )}
@@ -178,7 +178,7 @@ export function ProductCard({
       onClick={onClick}
       {...props}
     >
-      <div className="relative aspect-square bg-[var(--color-background-200)] overflow-hidden">
+      <div className="relative aspect-square bg-background-200 overflow-hidden">
         {image && (
           <img 
             src={image} 
@@ -187,19 +187,19 @@ export function ProductCard({
           />
         )}
         {badge && (
-          <span className="absolute top-3 left-3 px-2 py-1 text-xs font-medium bg-[var(--color-secondary-400)] text-white rounded">
+          <span className="absolute top-3 left-3 px-2 py-1 text-xs font-medium bg-secondary-400 text-white rounded">
             {badge}
           </span>
         )}
       </div>
       <div className="p-4">
-        <h3 className="text-base font-medium text-[var(--color-midnight-900)] text-display mb-2 line-clamp-2">
+        <h3 className="text-base font-medium text-midnight-900 font-[family-name:var(--font-family-display)] mb-2 line-clamp-2">
           {title}
         </h3>
         <div className="flex items-center gap-2">
-          <span className="text-lg font-semibold text-[var(--color-primary-500)]">{price}</span>
+          <span className="text-lg font-semibold text-primary-500">{price}</span>
           {originalPrice && (
-            <span className="text-sm text-[var(--color-charcoal-500)] line-through">{originalPrice}</span>
+            <span className="text-sm text-charcoal-500 line-through">{originalPrice}</span>
           )}
         </div>
       </div>
@@ -219,7 +219,7 @@ export function ProfileCard({
 }) {
   return (
     <div className={cn(cardBase, "p-6 text-center", className)} {...props}>
-      <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-[var(--color-accent-300)] overflow-hidden">
+      <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-accent-300 overflow-hidden">
         {avatar ? (
           <img src={avatar} alt={name} className="w-full h-full object-cover" />
         ) : (
@@ -228,14 +228,14 @@ export function ProfileCard({
           </div>
         )}
       </div>
-      <h3 className="text-xl font-light text-[var(--color-midnight-900)] text-display mb-1">
+      <h3 className="text-xl font-light text-midnight-900 font-[family-name:var(--font-family-display)] mb-1">
         {name}
       </h3>
       {role && (
-        <p className="text-sm text-[var(--color-secondary-500)] mb-3">{role}</p>
+        <p className="text-sm text-secondary-500 mb-3">{role}</p>
       )}
       {bio && (
-        <p className="text-sm text-[var(--color-charcoal-500)] text-body mb-4">{bio}</p>
+        <p className="text-sm text-charcoal-500 font-[family-name:var(--font-family-body)] mb-4">{bio}</p>
       )}
       {actions && (
         <div className="flex justify-center gap-2">
@@ -263,7 +263,7 @@ export function TestimonialCard({
           {[...Array(5)].map((_, i) => (
             <svg 
               key={i} 
-              className={cn("h-5 w-5", i < rating ? "text-[var(--color-secondary-400)]" : "text-[var(--color-background-300)]")}
+              className={cn("h-5 w-5", i < rating ? "text-secondary-400" : "text-background-300")}
               fill="currentColor" 
               viewBox="0 0 20 20"
             >
@@ -272,20 +272,20 @@ export function TestimonialCard({
           ))}
         </div>
       )}
-      <blockquote className="text-[var(--color-charcoal-800)] text-body mb-4 italic">
+      <blockquote className="text-charcoal-800 font-[family-name:var(--font-family-body)] mb-4 italic">
         "{quote}"
       </blockquote>
       <div className="flex items-center gap-3">
         {avatar ? (
           <img src={avatar} alt={author} className="w-10 h-10 rounded-full object-cover" />
         ) : (
-          <div className="w-10 h-10 rounded-full bg-[var(--color-accent-300)] flex items-center justify-center text-sm font-medium text-white">
+          <div className="w-10 h-10 rounded-full bg-accent-300 flex items-center justify-center text-sm font-medium text-white">
             {author?.charAt(0)?.toUpperCase()}
           </div>
         )}
         <div>
-          <p className="font-medium text-[var(--color-midnight-900)]">{author}</p>
-          {role && <p className="text-sm text-[var(--color-charcoal-500)]">{role}</p>}
+          <p className="font-medium text-midnight-900">{author}</p>
+          {role && <p className="text-sm text-charcoal-500">{role}</p>}
         </div>
       </div>
     </div>
@@ -313,7 +313,7 @@ export function ImageCard({
       onClick={onClick}
       {...props}
     >
-      <div className="relative aspect-video bg-[var(--color-background-200)] overflow-hidden">
+      <div className="relative aspect-video bg-background-200 overflow-hidden">
         {image && (
           <img 
             src={image} 
@@ -322,11 +322,11 @@ export function ImageCard({
           />
         )}
         {overlay && (
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-midnight-900)]/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-midnight-900/80 to-transparent" />
         )}
         {overlay && title && (
           <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-            <h3 className="text-lg font-light text-display">
+            <h3 className="text-lg font-light font-[family-name:var(--font-family-display)]">
               {title}
             </h3>
             {description && (
@@ -338,12 +338,12 @@ export function ImageCard({
       {!overlay && (title || description) && (
         <div className="p-4">
           {title && (
-            <h3 className="text-lg font-light text-[var(--color-midnight-900)] text-display mb-1">
+            <h3 className="text-lg font-light text-midnight-900 font-[family-name:var(--font-family-display)] mb-1">
               {title}
             </h3>
           )}
           {description && (
-            <p className="text-sm text-[var(--color-charcoal-500)] line-clamp-2">{description}</p>
+            <p className="text-sm text-charcoal-500 line-clamp-2">{description}</p>
           )}
         </div>
       )}
