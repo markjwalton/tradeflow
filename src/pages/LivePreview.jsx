@@ -6,8 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { 
-  Layout, Zap, Database, Edit, Eye, ChevronRight, ChevronDown, Loader2, 
-  FlaskConical, CheckCircle2, ArrowLeft, Folder, FolderOpen
+  Layout, Zap, Database, Edit, Eye, Loader2, CheckCircle2, ArrowLeft
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -60,19 +59,6 @@ export default function LivePreview() {
   // Build navigation structure from config
   const pageItems = playgroundItems.filter(item => item.source_type === "page");
   const featureItems = playgroundItems.filter(item => item.source_type === "feature");
-
-  // Helper to find playground item by name (matches against source_name)
-  const findPlaygroundItem = (name) => {
-    if (!name) return null;
-    // Check if it's a feature (prefixed with "feature:")
-    if (name.startsWith("feature:")) {
-      const featureName = name.replace("feature:", "");
-      return playgroundItems.find(p => p.source_type === "feature" && p.source_name === featureName) ||
-             playgroundItems.find(p => p.source_type === "feature" && p.source_name?.toLowerCase() === featureName.toLowerCase());
-    }
-    return playgroundItems.find(p => p.source_type === "page" && p.source_name === name) ||
-           playgroundItems.find(p => p.source_type === "page" && p.source_name?.toLowerCase() === name.toLowerCase());
-  };
 
   // Fallback: Group features by category if no nav config
   const featuresByCategory = featureItems.reduce((acc, item) => {
