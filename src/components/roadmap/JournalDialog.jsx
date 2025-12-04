@@ -23,13 +23,13 @@ import { toast } from "sonner";
 import moment from "moment";
 
 const entryTypes = [
-  { value: "brainstorming", label: "Brainstorming", icon: Brain, color: "bg-purple-100 text-purple-800" },
-  { value: "question", label: "Question", icon: HelpCircle, color: "bg-blue-100 text-blue-800" },
-  { value: "advice", label: "Advice", icon: MessageSquare, color: "bg-green-100 text-green-800" },
-  { value: "idea", label: "Idea", icon: Lightbulb, color: "bg-yellow-100 text-yellow-800" },
-  { value: "decision", label: "Decision", icon: CheckCircle, color: "bg-emerald-100 text-emerald-800" },
-  { value: "update", label: "Update", icon: MessageSquare, color: "bg-gray-100 text-gray-800" },
-  { value: "blocker", label: "Blocker", icon: AlertTriangle, color: "bg-red-100 text-red-800" },
+  { value: "brainstorming", label: "Brainstorming", icon: Brain, color: "bg-[var(--color-accent)]/20 text-[var(--color-accent-dark)]" },
+  { value: "question", label: "Question", icon: HelpCircle, color: "bg-[var(--color-info)]/20 text-[var(--color-info-dark)]" },
+  { value: "advice", label: "Advice", icon: MessageSquare, color: "bg-[var(--color-success)]/20 text-[var(--color-success-dark)]" },
+  { value: "idea", label: "Idea", icon: Lightbulb, color: "bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]" },
+  { value: "decision", label: "Decision", icon: CheckCircle, color: "bg-[var(--color-primary)]/20 text-[var(--color-primary-dark)]" },
+  { value: "update", label: "Update", icon: MessageSquare, color: "bg-[var(--color-charcoal)]/10 text-[var(--color-charcoal)]" },
+  { value: "blocker", label: "Blocker", icon: AlertTriangle, color: "bg-[var(--color-destructive)]/20 text-[var(--color-destructive)]" },
 ];
 
 export default function JournalDialog({ isOpen, onClose, item }) {
@@ -125,7 +125,7 @@ Output only the prompt text, nothing else.`
         </DialogHeader>
 
         {/* New Entry Form */}
-        <div className="space-y-3 border-b pb-4">
+        <div className="space-y-3 border-b border-[var(--color-background-muted)] pb-4">
           <div className="flex gap-2">
             <Select value={entryType} onValueChange={setEntryType}>
               <SelectTrigger className="w-40">
@@ -144,7 +144,7 @@ Output only the prompt text, nothing else.`
             placeholder="Add a journal entry..."
             rows={3}
           />
-          <Button onClick={handleAddEntry} disabled={!newEntry.trim() || createMutation.isPending}>
+          <Button onClick={handleAddEntry} disabled={!newEntry.trim() || createMutation.isPending} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
             {createMutation.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Plus className="h-4 w-4 mr-2" />}
             Add Entry
           </Button>
@@ -157,29 +157,29 @@ Output only the prompt text, nothing else.`
               <Loader2 className="h-6 w-6 animate-spin" />
             </div>
           ) : entries.length === 0 ? (
-            <p className="text-center text-gray-500 py-8">No journal entries yet</p>
+            <p className="text-center text-[var(--color-charcoal)] py-8">No journal entries yet</p>
           ) : (
             <div className="space-y-4">
               {entries.map(entry => {
                 const typeInfo = getTypeInfo(entry.entry_type);
                 const TypeIcon = typeInfo.icon;
                 return (
-                  <div key={entry.id} className="border rounded-lg p-3">
+                  <div key={entry.id} className="border border-[var(--color-background-muted)] rounded-lg p-3">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <Badge className={typeInfo.color}>
                           <TypeIcon className="h-3 w-3 mr-1" />
                           {typeInfo.label}
                         </Badge>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-[var(--color-charcoal)]">
                           {moment(entry.entry_date || entry.created_date).format("DD MMM YYYY, HH:mm")}
                         </span>
                       </div>
-                      <Button variant="ghost" size="icon" className="h-6 w-6 text-red-500" onClick={() => deleteMutation.mutate(entry.id)}>
+                      <Button variant="ghost" size="icon" className="h-6 w-6 text-[var(--color-destructive)]" onClick={() => deleteMutation.mutate(entry.id)}>
                         <Trash2 className="h-3 w-3" />
                       </Button>
                     </div>
-                    <p className="text-sm whitespace-pre-wrap mb-3">{entry.content}</p>
+                    <p className="text-sm whitespace-pre-wrap mb-3 text-[var(--color-midnight)]">{entry.content}</p>
                     
                     {/* AI Prompt Section */}
                     <div className="flex gap-2">
@@ -195,14 +195,14 @@ Output only the prompt text, nothing else.`
                     </div>
                     
                     {entry.ai_generated_prompt && (
-                      <div className="mt-3 bg-purple-50 border border-purple-200 rounded-lg p-3">
+                      <div className="mt-3 bg-[var(--color-accent)]/10 border border-[var(--color-accent)]/30 rounded-lg p-3">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs font-medium text-purple-700">AI Generated Prompt</span>
+                          <span className="text-xs font-medium text-[var(--color-accent-dark)]">AI Generated Prompt</span>
                           <Button size="sm" variant="ghost" onClick={() => copyToClipboard(entry.ai_generated_prompt)}>
                             <Copy className="h-3 w-3 mr-1" /> Copy
                           </Button>
                         </div>
-                        <p className="text-sm text-purple-900 whitespace-pre-wrap">{entry.ai_generated_prompt}</p>
+                        <p className="text-sm text-[var(--color-midnight)] whitespace-pre-wrap">{entry.ai_generated_prompt}</p>
                       </div>
                     )}
                   </div>

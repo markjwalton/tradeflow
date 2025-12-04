@@ -72,7 +72,7 @@ Format the prompt clearly with sections. Output only the prompt text.`
         </DialogHeader>
 
         <div className="space-y-4">
-          <Button onClick={generateDevPrompt} disabled={isGenerating} className="w-full">
+          <Button onClick={generateDevPrompt} disabled={isGenerating} className="w-full bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
             {isGenerating ? (
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
             ) : (
