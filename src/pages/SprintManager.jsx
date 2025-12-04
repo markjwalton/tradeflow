@@ -120,14 +120,14 @@ export default function SprintManager() {
   const completedSprints = sprints.filter(s => s.status === "completed");
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Play className="h-6 w-6 text-green-600" />
+          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
+            <Play className="h-6 w-6 text-[var(--color-success)]" />
             Sprint Manager
           </h1>
-          <p className="text-gray-500">Manage development sprints and track progress</p>
+          <p className="text-[var(--color-charcoal)]">Manage development sprints and track progress</p>
         </div>
         <Button onClick={() => openDialog()}>
           <Plus className="h-4 w-4 mr-2" />
@@ -137,15 +137,15 @@ export default function SprintManager() {
 
       {isLoading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
         </div>
       ) : (
         <div className="space-y-8">
           {/* Active Sprints */}
           {activeSprints.length > 0 && (
             <div>
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Play className="h-5 w-5 text-green-600" />
+              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-[var(--color-midnight)]">
+                <Play className="h-5 w-5 text-[var(--color-success)]" />
                 Active Sprints
               </h2>
               <div className="grid gap-4">
@@ -214,7 +214,7 @@ export default function SprintManager() {
           )}
 
           {sprints.length === 0 && (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-[var(--color-charcoal)]">
               <Play className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p>No sprints yet. Create your first sprint!</p>
             </div>

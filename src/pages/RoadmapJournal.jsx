@@ -423,8 +423,8 @@ Return as JSON:
 
   if (!itemId) {
     return (
-      <div className="p-6">
-        <p className="text-gray-500">No roadmap item selected.</p>
+      <div className="p-6 bg-[var(--color-background)]">
+        <p className="text-[var(--color-charcoal)]">No roadmap item selected.</p>
         <Button variant="outline" className="mt-4" onClick={() => navigate(-1)}>
           <ArrowLeft className="h-4 w-4 mr-2" /> Go Back
         </Button>
@@ -434,8 +434,8 @@ Return as JSON:
 
   if (itemLoading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="flex justify-center items-center h-64 bg-[var(--color-background)]">
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
       </div>
     );
   }
@@ -443,7 +443,7 @@ Return as JSON:
   const currentPrompt = devPrompt || item?.development_prompt || "";
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <div className="p-6 max-w-5xl mx-auto bg-[var(--color-background)] min-h-screen">
       {/* Header */}
       <div className="flex items-start justify-between gap-4 mb-6">
         <div className="flex items-center gap-4">
@@ -451,8 +451,8 @@ Return as JSON:
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold">{item?.title}</h1>
-            <p className="text-gray-500">{item?.description}</p>
+            <h1 className="text-2xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>{item?.title}</h1>
+            <p className="text-[var(--color-charcoal)]">{item?.description}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
