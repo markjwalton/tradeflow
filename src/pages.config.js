@@ -57,6 +57,7 @@ import DashboardManager from './pages/DashboardManager';
 import Dashboard from './pages/Dashboard';
 import ComponentShowcase from './pages/ComponentShowcase';
 import SturijPackage from './pages/SturijPackage';
+import DesignSystemManager from './pages/DesignSystemManager';
 import __Layout from './Layout.jsx';
 
 
@@ -120,6 +121,7 @@ export const PAGES = {
     "Dashboard": Dashboard,
     "ComponentShowcase": ComponentShowcase,
     "SturijPackage": SturijPackage,
+    "DesignSystemManager": DesignSystemManager,
 }
 
 export const pagesConfig = {
