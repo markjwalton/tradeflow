@@ -35,15 +35,15 @@ export default function DashboardWidgetCard({
   const content = (
     <div className="group relative h-full">
       {isDraggable && (
-        <div className="absolute top-3 left-3 z-10 p-1.5 rounded-lg bg-white/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity shadow-sm cursor-grab">
-          <GripVertical className="h-3.5 w-3.5 text-slate-400" />
+        <div className="absolute top-3 left-3 z-10 p-1.5 rounded-lg bg-[var(--color-background-50)]/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity shadow-sm cursor-grab">
+          <GripVertical className="h-3.5 w-3.5 text-[var(--color-charcoal-400)]" />
         </div>
       )}
       <button
         onClick={() => onConfigClick?.(widget)}
-        className="absolute top-3 right-3 z-10 p-1.5 rounded-lg bg-white/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity shadow-sm hover:bg-white"
+        className="absolute top-3 right-3 z-10 p-1.5 rounded-lg bg-[var(--color-background-50)]/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity shadow-sm hover:bg-[var(--color-background-50)]"
       >
-        <Settings className="h-3.5 w-3.5 text-slate-500" />
+        <Settings className="h-3.5 w-3.5 text-[var(--color-charcoal-500)]" />
       </button>
       <WidgetRenderer widget={resolvedWidget} />
     </div>
