@@ -107,8 +107,11 @@ function ComponentDemo({ title, children, code }) {
 }
 
 export default function ComponentShowcase() {
-  const [activeCategory, setActiveCategory] = useState("typography");
-  const [activeMainTab, setActiveMainTab] = useState("all");
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabFromUrl = urlParams.get("tab") || "all";
+
+    const [activeCategory, setActiveCategory] = useState("typography");
+    const [activeMainTab, setActiveMainTab] = useState(tabFromUrl);
   
   // Get visible categories based on active tab
   const activeTabConfig = tabs.find(t => t.id === activeMainTab);
