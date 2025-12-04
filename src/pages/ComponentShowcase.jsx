@@ -393,11 +393,13 @@ export default function ComponentShowcase() {
               />
             </Grid>
           </ComponentDemo>
-        </ShowcaseSection>}
+        </ShowcaseSection>
+        )}
 
         {/* Forms Section */}
-        {visibleCategories.includes("forms") && <ShowcaseSection
-          id="forms"
+        {visibleCategories.includes("forms") && (
+          <ShowcaseSection
+            id="forms"
           title="Forms"
           count={10}
           description="Form fields with labels and validation support"
