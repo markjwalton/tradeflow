@@ -175,13 +175,13 @@ export default function TestDataManager() {
 
       // Debug: log what we found
       if (entitiesUsed.length === 0) {
-        console.log(`No entities found for ${item.source_name}:`, {
-          source_type: item.source_type,
-          source_id: item.source_id,
-          working_data: item.working_data,
-          templateFound: item.source_type === "page" 
-            ? pageTemplates.find(t => t.id === item.source_id)
-            : featureTemplates.find(t => t.id === item.source_id)
+        console.log(`No entities found for ${item.data?.source_name}:`, {
+          source_type: item.data?.source_type,
+          source_id: item.data?.source_id,
+          working_data: item.data?.working_data,
+          templateFound: item.data?.source_type === "page" 
+            ? pageTemplates.find(t => t.id === item.data?.source_id)
+            : featureTemplates.find(t => t.id === item.data?.source_id)
         });
       }
 
