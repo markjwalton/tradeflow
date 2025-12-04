@@ -162,107 +162,105 @@ export default function BulkVerificationDialog({
 
   const [isMarkingVerified, setIsMarkingVerified] = useState(false);
   const [markProgress, setMarkProgress] = useState({ current: 0, total: 0 });
-  const [markReport, setMarkReport] = useState(null);
+  const [batchState, setBatchState] = useState({
+    queue: [],        // Items still to process
+    successItems: [], // Successfully verified
+    errorItems: [],   // Failed items
+    isProcessing: false,
+    batchComplete: false
+  });
 
-  const markAllVerified = async () => {
+  const BATCH_SIZE = 10;
+
+  // Start batch verification process
+  const startBatchVerification = () => {
     const passedItems = results.filter(r => r.status === "passed" || r.status === "warning");
     if (passedItems.length === 0) return;
 
-    setIsMarkingVerified(true);
-    setMarkProgress({ current: 0, total: passedItems.length });
-    setMarkReport(null);
-    
-    const successItems = [];
+    // Build queue with test data IDs
+    const queue = [];
     const errorItems = [];
-
-    try {
-      // Collect all test data IDs to update
-      const testDataToUpdate = [];
-      const itemMap = new Map();
-      
-      for (const item of passedItems) {
-        const testData = testDataSets.find(td => 
-          td.playground_item_id === item.id || td.data?.playground_item_id === item.id
-        );
-        if (testData) {
-          testDataToUpdate.push(testData.id);
-          itemMap.set(testData.id, item);
-        } else {
-          errorItems.push({ ...item, error: "No test data found" });
-        }
+    
+    for (const item of passedItems) {
+      const testData = testDataSets.find(td => 
+        td.playground_item_id === item.id || td.data?.playground_item_id === item.id
+      );
+      if (testData) {
+        queue.push({ item, testDataId: testData.id });
+      } else {
+        errorItems.push({ ...item, error: "No test data found" });
       }
+    }
 
-      // Process in batches of 50 to reduce API calls
-      const BATCH_SIZE = 50;
-      let processed = 0;
-      
-      for (let i = 0; i < testDataToUpdate.length; i += BATCH_SIZE) {
-        const batch = testDataToUpdate.slice(i, i + BATCH_SIZE);
-        
-        try {
-          const response = await base44.functions.invoke('bulkVerifyTestData', {
-            testDataIds: batch
-          });
-          
-          const result = response.data;
-          
-          // Map results back to items
-          result.success?.forEach?.(id => {
-            const item = itemMap.get(id);
-            if (item) successItems.push(item);
-          });
-          
-          result.failedItems?.forEach?.(({ id, error }) => {
-            const item = itemMap.get(id);
-            if (item) errorItems.push({ ...item, error });
-          });
-          
-          // If response structure is different, handle counts
-          if (typeof result.verified === 'number' && !result.success) {
-            for (const id of batch) {
-              if (!result.failedItems?.some(f => f.id === id)) {
-                const item = itemMap.get(id);
-                if (item) successItems.push(item);
-              }
-            }
-          }
-        } catch (batchError) {
-          // Mark all in batch as failed
-          for (const id of batch) {
-            const item = itemMap.get(id);
-            if (item) errorItems.push({ ...item, error: batchError.message });
-          }
-        }
-        
-        processed += batch.length;
-        setMarkProgress({ current: processed, total: testDataToUpdate.length });
-        
-        // Small delay between batches
-        if (i + BATCH_SIZE < testDataToUpdate.length) {
-          await new Promise(r => setTimeout(r, 500));
-        }
-      }
-      
-      onComplete?.(); // Always refresh data
-      
+    setBatchState({
+      queue,
+      successItems: [],
+      errorItems,
+      isProcessing: false,
+      batchComplete: false
+    });
+    setMarkProgress({ current: 0, total: queue.length });
+    
+    // Auto-start first batch
+    processNextBatch(queue, [], errorItems);
+  };
+
+  // Process next batch of 10
+  const processNextBatch = async (queue, successItems, errorItems) => {
+    if (queue.length === 0) {
+      // All done
+      onComplete?.();
       if (errorItems.length > 0) {
-        const report = {
-          success: successItems,
-          errors: errorItems,
-          timestamp: new Date().toISOString()
-        };
         toast.warning(`${successItems.length} verified, ${errorItems.length} failed`);
-        onErrorReport?.(report);
+        onErrorReport?.({ success: successItems, errors: errorItems, timestamp: new Date().toISOString() });
       } else {
         toast.success(`${successItems.length} items marked as verified`);
         onClose();
       }
-    } catch (e) {
-      toast.error("Failed to update items: " + e.message);
-    } finally {
-      setIsMarkingVerified(false);
-      setMarkProgress({ current: 0, total: 0 });
+      return;
     }
+
+    setBatchState(prev => ({ ...prev, isProcessing: true, batchComplete: false }));
+    
+    const batch = queue.slice(0, BATCH_SIZE);
+    const remaining = queue.slice(BATCH_SIZE);
+    const newSuccess = [...successItems];
+    const newErrors = [...errorItems];
+    const verifiedDate = new Date().toISOString();
+
+    for (let i = 0; i < batch.length; i++) {
+      const { item, testDataId } = batch[i];
+      
+      try {
+        await base44.entities.TestData.update(testDataId, {
+          test_status: "verified",
+          verified_date: verifiedDate
+        });
+        newSuccess.push(item);
+      } catch (e) {
+        newErrors.push({ ...item, error: e.message });
+      }
+      
+      setMarkProgress({ current: successItems.length + newSuccess.length + newErrors.length - errorItems.length, total: queue.length + successItems.length });
+      
+      // Small delay between each update
+      if (i < batch.length - 1) {
+        await new Promise(r => setTimeout(r, 200));
+      }
+    }
+
+    setBatchState({
+      queue: remaining,
+      successItems: newSuccess,
+      errorItems: newErrors,
+      isProcessing: false,
+      batchComplete: true
+    });
+    setMarkProgress({ current: newSuccess.length + newErrors.length, total: remaining.length + newSuccess.length + newErrors.length });
+  };
+
+  const continueNextBatch = () => {
+    processNextBatch(batchState.queue, batchState.successItems, batchState.errorItems);
   };
 
   const percentage = progress.total > 0 ? Math.round((progress.current / progress.total) * 100) : 0;
