@@ -108,10 +108,10 @@ export default function TenantManager() {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <Card>
+    <div className="p-6 max-w-4xl mx-auto bg-[var(--color-background)] min-h-screen">
+      <Card className="border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Tenant Manager</CardTitle>
+          <CardTitle className="text-[var(--color-midnight)]">Tenant Manager</CardTitle>
           <Button onClick={() => { setEditingTenant(null); setIsFormOpen(true); }}>
             <Plus className="h-4 w-4 mr-2" />
             Add Tenant
@@ -119,30 +119,30 @@ export default function TenantManager() {
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="text-center py-8 text-gray-500">Loading...</div>
+            <div className="text-center py-8 text-[var(--color-charcoal)]">Loading...</div>
           ) : tenants.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-[var(--color-charcoal)]">
               No tenants yet. Add one to get started.
             </div>
           ) : (
             <div className="space-y-2">
               {tenants.map((tenant) => (
-                <div key={tenant.id} className="border rounded-lg shadow-sm overflow-hidden">
-                  <div className="flex items-center gap-3 p-3 bg-white">
+                <div key={tenant.id} className="border border-[var(--color-background-muted)] rounded-lg shadow-sm overflow-hidden">
+                  <div className="flex items-center gap-3 p-3 bg-[var(--color-background-paper)]">
                     <button 
                       onClick={() => toggleExpand(tenant.id)}
-                      className="p-1 hover:bg-gray-100 rounded"
+                      className="p-1 hover:bg-[var(--color-background)] rounded"
                     >
                       {expandedTenants.has(tenant.id) ? (
-                        <ChevronDown className="h-4 w-4 text-gray-500" />
+                        <ChevronDown className="h-4 w-4 text-[var(--color-charcoal)]" />
                       ) : (
-                        <ChevronRight className="h-4 w-4 text-gray-500" />
+                        <ChevronRight className="h-4 w-4 text-[var(--color-charcoal)]" />
                       )}
                     </button>
-                    <Building2 className="h-5 w-5 text-gray-400" />
+                    <Building2 className="h-5 w-5 text-[var(--color-charcoal)]" />
                     <div className="flex-1">
-                      <span className="font-medium">{tenant.name}</span>
-                      <span className="text-sm text-gray-400 ml-2">/{tenant.slug}</span>
+                      <span className="font-medium text-[var(--color-midnight)]">{tenant.name}</span>
+                      <span className="text-sm text-[var(--color-charcoal)] ml-2">/{tenant.slug}</span>
                     </div>
                     <Badge variant={tenant.is_active !== false ? "default" : "secondary"}>
                       {tenant.is_active !== false ? (
@@ -159,13 +159,13 @@ export default function TenantManager() {
                     </Button>
                   </div>
                   {expandedTenants.has(tenant.id) && (
-                    <div className="p-3 bg-gray-50 border-t space-y-4">
+                    <div className="p-3 bg-[var(--color-background)] border-t border-[var(--color-background-muted)] space-y-4">
                       <TenantAccessRequests tenantId={tenant.id} />
                       <TenantRoleManager tenantId={tenant.id} />
                       <TenantUserManager tenantId={tenant.id} />
-                      <div className="text-sm text-gray-500 bg-white p-3 rounded border">
+                      <div className="text-sm text-[var(--color-charcoal)] bg-[var(--color-background-paper)] p-3 rounded border border-[var(--color-background-muted)]">
                         <strong>Invite Link:</strong>{" "}
-                        <code className="bg-gray-100 px-2 py-1 rounded">
+                        <code className="bg-[var(--color-background)] px-2 py-1 rounded">
                           {window.location.origin}/TenantAccess?tenant={tenant.slug}
                         </code>
                       </div>
