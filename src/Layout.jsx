@@ -454,7 +454,7 @@ export default function Layout({ children, currentPageName }) {
           key={itemId || item.slug}
           to={pageUrl}
           className={`flex items-center gap-2 px-3 rounded-lg transition-colors ${
-            isChild ? "py-1.5 text-sm" : "py-2"
+            isChild ? "py-1.5 text-sm ml-6" : "py-2"
           } ${
             isActive
               ? "bg-slate-700 text-white"
