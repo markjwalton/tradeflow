@@ -35,7 +35,10 @@ import { SuccessAlert, ErrorAlert, WarningAlert, InfoAlert, LoadingSpinner, Skel
 // Tab definitions - each tab shows specific categories
 const tabs = [
   { id: "all", label: "All Components", icon: BookOpen, categories: ["typography", "buttons", "cards", "forms", "layouts", "navigation", "dataDisplay", "feedback"] },
-  { id: "ui", label: "UI Elements", icon: Grid3X3, categories: ["typography", "buttons", "cards"] },
+  { id: "tokens", label: "Design Tokens", icon: Sparkles, categories: [] },
+  { id: "typography", label: "Typography", icon: Type, categories: ["typography"] },
+  { id: "buttons", label: "Buttons", icon: MousePointer, categories: ["buttons"] },
+  { id: "cards", label: "Cards", icon: Square, categories: ["cards"] },
   { id: "forms", label: "Forms", icon: FormInput, categories: ["forms"] },
   { id: "layout", label: "Layout", icon: Layout, categories: ["layouts"] },
   { id: "navigation", label: "Navigation", icon: NavIcon, categories: ["navigation"] },
