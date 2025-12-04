@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
 import { 
   Layout, Zap, Database, Edit, Eye, Loader2, CheckCircle2, ArrowLeft
 } from "lucide-react";
@@ -16,7 +14,7 @@ import LivePageRenderer from "@/components/playground/LivePageRenderer";
 
 // Standardized components
 import { LivePreviewNavigation } from "@/components/testing/LivePreviewNavigation";
-import { PlaygroundTestData } from "@/components/testing/StandaloneTestData";
+import { ContentCard, InfoRow, StatCard } from "@/components/layout/PageLayout";
 
 const statusColors = {
   passed: "text-green-600",
@@ -210,91 +208,73 @@ export default function LivePreview() {
               <div className="grid grid-cols-4 gap-6">
                 {/* Live Page Preview - 3 columns */}
                 <div className="col-span-3">
-                  <Card className="h-full">
-                    <CardHeader className="pb-2 border-b">
-                      <CardTitle className="text-sm flex items-center gap-2">
-                        <Eye className="h-4 w-4" />
-                        Live Page
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-0">
-                      <LivePageRenderer 
-                        item={selectedItem}
-                        template={templateData}
-                        testData={itemTestData?.entity_data}
-                        entities={getEntitiesForItem()}
-                      />
-                    </CardContent>
-                  </Card>
+                  <ContentCard
+                    title="Live Page"
+                    icon={<Eye className="h-4 w-4" />}
+                    noPadding
+                  >
+                    <LivePageRenderer 
+                      item={selectedItem}
+                      template={templateData}
+                      testData={itemTestData?.entity_data}
+                      entities={getEntitiesForItem()}
+                    />
+                  </ContentCard>
                 </div>
 
                 {/* Sidebar - User Stories & Details */}
                 <div className="col-span-1 space-y-4">
                   {/* User Stories */}
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm">User Stories</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      {getUserStories().length > 0 ? (
-                        <ul className="space-y-2 text-sm">
-                          {getUserStories().map((story, i) => (
-                            <li key={i} className="flex items-start gap-2">
-                              <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>{story}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <p className="text-gray-500 text-sm">No user stories defined</p>
-                      )}
-                    </CardContent>
-                  </Card>
+                  <ContentCard title="User Stories">
+                    {getUserStories().length > 0 ? (
+                      <ul className="space-y-2 text-sm">
+                        {getUserStories().map((story, i) => (
+                          <li key={i} className="flex items-start gap-2">
+                            <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            <span>{story}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-gray-500 text-sm">No user stories defined</p>
+                    )}
+                  </ContentCard>
 
                   {/* Details */}
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm">Details</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">Type</span>
-                        <Badge variant="outline">{selectedItem.source_type}</Badge>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">Status</span>
-                        <Badge className={
-                          selectedItem.test_status === "passed" ? "bg-green-100 text-green-800" :
-                          selectedItem.test_status === "failed" ? "bg-red-100 text-red-800" :
-                          "bg-gray-100 text-gray-800"
-                        }>{selectedItem.test_status || "pending"}</Badge>
-                      </div>
+                  <ContentCard title="Details">
+                    <div className="space-y-1">
+                      <InfoRow 
+                        label="Type" 
+                        value={<Badge variant="outline">{selectedItem.source_type}</Badge>} 
+                      />
+                      <InfoRow 
+                        label="Status" 
+                        value={
+                          <Badge className={
+                            selectedItem.test_status === "passed" ? "bg-green-100 text-green-800" :
+                            selectedItem.test_status === "failed" ? "bg-red-100 text-red-800" :
+                            "bg-gray-100 text-gray-800"
+                          }>{selectedItem.test_status || "pending"}</Badge>
+                        } 
+                      />
                       {templateData?.category && (
-                        <div className="flex justify-between">
-                          <span className="text-gray-500">Category</span>
-                          <span>{templateData.category}</span>
-                        </div>
+                        <InfoRow label="Category" value={templateData.category} />
                       )}
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </ContentCard>
 
                   {/* Entities Used */}
                   {getEntitiesForItem().length > 0 && (
-                    <Card>
-                      <CardHeader className="pb-2">
-                        <CardTitle className="text-sm">Entities</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="flex flex-wrap gap-1">
-                          {getEntitiesForItem().map((e, i) => (
-                            <Badge key={i} variant="secondary" className="text-xs">
-                              <Database className="h-3 w-3 mr-1" />
-                              {e.name}
-                            </Badge>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
+                    <ContentCard title="Entities">
+                      <div className="flex flex-wrap gap-1">
+                        {getEntitiesForItem().map((e, i) => (
+                          <Badge key={i} variant="secondary" className="text-xs">
+                            <Database className="h-3 w-3 mr-1" />
+                            {e.name}
+                          </Badge>
+                        ))}
+                      </div>
+                    </ContentCard>
                   )}
                 </div>
               </div>
