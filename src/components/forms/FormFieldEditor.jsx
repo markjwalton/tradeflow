@@ -28,9 +28,9 @@ export default function FormFieldEditor({ field, onUpdate, onDelete, onClose }) 
   };
 
   return (
-    <div className="w-80 bg-white border-l flex flex-col">
-      <div className="p-3 border-b flex items-center justify-between">
-        <h3 className="font-semibold text-sm">Edit Field</h3>
+    <div className="w-80 bg-[var(--color-background-paper)] border-l border-[var(--color-background-muted)] flex flex-col">
+      <div className="p-3 border-b border-[var(--color-background-muted)] flex items-center justify-between">
+        <h3 className="font-semibold text-sm text-[var(--color-midnight)]">Edit Field</h3>
         <Button variant="ghost" size="sm" onClick={onClose}>
           <X className="h-4 w-4" />
         </Button>
@@ -54,7 +54,7 @@ export default function FormFieldEditor({ field, onUpdate, onDelete, onClose }) 
                 onUpdate({ fieldId: e.target.value.toLowerCase().replace(/\s+/g, "_") })
               }
             />
-            <p className="text-xs text-gray-500 mt-1">Used to reference this field</p>
+            <p className="text-xs text-[var(--color-charcoal)] mt-1">Used to reference this field</p>
           </div>
 
           {field.type !== "section" && field.type !== "instructions" && (
@@ -194,7 +194,7 @@ export default function FormFieldEditor({ field, onUpdate, onDelete, onClose }) 
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="h-9 w-9 p-0 text-red-500"
+                      className="h-9 w-9 p-0 text-[var(--color-destructive)]"
                       onClick={() => removeOption(index)}
                     >
                       <Trash2 className="h-4 w-4" />
@@ -215,8 +215,8 @@ export default function FormFieldEditor({ field, onUpdate, onDelete, onClose }) 
         </div>
       </ScrollArea>
 
-      <div className="p-3 border-t">
-        <Button variant="destructive" size="sm" className="w-full" onClick={onDelete}>
+      <div className="p-3 border-t border-[var(--color-background-muted)]">
+        <Button variant="destructive" size="sm" className="w-full bg-[var(--color-destructive)] hover:bg-[var(--color-destructive-dark)] text-white" onClick={onDelete}>
           <Trash2 className="h-4 w-4 mr-2" />
           Delete Field
         </Button>

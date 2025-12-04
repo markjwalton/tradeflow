@@ -92,7 +92,7 @@ export default function FormSettings({ open, onOpenChange, formData, onUpdate })
                 <SelectItem value="Customer">Customer</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-[var(--color-charcoal)] mt-1">
               Form data will be saved to this entity
             </p>
           </div>
@@ -122,7 +122,7 @@ export default function FormSettings({ open, onOpenChange, formData, onUpdate })
             />
           </div>
 
-          <Button onClick={() => onOpenChange(false)} className="w-full">
+          <Button onClick={() => onOpenChange(false)} className="w-full bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
             Done
           </Button>
         </div>

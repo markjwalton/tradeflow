@@ -39,10 +39,10 @@ const fieldTypes = [
 
 export default function FormFieldPalette({ onAddField }) {
   return (
-    <div className="w-64 bg-white border-r flex flex-col">
-      <div className="p-3 border-b">
-        <h3 className="font-semibold text-sm">Add Field</h3>
-        <p className="text-xs text-gray-500">Click to add to form</p>
+    <div className="w-64 bg-[var(--color-background-paper)] border-r border-[var(--color-background-muted)] flex flex-col">
+      <div className="p-3 border-b border-[var(--color-background-muted)]">
+        <h3 className="font-semibold text-sm text-[var(--color-midnight)]">Add Field</h3>
+        <p className="text-xs text-[var(--color-charcoal)]">Click to add to form</p>
       </div>
       <ScrollArea className="flex-1">
         <div className="p-3 space-y-2">
@@ -52,13 +52,13 @@ export default function FormFieldPalette({ onAddField }) {
               <button
                 key={field.type}
                 onClick={() => onAddField(field.type)}
-                className="w-full p-3 rounded-lg border text-left transition-all hover:shadow-md hover:border-blue-300 bg-white"
+                className="w-full p-3 rounded-lg border border-[var(--color-background-muted)] text-left transition-all hover:shadow-md hover:border-[var(--color-primary)]/30 bg-[var(--color-background-paper)]"
               >
                 <div className="flex items-center gap-2">
-                  <Icon className="h-4 w-4 text-gray-600" />
-                  <span className="font-medium text-sm">{field.label}</span>
+                  <Icon className="h-4 w-4 text-[var(--color-charcoal)]" />
+                  <span className="font-medium text-sm text-[var(--color-midnight)]">{field.label}</span>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">{field.description}</p>
+                <p className="text-xs text-[var(--color-charcoal)] mt-1">{field.description}</p>
               </button>
             );
           })}
