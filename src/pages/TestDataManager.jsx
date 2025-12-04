@@ -744,7 +744,8 @@ Return as JSON with entity names as keys and arrays of records as values.`,
         <CardContent className="py-4">
           <p className="text-blue-800">
             Debug: {playgroundItems.length} PlaygroundItems, {itemStatusList.length} in status list.
-            {playgroundItems.length > 0 && ` First: ${playgroundItems[0]?.data?.source_name} (${playgroundItems[0]?.data?.source_type})`}
+            Pages: {playgroundItems.filter(p => p.data?.source_type === "page").length}, 
+            Features: {playgroundItems.filter(p => p.data?.source_type === "feature").length}
           </p>
         </CardContent>
       </Card>
