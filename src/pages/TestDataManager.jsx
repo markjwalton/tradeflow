@@ -56,31 +56,18 @@ export default function TestDataManager() {
   });
 
   // Build unified item list - SINGLE SOURCE OF TRUTH
+  // TestData is now linked to LIBRARY items (source_id) not playground items
   const items = useMemo(() => {
-    console.log("Building items list...");
-    console.log("playgroundItems count:", playgroundItems.length);
-    console.log("testDataSets count:", testDataSets.length);
-    
-    // Debug first few items
-    if (playgroundItems.length > 0) {
-      console.log("Sample PlaygroundItem:", JSON.stringify(playgroundItems[0], null, 2));
-    }
-    if (testDataSets.length > 0) {
-      console.log("Sample TestData:", JSON.stringify(testDataSets[0], null, 2));
-    }
-
     // Filter to pages and features only
     const previewable = playgroundItems.filter(p => {
       const type = get(p, "source_type");
       return type === "page" || type === "feature";
     });
-    
-    console.log("Previewable items:", previewable.length);
 
     return previewable.map(item => {
       const type = get(item, "source_type");
       const name = get(item, "source_name");
-      const sourceId = get(item, "source_id");
+      const sourceId = get(item, "source_id"); // This is the library template ID
       
       // Find entities used
       let entitiesUsed = [];
@@ -93,24 +80,22 @@ export default function TestDataManager() {
         entitiesUsed = workingData?.entities_used || get(template, "entities_used") || [];
       }
 
-      // Find test data - match by playground_item_id OR by source reference
-      // After clearing/re-syncing, IDs change, so we also match by source_type + source_name
+      // Find test data by LIBRARY source_id (persists across playground syncs)
       const testData = testDataSets.find(td => {
-        const tdPlaygroundId = get(td, "playground_item_id");
-        // Direct ID match
-        if (tdPlaygroundId === item.id) return true;
-        return false;
+        const tdSourceId = get(td, "source_id");
+        const tdSourceType = get(td, "source_type");
+        return tdSourceId === sourceId && tdSourceType === type;
       });
       
       const entityData = get(testData, "entity_data") || {};
       const recordCount = Object.values(entityData).reduce(
         (sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0
       );
-      // test_status is stored on TestData entity, not PlaygroundItem
       const testStatus = get(testData, "test_status") || "pending";
 
       return {
         id: item.id,
+        sourceId, // Library template ID
         name,
         type,
         entityCount: entitiesUsed.length,
@@ -234,15 +219,17 @@ export default function TestDataManager() {
     }
   };
 
-  // GENERATE TEST DATA
+  // GENERATE TEST DATA - linked to library source, not playground item
   const generateTestData = async (item) => {
     setOperation({ type: "generating", progress: 0, total: 1, results: [], currentItem: item.name });
     
     try {
       if (item.entities.length === 0) {
-        // No entities - create placeholder
+        // No entities - create placeholder linked to library source
         await base44.entities.TestData.create({
-          playground_item_id: item.id,
+          source_type: item.type,
+          source_id: item.sourceId,
+          source_name: item.name,
           name: "Default Test Data",
           entity_data: {},
           is_default: true,
@@ -263,7 +250,9 @@ Return JSON with entity names as keys and arrays of records as values.`,
         });
 
         await base44.entities.TestData.create({
-          playground_item_id: item.id,
+          source_type: item.type,
+          source_id: item.sourceId,
+          source_name: item.name,
           name: "Default Test Data",
           entity_data: result.data || {},
           is_default: true,
