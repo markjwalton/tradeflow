@@ -215,7 +215,7 @@ export default function TestDataManager() {
             const recordCount = Object.values(entityData).reduce((sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0);
 
             // Get test status from TestData record - check both direct and nested
-            const testStatus = testData?.test_status || testData?.data?.test_status || "pending";
+            const testStatus = testData?.data?.test_status || testData?.test_status || "pending";
 
             return {
               id: item.id,
