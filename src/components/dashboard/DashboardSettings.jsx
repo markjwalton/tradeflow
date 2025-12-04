@@ -55,7 +55,7 @@ export default function DashboardSettings({
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent className="w-[400px] sm:w-[540px]">
         <SheetHeader>
-          <SheetTitle className="flex items-center gap-2">
+          <SheetTitle className="flex items-center gap-2 text-[var(--color-midnight)]">
             <Settings className="h-5 w-5" />
             Dashboard Settings
           </SheetTitle>

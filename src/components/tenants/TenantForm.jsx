@@ -65,7 +65,7 @@ export default function TenantForm({ isOpen, onClose, onSubmit, tenant = null })
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{tenant ? "Edit Tenant" : "Add Tenant"}</DialogTitle>
+          <DialogTitle className="text-[var(--color-midnight)]">{tenant ? "Edit Tenant" : "Add Tenant"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
