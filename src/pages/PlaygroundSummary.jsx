@@ -73,20 +73,22 @@ export default function PlaygroundSummary() {
     queryFn: () => base44.entities.ConceptItem.list("-created_date"),
   });
 
-  const { data: entityTemplates = [] } = useQuery({
+  const { data: entityTemplates = [], isLoading: loadingEntities } = useQuery({
     queryKey: ["entityTemplates"],
     queryFn: () => base44.entities.EntityTemplate.filter({ is_custom: false }),
   });
 
-  const { data: pageTemplates = [] } = useQuery({
+  const { data: pageTemplates = [], isLoading: loadingPages } = useQuery({
     queryKey: ["pageTemplates"],
     queryFn: () => base44.entities.PageTemplate.filter({ is_custom: false }),
   });
 
-  const { data: featureTemplates = [] } = useQuery({
+  const { data: featureTemplates = [], isLoading: loadingFeatures } = useQuery({
     queryKey: ["featureTemplates"],
     queryFn: () => base44.entities.FeatureTemplate.filter({ is_custom: false }),
   });
+
+  const allLoading = isLoading || loadingEntities || loadingPages || loadingFeatures;
 
   // Clear all playground data
   const clearPlaygroundData = async () => {
@@ -484,7 +486,7 @@ export default function PlaygroundSummary() {
           </div>
 
           {/* Items Grid */}
-          {isLoading ? (
+          {allLoading ? (
             <div className="flex justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
             </div>
