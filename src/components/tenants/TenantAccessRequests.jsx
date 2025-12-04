@@ -76,20 +76,20 @@ export default function TenantAccessRequests({ tenantId }) {
   if (requests.length === 0) return null;
 
   return (
-    <Card className="border-amber-200 bg-amber-50">
+    <Card className="border-[var(--color-secondary)]/30 bg-[var(--color-secondary)]/10">
       <CardHeader className="pb-3">
-        <CardTitle className="text-base flex items-center gap-2 text-amber-800">
+        <CardTitle className="text-base flex items-center gap-2 text-[var(--color-secondary-dark)]">
           <UserPlus className="h-4 w-4" />
           Pending Access Requests ({requests.length})
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {requests.map((request) => (
-          <div key={request.id} className="bg-white p-3 rounded-lg border space-y-2">
+          <div key={request.id} className="bg-[var(--color-background-paper)] p-3 rounded-lg border border-[var(--color-background-muted)] space-y-2">
             <div className="flex items-center justify-between">
               <div>
-                <div className="font-medium">{request.user_name || request.user_email}</div>
-                <div className="text-xs text-gray-500">{request.user_email}</div>
+                <div className="font-medium text-[var(--color-midnight)]">{request.user_name || request.user_email}</div>
+                <div className="text-xs text-[var(--color-charcoal)]">{request.user_email}</div>
               </div>
               <div className="flex gap-2">
                 <Button 
@@ -103,6 +103,7 @@ export default function TenantAccessRequests({ tenantId }) {
                   size="sm"
                   onClick={() => handleApprove(request)}
                   disabled={(selectedRoles[request.id] || []).length === 0}
+                  className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
                 >
                   <Check className="h-4 w-4 mr-1" /> Approve
                 </Button>

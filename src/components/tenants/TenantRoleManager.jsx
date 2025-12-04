@@ -63,12 +63,12 @@ export default function TenantRoleManager({ tenantId }) {
       </CardHeader>
       <CardContent className="space-y-4">
         {isLoading ? (
-          <div className="text-sm text-gray-500">Loading roles...</div>
+          <div className="text-sm text-[var(--color-charcoal)]">Loading roles...</div>
         ) : (
           <>
             <div className="flex flex-wrap gap-2">
               {roles.length === 0 ? (
-                <p className="text-sm text-gray-500">No roles defined yet</p>
+                <p className="text-sm text-[var(--color-charcoal)]">No roles defined yet</p>
               ) : (
                 roles.map((role) => (
                   <Badge 
@@ -79,7 +79,7 @@ export default function TenantRoleManager({ tenantId }) {
                   >
                     {role.name}
                     <X
-                      className="h-3 w-3 cursor-pointer hover:text-red-500"
+                      className="h-3 w-3 cursor-pointer hover:text-[var(--color-destructive)]"
                       onClick={() => deleteMutation.mutate(role.id)}
                     />
                   </Badge>
@@ -100,7 +100,7 @@ export default function TenantRoleManager({ tenantId }) {
                 onChange={(e) => setNewDescription(e.target.value)}
                 className="flex-1"
               />
-              <Button type="submit" size="icon" disabled={!newRole.trim()}>
+              <Button type="submit" size="icon" disabled={!newRole.trim()} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
                 <Plus className="h-4 w-4" />
               </Button>
             </form>

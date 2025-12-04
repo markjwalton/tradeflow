@@ -96,9 +96,9 @@ export default function TenantForm({ isOpen, onClose, onSubmit, tenant = null })
               id="company_id"
               value={formData.company_id}
               readOnly
-              className="bg-gray-50 font-mono"
+              className="bg-[var(--color-background)] font-mono"
             />
-            <p className="text-xs text-gray-500">Share this ID with users to let them find your organization</p>
+            <p className="text-xs text-[var(--color-charcoal)]">Share this ID with users to let them find your organization</p>
           </div>
 
           <div className="flex items-center justify-between">
@@ -114,7 +114,7 @@ export default function TenantForm({ isOpen, onClose, onSubmit, tenant = null })
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit">
+            <Button type="submit" className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
               {tenant ? "Update" : "Create"}
             </Button>
           </DialogFooter>

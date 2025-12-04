@@ -119,16 +119,16 @@ export default function TenantUserManager({ tenantId }) {
       <CardContent className="space-y-4">
         {/* Existing assignments */}
         {userRoles.length === 0 ? (
-          <p className="text-sm text-gray-500">No users assigned to this tenant yet</p>
+          <p className="text-sm text-[var(--color-charcoal)]">No users assigned to this tenant yet</p>
         ) : (
           <div className="space-y-2">
             {userRoles.map((ur) => {
               const user = users.find(u => u.id === ur.user_id);
               return (
-                <div key={ur.id} className="flex items-center gap-3 p-2 bg-gray-50 rounded-lg">
+                <div key={ur.id} className="flex items-center gap-3 p-2 bg-[var(--color-background)] rounded-lg">
                   <div className="flex-1">
-                    <div className="font-medium text-sm">{user?.full_name || ur.user_email}</div>
-                    <div className="text-xs text-gray-500">{ur.user_email}</div>
+                    <div className="font-medium text-sm text-[var(--color-midnight)]">{user?.full_name || ur.user_email}</div>
+                    <div className="text-xs text-[var(--color-charcoal)]">{ur.user_email}</div>
                   </div>
                   <div className="flex gap-1 flex-wrap">
                     {availableRoles.map(role => (
@@ -147,7 +147,7 @@ export default function TenantUserManager({ tenantId }) {
                     size="icon"
                     onClick={() => deleteMutation.mutate(ur.id)}
                   >
-                    <Trash2 className="h-4 w-4 text-red-500" />
+                    <Trash2 className="h-4 w-4 text-[var(--color-destructive)]" />
                   </Button>
                 </div>
               );
@@ -157,8 +157,8 @@ export default function TenantUserManager({ tenantId }) {
 
         {/* Add new user */}
         {unassignedUsers.length > 0 && availableRoles.length > 0 && (
-          <div className="border-t pt-4 space-y-3">
-            <div className="text-sm font-medium">Add User</div>
+          <div className="border-t border-[var(--color-background-muted)] pt-4 space-y-3">
+            <div className="text-sm font-medium text-[var(--color-midnight)]">Add User</div>
             <div className="flex gap-2">
               <Select value={selectedUserId} onValueChange={setSelectedUserId}>
                 <SelectTrigger className="flex-1">
@@ -172,7 +172,7 @@ export default function TenantUserManager({ tenantId }) {
                   ))}
                 </SelectContent>
               </Select>
-              <Button onClick={handleAddUser} disabled={!selectedUserId || selectedRoles.length === 0}>
+              <Button onClick={handleAddUser} disabled={!selectedUserId || selectedRoles.length === 0} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
                 <Plus className="h-4 w-4 mr-1" /> Add
               </Button>
             </div>
@@ -200,7 +200,7 @@ export default function TenantUserManager({ tenantId }) {
         )}
 
         {availableRoles.length === 0 && (
-          <p className="text-sm text-gray-500 italic">Define roles first to assign users</p>
+          <p className="text-sm text-[var(--color-charcoal)] italic">Define roles first to assign users</p>
         )}
       </CardContent>
     </Card>
