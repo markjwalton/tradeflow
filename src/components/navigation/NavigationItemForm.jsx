@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { X, Home, Settings, Users, FileText, LayoutDashboard, FolderOpen, ShoppingCart, Mail, Calendar, Bell, Search, Heart, Star, Bookmark, Clock, Globe, Lock, Key, Shield, Zap, Database, Server, Code, Terminal, Cpu, Monitor, Smartphone, Tablet, Camera, Image, Video, Music, Mic, Phone, MessageSquare, Send, Inbox, Archive, Trash, Edit, PenTool, Layers, Grid, List, BarChart, PieChart, TrendingUp, DollarSign, CreditCard, Wallet, Gift, Tag, Package, Truck, MapPin, Navigation, Compass, Map, Flag, Award, Target, Crosshair } from "lucide-react";
+import { X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -27,71 +27,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { getIconOptions, getIconByName } from "./NavIconMap";
 
-const iconOptions = [
-  { name: "Home", icon: Home },
-  { name: "Settings", icon: Settings },
-  { name: "Users", icon: Users },
-  { name: "FileText", icon: FileText },
-  { name: "LayoutDashboard", icon: LayoutDashboard },
-  { name: "FolderOpen", icon: FolderOpen },
-  { name: "ShoppingCart", icon: ShoppingCart },
-  { name: "Mail", icon: Mail },
-  { name: "Calendar", icon: Calendar },
-  { name: "Bell", icon: Bell },
-  { name: "Search", icon: Search },
-  { name: "Heart", icon: Heart },
-  { name: "Star", icon: Star },
-  { name: "Bookmark", icon: Bookmark },
-  { name: "Clock", icon: Clock },
-  { name: "Globe", icon: Globe },
-  { name: "Lock", icon: Lock },
-  { name: "Key", icon: Key },
-  { name: "Shield", icon: Shield },
-  { name: "Zap", icon: Zap },
-  { name: "Database", icon: Database },
-  { name: "Server", icon: Server },
-  { name: "Code", icon: Code },
-  { name: "Terminal", icon: Terminal },
-  { name: "Cpu", icon: Cpu },
-  { name: "Monitor", icon: Monitor },
-  { name: "Smartphone", icon: Smartphone },
-  { name: "Tablet", icon: Tablet },
-  { name: "Camera", icon: Camera },
-  { name: "Image", icon: Image },
-  { name: "Video", icon: Video },
-  { name: "Music", icon: Music },
-  { name: "Mic", icon: Mic },
-  { name: "Phone", icon: Phone },
-  { name: "MessageSquare", icon: MessageSquare },
-  { name: "Send", icon: Send },
-  { name: "Inbox", icon: Inbox },
-  { name: "Archive", icon: Archive },
-  { name: "Trash", icon: Trash },
-  { name: "Edit", icon: Edit },
-  { name: "PenTool", icon: PenTool },
-  { name: "Layers", icon: Layers },
-  { name: "Grid", icon: Grid },
-  { name: "List", icon: List },
-  { name: "BarChart", icon: BarChart },
-  { name: "PieChart", icon: PieChart },
-  { name: "TrendingUp", icon: TrendingUp },
-  { name: "DollarSign", icon: DollarSign },
-  { name: "CreditCard", icon: CreditCard },
-  { name: "Wallet", icon: Wallet },
-  { name: "Gift", icon: Gift },
-  { name: "Tag", icon: Tag },
-  { name: "Package", icon: Package },
-  { name: "Truck", icon: Truck },
-  { name: "MapPin", icon: MapPin },
-  { name: "Navigation", icon: Navigation },
-  { name: "Compass", icon: Compass },
-  { name: "Map", icon: Map },
-  { name: "Flag", icon: Flag },
-  { name: "Award", icon: Award },
-  { name: "Target", icon: Target },
-  { name: "Crosshair", icon: Crosshair },
-];
+const iconOptions = getIconOptions();
 
 export default function NavigationItemForm({ 
   isOpen, 
@@ -242,13 +180,13 @@ export default function NavigationItemForm({
                   {formData.icon ? (
                     <>
                       {(() => {
-                        const IconComp = iconOptions.find(i => i.name === formData.icon)?.icon;
+                        const IconComp = getIconByName(formData.icon);
                         return IconComp ? <IconComp className="h-4 w-4" /> : null;
                       })()}
                       {formData.icon}
                     </>
                   ) : (
-                    <span className="text-gray-500">Select an icon...</span>
+                    <span className="text-muted-foreground">Select an icon...</span>
                   )}
                 </Button>
               </PopoverTrigger>
@@ -259,8 +197,10 @@ export default function NavigationItemForm({
                       key={name}
                       type="button"
                       onClick={() => setFormData({ ...formData, icon: name })}
-                      className={`p-2 rounded hover:bg-gray-100 transition-colors ${
-                        formData.icon === name ? 'bg-blue-100 ring-1 ring-blue-400' : ''
+                      className={`p-2 rounded-token-md transition-token-fast ${
+                        formData.icon === name 
+                          ? 'bg-primary-100 ring-1 ring-primary-400' 
+                          : 'hover:bg-primary-50'
                       }`}
                       title={name}
                     >
@@ -272,7 +212,7 @@ export default function NavigationItemForm({
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    className="w-full mt-2 text-gray-500"
+                    className="w-full mt-2 text-muted-foreground"
                     onClick={() => setFormData({ ...formData, icon: '' })}
                   >
                     Clear icon
@@ -366,20 +306,20 @@ export default function NavigationItemForm({
           </div>
 
           {formData.item_type === "folder" && (
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="default_collapsed">Default Collapsed</Label>
-                  <Switch
-                    id="default_collapsed"
-                    checked={formData.default_collapsed}
-                    onCheckedChange={(checked) => setFormData({ ...formData, default_collapsed: checked })}
-                  />
-                </div>
-                <p className="text-xs text-amber-600 bg-amber-50 p-2 rounded">
-                  ⚠️ Note: Page settings "Auto-expand all items" will override this setting when enabled.
-                </p>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="default_collapsed">Default Collapsed</Label>
+                <Switch
+                  id="default_collapsed"
+                  checked={formData.default_collapsed}
+                  onCheckedChange={(checked) => setFormData({ ...formData, default_collapsed: checked })}
+                />
               </div>
-            )}
+              <p className="text-xs text-secondary-600 bg-secondary-50 p-2 rounded-token-md">
+                ⚠️ Note: Page settings "Auto-expand all items" will override this setting when enabled.
+              </p>
+            </div>
+          )}
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={onClose}>
