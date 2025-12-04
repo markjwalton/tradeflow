@@ -56,6 +56,7 @@ import CommunityPublish from './pages/CommunityPublish';
 import DashboardManager from './pages/DashboardManager';
 import Dashboard from './pages/Dashboard';
 import ComponentShowcase from './pages/ComponentShowcase';
+import SturijPackage from './pages/SturijPackage';
 import __Layout from './Layout.jsx';
 
 
@@ -118,6 +119,7 @@ export const PAGES = {
     "DashboardManager": DashboardManager,
     "Dashboard": Dashboard,
     "ComponentShowcase": ComponentShowcase,
+    "SturijPackage": SturijPackage,
 }
 
 export const pagesConfig = {
