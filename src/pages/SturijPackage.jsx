@@ -672,7 +672,7 @@ When updating existing code:
                       <li>• text-gray-500, bg-blue-100</li>
                       <li>• inline style attributes</li>
                       <li>• Hardcoded color values (#hex)</li>
-                      <li>• style={{"{"}}fontFamily: ...{"}}"}</li>
+                      <li>• style with fontFamily property</li>
                       <li>• Non-semantic color names</li>
                     </ul>
                   </div>
