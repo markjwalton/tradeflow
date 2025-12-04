@@ -15,9 +15,9 @@ import { createPageUrl } from "@/utils";
 // Dynamic page renderer based on template
 import LivePageRenderer from "@/components/playground/LivePageRenderer";
 
-// Standardized data providers
-import { NavigationDataProvider, useNavigation } from "@/components/navigation/NavigationDataProvider";
-import { TestDataProvider, useTestData } from "@/components/testing/TestDataProvider";
+// Standardized components
+import { LivePreviewNavigation } from "@/components/testing/LivePreviewNavigation";
+import { PlaygroundTestData } from "@/components/testing/StandaloneTestData";
 
 const statusColors = {
   passed: "text-green-600",
@@ -57,14 +57,6 @@ export default function LivePreview() {
     queryFn: () => base44.entities.TestData.list(),
   });
 
-  // Fetch navigation config for live pages
-  const { data: navConfigs = [] } = useQuery({
-    queryKey: ["navConfig", "live_pages_source"],
-    queryFn: () => base44.entities.NavigationConfig.filter({ config_type: "live_pages_source" }),
-  });
-
-  const navItems = navConfigs[0]?.items || [];
-
   // Build navigation structure from config
   const pageItems = playgroundItems.filter(item => item.source_type === "page");
   const featureItems = playgroundItems.filter(item => item.source_type === "feature");
@@ -75,23 +67,12 @@ export default function LivePreview() {
     // Check if it's a feature (prefixed with "feature:")
     if (name.startsWith("feature:")) {
       const featureName = name.replace("feature:", "");
-      // Try exact match first, then case-insensitive
       return playgroundItems.find(p => p.source_type === "feature" && p.source_name === featureName) ||
              playgroundItems.find(p => p.source_type === "feature" && p.source_name?.toLowerCase() === featureName.toLowerCase());
     }
-    // Try exact match first, then case-insensitive
     return playgroundItems.find(p => p.source_type === "page" && p.source_name === name) ||
            playgroundItems.find(p => p.source_type === "page" && p.source_name?.toLowerCase() === name.toLowerCase());
   };
-
-  // Build hierarchical nav from config
-  const getNavItemsByParent = (parentId) => {
-    return navItems
-      .filter(item => (item.parent_id || null) === parentId && item.is_visible !== false)
-      .sort((a, b) => (a.order || 0) - (b.order || 0));
-  };
-
-  const topLevelNavItems = getNavItemsByParent(null);
 
   // Fallback: Group features by category if no nav config
   const featuresByCategory = featureItems.reduce((acc, item) => {
@@ -151,9 +132,6 @@ export default function LivePreview() {
     });
   };
 
-  // Start with folders collapsed
-  // No auto-expand - folders start closed
-
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -161,95 +139,6 @@ export default function LivePreview() {
       </div>
     );
   }
-
-  // Get children of a nav item - match parent_id against _id OR slug (for folders that use slug as ID)
-  const getNavChildren = (parentId) => {
-    return navItems
-      .filter(item => {
-        const itemParent = item.parent_id;
-        // Match against _id or slug (folders use slug as their identifier)
-        return itemParent === parentId && item.is_visible !== false;
-      })
-      .sort((a, b) => (a.order || 0) - (b.order || 0));
-  };
-
-  // Get top-level items
-  const getTopLevelItems = () => {
-    return navItems
-      .filter(item => !item.parent_id && item.is_visible !== false)
-      .sort((a, b) => (a.order || 0) - (b.order || 0));
-  };
-
-  // Recursive nav renderer - matches Layout.js styling exactly
-  const renderNavItems = (items, depth = 0) => {
-    return items.map((navItem) => {
-      const isFolder = navItem.item_type === "folder";
-      const folderId = navItem._id || navItem.slug;
-      const children = getNavChildren(folderId);
-      const hasChildren = children.length > 0;
-      const isExpanded = expandedFolders.has(folderId);
-      const isFeature = navItem.slug?.startsWith("feature:");
-      
-      // For pages/features, find the corresponding playground item
-      // Nav items use slug (e.g. "FormBuilder") which should match PlaygroundItem.source_name
-      const playgroundItem = !isFolder ? findPlaygroundItem(navItem.slug || navItem.name) : null;
-      const isSelected = playgroundItem && selectedItemId === playgroundItem.id;
-      
-      // Debug: log when we can't find a match
-      // if (!isFolder && !playgroundItem) console.log("No match for:", navItem.slug, navItem.name);
-
-      if (isFolder) {
-        return (
-          <div key={folderId}>
-            <button
-              onClick={() => toggleFolder(folderId)}
-              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-slate-300 hover:bg-slate-800 hover:text-white"
-            >
-              {hasChildren ? (
-                isExpanded ? <ChevronDown className="h-4 w-4 text-slate-400" /> : <ChevronRight className="h-4 w-4 text-slate-400" />
-              ) : (
-                <div className="w-4" />
-              )}
-              {isExpanded ? <FolderOpen className="h-4 w-4 text-amber-400" /> : <Folder className="h-4 w-4 text-amber-400" />}
-              <span className="flex-1 text-left">{navItem.name}</span>
-            </button>
-            {isExpanded && hasChildren && (
-              <div>
-                {renderNavItems(children, depth + 1)}
-              </div>
-            )}
-          </div>
-        );
-      }
-
-      // Page or feature item - always clickable, just show different styling if no playground item
-      const isChild = depth > 0;
-      return (
-        <button
-          key={navItem._id || navItem.slug}
-          onClick={() => {
-            if (playgroundItem) {
-              setSelectedItemId(playgroundItem.id);
-            }
-          }}
-          className={`w-full flex items-center gap-2 px-3 rounded-lg transition-colors truncate ${
-            isChild ? "py-1.5 text-xs" : "py-2 text-sm"
-          } ${
-            isSelected
-              ? "bg-slate-700 text-white"
-              : playgroundItem
-                ? "text-slate-300 hover:bg-slate-800 hover:text-white cursor-pointer"
-                : "text-slate-500 hover:bg-slate-800/50 hover:text-slate-400 cursor-pointer"
-          }`}
-          title={!playgroundItem ? "Not synced to playground yet" : undefined}
-        >
-          {!isChild && (isFeature ? <Zap className="h-4 w-4 flex-shrink-0" /> : <Layout className="h-4 w-4 flex-shrink-0" />)}
-          <span className="truncate">{navItem.name}</span>
-          {!playgroundItem && <span className="text-xs text-slate-600">•</span>}
-        </button>
-      );
-    });
-  };
 
   return (
     <div className="flex h-[calc(100vh-56px)]">
@@ -275,92 +164,13 @@ export default function LivePreview() {
         </div>
 
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-            {navItems.length > 0 ? (
-              // Use configured navigation structure - matches Layout.js exactly
-              renderNavItems(getTopLevelItems(), 0)
-            ) : (
-              // Fallback: Show pages and features separately
-              <>
-                {/* Pages Section */}
-                <div className="mb-4">
-                  <div className="flex items-center gap-2 mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wide">
-                    <Layout className="h-3 w-3" />
-                    Pages
-                  </div>
-                  {pageItems.map(item => (
-                    <button
-                      key={item.id}
-                      onClick={() => setSelectedItemId(item.id)}
-                      className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm ${
-                        selectedItemId === item.id 
-                          ? "bg-slate-700 text-white" 
-                          : "text-slate-300 hover:bg-slate-800 hover:text-white"
-                      }`}
-                    >
-                      <Layout className="h-4 w-4" />
-                      <span className="flex-1 text-left truncate">{item.source_name}</span>
-                      <span className={statusColors[item.test_status || "pending"]}>●</span>
-                    </button>
-                  ))}
-                  {pageItems.length === 0 && (
-                    <p className="text-xs text-slate-500 px-3 py-2">No pages synced</p>
-                  )}
-                </div>
-
-                {/* Features Section - Grouped by Category */}
-                <div>
-                  <div className="flex items-center gap-2 mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wide">
-                    <Zap className="h-3 w-3" />
-                    Features
-                  </div>
-                  {Object.entries(featuresByCategory).map(([category, items]) => (
-                    <div key={category}>
-                      <button
-                        onClick={() => toggleFolder(category)}
-                        className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
-                      >
-                        {expandedFolders.has(category) ? (
-                          <ChevronDown className="h-4 w-4 text-slate-400" />
-                        ) : (
-                          <ChevronRight className="h-4 w-4 text-slate-400" />
-                        )}
-                        {expandedFolders.has(category) ? (
-                          <FolderOpen className="h-4 w-4 text-amber-400" />
-                        ) : (
-                          <Folder className="h-4 w-4 text-amber-400" />
-                        )}
-                        <span className="flex-1 text-left font-medium">{category}</span>
-                        <Badge className="bg-slate-700 text-slate-300 text-xs">
-                          {items.length}
-                        </Badge>
-                      </button>
-                      {expandedFolders.has(category) && (
-                        <div className="ml-4 pl-3 border-l border-slate-700 space-y-1 mt-1">
-                          {items.map(item => (
-                            <button
-                              key={item.id}
-                              onClick={() => setSelectedItemId(item.id)}
-                              className={`w-full flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                                selectedItemId === item.id 
-                                  ? "bg-slate-700 text-white" 
-                                  : "text-slate-400 hover:bg-slate-800 hover:text-white"
-                              }`}
-                            >
-                              <Zap className="h-3 w-3" />
-                              <span className="flex-1 text-left truncate">{item.source_name}</span>
-                              <span className={statusColors[item.test_status || "pending"]}>●</span>
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                  {Object.keys(featuresByCategory).length === 0 && (
-                    <p className="text-xs text-slate-500 px-3 py-2">No features synced</p>
-                  )}
-                </div>
-              </>
-            )}
+          <LivePreviewNavigation
+            playgroundItems={playgroundItems}
+            selectedItemId={selectedItemId}
+            onSelectItem={setSelectedItemId}
+            fallbackPages={pageItems}
+            fallbackFeatures={featuresByCategory}
+          />
         </nav>
 
         {/* Bottom Actions */}
