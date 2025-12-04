@@ -153,7 +153,7 @@ export default function LivePreview() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-primary-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-primary)]" />
       </div>
     );
   }
@@ -161,8 +161,8 @@ export default function LivePreview() {
   // Detail view when item is selected
   if (selectedItem) {
     return (
-      <div className="p-6 space-y-6 bg-background-100 min-h-screen">
-        <Button variant="ghost" onClick={goBack} className="gap-2 text-charcoal-600 hover:text-midnight-900">
+      <div className="p-6 space-y-6 bg-[var(--color-background)] min-h-screen">
+        <Button variant="ghost" onClick={goBack} className="gap-2 text-[var(--color-charcoal)] hover:text-[var(--color-midnight)]">
           <ArrowLeft className="h-4 w-4" />
           Back to Overview
         </Button>
@@ -187,7 +187,7 @@ export default function LivePreview() {
                 </Button>
               </Link>
               <Link to={getDetailUrl(selectedItem)}>
-                <Button size="sm" className="gap-2 bg-primary-500 hover:bg-primary-600">
+                <Button size="sm" className="gap-2 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
                   <Edit className="h-4 w-4" />
                   Edit in Playground
                 </Button>
@@ -203,7 +203,7 @@ export default function LivePreview() {
               title="Live Preview"
               description="Interactive page rendering with test data"
             >
-              <div className="-mx-4 -mb-4 mt-4 border-t border-background-200">
+              <div className="-mx-4 -mb-4 mt-4 border-t border-[var(--color-background)]">
                 <LivePageRenderer 
                   item={selectedItem}
                   template={templateData}
@@ -241,8 +241,8 @@ export default function LivePreview() {
               >
                 <ul className="space-y-2 text-sm">
                   {getUserStories().map((story, i) => (
-                    <li key={i} className="flex items-start gap-2 text-charcoal-600">
-                      <span className="text-primary-500 mt-1">•</span>
+                    <li key={i} className="flex items-start gap-2 text-[var(--color-charcoal)]">
+                      <span className="text-[var(--color-primary)] mt-1">•</span>
                       <span>{story}</span>
                     </li>
                   ))}
@@ -273,7 +273,7 @@ export default function LivePreview() {
 
   // Overview dashboard
   return (
-    <div className="p-6 space-y-6 bg-background-100 min-h-screen">
+    <div className="p-6 space-y-6 bg-[var(--color-background)] min-h-screen">
       <PageHeader
         icon={<Eye className="h-6 w-6" />}
         title="Live Preview"
@@ -327,20 +327,20 @@ export default function LivePreview() {
             <button
               key={item.id}
               onClick={() => selectItem(item)}
-              className="flex items-center gap-3 p-3 rounded-lg border border-background-200 bg-white hover:bg-primary-50 hover:border-primary-200 transition-all text-left group"
+              className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 bg-white hover:bg-[var(--color-primary)]/10 hover:border-[var(--color-primary)]/30 transition-all text-left group"
             >
-              <div className="p-2 bg-primary-50 rounded-lg text-primary-600 group-hover:bg-primary-100">
+              <div className="p-2 bg-[var(--color-primary)]/10 rounded-lg text-[var(--color-primary)] group-hover:bg-[var(--color-primary)]/20">
                 <Layout className="h-4 w-4" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-midnight-900 truncate">{item.source_name}</p>
-                <p className="text-xs text-charcoal-400 font-mono">/{toSlug(item.source_name)}</p>
+                <p className="font-medium text-[var(--color-midnight)] truncate">{item.source_name}</p>
+                <p className="text-xs text-[var(--color-charcoal)] font-mono">/{toSlug(item.source_name)}</p>
               </div>
               <StatusBadge status={item.test_status || "pending"} size="small" />
             </button>
           ))}
           {groupedItems.pages.length === 0 && (
-            <p className="text-charcoal-400 text-sm col-span-full py-8 text-center">
+            <p className="text-[var(--color-charcoal)] text-sm col-span-full py-8 text-center">
               No pages synced yet
             </p>
           )}
@@ -362,14 +362,14 @@ export default function LivePreview() {
               <button
                 key={item.id}
                 onClick={() => selectItem(item)}
-                className="flex items-center gap-3 p-3 rounded-lg border border-background-200 bg-white hover:bg-secondary-50 hover:border-secondary-200 transition-all text-left group"
+                className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 bg-white hover:bg-[var(--color-secondary)]/10 hover:border-[var(--color-secondary)]/30 transition-all text-left group"
               >
-                <div className="p-2 bg-secondary-50 rounded-lg text-secondary-600 group-hover:bg-secondary-100">
+                <div className="p-2 bg-[var(--color-secondary)]/10 rounded-lg text-[var(--color-secondary)] group-hover:bg-[var(--color-secondary)]/20">
                   <Zap className="h-4 w-4" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-midnight-900 truncate">{item.source_name}</p>
-                  <p className="text-xs text-charcoal-400 font-mono">/{toSlug(item.source_name)}</p>
+                  <p className="font-medium text-[var(--color-midnight)] truncate">{item.source_name}</p>
+                  <p className="text-xs text-[var(--color-charcoal)] font-mono">/{toSlug(item.source_name)}</p>
                 </div>
                 <StatusBadge status={item.test_status || "pending"} size="small" />
               </button>
@@ -384,7 +384,7 @@ export default function LivePreview() {
           title="Features"
           description="No features synced yet"
         >
-          <div className="py-8 text-center text-charcoal-400">
+          <div className="py-8 text-center text-[var(--color-charcoal)]">
             <Zap className="h-10 w-10 mx-auto mb-2 opacity-30" />
             <p>Sync features from the Playground to see them here</p>
           </div>
