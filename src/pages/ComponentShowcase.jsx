@@ -231,8 +231,9 @@ export default function ComponentShowcase() {
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Typography Section */}
-        {visibleCategories.includes("typography") && <ShowcaseSection
-          id="typography"
+        {visibleCategories.includes("typography") && (
+          <ShowcaseSection
+            id="typography"
           title="Typography"
           count={13}
           description="Semantic text components with consistent styling"
