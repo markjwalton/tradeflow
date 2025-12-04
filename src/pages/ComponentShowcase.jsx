@@ -268,10 +268,12 @@ export default function ComponentShowcase() {
               </div>
             </Stack>
           </ComponentDemo>
-        </ShowcaseSection>}
+        </ShowcaseSection>
+        )}
 
         {/* Buttons Section */}
-        {visibleCategories.includes("buttons") && <ShowcaseSection
+        {visibleCategories.includes("buttons") && (
+          <ShowcaseSection
           id="buttons"
           title="Buttons"
           count={11}
