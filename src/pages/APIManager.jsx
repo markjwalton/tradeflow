@@ -528,7 +528,7 @@ export default function APIManager() {
                 </Select>
               )}
             </div>
-            <Button onClick={() => openEditor()}>
+            <Button className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white" onClick={() => openEditor()}>
               <Plus className="h-4 w-4 mr-2" />
               Add API
             </Button>
@@ -543,7 +543,7 @@ export default function APIManager() {
               <CardContent className="py-12 text-center text-gray-500">
                 <Key className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>No {apiViewMode === "global" ? "global" : "tenant"} API configurations yet</p>
-                <Button className="mt-4" onClick={() => openEditor()}>
+                <Button className="mt-4 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white" onClick={() => openEditor()}>
                   <Plus className="h-4 w-4 mr-2" />
                   Add Your First API
                 </Button>
@@ -1129,7 +1129,7 @@ export default function APIManager() {
 
             <div className="flex justify-end gap-2 pt-4">
               <Button variant="outline" onClick={closeEditor}>Cancel</Button>
-              <Button onClick={handleSave} disabled={createMutation.isPending || updateMutation.isPending}>
+              <Button className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white" onClick={handleSave} disabled={createMutation.isPending || updateMutation.isPending}>
                 {(createMutation.isPending || updateMutation.isPending) && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                 Save
               </Button>
