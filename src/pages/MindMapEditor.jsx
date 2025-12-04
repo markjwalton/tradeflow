@@ -909,10 +909,10 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
   };
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col bg-[var(--color-background)]">
       {/* Header */}
-      <div className="flex items-center gap-4 p-4 bg-white border-b">
-        <h1 className="text-xl font-bold">Mind Map Editor</h1>
+      <div className="flex items-center gap-4 p-4 bg-[var(--color-background-paper)] border-b border-[var(--color-background-muted)]">
+        <h1 className="text-xl font-bold text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>Mind Map Editor</h1>
         
         <Select value={selectedMindMapId || ""} onValueChange={(id) => {
           setSelectedMindMapId(id);
@@ -989,12 +989,12 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
       {/* Canvas and History Panel */}
       <div className="flex-1 flex">
         {!selectedMindMapId ? (
-          <div className="h-full flex items-center justify-center text-gray-500">
+          <div className="h-full flex items-center justify-center text-[var(--color-charcoal)]">
             Select or create a mind map to get started
           </div>
         ) : loadingNodes || loadingConnections ? (
           <div className="h-full flex items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
           </div>
         ) : (
           <div className="flex-1">

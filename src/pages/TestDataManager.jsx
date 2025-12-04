@@ -279,8 +279,8 @@ Return JSON with entity names as keys and arrays of records as values.`,
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+      <div className="flex items-center justify-center h-64 bg-[var(--color-background)]">
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
       </div>
     );
   }
@@ -296,8 +296,8 @@ Return JSON with entity names as keys and arrays of records as values.`,
                 <FlaskConical className="h-8 w-8" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold">Test Data Manager</h1>
-                <p className="text-purple-100 mt-1">Manage test data for pages and features</p>
+                <h1 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>Test Data Manager</h1>
+                <p className="text-white/80 mt-1">Manage test data for pages and features</p>
                 <div className="flex gap-3 mt-4">
                   <Badge className="bg-white/20">{stats.total} Items</Badge>
                   <Badge className="bg-green-500/80">{stats.verified} Verified</Badge>

@@ -354,11 +354,11 @@ Only suggest NEW relationships not already in existingRelationships.`,
   };
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col bg-[var(--color-background)]">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 bg-white border-b">
+      <div className="flex items-center justify-between p-4 bg-[var(--color-background-paper)] border-b border-[var(--color-background-muted)]">
         <div className="flex items-center gap-4">
-          <h1 className="text-xl font-bold flex items-center gap-2">
+          <h1 className="text-xl font-bold flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
             <Database className="h-5 w-5 text-purple-600" />
             ERD Editor
           </h1>
@@ -378,7 +378,7 @@ Only suggest NEW relationships not already in existingRelationships.`,
       </div>
 
       {/* Toolbar */}
-      <div className="flex items-center gap-2 p-2 bg-slate-50 border-b">
+      <div className="flex items-center gap-2 p-2 bg-[var(--color-background)] border-b border-[var(--color-background-muted)]">
         <Button size="sm" onClick={handleAddEntity}>
           <Plus className="h-4 w-4 mr-1" />
           Add Entity
@@ -445,12 +445,12 @@ Only suggest NEW relationships not already in existingRelationships.`,
       <div className="flex-1 overflow-hidden">
         {isLoading ? (
           <div className="h-full flex items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
           </div>
         ) : entities.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-gray-500">
+          <div className="h-full flex flex-col items-center justify-center text-[var(--color-charcoal)]">
             <Database className="h-16 w-16 mb-4 opacity-30" />
-            <p className="text-lg font-medium">No entities yet</p>
+            <p className="text-lg font-medium text-[var(--color-midnight)]">No entities yet</p>
             <p className="text-sm mb-4">Add entities to start building your ERD</p>
             <Button onClick={handleAddEntity}>
               <Plus className="h-4 w-4 mr-1" />
