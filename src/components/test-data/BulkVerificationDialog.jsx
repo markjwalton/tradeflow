@@ -232,7 +232,12 @@ export default function BulkVerificationDialog({
       const { item, testDataId } = batch[i];
       
       try {
+        // Get the current test data to merge with existing data
+        const currentTestData = testDataSets.find(td => td.id === testDataId);
+        const currentData = currentTestData?.data || {};
+        
         await base44.entities.TestData.update(testDataId, {
+          ...currentData,
           test_status: "verified",
           verified_date: verifiedDate
         });
