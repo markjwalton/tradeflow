@@ -904,8 +904,7 @@ Return as JSON with entity names as keys and arrays of records as values.`,
                     isOpen={!!verifyingItem}
                     onClose={() => setVerifyingItem(null)}
                     item={verifyingItem}
-                    testData={testDataSets.find(td => td.playground_item_id === verifyingItem?.id)}
-                    entityTemplates={entityTemplates}
+                    testData={testDataSets.find(td => get(td, "playground_item_id") === verifyingItem?.id)}
                     onVerified={() => {
                       queryClient.invalidateQueries({ queryKey: ["testData"] });
                       setVerifyingItem(null);
@@ -913,24 +912,19 @@ Return as JSON with entity names as keys and arrays of records as values.`,
                   />
 
                   {/* Bulk Verification Dialog */}
-                                  <BulkVerificationDialog
-                                                    isOpen={isVerifyingBulk}
-                                                    onClose={() => {
-                                                      setIsVerifyingBulk(false);
-                                                      queryClient.invalidateQueries({ queryKey: ["testData"] });
-                                                    }}
-                                                    items={itemStatusList}
-                                                    testDataSets={testDataSets}
-                                                    entityTemplates={entityTemplates}
-                                                    onComplete={() => {
-                                                      queryClient.invalidateQueries({ queryKey: ["testData"] });
-                                                    }}
-                                                    onErrorReport={(report) => {
-                                                      setVerificationErrorReport(report);
-                                                      setIsVerifyingBulk(false);
-                                                      queryClient.invalidateQueries({ queryKey: ["testData"] });
-                                                    }}
-                                                  />
+                  <BulkVerificationDialog
+                    isOpen={isVerifyingBulk}
+                    onClose={() => {
+                      setIsVerifyingBulk(false);
+                      queryClient.invalidateQueries({ queryKey: ["testData"] });
+                    }}
+                    items={itemStatusList}
+                    testDataSets={testDataSets}
+                    entityTemplates={entityTemplates}
+                    onComplete={() => {
+                      queryClient.invalidateQueries({ queryKey: ["testData"] });
+                    }}
+                  />
     </div>
   );
 }

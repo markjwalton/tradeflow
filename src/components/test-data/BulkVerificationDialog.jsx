@@ -11,9 +11,12 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { 
   CheckCircle2, XCircle, Loader2, AlertTriangle, 
-  Play, FileCheck, Download, Layout, Zap
+  Play, FileCheck, Layout, Zap
 } from "lucide-react";
 import { toast } from "sonner";
+
+// Helper: safely get nested or flat property
+const get = (obj, key) => obj?.[key] ?? obj?.data?.[key];
 
 export default function BulkVerificationDialog({ 
   isOpen, 
@@ -21,99 +24,27 @@ export default function BulkVerificationDialog({
   items,
   testDataSets,
   entityTemplates,
-  onComplete,
-  onErrorReport
+  onComplete
 }) {
-  const [isRunning, setIsRunning] = useState(false);
+  const [phase, setPhase] = useState("idle"); // idle, running, complete
   const [progress, setProgress] = useState({ current: 0, total: 0 });
-  const [results, setResults] = useState([]);
-  const [summary, setSummary] = useState(null);
+  const [results, setResults] = useState({ success: [], failed: [] });
 
   // Reset when dialog opens
   useEffect(() => {
     if (isOpen) {
-      setResults([]);
-      setSummary(null);
+      setPhase("idle");
       setProgress({ current: 0, total: 0 });
+      setResults({ success: [], failed: [] });
     }
   }, [isOpen]);
 
-  const verifyItem = async (item, testData) => {
-    const result = {
-      id: item.id,
-      name: item.name,
-      type: item.type,
-      checks: { schema: "pending", data: "pending", preview: "pending" },
-      issues: [],
-      status: "pending"
-    };
-
-    const entityData = testData?.entity_data || {};
-    const entityCount = Object.keys(entityData).length;
-    let totalRecords = 0;
-
-    // Schema check
-    for (const [entityName, records] of Object.entries(entityData)) {
-      const template = entityTemplates.find(e => 
-        e.name === entityName || e.data?.name === entityName
-      );
-      
-      if (!template) {
-        result.issues.push(`${entityName}: No template`);
-        continue;
-      }
-      
-      const schema = template.data?.schema || template.schema;
-      const required = schema?.required || [];
-      
-      if (Array.isArray(records)) {
-        totalRecords += records.length;
-        records.forEach((record, idx) => {
-          required.forEach(field => {
-            if (record[field] === undefined || record[field] === null) {
-              result.issues.push(`${entityName}[${idx}]: Missing '${field}'`);
-            }
-          });
-        });
-      }
-    }
-
-    result.checks.schema = result.issues.length === 0 ? "passed" : 
-                           result.issues.length <= 3 ? "warning" : "failed";
-
-    // Data check
-    if (entityCount === 0) {
-      result.checks.data = "passed"; // No entities needed
-    } else if (totalRecords === 0) {
-      result.checks.data = "warning";
-      result.issues.push("No test records");
-    } else {
-      result.checks.data = "passed";
-    }
-
-    // Preview check
-    if (totalRecords > 0 || entityCount === 0) {
-      result.checks.preview = "passed";
-    } else {
-      result.checks.preview = "warning";
-    }
-
-    // Overall status
-    const checkValues = Object.values(result.checks);
-    if (checkValues.includes("failed")) {
-      result.status = "failed";
-    } else if (checkValues.includes("warning")) {
-      result.status = "warning";
-    } else {
-      result.status = "passed";
-    }
-
-    result.recordCount = totalRecords;
-    result.entityCount = entityCount;
-
-    return result;
+  // Find TestData for an item
+  const findTestData = (itemId) => {
+    return testDataSets.find(td => get(td, "playground_item_id") === itemId);
   };
 
+  // Run bulk verification - marks all items with test data as verified
   const runBulkVerification = async () => {
     const itemsWithData = items.filter(i => i.hasTestData);
     if (itemsWithData.length === 0) {
@@ -121,152 +52,56 @@ export default function BulkVerificationDialog({
       return;
     }
 
-    setIsRunning(true);
-    setResults([]);
+    setPhase("running");
     setProgress({ current: 0, total: itemsWithData.length });
-
-    const allResults = [];
+    
+    const success = [];
+    const failed = [];
 
     for (let i = 0; i < itemsWithData.length; i++) {
       const item = itemsWithData[i];
-      const testData = testDataSets.find(td => td.playground_item_id === item.id);
+      const testData = findTestData(item.id);
       
       setProgress({ current: i + 1, total: itemsWithData.length });
-      
-      const result = await verifyItem(item, testData);
-      allResults.push(result);
-      setResults([...allResults]);
 
-      // Small delay to prevent UI freezing
-      if (i % 10 === 0) {
-        await new Promise(r => setTimeout(r, 50));
+      if (!testData) {
+        failed.push({ ...item, error: "No test data found" });
+        continue;
       }
-    }
 
-    // Generate summary
-    const passed = allResults.filter(r => r.status === "passed").length;
-    const warnings = allResults.filter(r => r.status === "warning").length;
-    const failed = allResults.filter(r => r.status === "failed").length;
-
-    setSummary({
-      total: allResults.length,
-      passed,
-      warnings,
-      failed,
-      passRate: Math.round((passed / allResults.length) * 100),
-      timestamp: new Date().toISOString()
-    });
-
-    setIsRunning(false);
-  };
-
-  const [isMarkingVerified, setIsMarkingVerified] = useState(false);
-  const [markProgress, setMarkProgress] = useState({ current: 0, total: 0 });
-  const [batchState, setBatchState] = useState({
-    queue: [],        // Items still to process
-    successItems: [], // Successfully verified
-    errorItems: [],   // Failed items
-    isProcessing: false,
-    batchComplete: false
-  });
-
-  const BATCH_SIZE = 10;
-
-  // Start batch verification process
-  const startBatchVerification = () => {
-    const passedItems = results.filter(r => r.status === "passed" || r.status === "warning");
-    if (passedItems.length === 0) return;
-
-    // Build queue with test data IDs
-    const queue = [];
-    const errorItems = [];
-    
-    for (const item of passedItems) {
-      const testData = testDataSets.find(td => 
-        td.playground_item_id === item.id || td.data?.playground_item_id === item.id
-      );
-      if (testData) {
-        queue.push({ item, testDataId: testData.id });
-      } else {
-        errorItems.push({ ...item, error: "No test data found" });
-      }
-    }
-
-    setBatchState({
-      queue,
-      successItems: [],
-      errorItems,
-      isProcessing: false,
-      batchComplete: false
-    });
-    setMarkProgress({ current: 0, total: queue.length });
-    
-    // Auto-start first batch
-    processNextBatch(queue, [], errorItems);
-  };
-
-  // Process next batch of 10
-  const processNextBatch = async (queue, successItems, errorItems) => {
-    if (queue.length === 0) {
-      // All done
-      onComplete?.();
-      if (errorItems.length > 0) {
-        toast.warning(`${successItems.length} verified, ${errorItems.length} failed`);
-        onErrorReport?.({ success: successItems, errors: errorItems, timestamp: new Date().toISOString() });
-      } else {
-        toast.success(`${successItems.length} items marked as verified`);
-        onClose();
-      }
-      return;
-    }
-
-    setBatchState(prev => ({ ...prev, isProcessing: true, batchComplete: false }));
-    
-    const batch = queue.slice(0, BATCH_SIZE);
-    const remaining = queue.slice(BATCH_SIZE);
-    const newSuccess = [...successItems];
-    const newErrors = [...errorItems];
-    const verifiedDate = new Date().toISOString();
-
-    for (let i = 0; i < batch.length; i++) {
-      const { item, testDataId } = batch[i];
-      
       try {
-        await base44.entities.TestData.update(testDataId, {
+        await base44.entities.TestData.update(testData.id, {
           test_status: "verified"
         });
-        newSuccess.push(item);
+        success.push(item);
       } catch (e) {
-        newErrors.push({ ...item, error: e.message });
+        failed.push({ ...item, error: e.message });
       }
-      
-      setMarkProgress({ current: successItems.length + newSuccess.length + newErrors.length - errorItems.length, total: queue.length + successItems.length });
-      
-      // Small delay between each update
-      if (i < batch.length - 1) {
-        await new Promise(r => setTimeout(r, 200));
+
+      // Small delay to prevent overwhelming API
+      if (i % 5 === 0 && i > 0) {
+        await new Promise(r => setTimeout(r, 100));
       }
     }
 
-    setBatchState({
-      queue: remaining,
-      successItems: newSuccess,
-      errorItems: newErrors,
-      isProcessing: false,
-      batchComplete: true
-    });
-    setMarkProgress({ current: newSuccess.length + newErrors.length, total: remaining.length + newSuccess.length + newErrors.length });
-  };
+    setResults({ success, failed });
+    setPhase("complete");
+    
+    if (failed.length === 0) {
+      toast.success(`${success.length} items verified successfully`);
+    } else {
+      toast.warning(`${success.length} verified, ${failed.length} failed`);
+    }
 
-  const continueNextBatch = () => {
-    processNextBatch(batchState.queue, batchState.successItems, batchState.errorItems);
+    onComplete?.();
   };
 
   const percentage = progress.total > 0 ? Math.round((progress.current / progress.total) * 100) : 0;
+  const itemsWithData = items.filter(i => i.hasTestData);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
+      <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileCheck className="h-5 w-5 text-purple-600" />
@@ -274,31 +109,11 @@ export default function BulkVerificationDialog({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4 flex-1 overflow-hidden flex flex-col">
-          {/* Batch Progress */}
-          {(batchState.isProcessing || batchState.batchComplete) && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <div className="flex justify-between text-sm mb-2">
-                <span className="font-medium">
-                  {batchState.isProcessing ? "Verifying batch..." : `Batch complete - ${batchState.queue.length} remaining`}
-                </span>
-                <span>{batchState.successItems.length} ✓ / {batchState.errorItems.length} ✗</span>
-              </div>
-              <Progress value={markProgress.total > 0 ? (markProgress.current / markProgress.total) * 100 : 0} className="h-2" />
-              {batchState.errorItems.length > 0 && (
-                <div className="mt-2 text-xs text-red-600">
-                  {batchState.errorItems.slice(-3).map((e, i) => (
-                    <div key={i}>• {e.name}: {e.error}</div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
+        <div className="space-y-4">
           {/* Progress */}
-          {isRunning && (
-            <div>
-              <div className="flex justify-between text-sm mb-2">
+          {phase === "running" && (
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
                 <span>Verifying items...</span>
                 <span>{progress.current} / {progress.total}</span>
               </div>
@@ -306,168 +121,83 @@ export default function BulkVerificationDialog({
             </div>
           )}
 
-          {/* Summary Report */}
-          {summary && (
-            <div className="grid grid-cols-4 gap-3">
-              <div className="bg-gray-50 rounded-lg p-3 text-center">
-                <div className="text-2xl font-bold">{summary.total}</div>
-                <div className="text-xs text-gray-500">Total</div>
-              </div>
-              <div className="bg-green-50 rounded-lg p-3 text-center">
-                <div className="text-2xl font-bold text-green-700">{summary.passed}</div>
-                <div className="text-xs text-green-600">Passed</div>
-              </div>
-              <div className="bg-amber-50 rounded-lg p-3 text-center">
-                <div className="text-2xl font-bold text-amber-700">{summary.warnings}</div>
-                <div className="text-xs text-amber-600">Warnings</div>
-              </div>
-              <div className="bg-red-50 rounded-lg p-3 text-center">
-                <div className="text-2xl font-bold text-red-700">{summary.failed}</div>
-                <div className="text-xs text-red-600">Failed</div>
-              </div>
-            </div>
-          )}
-
-          {/* Results Table */}
-                        {results.length > 0 && (
-            <div className="flex-1 overflow-auto border rounded-lg">
-              <table className="w-full text-sm">
-                <thead className="bg-gray-50 sticky top-0">
-                  <tr>
-                    <th className="text-left p-2">Item</th>
-                    <th className="text-center p-2">Schema</th>
-                    <th className="text-center p-2">Data</th>
-                    <th className="text-center p-2">Preview</th>
-                    <th className="text-center p-2">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {results.map((result) => (
-                    <tr key={result.id} className={
-                      result.status === "failed" ? "bg-red-50" :
-                      result.status === "warning" ? "bg-amber-50" : ""
-                    }>
-                      <td className="p-2">
-                        <div className="flex items-center gap-2">
-                          {result.type === "page" ? (
-                            <Layout className="h-3 w-3 text-blue-600" />
-                          ) : (
-                            <Zap className="h-3 w-3 text-amber-600" />
-                          )}
-                          <span className="truncate max-w-[200px]">{result.name}</span>
-                        </div>
-                      </td>
-                      <td className="text-center p-2">
-                        {result.checks.schema === "passed" ? (
-                          <CheckCircle2 className="h-4 w-4 text-green-600 mx-auto" />
-                        ) : result.checks.schema === "warning" ? (
-                          <AlertTriangle className="h-4 w-4 text-amber-600 mx-auto" />
-                        ) : (
-                          <XCircle className="h-4 w-4 text-red-600 mx-auto" />
-                        )}
-                      </td>
-                      <td className="text-center p-2">
-                        {result.checks.data === "passed" ? (
-                          <CheckCircle2 className="h-4 w-4 text-green-600 mx-auto" />
-                        ) : result.checks.data === "warning" ? (
-                          <AlertTriangle className="h-4 w-4 text-amber-600 mx-auto" />
-                        ) : (
-                          <XCircle className="h-4 w-4 text-red-600 mx-auto" />
-                        )}
-                      </td>
-                      <td className="text-center p-2">
-                        {result.checks.preview === "passed" ? (
-                          <CheckCircle2 className="h-4 w-4 text-green-600 mx-auto" />
-                        ) : result.checks.preview === "warning" ? (
-                          <AlertTriangle className="h-4 w-4 text-amber-600 mx-auto" />
-                        ) : (
-                          <XCircle className="h-4 w-4 text-red-600 mx-auto" />
-                        )}
-                      </td>
-                      <td className="text-center p-2">
-                        <Badge variant={
-                          result.status === "passed" ? "default" :
-                          result.status === "warning" ? "secondary" : "destructive"
-                        } className="text-xs">
-                          {result.status}
-                        </Badge>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-
-          {/* Empty state */}
-          {!isRunning && results.length === 0 && (
-            <div className="text-center py-12 text-gray-500">
+          {/* Idle State */}
+          {phase === "idle" && (
+            <div className="text-center py-8">
               <FileCheck className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-              <p>Click "Run Bulk Verification" to test all items with data</p>
-              <p className="text-sm mt-1">{items.filter(i => i.hasTestData).length} items ready to verify</p>
+              <p className="text-gray-600 mb-2">
+                Ready to verify {itemsWithData.length} items with test data
+              </p>
+              <p className="text-sm text-gray-500">
+                This will mark all items as verified
+              </p>
+            </div>
+          )}
+
+          {/* Complete State */}
+          {phase === "complete" && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-green-50 rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-green-700">{results.success.length}</div>
+                  <div className="text-sm text-green-600">Verified</div>
+                </div>
+                <div className="bg-red-50 rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-red-700">{results.failed.length}</div>
+                  <div className="text-sm text-red-600">Failed</div>
+                </div>
+              </div>
+
+              {results.failed.length > 0 && (
+                <div className="border rounded-lg max-h-48 overflow-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-gray-50 sticky top-0">
+                      <tr>
+                        <th className="text-left p-2">Item</th>
+                        <th className="text-left p-2">Error</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y">
+                      {results.failed.map((item, idx) => (
+                        <tr key={idx} className="bg-red-50">
+                          <td className="p-2 flex items-center gap-2">
+                            {item.type === "page" ? (
+                              <Layout className="h-3 w-3 text-blue-600" />
+                            ) : (
+                              <Zap className="h-3 w-3 text-amber-600" />
+                            )}
+                            {item.name}
+                          </td>
+                          <td className="p-2 text-red-600">{item.error}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           )}
 
           {/* Actions */}
           <div className="flex justify-between pt-2 border-t">
             <Button variant="outline" onClick={onClose}>
-              {batchState.successItems.length > 0 ? `Close (${batchState.successItems.length} verified)` : "Close"}
+              {phase === "complete" ? "Done" : "Cancel"}
             </Button>
             
-            <div className="flex gap-2">
-              {!summary ? (
-                <Button onClick={runBulkVerification} disabled={isRunning}>
-                  {isRunning ? (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <Play className="h-4 w-4 mr-2" />
-                  )}
-                  Run Bulk Verification
-                </Button>
-              ) : (
-                <>
-                  <Button variant="outline" onClick={runBulkVerification}>
-                    Re-run All
-                  </Button>
-  {(summary.passed + summary.warnings) > 0 && !batchState.batchComplete && !batchState.isProcessing && batchState.queue.length === 0 && batchState.successItems.length === 0 && (
-                    <Button 
-                      onClick={startBatchVerification}
-                      className="bg-green-600 hover:bg-green-700 min-w-[180px]"
-                    >
-                      <CheckCircle2 className="h-4 w-4 mr-2" />
-                      Start Verification ({summary.passed + summary.warnings})
-                    </Button>
-                  )}
-                  {batchState.isProcessing && (
-                    <Button disabled className="bg-green-600 min-w-[180px]">
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Processing {Math.min(BATCH_SIZE, batchState.queue.length)}...
-                    </Button>
-                  )}
-                  {batchState.batchComplete && batchState.queue.length > 0 && (
-                    <Button 
-                      onClick={continueNextBatch}
-                      className="bg-green-600 hover:bg-green-700 min-w-[180px]"
-                    >
-                      <CheckCircle2 className="h-4 w-4 mr-2" />
-                      Continue ({batchState.queue.length} remaining)
-                    </Button>
-                  )}
-                  {batchState.batchComplete && batchState.queue.length === 0 && batchState.successItems.length > 0 && (
-                    <Button 
-                      onClick={() => {
-                        onComplete?.();
-                        onClose();
-                      }}
-                      className="bg-green-600 hover:bg-green-700"
-                    >
-                      <CheckCircle2 className="h-4 w-4 mr-2" />
-                      Done ({batchState.successItems.length} verified)
-                    </Button>
-                  )}
-                </>
-              )}
-            </div>
+            {phase !== "complete" && (
+              <Button 
+                onClick={runBulkVerification} 
+                disabled={phase === "running" || itemsWithData.length === 0}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                {phase === "running" ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <CheckCircle2 className="h-4 w-4 mr-2" />
+                )}
+                Verify All ({itemsWithData.length})
+              </Button>
+            )}
           </div>
         </div>
       </DialogContent>
