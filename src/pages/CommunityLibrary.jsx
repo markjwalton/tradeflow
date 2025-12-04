@@ -220,21 +220,21 @@ export default function CommunityLibrary() {
 
   if (loadingCommunity || loadingTenant) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="flex justify-center items-center h-64 bg-[var(--color-background)]">
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
       </div>
     );
   }
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6 max-w-6xl mx-auto bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
             <Package className="h-6 w-6" />
             Community Library
           </h1>
-          <p className="text-gray-500">Browse and import shared templates</p>
+          <p className="text-[var(--color-charcoal)]">Browse and import shared templates</p>
         </div>
         {itemsWithUpdates.length > 0 && (
           <Badge className="bg-amber-100 text-amber-700 text-sm py-1 px-3">
@@ -286,7 +286,7 @@ export default function CommunityLibrary() {
 
         <TabsContent value="available" className="mt-4">
           {newItems.length === 0 ? (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-[var(--color-charcoal)]">
               <Package className="h-12 w-12 mx-auto mb-4 opacity-30" />
               <p>No new items available</p>
             </div>
@@ -299,7 +299,7 @@ export default function CommunityLibrary() {
 
         <TabsContent value="updates" className="mt-4">
           {itemsWithUpdates.length === 0 ? (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-[var(--color-charcoal)]">
               <RefreshCw className="h-12 w-12 mx-auto mb-4 opacity-30" />
               <p>All items are up to date</p>
             </div>
@@ -316,7 +316,7 @@ export default function CommunityLibrary() {
 
         <TabsContent value="installed" className="mt-4">
           {tenantItems.length === 0 ? (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-[var(--color-charcoal)]">
               <Download className="h-12 w-12 mx-auto mb-4 opacity-30" />
               <p>No items installed yet</p>
             </div>

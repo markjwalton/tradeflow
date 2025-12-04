@@ -211,8 +211,8 @@ Return as JSON with a "suggestions" array of strings.`,
 
   if (isLoading || !item) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="flex justify-center items-center h-64 bg-[var(--color-background)]">
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
       </div>
     );
   }
@@ -224,18 +224,18 @@ Return as JSON with a "suggestions" array of strings.`,
   }[item.test_status];
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <div className="p-6 max-w-5xl mx-auto bg-[var(--color-background)] min-h-screen">
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
         <Button variant="ghost" size="icon" onClick={() => navigate(createPageUrl("PlaygroundSummary"))}>
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div className="flex-1">
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
             <Zap className="h-6 w-6 text-amber-600" />
             {item.source_name}
           </h1>
-          <p className="text-gray-500">Feature Playground</p>
+          <p className="text-[var(--color-charcoal)]">Feature Playground</p>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="outline">v{item.current_version || 1}</Badge>

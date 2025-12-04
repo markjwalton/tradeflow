@@ -146,14 +146,14 @@ export default function PromptSettings() {
   }, {});
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
             <Sparkles className="h-6 w-6 text-purple-600" />
             Prompt Settings
           </h1>
-          <p className="text-gray-500">Manage AI reasoning prompts for input fields</p>
+          <p className="text-[var(--color-charcoal)]">Manage AI reasoning prompts for input fields</p>
         </div>
         <Button onClick={() => handleOpenDialog()}>
           <Plus className="h-4 w-4 mr-2" />
@@ -177,10 +177,10 @@ export default function PromptSettings() {
 
       {isLoading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
         </div>
       ) : Object.keys(groupedPrompts).length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-[var(--color-charcoal)]">
           <Sparkles className="h-12 w-12 mx-auto mb-4 opacity-50" />
           <p>No prompts found. Create your first prompt template.</p>
         </div>

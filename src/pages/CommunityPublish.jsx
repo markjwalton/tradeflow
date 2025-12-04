@@ -363,13 +363,13 @@ export default function CommunityPublish() {
   }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="p-6 max-w-4xl mx-auto bg-[var(--color-background)] min-h-screen">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
           <Upload className="h-6 w-6" />
           Publish to Community
         </h1>
-        <p className="text-gray-500">Share templates with all tenants</p>
+        <p className="text-[var(--color-charcoal)]">Share templates with all tenants</p>
       </div>
 
       <Card className="mb-6 bg-blue-50 border-blue-200">
