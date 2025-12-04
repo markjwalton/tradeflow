@@ -93,7 +93,7 @@ export default function CustomProjectSelector({
       <Dialog open={showCreate} onOpenChange={setShowCreate}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create Custom Project</DialogTitle>
+            <DialogTitle className="text-[var(--color-midnight)]">Create Custom Project</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>

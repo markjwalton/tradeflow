@@ -605,7 +605,7 @@ export default function GenericNavEditor({
       <Dialog open={showDialog} onOpenChange={closeDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editingItem !== null ? "Edit Item" : "Add Navigation Item"}</DialogTitle>
+            <DialogTitle className="text-[var(--color-midnight)]">{editingItem !== null ? "Edit Item" : "Add Navigation Item"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>

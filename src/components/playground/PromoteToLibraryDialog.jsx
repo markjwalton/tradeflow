@@ -148,7 +148,7 @@ Output only the prompt text.`
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[85vh] overflow-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 text-[var(--color-midnight)]">
             <ArrowUpCircle className="h-5 w-5 text-[var(--color-success)]" />
             Promote to Library & Sprint
           </DialogTitle>

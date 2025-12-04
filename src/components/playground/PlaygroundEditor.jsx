@@ -232,7 +232,7 @@ Also provide a brief summary of what was changed.`,
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
-          <DialogTitle>Edit {type.charAt(0).toUpperCase() + type.slice(1)}: {data.name}</DialogTitle>
+          <DialogTitle className="text-[var(--color-midnight)]">Edit {type.charAt(0).toUpperCase() + type.slice(1)}: {data.name}</DialogTitle>
         </DialogHeader>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 overflow-hidden flex flex-col">

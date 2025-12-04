@@ -28,9 +28,9 @@ export default function VersionHistory({
   }
 
   return (
-    <Card>
+    <Card className="border-[var(--color-background-muted)]">
       <CardHeader>
-        <CardTitle className="text-lg flex items-center gap-2">
+        <CardTitle className="text-lg flex items-center gap-2 text-[var(--color-midnight)]">
           <History className="h-5 w-5" />
           Version History ({versions.length})
         </CardTitle>

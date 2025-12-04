@@ -73,9 +73,9 @@ export default function PlaygroundJournalPanel({ playgroundItemId, currentVersio
   const getTypeInfo = (type) => entryTypes.find(t => t.value === type) || entryTypes[3];
 
   return (
-    <Card>
+    <Card className="border-[var(--color-background-muted)]">
       <CardHeader>
-        <CardTitle className="text-lg flex items-center gap-2">
+        <CardTitle className="text-lg flex items-center gap-2 text-[var(--color-midnight)]">
           <BookOpen className="h-5 w-5" />
           Playground Journal
         </CardTitle>

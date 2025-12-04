@@ -217,7 +217,7 @@ export default function WidgetStaging({ widgets = [], onEdit }) {
       <Dialog open={!!previewWidget} onOpenChange={() => setPreviewWidget(null)}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Widget Preview: {previewWidget?.name}</DialogTitle>
+            <DialogTitle className="text-[var(--color-midnight)]">Widget Preview: {previewWidget?.name}</DialogTitle>
           </DialogHeader>
           {previewWidget && (
             <div className="p-4">
@@ -238,7 +238,7 @@ export default function WidgetStaging({ widgets = [], onEdit }) {
       <Dialog open={showApproveDialog} onOpenChange={setShowApproveDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="text-[var(--color-midnight)]">
               {selectedWidget?.status === "staging" ? "Approve Widget" : "Publish Widget"}
             </DialogTitle>
           </DialogHeader>
