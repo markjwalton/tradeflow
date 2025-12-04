@@ -275,7 +275,7 @@ export default function ComponentShowcase() {
         {/* Buttons Section */}
         {visibleCategories.includes("buttons") && (
           <ShowcaseSection
-          id="buttons"
+            id="buttons"
           title="Buttons"
           count={11}
           description="All button variants with loading and disabled states"
