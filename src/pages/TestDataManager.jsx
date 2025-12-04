@@ -747,9 +747,9 @@ Return as JSON with entity names as keys and arrays of records as values.`,
       <Card className="bg-blue-50 border-blue-200">
         <CardContent className="py-4">
           <p className="text-blue-800">
-            Debug: {playgroundItems.length} PlaygroundItems. 
-            First item keys: {playgroundItems.length > 0 ? Object.keys(playgroundItems[0]).join(", ") : "none"}.
-            source_type location: {playgroundItems.length > 0 ? (playgroundItems[0].source_type || playgroundItems[0].data?.source_type || "NOT FOUND") : "N/A"}
+            Debug: {testDataSets.length} TestData records. 
+            First TestData keys: {testDataSets.length > 0 ? Object.keys(testDataSets[0]).join(", ") : "none"}.
+            test_status location: {testDataSets.length > 0 ? (testDataSets[0].test_status || testDataSets[0].data?.test_status || "NOT FOUND") : "N/A"}
           </p>
         </CardContent>
       </Card>
