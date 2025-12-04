@@ -35,21 +35,21 @@ export default function Setup() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+      <div className="min-h-screen flex items-center justify-center bg-[var(--color-background)]">
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6">
-        <Card className="max-w-md w-full">
+      <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--color-background)]">
+        <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
           <CardHeader>
-            <CardTitle>Setup Required</CardTitle>
+            <CardTitle className="text-[var(--color-midnight)]">Setup Required</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-gray-600">Please sign in to set up the application.</p>
+            <p className="text-[var(--color-charcoal)]">Please sign in to set up the application.</p>
             <Button className="w-full" onClick={() => base44.auth.redirectToLogin()}>
               Sign In
             </Button>
@@ -61,13 +61,13 @@ export default function Setup() {
 
   if (user.is_global_admin === true) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6">
-        <Card className="max-w-md w-full">
+      <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--color-background)]">
+        <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
           <CardContent className="pt-6 text-center space-y-4">
-            <CheckCircle className="h-12 w-12 text-green-500 mx-auto" />
+            <CheckCircle className="h-12 w-12 text-[var(--color-success)] mx-auto" />
             <div>
-              <h2 className="text-xl font-semibold">Already a Global Admin</h2>
-              <p className="text-gray-500">You already have global admin access.</p>
+              <h2 className="text-xl font-semibold text-[var(--color-midnight)]">Already a Global Admin</h2>
+              <p className="text-[var(--color-charcoal)]">You already have global admin access.</p>
             </div>
             <Button onClick={() => window.location.href = createPageUrl("TenantManager")}>
               Go to Tenant Manager
@@ -79,20 +79,20 @@ export default function Setup() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <Card className="max-w-md w-full">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--color-background)]">
+      <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-[var(--color-midnight)]">
             <Shield className="h-5 w-5" />
             Initial Setup
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-gray-600">
+          <p className="text-[var(--color-charcoal)]">
             Welcome <strong>{user.email}</strong>! Set yourself as the Global Admin to manage all tenants and navigation.
           </p>
           
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm text-amber-800">
+          <div className="bg-[var(--color-warning)]/10 border border-[var(--color-warning)]/30 rounded-lg p-3 text-sm text-[var(--color-warning-dark)]">
             <strong>Note:</strong> Only do this if you are the application owner. Global admins have full access to all tenants.
           </div>
 
