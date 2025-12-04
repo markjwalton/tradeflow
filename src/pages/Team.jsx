@@ -138,16 +138,16 @@ export default function Team() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+      <div className="flex items-center justify-center h-64 bg-[var(--color-background)]">
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
       </div>
     );
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Team</h1>
+        <h1 className="text-2xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>Team</h1>
         <Button onClick={() => { resetForm(); setEditingMember(null); setShowForm(true); }}>
           <Plus className="h-4 w-4 mr-2" />
           Add Team Member
@@ -156,7 +156,7 @@ export default function Team() {
 
       <div className="flex gap-4 mb-6">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-charcoal)]" />
           <Input
             placeholder="Search team members..."
             value={search}
@@ -182,12 +182,12 @@ export default function Team() {
         {filteredMembers.map((member) => {
           const holidaysRemaining = (member.annual_holiday_days || 25) - (member.holidays_used || 0);
           return (
-            <Card key={member.id} className="hover:shadow-md transition-shadow">
+            <Card key={member.id} className="hover:shadow-md transition-shadow border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
               <CardHeader className="pb-2">
                 <div className="flex items-start justify-between">
                   <div>
-                    <CardTitle className="text-lg">{member.name}</CardTitle>
-                    {member.role && <p className="text-sm text-gray-500 mt-1">{member.role}</p>}
+                    <CardTitle className="text-lg text-[var(--color-midnight)]">{member.name}</CardTitle>
+                    {member.role && <p className="text-sm text-[var(--color-charcoal)] mt-1">{member.role}</p>}
                   </div>
                   <div className="flex gap-1">
                     <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(member)}>
@@ -202,16 +202,16 @@ export default function Team() {
               <CardContent className="space-y-3">
                 <Badge className={availabilityColors[member.availability]}>{member.availability?.replace("_", " ")}</Badge>
                 {member.email && (
-                  <p className="text-sm text-gray-600 flex items-center gap-2">
+                  <p className="text-sm text-[var(--color-charcoal)] flex items-center gap-2">
                     <Mail className="h-3 w-3" />{member.email}
                   </p>
                 )}
                 {member.phone && (
-                  <p className="text-sm text-gray-600 flex items-center gap-2">
+                  <p className="text-sm text-[var(--color-charcoal)] flex items-center gap-2">
                     <Phone className="h-3 w-3" />{member.phone}
                   </p>
                 )}
-                <p className="text-sm text-gray-600 flex items-center gap-2">
+                <p className="text-sm text-[var(--color-charcoal)] flex items-center gap-2">
                   <Calendar className="h-3 w-3" />{holidaysRemaining} days remaining
                 </p>
                 {member.skills?.length > 0 && (
@@ -228,7 +228,7 @@ export default function Team() {
       </div>
 
       {filteredMembers.length === 0 && (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-[var(--color-charcoal)]">
           No team members found. Add your first team member to get started.
         </div>
       )}

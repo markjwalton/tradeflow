@@ -142,16 +142,16 @@ export default function Customers() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+      <div className="flex items-center justify-center h-64 bg-[var(--color-background)]">
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
       </div>
     );
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Customers</h1>
+        <h1 className="text-2xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>Customers</h1>
         <Button onClick={() => { resetForm(); setEditingCustomer(null); setShowForm(true); }}>
           <Plus className="h-4 w-4 mr-2" />
           New Customer
@@ -160,7 +160,7 @@ export default function Customers() {
 
       <div className="flex gap-4 mb-6">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-charcoal)]" />
           <Input
             placeholder="Search customers..."
             value={search}
@@ -183,13 +183,13 @@ export default function Customers() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredCustomers.map((customer) => (
-          <Card key={customer.id} className="hover:shadow-md transition-shadow">
+          <Card key={customer.id} className="hover:shadow-md transition-shadow border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
             <CardHeader className="pb-2">
               <div className="flex items-start justify-between">
                 <div>
-                  <CardTitle className="text-lg">{customer.name}</CardTitle>
+                  <CardTitle className="text-lg text-[var(--color-midnight)]">{customer.name}</CardTitle>
                   {customer.company && (
-                    <p className="text-sm text-gray-500 flex items-center gap-1 mt-1">
+                    <p className="text-sm text-[var(--color-charcoal)] flex items-center gap-1 mt-1">
                       <Building2 className="h-3 w-3" />
                       {customer.company}
                     </p>
@@ -208,13 +208,13 @@ export default function Customers() {
             <CardContent className="space-y-3">
               <Badge className={statusColors[customer.status]}>{customer.status}</Badge>
               {customer.email && (
-                <p className="text-sm text-gray-600 flex items-center gap-2">
+                <p className="text-sm text-[var(--color-charcoal)] flex items-center gap-2">
                   <Mail className="h-3 w-3" />
                   {customer.email}
                 </p>
               )}
               {customer.phone && (
-                <p className="text-sm text-gray-600 flex items-center gap-2">
+                <p className="text-sm text-[var(--color-charcoal)] flex items-center gap-2">
                   <Phone className="h-3 w-3" />
                   {customer.phone}
                 </p>
@@ -232,7 +232,7 @@ export default function Customers() {
       </div>
 
       {filteredCustomers.length === 0 && (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-[var(--color-charcoal)]">
           No customers found. Add your first customer to get started.
         </div>
       )}
