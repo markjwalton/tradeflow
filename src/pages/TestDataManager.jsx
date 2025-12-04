@@ -150,10 +150,11 @@ export default function TestDataManager() {
     },
   });
 
+  // Helper: safely get nested or flat property
+  const get = (obj, key) => obj?.[key] ?? obj?.data?.[key];
+
   // Build page/feature status list - CLEAN REFACTOR
   const itemStatusList = useMemo(() => {
-    // Helper: safely get nested or flat property
-    const get = (obj, key) => obj?.[key] ?? obj?.data?.[key];
 
     // Helper: get entities for a playground item
     const getEntitiesForItem = (item) => {
@@ -535,9 +536,6 @@ Return as JSON with entity names as keys and arrays of records as values.`,
     setFilterView(filterView === cardId ? null : cardId);
     setActiveTab("status");
   };
-
-  // Helper: safely get nested or flat property (duplicate for closure scope)
-  const get = (obj, key) => obj?.[key] ?? obj?.data?.[key];
 
   // Helper to get entities for a single item (for generation)
   const getEntitiesForItemById = (itemId) => {
