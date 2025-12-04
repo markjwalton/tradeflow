@@ -119,50 +119,62 @@ export default function LivePreview() {
 
   return (
     <div className="p-6">
-      {/* Content Area */}
-      <div className="flex gap-6">
-        {!selectedItem ? (
-          <div className="h-full flex items-center justify-center text-gray-500">
-            <div className="text-center">
-              <Eye className="h-16 w-16 mx-auto mb-4 opacity-30" />
-              <p className="text-lg">Select a page or feature</p>
-              <p className="text-sm mt-1">Use the navigation on the left</p>
-            </div>
-          </div>
-        ) : (
-          <>
-            {/* Header Bar */}
-            <div className="bg-white border-b px-4 py-3 flex items-center justify-between flex-shrink-0">
-              <div className="flex items-center gap-3">
-                {selectedItem.source_type === "page" ? (
-                  <Layout className="h-5 w-5 text-blue-600" />
-                ) : (
-                  <Zap className="h-5 w-5 text-amber-600" />
-                )}
-                <div>
-                  <h1 className="font-bold">{selectedItem.source_name}</h1>
-                  <p className="text-xs text-gray-500">{templateData?.description}</p>
-                </div>
-                <Badge variant="outline">v{selectedItem.current_version || 1}</Badge>
-              </div>
-              <div className="flex gap-2">
-                <Link to={createPageUrl("TestDataManager") + `?item=${selectedItem.id}`}>
-                  <Button variant="outline" size="sm">
-                    <Database className="h-4 w-4 mr-2" />
-                    Test Data
-                  </Button>
-                </Link>
-                <Link to={getDetailUrl(selectedItem)}>
-                  <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
-                    <Edit className="h-4 w-4 mr-2" />
-                    Edit in Playground
-                  </Button>
-                </Link>
-              </div>
-            </div>
+        {/* Left Navigation Panel */}
+        <aside className="w-64 bg-slate-900 text-white rounded-lg flex-shrink-0">
+          <nav className="p-3 space-y-1 overflow-y-auto">
+            <LivePreviewNavigation
+              playgroundItems={playgroundItems}
+              selectedItemId={selectedItemId}
+              onSelectItem={setSelectedItemId}
+              fallbackPages={pageItems}
+              fallbackFeatures={featuresByCategory}
+            />
+          </nav>
+        </aside>
 
-            {/* Content Area */}
-            <div className="flex-1 overflow-auto p-6">
+        {/* Main Content Area */}
+        <div className="flex-1">
+          {!selectedItem ? (
+            <div className="h-64 flex items-center justify-center text-gray-500">
+              <div className="text-center">
+                <Eye className="h-16 w-16 mx-auto mb-4 opacity-30" />
+                <p className="text-lg">Select a page or feature</p>
+                <p className="text-sm mt-1">Use the navigation on the left</p>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {/* Header Bar */}
+              <div className="bg-white border rounded-lg px-4 py-3 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  {selectedItem.source_type === "page" ? (
+                    <Layout className="h-5 w-5 text-blue-600" />
+                  ) : (
+                    <Zap className="h-5 w-5 text-amber-600" />
+                  )}
+                  <div>
+                    <h1 className="font-bold">{selectedItem.source_name}</h1>
+                    <p className="text-xs text-gray-500">{templateData?.description}</p>
+                  </div>
+                  <Badge variant="outline">v{selectedItem.current_version || 1}</Badge>
+                </div>
+                <div className="flex gap-2">
+                  <Link to={createPageUrl("TestDataManager") + `?item=${selectedItem.id}`}>
+                    <Button variant="outline" size="sm">
+                      <Database className="h-4 w-4 mr-2" />
+                      Test Data
+                    </Button>
+                  </Link>
+                  <Link to={getDetailUrl(selectedItem)}>
+                    <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
+                      <Edit className="h-4 w-4 mr-2" />
+                      Edit in Playground
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+
+              {/* Content Grid */}
               <div className="grid grid-cols-4 gap-6">
                 {/* Live Page Preview - 3 columns */}
                 <div className="col-span-3">
@@ -237,9 +249,9 @@ export default function LivePreview() {
                 </div>
               </div>
             </div>
-          </>
-        )}
-      </main>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
