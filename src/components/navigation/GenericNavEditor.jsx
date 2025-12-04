@@ -22,12 +22,7 @@ import {
 } from "@/components/ui/select";
 import { 
   Plus, GripVertical, Pencil, Trash2, Copy, FolderOpen, Power, Sparkles, Loader2,
-  Home, Lightbulb, GitBranch, Database, Package, Building2, 
-  Navigation, Workflow, Layout, Zap, Settings, FileText,
-  Users, Calendar, Mail, Bell, Search, Star, Heart,
-  Folder, File, Image, Video, Music, Map, Globe, Shield,
-  Key, Gauge, BookOpen, FlaskConical, ChevronDown, ChevronRight,
-  MoveRight, CornerDownRight
+  Folder, File, ChevronDown, ChevronRight, MoveRight, CornerDownRight
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -39,18 +34,18 @@ import {
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { toast } from "sonner";
 
-// Generate unique ID for items
-const generateId = () => Math.random().toString(36).substr(2, 9);
+// Import shared nav utilities
+import { getIconOptions, getIconByName, renderIcon } from "./NavIconMap";
+import { 
+  generateId, 
+  getChildren, 
+  getTopLevelItems, 
+  getValidParentOptions,
+  buildFlatNavList,
+  ensureItemIds
+} from "./NavTypes";
 
-const iconMap = {
-  Home, Lightbulb, GitBranch, Database, Package, Building2, 
-  Navigation, Workflow, Layout, Zap, Settings, FileText,
-  Users, Calendar, Mail, Bell, Search, Star, Heart,
-  Folder, File, Image, Video, Music, Map, Globe, Shield,
-  Key, Gauge, BookOpen, FlaskConical, FolderOpen
-};
-
-const iconOptions = Object.keys(iconMap);
+const iconOptions = getIconOptions();
 
 /**
  * GenericNavEditor - A reusable navigation editor component
@@ -96,48 +91,18 @@ export default function GenericNavEditor({
   });
 
   const config = navConfigs[0];
-  // Ensure all items have unique IDs - persist IDs if missing
   const rawItems = config?.items || [];
   
-  // Generate stable IDs for items that don't have them
-  // For folders, use a deterministic ID based on name to prevent orphaning children
-  const itemsWithIds = React.useMemo(() => {
-    return rawItems.map(item => {
-      if (item._id) return item;
-      // Generate stable ID for folders based on name
-      if (item.item_type === "folder") {
-        const stableId = `folder_${item.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
-        return { ...item, _id: stableId };
-      }
-      // For pages, generate stable ID based on slug
-      if (item.slug) {
-        const stableId = `page_${item.slug.toLowerCase()}`;
-        return { ...item, _id: stableId };
-      }
-      return { ...item, _id: generateId() };
-    });
-  }, [rawItems]);
-  
-  const items = itemsWithIds;
+  // Use shared utility to ensure all items have stable IDs
+  const items = React.useMemo(() => ensureItemIds(rawItems), [rawItems]);
   
   // Auto-save items with generated IDs so they persist
   React.useEffect(() => {
     const itemsNeedIds = rawItems.some(item => !item._id);
-    if (itemsNeedIds && config && itemsWithIds.length > 0) {
-      base44.entities.NavigationConfig.update(config.id, { items: itemsWithIds });
+    if (itemsNeedIds && config && items.length > 0) {
+      base44.entities.NavigationConfig.update(config.id, { items });
     }
-  }, [rawItems, config?.id, itemsWithIds]);
-  
-  // Auto-save items with generated IDs so they persist
-  // DISABLED: This was causing issues by generating random IDs that break parent_id references
-  // IDs should be set explicitly when creating items, not auto-generated
-  // React.useEffect(() => {
-  //   if (itemsNeedIds && config && itemsWithIds.length > 0) {
-  //     base44.entities.NavigationConfig.update(config.id, { items: itemsWithIds }).then(() => {
-  //       queryClient.invalidateQueries({ queryKey: ["navConfig", configType] });
-  //     });
-  //   }
-  // }, [itemsNeedIds, config?.id, itemsWithIds]);
+  }, [rawItems, config?.id, items]);
   
   // Respect default_collapsed setting on initial load - start with empty set (all collapsed)
   React.useEffect(() => {
@@ -151,40 +116,9 @@ export default function GenericNavEditor({
   const allocatedSlugs = items.map(i => i.slug).filter(Boolean);
   const unallocatedSlugs = sourceSlugs.filter(slug => !allocatedSlugs.includes(slug));
 
-  // Hierarchy helpers - parent_id refers to _id of parent
-  const getItemsByParent = (parentId) => {
-    if (parentId === null) {
-      return items.filter(i => !i.parent_id);
-    }
-    return items.filter(i => i.parent_id === parentId);
-  };
-
-  // Find parent by _id
-  const findParentItem = (parentId) => {
-    if (!parentId) return null;
-    return items.find(i => i._id === parentId);
-  };
-  const topLevelItems = getItemsByParent(null);
-  
-  // Get all potential parent items (folders or any item can be a parent)
-  const getValidParents = (excludeId = null) => {
-    // Get all descendants to exclude (can't move item into its own children)
-    const getDescendants = (id, acc = new Set()) => {
-      items.filter(i => i.parent_id === id).forEach(child => {
-        acc.add(child._id);
-        getDescendants(child._id, acc);
-      });
-      return acc;
-    };
-    const descendants = excludeId ? getDescendants(excludeId) : new Set();
-    
-    // Any item can be a parent (for nesting), but prefer folders
-    // Exclude: self, descendants of self
-    return items.filter(i => 
-      i._id !== excludeId &&
-      !descendants.has(i._id)
-    );
-  };
+  // Use shared hierarchy helpers
+  const getItemsByParent = (parentId) => getChildren(items, parentId);
+  const getValidParents = (excludeId) => getValidParentOptions(items, excludeId);
 
   const saveMutation = useMutation({
         mutationFn: async (newItems) => {
@@ -382,47 +316,17 @@ export default function GenericNavEditor({
     toast.success(`${item.name} removed from navigation`);
   };
 
-  const toggleParent = (slug) => {
+  const toggleParent = (id) => {
     setExpandedParents(prev => {
       const next = new Set(prev);
-      if (next.has(slug)) next.delete(slug);
-      else next.add(slug);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
   };
 
-  const getIcon = (iconName) => {
-    const Icon = iconMap[iconName];
-    return Icon ? <Icon className="h-4 w-4" /> : <Home className="h-4 w-4" />;
-  };
-
-  // Build flat list for rendering - recalculates hasChildren from current items array
-  const buildFlatList = () => {
-    const result = [];
-    // Pre-calculate which items have children by checking parent_id references
-    const itemIdsWithChildren = new Set();
-    items.forEach(i => {
-      if (i.parent_id) {
-        itemIdsWithChildren.add(i.parent_id);
-      }
-    });
-
-    const addItems = (parentId, depth) => {
-      if (depth > 3) return; // Allow 3 levels of nesting
-      const children = getItemsByParent(parentId).sort((a, b) => (a.order || 0) - (b.order || 0));
-      children.forEach(child => {
-        const hasChildren = itemIdsWithChildren.has(child._id);
-        result.push({ ...child, depth, hasChildren });
-        // Recurse if has children and expanded
-        const isExpanded = expandedParents.has(child._id);
-        if (hasChildren && isExpanded) {
-          addItems(child._id, depth + 1);
-        }
-      });
-    };
-    addItems(null, 0);
-    return result;
-  };
+  // Use shared flat list builder
+  const buildFlatList = () => buildFlatNavList(items, expandedParents);
 
   // Get valid parent options for the form dialog
   const getParentOptions = () => getValidParents(editingItem);
@@ -452,7 +356,7 @@ export default function GenericNavEditor({
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <div className="text-center py-8 text-gray-500">Loading...</div>
+          <div className="text-center py-8 text-muted-foreground">Loading...</div>
         ) : (
           <>
             {/* Navigation Items */}
@@ -471,17 +375,17 @@ export default function GenericNavEditor({
                                 ...provided.draggableProps.style,
                                 marginLeft: (item.depth || 0) * 24 
                               }}
-                              className={`group flex items-center gap-2 p-3 border rounded-lg bg-white hover:bg-gray-50 transition-colors ${!item.is_visible ? "opacity-50" : ""}`}
+                              className={`draggable-item group ${!item.is_visible ? "opacity-50" : ""}`}
                             >
-                              <div {...provided.dragHandleProps} className="cursor-grab opacity-0 group-hover:opacity-100">
-                                <GripVertical className="h-4 w-4 text-gray-400" />
+                              <div {...provided.dragHandleProps} className="drag-handle">
+                                <GripVertical className="h-4 w-4" />
                               </div>
                               
                               {item.hasChildren ? (
                                 <button onClick={() => toggleParent(item._id)} className="p-0.5">
                                   {expandedParents.has(item._id) ? 
-                                    <ChevronDown className="h-4 w-4 text-gray-400" /> : 
-                                    <ChevronRight className="h-4 w-4 text-gray-400" />
+                                    <ChevronDown className="h-4 w-4 text-muted-foreground" /> : 
+                                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
                                   }
                                 </button>
                               ) : (
@@ -489,14 +393,14 @@ export default function GenericNavEditor({
                               )}
                               
                               <div className="flex items-center gap-2 flex-1">
-                                {getIcon(item.icon)}
-                                <span className="font-medium">{item.name}</span>
+                                {renderIcon(item.icon, "h-4 w-4")}
+                                <span className="text-title">{item.name}</span>
                                 {item.item_type === "folder" && (
-                                  <Badge className="text-xs bg-amber-100 text-amber-700">Folder</Badge>
+                                  <Badge className="text-xs bg-secondary-100 text-secondary-700">Folder</Badge>
                                 )}
                               </div>
 
-                              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100">
+                              <div className="action-buttons">
                                 {/* Move Menu */}
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
@@ -534,9 +438,9 @@ export default function GenericNavEditor({
                                   <Pencil className="h-4 w-4" />
                                 </Button>
                                 <Button variant="ghost" size="icon" onClick={() => handleUnallocate(item)} title="Remove">
-                                  <Power className="h-4 w-4 text-green-500" />
+                                  <Power className="h-4 w-4 text-success" />
                                 </Button>
-                                <Button variant="ghost" size="icon" className="text-red-500" onClick={() => handleDelete(item)} title="Delete">
+                                <Button variant="ghost" size="icon" className="text-destructive" onClick={() => handleDelete(item)} title="Delete">
                                   <Trash2 className="h-4 w-4" />
                                 </Button>
                               </div>
@@ -544,7 +448,7 @@ export default function GenericNavEditor({
                               <Switch
                                 checked={item.is_visible !== false}
                                 onCheckedChange={() => handleToggleVisibility(item)}
-                                className={item.is_visible !== false ? "data-[state=checked]:bg-green-500" : "data-[state=unchecked]:bg-red-500"}
+                                className={item.is_visible !== false ? "data-[state=checked]:bg-success" : "data-[state=unchecked]:bg-destructive"}
                               />
                             </div>
                           )}
@@ -562,7 +466,7 @@ export default function GenericNavEditor({
               <div className="border-t pt-4">
                 <button 
                   onClick={() => setUnallocatedExpanded(!unallocatedExpanded)}
-                  className="flex items-center gap-2 text-sm font-medium text-gray-600 mb-3 hover:text-gray-800"
+                  className="section-header mb-3"
                 >
                   {unallocatedExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                   <FolderOpen className="h-4 w-4" />
@@ -604,20 +508,20 @@ export default function GenericNavEditor({
                           {unallocatedSlugs.map(slug => (
                       <div 
                         key={slug} 
-                        className="group flex items-center gap-3 p-3 bg-gray-50 border border-dashed border-gray-300 rounded-lg hover:bg-gray-100"
+                        className="draggable-item group border-dashed"
                       >
                         <div className="w-5" />
                         <div className="flex items-center gap-2 flex-1">
-                          <File className="h-4 w-4 text-gray-400" />
-                          <span className="font-medium text-gray-600">{slug.replace(/([A-Z])/g, ' $1').trim()}</span>
+                          <File className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-title text-muted-foreground">{slug.replace(/([A-Z])/g, ' $1').trim()}</span>
                           {aiRecommendations[slug] && (
-                            <Badge className="bg-purple-100 text-purple-700 text-xs">
+                            <Badge className="bg-accent-100 text-accent-700 text-xs">
                               <Sparkles className="h-3 w-3 mr-1" />
                               {aiRecommendations[slug]}
                             </Badge>
                           )}
                         </div>
-                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100">
+                        <div className="action-buttons">
                           <Button 
                             variant="ghost" 
                             size="icon" 
@@ -632,12 +536,12 @@ export default function GenericNavEditor({
                             <Pencil className="h-4 w-4" />
                           </Button>
                           <Button 
-                                                            variant="ghost" 
-                                                            size="icon" 
-                                                            onClick={() => handleAllocate(slug)}
-                                                            title="Quick allocate"
-                                                          >
-                                                            <Power className="h-4 w-4 text-red-500" />
+                            variant="ghost" 
+                            size="icon" 
+                            onClick={() => handleAllocate(slug)}
+                            title="Quick allocate"
+                          >
+                            <Power className="h-4 w-4 text-destructive" />
                           </Button>
                         </div>
                       </div>
@@ -648,7 +552,7 @@ export default function GenericNavEditor({
             )}
 
             {items.length === 0 && unallocatedSlugs.length === 0 && (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-muted-foreground">
                 No pages available.
               </div>
             )}
@@ -726,11 +630,11 @@ export default function GenericNavEditor({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {iconOptions.map(icon => (
-                    <SelectItem key={icon} value={icon}>
+                  {iconOptions.map(({ name, icon: IconComp }) => (
+                    <SelectItem key={name} value={name}>
                       <div className="flex items-center gap-2">
-                        {getIcon(icon)}
-                        {icon}
+                        <IconComp className="h-4 w-4" />
+                        {name}
                       </div>
                     </SelectItem>
                   ))}
