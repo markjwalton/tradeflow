@@ -396,7 +396,7 @@ export default function GenericNavEditor({
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <div className="text-center py-8 text-muted-foreground">Loading...</div>
+          <div className="text-center py-8 text-[var(--color-charcoal)]">Loading...</div>
         ) : (
           <>
             {/* Navigation Items */}
@@ -415,17 +415,17 @@ export default function GenericNavEditor({
                                 ...provided.draggableProps.style,
                                 marginLeft: (item.depth || 0) * 24 
                               }}
-                              className={`flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg hover:bg-[var(--color-primary)]/5 hover:border-[var(--color-primary)]/30 transition-all group ${!item.is_visible ? "opacity-50" : ""}`}
+                              className={`flex items-center gap-3 p-3 bg-[var(--color-background-paper)] border border-[var(--color-background-muted)] rounded-lg hover:bg-[var(--color-primary)]/5 hover:border-[var(--color-primary)]/30 transition-all group ${!item.is_visible ? "opacity-50" : ""}`}
                             >
-                              <div {...provided.dragHandleProps} className="cursor-grab text-gray-400 hover:text-gray-600">
+                              <div {...provided.dragHandleProps} className="cursor-grab text-[var(--color-charcoal)]/50 hover:text-[var(--color-charcoal)]">
                                 <GripVertical className="h-4 w-4" />
                               </div>
                               
                               {item.hasChildren ? (
                                 <button onClick={() => toggleParent(item._id)} className="p-0.5">
                                   {expandedParents.has(item._id) ? 
-                                    <ChevronDown className="h-4 w-4 text-muted-foreground" /> : 
-                                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                                    <ChevronDown className="h-4 w-4 text-[var(--color-charcoal)]" /> : 
+                                    <ChevronRight className="h-4 w-4 text-[var(--color-charcoal)]" />
                                   }
                                 </button>
                               ) : (
@@ -548,7 +548,7 @@ export default function GenericNavEditor({
                           {unallocatedSlugs.map(slug => (
                       <div 
                         key={slug} 
-                        className="flex items-center gap-3 p-3 bg-white border border-dashed border-gray-300 rounded-lg hover:bg-gray-50 transition-all group"
+                        className="flex items-center gap-3 p-3 bg-[var(--color-background-paper)] border border-dashed border-[var(--color-charcoal)]/30 rounded-lg hover:bg-[var(--color-background)] transition-all group"
                       >
                         <div className="w-5" />
                         <div className="flex items-center gap-2 flex-1">
@@ -593,7 +593,7 @@ export default function GenericNavEditor({
             )}
 
             {items.length === 0 && unallocatedSlugs.length === 0 && (
-              <div className="text-center py-8 text-muted-foreground">
+              <div className="text-center py-8 text-[var(--color-charcoal)]">
                 No pages available.
               </div>
             )}
