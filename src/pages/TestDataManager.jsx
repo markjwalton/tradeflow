@@ -538,32 +538,33 @@ Return as JSON with entity names as keys and arrays of records as values.`,
     setActiveTab("status");
   };
 
+  // Helper: safely get nested or flat property (duplicate for closure scope)
+  const get = (obj, key) => obj?.[key] ?? obj?.data?.[key];
+
   // Helper to get entities for a single item (for generation)
   const getEntitiesForItemById = (itemId) => {
     const item = playgroundItems.find(p => p.id === itemId);
-    if (!item) {
-      console.log(`getEntitiesForItemById: item not found for id ${itemId}`);
-      return [];
-    }
+    if (!item) return [];
+
+    const sourceType = get(item, "source_type");
+    const sourceId = get(item, "source_id");
+    const workingData = get(item, "working_data");
 
     let entitiesUsed = [];
-    if (item.data?.source_type === "page") {
-      const template = pageTemplates.find(t => t.id === item.data?.source_id);
-      entitiesUsed = item.data?.working_data?.entities_used || template?.data?.entities_used || [];
-    } else if (item.data?.source_type === "feature") {
-      const template = featureTemplates.find(t => t.id === item.data?.source_id);
-      entitiesUsed = item.data?.working_data?.entities_used || template?.data?.entities_used || [];
+    if (sourceType === "page") {
+      const template = pageTemplates.find(t => t.id === sourceId);
+      entitiesUsed = workingData?.entities_used || get(template, "entities_used") || [];
+    } else if (sourceType === "feature") {
+      const template = featureTemplates.find(t => t.id === sourceId);
+      entitiesUsed = workingData?.entities_used || get(template, "entities_used") || [];
     }
 
     return entitiesUsed.map(name => {
-      const entity = entityTemplates.find(e => e.data?.name === name);
-      if (entity) {
-        return {
-          name: entity.data?.name || name,
-          schema: entity.data?.schema || { properties: {} }
-        };
-      }
-      return { name, schema: { properties: {} } };
+      const entity = entityTemplates.find(e => get(e, "name") === name);
+      return {
+        name: get(entity, "name") || name,
+        schema: get(entity, "schema") || { properties: {} }
+      };
     });
   };
 
