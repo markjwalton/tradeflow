@@ -131,12 +131,12 @@ export default function NavigationManager() {
   // Tab button style helper
   const tabStyle = (tab) => `px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
     activeTab === tab 
-      ? "bg-slate-900 text-white" 
-      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+      ? "bg-[var(--color-primary)] text-white" 
+      : "bg-[var(--color-background)] text-[var(--color-charcoal)] hover:bg-[var(--color-background)]/80 border border-[var(--color-charcoal)]/20"
   }`;
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="p-6 max-w-4xl mx-auto bg-[var(--color-background)] min-h-screen">
       {isGlobalAdmin ? (
         <>
           {/* Tab Navigation */}
@@ -204,7 +204,7 @@ export default function NavigationManager() {
               />
 
               {selectedTenantId === "__global__" ? (
-                <div className="text-center py-12 text-gray-500">
+                <div className="text-center py-12 text-[var(--color-charcoal)]">
                   Select a tenant to manage their navigation
                 </div>
               ) : (
@@ -380,7 +380,7 @@ function LivePagesNavEditor({ pageTemplates = [], featureTemplates = [] }) {
         <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-700 flex-1 mr-4">
           <strong>{pageTemplates.length} pages</strong> and <strong>{featureTemplates.length} features</strong> across <strong>{allCategories.length} categories</strong>.
         </div>
-        <Button onClick={handleAutoGenerate} disabled={generating} className="gap-2">
+        <Button onClick={handleAutoGenerate} disabled={generating} className="gap-2 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
           {generating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
           Auto-Generate
         </Button>
@@ -433,32 +433,32 @@ function TenantNavEditor({ tenantId, items = [], isLoading }) {
   });
 
   if (isLoading) {
-    return <div className="text-center py-8 text-gray-500">Loading...</div>;
+    return <div className="text-center py-8 text-[var(--color-charcoal)]">Loading...</div>;
   }
 
   return (
     <div className="border rounded-lg p-4 bg-white">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="font-semibold">Tenant Navigation Items</h3>
-        <Button size="sm" onClick={() => { setEditingItem(null); setShowForm(true); }}>
+        <h3 className="font-semibold text-[var(--color-midnight)]">Tenant Navigation Items</h3>
+        <Button size="sm" className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white" onClick={() => { setEditingItem(null); setShowForm(true); }}>
           Add Item
         </Button>
       </div>
       
       {items.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-[var(--color-charcoal)]">
           No navigation items. Add items or copy from global template.
         </div>
       ) : (
         <div className="space-y-2">
           {items.map((item) => (
-            <div key={item.id} className="flex items-center gap-3 p-3 border rounded-lg bg-gray-50">
-              <span className="flex-1 font-medium">{item.name}</span>
-              <span className="text-sm text-gray-500">{item.page_url}</span>
+            <div key={item.id} className="flex items-center gap-3 p-3 border rounded-lg bg-[var(--color-background)]">
+              <span className="flex-1 font-medium text-[var(--color-midnight)]">{item.name}</span>
+              <span className="text-sm text-[var(--color-charcoal)]">{item.page_url}</span>
               <Button variant="ghost" size="sm" onClick={() => { setEditingItem(item); setShowForm(true); }}>
                 Edit
               </Button>
-              <Button variant="ghost" size="sm" className="text-red-500" onClick={() => deleteMutation.mutate(item.id)}>
+              <Button variant="ghost" size="sm" className="text-[var(--color-destructive)]" onClick={() => deleteMutation.mutate(item.id)}>
                 Delete
               </Button>
             </div>
