@@ -233,10 +233,10 @@ Return a JSON object with:
   const currentProject = projects.find(p => p.id === selectedProjectId);
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
             Entity Library
             {currentProject && (
               <Badge className="bg-indigo-100 text-indigo-800">
@@ -245,7 +245,7 @@ Return a JSON object with:
               </Badge>
             )}
           </h1>
-          <p className="text-gray-500">Reusable entity templates for business applications</p>
+          <p className="text-[var(--color-charcoal)]">Reusable entity templates for business applications</p>
         </div>
         <div className="flex gap-2">
           <CustomProjectSelector

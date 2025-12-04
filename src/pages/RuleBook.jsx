@@ -212,14 +212,14 @@ export default function RuleBook() {
   const getEnforcementInfo = (enf) => enforcements.find(e => e.value === enf) || enforcements[1];
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <BookOpen className="h-6 w-6 text-blue-600" />
+          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
+            <BookOpen className="h-6 w-6 text-[var(--color-primary)]" />
             Development Rule Book
           </h1>
-          <p className="text-gray-500">Maintain rules for AI-assisted development</p>
+          <p className="text-[var(--color-charcoal)]">Maintain rules for AI-assisted development</p>
         </div>
         <div className="flex gap-2">
           {copiedRules.length > 0 && (

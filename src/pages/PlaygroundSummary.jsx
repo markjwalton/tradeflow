@@ -284,14 +284,14 @@ export default function PlaygroundSummary() {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <FlaskConical className="h-6 w-6 text-purple-600" />
+          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
+            <FlaskConical className="h-6 w-6 text-[var(--color-primary)]" />
             Development Playground
           </h1>
-          <p className="text-gray-500">Test, modify, and validate templates before deployment</p>
+          <p className="text-[var(--color-charcoal)]">Test, modify, and validate templates before deployment</p>
         </div>
         <div className="flex gap-2">
           <Link to={createPageUrl("LivePreview")}>
