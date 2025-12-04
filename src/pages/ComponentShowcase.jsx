@@ -640,10 +640,10 @@ export default function ComponentShowcase() {
               </div>
             </Stack>
           </ComponentDemo>
-        </ShowcaseSection>
+        </ShowcaseSection>}
 
         {/* Data Display Section */}
-        <ShowcaseSection
+        {visibleCategories.includes("dataDisplay") && <ShowcaseSection
           id="dataDisplay"
           title="Data Display"
           count={9}
