@@ -210,7 +210,7 @@ export default function WidgetConfigEditor({ widget, isOpen, onClose, onSave }) 
           <div className="space-y-4 pt-2">
             {fields.map(field => (
               <div key={field.key}>
-                <Label className="text-xs text-gray-500">{field.label}</Label>
+                <Label className="text-xs text-[var(--color-charcoal)]">{field.label}</Label>
                 {renderField(field)}
               </div>
             ))}
@@ -238,9 +238,9 @@ export default function WidgetConfigEditor({ widget, isOpen, onClose, onSave }) 
           </Accordion>
         </div>
 
-        <div className="flex justify-end gap-2 pt-4 border-t">
+        <div className="flex justify-end gap-2 pt-4 border-t border-[var(--color-background-muted)]">
           <Button variant="outline" onClick={onClose}>Cancel</Button>
-          <Button onClick={handleSave}>Save Changes</Button>
+          <Button onClick={handleSave} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">Save Changes</Button>
         </div>
       </DialogContent>
     </Dialog>

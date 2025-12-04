@@ -148,7 +148,7 @@ export default function DashboardGrid({
         <div
           ref={provided.innerRef}
           {...provided.droppableProps}
-          className={`grid gap-4 ${snapshot.isDraggingOver ? "bg-blue-50/50 rounded-lg p-2" : ""}`}
+          className={`grid gap-4 ${snapshot.isDraggingOver ? "bg-[var(--color-primary)]/10 rounded-lg p-2" : ""}`}
           style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
         >
           {widgetPlacements.map((placement, index) => {
@@ -174,17 +174,17 @@ export default function DashboardGrid({
                       {isEditing && (
                         <div 
                           {...provided.dragHandleProps}
-                          className="absolute -top-2 -left-2 z-10 p-1.5 bg-white rounded-lg shadow-md opacity-0 group-hover:opacity-100 cursor-grab active:cursor-grabbing transition-opacity"
+                          className="absolute -top-2 -left-2 z-10 p-1.5 bg-[var(--color-background-paper)] rounded-lg shadow-md opacity-0 group-hover:opacity-100 cursor-grab active:cursor-grabbing transition-opacity"
                         >
-                          <GripVertical className="h-4 w-4 text-gray-500" />
+                          <GripVertical className="h-4 w-4 text-[var(--color-charcoal)]" />
                         </div>
                       )}
                       {isEditing && (
                         <div className="absolute -top-2 -right-2 z-10 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button size="icon" variant="outline" className="h-6 w-6 bg-white shadow-sm">
+                          <Button size="icon" variant="outline" className="h-6 w-6 bg-[var(--color-background-paper)] shadow-sm">
                             <Settings className="h-3 w-3" />
                           </Button>
-                          <Button size="icon" variant="outline" className="h-6 w-6 bg-white text-red-500 shadow-sm">
+                          <Button size="icon" variant="outline" className="h-6 w-6 bg-[var(--color-background-paper)] text-[var(--color-destructive)] shadow-sm">
                             <Trash2 className="h-3 w-3" />
                           </Button>
                         </div>
@@ -227,12 +227,12 @@ export default function DashboardGrid({
           return (
             <div 
               key={group.id}
-              className={`${isCollapsed ? "" : "bg-gray-50/50 rounded-lg p-4"}`}
+              className={`${isCollapsed ? "" : "bg-[var(--color-background)]/50 rounded-lg p-4"}`}
               style={{ gridColumn: groupSpan < columns ? `span ${groupSpan}` : undefined }}
             >
               <button
                 onClick={() => toggleGroup(group.id)}
-                className="flex items-center gap-2 mb-3 text-sm font-medium text-gray-700 hover:text-gray-900"
+                className="flex items-center gap-2 mb-3 text-sm font-medium text-[var(--color-charcoal)] hover:text-[var(--color-midnight)]"
               >
                 {isCollapsed ? (
                   <ChevronRight className="h-4 w-4" />

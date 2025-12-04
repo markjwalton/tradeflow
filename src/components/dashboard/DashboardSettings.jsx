@@ -67,12 +67,12 @@ export default function DashboardSettings({
         <div className="mt-6 space-y-6">
           {/* Layout Options */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-sm text-slate-900">Layout Options</h3>
+            <h3 className="font-semibold text-sm text-[var(--color-midnight)]">Layout Options</h3>
             
             <div className="flex items-center justify-between py-2">
               <div>
-                <Label htmlFor="drag-drop" className="font-medium">Enable Drag & Drop</Label>
-                <p className="text-sm text-slate-500">Rearrange widgets by dragging</p>
+                <Label htmlFor="drag-drop" className="font-medium text-[var(--color-midnight)]">Enable Drag & Drop</Label>
+                <p className="text-sm text-[var(--color-charcoal)]">Rearrange widgets by dragging</p>
               </div>
               <Switch
                 id="drag-drop"
@@ -83,8 +83,8 @@ export default function DashboardSettings({
 
             <div className="flex items-center justify-between py-2">
               <div>
-                <Label htmlFor="compact" className="font-medium">Compact Mode</Label>
-                <p className="text-sm text-slate-500">Reduce spacing between widgets</p>
+                <Label htmlFor="compact" className="font-medium text-[var(--color-midnight)]">Compact Mode</Label>
+                <p className="text-sm text-[var(--color-charcoal)]">Reduce spacing between widgets</p>
               </div>
               <Switch
                 id="compact"
@@ -97,7 +97,7 @@ export default function DashboardSettings({
           {/* Widget Selection */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-sm text-slate-900">Visible Widgets</h3>
+              <h3 className="font-semibold text-sm text-[var(--color-midnight)]">Visible Widgets</h3>
               <div className="flex gap-2">
                 <Button variant="ghost" size="sm" onClick={handleSelectAll}>
                   Select All
@@ -108,7 +108,7 @@ export default function DashboardSettings({
               </div>
             </div>
             
-            <ScrollArea className="h-[300px] border rounded-lg p-2">
+            <ScrollArea className="h-[300px] border border-[var(--color-background-muted)] rounded-lg p-2">
               <div className="space-y-2">
                 {allWidgets.map(widget => {
                   const Icon = widgetTypeIcons[widget.widget_type] || Info;
@@ -118,20 +118,20 @@ export default function DashboardSettings({
                     <div 
                       key={widget.id}
                       className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${
-                        isChecked ? "bg-slate-50 border-slate-300" : "bg-white border-slate-200"
+                        isChecked ? "bg-[var(--color-background)] border-[var(--color-primary)]/30" : "bg-[var(--color-background-paper)] border-[var(--color-background-muted)]"
                       }`}
                     >
                       <Checkbox
                         checked={isChecked}
                         onCheckedChange={() => handleWidgetToggle(widget.id)}
                       />
-                      <Icon className="h-4 w-4 text-slate-500" />
+                      <Icon className="h-4 w-4 text-[var(--color-charcoal)]" />
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-sm truncate">{widget.name}</p>
-                        <p className="text-xs text-slate-500 truncate">{widget.category}</p>
+                        <p className="font-medium text-sm truncate text-[var(--color-midnight)]">{widget.name}</p>
+                        <p className="text-xs text-[var(--color-charcoal)] truncate">{widget.category}</p>
                       </div>
                       {settings.enableDragDrop && (
-                        <GripVertical className="h-4 w-4 text-slate-300" />
+                        <GripVertical className="h-4 w-4 text-[var(--color-charcoal)]/30" />
                       )}
                     </div>
                   );
