@@ -1311,7 +1311,7 @@ Provide:
             <Button 
               onClick={generateSystemReview} 
               disabled={isGeneratingSystemReview}
-              className="bg-purple-600 hover:bg-purple-700"
+              className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
             >
               {isGeneratingSystemReview ? (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />

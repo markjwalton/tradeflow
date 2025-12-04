@@ -432,7 +432,7 @@ Provide:
             <Plus className="h-4 w-4 mr-2" />
             Add Policy
           </Button>
-          <Button onClick={generateSecurityAudit} disabled={isGeneratingAudit} className="bg-purple-600 hover:bg-purple-700">
+          <Button onClick={generateSecurityAudit} disabled={isGeneratingAudit} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
             {isGeneratingAudit ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
             AI Security Audit
           </Button>
@@ -934,7 +934,7 @@ Provide:
               <h2 className="text-lg font-semibold">AI Security Audit History</h2>
               <p className="text-sm text-gray-500">Collapsible audit logs with roadmap integration</p>
             </div>
-            <Button onClick={generateSecurityAudit} disabled={isGeneratingAudit} className="bg-purple-600 hover:bg-purple-700">
+            <Button onClick={generateSecurityAudit} disabled={isGeneratingAudit} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
               {isGeneratingAudit ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
               Run New Audit
             </Button>
