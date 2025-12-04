@@ -454,10 +454,15 @@ export default function Layout({ children, currentPageName }) {
         }
       }
 
+      const handleNavClick = (e) => {
+        e.preventDefault();
+        navigate(pageUrl);
+      };
+
       return (
-        <a
+        <div
           key={itemId || item.slug}
-          href={pageUrl}
+          onClick={handleNavClick}
           className={`flex items-center gap-2 px-3 rounded-lg transition-colors cursor-pointer ${
             isChild ? "py-1.5 text-sm ml-6" : "py-2"
           } ${
@@ -468,7 +473,7 @@ export default function Layout({ children, currentPageName }) {
         >
           {!isChild && <Icon className="h-4 w-4 flex-shrink-0" />}
           <span className="truncate">{item.name}</span>
-        </a>
+        </div>
       );
     });
   };
