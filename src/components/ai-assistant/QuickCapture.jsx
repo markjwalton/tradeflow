@@ -235,10 +235,12 @@ Return as JSON:
                 <SelectValue placeholder="Select item..." />
               </SelectTrigger>
               <SelectContent>
-                {sortedItems.map((item, index) => (
-                  <React.Fragment key={item.id}>
-                    {item.title === "Live Chat Journal" && item.category === "discussion_note" && (
-                      <>
+                {sortedItems.map((item, index) => {
+                  const isLiveJournal = item.title === "Live Chat Journal" && item.category === "discussion_note";
+                  
+                  if (isLiveJournal) {
+                    return (
+                      <div key={item.id}>
                         <SelectItem value={item.id}>
                           <div className="flex items-center gap-2">
                             <MessageSquare className="h-3 w-3 text-blue-500" />
@@ -248,19 +250,20 @@ Return as JSON:
                         {sortedItems.length > 1 && (
                           <div className="px-2 py-1 text-xs text-gray-400 border-b mb-1">Other Items</div>
                         )}
-                      </>
-                    )}
-                    {!(item.title === "Live Chat Journal" && item.category === "discussion_note") && (
-                      <SelectItem value={item.id}>
-                        <div className="flex items-center gap-2">
-                          {item.is_focused && <span className="text-purple-600">●</span>}
-                          {item.is_starred && <span className="text-yellow-500">★</span>}
-                          {item.title}
-                        </div>
-                      </SelectItem>
-                    )}
-                  </React.Fragment>
-                ))}
+                      </div>
+                    );
+                  }
+                  
+                  return (
+                    <SelectItem key={item.id} value={item.id}>
+                      <div className="flex items-center gap-2">
+                        {item.is_focused && <span className="text-purple-600">●</span>}
+                        {item.is_starred && <span className="text-yellow-500">★</span>}
+                        {item.title}
+                      </div>
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
           </div>
