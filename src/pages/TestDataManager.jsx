@@ -217,8 +217,8 @@ export default function TestDataManager() {
 
             return {
               id: item.id,
-              name: item.source_name,
-              type: item.source_type,
+              name: item.data?.source_name,
+              type: item.data?.source_type,
               entityCount: entities.length,
               recordCount,
               hasTestData: !!testData,
