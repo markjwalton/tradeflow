@@ -62,9 +62,9 @@ export default function CMSSubmissions({ tenantId }) {
   });
 
   const statusColors = {
-    new: "bg-blue-100 text-blue-700",
-    read: "bg-gray-100 text-gray-700",
-    archived: "bg-yellow-100 text-yellow-700"
+    new: "bg-[var(--color-info)]/20 text-[var(--color-info)]",
+    read: "bg-[var(--color-charcoal)]/10 text-[var(--color-charcoal)]",
+    archived: "bg-[var(--color-warning)]/20 text-[var(--color-warning)]"
   };
 
   const handleView = (submission) => {
@@ -109,10 +109,10 @@ export default function CMSSubmissions({ tenantId }) {
       <CardContent>
         {isLoading ? (
           <div className="flex justify-center py-8">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
           </div>
         ) : filteredSubmissions.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
+          <div className="text-center py-8 text-[var(--color-charcoal)]">
             <Inbox className="h-12 w-12 mx-auto mb-4 opacity-50" />
             <p>No submissions yet</p>
           </div>
@@ -121,20 +121,20 @@ export default function CMSSubmissions({ tenantId }) {
             {filteredSubmissions.map(sub => (
               <div 
                 key={sub.id} 
-                className={`flex items-center justify-between p-4 rounded-lg border cursor-pointer hover:bg-gray-50 ${
-                  sub.status === "new" ? "bg-blue-50 border-blue-200" : "bg-white"
+                className={`flex items-center justify-between p-4 rounded-lg border cursor-pointer hover:bg-[var(--color-background)] ${
+                  sub.status === "new" ? "bg-[var(--color-info)]/10 border-[var(--color-info)]/30" : "bg-white border-[var(--color-background-muted)]"
                 }`}
                 onClick={() => handleView(sub)}
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-medium">{sub.form_name || "Unknown Form"}</h3>
+                    <h3 className="font-medium text-[var(--color-midnight)]">{sub.form_name || "Unknown Form"}</h3>
                     <Badge className={statusColors[sub.status]}>{sub.status}</Badge>
                   </div>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-sm text-[var(--color-charcoal)] mt-1">
                     {new Date(sub.created_date).toLocaleString()}
                   </p>
-                  <p className="text-sm text-gray-600 mt-1 line-clamp-1">
+                  <p className="text-sm text-[var(--color-charcoal)] mt-1 line-clamp-1">
                     {Object.entries(sub.data || {}).slice(0, 2).map(([k, v]) => `${k}: ${v}`).join(", ")}
                   </p>
                 </div>
@@ -159,24 +159,24 @@ export default function CMSSubmissions({ tenantId }) {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-500">Form</p>
-                  <p className="font-medium">{selectedSubmission.form_name}</p>
+                  <p className="text-sm text-[var(--color-charcoal)]">Form</p>
+                  <p className="font-medium text-[var(--color-midnight)]">{selectedSubmission.form_name}</p>
                 </div>
                 <Badge className={statusColors[selectedSubmission.status]}>
                   {selectedSubmission.status}
                 </Badge>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Submitted</p>
-                <p>{new Date(selectedSubmission.created_date).toLocaleString()}</p>
+                <p className="text-sm text-[var(--color-charcoal)]">Submitted</p>
+                <p className="text-[var(--color-midnight)]">{new Date(selectedSubmission.created_date).toLocaleString()}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500 mb-2">Data</p>
-                <div className="space-y-2 bg-gray-50 p-3 rounded-lg">
+                <p className="text-sm text-[var(--color-charcoal)] mb-2">Data</p>
+                <div className="space-y-2 bg-[var(--color-background)] p-3 rounded-lg">
                   {Object.entries(selectedSubmission.data || {}).map(([key, value]) => (
                     <div key={key} className="flex justify-between">
-                      <span className="font-medium text-gray-700">{key}:</span>
-                      <span className="text-gray-600">{String(value)}</span>
+                      <span className="font-medium text-[var(--color-midnight)]">{key}:</span>
+                      <span className="text-[var(--color-charcoal)]">{String(value)}</span>
                     </div>
                   ))}
                 </div>
@@ -197,7 +197,7 @@ export default function CMSSubmissions({ tenantId }) {
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className="text-red-500"
+                  className="text-[var(--color-destructive)]"
                   onClick={() => {
                     if (confirm("Delete this submission?")) {
                       deleteMutation.mutate(selectedSubmission.id);

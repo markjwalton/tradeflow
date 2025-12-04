@@ -20,7 +20,7 @@ export default function CMSTenantSelector({ value, onChange, showLabel = true })
   return (
     <div className="flex items-center gap-3">
       {showLabel && (
-        <div className="flex items-center gap-2 text-sm font-medium text-gray-600">
+        <div className="flex items-center gap-2 text-sm font-medium text-[var(--color-charcoal)]">
           <Building2 className="h-4 w-4" />
           Tenant:
         </div>
@@ -41,7 +41,7 @@ export default function CMSTenantSelector({ value, onChange, showLabel = true })
               <div className="flex items-center gap-2">
                 <span>{tenant.name}</span>
                 {tenant.slug && (
-                  <span className="text-xs text-gray-400">({tenant.slug})</span>
+                  <span className="text-xs text-[var(--color-charcoal)]">({tenant.slug})</span>
                 )}
               </div>
             </SelectItem>
@@ -49,7 +49,7 @@ export default function CMSTenantSelector({ value, onChange, showLabel = true })
         </SelectContent>
       </Select>
       {value && value !== "__all__" && (
-        <Badge className="bg-blue-100 text-blue-700">
+        <Badge className="bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
           {tenants.find(t => t.id === value)?.name || "Selected"}
         </Badge>
       )}
