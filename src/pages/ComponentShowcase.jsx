@@ -115,13 +115,26 @@ export default function ComponentShowcase() {
 
     const [activeCategory, setActiveCategory] = useState("typography");
     const [activeMainTab, setActiveMainTab] = useState(tabFromUrl);
-    
-    // Update tab when URL changes
+
+    // Update tab when URL changes - use popstate and manual check
     React.useEffect(() => {
-      const params = new URLSearchParams(window.location.search);
-      const tab = params.get("tab") || "all";
-      setActiveMainTab(tab);
-    }, [window.location.search]);
+      const updateTabFromUrl = () => {
+        const params = new URLSearchParams(window.location.search);
+        const tab = params.get("tab") || "all";
+        setActiveMainTab(tab);
+      };
+
+      // Listen for browser back/forward
+      window.addEventListener('popstate', updateTabFromUrl);
+
+      // Also check on interval for programmatic navigation
+      const interval = setInterval(updateTabFromUrl, 100);
+
+      return () => {
+        window.removeEventListener('popstate', updateTabFromUrl);
+        clearInterval(interval);
+      };
+    }, []);
   
   // Get visible categories based on active tab
   const activeTabConfig = tabs.find(t => t.id === activeMainTab);
