@@ -411,10 +411,7 @@ export default function BulkVerificationDialog({
 
           {/* Actions */}
           <div className="flex justify-between pt-2 border-t">
-            <Button variant="outline" onClick={() => {
-              onComplete?.();
-              onClose();
-            }}>
+            <Button variant="outline" onClick={onClose}>
               {batchState.successItems.length > 0 ? `Close (${batchState.successItems.length} verified)` : "Close"}
             </Button>
             
