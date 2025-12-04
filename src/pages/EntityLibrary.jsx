@@ -236,7 +236,7 @@ Return a JSON object with:
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)] font-heading">
             Entity Library
             {currentProject && (
               <Badge className="bg-indigo-100 text-indigo-800">

@@ -318,7 +318,7 @@ Return a JSON object with a "pages" array containing page templates.`,
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)] font-heading">
             Page Library
             {currentProject && (
               <Badge className="bg-indigo-100 text-indigo-800">
@@ -593,7 +593,7 @@ Return a JSON object with a "pages" array containing page templates.`,
                     <div 
                       key={index} 
                       className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                        selectedBulkPages.includes(index) ? "border-blue-500 bg-blue-50" : "hover:bg-gray-50"
+                        selectedBulkPages.includes(index) ? "border-[var(--color-info)] bg-[var(--color-info)]/10" : "hover:bg-[var(--color-background)]"
                       }`}
                       onClick={() => setSelectedBulkPages(prev => 
                         prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
@@ -603,7 +603,7 @@ Return a JSON object with a "pages" array containing page templates.`,
                         <Checkbox checked={selectedBulkPages.includes(index)} />
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <Layout className="h-4 w-4 text-blue-600" />
+                            <Layout className="h-4 w-4 text-[var(--color-info)]" />
                             <span className="font-medium">{page.name}</span>
                             <Badge className={categoryColors[page.category] || "bg-slate-100"}>{page.category}</Badge>
                           </div>

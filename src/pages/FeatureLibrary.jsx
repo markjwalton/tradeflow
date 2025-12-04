@@ -329,7 +329,7 @@ Return a JSON object with a "features" array containing feature templates.`,
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)] font-heading">
             Feature Library
             {currentProject && (
               <Badge className="bg-indigo-100 text-indigo-800">
@@ -609,7 +609,7 @@ Return a JSON object with a "features" array containing feature templates.`,
                     <div 
                       key={index} 
                       className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                        selectedBulkFeatures.includes(index) ? "border-amber-500 bg-amber-50" : "hover:bg-gray-50"
+                        selectedBulkFeatures.includes(index) ? "border-[var(--color-warning)] bg-[var(--color-warning)]/10" : "hover:bg-[var(--color-background)]"
                       }`}
                       onClick={() => setSelectedBulkFeatures(prev => 
                         prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
@@ -619,7 +619,7 @@ Return a JSON object with a "features" array containing feature templates.`,
                         <Checkbox checked={selectedBulkFeatures.includes(index)} />
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <Zap className="h-4 w-4 text-amber-600" />
+                            <Zap className="h-4 w-4 text-[var(--color-warning)]" />
                             <span className="font-medium">{feature.name}</span>
                             <Badge className={categoryColors[feature.category] || "bg-slate-100"}>{feature.category}</Badge>
                             <Badge className={complexityColors[feature.complexity || "medium"]}>{feature.complexity || "medium"}</Badge>
