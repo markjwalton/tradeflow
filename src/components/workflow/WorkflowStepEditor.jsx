@@ -88,13 +88,13 @@ export default function WorkflowStepEditor({
   const otherSteps = allSteps.filter((s) => s.id !== step.id);
 
   return (
-    <div className="w-96 bg-white border-l flex flex-col">
+    <div className="w-96 bg-[var(--color-background-paper)] border-l border-[var(--color-background-muted)] flex flex-col">
       {/* Header */}
-      <div className="p-3 border-b flex items-center justify-between">
-        <h3 className="font-semibold">Edit Step</h3>
+      <div className="p-3 border-b border-[var(--color-background-muted)] flex items-center justify-between">
+        <h3 className="font-semibold text-[var(--color-midnight)]">Edit Step</h3>
         <div className="flex items-center gap-2">
           {hasChanges && (
-            <Button size="sm" onClick={handleSave}>
+            <Button size="sm" onClick={handleSave} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
               <Save className="h-3 w-3 mr-1" />
               Save
             </Button>
@@ -284,7 +284,7 @@ export default function WorkflowStepEditor({
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="w-full text-red-500"
+                          className="w-full text-[var(--color-destructive)]"
                           onClick={() => removeDecisionOption(i)}
                         >
                           <Trash2 className="h-3 w-3 mr-1" />
@@ -390,11 +390,11 @@ export default function WorkflowStepEditor({
       </ScrollArea>
 
       {/* Footer */}
-      <div className="p-3 border-t">
+      <div className="p-3 border-t border-[var(--color-background-muted)]">
         <Button
           variant="destructive"
           size="sm"
-          className="w-full"
+          className="w-full bg-[var(--color-destructive)] hover:bg-[var(--color-destructive-dark)] text-white"
           onClick={onDelete}
         >
           <Trash2 className="h-4 w-4 mr-2" />

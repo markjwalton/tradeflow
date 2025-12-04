@@ -82,10 +82,10 @@ const stepTypes = [
 
 export default function WorkflowStepPalette({ onAddStep }) {
   return (
-    <div className="w-64 bg-white border-r flex flex-col">
-      <div className="p-3 border-b">
-        <h3 className="font-semibold text-sm">Add Step</h3>
-        <p className="text-xs text-gray-500">Click to add to workflow</p>
+    <div className="w-64 bg-[var(--color-background-paper)] border-r border-[var(--color-background-muted)] flex flex-col">
+      <div className="p-3 border-b border-[var(--color-background-muted)]">
+        <h3 className="font-semibold text-sm text-[var(--color-midnight)]">Add Step</h3>
+        <p className="text-xs text-[var(--color-charcoal)]">Click to add to workflow</p>
       </div>
       <ScrollArea className="flex-1">
         <div className="p-3 space-y-2">

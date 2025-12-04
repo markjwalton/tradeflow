@@ -65,11 +65,11 @@ export default function WorkflowCanvas({
   if (steps.length === 0) {
     return (
       <div className="h-full flex items-center justify-center">
-        <div className="text-center text-gray-500">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
-            <CheckSquare className="h-8 w-8 text-gray-400" />
+        <div className="text-center text-[var(--color-charcoal)]">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--color-background)] flex items-center justify-center">
+            <CheckSquare className="h-8 w-8 text-[var(--color-charcoal)]" />
           </div>
-          <h3 className="font-medium">No steps yet</h3>
+          <h3 className="font-medium text-[var(--color-midnight)]">No steps yet</h3>
           <p className="text-sm">Add steps from the palette on the left</p>
         </div>
       </div>
@@ -98,7 +98,7 @@ export default function WorkflowCanvas({
                         {/* Connector line */}
                         {index > 0 && (
                           <div className="flex justify-center -mt-4 mb-0">
-                            <div className="w-0.5 h-8 bg-gray-300" />
+                            <div className="w-0.5 h-8 bg-[var(--color-background-muted)]" />
                           </div>
                         )}
 
@@ -106,7 +106,7 @@ export default function WorkflowCanvas({
                         <Card
                           className={`border-2 cursor-pointer transition-all ${colorClass} ${
                             isSelected
-                              ? "ring-2 ring-blue-500 shadow-lg"
+                              ? "ring-2 ring-[var(--color-primary)] shadow-lg"
                               : "hover:shadow-md"
                           } ${snapshot.isDragging ? "shadow-xl" : ""}`}
                           onClick={() => onSelectStep(step.id)}
@@ -117,13 +117,13 @@ export default function WorkflowCanvas({
                                 {...provided.dragHandleProps}
                                 className="mt-1 cursor-grab active:cursor-grabbing"
                               >
-                                <GripVertical className="h-4 w-4 text-gray-400" />
+                                <GripVertical className="h-4 w-4 text-[var(--color-charcoal)]" />
                               </div>
 
                               <div className="flex-1">
                                 <div className="flex items-center gap-2">
                                   <Icon className="h-5 w-5" />
-                                  <span className="font-medium">{step.name}</span>
+                                  <span className="font-medium text-[var(--color-midnight)]">{step.name}</span>
                                   <Badge variant="outline" className="text-xs">
                                     {step.stepNumber}
                                   </Badge>
@@ -135,7 +135,7 @@ export default function WorkflowCanvas({
                                 </div>
 
                                 {step.description && (
-                                  <p className="text-sm text-gray-600 mt-1">
+                                  <p className="text-sm text-[var(--color-charcoal)] mt-1">
                                     {step.description}
                                   </p>
                                 )}
@@ -191,7 +191,7 @@ export default function WorkflowCanvas({
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                className="h-8 w-8 p-0 text-gray-400 hover:text-red-500"
+                                className="h-8 w-8 p-0 text-[var(--color-charcoal)] hover:text-[var(--color-destructive)]"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   onDeleteStep(step.id);
@@ -206,7 +206,7 @@ export default function WorkflowCanvas({
                         {/* Arrow to next step */}
                         {index < steps.length - 1 && (
                           <div className="flex justify-center mt-0">
-                            <ArrowDown className="h-6 w-6 text-gray-400" />
+                            <ArrowDown className="h-6 w-6 text-[var(--color-charcoal)]" />
                           </div>
                         )}
                       </div>
@@ -222,7 +222,7 @@ export default function WorkflowCanvas({
 
       {/* End marker */}
       <div className="flex justify-center mt-4">
-        <div className="px-4 py-2 bg-gray-200 rounded-full text-sm font-medium text-gray-600">
+        <div className="px-4 py-2 bg-[var(--color-background-muted)] rounded-full text-sm font-medium text-[var(--color-charcoal)]">
           End of Workflow
         </div>
       </div>
