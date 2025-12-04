@@ -58,8 +58,8 @@ export default function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="p-6 flex items-center justify-center h-64">
-        <RefreshCw className="h-6 w-6 animate-spin text-gray-400" />
+      <div className="p-6 flex items-center justify-center h-64 bg-[var(--color-background-100)]">
+        <RefreshCw className="h-6 w-6 animate-spin text-[var(--color-primary-400)]" />
       </div>
     );
   }
@@ -76,30 +76,30 @@ export default function Dashboard() {
   );
 
   return (
-    <div className={`p-6 bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen ${settings.compactMode ? "space-y-4" : ""}`}>
+    <div className={`p-6 bg-[var(--color-background-100)] min-h-screen ${settings.compactMode ? "space-y-4" : ""}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Dashboard</h1>
-          <p className="text-slate-500 mt-1">Welcome back! Here's what's happening.</p>
+          <h1 className="text-3xl font-light text-[var(--color-midnight-900)]" style={{ fontFamily: 'var(--font-family-display)' }}>Dashboard</h1>
+          <p className="text-[var(--color-charcoal-500)] mt-1">Welcome back! Here's what's happening.</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2">
+          <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2 border-[var(--color-background-300)] text-[var(--color-charcoal-600)] hover:bg-[var(--color-background-200)]">
             <RefreshCw className="h-4 w-4" />
             Refresh
           </Button>
-          <Button variant="outline" size="sm" onClick={() => setShowSettings(true)} className="gap-2">
+          <Button variant="outline" size="sm" onClick={() => setShowSettings(true)} className="gap-2 border-[var(--color-background-300)] text-[var(--color-charcoal-600)] hover:bg-[var(--color-background-200)]">
             <Settings className="h-4 w-4" />
           </Button>
         </div>
       </div>
 
       {displayWidgets.length === 0 ? (
-        <Card className="border-dashed">
+        <Card className="border-dashed border-[var(--color-background-300)] bg-[var(--color-background-50)]">
           <CardContent className="py-16 text-center">
-            <LayoutGrid className="h-16 w-16 mx-auto mb-4 text-slate-300" />
-            <h3 className="text-xl font-medium text-slate-700">No widgets visible</h3>
-            <p className="text-slate-500 mt-2">
+            <LayoutGrid className="h-16 w-16 mx-auto mb-4 text-[var(--color-background-400)]" />
+            <h3 className="text-xl font-medium text-[var(--color-midnight-700)]" style={{ fontFamily: 'var(--font-family-display)' }}>No widgets visible</h3>
+            <p className="text-[var(--color-charcoal-500)] mt-2">
               Click the settings button to add widgets
             </p>
           </CardContent>
