@@ -173,24 +173,6 @@ export default function ComponentShowcase() {
             </div>
           </div>
 
-          {/* Tab Navigation - Matching Figma */}
-          <div className="flex items-center gap-1 -mb-px">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveMainTab(tab.id)}
-                className={cn(
-                  "flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors",
-                  activeMainTab === tab.id
-                    ? "border-[#4A5D4E] text-[#4A5D4E]"
-                    : "border-transparent text-[#6d6d6d] hover:text-[#3b3b3b]"
-                )}
-              >
-                <tab.icon className="h-4 w-4" />
-                {tab.label}
-              </button>
-            ))}
-          </div>
         </div>
       </div>
 
