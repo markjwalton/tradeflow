@@ -11,7 +11,7 @@ import GenericNavEditor from "@/components/navigation/GenericNavEditor";
 import TenantSelector from "@/components/navigation/TenantSelector";
 import PageSettingsDialog from "@/components/common/PageSettingsDialog";
 
-// Admin Console page slugs - hardcoded in Layout.js
+// Admin Console page slugs - base list, will be merged with source_slugs from config
 const ADMIN_CONSOLE_SLUGS = [
   "Dashboard", "DashboardManager", "CMSManager", "APIManager", "SecurityMonitor", "PerformanceMonitor",
   "RoadmapManager", "RoadmapJournal", "SprintManager", "RuleBook",
@@ -20,15 +20,18 @@ const ADMIN_CONSOLE_SLUGS = [
   "TemplateLibrary", "BusinessTemplates", "WorkflowLibrary", "WorkflowDesigner",
   "FormTemplates", "FormBuilder", "ChecklistTemplates", "ChecklistBuilder",
   "SystemSpecification", "TenantManager", "NavigationManager", "PackageLibrary",
-  "PromptSettings", "LookupTestForms", "CommunityLibrary", "CommunityPublish"
+  "PromptSettings", "LookupTestForms", "CommunityLibrary", "CommunityPublish",
+  "DesignSystemManager", "ComponentShowcase", "SturijPackage", 
+  "StandaloneInstanceManager", "StandaloneAPIStrategy"
 ];
 
-// App Pages slugs - hardcoded tenant-facing pages in Layout.js
+// App Pages slugs - base list, will be merged with source_slugs from config
 const APP_PAGES_SLUGS = [
   "Home", "Projects", "ProjectDetail", "ProjectDetails", "ProjectForm", "ProjectsOverview",
   "Tasks", "Customers", "Team", "Estimates", "Calendar",
   "WebsiteEnquiryForm", "AppointmentHub", "AppointmentConfirm", "AppointmentManager",
-  "InterestOptionsManager"
+  "InterestOptionsManager", "DesignSystemManager", "ComponentShowcase", "SturijPackage",
+  "StandaloneInstanceManager", "StandaloneAPIStrategy"
 ];
 
 // Generate unique ID for items
