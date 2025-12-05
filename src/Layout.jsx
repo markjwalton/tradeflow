@@ -249,13 +249,13 @@ export default function Layout({ children, currentPageName }) {
     checkAccess();
   }, []); // Empty deps - only run once on mount
 
-  // Pages without layout wrapper or public pages
+  // Pages without layout wrapper (TenantAccess, Setup render without chrome)
   if (currentPageName === "TenantAccess" || currentPageName === "Setup") {
     return <>{children}</>;
   }
 
-  // Public dashboard - skip access check for unauthenticated users
-  if (currentPageName === "Dashboard" && !hasAccess && !checkingAccess) {
+  // Public pages - render without full chrome for unauthenticated users
+  if (publicPages.includes(currentPageName) && !hasAccess && !checkingAccess) {
     return <div className="min-h-screen bg-[var(--color-background)]">{children}</div>;
   }
 
