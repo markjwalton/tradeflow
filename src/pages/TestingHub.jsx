@@ -231,6 +231,71 @@ Return JSON with entity names as keys and arrays of records as values.`,
     setOperation({ type: null, progress: 0, total: 0, message: "" });
   };
 
+  // BULK GENERATE TEST DATA
+  const bulkGenerate = async () => {
+    const toGenerate = items.filter(i => !i.hasTestData);
+    if (toGenerate.length === 0) {
+      toast.info("All items have test data");
+      return;
+    }
+
+    setOperation({ type: "generating", progress: 0, total: toGenerate.length, message: "Generating test data..." });
+
+    let success = 0, failed = 0;
+    
+    for (let i = 0; i < toGenerate.length; i++) {
+      const item = toGenerate[i];
+      setOperation(prev => ({ ...prev, progress: i + 1, message: `Generating for ${item.name}...` }));
+      
+      try {
+        let entityData = {};
+        
+        if (item.entities.length > 0) {
+          const result = await base44.integrations.Core.InvokeLLM({
+            prompt: `Generate realistic test data for "${item.name}". Create 3 records for EACH entity:
+${item.entities.map(e => `Entity: ${e.name}\nSchema: ${JSON.stringify(e.schema?.properties || {})}`).join('\n---\n')}
+Return JSON with entity names as keys and arrays of records as values.`,
+            response_json_schema: {
+              type: "object",
+              properties: {
+                data: { type: "object", additionalProperties: { type: "array", items: { type: "object" } } }
+              }
+            }
+          });
+          entityData = result.data || {};
+        }
+
+        await base44.entities.TestData.create({
+          source_type: item.type,
+          source_id: item.sourceId,
+          source_name: item.name,
+          name: "Default Test Data",
+          entity_data: entityData,
+          is_default: true,
+          test_status: "pending",
+          generation_method: "ai_generated"
+        });
+        
+        success++;
+      } catch (e) {
+        console.error(`Failed for ${item.name}:`, e);
+        failed++;
+      }
+      
+      // Rate limit delay
+      await new Promise(r => setTimeout(r, 1000));
+    }
+
+    if (failed > 0) {
+      toast.warning(`Generated ${success}, failed ${failed}`);
+    } else {
+      toast.success(`Generated test data for ${success} items`);
+    }
+    
+    setOperation({ type: null, progress: 0, total: 0, message: "" });
+    refreshData();
+  };
+
   // CLEAR ALL PLAYGROUND
   const clearAllPlayground = async () => {
     if (!confirm("Clear all playground items? Test data will be preserved.")) return;
@@ -358,6 +423,14 @@ Return JSON with entity names as keys and arrays of records as values.`,
               >
                 <CheckCircle2 className="h-4 w-4 mr-2" />
                 Verify All ({stats.pending})
+              </Button>
+              <Button 
+                onClick={bulkGenerate}
+                disabled={isOperating || stats.noData === 0}
+                className="bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-dark)] text-white"
+              >
+                <Sparkles className="h-4 w-4 mr-2" />
+                Generate All ({stats.noData})
               </Button>
               <Button 
                 variant="destructive"
