@@ -41,6 +41,19 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import GlobalAIAssistant from "@/components/ai-assistant/GlobalAIAssistant";
 import NavigationBreadcrumb from "@/components/navigation/NavigationBreadcrumb";
 
@@ -68,6 +81,7 @@ export default function Layout({ children, currentPageName }) {
   const [navConfig, setNavConfig] = useState(null);
   const [expandedFolders, setExpandedFolders] = useState(new Set());
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
+  const [pageSearchOpen, setPageSearchOpen] = useState(false);
   
   const urlParams = new URLSearchParams(window.location.search);
   const tenantSlug = urlParams.get("tenant");
@@ -532,101 +546,133 @@ export default function Layout({ children, currentPageName }) {
               </div>
             </div>
 
-            {/* Page Selector Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="gap-2 ml-2">
-                  <CurrentIcon className="h-4 w-4" />
-                  <span className="hidden md:inline">{currentPage?.name || "Select Page"}</span>
-                  <ChevronDown className="h-4 w-4" />
+            {/* Searchable Page Selector */}
+            <Popover open={pageSearchOpen} onOpenChange={setPageSearchOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="gap-2 ml-2 min-w-[200px] justify-between">
+                  <div className="flex items-center gap-2">
+                    <CurrentIcon className="h-4 w-4" />
+                    <span className="hidden md:inline truncate">{currentPage?.name || "Select Page"}</span>
+                  </div>
+                  <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="max-h-96 overflow-y-auto">
-                {customAdminNav && customAdminNav.length > 0 ? (
-                  (() => {
-                    const getFolderId = (item) => {
-                      if (item._id) return item._id;
-                      if (item.item_type === "folder") {
-                        const normalized = item.name.toLowerCase().replace(/[\s-]+/g, '_').replace(/[^a-z0-9_]/g, '');
-                        return `folder_${normalized}`;
-                      }
-                      return item.slug;
-                    };
-                    
-                    const renderDropdownItems = (items, depth = 0) => {
-                      return items
-                        .filter(item => item.is_visible !== false)
-                        .sort((a, b) => (a.order || 0) - (b.order || 0))
-                        .flatMap(item => {
-                          const isFolder = item.item_type === "folder";
-                          const itemId = getFolderId(item);
-                          
-                          if (isFolder) {
-                            const folderChildren = customAdminNav.filter(child => 
-                              child.parent_id === itemId && child.is_visible !== false
-                            );
-                            return [
-                              <div key={itemId} className="px-2 py-1.5 text-xs font-semibold text-[var(--color-charcoal)] uppercase tracking-wider" style={{ paddingLeft: `${8 + depth * 12}px` }}>
-                                {item.name}
-                              </div>,
-                              ...renderDropdownItems(folderChildren, depth + 1)
-                            ];
+              </PopoverTrigger>
+              <PopoverContent className="w-[300px] p-0" align="start">
+                <Command>
+                  <CommandInput placeholder="Search pages..." />
+                  <CommandList className="max-h-[400px]">
+                    <CommandEmpty>No pages found.</CommandEmpty>
+                    {customAdminNav && customAdminNav.length > 0 ? (
+                      (() => {
+                        const getFolderId = (item) => {
+                          if (item._id) return item._id;
+                          if (item.item_type === "folder") {
+                            const normalized = item.name.toLowerCase().replace(/[\s-]+/g, '_').replace(/[^a-z0-9_]/g, '');
+                            return `folder_${normalized}`;
                           }
-                          
-                          const Icon = iconMap[item.icon] || Home;
-                          const slugParts = item.slug?.split("?") || [""];
-                          const baseSlug = slugParts[0];
-                          const queryString = slugParts[1] || "";
-                          let pageUrl = createPageUrl(baseSlug);
-                          if (queryString) {
-                            pageUrl = pageUrl + (pageUrl.includes("?") ? "&" : "?") + queryString;
-                          }
-                          const safeKey = `page_${item.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
-                          
-                          return [
-                            <DropdownMenuItem
-                              key={safeKey}
-                              onClick={() => navigate(pageUrl)}
+                          return item.slug;
+                        };
+                        
+                        // Group pages by folder
+                        const folders = customAdminNav.filter(item => item.item_type === "folder" && item.is_visible !== false);
+                        const topLevelPages = customAdminNav.filter(item => !item.parent_id && item.item_type !== "folder" && item.is_visible !== false);
+                        
+                        return (
+                          <>
+                            {topLevelPages.length > 0 && (
+                              <CommandGroup>
+                                {topLevelPages.sort((a, b) => (a.order || 0) - (b.order || 0)).map(item => {
+                                  const Icon = iconMap[item.icon] || Home;
+                                  const slugParts = item.slug?.split("?") || [""];
+                                  const baseSlug = slugParts[0];
+                                  const queryString = slugParts[1] || "";
+                                  let pageUrl = createPageUrl(baseSlug);
+                                  if (queryString) {
+                                    pageUrl = pageUrl + (pageUrl.includes("?") ? "&" : "?") + queryString;
+                                  }
+                                  return (
+                                    <CommandItem
+                                      key={item.slug}
+                                      value={item.name}
+                                      onSelect={() => {
+                                        navigate(pageUrl);
+                                        setPageSearchOpen(false);
+                                      }}
+                                      className="gap-2"
+                                    >
+                                      <Icon className="h-4 w-4" />
+                                      {item.name}
+                                    </CommandItem>
+                                  );
+                                })}
+                              </CommandGroup>
+                            )}
+                            {folders.sort((a, b) => (a.order || 0) - (b.order || 0)).map(folder => {
+                              const folderId = getFolderId(folder);
+                              const folderChildren = customAdminNav.filter(child => 
+                                child.parent_id === folderId && child.is_visible !== false
+                              ).sort((a, b) => (a.order || 0) - (b.order || 0));
+                              
+                              if (folderChildren.length === 0) return null;
+                              
+                              return (
+                                <CommandGroup key={folderId} heading={folder.name}>
+                                  {folderChildren.map(item => {
+                                    const Icon = iconMap[item.icon] || Home;
+                                    const slugParts = item.slug?.split("?") || [""];
+                                    const baseSlug = slugParts[0];
+                                    const queryString = slugParts[1] || "";
+                                    let pageUrl = createPageUrl(baseSlug);
+                                    if (queryString) {
+                                      pageUrl = pageUrl + (pageUrl.includes("?") ? "&" : "?") + queryString;
+                                    }
+                                    return (
+                                      <CommandItem
+                                        key={item.slug || item.name}
+                                        value={`${folder.name} ${item.name}`}
+                                        onSelect={() => {
+                                          navigate(pageUrl);
+                                          setPageSearchOpen(false);
+                                        }}
+                                        className="gap-2"
+                                      >
+                                        <Icon className="h-4 w-4" />
+                                        {item.name}
+                                      </CommandItem>
+                                    );
+                                  })}
+                                </CommandGroup>
+                              );
+                            })}
+                          </>
+                        );
+                      })()
+                    ) : (
+                      <CommandGroup>
+                        {displayPages.map((page) => {
+                          const Icon = page.icon;
+                          const pageUrl = createPageUrl(page.slug);
+                          return (
+                            <CommandItem
+                              key={page.slug}
+                              value={page.name}
+                              onSelect={() => {
+                                navigate(pageUrl);
+                                setPageSearchOpen(false);
+                              }}
                               className="gap-2"
-                              style={{ paddingLeft: `${8 + depth * 12}px` }}
                             >
                               <Icon className="h-4 w-4" />
-                              {item.name}
-                            </DropdownMenuItem>
-                          ];
-                        });
-                    };
-                    
-                    const topLevel = customAdminNav.filter(item => !item.parent_id && item.is_visible !== false);
-                    return renderDropdownItems(topLevel);
-                  })()
-                ) : (
-                  displayPages.map((page) => {
-                    const Icon = page.icon;
-                    const pageUrl = createPageUrl(page.slug);
-                    return (
-                      <DropdownMenuItem
-                        key={page.slug}
-                        onClick={() => {
-                          let navUrl = pageUrl;
-                          if (page.slug === "MindMapEditor") {
-                            const currentMap = new URLSearchParams(window.location.search).get("map");
-                            if (currentMap) {
-                              navUrl = navUrl + (navUrl.includes("?") ? "&" : "?") + `map=${currentMap}`;
-                            }
-                          }
-                          navigate(navUrl);
-                        }}
-                        className="gap-2"
-                      >
-                        <Icon className="h-4 w-4" />
-                        {page.name}
-                      </DropdownMenuItem>
-                    );
-                  })
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                              {page.name}
+                            </CommandItem>
+                          );
+                        })}
+                      </CommandGroup>
+                    )}
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
           </div>
 
           {/* User Info & Logout */}
