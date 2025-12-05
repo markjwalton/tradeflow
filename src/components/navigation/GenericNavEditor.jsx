@@ -53,7 +53,7 @@ const iconOptions = getIconOptions();
  * Props:
  * - title: string - Title for the card
  * - configType: string - The config_type to filter NavigationConfig (e.g., "admin_console", "app_pages_source")
- * - sourceSlugs: string[] - Available page slugs for this navigation
+ * - sourceSlugs: string[] - (deprecated, use source_slugs in NavigationConfig entity)
  * - onCopyFromTemplate: function - Optional callback to copy from another template
  * - showCopyButton: boolean - Whether to show the copy button
  * - copyButtonLabel: string - Label for the copy button
@@ -109,12 +109,10 @@ export default function GenericNavEditor({
   const config = navConfigs[0];
   const rawItems = config?.items || [];
   
-  // Merge sourceSlugs prop with source_slugs from config (if any)
+  // Get slugs from config's source_slugs (no hardcoded fallback)
   const effectiveSlugs = React.useMemo(() => {
-    const configSlugs = config?.source_slugs || [];
-    const merged = [...new Set([...sourceSlugs, ...configSlugs])];
-    return merged.sort();
-  }, [sourceSlugs, config?.source_slugs]);
+    return (config?.source_slugs || []).sort();
+  }, [config?.source_slugs]);
   
   // Use shared utility to ensure all items have stable IDs
   const items = React.useMemo(() => ensureItemIds(rawItems), [rawItems]);

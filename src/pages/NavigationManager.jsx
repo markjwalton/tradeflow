@@ -11,28 +11,7 @@ import GenericNavEditor from "@/components/navigation/GenericNavEditor";
 import TenantSelector from "@/components/navigation/TenantSelector";
 import PageSettingsDialog from "@/components/common/PageSettingsDialog";
 
-// Admin Console page slugs - base list, will be merged with source_slugs from config
-const ADMIN_CONSOLE_SLUGS = [
-  "Dashboard", "DashboardManager", "CMSManager", "APIManager", "SecurityMonitor", "PerformanceMonitor",
-  "RoadmapManager", "RoadmapJournal", "SprintManager", "RuleBook",
-  "PlaygroundSummary", "TestDataManager", "MindMapEditor", "ERDEditor",
-  "GeneratedApps", "EntityLibrary", "PageLibrary", "FeatureLibrary",
-  "TemplateLibrary", "BusinessTemplates", "WorkflowLibrary", "WorkflowDesigner",
-  "FormTemplates", "FormBuilder", "ChecklistTemplates", "ChecklistBuilder",
-  "SystemSpecification", "TenantManager", "NavigationManager", "PackageLibrary",
-  "PromptSettings", "LookupTestForms", "CommunityLibrary", "CommunityPublish",
-  "DesignSystemManager", "ComponentShowcase", "SturijPackage", 
-  "StandaloneInstanceManager", "StandaloneAPIStrategy"
-];
-
-// App Pages slugs - base list, will be merged with source_slugs from config
-const APP_PAGES_SLUGS = [
-  "Home", "Projects", "ProjectDetail", "ProjectDetails", "ProjectForm", "ProjectsOverview",
-  "Tasks", "Customers", "Team", "Estimates", "Calendar",
-  "WebsiteEnquiryForm", "AppointmentHub", "AppointmentConfirm", "AppointmentManager",
-  "InterestOptionsManager", "DesignSystemManager", "ComponentShowcase", "SturijPackage",
-  "StandaloneInstanceManager", "StandaloneAPIStrategy"
-];
+// Slugs are now loaded from NavigationConfig.source_slugs - no hardcoded lists
 
 // Generate unique ID for items
 const generateId = () => Math.random().toString(36).substr(2, 9);
@@ -155,7 +134,6 @@ export default function NavigationManager() {
             <GenericNavEditor
               title="Admin Console Navigation"
               configType="admin_console"
-              sourceSlugs={ADMIN_CONSOLE_SLUGS}
             />
           )}
 
@@ -168,7 +146,6 @@ export default function NavigationManager() {
               <GenericNavEditor
                 title="App Pages Navigation (Global Template)"
                 configType="app_pages_source"
-                sourceSlugs={APP_PAGES_SLUGS}
               />
             </div>
           )}
@@ -190,7 +167,6 @@ export default function NavigationManager() {
                 <GenericNavEditor
                   title={`Tenant Navigation: ${tenants.find(t => t.id === selectedTenantId)?.name || 'Unknown'}`}
                   configType={`tenant_nav_${selectedTenantId}`}
-                  sourceSlugs={APP_PAGES_SLUGS}
                   showCopyButton={true}
                   copyButtonLabel="Copy from App Pages Template"
                   onCopyFromTemplate={async () => {
