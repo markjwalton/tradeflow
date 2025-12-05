@@ -11,7 +11,9 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/components/ui/sheet";
-import { Settings, GripVertical, BarChart3, Info, Zap, Sparkles, PieChart, Table } from "lucide-react";
+import { Settings, GripVertical, BarChart3, Info, Zap, Sparkles, PieChart, Table, Newspaper } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { getTechNewsSettings, setTechNewsSettings } from "@/components/dashboard/TechNewsWidget";
 
 const widgetTypeIcons = {
   stat_card: BarChart3,
@@ -31,8 +33,17 @@ export default function DashboardSettings({
   visibleWidgetIds = [],
   onVisibleWidgetsChange
 }) {
+  const [newsSettings, setNewsSettings] = React.useState(getTechNewsSettings());
+
   const handleToggle = (key) => {
     onSettingsChange({ ...settings, [key]: !settings[key] });
+  };
+
+  const handleNewsScanChange = (value) => {
+    const num = parseInt(value) || 20;
+    const newSettings = { ...newsSettings, scanTriggerVisits: Math.max(1, num) };
+    setNewsSettings(newSettings);
+    setTechNewsSettings(newSettings);
   };
 
   const handleWidgetToggle = (widgetId) => {
@@ -90,6 +101,30 @@ export default function DashboardSettings({
                 id="compact"
                 checked={settings.compactMode || false}
                 onCheckedChange={() => handleToggle("compactMode")}
+              />
+            </div>
+          </div>
+
+          {/* News Feed Settings */}
+          <div className="space-y-4">
+            <h3 className="font-semibold text-sm text-[var(--color-midnight)] flex items-center gap-2">
+              <Newspaper className="h-4 w-4" />
+              Tech News Settings
+            </h3>
+            
+            <div className="flex items-center justify-between py-2">
+              <div>
+                <Label htmlFor="scan-trigger" className="font-medium text-[var(--color-midnight)]">Auto-Scan Trigger</Label>
+                <p className="text-sm text-[var(--color-charcoal)]">Scan for news every N dashboard visits</p>
+              </div>
+              <Input
+                id="scan-trigger"
+                type="number"
+                min="1"
+                max="100"
+                value={newsSettings.scanTriggerVisits}
+                onChange={(e) => handleNewsScanChange(e.target.value)}
+                className="w-20 text-center"
               />
             </div>
           </div>
