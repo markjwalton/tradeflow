@@ -208,6 +208,69 @@ Provide:
     setAnalyzing(false);
   };
 
+  const handleGenerateRecommendations = async () => {
+    if (releases.length === 0) {
+      toast.error("No releases to analyze. Check for updates first.");
+      return;
+    }
+    setAnalyzing(true);
+    try {
+      const latestRelease = releases[0];
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `Based on Tailwind CSS ${latestRelease.version}, generate specific recommendations for updating a UI component library.
+
+Release features: ${JSON.stringify(latestRelease.new_features || [])}
+Breaking changes: ${JSON.stringify(latestRelease.breaking_changes || [])}
+
+Our library uses: Sturij Design System with custom color tokens (primary, secondary, accent), typography system, spacing scale, and shadcn/ui components.
+
+Generate 3-5 actionable recommendations. For each:
+1. Title (short, specific)
+2. Description (what to do)
+3. Impact level (high/medium/low)
+4. Effort required (high/medium/low)`,
+        add_context_from_internet: true,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            recommendations: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  title: { type: "string" },
+                  description: { type: "string" },
+                  impact: { type: "string" },
+                  effort: { type: "string" }
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // Save recommendations
+      for (const rec of result.recommendations || []) {
+        await base44.entities.PackageUpdateRecommendation.create({
+          package_id: "tailwind-css",
+          recommendation_type: "tailwind_update",
+          title: rec.title,
+          description: rec.description,
+          impact: rec.impact,
+          effort: rec.effort,
+          current_version: latestRelease.version,
+          status: "pending_review"
+        });
+      }
+
+      queryClient.invalidateQueries({ queryKey: ["packageRecommendations"] });
+      toast.success(`Generated ${result.recommendations?.length || 0} recommendations`);
+    } catch (error) {
+      toast.error("Failed to generate recommendations: " + error.message);
+    }
+    setAnalyzing(false);
+  };
+
   const handleCheckNewReleases = async () => {
     setSyncing(true);
     try {
