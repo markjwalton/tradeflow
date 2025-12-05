@@ -231,6 +231,28 @@ Return JSON with entity names as keys and arrays of records as values.`,
     setOperation({ type: null, progress: 0, total: 0, message: "" });
   };
 
+  // CLEAR ALL PLAYGROUND
+  const clearAllPlayground = async () => {
+    if (!confirm("Clear all playground items? Test data will be preserved.")) return;
+    
+    setOperation({ type: "clearing", progress: 0, total: playgroundItems.length, message: "Clearing playground..." });
+    
+    try {
+      let deleted = 0;
+      for (const item of playgroundItems) {
+        await base44.entities.PlaygroundItem.delete(item.id);
+        deleted++;
+        setOperation(prev => ({ ...prev, progress: deleted }));
+      }
+      toast.success(`Cleared ${deleted} items`);
+      refreshData();
+    } catch (e) {
+      toast.error("Clear failed: " + e.message);
+    }
+    
+    setOperation({ type: null, progress: 0, total: 0, message: "" });
+  };
+
   // SYNC FROM LIBRARY
   const syncFromLibrary = async (sourceType) => {
     setOperation({ type: "syncing", progress: 0, total: 0, message: `Syncing ${sourceType}s from library...` });
@@ -238,24 +260,50 @@ Return JSON with entity names as keys and arrays of records as values.`,
     try {
       const templates = sourceType === "page" ? pageTemplates : featureTemplates;
       
-      const results = await testingDataService.syncFromLibrary(
-        sourceType,
-        templates,
-        (progress, total) => {
-          setOperation(prev => ({ ...prev, progress, total }));
+      // Get existing playground items for this type
+      const existingItems = playgroundItems.filter(p => get(p, "source_type") === sourceType);
+      const existingBySourceId = new Map();
+      existingItems.forEach(item => {
+        const sid = get(item, "source_id");
+        if (sid) existingBySourceId.set(sid, item);
+      });
+      
+      let created = 0, updated = 0;
+      
+      for (let i = 0; i < templates.length; i++) {
+        const template = templates[i];
+        setOperation(prev => ({ ...prev, progress: i + 1, total: templates.length }));
+        
+        const existing = existingBySourceId.get(template.id);
+        
+        if (existing) {
+          // UPDATE existing
+          await base44.entities.PlaygroundItem.update(existing.id, {
+            source_name: template.name,
+            working_data: template,
+            sync_status: "synced",
+            last_sync_date: new Date().toISOString()
+          });
+          updated++;
+        } else {
+          // CREATE new
+          await base44.entities.PlaygroundItem.create({
+            source_type: sourceType,
+            source_id: template.id,
+            source_name: template.name,
+            working_data: template,
+            item_origin: "library",
+            sync_status: "synced",
+            last_sync_date: new Date().toISOString(),
+            status: "synced"
+          });
+          created++;
         }
-      );
-
-      const created = results.filter(r => r.action === "created").length;
-      const updated = results.filter(r => r.action === "updated").length;
-      toast.success(`Synced: ${created} new, ${updated} updated`);
-      
-      // Detect orphans
-      const orphans = await testingDataService.detectOrphans(sourceType, templates.map(t => t.id));
-      if (orphans.length > 0) {
-        toast.warning(`${orphans.length} orphaned items detected`);
+        
+        await new Promise(r => setTimeout(r, 50)); // Small delay
       }
-      
+
+      toast.success(`Synced: ${created} new, ${updated} updated`);
       refreshData();
     } catch (e) {
       toast.error("Sync failed: " + e.message);
@@ -310,6 +358,14 @@ Return JSON with entity names as keys and arrays of records as values.`,
               >
                 <CheckCircle2 className="h-4 w-4 mr-2" />
                 Verify All ({stats.pending})
+              </Button>
+              <Button 
+                variant="destructive"
+                onClick={clearAllPlayground}
+                disabled={isOperating || stats.total === 0}
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Clear All
               </Button>
             </div>
           </div>
