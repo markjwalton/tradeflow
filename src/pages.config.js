@@ -58,6 +58,8 @@ import Dashboard from './pages/Dashboard';
 import ComponentShowcase from './pages/ComponentShowcase';
 import SturijPackage from './pages/SturijPackage';
 import DesignSystemManager from './pages/DesignSystemManager';
+import StandaloneAPIStrategy from './pages/StandaloneAPIStrategy';
+import StandaloneInstanceManager from './pages/StandaloneInstanceManager';
 import __Layout from './Layout.jsx';
 
 
@@ -122,6 +124,8 @@ export const PAGES = {
     "ComponentShowcase": ComponentShowcase,
     "SturijPackage": SturijPackage,
     "DesignSystemManager": DesignSystemManager,
+    "StandaloneAPIStrategy": StandaloneAPIStrategy,
+    "StandaloneInstanceManager": StandaloneInstanceManager,
 }
 
 export const pagesConfig = {
