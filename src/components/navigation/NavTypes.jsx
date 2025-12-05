@@ -125,11 +125,16 @@ export const getDescendants = (itemId, allItems, result = new Set()) => {
 
 /**
  * Get valid parent options for an item (excluding self and descendants)
+ * Only returns folders as valid parents
  */
 export const getValidParents = (itemId, allItems) => {
   const descendants = itemId ? getDescendants(itemId, allItems) : new Set();
   return allItems.filter(
-    (item) => item._id !== itemId && !descendants.has(item._id)
+    (item) => 
+      isFolder(item) && 
+      item._id && 
+      item._id !== itemId && 
+      !descendants.has(item._id)
   );
 };
 
