@@ -128,11 +128,11 @@ export default function Layout({ children, currentPageName }) {
 
   useEffect(() => {
     // Skip access check for public pages
-    if (currentPageName === "TenantAccess" || currentPageName === "Setup") {
-      if (checkingAccess) setCheckingAccess(false);
-      if (!hasAccess) setHasAccess(true);
-      return;
-    }
+          if (currentPageName === "TenantAccess" || currentPageName === "Setup" || currentPageName === "Dashboard") {
+            if (checkingAccess) setCheckingAccess(false);
+            if (!hasAccess) setHasAccess(true);
+            return;
+          }
     
     const checkAccess = async () => {
       try {
@@ -280,9 +280,14 @@ export default function Layout({ children, currentPageName }) {
     checkAccess();
   }, []); // Empty deps - only run once on mount
 
-  // Pages without layout wrapper
+  // Pages without layout wrapper or public pages
   if (currentPageName === "TenantAccess" || currentPageName === "Setup") {
     return <>{children}</>;
+  }
+
+  // Public dashboard - skip access check for unauthenticated users
+  if (currentPageName === "Dashboard" && !hasAccess && !checkingAccess) {
+    return <div className="min-h-screen bg-[var(--color-background)]">{children}</div>;
   }
 
   // Fullscreen pages with their own navigation
