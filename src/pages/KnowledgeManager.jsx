@@ -27,7 +27,7 @@ import {
   RefreshCw, Download, Sparkles, Search, ExternalLink,
   CheckCircle2, Loader2, BookOpen, GitBranch, Zap, 
   FileText, ArrowUp, Plus, Expand, Eye, Layers,
-  Component, Box, Palette
+  Component, Box, Palette, Database, Newspaper
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -36,6 +36,8 @@ import ShadcnReference from "@/components/knowledge/ShadcnReference";
 import TailwindReference from "@/components/knowledge/TailwindReference";
 import ReactReference from "@/components/knowledge/ReactReference";
 import LucideReference from "@/components/knowledge/LucideReference";
+import Base44Reference from "@/components/knowledge/Base44Reference";
+import NewsFeed from "@/components/knowledge/NewsFeed";
 
 // Technology configurations
 const TECH_CONFIGS = {
@@ -101,6 +103,19 @@ const TECH_CONFIGS = {
     color: "text-orange-600",
     bgColor: "bg-orange-50",
     categories: []
+  },
+  base44: {
+    name: "Base44",
+    icon: Database,
+    color: "text-green-600",
+    bgColor: "bg-green-50",
+    categories: [
+      { id: "entities", name: "Entity Operations" },
+      { id: "auth", name: "Authentication" },
+      { id: "integrations", name: "Integrations" },
+      { id: "functions", name: "Backend Functions" },
+      { id: "agents", name: "AI Agents" }
+    ]
   }
 };
 
@@ -598,6 +613,10 @@ Create a development prompt that:
             <FileText className="h-4 w-4" />
             Quick Reference
           </TabsTrigger>
+          <TabsTrigger value="news" className="gap-1">
+            <Newspaper className="h-4 w-4" />
+            News Feed
+          </TabsTrigger>
         </TabsList>
 
         {/* Releases Tab */}
@@ -792,6 +811,12 @@ Create a development prompt that:
           {activeTech === "tailwind" && <TailwindReference />}
           {activeTech === "react" && <ReactReference />}
           {activeTech === "lucide" && <LucideReference />}
+          {activeTech === "base44" && <Base44Reference />}
+        </TabsContent>
+
+        {/* News Feed Tab */}
+        <TabsContent value="news" className="space-y-4">
+          <NewsFeed />
         </TabsContent>
       </Tabs>
 
