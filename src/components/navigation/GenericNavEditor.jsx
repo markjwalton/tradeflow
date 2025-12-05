@@ -41,8 +41,10 @@ import {
   getChildren, 
   getTopLevelItems, 
   getValidParents,
+  getFolderParents,
   buildFlatNavList,
-  ensureItemIds
+  ensureItemIds,
+  isFolder
 } from "./NavTypes";
 
 const iconOptions = getIconOptions();
