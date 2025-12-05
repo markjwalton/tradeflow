@@ -69,6 +69,9 @@ import LayoutShowcase from './pages/LayoutShowcase';
 import NavigationShowcase from './pages/NavigationShowcase';
 import DataDisplayShowcase from './pages/DataDisplayShowcase';
 import FeedbackShowcase from './pages/FeedbackShowcase';
+import PackageDetail from './pages/PackageDetail';
+import PackageExport from './pages/PackageExport';
+import TokenPreview from './pages/TokenPreview';
 import __Layout from './Layout.jsx';
 
 
@@ -144,6 +147,9 @@ export const PAGES = {
     "NavigationShowcase": NavigationShowcase,
     "DataDisplayShowcase": DataDisplayShowcase,
     "FeedbackShowcase": FeedbackShowcase,
+    "PackageDetail": PackageDetail,
+    "PackageExport": PackageExport,
+    "TokenPreview": TokenPreview,
 }
 
 export const pagesConfig = {
