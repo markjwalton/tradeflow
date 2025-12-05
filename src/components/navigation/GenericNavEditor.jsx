@@ -86,6 +86,7 @@ export default function GenericNavEditor({
   });
   const [expandedParents, setExpandedParents] = useState(new Set());
   const [unallocatedExpanded, setUnallocatedExpanded] = useState(false);
+  const [allPagesExpanded, setAllPagesExpanded] = useState(false);
   const [initialExpandDone, setInitialExpandDone] = useState(false);
   const [aiRecommendations, setAiRecommendations] = useState({});
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
