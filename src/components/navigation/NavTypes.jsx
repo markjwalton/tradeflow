@@ -125,17 +125,32 @@ export const getDescendants = (itemId, allItems, result = new Set()) => {
 
 /**
  * Get valid parent options for an item (excluding self and descendants)
- * Only returns folders as valid parents
+ * Returns folders AND pages that can be parents (for 3-level nesting)
  */
 export const getValidParents = (itemId, allItems) => {
   const descendants = itemId ? getDescendants(itemId, allItems) : new Set();
   return allItems.filter(
     (item) => 
-      isFolder(item) && 
       item._id && 
       item._id !== itemId && 
       !descendants.has(item._id)
   );
+};
+
+/**
+ * Get only folder parents for move menu (alphabetically sorted)
+ */
+export const getFolderParents = (itemId, allItems) => {
+  const descendants = itemId ? getDescendants(itemId, allItems) : new Set();
+  return allItems
+    .filter(
+      (item) => 
+        isFolder(item) && 
+        item._id && 
+        item._id !== itemId && 
+        !descendants.has(item._id)
+    )
+    .sort((a, b) => a.name.localeCompare(b.name));
 };
 
 /**
