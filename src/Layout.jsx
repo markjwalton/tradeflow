@@ -54,6 +54,8 @@ const globalAdminPages = [
   { name: "Dashboard Manager", slug: "DashboardManager", icon: LayoutDashboard },
   { name: "CMS", slug: "CMSManager", icon: Globe },
   { name: "API Manager", slug: "APIManager", icon: Key },
+  { name: "Standalone Instances", slug: "StandaloneInstanceManager", icon: Building2 },
+  { name: "API Strategy", slug: "StandaloneAPIStrategy", icon: GitBranch },
   { name: "Security", slug: "SecurityMonitor", icon: Shield },
   { name: "Performance", slug: "PerformanceMonitor", icon: Gauge },
   { name: "Roadmap", slug: "RoadmapManager", icon: Lightbulb },
@@ -88,7 +90,7 @@ const globalAdminPages = [
 ];
 
 // Pages that don't require tenant context but need to preserve query params
-const standalonePages = ["Dashboard", "DashboardManager", "CMSManager", "APIManager", "SecurityMonitor", "PerformanceMonitor", "RoadmapManager", "RoadmapJournal", "SprintManager", "RuleBook", "PlaygroundSummary", "PlaygroundEntity", "PlaygroundPage", "PlaygroundFeature", "ConceptWorkbench", "TestDataManager", "LivePreview", "MindMapEditor", "GeneratedApps", "EntityLibrary", "PageLibrary", "FeatureLibrary", "PackageLibrary", "TenantManager", "BusinessTemplates", "WorkflowLibrary", "WorkflowDesigner", "FormTemplates", "FormBuilder", "ChecklistTemplates", "ChecklistBuilder", "PromptSettings", "LookupTestForms", "CommunityLibrary", "CommunityPublish"];
+const standalonePages = ["Dashboard", "DashboardManager", "CMSManager", "APIManager", "StandaloneInstanceManager", "StandaloneAPIStrategy", "SecurityMonitor", "PerformanceMonitor", "RoadmapManager", "RoadmapJournal", "SprintManager", "RuleBook", "PlaygroundSummary", "PlaygroundEntity", "PlaygroundPage", "PlaygroundFeature", "ConceptWorkbench", "TestDataManager", "LivePreview", "MindMapEditor", "GeneratedApps", "EntityLibrary", "PageLibrary", "FeatureLibrary", "PackageLibrary", "TenantManager", "BusinessTemplates", "WorkflowLibrary", "WorkflowDesigner", "FormTemplates", "FormBuilder", "ChecklistTemplates", "ChecklistBuilder", "PromptSettings", "LookupTestForms", "CommunityLibrary", "CommunityPublish"];
 
 // Pages that render their own navigation (no layout sidebar)
 const fullscreenPages = [];
