@@ -382,14 +382,18 @@ For each recommendation, provide:
                       <span>{pkg.component_list?.length || 0} components</span>
                     </div>
                     <div className="flex gap-2">
-                      <Button size="sm" variant="outline">
-                        <Eye className="h-3 w-3 mr-1" />
-                        View
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        <Download className="h-3 w-3 mr-1" />
-                        Export
-                      </Button>
+                      <Link to={createPageUrl("PackageDetail") + `?id=${pkg.id}`}>
+                        <Button size="sm" variant="outline">
+                          <Eye className="h-3 w-3 mr-1" />
+                          View
+                        </Button>
+                      </Link>
+                      <Link to={createPageUrl("PackageExport") + `?id=${pkg.id}`}>
+                        <Button size="sm" variant="outline">
+                          <Download className="h-3 w-3 mr-1" />
+                          Export
+                        </Button>
+                      </Link>
                       <Button size="sm" variant="outline">
                         <Copy className="h-3 w-3 mr-1" />
                         Clone
@@ -471,10 +475,12 @@ For each recommendation, provide:
                             Update
                           </Button>
                         )}
-                        <Button size="sm" variant="outline">
-                          <Eye className="h-3 w-3 mr-1" />
-                          View
-                        </Button>
+                        <Link to={createPageUrl("PackageDetail") + `?id=${pkg.id}`}>
+                          <Button size="sm" variant="outline">
+                            <Eye className="h-3 w-3 mr-1" />
+                            View
+                          </Button>
+                        </Link>
                         <Button size="sm" variant="outline">
                           <Mail className="h-3 w-3 mr-1" />
                           Notify
