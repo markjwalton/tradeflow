@@ -456,8 +456,7 @@ export default function Layout({ children, currentPageName }) {
   };
   
   if (isGlobalAdminPage && !currentTenant) {
-    // On global admin pages without tenant context, show global admin nav
-    // Use custom nav if available, otherwise use default
+    // On global admin pages without tenant context, show global admin nav from config
     if (customAdminNav && customAdminNav.length > 0) {
       displayPages = customAdminNav
         .filter(item => item.is_visible !== false)
@@ -466,19 +465,23 @@ export default function Layout({ children, currentPageName }) {
           slug: item.slug,
           icon: iconMap[item.icon] || Home
         }));
-    } else {
-      displayPages = globalAdminPages;
     }
+    // No fallback - if no nav config, displayPages stays empty
   } else if (currentTenant) {
     // On tenant pages, show tenant nav
-    displayPages = [...tenantPages];
     // Tenant admins can access tenant admin pages
     if (isTenantAdmin) {
-      displayPages = [...displayPages, ...tenantAdminPages];
+      displayPages = [...tenantAdminPages];
     }
-    // Global admins can access all admin pages
-    if (isGlobalAdmin) {
-      displayPages = [...tenantPages, ...globalAdminPages];
+    // Global admins can access all admin pages from config
+    if (isGlobalAdmin && customAdminNav) {
+      displayPages = [...displayPages, ...customAdminNav
+        .filter(item => item.is_visible !== false)
+        .map(item => ({
+          name: item.name,
+          slug: item.slug,
+          icon: iconMap[item.icon] || Home
+        }))];
     }
   }
 
