@@ -14,10 +14,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Progress } from "@/components/ui/progress";
 import { 
   RefreshCw, Download, Sparkles, Search, ExternalLink,
   CheckCircle2, AlertCircle, Clock, Loader2, BookOpen,
-  GitBranch, Zap, FileText, ArrowUp
+  GitBranch, Zap, FileText, ArrowUp, X
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -42,6 +43,7 @@ export default function TailwindKnowledgeManager() {
   const [selectedVersion, setSelectedVersion] = useState("4.1");
   const [syncing, setSyncing] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
+  const [syncProgress, setSyncProgress] = useState({ current: 0, total: 0, message: "" });
 
   const { data: releases = [], isLoading: loadingReleases } = useQuery({
     queryKey: ["tailwindReleases"],
@@ -75,9 +77,19 @@ export default function TailwindKnowledgeManager() {
 
   const handleSyncDocs = async () => {
     setSyncing(true);
+    const categoriesToSync = TAILWIND_DOCS_CATEGORIES.slice(0, 3); // Start with first 3 categories
+    setSyncProgress({ current: 0, total: categoriesToSync.length, message: "Starting sync..." });
+    
     try {
       // Use AI to extract knowledge from Tailwind docs
-      for (const category of TAILWIND_DOCS_CATEGORIES.slice(0, 3)) { // Start with first 3 categories
+      for (let i = 0; i < categoriesToSync.length; i++) {
+        const category = categoriesToSync[i];
+        setSyncProgress({ 
+          current: i, 
+          total: categoriesToSync.length, 
+          message: `Syncing ${category.name}...` 
+        });
+        
         const result = await base44.integrations.Core.InvokeLLM({
           prompt: `Extract Tailwind CSS v${selectedVersion} documentation for the "${category.name}" category.
           
@@ -119,7 +131,14 @@ Return as JSON array with structure:
         });
 
         // Save each topic to knowledge base
-        for (const topicData of result.topics || []) {
+        const topics = result.topics || [];
+        for (let t = 0; t < topics.length; t++) {
+          const topicData = topics[t];
+          setSyncProgress({ 
+            current: i, 
+            total: categoriesToSync.length, 
+            message: `${category.name}: Saving ${topicData.topic} (${t + 1}/${topics.length})` 
+          });
           await createKnowledgeMutation.mutateAsync({
             version: selectedVersion,
             category: category.id,
@@ -131,10 +150,18 @@ Return as JSON array with structure:
             last_synced: new Date().toISOString()
           });
         }
+        setSyncProgress({ 
+          current: i + 1, 
+          total: categoriesToSync.length, 
+          message: `Completed ${category.name}` 
+        });
       }
+      setSyncProgress({ current: categoriesToSync.length, total: categoriesToSync.length, message: "Complete!" });
       toast.success("Knowledge base synced successfully");
+      setTimeout(() => setSyncProgress({ current: 0, total: 0, message: "" }), 2000);
     } catch (error) {
       toast.error("Failed to sync: " + error.message);
+      setSyncProgress({ current: 0, total: 0, message: "" });
     }
     setSyncing(false);
   };
@@ -277,6 +304,27 @@ Provide:
           </Button>
         </div>
       </div>
+
+      {/* Progress Bar */}
+      {syncProgress.total > 0 && (
+        <div className="mb-4 p-4 bg-white border border-[var(--color-background-muted)] rounded-lg">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <Loader2 className="h-4 w-4 animate-spin text-[var(--color-primary)]" />
+              <span className="text-sm font-medium text-[var(--color-midnight)]">
+                {syncProgress.message}
+              </span>
+            </div>
+            <span className="text-sm text-[var(--color-charcoal)]">
+              {syncProgress.current} / {syncProgress.total} categories
+            </span>
+          </div>
+          <Progress 
+            value={(syncProgress.current / syncProgress.total) * 100} 
+            className="h-2"
+          />
+        </div>
+      )}
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
