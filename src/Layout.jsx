@@ -83,15 +83,33 @@ export default function Layout({ children, currentPageName }) {
   const isTenantPage = false; // Will be determined by tenant nav config when implemented
 
   useEffect(() => {
-    // Skip access check for public pages
-          if (currentPageName === "TenantAccess" || currentPageName === "Setup" || currentPageName === "Dashboard") {
-            if (checkingAccess) setCheckingAccess(false);
-            if (!hasAccess) setHasAccess(true);
-            return;
-          }
-    
     const checkAccess = async () => {
       try {
+        // First, fetch nav config to get access rules (before auth check)
+        let loadedNavConfig = null;
+        try {
+          const navConfigs = await base44.entities.NavigationConfig.filter({ config_type: "admin_console" });
+          if (navConfigs.length > 0) {
+            loadedNavConfig = navConfigs[0];
+            setNavConfig(loadedNavConfig);
+            if (loadedNavConfig.items?.length > 0) {
+              setCustomAdminNav(loadedNavConfig.items);
+            }
+          }
+        } catch (e) {
+          // Ignore errors, will use minimal defaults
+        }
+        
+        // Get public pages from config or use defaults
+        const configPublicPages = loadedNavConfig?.public_pages || ["TenantAccess", "Setup", "Dashboard"];
+        
+        // Skip access check for public pages
+        if (configPublicPages.includes(currentPageName)) {
+          setCheckingAccess(false);
+          setHasAccess(true);
+          return;
+        }
+    
         const user = await base44.auth.me();
         if (!user) {
           setHasAccess(false);
@@ -101,18 +119,6 @@ export default function Layout({ children, currentPageName }) {
         }
         setCurrentUser(user);
         setIsGlobalAdmin(user.is_global_admin === true);
-        
-        // Fetch custom admin nav config
-        if (user.is_global_admin === true) {
-          try {
-            const navConfigs = await base44.entities.NavigationConfig.filter({ config_type: "admin_console" });
-            if (navConfigs.length > 0 && navConfigs[0].items?.length > 0) {
-              setCustomAdminNav(navConfigs[0].items);
-            }
-          } catch (e) {
-            // Ignore errors, will use default nav
-          }
-        }
         
         // Global admin pages: for is_global_admin OR tenant admins (with tenant context)
         if (isGlobalAdminPage) {
