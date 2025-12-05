@@ -536,15 +536,26 @@ Provide:
         {/* AI Recommendations Tab */}
         <TabsContent value="recommendations">
           <Card className="border-[var(--color-background-muted)]">
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-[var(--color-midnight)]">AI-Generated Recommendations</CardTitle>
+              <Button 
+                onClick={handleGenerateRecommendations}
+                disabled={analyzing || releases.length === 0}
+                className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+              >
+                {analyzing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
+                Generate Recommendations
+              </Button>
             </CardHeader>
             <CardContent>
               {recommendations.length === 0 ? (
                 <div className="text-center py-8">
                   <Sparkles className="h-12 w-12 mx-auto mb-4 text-[var(--color-charcoal)]" />
                   <p className="text-[var(--color-charcoal)]">
-                    Analyze a release to generate recommendations for your UI library
+                    {releases.length === 0 
+                      ? "Check for releases first, then generate recommendations"
+                      : "Click 'Generate Recommendations' to analyze releases for your UI library"
+                    }
                   </p>
                 </div>
               ) : (
