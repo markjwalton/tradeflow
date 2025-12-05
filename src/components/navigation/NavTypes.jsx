@@ -218,6 +218,7 @@ export default {
   getTopLevelItems,
   getDescendants,
   getValidParents,
+  getFolderParents,
   buildFlatNavList,
   ensureItemIds,
 };
