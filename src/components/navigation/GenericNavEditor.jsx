@@ -128,10 +128,14 @@ export default function GenericNavEditor({
     }
   }, [rawItems, config?.id, items]);
   
-  // Respect default_collapsed setting on initial load - start with empty set (all collapsed)
+  // Respect default_collapsed setting on initial load - start with top-level folders expanded
   React.useEffect(() => {
     if (!initialExpandDone && items.length > 0) {
-      setExpandedParents(new Set());
+      // Expand all top-level folders by default
+      const topLevelFolders = items
+        .filter(item => !item.parent_id && item.item_type === "folder")
+        .map(item => item._id);
+      setExpandedParents(new Set(topLevelFolders));
       setInitialExpandDone(true);
     }
   }, [items, initialExpandDone]);
