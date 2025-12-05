@@ -461,7 +461,7 @@ export default function GenericNavEditor({
                                       <MoveRight className="h-4 w-4" />
                                     </Button>
                                   </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end" className="w-56 max-h-64 overflow-y-auto">
+                                  <DropdownMenuContent align="end" className="w-56 max-h-80 overflow-y-auto">
                                     <DropdownMenuItem 
                                       onClick={() => handleMoveToParent(item, null)}
                                       disabled={!item.parent_id}
@@ -471,6 +471,7 @@ export default function GenericNavEditor({
                                       Move to top level
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
+                                    {/* Folders */}
                                     {getMoveParentOptions(item._id)
                                       .filter(p => p._id !== item.parent_id)
                                       .map(parent => (
@@ -479,10 +480,33 @@ export default function GenericNavEditor({
                                         onClick={() => handleMoveToParent(item, parent._id)}
                                         className="gap-2"
                                       >
-                                        <CornerDownRight className="h-4 w-4" />
+                                        <Folder className="h-4 w-4" />
                                         {parent.name}
                                       </DropdownMenuItem>
                                     ))}
+                                    {/* Pages as parents */}
+                                    {getParentOptions(item._id)
+                                      .filter(p => p._id !== item.parent_id && p.item_type !== "folder")
+                                      .sort((a, b) => a.name.localeCompare(b.name))
+                                      .length > 0 && (
+                                      <>
+                                        <DropdownMenuSeparator />
+                                        <div className="px-2 py-1.5 text-xs font-medium text-[var(--color-charcoal)]">Pages</div>
+                                        {getParentOptions(item._id)
+                                          .filter(p => p._id !== item.parent_id && p.item_type !== "folder")
+                                          .sort((a, b) => a.name.localeCompare(b.name))
+                                          .map(parent => (
+                                          <DropdownMenuItem 
+                                            key={parent._id}
+                                            onClick={() => handleMoveToParent(item, parent._id)}
+                                            className="gap-2"
+                                          >
+                                            <File className="h-4 w-4" />
+                                            {parent.name}
+                                          </DropdownMenuItem>
+                                        ))}
+                                      </>
+                                    )}
                                   </DropdownMenuContent>
                                 </DropdownMenu>
                                 
