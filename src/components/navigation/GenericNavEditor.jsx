@@ -142,6 +142,7 @@ export default function GenericNavEditor({
   // Use shared hierarchy helpers
   const getItemsByParent = (parentId) => getChildren(parentId, items);
   const getParentOptions = (excludeId) => getValidParents(excludeId, items);
+  const getMoveParentOptions = (excludeId) => getFolderParents(excludeId, items);
 
   const saveMutation = useMutation({
         mutationFn: async (newItems) => {
