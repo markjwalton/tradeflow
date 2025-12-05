@@ -607,6 +607,54 @@ export default function GenericNavEditor({
               </div>
             )}
 
+            {/* All Pages Reference List */}
+            {items.length > 0 && (
+              <div className="border-t pt-4 mt-4">
+                <button 
+                  onClick={() => setAllPagesExpanded(!allPagesExpanded)}
+                  className="flex items-center gap-2 text-[var(--color-charcoal)] hover:text-[var(--color-midnight)] font-medium mb-3"
+                >
+                  {allPagesExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                  <File className="h-4 w-4" />
+                  All Pages ({items.filter(i => i.item_type !== "folder").length})
+                </button>
+                {allPagesExpanded && (
+                  <div className="space-y-1 pl-6">
+                    {items
+                      .filter(i => i.item_type !== "folder")
+                      .sort((a, b) => a.name.localeCompare(b.name))
+                      .map(item => {
+                        // Find parent chain for context
+                        const getParentPath = (parentId) => {
+                          if (!parentId) return "";
+                          const parent = items.find(i => i._id === parentId);
+                          if (!parent) return "";
+                          const grandPath = getParentPath(parent.parent_id);
+                          return grandPath ? `${grandPath} > ${parent.name}` : parent.name;
+                        };
+                        const parentPath = getParentPath(item.parent_id);
+                        
+                        return (
+                          <div 
+                            key={item._id} 
+                            className={`flex items-center gap-3 p-2 rounded-lg hover:bg-[var(--color-background)] transition-all text-sm ${!item.is_visible ? "opacity-50" : ""}`}
+                          >
+                            {renderIcon(item.icon, "h-3 w-3 text-[var(--color-charcoal)]")}
+                            <span className="font-medium text-[var(--color-midnight)]">{item.name}</span>
+                            {parentPath && (
+                              <span className="text-xs text-[var(--color-charcoal)]">in {parentPath}</span>
+                            )}
+                            {!item.is_visible && (
+                              <Badge className="text-xs bg-[var(--color-charcoal)]/10 text-[var(--color-charcoal)]">Hidden</Badge>
+                            )}
+                          </div>
+                        );
+                      })}
+                  </div>
+                )}
+              </div>
+            )}
+
             {items.length === 0 && unallocatedSlugs.length === 0 && (
               <div className="text-center py-8 text-[var(--color-charcoal)]">
                 No pages available.
