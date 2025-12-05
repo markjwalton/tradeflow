@@ -72,6 +72,8 @@ import FeedbackShowcase from './pages/FeedbackShowcase';
 import PackageDetail from './pages/PackageDetail';
 import PackageExport from './pages/PackageExport';
 import TokenPreview from './pages/TokenPreview';
+import TailwindKnowledgeManager from './pages/TailwindKnowledgeManager';
+import LayoutBuilder from './pages/LayoutBuilder';
 import __Layout from './Layout.jsx';
 
 
@@ -150,6 +152,8 @@ export const PAGES = {
     "PackageDetail": PackageDetail,
     "PackageExport": PackageExport,
     "TokenPreview": TokenPreview,
+    "TailwindKnowledgeManager": TailwindKnowledgeManager,
+    "LayoutBuilder": LayoutBuilder,
 }
 
 export const pagesConfig = {
