@@ -65,15 +65,22 @@ export default function Layout({ children, currentPageName }) {
   const [isGlobalAdmin, setIsGlobalAdmin] = useState(false);
   const [isTenantAdmin, setIsTenantAdmin] = useState(false);
   const [customAdminNav, setCustomAdminNav] = useState(null);
+  const [navConfig, setNavConfig] = useState(null);
   const [expandedFolders, setExpandedFolders] = useState(new Set());
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   
   const urlParams = new URLSearchParams(window.location.search);
   const tenantSlug = urlParams.get("tenant");
   
-  // Determine page type
-  const isGlobalAdminPage = globalAdminPages.some(p => p.slug === currentPageName);
-  const isTenantPage = tenantPages.some(p => p.slug === currentPageName);
+  // Get page access rules from navConfig (data-driven, no hardcoded lists)
+  const publicPages = navConfig?.public_pages || ["TenantAccess", "Setup", "Dashboard"];
+  const standalonePages = navConfig?.standalone_pages || [];
+  const fullscreenPages = navConfig?.fullscreen_pages || [];
+  
+  // Determine page type from nav config items
+  const adminNavItems = customAdminNav || [];
+  const isGlobalAdminPage = adminNavItems.some(item => item.slug === currentPageName) || standalonePages.includes(currentPageName);
+  const isTenantPage = false; // Will be determined by tenant nav config when implemented
 
   useEffect(() => {
     // Skip access check for public pages
