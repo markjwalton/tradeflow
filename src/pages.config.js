@@ -74,6 +74,7 @@ import PackageExport from './pages/PackageExport';
 import TokenPreview from './pages/TokenPreview';
 import TailwindKnowledgeManager from './pages/TailwindKnowledgeManager';
 import LayoutBuilder from './pages/LayoutBuilder';
+import TestingHub from './pages/TestingHub';
 import __Layout from './Layout.jsx';
 
 
@@ -154,6 +155,7 @@ export const PAGES = {
     "TokenPreview": TokenPreview,
     "TailwindKnowledgeManager": TailwindKnowledgeManager,
     "LayoutBuilder": LayoutBuilder,
+    "TestingHub": TestingHub,
 }
 
 export const pagesConfig = {
