@@ -463,7 +463,10 @@ export default function GenericNavEditor({
                                       Move to top level
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
-                                    {getParentOptions(item._id).filter(p => p._id !== item.parent_id).map(parent => (
+                                    {getParentOptions(item._id)
+                                      .filter(p => p._id !== item.parent_id)
+                                      .sort((a, b) => a.name.localeCompare(b.name))
+                                      .map(parent => (
                                       <DropdownMenuItem 
                                         key={parent._id}
                                         onClick={() => handleMoveToParent(item, parent._id)}
