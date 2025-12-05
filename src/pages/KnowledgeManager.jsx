@@ -31,6 +31,12 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
+// Import reference components
+import ShadcnReference from "@/components/knowledge/ShadcnReference";
+import TailwindReference from "@/components/knowledge/TailwindReference";
+import ReactReference from "@/components/knowledge/ReactReference";
+import LucideReference from "@/components/knowledge/LucideReference";
+
 // Technology configurations
 const TECH_CONFIGS = {
   tailwind: {
@@ -88,6 +94,13 @@ const TECH_CONFIGS = {
       "Skeleton", "Slider", "Sonner", "Switch", "Table", "Tabs",
       "Textarea", "Toast", "Toggle", "ToggleGroup", "Tooltip"
     ]
+  },
+  lucide: {
+    name: "Lucide Icons",
+    icon: Sparkles,
+    color: "text-orange-600",
+    bgColor: "bg-orange-50",
+    categories: []
   }
 };
 
@@ -775,200 +788,10 @@ Create a development prompt that:
 
         {/* Quick Reference Tab */}
         <TabsContent value="reference" className="space-y-4">
-          {activeTech === "shadcn" && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Box className="h-5 w-5 text-purple-600" />
-                  shadcn/ui Components Reference
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {[
-                    { name: "Button", import: "import { Button } from '@/components/ui/button'", usage: "<Button variant=\"outline\">Click</Button>", variants: "default, destructive, outline, secondary, ghost, link" },
-                    { name: "Card", import: "import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'", usage: "<Card><CardHeader><CardTitle>Title</CardTitle></CardHeader><CardContent>Content</CardContent></Card>", variants: "Standard card with header, content, footer sections" },
-                    { name: "Dialog", import: "import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'", usage: "<Dialog><DialogTrigger>Open</DialogTrigger><DialogContent>...</DialogContent></Dialog>", variants: "Modal dialog with trigger" },
-                    { name: "Select", import: "import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'", usage: "<Select><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value=\"1\">One</SelectItem></SelectContent></Select>", variants: "Dropdown select with search" },
-                    { name: "Tabs", import: "import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'", usage: "<Tabs defaultValue=\"tab1\"><TabsList><TabsTrigger value=\"tab1\">Tab 1</TabsTrigger></TabsList><TabsContent value=\"tab1\">Content</TabsContent></Tabs>", variants: "Tabbed interface" },
-                    { name: "Badge", import: "import { Badge } from '@/components/ui/badge'", usage: "<Badge variant=\"secondary\">Status</Badge>", variants: "default, secondary, destructive, outline" },
-                    { name: "Input", import: "import { Input } from '@/components/ui/input'", usage: "<Input placeholder=\"Enter text...\" />", variants: "Text input with variants" },
-                    { name: "Textarea", import: "import { Textarea } from '@/components/ui/textarea'", usage: "<Textarea rows={4} />", variants: "Multi-line text input" },
-                    { name: "Progress", import: "import { Progress } from '@/components/ui/progress'", usage: "<Progress value={50} />", variants: "Progress bar 0-100" },
-                    { name: "Skeleton", import: "import { Skeleton } from '@/components/ui/skeleton'", usage: "<Skeleton className=\"h-12 w-full\" />", variants: "Loading placeholder" },
-                    { name: "ScrollArea", import: "import { ScrollArea } from '@/components/ui/scroll-area'", usage: "<ScrollArea className=\"h-72\">Content</ScrollArea>", variants: "Custom scrollable area" },
-                    { name: "Tooltip", import: "import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip'", usage: "<TooltipProvider><Tooltip><TooltipTrigger>Hover</TooltipTrigger><TooltipContent>Tip</TooltipContent></Tooltip></TooltipProvider>", variants: "Hover tooltip" }
-                  ].map((comp) => (
-                    <div key={comp.name} className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                      <h4 className="font-semibold text-purple-900 mb-2">{comp.name}</h4>
-                      <div className="space-y-2">
-                        <div>
-                          <p className="text-xs font-medium text-purple-700">Import:</p>
-                          <code className="text-xs bg-white p-1 rounded block overflow-x-auto">{comp.import}</code>
-                        </div>
-                        <div>
-                          <p className="text-xs font-medium text-purple-700">Usage:</p>
-                          <code className="text-xs bg-white p-1 rounded block overflow-x-auto">{comp.usage}</code>
-                        </div>
-                        <p className="text-xs text-purple-600">{comp.variants}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {activeTech === "tailwind" && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Palette className="h-5 w-5 text-cyan-600" />
-                  Tailwind + Sturij Tokens Reference
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="p-4 bg-cyan-50 rounded-lg border border-cyan-200">
-                    <h4 className="font-semibold text-cyan-900 mb-2">Colors (Use CSS Variables)</h4>
-                    <div className="space-y-1 text-xs">
-                      <code className="block bg-white p-1 rounded">bg-[var(--color-primary)] // Forest Green #4A5D4E</code>
-                      <code className="block bg-white p-1 rounded">bg-[var(--color-secondary)] // Copper #D4A574</code>
-                      <code className="block bg-white p-1 rounded">bg-[var(--color-accent)] // Blush #d9b4a7</code>
-                      <code className="block bg-white p-1 rounded">bg-[var(--color-midnight)] // Dark Blue #1b2a35</code>
-                      <code className="block bg-white p-1 rounded">text-[var(--color-charcoal)] // Text #3b3b3b</code>
-                      <code className="block bg-white p-1 rounded">bg-[var(--color-background)] // Page BG #f5f3ef</code>
-                      <code className="block bg-white p-1 rounded">bg-[var(--color-background-paper)] // White</code>
-                    </div>
-                  </div>
-                  <div className="p-4 bg-cyan-50 rounded-lg border border-cyan-200">
-                    <h4 className="font-semibold text-cyan-900 mb-2">Color Scales (50-900)</h4>
-                    <div className="space-y-1 text-xs">
-                      <code className="block bg-white p-1 rounded">bg-[var(--color-primary-50)] // Lightest</code>
-                      <code className="block bg-white p-1 rounded">bg-[var(--color-primary-100)]</code>
-                      <code className="block bg-white p-1 rounded">bg-[var(--color-primary-500)] // Base</code>
-                      <code className="block bg-white p-1 rounded">bg-[var(--color-primary-900)] // Darkest</code>
-                      <p className="text-cyan-700 mt-2">Same pattern for: secondary, accent, midnight, charcoal</p>
-                    </div>
-                  </div>
-                  <div className="p-4 bg-cyan-50 rounded-lg border border-cyan-200">
-                    <h4 className="font-semibold text-cyan-900 mb-2">Typography</h4>
-                    <div className="space-y-1 text-xs">
-                      <code className="block bg-white p-1 rounded">font-heading // Degular Display</code>
-                      <code className="block bg-white p-1 rounded">font-body // Mrs Eaves XL Serif</code>
-                      <code className="block bg-white p-1 rounded">text-[var(--font-size-sm)] // 0.875rem</code>
-                      <code className="block bg-white p-1 rounded">text-[var(--font-size-lg)] // 1.125rem</code>
-                      <code className="block bg-white p-1 rounded">text-[var(--font-size-2xl)] // 1.5rem</code>
-                    </div>
-                  </div>
-                  <div className="p-4 bg-cyan-50 rounded-lg border border-cyan-200">
-                    <h4 className="font-semibold text-cyan-900 mb-2">Effects</h4>
-                    <div className="space-y-1 text-xs">
-                      <code className="block bg-white p-1 rounded">shadow-[var(--shadow-sm)]</code>
-                      <code className="block bg-white p-1 rounded">shadow-[var(--shadow-md)]</code>
-                      <code className="block bg-white p-1 rounded">shadow-[var(--shadow-lg)]</code>
-                      <code className="block bg-white p-1 rounded">rounded-[var(--radius-lg)] // 8px</code>
-                      <code className="block bg-white p-1 rounded">rounded-[var(--radius-xl)] // 12px</code>
-                      <code className="block bg-white p-1 rounded">transition-[var(--transition-normal)]</code>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {activeTech === "react" && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Component className="h-5 w-5 text-blue-600" />
-                  React Patterns & Snippets
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <h4 className="font-semibold text-blue-900 mb-2">Data Fetching with React Query</h4>
-                    <pre className="text-xs bg-white p-3 rounded overflow-x-auto">{`import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
-
-// List entities
-const { data: items = [], isLoading } = useQuery({
-  queryKey: ["items"],
-  queryFn: () => base44.entities.Item.list("-created_date", 50)
-});
-
-// Filter entities
-const { data: activeItems = [] } = useQuery({
-  queryKey: ["items", "active"],
-  queryFn: () => base44.entities.Item.filter({ status: "active" })
-});
-
-// Create/Update mutation
-const queryClient = useQueryClient();
-const createMutation = useMutation({
-  mutationFn: (data) => base44.entities.Item.create(data),
-  onSuccess: () => queryClient.invalidateQueries({ queryKey: ["items"] })
-});`}</pre>
-                  </div>
-                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <h4 className="font-semibold text-blue-900 mb-2">Page Component Template</h4>
-                    <pre className="text-xs bg-white p-3 rounded overflow-x-auto">{`import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
-import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
-
-export default function MyPage() {
-  const { data: items = [], isLoading } = useQuery({
-    queryKey: ["items"],
-    queryFn: () => base44.entities.Item.list()
-  });
-
-  if (isLoading) {
-    return (
-      <div className="p-6 flex justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
-
-  return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
-      <h1 className="text-2xl font-heading text-[var(--color-midnight)]">
-        My Page
-      </h1>
-      {/* Content */}
-    </div>
-  );
-}`}</pre>
-                  </div>
-                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <h4 className="font-semibold text-blue-900 mb-2">Common Hooks</h4>
-                    <pre className="text-xs bg-white p-3 rounded overflow-x-auto">{`// URL Parameters
-const urlParams = new URLSearchParams(window.location.search);
-const id = urlParams.get("id");
-
-// Navigation
-import { useNavigate } from "react-router-dom";
-const navigate = useNavigate();
-navigate(createPageUrl("Details?id=" + id));
-
-// Current User
-const user = await base44.auth.me();
-
-// Toast Notifications
-import { toast } from "sonner";
-toast.success("Saved!");
-toast.error("Failed: " + error.message);`}</pre>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+          {activeTech === "shadcn" && <ShadcnReference />}
+          {activeTech === "tailwind" && <TailwindReference />}
+          {activeTech === "react" && <ReactReference />}
+          {activeTech === "lucide" && <LucideReference />}
         </TabsContent>
       </Tabs>
 
