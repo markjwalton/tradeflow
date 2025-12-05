@@ -60,6 +60,15 @@ import SturijPackage from './pages/SturijPackage';
 import DesignSystemManager from './pages/DesignSystemManager';
 import StandaloneAPIStrategy from './pages/StandaloneAPIStrategy';
 import StandaloneInstanceManager from './pages/StandaloneInstanceManager';
+import DesignTokens from './pages/DesignTokens';
+import TypographyShowcase from './pages/TypographyShowcase';
+import ButtonsShowcase from './pages/ButtonsShowcase';
+import CardsShowcase from './pages/CardsShowcase';
+import FormsShowcase from './pages/FormsShowcase';
+import LayoutShowcase from './pages/LayoutShowcase';
+import NavigationShowcase from './pages/NavigationShowcase';
+import DataDisplayShowcase from './pages/DataDisplayShowcase';
+import FeedbackShowcase from './pages/FeedbackShowcase';
 import __Layout from './Layout.jsx';
 
 
@@ -126,6 +135,15 @@ export const PAGES = {
     "DesignSystemManager": DesignSystemManager,
     "StandaloneAPIStrategy": StandaloneAPIStrategy,
     "StandaloneInstanceManager": StandaloneInstanceManager,
+    "DesignTokens": DesignTokens,
+    "TypographyShowcase": TypographyShowcase,
+    "ButtonsShowcase": ButtonsShowcase,
+    "CardsShowcase": CardsShowcase,
+    "FormsShowcase": FormsShowcase,
+    "LayoutShowcase": LayoutShowcase,
+    "NavigationShowcase": NavigationShowcase,
+    "DataDisplayShowcase": DataDisplayShowcase,
+    "FeedbackShowcase": FeedbackShowcase,
 }
 
 export const pagesConfig = {
