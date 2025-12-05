@@ -9,6 +9,7 @@ import WidgetConfigEditor from "@/components/dashboard/WidgetConfigEditor";
 import DashboardSettings from "@/components/dashboard/DashboardSettings";
 import DashboardWidgetCard from "@/components/dashboard/DashboardWidgetCard";
 import useDashboardSettings from "@/components/dashboard/useDashboardSettings";
+import TechNewsWidget from "@/components/dashboard/TechNewsWidget";
 
 export default function Dashboard() {
   const [configWidget, setConfigWidget] = useState(null);
@@ -149,6 +150,11 @@ export default function Dashboard() {
         onClose={() => setConfigWidget(null)}
         onSave={() => setConfigWidget(null)}
       />
+
+      {/* Tech News Widget - Always visible */}
+      <div className="mt-6">
+        <TechNewsWidget />
+      </div>
 
       {/* Dashboard Settings */}
       <DashboardSettings
