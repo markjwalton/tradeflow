@@ -647,7 +647,7 @@ export default function GenericNavEditor({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="__none__">Select page...</SelectItem>
-                    {[...unallocatedSlugs, formData.slug].filter(Boolean).map(slug => (
+                    {[...unallocatedSlugs, formData.slug].filter(Boolean).filter((v, i, a) => a.indexOf(v) === i).map(slug => (
                       <SelectItem key={slug} value={slug}>{slug}</SelectItem>
                     ))}
                   </SelectContent>
