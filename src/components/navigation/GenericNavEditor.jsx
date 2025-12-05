@@ -109,6 +109,13 @@ export default function GenericNavEditor({
   const config = navConfigs[0];
   const rawItems = config?.items || [];
   
+  // Merge sourceSlugs prop with source_slugs from config (if any)
+  const effectiveSlugs = React.useMemo(() => {
+    const configSlugs = config?.source_slugs || [];
+    const merged = [...new Set([...sourceSlugs, ...configSlugs])];
+    return merged.sort();
+  }, [sourceSlugs, config?.source_slugs]);
+  
   // Use shared utility to ensure all items have stable IDs
   const items = React.useMemo(() => ensureItemIds(rawItems), [rawItems]);
   
@@ -128,9 +135,9 @@ export default function GenericNavEditor({
     }
   }, [items, initialExpandDone]);
 
-  // Calculate unallocated slugs
+  // Calculate unallocated slugs using effective (merged) slugs
   const allocatedSlugs = items.map(i => i.slug).filter(Boolean);
-  const unallocatedSlugs = sourceSlugs.filter(slug => !allocatedSlugs.includes(slug));
+  const unallocatedSlugs = effectiveSlugs.filter(slug => !allocatedSlugs.includes(slug));
 
   // Use shared hierarchy helpers
   const getItemsByParent = (parentId) => getChildren(parentId, items);
