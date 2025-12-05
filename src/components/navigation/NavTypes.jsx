@@ -60,9 +60,10 @@ export const generateNavId = () => {
 
 /**
  * Generate a stable ID for folders based on name
+ * Normalizes spaces and special chars to single underscores
  */
 export const generateFolderId = (name) => {
-  return `folder_${name.toLowerCase().replace(/[^a-z0-9]/g, "_")}`;
+  return `folder_${name.toLowerCase().replace(/[\s-]+/g, '_').replace(/[^a-z0-9_]/g, '')}`;
 };
 
 /**
