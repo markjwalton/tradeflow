@@ -44,61 +44,10 @@ import {
 import GlobalAIAssistant from "@/components/ai-assistant/GlobalAIAssistant";
 import NavigationBreadcrumb from "@/components/navigation/NavigationBreadcrumb";
 
-// Global admin pages - only for is_global_admin users
-import { BookOpen, FlaskConical, Key, Gauge, Palette, Sparkles, Type, MousePointer, Square, FormInput, BarChart3, Bell, Users, Upload, File, Eye } from "lucide-react";
+// Additional icons for nav items
+import { BookOpen, FlaskConical, Key, Gauge, Palette, Sparkles, Type, MousePointer, Square, FormInput, BarChart3, Bell, Users, Upload, File, Eye, LayoutDashboard } from "lucide-react";
 
-import { LayoutDashboard } from "lucide-react";
-
-const globalAdminPages = [
-  { name: "Dashboard", slug: "Dashboard", icon: LayoutDashboard },
-  { name: "Dashboard Manager", slug: "DashboardManager", icon: LayoutDashboard },
-  { name: "CMS", slug: "CMSManager", icon: Globe },
-  { name: "API Manager", slug: "APIManager", icon: Key },
-  { name: "Standalone Instances", slug: "StandaloneInstanceManager", icon: Building2 },
-  { name: "API Strategy", slug: "StandaloneAPIStrategy", icon: GitBranch },
-  { name: "Security", slug: "SecurityMonitor", icon: Shield },
-  { name: "Performance", slug: "PerformanceMonitor", icon: Gauge },
-  { name: "Roadmap", slug: "RoadmapManager", icon: Lightbulb },
-  { name: "Journal", slug: "RoadmapJournal", icon: Lightbulb },
-  { name: "Sprints", slug: "SprintManager", icon: Lightbulb },
-  { name: "Rule Book", slug: "RuleBook", icon: BookOpen },
-  { name: "Playground", slug: "PlaygroundSummary", icon: FlaskConical },
-  { name: "Test Data Manager", slug: "TestDataManager", icon: Database },
-  { name: "Mind Map Editor", slug: "MindMapEditor", icon: GitBranch },
-  { name: "ERD Editor", slug: "ERDEditor", icon: Database },
-  { name: "Generated Apps", slug: "GeneratedApps", icon: Package },
-  { name: "Entity Library", slug: "EntityLibrary", icon: Database },
-  { name: "Page Library", slug: "PageLibrary", icon: LayoutIcon },
-  { name: "Feature Library", slug: "FeatureLibrary", icon: Zap },
-  { name: "Template Library", slug: "TemplateLibrary", icon: Package },
-  { name: "Business Templates", slug: "BusinessTemplates", icon: Building2 },
-  { name: "Workflow Library", slug: "WorkflowLibrary", icon: Workflow },
-  { name: "Workflow Designer", slug: "WorkflowDesigner", icon: Workflow },
-  { name: "Form Templates", slug: "FormTemplates", icon: LayoutIcon },
-  { name: "Form Builder", slug: "FormBuilder", icon: LayoutIcon },
-  { name: "Checklist Templates", slug: "ChecklistTemplates", icon: LayoutIcon },
-  { name: "Checklist Builder", slug: "ChecklistBuilder", icon: LayoutIcon },
-  { name: "System Specification", slug: "SystemSpecification", icon: Package },
-
-  { name: "Tenant Manager", slug: "TenantManager", icon: Building2 },
-  { name: "Navigation Manager", slug: "NavigationManager", icon: Navigation },
-  { name: "Community Library", slug: "CommunityLibrary", icon: Package },
-  { name: "Community Publish", slug: "CommunityPublish", icon: Package },
-  { name: "Package Library", slug: "PackageLibrary", icon: Package },
-  { name: "Prompt Settings", slug: "PromptSettings", icon: Settings },
-  { name: "Lookup Test", slug: "LookupTestForms", icon: Key },
-];
-
-// Pages that don't require tenant context but need to preserve query params
-const standalonePages = ["Dashboard", "DashboardManager", "CMSManager", "APIManager", "StandaloneInstanceManager", "StandaloneAPIStrategy", "SecurityMonitor", "PerformanceMonitor", "RoadmapManager", "RoadmapJournal", "SprintManager", "RuleBook", "PlaygroundSummary", "PlaygroundEntity", "PlaygroundPage", "PlaygroundFeature", "ConceptWorkbench", "TestDataManager", "LivePreview", "MindMapEditor", "GeneratedApps", "EntityLibrary", "PageLibrary", "FeatureLibrary", "PackageLibrary", "TenantManager", "BusinessTemplates", "WorkflowLibrary", "WorkflowDesigner", "FormTemplates", "FormBuilder", "ChecklistTemplates", "ChecklistBuilder", "PromptSettings", "LookupTestForms", "CommunityLibrary", "CommunityPublish"];
-
-// Pages that render their own navigation (no layout sidebar)
-const fullscreenPages = [];
-
-// Tenant pages - for users with tenant access
-const tenantPages = [];
-
-// Tenant admin pages - for users with admin role in a tenant
+// Tenant admin pages - for users with admin role in a tenant (minimal hardcoded list)
 const tenantAdminPages = [
   { name: "Navigation Manager", slug: "NavigationManager", icon: Navigation },
 ];
