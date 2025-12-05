@@ -668,8 +668,15 @@ export default function GenericNavEditor({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="__none__">No parent (top level)</SelectItem>
-                  {getFormParentOptions().map(parent => (
-                    <SelectItem key={parent._id} value={parent._id}>{parent.name}</SelectItem>
+                  {getFormParentOptions()
+                    .sort((a, b) => a.name.localeCompare(b.name))
+                    .map(parent => (
+                    <SelectItem key={parent._id} value={parent._id}>
+                      <div className="flex items-center gap-2">
+                        {isFolder(parent) ? <Folder className="h-3 w-3" /> : <File className="h-3 w-3" />}
+                        {parent.name}
+                      </div>
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
