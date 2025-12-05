@@ -120,8 +120,15 @@ export default function Layout({ children, currentPageName }) {
         setCurrentUser(user);
         setIsGlobalAdmin(user.is_global_admin === true);
         
+        // Get standalone pages from config
+        const configStandalonePages = loadedNavConfig?.standalone_pages || [];
+        
+        // Check if page is in admin nav items
+        const adminNavItems = loadedNavConfig?.items || [];
+        const isAdminPage = adminNavItems.some(item => item.slug === currentPageName) || configStandalonePages.includes(currentPageName);
+        
         // Global admin pages: for is_global_admin OR tenant admins (with tenant context)
-        if (isGlobalAdminPage) {
+        if (isAdminPage) {
           // Global admins always have access
           if (user.is_global_admin === true) {
             setHasAccess(true);
@@ -129,8 +136,8 @@ export default function Layout({ children, currentPageName }) {
             return;
           }
           
-          // Standalone pages (MindMapEditor, PackageLibrary, TenantManager) - check if user has any tenant admin access
-          if (standalonePages.includes(currentPageName)) {
+          // Standalone pages - check if user has any tenant admin access
+          if (configStandalonePages.includes(currentPageName)) {
             const userRolesAll = await base44.entities.TenantUserRole.filter({ user_id: user.id });
             const hasAnyAdminRole = userRolesAll.some(r => r.roles?.includes("admin"));
             if (hasAnyAdminRole) {
