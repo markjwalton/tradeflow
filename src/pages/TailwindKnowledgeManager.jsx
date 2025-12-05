@@ -15,10 +15,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { 
   RefreshCw, Download, Sparkles, Search, ExternalLink,
   CheckCircle2, AlertCircle, Clock, Loader2, BookOpen,
-  GitBranch, Zap, FileText, ArrowUp, X
+  GitBranch, Zap, FileText, ArrowUp, X, Plus, Expand, Eye
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -44,6 +53,11 @@ export default function TailwindKnowledgeManager() {
   const [syncing, setSyncing] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [syncProgress, setSyncProgress] = useState({ current: 0, total: 0, message: "" });
+  const [expandingRec, setExpandingRec] = useState(null);
+  const [expandedPrompt, setExpandedPrompt] = useState("");
+  const [roadmapDialog, setRoadmapDialog] = useState({ open: false, rec: null });
+  const [roadmapPriority, setRoadmapPriority] = useState("medium");
+  const [analyzingImpl, setAnalyzingImpl] = useState(false);
 
   const { data: releases = [], isLoading: loadingReleases } = useQuery({
     queryKey: ["tailwindReleases"],
@@ -269,6 +283,145 @@ Generate 3-5 actionable recommendations. For each:
       toast.error("Failed to generate recommendations: " + error.message);
     }
     setAnalyzing(false);
+  };
+
+  const handleExpandRecommendation = async (rec) => {
+    setExpandingRec(rec.id);
+    try {
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `Expand this Tailwind CSS update recommendation into a detailed development prompt.
+
+Recommendation: ${rec.title}
+Description: ${rec.description}
+
+Our implementation uses the Sturij Design System with:
+- CSS custom properties (--color-primary, --color-secondary, --color-accent, etc.)
+- HSL-based color tokens (--sturij-primary: 135 12% 33%)
+- Typography tokens (--font-heading, --font-body, --font-size-*)
+- Spacing scale (--spacing-1 through --spacing-32)
+- Shadow tokens (--shadow-sm, --shadow-md, etc.)
+- Border radius tokens (--radius-sm, --radius-lg, etc.)
+
+Create a detailed development prompt that:
+1. Explains exactly what needs to be changed
+2. Shows how to align with our token scheme
+3. Lists specific files/components that may need updates
+4. Provides code examples using our CSS variables
+5. Highlights any potential conflicts with our current approach`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            development_prompt: { type: "string" },
+            affected_areas: { type: "array", items: { type: "string" } },
+            code_examples: { type: "array", items: { type: "string" } }
+          }
+        }
+      });
+
+      setExpandedPrompt(result.development_prompt);
+      
+      // Update the recommendation with the expanded prompt
+      await base44.entities.PackageUpdateRecommendation.update(rec.id, {
+        reasoning: result.development_prompt,
+        code_changes_required: result.affected_areas?.map(area => ({ description: area })) || []
+      });
+      
+      queryClient.invalidateQueries({ queryKey: ["packageRecommendations"] });
+      toast.success("Recommendation expanded");
+    } catch (error) {
+      toast.error("Failed to expand: " + error.message);
+    }
+    setExpandingRec(null);
+  };
+
+  const handleAddToRoadmap = async () => {
+    const rec = roadmapDialog.rec;
+    if (!rec) return;
+    
+    try {
+      await base44.entities.RoadmapItem.create({
+        title: rec.title,
+        description: rec.description + (rec.reasoning ? `\n\n**Development Prompt:**\n${rec.reasoning}` : ""),
+        category: "improvement",
+        priority: roadmapPriority,
+        status: "backlog",
+        source: "ai_assistant",
+        tags: ["tailwind", "design-system"]
+      });
+
+      await base44.entities.PackageUpdateRecommendation.update(rec.id, {
+        status: "accepted",
+        roadmap_item_id: "added"
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["packageRecommendations"] });
+      toast.success("Added to roadmap");
+      setRoadmapDialog({ open: false, rec: null });
+    } catch (error) {
+      toast.error("Failed to add to roadmap: " + error.message);
+    }
+  };
+
+  const handleAnalyzeImplementation = async () => {
+    setAnalyzingImpl(true);
+    try {
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `Analyze our Sturij Design System implementation and suggest improvements based on Tailwind CSS best practices.
+
+Our current implementation:
+- CSS Variables in globals.css with HSL color tokens
+- Custom properties: --color-primary (#4A5D4E), --color-secondary (#D4A574), --color-accent (#d9b4a7)
+- Full color scales (50-900) for each brand color
+- Typography: --font-heading (Degular Display), --font-body (Mrs Eaves XL Serif)
+- Spacing scale based on 4px grid (--spacing-1 through --spacing-32)
+- Shadows, radii, and transitions as tokens
+- Component classes like .sturij-btn, .sturij-card, .sturij-input
+
+Analyze and provide 3-5 specific recommendations to:
+1. Better align with Tailwind CSS v4.x patterns
+2. Improve token organization and naming
+3. Enhance component utility classes
+4. Optimize for maintainability
+5. Leverage new Tailwind features we might be missing`,
+        add_context_from_internet: true,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            recommendations: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  title: { type: "string" },
+                  description: { type: "string" },
+                  impact: { type: "string" },
+                  effort: { type: "string" },
+                  category: { type: "string" }
+                }
+              }
+            }
+          }
+        }
+      });
+
+      for (const rec of result.recommendations || []) {
+        await base44.entities.PackageUpdateRecommendation.create({
+          package_id: "sturij-implementation",
+          recommendation_type: "tailwind_update",
+          title: `[Implementation] ${rec.title}`,
+          description: rec.description,
+          impact: rec.impact,
+          effort: rec.effort,
+          status: "pending_review"
+        });
+      }
+
+      queryClient.invalidateQueries({ queryKey: ["packageRecommendations"] });
+      toast.success(`Generated ${result.recommendations?.length || 0} implementation recommendations`);
+    } catch (error) {
+      toast.error("Failed to analyze: " + error.message);
+    }
+    setAnalyzingImpl(false);
   };
 
   const handleCheckNewReleases = async () => {
@@ -601,14 +754,24 @@ Generate 3-5 actionable recommendations. For each:
           <Card className="border-[var(--color-background-muted)]">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-[var(--color-midnight)]">AI-Generated Recommendations</CardTitle>
-              <Button 
-                onClick={handleGenerateRecommendations}
-                disabled={analyzing || releases.length === 0}
-                className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
-              >
-                {analyzing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
-                Generate Recommendations
-              </Button>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline"
+                  onClick={handleAnalyzeImplementation}
+                  disabled={analyzingImpl}
+                >
+                  {analyzingImpl ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Eye className="h-4 w-4 mr-2" />}
+                  Analyze Our Implementation
+                </Button>
+                <Button 
+                  onClick={handleGenerateRecommendations}
+                  disabled={analyzing || releases.length === 0}
+                  className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+                >
+                  {analyzing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
+                  From Releases
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               {recommendations.length === 0 ? (
@@ -625,18 +788,68 @@ Generate 3-5 actionable recommendations. For each:
                 <div className="space-y-3">
                   {recommendations.map((rec) => (
                     <div key={rec.id} className="p-4 border border-[var(--color-background-muted)] rounded-lg">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <h4 className="font-medium text-[var(--color-midnight)]">{rec.title}</h4>
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-medium text-[var(--color-midnight)]">{rec.title}</h4>
+                            {rec.status === "accepted" && (
+                              <Badge className="bg-[var(--color-success)]/20 text-[var(--color-success)]">
+                                <CheckCircle2 className="h-3 w-3 mr-1" />
+                                In Roadmap
+                              </Badge>
+                            )}
+                          </div>
                           <p className="text-sm text-[var(--color-charcoal)]">{rec.description}</p>
                         </div>
-                        <Badge className={
-                          rec.impact === "high" ? "bg-[var(--color-destructive)]/20 text-[var(--color-destructive)]" :
-                          rec.impact === "medium" ? "bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]" :
-                          "bg-[var(--color-success)]/20 text-[var(--color-success)]"
-                        }>
-                          {rec.impact} impact
-                        </Badge>
+                        <div className="flex items-center gap-2">
+                          <Badge className={
+                            rec.impact === "high" ? "bg-[var(--color-destructive)]/20 text-[var(--color-destructive)]" :
+                            rec.impact === "medium" ? "bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]" :
+                            "bg-[var(--color-success)]/20 text-[var(--color-success)]"
+                          }>
+                            {rec.impact} impact
+                          </Badge>
+                          {rec.effort && (
+                            <Badge variant="outline">
+                              {rec.effort} effort
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                      
+                      {/* Expanded Development Prompt */}
+                      {rec.reasoning && (
+                        <div className="mt-3 p-3 bg-[var(--color-primary)]/5 rounded-lg border border-[var(--color-primary)]/20">
+                          <p className="text-xs font-medium text-[var(--color-midnight)] mb-1">Development Prompt:</p>
+                          <p className="text-sm text-[var(--color-charcoal)] whitespace-pre-wrap">{rec.reasoning}</p>
+                        </div>
+                      )}
+                      
+                      {/* Action Buttons */}
+                      <div className="flex gap-2 mt-3">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleExpandRecommendation(rec)}
+                          disabled={expandingRec === rec.id}
+                        >
+                          {expandingRec === rec.id ? (
+                            <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                          ) : (
+                            <Expand className="h-3 w-3 mr-1" />
+                          )}
+                          Expand with Dev Prompt
+                        </Button>
+                        {rec.status !== "accepted" && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setRoadmapDialog({ open: true, rec })}
+                          >
+                            <Plus className="h-3 w-3 mr-1" />
+                            Add to Roadmap
+                          </Button>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -646,6 +859,47 @@ Generate 3-5 actionable recommendations. For each:
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Add to Roadmap Dialog */}
+      <Dialog open={roadmapDialog.open} onOpenChange={(open) => setRoadmapDialog({ open, rec: roadmapDialog.rec })}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add to Roadmap</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <Label className="text-sm font-medium">Recommendation</Label>
+              <p className="text-sm text-[var(--color-charcoal)] mt-1">{roadmapDialog.rec?.title}</p>
+            </div>
+            <div>
+              <Label className="text-sm font-medium">Priority</Label>
+              <Select value={roadmapPriority} onValueChange={setRoadmapPriority}>
+                <SelectTrigger className="mt-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="critical">Critical</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="low">Low</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRoadmapDialog({ open: false, rec: null })}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleAddToRoadmap}
+              className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add to Roadmap
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
