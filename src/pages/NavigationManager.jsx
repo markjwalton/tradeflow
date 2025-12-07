@@ -49,7 +49,8 @@ export default function NavigationManager() {
       { value: "admin", label: "Admin Console" },
       { value: "app", label: "App Pages" },
       { value: "tenant", label: "Tenant Navigation" }
-    ], description: "Which tab to show by default" }
+    ], description: "Which tab to show by default" },
+    { key: "defaultCollapsed", label: "Folders Start Collapsed", type: "boolean", description: "All folders start collapsed on page load" }
   ];
 
   const handleSaveSettings = (newSettings) => {

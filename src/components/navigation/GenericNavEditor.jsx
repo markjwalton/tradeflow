@@ -84,7 +84,11 @@ export default function GenericNavEditor({
     item_type: "page", 
     default_collapsed: false 
   });
-  const [expandedParents, setExpandedParents] = useState(new Set());
+  const [expandedParents, setExpandedParents] = useState(() => {
+    // Load from sessionStorage
+    const stored = sessionStorage.getItem(`nav_expanded_${configType}`);
+    return stored ? new Set(JSON.parse(stored)) : new Set();
+  });
   const [unallocatedExpanded, setUnallocatedExpanded] = useState(false);
   const [allPagesExpanded, setAllPagesExpanded] = useState(false);
   const [initialExpandDone, setInitialExpandDone] = useState(false);
@@ -128,17 +132,33 @@ export default function GenericNavEditor({
     }
   }, [rawItems, config?.id, items]);
   
-  // Respect default_collapsed setting on initial load - start with top-level folders expanded
+  // Initial expand logic - check settings and respect default_collapsed
   React.useEffect(() => {
     if (!initialExpandDone && items.length > 0) {
-      // Expand all top-level folders by default
-      const topLevelFolders = items
-        .filter(item => !item.parent_id && item.item_type === "folder")
-        .map(item => item._id);
-      setExpandedParents(new Set(topLevelFolders));
+      // Check if session state already exists
+      const sessionState = sessionStorage.getItem(`nav_expanded_${configType}`);
+      if (sessionState) {
+        // Use session state
+        setInitialExpandDone(true);
+        return;
+      }
+
+      // No session state - check settings
+      const settings = localStorage.getItem("navManager_settings");
+      const defaultCollapsed = settings ? JSON.parse(settings).defaultCollapsed : false;
+
+      if (!defaultCollapsed) {
+        // Expand folders that don't have default_collapsed=true
+        const foldersToExpand = items
+          .filter(item => !item.parent_id && item.item_type === "folder" && !item.default_collapsed)
+          .map(item => item._id);
+        setExpandedParents(new Set(foldersToExpand));
+      }
+      // else: keep everything collapsed (empty Set)
+      
       setInitialExpandDone(true);
     }
-  }, [items, initialExpandDone]);
+  }, [items, initialExpandDone, configType]);
 
   // Calculate unallocated slugs using effective (merged) slugs
   const allocatedSlugs = items.map(i => i.slug).filter(Boolean);
@@ -321,7 +341,11 @@ export default function GenericNavEditor({
     saveMutation.mutate(newItems);
     // Auto-expand the new parent to show the moved item
     if (newParentId) {
-      setExpandedParents(prev => new Set([...prev, newParentId]));
+      setExpandedParents(prev => {
+        const next = new Set([...prev, newParentId]);
+        sessionStorage.setItem(`nav_expanded_${configType}`, JSON.stringify([...next]));
+        return next;
+      });
     }
     toast.success(newParentId ? "Item moved" : "Moved to top level");
   };
@@ -364,6 +388,8 @@ export default function GenericNavEditor({
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
+      // Save to sessionStorage
+      sessionStorage.setItem(`nav_expanded_${configType}`, JSON.stringify([...next]));
       return next;
     });
   };
