@@ -406,7 +406,7 @@ export default function SystemSpecification() {
               <>
                 <div className="flex items-center gap-3 mb-6">
                   {React.createElement(currentSection.icon, {
-                    className: "h-8 w-8 text-info",
+                    className: "h-8 w-8 text-info-foreground",
                   })}
                   <div>
                     <h1 className="text-2xl font-bold">{currentSection.title}</h1>
@@ -426,7 +426,7 @@ export default function SystemSpecification() {
                       <ul className="space-y-2">
                         {currentSection.content.keyCapabilities.map((cap, i) => (
                           <li key={i} className="flex items-start gap-2">
-                            <ChevronRight className="h-4 w-4 mt-0.5 text-info" />
+                            <ChevronRight className="h-4 w-4 mt-0.5 text-info-foreground" />
                             <span>{cap}</span>
                           </li>
                         ))}
@@ -445,7 +445,7 @@ export default function SystemSpecification() {
                       <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         {currentSection.content.features.map((feature, i) => (
                           <li key={i} className="flex items-start gap-2">
-                            <CheckSquare className="h-4 w-4 mt-0.5 text-success flex-shrink-0" />
+                            <CheckSquare className="h-4 w-4 mt-0.5 text-success-foreground flex-shrink-0" />
                             <span className="text-sm">{feature}</span>
                           </li>
                         ))}
@@ -467,7 +467,7 @@ export default function SystemSpecification() {
                             key={i}
                             className="flex items-center gap-3 p-3 bg-muted rounded-lg"
                           >
-                            <Database className="h-5 w-5 text-info" />
+                            <Database className="h-5 w-5 text-info-foreground" />
                             <div>
                               <div className="font-medium">{entity.name}</div>
                               <div className="text-sm text-muted-foreground">
@@ -491,7 +491,7 @@ export default function SystemSpecification() {
                       <ul className="space-y-2">
                         {currentSection.content.pages.map((page, i) => (
                           <li key={i} className="flex items-start gap-2">
-                            <Layout className="h-4 w-4 mt-0.5 text-accent-500" />
+                            <Layout className="h-4 w-4 mt-0.5 text-accent-600" />
                             <span className="text-sm">{page}</span>
                           </li>
                         ))}
@@ -512,7 +512,7 @@ export default function SystemSpecification() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="border-l-2 border-info pl-4">
+                  <div className="border-l-2 border-info-foreground pl-4">
                     <div className="flex items-center gap-2">
                       <Badge>v1.0.0</Badge>
                       <span className="text-sm text-muted-foreground">2025-11-30</span>
