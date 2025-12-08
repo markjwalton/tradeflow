@@ -210,7 +210,7 @@ Return as JSON with a "suggestions" array of strings.`,
   }
 
   const statusIcon = {
-    passed: <CheckCircle2 className="h-5 w-5 text-success" />,
+    passed: <CheckCircle2 className="h-5 w-5 text-success-foreground" />,
     failed: <XCircle className="h-5 w-5 text-destructive" />,
     pending: <Circle className="h-5 w-5 text-muted-foreground" />,
   }[item.test_status];
@@ -224,7 +224,7 @@ Return as JSON with a "suggestions" array of strings.`,
         </Button>
         <div className="flex-1">
           <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
-            <Layout className="h-6 w-6 text-info" />
+            <Layout className="h-6 w-6 text-info-foreground" />
             {item.source_name}
           </h1>
           <p className="text-[var(--color-charcoal)]">Page Playground</p>
@@ -254,7 +254,7 @@ Return as JSON with a "suggestions" array of strings.`,
         </Button>
         <Button 
           variant="outline" 
-          className="text-success border-success/30 hover:bg-success-50"
+          className="text-success-foreground border-success/30 hover:bg-success-50"
           onClick={() => setShowPromote(true)}
           disabled={item.test_status !== "passed"}
         >
@@ -293,17 +293,17 @@ Return as JSON with a "suggestions" array of strings.`,
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <h4 className="text-sm font-medium text-gray-500 mb-1">Category</h4>
+                    <h4 className="text-sm font-medium text-muted-foreground mb-1">Category</h4>
                     <Badge>{template.category}</Badge>
                   </div>
                   <div>
-                    <h4 className="text-sm font-medium text-gray-500 mb-1">Layout</h4>
+                    <h4 className="text-sm font-medium text-muted-foreground mb-1">Layout</h4>
                     <Badge variant="outline">{template.layout}</Badge>
                   </div>
                 </div>
                 {template.entities_used?.length > 0 && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-500 mb-2">Entities Used</h4>
+                    <h4 className="text-sm font-medium text-muted-foreground mb-2">Entities Used</h4>
                     <div className="flex flex-wrap gap-1">
                       {template.entities_used.map(e => (
                         <Badge key={e} variant="outline">{e}</Badge>
@@ -313,7 +313,7 @@ Return as JSON with a "suggestions" array of strings.`,
                 )}
                 {template.components?.length > 0 && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-500 mb-2">Components ({template.components.length})</h4>
+                    <h4 className="text-sm font-medium text-muted-foreground mb-2">Components ({template.components.length})</h4>
                     <div className="space-y-1">
                       {template.components.map((c, i) => (
                         <div key={i} className="text-sm bg-muted p-2 rounded">
@@ -350,7 +350,7 @@ Return as JSON with a "suggestions" array of strings.`,
                       }`}
                     >
                       <span className="text-sm">{test.name}</span>
-                      {isPassed && <CheckCircle2 className="h-4 w-4 text-success" />}
+                      {isPassed && <CheckCircle2 className="h-4 w-4 text-success-foreground" />}
                       {isFailed && <XCircle className="h-4 w-4 text-destructive" />}
                       {!isPassed && !isFailed && <Circle className="h-4 w-4 text-muted-foreground" />}
                     </div>
@@ -380,7 +380,7 @@ Return as JSON with a "suggestions" array of strings.`,
       <Card className="mt-6">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-accent-600" />
+            <Sparkles className="h-5 w-5 text-accent-400" />
             AI Suggestions
           </CardTitle>
           <Button onClick={generateAISuggestions} disabled={isGenerating} variant="outline">
@@ -392,8 +392,8 @@ Return as JSON with a "suggestions" array of strings.`,
           {item.ai_suggestions?.length > 0 ? (
             <ul className="space-y-2">
               {item.ai_suggestions.map((suggestion, i) => (
-                <li key={i} className="flex items-start gap-2 p-3 bg-accent-50 rounded-lg">
-                  <span className="text-accent-600 font-bold">{i + 1}.</span>
+                <li key={i} className="flex items-start gap-2 p-3 bg-accent-100 rounded-lg">
+                  <span className="text-accent-400 font-bold">{i + 1}.</span>
                   <span className="text-sm">{suggestion}</span>
                 </li>
               ))}

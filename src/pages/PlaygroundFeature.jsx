@@ -218,7 +218,7 @@ Return as JSON with a "suggestions" array of strings.`,
   }
 
   const statusIcon = {
-    passed: <CheckCircle2 className="h-5 w-5 text-success" />,
+    passed: <CheckCircle2 className="h-5 w-5 text-success-foreground" />,
     failed: <XCircle className="h-5 w-5 text-destructive" />,
     pending: <Circle className="h-5 w-5 text-muted-foreground" />,
   }[item.test_status];
@@ -232,7 +232,7 @@ Return as JSON with a "suggestions" array of strings.`,
         </Button>
         <div className="flex-1">
           <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
-            <Zap className="h-6 w-6 text-warning" />
+            <Zap className="h-6 w-6 text-warning-foreground" />
             {item.source_name}
           </h1>
           <p className="text-[var(--color-charcoal)]">Feature Playground</p>
@@ -262,7 +262,7 @@ Return as JSON with a "suggestions" array of strings.`,
         </Button>
         <Button 
           variant="outline" 
-          className="text-success border-success/30 hover:bg-success-50"
+          className="text-success-foreground border-success/30 hover:bg-success-50"
           onClick={() => setShowPromote(true)}
           disabled={item.test_status !== "passed"}
         >
@@ -297,7 +297,7 @@ Return as JSON with a "suggestions" array of strings.`,
               )}
               {template.triggers?.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-medium text-gray-500 mb-2">Triggers</h4>
+                  <h4 className="text-sm font-medium text-muted-foreground mb-2">Triggers</h4>
                   <div className="flex flex-wrap gap-1">
                     {template.triggers.map(t => (
                       <Badge key={t} className="bg-info-50 text-info-foreground">{t}</Badge>
@@ -307,7 +307,7 @@ Return as JSON with a "suggestions" array of strings.`,
               )}
               {template.integrations?.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-medium text-gray-500 mb-2">Integrations</h4>
+                  <h4 className="text-sm font-medium text-muted-foreground mb-2">Integrations</h4>
                   <div className="flex flex-wrap gap-1">
                     {template.integrations.map(i => (
                       <Badge key={i} className="bg-accent-100 text-accent-700">{i}</Badge>
@@ -331,7 +331,7 @@ Return as JSON with a "suggestions" array of strings.`,
               <div className="space-y-4">
                 {template.requirements?.length > 0 && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-500 mb-2">Requirements</h4>
+                    <h4 className="text-sm font-medium text-muted-foreground mb-2">Requirements</h4>
                     <ul className="space-y-1">
                       {template.requirements.map((r, i) => (
                         <li key={i} className="text-sm flex items-start gap-2">
@@ -344,7 +344,7 @@ Return as JSON with a "suggestions" array of strings.`,
                 )}
                 {template.user_stories?.length > 0 && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-500 mb-2">User Stories</h4>
+                    <h4 className="text-sm font-medium text-muted-foreground mb-2">User Stories</h4>
                     <ul className="space-y-2">
                       {template.user_stories.map((s, i) => (
                         <li key={i} className="text-sm bg-muted p-2 rounded italic">
