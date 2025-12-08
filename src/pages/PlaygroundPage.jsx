@@ -203,38 +203,38 @@ Return as JSON with a "suggestions" array of strings.`,
 
   if (isLoading || !item) {
     return (
-      <div className="flex justify-center items-center h-64 bg-[var(--color-background)]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+      <div className="flex justify-center items-center h-64 bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
       </div>
     );
   }
 
   const statusIcon = {
-    passed: <CheckCircle2 className="h-5 w-5 text-success-foreground" />,
+    passed: <CheckCircle2 className="h-5 w-5 text-success" />,
     failed: <XCircle className="h-5 w-5 text-destructive" />,
     pending: <Circle className="h-5 w-5 text-muted-foreground" />,
   }[item.test_status];
 
   return (
-    <div className="p-6 max-w-5xl mx-auto bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 max-w-5xl mx-auto bg-background min-h-screen">
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
         <Button variant="ghost" size="icon" onClick={() => navigate(createPageUrl("PlaygroundSummary"))}>
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div className="flex-1">
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
-            <Layout className="h-6 w-6 text-info-foreground" />
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-midnight-900">
+            <Layout className="h-6 w-6 text-info" />
             {item.source_name}
           </h1>
-          <p className="text-[var(--color-charcoal)]">Page Playground</p>
+          <p className="text-charcoal-700">Page Playground</p>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="outline">v{item.current_version || 1}</Badge>
           {statusIcon}
           <Badge className={
-            item.test_status === "passed" ? "bg-success-50 text-success-foreground" :
-            item.test_status === "failed" ? "bg-destructive-50 text-destructive-700" :
+            item.test_status === "passed" ? "bg-success-50 text-success" :
+            item.test_status === "failed" ? "bg-destructive-50 text-destructive" :
             "bg-muted text-muted-foreground"
           }>
             {item.test_status}
@@ -254,7 +254,7 @@ Return as JSON with a "suggestions" array of strings.`,
         </Button>
         <Button 
           variant="outline" 
-          className="text-success-foreground border-success/30 hover:bg-success-50"
+          className="text-success border-success/30 hover:bg-success-50"
           onClick={() => setShowPromote(true)}
           disabled={item.test_status !== "passed"}
         >
@@ -350,7 +350,7 @@ Return as JSON with a "suggestions" array of strings.`,
                       }`}
                     >
                       <span className="text-sm">{test.name}</span>
-                      {isPassed && <CheckCircle2 className="h-4 w-4 text-success-foreground" />}
+                      {isPassed && <CheckCircle2 className="h-4 w-4 text-success" />}
                       {isFailed && <XCircle className="h-4 w-4 text-destructive" />}
                       {!isPassed && !isFailed && <Circle className="h-4 w-4 text-muted-foreground" />}
                     </div>
@@ -380,7 +380,7 @@ Return as JSON with a "suggestions" array of strings.`,
       <Card className="mt-6">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-accent-700" />
+            <Sparkles className="h-5 w-5 text-accent" />
             AI Suggestions
           </CardTitle>
           <Button onClick={generateAISuggestions} disabled={isGenerating} variant="outline">

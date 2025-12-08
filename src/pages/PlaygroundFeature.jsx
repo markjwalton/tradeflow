@@ -17,9 +17,9 @@ import PlaygroundJournalPanel from "@/components/playground/PlaygroundJournalPan
 import PromoteToLibraryDialog from "@/components/playground/PromoteToLibraryDialog";
 
 const complexityColors = {
-  simple: "bg-success-50 text-success-foreground",
-  medium: "bg-warning/10 text-warning-foreground",
-  complex: "bg-destructive-50 text-destructive-700",
+  simple: "bg-success-50 text-success",
+  medium: "bg-warning/10 text-warning",
+  complex: "bg-destructive-50 text-destructive",
 };
 
 export default function PlaygroundFeature() {
@@ -211,38 +211,38 @@ Return as JSON with a "suggestions" array of strings.`,
 
   if (isLoading || !item) {
     return (
-      <div className="flex justify-center items-center h-64 bg-[var(--color-background)]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+      <div className="flex justify-center items-center h-64 bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
       </div>
     );
   }
 
   const statusIcon = {
-    passed: <CheckCircle2 className="h-5 w-5 text-success-foreground" />,
+    passed: <CheckCircle2 className="h-5 w-5 text-success" />,
     failed: <XCircle className="h-5 w-5 text-destructive" />,
     pending: <Circle className="h-5 w-5 text-muted-foreground" />,
   }[item.test_status];
 
   return (
-    <div className="p-6 max-w-5xl mx-auto bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 max-w-5xl mx-auto bg-background min-h-screen">
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
         <Button variant="ghost" size="icon" onClick={() => navigate(createPageUrl("PlaygroundSummary"))}>
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div className="flex-1">
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
-            <Zap className="h-6 w-6 text-warning-foreground" />
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-midnight-900">
+            <Zap className="h-6 w-6 text-warning" />
             {item.source_name}
           </h1>
-          <p className="text-[var(--color-charcoal)]">Feature Playground</p>
+          <p className="text-charcoal-700">Feature Playground</p>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="outline">v{item.current_version || 1}</Badge>
           {statusIcon}
           <Badge className={
-            item.test_status === "passed" ? "bg-success-50 text-success-foreground" :
-            item.test_status === "failed" ? "bg-destructive-50 text-destructive-700" :
+            item.test_status === "passed" ? "bg-success-50 text-success" :
+            item.test_status === "failed" ? "bg-destructive-50 text-destructive" :
             "bg-muted text-muted-foreground"
           }>
             {item.test_status}
@@ -262,7 +262,7 @@ Return as JSON with a "suggestions" array of strings.`,
         </Button>
         <Button 
           variant="outline" 
-          className="text-success-foreground border-success/30 hover:bg-success-50"
+          className="text-success border-success/30 hover:bg-success-50"
           onClick={() => setShowPromote(true)}
           disabled={item.test_status !== "passed"}
         >
@@ -300,7 +300,7 @@ Return as JSON with a "suggestions" array of strings.`,
                   <h4 className="text-sm font-medium text-muted-foreground mb-2">Triggers</h4>
                   <div className="flex flex-wrap gap-1">
                     {template.triggers.map(t => (
-                      <Badge key={t} className="bg-info-50 text-info-foreground">{t}</Badge>
+                      <Badge key={t} className="bg-info-50 text-info">{t}</Badge>
                     ))}
                   </div>
                 </div>
@@ -310,7 +310,7 @@ Return as JSON with a "suggestions" array of strings.`,
                   <h4 className="text-sm font-medium text-muted-foreground mb-2">Integrations</h4>
                   <div className="flex flex-wrap gap-1">
                     {template.integrations.map(i => (
-                      <Badge key={i} className="bg-accent-100 text-accent-700">{i}</Badge>
+                      <Badge key={i} className="bg-accent-100 text-accent">{i}</Badge>
                     ))}
                   </div>
                 </div>
@@ -383,7 +383,7 @@ Return as JSON with a "suggestions" array of strings.`,
                       }`}
                     >
                       <span className="text-sm">{test.name}</span>
-                      {isPassed && <CheckCircle2 className="h-4 w-4 text-success-foreground" />}
+                      {isPassed && <CheckCircle2 className="h-4 w-4 text-success" />}
                       {isFailed && <XCircle className="h-4 w-4 text-destructive" />}
                       {!isPassed && !isFailed && <Circle className="h-4 w-4 text-muted-foreground" />}
                     </div>
@@ -413,7 +413,7 @@ Return as JSON with a "suggestions" array of strings.`,
       <Card className="mt-6">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-accent-700" />
+            <Sparkles className="h-5 w-5 text-accent" />
             AI Improvement Suggestions
           </CardTitle>
           <Button onClick={generateAISuggestions} disabled={isGenerating}>
@@ -426,7 +426,7 @@ Return as JSON with a "suggestions" array of strings.`,
             <ul className="space-y-2">
               {item.ai_suggestions.map((suggestion, i) => (
                 <li key={i} className="flex items-start gap-2 p-3 bg-warning/10 rounded-lg">
-                  <Sparkles className="h-4 w-4 text-warning-foreground mt-0.5 flex-shrink-0" />
+                  <Sparkles className="h-4 w-4 text-warning mt-0.5 flex-shrink-0" />
                   <span className="text-sm">{suggestion}</span>
                 </li>
               ))}
