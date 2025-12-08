@@ -36,13 +36,13 @@ import {
 import { toast } from "sonner";
 
 const categoryColors = {
-  sales: "bg-success-50 text-success-foreground",
-  project: "bg-info-50 text-info-foreground",
-  manufacturing: "bg-accent-100 text-accent-700",
-  installation: "bg-warning/10 text-warning-foreground",
-  service: "bg-info-50 text-info-foreground",
+  sales: "bg-success-50 text-success",
+  project: "bg-info-50 text-info",
+  manufacturing: "bg-accent-100 text-accent",
+  installation: "bg-warning/10 text-warning",
+  service: "bg-info-50 text-info",
   admin: "bg-muted text-muted-foreground",
-  custom: "bg-accent-100 text-accent-700",
+  custom: "bg-accent-100 text-accent",
 };
 
 export default function WorkflowLibrary() {
@@ -106,12 +106,12 @@ export default function WorkflowLibrary() {
   });
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Workflow Library</h1>
-          <p className="text-[var(--color-charcoal)]">
+          <h1 className="text-2xl font-light font-display text-midnight-900">Workflow Library</h1>
+          <p className="text-charcoal-700">
             Manage and create workflow templates for your business processes
           </p>
         </div>
@@ -154,20 +154,20 @@ export default function WorkflowLibrary() {
       {/* Workflow Grid */}
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+          <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
         </div>
       ) : filteredWorkflows.length === 0 ? (
         <div className="text-center py-12">
           <GitBranch className="h-12 w-12 mx-auto text-muted-foreground opacity-50 mb-4" />
-          <h3 className="text-lg font-medium text-[var(--color-midnight)]">No workflows found</h3>
-          <p className="text-[var(--color-charcoal)] mb-4">
+          <h3 className="text-lg font-medium text-midnight-900">No workflows found</h3>
+          <p className="text-charcoal-700 mb-4">
             {search || categoryFilter !== "all"
               ? "Try adjusting your filters"
               : "Create your first workflow to get started"}
           </p>
           {!search && categoryFilter === "all" && (
             <Link to={createPageUrl("WorkflowDesigner")}>
-              <Button className="bg-primary-500 hover:bg-primary-600 text-white">
+              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
                 <Plus className="h-4 w-4 mr-2" />
                 Create Workflow
               </Button>
@@ -184,7 +184,7 @@ export default function WorkflowLibrary() {
                     <CardTitle className="text-lg flex items-center gap-2">
                       {workflow.name}
                       {workflow.isActive ? (
-                        <CheckCircle className="h-4 w-4 text-success-foreground" />
+                        <CheckCircle className="h-4 w-4 text-success" />
                       ) : (
                         <XCircle className="h-4 w-4 text-muted-foreground" />
                       )}

@@ -289,14 +289,14 @@ export default function RoadmapManager() {
   );
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
-            <Lightbulb className="h-6 w-6 text-[var(--color-secondary)]" />
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-midnight-900">
+            <Lightbulb className="h-6 w-6 text-secondary" />
             Roadmap Manager
           </h1>
-          <p className="text-[var(--color-charcoal)]">Track ideas, requirements, and development tasks</p>
+          <p className="text-charcoal-700">Track ideas, requirements, and development tasks</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="icon" onClick={() => setShowSettings(true)}>
@@ -311,14 +311,14 @@ export default function RoadmapManager() {
 
       {/* Focused Item Banner */}
       {focusedItem && (
-        <div className="mb-6 p-4 bg-primary-100 border border-primary-200 rounded-[var(--radius-lg)]">
+        <div className="mb-6 p-4 bg-primary-100 border border-primary/20 rounded-lg">
           <div className="flex items-center gap-2 mb-2">
-            <Focus className="h-5 w-5 text-primary-500" />
-            <span className="font-semibold text-primary-700">Current Focus</span>
+            <Focus className="h-5 w-5 text-primary" />
+            <span className="font-semibold text-primary">Current Focus</span>
           </div>
           <p className="text-foreground font-medium">{focusedItem.title}</p>
           {focusedItem.description && (
-            <p className="text-primary-700 text-sm mt-1">{focusedItem.description}</p>
+            <p className="text-primary text-sm mt-1">{focusedItem.description}</p>
           )}
           <div className="flex gap-2 mt-3">
             <Button size="sm" variant="outline" onClick={() => handleOpenJournal(focusedItem)}>
@@ -351,7 +351,7 @@ export default function RoadmapManager() {
 
       {isLoading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+          <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
         </div>
       ) : (
         <Tabs value={activeTab} onValueChange={setActiveTab}>

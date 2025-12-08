@@ -35,11 +35,11 @@ import {
 import { toast } from "sonner";
 
 const categoryColors = {
-  quality: "bg-info-50 text-info-foreground",
-  safety: "bg-destructive-50 text-destructive-700",
-  compliance: "bg-accent-100 text-accent-700",
-  preparation: "bg-success-50 text-success-foreground",
-  verification: "bg-warning/10 text-warning-foreground",
+  quality: "bg-info-50 text-info",
+  safety: "bg-destructive-50 text-destructive",
+  compliance: "bg-accent-100 text-accent",
+  preparation: "bg-success-50 text-success",
+  verification: "bg-warning/10 text-warning",
   custom: "bg-muted text-muted-foreground",
 };
 
@@ -90,11 +90,11 @@ export default function ChecklistTemplates() {
   });
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Checklist Templates</h1>
-          <p className="text-[var(--color-charcoal)]">Create and manage reusable checklists</p>
+          <h1 className="text-2xl font-light font-display text-midnight-900">Checklist Templates</h1>
+          <p className="text-charcoal-700">Create and manage reusable checklists</p>
         </div>
         <Link to={createPageUrl("ChecklistBuilder")}>
           <Button>
@@ -132,13 +132,13 @@ export default function ChecklistTemplates() {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+          <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
         </div>
       ) : filteredChecklists.length === 0 ? (
         <div className="text-center py-12">
           <ListChecks className="h-12 w-12 mx-auto text-charcoal-500 opacity-30 mb-4" />
-          <h3 className="text-lg font-medium text-[var(--color-midnight)]">No checklists found</h3>
-          <p className="text-[var(--color-charcoal)] mb-4">
+          <h3 className="text-lg font-medium text-midnight-900">No checklists found</h3>
+          <p className="text-charcoal-700 mb-4">
             {search || categoryFilter !== "all"
               ? "Try adjusting your filters"
               : "Create your first checklist template"}
@@ -162,7 +162,7 @@ export default function ChecklistTemplates() {
                     <CardTitle className="text-lg flex items-center gap-2">
                       {checklist.name}
                       {checklist.isActive !== false ? (
-                        <CheckCircle className="h-4 w-4 text-success-foreground" />
+                        <CheckCircle className="h-4 w-4 text-success" />
                       ) : (
                         <XCircle className="h-4 w-4 text-muted-foreground" />
                       )}

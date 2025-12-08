@@ -29,7 +29,7 @@ export default function LookupTestForms() {
     <div className="p-6 max-w-4xl mx-auto bg-background min-h-screen">
       <div className="mb-6">
         <h1 className="text-2xl font-light flex items-center gap-2 text-midnight-900" style={{ fontFamily: 'var(--font-heading)' }}>
-          <CheckCircle2 className="h-6 w-6 text-success-foreground" />
+          <CheckCircle2 className="h-6 w-6 text-success" />
           Lookup API Test Forms
         </h1>
         <p className="text-charcoal-700">Test Address Finder, Email Validation, and Phone Validation APIs</p>
@@ -60,9 +60,9 @@ export default function LookupTestForms() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Search className="h-5 w-5 text-success-foreground" />
+                <Search className="h-5 w-5 text-success" />
                 UK Postcode Lookup
-                <Badge className="bg-success-50 text-success-foreground">Active</Badge>
+                <Badge className="bg-success-50 text-success">Active</Badge>
               </CardTitle>
               <p className="text-sm text-muted-foreground">
                 Enter a UK postcode to find all addresses at that location.
@@ -76,8 +76,8 @@ export default function LookupTestForms() {
               />
 
               {postcodeResult && (
-                <div className="mt-4 p-4 bg-success-50 border border-success rounded-lg">
-                  <h4 className="font-medium text-success-foreground mb-2 flex items-center gap-2">
+                <div className="mt-4 p-4 bg-success-50 border border-success/20 rounded-lg">
+                  <h4 className="font-medium text-success mb-2 flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4" />
                     Selected Address
                   </h4>
@@ -104,9 +104,9 @@ export default function LookupTestForms() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-info-foreground" />
+                <MapPin className="h-5 w-5 text-info" />
                 UK Address Finder
-                {!API_KEYS.address && <Badge className="bg-warning/10 text-warning-foreground">API Key Pending</Badge>}
+                {!API_KEYS.address && <Badge className="bg-warning/10 text-warning">API Key Pending</Badge>}
               </CardTitle>
               <p className="text-sm text-muted-foreground">
                 Start typing an address or postcode to search. Uses Ideal Postcodes API.
@@ -115,10 +115,10 @@ export default function LookupTestForms() {
             <CardContent className="space-y-4">
               {!API_KEYS.address && (
                 <div className="p-3 bg-warning/10 border border-warning/30 rounded-lg flex items-start gap-2">
-                  <AlertTriangle className="h-5 w-5 text-warning-foreground mt-0.5" />
+                  <AlertTriangle className="h-5 w-5 text-warning mt-0.5" />
                   <div>
-                    <p className="font-medium text-warning-foreground">API Key Required</p>
-                    <p className="text-sm text-warning-foreground">Set IDEAL_POSTCODES_ADDRESS_KEY in Base44 secrets to enable this feature.</p>
+                    <p className="font-medium text-warning">API Key Required</p>
+                    <p className="text-sm text-warning">Set IDEAL_POSTCODES_ADDRESS_KEY in Base44 secrets to enable this feature.</p>
                   </div>
                 </div>
               )}
@@ -155,9 +155,9 @@ export default function LookupTestForms() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Mail className="h-5 w-5 text-accent-700" />
+                <Mail className="h-5 w-5 text-accent" />
                 Email Validation
-                {!API_KEYS.email && <Badge className="bg-warning/10 text-warning-foreground">API Key Pending</Badge>}
+                {!API_KEYS.email && <Badge className="bg-warning/10 text-warning">API Key Pending</Badge>}
               </CardTitle>
               <p className="text-sm text-muted-foreground">
                 Enter an email address to validate. Includes typo detection and API verification.
@@ -166,10 +166,10 @@ export default function LookupTestForms() {
             <CardContent className="space-y-4">
               {!API_KEYS.email && (
                 <div className="p-3 bg-warning/10 border border-warning/30 rounded-lg flex items-start gap-2">
-                  <AlertTriangle className="h-5 w-5 text-warning-foreground mt-0.5" />
+                  <AlertTriangle className="h-5 w-5 text-warning mt-0.5" />
                   <div>
-                    <p className="font-medium text-warning-foreground">API Key Required</p>
-                    <p className="text-sm text-warning-foreground">Set IDEAL_POSTCODES_EMAIL_KEY in Base44 secrets. Basic validation still works without API.</p>
+                    <p className="font-medium text-warning">API Key Required</p>
+                    <p className="text-sm text-warning">Set IDEAL_POSTCODES_EMAIL_KEY in Base44 secrets. Basic validation still works without API.</p>
                   </div>
                 </div>
               )}
@@ -184,10 +184,10 @@ export default function LookupTestForms() {
 
               {results.email && (
                 <div className={`mt-4 p-4 rounded-lg border ${
-                  results.email.valid ? "bg-success-50 border-success" : "bg-destructive-50 border-destructive-200"
+                  results.email.valid ? "bg-success-50 border-success/20" : "bg-destructive-50 border-destructive/20"
                 }`}>
                   <h4 className={`font-medium mb-2 flex items-center gap-2 ${
-                    results.email.valid ? "text-success-foreground" : "text-destructive-700"
+                    results.email.valid ? "text-success" : "text-destructive"
                   }`}>
                     <CheckCircle2 className="h-4 w-4" />
                     Validation Result
@@ -215,9 +215,9 @@ export default function LookupTestForms() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Phone className="h-5 w-5 text-warning-foreground" />
+                <Phone className="h-5 w-5 text-warning" />
                 UK Phone Validation
-                {!API_KEYS.phone && <Badge className="bg-warning/10 text-warning-foreground">API Key Pending</Badge>}
+                {!API_KEYS.phone && <Badge className="bg-warning/10 text-warning">API Key Pending</Badge>}
               </CardTitle>
               <p className="text-sm text-muted-foreground">
                 Enter a UK phone number to validate. Supports mobile and landline formats.
@@ -226,10 +226,10 @@ export default function LookupTestForms() {
             <CardContent className="space-y-4">
               {!API_KEYS.phone && (
                 <div className="p-3 bg-warning/10 border border-warning/30 rounded-lg flex items-start gap-2">
-                  <AlertTriangle className="h-5 w-5 text-warning-foreground mt-0.5" />
+                  <AlertTriangle className="h-5 w-5 text-warning mt-0.5" />
                   <div>
-                    <p className="font-medium text-warning-foreground">API Key Required</p>
-                    <p className="text-sm text-warning-foreground">Set IDEAL_POSTCODES_PHONE_KEY in Base44 secrets. Basic format validation still works.</p>
+                    <p className="font-medium text-warning">API Key Required</p>
+                    <p className="text-sm text-warning">Set IDEAL_POSTCODES_PHONE_KEY in Base44 secrets. Basic format validation still works.</p>
                   </div>
                 </div>
               )}
@@ -244,10 +244,10 @@ export default function LookupTestForms() {
 
               {results.phone && (
                 <div className={`mt-4 p-4 rounded-lg border ${
-                  results.phone.valid ? "bg-success-50 border-success" : "bg-destructive-50 border-destructive-200"
+                  results.phone.valid ? "bg-success-50 border-success/20" : "bg-destructive-50 border-destructive/20"
                 }`}>
                   <h4 className={`font-medium mb-2 flex items-center gap-2 ${
-                    results.phone.valid ? "text-success-foreground" : "text-destructive-700"
+                    results.phone.valid ? "text-success" : "text-destructive"
                   }`}>
                     <CheckCircle2 className="h-4 w-4" />
                     Validation Result
@@ -278,25 +278,25 @@ export default function LookupTestForms() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-4 gap-4 text-sm">
-            <div className="p-3 bg-success-50 rounded-lg border border-success">
-              <Badge className="bg-success-50 text-success-foreground mb-2">Postcode</Badge>
+            <div className="p-3 bg-success-50 rounded-lg border border-success/20">
+              <Badge className="bg-success-50 text-success mb-2">Postcode</Badge>
               <p className="text-xs text-muted-foreground mb-1">IDEAL_POSTCODES_API_KEY</p>
-              <Badge className="bg-success-foreground text-white text-xs">Active</Badge>
+              <Badge className="bg-success text-success-foreground text-xs">Active</Badge>
             </div>
             <div className="p-3 bg-warning/10 rounded-lg border border-warning/30">
-              <Badge className="bg-warning/10 text-warning-foreground mb-2">Address</Badge>
+              <Badge className="bg-warning/10 text-warning mb-2">Address</Badge>
               <p className="text-xs text-muted-foreground mb-1">IDEAL_POSTCODES_ADDRESS_KEY</p>
-              <Badge className="bg-warning-foreground text-white text-xs">Pending</Badge>
+              <Badge className="bg-warning text-warning-foreground text-xs">Pending</Badge>
             </div>
             <div className="p-3 bg-warning/10 rounded-lg border border-warning/30">
-              <Badge className="bg-warning/10 text-warning-foreground mb-2">Email</Badge>
+              <Badge className="bg-warning/10 text-warning mb-2">Email</Badge>
               <p className="text-xs text-muted-foreground mb-1">IDEAL_POSTCODES_EMAIL_KEY</p>
-              <Badge className="bg-warning-foreground text-white text-xs">Pending</Badge>
+              <Badge className="bg-warning text-warning-foreground text-xs">Pending</Badge>
             </div>
             <div className="p-3 bg-warning/10 rounded-lg border border-warning/30">
-              <Badge className="bg-warning/10 text-warning-foreground mb-2">Phone</Badge>
+              <Badge className="bg-warning/10 text-warning mb-2">Phone</Badge>
               <p className="text-xs text-muted-foreground mb-1">IDEAL_POSTCODES_PHONE_KEY</p>
-              <Badge className="bg-warning-foreground text-white text-xs">Pending</Badge>
+              <Badge className="bg-warning text-warning-foreground text-xs">Pending</Badge>
             </div>
           </div>
         </CardContent>
