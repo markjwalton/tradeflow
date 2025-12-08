@@ -111,7 +111,7 @@ export default function ProjectsOverview() {
           <p className="text-muted-foreground mt-1">Manage all your construction projects</p>
         </div>
         <Link to={createPageUrl("ProjectForm")}>
-          <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
+          <Button>
             <Plus className="h-4 w-4 mr-2" />
             New Project
           </Button>
