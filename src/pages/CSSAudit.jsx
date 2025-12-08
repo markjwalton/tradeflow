@@ -434,6 +434,23 @@ For each violation provide:
     localStorage.setItem('cssAudit_verifiedFiles', JSON.stringify(updated));
   };
 
+  const generateAIPrompt = () => {
+    if (!fileReport || fileReport.violations.length === 0) return;
+
+    let prompt = `Please fix the following CSS/design token violations in ${fileReport.filePath}:\n\n`;
+    
+    fileReport.violations.forEach((v, idx) => {
+      prompt += `${idx + 1}. [${v.severity.toUpperCase()}] ${v.issue}\n`;
+      prompt += `   Current: ${v.currentCode}\n`;
+      prompt += `   Fix: ${v.recommendedFix}\n\n`;
+    });
+
+    prompt += `\nPlease apply all ${fileReport.violations.length} fixes to the file.`;
+
+    navigator.clipboard.writeText(prompt);
+    toast.success("AI prompt copied to clipboard!");
+  };
+
   const filteredFiles = fileList.filter(f => 
     f.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -532,17 +549,25 @@ For each violation provide:
                         )}
                       </div>
                     </div>
-                    {fileReport.totalViolations === 0 && !verifiedFiles[selectedFile] && (
-                      <Button onClick={() => markFileVerified(selectedFile)} className="gap-2">
-                        <CheckCircle2 className="h-4 w-4" />
-                        Mark as Verified
-                      </Button>
-                    )}
-                    {verifiedFiles[selectedFile] && (
-                      <Button variant="outline" onClick={() => clearVerification(selectedFile)} className="gap-2">
-                        Clear Verification
-                      </Button>
-                    )}
+                    <div className="flex gap-2">
+                      {fileReport.totalViolations > 0 && (
+                        <Button onClick={generateAIPrompt} variant="default" className="gap-2">
+                          <Sparkles className="h-4 w-4" />
+                          Copy AI Prompt
+                        </Button>
+                      )}
+                      {fileReport.totalViolations === 0 && !verifiedFiles[selectedFile] && (
+                        <Button onClick={() => markFileVerified(selectedFile)} className="gap-2">
+                          <CheckCircle2 className="h-4 w-4" />
+                          Mark as Verified
+                        </Button>
+                      )}
+                      {verifiedFiles[selectedFile] && (
+                        <Button variant="outline" onClick={() => clearVerification(selectedFile)} className="gap-2">
+                          Clear Verification
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </CardHeader>
               </Card>
