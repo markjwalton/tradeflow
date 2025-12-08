@@ -112,7 +112,7 @@ export default function Dashboard() {
               <div 
                 {...provided.droppableProps} 
                 ref={provided.innerRef}
-                className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 ${settings.compactMode ? "gap-3" : "gap-4"}`}
+                className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 ${settings.compactMode ? "[gap:var(--spacing-3)]" : "[gap:var(--spacing-4)]"}`}
               >
                 {displayWidgets.map((widget, index) => renderWidgetCard(widget, index, true))}
                 {provided.placeholder}
@@ -123,13 +123,13 @@ export default function Dashboard() {
       ) : (
         <div className={`space-y-${settings.compactMode ? "4" : "8"}`}>
           {statWidgets.length > 0 && (
-            <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 ${settings.compactMode ? "gap-3" : "gap-4"}`}>
+            <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 ${settings.compactMode ? "[gap:var(--spacing-3)]" : "[gap:var(--spacing-4)]"}`}>
               {statWidgets.map((widget, index) => renderWidgetCard(widget, index, false))}
             </div>
           )}
 
           {otherWidgets.length > 0 && (
-            <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${settings.compactMode ? "gap-4" : "gap-6"}`}>
+            <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${settings.compactMode ? "[gap:var(--spacing-4)]" : "[gap:var(--spacing-6)]"}`}>
               {otherWidgets.map((widget, index) => {
                 const colSpan = widget.default_col_span >= 2 ? "md:col-span-2" : "";
                 return (
