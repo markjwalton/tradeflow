@@ -24,13 +24,13 @@ import { toast } from "sonner";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const nodeTypes = [
-  { value: "central", label: "Central Topic", color: "var(--color-info)" },
-  { value: "main_branch", label: "Main Branch", color: "var(--color-success)" },
-  { value: "sub_branch", label: "Sub Branch", color: "var(--color-warning)" },
+  { value: "central", label: "Central Topic", color: "var(--color-info-foreground)" },
+  { value: "main_branch", label: "Main Branch", color: "var(--color-success-foreground)" },
+  { value: "sub_branch", label: "Sub Branch", color: "var(--color-warning-foreground)" },
   { value: "feature", label: "Feature", color: "var(--color-accent-500)" },
   { value: "entity", label: "Entity", color: "var(--color-accent-400)" },
-  { value: "page", label: "Page", color: "var(--color-info)" },
-  { value: "note", label: "Note", color: "var(--color-success)" },
+  { value: "page", label: "Page", color: "var(--color-info-foreground)" },
+  { value: "note", label: "Note", color: "var(--color-success-foreground)" },
 ];
 
 const categoryColors = {

@@ -211,7 +211,7 @@ export default function BusinessTemplates() {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <CardTitle className="text-lg flex items-center gap-2">
-                    {template.is_starred && <Star className="h-4 w-4 fill-warning text-warning" />}
+                    {template.is_starred && <Star className="h-4 w-4 fill-warning-foreground text-warning-foreground" />}
                     {template.name}
                   </CardTitle>
                   {template.category && (
@@ -227,7 +227,7 @@ export default function BusinessTemplates() {
                     onClick={() => toggleStar(template)}
                     title={template.is_starred ? "Remove from featured" : "Add to featured"}
                   >
-                    <Star className={`h-4 w-4 ${template.is_starred ? "fill-warning text-warning" : ""}`} />
+                    <Star className={`h-4 w-4 ${template.is_starred ? "fill-warning-foreground text-warning-foreground" : ""}`} />
                   </Button>
                   <Button size="icon" variant="ghost" onClick={() => handleEdit(template)}>
                     <Edit2 className="h-4 w-4" />
@@ -274,7 +274,7 @@ export default function BusinessTemplates() {
               {(template.entity_relationships?.length > 0 || template.workflows?.length > 0) && (
                 <div className="flex items-center gap-2 text-xs text-accent-600 mb-3">
                   <GitBranch className="h-3 w-3" />
-                  <span>
+                  <span className="text-accent-700">
                     {template.entity_relationships?.length || 0} relationships, {template.workflows?.length || 0} workflows
                   </span>
                 </div>

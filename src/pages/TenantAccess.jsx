@@ -241,7 +241,7 @@ export default function TenantAccess() {
                 <div className="space-y-2">
                   {allPendingRequests.map(req => (
                     <div key={req.id} className="flex items-center gap-3 p-3 bg-warning/10 border border-warning/20 rounded-lg">
-                      <Clock className="h-5 w-5 text-warning flex-shrink-0" />
+                      <Clock className="h-5 w-5 text-warning-foreground flex-shrink-0" />
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-sm truncate text-[var(--color-midnight)]">{req.tenant?.name || "Unknown"}</p>
                         <p className="text-xs text-[var(--color-charcoal)]">Awaiting approval</p>
@@ -303,7 +303,7 @@ export default function TenantAccess() {
       <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--color-background)]">
         <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
           <CardContent className="pt-6 text-center space-y-4">
-            <CheckCircle className="h-12 w-12 text-success mx-auto" />
+            <CheckCircle className="h-12 w-12 text-success-foreground mx-auto" />
             <div>
               <h2 className="text-xl font-semibold text-[var(--color-midnight)]">You have access!</h2>
               <p className="text-[var(--color-charcoal)]">You can now use {tenant.name}</p>
@@ -325,7 +325,7 @@ export default function TenantAccess() {
       <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--color-background)]">
         <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
           <CardContent className="pt-6 text-center space-y-4">
-            <Clock className="h-12 w-12 text-warning mx-auto" />
+            <Clock className="h-12 w-12 text-warning-foreground mx-auto" />
             <div>
               <h2 className="text-xl font-semibold text-[var(--color-midnight)]">Request Submitted</h2>
               <p className="text-[var(--color-charcoal)]">Your request to join {tenant.name} is awaiting approval.</p>

@@ -16,9 +16,9 @@ import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, isSa
 
 const statusColors = {
   todo: "bg-muted",
-  in_progress: "bg-info",
+  in_progress: "bg-info-foreground",
   review: "bg-accent-400",
-  completed: "bg-success",
+  completed: "bg-success-foreground",
 };
 
 export default function Calendar() {
@@ -95,12 +95,12 @@ export default function Calendar() {
             hover:bg-muted`}
           onClick={() => setSelectedDate(currentDay)}
         >
-          <div className={`text-sm font-medium mb-1 ${isToday ? "text-info" : ""}`}>
+          <div className={`text-sm font-medium mb-1 ${isToday ? "text-info-foreground" : ""}`}>
             {format(currentDay, "d")}
           </div>
           <div className="space-y-1">
             {dayTasks.slice(0, 3).map((task) => (
-              <div key={task.id} className="text-xs truncate px-1 py-0.5 rounded border-l-2 border-info bg-card">
+              <div key={task.id} className="text-xs truncate px-1 py-0.5 rounded border-l-2 border-info-foreground bg-card">
                 <span className={`inline-block w-1.5 h-1.5 rounded-full mr-1 ${statusColors[task.status]}`} />
                 {task.title}
               </div>
@@ -162,9 +162,9 @@ export default function Calendar() {
 
           <div className="mt-4 flex gap-4 text-sm">
             <div className="flex items-center gap-2"><Circle className="h-3 w-3 fill-muted text-muted" /> To Do</div>
-            <div className="flex items-center gap-2"><Circle className="h-3 w-3 fill-info text-info" /> In Progress</div>
+            <div className="flex items-center gap-2"><Circle className="h-3 w-3 fill-info-foreground text-info-foreground" /> In Progress</div>
             <div className="flex items-center gap-2"><Circle className="h-3 w-3 fill-accent-400 text-accent-400" /> Review</div>
-            <div className="flex items-center gap-2"><Circle className="h-3 w-3 fill-success text-success" /> Completed</div>
+            <div className="flex items-center gap-2"><Circle className="h-3 w-3 fill-success-foreground text-success-foreground" /> Completed</div>
           </div>
         </div>
 
