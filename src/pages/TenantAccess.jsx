@@ -203,7 +203,7 @@ export default function TenantAccess() {
                 <span className="w-full border-t" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-gray-500">
+                <span className="bg-white px-2 text-muted-foreground">
                   {user ? "Or find your organization" : "Or register for access"}
                 </span>
               </div>
@@ -235,7 +235,7 @@ export default function TenantAccess() {
                     <span className="w-full border-t" />
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-white px-2 text-gray-500">Pending Requests</span>
+                    <span className="bg-white px-2 text-muted-foreground">Pending Requests</span>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -357,7 +357,7 @@ export default function TenantAccess() {
               <Input
                 value={user.full_name || ""}
                 disabled
-                className="bg-gray-50"
+                className="bg-muted"
               />
             </div>
             <div className="space-y-2">
@@ -365,7 +365,7 @@ export default function TenantAccess() {
               <Input
                 value={user.email}
                 disabled
-                className="bg-gray-50"
+                className="bg-muted"
               />
             </div>
           </div>
