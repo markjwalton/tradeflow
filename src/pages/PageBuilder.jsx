@@ -398,22 +398,9 @@ export default function PageBuilder() {
       // Update form data
       setFormData({ ...formData, current_content_jsx: updatedContent });
 
-      // Apply to DOM element for immediate visual feedback
-      if (originalElement) {
-        originalElement.className = newClasses;
-      }
-
-      // Update selected element state with new classes so next click works
-      setSelectedElement({
-        ...selectedElement,
-        currentClasses: newClasses
-      });
-
-      // Keep element selected with outline
-      if (originalElement) {
-        originalElement.style.outline = '2px solid var(--color-primary)';
-        originalElement.style.outlineOffset = '2px';
-      }
+      // Close picker so user clicks element again for fresh reference
+      setShowTokenPicker(false);
+      setSelectedElement(null);
     } catch (error) {
       console.error('Error applying token:', error);
       toast.error("Failed to apply token: " + error.message);
