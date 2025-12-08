@@ -35,12 +35,12 @@ import {
 import { toast } from "sonner";
 
 const categoryColors = {
-  quality: "bg-blue-100 text-blue-800",
-  safety: "bg-red-100 text-red-800",
-  compliance: "bg-purple-100 text-purple-800",
-  preparation: "bg-green-100 text-green-800",
-  verification: "bg-amber-100 text-amber-800",
-  custom: "bg-gray-100 text-gray-800",
+  quality: "bg-info-50 text-info-foreground",
+  safety: "bg-destructive-50 text-destructive-700",
+  compliance: "bg-accent-100 text-accent-700",
+  preparation: "bg-success-50 text-success-foreground",
+  verification: "bg-warning/10 text-warning-foreground",
+  custom: "bg-muted text-muted-foreground",
 };
 
 export default function ChecklistTemplates() {
@@ -93,7 +93,7 @@ export default function ChecklistTemplates() {
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>Checklist Templates</h1>
+          <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Checklist Templates</h1>
           <p className="text-[var(--color-charcoal)]">Create and manage reusable checklists</p>
         </div>
         <Link to={createPageUrl("ChecklistBuilder")}>
@@ -106,7 +106,7 @@ export default function ChecklistTemplates() {
 
       <div className="flex gap-4 mb-6">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search checklists..."
             value={search}
@@ -162,12 +162,12 @@ export default function ChecklistTemplates() {
                     <CardTitle className="text-lg flex items-center gap-2">
                       {checklist.name}
                       {checklist.isActive !== false ? (
-                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        <CheckCircle className="h-4 w-4 text-success" />
                       ) : (
-                        <XCircle className="h-4 w-4 text-gray-400" />
+                        <XCircle className="h-4 w-4 text-muted-foreground" />
                       )}
                     </CardTitle>
-                    <p className="text-sm text-gray-500 mt-1">{checklist.code}</p>
+                    <p className="text-sm text-muted-foreground mt-1">{checklist.code}</p>
                   </div>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -187,7 +187,7 @@ export default function ChecklistTemplates() {
                         Duplicate
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        className="text-red-600"
+                        className="text-destructive"
                         onClick={() => deleteMutation.mutate(checklist.id)}
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
@@ -199,7 +199,7 @@ export default function ChecklistTemplates() {
               </CardHeader>
               <CardContent>
                 {checklist.description && (
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
                     {checklist.description}
                   </p>
                 )}

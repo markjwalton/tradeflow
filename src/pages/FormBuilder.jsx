@@ -286,29 +286,29 @@ export default function FormBuilder() {
                               <div
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
-                                className={`border rounded-lg p-3 bg-white transition-all cursor-pointer ${
+                                className={`border rounded-lg p-3 bg-card transition-all cursor-pointer ${
                                   selectedFieldIndex === index
-                                    ? "ring-2 ring-blue-500 border-blue-300"
-                                    : "hover:border-gray-400"
+                                    ? "ring-2 ring-primary border-primary"
+                                    : "hover:border-border"
                                 } ${snapshot.isDragging ? "shadow-lg" : ""}`}
                                 onClick={() => setSelectedFieldIndex(index)}
                               >
                                 <div className="flex items-start gap-2">
                                   <div {...provided.dragHandleProps} className="mt-1 cursor-grab">
-                                    <GripVertical className="h-4 w-4 text-gray-400" />
+                                    <GripVertical className="h-4 w-4 text-muted-foreground" />
                                   </div>
                                   <div className="flex-1">
                                     <div className="flex items-center gap-2">
                                       <span className="font-medium text-sm">{field.label}</span>
                                       {field.required && (
-                                        <span className="text-red-500 text-xs">*</span>
+                                        <span className="text-destructive text-xs">*</span>
                                       )}
                                       <Badge variant="outline" className="text-xs">
                                         {field.type}
                                       </Badge>
                                     </div>
                                     {field.helpText && (
-                                      <p className="text-xs text-gray-500 mt-1">{field.helpText}</p>
+                                      <p className="text-xs text-muted-foreground mt-1">{field.helpText}</p>
                                     )}
                                   </div>
                                   <div className="flex gap-1">
@@ -326,7 +326,7 @@ export default function FormBuilder() {
                                     <Button
                                       variant="ghost"
                                       size="sm"
-                                      className="h-7 w-7 p-0 text-red-500"
+                                      className="h-7 w-7 p-0 text-destructive"
                                       onClick={(e) => {
                                         e.stopPropagation();
                                         handleDeleteField(index);

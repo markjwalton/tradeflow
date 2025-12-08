@@ -252,10 +252,10 @@ export default function ChecklistBuilder() {
                               <div
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
-                                className={`border rounded-lg p-3 bg-white transition-all ${
+                                className={`border rounded-lg p-3 bg-card transition-all ${
                                   editingItemIndex === index
-                                    ? "ring-2 ring-blue-500"
-                                    : "hover:border-gray-400"
+                                    ? "ring-2 ring-primary"
+                                    : "hover:border-border"
                                 } ${snapshot.isDragging ? "shadow-lg" : ""}`}
                               >
                                 {editingItemIndex === index ? (
@@ -302,16 +302,16 @@ export default function ChecklistBuilder() {
                                     onClick={() => setEditingItemIndex(index)}
                                   >
                                     <div {...provided.dragHandleProps}>
-                                      <GripVertical className="h-4 w-4 text-gray-400" />
+                                      <GripVertical className="h-4 w-4 text-muted-foreground" />
                                     </div>
-                                    <CheckSquare className="h-4 w-4 text-gray-400" />
+                                    <CheckSquare className="h-4 w-4 text-muted-foreground" />
                                     <div className="flex-1">
                                       <span className="font-medium text-sm">{item.label}</span>
                                       {item.required && (
-                                        <span className="text-red-500 text-xs ml-1">*</span>
+                                        <span className="text-destructive text-xs ml-1">*</span>
                                       )}
                                       {item.description && (
-                                        <p className="text-xs text-gray-500 mt-0.5">{item.description}</p>
+                                        <p className="text-xs text-muted-foreground mt-0.5">{item.description}</p>
                                       )}
                                     </div>
                                   </div>

@@ -35,13 +35,13 @@ import {
 import { toast } from "sonner";
 
 const categoryColors = {
-  survey: "bg-blue-100 text-blue-800",
-  checkin: "bg-green-100 text-green-800",
-  assessment: "bg-purple-100 text-purple-800",
-  data_capture: "bg-cyan-100 text-cyan-800",
-  approval: "bg-amber-100 text-amber-800",
-  feedback: "bg-pink-100 text-pink-800",
-  custom: "bg-gray-100 text-gray-800",
+  survey: "bg-info-50 text-info-foreground",
+  checkin: "bg-success-50 text-success-foreground",
+  assessment: "bg-accent-100 text-accent-700",
+  data_capture: "bg-info-50 text-info-foreground",
+  approval: "bg-warning/10 text-warning-foreground",
+  feedback: "bg-accent-100 text-accent-700",
+  custom: "bg-muted text-muted-foreground",
 };
 
 export default function FormTemplates() {
@@ -96,7 +96,7 @@ export default function FormTemplates() {
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>Form Templates</h1>
+          <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Form Templates</h1>
           <p className="text-[var(--color-charcoal)]">Create and manage reusable form templates</p>
         </div>
         <Link to={createPageUrl("FormBuilder")}>
@@ -109,7 +109,7 @@ export default function FormTemplates() {
 
       <div className="flex gap-4 mb-6">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search forms..."
             value={search}
@@ -166,12 +166,12 @@ export default function FormTemplates() {
                     <CardTitle className="text-lg flex items-center gap-2">
                       {form.name}
                       {form.isActive !== false ? (
-                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        <CheckCircle className="h-4 w-4 text-success" />
                       ) : (
-                        <XCircle className="h-4 w-4 text-gray-400" />
+                        <XCircle className="h-4 w-4 text-muted-foreground" />
                       )}
                     </CardTitle>
-                    <p className="text-sm text-gray-500 mt-1">{form.code}</p>
+                    <p className="text-sm text-muted-foreground mt-1">{form.code}</p>
                   </div>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -191,7 +191,7 @@ export default function FormTemplates() {
                         Duplicate
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        className="text-red-600"
+                        className="text-destructive"
                         onClick={() => deleteMutation.mutate(form.id)}
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
@@ -203,7 +203,7 @@ export default function FormTemplates() {
               </CardHeader>
               <CardContent>
                 {form.description && (
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
                     {form.description}
                   </p>
                 )}
