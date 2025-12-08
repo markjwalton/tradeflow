@@ -19,11 +19,7 @@ css
     --color-background-muted: #eceae5;
     --color-background-subtle: #f9f8f5;
     --color-destructive: #c45a4d;
-
-    /* Font Families */
-    --font-heading: degular-display;
-    --font-body: mrs-eaves-xl-serif-narrow;
-
+    
     /* Spacing Scale */
     --spacing-1: 0.25rem;
     --spacing-2: 0.5rem;
@@ -33,25 +29,25 @@ css
     --spacing-8: 2rem;
     --spacing-12: 3rem;
     --spacing-16: 4rem;
-
+    
     /* Border Radius */
     --radius-sm: 0.25rem;
     --radius-md: 0.5rem;
     --radius-lg: 0.75rem;
     --radius-xl: 1rem;
     --radius-full: 9999px;
-
+    
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-
+    
     /* Transitions */
     --transition-fast: 150ms ease-in-out;
     --transition-normal: 200ms ease-in-out;
     --transition-slow: 300ms ease-in-out;
-
+    
     /* Typography Scale */
     --font-size-xs: 0.75rem;
     --font-size-sm: 0.875rem;
@@ -62,34 +58,29 @@ css
     --font-size-3xl: 1.875rem;
     --font-size-4xl: 2.25rem;
   }
-
+  
   * {
-    font-family: var(--font-body), serif;
+    font-family: mrs-eaves-xl-serif-narrow, serif !important;
   }
-
+  
   body {
-    font-family: var(--font-body), serif !important;
+    font-family: mrs-eaves-xl-serif-narrow, serif !important;
     color: var(--color-charcoal);
     background: var(--color-background);
   }
-
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading), sans-serif !important;
+  
+  h1, h2, h3, h4, h5, h6, .font-heading {
+    font-family: degular-display, sans-serif !important;
     font-weight: 300 !important;
     color: var(--color-midnight);
   }
 }
 
 @layer utilities {
-  .font-heading {
-    font-family: var(--font-heading), sans-serif !important;
-    font-weight: 300 !important;
-  }
-
   .font-body {
-    font-family: var(--font-body), serif !important;
+    font-family: mrs-eaves-xl-serif-narrow, serif !important;
   }
-
+  
   .font-light {
     font-weight: 300 !important;
   }
