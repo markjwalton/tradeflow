@@ -318,76 +318,86 @@ export default function PageBuilder() {
   };
 
   const applyTokenToElement = (tokenClass, tokenType) => {
-    if (!selectedElement) return;
-
-    const { currentClasses, originalElement } = selectedElement;
-    let newClasses = currentClasses;
-
-    // Remove conflicting classes based on token type
-    if (tokenType === 'color-text') {
-      newClasses = currentClasses.replace(/text-\[var\(--color-[^\]]+\)\]/g, '');
-    } else if (tokenType === 'color-bg') {
-      newClasses = currentClasses.replace(/bg-\[var\(--color-[^\]]+\)\]/g, '');
-    } else if (tokenType === 'spacing-p') {
-      newClasses = currentClasses.replace(/p-\[var\(--spacing-[^\]]+\)\]/g, '');
-    } else if (tokenType === 'spacing-m') {
-      newClasses = currentClasses.replace(/m-\[var\(--spacing-[^\]]+\)\]/g, '');
-    } else if (tokenType === 'radius') {
-      newClasses = currentClasses.replace(/rounded-\[var\(--radius-[^\]]+\)\]/g, '');
-    } else if (tokenType === 'shadow') {
-      newClasses = currentClasses.replace(/shadow-\[var\(--shadow-[^\]]+\)\]/g, '');
-    } else if (tokenType === 'font-family') {
-      newClasses = currentClasses.replace(/font-\[var\(--font-[^\]]+\)\]/g, '');
-    } else if (tokenType === 'font-size') {
-      newClasses = currentClasses.replace(/text-\[var\(--font-size-[^\]]+\)\]/g, '');
-    } else if (tokenType === 'border') {
-      newClasses = currentClasses.replace(/border-\[var\(--color-[^\]]+\)\]/g, '');
-    } else if (tokenType === 'transition') {
-      newClasses = currentClasses.replace(/transition-[^\s]+/g, '');
-    } else if (tokenType === 'button') {
-      newClasses = '';
-    }
-
-    newClasses = `${newClasses.trim()} ${tokenClass}`.trim();
-
-    // Apply directly to DOM element for immediate visual feedback
-    if (originalElement) {
-      originalElement.className = newClasses;
-      originalElement.style.outline = '';
-      originalElement.style.outlineOffset = '';
-    }
-
-    // Update JSX content
-    let updatedContent = formData.current_content_jsx;
-    const escapedClasses = escapeRegex(currentClasses.trim());
-    
-    // Try multiple patterns to find and replace
-    const patterns = [
-      new RegExp(`className\\s*=\\s*"${escapedClasses}"`, 'g'),
-      new RegExp(`className\\s*=\\s*'${escapedClasses}'`, 'g'),
-      new RegExp(`class\\s*=\\s*"${escapedClasses}"`, 'g'),
-      new RegExp(`class\\s*=\\s*'${escapedClasses}'`, 'g'),
-    ];
-
-    let replaced = false;
-    for (const pattern of patterns) {
-      if (pattern.test(updatedContent)) {
-        updatedContent = updatedContent.replace(pattern, `className="${newClasses}"`);
-        replaced = true;
-        break;
-      }
-    }
-
-    if (!replaced) {
-      console.warn('Could not find matching class string in JSX');
-      toast.error("Could not update JSX - try editing manually");
+    if (!selectedElement) {
+      toast.error("No element selected");
       return;
     }
 
-    setFormData({ ...formData, current_content_jsx: updatedContent });
-    setShowTokenPicker(false);
-    setSelectedElement(null);
-    toast.success("Token applied!");
+    try {
+      const { currentClasses, originalElement } = selectedElement;
+      let newClasses = currentClasses;
+
+      // Remove conflicting classes based on token type
+      if (tokenType === 'color-text') {
+        newClasses = currentClasses.replace(/text-\[var\(--color-[^\]]+\)\]/g, '');
+      } else if (tokenType === 'color-bg') {
+        newClasses = currentClasses.replace(/bg-\[var\(--color-[^\]]+\)\]/g, '');
+      } else if (tokenType === 'spacing-p') {
+        newClasses = currentClasses.replace(/p-\[var\(--spacing-[^\]]+\)\]/g, '');
+      } else if (tokenType === 'spacing-m') {
+        newClasses = currentClasses.replace(/m-\[var\(--spacing-[^\]]+\)\]/g, '');
+      } else if (tokenType === 'radius') {
+        newClasses = currentClasses.replace(/rounded-\[var\(--radius-[^\]]+\)\]/g, '');
+      } else if (tokenType === 'shadow') {
+        newClasses = currentClasses.replace(/shadow-\[var\(--shadow-[^\]]+\)\]/g, '');
+      } else if (tokenType === 'font-family') {
+        newClasses = currentClasses.replace(/font-\[var\(--font-[^\]]+\)\]/g, '');
+      } else if (tokenType === 'font-size') {
+        newClasses = currentClasses.replace(/text-\[var\(--font-size-[^\]]+\)\]/g, '');
+      } else if (tokenType === 'border') {
+        newClasses = currentClasses.replace(/border-\[var\(--color-[^\]]+\)\]/g, '');
+      } else if (tokenType === 'transition') {
+        newClasses = currentClasses.replace(/transition-[^\s]+/g, '');
+      } else if (tokenType === 'button') {
+        newClasses = '';
+      }
+
+      newClasses = `${newClasses.trim()} ${tokenClass}`.trim();
+
+      // Apply directly to DOM element for immediate visual feedback
+      if (originalElement) {
+        originalElement.className = newClasses;
+      }
+
+      // Update JSX content - try to find and replace the class attribute
+      let updatedContent = formData.current_content_jsx;
+      const escapedClasses = escapeRegex(currentClasses.trim());
+      
+      // Try multiple patterns to find and replace
+      const patterns = [
+        { regex: new RegExp(`className\\s*=\\s*"${escapedClasses}"`, 'g'), replacement: `className="${newClasses}"` },
+        { regex: new RegExp(`className\\s*=\\s*'${escapedClasses}'`, 'g'), replacement: `className="${newClasses}"` },
+        { regex: new RegExp(`class\\s*=\\s*"${escapedClasses}"`, 'g'), replacement: `class="${newClasses}"` },
+        { regex: new RegExp(`class\\s*=\\s*'${escapedClasses}'`, 'g'), replacement: `class="${newClasses}"` },
+      ];
+
+      let replaced = false;
+      for (const { regex, replacement } of patterns) {
+        if (regex.test(updatedContent)) {
+          updatedContent = updatedContent.replace(regex, replacement);
+          replaced = true;
+          break;
+        }
+      }
+
+      if (!replaced) {
+        console.warn('Could not find class in JSX. Current classes:', currentClasses);
+        toast.warning("Style applied visually, but couldn't update code");
+      } else {
+        toast.success("Token applied!");
+      }
+
+      setFormData({ ...formData, current_content_jsx: updatedContent });
+      setShowTokenPicker(false);
+      // Keep element selected so user can continue styling
+      if (originalElement) {
+        originalElement.style.outline = '2px solid var(--color-primary)';
+        originalElement.style.outlineOffset = '2px';
+      }
+    } catch (error) {
+      console.error('Error applying token:', error);
+      toast.error("Failed to apply token: " + error.message);
+    }
   };
 
   const renderPreview = (content, includeShell) => {
