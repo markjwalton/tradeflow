@@ -153,7 +153,7 @@ export default function PromptSettings() {
             <Sparkles className="h-6 w-6 text-accent" />
             Prompt Settings
           </h1>
-          <p className="text-charcoal-700">Manage AI reasoning prompts for input fields</p>
+          <p className="text-muted-foreground">Manage AI reasoning prompts for input fields</p>
         </div>
         <Button onClick={() => handleOpenDialog()}>
           <Plus className="h-4 w-4 mr-2" />
@@ -177,10 +177,10 @@ export default function PromptSettings() {
 
       {isLoading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
       ) : Object.keys(groupedPrompts).length === 0 ? (
-        <div className="text-center py-12 text-charcoal-700">
+        <div className="text-center py-12 text-muted-foreground">
           <Sparkles className="h-12 w-12 mx-auto mb-4 opacity-50" />
           <p>No prompts found. Create your first prompt template.</p>
         </div>

@@ -124,7 +124,7 @@ export default function Calendar() {
   const selectedDateAbsences = selectedDate ? getAbsencesForDate(selectedDate) : [];
 
   if (isLoading) {
-    return <div className="flex items-center justify-center h-64 bg-background"><Loader2 className="h-8 w-8 animate-spin text-charcoal-700" /></div>;
+    return <div className="flex items-center justify-center h-64 bg-background"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>;
   }
 
   return (
@@ -153,7 +153,7 @@ export default function Calendar() {
             <CardContent>
               <div className="grid grid-cols-7 mb-2">
                 {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => (
-                  <div key={d} className="text-center text-sm font-medium text-charcoal-700 py-2">{d}</div>
+                  <div key={d} className="text-center text-sm font-medium text-muted-foreground py-2">{d}</div>
                 ))}
               </div>
               <div className="border border-background-muted rounded-lg overflow-hidden">{rows}</div>
@@ -186,14 +186,14 @@ export default function Calendar() {
                               <span className={`w-2 h-2 rounded-full ${statusColors[task.status]}`} />
                               <span className="font-medium text-sm text-midnight-900">{task.title}</span>
                             </div>
-                            <p className="text-xs text-charcoal-700 mt-1">{getProjectName(task.project_id)}</p>
+                            <p className="text-xs text-muted-foreground mt-1">{getProjectName(task.project_id)}</p>
                             <Badge className="mt-1 text-xs" variant="outline">{task.priority}</Badge>
                           </div>
                         ))}
                       </div>
                     </div>
                   ) : (
-                    <p className="text-sm text-charcoal-700">No tasks scheduled</p>
+                    <p className="text-sm text-muted-foreground">No tasks scheduled</p>
                   )}
                   {selectedDateAbsences.length > 0 && (
                     <div>
@@ -210,7 +210,7 @@ export default function Calendar() {
                   )}
                 </div>
               ) : (
-                <p className="text-sm text-charcoal-700">Click on a date to see details</p>
+                <p className="text-sm text-muted-foreground">Click on a date to see details</p>
               )}
             </CardContent>
           </Card>

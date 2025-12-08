@@ -281,7 +281,7 @@ Create 4-8 zones for a complete layout.`,
             <Layout className="h-6 w-6 text-primary" />
             Layout Builder
           </h1>
-          <p className="text-charcoal-700">
+          <p className="text-muted-foreground">
             Design page layouts visually and save as reusable patterns
           </p>
         </div>
@@ -317,7 +317,7 @@ Create 4-8 zones for a complete layout.`,
                     className="w-full text-left p-2 rounded-lg hover:bg-background transition-colors text-sm"
                   >
                     <p className="font-medium text-midnight-900">{preset.name}</p>
-                    <p className="text-xs text-charcoal-700">{preset.zones.length} zones</p>
+                    <p className="text-xs text-muted-foreground">{preset.zones.length} zones</p>
                   </button>
                 ))}
               </div>
@@ -335,7 +335,7 @@ Create 4-8 zones for a complete layout.`,
                     <Loader2 className="h-4 w-4 animate-spin mx-auto" />
                   </div>
                 ) : patterns.length === 0 ? (
-                  <p className="text-xs text-charcoal-700 text-center py-4">No saved patterns</p>
+                  <p className="text-xs text-muted-foreground text-center py-4">No saved patterns</p>
                 ) : (
                   <div className="space-y-2">
                     {patterns.map((pattern) => (
@@ -346,7 +346,7 @@ Create 4-8 zones for a complete layout.`,
                         <div className="flex items-center justify-between">
                           <button onClick={() => handleLoadPattern(pattern)} className="text-left flex-1">
                             <p className="font-medium text-sm text-midnight-900">{pattern.name}</p>
-                            <p className="text-xs text-charcoal-700">{pattern.zones?.length || 0} zones</p>
+                            <p className="text-xs text-muted-foreground">{pattern.zones?.length || 0} zones</p>
                           </button>
                           <Button 
                             variant="ghost" 
@@ -374,7 +374,7 @@ Create 4-8 zones for a complete layout.`,
                 {ZONE_PURPOSES.map((purpose) => (
                   <div key={purpose.id} className="flex items-center gap-1 text-xs p-1">
                     <div className={`w-3 h-3 rounded ${purpose.color}`} />
-                    <span className="text-charcoal-700">{purpose.name}</span>
+                    <span className="text-muted-foreground">{purpose.name}</span>
                   </div>
                 ))}
               </div>
@@ -439,7 +439,7 @@ Create 4-8 zones for a complete layout.`,
                 ))}
                 
                 {zones.length === 0 && (
-                  <div className="col-span-12 row-span-6 flex items-center justify-center text-charcoal-700">
+                  <div className="col-span-12 row-span-6 flex items-center justify-center text-muted-foreground">
                     <div className="text-center">
                       <Grid3X3 className="h-12 w-12 mx-auto mb-2 opacity-30" />
                       <p>Click "Add Zone" or select a preset to start</p>
@@ -543,7 +543,7 @@ Create 4-8 zones for a complete layout.`,
                   })()}
                 </div>
               ) : (
-                <p className="text-xs text-charcoal-700 text-center py-4">
+                <p className="text-xs text-muted-foreground text-center py-4">
                   Select a zone to edit its properties
                 </p>
               )}
@@ -557,7 +557,7 @@ Create 4-8 zones for a complete layout.`,
               </CardHeader>
               <CardContent className="pt-0">
                 <ScrollArea className="h-[150px]">
-                  <pre className="text-xs font-mono text-charcoal-700 whitespace-pre-wrap">
+                  <pre className="text-xs font-mono text-muted-foreground whitespace-pre-wrap">
                     {generateJSXTemplate()}
                   </pre>
                 </ScrollArea>
