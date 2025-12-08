@@ -464,9 +464,9 @@ For each violation provide:
   const handleViolationClick = (code) => {
     setHighlightedCode(code);
     setTimeout(() => {
-      const codeBlock = document.getElementById('file-content-display');
-      if (codeBlock) {
-        codeBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const highlight = document.querySelector('.code-highlight');
+      if (highlight) {
+        highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }, 100);
   };
@@ -705,15 +705,22 @@ For each violation provide:
                   <pre 
                     id="file-content-display"
                     className="text-xs font-mono p-4 whitespace-pre-wrap break-words"
-                    dangerouslySetInnerHTML={{
-                      __html: highlightedCode 
-                        ? fileContent.replace(
-                            highlightedCode,
-                            `<mark class="bg-yellow-200 px-1">${highlightedCode}</mark>`
-                          )
-                        : fileContent
-                    }}
-                  />
+                  >
+                    {highlightedCode ? (
+                      fileContent.split(highlightedCode).map((part, i, arr) => (
+                        <React.Fragment key={i}>
+                          {part}
+                          {i < arr.length - 1 && (
+                            <mark className="bg-yellow-300 px-1 code-highlight font-bold">
+                              {highlightedCode}
+                            </mark>
+                          )}
+                        </React.Fragment>
+                      ))
+                    ) : (
+                      fileContent
+                    )}
+                  </pre>
                 </CardContent>
               </Card>
             )}
