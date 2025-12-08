@@ -30,7 +30,7 @@ export default function Home() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
@@ -67,7 +67,7 @@ export default function Home() {
                 <Card key={item.id} className="hover:shadow-md transition-shadow border-background-muted bg-card">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-lg text-midnight-900">
-                      <Icon className="h-5 w-5 text-primary-500" />
+                      <Icon className="h-5 w-5 text-primary" />
                       {item.name}
                     </CardTitle>
                   </CardHeader>
@@ -96,7 +96,7 @@ export default function Home() {
                     ) : pageUrl ? (
                       <Link 
                         to={pageUrl}
-                        className="text-sm text-primary-500 hover:text-primary-600 hover:underline"
+                        className="text-sm text-primary hover:text-primary/90 hover:underline"
                       >
                         Open →
                       </Link>

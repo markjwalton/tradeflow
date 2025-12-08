@@ -143,7 +143,7 @@ export default function Customers() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64 bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
