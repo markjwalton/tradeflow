@@ -142,8 +142,8 @@ export const colors = {
 
 export const typography = {
   fonts: {
-    heading: '"Degular Display Light", system-ui, sans-serif',
-    body: '"Mrs Eaves XL Serif", Georgia, serif',
+    heading: 'degular-display, system-ui, sans-serif',
+    body: 'mrs-eaves-xl-serif-narrow, Georgia, serif',
     mono: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace'
   },
   

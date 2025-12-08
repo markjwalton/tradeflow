@@ -288,7 +288,7 @@ export default function Layout({ children, currentPageName }) {
       <TenantContext.Provider value={fullscreenContextValue}>
         <div className="min-h-screen flex flex-col">
           {/* Minimal Top Bar */}
-          <header className="h-14 bg-white border-b flex items-center justify-between px-4">
+          <header className="h-14 bg-[var(--color-background-paper)] border-b border-[var(--color-background-muted)] flex items-center justify-between px-4">
             <div className="flex items-center gap-3">
               <span className="font-semibold text-gray-700">Admin Console</span>
               <span className="text-gray-400">|</span>

@@ -48,14 +48,14 @@ const tabs = [
 
 // Component categories for navigation
 const categories = [
-  { id: "typography", label: "Typography", icon: Type, count: 13, color: "bg-[#4A5D4E]" },
-  { id: "buttons", label: "Buttons", icon: MousePointer, count: 11, color: "bg-[#D4A574]" },
-  { id: "cards", label: "Cards", icon: Square, count: 8, color: "bg-[#5a7a8b]" },
-  { id: "forms", label: "Forms", icon: FormInput, count: 10, color: "bg-[#d9b4a7]" },
-  { id: "layouts", label: "Layouts", icon: Layout, count: 12, color: "bg-[#4A5D4E]" },
-  { id: "navigation", label: "Navigation", icon: NavIcon, count: 8, color: "bg-[#D4A574]" },
-  { id: "dataDisplay", label: "Data Display", icon: BarChart3, count: 9, color: "bg-[#5a7a8b]" },
-  { id: "feedback", label: "Feedback", icon: Bell, count: 11, color: "bg-[#d9b4a7]" },
+  { id: "typography", label: "Typography", icon: Type, count: 13, color: "bg-primary" },
+  { id: "buttons", label: "Buttons", icon: MousePointer, count: 11, color: "bg-secondary" },
+  { id: "cards", label: "Cards", icon: Square, count: 8, color: "bg-accent" },
+  { id: "forms", label: "Forms", icon: FormInput, count: 10, color: "bg-[var(--color-midnight)]" },
+  { id: "layouts", label: "Layouts", icon: Layout, count: 12, color: "bg-primary" },
+  { id: "navigation", label: "Navigation", icon: NavIcon, count: 8, color: "bg-secondary" },
+  { id: "dataDisplay", label: "Data Display", icon: BarChart3, count: 9, color: "bg-accent" },
+  { id: "feedback", label: "Feedback", icon: Bell, count: 11, color: "bg-[var(--color-midnight)]" },
 ];
 
 // Section wrapper component - Matching Figma style
@@ -438,18 +438,18 @@ export default function ComponentShowcase() {
               <div>
                 <MutedText className="mb-2">3-Column Grid</MutedText>
                 <Grid columns={3} gap="md">
-                  <div className="p-4 bg-[#4A5D4E]/10 rounded-lg text-center">Column 1</div>
-                  <div className="p-4 bg-[#4A5D4E]/10 rounded-lg text-center">Column 2</div>
-                  <div className="p-4 bg-[#4A5D4E]/10 rounded-lg text-center">Column 3</div>
+                  <div className="p-4 bg-primary/10 rounded-lg text-center">Column 1</div>
+                  <div className="p-4 bg-primary/10 rounded-lg text-center">Column 2</div>
+                  <div className="p-4 bg-primary/10 rounded-lg text-center">Column 3</div>
                 </Grid>
               </div>
               <div>
                 <MutedText className="mb-2">4-Column Grid</MutedText>
                 <Grid columns={4} gap="md">
-                  <div className="p-4 bg-[#D4A574]/10 rounded-lg text-center">1</div>
-                  <div className="p-4 bg-[#D4A574]/10 rounded-lg text-center">2</div>
-                  <div className="p-4 bg-[#D4A574]/10 rounded-lg text-center">3</div>
-                  <div className="p-4 bg-[#D4A574]/10 rounded-lg text-center">4</div>
+                  <div className="p-4 bg-secondary/10 rounded-lg text-center">1</div>
+                  <div className="p-4 bg-secondary/10 rounded-lg text-center">2</div>
+                  <div className="p-4 bg-secondary/10 rounded-lg text-center">3</div>
+                  <div className="p-4 bg-secondary/10 rounded-lg text-center">4</div>
                 </Grid>
               </div>
             </Stack>
@@ -460,13 +460,13 @@ export default function ComponentShowcase() {
               ratio="2:1"
               gap="lg"
               left={
-                <div className="p-6 bg-[#4A5D4E]/10 rounded-lg">
+                <div className="p-6 bg-primary/10 rounded-lg">
                   <H5>Main Content (2fr)</H5>
                   <MutedText>Primary content area</MutedText>
                 </div>
               }
               right={
-                <div className="p-6 bg-[#D4A574]/10 rounded-lg">
+                <div className="p-6 bg-secondary/10 rounded-lg">
                   <H5>Sidebar (1fr)</H5>
                   <MutedText>Secondary content</MutedText>
                 </div>
@@ -479,17 +479,17 @@ export default function ComponentShowcase() {
               <div>
                 <MutedText className="mb-2">Stack (Vertical)</MutedText>
                 <Stack spacing="sm">
-                  <div className="p-3 bg-[#4A5D4E]/10 rounded">Item 1</div>
-                  <div className="p-3 bg-[#4A5D4E]/10 rounded">Item 2</div>
-                  <div className="p-3 bg-[#4A5D4E]/10 rounded">Item 3</div>
+                  <div className="p-3 bg-primary/10 rounded">Item 1</div>
+                  <div className="p-3 bg-primary/10 rounded">Item 2</div>
+                  <div className="p-3 bg-primary/10 rounded">Item 3</div>
                 </Stack>
               </div>
               <div>
                 <MutedText className="mb-2">Row (Horizontal)</MutedText>
                 <Row spacing="sm">
-                  <div className="p-3 bg-[#D4A574]/10 rounded">Item 1</div>
-                  <div className="p-3 bg-[#D4A574]/10 rounded">Item 2</div>
-                  <div className="p-3 bg-[#D4A574]/10 rounded">Item 3</div>
+                  <div className="p-3 bg-secondary/10 rounded">Item 1</div>
+                  <div className="p-3 bg-secondary/10 rounded">Item 2</div>
+                  <div className="p-3 bg-secondary/10 rounded">Item 3</div>
                 </Row>
               </div>
             </Grid>
@@ -514,7 +514,7 @@ export default function ComponentShowcase() {
           description="Navigation patterns and wayfinding components"
         >
           <ComponentDemo title="Nav Items & Groups">
-            <div className="max-w-xs bg-white rounded-lg border border-[#eceae5] p-3">
+            <div className="max-w-xs bg-card rounded-lg border border-border p-3">
               <NavGroup title="Main Menu">
                 <NavItem icon={<Home className="h-4 w-4" />} label="Dashboard" active />
                 <NavItem icon={<Users className="h-4 w-4" />} label="Team" badge="3" />
