@@ -99,9 +99,9 @@ export default function NavigationManager() {
   });
 
   // Tab button style helper
-  const tabStyle = (tab) => `font-body text-body-base [padding:var(--spacing-2)_var(--spacing-4)] [border-radius:var(--radius-lg)] [transition:var(--duration-200)] ${
+  const tabStyle = (tab) => `font-body [padding:var(--spacing-2)_var(--spacing-4)] [border-radius:var(--radius-lg)] [transition:var(--duration-200)] ${
     activeTab === tab 
-      ? "bg-[var(--color-primary)] text-[var(--color-primary-foreground)]" 
+      ? "bg-[var(--color-primary)] text-white" 
       : "bg-[var(--color-background)] text-[var(--color-foreground)] hover:bg-[var(--color-muted)] border border-[var(--color-border)]"
   }`;
 
