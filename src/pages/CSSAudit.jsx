@@ -23,53 +23,111 @@ export default function CSSAudit() {
     setScannedFiles([]);
     setCurrentFile("");
     
-    // Files to scan - comprehensive list
-    const filesToScan = [
-      "Layout.js",
-      "pages/Dashboard.jsx", 
-      "pages/ComponentShowcase.jsx",
-      "pages/Home.jsx",
-      "pages/Projects.jsx",
-      "pages/Tasks.jsx",
-      "pages/Customers.jsx",
-      "pages/Team.jsx",
-      "pages/Estimates.jsx",
-      "pages/TenantManager.jsx",
-      "pages/NavigationManager.jsx",
-      "pages/MindMapEditor.jsx",
-      "pages/RuleBook.jsx",
-      "pages/Setup.jsx",
-      "pages/TenantAccess.jsx",
-      "pages/Calendar.jsx",
-      "pages/ProjectDetail.jsx",
-      "components/ui/card.jsx",
-      "components/ui/button.jsx",
-      "components/ui/input.jsx",
-      "components/library/designTokens.js",
-      "components/navigation/NavigationBreadcrumb.jsx",
-      "components/navigation/GenericNavEditor.jsx",
-      "components/dashboard/DashboardSettings.jsx",
-      "components/dashboard/DashboardWidgetCard.jsx",
-      "components/tenants/TenantForm.jsx",
-      "components/mindmap/MindMapCanvas.jsx",
-      "components/ai-assistant/GlobalAIAssistant.jsx"
-    ];
+    // Generate comprehensive file list - all pages, components, and layout
+    const generateFileList = () => {
+      const files = [];
+      
+      // Core files
+      files.push("Layout.js", "globals.css");
+      
+      // All pages (based on snapshot)
+      const pages = [
+        "Dashboard", "Home", "ComponentShowcase", "DesignTokens",
+        "TenantAccess", "TenantManager", "NavigationManager", "Setup",
+        "Projects", "Tasks", "Customers", "Team", "Estimates", "Calendar",
+        "ProjectDetail", "MindMapEditor", "RuleBook", "PackageLibrary",
+        "TemplateLibrary", "BusinessTemplates", "GeneratedApps",
+        "EntityLibrary", "PageLibrary", "FeatureLibrary",
+        "WorkflowDesigner", "WorkflowLibrary", "FormBuilder", "FormTemplates",
+        "ChecklistBuilder", "ChecklistTemplates", "WebsiteEnquiryForm",
+        "AppointmentHub", "AppointmentConfirm", "AppointmentManager",
+        "InterestOptionsManager", "SystemSpecification", "ERDEditor",
+        "ProjectDetails", "ProjectForm", "ProjectsOverview", "PromptSettings",
+        "RoadmapManager", "RoadmapJournal", "SprintManager",
+        "PlaygroundSummary", "PlaygroundEntity", "PlaygroundPage", "PlaygroundFeature",
+        "ConceptWorkbench", "LivePreview", "TestDataManager",
+        "CMSManager", "APIManager", "PerformanceMonitor", "SecurityMonitor",
+        "LookupTestForms", "CommunityLibrary", "CommunityPublish",
+        "DashboardManager", "SturijPackage", "DesignSystemManager",
+        "StandaloneAPIStrategy", "StandaloneInstanceManager",
+        "TypographyShowcase", "ButtonsShowcase", "CardsShowcase", "FormsShowcase",
+        "LayoutShowcase", "NavigationShowcase", "DataDisplayShowcase", "FeedbackShowcase",
+        "PackageDetail", "PackageExport", "TokenPreview",
+        "TailwindKnowledgeManager", "LayoutBuilder", "TestingHub",
+        "DebugProjectWorkspace", "DebugProjectEditor", "KnowledgeManager", "PageBuilder"
+      ];
+      pages.forEach(p => files.push(`pages/${p}.jsx`));
+      
+      // UI components
+      files.push("components/ui/card.jsx", "components/ui/button.jsx", "components/ui/input.jsx");
+      
+      // Library components
+      files.push(
+        "components/library/designTokens.js",
+        "components/library/Typography.jsx",
+        "components/library/Buttons.jsx",
+        "components/library/Cards.jsx",
+        "components/library/Forms.jsx",
+        "components/library/Layouts.jsx",
+        "components/library/Navigation.jsx",
+        "components/library/DataDisplay.jsx",
+        "components/library/Feedback.jsx"
+      );
+      
+      // Navigation components
+      files.push(
+        "components/navigation/NavigationBreadcrumb.jsx",
+        "components/navigation/GenericNavEditor.jsx",
+        "components/navigation/NavIconMap.jsx",
+        "components/navigation/NavTypes.jsx"
+      );
+      
+      // Dashboard components
+      files.push(
+        "components/dashboard/DashboardSettings.jsx",
+        "components/dashboard/DashboardWidgetCard.jsx",
+        "components/dashboard/WidgetRenderer.jsx",
+        "components/dashboard/TechNewsWidget.jsx"
+      );
+      
+      // Other major components
+      files.push(
+        "components/tenants/TenantForm.jsx",
+        "components/tenants/TenantRoleManager.jsx",
+        "components/tenants/TenantUserManager.jsx",
+        "components/mindmap/MindMapCanvas.jsx",
+        "components/mindmap/MindMapNode.jsx",
+        "components/ai-assistant/GlobalAIAssistant.jsx",
+        "components/common/PageSettingsDialog.jsx"
+      );
+      
+      return files;
+    };
     
-    // Simulate scanning progress
+    const filesToScan = generateFileList();
+    
+    // Simulate scanning progress with faster animation for many files
     const simulateScanning = async () => {
-      for (let i = 0; i < filesToScan.length; i++) {
-        await new Promise(resolve => setTimeout(resolve, 400));
-        setCurrentFile(filesToScan[i]);
-        setScanProgress(((i + 1) / filesToScan.length) * 100);
-        setScannedFiles(prev => [...prev, { 
-          path: filesToScan[i], 
-          status: "scanning",
-          timestamp: new Date().toISOString()
-        }]);
+      const batchSize = 5;
+      for (let i = 0; i < filesToScan.length; i += batchSize) {
+        const batch = filesToScan.slice(i, i + batchSize);
         
-        await new Promise(resolve => setTimeout(resolve, 300));
-        setScannedFiles(prev => prev.map((f, idx) => 
-          idx === i ? { ...f, status: "complete" } : f
+        // Add batch to scanning
+        for (const file of batch) {
+          setScannedFiles(prev => [...prev, { 
+            path: file, 
+            status: "scanning",
+            timestamp: new Date().toISOString()
+          }]);
+        }
+        
+        setCurrentFile(batch[0]);
+        setScanProgress(((i + batchSize) / filesToScan.length) * 100);
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Mark batch as complete
+        setScannedFiles(prev => prev.map(f => 
+          batch.includes(f.path) && f.status === "scanning" ? { ...f, status: "complete" } : f
         ));
       }
     };
@@ -79,13 +137,16 @@ export default function CSSAudit() {
     
     try {
       const result = await base44.integrations.Core.InvokeLLM({
-        prompt: `You are a CSS/design token auditor. Analyze the following codebase for design token violations.
+        prompt: `You are a CSS/design token auditor. Analyze ALL ${filesToScan.length} files in this codebase for design token violations.
 
-FILES TO AUDIT:
-1. Layout.js - Main layout component
-2. Dashboard.jsx - Dashboard page with hardcoded colors like #4A5D4E, #D4A574, #5a7a8b, #d9b4a7, #eceae5
-3. ComponentShowcase.jsx - Multiple hardcoded hex colors throughout
-4. components/library/designTokens.js - Font definitions with wrong format: "Degular Display Light", "Mrs Eaves XL Serif"
+COMPREHENSIVE FILE LIST (${filesToScan.length} files):
+${filesToScan.map((f, i) => `${i + 1}. ${f}`).join('\n')}
+
+KNOWN ISSUES TO PRIORITIZE:
+- Layout.js: Hardcoded colors (#ffffff, etc), pixel spacing
+- Dashboard.jsx: Hardcoded colors #4A5D4E, #D4A574, #5a7a8b, #d9b4a7, #eceae5
+- ComponentShowcase.jsx: Multiple hardcoded hex colors
+- designTokens.js: Wrong font format - quoted Adobe fonts
 
 DESIGN TOKENS REFERENCE (from globals.css):
 - Colors: var(--color-primary), var(--color-secondary), var(--color-accent), var(--color-midnight), var(--color-charcoal)
@@ -102,7 +163,7 @@ VIOLATIONS TO DETECT:
 5. MEDIUM - Hardcoded font sizes
 6. LOW - Generic Tailwind grays instead of semantic tokens
 
-For each file with violations, provide:
+Examine ALL ${filesToScan.length} files. For each file WITH violations, provide:
 - File path
 - Total violation count
 - Critical count
@@ -260,8 +321,12 @@ Return a comprehensive audit report.`,
             
             {/* Scanned Files List */}
             {scannedFiles.length > 0 && (
-              <div className="max-h-60 overflow-y-auto space-y-1 border border-[var(--color-background-muted)] rounded-lg p-3 bg-[var(--color-background-subtle)]">
-                {scannedFiles.map((file, idx) => (
+              <div>
+                <div className="text-xs text-[var(--color-charcoal)] mb-2">
+                  Scanned {scannedFiles.filter(f => f.status === "complete").length} of {filesToScan.length} files
+                </div>
+                <div className="max-h-60 overflow-y-auto space-y-1 border border-[var(--color-background-muted)] rounded-lg p-3 bg-[var(--color-background-subtle)]">
+                {scannedFiles.slice(-20).map((file, idx) => (
                   <div 
                     key={idx} 
                     className="flex items-center gap-2 text-sm font-mono"
@@ -280,6 +345,12 @@ Return a comprehensive audit report.`,
                     </span>
                   </div>
                 ))}
+                {scannedFiles.length > 20 && (
+                  <div className="text-xs text-[var(--color-charcoal)] text-center mt-2">
+                    Showing last 20 files... ({scannedFiles.length} total scanned)
+                  </div>
+                )}
+              </div>
               </div>
             )}
           </CardContent>
