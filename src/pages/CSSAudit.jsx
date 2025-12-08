@@ -567,7 +567,7 @@ export default function CSSAudit() {
             <h1 className="text-2xl font-light font-display text-midnight-900">
               File-by-File CSS Audit
             </h1>
-            <p className="text-charcoal-700 mt-1">
+            <p className="text-muted-foreground mt-1">
               Select a file, load it, then scan for violations
             </p>
           </div>
@@ -710,7 +710,7 @@ export default function CSSAudit() {
                               {v.issue}
                             </p>
                             {v.lineNumber && (
-                              <p className="text-xs text-charcoal-700 mt-1">
+                              <p className="text-xs text-muted-foreground mt-1">
                                 Line {v.lineNumber}
                               </p>
                             )}
@@ -722,7 +722,7 @@ export default function CSSAudit() {
                               e.stopPropagation();
                               handleDeleteViolation(originalIdx);
                             }}
-                            className="gap-1 text-charcoal-700 hover:text-destructive"
+                            className="gap-1 text-muted-foreground hover:text-destructive"
                           >
                             <Trash2 className="h-3 w-3" />
                             Dismiss
@@ -781,7 +781,7 @@ export default function CSSAudit() {
               <Card className="h-[calc(100vh-300px)] flex flex-col">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-sm">File Content</CardTitle>
-                  <p className="text-xs text-charcoal-700">Click violations to highlight</p>
+                  <p className="text-xs text-muted-foreground">Click violations to highlight</p>
                 </CardHeader>
                 <CardContent className="flex-1 overflow-y-auto p-0">
                   <pre 

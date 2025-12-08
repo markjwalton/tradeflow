@@ -445,12 +445,12 @@ Only suggest NEW relationships not already in existingRelationships.`,
       <div className="flex-1 overflow-hidden">
         {isLoading ? (
           <div className="h-full flex items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
         ) : entities.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-charcoal-700">
+          <div className="h-full flex flex-col items-center justify-center text-muted-foreground">
             <Database className="h-16 w-16 mb-4 opacity-30" />
-            <p className="text-lg font-medium text-midnight-900">No entities yet</p>
+            <p className="text-lg font-medium text-foreground">No entities yet</p>
             <p className="text-sm mb-4">Add entities to start building your ERD</p>
             <Button onClick={handleAddEntity}>
               <Plus className="h-4 w-4 mr-1" />

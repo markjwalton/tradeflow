@@ -226,14 +226,14 @@ export default function DashboardManager() {
             <div className="flex-1 overflow-auto p-6 bg-background">
               {widgetsLoading ? (
                 <div className="flex justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                 </div>
               ) : publishedWidgets.length === 0 && !currentLayout?.widgets?.length ? (
                 <Card className="max-w-lg mx-auto mt-12">
                   <CardContent className="py-12 text-center">
                     <LayoutDashboard className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
                     <h3 className="text-h4 mb-2">No Widgets Yet</h3>
-                    <p className="text-charcoal-700 mb-4">
+                    <p className="text-muted-foreground mb-4">
                       Create widgets in the staging area or use AI to generate recommendations.
                     </p>
                     <div className="flex justify-center gap-2">
@@ -328,7 +328,7 @@ function WidgetLibraryManager({ widgets }) {
 
       {publishedWidgets.length === 0 ? (
         <Card>
-          <CardContent className="py-12 text-center text-gray-500">
+          <CardContent className="py-12 text-center text-muted-foreground">
             <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
             <p>No published widgets yet</p>
             <p className="text-sm mt-1">Approve widgets from the staging area to publish them</p>
