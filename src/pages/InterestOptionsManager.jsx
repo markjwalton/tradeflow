@@ -124,7 +124,7 @@ export default function InterestOptionsManager() {
               <Settings className="h-5 w-5" />
               Interest Options
             </CardTitle>
-            <p className="text-sm text-charcoal-700 mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               Manage the dropdown options shown on the enquiry form
             </p>
           </div>
@@ -136,10 +136,10 @@ export default function InterestOptionsManager() {
         <CardContent>
           {isLoading ? (
             <div className="flex justify-center py-8">
-              <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
             </div>
           ) : options.length === 0 ? (
-            <div className="text-center py-8 text-charcoal-700">
+            <div className="text-center py-8 text-muted-foreground">
               No options configured. Add your first option above.
             </div>
           ) : (
@@ -171,7 +171,7 @@ export default function InterestOptionsManager() {
                                   </div>
                                 </TableCell>
                                 <TableCell className="font-medium text-midnight-900">{option.label}</TableCell>
-                                <TableCell className="text-charcoal-700">{option.value}</TableCell>
+                                <TableCell className="text-muted-foreground">{option.value}</TableCell>
                                 <TableCell>
                                   <Switch
                                     checked={option.isActive !== false}

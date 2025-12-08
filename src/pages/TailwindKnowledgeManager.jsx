@@ -501,7 +501,7 @@ Analyze and provide 3-5 specific recommendations to:
             <BookOpen className="h-6 w-6 text-primary-500" />
             Tailwind Knowledge Manager
           </h1>
-          <p className="text-[var(--color-charcoal)]">
+          <p className="text-muted-foreground">
             Keep your UI library current with Tailwind CSS updates
           </p>
         </div>
@@ -531,7 +531,7 @@ Analyze and provide 3-5 specific recommendations to:
                 {syncProgress.message}
               </span>
             </div>
-            <span className="text-sm text-[var(--color-charcoal)]">
+            <span className="text-sm text-muted-foreground">
               {syncProgress.current} / {syncProgress.total} categories
             </span>
           </div>
@@ -562,14 +562,14 @@ Analyze and provide 3-5 specific recommendations to:
         <TabsContent value="releases" className="space-y-4">
           {loadingReleases ? (
             <div className="text-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto text-[var(--color-charcoal)]" />
+              <Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground" />
             </div>
           ) : releases.length === 0 ? (
             <Card className="border-background-muted">
               <CardContent className="py-12 text-center">
-                <GitBranch className="h-12 w-12 mx-auto mb-4 text-[var(--color-charcoal)]" />
+                <GitBranch className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
                 <h3 className="text-lg font-medium text-[var(--color-midnight)]">No Releases Tracked</h3>
-                <p className="text-[var(--color-charcoal)] mt-2">Click "Check for Updates" to find the latest Tailwind CSS releases</p>
+                <p className="text-muted-foreground mt-2">Click "Check for Updates" to find the latest Tailwind CSS releases</p>
               </CardContent>
             </Card>
           ) : (
@@ -678,7 +678,7 @@ Analyze and provide 3-5 specific recommendations to:
         <TabsContent value="knowledge" className="space-y-4">
           <div className="flex gap-4 mb-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-charcoal)]" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search knowledge base..."
                 value={searchQuery}
@@ -700,14 +700,14 @@ Analyze and provide 3-5 specific recommendations to:
 
           {loadingKnowledge ? (
             <div className="text-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto text-[var(--color-charcoal)]" />
+              <Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground" />
             </div>
           ) : Object.keys(groupedKnowledge).length === 0 ? (
             <Card className="border-background-muted">
               <CardContent className="py-12 text-center">
-                <FileText className="h-12 w-12 mx-auto mb-4 text-[var(--color-charcoal)]" />
+                <FileText className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
                 <h3 className="text-lg font-medium text-[var(--color-midnight)]">No Knowledge Synced</h3>
-                <p className="text-[var(--color-charcoal)] mt-2">Click "Sync Documentation" to extract Tailwind CSS knowledge</p>
+                <p className="text-muted-foreground mt-2">Click "Sync Documentation" to extract Tailwind CSS knowledge</p>
               </CardContent>
             </Card>
           ) : (
@@ -776,8 +776,8 @@ Analyze and provide 3-5 specific recommendations to:
             <CardContent>
               {recommendations.length === 0 ? (
                 <div className="text-center py-8">
-                  <Sparkles className="h-12 w-12 mx-auto mb-4 text-[var(--color-charcoal)]" />
-                  <p className="text-[var(--color-charcoal)]">
+                  <Sparkles className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                  <p className="text-muted-foreground">
                     {releases.length === 0 
                       ? "Check for releases first, then generate recommendations"
                       : "Click 'Generate Recommendations' to analyze releases for your UI library"

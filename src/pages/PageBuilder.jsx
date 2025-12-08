@@ -484,7 +484,7 @@ export default function PageBuilder() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-heading text-[var(--color-midnight)]">Page Design Builder</h1>
-          <p className="text-[var(--color-charcoal)]">Create and manage UI page designs with version control</p>
+          <p className="text-muted-foreground">Create and manage UI page designs with version control</p>
         </div>
         <Button onClick={() => openEditor()} className="bg-primary-500 hover:bg-primary-600 text-white">
           <Plus className="h-4 w-4 mr-2" />
@@ -494,13 +494,13 @@ export default function PageBuilder() {
 
       {/* Pages Grid */}
       {isLoading ? (
-        <div className="text-center py-12 text-[var(--color-charcoal)]">Loading...</div>
+        <div className="text-center py-12 text-muted-foreground">Loading...</div>
       ) : pages.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
-            <FileCode className="h-12 w-12 mx-auto mb-4 text-[var(--color-charcoal)]" />
+            <FileCode className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
             <h3 className="text-lg font-medium mb-2">No pages yet</h3>
-            <p className="text-[var(--color-charcoal)] mb-4">Create your first UI page to get started</p>
+            <p className="text-muted-foreground mb-4">Create your first UI page to get started</p>
             <Button onClick={() => openEditor()} className="bg-primary-500 hover:bg-primary-600 text-white">
               <Plus className="h-4 w-4 mr-2" />
               Create Page
@@ -515,7 +515,7 @@ export default function PageBuilder() {
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <CardTitle className="text-base">{page.page_name}</CardTitle>
-                    <p className="text-sm text-[var(--color-charcoal)] mt-1">{page.description || "No description"}</p>
+                    <p className="text-sm text-muted-foreground mt-1">{page.description || "No description"}</p>
                   </div>
                   <Badge variant="outline">{page.category}</Badge>
                 </div>
@@ -526,7 +526,7 @@ export default function PageBuilder() {
                     <Badge className={page.includes_app_shell ? "bg-success-50 text-success-foreground" : "bg-muted text-muted-foreground"}>
                       {page.includes_app_shell ? "With Shell" : "Content Only"}
                     </Badge>
-                    <span className="text-[var(--color-charcoal)]">
+                    <span className="text-muted-foreground">
                       v{page.current_version_number || 1} • {page.versions?.length || 1} versions
                     </span>
                   </div>
