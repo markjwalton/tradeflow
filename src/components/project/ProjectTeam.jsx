@@ -40,13 +40,13 @@ import { format } from "date-fns";
 import { toast } from "sonner";
 
 const roleColors = {
-  "Project Manager": "bg-purple-100 text-purple-800",
-  "Site Manager": "bg-blue-100 text-blue-800",
-  Carpenter: "bg-amber-100 text-amber-800",
-  Joiner: "bg-orange-100 text-orange-800",
-  Apprentice: "bg-green-100 text-green-800",
-  Administrator: "bg-pink-100 text-pink-800",
-  Other: "bg-stone-100 text-stone-800",
+  "Project Manager": "bg-accent-100 text-accent",
+  "Site Manager": "bg-info-50 text-info",
+  Carpenter: "bg-warning/10 text-warning",
+  Joiner: "bg-warning/10 text-warning",
+  Apprentice: "bg-success-50 text-success",
+  Administrator: "bg-accent-100 text-accent",
+  Other: "bg-muted text-muted-foreground",
 };
 
 const emptyAllocation = {
@@ -154,7 +154,7 @@ export default function ProjectTeam({ projectId, tasks = [], isLoading: isLoadin
           <DialogTrigger asChild>
             <Button
               size="sm"
-              className="bg-amber-700 hover:bg-amber-800"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
               onClick={() => handleOpenDialog()}
             >
               <Plus className="h-4 w-4 mr-1" />
@@ -247,7 +247,7 @@ export default function ProjectTeam({ projectId, tasks = [], isLoading: isLoadin
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-amber-700 hover:bg-amber-800"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
                   disabled={isSubmitting || !formData.teamMemberId}
                 >
                   {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
@@ -262,12 +262,12 @@ export default function ProjectTeam({ projectId, tasks = [], isLoading: isLoadin
         {isLoading ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-16 bg-stone-100 animate-pulse rounded-lg" />
+              <div key={i} className="h-16 bg-muted animate-pulse rounded-lg" />
             ))}
           </div>
         ) : allocations.length === 0 ? (
-          <div className="text-center py-8 text-stone-500">
-            <User className="h-10 w-10 mx-auto mb-3 text-stone-300" />
+          <div className="text-center py-8 text-muted-foreground">
+            <User className="h-10 w-10 mx-auto mb-3 text-muted-foreground" />
             <p>No team members assigned yet</p>
           </div>
         ) : (
@@ -283,13 +283,13 @@ export default function ProjectTeam({ projectId, tasks = [], isLoading: isLoadin
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-amber-100 flex items-center justify-center">
-                        <span className="text-amber-700 font-semibold">
+                      <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center">
+                        <span className="text-primary font-semibold">
                           {member?.name?.charAt(0)?.toUpperCase() || "?"}
                         </span>
                       </div>
                       <div>
-                        <h4 className="font-medium text-stone-900">
+                        <h4 className="font-medium text-foreground">
                           {member?.name || "Unknown Member"}
                         </h4>
                         <div className="flex items-center gap-2 mt-1">
@@ -325,7 +325,7 @@ export default function ProjectTeam({ projectId, tasks = [], isLoading: isLoadin
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
-                  <div className="flex flex-wrap items-center gap-4 mt-3 text-sm text-stone-500">
+                  <div className="flex flex-wrap items-center gap-4 mt-3 text-sm text-muted-foreground">
                     {allocation.startDate && (
                       <span className="flex items-center gap-1">
                         <Calendar className="h-4 w-4" />
@@ -341,7 +341,7 @@ export default function ProjectTeam({ projectId, tasks = [], isLoading: isLoadin
                     )}
                   </div>
                   {allocation.notes && (
-                    <p className="text-sm text-stone-500 mt-2">{allocation.notes}</p>
+                    <p className="text-sm text-muted-foreground mt-2">{allocation.notes}</p>
                   )}
                 </div>
               );

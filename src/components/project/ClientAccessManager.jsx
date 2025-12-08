@@ -120,7 +120,7 @@ export default function ClientAccessManager({ projectId }) {
         <CardTitle>Client Portal Access</CardTitle>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-amber-700 hover:bg-amber-800" size="sm">
+            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground" size="sm">
               <Plus className="h-4 w-4 mr-2" />
               Grant Access
             </Button>
@@ -196,7 +196,7 @@ export default function ClientAccessManager({ projectId }) {
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-amber-700 hover:bg-amber-800"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
                   disabled={isSubmitting}
                 >
                   {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
@@ -209,12 +209,12 @@ export default function ClientAccessManager({ projectId }) {
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <div className="text-center py-4 text-stone-500">Loading...</div>
+          <div className="text-center py-4 text-muted-foreground">Loading...</div>
         ) : accessList.length === 0 ? (
           <div className="text-center py-8">
-            <Users className="h-12 w-12 text-stone-300 mx-auto mb-4" />
-            <p className="text-stone-500">No client access granted yet</p>
-            <p className="text-sm text-stone-400">Grant access to allow clients to view project progress</p>
+            <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <p className="text-muted-foreground">No client access granted yet</p>
+            <p className="text-sm text-muted-foreground">Grant access to allow clients to view project progress</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -230,9 +230,9 @@ export default function ClientAccessManager({ projectId }) {
                       {access.isActive ? "Active" : "Inactive"}
                     </Badge>
                   </div>
-                  <p className="text-sm text-stone-500">{access.clientEmail}</p>
+                  <p className="text-sm text-muted-foreground">{access.clientEmail}</p>
                   {access.expiresAt && (
-                    <p className="text-xs text-stone-400">
+                    <p className="text-xs text-muted-foreground">
                       Expires {format(new Date(access.expiresAt), "MMM d, yyyy")}
                     </p>
                   )}

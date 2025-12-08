@@ -28,29 +28,29 @@ import { format, addDays, differenceInDays, startOfWeek, eachDayOfInterval, isWe
 import { toast } from "sonner";
 
 const statusColors = {
-  "To Do": "bg-stone-400",
-  "In Progress": "bg-blue-500",
-  "Blocked": "bg-red-500",
-  "Completed": "bg-green-500",
-  "Snagging": "bg-yellow-500",
+  "To Do": "bg-muted-foreground",
+  "In Progress": "bg-info",
+  "Blocked": "bg-destructive",
+  "Completed": "bg-success",
+  "Snagging": "bg-warning",
 };
 
 const priorityBorders = {
-  Low: "border-l-stone-400",
-  Medium: "border-l-yellow-500",
-  High: "border-l-orange-500",
-  Critical: "border-l-red-500",
+  Low: "border-l-muted-foreground",
+  Medium: "border-l-warning",
+  High: "border-l-warning",
+  Critical: "border-l-destructive",
 };
 
 const typeColors = {
-  Design: "bg-purple-100",
-  Manufacturing: "bg-blue-100",
-  "Site Work": "bg-green-100",
-  Procurement: "bg-amber-100",
-  Inspection: "bg-pink-100",
-  Snagging: "bg-red-100",
-  "Client Communication": "bg-cyan-100",
-  Other: "bg-stone-100",
+  Design: "bg-accent-100",
+  Manufacturing: "bg-info-50",
+  "Site Work": "bg-success-50",
+  Procurement: "bg-warning/10",
+  Inspection: "bg-accent-100",
+  Snagging: "bg-destructive-50",
+  "Client Communication": "bg-info-50",
+  Other: "bg-muted",
 };
 
 export default function GanttChart({ tasks = [], project, isLoading }) {
@@ -143,7 +143,7 @@ export default function GanttChart({ tasks = [], project, isLoading }) {
         <CardContent className="p-8">
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-12 bg-stone-100 animate-pulse rounded" />
+              <div key={i} className="h-12 bg-muted animate-pulse rounded" />
             ))}
           </div>
         </CardContent>
@@ -189,7 +189,7 @@ export default function GanttChart({ tasks = [], project, isLoading }) {
           <div style={{ minWidth: `${chartWidth + 250}px` }}>
             {/* Header - Days */}
             <div className="flex border-b sticky top-0 bg-white z-10">
-              <div className="w-[250px] flex-shrink-0 p-3 border-r bg-stone-50 font-medium text-sm text-stone-600">
+              <div className="w-[250px] flex-shrink-0 p-3 border-r bg-muted font-medium text-sm text-muted-foreground">
                 Task
               </div>
               <div className="flex">
@@ -197,12 +197,12 @@ export default function GanttChart({ tasks = [], project, isLoading }) {
                   <div
                     key={idx}
                     className={`flex-shrink-0 text-center border-r p-1 ${
-                      isWeekend(date) ? "bg-stone-100" : "bg-white"
-                    } ${isSameDay(date, today) ? "bg-amber-50" : ""}`}
+                      isWeekend(date) ? "bg-muted" : "bg-background"
+                    } ${isSameDay(date, today) ? "bg-primary-100" : ""}`}
                     style={{ width: dayWidth }}
                   >
-                    <div className="text-xs text-stone-500">{format(date, "EEE")}</div>
-                    <div className={`text-sm font-medium ${isSameDay(date, today) ? "text-amber-700" : "text-stone-700"}`}>
+                    <div className="text-xs text-muted-foreground">{format(date, "EEE")}</div>
+                    <div className={`text-sm font-medium ${isSameDay(date, today) ? "text-primary" : "text-foreground"}`}>
                       {format(date, "d")}
                     </div>
                   </div>
@@ -212,8 +212,8 @@ export default function GanttChart({ tasks = [], project, isLoading }) {
 
             {/* Tasks */}
             {sortedTasks.length === 0 ? (
-              <div className="p-8 text-center text-stone-500">
-                <Calendar className="h-10 w-10 mx-auto mb-2 text-stone-300" />
+              <div className="p-8 text-center text-muted-foreground">
+                <Calendar className="h-10 w-10 mx-auto mb-2 text-muted-foreground" />
                 <p>No tasks with due dates to display</p>
               </div>
             ) : (
@@ -221,25 +221,25 @@ export default function GanttChart({ tasks = [], project, isLoading }) {
                 const position = getTaskPosition(task);
                 
                 return (
-                  <div key={task.id} className="flex border-b hover:bg-stone-50">
+                  <div key={task.id} className="flex border-b hover:bg-muted">
                     {/* Task Name Column */}
-                    <div className={`w-[250px] flex-shrink-0 p-3 border-r border-l-4 ${priorityBorders[task.priority] || "border-l-stone-300"}`}>
+                    <div className={`w-[250px] flex-shrink-0 p-3 border-r border-l-4 ${priorityBorders[task.priority] || "border-l-border"}`}>
                       <div className="flex items-center gap-2">
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <span className="font-medium text-sm text-stone-900 truncate cursor-default">
+                              <span className="font-medium text-sm text-foreground truncate cursor-default">
                                 {task.name}
                               </span>
                             </TooltipTrigger>
                             <TooltipContent>
                               <p className="font-medium">{task.name}</p>
-                              {task.description && <p className="text-xs text-stone-400 mt-1">{task.description}</p>}
+                              {task.description && <p className="text-xs text-muted-foreground mt-1">{task.description}</p>}
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
                         {task.status === "Blocked" && (
-                          <AlertTriangle className="h-4 w-4 text-red-500 flex-shrink-0" />
+                          <AlertTriangle className="h-4 w-4 text-destructive flex-shrink-0" />
                         )}
                       </div>
                       <div className="flex items-center gap-2 mt-1">
@@ -263,8 +263,8 @@ export default function GanttChart({ tasks = [], project, isLoading }) {
                         <div
                           key={idx}
                           className={`flex-shrink-0 border-r h-full ${
-                            isWeekend(date) ? "bg-stone-50" : ""
-                          } ${isSameDay(date, today) ? "bg-amber-50/50" : ""}`}
+                            isWeekend(date) ? "bg-muted" : ""
+                          } ${isSameDay(date, today) ? "bg-primary-100/50" : ""}`}
                           style={{ width: dayWidth }}
                           onDrop={(e) => handleDrop(e, idx)}
                           onDragOver={(e) => e.preventDefault()}
@@ -305,7 +305,7 @@ export default function GanttChart({ tasks = [], project, isLoading }) {
                       {/* No date indicator */}
                       {!position && !task.dueDate && (
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-xs text-stone-400 italic">No due date</span>
+                          <span className="text-xs text-muted-foreground italic">No due date</span>
                         </div>
                       )}
                     </div>
@@ -316,8 +316,8 @@ export default function GanttChart({ tasks = [], project, isLoading }) {
 
             {/* Project Timeline Summary */}
             {project?.startDate && project?.estimatedEndDate && (
-              <div className="flex border-t-2 border-amber-200 bg-amber-50">
-                <div className="w-[250px] flex-shrink-0 p-3 border-r font-medium text-sm text-amber-800">
+              <div className="flex border-t-2 border-primary-200 bg-primary-100">
+                <div className="w-[250px] flex-shrink-0 p-3 border-r font-medium text-sm text-primary">
                   📅 Project Timeline
                 </div>
                 <div className="flex relative" style={{ width: chartWidth }}>
@@ -329,7 +329,7 @@ export default function GanttChart({ tasks = [], project, isLoading }) {
                     return (
                       <div
                         key={idx}
-                        className={`flex-shrink-0 border-r h-12 ${isInProject ? "bg-amber-200/50" : ""}`}
+                        className={`flex-shrink-0 border-r h-12 ${isInProject ? "bg-primary-200/50" : ""}`}
                         style={{ width: dayWidth }}
                       />
                     );
