@@ -111,7 +111,7 @@ export default function ProjectsOverview() {
           <p className="text-muted-foreground mt-1">Manage all your construction projects</p>
         </div>
         <Link to={createPageUrl("ProjectForm")}>
-          <Button className="bg-warning hover:bg-warning/90 text-warning-foreground">
+          <Button className="bg-primary-500 hover:bg-primary-600 text-white">
             <Plus className="h-4 w-4 mr-2" />
             New Project
           </Button>
@@ -214,7 +214,7 @@ export default function ProjectsOverview() {
                 : "Get started by creating your first project"}
             </p>
             <Link to={createPageUrl("ProjectForm")}>
-              <Button className="bg-warning hover:bg-warning/90 text-warning-foreground">
+              <Button className="bg-primary-500 hover:bg-primary-600 text-white">
                 <Plus className="h-4 w-4 mr-2" />
                 Create Project
               </Button>
