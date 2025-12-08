@@ -449,7 +449,21 @@ export default function CSSAudit() {
 
       // Validate violations - only keep ones where the code actually exists in the file
       const validatedViolations = result.violations.filter(v => {
-        return fileContent.includes(v.currentCode);
+        // Must have non-empty code snippet
+        if (!v.currentCode || v.currentCode.trim().length === 0) return false;
+
+        // Code must exist in file (exact match)
+        if (!fileContent.includes(v.currentCode.trim())) return false;
+
+        // If it's a very short snippet (< 10 chars), require more context
+        if (v.currentCode.trim().length < 10) {
+          // Check if it appears as a standalone token, not part of a larger word
+          const escaped = v.currentCode.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          const regex = new RegExp(`\\b${escaped}\\b|${escaped}[^a-zA-Z0-9]|[^a-zA-Z0-9]${escaped}`);
+          return regex.test(fileContent);
+        }
+
+        return true;
       });
 
       const validatedResult = {
