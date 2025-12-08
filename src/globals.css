@@ -16,8 +16,8 @@ css
 
     /* CRITICAL: Alias for components - no quotes on font names! */
     /* Updated from outline, simplified for mapping */
-    --font-heading: "degular-display"; /* Updated from outline */
-    --font-body: "mrs-eaves-xl-serif-narrow"; /* Updated from outline */
+    --font-heading: degular-display, sans-serif; /* Updated from outline */
+    --font-body: mrs-eaves-xl-serif-narrow, serif; /* Updated from outline */
     --font-family-mono:
       "source-code-pro", "SF Mono", Monaco, Inconsolata,
       "Roboto Mono", monospace;
@@ -356,14 +356,14 @@ css
   }
 
   body {
-    font-family: "mrs-eaves-xl-serif-narrow"; /* Updated from outline */
+    font-family: mrs-eaves-xl-serif-narrow, serif; /* Updated from outline */
     color: var(--color-charcoal);
     background: var(--color-background);
   }
 
   /* General heading styles - Applied from outline, specific weights/sizes remain in :where block */
   h1, h2, h3, h4, h5, h6 {
-    font-family: "degular-display"; /* Updated from outline */
+    font-family: degular-display, sans-serif !important; /* Updated from outline */
     font-weight: 300;
     color: var(--color-midnight);
   }
@@ -822,16 +822,16 @@ css
 @layer utilities {
   /* Override Tailwind's .font-sans with Adobe Fonts */
   .font-sans {
-    font-family: "degular-display" !important; /* Updated from outline */
+    font-family: degular-display, sans-serif !important; /* Updated from outline */
   }
 
   /* Updated/Added font family utilities from outline */
   .font-heading {
-    font-family: "degular-display" !important; /* Updated from outline */
+    font-family: degular-display, sans-serif !important; /* Updated from outline */
   }
 
   .font-body {
-    font-family: "mrs-eaves-xl-serif-narrow" !important; /* Added/Updated from outline */
+    font-family: mrs-eaves-xl-serif-narrow, serif !important; /* Added/Updated from outline */
   }
 
   .font-display {
@@ -840,7 +840,7 @@ css
 
   /* Modified .font-light to include font-weight */
   .font-light {
-    font-family: "degular-display" !important; /* Updated from outline */
+    /* font-family: "degular-display" !important; Removed from outline */
     font-weight: 300 !important; /* Updated from outline */
   }
 
