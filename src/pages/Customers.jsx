@@ -189,7 +189,7 @@ export default function Customers() {
                 <div>
                   <CardTitle className="text-lg text-midnight-900">{customer.name}</CardTitle>
                   {customer.company && (
-                    <p className="text-sm text-charcoal-700 flex items-center gap-1 mt-1">
+                    <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
                       <Building2 className="h-3 w-3" />
                       {customer.company}
                     </p>
@@ -208,13 +208,13 @@ export default function Customers() {
             <CardContent className="space-y-3">
               <Badge className={statusColors[customer.status]}>{customer.status}</Badge>
               {customer.email && (
-                <p className="text-sm text-charcoal-700 flex items-center gap-2">
+                <p className="text-sm text-muted-foreground flex items-center gap-2">
                   <Mail className="h-3 w-3" />
                   {customer.email}
                 </p>
               )}
               {customer.phone && (
-                <p className="text-sm text-charcoal-700 flex items-center gap-2">
+                <p className="text-sm text-muted-foreground flex items-center gap-2">
                   <Phone className="h-3 w-3" />
                   {customer.phone}
                 </p>
@@ -232,7 +232,7 @@ export default function Customers() {
       </div>
 
       {filteredCustomers.length === 0 && (
-        <div className="text-center py-12 text-charcoal-700">
+        <div className="text-center py-12 text-muted-foreground">
           No customers found. Add your first customer to get started.
         </div>
       )}

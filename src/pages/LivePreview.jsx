@@ -162,7 +162,7 @@ export default function LivePreview() {
   if (selectedItem) {
     return (
       <div className="p-6 space-y-6 bg-background min-h-screen">
-        <Button variant="ghost" onClick={goBack} className="gap-2 text-charcoal-700 hover:text-midnight-900">
+        <Button variant="ghost" onClick={goBack} className="gap-2 text-muted-foreground hover:text-midnight-900">
           <ArrowLeft className="h-4 w-4" />
           Back to Overview
         </Button>
@@ -241,7 +241,7 @@ export default function LivePreview() {
               >
                 <ul className="space-y-2 text-sm">
                   {getUserStories().map((story, i) => (
-                    <li key={i} className="flex items-start gap-2 text-charcoal-700">
+                    <li key={i} className="flex items-start gap-2 text-muted-foreground">
                       <span className="text-primary mt-1">•</span>
                       <span>{story}</span>
                     </li>
@@ -334,13 +334,13 @@ export default function LivePreview() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-midnight-900 truncate">{item.source_name}</p>
-                <p className="text-xs text-charcoal-700 font-mono">/{toSlug(item.source_name)}</p>
+                <p className="text-xs text-muted-foreground font-mono">/{toSlug(item.source_name)}</p>
               </div>
               <StatusBadge status={item.test_status || "pending"} size="small" />
             </button>
           ))}
           {groupedItems.pages.length === 0 && (
-            <p className="text-charcoal-700 text-sm col-span-full py-8 text-center">
+            <p className="text-muted-foreground text-sm col-span-full py-8 text-center">
               No pages synced yet
             </p>
           )}
@@ -369,7 +369,7 @@ export default function LivePreview() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-midnight-900 truncate">{item.source_name}</p>
-                  <p className="text-xs text-charcoal-700 font-mono">/{toSlug(item.source_name)}</p>
+                  <p className="text-xs text-muted-foreground font-mono">/{toSlug(item.source_name)}</p>
                 </div>
                 <StatusBadge status={item.test_status || "pending"} size="small" />
               </button>
@@ -384,7 +384,7 @@ export default function LivePreview() {
           title="Features"
           description="No features synced yet"
         >
-          <div className="py-8 text-center text-charcoal-700">
+          <div className="py-8 text-center text-muted-foreground">
             <Zap className="h-10 w-10 mx-auto mb-2 opacity-30" />
             <p>Sync features from the Playground to see them here</p>
           </div>

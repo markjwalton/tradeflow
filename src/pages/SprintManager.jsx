@@ -127,7 +127,7 @@ export default function SprintManager() {
             <Play className="h-6 w-6 text-success" />
             Sprint Manager
           </h1>
-          <p className="text-charcoal-700">Manage development sprints and track progress</p>
+          <p className="text-muted-foreground">Manage development sprints and track progress</p>
         </div>
         <Button onClick={() => openDialog()}>
           <Plus className="h-4 w-4 mr-2" />

@@ -123,7 +123,7 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-light font-display text-midnight-900">Generated Apps</h1>
-          <p className="text-charcoal-700">App specifications generated from mind maps</p>
+          <p className="text-muted-foreground">App specifications generated from mind maps</p>
         </div>
       </div>
 
@@ -140,7 +140,7 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
 
       {/* Apps Grid */}
       {filteredApps.length === 0 ? (
-        <div className="text-center py-12 text-charcoal-700">
+        <div className="text-center py-12 text-muted-foreground">
           <Package className="h-12 w-12 mx-auto mb-4 opacity-30" />
           <p>No generated apps yet.</p>
           <p className="text-sm">Generate an app from a mind map to see it here.</p>
@@ -239,7 +239,7 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
                     </Button>
                     <Button 
                       size="sm" 
-                      className="flex-1 bg-success hover:bg-primary text-white"
+                      className="flex-1 bg-success hover:bg-success/90 text-success-foreground"
                       onClick={() => copyForChat(app)}
                     >
                       <Copy className="h-4 w-4 mr-1" />
