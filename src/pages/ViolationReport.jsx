@@ -74,7 +74,7 @@ export default function ViolationReport() {
 
       // Extract all CSS patterns using AI
       const result = await base44.integrations.Core.InvokeLLM({
-        prompt: `Extract ALL CSS/style patterns from these files. For each unique pattern found, determine if it's a verified design token or needs refactoring.
+        prompt: `Extract SPECIFIC CSS/style patterns from these files. For each pattern, show the EXACT code string.
 
 FILES TO ANALYZE:
 ${Object.entries(fileContents).map(([path, content]) => `
@@ -83,21 +83,18 @@ ${content.substring(0, 10000)}
 ===
 `).join('\n')}
 
-DESIGN TOKEN STANDARDS:
-- Colors: var(--color-primary), bg-primary, text-muted-foreground
-- Spacing: var(--spacing-4), p-4, gap-4
-- Typography: font-display, text-lg, font-medium
-- Fonts: degular-display, mrs-eaves-xl-serif-narrow (unquoted)
+EXAMPLES OF PATTERNS TO EXTRACT:
+✓ GOOD: "className='bg-primary'", "var(--color-primary)", "className='p-4'"
+✗ BAD: "color: #4A5D4E", "className='text-gray-500'", "font-family: 'degular-display'"
 
-For EACH unique pattern found, extract:
-1. The actual code pattern (e.g., "className='text-gray-500'", "color: #4A5D4E")
-2. Where it was found (file + approximate location)
-3. Classification: "verified" (follows design tokens) or "violation" (needs refactoring)
-4. If violation: severity (critical/high/medium/low)
-5. If violation: suggested fix
-6. Category (color/spacing/typography/layout/other)
+EXTRACT PATTERNS LIKE:
+- className="text-gray-500" → VIOLATION (use text-muted-foreground)
+- style={{color: '#4A5D4E'}} → VIOLATION (use bg-primary or var(--color-primary))
+- className="bg-primary" → VERIFIED (correct design token)
+- padding: 16px → VIOLATION (use var(--spacing-4) or p-4)
+- font-family: "degular-display" → CRITICAL VIOLATION (remove quotes)
 
-Return ALL unique patterns found, grouped by classification.`,
+For EACH pattern, provide the EXACT string found in code, not a description.`,
         response_json_schema: {
           type: "object",
           properties: {
@@ -106,10 +103,11 @@ Return ALL unique patterns found, grouped by classification.`,
               items: {
                 type: "object",
                 properties: {
-                  pattern: { type: "string" },
+                  pattern: { type: "string", description: "Exact code string like 'className=\"text-gray-500\"' or 'color: #4A5D4E'" },
                   category: { type: "string" },
                   found_in: { type: "array", items: { type: "string" } },
-                  occurrences: { type: "number" }
+                  occurrences: { type: "number" },
+                  example_usage: { type: "string", description: "Example line of code where found" }
                 }
               }
             },
@@ -118,13 +116,14 @@ Return ALL unique patterns found, grouped by classification.`,
               items: {
                 type: "object",
                 properties: {
-                  pattern: { type: "string" },
+                  pattern: { type: "string", description: "Exact problematic code like 'text-gray-500' or '#4A5D4E'" },
                   category: { type: "string" },
                   severity: { type: "string" },
                   found_in: { type: "array", items: { type: "string" } },
                   occurrences: { type: "number" },
                   issue: { type: "string" },
-                  suggested_fix: { type: "string" }
+                  suggested_fix: { type: "string" },
+                  example_usage: { type: "string", description: "Full line showing pattern in context" }
                 }
               }
             },
@@ -346,9 +345,22 @@ Return ALL unique patterns found, grouped by classification.`,
                       </span>
                     </div>
                     
-                    <code className="block bg-muted p-2 rounded text-sm font-mono mb-2">
-                      {pattern.pattern}
-                    </code>
+                    <div className="space-y-2">
+                      <div>
+                        <span className="text-xs text-muted-foreground">Pattern:</span>
+                        <code className="block bg-muted p-3 rounded text-sm font-mono font-bold mt-1">
+                          {pattern.pattern}
+                        </code>
+                      </div>
+                      {pattern.example_usage && (
+                        <div>
+                          <span className="text-xs text-muted-foreground">Example usage:</span>
+                          <code className="block bg-muted/50 p-2 rounded text-xs font-mono mt-1 text-muted-foreground">
+                            {pattern.example_usage}
+                          </code>
+                        </div>
+                      )}
+                    </div>
                     
                     {pattern.issue && (
                       <p className="text-sm text-muted-foreground mb-2">
