@@ -6,6 +6,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 import {
   Select,
@@ -26,6 +34,8 @@ export default function CSSAudit() {
   const [searchQuery, setSearchQuery] = useState("");
   const [fileContent, setFileContent] = useState("");
   const [highlightedCode, setHighlightedCode] = useState(null);
+  const [showPasteDialog, setShowPasteDialog] = useState(false);
+  const [pasteContent, setPasteContent] = useState("");
 
   // Load verification status from localStorage
   React.useEffect(() => {
@@ -341,23 +351,23 @@ export default function CSSAudit() {
       return files;
     };
 
-  const handleLoadFile = async (filePath) => {
+  const handleSelectFile = (filePath) => {
     if (!filePath) return;
-
     setSelectedFile(filePath);
+    setShowPasteDialog(true);
     setFileReport(null);
     setFileContent("");
     setHighlightedCode(null);
+  };
 
-    try {
-      const response = await fetch(`/${filePath}`);
-      if (!response.ok) throw new Error(`Failed to load`);
-      const content = await response.text();
-      setFileContent(content);
-      toast.success("File loaded");
-    } catch (err) {
-      toast.error("Could not load file");
+  const handlePasteContent = () => {
+    if (!pasteContent) {
+      toast.error("Please paste file content");
+      return;
     }
+    setFileContent(pasteContent);
+    setShowPasteDialog(false);
+    toast.success("File content loaded - ready to scan");
   };
 
   const handleScanFile = async () => {
@@ -516,7 +526,7 @@ For each violation provide:
             <div className="flex gap-3 items-end">
               <div className="flex-1">
                 <label className="text-sm font-medium mb-2 block">Select File</label>
-                <Select value={selectedFile || ""} onValueChange={handleLoadFile}>
+                <Select value={selectedFile || ""} onValueChange={handleSelectFile}>
                   <SelectTrigger>
                     <SelectValue placeholder="Choose a file to audit..." />
                   </SelectTrigger>
@@ -708,6 +718,32 @@ For each violation provide:
               </Card>
             )}
             </div>
+            
+            {/* Paste Dialog */}
+            <Dialog open={showPasteDialog} onOpenChange={setShowPasteDialog}>
+              <DialogContent className="max-w-3xl max-h-[80vh]">
+                <DialogHeader>
+                  <DialogTitle>Paste File Content</DialogTitle>
+                  <DialogDescription>
+                    Copy the content of <code className="bg-muted px-1 rounded text-xs">{selectedFile}</code> and paste it below
+                  </DialogDescription>
+                </DialogHeader>
+                <Textarea
+                  value={pasteContent}
+                  onChange={(e) => setPasteContent(e.target.value)}
+                  placeholder="Paste file content here..."
+                  className="min-h-[400px] font-mono text-xs"
+                />
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setShowPasteDialog(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handlePasteContent} disabled={!pasteContent}>
+                    Load Content
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
             </div>
             );
             }
