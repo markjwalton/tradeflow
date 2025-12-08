@@ -225,7 +225,10 @@ export default function DocumentList({ documents = [], projectId, isLoading }) {
                       <label htmlFor="file-upload" className="cursor-pointer">
                         {file ? (
                           <div className="flex items-center justify-center gap-2 text-foreground">
-...
+                            <File className="h-5 w-5" />
+                            <span>{file.name}</span>
+                          </div>
+                        ) : (
                           <div className="text-muted-foreground">
                             <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
                             <p>Click to select a file</p>
@@ -322,14 +325,14 @@ export default function DocumentList({ documents = [], projectId, isLoading }) {
           <div className="space-y-4">
             {Object.entries(groupedDocuments).map(([type, typeDocs]) => (
               <div key={type}>
-                <h4 className="text-sm font-medium text-stone-500 mb-2">{type}</h4>
+                <h4 className="text-sm font-medium text-muted-foreground mb-2">{type}</h4>
                 <div className="space-y-2">
                   {typeDocs.map((doc) => {
                     const IconComponent = typeIcons[doc.type] || typeIcons.default;
                     return (
                       <div
                         key={doc.id}
-                        className="p-4 rounded-lg border border-stone-200 bg-white hover:shadow-sm transition-shadow"
+                        className="p-4 rounded-lg border border-border bg-card hover:shadow-sm transition-shadow"
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex items-start gap-3">
@@ -357,7 +360,7 @@ export default function DocumentList({ documents = [], projectId, isLoading }) {
                               href={doc.fileUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="p-2 hover:bg-stone-100 rounded-lg transition-colors"
+                              className="p-2 hover:bg-muted rounded-lg transition-colors"
                             >
                               <ExternalLink className="h-4 w-4 text-muted-foreground" />
                             </a>
@@ -380,7 +383,7 @@ export default function DocumentList({ documents = [], projectId, isLoading }) {
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                   onClick={() => deleteMutation.mutate(doc.id)}
-                                  className="text-red-600"
+                                  className="text-destructive"
                                 >
                                   <Trash2 className="h-4 w-4 mr-2" />
                                   Delete
