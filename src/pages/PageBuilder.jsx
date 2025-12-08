@@ -352,7 +352,14 @@ export default function PageBuilder() {
 
     // Update JSX content - escape special regex characters
     const escapedClasses = escapeRegex(currentClasses);
-    const updatedContent = formData.current_content_jsx.replace(
+    // Try both class= and className= for JSX compatibility
+    let updatedContent = formData.current_content_jsx.replace(
+      new RegExp(`className="${escapedClasses}"`, 'g'),
+      `className="${newClasses}"`
+    );
+    
+    // Also try class= for HTML
+    updatedContent = updatedContent.replace(
       new RegExp(`class="${escapedClasses}"`, 'g'),
       `class="${newClasses}"`
     );
