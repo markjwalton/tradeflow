@@ -106,6 +106,25 @@ export default function PageBuilder() {
       { name: "3XL (1.875rem)", value: "text-[var(--font-size-3xl)]" },
       { name: "4XL (2.25rem)", value: "text-[var(--font-size-4xl)]" },
     ],
+    borders: [
+      { name: "Primary", value: "border-[var(--color-primary)]" },
+      { name: "Secondary", value: "border-[var(--color-secondary)]" },
+      { name: "Accent", value: "border-[var(--color-accent)]" },
+      { name: "Midnight", value: "border-[var(--color-midnight)]" },
+      { name: "Muted", value: "border-[var(--color-background-muted)]" },
+    ],
+    transitions: [
+      { name: "Fast (150ms)", value: "transition-[var(--transition-fast)]" },
+      { name: "Normal (200ms)", value: "transition-[var(--transition-normal)]" },
+      { name: "Slow (300ms)", value: "transition-[var(--transition-slow)]" },
+      { name: "All", value: "transition-all duration-200" },
+    ],
+    buttons: [
+      { name: "Primary", value: "bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)] px-4 py-2 rounded-[var(--radius-lg)]" },
+      { name: "Secondary", value: "bg-[var(--color-secondary)] text-white hover:bg-[var(--color-secondary-dark)] px-4 py-2 rounded-[var(--radius-lg)]" },
+      { name: "Outline", value: "border border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10 px-4 py-2 rounded-[var(--radius-lg)]" },
+      { name: "Ghost", value: "text-[var(--color-charcoal)] hover:bg-[var(--color-background-muted)] px-4 py-2 rounded-[var(--radius-lg)]" },
+    ],
   };
 
   const [formData, setFormData] = useState({
@@ -311,6 +330,13 @@ export default function PageBuilder() {
       newClasses = currentClasses.replace(/font-\[var\(--font-[^\]]+\)\]/g, '');
     } else if (tokenType === 'font-size') {
       newClasses = currentClasses.replace(/text-\[var\(--font-size-[^\]]+\)\]/g, '');
+    } else if (tokenType === 'border') {
+      newClasses = currentClasses.replace(/border-\[var\(--color-[^\]]+\)\]/g, '');
+    } else if (tokenType === 'transition') {
+      newClasses = currentClasses.replace(/transition-[^\s]+/g, '');
+    } else if (tokenType === 'button') {
+      // Replace all button-related classes
+      newClasses = '';
     }
 
     newClasses = `${newClasses.trim()} ${tokenClass}`.trim();
@@ -875,6 +901,21 @@ export default function PageBuilder() {
                   ))}
                 </div>
               </div>
+              <div>
+                <Label className="mb-2 block">Border Color</Label>
+                <div className="grid grid-cols-3 gap-2">
+                  {TOKEN_LIBRARY.borders.map((token) => (
+                    <Button
+                      key={token.value}
+                      variant="outline"
+                      className="justify-start"
+                      onClick={() => applyTokenToElement(token.value, 'border')}
+                    >
+                      {token.name}
+                    </Button>
+                  ))}
+                </div>
+              </div>
             </TabsContent>
 
             <TabsContent value="typography" className="space-y-4">
@@ -968,6 +1009,36 @@ export default function PageBuilder() {
                       variant="outline"
                       className="justify-start"
                       onClick={() => applyTokenToElement(token.value, 'shadow')}
+                    >
+                      {token.name}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <Label className="mb-2 block">Transitions</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  {TOKEN_LIBRARY.transitions.map((token) => (
+                    <Button
+                      key={token.value}
+                      variant="outline"
+                      className="justify-start"
+                      onClick={() => applyTokenToElement(token.value, 'transition')}
+                    >
+                      {token.name}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <Label className="mb-2 block">Button Styles</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  {TOKEN_LIBRARY.buttons.map((token) => (
+                    <Button
+                      key={token.value}
+                      variant="outline"
+                      className="justify-start"
+                      onClick={() => applyTokenToElement(token.value, 'button')}
                     >
                       {token.name}
                     </Button>
