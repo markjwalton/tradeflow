@@ -35,7 +35,10 @@ import { createPageUrl } from "@/utils";
 export default function CSSAudit() {
   const queryClient = useQueryClient();
   const [scanning, setScanning] = useState(false);
-  const [findings, setFindings] = useState([]);
+  const [findings, setFindings] = useState(() => {
+    const saved = localStorage.getItem('cssAudit_findings');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [progress, setProgress] = useState({ current: 0, total: 0, file: "" });
   const [roadmapProgress, setRoadmapProgress] = useState({ current: 0, total: 0, file: "" });
   const [selectedFindings, setSelectedFindings] = useState([]);
@@ -43,6 +46,13 @@ export default function CSSAudit() {
   const [filterSeverity, setFilterSeverity] = useState("all");
   const [creatingRoadmap, setCreatingRoadmap] = useState(false);
   const [defaultPriority, setDefaultPriority] = useState("medium");
+
+  // Persist findings to localStorage
+  React.useEffect(() => {
+    if (findings.length > 0) {
+      localStorage.setItem('cssAudit_findings', JSON.stringify(findings));
+    }
+  }, [findings]);
 
   const hardcodedPatterns = [
     // Font weights - should use semantic tokens
@@ -87,6 +97,13 @@ export default function CSSAudit() {
     // Z-index - should use CSS variables
     { pattern: /z-(0|10|20|30|40|50|auto)/g, type: "z-index-hardcoded", replacement: "Use CSS variables --z-index-* (e.g., [z-index:var(--z-dropdown)])" },
   ];
+
+  const clearResults = () => {
+    setFindings([]);
+    setSelectedFindings([]);
+    localStorage.removeItem('cssAudit_findings');
+    toast.success("Results cleared");
+  };
 
   const scanProject = async () => {
     setScanning(true);
@@ -390,8 +407,7 @@ ${aiPrompt.rulebook_references?.map(r => `- ${r}`).join("\n") || "None"}
 
       setRoadmapProgress({ current: selected.length, total: selected.length, file: "Complete!" });
       queryClient.invalidateQueries({ queryKey: ["roadmapItems"] });
-      toast.success(`Created ${selected.length} roadmap items with AI prompts`);
-      setSelectedFindings([]);
+      toast.success(`Created ${selected.length} roadmap items - results kept for reference`);
       setTimeout(() => setRoadmapProgress({ current: 0, total: 0, file: "" }), 2000);
     } catch (error) {
       toast.error("Failed: " + error.message);
@@ -424,6 +440,14 @@ ${aiPrompt.rulebook_references?.map(r => `- ${r}`).join("\n") || "None"}
             </p>
           </div>
           <div className="flex gap-2">
+            {findings.length > 0 && !scanning && (
+              <Button
+                variant="outline"
+                onClick={clearResults}
+              >
+                Clear Results
+              </Button>
+            )}
             <Button
               onClick={scanProject}
               disabled={scanning}
@@ -434,7 +458,7 @@ ${aiPrompt.rulebook_references?.map(r => `- ${r}`).join("\n") || "None"}
               ) : (
                 <FileSearch className="h-4 w-4 mr-2" />
               )}
-              {scanning ? "Scanning..." : "Scan Project"}
+              {scanning ? "Scanning..." : findings.length > 0 ? "Re-scan Project" : "Scan Project"}
             </Button>
           </div>
         </div>
