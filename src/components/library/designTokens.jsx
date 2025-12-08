@@ -268,6 +268,15 @@ export const components = {
  * Use in Layout.js: <style dangerouslySetInnerHTML={{ __html: cssVariables }} />
  */
 export const cssVariables = `
+/* Force Adobe Fonts to load */
+body {
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
 :root {
   /* ================================
      SHADCN/UI BASE TOKENS (HSL)
