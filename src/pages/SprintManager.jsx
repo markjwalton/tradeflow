@@ -123,7 +123,7 @@ export default function SprintManager() {
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
             <Play className="h-6 w-6 text-[var(--color-success)]" />
             Sprint Manager
           </h1>
@@ -169,7 +169,7 @@ export default function SprintManager() {
           {planningSprints.length > 0 && (
             <div>
               <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-blue-600" />
+                <Calendar className="h-5 w-5 text-info" />
                 Planning
               </h2>
               <div className="grid gap-4">
@@ -193,7 +193,7 @@ export default function SprintManager() {
           {completedSprints.length > 0 && (
             <div>
               <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-gray-600" />
+                <CheckCircle className="h-5 w-5 text-muted-foreground" />
                 Completed
               </h2>
               <div className="grid gap-4">
@@ -311,16 +311,16 @@ function SprintCard({ sprint, items, onEdit, onDelete, onStatusChange, onCopy, o
               </Button>
             )}
             <Button size="sm" variant="ghost" onClick={onEdit}>Edit</Button>
-            <Button size="sm" variant="ghost" className="text-red-500" onClick={onDelete}>
+            <Button size="sm" variant="ghost" className="text-destructive" onClick={onDelete}>
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>
         </div>
         {sprint.description && (
-          <p className="text-sm text-gray-500 mt-1">{sprint.description}</p>
+          <p className="text-sm text-muted-foreground mt-1">{sprint.description}</p>
         )}
         {(sprint.start_date || sprint.end_date) && (
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             {sprint.start_date && moment(sprint.start_date).format("MMM D")}
             {sprint.start_date && sprint.end_date && " - "}
             {sprint.end_date && moment(sprint.end_date).format("MMM D, YYYY")}
@@ -339,7 +339,7 @@ function SprintCard({ sprint, items, onEdit, onDelete, onStatusChange, onCopy, o
                   <Button size="sm" variant="outline" onClick={() => onCopy(combinedPrompt)}>
                     <Copy className="h-3 w-3 mr-1" /> Copy All
                   </Button>
-                  <Button size="sm" className="bg-purple-600 hover:bg-purple-700" onClick={() => onSend(combinedPrompt)}>
+                  <Button size="sm" className="bg-accent-600 hover:bg-accent-700 text-accent-foreground" onClick={() => onSend(combinedPrompt)}>
                     <Send className="h-3 w-3 mr-1" /> Send to Chat
                   </Button>
                 </>
@@ -355,13 +355,13 @@ function SprintCard({ sprint, items, onEdit, onDelete, onStatusChange, onCopy, o
                       <Badge variant="outline">{item.status}</Badge>
                     </div>
                     {item.development_prompt && (
-                      <div className="bg-slate-50 rounded p-2 mt-2">
+                      <div className="bg-muted rounded p-2 mt-2">
                         <pre className="text-xs whitespace-pre-wrap font-mono">{item.development_prompt.substring(0, 200)}...</pre>
                         <div className="flex gap-2 mt-2">
                           <Button size="sm" variant="ghost" onClick={() => onCopy(item.development_prompt)}>
                             <Copy className="h-3 w-3 mr-1" /> Copy
                           </Button>
-                          <Button size="sm" variant="ghost" className="text-purple-600" onClick={() => onSend(item.development_prompt)}>
+                          <Button size="sm" variant="ghost" className="text-accent-600" onClick={() => onSend(item.development_prompt)}>
                             <Send className="h-3 w-3 mr-1" /> Send
                           </Button>
                         </div>
@@ -374,7 +374,7 @@ function SprintCard({ sprint, items, onEdit, onDelete, onStatusChange, onCopy, o
           </div>
         )}
         {items.length === 0 && (
-          <p className="text-sm text-gray-500">No items in this sprint yet</p>
+          <p className="text-sm text-muted-foreground">No items in this sprint yet</p>
         )}
       </CardContent>
     </Card>

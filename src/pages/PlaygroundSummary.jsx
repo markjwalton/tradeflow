@@ -35,24 +35,24 @@ import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
 
 const statusIcons = {
-  passed: <CheckCircle2 className="h-4 w-4 text-green-600" />,
-  failed: <XCircle className="h-4 w-4 text-red-600" />,
-  pending: <Circle className="h-4 w-4 text-gray-400" />,
-  skipped: <Circle className="h-4 w-4 text-yellow-500" />,
+  passed: <CheckCircle2 className="h-4 w-4 text-success" />,
+  failed: <XCircle className="h-4 w-4 text-destructive" />,
+  pending: <Circle className="h-4 w-4 text-muted-foreground" />,
+  skipped: <Circle className="h-4 w-4 text-warning" />,
 };
 
 const typeIcons = {
-  entity: <Database className="h-4 w-4 text-purple-600" />,
-  page: <Layout className="h-4 w-4 text-blue-600" />,
-  feature: <Zap className="h-4 w-4 text-amber-600" />,
+  entity: <Database className="h-4 w-4 text-accent-600" />,
+  page: <Layout className="h-4 w-4 text-info" />,
+  feature: <Zap className="h-4 w-4 text-warning" />,
 };
 
 const itemStatusColors = {
-  synced: "bg-gray-100 text-gray-700",
-  modified: "bg-blue-100 text-blue-700",
-  testing: "bg-yellow-100 text-yellow-700",
-  ready: "bg-green-100 text-green-700",
-  promoted: "bg-purple-100 text-purple-700",
+  synced: "bg-muted text-muted-foreground",
+  modified: "bg-info-50 text-info-foreground",
+  testing: "bg-warning/10 text-warning-foreground",
+  ready: "bg-success-50 text-success-foreground",
+  promoted: "bg-accent-100 text-accent-700",
 };
 
 export default function PlaygroundSummary() {
@@ -287,7 +287,7 @@ export default function PlaygroundSummary() {
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
             <FlaskConical className="h-6 w-6 text-[var(--color-primary)]" />
             Development Playground
           </h1>
@@ -302,7 +302,7 @@ export default function PlaygroundSummary() {
           </Link>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="outline" className="text-red-600 border-red-200 hover:bg-red-50" disabled={isClearing || playgroundItems.length === 0}>
+              <Button variant="outline" className="text-destructive border-destructive-200 hover:bg-destructive-50" disabled={isClearing || playgroundItems.length === 0}>
                 {isClearing ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -319,7 +319,7 @@ export default function PlaygroundSummary() {
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle className="flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 text-red-600" />
+                  <AlertTriangle className="h-5 w-5 text-destructive" />
                   Clear Playground Data?
                 </AlertDialogTitle>
                 <AlertDialogDescription>
@@ -329,7 +329,7 @@ export default function PlaygroundSummary() {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={clearPlaygroundData} className="bg-red-600 hover:bg-red-700">
+                <AlertDialogAction onClick={clearPlaygroundData} className="bg-destructive hover:bg-destructive/90 text-destructive-foreground">
                   Clear All Data
                 </AlertDialogAction>
               </AlertDialogFooter>
@@ -349,7 +349,7 @@ export default function PlaygroundSummary() {
             )}
           </Button>
           <Link to={createPageUrl("ConceptWorkbench")}>
-            <Button className="bg-amber-600 hover:bg-amber-700">
+            <Button className="bg-warning hover:bg-warning/90 text-warning-foreground">
               <Lightbulb className="h-4 w-4 mr-2" />
               New Concept
             </Button>
@@ -359,10 +359,10 @@ export default function PlaygroundSummary() {
 
       {/* Progress Banner */}
       {(isSyncing || isClearing) && (syncProgress.total > 0 || clearProgress.total > 0) && (
-        <Card className="mb-6 border-blue-200 bg-blue-50">
+        <Card className="mb-6 border-info/20 bg-info-50">
           <CardContent className="py-4">
             <div className="flex items-center gap-4">
-              <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
+              <Loader2 className="h-5 w-5 animate-spin text-info" />
               <div className="flex-1">
                 <div className="flex justify-between mb-1 text-sm">
                   <span className="font-medium">
@@ -435,7 +435,7 @@ export default function PlaygroundSummary() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Edit className="h-5 w-5 text-blue-600" />
+                  <Edit className="h-5 w-5 text-info" />
                   Items Being Modified ({activeItems.length})
                 </CardTitle>
               </CardHeader>
@@ -446,7 +446,7 @@ export default function PlaygroundSummary() {
                   <div className="space-y-2">
                     {activeItems.slice(0, 5).map(item => (
                       <Link key={item.id} to={getDetailUrl(item)}>
-                        <div className="flex items-center justify-between p-2 rounded hover:bg-gray-50">
+                        <div className="flex items-center justify-between p-2 rounded hover:bg-muted">
                           <div className="flex items-center gap-2">
                             {typeIcons[item.source_type]}
                             <span className="font-medium">{item.source_name}</span>
@@ -459,7 +459,7 @@ export default function PlaygroundSummary() {
                       </Link>
                     ))}
                     {activeItems.length > 5 && (
-                      <p className="text-sm text-gray-500 text-center">+{activeItems.length - 5} more</p>
+                      <p className="text-sm text-muted-foreground text-center">+{activeItems.length - 5} more</p>
                     )}
                   </div>
                 )}
@@ -470,7 +470,7 @@ export default function PlaygroundSummary() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Lightbulb className="h-5 w-5 text-amber-600" />
+                  <Lightbulb className="h-5 w-5 text-warning" />
                   Active Concepts ({activeConcepts.length})
                 </CardTitle>
               </CardHeader>
@@ -489,7 +489,7 @@ export default function PlaygroundSummary() {
                   <div className="space-y-2">
                     {activeConcepts.slice(0, 5).map(concept => (
                       <Link key={concept.id} to={createPageUrl("ConceptWorkbench") + `?id=${concept.id}`}>
-                        <div className="flex items-center justify-between p-2 rounded hover:bg-gray-50">
+                        <div className="flex items-center justify-between p-2 rounded hover:bg-muted">
                           <div className="flex items-center gap-2">
                             {typeIcons[concept.item_type]}
                             <span className="font-medium">{concept.name}</span>
@@ -511,28 +511,28 @@ export default function PlaygroundSummary() {
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between text-sm">
-                <div className="flex flex-col items-center p-4 bg-amber-50 rounded-lg flex-1">
-                  <Beaker className="h-8 w-8 text-amber-600 mb-2" />
+                <div className="flex flex-col items-center p-4 bg-warning/10 rounded-lg flex-1">
+                  <Beaker className="h-8 w-8 text-warning mb-2" />
                   <span className="font-medium">Concept</span>
-                  <span className="text-gray-500 text-xs">New ideas</span>
+                  <span className="text-muted-foreground text-xs">New ideas</span>
                 </div>
-                <ArrowRight className="h-5 w-5 text-gray-400" />
-                <div className="flex flex-col items-center p-4 bg-purple-50 rounded-lg flex-1">
-                  <FlaskConical className="h-8 w-8 text-purple-600 mb-2" />
+                <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                <div className="flex flex-col items-center p-4 bg-accent-50 rounded-lg flex-1">
+                  <FlaskConical className="h-8 w-8 text-accent-600 mb-2" />
                   <span className="font-medium">Playground</span>
-                  <span className="text-gray-500 text-xs">Test & refine</span>
+                  <span className="text-muted-foreground text-xs">Test & refine</span>
                 </div>
-                <ArrowRight className="h-5 w-5 text-gray-400" />
-                <div className="flex flex-col items-center p-4 bg-blue-50 rounded-lg flex-1">
-                  <Database className="h-8 w-8 text-blue-600 mb-2" />
+                <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                <div className="flex flex-col items-center p-4 bg-info-50 rounded-lg flex-1">
+                  <Database className="h-8 w-8 text-info mb-2" />
                   <span className="font-medium">Library</span>
-                  <span className="text-gray-500 text-xs">Production ready</span>
+                  <span className="text-muted-foreground text-xs">Production ready</span>
                 </div>
-                <ArrowRight className="h-5 w-5 text-gray-400" />
-                <div className="flex flex-col items-center p-4 bg-green-50 rounded-lg flex-1">
-                  <Play className="h-8 w-8 text-green-600 mb-2" />
+                <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                <div className="flex flex-col items-center p-4 bg-success-50 rounded-lg flex-1">
+                  <Play className="h-8 w-8 text-success mb-2" />
                   <span className="font-medium">Sprint</span>
-                  <span className="text-gray-500 text-xs">Implementation</span>
+                  <span className="text-muted-foreground text-xs">Implementation</span>
                 </div>
               </div>
             </CardContent>
@@ -544,7 +544,7 @@ export default function PlaygroundSummary() {
           {/* Filters */}
           <div className="flex gap-4 flex-wrap">
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search..."
                 value={searchQuery}
@@ -627,7 +627,7 @@ export default function PlaygroundSummary() {
         {/* Concepts Tab */}
         <TabsContent value="concepts" className="space-y-4">
           <div className="flex justify-between items-center">
-            <p className="text-gray-500">New concepts being developed before adding to playground</p>
+            <p className="text-muted-foreground">New concepts being developed before adding to playground</p>
             <Link to={createPageUrl("ConceptWorkbench")}>
               <Button>
                 <Lightbulb className="h-4 w-4 mr-2" />
@@ -645,7 +645,7 @@ export default function PlaygroundSummary() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {conceptItems.map(concept => (
-                <Card key={concept.id} className="hover:shadow-md transition-shadow border-amber-200">
+                <Card key={concept.id} className="hover:shadow-md transition-shadow border-warning/20">
                   <CardHeader className="pb-2">
                     <div className="flex items-start justify-between">
                       <CardTitle className="text-base flex items-center gap-2">
@@ -654,12 +654,12 @@ export default function PlaygroundSummary() {
                       </CardTitle>
                       <Badge variant="outline">{concept.status}</Badge>
                     </div>
-                    <p className="text-sm text-gray-500">{concept.description}</p>
+                    <p className="text-sm text-muted-foreground">{concept.description}</p>
                   </CardHeader>
                   <CardContent className="pt-0">
                     <div className="flex items-center gap-2 mb-3">
                       {statusIcons[concept.test_status]}
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-muted-foreground">
                         {concept.test_status === "passed" ? "Tests passed" : 
                          concept.test_status === "failed" ? "Tests failed" : "Not tested"}
                       </span>

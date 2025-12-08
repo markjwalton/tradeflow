@@ -25,13 +25,13 @@ import { toast } from "sonner";
 import moment from "moment";
 
 const entryTypes = [
-  { value: "brainstorming", label: "Brainstorming", icon: Brain, color: "bg-purple-100 text-purple-800" },
-  { value: "question", label: "Question", icon: HelpCircle, color: "bg-blue-100 text-blue-800" },
-  { value: "advice", label: "Advice", icon: MessageSquare, color: "bg-green-100 text-green-800" },
-  { value: "idea", label: "Idea", icon: Lightbulb, color: "bg-yellow-100 text-yellow-800" },
-  { value: "decision", label: "Decision", icon: CheckCircle, color: "bg-emerald-100 text-emerald-800" },
-  { value: "update", label: "Update", icon: MessageSquare, color: "bg-gray-100 text-gray-800" },
-  { value: "blocker", label: "Blocker", icon: AlertTriangle, color: "bg-red-100 text-red-800" },
+  { value: "brainstorming", label: "Brainstorming", icon: Brain, color: "bg-accent-100 text-accent-700" },
+  { value: "question", label: "Question", icon: HelpCircle, color: "bg-info-50 text-info-foreground" },
+  { value: "advice", label: "Advice", icon: MessageSquare, color: "bg-success-50 text-success-foreground" },
+  { value: "idea", label: "Idea", icon: Lightbulb, color: "bg-warning/10 text-warning-foreground" },
+  { value: "decision", label: "Decision", icon: CheckCircle, color: "bg-success-50 text-success-foreground" },
+  { value: "update", label: "Update", icon: MessageSquare, color: "bg-muted text-muted-foreground" },
+  { value: "blocker", label: "Blocker", icon: AlertTriangle, color: "bg-destructive-50 text-destructive-700" },
 ];
 
 const contextCategories = [
@@ -451,7 +451,7 @@ Return as JSON:
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-2xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>{item?.title}</h1>
+            <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">{item?.title}</h1>
             <p className="text-[var(--color-charcoal)]">{item?.description}</p>
           </div>
         </div>
@@ -517,14 +517,14 @@ Return as JSON:
               </div>
               
               {continueFromEntry && (
-                <div className="bg-slate-50 border-l-4 border-slate-300 p-3 rounded text-sm">
+                <div className="bg-muted border-l-4 border-border p-3 rounded text-sm">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-slate-500 font-medium">Continuing from:</span>
+                    <span className="text-xs text-muted-foreground font-medium">Continuing from:</span>
                     <Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => setContinueFromEntry(null)}>
                       Clear
                     </Button>
                   </div>
-                  <p className="text-slate-700">{continueFromEntry.content.substring(0, 150)}{continueFromEntry.content.length > 150 ? "..." : ""}</p>
+                  <p className="text-foreground">{continueFromEntry.content.substring(0, 150)}{continueFromEntry.content.length > 150 ? "..." : ""}</p>
                 </div>
               )}
               
@@ -558,8 +558,8 @@ Return as JSON:
                 {attachments.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {attachments.map((att, index) => (
-                      <div key={index} className="flex items-center gap-1 bg-slate-100 rounded px-2 py-1 text-sm">
-                        <FileText className="h-3 w-3 text-slate-500" />
+                      <div key={index} className="flex items-center gap-1 bg-muted rounded px-2 py-1 text-sm">
+                        <FileText className="h-3 w-3 text-muted-foreground" />
                         {editingAttachmentIndex === index ? (
                           <>
                             <Input
@@ -580,7 +580,7 @@ Return as JSON:
                             </Button>
                           </>
                         )}
-                        <Button variant="ghost" size="icon" className="h-5 w-5 text-red-500" onClick={() => removeAttachment(index)}>
+                        <Button variant="ghost" size="icon" className="h-5 w-5 text-destructive" onClick={() => removeAttachment(index)}>
                           <X className="h-3 w-3" />
                         </Button>
                       </div>
@@ -605,7 +605,7 @@ Return as JSON:
                 <Loader2 className="h-6 w-6 animate-spin" />
               </div>
             ) : entries.length === 0 ? (
-              <p className="text-center text-gray-500 py-8">No journal entries yet</p>
+              <p className="text-center text-muted-foreground py-8">No journal entries yet</p>
             ) : (
               entries.map(entry => {
                 const typeInfo = getTypeInfo(entry.entry_type);
@@ -622,11 +622,11 @@ Return as JSON:
                             <TypeIcon className="h-3 w-3 mr-1" />
                             {typeInfo.label}
                           </Badge>
-                          <span className="text-sm text-gray-500">
+                          <span className="text-sm text-muted-foreground">
                             {moment(entry.entry_date || entry.created_date).format("DD MMM YYYY, HH:mm")}
                           </span>
                           {isFollowUp && parentEntry && (
-                            <span className="text-xs text-slate-500 italic">
+                            <span className="text-xs text-muted-foreground italic">
                               ↳ follows: "{parentEntry.content.substring(0, 30)}..."
                             </span>
                           )}
@@ -643,7 +643,7 @@ Return as JSON:
                           <Button 
                             variant="ghost" 
                             size="icon" 
-                            className="h-8 w-8 text-red-500 hover:text-red-700" 
+                            className="h-8 w-8 text-destructive" 
                             onClick={() => deleteMutation.mutate(entry.id)}
                           >
                             <Trash2 className="h-4 w-4" />
@@ -684,19 +684,19 @@ Return as JSON:
                       </div>
                       
                       {entry.ai_generated_prompt && (
-                        <div className="mt-4 bg-purple-50 border border-purple-200 rounded-lg p-4">
+                        <div className="mt-4 bg-accent-50 border border-accent-200 rounded-lg p-4">
                           <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm font-medium text-purple-700">Prompt to continue this discussion</span>
+                            <span className="text-sm font-medium text-accent-700">Prompt to continue this discussion</span>
                             <div className="flex gap-1">
                               <Button size="sm" variant="ghost" onClick={() => copyToClipboard(entry.ai_generated_prompt)}>
                                 <Copy className="h-3 w-3 mr-1" /> Copy
                               </Button>
-                              <Button size="sm" variant="ghost" className="text-purple-700" onClick={() => sendToChat(entry.ai_generated_prompt)}>
+                              <Button size="sm" variant="ghost" className="text-accent-700" onClick={() => sendToChat(entry.ai_generated_prompt)}>
                                 <Send className="h-3 w-3 mr-1" /> Send
                               </Button>
                             </div>
                           </div>
-                          <p className="text-sm text-purple-900 whitespace-pre-wrap">{entry.ai_generated_prompt}</p>
+                          <p className="text-sm text-accent-900 whitespace-pre-wrap">{entry.ai_generated_prompt}</p>
                         </div>
                       )}
                     </CardContent>
@@ -712,10 +712,10 @@ Return as JSON:
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
-                <MessageSquare className="h-5 w-5 text-blue-500" />
+                <MessageSquare className="h-5 w-5 text-info" />
                 Live Chat Journal
               </CardTitle>
-              <p className="text-sm text-gray-500">Quick captures from AI chat sessions (hidden from main roadmap)</p>
+              <p className="text-sm text-muted-foreground">Quick captures from AI chat sessions (hidden from main roadmap)</p>
             </CardHeader>
             <CardContent>
               {liveChatLoading ? (
@@ -723,9 +723,9 @@ Return as JSON:
                   <Loader2 className="h-6 w-6 animate-spin" />
                 </div>
               ) : !liveJournalItem ? (
-                <p className="text-center text-gray-500 py-8">No Live Chat Journal found. Use Quick Capture to create entries.</p>
+                <p className="text-center text-muted-foreground py-8">No Live Chat Journal found. Use Quick Capture to create entries.</p>
               ) : liveChatEntries.length === 0 ? (
-                <p className="text-center text-gray-500 py-8">No live chat entries yet. Use Quick Capture to add notes.</p>
+                <p className="text-center text-muted-foreground py-8">No live chat entries yet. Use Quick Capture to add notes.</p>
               ) : (
                 <div className="space-y-4">
                   {liveChatEntries.map(entry => {
@@ -733,7 +733,7 @@ Return as JSON:
                     const TypeIcon = typeInfo.icon;
                     
                     return (
-                      <Card key={entry.id} className="border-l-4 border-l-blue-300">
+                      <Card key={entry.id} className="border-l-4 border-l-info">
                         <CardContent className="pt-4">
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-2 flex-wrap">
@@ -741,7 +741,7 @@ Return as JSON:
                                 <TypeIcon className="h-3 w-3 mr-1" />
                                 {typeInfo.label}
                               </Badge>
-                              <span className="text-sm text-gray-500">
+                              <span className="text-sm text-muted-foreground">
                                 {moment(entry.entry_date || entry.created_date).format("DD MMM YYYY, HH:mm")}
                               </span>
                             </div>
@@ -797,7 +797,7 @@ Return as JSON:
               
               {currentPrompt && (
                 <>
-                  <div className="bg-slate-50 border rounded-lg p-4">
+                  <div className="bg-muted border rounded-lg p-4">
                     <Textarea
                       value={devPrompt || item?.development_prompt || ""}
                       onChange={(e) => setDevPrompt(e.target.value)}
@@ -809,7 +809,7 @@ Return as JSON:
                     <Button onClick={() => copyToClipboard(currentPrompt)} variant="outline">
                       <Copy className="h-4 w-4 mr-2" /> Copy
                     </Button>
-                    <Button onClick={() => sendToChat(currentPrompt)} className="bg-purple-600 hover:bg-purple-700">
+                    <Button onClick={() => sendToChat(currentPrompt)} className="bg-accent-600 hover:bg-accent-700 text-accent-foreground">
                       <Send className="h-4 w-4 mr-2" /> Send to Chat
                     </Button>
                     <Button onClick={generateAIReview} disabled={isGeneratingReview} variant="secondary">
@@ -829,22 +829,22 @@ Return as JSON:
                 <CardTitle className="text-lg flex items-center gap-2">
                   <Brain className="h-5 w-5" />
                   AI Review
-                  <Badge className={item.ai_review.status === "accepted" ? "bg-green-100 text-green-800" : item.ai_review.status === "needs_work" ? "bg-orange-100 text-orange-800" : "bg-blue-100 text-blue-800"}>
+                  <Badge className={item.ai_review.status === "accepted" ? "bg-success-50 text-success-foreground" : item.ai_review.status === "needs_work" ? "bg-warning/10 text-warning-foreground" : "bg-info-50 text-info-foreground"}>
                     {item.ai_review.status === "accepted" ? "Accepted" : item.ai_review.status === "needs_work" ? "Needs Work" : "Pending Review"}
                   </Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="bg-slate-50 p-4 rounded-lg">
+                <div className="bg-muted p-4 rounded-lg">
                   <h4 className="font-medium mb-2">Overall Assessment</h4>
-                  <p className="text-sm text-gray-700">{item.ai_review.reasoning}</p>
+                  <p className="text-sm text-muted-foreground">{item.ai_review.reasoning}</p>
                 </div>
 
                 {item.ai_review.recommendations?.length > 0 && (
                   <div className="space-y-3">
                     <h4 className="font-medium">Recommendations</h4>
                     {item.ai_review.recommendations.map((rec, index) => (
-                      <div key={index} className={`border rounded-lg p-3 ${rec.accepted === true ? "bg-green-50 border-green-200" : rec.accepted === false ? "bg-gray-50 border-gray-200 opacity-60" : "bg-white"}`}>
+                      <div key={index} className={`border rounded-lg p-3 ${rec.accepted === true ? "bg-success-50 border-success" : rec.accepted === false ? "bg-muted border-border opacity-60" : "bg-card"}`}>
                         <div className="flex items-start justify-between gap-2">
                           <div>
                             <Badge variant="outline" className="mb-2">{rec.type}</Badge>
@@ -852,16 +852,16 @@ Return as JSON:
                           </div>
                           {rec.accepted === undefined && (
                             <div className="flex gap-1">
-                              <Button size="icon" variant="ghost" className="h-8 w-8 text-green-600" onClick={() => handleRecommendationAction(index, true)}>
+                              <Button size="icon" variant="ghost" className="h-8 w-8 text-success" onClick={() => handleRecommendationAction(index, true)}>
                                 <ThumbsUp className="h-4 w-4" />
                               </Button>
-                              <Button size="icon" variant="ghost" className="h-8 w-8 text-red-600" onClick={() => handleRecommendationAction(index, false)}>
+                              <Button size="icon" variant="ghost" className="h-8 w-8 text-destructive" onClick={() => handleRecommendationAction(index, false)}>
                                 <ThumbsDown className="h-4 w-4" />
                               </Button>
                             </div>
                           )}
                           {rec.accepted !== undefined && (
-                            <Badge className={rec.accepted ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-600"}>
+                            <Badge className={rec.accepted ? "bg-success-50 text-success-foreground" : "bg-muted text-muted-foreground"}>
                               {rec.accepted ? "Accepted" : "Rejected"}
                             </Badge>
                           )}
@@ -872,7 +872,7 @@ Return as JSON:
                 )}
 
                 <div className="flex gap-2 pt-4 border-t">
-                  <Button onClick={acceptAndProceed} className="bg-green-600 hover:bg-green-700">
+                  <Button onClick={acceptAndProceed} className="bg-success hover:bg-success/90 text-success-foreground">
                     <CheckCircle className="h-4 w-4 mr-2" /> Accept & Mark Ready
                   </Button>
                   <Button onClick={sendBackToRoadmap} variant="outline">
@@ -890,7 +890,7 @@ Return as JSON:
                 <CardTitle className="text-lg">Sprint Assignment</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-gray-500 mb-4">This item is ready for development. Assign it to a sprint.</p>
+                <p className="text-sm text-muted-foreground mb-4">This item is ready for development. Assign it to a sprint.</p>
                 {item?.sprints?.length > 0 && (
                   <div className="mb-4">
                     <h4 className="text-sm font-medium mb-2">Assigned Sprints:</h4>
@@ -930,7 +930,7 @@ Return as JSON:
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-lg">Context Items for AI</CardTitle>
-              <p className="text-sm text-gray-500">Add specific context items for the AI to consider when generating prompts</p>
+              <p className="text-sm text-muted-foreground">Add specific context items for the AI to consider when generating prompts</p>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex gap-2">
@@ -958,17 +958,17 @@ Return as JSON:
               {item?.context_items?.length > 0 ? (
                 <div className="space-y-2">
                   {item.context_items.map((ctx, index) => (
-                    <div key={index} className="flex items-start gap-2 bg-slate-50 p-3 rounded-lg">
+                    <div key={index} className="flex items-start gap-2 bg-muted p-3 rounded-lg">
                       <Badge variant="outline">{ctx.category}</Badge>
                       <p className="text-sm flex-1">{ctx.content}</p>
-                      <Button variant="ghost" size="icon" className="h-6 w-6 text-red-500" onClick={() => removeContextItem(index)}>
+                      <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive" onClick={() => removeContextItem(index)}>
                         <X className="h-3 w-3" />
                       </Button>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-center text-gray-500 py-8">No context items added yet</p>
+                <p className="text-center text-muted-foreground py-8">No context items added yet</p>
               )}
             </CardContent>
           </Card>
