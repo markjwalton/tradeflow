@@ -1,4 +1,4 @@
-css
+/* Adobe Fonts - Direct Import */
 @import url("https://use.typekit.net/fny0atv.css");
 
 @tailwind base;
@@ -59,29 +59,26 @@ css
     --font-size-4xl: 2.25rem;
   }
   
-  * {
-    font-family: mrs-eaves-xl-serif-narrow, serif !important;
+  /* Global body text font */
+  html, body, * {
+    font-family: "mrs-eaves-xl-serif-narrow", Georgia, serif !important;
   }
   
-  body {
-    font-family: mrs-eaves-xl-serif-narrow, serif !important;
-    color: var(--color-charcoal);
-    background: var(--color-background);
-  }
-  
-  h1, h2, h3, h4, h5, h6, .font-heading {
-    font-family: degular-display, sans-serif !important;
+  /* Headings override */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "degular-display", -apple-system, BlinkMacSystemFont, sans-serif !important;
     font-weight: 300 !important;
     color: var(--color-midnight);
   }
 }
 
 @layer utilities {
-  .font-body {
-    font-family: mrs-eaves-xl-serif-narrow, serif !important;
+  .font-heading {
+    font-family: "degular-display", -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-weight: 300 !important;
   }
   
-  .font-light {
-    font-weight: 300 !important;
+  .font-body {
+    font-family: "mrs-eaves-xl-serif-narrow", Georgia, serif !important;
   }
 }
