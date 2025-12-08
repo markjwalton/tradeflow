@@ -16,8 +16,8 @@ css
 
     /* CRITICAL: Alias for components - no quotes on font names! */
     /* Updated from outline, simplified for mapping */
-    --font-heading: degular-display;
-    --font-body: mrs-eaves-xl-serif-narrow;
+    --font-heading: "degular-display"; /* Updated from outline */
+    --font-body: "mrs-eaves-xl-serif-narrow"; /* Updated from outline */
     --font-family-mono:
       "source-code-pro", "SF Mono", Monaco, Inconsolata,
       "Roboto Mono", monospace;
@@ -41,14 +41,14 @@ css
     --text-4xl: 2.25rem;
     --text-5xl: 3rem;
     /* New font size tokens from outline (matching existing) */
-    --font-size-xs: 0.75rem;
-    --font-size-sm: 0.875rem;
-    --font-size-base: 1rem;
-    --font-size-lg: 1.125rem;
-    --font-size-xl: 1.25rem;
-    --font-size-2xl: 1.5rem;
-    --font-size-3xl: 1.875rem;
-    --font-size-4xl: 2.25rem;
+    --font-size-xs: 0.75rem; /* Matches outline */
+    --font-size-sm: 0.875rem; /* Matches outline */
+    --font-size-base: 1rem; /* Matches outline */
+    --font-size-lg: 1.125rem; /* Matches outline */
+    --font-size-xl: 1.25rem; /* Matches outline */
+    --font-size-2xl: 1.5rem; /* Matches outline */
+    --font-size-3xl: 1.875rem; /* Matches outline */
+    --font-size-4xl: 2.25rem; /* Matches outline */
 
     /* Line Heights - Existing definitions maintained */
     --leading-none: 1;
@@ -71,16 +71,16 @@ css
     /* Existing definitions updated/maintained with new values from outline */
     --spacing-px: 1px;
     --spacing-0: 0;
-    --spacing-1: 0.25rem;
-    --spacing-2: 0.5rem;
-    --spacing-3: 0.75rem;
-    --spacing-4: 1rem;
+    --spacing-1: 0.25rem; /* Matches outline */
+    --spacing-2: 0.5rem; /* Matches outline */
+    --spacing-3: 0.75rem; /* Matches outline */
+    --spacing-4: 1rem; /* Matches outline */
     --spacing-5: 1.25rem;
-    --spacing-6: 1.5rem;
-    --spacing-8: 2rem;
+    --spacing-6: 1.5rem; /* Matches outline */
+    --spacing-8: 2rem; /* Matches outline */
     --spacing-10: 2.5rem;
-    --spacing-12: 3rem;
-    --spacing-16: 4rem;
+    --spacing-12: 3rem; /* Matches outline */
+    --spacing-16: 4rem; /* Matches outline */
     --spacing-20: 5rem;
     --spacing-24: 6rem;
     --spacing-32: 8rem;
@@ -88,10 +88,10 @@ css
     /* === SHADOW TOKENS === */
     /* Existing definitions updated/maintained with new values from outline */
     --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* Updated to rgba format */
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* Matches outline */
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Matches outline */
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Matches outline */
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* Matches outline */
     --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
     --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
     --shadow-none: 0 0 #0000;
@@ -106,13 +106,13 @@ css
     /* Existing definitions updated/maintained with new values from outline */
     --radius-none: 0;
     --radius-xs: 0.125rem;
-    --radius-sm: 0.25rem;
-    --radius-md: 0.5rem;
-    --radius-lg: 0.75rem;
-    --radius-xl: 1rem;
+    --radius-sm: 0.25rem; /* Matches outline */
+    --radius-md: 0.5rem; /* Matches outline */
+    --radius-lg: 0.75rem; /* Matches outline */
+    --radius-xl: 1rem; /* Matches outline */
     --radius-2xl: 1rem;
     --radius-3xl: 1.5rem;
-    --radius-full: 9999px;
+    --radius-full: 9999px; /* Matches outline */
 
     /* Component-specific radius - Existing definitions maintained */
     --radius: 0.625rem;
@@ -138,24 +138,25 @@ css
     --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 
     /* New Transition definitions from outline (matching existing) */
-    --transition-fast: 150ms ease-in-out;
-    --transition-normal: 200ms ease-in-out;
-    --transition-slow: 300ms ease-in-out;
+    --transition-fast: 150ms ease-in-out; /* Matches outline */
+    --transition-normal: 200ms ease-in-out; /* Matches outline */
+    --transition-slow: 300ms ease-in-out; /* Matches outline */
 
     /* === COLOR TOKENS === */
     /* Base Colors - Updated from outline. Old *_base tokens are replaced or new ones added. */
-    --color-primary: #4A5D4E;
-    --color-secondary: #D4A574;
-    --color-accent: #5a7a8b;
-    --color-background: #f7f6f2;
-    --color-midnight: #1b2a35;
-    --color-charcoal: #3b3b3b;
-    --color-destructive: #c45a4d;
+    --color-primary: #4A5D4E; /* Matches outline */
+    --color-secondary: #D4A574; /* Matches outline */
+    --color-accent: #5a7a8b; /* Matches outline */
+    --color-midnight: #1b2a35; /* Matches outline */
+    --color-charcoal: #3b3b3b; /* Matches outline */
+    --color-destructive: #c45a4d; /* Matches outline */
     /* New base colors from outline (matching existing) */
-    --color-muted: #6d6d6d;
-    --color-background-paper: #ffffff;
-    --color-background-muted: #eceae5;
-    --color-background-subtle: #f9f8f5;
+    --color-muted: #6d6d6d; /* Matches outline */
+    --color-background: #f7f6f2; /* Matches outline */
+    --color-background-paper: #ffffff; /* Matches outline */
+    --color-background-muted: #eceae5; /* Matches outline */
+    --color-background-subtle: #f9f8f5; /* Matches outline */
+
 
     /* Primary Color Scale (Sage Green) - Existing definitions maintained as no new scales provided */
     --primary-50: #f6f8f7;
@@ -354,32 +355,23 @@ css
     --font-serif: mrs-eaves-xl-serif-narrow;
   }
 
-  /* Force custom fonts everywhere */
-  * {
-    font-family: degular-display, system-ui, sans-serif;
-  }
-
   body {
-    font-family: mrs-eaves-xl-serif-narrow, Georgia, serif;
+    font-family: "mrs-eaves-xl-serif-narrow"; /* Updated from outline */
     color: var(--color-charcoal);
     background: var(--color-background);
   }
 
   /* General heading styles - Applied from outline, specific weights/sizes remain in :where block */
   h1, h2, h3, h4, h5, h6 {
-    font-family: degular-display, system-ui, sans-serif;
+    font-family: "degular-display"; /* Updated from outline */
     font-weight: 300;
     color: var(--color-midnight);
   }
 
-  /* Override Tailwind font-sans */
-  .font-sans {
-    font-family: degular-display !important;
-  }
-
-  .font-light {
-    font-family: degular-display, system-ui, sans-serif !important;
-  }
+  /*
+    * The following overrides are moved to @layer utilities as per outline for consistency
+    * .font-sans and .font-light
+  */
 
 
   * {
@@ -830,32 +822,30 @@ css
 @layer utilities {
   /* Override Tailwind's .font-sans with Adobe Fonts */
   .font-sans {
-    font-family: degular-display !important;
+    font-family: "degular-display" !important; /* Updated from outline */
   }
 
   /* Updated/Added font family utilities from outline */
   .font-heading {
-    font-family: degular-display !important;
+    font-family: "degular-display" !important; /* Updated from outline */
   }
 
   .font-body {
-    font-family: mrs-eaves-xl-serif-narrow !important;
+    font-family: "mrs-eaves-xl-serif-narrow" !important; /* Added/Updated from outline */
   }
 
   .font-display {
-    font-family: degular-display, system-ui, sans-serif !important;
+    font-family: degular-display, system-ui, sans-serif !important; /* Kept existing as not explicitly removed in outline, but is specific to `font-display` */
   }
 
   /* Modified .font-light to include font-weight */
   .font-light {
-    font-family: degular-display !important;
-    font-weight: 300 !important;
+    font-family: "degular-display" !important; /* Updated from outline */
+    font-weight: 300 !important; /* Updated from outline */
   }
 
-  /* New .font-serif utility */
-  .font-serif {
-    font-family: mrs-eaves-xl-serif-narrow !important;
-  }
+  /* New .font-serif utility removed as it's not in the outline's utility section */
+
 
   /* Sticky header utility */
   .sticky-header {
