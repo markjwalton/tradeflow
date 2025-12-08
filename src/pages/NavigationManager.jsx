@@ -101,8 +101,8 @@ export default function NavigationManager() {
   // Tab button style helper
   const tabStyle = (tab) => `text-body-base [padding:var(--spacing-2)_var(--spacing-4)] [border-radius:var(--radius-lg)] [transition:var(--duration-200)] ${
     activeTab === tab 
-      ? "bg-[var(--color-primary)] text-white" 
-      : "bg-[var(--color-background)] text-[var(--color-charcoal)] hover:bg-[var(--color-background)]/80 border border-[var(--color-charcoal)]/20"
+      ? "bg-[var(--color-primary)] text-[var(--color-primary-foreground)]" 
+      : "bg-[var(--color-background)] text-[var(--color-foreground)] hover:bg-[var(--color-muted)] border border-[var(--color-border)]"
   }`;
 
   return (
@@ -140,7 +140,7 @@ export default function NavigationManager() {
 
           {activeTab === "app" && (
             <div>
-              <div className="[margin-bottom:var(--spacing-4)] [padding:var(--spacing-3)] bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/30 [border-radius:var(--radius-lg)] text-[var(--color-midnight)]">
+              <div className="[margin-bottom:var(--spacing-4)] [padding:var(--spacing-3)] bg-[var(--color-secondary-50)] border border-[var(--color-secondary-200)] [border-radius:var(--radius-lg)] text-[var(--color-foreground)]">
                 <strong>App Pages</strong> are tenant-facing pages. 
                 Use this to organize which pages appear in tenant navigation.
               </div>
@@ -161,7 +161,7 @@ export default function NavigationManager() {
               />
 
               {selectedTenantId === "__global__" ? (
-                <div className="text-center [padding-block:var(--spacing-12)] text-[var(--color-charcoal)]">
+                <div className="text-center [padding-block:var(--spacing-12)] text-[var(--color-muted-foreground)]">
                   Select a tenant to manage their navigation
                 </div>
               ) : (
@@ -184,8 +184,7 @@ export default function NavigationManager() {
                       } else {
                         await base44.entities.NavigationConfig.create({
                           config_type: `tenant_nav_${selectedTenantId}`,
-                          items: appItems,
-                          source_slugs: APP_PAGES_SLUGS
+                          items: appItems
                         });
                       }
                       queryClient.invalidateQueries({ queryKey: ["navConfig", `tenant_nav_${selectedTenantId}`] });
@@ -257,28 +256,28 @@ function TenantNavEditor({ tenantId, items = [], isLoading }) {
   });
 
   if (isLoading) {
-    return <div className="text-center [padding-block:var(--spacing-8)] text-[var(--color-charcoal)]">Loading...</div>;
+    return <div className="text-center [padding-block:var(--spacing-8)] text-[var(--color-muted-foreground)]">Loading...</div>;
   }
 
   return (
-    <div className="border [border-radius:var(--radius-lg)] [padding:var(--spacing-4)] bg-white">
+    <div className="border [border-radius:var(--radius-lg)] [padding:var(--spacing-4)] bg-[var(--color-background)]">
       <div className="flex justify-between items-center [margin-bottom:var(--spacing-4)]">
         <h3 className="text-h5">Tenant Navigation Items</h3>
-        <Button size="sm" className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white" onClick={() => { setEditingItem(null); setShowForm(true); }}>
+        <Button size="sm" className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-600)] text-[var(--color-primary-foreground)]" onClick={() => { setEditingItem(null); setShowForm(true); }}>
           Add Item
         </Button>
       </div>
       
       {items.length === 0 ? (
-        <div className="text-center [padding-block:var(--spacing-8)] text-[var(--color-charcoal)]">
+        <div className="text-center [padding-block:var(--spacing-8)] text-[var(--color-muted-foreground)]">
           No navigation items. Add items or copy from global template.
         </div>
       ) : (
         <div className="[&>*+*]:mt-[var(--spacing-2)]">
           {items.map((item) => (
-            <div key={item.id} className="flex items-center [gap:var(--spacing-3)] [padding:var(--spacing-3)] border [border-radius:var(--radius-lg)] bg-[var(--color-background)]">
-              <span className="flex-1 text-[var(--color-midnight)]">{item.name}</span>
-              <span className="text-caption text-[var(--color-charcoal)]">{item.page_url}</span>
+            <div key={item.id} className="flex items-center [gap:var(--spacing-3)] [padding:var(--spacing-3)] border [border-radius:var(--radius-lg)] bg-[var(--color-muted)]">
+              <span className="flex-1 text-[var(--color-foreground)]">{item.name}</span>
+              <span className="text-caption text-[var(--color-muted-foreground)]">{item.page_url}</span>
               <Button variant="ghost" size="sm" onClick={() => { setEditingItem(item); setShowForm(true); }}>
                 Edit
               </Button>
