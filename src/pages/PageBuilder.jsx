@@ -269,6 +269,10 @@ export default function PageBuilder() {
     return path.join(' > ');
   };
 
+  const escapeRegex = (str) => {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  };
+
   const applyTokenToElement = (tokenClass, tokenType) => {
     if (!selectedElement) return;
 
@@ -292,9 +296,10 @@ export default function PageBuilder() {
 
     newClasses = `${newClasses.trim()} ${tokenClass}`.trim();
 
-    // Update JSX content
+    // Update JSX content - escape special regex characters
+    const escapedClasses = escapeRegex(currentClasses);
     const updatedContent = formData.current_content_jsx.replace(
-      new RegExp(`class="${currentClasses}"`, 'g'),
+      new RegExp(`class="${escapedClasses}"`, 'g'),
       `class="${newClasses}"`
     );
 
