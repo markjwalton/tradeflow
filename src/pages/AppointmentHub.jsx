@@ -209,7 +209,7 @@ export default function AppointmentHub() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -223,7 +223,7 @@ export default function AppointmentHub() {
               <AlertCircle className="h-8 w-8 text-destructive" />
             </div>
             <h2 className="text-xl font-semibold mb-2 text-midnight-900">Link Invalid</h2>
-            <p className="text-charcoal-700">{error}</p>
+            <p className="text-muted-foreground">{error}</p>
           </CardContent>
         </Card>
       </div>
@@ -241,7 +241,7 @@ export default function AppointmentHub() {
             <h2 className="text-xl font-semibold mb-2 text-midnight-900">
               {actionType === "cancel" ? "Appointment Cancelled" : "Appointment Booked!"}
             </h2>
-            <p className="text-charcoal-700">
+            <p className="text-muted-foreground">
               {actionType === "cancel"
                 ? "Your appointment has been cancelled."
                 : "Please check your email and click the confirmation link to confirm your appointment."}
@@ -307,7 +307,7 @@ export default function AppointmentHub() {
 
         {Object.keys(blocksByLocation).length === 0 ? (
           <Card className="border-border bg-card">
-            <CardContent className="py-8 text-center text-charcoal-700">
+            <CardContent className="py-8 text-center text-muted-foreground">
               <Calendar className="h-12 w-12 mx-auto mb-4 opacity-30" />
               <p>No available appointment slots at the moment.</p>
               <p className="text-sm">Please check back later or request a callback.</p>
@@ -338,7 +338,7 @@ export default function AppointmentHub() {
                         <div className="font-medium text-midnight-900">
                           {format(new Date(block.date), "EEE, d MMM")}
                         </div>
-                        <div className="flex items-center gap-1 text-charcoal-700 mt-1">
+                        <div className="flex items-center gap-1 text-muted-foreground mt-1">
                           <Clock className="h-4 w-4" />
                           {block.startTime}
                           {block.endTime && ` - ${block.endTime}`}

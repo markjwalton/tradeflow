@@ -86,7 +86,7 @@ export default function AppointmentConfirm() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -100,7 +100,7 @@ export default function AppointmentConfirm() {
               <AlertCircle className="h-8 w-8 text-destructive" />
             </div>
             <h2 className="text-xl font-semibold mb-2 text-midnight-900">Confirmation Failed</h2>
-            <p className="text-charcoal-700">{error}</p>
+            <p className="text-muted-foreground">{error}</p>
           </CardContent>
         </Card>
       </div>
@@ -117,7 +117,7 @@ export default function AppointmentConfirm() {
           <h2 className="text-xl font-semibold mb-2 text-midnight-900">
             {alreadyConfirmed ? "Already Confirmed" : "Appointment Confirmed!"}
           </h2>
-          <p className="text-charcoal-700 mb-4">
+          <p className="text-muted-foreground mb-4">
             {alreadyConfirmed
               ? "This appointment was already confirmed."
               : "Thank you for confirming your design visit."}
@@ -126,18 +126,18 @@ export default function AppointmentConfirm() {
           {appointment && (
             <div className="bg-background rounded-lg p-4 text-left">
               <div className="flex items-center gap-2 mb-2">
-                <Calendar className="h-5 w-5 text-charcoal-700" />
+                <Calendar className="h-5 w-5 text-muted-foreground" />
                 <span className="font-medium text-midnight-900">Appointment Details</span>
               </div>
-              <p className="text-charcoal-700">
+              <p className="text-muted-foreground">
                 {format(new Date(appointment.appointmentDate), "EEEE, d MMMM yyyy")}
               </p>
-              <p className="text-charcoal-700">{appointment.appointmentTime}</p>
-              <p className="text-charcoal-700">{appointment.location}</p>
+              <p className="text-muted-foreground">{appointment.appointmentTime}</p>
+              <p className="text-muted-foreground">{appointment.location}</p>
             </div>
           )}
 
-          <p className="text-sm text-charcoal-700 mt-4">
+          <p className="text-sm text-muted-foreground mt-4">
             A confirmation email has been sent to you.
           </p>
         </CardContent>
