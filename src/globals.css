@@ -5,356 +5,502 @@ css
 @tailwind components;
 @tailwind utilities;
 
-/* Force override Tailwind's font-sans immediately */
-* {
-  font-family: var(--font-family-body) !important;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-family-display) !important;
-}
-
 @custom-variant dark (&:is(.dark *));
 
-:root {
-  /* === TYPOGRAPHY TOKENS === */
-  /* Font Families - Custom Typography */
-  --font-family-display: degular-display, system-ui, sans-serif; /* Updated from outline */
-  --font-family-body: mrs-eaves-xl-serif-narrow, Georgia, serif; /* Updated from outline */
-  
-  /* CRITICAL: Alias for components - no quotes on font names! */
-  --font-heading: degular-display, system-ui, sans-serif; /* Updated from outline */
-  --font-body: mrs-eaves-xl-serif-narrow, Georgia, serif; /* New from outline */
-  --font-family-mono:
-    "source-code-pro", "SF Mono", Monaco, Inconsolata,
-    "Roboto Mono", monospace;
+@layer base {
+  :root {
+    /* === TYPOGRAPHY TOKENS === */
+    /* Font Families - Custom Typography */
+    --font-family-display: degular-display, system-ui, sans-serif;
+    --font-family-body: mrs-eaves-xl-serif-narrow, Georgia, serif;
 
-  /* Font Weights - Existing definitions maintained */
-  --font-weight-light: 300;
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
+    /* CRITICAL: Alias for components - no quotes on font names! */
+    --font-heading: degular-display, system-ui, sans-serif;
+    --font-body: mrs-eaves-xl-serif-narrow, Georgia, serif;
+    --font-family-mono:
+      "source-code-pro", "SF Mono", Monaco, Inconsolata,
+      "Roboto Mono", monospace;
 
-  /* Font Sizes - New from outline added, existing maintained for compatibility */
-  --font-size-root: 16px;
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.125rem;
-  --text-xl: 1.25rem;
-  --text-2xl: 1.5rem;
-  --text-3xl: 1.875rem;
-  --text-4xl: 2.25rem;
-  --text-5xl: 3rem;
-  /* New font size tokens from outline */
-  --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
-  --font-size-base: 1rem;
-  --font-size-lg: 1.125rem;
-  --font-size-xl: 1.25rem;
-  --font-size-2xl: 1.5rem;
-  --font-size-3xl: 1.875rem;
-  --font-size-4xl: 2.25rem;
+    /* Font Weights - Existing definitions maintained */
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
 
-  /* Line Heights - Existing definitions maintained */
-  --leading-none: 1;
-  --leading-tight: 1.25;
-  --leading-snug: 1.375;
-  --leading-normal: 1.5;
-  --leading-relaxed: 1.625;
-  --leading-loose: 2;
+    /* Font Sizes - New from outline added, existing maintained for compatibility */
+    --font-size-root: 16px;
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.875rem;
+    --text-4xl: 2.25rem;
+    --text-5xl: 3rem;
+    /* New font size tokens from outline */
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 1.875rem;
+    --font-size-4xl: 2.25rem;
 
-  /* Letter Spacing - Existing definitions maintained */
-  --tracking-tighter: -0.05em;
-  --tracking-tight: -0.025em;
-  --tracking-normal: 0em;
-  --tracking-airy: 0.02em; /* Your 20 letter spacing for more air */
-  --tracking-wide: 0.025em;
-  --tracking-wider: 0.05em;
-  --tracking-widest: 0.1em;
+    /* Line Heights - Existing definitions maintained */
+    --leading-none: 1;
+    --leading-tight: 1.25;
+    --leading-snug: 1.375;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.625;
+    --leading-loose: 2;
 
-  /* === SPACING TOKENS === */
-  /* Existing definitions updated/maintained with new values from outline */
-  --spacing-px: 1px;
-  --spacing-0: 0;
-  --spacing-1: 0.25rem; /* Updated from outline */
-  --spacing-2: 0.5rem;  /* Updated from outline */
-  --spacing-3: 0.75rem; /* Updated from outline */
-  --spacing-4: 1rem;    /* Updated from outline */
-  --spacing-5: 1.25rem;
-  --spacing-6: 1.5rem;  /* Updated from outline */
-  --spacing-8: 2rem;    /* Updated from outline */
-  --spacing-10: 2.5rem;
-  --spacing-12: 3rem;   /* Updated from outline */
-  --spacing-16: 4rem;   /* Updated from outline */
-  --spacing-20: 5rem;
-  --spacing-24: 6rem;
-  --spacing-32: 8rem;
+    /* Letter Spacing - Existing definitions maintained */
+    --tracking-tighter: -0.05em;
+    --tracking-tight: -0.025em;
+    --tracking-normal: 0em;
+    --tracking-airy: 0.02em; /* Your 20 letter spacing for more air */
+    --tracking-wide: 0.025em;
+    --tracking-wider: 0.05em;
+    --tracking-widest: 0.1em;
 
-  /* === SHADOW TOKENS === */
-  /* Existing definitions updated/maintained with new values from outline */
-  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* Updated from outline */
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Updated from outline */
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Updated from outline */
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* Updated from outline */
-  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-  --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
-  --shadow-none: 0 0 #0000;
+    /* === SPACING TOKENS === */
+    /* Existing definitions updated/maintained with new values from outline */
+    --spacing-px: 1px;
+    --spacing-0: 0;
+    --spacing-1: 0.25rem;
+    --spacing-2: 0.5rem;
+    --spacing-3: 0.75rem;
+    --spacing-4: 1rem;
+    --spacing-5: 1.25rem;
+    --spacing-6: 1.5rem;
+    --spacing-8: 2rem;
+    --spacing-10: 2.5rem;
+    --spacing-12: 3rem;
+    --spacing-16: 4rem;
+    --spacing-20: 5rem;
+    --spacing-24: 6rem;
+    --spacing-32: 8rem;
 
-  /* Custom Component Shadows - Existing definitions maintained */
-  --shadow-card: var(--shadow-sm);
-  --shadow-card-hover: var(--shadow-md);
-  --shadow-dropdown: var(--shadow-lg);
-  --shadow-modal: var(--shadow-2xl);
+    /* === SHADOW TOKENS === */
+    /* Existing definitions updated/maintained with new values from outline */
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+    --shadow-none: 0 0 #0000;
 
-  /* === BORDER RADIUS TOKENS === */
-  /* Existing definitions updated/maintained with new values from outline */
-  --radius-none: 0;
-  --radius-xs: 0.125rem;
-  --radius-sm: 0.25rem; /* Updated from outline */
-  --radius-md: 0.5rem;  /* Updated from outline */
-  --radius-lg: 0.75rem; /* Updated from outline */
-  --radius-xl: 1rem;    /* Updated from outline */
-  --radius-2xl: 1rem;
-  --radius-3xl: 1.5rem;
-  --radius-full: 9999px; /* Updated from outline */
+    /* Custom Component Shadows - Existing definitions maintained */
+    --shadow-card: var(--shadow-sm);
+    --shadow-card-hover: var(--shadow-md);
+    --shadow-dropdown: var(--shadow-lg);
+    --shadow-modal: var(--shadow-2xl);
 
-  /* Component-specific radius - Existing definitions maintained */
-  --radius: 0.625rem;
-  --radius-button: var(--radius-lg);
-  --radius-card: var(--radius);
-  --radius-input: var(--radius-md);
+    /* === BORDER RADIUS TOKENS === */
+    /* Existing definitions updated/maintained with new values from outline */
+    --radius-none: 0;
+    --radius-xs: 0.125rem;
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    --radius-2xl: 1rem;
+    --radius-3xl: 1.5rem;
+    --radius-full: 9999px;
 
-  /* === ANIMATION TOKENS === */
-  /* Existing durations maintained */
-  --duration-75: 75ms;
-  --duration-100: 100ms;
-  --duration-150: 150ms;
-  --duration-200: 200ms;
-  --duration-300: 300ms;
-  --duration-500: 500ms;
-  --duration-700: 700ms;
-  --duration-1000: 1000ms;
+    /* Component-specific radius - Existing definitions maintained */
+    --radius: 0.625rem;
+    --radius-button: var(--radius-lg);
+    --radius-card: var(--radius);
+    --radius-input: var(--radius-md);
 
-  /* Transition Timing Functions - Existing definitions maintained */
-  --ease-linear: linear;
-  --ease-in: cubic-bezier(0.4, 0, 1, 1);
-  --ease-out: cubic-bezier(0, 0, 0.2, 1);
-  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    /* === ANIMATION TOKENS === */
+    /* Existing durations maintained */
+    --duration-75: 75ms;
+    --duration-100: 100ms;
+    --duration-150: 150ms;
+    --duration-200: 200ms;
+    --duration-300: 300ms;
+    --duration-500: 500ms;
+    --duration-700: 700ms;
+    --duration-1000: 1000ms;
 
-  /* New Transition definitions from outline */
-  --transition-fast: 150ms ease-in-out;
-  --transition-normal: 200ms ease-in-out;
-  --transition-slow: 300ms ease-in-out;
+    /* Transition Timing Functions - Existing definitions maintained */
+    --ease-linear: linear;
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* === COLOR TOKENS === */
-  /* Base Colors - Updated from outline. Old *_base tokens are replaced or new ones added. */
-  --color-primary: #4A5D4E; /* Updated from outline (replaces --color-primary-base) */
-  --color-secondary: #D4A574; /* Updated from outline (replaces --color-secondary-base) */
-  --color-accent: #5a7a8b; /* Updated from outline (replaces --color-accent-base) */
-  --color-background: #f7f6f2; /* Updated from outline (replaces --color-background-base) */
-  --color-midnight: #1b2a35; /* Updated from outline (replaces --color-midnight-base) */
-  --color-charcoal: #3b3b3b; /* Updated from outline (replaces --color-charcoal-base) */
-  --color-destructive: #c45a4d; /* Updated from outline (replaces --color-destructive-base) */
-  /* New base colors from outline */
-  --color-muted: #6d6d6d;
-  --color-background-paper: #ffffff;
-  --color-background-muted: #eceae5;
-  --color-background-subtle: #f9f8f5;
+    /* New Transition definitions from outline */
+    --transition-fast: 150ms ease-in-out;
+    --transition-normal: 200ms ease-in-out;
+    --transition-slow: 300ms ease-in-out;
 
-  /* Primary Color Scale (Sage Green) - Existing definitions maintained as no new scales provided */
-  --primary-50: #f6f8f7;
-  --primary-100: #e8f0ea;
-  --primary-200: #d1e1d5;
-  --primary-300: #a9c7b1;
-  --primary-400: #7ba688;
-  --primary-500: #4a5d4e;
-  --primary-600: #3d4d42;
-  --primary-700: #334036;
-  --primary-800: #2a342c;
-  --primary-900: #232b25;
+    /* === COLOR TOKENS === */
+    /* Base Colors - Updated from outline. Old *_base tokens are replaced or new ones added. */
+    --color-primary: #4A5D4E;
+    --color-secondary: #D4A574;
+    --color-accent: #5a7a8b;
+    --color-background: #f7f6f2;
+    --color-midnight: #1b2a35;
+    --color-charcoal: #3b3b3b;
+    --color-destructive: #c45a4d;
+    /* New base colors from outline */
+    --color-muted: #6d6d6d;
+    --color-background-paper: #ffffff;
+    --color-background-muted: #eceae5;
+    --color-background-subtle: #f9f8f5;
 
-  /* Secondary Color Scale (Warm Beige) - Existing definitions maintained */
-  --secondary-50: #faf8f4;
-  --secondary-100: #f4f0e8;
-  --secondary-200: #e8ddc9;
-  --secondary-300: #dcc5a0;
-  --secondary-400: #d4a574;
-  --secondary-500: #c89558;
-  --secondary-600: #b7824a;
-  --secondary-700: #98683f;
-  --secondary-800: #7c5539;
-  --secondary-900: #654731;
+    /* Primary Color Scale (Sage Green) - Existing definitions maintained as no new scales provided */
+    --primary-50: #f6f8f7;
+    --primary-100: #e8f0ea;
+    --primary-200: #d1e1d5;
+    --primary-300: #a9c7b1;
+    --primary-400: #7ba688;
+    --primary-500: #4a5d4e;
+    --primary-600: #3d4d42;
+    --primary-700: #334036;
+    --primary-800: #2a342c;
+    --primary-900: #232b25;
 
-  /* Accent Color Scale (Dusty Rose) - Existing definitions maintained */
-  --accent-50: #faf7f6;
-  --accent-100: #f4eeec;
-  --accent-200: #e8d9d5;
-  --accent-300: #d9b4a7;
-  --accent-400: #ce9c8c;
-  --accent-500: #c18871;
-  --accent-600: #b07460;
-  --accent-700: #93614f;
-  --accent-800: #785043;
-  --accent-900: #63433a;
+    /* Secondary Color Scale (Warm Beige) - Existing definitions maintained */
+    --secondary-50: #faf8f4;
+    --secondary-100: #f4f0e8;
+    --secondary-200: #e8ddc9;
+    --secondary-300: #dcc5a0;
+    --secondary-400: #d4a574;
+    --secondary-500: #c89558;
+    --secondary-600: #b7824a;
+    --secondary-700: #98683f;
+    --secondary-800: #7c5539;
+    --secondary-900: #654731;
 
-  /* Background Color Scale (Warm Off-White) - Existing definitions maintained */
-  --background-50: #fdfcfa;
-  --background-100: #f5f3ef;
-  --background-200: #ebe7e0;
-  --background-300: #ddd6cc;
-  --background-400: #ccc2b5;
-  --background-500: #b8aa9a;
-  --background-600: #a0947f;
-  --background-700: #867b68;
-  --background-800: #6e6556;
-  --background-900: #5a5248;
+    /* Accent Color Scale (Dusty Rose) - Existing definitions maintained */
+    --accent-50: #faf7f6;
+    --accent-100: #f4eeec;
+    --accent-200: #e8d9d5;
+    --accent-300: #d9b4a7;
+    --accent-400: #ce9c8c;
+    --accent-500: #c18871;
+    --accent-600: #b07460;
+    --accent-700: #93614f;
+    --accent-800: #785043;
+    --accent-900: #63433a;
 
-  /* Midnight Color Scale (Dark Blue-Gray) - Existing definitions maintained */
-  --midnight-50: #f4f6f7;
-  --midnight-100: #e3e8eb;
-  --midnight-200: #c9d3d8;
-  --midnight-300: #a3b5be;
-  --midnight-400: #76909c;
-  --midnight-500: #5a7480;
-  --midnight-600: #4e636e;
-  --midnight-700: #44535c;
-  --midnight-800: #3d474f;
-  --midnight-900: #1b2a35;
+    /* Background Color Scale (Warm Off-White) - Existing definitions maintained */
+    --background-50: #fdfcfa;
+    --background-100: #f5f3ef;
+    --background-200: #ebe7e0;
+    --background-300: #ddd6cc;
+    --background-400: #ccc2b5;
+    --background-500: #b8aa9a;
+    --background-600: #a0947f;
+    --background-700: #867b68;
+    --background-800: #6e6556;
+    --background-900: #5a5248;
 
-  /* Charcoal Color Scale (Neutral Gray) - Existing definitions maintained */
-  --charcoal-50: #f7f7f7;
-  --charcoal-100: #ededed;
-  --charcoal-200: #d9d9d9;
-  --charcoal-300: #bfbfbf;
-  --charcoal-400: #9d9d9d;
-  --charcoal-500: #7a7a7a;
-  --charcoal-600: #5f5f5f;
-  --charcoal-700: #4a4a4a;
-  --charcoal-800: #3b3b3b;
-  --charcoal-900: #2e2e2e;
+    /* Midnight Color Scale (Dark Blue-Gray) - Existing definitions maintained */
+    --midnight-50: #f4f6f7;
+    --midnight-100: #e3e8eb;
+    --midnight-200: #c9d3d8;
+    --midnight-300: #a3b5be;
+    --midnight-400: #76909c;
+    --midnight-500: #5a7480;
+    --midnight-600: #4e636e;
+    --midnight-700: #44535c;
+    --midnight-800: #3d474f;
+    --midnight-900: #1b2a35;
 
-  /* Destructive Color Scale (Muted Red-Brown) - Existing definitions maintained */
-  --destructive-50: #faf7f7;
-  --destructive-100: #f4eeee;
-  --destructive-200: #e6d8d8;
-  --destructive-300: #d4bcbc;
-  --destructive-400: #bc9595;
-  --destructive-500: #a07373;
-  --destructive-600: #8b5b5b;
-  --destructive-700: #734d4d;
-  --destructive-800: #5f4141;
-  --destructive-900: #4f3737;
+    /* Charcoal Color Scale (Neutral Gray) - Existing definitions maintained */
+    --charcoal-50: #f7f7f7;
+    --charcoal-100: #ededed;
+    --charcoal-200: #d9d9d9;
+    --charcoal-300: #bfbfbf;
+    --charcoal-400: #9d9d9d;
+    --charcoal-500: #7a7a7a;
+    --charcoal-600: #5f5f5f;
+    --charcoal-700: #4a4a4a;
+    --charcoal-800: #3b3b3b;
+    --charcoal-900: #2e2e2e;
 
-  /* Semantic Colors - Updated using new base colors from outline where applicable */
-  --background: var(--color-background); /* Updated from outline */
-  --foreground: var(--midnight-900);
-  --card: var(--color-background-paper); /* Updated from outline */
-  --card-foreground: var(--midnight-900);
-  --popover: var(--color-background-paper); /* Updated from outline */
-  --popover-foreground: var(--midnight-900);
-  --primary: var(--primary-500);
-  --primary-foreground: #ffffff;
-  --secondary: var(--secondary-400);
-  --secondary-foreground: var(--midnight-900);
-  --muted: var(--background-200); /* Kept existing, --color-muted is a new base */
-  --muted-foreground: var(--charcoal-600);
-  --accent: var(--accent-300);
-  --accent-foreground: var(--midnight-900);
-  --destructive: var(--destructive-600); /* Kept existing, --color-destructive is a new base */
-  --destructive-foreground: #ffffff;
-  --warning: var(--secondary-500);
-  --warning-foreground: #ffffff;
-  --success: var(--primary-600);
-  --success-foreground: #ffffff;
-  --info: var(--midnight-600);
-  --info-foreground: #ffffff;
+    /* Destructive Color Scale (Muted Red-Brown) - Existing definitions maintained */
+    --destructive-50: #faf7f7;
+    --destructive-100: #f4eeee;
+    --destructive-200: #e6d8d8;
+    --destructive-300: #d4bcbc;
+    --destructive-400: #bc9595;
+    --destructive-500: #a07373;
+    --destructive-600: #8b5b5b;
+    --destructive-700: #734d4d;
+    --destructive-800: #5f4141;
+    --destructive-900: #4f3737;
 
-  /* Interactive Colors - Existing definitions maintained */
-  --border: var(--background-300);
-  --input: transparent;
-  --input-background: var(--background-200);
-  --switch-background: var(--background-400);
-  --ring: var(--primary-400);
+    /* Semantic Colors - Updated using new base colors from outline where applicable */
+    --background: var(--color-background);
+    --foreground: var(--midnight-900);
+    --card: var(--color-background-paper);
+    --card-foreground: var(--midnight-900);
+    --popover: var(--color-background-paper);
+    --popover-foreground: var(--midnight-900);
+    --primary: var(--primary-500);
+    --primary-foreground: #ffffff;
+    --secondary: var(--secondary-400);
+    --secondary-foreground: var(--midnight-900);
+    --muted: var(--background-200);
+    --muted-foreground: var(--charcoal-600);
+    --accent: var(--accent-300);
+    --accent-foreground: var(--midnight-900);
+    --destructive: var(--destructive-600);
+    --destructive-foreground: #ffffff;
+    --warning: var(--secondary-500);
+    --warning-foreground: #ffffff;
+    --success: var(--primary-600);
+    --success-foreground: #ffffff;
+    --info: var(--midnight-600);
+    --info-foreground: #ffffff;
 
-  /* Typography Color System - Optimized for Clarity - Existing definitions maintained */
-  --text-primary: var(
-    --midnight-900
-  ); /* Main headings, high emphasis */
-  --text-secondary: var(
-    --charcoal-800
-  ); /* Subheadings, medium emphasis */
-  --text-body: var(
-    --charcoal-700
-  ); /* Body text, readable primary */
-  --text-muted: var(
-    --charcoal-600
-  ); /* Supporting text, low emphasis */
-  --text-subtle: var(--charcoal-500); /* Captions, metadata */
-  --text-accent: var(
-    --primary-600
-  ); /* Links, emphasis, brand elements */
-  --text-accent-hover: var(
-    --primary-700
-  ); /* Interactive accent states */
-  --text-inverse: var(
-    --background-50
-  ); /* Text on dark backgrounds */
+    /* Interactive Colors - Existing definitions maintained */
+    --border: var(--background-300);
+    --input: transparent;
+    --input-background: var(--background-200);
+    --switch-background: var(--background-400);
+    --ring: var(--primary-400);
 
-  /* Gray Scale (Using Charcoal Palette) - Existing definitions maintained */
-  --gray-50: var(--charcoal-50);
-  --gray-100: var(--charcoal-100);
-  --gray-200: var(--charcoal-200);
-  --gray-300: var(--charcoal-300);
-  --gray-400: var(--charcoal-400);
-  --gray-500: var(--charcoal-500);
-  --gray-600: var(--charcoal-600);
-  --gray-700: var(--charcoal-700);
-  --gray-800: var(--charcoal-800);
-  --gray-900: var(--charcoal-900);
+    /* Typography Color System - Optimized for Clarity - Existing definitions maintained */
+    --text-primary: var(
+      --midnight-900
+    ); /* Main headings, high emphasis */
+    --text-secondary: var(
+      --charcoal-800
+    ); /* Subheadings, medium emphasis */
+    --text-body: var(
+      --charcoal-700
+    ); /* Body text, readable primary */
+    --text-muted: var(
+      --charcoal-600
+    ); /* Supporting text, low emphasis */
+    --text-subtle: var(--charcoal-500); /* Captions, metadata */
+    --text-accent: var(
+      --primary-600
+    ); /* Links, emphasis, brand elements */
+    --text-accent-hover: var(
+      --primary-700
+    ); /* Interactive accent states */
+    --text-inverse: var(
+      --background-50
+    ); /* Text on dark backgrounds */
 
-  /* Brand Colors (Using Primary Palette) - Existing definitions maintained */
-  --brand-50: var(--primary-50);
-  --brand-100: var(--primary-100);
-  --brand-200: var(--primary-200);
-  --brand-300: var(--primary-300);
-  --brand-400: var(--primary-400);
-  --brand-500: var(--primary-500);
-  --brand-600: var(--primary-600);
-  --brand-700: var(--primary-700);
-  --brand-800: var(--primary-800);
-  --brand-900: var(--primary-900);
+    /* Gray Scale (Using Charcoal Palette) - Existing definitions maintained */
+    --gray-50: var(--charcoal-50);
+    --gray-100: var(--charcoal-100);
+    --gray-200: var(--charcoal-200);
+    --gray-300: var(--charcoal-300);
+    --gray-400: var(--charcoal-400);
+    --gray-500: var(--charcoal-500);
+    --gray-600: var(--charcoal-600);
+    --gray-700: var(--charcoal-700);
+    --gray-800: var(--charcoal-800);
+    --gray-900: var(--charcoal-900);
 
-  /* Chart Colors - Existing definitions maintained */
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+    /* Brand Colors (Using Primary Palette) - Existing definitions maintained */
+    --brand-50: var(--primary-50);
+    --brand-100: var(--primary-100);
+    --brand-200: var(--primary-200);
+    --brand-300: var(--primary-300);
+    --brand-400: var(--primary-400);
+    --brand-500: var(--primary-500);
+    --brand-600: var(--primary-600);
+    --brand-700: var(--primary-700);
+    --brand-800: var(--primary-800);
+    --brand-900: var(--primary-900);
 
-  /* Sidebar Colors - Existing definitions maintained */
-  --sidebar: var(--background-50);
-  --sidebar-foreground: var(--midnight-900);
-  --sidebar-primary: var(--primary-500);
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: var(--background-100);
-  --sidebar-accent-foreground: var(--midnight-800);
-  --sidebar-border: var(--background-300);
-  --sidebar-ring: var(--primary-400);
+    /* Chart Colors - Existing definitions maintained */
+    --chart-1: oklch(0.646 0.222 41.116);
+    --chart-2: oklch(0.6 0.118 184.704);
+    --chart-3: oklch(0.398 0.07 227.392);
+    --chart-4: oklch(0.828 0.189 84.429);
+    --chart-5: oklch(0.769 0.188 70.08);
 
-  /* === Z-INDEX TOKENS === */
-  --z-base: 0;
-  --z-dropdown: 1000;
-  --z-sticky: 1020;
-  --z-fixed: 1030;
-  --z-modal-backdrop: 1040;
-  --z-modal: 1050;
-  --z-popover: 1060;
-  --z-tooltip: 1070;
-  --z-toast: 1080;
-  --z-max: 9999;
+    /* Sidebar Colors - Existing definitions maintained */
+    --sidebar: var(--background-50);
+    --sidebar-foreground: var(--midnight-900);
+    --sidebar-primary: var(--primary-500);
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: var(--background-100);
+    --sidebar-accent-foreground: var(--midnight-800);
+    --sidebar-border: var(--background-300);
+    --sidebar-ring: var(--primary-400);
+
+    /* === Z-INDEX TOKENS === */
+    --z-base: 0;
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+    --z-toast: 1080;
+    --z-max: 9999;
+  }
+
+  /* Force custom fonts everywhere */
+  * {
+    font-family: degular-display, system-ui, sans-serif;
+  }
+
+  body {
+    font-family: mrs-eaves-xl-serif-narrow, Georgia, serif !important;
+    color: var(--color-charcoal);
+    background: var(--color-background);
+  }
+
+  /* General heading styles - Applied from outline, specific weights/sizes remain in :where block */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: degular-display, system-ui, sans-serif !important;
+    font-weight: 300;
+    color: var(--color-midnight);
+  }
+
+  /* Override Tailwind font-sans */
+  .font-sans {
+    font-family: degular-display, system-ui, sans-serif !important;
+  }
+
+  .font-light {
+    font-family: degular-display, system-ui, sans-serif !important;
+  }
+
+
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  /**
+   * Base typography system with semantic font sizing
+   */
+  :where(
+    :not(:has([class*=" text-"]), :not(:has([class^="text-"])))
+  ) {
+    h1 {
+      font-family: var(--font-family-display);
+      font-size: var(--text-2xl);
+      font-weight: var(--font-weight-light);
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-airy);
+      color: var(--color-midnight);
+    }
+
+    h2 {
+      font-family: var(--font-family-display);
+      font-size: var(--text-xl);
+      font-weight: var(--font-weight-light);
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-airy);
+      color: var(--color-midnight);
+    }
+
+    h3 {
+      font-family: var(--font-family-display);
+      font-size: var(--text-lg);
+      font-weight: var(--font-weight-normal);
+      line-height: var(--leading-snug);
+      letter-spacing: var(--tracking-airy);
+      color: var(--color-midnight);
+    }
+
+    h4 {
+      font-family: var(--font-family-display);
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: var(--leading-normal);
+      letter-spacing: var(--tracking-airy);
+      color: var(--color-midnight);
+    }
+
+    h5 {
+      font-family: var(--font-family-display);
+      font-size: var(--text-sm);
+      font-weight: var(--font-weight-normal);
+      line-height: var(--leading-normal);
+      letter-spacing: var(--tracking-airy);
+      color: var(--color-midnight);
+    }
+
+    h6 {
+      font-family: var(--font-family-display);
+      font-size: var(--text-xs);
+      font-weight: var(--font-weight-normal);
+      line-height: var(--leading-normal);
+      letter-spacing: var(--tracking-wider);
+      text-transform: uppercase;
+      color: var(--color-midnight);
+    }
+
+    p {
+      font-family: var(--font-family-body);
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: var(--leading-relaxed);
+      letter-spacing: var(--tracking-normal);
+      color: var(--text-body);
+    }
+
+    small {
+      font-family: var(--font-family-body);
+      font-size: var(--text-sm);
+      font-weight: var(--font-weight-normal);
+      line-height: var(--leading-normal);
+      letter-spacing: var(--tracking-normal);
+      color: var(--text-subtle);
+    }
+
+    label {
+      font-family: var(--font-family-display);
+      font-size: var(--text-sm);
+      font-weight: var(--font-weight-normal);
+      line-height: var(--leading-normal);
+      letter-spacing: var(--tracking-airy);
+      color: var(--text-secondary);
+    }
+
+    button {
+      font-family: var(--font-family-display);
+      font-size: var(--text-sm);
+      font-weight: var(--font-weight-normal);
+      line-height: var(--leading-normal);
+      letter-spacing: var(--tracking-airy);
+    }
+
+    input,
+    textarea,
+    select {
+      font-family: var(--font-family-body);
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: var(--leading-normal);
+      letter-spacing: var(--tracking-normal);
+      color: var(--text-body);
+    }
+
+    code {
+      font-family: var(--font-family-mono);
+      font-size: 0.875em;
+      font-weight: var(--font-weight-medium);
+    }
+
+    pre {
+      font-family: var(--font-family-mono);
+      font-size: var(--text-sm);
+      font-weight: var(--font-weight-normal);
+      line-height: var(--leading-relaxed);
+    }
+  }
 }
 
 .dark {
@@ -654,14 +800,15 @@ h1, h2, h3, h4, h5, h6 {
   --border-radius-input: var(--radius-input);
 
   /* === DURATION MAPPINGS === */
-  --transition-duration-75: var(--duration-75);
-  --transition-duration-100: var(--duration-100);
-  --transition-duration-150: var(--duration-150);
-  --transition-duration-200: var(--duration-200);
-  --transition-duration-300: var(--duration-300);
-  --transition-duration-500: var(--duration-500);
-  --transition-duration-700: var(--duration-700);
-  --transition-duration-1000: var(--duration-1000);
+  /* Removing individual duration mappings in favor of combined transition values */
+  /* --transition-duration-75: var(--duration-75); */
+  /* --transition-duration-100: var(--duration-100); */
+  /* --transition-duration-150: var(--duration-150); */
+  /* --transition-duration-200: var(--duration-200); */
+  /* --transition-duration-300: var(--duration-300); */
+  /* --transition-duration-500: var(--duration-500); */
+  /* --transition-duration-700: var(--duration-700); */
+  /* --transition-duration-1000: var(--duration-1000); */
   /* New transition mappings from outline */
   --transition-custom-fast: var(--transition-fast);
   --transition-custom-normal: var(--transition-normal);
@@ -683,6 +830,24 @@ h1, h2, h3, h4, h5, h6 {
 
 /* === LAYOUT UTILITIES === */
 @layer utilities {
+  /* Override Tailwind's .font-sans with Adobe Fonts */
+  .font-sans {
+    font-family: degular-display, system-ui, sans-serif !important;
+  }
+
+  /* Updated/Added font family utilities from outline */
+  .font-heading {
+    font-family: degular-display, system-ui, sans-serif !important;
+  }
+
+  .font-body {
+    font-family: mrs-eaves-xl-serif-narrow, Georgia, serif !important;
+  }
+
+  .font-display {
+    font-family: degular-display, system-ui, sans-serif !important;
+  }
+
   /* Sticky header utility */
   .sticky-header {
     position: sticky;
@@ -746,171 +911,6 @@ h1, h2, h3, h4, h5, h6 {
 
   .overflow-y-auto::-webkit-scrollbar-thumb:hover {
     background: var(--muted-foreground);
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-
-  /* Base styles with custom fonts - Updated from outline */
-  body {
-    font-family: var(--font-family-body);
-    color: var(--color-charcoal);
-    background: var(--color-background);
-  }
-  
-  /* General heading styles - Applied from outline, specific weights/sizes remain in :where block */
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-family-display);
-    /* font-weight: 300; // Outline suggests, but conflicts with existing specific weights. Retaining original weights below. */
-    color: var(--color-midnight);
-  }
-
-
-/**
- * Base typography system with semantic font sizing
- */
-  :where(
-    :not(:has([class*=" text-"]), :not(:has([class^="text-"])))
-  ) {
-    h1 {
-      font-family: var(--font-family-display); /* Updated */
-      font-size: var(--text-2xl);
-      font-weight: var(--font-weight-light); /* Existing weight maintained */
-      line-height: var(--leading-tight);
-      letter-spacing: var(--tracking-airy);
-      color: var(--color-midnight); /* Updated */
-    }
-
-    h2 {
-      font-family: var(--font-family-display); /* Updated */
-      font-size: var(--text-xl);
-      font-weight: var(--font-weight-light); /* Existing weight maintained */
-      line-height: var(--leading-tight);
-      letter-spacing: var(--tracking-airy);
-      color: var(--color-midnight); /* Updated */
-    }
-
-    h3 {
-      font-family: var(--font-family-display); /* Updated */
-      font-size: var(--text-lg);
-      font-weight: var(--font-weight-normal); /* Existing weight maintained */
-      line-height: var(--leading-snug);
-      letter-spacing: var(--tracking-airy);
-      color: var(--color-midnight); /* Updated */
-    }
-
-    h4 {
-      font-family: var(--font-family-display); /* Updated */
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-normal); /* Existing weight maintained */
-      line-height: var(--leading-normal);
-      letter-spacing: var(--tracking-airy);
-      color: var(--color-midnight); /* Updated */
-    }
-
-    h5 {
-      font-family: var(--font-family-display); /* Updated */
-      font-size: var(--text-sm);
-      font-weight: var(--font-weight-normal); /* Existing weight maintained */
-      line-height: var(--leading-normal);
-      letter-spacing: var(--tracking-airy);
-      color: var(--color-midnight); /* Updated */
-    }
-
-    h6 {
-      font-family: var(--font-family-display); /* Updated */
-      font-size: var(--text-xs);
-      font-weight: var(--font-weight-normal); /* Existing weight maintained */
-      line-height: var(--leading-normal);
-      letter-spacing: var(--tracking-wider);
-      text-transform: uppercase;
-      color: var(--color-midnight); /* Updated */
-    }
-
-    p {
-      font-family: var(--font-family-body);
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-normal);
-      line-height: var(--leading-relaxed);
-      letter-spacing: var(--tracking-normal);
-      color: var(--text-body);
-    }
-
-    small {
-      font-family: var(--font-family-body);
-      font-size: var(--text-sm);
-      font-weight: var(--font-weight-normal);
-      line-height: var(--leading-normal);
-      letter-spacing: var(--tracking-normal);
-      color: var(--text-subtle);
-    }
-
-    label {
-      font-family: var(--font-family-display);
-      font-size: var(--text-sm);
-      font-weight: var(--font-weight-normal);
-      line-height: var(--leading-normal);
-      letter-spacing: var(--tracking-airy);
-      color: var(--text-secondary);
-    }
-
-    button {
-      font-family: var(--font-family-display);
-      font-size: var(--text-sm);
-      font-weight: var(--font-weight-normal);
-      line-height: var(--leading-normal);
-      letter-spacing: var(--tracking-airy);
-    }
-
-    input,
-    textarea,
-    select {
-      font-family: var(--font-family-body);
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-normal);
-      line-height: var(--leading-normal);
-      letter-spacing: var(--tracking-normal);
-      color: var(--text-body);
-    }
-
-    code {
-      font-family: var(--font-family-mono);
-      font-size: 0.875em;
-      font-weight: var(--font-weight-medium);
-    }
-
-    pre {
-      font-family: var(--font-family-mono);
-      font-size: var(--text-sm);
-      font-weight: var(--font-weight-normal);
-      line-height: var(--leading-relaxed);
-    }
-  }
-}
-
-/**
- * Utility classes for design tokens
- */
-@layer utilities {
-  /* Override Tailwind's .font-sans with Adobe Fonts */
-  .font-sans {
-    font-family: var(--font-family-body) !important;
-  }
-
-  /* Updated/Added font family utilities from outline */
-  .font-heading {
-    font-family: var(--font-family-display) !important;
-  }
-  
-  .font-body {
-    font-family: var(--font-family-body) !important;
-  }
-  
-  .font-display {
-    font-family: var(--font-family-display) !important;
   }
 
   /* Shadow Utilities */
@@ -997,39 +997,39 @@ h1, h2, h3, h4, h5, h6 {
 
   /* Typography Utilities - Updated with Custom Fonts & Colors */
   .text-display {
-    font-family: var(--font-family-display); /* Updated */
+    font-family: var(--font-family-display);
     font-size: var(--text-4xl);
     font-weight: var(--font-weight-light);
     line-height: var(--leading-tight);
     letter-spacing: var(--tracking-airy);
-    color: var(--color-midnight); /* Updated */
+    color: var(--color-midnight);
   }
 
   .text-headline {
-    font-family: var(--font-family-display); /* Updated */
+    font-family: var(--font-family-display);
     font-size: var(--text-3xl);
     font-weight: var(--font-weight-light);
     line-height: var(--leading-tight);
     letter-spacing: var(--tracking-airy);
-    color: var(--color-midnight); /* Updated */
+    color: var(--color-midnight);
   }
 
   .text-title {
-    font-family: var(--font-family-display); /* Updated */
+    font-family: var(--font-family-display);
     font-size: var(--text-2xl);
     font-weight: var(--font-weight-normal);
     line-height: var(--leading-snug);
     letter-spacing: var(--tracking-airy);
-    color: var(--color-midnight); /* Updated */
+    color: var(--color-midnight);
   }
 
   .text-subtitle {
-    font-family: var(--font-family-display); /* Updated */
+    font-family: var(--font-family-display);
     font-size: var(--text-lg);
     font-weight: var(--font-weight-normal);
     line-height: var(--leading-normal);
     letter-spacing: var(--tracking-airy);
-    color: var(--color-midnight); /* Updated */
+    color: var(--color-midnight);
   }
 
   .text-body {
@@ -1051,7 +1051,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .text-overline {
-    font-family: var(--font-family-display); /* Updated */
+    font-family: var(--font-family-display);
     font-size: var(--text-xs);
     font-weight: var(--font-weight-normal);
     line-height: var(--leading-normal);
@@ -1313,21 +1313,4 @@ h1, h2, h3, h4, h5, h6 {
 
 html {
   font-size: var(--font-size-root);
-}
-
-/* ============================================
-   CRITICAL FIX: Override Tailwind's .font-sans
-   ============================================
-   This MUST come after all @layer directives to override Tailwind
-*/
-.font-sans {
-  font-family: var(--font-family-body) !important;
-}
-
-button, .font-sans {
-  font-family: var(--font-family-body) !important;
-}
-
-h1, h2, h3, h4, h5, h6, .font-heading {
-  font-family: var(--font-family-display) !important;
 }
