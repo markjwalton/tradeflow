@@ -91,20 +91,18 @@ export default function PageBuilder() {
       { name: "Large", value: "shadow-[var(--shadow-lg)]" },
       { name: "XL", value: "shadow-[var(--shadow-xl)]" },
     ],
-    fonts: [
-      { name: "Heading", value: "font-[var(--font-heading)]" },
-      { name: "Body", value: "font-[var(--font-body)]" },
-      { name: "Mono", value: "font-[var(--font-mono)]" },
-    ],
-    fontSizes: [
-      { name: "XS (0.75rem)", value: "text-[length:var(--font-size-xs)]" },
-      { name: "SM (0.875rem)", value: "text-[length:var(--font-size-sm)]" },
-      { name: "Base (1rem)", value: "text-[length:var(--font-size-base)]" },
-      { name: "LG (1.125rem)", value: "text-[length:var(--font-size-lg)]" },
-      { name: "XL (1.25rem)", value: "text-[length:var(--font-size-xl)]" },
-      { name: "2XL (1.5rem)", value: "text-[length:var(--font-size-2xl)]" },
-      { name: "3XL (1.875rem)", value: "text-[length:var(--font-size-3xl)]" },
-      { name: "4XL (2.25rem)", value: "text-[length:var(--font-size-4xl)]" },
+    semanticText: [
+      { name: "Heading 1", value: "text-h1" },
+      { name: "Heading 2", value: "text-h2" },
+      { name: "Heading 3", value: "text-h3" },
+      { name: "Heading 4", value: "text-h4" },
+      { name: "Heading 5", value: "text-h5" },
+      { name: "Heading 6", value: "text-h6" },
+      { name: "Body Large", value: "text-body-large" },
+      { name: "Body Base", value: "text-body-base" },
+      { name: "Body Small", value: "text-body-small" },
+      { name: "Body Muted", value: "text-body-muted" },
+      { name: "Caption", value: "text-caption" },
     ],
     fontWeights: [
       { name: "Light (300)", value: "font-light" },
@@ -351,8 +349,8 @@ export default function PageBuilder() {
         classArray = classArray.filter(c => !c.match(/^shadow-\[var\(--shadow-/) && !c.match(/^shadow/));
       } else if (tokenType === 'font-family') {
         classArray = classArray.filter(c => !c.match(/^font-\[var\(--font-/) && !c.match(/^font-(sans|serif|mono|heading|body)$/));
-      } else if (tokenType === 'font-size') {
-        classArray = classArray.filter(c => !c.match(/^text-\[(length:)?var\(--font-size-/) && !c.match(/^text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)$/));
+        } else if (tokenType === 'semantic-text') {
+        classArray = classArray.filter(c => !c.match(/^text-(h[1-6]|body-(large|base|small|muted)|caption)$/));
       } else if (tokenType === 'font-weight') {
         classArray = classArray.filter(c => !c.match(/^font-(thin|extralight|light|normal|medium|semibold|bold|extrabold|black)$/));
       } else if (tokenType === 'border') {
@@ -1007,29 +1005,15 @@ export default function PageBuilder() {
 
             <TabsContent value="typography" className="space-y-4">
               <div>
-                <Label className="mb-2 block">Font Family</Label>
-                <div className="grid grid-cols-3 gap-2">
-                  {TOKEN_LIBRARY.fonts.map((token) => (
-                    <Button
-                      key={token.value}
-                      variant="outline"
-                      className="justify-start"
-                      onClick={() => applyTokenToElement(token.value, 'font-family')}
-                    >
-                      {token.name}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <Label className="mb-2 block">Font Size</Label>
+                <Label className="mb-2 block">Semantic Typography</Label>
+                <p className="text-xs text-[var(--color-charcoal)] mb-3">Use these pre-defined text styles for consistency</p>
                 <div className="grid grid-cols-2 gap-2">
-                  {TOKEN_LIBRARY.fontSizes.map((token) => (
+                  {TOKEN_LIBRARY.semanticText.map((token) => (
                     <Button
                       key={token.value}
                       variant="outline"
                       className="justify-start"
-                      onClick={() => applyTokenToElement(token.value, 'font-size')}
+                      onClick={() => applyTokenToElement(token.value, 'semantic-text')}
                     >
                       {token.name}
                     </Button>
