@@ -534,15 +534,15 @@ Create a development prompt that:
   );
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-h2 flex items-center gap-2">
-            <BookOpen className="h-6 w-6 text-primary-500" />
+            <BookOpen className="h-6 w-6 text-primary" />
             Knowledge Manager
           </h1>
-          <p className="text-[var(--color-charcoal)]">
+          <p className="text-charcoal-700">
             Track updates across Tailwind, React, and shadcn/ui with RuleBook integration
           </p>
         </div>
@@ -557,7 +557,7 @@ Create a development prompt that:
               key={key}
               variant={activeTech === key ? "default" : "outline"}
               onClick={() => setActiveTech(key)}
-              className={activeTech === key ? "bg-primary-500" : ""}
+              className={activeTech === key ? "bg-primary" : ""}
             >
               <Icon className="h-4 w-4 mr-2" />
               {config.name}
@@ -568,13 +568,13 @@ Create a development prompt that:
 
       {/* Progress Bar */}
       {syncProgress.total > 0 && (
-        <div className="mb-4 p-4 bg-white border border-background-muted rounded-lg">
+        <div className="mb-4 p-4 bg-white border border-border rounded-lg">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-            <Loader2 className="h-4 w-4 animate-spin text-primary-500" />
+            <Loader2 className="h-4 w-4 animate-spin text-primary" />
               <span className="text-sm font-medium">{syncProgress.message}</span>
             </div>
-            <span className="text-sm text-[var(--color-charcoal)]">
+            <span className="text-sm text-charcoal-700">
               {syncProgress.current} / {syncProgress.total}
             </span>
           </div>
@@ -583,14 +583,14 @@ Create a development prompt that:
       )}
 
       {/* RuleBook Status */}
-      <div className="mb-4 p-3 bg-primary-50 border border-primary-200 rounded-lg flex items-center justify-between">
+      <div className="mb-4 p-3 bg-primary-50 border border-primary/20 rounded-lg flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <FileText className="h-4 w-4 text-primary-500" />
-          <span className="text-sm text-[var(--color-midnight)]">
+          <FileText className="h-4 w-4 text-primary" />
+          <span className="text-sm text-midnight-900">
             RuleBook: {rules.length} active rules loaded for AI reasoning
           </span>
         </div>
-        <Badge className="bg-primary-100 text-primary-700">
+        <Badge className="bg-primary-100 text-primary">
           {rules.filter(r => r.category === "ui_ux").length} UI/UX rules
         </Badge>
       </div>
@@ -637,7 +637,7 @@ Create a development prompt that:
               <CardContent className="py-12 text-center">
                 <TechIcon className={`h-12 w-12 mx-auto mb-4 ${techConfig.color}`} />
                 <h3 className="text-h4">No {techConfig.name} Releases Tracked</h3>
-                <p className="text-[var(--color-charcoal)] mt-2">Click "Check for Updates" to find the latest releases</p>
+                <p className="text-charcoal-700 mt-2">Click "Check for Updates" to find the latest releases</p>
               </CardContent>
             </Card>
           ) : (
@@ -652,7 +652,7 @@ Create a development prompt that:
                         {release.is_major && <Badge>Major</Badge>}
                         <Badge variant="outline">{release.status}</Badge>
                       </CardTitle>
-                      <p className="text-sm text-[var(--color-charcoal)]">Released: {release.release_date || "Unknown"}</p>
+                      <p className="text-sm text-charcoal-700">Released: {release.release_date || "Unknown"}</p>
                     </div>
                     {release.changelog_url && (
                       <Button variant="outline" size="sm" asChild>
@@ -669,7 +669,7 @@ Create a development prompt that:
                         {release.new_features.map((feature, idx) => (
                           <div key={idx} className={`p-2 ${techConfig.bgColor} rounded-lg`}>
                             <p className="text-body-small">{feature.name}</p>
-                            <p className="text-xs text-[var(--color-charcoal)]">{feature.description}</p>
+                            <p className="text-xs text-charcoal-700">{feature.description}</p>
                           </div>
                         ))}
                       </div>
@@ -685,7 +685,7 @@ Create a development prompt that:
         <TabsContent value="components" className="space-y-4">
           <div className="flex gap-4 mb-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-charcoal)]" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-charcoal-700" />
               <Input
                 placeholder="Search components..."
                 value={searchQuery}
@@ -709,11 +709,11 @@ Create a development prompt that:
                     className={`p-3 rounded-lg border text-center ${
                       synced 
                         ? "bg-success-50 border-success/30" 
-                        : "bg-white border-background-muted"
+                        : "bg-white border-border"
                     }`}
                   >
                     <p className="text-body-small">{comp}</p>
-                    {synced && <CheckCircle2 className="h-3 w-3 mx-auto mt-1 text-[var(--color-success)]" />}
+                    {synced && <CheckCircle2 className="h-3 w-3 mx-auto mt-1 text-success" />}
                   </div>
                 );
               })}
@@ -734,7 +734,7 @@ Create a development prompt that:
                 <Button 
                   onClick={handleGenerateRecommendations} 
                   disabled={analyzing}
-                  className="bg-primary-500 hover:bg-primary-600"
+                  className="bg-primary hover:bg-primary/90"
                 >
                   {analyzing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
                   Generate from Releases
@@ -744,8 +744,8 @@ Create a development prompt that:
             <CardContent>
               {recommendations.length === 0 ? (
                 <div className="text-center py-8">
-                  <Sparkles className="h-12 w-12 mx-auto mb-4 text-[var(--color-charcoal)]" />
-                  <p className="text-[var(--color-charcoal)]">
+                  <Sparkles className="h-12 w-12 mx-auto mb-4 text-charcoal-700" />
+                  <p className="text-charcoal-700">
                     Generate recommendations to get AI insights with RuleBook alignment
                   </p>
                 </div>
@@ -758,19 +758,19 @@ Create a development prompt that:
                           <div className="flex items-center gap-2">
                             <h4 className="text-h6">{rec.title}</h4>
                             {rec.status === "accepted" && (
-                              <Badge className="bg-success-50 text-success-foreground">
+                              <Badge className="bg-success-50 text-success">
                                 <CheckCircle2 className="h-3 w-3 mr-1" />
                                 In Roadmap
                               </Badge>
                             )}
                           </div>
-                          <p className="text-sm text-[var(--color-charcoal)]">{rec.description}</p>
+                          <p className="text-sm text-charcoal-700">{rec.description}</p>
                         </div>
                         <div className="flex gap-2">
                           <Badge className={
-                            rec.impact === "high" ? "bg-destructive-50 text-destructive-700" :
-                            rec.impact === "medium" ? "bg-warning/10 text-warning-foreground" :
-                            "bg-success-50 text-success-foreground"
+                            rec.impact === "high" ? "bg-destructive-50 text-destructive" :
+                            rec.impact === "medium" ? "bg-warning/10 text-warning" :
+                            "bg-success-50 text-success"
                           }>
                             {rec.impact}
                           </Badge>
@@ -781,7 +781,7 @@ Create a development prompt that:
                       {rec.reasoning && (
                         <div className="mt-3 p-3 bg-primary-50 rounded-lg">
                           <p className="text-xs font-medium mb-1">Development Prompt & RuleBook Context:</p>
-                          <p className="text-sm text-[var(--color-charcoal)] whitespace-pre-wrap">{rec.reasoning}</p>
+                          <p className="text-sm text-charcoal-700 whitespace-pre-wrap">{rec.reasoning}</p>
                         </div>
                       )}
 
@@ -829,7 +829,7 @@ Create a development prompt that:
           <div className="space-y-4 py-4">
             <div>
               <Label>Recommendation</Label>
-              <p className="text-sm text-[var(--color-charcoal)] mt-1">{roadmapDialog.rec?.title}</p>
+              <p className="text-sm text-charcoal-700 mt-1">{roadmapDialog.rec?.title}</p>
             </div>
             <div>
               <Label>Priority</Label>
@@ -848,7 +848,7 @@ Create a development prompt that:
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setRoadmapDialog({ open: false, rec: null })}>Cancel</Button>
-            <Button onClick={handleAddToRoadmap} className="bg-primary-500 hover:bg-primary-600">
+            <Button onClick={handleAddToRoadmap} className="bg-primary hover:bg-primary/90">
               <Plus className="h-4 w-4 mr-2" />
               Add to Roadmap
             </Button>

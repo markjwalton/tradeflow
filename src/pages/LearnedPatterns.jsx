@@ -42,14 +42,14 @@ export default function LearnedPatterns() {
   });
 
   const statusColors = {
-    verified: "bg-success-50 text-success-foreground border-success",
-    violation: "bg-destructive-50 text-destructive-700 border-destructive-200"
+    verified: "bg-success-50 text-success border-success/20",
+    violation: "bg-destructive-50 text-destructive border-destructive/20"
   };
 
   const severityColors = {
-    critical: "bg-destructive text-white",
-    high: "bg-warning-foreground text-white",
-    medium: "bg-info-foreground text-white",
+    critical: "bg-destructive text-destructive-foreground",
+    high: "bg-warning text-warning-foreground",
+    medium: "bg-info text-info-foreground",
     low: "bg-muted text-muted-foreground"
   };
 
@@ -125,7 +125,7 @@ export default function LearnedPatterns() {
             <CardTitle className="text-xs">Verified</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-success-foreground">{stats.verified}</div>
+            <div className="text-2xl font-bold text-success">{stats.verified}</div>
           </CardContent>
         </Card>
         <Card>
@@ -141,7 +141,7 @@ export default function LearnedPatterns() {
             <CardTitle className="text-xs">User Modified</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-info-foreground">{stats.userModified}</div>
+            <div className="text-2xl font-bold text-info">{stats.userModified}</div>
           </CardContent>
         </Card>
       </div>
@@ -254,8 +254,8 @@ export default function LearnedPatterns() {
                     
                     {pattern.suggested_fix && (
                       <div className="mt-2">
-                        <p className="text-xs text-success-foreground mb-1">Suggested Fix:</p>
-                        <code className="block bg-success-50 p-2 rounded text-sm font-mono">
+                        <p className="text-xs text-success mb-1">Suggested Fix:</p>
+                        <code className="block bg-success-50 p-2 rounded text-sm font-mono text-success">
                           {pattern.suggested_fix}
                         </code>
                       </div>

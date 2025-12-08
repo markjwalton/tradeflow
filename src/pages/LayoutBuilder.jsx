@@ -293,7 +293,7 @@ Create 4-8 zones for a complete layout.`,
           <Button 
             onClick={() => setShowSaveDialog(true)}
             disabled={zones.length === 0}
-            className="bg-primary-500 hover:bg-primary-600 text-white"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground"
           >
             <Save className="h-4 w-4 mr-2" />
             Save Pattern
@@ -304,7 +304,7 @@ Create 4-8 zones for a complete layout.`,
       <div className="grid grid-cols-12 gap-6">
         {/* Left Sidebar - Presets & Saved Patterns */}
         <div className="col-span-3 space-y-4">
-          <Card className="border-background-muted">
+          <Card className="border-border">
             <CardHeader className="py-3">
               <CardTitle className="text-sm text-midnight-900">Presets</CardTitle>
             </CardHeader>
@@ -314,17 +314,17 @@ Create 4-8 zones for a complete layout.`,
                   <button
                     key={preset.name}
                     onClick={() => handleLoadPreset(preset)}
-                    className="w-full text-left p-2 rounded-lg hover:bg-[var(--color-background)] transition-colors text-sm"
+                    className="w-full text-left p-2 rounded-lg hover:bg-background transition-colors text-sm"
                   >
-                    <p className="font-medium text-[var(--color-midnight)]">{preset.name}</p>
-                    <p className="text-xs text-[var(--color-charcoal)]">{preset.zones.length} zones</p>
+                    <p className="font-medium text-midnight-900">{preset.name}</p>
+                    <p className="text-xs text-charcoal-700">{preset.zones.length} zones</p>
                   </button>
                 ))}
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-background-muted">
+          <Card className="border-border">
             <CardHeader className="py-3">
               <CardTitle className="text-sm text-midnight-900">Saved Patterns</CardTitle>
             </CardHeader>
@@ -341,12 +341,12 @@ Create 4-8 zones for a complete layout.`,
                     {patterns.map((pattern) => (
                       <div
                         key={pattern.id}
-                        className="p-2 rounded-lg hover:bg-[var(--color-background)] transition-colors group"
+                        className="p-2 rounded-lg hover:bg-background transition-colors group"
                       >
                         <div className="flex items-center justify-between">
                           <button onClick={() => handleLoadPattern(pattern)} className="text-left flex-1">
-                            <p className="font-medium text-sm text-[var(--color-midnight)]">{pattern.name}</p>
-                            <p className="text-xs text-[var(--color-charcoal)]">{pattern.zones?.length || 0} zones</p>
+                            <p className="font-medium text-sm text-midnight-900">{pattern.name}</p>
+                            <p className="text-xs text-charcoal-700">{pattern.zones?.length || 0} zones</p>
                           </button>
                           <Button 
                             variant="ghost" 
@@ -365,7 +365,7 @@ Create 4-8 zones for a complete layout.`,
             </CardContent>
           </Card>
 
-          <Card className="border-background-muted">
+          <Card className="border-border">
             <CardHeader className="py-3">
               <CardTitle className="text-sm text-midnight-900">Zone Types</CardTitle>
             </CardHeader>
@@ -384,7 +384,7 @@ Create 4-8 zones for a complete layout.`,
 
         {/* Main Canvas */}
         <div className="col-span-6">
-          <Card className="border-background-muted">
+          <Card className="border-border">
             <CardHeader className="flex flex-row items-center justify-between py-3">
               <CardTitle className="text-sm text-midnight-900">Layout Canvas (12-column grid)</CardTitle>
               <Button variant="outline" size="sm" onClick={handleAddZone}>
@@ -453,7 +453,7 @@ Create 4-8 zones for a complete layout.`,
 
         {/* Right Sidebar - Zone Properties */}
         <div className="col-span-3 space-y-4">
-          <Card className="border-background-muted">
+          <Card className="border-border">
             <CardHeader className="py-3">
               <CardTitle className="text-sm text-midnight-900">Zone Properties</CardTitle>
             </CardHeader>
@@ -551,7 +551,7 @@ Create 4-8 zones for a complete layout.`,
           </Card>
 
           {zones.length > 0 && (
-            <Card className="border-background-muted">
+            <Card className="border-border">
               <CardHeader className="py-3">
                 <CardTitle className="text-sm text-midnight-900">Generated Code</CardTitle>
               </CardHeader>
@@ -626,7 +626,7 @@ Create 4-8 zones for a complete layout.`,
               <Button 
                 onClick={handleSave}
                 disabled={saveMutation.isPending}
-                className="bg-primary-500 hover:bg-primary-600 text-white"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 {saveMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                 Save Pattern
