@@ -593,7 +593,7 @@ Return a JSON object with a "pages" array containing page templates.`,
                     <div 
                       key={index} 
                       className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                        selectedBulkPages.includes(index) ? "border-info bg-info-50" : "hover:bg-[var(--color-background)]"
+                        selectedBulkPages.includes(index) ? "border-info-foreground bg-info-50" : "hover:bg-muted"
                       }`}
                       onClick={() => setSelectedBulkPages(prev => 
                         prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
@@ -603,7 +603,7 @@ Return a JSON object with a "pages" array containing page templates.`,
                         <Checkbox checked={selectedBulkPages.includes(index)} />
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <Layout className="h-4 w-4 text-info" />
+                            <Layout className="h-4 w-4 text-info-foreground" />
                             <span className="font-medium">{page.name}</span>
                             <Badge className={categoryColors[page.category] || "bg-muted"}>{page.category}</Badge>
                           </div>
@@ -639,7 +639,7 @@ Return a JSON object with a "pages" array containing page templates.`,
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Layout className="h-5 w-5 text-info" />
+              <Layout className="h-5 w-5 text-info-foreground" />
               {previewPage?.name}
               {previewPage?.category && (
                 <Badge className={categoryColors[previewPage.category]}>{previewPage.category}</Badge>

@@ -239,7 +239,7 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
                     </Button>
                     <Button 
                       size="sm" 
-                      className="flex-1 bg-success hover:bg-success/90 text-success-foreground"
+                      className="flex-1 bg-success-foreground hover:bg-primary-600 text-white"
                       onClick={() => copyForChat(app)}
                     >
                       <Copy className="h-4 w-4 mr-1" />
