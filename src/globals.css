@@ -2,6 +2,9 @@ css
 /* Adobe Fonts - Must load first */
 @import url("https://use.typekit.net/iwm1gcu.css");
 
+/* Adobe Fonts - Must load first */
+@import url("https://use.typekit.net/iwm1gcu.css");
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
