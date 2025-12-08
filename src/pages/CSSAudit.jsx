@@ -384,34 +384,42 @@ export default function CSSAudit() {
       console.log(`Analyzing ${selectedFile}, ${fileContent.length} characters`);
 
       const result = await base44.integrations.Core.InvokeLLM({
-        prompt: `You are a CSS/design token auditor. Analyze this SINGLE FILE comprehensively for ALL design token violations.
+        prompt: `You are a CSS/design token auditor. Analyze this file CAREFULLY and ONLY report violations that ACTUALLY EXIST in the provided code.
 
-FILE: ${selectedFile}
-CONTENT:
-${fileContent}
+      FILE: ${selectedFile}
+      CONTENT:
+      ${fileContent}
 
-DESIGN TOKENS REFERENCE:
-- Colors: var(--color-primary), var(--color-secondary), var(--color-accent), var(--color-midnight), var(--color-charcoal)
-- Semantic: bg-primary, text-primary, border-border, bg-muted, text-muted-foreground
-- Spacing: var(--spacing-1) through var(--spacing-32), p-4, gap-4, etc.
-- Fonts: degular-display, mrs-eaves-xl-serif-narrow (NO QUOTES)
+      DESIGN TOKENS REFERENCE:
+      - Colors: var(--color-primary), var(--color-secondary), var(--color-accent), var(--color-midnight), var(--color-charcoal)
+      - Semantic: bg-primary, text-primary, border-border, bg-muted, text-muted-foreground
+      - Spacing: var(--spacing-1) through var(--spacing-32), p-4, gap-4, etc.
+      - Fonts: degular-display, mrs-eaves-xl-serif-narrow (NO QUOTES)
 
-VIOLATIONS TO DETECT (find ALL instances):
-1. CRITICAL - Quoted fonts: "degular-display", "mrs-eaves-xl-serif-narrow"
-2. CRITICAL - Inline styles with hardcoded values: style={{backgroundColor: '#fff'}}
-3. HIGH - Hardcoded hex: #4A5D4E, #D4A574, #ffffff, rgb(74, 93, 78)
-4. HIGH - Hardcoded Tailwind colors: bg-[#4A5D4E], text-gray-500, text-gray-400
-5. MEDIUM - Hardcoded spacing: padding: 16px, margin: 8px
-6. MEDIUM - Hardcoded font sizes: fontSize: 14px, text-[14px]
-7. LOW - Generic Tailwind grays: text-gray-400, bg-gray-100 (use semantic colors)
+      VIOLATIONS TO DETECT:
+      1. CRITICAL - Quoted fonts: "degular-display", "mrs-eaves-xl-serif-narrow"
+      2. CRITICAL - Inline styles with hardcoded values: style={{backgroundColor: '#fff'}}
+      3. HIGH - Hardcoded hex: #4A5D4E, #D4A574, #ffffff (NOT in comments or var() definitions)
+      4. HIGH - Hardcoded Tailwind colors: bg-[#4A5D4E], text-gray-500, text-gray-400
+      5. MEDIUM - Hardcoded spacing in inline styles: padding: 16px, margin: 8px
+      6. MEDIUM - Hardcoded font sizes in inline styles: fontSize: 14px
+      7. LOW - Generic Tailwind grays: text-gray-400, bg-gray-100 (use semantic colors)
 
-CRITICAL: Find EVERY violation in the file, not just examples. Be exhaustive.
+      CRITICAL RULES:
+      - ONLY report violations that exist in the actual code above
+      - Provide the EXACT code snippet as it appears (copy-paste from content)
+      - Verify each violation exists before including it
+      - Do NOT make up violations
+      - Do NOT report valid CSS variable definitions as violations
+      - Do NOT report design token references as violations
+      - If no violations exist, return an empty violations array
 
-For each violation provide:
-- Exact code snippet
-- Severity level
-- Specific issue description
-- Recommended fix with exact replacement code`,
+      For each REAL violation provide:
+      - Exact code snippet (must match actual code character-for-character)
+      - Line number (approximate, based on content position)
+      - Severity level
+      - Specific issue description
+      - Recommended fix`,
         response_json_schema: {
           type: "object",
           properties: {
