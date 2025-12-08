@@ -150,7 +150,7 @@ export default function PromptSettings() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
-            <Sparkles className="h-6 w-6 text-accent-400" />
+            <Sparkles className="h-6 w-6 text-accent-700" />
             Prompt Settings
           </h1>
           <p className="text-[var(--color-charcoal)]">Manage AI reasoning prompts for input fields</p>

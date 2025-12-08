@@ -271,7 +271,7 @@ For each recommendation, provide:
             variant="outline" 
             onClick={analyzePackageUpdates}
             disabled={isAnalyzing}
-            className="border-[var(--color-background-muted)]"
+            className="border-background-muted"
           >
             {isAnalyzing ? (
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -283,7 +283,7 @@ For each recommendation, provide:
           <Button 
             variant="outline"
             onClick={() => setShowCreateDialog(true)}
-            className="border-[var(--color-background-muted)]"
+            className="border-background-muted"
           >
             <Plus className="h-4 w-4 mr-2" />
             Core Package
@@ -358,7 +358,7 @@ For each recommendation, provide:
             </h2>
             <div className="grid md:grid-cols-2 gap-4">
               {corePackages.map(pkg => (
-                <Card key={pkg.id} className="border-[var(--color-background-muted)]">
+                <Card key={pkg.id} className="border-background-muted">
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div>
@@ -403,12 +403,12 @@ For each recommendation, provide:
                 </Card>
               ))}
               {corePackages.length === 0 && (
-                <Card className="border-dashed border-[var(--color-background-muted)] md:col-span-2">
+                <Card className="border-dashed border-background-muted md:col-span-2">
                   <CardContent className="py-12 text-center">
                     <Package className="h-12 w-12 mx-auto mb-4 opacity-50 text-[var(--color-charcoal)]" />
                     <p className="text-[var(--color-charcoal)]">No core packages yet</p>
                     <Button 
-                      className="mt-4 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+                      className="mt-4 bg-primary-500 hover:bg-primary-600 text-white"
                       onClick={() => setShowCreateDialog(true)}
                     >
                       Create Sturij Core Package
@@ -427,7 +427,7 @@ For each recommendation, provide:
               </h2>
               <div className="grid md:grid-cols-2 gap-4">
                 {customerPackages.map(pkg => (
-                  <Card key={pkg.id} className="border-[var(--color-background-muted)]">
+                  <Card key={pkg.id} className="border-background-muted">
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div>
@@ -528,7 +528,7 @@ For each recommendation, provide:
                     </CardTitle>
                     <div className="flex items-center gap-2 mt-1">
                       <Badge variant="outline" className="text-xs">{comp.category}</Badge>
-                      <Badge className="bg-[var(--color-charcoal)]/10 text-[var(--color-charcoal)] text-xs">
+                      <Badge className="bg-charcoal-100 text-charcoal-700 text-xs">
                         v{comp.version}
                       </Badge>
                     </div>
@@ -816,7 +816,7 @@ For each recommendation, provide:
 
             {formData.package_type === "customer_theme" && (
               <>
-                <div className="border-t border-[var(--color-background-muted)] pt-4">
+                <div className="border-t border-background-muted pt-4">
                   <h4 className="text-h5 mb-3">
                     Customer Information
                   </h4>

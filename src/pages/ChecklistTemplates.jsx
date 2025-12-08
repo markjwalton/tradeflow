@@ -136,7 +136,7 @@ export default function ChecklistTemplates() {
         </div>
       ) : filteredChecklists.length === 0 ? (
         <div className="text-center py-12">
-          <ListChecks className="h-12 w-12 mx-auto text-[var(--color-charcoal)] opacity-30 mb-4" />
+          <ListChecks className="h-12 w-12 mx-auto text-charcoal-500 opacity-30 mb-4" />
           <h3 className="text-lg font-medium text-[var(--color-midnight)]">No checklists found</h3>
           <p className="text-[var(--color-charcoal)] mb-4">
             {search || categoryFilter !== "all"

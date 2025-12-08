@@ -492,7 +492,7 @@ Create a detailed, actionable prompt that can be used by an AI coding assistant.
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-accent-400" />
+                  <Sparkles className="h-5 w-5 text-accent-700" />
                   Suggestions
                 </CardTitle>
               </CardHeader>
@@ -527,7 +527,7 @@ Create a detailed, actionable prompt that can be used by an AI coding assistant.
                 <SelectContent>
                   <SelectItem value="playground">
                     <div className="flex items-center gap-2">
-                      <FlaskConical className="h-4 w-4 text-accent-400" />
+                      <FlaskConical className="h-4 w-4 text-accent-700" />
                       Playground (for further testing)
                     </div>
                   </SelectItem>
