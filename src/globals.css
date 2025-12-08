@@ -39,7 +39,7 @@ css
     --text-3xl: 1.875rem;
     --text-4xl: 2.25rem;
     --text-5xl: 3rem;
-    /* New font size tokens from outline */
+    /* New font size tokens from outline (matching existing) */
     --font-size-xs: 0.75rem;
     --font-size-sm: 0.875rem;
     --font-size-base: 1rem;
@@ -87,7 +87,7 @@ css
     /* === SHADOW TOKENS === */
     /* Existing definitions updated/maintained with new values from outline */
     --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* Updated to rgba format */
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
@@ -136,7 +136,7 @@ css
     --ease-out: cubic-bezier(0, 0, 0.2, 1);
     --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 
-    /* New Transition definitions from outline */
+    /* New Transition definitions from outline (matching existing) */
     --transition-fast: 150ms ease-in-out;
     --transition-normal: 200ms ease-in-out;
     --transition-slow: 300ms ease-in-out;
@@ -150,7 +150,7 @@ css
     --color-midnight: #1b2a35;
     --color-charcoal: #3b3b3b;
     --color-destructive: #c45a4d;
-    /* New base colors from outline */
+    /* New base colors from outline (matching existing) */
     --color-muted: #6d6d6d;
     --color-background-paper: #ffffff;
     --color-background-muted: #eceae5;
@@ -355,14 +355,14 @@ css
   }
 
   body {
-    font-family: mrs-eaves-xl-serif-narrow, Georgia, serif !important;
+    font-family: mrs-eaves-xl-serif-narrow, Georgia, serif;
     color: var(--color-charcoal);
     background: var(--color-background);
   }
 
   /* General heading styles - Applied from outline, specific weights/sizes remain in :where block */
   h1, h2, h3, h4, h5, h6 {
-    font-family: degular-display, system-ui, sans-serif !important;
+    font-family: degular-display, system-ui, sans-serif;
     font-weight: 300;
     color: var(--color-midnight);
   }
@@ -846,6 +846,12 @@ css
 
   .font-display {
     font-family: degular-display, system-ui, sans-serif !important;
+  }
+
+  /* Modified .font-light to include font-weight */
+  .font-light {
+    font-family: degular-display, system-ui, sans-serif !important;
+    font-weight: 300;
   }
 
   /* Sticky header utility */
