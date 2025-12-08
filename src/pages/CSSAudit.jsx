@@ -355,6 +355,7 @@ export default function CSSAudit() {
   const handleSelectFile = (filePath) => {
     if (!filePath) return;
     setSelectedFile(filePath);
+    setPasteContent("");
     setShowPasteDialog(true);
     setFileReport(null);
     setFileContent("");
