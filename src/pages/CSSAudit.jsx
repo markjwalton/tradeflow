@@ -403,7 +403,7 @@ ${aiPrompt.rulebook_references?.map(r => `- ${r}`).join("\n") || "None"}
               CSS Audit Tool
             </h1>
             <p className="text-body-base text-[var(--color-charcoal)]">
-              Project-wide scan for hardcoded typography classes
+              Project-wide scan for hardcoded CSS classes - typography, colors, spacing, shadows, and more
             </p>
           </div>
           <div className="flex gap-2">
@@ -665,11 +665,23 @@ ${aiPrompt.rulebook_references?.map(r => `- ${r}`).join("\n") || "None"}
             <p>2. Review findings - expand files to see specific issues</p>
             <p>3. Select files to fix and set roadmap priority</p>
             <p>4. Click "Add to Roadmap" to create tasks for your sprints</p>
-            <div className="mt-4 p-3 bg-white rounded-lg">
-              <p className="text-caption mb-2">Semantic Token Classes:</p>
-              <code className="text-xs">text-h1, text-h2, text-h3, text-h4, text-h5, text-h6</code><br/>
-              <code className="text-xs">text-body-large, text-body-base, text-body-small, text-body-muted</code><br/>
-              <code className="text-xs">text-caption</code>
+            <div className="mt-4 p-3 bg-white rounded-lg space-y-2">
+              <div>
+                <p className="text-caption mb-1 font-medium">Typography:</p>
+                <code className="text-xs">text-h1, text-h2, text-h3, text-h4, text-h5, text-h6</code><br/>
+                <code className="text-xs">text-body-large, text-body-base, text-body-small, text-body-muted, text-caption</code>
+              </div>
+              <div>
+                <p className="text-caption mb-1 font-medium">Semantic Colors:</p>
+                <code className="text-xs">text-primary, text-secondary, text-muted, text-accent, text-destructive</code><br/>
+                <code className="text-xs">bg-primary, bg-secondary, bg-muted, bg-accent, bg-destructive</code><br/>
+                <code className="text-xs">border-primary, border-muted</code>
+              </div>
+              <div>
+                <p className="text-caption mb-1 font-medium">CSS Variables:</p>
+                <code className="text-xs">text-[var(--color-*)], bg-[var(--color-*)], border-[var(--color-*)]</code><br/>
+                <code className="text-xs">--spacing-*, --shadow-*, --radius-*</code>
+              </div>
             </div>
           </CardContent>
         </Card>
