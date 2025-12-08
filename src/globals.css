@@ -40,6 +40,28 @@ css
   }
   
   :root {
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html,
+  body,
+  :host {
+    font-family: var(--font-body) !important;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading) !important;
+  }
+  
+  /* Override any font-sans usage */
+  .font-sans {
+    font-family: var(--font-body) !important;
+  }
+  
+  :root {
     /* ================================
        SHADCN/UI BASE TOKENS (HSL)
        ================================ */
