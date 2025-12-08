@@ -375,7 +375,7 @@ export default function RoadmapManager() {
 
           <TabsContent value="roadmap" className="mt-6">
             {roadmapItems.length === 0 ? (
-              <div className="text-center py-12 text-[var(--color-charcoal)]">
+              <div className="text-center py-12 text-charcoal-700">
                 <Lightbulb className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>No items in roadmap. Add your first idea!</p>
               </div>
@@ -396,7 +396,7 @@ export default function RoadmapManager() {
 
           <TabsContent value="development" className="mt-6">
             {developmentItems.length === 0 ? (
-              <div className="text-center py-12 text-[var(--color-charcoal)]">
+              <div className="text-center py-12 text-charcoal-700">
                 <Code className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>No items in development. Set items to "Planned" to move them here.</p>
               </div>
@@ -432,7 +432,7 @@ export default function RoadmapManager() {
 
           <TabsContent value="completed" className="mt-6">
             {completedItems.length === 0 ? (
-              <div className="text-center py-12 text-[var(--color-charcoal)]">
+              <div className="text-center py-12 text-charcoal-700">
                 <Code className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>No completed items yet.</p>
               </div>

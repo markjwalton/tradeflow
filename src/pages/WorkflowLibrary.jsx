@@ -116,7 +116,7 @@ export default function WorkflowLibrary() {
           </p>
         </div>
         <Link to={createPageUrl("WorkflowDesigner")}>
-          <Button className="bg-primary-500 hover:bg-primary-600 text-white">
+          <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
             <Plus className="h-4 w-4 mr-2" />
             Create Workflow
           </Button>
