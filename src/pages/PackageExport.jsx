@@ -233,14 +233,14 @@ export default function PackageExport() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--color-background)]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
       </div>
     );
   }
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
@@ -250,11 +250,11 @@ export default function PackageExport() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-heading text-[var(--color-midnight)] flex items-center gap-2">
-              <Download className="h-6 w-6 text-primary-500" />
+            <h1 className="text-2xl font-heading text-midnight-900 flex items-center gap-2">
+              <Download className="h-6 w-6 text-primary" />
               Export Package
             </h1>
-            <p className="text-[var(--color-charcoal)]">
+            <p className="text-charcoal-700">
               {pkg?.package_name} v{pkg?.version}
             </p>
           </div>
@@ -264,7 +264,7 @@ export default function PackageExport() {
             <Copy className="h-4 w-4 mr-2" />
             Copy
           </Button>
-          <Button onClick={downloadFile} className="bg-primary-500 hover:bg-primary-600 text-white">
+          <Button onClick={downloadFile} className="bg-primary hover:bg-primary/90 text-primary-foreground">
             <Download className="h-4 w-4 mr-2" />
             Download
           </Button>
@@ -273,9 +273,9 @@ export default function PackageExport() {
 
       <div className="grid md:grid-cols-4 gap-6">
         {/* Options Sidebar */}
-        <Card className="border-background-muted">
+        <Card className="border-border">
           <CardHeader>
-            <CardTitle className="text-[var(--color-midnight)] flex items-center gap-2">
+            <CardTitle className="text-midnight-900 flex items-center gap-2">
               <Settings className="h-4 w-4" />
               Export Options
             </CardTitle>
@@ -303,23 +303,23 @@ export default function PackageExport() {
               />
             </div>
 
-            <div className="pt-4 border-t border-background-muted">
+            <div className="pt-4 border-t border-border">
               <Label className="text-sm font-medium">Token Summary</Label>
               <div className="mt-2 space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-[var(--color-charcoal)]">Colors</span>
+                  <span className="text-charcoal-700">Colors</span>
                   <Badge variant="outline">{Object.keys(pkg?.design_tokens?.colors || {}).length}</Badge>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[var(--color-charcoal)]">Typography</span>
+                  <span className="text-charcoal-700">Typography</span>
                   <Badge variant="outline">{Object.keys(pkg?.design_tokens?.typography || {}).length}</Badge>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[var(--color-charcoal)]">Spacing</span>
+                  <span className="text-charcoal-700">Spacing</span>
                   <Badge variant="outline">{Object.keys(pkg?.design_tokens?.spacing || {}).length}</Badge>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[var(--color-charcoal)]">Effects</span>
+                  <span className="text-charcoal-700">Effects</span>
                   <Badge variant="outline">{Object.keys(pkg?.design_tokens?.effects || {}).length}</Badge>
                 </div>
               </div>
@@ -349,10 +349,10 @@ export default function PackageExport() {
               </TabsTrigger>
             </TabsList>
 
-            <Card className="mt-4 border-[var(--color-background-muted)]">
+            <Card className="mt-4 border-border">
               <CardContent className="p-0">
                 <ScrollArea className="h-[500px]">
-                  <pre className="p-4 text-sm font-mono text-[var(--color-midnight)] whitespace-pre-wrap">
+                  <pre className="p-4 text-sm font-mono text-midnight-900 whitespace-pre-wrap">
                     {getExportContent()}
                   </pre>
                 </ScrollArea>

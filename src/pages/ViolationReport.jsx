@@ -327,14 +327,14 @@ Provide a clear, concise explanation that helps them understand this pattern and
   };
 
   const statusColors = {
-    verified: "bg-success-50 text-success-foreground border-success",
-    violation: "bg-destructive-50 text-destructive-foreground border-destructive"
+    verified: "bg-success-50 text-success border-success/20",
+    violation: "bg-destructive-50 text-destructive border-destructive/20"
   };
 
   const severityColors = {
-    critical: "bg-destructive text-white",
-    high: "bg-warning-foreground text-white",
-    medium: "bg-info-foreground text-white",
+    critical: "bg-destructive text-destructive-foreground",
+    high: "bg-warning text-warning-foreground",
+    medium: "bg-info text-info-foreground",
     low: "bg-muted text-muted-foreground"
   };
 
@@ -407,7 +407,7 @@ Provide a clear, concise explanation that helps them understand this pattern and
               <CardTitle className="text-sm">Verified</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-success-foreground">
+              <div className="text-3xl font-bold text-success">
                 {patterns.filter(p => p.status === 'verified').length}
               </div>
             </CardContent>
@@ -458,7 +458,7 @@ Provide a clear, concise explanation that helps them understand this pattern and
                       {(pattern.pattern || pattern.example_usage) && (
                         <div>
                           <span className="text-xs text-muted-foreground">Code Pattern:</span>
-                          <code className="block bg-primary-100 p-3 rounded text-sm font-mono font-bold mt-1 border-l-4 border-primary-500">
+                          <code className="block bg-primary-100 p-3 rounded text-sm font-mono font-bold mt-1 border-l-4 border-primary">
                             {pattern.pattern || pattern.example_usage?.match(/className=["'][^"']+["']|var\([^)]+\)|[a-z-]+:\s*[^;]+/)?.[0] || "Pattern not extracted"}
                           </code>
                         </div>
@@ -481,8 +481,8 @@ Provide a clear, concise explanation that helps them understand this pattern and
                     
                     {pattern.suggested_fix && (
                       <div className="mt-2">
-                        <p className="text-xs text-success-foreground mb-1">Suggested Fix:</p>
-                        <code className="block bg-success-50 p-2 rounded text-sm font-mono">
+                        <p className="text-xs text-success mb-1">Suggested Fix:</p>
+                        <code className="block bg-success-50 p-2 rounded text-sm font-mono text-success">
                           {pattern.suggested_fix}
                         </code>
                       </div>
@@ -644,9 +644,9 @@ Provide a clear, concise explanation that helps them understand this pattern and
               </div>
 
               {aiAnswer && (
-                <div className="mt-4 p-4 bg-primary-50 rounded-lg border border-primary-200">
+                <div className="mt-4 p-4 bg-primary-50 rounded-lg border border-primary/20">
                   <div className="text-sm font-medium mb-2 flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-primary-500" />
+                    <Sparkles className="h-4 w-4 text-primary" />
                     AI Explanation:
                   </div>
                   <div className="text-sm whitespace-pre-wrap">{aiAnswer}</div>
@@ -789,7 +789,7 @@ Provide a clear, concise explanation that helps them understand this pattern and
           </CardHeader>
           <CardContent className="space-y-4 text-xs">
             <div>
-              <h4 className="font-medium mb-2 text-success-foreground">✓ Colors (Correct)</h4>
+              <h4 className="font-medium mb-2 text-success">✓ Colors (Correct)</h4>
               <div className="space-y-1">
                 <p className="text-muted-foreground mb-1">Semantic:</p>
                 {designTokenReference.colors.semantic.map(token => (
