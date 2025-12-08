@@ -15,14 +15,13 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'File path required' }, { status: 400 });
     }
 
-    // Read the file from the project directory
-    const projectRoot = Deno.cwd();
+    // In Base44, files are in /src directory
+    // Remove any leading slashes or 'src/' from filePath
+    const cleanPath = filePath.replace(/^(src\/|\/)+/, '');
     
-    // Try multiple possible paths
     const possiblePaths = [
-      `${projectRoot}/src/${filePath}`,
-      `${projectRoot}/${filePath}`,
-      `${projectRoot}/app/src/${filePath}`,
+      `/src/${cleanPath}`,
+      `/src/src/${cleanPath}`,
     ];
 
     for (const fullPath of possiblePaths) {
