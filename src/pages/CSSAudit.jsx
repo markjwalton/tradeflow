@@ -333,7 +333,6 @@ export default function CSSAudit() {
                                 setSelectedForFix(prev => checked ? [...prev, fileIndex] : prev.filter(i => i !== fileIndex));
                               }}
                               onClick={(e) => e.stopPropagation()}
-                              disabled={fileData.autoFixable === 0}
                             />
                             {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                             <FileCode className="h-4 w-4" />
