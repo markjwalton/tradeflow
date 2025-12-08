@@ -694,26 +694,31 @@ export default function CSSAudit() {
                             {v.severity}
                           </Badge>
                           <div className="flex-1">
-                            <p className="font-medium text-sm">{v.issue}</p>
+                            <p 
+                              className="font-medium text-sm cursor-pointer hover:underline"
+                              onClick={() => handleViolationClick(v.currentCode)}
+                            >
+                              {v.issue}
+                            </p>
                             {v.lineNumber && (
                               <p className="text-xs text-[var(--color-charcoal)] mt-1">
                                 Line {v.lineNumber}
                               </p>
-                              )}
-                              </div>
-                              <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={(e) => {
+                            )}
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
                               e.stopPropagation();
                               handleDeleteViolation(originalIdx);
-                              }}
-                              className="gap-1 text-[var(--color-charcoal)] hover:text-[var(--color-destructive)]"
-                              >
-                              <Trash2 className="h-3 w-3" />
-                              Dismiss
-                              </Button>
-                              </div>
+                            }}
+                            className="gap-1 text-[var(--color-charcoal)] hover:text-[var(--color-destructive)]"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                            Dismiss
+                          </Button>
+                        </div>
                         <div className="space-y-2 mt-3">
                           <div onClick={() => handleViolationClick(v.currentCode)} className="cursor-pointer">
                             <span className="text-xs font-mono text-[var(--color-destructive)]">Current:</span>
