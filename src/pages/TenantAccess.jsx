@@ -171,7 +171,7 @@ export default function TenantAccess() {
   if (!tenantSlug && !selectedTenant) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--color-background)]">
-        <Card className="max-w-lg w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+        <Card className="max-w-lg w-full border-background-muted bg-card">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-[var(--color-midnight)]">
               <Building2 className="h-5 w-5" />
@@ -260,7 +260,7 @@ export default function TenantAccess() {
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--color-background)]">
-        <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+        <Card className="max-w-md w-full border-background-muted bg-card">
           <CardHeader>
             <CardTitle className="text-[var(--color-midnight)]">Sign In Required</CardTitle>
           </CardHeader>
@@ -281,7 +281,7 @@ export default function TenantAccess() {
   if (!tenant) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--color-background)]">
-        <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+        <Card className="max-w-md w-full border-background-muted bg-card">
           <CardContent className="pt-6 text-center">
             <p className="text-[var(--color-charcoal)]">Organization not found.</p>
           </CardContent>
@@ -301,7 +301,7 @@ export default function TenantAccess() {
   if (hasAccess) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--color-background)]">
-        <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+        <Card className="max-w-md w-full border-background-muted bg-card">
           <CardContent className="pt-6 text-center space-y-4">
             <CheckCircle className="h-12 w-12 text-success-foreground mx-auto" />
             <div>
@@ -323,7 +323,7 @@ export default function TenantAccess() {
   if (requestSubmitted || (existingRequest && existingRequest.status === "pending")) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--color-background)]">
-        <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+        <Card className="max-w-md w-full border-background-muted bg-card">
           <CardContent className="pt-6 text-center space-y-4">
             <Clock className="h-12 w-12 text-warning-foreground mx-auto" />
             <div>

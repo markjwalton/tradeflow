@@ -911,7 +911,7 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
   return (
     <div className="h-screen flex flex-col bg-[var(--color-background)]">
       {/* Header */}
-      <div className="flex items-center gap-4 p-4 bg-[var(--color-background-paper)] border-b border-[var(--color-background-muted)]">
+      <div className="flex items-center gap-4 p-4 bg-card border-b border-background-muted">
         <h1 className="text-xl font-bold text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>Mind Map Editor</h1>
         
         <Select value={selectedMindMapId || ""} onValueChange={(id) => {
@@ -1170,7 +1170,7 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
                           placeholder="List nodes you want the AI to add, e.g.:&#10;- User Management&#10;- Payment Processing&#10;- Email Notifications"
                           rows={5}
                         />
-                        <p className="text-xs text-gray-500 mt-1">The AI Suggest feature will prioritize adding these nodes.</p>
+                        <p className="text-xs text-muted-foreground mt-1">The AI Suggest feature will prioritize adding these nodes.</p>
                       </div>
                       <Button
                         className="w-full"

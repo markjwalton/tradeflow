@@ -44,7 +44,7 @@ export default function Setup() {
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--color-background)]">
-        <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+        <Card className="max-w-md w-full border-background-muted bg-card">
           <CardHeader>
             <CardTitle className="text-[var(--color-midnight)]">Setup Required</CardTitle>
           </CardHeader>
@@ -62,7 +62,7 @@ export default function Setup() {
   if (user.is_global_admin === true) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--color-background)]">
-        <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+        <Card className="max-w-md w-full border-background-muted bg-card">
           <CardContent className="pt-6 text-center space-y-4">
             <CheckCircle className="h-12 w-12 text-success-foreground mx-auto" />
             <div>
@@ -92,7 +92,7 @@ export default function Setup() {
             Welcome <strong>{user.email}</strong>! Set yourself as the Global Admin to manage all tenants and navigation.
           </p>
           
-          <div className="bg-warning/10 border border-warning/30 rounded-lg p-3 text-sm text-warning-foreground">
+          <div className="bg-warning/10 border border-warning/20 rounded-lg p-3 text-sm text-warning-foreground">
             <strong>Note:</strong> Only do this if you are the application owner. Global admins have full access to all tenants.
           </div>
 

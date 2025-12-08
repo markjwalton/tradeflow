@@ -175,23 +175,23 @@ export default function ProjectDetail() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <Card className="border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+        <Card className="border-background-muted bg-card">
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-[var(--color-info)]/10 rounded-lg"><Clock className="h-5 w-5 text-[var(--color-info)]" /></div>
+              <div className="p-2 bg-info-50 rounded-lg"><Clock className="h-5 w-5 text-info-foreground" /></div>
               <div><p className="text-sm text-[var(--color-charcoal)]">Tasks</p><p className="text-xl font-bold text-[var(--color-midnight)]">{tasks.length}</p></div>
             </div>
           </CardContent>
         </Card>
-        <Card className="border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+        <Card className="border-background-muted bg-card">
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-[var(--color-success)]/10 rounded-lg"><CheckCircle2 className="h-5 w-5 text-[var(--color-success)]" /></div>
+              <div className="p-2 bg-success-50 rounded-lg"><CheckCircle2 className="h-5 w-5 text-success-foreground" /></div>
               <div><p className="text-sm text-[var(--color-charcoal)]">Completed</p><p className="text-xl font-bold text-[var(--color-midnight)]">{completedTasks}</p></div>
             </div>
           </CardContent>
         </Card>
-        <Card className="border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+        <Card className="border-background-muted bg-card">
           <CardContent className="pt-4">
             <div className="space-y-2">
               <div className="flex justify-between text-sm"><span className="text-[var(--color-charcoal)]">Budget</span><span>£{project.spend?.toLocaleString()} / £{project.budget?.toLocaleString()}</span></div>
@@ -224,7 +224,7 @@ export default function ProjectDetail() {
           </div>
           <div className="space-y-2">
             {tasks.map((task) => (
-              <Card key={task.id} className="border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+              <Card key={task.id} className="border-background-muted bg-card">
                 <CardContent className="p-4 flex items-center justify-between">
                   <div>
                     <div className="flex items-center gap-2">
@@ -255,7 +255,7 @@ export default function ProjectDetail() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {contacts.map((contact) => (
-              <Card key={contact.id} className="border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+              <Card key={contact.id} className="border-background-muted bg-card">
                 <CardContent className="p-4">
                   <div className="flex justify-between">
                     <div><p className="font-medium text-[var(--color-midnight)]">{contact.name}</p><Badge variant="outline" className="mt-1">{contact.role}</Badge></div>
@@ -274,7 +274,7 @@ export default function ProjectDetail() {
         <TabsContent value="estimates" className="mt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {estimates.map((estimate) => (
-              <Card key={estimate.id} className="border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+              <Card key={estimate.id} className="border-background-muted bg-card">
                 <CardContent className="p-4">
                   <p className="font-medium text-[var(--color-midnight)]">{estimate.title}</p>
                   <Badge className="mt-1">{estimate.status}</Badge>
