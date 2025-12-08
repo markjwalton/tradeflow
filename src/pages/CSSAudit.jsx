@@ -23,16 +23,36 @@ export default function CSSAudit() {
     setScannedFiles([]);
     setCurrentFile("");
     
-    // Files to scan
+    // Files to scan - comprehensive list
     const filesToScan = [
       "Layout.js",
-      "Dashboard.jsx", 
-      "ComponentShowcase.jsx",
-      "components/library/designTokens.js",
-      "NavigationBreadcrumb.jsx",
-      "DashboardSettings.jsx",
+      "pages/Dashboard.jsx", 
+      "pages/ComponentShowcase.jsx",
       "pages/Home.jsx",
-      "pages/Projects.jsx"
+      "pages/Projects.jsx",
+      "pages/Tasks.jsx",
+      "pages/Customers.jsx",
+      "pages/Team.jsx",
+      "pages/Estimates.jsx",
+      "pages/TenantManager.jsx",
+      "pages/NavigationManager.jsx",
+      "pages/MindMapEditor.jsx",
+      "pages/RuleBook.jsx",
+      "pages/Setup.jsx",
+      "pages/TenantAccess.jsx",
+      "pages/Calendar.jsx",
+      "pages/ProjectDetail.jsx",
+      "components/ui/card.jsx",
+      "components/ui/button.jsx",
+      "components/ui/input.jsx",
+      "components/library/designTokens.js",
+      "components/navigation/NavigationBreadcrumb.jsx",
+      "components/navigation/GenericNavEditor.jsx",
+      "components/dashboard/DashboardSettings.jsx",
+      "components/dashboard/DashboardWidgetCard.jsx",
+      "components/tenants/TenantForm.jsx",
+      "components/mindmap/MindMapCanvas.jsx",
+      "components/ai-assistant/GlobalAIAssistant.jsx"
     ];
     
     // Simulate scanning progress
