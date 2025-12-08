@@ -5,24 +5,6 @@ css
 @tailwind components;
 @tailwind utilities;
 
-/* Force custom fonts with maximum specificity */
-html,
-html body,
-html :host {
-  font-family: var(--font-body, "Mrs Eaves XL Serif", Georgia, serif) !important;
-}
-
-h1, h2, h3, h4, h5, h6,
-.font-heading,
-[class*="font-heading"] {
-  font-family: var(--font-heading, "Degular Display Light", system-ui, sans-serif) !important;
-}
-
-.font-sans,
-.font-body {
-  font-family: var(--font-body, "Mrs Eaves XL Serif", Georgia, serif) !important;
-}
-
 @layer utilities {
   .font-sans {
     font-family: var(--font-body) !important;
@@ -36,28 +18,6 @@ h1, h2, h3, h4, h5, h6,
     font-family: var(--font-body) !important;
   }
 }
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  
-  html,
-  body,
-  :host {
-    font-family: var(--font-body) !important;
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading) !important;
-  }
-  
-  /* Override any font-sans usage */
-  .font-sans {
-    font-family: var(--font-body) !important;
-  }
-  
-  :root {
 
 @layer base {
   * {
