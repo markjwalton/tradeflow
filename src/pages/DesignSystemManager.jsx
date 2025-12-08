@@ -248,10 +248,10 @@ For each recommendation, provide:
   const pendingRecs = recommendations.filter(r => r.status === "pending_review");
 
   const impactColors = {
-    low: "bg-[var(--color-info)]/20 text-[var(--color-info-dark)]",
-    medium: "bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]",
-    high: "bg-[var(--color-secondary)]/20 text-[var(--color-secondary-dark)]",
-    critical: "bg-[var(--color-destructive)]/20 text-[var(--color-destructive)]"
+    low: "bg-info-50 text-info-foreground",
+    medium: "bg-warning/10 text-warning-foreground",
+    high: "bg-secondary-100 text-secondary-700",
+    critical: "bg-destructive-50 text-destructive-700"
   };
 
   return (
@@ -259,7 +259,7 @@ For each recommendation, provide:
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-h2 flex items-center gap-2">
-            <Package className="h-6 w-6 text-[var(--color-primary)]" />
+            <Package className="h-6 w-6 text-primary-500" />
             Design System Manager
           </h1>
           <p className="text-[var(--color-charcoal)]">
@@ -290,7 +290,7 @@ For each recommendation, provide:
           </Button>
           <Button 
             onClick={() => setShowThemeCreator(true)}
-            className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+            className="bg-primary-500 hover:bg-primary-600 text-white"
           >
             <Palette className="h-4 w-4 mr-2" />
             Create Custom Theme
@@ -300,10 +300,10 @@ For each recommendation, provide:
 
       {/* Alert for pending recommendations */}
       {pendingRecs.length > 0 && (
-        <Card className="mb-6 border-[var(--color-warning)] bg-[var(--color-warning)]/5">
+        <Card className="mb-6 border-warning bg-warning/5">
           <CardContent className="py-4">
             <div className="flex items-center gap-3">
-              <AlertCircle className="h-5 w-5 text-[var(--color-warning)]" />
+              <AlertCircle className="h-5 w-5 text-warning-foreground" />
               <div className="flex-1">
                 <p className="font-medium text-[var(--color-midnight)]">
                   {pendingRecs.length} update recommendations pending review
@@ -338,7 +338,7 @@ For each recommendation, provide:
             <Sparkles className="h-4 w-4 mr-2" />
             AI Recommendations
             {pendingRecs.length > 0 && (
-              <Badge className="ml-2 bg-[var(--color-warning)] text-white">
+              <Badge className="ml-2 bg-warning text-white">
                 {pendingRecs.length}
               </Badge>
             )}
@@ -363,12 +363,12 @@ For each recommendation, provide:
                     <div className="flex items-start justify-between">
                       <div>
                         <CardTitle className="text-[var(--color-midnight)] flex items-center gap-2">
-                          <Palette className="h-5 w-5 text-[var(--color-primary)]" />
+                          <Palette className="h-5 w-5 text-primary-500" />
                           {pkg.package_name}
                         </CardTitle>
                         <code className="text-xs text-[var(--color-charcoal)]">{pkg.package_code}</code>
                       </div>
-                      <Badge className="bg-[var(--color-success)]/20 text-[var(--color-success-dark)]">
+                      <Badge className="bg-success-50 text-success-foreground">
                         v{pkg.version}
                       </Badge>
                     </div>
@@ -432,19 +432,19 @@ For each recommendation, provide:
                       <div className="flex items-start justify-between">
                         <div>
                           <CardTitle className="text-[var(--color-midnight)] flex items-center gap-2">
-                            <Building2 className="h-5 w-5 text-[var(--color-secondary)]" />
+                            <Building2 className="h-5 w-5 text-secondary-400" />
                             {pkg.package_name}
                           </CardTitle>
                           <div className="flex items-center gap-2 mt-1">
                             <code className="text-xs text-[var(--color-charcoal)]">{pkg.package_code}</code>
                             {pkg.update_available && (
-                              <Badge className="bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]">
+                              <Badge className="bg-warning/10 text-warning-foreground">
                                 Update Available
                               </Badge>
                             )}
                           </div>
                         </div>
-                        <Badge className="bg-[var(--color-info)]/20 text-[var(--color-info-dark)]">
+                        <Badge className="bg-info-50 text-info-foreground">
                           v{pkg.version}
                         </Badge>
                       </div>
@@ -470,7 +470,7 @@ For each recommendation, provide:
                       </div>
                       <div className="flex gap-2">
                         {pkg.update_available && (
-                          <Button size="sm" className="bg-[var(--color-warning)] hover:bg-[var(--color-warning-dark)] text-white">
+                          <Button size="sm" className="bg-warning hover:bg-secondary-600 text-white">
                             <RefreshCw className="h-3 w-3 mr-1" />
                             Update
                           </Button>
@@ -556,7 +556,7 @@ For each recommendation, provide:
             <Button 
               onClick={analyzePackageUpdates}
               disabled={isAnalyzing}
-              className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+              className="bg-primary-500 hover:bg-primary-600 text-white"
             >
               {isAnalyzing ? (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -597,7 +597,7 @@ For each recommendation, provide:
                             {rec.impact}
                           </Badge>
                           {rec.breaking_change && (
-                            <Badge className="bg-[var(--color-destructive)]/20 text-[var(--color-destructive)]">
+                            <Badge className="bg-destructive-50 text-destructive-700">
                               Breaking
                             </Badge>
                           )}
@@ -607,9 +607,9 @@ For each recommendation, provide:
                       <Badge 
                         variant="outline"
                         className={
-                          rec.status === "pending_review" ? "border-[var(--color-warning)]" :
-                          rec.status === "accepted" ? "border-[var(--color-success)]" :
-                          "border-[var(--color-charcoal)]"
+                          rec.status === "pending_review" ? "border-warning" :
+                          rec.status === "accepted" ? "border-success" :
+                          "border-charcoal-300"
                         }
                       >
                         {rec.status}
@@ -622,7 +622,7 @@ For each recommendation, provide:
                         {rec.description}
                       </p>
                       {rec.reasoning && (
-                        <div className="bg-[var(--color-accent)]/10 p-3 rounded-[var(--radius-md)] text-sm">
+                        <div className="bg-accent-100 p-3 rounded-[var(--radius-md)] text-sm">
                           <p className="font-medium text-[var(--color-midnight)] mb-1">AI Reasoning:</p>
                           <p className="text-[var(--color-charcoal)]">{rec.reasoning}</p>
                         </div>
@@ -658,7 +658,7 @@ For each recommendation, provide:
                         <ul className="text-sm text-[var(--color-charcoal)] space-y-1">
                           {rec.benefits.map((b, i) => (
                             <li key={i} className="flex items-start gap-2">
-                              <CheckCircle2 className="h-4 w-4 text-[var(--color-success)] mt-0.5 flex-shrink-0" />
+                              <CheckCircle2 className="h-4 w-4 text-success-foreground mt-0.5 flex-shrink-0" />
                               {b}
                             </li>
                           ))}
@@ -671,7 +671,7 @@ For each recommendation, provide:
                         <Button 
                           size="sm"
                           onClick={() => handleAcceptRecommendation(rec)}
-                          className="bg-[var(--color-success)] hover:bg-[var(--color-success-dark)] text-white"
+                          className="bg-success-foreground hover:bg-primary-600 text-white"
                         >
                           <CheckCircle2 className="h-3 w-3 mr-1" />
                           Accept & Add to Roadmap
@@ -689,7 +689,7 @@ For each recommendation, provide:
                     {rec.roadmap_item_id && (
                       <div className="pt-2 border-t border-[var(--color-background-muted)]">
                         <Link to={createPageUrl("RoadmapManager")}>
-                          <Badge className="bg-[var(--color-info)]/20 text-[var(--color-info-dark)] cursor-pointer">
+                          <Badge className="bg-info-50 text-info-foreground cursor-pointer">
                             <Zap className="h-3 w-3 mr-1" />
                             View in Roadmap
                           </Badge>
@@ -891,7 +891,7 @@ For each recommendation, provide:
               <Button 
                 onClick={handleCreatePackage}
                 disabled={createMutation.isPending}
-                className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+                className="bg-primary-500 hover:bg-primary-600 text-white"
               >
                 {createMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                 Create Package

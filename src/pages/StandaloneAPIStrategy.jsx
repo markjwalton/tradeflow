@@ -55,7 +55,7 @@ export default function StandaloneAPIStrategy() {
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="mb-6">
         <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)] font-heading">
-          <Globe className="h-6 w-6 text-[var(--color-primary)]" />
+          <Globe className="h-6 w-6 text-primary-500" />
           Multi-Tenant Standalone API Strategy
         </h1>
         <p className="text-[var(--color-charcoal)]">
@@ -76,7 +76,7 @@ export default function StandaloneAPIStrategy() {
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
-          <Card className="border-[var(--color-primary)]/30">
+          <Card className="border-primary-300">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Info className="h-5 w-5 text-[var(--color-primary)]" />
