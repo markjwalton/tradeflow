@@ -25,17 +25,17 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
 const statusColors = {
-  draft: "bg-gray-100 text-gray-700",
-  active: "bg-green-100 text-green-700",
-  on_hold: "bg-yellow-100 text-yellow-700",
-  completed: "bg-blue-100 text-blue-700",
-  cancelled: "bg-red-100 text-red-700",
+  draft: "bg-muted text-muted-foreground",
+  active: "bg-success-50 text-success-foreground",
+  on_hold: "bg-warning/10 text-warning-foreground",
+  completed: "bg-info-50 text-info-foreground",
+  cancelled: "bg-destructive-50 text-destructive-700",
 };
 
 const priorityColors = {
-  low: "bg-slate-100 text-slate-700",
-  medium: "bg-amber-100 text-amber-700",
-  high: "bg-red-100 text-red-700",
+  low: "bg-muted text-muted-foreground",
+  medium: "bg-warning/10 text-warning-foreground",
+  high: "bg-destructive-50 text-destructive-700",
 };
 
 export default function Projects() {
@@ -157,7 +157,7 @@ export default function Projects() {
   return (
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>Projects</h1>
+        <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Projects</h1>
         <Button onClick={() => { resetForm(); setEditingProject(null); setShowForm(true); }}>
           <Plus className="h-4 w-4 mr-2" />
           New Project
@@ -217,7 +217,7 @@ export default function Projects() {
                     <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(project)}>
                       <Pencil className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500" onClick={() => deleteMutation.mutate(project.id)}>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => deleteMutation.mutate(project.id)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>

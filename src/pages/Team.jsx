@@ -22,10 +22,10 @@ import { Plus, Search, Pencil, Trash2, Loader2, Mail, Phone, Calendar } from "lu
 import { toast } from "sonner";
 
 const availabilityColors = {
-  available: "bg-green-100 text-green-700",
-  busy: "bg-yellow-100 text-yellow-700",
-  on_leave: "bg-blue-100 text-blue-700",
-  unavailable: "bg-red-100 text-red-700",
+  available: "bg-success-50 text-success-foreground",
+  busy: "bg-warning/10 text-warning-foreground",
+  on_leave: "bg-info-50 text-info-foreground",
+  unavailable: "bg-destructive-50 text-destructive-700",
 };
 
 export default function Team() {
@@ -147,7 +147,7 @@ export default function Team() {
   return (
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>Team</h1>
+        <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Team</h1>
         <Button onClick={() => { resetForm(); setEditingMember(null); setShowForm(true); }}>
           <Plus className="h-4 w-4 mr-2" />
           Add Team Member
@@ -193,7 +193,7 @@ export default function Team() {
                     <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(member)}>
                       <Pencil className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500" onClick={() => deleteMutation.mutate(member.id)}>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => deleteMutation.mutate(member.id)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>

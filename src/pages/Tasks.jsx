@@ -24,16 +24,16 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 
 const statusColors = {
-  todo: "bg-gray-100 text-gray-700",
-  in_progress: "bg-blue-100 text-blue-700",
-  review: "bg-purple-100 text-purple-700",
-  completed: "bg-green-100 text-green-700",
+  todo: "bg-muted text-muted-foreground",
+  in_progress: "bg-info-50 text-info-foreground",
+  review: "bg-accent-100 text-accent-700",
+  completed: "bg-success-50 text-success-foreground",
 };
 
 const priorityColors = {
-  low: "bg-slate-100 text-slate-700",
-  medium: "bg-amber-100 text-amber-700",
-  high: "bg-red-100 text-red-700",
+  low: "bg-muted text-muted-foreground",
+  medium: "bg-warning/10 text-warning-foreground",
+  high: "bg-destructive-50 text-destructive-700",
 };
 
 export default function Tasks() {
@@ -168,7 +168,7 @@ export default function Tasks() {
   return (
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>Tasks</h1>
+        <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Tasks</h1>
         <Button onClick={() => { resetForm(); setEditingTask(null); setShowForm(true); }}>
           <Plus className="h-4 w-4 mr-2" />
           New Task
@@ -236,7 +236,7 @@ export default function Tasks() {
                   <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(task)}>
                     <Pencil className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500" onClick={() => deleteMutation.mutate(task.id)}>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => deleteMutation.mutate(task.id)}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>

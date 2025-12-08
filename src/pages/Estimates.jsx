@@ -23,10 +23,10 @@ import { Plus, Search, Pencil, Trash2, Loader2, Copy, FileText } from "lucide-re
 import { toast } from "sonner";
 
 const statusColors = {
-  draft: "bg-gray-100 text-gray-700",
-  sent: "bg-blue-100 text-blue-700",
-  approved: "bg-green-100 text-green-700",
-  rejected: "bg-red-100 text-red-700",
+  draft: "bg-muted text-muted-foreground",
+  sent: "bg-info-50 text-info-foreground",
+  approved: "bg-success-50 text-success-foreground",
+  rejected: "bg-destructive-50 text-destructive-700",
 };
 
 export default function Estimates() {
@@ -200,7 +200,7 @@ export default function Estimates() {
   return (
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>Estimates</h1>
+        <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Estimates</h1>
         <Button onClick={() => { resetForm(); setEditingEstimate(null); setShowForm(true); }}>
           <Plus className="h-4 w-4 mr-2" />
           New Estimate
@@ -238,7 +238,7 @@ export default function Estimates() {
                 <div className="flex gap-1">
                   <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleDuplicate(estimate)}><Copy className="h-4 w-4" /></Button>
                   <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(estimate)}><Pencil className="h-4 w-4" /></Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500" onClick={() => deleteMutation.mutate(estimate.id)}><Trash2 className="h-4 w-4" /></Button>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => deleteMutation.mutate(estimate.id)}><Trash2 className="h-4 w-4" /></Button>
                 </div>
               </div>
             </CardHeader>
@@ -295,7 +295,7 @@ export default function Estimates() {
                     <div className="col-span-2"><Input placeholder="Unit" value={item.unit} onChange={(e) => updateLineItem(index, "unit", e.target.value)} /></div>
                     <div className="col-span-2"><Input type="number" placeholder="Unit Cost" value={item.unit_cost} onChange={(e) => updateLineItem(index, "unit_cost", parseFloat(e.target.value) || 0)} /></div>
                     <div className="col-span-1 text-right font-medium">£{item.subtotal?.toFixed(2)}</div>
-                    <div className="col-span-1"><Button variant="ghost" size="icon" className="h-8 w-8 text-red-500" onClick={() => removeLineItem(index)}><Trash2 className="h-4 w-4" /></Button></div>
+                    <div className="col-span-1"><Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => removeLineItem(index)}><Trash2 className="h-4 w-4" /></Button></div>
                   </div>
                 ))}
                 <Button variant="outline" size="sm" onClick={addLineItem}><Plus className="h-4 w-4 mr-1" />Add Line</Button>

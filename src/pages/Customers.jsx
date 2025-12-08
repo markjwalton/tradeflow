@@ -23,9 +23,9 @@ import { Plus, Search, Pencil, Trash2, Loader2, Mail, Phone, Building2 } from "l
 import { toast } from "sonner";
 
 const statusColors = {
-  lead: "bg-yellow-100 text-yellow-700",
-  active: "bg-green-100 text-green-700",
-  inactive: "bg-gray-100 text-gray-700",
+  lead: "bg-warning/10 text-warning-foreground",
+  active: "bg-success-50 text-success-foreground",
+  inactive: "bg-muted text-muted-foreground",
 };
 
 export default function Customers() {
@@ -151,7 +151,7 @@ export default function Customers() {
   return (
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>Customers</h1>
+        <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Customers</h1>
         <Button onClick={() => { resetForm(); setEditingCustomer(null); setShowForm(true); }}>
           <Plus className="h-4 w-4 mr-2" />
           New Customer
@@ -199,7 +199,7 @@ export default function Customers() {
                   <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(customer)}>
                     <Pencil className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500" onClick={() => deleteMutation.mutate(customer.id)}>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => deleteMutation.mutate(customer.id)}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
