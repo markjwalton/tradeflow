@@ -31,14 +31,14 @@ import AddGroupToProjectDialog from "@/components/library/AddGroupToProjectDialo
 const categories = ["Core", "CRM", "Finance", "Operations", "HR", "Inventory", "Communication", "Custom", "Other"];
 
 const categoryColors = {
-  Core: "bg-info-50 text-info-foreground",
-  CRM: "bg-success-50 text-success-foreground",
-  Finance: "bg-warning/10 text-warning-foreground",
-  Operations: "bg-accent-100 text-accent-700",
-  HR: "bg-accent-100 text-accent-700",
-  Inventory: "bg-warning/10 text-warning-foreground",
-  Communication: "bg-info-50 text-info-foreground",
-  Custom: "bg-primary-100 text-primary-700",
+  Core: "bg-info-50 text-info",
+  CRM: "bg-success-50 text-success",
+  Finance: "bg-warning/10 text-warning",
+  Operations: "bg-accent-100 text-accent",
+  HR: "bg-accent-100 text-accent",
+  Inventory: "bg-warning/10 text-warning",
+  Communication: "bg-info-50 text-info",
+  Custom: "bg-primary-100 text-primary",
   Other: "bg-muted text-muted-foreground",
 };
 
@@ -233,19 +233,19 @@ Return a JSON object with:
   const currentProject = projects.find(p => p.id === selectedProjectId);
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-midnight-900">
             Entity Library
             {currentProject && (
-              <Badge className="bg-primary-100 text-primary-700">
+              <Badge className="bg-primary-100 text-primary">
                 <Folder className="h-3 w-3 mr-1" />
                 {currentProject.name}
               </Badge>
             )}
           </h1>
-          <p className="text-[var(--color-charcoal)]">Reusable entity templates for business applications</p>
+          <p className="text-charcoal-700">Reusable entity templates for business applications</p>
         </div>
         <div className="flex gap-2">
           <CustomProjectSelector
@@ -302,10 +302,10 @@ Return a JSON object with:
       {/* Entity Grid */}
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+          <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
         </div>
       ) : filteredEntities.length === 0 ? (
-        <div className="text-center py-12 text-[var(--color-charcoal)]">
+        <div className="text-center py-12 text-charcoal-700">
           <Database className="h-12 w-12 mx-auto mb-4 opacity-50" />
           <p>No entity templates found</p>
           <p className="text-sm mt-1">Create your first entity or use AI to generate one</p>
@@ -338,7 +338,7 @@ Return a JSON object with:
                       <div className="flex items-start justify-between">
                         <div>
                           <CardTitle className="text-base flex items-center gap-2">
-                            <Database className="h-4 w-4 text-accent-700" />
+                            <Database className="h-4 w-4 text-accent" />
                             {entity.name}
                             {entity.is_custom && (
                               <Badge variant="outline" className="text-xs">Custom</Badge>
@@ -422,7 +422,7 @@ Return a JSON object with:
             <DialogTitle>
               {editingEntity?.id ? "Edit Entity" : "Create Entity"}
               {selectedProjectId && currentProject && (
-                <Badge className="ml-2 bg-primary-100 text-primary-700">{currentProject.name}</Badge>
+                <Badge className="ml-2 bg-primary-100 text-primary">{currentProject.name}</Badge>
               )}
             </DialogTitle>
           </DialogHeader>
@@ -475,7 +475,7 @@ Return a JSON object with:
               <>
                 {/* Step 2: Select Related Items */}
                 <div className="flex items-center gap-2 text-sm text-muted-foreground bg-primary-100 p-2 rounded">
-                  <Check className="h-4 w-4 text-primary-700" />
+                  <Check className="h-4 w-4 text-primary" />
                   Adding to: <strong>{projects.find(p => p.id === addToProjectTargetId)?.name}</strong>
                   <Button variant="ghost" size="sm" className="ml-auto h-6 text-xs" onClick={() => setAddToProjectTargetId(null)}>Change</Button>
                 </div>
@@ -491,7 +491,7 @@ Return a JSON object with:
                   return (
                     <div>
                       <label className="text-sm font-medium flex items-center gap-2 mb-2">
-                        <Database className="h-4 w-4 text-accent-700" />
+                        <Database className="h-4 w-4 text-accent" />
                         Related Entities ({relatedEntities.length})
                       </label>
                       <div className="space-y-1 max-h-32 overflow-auto border rounded p-2">
@@ -618,7 +618,7 @@ Return a JSON object with:
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-accent-700" />
+              <Sparkles className="h-5 w-5 text-accent" />
               Generate Entity with AI
             </DialogTitle>
           </DialogHeader>

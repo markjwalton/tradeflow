@@ -29,17 +29,17 @@ import { format } from "date-fns";
 
 const statusColors = {
   draft: "bg-muted text-muted-foreground",
-  active: "bg-success-50 text-success-foreground",
-  on_hold: "bg-warning/10 text-warning-foreground",
-  completed: "bg-info-50 text-info-foreground",
-  cancelled: "bg-destructive-50 text-destructive-700",
+  active: "bg-success-50 text-success",
+  on_hold: "bg-warning/10 text-warning",
+  completed: "bg-info-50 text-info",
+  cancelled: "bg-destructive-50 text-destructive",
 };
 
 const taskStatusColors = {
   todo: "bg-muted text-muted-foreground",
-  in_progress: "bg-info-50 text-info-foreground",
-  review: "bg-accent-100 text-accent-700",
-  completed: "bg-success-50 text-success-foreground",
+  in_progress: "bg-info-50 text-info",
+  review: "bg-accent-100 text-accent",
+  completed: "bg-success-50 text-success",
 };
 
 export default function ProjectDetail() {
@@ -147,13 +147,13 @@ export default function ProjectDetail() {
   const getTeamMemberName = (memberId) => teamMembers.find((m) => m.id === memberId)?.name || "Unassigned";
 
   if (isLoading) {
-    return <div className="flex items-center justify-center h-64 bg-[var(--color-background)]"><Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" /></div>;
+    return <div className="flex items-center justify-center h-64 bg-background"><Loader2 className="h-8 w-8 animate-spin text-charcoal-700" /></div>;
   }
 
   if (!project) {
     return (
-      <div className="p-6 text-center bg-[var(--color-background)]">
-        <p className="text-[var(--color-charcoal)]">Project not found</p>
+      <div className="p-6 text-center bg-background">
+        <p className="text-charcoal-700">Project not found</p>
         <Button asChild className="mt-4"><Link to={createPageUrl("Projects")}>Back to Projects</Link></Button>
       </div>
     );
@@ -164,45 +164,45 @@ export default function ProjectDetail() {
   const taskProgress = tasks.length > 0 ? (completedTasks / tasks.length) * 100 : 0;
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center gap-4 mb-6">
         <Button variant="ghost" size="icon" asChild><Link to={createPageUrl("Projects")}><ArrowLeft className="h-4 w-4" /></Link></Button>
         <div className="flex-1">
-          <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">{project.name}</h1>
-          <p className="text-[var(--color-charcoal)]">Customer: {getCustomerName(project.customer_id)}</p>
+          <h1 className="text-2xl font-light font-display text-midnight-900">{project.name}</h1>
+          <p className="text-charcoal-700">Customer: {getCustomerName(project.customer_id)}</p>
         </div>
         <Badge className={statusColors[project.status]}>{project.status}</Badge>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <Card className="border-background-muted bg-card">
+        <Card className="border-border bg-card">
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-info-50 rounded-lg"><Clock className="h-5 w-5 text-info-foreground" /></div>
-              <div><p className="text-sm text-[var(--color-charcoal)]">Tasks</p><p className="text-xl font-bold text-[var(--color-midnight)]">{tasks.length}</p></div>
+              <div className="p-2 bg-info-50 rounded-lg"><Clock className="h-5 w-5 text-info" /></div>
+              <div><p className="text-sm text-charcoal-700">Tasks</p><p className="text-xl font-bold text-midnight-900">{tasks.length}</p></div>
             </div>
           </CardContent>
         </Card>
-        <Card className="border-background-muted bg-card">
+        <Card className="border-border bg-card">
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-success-50 rounded-lg"><CheckCircle2 className="h-5 w-5 text-success-foreground" /></div>
-              <div><p className="text-sm text-[var(--color-charcoal)]">Completed</p><p className="text-xl font-bold text-[var(--color-midnight)]">{completedTasks}</p></div>
+              <div className="p-2 bg-success-50 rounded-lg"><CheckCircle2 className="h-5 w-5 text-success" /></div>
+              <div><p className="text-sm text-charcoal-700">Completed</p><p className="text-xl font-bold text-midnight-900">{completedTasks}</p></div>
             </div>
           </CardContent>
         </Card>
-        <Card className="border-background-muted bg-card">
+        <Card className="border-border bg-card">
           <CardContent className="pt-4">
             <div className="space-y-2">
-              <div className="flex justify-between text-sm"><span className="text-[var(--color-charcoal)]">Budget</span><span>£{project.spend?.toLocaleString()} / £{project.budget?.toLocaleString()}</span></div>
+              <div className="flex justify-between text-sm"><span className="text-charcoal-700">Budget</span><span>£{project.spend?.toLocaleString()} / £{project.budget?.toLocaleString()}</span></div>
               <Progress value={Math.min(budgetProgress, 100)} className="h-2" />
             </div>
           </CardContent>
         </Card>
-        <Card className="border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+        <Card className="border-border bg-card">
           <CardContent className="pt-4">
             <div className="space-y-2">
-              <div className="flex justify-between text-sm"><span className="text-[var(--color-charcoal)]">Progress</span><span>{taskProgress.toFixed(0)}%</span></div>
+              <div className="flex justify-between text-sm"><span className="text-charcoal-700">Progress</span><span>{taskProgress.toFixed(0)}%</span></div>
               <Progress value={taskProgress} className="h-2" />
             </div>
           </CardContent>
@@ -224,14 +224,14 @@ export default function ProjectDetail() {
           </div>
           <div className="space-y-2">
             {tasks.map((task) => (
-              <Card key={task.id} className="border-background-muted bg-card">
+              <Card key={task.id} className="border-border bg-card">
                 <CardContent className="p-4 flex items-center justify-between">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-medium text-[var(--color-midnight)]">{task.title}</span>
+                      <span className="font-medium text-midnight-900">{task.title}</span>
                       <Badge className={taskStatusColors[task.status]}>{task.status?.replace("_", " ")}</Badge>
                     </div>
-                    <div className="flex gap-4 text-sm text-[var(--color-charcoal)] mt-1">
+                    <div className="flex gap-4 text-sm text-charcoal-700 mt-1">
                       <span>Assigned: {getTeamMemberName(task.assigned_to)}</span>
                       {task.due_date && <span>Due: {format(new Date(task.due_date), "MMM d")}</span>}
                     </div>
@@ -243,7 +243,7 @@ export default function ProjectDetail() {
                 </CardContent>
               </Card>
             ))}
-            {tasks.length === 0 && <p className="text-center py-8 text-[var(--color-charcoal)]">No tasks yet</p>}
+            {tasks.length === 0 && <p className="text-center py-8 text-charcoal-700">No tasks yet</p>}
           </div>
         </TabsContent>
 
@@ -255,34 +255,34 @@ export default function ProjectDetail() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {contacts.map((contact) => (
-              <Card key={contact.id} className="border-background-muted bg-card">
+              <Card key={contact.id} className="border-border bg-card">
                 <CardContent className="p-4">
                   <div className="flex justify-between">
-                    <div><p className="font-medium text-[var(--color-midnight)]">{contact.name}</p><Badge variant="outline" className="mt-1">{contact.role}</Badge></div>
+                    <div><p className="font-medium text-midnight-900">{contact.name}</p><Badge variant="outline" className="mt-1">{contact.role}</Badge></div>
                     <Button variant="ghost" size="icon" className="text-destructive" onClick={() => deleteContactMutation.mutate(contact.id)}><Trash2 className="h-4 w-4" /></Button>
                   </div>
-                  {contact.company && <p className="text-sm text-[var(--color-charcoal)] mt-2">{contact.company}</p>}
+                  {contact.company && <p className="text-sm text-charcoal-700 mt-2">{contact.company}</p>}
                   {contact.email && <p className="text-sm mt-1">{contact.email}</p>}
                   {contact.phone && <p className="text-sm">{contact.phone}</p>}
                 </CardContent>
               </Card>
             ))}
-            {contacts.length === 0 && <p className="text-center py-8 text-[var(--color-charcoal)] col-span-3">No contacts yet</p>}
+            {contacts.length === 0 && <p className="text-center py-8 text-charcoal-700 col-span-3">No contacts yet</p>}
           </div>
         </TabsContent>
 
         <TabsContent value="estimates" className="mt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {estimates.map((estimate) => (
-              <Card key={estimate.id} className="border-background-muted bg-card">
+              <Card key={estimate.id} className="border-border bg-card">
                 <CardContent className="p-4">
-                  <p className="font-medium text-[var(--color-midnight)]">{estimate.title}</p>
+                  <p className="font-medium text-midnight-900">{estimate.title}</p>
                   <Badge className="mt-1">{estimate.status}</Badge>
-                  <p className="text-lg font-bold mt-2 text-[var(--color-midnight)]">£{estimate.total?.toLocaleString()}</p>
+                  <p className="text-lg font-bold mt-2 text-midnight-900">£{estimate.total?.toLocaleString()}</p>
                 </CardContent>
               </Card>
             ))}
-            {estimates.length === 0 && <p className="text-center py-8 text-[var(--color-charcoal)] col-span-3">No estimates yet</p>}
+            {estimates.length === 0 && <p className="text-center py-8 text-charcoal-700 col-span-3">No estimates yet</p>}
           </div>
         </TabsContent>
       </Tabs>
