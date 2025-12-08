@@ -74,6 +74,18 @@ export default function CSSAudit() {
     
     // Border radius - should use CSS variables
     { pattern: /rounded-(none|xs|sm|md|lg|xl|2xl|3xl|full)/g, type: "radius-hardcoded", replacement: "Use CSS variables --radius-* (e.g., [border-radius:var(--radius-lg)])" },
+    
+    // Animations - should use CSS variables for durations
+    { pattern: /duration-(75|100|150|200|300|500|700|1000)/g, type: "animation-duration", replacement: "Use CSS variables --duration-* (e.g., [transition-duration:var(--duration-300)])" },
+    
+    // Transitions - check for hardcoded timing
+    { pattern: /ease-(linear|in|out|in-out)/g, type: "transition-timing", replacement: "Use CSS variables --ease-* (e.g., [transition-timing-function:var(--ease-in-out)])" },
+    
+    // Opacity - should use semantic tokens
+    { pattern: /opacity-(0|5|10|20|25|30|40|50|60|70|75|80|90|95|100)/g, type: "opacity-hardcoded", replacement: "Consider semantic opacity patterns or CSS variables" },
+    
+    // Z-index - should use CSS variables
+    { pattern: /z-(0|10|20|30|40|50|auto)/g, type: "z-index-hardcoded", replacement: "Use CSS variables --z-index-* (e.g., [z-index:var(--z-dropdown)])" },
   ];
 
   const scanProject = async () => {
@@ -179,12 +191,15 @@ export default function CSSAudit() {
             const fileAnalysis = await base44.integrations.Core.InvokeLLM({
               prompt: `Analyze this file path: ${filePath}
 
-Scan for hardcoded typography/font classes that should use semantic tokens instead:
-- Font weights: font-light, font-medium, font-semibold, font-bold
-- Font sizes: text-xs, text-sm, text-lg, text-xl, text-2xl, text-3xl, etc.
-- Font families: hardcoded font-heading, font-body in className strings
-- Letter spacing: tracking-tight, tracking-wide, etc.
-- Line height: leading-tight, leading-normal, etc.
+Scan for hardcoded CSS classes that should use semantic tokens or CSS variables:
+- Typography: font weights, sizes, families, letter spacing, line height
+- Colors: text-*, bg-*, border-* with hardcoded Tailwind colors (gray-500, blue-600, etc.)
+- Spacing: padding, margin, gap classes (p-4, m-6, gap-2, etc.)
+- Shadows: shadow-sm, shadow-md, shadow-lg, etc.
+- Border radius: rounded-sm, rounded-lg, rounded-xl, etc.
+- Animations: duration-300, ease-in-out, etc.
+- Opacity: opacity-50, opacity-75, etc.
+- Z-index: z-10, z-20, z-50, etc.
 
 For each issue found, provide:
 1. Line number (approximate)
@@ -300,13 +315,15 @@ Return empty array if file doesn't exist or has no issues.`,
 ${issuesList}
 
 **Design System Tokens Available:**
-- Typography: text-h1, text-h2, text-h3, text-h4, text-h5, text-h6, text-body-large, text-body-base, text-body-small, text-body-muted, text-caption
+- Typography: text-h1 through text-h6, text-body-large, text-body-base, text-body-small, text-body-muted, text-caption
 - Semantic Colors: text-primary, text-secondary, text-muted, text-accent, text-destructive (or use text-[var(--color-*)])
 - Background Colors: bg-primary, bg-secondary, bg-muted, bg-accent, bg-destructive (or use bg-[var(--color-*)])
 - Border Colors: border-primary, border-muted (or use border-[var(--color-*)])
-- Spacing: --spacing-* CSS variables
-- Shadows: --shadow-* CSS variables
-- Radius: --radius-* CSS variables
+- Spacing: --spacing-* CSS variables (0 through 32)
+- Shadows: --shadow-xs, --shadow-sm, --shadow-md, --shadow-lg, --shadow-xl, --shadow-2xl
+- Border Radius: --radius-xs, --radius-sm, --radius-md, --radius-lg, --radius-xl, --radius-2xl, --radius-3xl, --radius-full
+- Animations: --duration-* (75, 100, 150, 200, 300, 500, 700, 1000ms), --ease-* (linear, in, out, in-out)
+- Z-Index: --z-dropdown, --z-modal, --z-popover, --z-tooltip, --z-toast
 
 **RuleBook Guidelines:**
 ${ruleContext || "No specific rules defined"}
@@ -403,7 +420,7 @@ ${aiPrompt.rulebook_references?.map(r => `- ${r}`).join("\n") || "None"}
               CSS Audit Tool
             </h1>
             <p className="text-body-base text-[var(--color-charcoal)]">
-              Project-wide scan for hardcoded CSS classes - typography, colors, spacing, shadows, and more
+              Comprehensive scan for hardcoded CSS - typography, colors, spacing, shadows, animations, and all design tokens
             </p>
           </div>
           <div className="flex gap-2">
@@ -680,7 +697,8 @@ ${aiPrompt.rulebook_references?.map(r => `- ${r}`).join("\n") || "None"}
               <div>
                 <p className="text-caption mb-1 font-medium">CSS Variables:</p>
                 <code className="text-xs">text-[var(--color-*)], bg-[var(--color-*)], border-[var(--color-*)]</code><br/>
-                <code className="text-xs">--spacing-*, --shadow-*, --radius-*</code>
+                <code className="text-xs">--spacing-*, --shadow-*, --radius-*</code><br/>
+                <code className="text-xs">--duration-*, --ease-*, --z-index-*</code>
               </div>
             </div>
           </CardContent>
