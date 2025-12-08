@@ -268,13 +268,13 @@ export const components = {
  * Use in Layout.js: <style dangerouslySetInnerHTML={{ __html: cssVariables }} />
  */
 export const cssVariables = `
-/* Force Adobe Fonts to load */
+/* Force Adobe Fonts to load - NO QUOTES */
 body {
-  font-family: var(--font-body);
+  font-family: mrs-eaves-xl-serif-narrow, Georgia, serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
+  font-family: degular-display, system-ui, sans-serif;
 }
 
 :root {

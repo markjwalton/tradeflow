@@ -60,7 +60,7 @@ export default function Dashboard() {
   if (isLoading) {
     return (
       <div className="p-6 flex items-center justify-center h-64 bg-[var(--color-background)]">
-        <RefreshCw className="h-6 w-6 animate-spin text-[var(--color-primary-400)]" />
+        <RefreshCw className="h-6 w-6 animate-spin text-primary" />
       </div>
     );
   }
@@ -82,7 +82,7 @@ export default function Dashboard() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-h1">Dashboard</h1>
-          <p className="text-[var(--color-charcoal-500)] mt-1">Welcome back! Here's what's happening.</p>
+          <p className="text-muted-foreground mt-1">Welcome back! Here's what's happening.</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2">
