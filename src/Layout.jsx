@@ -290,13 +290,13 @@ export default function Layout({ children, currentPageName }) {
           {/* Minimal Top Bar */}
           <header className="h-14 bg-[var(--color-background-paper)] border-b border-[var(--color-background-muted)] flex items-center justify-between px-4">
             <div className="flex items-center gap-3">
-              <span className="font-semibold text-gray-700">Admin Console</span>
-              <span className="text-gray-400">|</span>
-              <span className="text-gray-500">{currentPageName}</span>
+              <span className="font-semibold text-[var(--color-midnight)]">Admin Console</span>
+              <span className="text-muted-foreground">|</span>
+              <span className="text-muted-foreground">{currentPageName}</span>
             </div>
             <div className="flex items-center gap-3">
               {currentUser && (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <User className="h-4 w-4" />
                   <span>{currentUser.email}</span>
                 </div>
@@ -328,7 +328,7 @@ export default function Layout({ children, currentPageName }) {
   if (checkingAccess) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
