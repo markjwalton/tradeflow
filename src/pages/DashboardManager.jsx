@@ -133,9 +133,9 @@ export default function DashboardManager() {
   return (
     <div className="h-[calc(100vh-56px)] flex flex-col">
       {/* Header */}
-      <div className="bg-[var(--color-background-paper)] border-b border-[var(--color-background-muted)] px-4 py-3 flex items-center justify-between flex-shrink-0">
+      <div className="bg-card border-b border-border px-4 py-3 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-3">
-          <LayoutDashboard className="h-5 w-5 text-primary-500" />
+          <LayoutDashboard className="h-5 w-5 text-primary" />
           <h1 className="text-h4">Dashboard Manager</h1>
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="h-8">
@@ -147,7 +147,7 @@ export default function DashboardManager() {
                 <Sparkles className="h-3 w-3 mr-1" />
                 Staging
                 {widgets.filter(w => ["draft", "staging", "approved"].includes(w.status)).length > 0 && (
-                  <Badge className="ml-1 h-4 px-1 text-xs bg-amber-500">
+                  <Badge className="ml-1 h-4 px-1 text-xs bg-warning">
                     {widgets.filter(w => ["draft", "staging", "approved"].includes(w.status)).length}
                   </Badge>
                 )}
@@ -198,7 +198,7 @@ export default function DashboardManager() {
 
           <Button 
             size="sm" 
-            className="bg-primary-500 hover:bg-primary-600 text-white"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground"
             onClick={() => setShowAIGenerator(true)}
           >
             <Sparkles className="h-3 w-3 mr-1" />
@@ -223,26 +223,26 @@ export default function DashboardManager() {
             )}
 
             {/* Dashboard Grid */}
-            <div className="flex-1 overflow-auto p-6 bg-[var(--color-background)]">
+            <div className="flex-1 overflow-auto p-6 bg-background">
               {widgetsLoading ? (
                 <div className="flex justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+                  <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
                 </div>
               ) : publishedWidgets.length === 0 && !currentLayout?.widgets?.length ? (
-                <Card className="max-w-lg mx-auto mt-12 border-[var(--color-background-muted)]">
+                <Card className="max-w-lg mx-auto mt-12 border-border">
                   <CardContent className="py-12 text-center">
-                    <LayoutDashboard className="h-12 w-12 mx-auto mb-4 text-[var(--color-background-muted)]" />
+                    <LayoutDashboard className="h-12 w-12 mx-auto mb-4 text-muted" />
                     <h3 className="text-h4 mb-2">No Widgets Yet</h3>
-                    <p className="text-[var(--color-charcoal)] mb-4">
+                    <p className="text-charcoal-700 mb-4">
                       Create widgets in the staging area or use AI to generate recommendations.
                     </p>
                     <div className="flex justify-center gap-2">
-                      <Button variant="outline" onClick={() => setActiveTab("staging")} className="border-[var(--color-background-muted)]">
+                      <Button variant="outline" onClick={() => setActiveTab("staging")} className="border-border">
                         <Plus className="h-4 w-4 mr-1" />
                         Create Widget
                       </Button>
                       <Button 
-                        className="bg-primary-500 hover:bg-primary-600 text-white"
+                        className="bg-primary hover:bg-primary/90 text-primary-foreground"
                         onClick={() => setShowAIGenerator(true)}
                       >
                         <Sparkles className="h-4 w-4 mr-1" />
@@ -344,12 +344,12 @@ function WidgetLibraryManager({ widgets }) {
               <div key={category} className={isExpanded ? "bg-white rounded-lg border" : ""}>
                 <button
                   onClick={() => toggleCategory(category)}
-                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg"
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted rounded-lg"
                 >
                   {isExpanded ? (
-                    <Columns className="h-4 w-4 text-amber-500" />
+                    <Columns className="h-4 w-4 text-warning" />
                   ) : (
-                    <Columns className="h-4 w-4 text-gray-400" />
+                    <Columns className="h-4 w-4 text-muted-foreground" />
                   )}
                   <span className="font-medium flex-1 text-left">{category}</span>
                   <Badge variant="secondary">{catWidgets.length}</Badge>
@@ -363,14 +363,14 @@ function WidgetLibraryManager({ widgets }) {
                           <div className="flex items-start justify-between">
                             <div>
                               <h4 className="font-medium">{widget.name}</h4>
-                              <p className="text-sm text-gray-500">{widget.description}</p>
+                              <p className="text-sm text-muted-foreground">{widget.description}</p>
                             </div>
                             <Badge variant="outline">v{widget.version || 1}</Badge>
                           </div>
                           <div className="flex gap-2 mt-3">
                             <Badge variant="secondary">{widget.widget_type}</Badge>
                             {widget.ai_generated && (
-                              <Badge className="bg-purple-100 text-purple-700">
+                              <Badge className="bg-accent-100 text-accent-700">
                                 <Sparkles className="h-3 w-3 mr-1" />
                                 AI
                               </Badge>

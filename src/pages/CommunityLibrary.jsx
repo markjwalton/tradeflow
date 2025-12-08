@@ -152,29 +152,29 @@ export default function CommunityLibrary() {
         <CardContent className="p-4">
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-3">
-              <div className={`p-2 rounded-lg ${item.is_global ? "bg-blue-100" : "bg-purple-100"}`}>
-                <Icon className={`h-5 w-5 ${item.is_global ? "text-info-foreground" : "text-accent-400"}`} />
+              <div className={`p-2 rounded-lg ${item.is_global ? "bg-info-50" : "bg-accent-100"}`}>
+                <Icon className={`h-5 w-5 ${item.is_global ? "text-info" : "text-accent-700"}`} />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <h3 className="font-medium truncate">{item.name}</h3>
                   <Badge variant="outline" className="text-xs">v{item.version}</Badge>
                   {item.is_global ? (
-                    <Globe className="h-3 w-3 text-info-foreground" title="Global" />
+                    <Globe className="h-3 w-3 text-info" title="Global" />
                   ) : (
-                    <Users className="h-3 w-3 text-accent-400" title="Community" />
+                    <Users className="h-3 w-3 text-accent-700" title="Community" />
                   )}
                 </div>
-                <p className="text-sm text-gray-500 truncate">{item.description}</p>
+                <p className="text-sm text-muted-foreground truncate">{item.description}</p>
                 <div className="flex items-center gap-2 mt-2">
-                  <Badge className="text-xs bg-gray-100 text-gray-600">
+                  <Badge className="text-xs bg-muted text-muted-foreground">
                     {itemTypeLabels[item.item_type]}
                   </Badge>
                   {item.category && (
                     <Badge variant="outline" className="text-xs">{item.category}</Badge>
                   )}
                   {hasUpdate && (
-                    <Badge className="bg-amber-100 text-amber-700 text-xs gap-1">
+                    <Badge className="bg-warning/10 text-warning-foreground text-xs gap-1">
                       <ArrowUp className="h-3 w-3" />
                       Update Available (v{tenantItem.latest_available_version})
                     </Badge>
@@ -220,24 +220,24 @@ export default function CommunityLibrary() {
 
   if (loadingCommunity || loadingTenant) {
     return (
-      <div className="flex justify-center items-center h-64 bg-[var(--color-background)]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+      <div className="flex justify-center items-center h-64 bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
       </div>
     );
   }
 
   return (
-    <div className="p-6 max-w-6xl mx-auto bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 max-w-6xl mx-auto bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-2xl font-light flex items-center gap-2 text-midnight-900 font-heading">
             <Package className="h-6 w-6" />
             Community Library
           </h1>
-          <p className="text-[var(--color-charcoal)]">Browse and import shared templates</p>
+          <p className="text-charcoal-700">Browse and import shared templates</p>
         </div>
         {itemsWithUpdates.length > 0 && (
-          <Badge className="bg-amber-100 text-amber-700 text-sm py-1 px-3">
+          <Badge className="bg-warning/10 text-warning-foreground text-sm py-1 px-3">
             <ArrowUp className="h-4 w-4 mr-1" />
             {itemsWithUpdates.length} Updates Available
           </Badge>
@@ -247,7 +247,7 @@ export default function CommunityLibrary() {
       {/* Filters */}
       <div className="flex gap-4 mb-6">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search library..."
             value={searchQuery}
@@ -286,7 +286,7 @@ export default function CommunityLibrary() {
 
         <TabsContent value="available" className="mt-4">
           {newItems.length === 0 ? (
-            <div className="text-center py-12 text-[var(--color-charcoal)]">
+            <div className="text-center py-12 text-charcoal-700">
               <Package className="h-12 w-12 mx-auto mb-4 opacity-30" />
               <p>No new items available</p>
             </div>
@@ -299,7 +299,7 @@ export default function CommunityLibrary() {
 
         <TabsContent value="updates" className="mt-4">
           {itemsWithUpdates.length === 0 ? (
-            <div className="text-center py-12 text-[var(--color-charcoal)]">
+            <div className="text-center py-12 text-charcoal-700">
               <RefreshCw className="h-12 w-12 mx-auto mb-4 opacity-30" />
               <p>All items are up to date</p>
             </div>
@@ -316,7 +316,7 @@ export default function CommunityLibrary() {
 
         <TabsContent value="installed" className="mt-4">
           {tenantItems.length === 0 ? (
-            <div className="text-center py-12 text-[var(--color-charcoal)]">
+            <div className="text-center py-12 text-charcoal-700">
               <Download className="h-12 w-12 mx-auto mb-4 opacity-30" />
               <p>No items installed yet</p>
             </div>
@@ -337,7 +337,7 @@ export default function CommunityLibrary() {
                           <div className="flex items-start gap-3">
                             <div className={`p-2 rounded-lg ${tenantItem.is_custom ? "bg-accent-100" : "bg-info-50"}`}>
                               {React.createElement(itemTypeIcons[tenantItem.item_type] || Package, {
-                                className: `h-5 w-5 ${tenantItem.is_custom ? "text-accent-400" : "text-info-foreground"}`
+                                className: `h-5 w-5 ${tenantItem.is_custom ? "text-accent-700" : "text-info"}`
                               })}
                             </div>
                             <div>
@@ -345,15 +345,15 @@ export default function CommunityLibrary() {
                                 <h3 className="font-medium">{tenantItem.name}</h3>
                                 <Badge variant="outline" className="text-xs">v{tenantItem.installed_version}</Badge>
                                 {tenantItem.is_custom && (
-                                  <Badge className="bg-purple-100 text-purple-700 text-xs">Custom</Badge>
+                                  <Badge className="bg-accent-100 text-accent-700 text-xs">Custom</Badge>
                                 )}
                                 {tenantItem.status === "synced" && (
-                                  <Badge className="bg-green-100 text-green-700 text-xs">Synced</Badge>
+                                  <Badge className="bg-success-50 text-success-foreground text-xs">Synced</Badge>
                                 )}
                               </div>
-                              <p className="text-sm text-gray-500">{tenantItem.description}</p>
+                              <p className="text-sm text-muted-foreground">{tenantItem.description}</p>
                               {tenantItem.has_update_available && (
-                                <Badge className="bg-amber-100 text-amber-700 text-xs mt-2 gap-1">
+                                <Badge className="bg-warning/10 text-warning-foreground text-xs mt-2 gap-1">
                                   <ArrowUp className="h-3 w-3" />
                                   v{tenantItem.latest_available_version} available
                                 </Badge>
@@ -394,7 +394,7 @@ export default function CommunityLibrary() {
           </DialogHeader>
           {selectedItem && (
             <div className="space-y-4">
-              <p className="text-gray-600">{selectedItem.description}</p>
+              <p className="text-muted-foreground">{selectedItem.description}</p>
               <div className="flex gap-2 flex-wrap">
                 <Badge>{itemTypeLabels[selectedItem.item_type]}</Badge>
                 {selectedItem.category && <Badge variant="outline">{selectedItem.category}</Badge>}
@@ -407,9 +407,9 @@ export default function CommunityLibrary() {
                   <h4 className="font-medium mb-2">Version History</h4>
                   <div className="space-y-2 max-h-48 overflow-y-auto">
                     {selectedItem.version_history.map((v, i) => (
-                      <div key={i} className="flex items-center gap-2 text-sm p-2 bg-gray-50 rounded">
+                      <div key={i} className="flex items-center gap-2 text-sm p-2 bg-muted rounded">
                         <Badge variant="outline">v{v.version}</Badge>
-                        <span className="text-gray-500">{new Date(v.published_date).toLocaleDateString()}</span>
+                        <span className="text-muted-foreground">{new Date(v.published_date).toLocaleDateString()}</span>
                         <span className="flex-1">{v.change_notes}</span>
                       </div>
                     ))}

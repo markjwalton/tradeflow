@@ -298,19 +298,19 @@ When updating existing code:
 - [ ] Verify dialog titles use text-[var(--color-midnight)]`;
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20">
-              <Package className="h-6 w-6 text-primary-500" />
+            <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border border-primary/20">
+              <Package className="h-6 w-6 text-primary" />
             </div>
             <div>
-              <h1 className="text-3xl font-heading text-[var(--color-midnight)]">
+              <h1 className="text-3xl font-heading text-midnight-900">
                 Sturij Design System Package
               </h1>
-              <p className="text-[var(--color-charcoal)]">
+              <p className="text-charcoal-700">
                 Complete UI theme package for Base44 applications
               </p>
             </div>
@@ -320,10 +320,10 @@ When updating existing code:
               <CheckCircle2 className="h-3 w-3 mr-1" />
               Production Ready
             </Badge>
-            <Badge className="bg-info-50 text-info-foreground">
+            <Badge className="bg-info-50 text-info">
               v1.0.0
             </Badge>
-            <Badge className="bg-secondary-100 text-secondary-700">
+            <Badge className="bg-secondary-100 text-secondary">
               Base44 Compatible
             </Badge>
           </div>
@@ -361,19 +361,19 @@ When updating existing code:
           <TabsContent value="overview" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-[var(--color-midnight)]">What is Sturij?</CardTitle>
+                <CardTitle className="text-midnight-900">What is Sturij?</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <p className="text-[var(--color-charcoal)]">
+                <p className="text-charcoal-700">
                   Sturij is a comprehensive design system built specifically for Base44 applications. 
                   It provides a cohesive visual language with warm, professional aesthetics inspired by 
                   natural materials and craftsmanship.
                 </p>
                 
                 <div className="grid md:grid-cols-3 gap-4">
-                  <div className="p-4 bg-[var(--color-background-subtle)] rounded-[var(--radius-lg)]">
-                    <Palette className="h-8 w-8 text-primary-500 mb-3" />
-                    <h3 className="font-heading font-medium text-[var(--color-midnight)] mb-2">
+                  <div className="p-4 bg-muted rounded-lg">
+                    <Palette className="h-8 w-8 text-primary mb-3" />
+                    <h3 className="font-heading font-medium text-midnight-900 mb-2">
                       Design Tokens
                     </h3>
                     <p className="text-sm text-[var(--color-charcoal)]">
@@ -381,9 +381,9 @@ When updating existing code:
                     </p>
                   </div>
                   
-                  <div className="p-4 bg-[var(--color-background-subtle)] rounded-[var(--radius-lg)]">
-                    <Layers className="h-8 w-8 text-secondary-400 mb-3" />
-                    <h3 className="font-heading font-medium text-[var(--color-midnight)] mb-2">
+                  <div className="p-4 bg-muted rounded-lg">
+                    <Layers className="h-8 w-8 text-secondary mb-3" />
+                    <h3 className="font-heading font-medium text-midnight-900 mb-2">
                       Components
                     </h3>
                     <p className="text-sm text-[var(--color-charcoal)]">
@@ -391,9 +391,9 @@ When updating existing code:
                     </p>
                   </div>
                   
-                  <div className="p-4 bg-[var(--color-background-subtle)] rounded-[var(--radius-lg)]">
-                    <Zap className="h-8 w-8 text-accent-400 mb-3" />
-                    <h3 className="font-heading font-medium text-[var(--color-midnight)] mb-2">
+                  <div className="p-4 bg-muted rounded-lg">
+                    <Zap className="h-8 w-8 text-accent mb-3" />
+                    <h3 className="font-heading font-medium text-midnight-900 mb-2">
                       LLM Optimized
                     </h3>
                     <p className="text-sm text-[var(--color-charcoal)]">
@@ -402,11 +402,11 @@ When updating existing code:
                   </div>
                 </div>
 
-                <div className="bg-[var(--color-primary)]/10 p-4 rounded-[var(--radius-lg)] border border-[var(--color-primary)]/20">
-                  <h4 className="font-heading font-medium text-primary-700 mb-2">
+                <div className="bg-primary/10 p-4 rounded-lg border border-primary/20">
+                  <h4 className="font-heading font-medium text-primary mb-2">
                     Key Features
                   </h4>
-                  <ul className="space-y-1 text-sm text-[var(--color-midnight)]">
+                  <ul className="space-y-1 text-sm text-midnight-900">
                     <li className="flex items-start gap-2">
                       <CheckCircle2 className="h-4 w-4 text-success-foreground mt-0.5 flex-shrink-0" />
                       <span>Complete CSS variable system with semantic naming</span>
@@ -716,7 +716,7 @@ When updating existing code:
                 <h3 className="text-xl font-heading text-[var(--color-midnight)] mb-2">
                   Ready to implement?
                 </h3>
-                <p className="text-[var(--color-charcoal)]">
+                <p className="text-charcoal-700">
                   All files are already in your Base44 project and ready to use
                 </p>
               </div>
