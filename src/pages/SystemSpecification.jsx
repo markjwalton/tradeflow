@@ -365,8 +365,8 @@ export default function SystemSpecification() {
   return (
     <div className="h-full flex bg-[var(--color-background)]">
       {/* Sidebar */}
-      <div className="w-64 border-r border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
-        <div className="p-4 border-b border-[var(--color-background-muted)]">
+      <div className="w-64 border-r border-background-muted bg-card">
+        <div className="p-4 border-b border-background-muted">
           <h2 className="font-semibold text-[var(--color-midnight)]">System Specification</h2>
           <div className="flex items-center gap-2 mt-1">
             <Badge variant="outline">v{SPEC_VERSION}</Badge>

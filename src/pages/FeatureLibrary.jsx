@@ -533,7 +533,7 @@ Return a JSON object with a "features" array containing feature templates.`,
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-accent-600" />
+              <Sparkles className="h-5 w-5 text-accent-700" />
               Generate Feature with AI
             </DialogTitle>
           </DialogHeader>

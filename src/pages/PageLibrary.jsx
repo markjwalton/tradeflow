@@ -517,7 +517,7 @@ Return a JSON object with a "pages" array containing page templates.`,
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-accent-600" />
+              <Sparkles className="h-5 w-5 text-accent-700" />
               Generate Page with AI
             </DialogTitle>
           </DialogHeader>
@@ -593,7 +593,7 @@ Return a JSON object with a "pages" array containing page templates.`,
                     <div 
                       key={index} 
                       className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                        selectedBulkPages.includes(index) ? "border-info-foreground bg-info-50" : "hover:bg-muted"
+                        selectedBulkPages.includes(index) ? "border-info bg-info-50" : "hover:bg-muted"
                       }`}
                       onClick={() => setSelectedBulkPages(prev => 
                         prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
