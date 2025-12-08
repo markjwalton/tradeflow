@@ -126,10 +126,10 @@ export default function DebugProjectEditor() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-stone-900">
+          <h1 className="text-2xl lg:text-3xl font-bold text-midnight-900">
             {isEditing ? "Edit Project" : "Create New Project"}
           </h1>
-          <p className="text-stone-500 mt-1">
+          <p className="text-muted-foreground mt-1">
             {isEditing ? "Update project details" : "Set up a new construction project"}
           </p>
         </div>
@@ -255,7 +255,7 @@ export default function DebugProjectEditor() {
                   ))}
                 </SelectContent>
               </Select>
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-muted-foreground">
                 Or enter client details manually below
               </p>
             </div>
@@ -353,7 +353,7 @@ export default function DebugProjectEditor() {
               Cancel
             </Button>
           </Link>
-          <Button type="submit" className="bg-secondary-700 hover:bg-secondary-800 text-white">
+          <Button type="submit" className="bg-secondary hover:bg-secondary/90 text-secondary-foreground">
             <Save className="h-4 w-4 mr-2" />
             {isEditing ? "Update Project" : "Create Project"}
           </Button>

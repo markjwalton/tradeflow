@@ -47,7 +47,7 @@ import { createPageUrl } from "@/utils";
 import { ChevronDown, ChevronRight, Folder, FolderOpen } from "lucide-react";
 import PerformanceAuditCard from "@/components/monitoring/PerformanceAuditCard";
 
-const COLORS = ["#22c55e", "#f59e0b", "#ef4444", "#3b82f6", "#8b5cf6"];
+const COLORS = ["var(--color-success)", "var(--color-warning)", "var(--color-destructive)", "var(--color-info)", "var(--color-accent)"];
 
 const metricTypeIcons = {
   page_size: FileCode,
@@ -60,22 +60,22 @@ const metricTypeIcons = {
 };
 
 const statusColors = {
-  ok: "bg-green-100 text-green-700",
-  warning: "bg-amber-100 text-amber-700",
-  critical: "bg-red-100 text-red-700"
+  ok: "bg-success-50 text-success",
+  warning: "bg-warning/10 text-warning",
+  critical: "bg-destructive-50 text-destructive"
 };
 
 const severityColors = {
-  low: "bg-blue-100 text-blue-700",
-  medium: "bg-amber-100 text-amber-700",
-  high: "bg-orange-100 text-orange-700",
-  critical: "bg-red-100 text-red-700"
+  low: "bg-info-50 text-info",
+  medium: "bg-warning/10 text-warning",
+  high: "bg-secondary-100 text-secondary",
+  critical: "bg-destructive-50 text-destructive"
 };
 
 const trendIcons = {
-  improving: <TrendingDown className="h-4 w-4 text-green-600" />,
-  stable: <Minus className="h-4 w-4 text-gray-400" />,
-  degrading: <TrendingUp className="h-4 w-4 text-red-600" />
+  improving: <TrendingDown className="h-4 w-4 text-success" />,
+  stable: <Minus className="h-4 w-4 text-muted-foreground" />,
+  degrading: <TrendingUp className="h-4 w-4 text-destructive" />
 };
 
 const DEFAULT_THRESHOLDS = {
@@ -126,10 +126,10 @@ function IssuesGroupedView({ issues, generateAIRecommendation, isGeneratingRecom
   );
 
   const severityIcons = {
-    critical: <XCircle className="h-5 w-5 text-red-600" />,
-    high: <AlertTriangle className="h-5 w-5 text-orange-600" />,
-    medium: <AlertTriangle className="h-5 w-5 text-amber-600" />,
-    low: <Circle className="h-5 w-5 text-blue-600" />
+    critical: <XCircle className="h-5 w-5 text-destructive" />,
+    high: <AlertTriangle className="h-5 w-5 text-secondary" />,
+    medium: <AlertTriangle className="h-5 w-5 text-warning" />,
+    low: <Circle className="h-5 w-5 text-info" />
   };
 
   return (
@@ -140,8 +140,8 @@ function IssuesGroupedView({ issues, generateAIRecommendation, isGeneratingRecom
         
         return (
           <Card key={severity} className={
-            severity === "critical" ? "border-red-200" :
-            severity === "high" ? "border-orange-200" : ""
+            severity === "critical" ? "border-destructive/20" :
+            severity === "high" ? "border-secondary/20" : ""
           }>
             <button
               onClick={() => toggleSeverity(severity)}
@@ -162,19 +162,19 @@ function IssuesGroupedView({ issues, generateAIRecommendation, isGeneratingRecom
               
               <div className="flex items-center gap-3">
                 {group.open > 0 && (
-                  <Badge className="bg-amber-100 text-amber-700">{group.open} Open</Badge>
+                  <Badge className="bg-warning/10 text-warning">{group.open} Open</Badge>
                 )}
                 {group.resolved > 0 && (
-                  <Badge className="bg-green-100 text-green-700">{group.resolved} Resolved</Badge>
+                  <Badge className="bg-success-50 text-success">{group.resolved} Resolved</Badge>
                 )}
                 {group.withAI > 0 && (
-                  <Badge className="bg-purple-100 text-purple-700">
+                  <Badge className="bg-accent-100 text-accent">
                     <Sparkles className="h-3 w-3 mr-1" />
                     {group.withAI} AI
                   </Badge>
                 )}
                 {group.inRoadmap > 0 && (
-                  <Badge className="bg-blue-100 text-blue-700">
+                  <Badge className="bg-info-50 text-info">
                     <Flag className="h-3 w-3 mr-1" />
                     {group.inRoadmap} Roadmap
                   </Badge>
@@ -185,7 +185,7 @@ function IssuesGroupedView({ issues, generateAIRecommendation, isGeneratingRecom
             {isExpanded && (
               <div className="border-t divide-y">
                 {group.issues.map(issue => (
-                  <div key={issue.id} className={`p-4 ${issue.status === "resolved" ? "opacity-60 bg-gray-50" : ""}`}>
+                  <div key={issue.id} className={`p-4 ${issue.status === "resolved" ? "opacity-60 bg-muted" : ""}`}>
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
@@ -193,19 +193,19 @@ function IssuesGroupedView({ issues, generateAIRecommendation, isGeneratingRecom
                           <Badge variant="outline">{issue.issue_type.replace(/_/g, " ")}</Badge>
                           <Badge variant="outline">{issue.status}</Badge>
                         </div>
-                        <p className="text-sm text-gray-600 mb-2">{issue.description}</p>
+                        <p className="text-sm text-charcoal-700 mb-2">{issue.description}</p>
                         
                         {issue.ai_recommendation && (
-                          <div className="bg-purple-50 p-3 rounded-lg mt-2">
-                            <div className="flex items-center gap-2 text-purple-700 text-sm font-medium mb-1">
+                          <div className="bg-accent-100 p-3 rounded-lg mt-2">
+                            <div className="flex items-center gap-2 text-accent text-sm font-medium mb-1">
                               <Sparkles className="h-4 w-4" />
                               AI Recommendation
                             </div>
-                            <p className="text-sm text-purple-900">{issue.ai_recommendation}</p>
+                            <p className="text-sm text-midnight-900">{issue.ai_recommendation}</p>
                             {issue.suggested_actions?.length > 0 && (
                               <ul className="mt-2 space-y-1">
                                 {issue.suggested_actions.map((action, i) => (
-                                  <li key={i} className="text-sm text-purple-800 flex items-start gap-2">
+                                  <li key={i} className="text-sm text-accent flex items-start gap-2">
                                     <ArrowRight className="h-3 w-3 mt-1 flex-shrink-0" />
                                     {action}
                                   </li>
@@ -218,7 +218,7 @@ function IssuesGroupedView({ issues, generateAIRecommendation, isGeneratingRecom
                         {issue.roadmap_item_id && (
                           <div className="mt-2">
                             <Link to={createPageUrl("RoadmapManager") + `?item=${issue.roadmap_item_id}`}>
-                              <Badge className="bg-blue-100 text-blue-700 cursor-pointer">
+                              <Badge className="bg-info-50 text-info cursor-pointer">
                                 <Lightbulb className="h-3 w-3 mr-1" />
                                 View in Roadmap
                               </Badge>
@@ -331,16 +331,16 @@ function MetricsGroupedView({ metrics, getThreshold }) {
               <div className="flex items-center gap-4">
                 <div className="flex gap-2">
                   {group.ok > 0 && (
-                    <Badge className="bg-green-100 text-green-700">{group.ok} OK</Badge>
+                    <Badge className="bg-success-50 text-success">{group.ok} OK</Badge>
                   )}
                   {group.warning > 0 && (
-                    <Badge className="bg-amber-100 text-amber-700">{group.warning} Warning</Badge>
+                    <Badge className="bg-warning/10 text-warning">{group.warning} Warning</Badge>
                   )}
                   {group.critical > 0 && (
-                    <Badge className="bg-red-100 text-red-700">{group.critical} Critical</Badge>
+                    <Badge className="bg-destructive-50 text-destructive">{group.critical} Critical</Badge>
                   )}
                 </div>
-                <div className="text-sm text-gray-500 w-32 text-right">
+                <div className="text-sm text-muted-foreground w-32 text-right">
                   Threshold: {threshold.warning}/{threshold.critical} {threshold.unit}
                 </div>
               </div>
@@ -363,7 +363,7 @@ function MetricsGroupedView({ metrics, getThreshold }) {
                       <TableRow key={metric.id}>
                         <TableCell>
                           <div className="font-medium">{metric.resource_name}</div>
-                          <div className="text-xs text-gray-500">{metric.resource_path}</div>
+                          <div className="text-xs text-muted-foreground">{metric.resource_path}</div>
                         </TableCell>
                         <TableCell className="font-mono">
                           {metric.value} {metric.unit}
@@ -376,7 +376,7 @@ function MetricsGroupedView({ metrics, getThreshold }) {
                         <TableCell>
                           {trendIcons[metric.trend || "stable"]}
                         </TableCell>
-                        <TableCell className="text-sm text-gray-500">
+                        <TableCell className="text-sm text-muted-foreground">
                           {metric.measured_at ? format(new Date(metric.measured_at), "MMM d, HH:mm") : "-"}
                         </TableCell>
                       </TableRow>
@@ -960,12 +960,12 @@ Provide:
 
       {/* Scan Progress Indicator */}
       {scanProgress.total > 0 && (
-        <Card className="mb-6 border-blue-200 bg-blue-50">
+        <Card className="mb-6 border-info/20 bg-info-50">
           <CardHeader className="pb-2">
             <CardTitle className="text-base flex items-center gap-2">
               <Loader2 className={`h-4 w-4 ${isScanning ? "animate-spin" : ""}`} />
               {isScanning ? "Scanning..." : "Scan Complete"}
-              <span className="text-sm font-normal text-gray-500">
+              <span className="text-sm font-normal text-muted-foreground">
                 ({scanProgress.current}/{scanProgress.total})
               </span>
             </CardTitle>
@@ -975,15 +975,15 @@ Provide:
               {scanProgress.items.map((item, idx) => (
                 <div key={item.type} className="flex items-center gap-3 text-sm">
                   <div className="w-5">
-                    {item.status === "pending" && <Circle className="h-4 w-4 text-gray-300" />}
-                    {item.status === "running" && <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />}
-                    {item.status === "done" && <CheckCircle2 className="h-4 w-4 text-green-500" />}
+                    {item.status === "pending" && <Circle className="h-4 w-4 text-muted-foreground" />}
+                    {item.status === "running" && <Loader2 className="h-4 w-4 text-info animate-spin" />}
+                    {item.status === "done" && <CheckCircle2 className="h-4 w-4 text-success" />}
                   </div>
-                  <span className={item.status === "pending" ? "text-gray-400" : "text-gray-700"}>
+                  <span className={item.status === "pending" ? "text-muted-foreground" : "text-charcoal-700"}>
                     {item.name}
                   </span>
                   {item.details && (
-                    <span className="text-gray-400 text-xs">— {item.details}</span>
+                    <span className="text-muted-foreground text-xs">— {item.details}</span>
                   )}
                 </div>
               ))}
@@ -1046,24 +1046,24 @@ Provide:
         <TabsContent value="overview" className="space-y-6">
           {/* Health Score */}
           <div className="grid grid-cols-4 gap-4">
-            <Card className={stats.healthScore >= 80 ? "border-green-200" : stats.healthScore >= 50 ? "border-amber-200" : "border-red-200"}>
+            <Card className={stats.healthScore >= 80 ? "border-success/20" : stats.healthScore >= 50 ? "border-warning/20" : "border-destructive/20"}>
               <CardContent className="pt-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-sm text-gray-500">Health Score</div>
+                    <div className="text-sm text-muted-foreground">Health Score</div>
                     <div className={`text-3xl font-bold ${
-                      stats.healthScore >= 80 ? "text-green-600" : 
-                      stats.healthScore >= 50 ? "text-amber-600" : "text-red-600"
+                      stats.healthScore >= 80 ? "text-success" : 
+                      stats.healthScore >= 50 ? "text-warning" : "text-destructive"
                     }`}>
                       {stats.healthScore}%
                     </div>
                   </div>
                   {stats.healthScore >= 80 ? (
-                    <CheckCircle2 className="h-10 w-10 text-green-500" />
+                    <CheckCircle2 className="h-10 w-10 text-success" />
                   ) : stats.healthScore >= 50 ? (
-                    <AlertTriangle className="h-10 w-10 text-amber-500" />
+                    <AlertTriangle className="h-10 w-10 text-warning" />
                   ) : (
-                    <XCircle className="h-10 w-10 text-red-500" />
+                    <XCircle className="h-10 w-10 text-destructive" />
                   )}
                 </div>
               </CardContent>
@@ -1071,24 +1071,24 @@ Provide:
 
             <Card>
               <CardContent className="pt-4">
-                <div className="text-sm text-gray-500">Open Issues</div>
+                <div className="text-sm text-muted-foreground">Open Issues</div>
                 <div className="text-3xl font-bold">{openIssues.length}</div>
                 {criticalIssues.length > 0 && (
-                  <p className="text-xs text-red-600">{criticalIssues.length} critical</p>
+                  <p className="text-xs text-destructive">{criticalIssues.length} critical</p>
                 )}
               </CardContent>
             </Card>
 
             <Card>
               <CardContent className="pt-4">
-                <div className="text-sm text-gray-500">Resources Tracked</div>
+                <div className="text-sm text-muted-foreground">Resources Tracked</div>
                 <div className="text-3xl font-bold">{filteredMetrics.length}</div>
               </CardContent>
             </Card>
 
             <Card>
               <CardContent className="pt-4">
-                <div className="text-sm text-gray-500">Last Scan</div>
+                <div className="text-sm text-muted-foreground">Last Scan</div>
                 <div className="text-lg font-medium">
                   {metrics[0]?.measured_at ? format(new Date(metrics[0].measured_at), "MMM d, HH:mm") : "Never"}
                 </div>
@@ -1112,15 +1112,15 @@ Provide:
                   return (
                     <div key={type} className="flex items-center gap-4">
                       <div className="flex items-center gap-2 w-40">
-                        <Icon className="h-4 w-4 text-gray-500" />
+                        <Icon className="h-4 w-4 text-muted-foreground" />
                         <span className="text-sm font-medium capitalize">{type.replace("_", " ")}</span>
                       </div>
-                      <div className="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden flex">
-                        <div className="h-full bg-green-500" style={{ width: `${okPercent}%` }} />
-                        <div className="h-full bg-amber-500" style={{ width: `${warnPercent}%` }} />
-                        <div className="h-full bg-red-500" style={{ width: `${critPercent}%` }} />
+                      <div className="flex-1 h-4 bg-muted rounded-full overflow-hidden flex">
+                        <div className="h-full bg-success" style={{ width: `${okPercent}%` }} />
+                        <div className="h-full bg-warning" style={{ width: `${warnPercent}%` }} />
+                        <div className="h-full bg-destructive" style={{ width: `${critPercent}%` }} />
                       </div>
-                      <div className="w-24 text-right text-sm text-gray-500">
+                      <div className="w-24 text-right text-sm text-muted-foreground">
                         {counts.ok}/{counts.total} OK
                       </div>
                     </div>
@@ -1132,9 +1132,9 @@ Provide:
 
           {/* Critical Issues */}
           {criticalIssues.length > 0 && (
-            <Card className="border-red-200">
+            <Card className="border-destructive/20">
               <CardHeader>
-                <CardTitle className="text-red-700 flex items-center gap-2">
+                <CardTitle className="text-destructive flex items-center gap-2">
                   <AlertTriangle className="h-5 w-5" />
                   Critical Issues Requiring Attention
                 </CardTitle>
@@ -1142,10 +1142,10 @@ Provide:
               <CardContent>
                 <div className="space-y-3">
                   {criticalIssues.slice(0, 5).map(issue => (
-                    <div key={issue.id} className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                    <div key={issue.id} className="flex items-center justify-between p-3 bg-destructive-50 rounded-lg">
                       <div>
                         <p className="font-medium">{issue.resource_name}</p>
-                        <p className="text-sm text-gray-600">{issue.description}</p>
+                        <p className="text-sm text-charcoal-700">{issue.description}</p>
                       </div>
                       <div className="flex gap-2">
                         <Button 
@@ -1198,8 +1198,8 @@ Provide:
             </div>
           ) : filteredIssues.length === 0 ? (
             <Card>
-              <CardContent className="py-12 text-center text-gray-500">
-                <CheckCircle2 className="h-12 w-12 mx-auto mb-4 text-green-500" />
+              <CardContent className="py-12 text-center text-muted-foreground">
+                <CheckCircle2 className="h-12 w-12 mx-auto mb-4 text-success" />
                 <p>No performance issues found!</p>
               </CardContent>
             </Card>
@@ -1230,7 +1230,7 @@ Provide:
                       <XAxis dataKey="resource_name" tick={{ fontSize: 10 }} angle={-45} textAnchor="end" height={80} />
                       <YAxis />
                       <Tooltip />
-                      <Bar dataKey="value" fill="#3b82f6" name="Lines" />
+                      <Bar dataKey="value" fill="var(--color-info)" name="Lines" />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -1248,9 +1248,9 @@ Provide:
                     <PieChart>
                       <Pie
                         data={[
-                          { name: "OK", value: filteredMetrics.filter(m => m.status === "ok").length, fill: "#22c55e" },
-                          { name: "Warning", value: filteredMetrics.filter(m => m.status === "warning").length, fill: "#f59e0b" },
-                          { name: "Critical", value: filteredMetrics.filter(m => m.status === "critical").length, fill: "#ef4444" }
+                          { name: "OK", value: filteredMetrics.filter(m => m.status === "ok").length, fill: "var(--color-success)" },
+                          { name: "Warning", value: filteredMetrics.filter(m => m.status === "warning").length, fill: "var(--color-warning)" },
+                          { name: "Critical", value: filteredMetrics.filter(m => m.status === "critical").length, fill: "var(--color-destructive)" }
                         ].filter(d => d.value > 0)}
                         dataKey="value"
                         nameKey="name"
@@ -1287,8 +1287,8 @@ Provide:
                           <Progress value={healthPercent} className="h-3" />
                         </div>
                         <div className={`w-16 text-right font-medium ${
-                          healthPercent >= 80 ? "text-green-600" : 
-                          healthPercent >= 50 ? "text-amber-600" : "text-red-600"
+                          healthPercent >= 80 ? "text-success" : 
+                          healthPercent >= 50 ? "text-warning" : "text-destructive"
                         }`}>
                           {healthPercent}%
                         </div>
@@ -1306,7 +1306,7 @@ Provide:
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold">AI Performance Review History</h2>
-              <p className="text-sm text-gray-500">Collapsible reviews with roadmap integration</p>
+              <p className="text-sm text-muted-foreground">Collapsible reviews with roadmap integration</p>
             </div>
             <Button 
               onClick={generateSystemReview} 
@@ -1324,9 +1324,9 @@ Provide:
           {isGeneratingSystemReview && (
             <Card>
               <CardContent className="py-12 text-center">
-                <Loader2 className="h-12 w-12 mx-auto mb-4 animate-spin text-purple-600" />
+                <Loader2 className="h-12 w-12 mx-auto mb-4 animate-spin text-accent" />
                 <p className="font-medium">Analyzing your system...</p>
-                <p className="text-sm text-gray-500 mt-2">This may take a few moments</p>
+                <p className="text-sm text-muted-foreground mt-2">This may take a few moments</p>
               </CardContent>
             </Card>
           )}
@@ -1364,7 +1364,7 @@ Provide:
 
           {!isGeneratingSystemReview && !aiSystemReview && aiReviewHistory.length === 0 && (
             <Card>
-              <CardContent className="py-12 text-center text-gray-500">
+              <CardContent className="py-12 text-center text-muted-foreground">
                 <Sparkles className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>No performance reviews yet</p>
                 <p className="text-sm mt-2">Run an AI review to get comprehensive analysis</p>
@@ -1391,7 +1391,7 @@ Provide:
                     <span className="text-sm font-medium capitalize">{type.replace("_", " ")}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Label className="text-xs text-amber-600">Warning:</Label>
+                    <Label className="text-xs text-warning">Warning:</Label>
                     <Input 
                       type="number" 
                       className="w-20" 
@@ -1400,7 +1400,7 @@ Provide:
                     />
                   </div>
                   <div className="flex items-center gap-2">
-                    <Label className="text-xs text-red-600">Critical:</Label>
+                    <Label className="text-xs text-destructive">Critical:</Label>
                     <Input 
                       type="number" 
                       className="w-20" 
