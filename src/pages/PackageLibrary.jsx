@@ -212,7 +212,7 @@ function PackageCard({ pkg }) {
             <div className="grid gap-2">
               {pkg.features.map((feature, i) => (
                 <div key={i} className="flex items-center gap-2 p-2 bg-success-50 rounded-lg">
-                  <Check className="h-4 w-4 text-success" />
+                  <Check className="h-4 w-4 text-success-foreground" />
                   <span className="text-sm">{feature}</span>
                 </div>
               ))}

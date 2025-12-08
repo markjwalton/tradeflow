@@ -64,7 +64,7 @@ export default function Setup() {
       <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--color-background)]">
         <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
           <CardContent className="pt-6 text-center space-y-4">
-            <CheckCircle className="h-12 w-12 text-[var(--color-success)] mx-auto" />
+            <CheckCircle className="h-12 w-12 text-success mx-auto" />
             <div>
               <h2 className="text-xl font-semibold text-[var(--color-midnight)]">Already a Global Admin</h2>
               <p className="text-[var(--color-charcoal)]">You already have global admin access.</p>
@@ -92,7 +92,7 @@ export default function Setup() {
             Welcome <strong>{user.email}</strong>! Set yourself as the Global Admin to manage all tenants and navigation.
           </p>
           
-          <div className="bg-[var(--color-warning)]/10 border border-[var(--color-warning)]/30 rounded-lg p-3 text-sm text-[var(--color-warning-dark)]">
+          <div className="bg-warning/10 border border-warning/30 rounded-lg p-3 text-sm text-warning-foreground">
             <strong>Note:</strong> Only do this if you are the application owner. Global admins have full access to all tenants.
           </div>
 
