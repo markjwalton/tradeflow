@@ -63,29 +63,22 @@ function ShowcaseSection({ id, title, description, count, children }) {
   const [expanded, setExpanded] = useState(true);
   
   return (
-    <section id={id} className="mb-8 scroll-mt-24 bg-white rounded-xl border border-[#eceae5] overflow-hidden">
+    <section id={id} className="mb-[var(--spacing-6)] scroll-mt-24 bg-[var(--color-background-paper)] rounded-[var(--radius-xl)] border border-[var(--color-background-muted)] overflow-hidden">
       <button 
         onClick={() => setExpanded(!expanded)}
-        className="w-full px-6 py-4 flex items-center justify-between hover:bg-[#faf9f7] transition-colors"
+        className="w-full px-[var(--spacing-6)] py-[var(--spacing-4)] flex items-center justify-between hover:bg-[var(--color-background-subtle)] transition-[var(--transition-fast)]"
       >
-        <div className="flex items-center gap-3">
-          <h3 className="text-base font-medium text-[#1b2a35]" style={{ fontFamily: 'var(--font-heading)' }}>
-            {title} {count && <span className="text-[#6d6d6d] font-normal">({count} Components)</span>}
+        <div className="flex items-center gap-[var(--spacing-3)]">
+          <h3 className="text-[length:var(--font-size-lg)] font-[var(--font-heading)] text-[var(--color-midnight)]">
+            {title}
           </h3>
         </div>
-        <ChevronDown className={cn("h-5 w-5 text-[#6d6d6d] transition-transform", !expanded && "-rotate-90")} />
+        <ChevronDown className={cn("h-5 w-5 text-[var(--color-charcoal)] transition-transform", !expanded && "-rotate-90")} />
       </button>
       {expanded && (
-        <div className="px-6 pb-6">
-          {description && <p className="text-sm text-[#6d6d6d] mb-4">{description}</p>}
-          <div className="space-y-6">{children}</div>
-          
-          {/* Import code snippet */}
-          <div className="mt-4 p-3 bg-[#1b2a35] rounded-lg">
-            <code className="text-sm text-[#a9c7b1] font-mono">
-              import {'{'} {title.replace(/\s/g, '')}Components {'}'} from "./components/library";
-            </code>
-          </div>
+        <div className="px-[var(--spacing-6)] pb-[var(--spacing-6)]">
+          {description && <p className="text-[length:var(--font-size-sm)] text-[var(--color-charcoal)] mb-[var(--spacing-4)]">{description}</p>}
+          <div className="space-y-[var(--spacing-6)]">{children}</div>
         </div>
       )}
     </section>
@@ -95,16 +88,11 @@ function ShowcaseSection({ id, title, description, count, children }) {
 // Component demo wrapper - Matching Figma card style
 function ComponentDemo({ title, children, code }) {
   return (
-    <div className="space-y-3">
-      {title && <p className="text-sm font-medium text-[#1b2a35]">{title}</p>}
-      <div className="p-4 bg-[#faf9f7] rounded-lg border border-[#eceae5]">
+    <div className="space-y-[var(--spacing-3)]">
+      {title && <p className="text-[length:var(--font-size-sm)] font-medium text-[var(--color-midnight)]">{title}</p>}
+      <div className="p-[var(--spacing-4)] bg-[var(--color-background-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-background-muted)]">
         {children}
       </div>
-      {code && (
-        <div className="p-3 bg-[#1b2a35] rounded-lg">
-          <code className="text-xs text-[#a9c7b1] font-mono">{code}</code>
-        </div>
-      )}
     </div>
   );
 }
@@ -157,83 +145,23 @@ export default function ComponentShowcase() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f3ef]">
-      {/* Header - Matching Figma */}
-      <div className="bg-white border-b border-[#eceae5]">
-        <div className="max-w-7xl mx-auto px-6">
-          {/* Top bar with title and actions */}
-          <div className="flex items-center justify-between py-4">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#4A5D4E] flex items-center justify-center">
-                <Package className="h-4 w-4 text-white" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h1 className="text-lg font-medium text-[#1b2a35]" style={{ fontFamily: 'var(--font-heading)' }}>
-                    Component Library
-                  </h1>
-                  <span className="px-2 py-0.5 text-xs bg-[#4A5D4E]/10 text-[#4A5D4E] rounded-full font-medium">
-                    v2.1.0
-                  </span>
-                </div>
-                <p className="text-sm text-[#6d6d6d]">
-                  Comprehensive collection of reusable components, patterns, and design tokens for the Sturij system
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <button className="flex items-center gap-2 px-3 py-2 text-sm text-[#6d6d6d] hover:bg-[#f5f3ef] rounded-lg transition-colors">
-                <Download className="h-4 w-4" />
-                Export Components
-              </button>
-              <button className="flex items-center gap-2 px-3 py-2 text-sm bg-[#4A5D4E] text-white rounded-lg hover:bg-[#3a4a3e] transition-colors">
-                <Eye className="h-4 w-4" />
-                View Documentation
-              </button>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      {/* Production Ready Banner */}
-      <div className="bg-white border-b border-[#eceae5]">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+    <div className="min-h-screen bg-[var(--color-background)]">
+      {/* Header */}
+      <div className="bg-[var(--color-background-paper)] border-b border-[var(--color-background-muted)]">
+        <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-[#4A5D4E]/10 flex items-center justify-center">
-              <Sparkles className="h-4 w-4 text-[#4A5D4E]" />
+            <div className="w-10 h-10 rounded-[var(--radius-lg)] bg-[var(--color-primary)] flex items-center justify-center">
+              <Package className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h2 className="text-base font-medium text-[#1b2a35]" style={{ fontFamily: 'var(--font-heading)' }}>
-                Production-Ready Component Library
-              </h2>
-              <p className="text-sm text-[#6d6d6d]">
-                82 fully functional components ready to use in your applications
+              <h1 className="text-[length:var(--font-size-2xl)] font-[var(--font-heading)] text-[var(--color-midnight)]">
+                Component Library
+              </h1>
+              <p className="text-[length:var(--font-size-sm)] text-[var(--color-charcoal)]">
+                Production-ready components using Sturij design tokens
               </p>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Complete Component Library Section */}
-      <div className="bg-[#faf9f7] border-b border-[#eceae5]">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base font-medium text-[#1b2a35]">Complete Component Library</h3>
-            <div className="flex items-center gap-2">
-              <button className="flex items-center gap-2 px-3 py-1.5 text-sm text-[#6d6d6d] border border-[#eceae5] rounded-lg hover:bg-white transition-colors">
-                <Download className="h-4 w-4" />
-                Download Docs
-              </button>
-              <button className="flex items-center gap-2 px-3 py-1.5 text-sm text-[#6d6d6d] border border-[#eceae5] rounded-lg hover:bg-white transition-colors">
-                <Eye className="h-4 w-4" />
-                View Source
-              </button>
-            </div>
-          </div>
-          <p className="text-sm text-[#6d6d6d] mb-1">
-            Import and use these components directly from: <code className="px-2 py-1 bg-white rounded text-[#4A5D4E] font-mono text-xs">./components/library</code>
-          </p>
         </div>
       </div>
 
@@ -842,48 +770,7 @@ export default function ComponentShowcase() {
         </ShowcaseSection>
         )}
 
-        {/* Category Cards Grid - Matching Figma Footer */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-12 pt-8 border-t border-[#eceae5]">
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => scrollToSection(cat.id)}
-              className={cn(
-                "p-4 rounded-xl text-left transition-all hover:shadow-md",
-                activeCategory === cat.id ? "ring-2 ring-[#4A5D4E]" : "",
-                "bg-white border border-[#eceae5]"
-              )}
-            >
-              <div className="text-2xl font-light text-[#4A5D4E] mb-1" style={{ fontFamily: 'var(--font-heading)' }}>
-                {cat.count}
-              </div>
-              <div className="text-sm text-[#6d6d6d]">{cat.label}</div>
-            </button>
-          ))}
-        </div>
 
-        {/* Footer */}
-        <div className="mt-12 pt-6 border-t border-[#eceae5]">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded bg-[#4A5D4E] flex items-center justify-center">
-                <span className="text-white text-xs font-bold">S</span>
-              </div>
-              <span className="text-sm text-[#6d6d6d]">
-                Intelligent navigation and design systems for modern applications.
-              </span>
-            </div>
-            <div className="flex items-center gap-4 text-sm text-[#6d6d6d]">
-              <a href="#" className="hover:text-[#4A5D4E]">Privacy Policy</a>
-              <a href="#" className="hover:text-[#4A5D4E]">Terms of Service</a>
-              <a href="#" className="hover:text-[#4A5D4E]">Help Center</a>
-              <a href="#" className="hover:text-[#4A5D4E]">Contact</a>
-            </div>
-          </div>
-          <div className="mt-4 text-xs text-[#888888]">
-            © 2025 Sturij. All rights reserved. • Version 2.1.6
-          </div>
-        </div>
       </div>
     </div>
   );
