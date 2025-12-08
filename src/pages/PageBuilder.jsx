@@ -329,23 +329,23 @@ export default function PageBuilder() {
 
       // Remove conflicting classes based on token type
       if (tokenType === 'color-text') {
-        newClasses = currentClasses.replace(/text-\[var\(--color-[^\]]+\)\]/g, '');
+        newClasses = currentClasses.replace(/text-\[var\(--color-[^\]]+\)\]/g, '').replace(/text-(white|black|gray-\d+|slate-\d+|zinc-\d+|neutral-\d+|stone-\d+|red-\d+|orange-\d+|amber-\d+|yellow-\d+|lime-\d+|green-\d+|emerald-\d+|teal-\d+|cyan-\d+|sky-\d+|blue-\d+|indigo-\d+|violet-\d+|purple-\d+|fuchsia-\d+|pink-\d+|rose-\d+)/g, '');
       } else if (tokenType === 'color-bg') {
-        newClasses = currentClasses.replace(/bg-\[var\(--color-[^\]]+\)\]/g, '');
+        newClasses = currentClasses.replace(/bg-\[var\(--color-[^\]]+\)\]/g, '').replace(/bg-(white|black|transparent|gray-\d+|slate-\d+|zinc-\d+|neutral-\d+|stone-\d+|red-\d+|orange-\d+|amber-\d+|yellow-\d+|lime-\d+|green-\d+|emerald-\d+|teal-\d+|cyan-\d+|sky-\d+|blue-\d+|indigo-\d+|violet-\d+|purple-\d+|fuchsia-\d+|pink-\d+|rose-\d+)/g, '');
       } else if (tokenType === 'spacing-p') {
-        newClasses = currentClasses.replace(/p-\[var\(--spacing-[^\]]+\)\]/g, '');
+        newClasses = currentClasses.replace(/p-\[var\(--spacing-[^\]]+\)\]/g, '').replace(/p[xytblr]?-\d+/g, '');
       } else if (tokenType === 'spacing-m') {
-        newClasses = currentClasses.replace(/m-\[var\(--spacing-[^\]]+\)\]/g, '');
+        newClasses = currentClasses.replace(/m-\[var\(--spacing-[^\]]+\)\]/g, '').replace(/m[xytblr]?-\d+/g, '');
       } else if (tokenType === 'radius') {
-        newClasses = currentClasses.replace(/rounded-\[var\(--radius-[^\]]+\)\]/g, '');
+        newClasses = currentClasses.replace(/rounded-\[var\(--radius-[^\]]+\)\]/g, '').replace(/rounded(-none|-sm|-md|-lg|-xl|-2xl|-3xl|-full)?/g, '');
       } else if (tokenType === 'shadow') {
-        newClasses = currentClasses.replace(/shadow-\[var\(--shadow-[^\]]+\)\]/g, '');
+        newClasses = currentClasses.replace(/shadow-\[var\(--shadow-[^\]]+\)\]/g, '').replace(/shadow(-sm|-md|-lg|-xl|-2xl|-inner|-none)?/g, '');
       } else if (tokenType === 'font-family') {
-        newClasses = currentClasses.replace(/font-\[var\(--font-[^\]]+\)\]/g, '');
+        newClasses = currentClasses.replace(/font-\[var\(--font-[^\]]+\)\]/g, '').replace(/font-(sans|serif|mono|heading|body)/g, '');
       } else if (tokenType === 'font-size') {
-        newClasses = currentClasses.replace(/text-\[var\(--font-size-[^\]]+\)\]/g, '');
+        newClasses = currentClasses.replace(/text-\[var\(--font-size-[^\]]+\)\]/g, '').replace(/text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)/g, '');
       } else if (tokenType === 'border') {
-        newClasses = currentClasses.replace(/border-\[var\(--color-[^\]]+\)\]/g, '');
+        newClasses = currentClasses.replace(/border-\[var\(--color-[^\]]+\)\]/g, '').replace(/border-(white|black|gray-\d+|slate-\d+|zinc-\d+|neutral-\d+|stone-\d+|red-\d+|orange-\d+|amber-\d+|yellow-\d+|lime-\d+|green-\d+|emerald-\d+|teal-\d+|cyan-\d+|sky-\d+|blue-\d+|indigo-\d+|violet-\d+|purple-\d+|fuchsia-\d+|pink-\d+|rose-\d+)/g, '');
       } else if (tokenType === 'transition') {
         newClasses = currentClasses.replace(/transition-[^\s]+/g, '');
       } else if (tokenType === 'button') {
