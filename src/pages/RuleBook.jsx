@@ -289,7 +289,7 @@ export default function RuleBook() {
                         <div className="flex items-center gap-2">
                           {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                           <Icon className="h-5 w-5" />
-                          <CardTitle className="text-lg">{category.label}</CardTitle>
+                          <h3 className="text-h5">{category.label}</h3>
                           <Badge variant="secondary">{catRules.length}</Badge>
                           {criticalCount > 0 && (
                             <Badge className="bg-red-600 text-white">
