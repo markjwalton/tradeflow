@@ -518,8 +518,10 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <TenantContext.Provider value={tenantContextValue}>
+      {/* Adobe Fonts - Load in head */}
+      <link rel="stylesheet" href="https://use.typekit.net/iwm1gcu.css" />
       {/* Inject Sturij Design System CSS Variables */}
-      <style dangerouslySetInnerHTML={{ __html: `@import url("https://use.typekit.net/iwm1gcu.css");\n\n${cssVariables}` }} />
+      <style dangerouslySetInnerHTML={{ __html: cssVariables }} />
       <div className="min-h-screen flex flex-col bg-[var(--color-background)]">
         {/* Full-width Header */}
         <header className="h-14 bg-[var(--color-background-paper)] border-b border-[var(--color-background-muted)] flex items-center justify-between px-4 flex-shrink-0">
