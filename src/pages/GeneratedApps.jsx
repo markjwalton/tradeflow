@@ -239,7 +239,7 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
                     </Button>
                     <Button 
                       size="sm" 
-                      className="flex-1 bg-success hover:bg-success"
+                      className="flex-1 bg-success hover:bg-success/90 text-success-foreground"
                       onClick={() => copyForChat(app)}
                     >
                       <Copy className="h-4 w-4 mr-1" />
@@ -321,7 +321,7 @@ function GeneratedAppDetailDialog({ open, onOpenChange, app }) {
                           onClick={() => copySchema(entity)}
                         >
                           {copiedJson === entity.name ? (
-                            <Check className="h-3 w-3 text-success" />
+                            <Check className="h-3 w-3 text-success-foreground" />
                           ) : (
                             <Copy className="h-3 w-3" />
                           )}

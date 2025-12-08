@@ -509,9 +509,9 @@ Return a JSON object with a "suggestions" array where each item has:
           </DialogHeader>
           <div className="space-y-4">
             {/* AI Suggest */}
-            <div className="p-3 bg-accent-50 rounded-lg space-y-2">
+            <div className="p-3 bg-accent-100 rounded-lg space-y-2">
               <label className="text-sm font-medium flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-accent-600" />
+                <Sparkles className="h-4 w-4 text-accent-700" />
                 AI Suggest Areas
               </label>
               <Textarea

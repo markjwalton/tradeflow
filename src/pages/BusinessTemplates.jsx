@@ -245,17 +245,17 @@ export default function BusinessTemplates() {
             </CardHeader>
             <CardContent>
               {template.summary ? (
-                <p className="text-sm text-gray-600 mb-3 line-clamp-3">
+                <p className="text-sm text-muted-foreground mb-3 line-clamp-3">
                   {template.summary}
                 </p>
               ) : template.description && (
-                <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
                   {template.description}
                 </p>
               )}
               
               {/* Stats */}
-              <div className="flex items-center gap-4 text-xs text-gray-500 mb-3">
+              <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
                 <span className="flex items-center gap-1">
                   <Database className="h-3 w-3" />
                   {template.entities?.length || 0} entities
@@ -272,7 +272,7 @@ export default function BusinessTemplates() {
               
               {/* Relationships & Workflows */}
               {(template.entity_relationships?.length > 0 || template.workflows?.length > 0) && (
-                <div className="flex items-center gap-2 text-xs text-purple-600 mb-3">
+                <div className="flex items-center gap-2 text-xs text-accent-600 mb-3">
                   <GitBranch className="h-3 w-3" />
                   <span>
                     {template.entity_relationships?.length || 0} relationships, {template.workflows?.length || 0} workflows

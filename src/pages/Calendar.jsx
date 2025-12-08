@@ -107,7 +107,7 @@ export default function Calendar() {
             ))}
             {dayTasks.length > 3 && <div className="text-xs text-muted-foreground">+{dayTasks.length - 3} more</div>}
             {dayAbsences.map((absence) => (
-              <div key={absence.id} className="text-xs truncate px-1 py-0.5 rounded bg-accent-100 text-accent-700">
+              <div key={absence.id} className="text-xs truncate px-1 py-0.5 rounded bg-accent-50 text-accent-700">
                 {getTeamMemberName(absence.team_member_id)} - {absence.absence_type}
               </div>
             ))}
@@ -200,9 +200,9 @@ export default function Calendar() {
                       <h3 className="text-sm font-medium mb-2">Absences</h3>
                       <div className="space-y-2">
                         {selectedDateAbsences.map((absence) => (
-                          <div key={absence.id} className="p-2 bg-accent-50 rounded-lg">
+                          <div key={absence.id} className="p-2 bg-accent-100 rounded-lg">
                             <span className="font-medium text-sm">{getTeamMemberName(absence.team_member_id)}</span>
-                            <p className="text-xs text-accent-700 capitalize">{absence.absence_type?.replace("_", " ")}</p>
+                            <p className="text-xs text-accent-800 capitalize">{absence.absence_type?.replace("_", " ")}</p>
                           </div>
                         ))}
                       </div>
