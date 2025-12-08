@@ -665,7 +665,7 @@ When updating existing code:
                     </ul>
                   </div>
                   <div>
-                    <h5 className="font-heading font-medium text-[var(--color-destructive)] mb-2">
+                    <h5 className="font-heading font-medium text-destructive mb-2">
                       ❌ Never Use
                     </h5>
                     <ul className="space-y-1 text-[var(--color-charcoal)]">
@@ -685,7 +685,7 @@ When updating existing code:
           <TabsContent value="showcase" className="space-y-6">
             <Card>
               <CardContent className="py-12 text-center">
-                <Eye className="h-16 w-16 mx-auto mb-4 text-[var(--color-primary)]" />
+                <Eye className="h-16 w-16 mx-auto mb-4 text-primary-500" />
                 <h3 className="text-xl font-heading text-[var(--color-midnight)] mb-2">
                   Interactive Component Showcase
                 </h3>
@@ -709,7 +709,7 @@ When updating existing code:
         </Tabs>
 
         {/* Download Section */}
-        <Card className="mt-8 border-[var(--color-primary)]">
+        <Card className="mt-8 border-primary-500">
           <CardContent className="py-8">
             <div className="flex items-center justify-between">
               <div>

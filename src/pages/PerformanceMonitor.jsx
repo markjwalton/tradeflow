@@ -322,7 +322,7 @@ function MetricsGroupedView({ metrics, getThreshold }) {
                   <ChevronRight className="h-5 w-5 text-gray-400" />
                 )}
                 <div className="flex items-center gap-2">
-                  <Icon className="h-5 w-5 text-blue-600" />
+                  <Icon className="h-5 w-5 text-info-foreground" />
                   <span className="font-medium capitalize">{type.replace(/_/g, " ")}</span>
                 </div>
                 <Badge variant="outline">{group.metrics.length} items</Badge>
@@ -941,7 +941,7 @@ Provide:
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)] font-heading">
-            <Activity className="h-6 w-6 text-[var(--color-primary)]" />
+            <Activity className="h-6 w-6 text-primary-500" />
             Performance Monitor
           </h1>
           <p className="text-[var(--color-charcoal)]">Track page sizes, load times, and identify refactoring needs</p>
@@ -1311,7 +1311,7 @@ Provide:
             <Button 
               onClick={generateSystemReview} 
               disabled={isGeneratingSystemReview}
-              className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+              className="bg-primary-500 hover:bg-primary-600 text-white"
             >
               {isGeneratingSystemReview ? (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
