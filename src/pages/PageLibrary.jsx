@@ -412,7 +412,7 @@ Return a JSON object with a "pages" array containing page templates.`,
                           <Badge variant="outline" className="text-xs">Custom</Badge>
                         )}
                       </CardTitle>
-                      <p className="text-sm text-gray-500 mt-1">{page.description}</p>
+                      <p className="text-sm text-muted-foreground mt-1">{page.description}</p>
                     </CardHeader>
                     <CardContent className="pt-0">
                       <div className="flex flex-wrap gap-1 mb-3">

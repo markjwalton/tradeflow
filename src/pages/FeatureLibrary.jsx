@@ -428,7 +428,7 @@ Return a JSON object with a "features" array containing feature templates.`,
                           {feature.complexity || "medium"}
                         </Badge>
                       </div>
-                      <p className="text-sm text-gray-500 mt-1">{feature.description}</p>
+                      <p className="text-sm text-muted-foreground mt-1">{feature.description}</p>
                     </CardHeader>
                     <CardContent className="pt-0">
                       <div className="flex flex-wrap gap-1 mb-3">
