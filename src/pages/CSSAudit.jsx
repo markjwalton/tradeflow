@@ -347,7 +347,8 @@ export default function CSSAudit() {
     
     try {
       // Read the actual file content using backend function
-      const { data: fileContent } = await base44.functions.invoke('readFileContent', { filePath });
+      const response = await base44.functions.invoke('readFileContent', { filePath });
+      const fileContent = response.data?.content;
       
       if (!fileContent) {
         toast.error(`Could not read ${filePath}`);
