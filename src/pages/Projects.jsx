@@ -26,16 +26,16 @@ import { createPageUrl } from "@/utils";
 
 const statusColors = {
   draft: "bg-muted text-muted-foreground",
-  active: "bg-success-50 text-success-foreground",
-  on_hold: "bg-warning/10 text-warning-foreground",
-  completed: "bg-info-50 text-info-foreground",
-  cancelled: "bg-destructive-50 text-destructive-700",
+  active: "bg-success-50 text-success",
+  on_hold: "bg-warning/10 text-warning",
+  completed: "bg-info-50 text-info",
+  cancelled: "bg-destructive-50 text-destructive",
 };
 
 const priorityColors = {
   low: "bg-muted text-muted-foreground",
-  medium: "bg-warning/10 text-warning-foreground",
-  high: "bg-destructive-50 text-destructive-700",
+  medium: "bg-warning/10 text-warning",
+  high: "bg-destructive-50 text-destructive",
 };
 
 export default function Projects() {
@@ -148,16 +148,16 @@ export default function Projects() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64 bg-[var(--color-background)]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+      <div className="flex items-center justify-center h-64 bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
       </div>
     );
   }
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Projects</h1>
+        <h1 className="text-2xl font-light font-display text-midnight-900">Projects</h1>
         <Button onClick={() => { resetForm(); setEditingProject(null); setShowForm(true); }}>
           <Plus className="h-4 w-4 mr-2" />
           New Project
@@ -207,7 +207,7 @@ export default function Projects() {
             <Card key={project.id} className="hover:shadow-md transition-shadow border-background-muted bg-card">
               <CardHeader className="pb-2">
                 <div className="flex items-start justify-between">
-                  <CardTitle className="text-lg text-[var(--color-midnight)]">{project.name}</CardTitle>
+                  <CardTitle className="text-lg text-midnight-900">{project.name}</CardTitle>
                   <div className="flex gap-1">
                     <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
                       <Link to={createPageUrl("ProjectDetail") + `?id=${project.id}`}>
@@ -228,7 +228,7 @@ export default function Projects() {
                   <Badge className={statusColors[project.status]}>{project.status}</Badge>
                   <Badge className={priorityColors[project.priority]}>{project.priority}</Badge>
                 </div>
-                <p className="text-sm text-[var(--color-charcoal)]">Customer: {getCustomerName(project.customer_id)}</p>
+                <p className="text-sm text-charcoal-700">Customer: {getCustomerName(project.customer_id)}</p>
                 <div className="space-y-1">
                   <div className="flex justify-between text-sm">
                     <span>Budget</span>
@@ -243,7 +243,7 @@ export default function Projects() {
       </div>
 
       {filteredProjects.length === 0 && (
-        <div className="text-center py-12 text-[var(--color-charcoal)]">
+        <div className="text-center py-12 text-charcoal-700">
           No projects found. Create your first project to get started.
         </div>
       )}

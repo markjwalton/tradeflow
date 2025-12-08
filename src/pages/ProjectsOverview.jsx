@@ -87,19 +87,19 @@ export default function ProjectsOverview() {
   });
 
   const statusColors = {
-    Planning: "bg-info-50 text-info-foreground border-primary-200",
-    Active: "bg-success-50 text-success-foreground border-success",
-    "On Hold": "bg-warning/10 text-warning-foreground border-warning/20",
+    Planning: "bg-info-50 text-info border-primary/20",
+    Active: "bg-success-50 text-success border-success/20",
+    "On Hold": "bg-warning/10 text-warning border-warning/20",
     Completed: "bg-muted text-muted-foreground border-border",
     Archived: "bg-muted text-muted-foreground border-border",
   };
 
   const typeColors = {
-    "New Build": "bg-info-50 text-info-foreground",
-    Extension: "bg-accent-100 text-accent-700",
-    Renovation: "bg-accent-200 text-accent-800",
-    Conservation: "bg-warning/10 text-warning-foreground",
-    Commercial: "bg-info-50 text-info-foreground",
+    "New Build": "bg-info-50 text-info",
+    Extension: "bg-accent-100 text-accent",
+    Renovation: "bg-accent-200 text-accent",
+    Conservation: "bg-warning/10 text-warning",
+    Commercial: "bg-info-50 text-info",
   };
 
   return (
@@ -111,7 +111,7 @@ export default function ProjectsOverview() {
           <p className="text-muted-foreground mt-1">Manage all your construction projects</p>
         </div>
         <Link to={createPageUrl("ProjectForm")}>
-          <Button className="bg-primary-500 hover:bg-primary-600 text-white">
+          <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
             <Plus className="h-4 w-4 mr-2" />
             New Project
           </Button>
@@ -214,7 +214,7 @@ export default function ProjectsOverview() {
                 : "Get started by creating your first project"}
             </p>
             <Link to={createPageUrl("ProjectForm")}>
-              <Button className="bg-primary-500 hover:bg-primary-600 text-white">
+              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
                 <Plus className="h-4 w-4 mr-2" />
                 Create Project
               </Button>
@@ -301,7 +301,7 @@ export default function ProjectsOverview() {
                                   ? "bg-destructive"
                                   : (project.currentSpend / project.budget) > 0.7
                                   ? "bg-warning"
-                                  : "bg-success-foreground"
+                                  : "bg-success"
                               }`}
                               style={{
                                 width: `${Math.min(100, (project.currentSpend / project.budget) * 100)}%`,

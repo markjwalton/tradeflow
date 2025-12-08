@@ -146,14 +146,14 @@ export default function PromptSettings() {
   }, {});
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
-            <Sparkles className="h-6 w-6 text-accent-700" />
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-midnight-900">
+            <Sparkles className="h-6 w-6 text-accent" />
             Prompt Settings
           </h1>
-          <p className="text-[var(--color-charcoal)]">Manage AI reasoning prompts for input fields</p>
+          <p className="text-charcoal-700">Manage AI reasoning prompts for input fields</p>
         </div>
         <Button onClick={() => handleOpenDialog()}>
           <Plus className="h-4 w-4 mr-2" />
@@ -177,10 +177,10 @@ export default function PromptSettings() {
 
       {isLoading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+          <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
         </div>
       ) : Object.keys(groupedPrompts).length === 0 ? (
-        <div className="text-center py-12 text-[var(--color-charcoal)]">
+        <div className="text-center py-12 text-charcoal-700">
           <Sparkles className="h-12 w-12 mx-auto mb-4 opacity-50" />
           <p>No prompts found. Create your first prompt template.</p>
         </div>
@@ -199,7 +199,7 @@ export default function PromptSettings() {
                       <CardTitle className="text-base flex items-center gap-2">
                         {prompt.name}
                         {prompt.is_default && (
-                          <Star className="h-4 w-4 text-warning-foreground fill-warning-foreground" />
+                          <Star className="h-4 w-4 text-warning fill-warning" />
                         )}
                       </CardTitle>
                       <p className="text-sm text-muted-foreground">{prompt.description}</p>
