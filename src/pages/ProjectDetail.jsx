@@ -259,7 +259,7 @@ export default function ProjectDetail() {
                 <CardContent className="p-4">
                   <div className="flex justify-between">
                     <div><p className="font-medium text-[var(--color-midnight)]">{contact.name}</p><Badge variant="outline" className="mt-1">{contact.role}</Badge></div>
-                    <Button variant="ghost" size="icon" className="text-[var(--color-destructive)]" onClick={() => deleteContactMutation.mutate(contact.id)}><Trash2 className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="icon" className="text-destructive" onClick={() => deleteContactMutation.mutate(contact.id)}><Trash2 className="h-4 w-4" /></Button>
                   </div>
                   {contact.company && <p className="text-sm text-[var(--color-charcoal)] mt-2">{contact.company}</p>}
                   {contact.email && <p className="text-sm mt-1">{contact.email}</p>}

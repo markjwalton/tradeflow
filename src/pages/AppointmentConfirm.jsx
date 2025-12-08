@@ -96,8 +96,8 @@ export default function AppointmentConfirm() {
       <div className="min-h-screen bg-[var(--color-background)] flex items-center justify-center p-4">
         <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
           <CardContent className="pt-6 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--color-destructive)]/10 flex items-center justify-center">
-              <AlertCircle className="h-8 w-8 text-[var(--color-destructive)]" />
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-destructive-50 flex items-center justify-center">
+              <AlertCircle className="h-8 w-8 text-destructive-700" />
             </div>
             <h2 className="text-xl font-semibold mb-2 text-[var(--color-midnight)]">Confirmation Failed</h2>
             <p className="text-[var(--color-charcoal)]">{error}</p>
@@ -111,8 +111,8 @@ export default function AppointmentConfirm() {
     <div className="min-h-screen bg-[var(--color-background)] flex items-center justify-center p-4">
       <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
         <CardContent className="pt-6 text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--color-success)]/10 flex items-center justify-center">
-            <CheckCircle className="h-8 w-8 text-[var(--color-success)]" />
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-success-50 flex items-center justify-center">
+            <CheckCircle className="h-8 w-8 text-success-foreground" />
           </div>
           <h2 className="text-xl font-semibold mb-2 text-[var(--color-midnight)]">
             {alreadyConfirmed ? "Already Confirmed" : "Appointment Confirmed!"}

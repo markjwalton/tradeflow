@@ -128,11 +128,11 @@ export default function WebsiteEnquiryForm() {
       <div className="min-h-screen bg-[var(--color-background)] flex items-center justify-center p-4">
         <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
           <CardContent className="pt-6 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--color-success)]/10 flex items-center justify-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-success-50 flex items-center justify-center">
               {submissionType === "callback" ? (
-                <Phone className="h-8 w-8 text-[var(--color-success)]" />
+                <Phone className="h-8 w-8 text-success-foreground" />
               ) : (
-                <Mail className="h-8 w-8 text-[var(--color-success)]" />
+                <Mail className="h-8 w-8 text-success-foreground" />
               )}
             </div>
             <h2 className="text-xl font-semibold mb-2 text-[var(--color-midnight)]">

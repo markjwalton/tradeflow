@@ -219,8 +219,8 @@ export default function AppointmentHub() {
       <div className="min-h-screen bg-[var(--color-background)] flex items-center justify-center p-4">
         <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
           <CardContent className="pt-6 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--color-destructive)]/10 flex items-center justify-center">
-              <AlertCircle className="h-8 w-8 text-[var(--color-destructive)]" />
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-destructive-50 flex items-center justify-center">
+              <AlertCircle className="h-8 w-8 text-destructive-700" />
             </div>
             <h2 className="text-xl font-semibold mb-2 text-[var(--color-midnight)]">Link Invalid</h2>
             <p className="text-[var(--color-charcoal)]">{error}</p>
@@ -235,8 +235,8 @@ export default function AppointmentHub() {
       <div className="min-h-screen bg-[var(--color-background)] flex items-center justify-center p-4">
         <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
           <CardContent className="pt-6 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--color-success)]/10 flex items-center justify-center">
-              <CheckCircle className="h-8 w-8 text-[var(--color-success)]" />
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-success-50 flex items-center justify-center">
+              <CheckCircle className="h-8 w-8 text-success-foreground" />
             </div>
             <h2 className="text-xl font-semibold mb-2 text-[var(--color-midnight)]">
               {actionType === "cancel" ? "Appointment Cancelled" : "Appointment Booked!"}
@@ -331,8 +331,8 @@ export default function AppointmentHub() {
                         onClick={() => setSelectedBlock(block)}
                         className={`p-4 rounded-lg border-2 text-left transition-all ${
                           selectedBlock?.id === block.id
-                            ? "border-[var(--color-primary)] bg-[var(--color-primary)]/10"
-                            : "border-[var(--color-background-muted)] hover:border-[var(--color-primary)]/50 hover:bg-[var(--color-background)]"
+                            ? "border-primary-500 bg-primary-100"
+                            : "border-border hover:border-primary-300 hover:bg-muted"
                         }`}
                       >
                         <div className="font-medium text-[var(--color-midnight)]">
@@ -356,10 +356,10 @@ export default function AppointmentHub() {
                   <CardTitle className="text-lg text-[var(--color-midnight)]">Complete Your Booking</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="bg-[var(--color-primary)]/10 rounded-lg p-4">
-                    <p className="font-medium text-[var(--color-midnight)]">Selected Appointment:</p>
-                    <p className="text-[var(--color-midnight)]">{format(new Date(selectedBlock.date), "EEEE, d MMMM yyyy")} at {selectedBlock.startTime}</p>
-                    <p className="text-[var(--color-charcoal)]">{selectedBlock.location}</p>
+                  <div className="bg-primary-100 rounded-lg p-4">
+                    <p className="font-medium text-foreground">Selected Appointment:</p>
+                    <p className="text-foreground">{format(new Date(selectedBlock.date), "EEEE, d MMMM yyyy")} at {selectedBlock.startTime}</p>
+                    <p className="text-muted-foreground">{selectedBlock.location}</p>
                   </div>
 
                   <div>
