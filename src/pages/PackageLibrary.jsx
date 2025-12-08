@@ -102,7 +102,7 @@ function FileItem({ name, file, description, onCopy }) {
           onClick={handleCopy}
           className="gap-1"
         >
-          {copied ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3" />}
+          {copied ? <Check className="h-3 w-3 text-success" /> : <Copy className="h-3 w-3" />}
           {copied ? "Copied" : "Copy Path"}
         </Button>
       </div>
@@ -211,8 +211,8 @@ function PackageCard({ pkg }) {
           <TabsContent value="features">
             <div className="grid gap-2">
               {pkg.features.map((feature, i) => (
-                <div key={i} className="flex items-center gap-2 p-2 bg-green-50 rounded-lg">
-                  <Check className="h-4 w-4 text-green-600" />
+                <div key={i} className="flex items-center gap-2 p-2 bg-success-50 rounded-lg">
+                  <Check className="h-4 w-4 text-success" />
                   <span className="text-sm">{feature}</span>
                 </div>
               ))}
@@ -222,8 +222,8 @@ function PackageCard({ pkg }) {
           <TabsContent value="setup">
             <ol className="space-y-3">
               {pkg.setup.map((step, i) => (
-                <li key={i} className="flex gap-3 p-3 bg-blue-50 rounded-lg">
-                  <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium">
+                <li key={i} className="flex gap-3 p-3 bg-info-50 rounded-lg">
+                  <span className="flex-shrink-0 w-6 h-6 bg-info text-info-foreground rounded-full flex items-center justify-center text-sm font-medium">
                     {i + 1}
                   </span>
                   <span className="text-sm">{step}</span>
@@ -242,7 +242,7 @@ export default function PackageLibrary() {
     <div className="min-h-screen bg-[var(--color-background)] p-6">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-light flex items-center gap-3 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-3xl font-light font-display flex items-center gap-3 text-[var(--color-midnight)]">
             <Package className="h-8 w-8" />
             Package Library
           </h1>

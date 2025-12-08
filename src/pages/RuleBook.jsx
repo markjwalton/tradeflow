@@ -33,28 +33,28 @@ import {
 import { toast } from "sonner";
 
 const categories = [
-  { value: "security", label: "Security", icon: Shield, color: "bg-red-100 text-red-800" },
-  { value: "architecture", label: "Architecture", icon: Layout, color: "bg-purple-100 text-purple-800" },
-  { value: "data", label: "Data", icon: Database, color: "bg-blue-100 text-blue-800" },
-  { value: "ui_ux", label: "UI/UX", icon: Eye, color: "bg-pink-100 text-pink-800" },
-  { value: "performance", label: "Performance", icon: Zap, color: "bg-yellow-100 text-yellow-800" },
-  { value: "accessibility", label: "Accessibility", icon: Eye, color: "bg-green-100 text-green-800" },
-  { value: "testing", label: "Testing", icon: TestTube, color: "bg-orange-100 text-orange-800" },
-  { value: "documentation", label: "Documentation", icon: FileText, color: "bg-slate-100 text-slate-800" },
-  { value: "other", label: "Other", icon: BookOpen, color: "bg-gray-100 text-gray-800" },
+  { value: "security", label: "Security", icon: Shield, color: "bg-destructive-50 text-destructive-700" },
+  { value: "architecture", label: "Architecture", icon: Layout, color: "bg-accent-100 text-accent-700" },
+  { value: "data", label: "Data", icon: Database, color: "bg-primary-100 text-primary-700" },
+  { value: "ui_ux", label: "UI/UX", icon: Eye, color: "bg-accent-100 text-accent-700" },
+  { value: "performance", label: "Performance", icon: Zap, color: "bg-warning/10 text-warning-foreground" },
+  { value: "accessibility", label: "Accessibility", icon: Eye, color: "bg-success-50 text-success-foreground" },
+  { value: "testing", label: "Testing", icon: TestTube, color: "bg-warning/10 text-warning-foreground" },
+  { value: "documentation", label: "Documentation", icon: FileText, color: "bg-muted text-muted-foreground" },
+  { value: "other", label: "Other", icon: BookOpen, color: "bg-muted text-muted-foreground" },
 ];
 
 const priorities = [
-  { value: "critical", label: "Critical", color: "bg-red-600 text-white" },
-  { value: "high", label: "High", color: "bg-orange-500 text-white" },
-  { value: "medium", label: "Medium", color: "bg-blue-500 text-white" },
-  { value: "low", label: "Low", color: "bg-gray-400 text-white" },
+  { value: "critical", label: "Critical", color: "bg-destructive text-destructive-foreground" },
+  { value: "high", label: "High", color: "bg-warning text-warning-foreground" },
+  { value: "medium", label: "Medium", color: "bg-primary text-primary-foreground" },
+  { value: "low", label: "Low", color: "bg-muted text-muted-foreground" },
 ];
 
 const enforcements = [
-  { value: "must", label: "MUST", color: "text-red-700 font-bold" },
-  { value: "should", label: "SHOULD", color: "text-orange-600 font-semibold" },
-  { value: "could", label: "COULD", color: "text-gray-600" },
+  { value: "must", label: "MUST", color: "text-destructive-700 font-bold" },
+  { value: "should", label: "SHOULD", color: "text-warning font-semibold" },
+  { value: "could", label: "COULD", color: "text-muted-foreground" },
 ];
 
 const emptyRule = {
@@ -215,7 +215,7 @@ export default function RuleBook() {
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
             <BookOpen className="h-6 w-6 text-[var(--color-primary)]" />
             Development Rule Book
           </h1>
@@ -292,7 +292,7 @@ export default function RuleBook() {
                           <h3 className="text-h5">{category.label}</h3>
                           <Badge variant="secondary">{catRules.length}</Badge>
                           {criticalCount > 0 && (
-                            <Badge className="bg-red-600 text-white">
+                            <Badge className="bg-destructive text-destructive-foreground">
                               <AlertTriangle className="h-3 w-3 mr-1" />
                               {criticalCount} Critical
                             </Badge>
@@ -304,7 +304,7 @@ export default function RuleBook() {
                   <CollapsibleContent>
                     <CardContent className="pt-0">
                       {catRules.length === 0 ? (
-                        <p className="text-gray-500 text-sm py-4">No rules in this category</p>
+                        <p className="text-muted-foreground text-sm py-4">No rules in this category</p>
                       ) : (
                         <div className="space-y-3">
                           {catRules.map(rule => {
@@ -315,13 +315,13 @@ export default function RuleBook() {
                             return (
                               <div 
                                 key={rule.id} 
-                                className={`border rounded-lg p-4 ${!rule.is_active ? "opacity-50" : ""} ${isSelected ? "ring-2 ring-blue-500" : ""}`}
+                                className={`border rounded-lg p-4 ${!rule.is_active ? "opacity-50" : ""} ${isSelected ? "ring-2 ring-primary" : ""}`}
                               >
                                 <div className="flex items-start justify-between gap-4">
                                   <div className="flex items-start gap-3 flex-1">
                                     <button
                                       onClick={() => toggleRuleSelection(rule.id)}
-                                      className={`mt-1 h-5 w-5 rounded border flex items-center justify-center ${isSelected ? "bg-blue-500 border-blue-500 text-white" : "border-gray-300"}`}
+                                      className={`mt-1 h-5 w-5 rounded border flex items-center justify-center ${isSelected ? "bg-primary border-primary text-primary-foreground" : "border-border"}`}
                                     >
                                       {isSelected && <Check className="h-3 w-3" />}
                                     </button>
@@ -332,9 +332,9 @@ export default function RuleBook() {
                                         <span className="font-medium">{rule.title}</span>
                                         {!rule.is_active && <Badge variant="outline">Inactive</Badge>}
                                       </div>
-                                      <p className="text-sm text-gray-600 mb-2">{rule.description}</p>
+                                      <p className="text-sm text-muted-foreground mb-2">{rule.description}</p>
                                       {rule.examples?.length > 0 && (
-                                        <div className="text-xs text-gray-500 mt-2">
+                                        <div className="text-xs text-muted-foreground mt-2">
                                           <span className="font-medium">Examples:</span>
                                           <ul className="list-disc list-inside">
                                             {rule.examples.map((ex, i) => <li key={i}>{ex}</li>)}
@@ -354,7 +354,7 @@ export default function RuleBook() {
                                     <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(rule)}>
                                       <Edit className="h-4 w-4" />
                                     </Button>
-                                    <Button variant="ghost" size="icon" className="text-red-500" onClick={() => deleteMutation.mutate(rule.id)}>
+                                    <Button variant="ghost" size="icon" className="text-destructive" onClick={() => deleteMutation.mutate(rule.id)}>
                                       <Trash2 className="h-4 w-4" />
                                     </Button>
                                   </div>
