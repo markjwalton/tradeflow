@@ -23,14 +23,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Loader2, Sparkles, Check, X, Edit, BookOpen, AlertTriangle, CheckCircle } from "lucide-react";
+import { Loader2, Sparkles, Check, X, Edit, BookOpen, AlertTriangle, CheckCircle, Info, Eye } from "lucide-react";
 import { toast } from "sonner";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export default function ViolationReport() {
   const [analyzing, setAnalyzing] = useState(false);
   const [patterns, setPatterns] = useState([]);
   const [editingPattern, setEditingPattern] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [showReference, setShowReference] = useState(true);
   
   const queryClient = useQueryClient();
 
@@ -232,9 +238,26 @@ Return ALL unique patterns found, grouped by classification.`,
     other: "🔧"
   };
 
+  // Design token reference for validation
+  const designTokenReference = {
+    colors: {
+      semantic: ['bg-primary', 'text-primary', 'bg-secondary', 'text-secondary', 'bg-muted', 'text-muted-foreground', 'bg-accent', 'text-accent', 'bg-destructive', 'text-destructive'],
+      vars: ['var(--color-primary)', 'var(--color-secondary)', 'var(--color-accent)', 'var(--color-midnight)', 'var(--color-charcoal)', 'var(--text-primary)', 'var(--text-body)', 'var(--text-muted)']
+    },
+    spacing: {
+      tailwind: ['p-1', 'p-2', 'p-3', 'p-4', 'p-6', 'p-8', 'm-1', 'm-2', 'm-4', 'gap-2', 'gap-4', 'space-y-4'],
+      vars: ['var(--spacing-1)', 'var(--spacing-2)', 'var(--spacing-3)', 'var(--spacing-4)', 'var(--spacing-6)', 'var(--spacing-8)']
+    },
+    typography: {
+      fonts: ['font-display', 'font-body', 'font-mono'],
+      fontVars: ['degular-display', 'mrs-eaves-xl-serif-narrow', 'source-code-pro'],
+      sizes: ['text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl']
+    }
+  };
+
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-6 max-w-7xl mx-auto grid grid-cols-[1fr_300px] gap-6">
+      <div className="col-span-2 flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-light font-display text-midnight">
             Interactive Violation Report
@@ -258,9 +281,11 @@ Return ALL unique patterns found, grouped by classification.`,
         </div>
       </div>
 
+      {/* Main Content */}
+      <div className="space-y-6">
       {/* Summary Stats */}
       {patterns.length > 0 && (
-        <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-3 gap-4">
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm">Total Patterns</CardTitle>
@@ -294,7 +319,7 @@ Return ALL unique patterns found, grouped by classification.`,
 
       {/* Pattern List */}
       {patterns.length > 0 && (
-        <div className="space-y-3">
+        <div className="space-y-3 mt-6">
           {patterns.map((pattern) => (
             <Card key={pattern.id} className="border-l-4" style={{
               borderLeftColor: pattern.status === 'verified' ? 'var(--color-success)' : 'var(--color-destructive)'
@@ -349,6 +374,37 @@ Return ALL unique patterns found, grouped by classification.`,
                   </div>
                   
                   <div className="flex gap-2 ml-4">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button size="sm" variant="ghost">
+                          <Info className="h-4 w-4" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-96">
+                        <div className="space-y-3">
+                          <h4 className="font-medium">Pattern Analysis</h4>
+                          <div>
+                            <p className="text-xs text-muted-foreground mb-1">Expected tokens for {pattern.category}:</p>
+                            <div className="flex flex-wrap gap-1">
+                              {pattern.category === 'color' && designTokenReference.colors.semantic.slice(0, 6).map(t => (
+                                <code key={t} className="text-xs bg-muted px-1 py-0.5 rounded">{t}</code>
+                              ))}
+                              {pattern.category === 'spacing' && designTokenReference.spacing.tailwind.slice(0, 6).map(t => (
+                                <code key={t} className="text-xs bg-muted px-1 py-0.5 rounded">{t}</code>
+                              ))}
+                              {pattern.category === 'typography' && designTokenReference.typography.sizes.map(t => (
+                                <code key={t} className="text-xs bg-muted px-1 py-0.5 rounded">{t}</code>
+                              ))}
+                            </div>
+                          </div>
+                          {pattern.status === 'violation' && (
+                            <div className="p-2 bg-destructive/10 rounded text-xs">
+                              <strong>Why this is wrong:</strong> {pattern.issue}
+                            </div>
+                          )}
+                        </div>
+                      </PopoverContent>
+                    </Popover>
                     <Button
                       size="sm"
                       variant="outline"
@@ -497,6 +553,76 @@ Return ALL unique patterns found, grouped by classification.`,
           </CardContent>
         </Card>
       )}
+      </div>
+
+      {/* Design Token Reference Sidebar */}
+      <div className="space-y-4">
+        <Card className="sticky top-6">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm flex items-center gap-2">
+              <Eye className="h-4 w-4" />
+              Design Token Reference
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 text-xs">
+            <div>
+              <h4 className="font-medium mb-2 text-success">✓ Colors (Correct)</h4>
+              <div className="space-y-1">
+                <p className="text-muted-foreground mb-1">Semantic:</p>
+                {designTokenReference.colors.semantic.map(token => (
+                  <code key={token} className="block bg-muted px-2 py-1 rounded font-mono">
+                    {token}
+                  </code>
+                ))}
+                <p className="text-muted-foreground mt-2 mb-1">Variables:</p>
+                {designTokenReference.colors.vars.slice(0, 4).map(token => (
+                  <code key={token} className="block bg-muted px-2 py-1 rounded font-mono">
+                    {token}
+                  </code>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-3 border-t">
+              <h4 className="font-medium mb-2 text-destructive">✗ Wrong</h4>
+              <div className="space-y-1">
+                <code className="block bg-destructive/10 px-2 py-1 rounded font-mono text-destructive">
+                  #4A5D4E
+                </code>
+                <code className="block bg-destructive/10 px-2 py-1 rounded font-mono text-destructive">
+                  text-gray-500
+                </code>
+                <code className="block bg-destructive/10 px-2 py-1 rounded font-mono text-destructive">
+                  "degular-display"
+                </code>
+              </div>
+            </div>
+
+            <div className="pt-3 border-t">
+              <h4 className="font-medium mb-2">Spacing</h4>
+              <div className="flex flex-wrap gap-1">
+                {designTokenReference.spacing.tailwind.slice(0, 6).map(token => (
+                  <code key={token} className="bg-muted px-1.5 py-0.5 rounded font-mono text-xs">
+                    {token}
+                  </code>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-3 border-t">
+              <h4 className="font-medium mb-2">Typography</h4>
+              <div className="space-y-1">
+                <p className="text-muted-foreground">Fonts (unquoted):</p>
+                {designTokenReference.typography.fontVars.map(token => (
+                  <code key={token} className="block bg-muted px-2 py-1 rounded font-mono">
+                    {token}
+                  </code>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
