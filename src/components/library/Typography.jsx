@@ -11,10 +11,9 @@ export function H1({ children, className, ...props }) {
     <h1 
       className={cn(
         headingBase,
-        "text-4xl md:text-5xl lg:text-6xl",
+        "text-4xl md:text-5xl lg:text-6xl font-heading",
         className
       )} 
-      style={{ fontFamily: 'var(--font-heading, "Degular Display Light", system-ui, sans-serif)' }}
       {...props}
     >
       {children}
@@ -28,10 +27,9 @@ export function H2({ children, className, ...props }) {
     <h2 
       className={cn(
         headingBase,
-        "text-3xl md:text-4xl",
+        "text-3xl md:text-4xl font-heading",
         className
       )} 
-      style={{ fontFamily: 'var(--font-heading, "Degular Display Light", system-ui, sans-serif)' }}
       {...props}
     >
       {children}
@@ -45,10 +43,9 @@ export function H3({ children, className, ...props }) {
     <h3 
       className={cn(
         headingBase,
-        "text-2xl md:text-3xl",
+        "text-2xl md:text-3xl font-heading",
         className
       )} 
-      style={{ fontFamily: 'var(--font-heading, "Degular Display Light", system-ui, sans-serif)' }}
       {...props}
     >
       {children}
@@ -62,10 +59,9 @@ export function H4({ children, className, ...props }) {
     <h4 
       className={cn(
         headingBase,
-        "text-xl md:text-2xl",
+        "text-xl md:text-2xl font-heading",
         className
       )} 
-      style={{ fontFamily: 'var(--font-heading, "Degular Display Light", system-ui, sans-serif)' }}
       {...props}
     >
       {children}
@@ -79,10 +75,9 @@ export function H5({ children, className, ...props }) {
     <h5 
       className={cn(
         headingBase,
-        "text-lg md:text-xl",
+        "text-lg md:text-xl font-heading",
         className
       )} 
-      style={{ fontFamily: 'var(--font-heading, "Degular Display Light", system-ui, sans-serif)' }}
       {...props}
     >
       {children}
@@ -96,10 +91,9 @@ export function H6({ children, className, ...props }) {
     <h6 
       className={cn(
         headingBase,
-        "text-base md:text-lg font-medium",
+        "text-base md:text-lg font-medium font-heading",
         className
       )} 
-      style={{ fontFamily: 'var(--font-heading, "Degular Display Light", system-ui, sans-serif)' }}
       {...props}
     >
       {children}
@@ -111,8 +105,7 @@ export function H6({ children, className, ...props }) {
 export function BodyText({ children, className, ...props }) {
   return (
     <p 
-      className={cn(bodyBase, "text-base", className)} 
-      style={{ fontFamily: 'var(--font-body, "Mrs Eaves XL Serif", Georgia, serif)' }}
+      className={cn(bodyBase, "text-base font-body", className)} 
       {...props}
     >
       {children}
@@ -124,8 +117,7 @@ export function BodyText({ children, className, ...props }) {
 export function MutedText({ children, className, ...props }) {
   return (
     <p 
-      className={cn("text-[#6d6d6d] text-sm leading-relaxed", className)} 
-      style={{ fontFamily: 'var(--font-body, "Mrs Eaves XL Serif", Georgia, serif)' }}
+      className={cn("text-[#6d6d6d] text-sm leading-relaxed font-body", className)} 
       {...props}
     >
       {children}
@@ -137,8 +129,7 @@ export function MutedText({ children, className, ...props }) {
 export function SmallText({ children, className, ...props }) {
   return (
     <span 
-      className={cn("text-[#3b3b3b] text-xs leading-normal", className)} 
-      style={{ fontFamily: 'var(--font-body, "Mrs Eaves XL Serif", Georgia, serif)' }}
+      className={cn("text-[#3b3b3b] text-xs leading-normal font-body", className)} 
       {...props}
     >
       {children}
@@ -150,8 +141,7 @@ export function SmallText({ children, className, ...props }) {
 export function LargeText({ children, className, ...props }) {
   return (
     <p 
-      className={cn(bodyBase, "text-lg md:text-xl", className)} 
-      style={{ fontFamily: 'var(--font-body, "Mrs Eaves XL Serif", Georgia, serif)' }}
+      className={cn(bodyBase, "text-lg md:text-xl font-body", className)} 
       {...props}
     >
       {children}
@@ -180,10 +170,9 @@ export function LinkText({ children, href, className, ...props }) {
     <a 
       href={href}
       className={cn(
-        "text-[#4A5D4E] hover:text-[#3a4a3e] underline underline-offset-2 transition-colors duration-200",
+        "text-[#4A5D4E] hover:text-[#3a4a3e] underline underline-offset-2 transition-colors duration-200 font-body",
         className
       )} 
-      style={{ fontFamily: 'var(--font-body, "Mrs Eaves XL Serif", Georgia, serif)' }}
       {...props}
     >
       {children}
@@ -195,8 +184,7 @@ export function LinkText({ children, href, className, ...props }) {
 export function Caption({ children, className, ...props }) {
   return (
     <figcaption 
-      className={cn("text-[#6d6d6d] text-xs italic leading-normal", className)} 
-      style={{ fontFamily: 'var(--font-body, "Mrs Eaves XL Serif", Georgia, serif)' }}
+      className={cn("text-[#6d6d6d] text-xs italic leading-normal font-body", className)} 
       {...props}
     >
       {children}
