@@ -646,7 +646,7 @@ export default function CSSAudit() {
                         </Badge>
                       )}
                       {activeCounts.high > 0 && (
-                        <Badge className="bg-warning text-white">
+                        <Badge className="bg-warning-foreground text-white">
                           {activeCounts.high} high
                         </Badge>
                       )}
@@ -685,20 +685,20 @@ export default function CSSAudit() {
                       key={idx} 
                       className="border-l-4 cursor-pointer hover:shadow-md transition-shadow" 
                       style={{
-                        borderLeftColor: v.severity === "critical" ? "var(--color-destructive)" : 
-                                        v.severity === "high" ? "var(--color-warning)" : 
-                                        v.severity === "medium" ? "var(--color-info)" : 
-                                        "var(--color-charcoal)"
+                        borderLeftColor: v.severity === "critical" ? "var(--destructive)" : 
+                                        v.severity === "high" ? "var(--warning)" : 
+                                        v.severity === "medium" ? "var(--info)" : 
+                                        "var(--charcoal-500)"
                       }}
                       onClick={() => handleViolationClick(v.currentCode)}
                     >
                       <CardContent className="pt-4">
                         <div className="flex items-start gap-2 mb-2">
                           <Badge className={
-                            v.severity === "critical" ? "bg-[var(--color-destructive)] text-white" :
-                            v.severity === "high" ? "bg-[var(--color-warning)] text-white" :
-                            v.severity === "medium" ? "bg-[var(--color-info)] text-white" :
-                            "bg-[var(--color-charcoal)] text-white"
+                            v.severity === "critical" ? "bg-destructive text-white" :
+                            v.severity === "high" ? "bg-warning-foreground text-white" :
+                            v.severity === "medium" ? "bg-info-foreground text-white" :
+                            "bg-charcoal-700 text-white"
                           }>
                             {v.severity}
                           </Badge>
@@ -748,7 +748,7 @@ export default function CSSAudit() {
                       })}
                       </div>
               ) : (
-                <Card className="border-dashed border-2 border-[var(--color-success)]">
+                <Card className="border-dashed border-2 border-success">
                   <CardContent className="py-12 text-center">
                     <CheckCircle2 className="h-12 w-12 mx-auto mb-3 text-success-foreground" />
                     <h3 className="text-lg font-medium text-success-foreground mb-2">
