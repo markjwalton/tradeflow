@@ -374,16 +374,19 @@ export default function PageBuilder() {
       const previewContent = (
         <div 
           dangerouslySetInnerHTML={{ __html: content }}
-          onClick={handleElementClick}
-          style={{ cursor: interactiveMode ? 'pointer' : 'default' }}
         />
       );
 
-      if (includeShell) {
-        return <AppShellPreview>{previewContent}</AppShellPreview>;
-      } else {
-        return previewContent;
-      }
+      const wrappedContent = includeShell ? <AppShellPreview>{previewContent}</AppShellPreview> : previewContent;
+
+      return (
+        <div
+          onClick={handleElementClick}
+          style={{ cursor: interactiveMode ? 'pointer' : 'default' }}
+        >
+          {wrappedContent}
+        </div>
+      );
     } catch (e) {
       return (
         <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
