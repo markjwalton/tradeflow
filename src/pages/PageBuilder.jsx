@@ -97,14 +97,14 @@ export default function PageBuilder() {
       { name: "Mono", value: "font-[var(--font-mono)]" },
     ],
     fontSizes: [
-      { name: "XS (0.75rem)", value: "text-[var(--font-size-xs)]" },
-      { name: "SM (0.875rem)", value: "text-[var(--font-size-sm)]" },
-      { name: "Base (1rem)", value: "text-[var(--font-size-base)]" },
-      { name: "LG (1.125rem)", value: "text-[var(--font-size-lg)]" },
-      { name: "XL (1.25rem)", value: "text-[var(--font-size-xl)]" },
-      { name: "2XL (1.5rem)", value: "text-[var(--font-size-2xl)]" },
-      { name: "3XL (1.875rem)", value: "text-[var(--font-size-3xl)]" },
-      { name: "4XL (2.25rem)", value: "text-[var(--font-size-4xl)]" },
+      { name: "XS (0.75rem)", value: "text-[length:var(--font-size-xs)]" },
+      { name: "SM (0.875rem)", value: "text-[length:var(--font-size-sm)]" },
+      { name: "Base (1rem)", value: "text-[length:var(--font-size-base)]" },
+      { name: "LG (1.125rem)", value: "text-[length:var(--font-size-lg)]" },
+      { name: "XL (1.25rem)", value: "text-[length:var(--font-size-xl)]" },
+      { name: "2XL (1.5rem)", value: "text-[length:var(--font-size-2xl)]" },
+      { name: "3XL (1.875rem)", value: "text-[length:var(--font-size-3xl)]" },
+      { name: "4XL (2.25rem)", value: "text-[length:var(--font-size-4xl)]" },
     ],
     fontWeights: [
       { name: "Light (300)", value: "font-light" },
@@ -352,7 +352,7 @@ export default function PageBuilder() {
       } else if (tokenType === 'font-family') {
         classArray = classArray.filter(c => !c.match(/^font-\[var\(--font-/) && !c.match(/^font-(sans|serif|mono|heading|body)$/));
       } else if (tokenType === 'font-size') {
-        classArray = classArray.filter(c => !c.match(/^text-\[var\(--font-size-/) && !c.match(/^text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)$/));
+        classArray = classArray.filter(c => !c.match(/^text-\[(length:)?var\(--font-size-/) && !c.match(/^text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)$/));
       } else if (tokenType === 'font-weight') {
         classArray = classArray.filter(c => !c.match(/^font-(thin|extralight|light|normal|medium|semibold|bold|extrabold|black)$/));
       } else if (tokenType === 'border') {
