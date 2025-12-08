@@ -571,7 +571,7 @@ export default function GenericNavEditor({
               <div className="border-t pt-4">
                 <button 
                   onClick={() => setUnallocatedExpanded(!unallocatedExpanded)}
-                  className="flex items-center gap-2 text-[var(--color-charcoal)] hover:text-[var(--color-midnight)] font-medium mb-3"
+                  className="flex items-center gap-2 text-[var(--color-charcoal)] hover:text-[var(--color-midnight)] text-body-base mb-3"
                 >
                   {unallocatedExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                   <FolderOpen className="h-4 w-4" />
