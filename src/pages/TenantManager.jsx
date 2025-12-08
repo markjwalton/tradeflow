@@ -119,9 +119,9 @@ export default function TenantManager() {
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="text-center py-8 text-charcoal-700">Loading...</div>
+            <div className="text-center py-8 text-muted-foreground">Loading...</div>
           ) : tenants.length === 0 ? (
-            <div className="text-center py-8 text-charcoal-700">
+            <div className="text-center py-8 text-muted-foreground">
               No tenants yet. Add one to get started.
             </div>
           ) : (
@@ -142,7 +142,7 @@ export default function TenantManager() {
                     <Building2 className="h-5 w-5" />
                     <div className="flex-1">
                       <span className="font-medium text-midnight-900">{tenant.name}</span>
-                      <span className="text-sm text-charcoal-700 ml-2">/{tenant.slug}</span>
+                      <span className="text-sm text-muted-foreground ml-2">/{tenant.slug}</span>
                     </div>
                     <Badge variant={tenant.is_active !== false ? "default" : "secondary"}>
                       {tenant.is_active !== false ? (
@@ -163,9 +163,9 @@ export default function TenantManager() {
                       <TenantAccessRequests tenantId={tenant.id} />
                       <TenantRoleManager tenantId={tenant.id} />
                       <TenantUserManager tenantId={tenant.id} />
-                      <div className="text-sm text-charcoal-700 bg-card p-3 rounded border border-border">
+                      <div className="text-sm text-muted-foreground bg-card p-3 rounded border border-border">
                         <strong>Invite Link:</strong>{" "}
-                        <code className="bg-background px-2 py-1 rounded">
+                        <code className="bg-muted px-2 py-1 rounded">
                           {window.location.origin}/TenantAccess?tenant={tenant.slug}
                         </code>
                       </div>
