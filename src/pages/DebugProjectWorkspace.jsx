@@ -83,18 +83,18 @@ export default function DebugProjectWorkspace() {
   const [activeTab, setActiveTab] = useState("overview");
 
   const statusColors = {
-    Planning: "bg-info-50 text-info-foreground border-primary-200",
-    Active: "bg-success-50 text-success-foreground border-success",
-    "On Hold": "bg-warning/10 text-warning-foreground border-warning/20",
+    Planning: "bg-info-50 text-info border-primary/20",
+    Active: "bg-success-50 text-success border-success/20",
+    "On Hold": "bg-warning/10 text-warning border-warning/20",
     Completed: "bg-muted text-muted-foreground border-border",
   };
 
   const typeColors = {
-    "New Build": "bg-info-50 text-info-foreground",
-    Extension: "bg-accent-100 text-accent-700",
-    Renovation: "bg-accent-200 text-accent-800",
-    Conservation: "bg-warning/10 text-warning-foreground",
-    Commercial: "bg-info-50 text-info-foreground",
+    "New Build": "bg-info-50 text-info",
+    Extension: "bg-accent-100 text-accent",
+    Renovation: "bg-accent-200 text-accent",
+    Conservation: "bg-warning/10 text-warning",
+    Commercial: "bg-info-50 text-info",
   };
 
   const taskStats = {
@@ -109,9 +109,9 @@ export default function DebugProjectWorkspace() {
     <div className="p-6 lg:p-8">
       {/* Debug Banner */}
       <div className="mb-4 p-3 bg-warning/10 border border-warning/20 rounded-lg flex items-center gap-2">
-        <AlertTriangle className="h-5 w-5 text-warning-foreground" />
-        <span className="text-warning-foreground font-medium">DEBUG MODE</span>
-        <span className="text-secondary-700 text-sm">– Using static mock data, no database calls</span>
+        <AlertTriangle className="h-5 w-5 text-warning" />
+        <span className="text-warning font-medium">DEBUG MODE</span>
+        <span className="text-secondary text-sm">– Using static mock data, no database calls</span>
       </div>
 
       {/* Header */}
@@ -227,15 +227,15 @@ export default function DebugProjectWorkspace() {
                       <p className="text-sm text-stone-500">Total</p>
                     </div>
                     <div className="p-3 bg-success-50 rounded-lg text-center">
-                      <p className="text-2xl font-bold text-success-foreground">{taskStats.completed}</p>
+                      <p className="text-2xl font-bold text-success">{taskStats.completed}</p>
                       <p className="text-sm text-stone-500">Completed</p>
                     </div>
                     <div className="p-3 bg-info-50 rounded-lg text-center">
-                      <p className="text-2xl font-bold text-info-foreground">{taskStats.inProgress}</p>
+                      <p className="text-2xl font-bold text-info">{taskStats.inProgress}</p>
                       <p className="text-sm text-stone-500">In Progress</p>
                     </div>
                     <div className="p-3 bg-destructive-50 rounded-lg text-center">
-                      <p className="text-2xl font-bold text-destructive-700">{taskStats.blocked}</p>
+                      <p className="text-2xl font-bold text-destructive">{taskStats.blocked}</p>
                       <p className="text-sm text-stone-500">Blocked</p>
                     </div>
                   </div>
@@ -263,11 +263,11 @@ export default function DebugProjectWorkspace() {
                 <CardContent className="space-y-3">
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 rounded-full bg-secondary-100 flex items-center justify-center">
-                      <User className="h-5 w-5 text-secondary-700" />
+                      <User className="h-5 w-5 text-secondary" />
                     </div>
                     <p className="font-medium text-stone-900">{mockProject.clientName}</p>
                   </div>
-                  <a href={`mailto:${mockProject.clientEmail}`} className="flex items-center gap-2 text-sm text-info-foreground hover:underline">
+                  <a href={`mailto:${mockProject.clientEmail}`} className="flex items-center gap-2 text-sm text-info hover:underline">
                     <Mail className="h-4 w-4" />
                     {mockProject.clientEmail}
                   </a>
@@ -355,9 +355,9 @@ export default function DebugProjectWorkspace() {
                     <div className="flex items-center gap-2">
                       <Badge variant={task.priority === "High" ? "destructive" : "secondary"}>{task.priority}</Badge>
                       <Badge className={
-                        task.status === "Completed" ? "bg-success-50 text-success-foreground" :
-                        task.status === "In Progress" ? "bg-info-50 text-info-foreground" :
-                        task.status === "Blocked" ? "bg-destructive-50 text-destructive-700" :
+                        task.status === "Completed" ? "bg-success-50 text-success" :
+                        task.status === "In Progress" ? "bg-info-50 text-info" :
+                        task.status === "Blocked" ? "bg-destructive-50 text-destructive" :
                         "bg-muted text-muted-foreground"
                       }>{task.status}</Badge>
                     </div>
@@ -476,7 +476,7 @@ export default function DebugProjectWorkspace() {
                   <div key={alloc.id} className="flex items-center justify-between p-3 border rounded-lg">
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-full bg-secondary-100 flex items-center justify-center">
-                        <User className="h-5 w-5 text-secondary-700" />
+                        <User className="h-5 w-5 text-secondary" />
                       </div>
                       <div>
                         <p className="font-medium">{alloc.memberName}</p>

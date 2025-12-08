@@ -341,14 +341,14 @@ export default function APIManager() {
   }).slice(0, 100);
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)] font-heading">
-            <Key className="h-6 w-6 text-primary-500" />
+          <h1 className="text-2xl font-light flex items-center gap-2 text-midnight-900 font-heading">
+            <Key className="h-6 w-6 text-primary" />
             API Manager
           </h1>
-          <p className="text-[var(--color-charcoal)]">Manage API keys, monitor usage, and view analytics</p>
+          <p className="text-charcoal-700">Manage API keys, monitor usage, and view analytics</p>
         </div>
       </div>
 
@@ -528,7 +528,7 @@ export default function APIManager() {
                 </Select>
               )}
             </div>
-            <Button className="bg-primary-500 hover:bg-primary-600 text-white" onClick={() => openEditor()}>
+            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground" onClick={() => openEditor()}>
               <Plus className="h-4 w-4 mr-2" />
               Add API
             </Button>
@@ -543,7 +543,7 @@ export default function APIManager() {
               <CardContent className="py-12 text-center text-gray-500">
                 <Key className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>No {apiViewMode === "global" ? "global" : "tenant"} API configurations yet</p>
-                <Button className="mt-4 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white" onClick={() => openEditor()}>
+                <Button className="mt-4 bg-primary hover:bg-primary/90 text-primary-foreground" onClick={() => openEditor()}>
                   <Plus className="h-4 w-4 mr-2" />
                   Add Your First API
                 </Button>
@@ -1129,7 +1129,7 @@ export default function APIManager() {
 
             <div className="flex justify-end gap-2 pt-4">
               <Button variant="outline" onClick={closeEditor}>Cancel</Button>
-              <Button className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white" onClick={handleSave} disabled={createMutation.isPending || updateMutation.isPending}>
+              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground" onClick={handleSave} disabled={createMutation.isPending || updateMutation.isPending}>
                 {(createMutation.isPending || updateMutation.isPending) && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                 Save
               </Button>

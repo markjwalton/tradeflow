@@ -322,7 +322,7 @@ function MetricsGroupedView({ metrics, getThreshold }) {
                   <ChevronRight className="h-5 w-5 text-gray-400" />
                 )}
                 <div className="flex items-center gap-2">
-                  <Icon className="h-5 w-5 text-info-foreground" />
+                  <Icon className="h-5 w-5 text-info" />
                   <span className="font-medium capitalize">{type.replace(/_/g, " ")}</span>
                 </div>
                 <Badge variant="outline">{group.metrics.length} items</Badge>
@@ -937,14 +937,14 @@ Provide:
   }, [filteredMetrics]);
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)] font-heading">
-            <Activity className="h-6 w-6 text-primary-500" />
+          <h1 className="text-2xl font-light flex items-center gap-2 text-midnight-900 font-heading">
+            <Activity className="h-6 w-6 text-primary" />
             Performance Monitor
           </h1>
-          <p className="text-[var(--color-charcoal)]">Track page sizes, load times, and identify refactoring needs</p>
+          <p className="text-charcoal-700">Track page sizes, load times, and identify refactoring needs</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setShowThresholdEditor(true)}>
@@ -1311,7 +1311,7 @@ Provide:
             <Button 
               onClick={generateSystemReview} 
               disabled={isGeneratingSystemReview}
-              className="bg-primary-500 hover:bg-primary-600 text-white"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               {isGeneratingSystemReview ? (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
