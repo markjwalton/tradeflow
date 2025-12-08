@@ -560,24 +560,24 @@ export default function CSSAudit() {
   const needsWorkCount = filteredFiles.length - verifiedCount;
 
   return (
-    <div className="p-6 max-w-7xl mx-auto bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 max-w-7xl mx-auto bg-background min-h-screen">
       <div className="mb-6 space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">
+            <h1 className="text-2xl font-light font-display text-midnight-900">
               File-by-File CSS Audit
             </h1>
-            <p className="text-[var(--color-charcoal)] mt-1">
+            <p className="text-charcoal-700 mt-1">
               Select a file, load it, then scan for violations
             </p>
           </div>
           <div className="flex gap-2">
             <Badge variant="outline" className="gap-2">
-              <CheckCircle2 className="h-3 w-3 text-success-foreground" />
+              <CheckCircle2 className="h-3 w-3 text-success" />
               {verifiedCount} Verified
             </Badge>
             <Badge variant="outline" className="gap-2">
-              <AlertTriangle className="h-3 w-3 text-warning-foreground" />
+              <AlertTriangle className="h-3 w-3 text-warning" />
               {needsWorkCount} Need Work
             </Badge>
           </div>
@@ -596,7 +596,7 @@ export default function CSSAudit() {
                     {filteredFiles.map(file => (
                       <SelectItem key={file} value={file}>
                         <div className="flex items-center gap-2">
-                          {verifiedFiles[file] && <CheckCircle2 className="h-3 w-3 text-success-foreground" />}
+                          {verifiedFiles[file] && <CheckCircle2 className="h-3 w-3 text-success" />}
                           <span className="font-mono text-xs">{file}</span>
                         </div>
                       </SelectItem>
@@ -622,7 +622,7 @@ export default function CSSAudit() {
         <div className="space-y-4 overflow-y-auto max-h-[calc(100vh-300px)]">{analyzing && (
           <Card>
             <CardContent className="py-8 text-center">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-3 text-primary-500" />
+              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-3 text-primary" />
               <p className="text-sm text-muted-foreground">Analyzing {selectedFile}...</p>
             </CardContent>
           </Card>
@@ -710,7 +710,7 @@ export default function CSSAudit() {
                               {v.issue}
                             </p>
                             {v.lineNumber && (
-                              <p className="text-xs text-[var(--color-charcoal)] mt-1">
+                              <p className="text-xs text-charcoal-700 mt-1">
                                 Line {v.lineNumber}
                               </p>
                             )}
@@ -722,7 +722,7 @@ export default function CSSAudit() {
                               e.stopPropagation();
                               handleDeleteViolation(originalIdx);
                             }}
-                            className="gap-1 text-[var(--color-charcoal)] hover:text-[var(--color-destructive)]"
+                            className="gap-1 text-charcoal-700 hover:text-destructive"
                           >
                             <Trash2 className="h-3 w-3" />
                             Dismiss
@@ -730,14 +730,14 @@ export default function CSSAudit() {
                         </div>
                         <div className="space-y-2 mt-3">
                           <div onClick={() => handleViolationClick(v.currentCode)} className="cursor-pointer">
-                            <span className="text-xs font-mono text-[var(--color-destructive)]">Current:</span>
-                            <code className="block text-xs bg-[var(--color-muted)] p-2 rounded mt-1 font-mono hover:bg-[var(--color-muted)]/80">
+                            <span className="text-xs font-mono text-destructive">Current:</span>
+                            <code className="block text-xs bg-muted p-2 rounded mt-1 font-mono hover:bg-muted/80">
                               {v.currentCode}
                             </code>
                           </div>
                           <div>
-                            <span className="text-xs font-mono text-[var(--color-success)]">Fix:</span>
-                            <code className="block text-xs bg-[var(--color-success)]/10 p-2 rounded mt-1 font-mono">
+                            <span className="text-xs font-mono text-success">Fix:</span>
+                            <code className="block text-xs bg-success/10 p-2 rounded mt-1 font-mono">
                               {v.recommendedFix}
                             </code>
                           </div>
@@ -750,8 +750,8 @@ export default function CSSAudit() {
               ) : (
                 <Card className="border-dashed border-2 border-success">
                   <CardContent className="py-12 text-center">
-                    <CheckCircle2 className="h-12 w-12 mx-auto mb-3 text-success-foreground" />
-                    <h3 className="text-lg font-medium text-success-foreground mb-2">
+                    <CheckCircle2 className="h-12 w-12 mx-auto mb-3 text-success" />
+                    <h3 className="text-lg font-medium text-success mb-2">
                       No Violations Found!
                     </h3>
                     <p className="text-muted-foreground">
@@ -781,7 +781,7 @@ export default function CSSAudit() {
               <Card className="h-[calc(100vh-300px)] flex flex-col">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-sm">File Content</CardTitle>
-                  <p className="text-xs text-[var(--color-charcoal)]">Click violations to highlight</p>
+                  <p className="text-xs text-charcoal-700">Click violations to highlight</p>
                 </CardHeader>
                 <CardContent className="flex-1 overflow-y-auto p-0">
                   <pre 

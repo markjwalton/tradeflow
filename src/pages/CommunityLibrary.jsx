@@ -153,7 +153,7 @@ export default function CommunityLibrary() {
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-3">
               <div className={`p-2 rounded-lg ${item.is_global ? "bg-info-50" : "bg-accent-100"}`}>
-                <Icon className={`h-5 w-5 ${item.is_global ? "text-info" : "text-accent-700"}`} />
+                <Icon className={`h-5 w-5 ${item.is_global ? "text-info" : "text-accent"}`} />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
@@ -162,7 +162,7 @@ export default function CommunityLibrary() {
                   {item.is_global ? (
                     <Globe className="h-3 w-3 text-info" title="Global" />
                   ) : (
-                    <Users className="h-3 w-3 text-accent-700" title="Community" />
+                    <Users className="h-3 w-3 text-accent" title="Community" />
                   )}
                 </div>
                 <p className="text-sm text-muted-foreground truncate">{item.description}</p>
@@ -174,7 +174,7 @@ export default function CommunityLibrary() {
                     <Badge variant="outline" className="text-xs">{item.category}</Badge>
                   )}
                   {hasUpdate && (
-                    <Badge className="bg-warning/10 text-warning-foreground text-xs gap-1">
+                    <Badge className="bg-warning/10 text-warning text-xs gap-1">
                       <ArrowUp className="h-3 w-3" />
                       Update Available (v{tenantItem.latest_available_version})
                     </Badge>
@@ -237,7 +237,7 @@ export default function CommunityLibrary() {
           <p className="text-charcoal-700">Browse and import shared templates</p>
         </div>
         {itemsWithUpdates.length > 0 && (
-          <Badge className="bg-warning/10 text-warning-foreground text-sm py-1 px-3">
+          <Badge className="bg-warning/10 text-warning text-sm py-1 px-3">
             <ArrowUp className="h-4 w-4 mr-1" />
             {itemsWithUpdates.length} Updates Available
           </Badge>
@@ -337,7 +337,7 @@ export default function CommunityLibrary() {
                           <div className="flex items-start gap-3">
                             <div className={`p-2 rounded-lg ${tenantItem.is_custom ? "bg-accent-100" : "bg-info-50"}`}>
                               {React.createElement(itemTypeIcons[tenantItem.item_type] || Package, {
-                                className: `h-5 w-5 ${tenantItem.is_custom ? "text-accent-700" : "text-info"}`
+                                className: `h-5 w-5 ${tenantItem.is_custom ? "text-accent" : "text-info"}`
                               })}
                             </div>
                             <div>
@@ -345,15 +345,15 @@ export default function CommunityLibrary() {
                                 <h3 className="font-medium">{tenantItem.name}</h3>
                                 <Badge variant="outline" className="text-xs">v{tenantItem.installed_version}</Badge>
                                 {tenantItem.is_custom && (
-                                  <Badge className="bg-accent-100 text-accent-700 text-xs">Custom</Badge>
+                                  <Badge className="bg-accent-100 text-accent text-xs">Custom</Badge>
                                 )}
                                 {tenantItem.status === "synced" && (
-                                  <Badge className="bg-success-50 text-success-foreground text-xs">Synced</Badge>
+                                  <Badge className="bg-success-50 text-success text-xs">Synced</Badge>
                                 )}
                               </div>
                               <p className="text-sm text-muted-foreground">{tenantItem.description}</p>
                               {tenantItem.has_update_available && (
-                                <Badge className="bg-warning/10 text-warning-foreground text-xs mt-2 gap-1">
+                                <Badge className="bg-warning/10 text-warning text-xs mt-2 gap-1">
                                   <ArrowUp className="h-3 w-3" />
                                   v{tenantItem.latest_available_version} available
                                 </Badge>

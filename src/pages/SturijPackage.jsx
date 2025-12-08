@@ -316,7 +316,7 @@ When updating existing code:
             </div>
           </div>
           <div className="flex gap-2 mt-4">
-            <Badge className="bg-success-50 text-success-foreground">
+            <Badge className="bg-success-50 text-success">
               <CheckCircle2 className="h-3 w-3 mr-1" />
               Production Ready
             </Badge>
@@ -441,24 +441,24 @@ When updating existing code:
           <TabsContent value="files" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-[var(--color-midnight)]">Package Contents</CardTitle>
+                <CardTitle className="text-midnight-900">Package Contents</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   {packageFiles.map((file, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-4 bg-[var(--color-background-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-background-muted)]">
+                    <div key={idx} className="flex items-center justify-between p-4 bg-background-subtle rounded-lg border border-border">
                       <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[var(--color-background-paper)]">
-                          <FileText className="h-5 w-5 text-primary-500" />
+                        <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-card">
+                          <FileText className="h-5 w-5 text-primary" />
                         </div>
                         <div>
-                          <div className="font-medium text-[var(--color-midnight)]">{file.name}</div>
-                          <p className="text-sm text-[var(--color-charcoal)]">{file.description}</p>
+                          <div className="font-medium text-midnight-900">{file.name}</div>
+                          <p className="text-sm text-charcoal-700">{file.description}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
                         <Badge variant="outline">{file.type}</Badge>
-                        <Badge className="bg-[var(--color-charcoal)]/10 text-[var(--color-charcoal)]">
+                        <Badge className="bg-charcoal-100 text-charcoal-700">
                           {file.size}
                         </Badge>
                       </div>
@@ -470,10 +470,10 @@ When updating existing code:
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-[var(--color-midnight)]">File Structure</CardTitle>
+                <CardTitle className="text-midnight-900">File Structure</CardTitle>
               </CardHeader>
               <CardContent>
-                <pre className="bg-[var(--color-midnight)] text-[var(--color-background-paper)] p-4 rounded-[var(--radius-lg)] text-sm font-mono overflow-x-auto">
+                <pre className="bg-midnight-900 text-background-50 p-4 rounded-lg text-sm font-mono overflow-x-auto">
 {`sturij-design-system/
 ├── globals.css                 # Complete design tokens
 ├── components/
@@ -510,18 +510,18 @@ When updating existing code:
             {Object.entries(designTokenDocs).map(([category, tokens]) => (
               <Card key={category}>
                 <CardHeader>
-                  <CardTitle className="text-[var(--color-midnight)] capitalize">
+                  <CardTitle className="text-midnight-900 capitalize">
                     {category}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
                     {tokens.map((token, idx) => (
-                      <div key={idx} className="flex items-center justify-between p-3 bg-[var(--color-background-subtle)] rounded-[var(--radius-lg)]">
+                      <div key={idx} className="flex items-center justify-between p-3 bg-background-subtle rounded-lg">
                         <div className="flex-1">
-                          <div className="font-medium text-[var(--color-midnight)]">{token.name}</div>
+                          <div className="font-medium text-midnight-900">{token.name}</div>
                           {token.var && (
-                            <code className="text-xs text-[var(--color-charcoal)] bg-[var(--color-background-paper)] px-2 py-0.5 rounded">
+                            <code className="text-xs text-charcoal-700 bg-card px-2 py-0.5 rounded">
                               var({token.var})
                             </code>
                           )}
@@ -529,17 +529,17 @@ When updating existing code:
                         {token.hex && (
                           <div className="flex items-center gap-2">
                             <div 
-                              className="w-10 h-10 rounded-[var(--radius-md)] border border-[var(--color-background-muted)]"
+                              className="w-10 h-10 rounded-md border border-border"
                               style={{ backgroundColor: token.hex }}
                             />
-                            <code className="text-sm text-[var(--color-charcoal)]">{token.hex}</code>
+                            <code className="text-sm text-charcoal-700">{token.hex}</code>
                           </div>
                         )}
                         {token.value && (
-                          <code className="text-sm text-[var(--color-charcoal)]">{token.value}</code>
+                          <code className="text-sm text-charcoal-700">{token.value}</code>
                         )}
                         {token.usage && (
-                          <span className="text-sm text-[var(--color-charcoal)]">{token.usage}</span>
+                          <span className="text-sm text-charcoal-700">{token.usage}</span>
                         )}
                       </div>
                     ))}
@@ -553,33 +553,33 @@ When updating existing code:
           <TabsContent value="usage" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-[var(--color-midnight)]">Implementation Steps</CardTitle>
+                <CardTitle className="text-midnight-900">Implementation Steps</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {implementationSteps.map((step) => (
                     <div key={step.step} className="flex gap-4">
-                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-500 text-white font-heading flex-shrink-0">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-heading flex-shrink-0">
                         {step.step}
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-heading font-medium text-[var(--color-midnight)] mb-1">
+                        <h3 className="font-heading font-medium text-midnight-900 mb-1">
                           {step.title}
                         </h3>
-                        <p className="text-sm text-[var(--color-charcoal)] mb-2">
+                        <p className="text-sm text-charcoal-700 mb-2">
                           {step.description}
                         </p>
                         <div className="relative">
-                          <pre className="bg-[var(--color-midnight)] text-[var(--color-background-paper)] p-3 rounded-[var(--radius-md)] text-xs overflow-x-auto">
+                          <pre className="bg-midnight-900 text-background-50 p-3 rounded-md text-xs overflow-x-auto">
                             {step.code}
                           </pre>
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="absolute top-2 right-2 h-6 w-6 p-0 bg-[var(--color-background-paper)]/10 hover:bg-[var(--color-background-paper)]/20"
+                            className="absolute top-2 right-2 h-6 w-6 p-0 bg-white/10 hover:bg-white/20"
                             onClick={() => copyToClipboard(step.code, `step-${step.step}`)}
                           >
-                            <Copy className="h-3 w-3 text-[var(--color-background-paper)]" />
+                            <Copy className="h-3 w-3 text-background-50" />
                           </Button>
                         </div>
                       </div>
@@ -591,17 +591,17 @@ When updating existing code:
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-[var(--color-midnight)]">Code Examples</CardTitle>
+                <CardTitle className="text-midnight-900">Code Examples</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {usageExamples.map((example, idx) => (
                     <div key={idx}>
-                      <h4 className="font-heading font-medium text-[var(--color-midnight)] mb-2">
+                      <h4 className="font-heading font-medium text-midnight-900 mb-2">
                         {example.title}
                       </h4>
                       <div className="relative">
-                        <pre className="bg-[var(--color-midnight)] text-[var(--color-background-paper)] p-4 rounded-[var(--radius-lg)] text-sm overflow-x-auto">
+                        <pre className="bg-midnight-900 text-background-50 p-4 rounded-lg text-sm overflow-x-auto">
                           {example.code}
                         </pre>
                         <Button

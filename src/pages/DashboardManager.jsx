@@ -229,15 +229,15 @@ export default function DashboardManager() {
                   <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
                 </div>
               ) : publishedWidgets.length === 0 && !currentLayout?.widgets?.length ? (
-                <Card className="max-w-lg mx-auto mt-12 border-border">
+                <Card className="max-w-lg mx-auto mt-12">
                   <CardContent className="py-12 text-center">
-                    <LayoutDashboard className="h-12 w-12 mx-auto mb-4 text-muted" />
+                    <LayoutDashboard className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
                     <h3 className="text-h4 mb-2">No Widgets Yet</h3>
                     <p className="text-charcoal-700 mb-4">
                       Create widgets in the staging area or use AI to generate recommendations.
                     </p>
                     <div className="flex justify-center gap-2">
-                      <Button variant="outline" onClick={() => setActiveTab("staging")} className="border-border">
+                      <Button variant="outline" onClick={() => setActiveTab("staging")}
                         <Plus className="h-4 w-4 mr-1" />
                         Create Widget
                       </Button>
@@ -370,7 +370,7 @@ function WidgetLibraryManager({ widgets }) {
                           <div className="flex gap-2 mt-3">
                             <Badge variant="secondary">{widget.widget_type}</Badge>
                             {widget.ai_generated && (
-                              <Badge className="bg-accent-100 text-accent-700">
+                              <Badge className="bg-accent-100 text-accent">
                                 <Sparkles className="h-3 w-3 mr-1" />
                                 AI
                               </Badge>
