@@ -376,7 +376,7 @@ export default function CSSAudit() {
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `You are a CSS/design token auditor. Analyze this SINGLE FILE comprehensively for ALL design token violations.
 
-FILE: ${filePath}
+FILE: ${selectedFile}
 CONTENT:
 ${fileContent}
 
@@ -430,7 +430,7 @@ For each violation provide:
       });
 
       setFileReport(result);
-      toast.success(`Found ${result.totalViolations} violations in ${filePath}`);
+      toast.success(`Found ${result.totalViolations} violations in ${selectedFile}`);
     } catch (error) {
       toast.error("Analysis failed: " + error.message);
     }
