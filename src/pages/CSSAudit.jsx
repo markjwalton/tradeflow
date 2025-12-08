@@ -346,25 +346,28 @@ export default function CSSAudit() {
     setFileReport(null);
     
     try {
-      // Read the actual file content using backend function
+      // Fetch file content directly from the frontend
       let fileContent;
       try {
-        const response = await base44.functions.invoke('readFileContent', { filePath });
-        fileContent = response.data?.content;
+        const response = await fetch(`/${filePath}`);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        fileContent = await response.text();
       } catch (err) {
-        console.error('Backend read error:', err);
-        toast.error(`Failed to read file: ${err.message}`);
+        console.error('File fetch error:', err);
+        toast.error(`Failed to fetch file: ${err.message}`);
         setAnalyzing(false);
         return;
       }
-      
+
       if (!fileContent) {
-        toast.error(`File is empty or could not be read: ${filePath}`);
+        toast.error(`File is empty: ${filePath}`);
         setAnalyzing(false);
         return;
       }
-      
-      console.log(`Successfully read ${filePath}, ${fileContent.length} characters`);
+
+      console.log(`Successfully fetched ${filePath}, ${fileContent.length} characters`);
 
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `You are a CSS/design token auditor. Analyze this SINGLE FILE comprehensively for ALL design token violations.
