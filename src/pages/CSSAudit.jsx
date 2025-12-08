@@ -7,6 +7,14 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -25,6 +33,8 @@ export default function CSSAudit() {
   const [searchQuery, setSearchQuery] = useState("");
   const [fileContent, setFileContent] = useState("");
   const [highlightedCode, setHighlightedCode] = useState(null);
+  const [showPasteDialog, setShowPasteDialog] = useState(false);
+  const [pasteContent, setPasteContent] = useState("");
 
   // Load verification status from localStorage
   React.useEffect(() => {
@@ -340,38 +350,26 @@ export default function CSSAudit() {
       return files;
     };
 
-  const handleScanFile = async (filePath) => {
+  const handleScanFile = async (filePath, content = null) => {
     if (!filePath) return;
-    
+
     setAnalyzing(true);
     setSelectedFile(filePath);
     setFileReport(null);
     setFileContent("");
     setHighlightedCode(null);
-    
+
     try {
-      // Fetch file content directly from the frontend
-      let fileContent;
-      try {
-        const response = await fetch(`/${filePath}`);
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-        fileContent = await response.text();
-      } catch (err) {
-        console.error('File fetch error:', err);
-        toast.error(`Failed to fetch file: ${err.message}`);
-        setAnalyzing(false);
-        return;
-      }
+      let fileContent = content;
 
+      // If no content provided, prompt user to paste it
       if (!fileContent) {
-        toast.error(`File is empty: ${filePath}`);
+        toast.error("Please use the 'Paste Content' button to load file content");
         setAnalyzing(false);
         return;
       }
 
-      console.log(`Successfully fetched ${filePath}, ${fileContent.length} characters`);
+      console.log(`Analyzing ${filePath}, ${fileContent.length} characters`);
       setFileContent(fileContent);
 
       const result = await base44.integrations.Core.InvokeLLM({
@@ -462,6 +460,16 @@ For each violation provide:
     }, 100);
   };
 
+  const handlePasteAndScan = () => {
+    if (!selectedFile || !pasteContent) {
+      toast.error("Please select a file and paste content");
+      return;
+    }
+    setShowPasteDialog(false);
+    handleScanFile(selectedFile, pasteContent);
+    setPasteContent("");
+  };
+
   const generateAIPrompt = () => {
     if (!fileReport || fileReport.violations.length === 0) return;
 
@@ -526,7 +534,10 @@ For each violation provide:
             {filteredFiles.map(file => (
               <button
                 key={file}
-                onClick={() => handleScanFile(file)}
+                onClick={() => {
+                  setSelectedFile(file);
+                  setShowPasteDialog(true);
+                }}
                 disabled={analyzing}
                 className={`w-full text-left px-2 py-1.5 rounded text-xs font-mono hover:bg-[var(--color-background-subtle)] transition-colors flex items-center gap-2 ${
                   selectedFile === file ? 'bg-[var(--color-primary)]/10 border border-[var(--color-primary)]' : ''
@@ -705,6 +716,32 @@ For each violation provide:
             </Card>
             )}
             </div>
+
+            {/* Paste Content Dialog */}
+            <Dialog open={showPasteDialog} onOpenChange={setShowPasteDialog}>
+            <DialogContent className="max-w-3xl max-h-[80vh]">
+              <DialogHeader>
+                <DialogTitle>Paste File Content</DialogTitle>
+                <DialogDescription>
+                  Copy and paste the content of <code className="text-xs bg-muted px-1 rounded">{selectedFile}</code> to scan for violations
+                </DialogDescription>
+              </DialogHeader>
+              <Textarea
+                value={pasteContent}
+                onChange={(e) => setPasteContent(e.target.value)}
+                placeholder="Paste file content here..."
+                className="min-h-[400px] font-mono text-xs"
+              />
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setShowPasteDialog(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handlePasteAndScan} disabled={!pasteContent}>
+                  Scan Content
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+            </Dialog>
             </div>
             );
             }
