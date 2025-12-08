@@ -125,20 +125,20 @@ export default function WebsiteEnquiryForm() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[var(--color-background)] flex items-center justify-center p-4">
-        <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <Card className="max-w-md w-full border-border bg-card">
           <CardContent className="pt-6 text-center">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-success-50 flex items-center justify-center">
               {submissionType === "callback" ? (
-                <Phone className="h-8 w-8 text-success-foreground" />
+                <Phone className="h-8 w-8 text-success" />
               ) : (
-                <Mail className="h-8 w-8 text-success-foreground" />
+                <Mail className="h-8 w-8 text-success" />
               )}
             </div>
-            <h2 className="text-xl font-semibold mb-2 text-[var(--color-midnight)]">
+            <h2 className="text-xl font-semibold mb-2 text-midnight-900">
               {submissionType === "callback" ? "Callback Requested!" : "Check Your Email!"}
             </h2>
-            <p className="text-[var(--color-charcoal)]">
+            <p className="text-charcoal-700">
               {submissionType === "callback"
                 ? "Thank you for your enquiry. One of our team will call you back shortly."
                 : `We've sent a verification email to ${formData.email}. Please click the link to book your design visit.`}
@@ -150,11 +150,11 @@ export default function WebsiteEnquiryForm() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--color-background)] flex items-center justify-center p-4">
-      <Card className="max-w-lg w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <Card className="max-w-lg w-full border-border bg-card">
         <CardHeader>
-          <CardTitle className="text-2xl text-center text-[var(--color-midnight)]">Get Started</CardTitle>
-          <p className="text-center text-[var(--color-charcoal)]">Tell us about your project</p>
+          <CardTitle className="text-2xl text-center text-midnight-900">Get Started</CardTitle>
+          <p className="text-center text-charcoal-700">Tell us about your project</p>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
