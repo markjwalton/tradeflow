@@ -77,68 +77,57 @@ export default function CSSAudit() {
     const newFindings = {};
 
     try {
-      // Get comprehensive file list
-      const fileListPrompt = `Analyze this Base44 React project and return a JSON array of ALL file paths that could contain CSS/styling code:
-- All pages in pages/ directory (*.js, *.jsx)
-- All components in components/ directory recursively (*.js, *.jsx)
-- Layout.js
-- globals.css
-- Any design system files
-
-Return ONLY the array, no explanation.`;
-
-      const fileList = await base44.integrations.Core.InvokeLLM({
-        prompt: fileListPrompt,
-        response_json_schema: {
-          type: "object",
-          properties: {
-            files: { type: "array", items: { type: "string" } }
-          }
-        }
-      });
-
-      const filesToScan = fileList.files || [];
+      // Hardcoded comprehensive file list
+      const filesToScan = [
+        'Layout.js', 'globals.css',
+        'pages/Dashboard.js', 'pages/Home.js', 'pages/NavigationManager.js', 'pages/TenantAccess.js',
+        'pages/ComponentShowcase.js', 'pages/DesignTokens.js', 'pages/RuleBook.js', 'pages/CSSAudit.js',
+        'components/ui/card.jsx', 'components/ui/button.jsx', 'components/ui/input.jsx', 
+        'components/navigation/GenericNavEditor.jsx', 'components/navigation/NavigationBreadcrumb.jsx',
+        'components/dashboard/DashboardSettings.jsx', 'components/dashboard/TechNewsWidget.jsx',
+        'components/library/designTokens.js'
+      ];
+      
       let processed = 0;
 
       for (const filePath of filesToScan) {
         try {
-          // Scan each file
-          const scanResult = await base44.integrations.Core.InvokeLLM({
-            prompt: `Scan this file for design token violations. File: ${filePath}
-
-Check for:
-1. Quoted Adobe Font names (critical)
-2. Hardcoded colors (#hex, rgb())
-3. Hardcoded spacing/sizing (px values)
-4. Inline styles with hardcoded values
-5. Font size violations
-
-Return found violations with line snippets.`,
-            response_json_schema: {
-              type: "object",
-              properties: {
-                violations: {
-                  type: "array",
-                  items: {
-                    type: "object",
-                    properties: {
-                      type: { type: "string" },
-                      severity: { type: "string" },
-                      line: { type: "string" },
-                      suggestion: { type: "string" }
-                    }
-                  }
-                }
-              }
+          const response = await fetch(`/src/${filePath}`);
+          if (!response.ok) {
+            processed++;
+            setProgress(Math.round((processed / filesToScan.length) * 100));
+            continue;
+          }
+          
+          const content = await response.text();
+          const fileViolations = [];
+          
+          // Apply all regex patterns directly
+          Object.entries(violationPatterns).forEach(([key, pattern]) => {
+            const matches = content.match(pattern.pattern);
+            if (matches && matches.length > 0) {
+              fileViolations.push({
+                key,
+                type: pattern.issue,
+                severity: pattern.severity,
+                category: pattern.category,
+                count: matches.length,
+                autoFixable: !!pattern.autoFix,
+                examples: matches.slice(0, 5),
+                suggestion: pattern.autoFix ? "Auto-fixable" : "Replace with design token"
+              });
             }
           });
-
-          if (scanResult.violations?.length > 0) {
+          
+          if (fileViolations.length > 0) {
+            const criticalCount = fileViolations.filter(v => v.severity === "critical").reduce((sum, v) => sum + v.count, 0);
+            const autoFixableCount = fileViolations.filter(v => v.autoFixable).reduce((sum, v) => sum + v.count, 0);
+            
             newFindings[filePath] = {
-              violations: scanResult.violations,
-              totalIssues: scanResult.violations.length,
-              criticalCount: scanResult.violations.filter(v => v.severity === "critical").length,
-              autoFixable: scanResult.violations.filter(v => ["quotedFonts", "pixelSpacing"].includes(v.type)).length
+              violations: fileViolations,
+              totalIssues: fileViolations.reduce((sum, v) => sum + v.count, 0),
+              criticalCount,
+              autoFixable: autoFixableCount
             };
           }
         } catch (e) {
@@ -150,9 +139,13 @@ Return found violations with line snippets.`,
       }
 
       setFindings(newFindings);
+      localStorage.setItem('cssAuditFindings', JSON.stringify(newFindings));
+      
       const totalFiles = Object.keys(newFindings).length;
       const totalIssues = Object.values(newFindings).reduce((sum, f) => sum + f.totalIssues, 0);
-      toast.success(`Scan complete: ${totalIssues} issues in ${totalFiles} files`);
+      const criticalIssues = Object.values(newFindings).reduce((sum, f) => sum + f.criticalCount, 0);
+      
+      toast.success(`Scan complete: ${totalIssues} issues in ${totalFiles} files (${criticalIssues} critical)`);
     } catch (error) {
       toast.error("Scan failed: " + error.message);
     }
