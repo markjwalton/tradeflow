@@ -263,7 +263,7 @@ function TenantNavEditor({ tenantId, items = [], isLoading }) {
   return (
     <div className="border rounded-lg p-4 bg-white">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="font-semibold text-[var(--color-midnight)]">Tenant Navigation Items</h3>
+        <h3 className="text-h5">Tenant Navigation Items</h3>
         <Button size="sm" className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white" onClick={() => { setEditingItem(null); setShowForm(true); }}>
           Add Item
         </Button>
@@ -277,7 +277,7 @@ function TenantNavEditor({ tenantId, items = [], isLoading }) {
         <div className="space-y-2">
           {items.map((item) => (
             <div key={item.id} className="flex items-center gap-3 p-3 border rounded-lg bg-[var(--color-background)]">
-              <span className="flex-1 font-medium text-[var(--color-midnight)]">{item.name}</span>
+              <span className="flex-1 text-[var(--color-midnight)]">{item.name}</span>
               <span className="text-sm text-[var(--color-charcoal)]">{item.page_url}</span>
               <Button variant="ghost" size="sm" onClick={() => { setEditingItem(item); setShowForm(true); }}>
                 Edit

@@ -258,7 +258,7 @@ For each recommendation, provide:
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-heading text-[var(--color-midnight)] flex items-center gap-2">
+          <h1 className="text-h2 flex items-center gap-2">
             <Package className="h-6 w-6 text-[var(--color-primary)]" />
             Design System Manager
           </h1>
@@ -422,7 +422,7 @@ For each recommendation, provide:
           {/* Customer Theme Packages */}
           {customerPackages.length > 0 && (
             <div>
-              <h2 className="text-lg font-heading text-[var(--color-midnight)] mb-3">
+              <h2 className="text-h4 mb-3">
                 Customer Theme Packages
               </h2>
               <div className="grid md:grid-cols-2 gap-4">
@@ -770,7 +770,7 @@ For each recommendation, provide:
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium text-[var(--color-midnight)]">Package Name *</label>
+                <label className="text-body-small text-[var(--color-midnight)]">Package Name *</label>
                 <Input
                   value={formData.package_name}
                   onChange={(e) => setFormData({ ...formData, package_name: e.target.value })}
@@ -778,7 +778,7 @@ For each recommendation, provide:
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-[var(--color-midnight)]">Package Code *</label>
+                <label className="text-body-small text-[var(--color-midnight)]">Package Code *</label>
                 <Input
                   value={formData.package_code}
                   onChange={(e) => setFormData({ ...formData, package_code: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
@@ -789,7 +789,7 @@ For each recommendation, provide:
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium text-[var(--color-midnight)]">Package Type</label>
+                <label className="text-body-small text-[var(--color-midnight)]">Package Type</label>
                 <Select 
                   value={formData.package_type} 
                   onValueChange={(v) => setFormData({ ...formData, package_type: v })}
@@ -805,7 +805,7 @@ For each recommendation, provide:
                 </Select>
               </div>
               <div>
-                <label className="text-sm font-medium text-[var(--color-midnight)]">Version</label>
+                <label className="text-body-small text-[var(--color-midnight)]">Version</label>
                 <Input
                   value={formData.version}
                   onChange={(e) => setFormData({ ...formData, version: e.target.value })}
@@ -817,12 +817,12 @@ For each recommendation, provide:
             {formData.package_type === "customer_theme" && (
               <>
                 <div className="border-t border-[var(--color-background-muted)] pt-4">
-                  <h4 className="font-heading font-medium text-[var(--color-midnight)] mb-3">
+                  <h4 className="text-h5 mb-3">
                     Customer Information
                   </h4>
                   <div className="space-y-3">
                     <div>
-                      <label className="text-sm font-medium text-[var(--color-midnight)]">Customer Name</label>
+                      <label className="text-body-small text-[var(--color-midnight)]">Customer Name</label>
                       <Input
                         value={formData.customer_name}
                         onChange={(e) => setFormData({ ...formData, customer_name: e.target.value })}
@@ -830,7 +830,7 @@ For each recommendation, provide:
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-[var(--color-midnight)]">Company</label>
+                      <label className="text-body-small text-[var(--color-midnight)]">Company</label>
                       <Input
                         value={formData.customer_company}
                         onChange={(e) => setFormData({ ...formData, customer_company: e.target.value })}
@@ -838,7 +838,7 @@ For each recommendation, provide:
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-[var(--color-midnight)]">Email</label>
+                      <label className="text-body-small text-[var(--color-midnight)]">Email</label>
                       <Input
                         type="email"
                         value={formData.customer_email}
@@ -850,7 +850,7 @@ For each recommendation, provide:
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-[var(--color-midnight)]">Based On Package</label>
+                  <label className="text-body-small text-[var(--color-midnight)]">Based On Package</label>
                   <Select 
                     value={formData.parent_package_id || ""} 
                     onValueChange={(v) => setFormData({ 
@@ -875,7 +875,7 @@ For each recommendation, provide:
             )}
 
             <div>
-              <label className="text-sm font-medium text-[var(--color-midnight)]">Description</label>
+              <label className="text-body-small text-[var(--color-midnight)]">Description</label>
               <Textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
