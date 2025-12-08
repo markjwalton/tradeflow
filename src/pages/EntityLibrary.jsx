@@ -338,7 +338,7 @@ Return a JSON object with:
                       <div className="flex items-start justify-between">
                         <div>
                           <CardTitle className="text-base flex items-center gap-2">
-                            <Database className="h-4 w-4 text-accent-600" />
+                            <Database className="h-4 w-4 text-accent-700" />
                             {entity.name}
                             {entity.is_custom && (
                               <Badge variant="outline" className="text-xs">Custom</Badge>
@@ -474,8 +474,8 @@ Return a JSON object with:
             ) : (
               <>
                 {/* Step 2: Select Related Items */}
-                <div className="flex items-center gap-2 text-sm text-muted-foreground bg-primary-50 p-2 rounded">
-                  <Check className="h-4 w-4 text-primary" />
+                <div className="flex items-center gap-2 text-sm text-muted-foreground bg-primary-100 p-2 rounded">
+                  <Check className="h-4 w-4 text-primary-700" />
                   Adding to: <strong>{projects.find(p => p.id === addToProjectTargetId)?.name}</strong>
                   <Button variant="ghost" size="sm" className="ml-auto h-6 text-xs" onClick={() => setAddToProjectTargetId(null)}>Change</Button>
                 </div>
@@ -491,7 +491,7 @@ Return a JSON object with:
                   return (
                     <div>
                       <label className="text-sm font-medium flex items-center gap-2 mb-2">
-                        <Database className="h-4 w-4 text-accent-600" />
+                        <Database className="h-4 w-4 text-accent-700" />
                         Related Entities ({relatedEntities.length})
                       </label>
                       <div className="space-y-1 max-h-32 overflow-auto border rounded p-2">

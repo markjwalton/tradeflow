@@ -560,7 +560,7 @@ Return a JSON object with a "features" array containing feature templates.`,
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Database className="h-5 w-5 text-warning" />
+              <Database className="h-5 w-5 text-warning-foreground" />
               Generate Features from Entities
             </DialogTitle>
           </DialogHeader>
@@ -609,7 +609,7 @@ Return a JSON object with a "features" array containing feature templates.`,
                     <div 
                       key={index} 
                       className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                        selectedBulkFeatures.includes(index) ? "border-[var(--color-warning)] bg-[var(--color-warning)]/10" : "hover:bg-[var(--color-background)]"
+                        selectedBulkFeatures.includes(index) ? "border-warning bg-warning/10" : "hover:bg-[var(--color-background)]"
                       }`}
                       onClick={() => setSelectedBulkFeatures(prev => 
                         prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
@@ -619,7 +619,7 @@ Return a JSON object with a "features" array containing feature templates.`,
                         <Checkbox checked={selectedBulkFeatures.includes(index)} />
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <Zap className="h-4 w-4 text-[var(--color-warning)]" />
+                            <Zap className="h-4 w-4 text-warning" />
                             <span className="font-medium">{feature.name}</span>
                             <Badge className={categoryColors[feature.category] || "bg-muted"}>{feature.category}</Badge>
                             <Badge className={complexityColors[feature.complexity || "medium"]}>{feature.complexity || "medium"}</Badge>
@@ -656,7 +656,7 @@ Return a JSON object with a "features" array containing feature templates.`,
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Zap className="h-5 w-5 text-warning" />
+              <Zap className="h-5 w-5 text-warning-foreground" />
               {previewFeature?.name}
             </DialogTitle>
           </DialogHeader>

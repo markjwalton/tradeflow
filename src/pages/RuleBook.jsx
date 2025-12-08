@@ -321,7 +321,7 @@ export default function RuleBook() {
                                   <div className="flex items-start gap-3 flex-1">
                                     <button
                                       onClick={() => toggleRuleSelection(rule.id)}
-                                      className={`mt-1 h-5 w-5 rounded border flex items-center justify-center ${isSelected ? "bg-primary border-primary text-primary-foreground" : "border-border"}`}
+                                      className={`mt-1 h-5 w-5 rounded border flex items-center justify-center ${isSelected ? "bg-primary-500 border-primary-500 text-white" : "border-border"}`}
                                     >
                                       {isSelected && <Check className="h-3 w-3" />}
                                     </button>

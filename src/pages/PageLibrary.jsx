@@ -406,7 +406,7 @@ Return a JSON object with a "pages" array containing page templates.`,
                   <Card key={page.id} className="hover:shadow-md transition-shadow">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-base flex items-center gap-2">
-                        <Layout className="h-4 w-4 text-info" />
+                        <Layout className="h-4 w-4 text-info-foreground" />
                         {page.name}
                         {page.is_custom && (
                           <Badge variant="outline" className="text-xs">Custom</Badge>
@@ -593,7 +593,7 @@ Return a JSON object with a "pages" array containing page templates.`,
                     <div 
                       key={index} 
                       className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                        selectedBulkPages.includes(index) ? "border-[var(--color-info)] bg-[var(--color-info)]/10" : "hover:bg-[var(--color-background)]"
+                        selectedBulkPages.includes(index) ? "border-info bg-info-50" : "hover:bg-[var(--color-background)]"
                       }`}
                       onClick={() => setSelectedBulkPages(prev => 
                         prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
@@ -603,7 +603,7 @@ Return a JSON object with a "pages" array containing page templates.`,
                         <Checkbox checked={selectedBulkPages.includes(index)} />
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <Layout className="h-4 w-4 text-[var(--color-info)]" />
+                            <Layout className="h-4 w-4 text-info" />
                             <span className="font-medium">{page.name}</span>
                             <Badge className={categoryColors[page.category] || "bg-muted"}>{page.category}</Badge>
                           </div>
