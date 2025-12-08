@@ -44,13 +44,28 @@ export default function CSSAudit() {
   const [defaultPriority, setDefaultPriority] = useState("medium");
 
   const hardcodedPatterns = [
-    { pattern: /font-(light|normal|medium|semibold|bold|black|thin|extralight|extrabold)/g, type: "font-weight", replacement: "Use semantic text-* classes or CSS variables" },
-    { pattern: /text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)/g, type: "font-size", replacement: "Use text-h1 through text-h6, text-body-*, text-caption" },
-    { pattern: /font-(sans|serif|mono|heading|body)(?![a-z-])/g, type: "font-family", replacement: "Already uses tokens - verify correct usage" },
-    { pattern: /tracking-(tighter|tight|normal|wide|wider|widest)/g, type: "letter-spacing", replacement: "Use CSS variables --tracking-*" },
-    { pattern: /leading-(none|tight|snug|normal|relaxed|loose|[0-9]+)/g, type: "line-height", replacement: "Use CSS variables --leading-*" },
-    { pattern: /className="[^"]*font-heading[^"]*"/g, type: "font-family-hardcoded", replacement: "Remove hardcoded font-heading, use semantic text-* tokens" },
+    // Font weights - should use semantic tokens
+    { pattern: /font-(light|normal|medium|semibold|bold|black|thin|extralight|extrabold)/g, type: "font-weight", replacement: "Use semantic text-* classes instead" },
+    
+    // Font sizes - should use semantic tokens
+    { pattern: /text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)/g, type: "font-size", replacement: "Use text-h1 through text-h6, text-body-large, text-body-base, text-body-small, text-body-muted, text-caption" },
+    
+    // Hardcoded font families in className
+    { pattern: /className="[^"]*font-heading[^"]*"/g, type: "font-family-hardcoded", replacement: "Remove hardcoded font-heading, use semantic text-h* tokens" },
     { pattern: /className="[^"]*font-body[^"]*"/g, type: "font-family-hardcoded", replacement: "Remove hardcoded font-body, use semantic text-* tokens" },
+    
+    // Letter spacing - should use CSS variables
+    { pattern: /tracking-(tighter|tight|normal|airy|wide|wider|widest)/g, type: "letter-spacing", replacement: "Use CSS variables --tracking-*" },
+    
+    // Line height - should use CSS variables
+    { pattern: /leading-(none|tight|snug|normal|relaxed|loose|[0-9]+)/g, type: "line-height", replacement: "Use CSS variables --leading-*" },
+    
+    // Color classes - check for hardcoded colors
+    { pattern: /text-(gray|slate|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(50|100|200|300|400|500|600|700|800|900)/g, type: "text-color", replacement: "Use design system color tokens: text-[var(--color-*)]" },
+    { pattern: /bg-(gray|slate|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(50|100|200|300|400|500|600|700|800|900)/g, type: "bg-color", replacement: "Use design system color tokens: bg-[var(--color-*)]" },
+    
+    // Spacing - should use semantic spacing tokens
+    { pattern: /\b(p|px|py|pt|pb|pl|pr|m|mx|my|mt|mb|ml|mr|gap|space-[xy])-(0|px|0\.5|1|1\.5|2|2\.5|3|3\.5|4|5|6|7|8|9|10|11|12|14|16|20|24|28|32|36|40|44|48|52|56|60|64|72|80|96)\b/g, type: "spacing", replacement: "Consider using CSS variables --spacing-* for consistency" },
   ];
 
   const scanProject = async () => {
@@ -60,36 +75,93 @@ export default function CSSAudit() {
     setProgress({ current: 0, total: 0, file: "" });
 
     try {
-      // Get list of all files via AI
-      const result = await base44.integrations.Core.InvokeLLM({
-        prompt: `Analyze the current Base44 project structure and return a list of all page and component files that need CSS audit.
+      // Get comprehensive list of all pages and components
+      const allPages = [
+        "Dashboard", "NavigationManager", "DashboardManager", "ComponentShowcase", "DesignTokens", 
+        "TypographyShowcase", "ButtonsShowcase", "CardsShowcase", "FormsShowcase", "LayoutShowcase",
+        "NavigationShowcase", "DataDisplayShowcase", "FeedbackShowcase", "DesignSystemManager", 
+        "KnowledgeManager", "EntityLibrary", "PageLibrary", "FeatureLibrary", "RoadmapManager",
+        "RoadmapJournal", "SprintManager", "RuleBook", "TestDataManager", "PlaygroundSummary",
+        "PlaygroundEntity", "PlaygroundPage", "PlaygroundFeature", "ConceptWorkbench", "LivePreview",
+        "TestingHub", "TenantManager", "CMSManager", "APIManager", "SecurityMonitor", "PerformanceMonitor",
+        "TailwindKnowledgeManager", "LookupTestForms", "TemplateLibrary", "BusinessTemplates",
+        "FormTemplates", "FormBuilder", "ChecklistTemplates", "ChecklistBuilder", "WorkflowLibrary",
+        "WorkflowDesigner", "PackageLibrary", "GeneratedApps", "StandaloneInstanceManager", "SturijPackage",
+        "StandaloneAPIStrategy", "ERDEditor", "MindMapEditor", "PromptSettings", "CommunityLibrary",
+        "CommunityPublish", "DebugProjectWorkspace", "DebugProjectEditor", "CSSAudit", "TenantAccess",
+        "Setup", "Home", "Projects", "ProjectDetails", "ProjectForm", "Tasks", "Customers", "Team",
+        "Estimates", "Calendar", "TokenPreview", "LayoutBuilder", "PageBuilder", "ProjectsOverview",
+        "ProjectDetail", "AppointmentHub", "AppointmentManager", "AppointmentConfirm", "InterestOptionsManager",
+        "WebsiteEnquiryForm", "SystemSpecification"
+      ];
 
-Return files in these directories:
-- pages/*.jsx or pages/*.js
-- components/**/*.jsx or components/**/*.js
+      const allComponents = [
+        "dashboard/DashboardWidgetCard", "dashboard/WidgetConfigEditor", "dashboard/useDashboardSettings",
+        "dashboard/TechNewsWidget", "dashboard/DashboardSettings", "dashboard/DashboardGrid",
+        "dashboard/AIWidgetGenerator", "dashboard/WidgetLibrarySidebar", "dashboard/WidgetStaging",
+        "dashboard/WidgetRenderer", "dashboard/TestDataCoverageWidget",
+        "navigation/GenericNavEditor", "navigation/TenantSelector", "navigation/NavigationBreadcrumb",
+        "navigation/NavigationItemRow", "navigation/NavigationItemForm", "navigation/NavigationRenderer",
+        "navigation/UnallocationConfirmDialog", "navigation/StandaloneNavigation", "navigation/NavigationDataProvider",
+        "design-system/ThemeCreatorDialog", "design-system/ThemeTokenEditor",
+        "knowledge/Base44Reference", "knowledge/NewsFeed", "knowledge/ShadcnReference",
+        "knowledge/TailwindReference", "knowledge/ReactReference", "knowledge/LucideReference",
+        "library/Typography", "library/Cards", "library/Buttons", "library/Forms", "library/Layouts",
+        "library/Navigation", "library/DataDisplay", "library/Feedback", "library/designTokens",
+        "library/PagePreview", "library/PageBuilder", "library/FeatureBuilder", "library/EntityBuilder",
+        "sturij/PageHeader", "sturij/ContentSection", "sturij/StatCard", "sturij/StatusBadge",
+        "sturij/FeatureCard", "sturij/DataRow",
+        "common/PageSettingsDialog",
+        "ai-assistant/GlobalAIAssistant", "ai-assistant/QuickCapture", "ai-assistant/ChatHighlightCapture",
+        "ai-assistant/AIInputAssistant",
+        "roadmap/RoadmapItemCard", "roadmap/RoadmapSettingsDialog", "roadmap/JournalDialog",
+        "roadmap/DevelopmentPromptDialog",
+        "playground/PlaygroundJournalPanel", "playground/PlaygroundEditor", "playground/VersionHistory",
+        "playground/PromoteToLibraryDialog", "playground/LivePageRenderer",
+        "forms/FormSettings", "forms/AIFormGenerator", "forms/FormFieldPalette", "forms/FormFieldEditor",
+        "forms/DynamicFormRenderer", "forms/PostcodeLookupField", "forms/EmailValidationField",
+        "forms/PhoneValidationField", "forms/AddressFinderField",
+        "checklists/AIChecklistGenerator",
+        "workflow/AIWorkflowGenerator", "workflow/WorkflowStepPalette", "workflow/WorkflowCanvas",
+        "workflow/WorkflowStepEditor", "workflow/WorkflowSettings", "workflow/TriggerEditor",
+        "cms/CMSPageEditor", "cms/CMSProductEditor", "cms/CMSBlogEditor", "cms/CMSFormEditor",
+        "cms/CMSApiKeyManager", "cms/CMSSubmissions", "cms/CMSNavigationEditor", "cms/CMSAssetManager",
+        "cms/CMSTemplateManager", "cms/CMSTenantSelector",
+        "tenants/TenantForm", "tenants/TenantRoleManager", "tenants/TenantUserManager",
+        "tenants/TenantAccessRequests",
+        "templates/BusinessTemplateBuilder", "templates/TemplateEntityEditor", "templates/TemplatePageEditor",
+        "templates/TemplateFeatureEditor",
+        "generated-app/AIDependencyAnalyzer", "generated-app/DependencyResolver", "generated-app/AppNavigationManager",
+        "generated-app/SystemFunctionManager",
+        "project/ContactList", "project/DocumentList", "project/SiteVisitList", "project/ProjectTeam",
+        "project/ClientAccessManager", "project/GanttChart", "project/TaskList", "project/DesignPhaseList",
+        "project/ManufactureStepList",
+        "monitoring/PerformanceAuditCard", "monitoring/AuditLogCard",
+        "testing/LivePreviewNavigation", "testing/StandaloneTestData", "testing/TestDataProvider",
+        "testing/TestDataDisplay", "testing/TestingDataService",
+        "test-data/AIQualityReport", "test-data/EntitySchemaValidator", "test-data/TestDataSettingsDialog",
+        "mindmap/MindMapCanvas", "mindmap/MindMapToolbar", "mindmap/MindMapNode", "mindmap/MindMapConnection",
+        "mindmap/NewMindMapDialog", "mindmap/GeneratedSpecDialog", "mindmap/AddNodeDialog",
+        "mindmap/VersionHistoryPanel", "mindmap/ForkVersionDialog", "mindmap/PublishVersionDialog",
+        "mindmap/EntityDetailDialog", "mindmap/EntityRelationshipDiagram", "mindmap/WorkflowDialog",
+        "mindmap/TenantForkDialog", "mindmap/NodeDetailPanel",
+        "erd/ERDCanvas", "erd/ERDEntityEditor", "erd/ERDRelationshipEditor", "erd/AddFromLibraryDialog",
+        "erd/ERDEntityBox", "erd/ERDRelationshipLine",
+        "page-builder/AppShellPreview",
+        "layout/PageLayout"
+      ];
 
-Focus on files that likely contain UI elements (skip utility files, hooks, services).
-
-Return a flat list of file paths.`,
-        response_json_schema: {
-          type: "object",
-          properties: {
-            files: {
-              type: "array",
-              items: { type: "string" }
-            }
-          }
-        }
-      });
-
-      const files = result.files || [];
+      const files = [
+        ...allPages.map(p => `pages/${p}`),
+        ...allComponents.map(c => `components/${c}`)
+      ];
       setProgress({ current: 0, total: files.length, file: "" });
 
       const allFindings = [];
       
-      // Process files in batches
-      for (let i = 0; i < files.length; i += 3) {
-        const batch = files.slice(i, i + 3);
+      // Process files in batches of 5
+      for (let i = 0; i < files.length; i += 5) {
+        const batch = files.slice(i, i + 5);
         
         for (const filePath of batch) {
           setProgress({ current: i + 1, total: files.length, file: filePath });
