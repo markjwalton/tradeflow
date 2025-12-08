@@ -37,6 +37,7 @@ export default function CSSAudit() {
   const [scanning, setScanning] = useState(false);
   const [findings, setFindings] = useState([]);
   const [progress, setProgress] = useState({ current: 0, total: 0, file: "" });
+  const [roadmapProgress, setRoadmapProgress] = useState({ current: 0, total: 0, file: "" });
   const [selectedFindings, setSelectedFindings] = useState([]);
   const [expandedFiles, setExpandedFiles] = useState(new Set());
   const [filterSeverity, setFilterSeverity] = useState("all");
@@ -421,7 +422,7 @@ ${aiPrompt.rulebook_references?.map(r => `- ${r}`).join("\n") || "None"}
           </div>
         </div>
 
-        {/* Progress Bar */}
+        {/* Scan Progress Bar */}
         {scanning && progress.total > 0 && (
           <Card className="mb-6">
             <CardContent className="pt-6">
@@ -435,6 +436,26 @@ ${aiPrompt.rulebook_references?.map(r => `- ${r}`).join("\n") || "None"}
                 </span>
               </div>
               <Progress value={(progress.current / progress.total) * 100} className="h-2" />
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Roadmap Creation Progress Bar */}
+        {roadmapProgress.total > 0 && (
+          <Card className="mb-6 border-[var(--color-primary)]/30 bg-[var(--color-primary)]/5">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin text-[var(--color-primary)]" />
+                  <span className="text-body-small text-[var(--color-primary)] font-medium">
+                    {roadmapProgress.file}
+                  </span>
+                </div>
+                <span className="text-body-small text-[var(--color-charcoal)]">
+                  {roadmapProgress.current} / {roadmapProgress.total}
+                </span>
+              </div>
+              <Progress value={(roadmapProgress.current / roadmapProgress.total) * 100} className="h-2" />
             </CardContent>
           </Card>
         )}
