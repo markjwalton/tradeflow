@@ -350,24 +350,38 @@ export default function PageBuilder() {
 
     newClasses = `${newClasses.trim()} ${tokenClass}`.trim();
 
-    // Update JSX content - escape special regex characters
-    const escapedClasses = escapeRegex(currentClasses);
-    // Try both class= and className= for JSX compatibility
-    let updatedContent = formData.current_content_jsx.replace(
-      new RegExp(`className="${escapedClasses}"`, 'g'),
-      `className="${newClasses}"`
-    );
-    
-    // Also try class= for HTML
-    updatedContent = updatedContent.replace(
-      new RegExp(`class="${escapedClasses}"`, 'g'),
-      `class="${newClasses}"`
-    );
-
-    // Clear highlight
+    // Apply directly to DOM element for immediate visual feedback
     if (originalElement) {
+      originalElement.className = newClasses;
       originalElement.style.outline = '';
       originalElement.style.outlineOffset = '';
+    }
+
+    // Update JSX content
+    let updatedContent = formData.current_content_jsx;
+    const escapedClasses = escapeRegex(currentClasses.trim());
+    
+    // Try multiple patterns to find and replace
+    const patterns = [
+      new RegExp(`className\\s*=\\s*"${escapedClasses}"`, 'g'),
+      new RegExp(`className\\s*=\\s*'${escapedClasses}'`, 'g'),
+      new RegExp(`class\\s*=\\s*"${escapedClasses}"`, 'g'),
+      new RegExp(`class\\s*=\\s*'${escapedClasses}'`, 'g'),
+    ];
+
+    let replaced = false;
+    for (const pattern of patterns) {
+      if (pattern.test(updatedContent)) {
+        updatedContent = updatedContent.replace(pattern, `className="${newClasses}"`);
+        replaced = true;
+        break;
+      }
+    }
+
+    if (!replaced) {
+      console.warn('Could not find matching class string in JSX');
+      toast.error("Could not update JSX - try editing manually");
+      return;
     }
 
     setFormData({ ...formData, current_content_jsx: updatedContent });
