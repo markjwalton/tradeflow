@@ -673,7 +673,7 @@ css
 
   .text-h2 {
     font-family: var(--font-family-display) !important;
-    font-size: var(--text-xl);
+    font-size: var(--text-2xl);
     font-weight: var(--font-weight-light);
     line-height: var(--leading-tight);
     letter-spacing: var(--tracking-airy);
@@ -763,7 +763,7 @@ css
 
     h2 {
       font-family: var(--font-family-display);
-      font-size: var(--text-xl);
+      font-size: var(--text-2xl);
       font-weight: var(--font-weight-light);
       line-height: var(--leading-tight);
       letter-spacing: var(--tracking-airy);
