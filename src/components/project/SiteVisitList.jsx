@@ -216,7 +216,7 @@ export default function SiteVisitList({ reports = [], projectId, isLoading }) {
           <DialogTrigger asChild>
             <Button
               size="sm"
-              className="bg-amber-700 hover:bg-amber-800"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
               onClick={() => handleOpenDialog()}
             >
               <Plus className="h-4 w-4 mr-1" />
@@ -420,7 +420,7 @@ export default function SiteVisitList({ reports = [], projectId, isLoading }) {
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-amber-700 hover:bg-amber-800"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
                   disabled={isSubmitting}
                 >
                   {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
@@ -435,12 +435,12 @@ export default function SiteVisitList({ reports = [], projectId, isLoading }) {
         {isLoading ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-20 bg-stone-100 animate-pulse rounded-lg" />
+              <div key={i} className="h-20 bg-muted animate-pulse rounded-lg" />
             ))}
           </div>
         ) : sortedReports.length === 0 ? (
-          <div className="text-center py-8 text-stone-500">
-            <MapPin className="h-10 w-10 mx-auto mb-3 text-stone-300" />
+          <div className="text-center py-8 text-muted-foreground">
+            <MapPin className="h-10 w-10 mx-auto mb-3 text-muted-foreground" />
             <p>No site visit reports yet</p>
           </div>
         ) : (
@@ -455,17 +455,17 @@ export default function SiteVisitList({ reports = [], projectId, isLoading }) {
                 >
                   <AccordionTrigger className="hover:no-underline">
                     <div className="flex items-center gap-4 text-left">
-                      <div className="h-10 w-10 rounded-lg bg-amber-100 flex items-center justify-center">
-                        <Calendar className="h-5 w-5 text-amber-700" />
+                      <div className="h-10 w-10 rounded-lg bg-primary-100 flex items-center justify-center">
+                        <Calendar className="h-5 w-5 text-primary" />
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="font-medium">
                             {format(new Date(report.visitDate), "MMMM d, yyyy")}
                           </span>
-                          <WeatherIcon className="h-4 w-4 text-stone-400" />
+                          <WeatherIcon className="h-4 w-4 text-muted-foreground" />
                         </div>
-                        <div className="flex items-center gap-2 text-sm text-stone-500">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <User className="h-3 w-3" />
                           <span>{report.visitedBy}</span>
                           {report.attendees?.length > 0 && (
@@ -479,35 +479,35 @@ export default function SiteVisitList({ reports = [], projectId, isLoading }) {
                     <div className="space-y-4">
                       {report.progressSummary && (
                         <div>
-                          <h5 className="text-sm font-medium text-stone-700 mb-1">Progress Summary</h5>
-                          <p className="text-sm text-stone-600">{report.progressSummary}</p>
+                          <h5 className="text-sm font-medium text-secondary mb-1">Progress Summary</h5>
+                          <p className="text-sm text-muted-foreground">{report.progressSummary}</p>
                         </div>
                       )}
 
                       {report.notes && (
                         <div>
-                          <h5 className="text-sm font-medium text-stone-700 mb-1">Notes</h5>
-                          <p className="text-sm text-stone-600 whitespace-pre-wrap">{report.notes}</p>
+                          <h5 className="text-sm font-medium text-secondary mb-1">Notes</h5>
+                          <p className="text-sm text-muted-foreground whitespace-pre-wrap">{report.notes}</p>
                         </div>
                       )}
 
                       {report.issuesIdentified && (
                         <div>
-                          <h5 className="text-sm font-medium text-red-700 mb-1 flex items-center gap-1">
+                          <h5 className="text-sm font-medium text-destructive-700 mb-1 flex items-center gap-1">
                             <AlertCircle className="h-4 w-4" />
                             Issues Identified
                           </h5>
-                          <p className="text-sm text-stone-600">{report.issuesIdentified}</p>
+                          <p className="text-sm text-muted-foreground">{report.issuesIdentified}</p>
                         </div>
                       )}
 
                       {report.actionItems?.length > 0 && (
                         <div>
-                          <h5 className="text-sm font-medium text-stone-700 mb-2">Action Items</h5>
+                          <h5 className="text-sm font-medium text-secondary mb-2">Action Items</h5>
                           <ul className="space-y-1">
                             {report.actionItems.map((action, index) => (
                               <li key={index} className="flex items-start gap-2 text-sm">
-                                <CheckCircle2 className="h-4 w-4 text-stone-400 mt-0.5" />
+                                <CheckCircle2 className="h-4 w-4 text-muted-foreground mt-0.5" />
                                 <span>{action}</span>
                               </li>
                             ))}
@@ -517,7 +517,7 @@ export default function SiteVisitList({ reports = [], projectId, isLoading }) {
 
                       {report.photos?.length > 0 && (
                         <div>
-                          <h5 className="text-sm font-medium text-stone-700 mb-2">Photos</h5>
+                          <h5 className="text-sm font-medium text-secondary mb-2">Photos</h5>
                           <div className="grid grid-cols-4 gap-2">
                             {report.photos.map((url, index) => (
                               <a
@@ -537,7 +537,7 @@ export default function SiteVisitList({ reports = [], projectId, isLoading }) {
                         </div>
                       )}
 
-                      <div className="flex justify-end gap-2 pt-2 border-t border-stone-100">
+                      <div className="flex justify-end gap-2 pt-2 border-t border-border">
                         <Button
                           variant="outline"
                           size="sm"

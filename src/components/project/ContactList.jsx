@@ -43,12 +43,12 @@ import {
 import { toast } from "sonner";
 
 const roleColors = {
-  Client: "bg-amber-100 text-amber-800",
-  Architect: "bg-blue-100 text-blue-800",
-  "Structural Engineer": "bg-purple-100 text-purple-800",
-  Supplier: "bg-green-100 text-green-800",
-  Subcontractor: "bg-cyan-100 text-cyan-800",
-  Other: "bg-stone-100 text-stone-800",
+  Client: "bg-warning/10 text-warning",
+  Architect: "bg-info-50 text-info",
+  "Structural Engineer": "bg-accent-100 text-accent",
+  Supplier: "bg-success-50 text-success",
+  Subcontractor: "bg-info-50 text-info",
+  Other: "bg-muted text-muted-foreground",
 };
 
 const emptyContact = {
@@ -146,7 +146,7 @@ export default function ContactList({ contacts = [], projectId, isLoading }) {
           <DialogTrigger asChild>
             <Button
               size="sm"
-              className="bg-amber-700 hover:bg-amber-800"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
               onClick={() => handleOpenDialog()}
             >
               <Plus className="h-4 w-4 mr-1" />
@@ -240,7 +240,7 @@ export default function ContactList({ contacts = [], projectId, isLoading }) {
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-amber-700 hover:bg-amber-800"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
                   disabled={isSubmitting}
                 >
                   {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
@@ -255,12 +255,12 @@ export default function ContactList({ contacts = [], projectId, isLoading }) {
         {isLoading ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-16 bg-stone-100 animate-pulse rounded-lg" />
+              <div key={i} className="h-16 bg-muted animate-pulse rounded-lg" />
             ))}
           </div>
         ) : contacts.length === 0 ? (
-          <div className="text-center py-8 text-stone-500">
-            <User className="h-10 w-10 mx-auto mb-3 text-stone-300" />
+          <div className="text-center py-8 text-muted-foreground">
+            <User className="h-10 w-10 mx-auto mb-3 text-muted-foreground" />
             <p>No contacts added yet</p>
           </div>
         ) : (
@@ -276,22 +276,22 @@ export default function ContactList({ contacts = [], projectId, isLoading }) {
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex items-start gap-3">
-                          <div className="h-10 w-10 rounded-full bg-amber-100 flex items-center justify-center">
-                            <span className="text-amber-700 font-medium">
+                          <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center">
+                            <span className="text-primary font-medium">
                               {contact.fullName?.charAt(0)?.toUpperCase() || "?"}
                             </span>
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <h4 className="font-medium text-stone-900">{contact.fullName}</h4>
+                              <h4 className="font-medium text-foreground">{contact.fullName}</h4>
                               {contact.isPrimary && (
-                                <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
+                                <Star className="h-4 w-4 text-warning fill-warning" />
                               )}
                             </div>
                             <div className="flex flex-wrap items-center gap-2 mt-1">
                               <Badge className={roleColors[contact.role]}>{contact.role}</Badge>
                               {contact.organization && (
-                                <span className="text-sm text-stone-500 flex items-center gap-1">
+                                <span className="text-sm text-muted-foreground flex items-center gap-1">
                                   <Building2 className="h-3 w-3" />
                                   {contact.organization}
                                 </span>

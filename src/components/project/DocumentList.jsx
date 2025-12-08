@@ -44,15 +44,15 @@ import { format } from "date-fns";
 import { toast } from "sonner";
 
 const typeColors = {
-  "Project Spec Sheet": "bg-blue-100 text-blue-800",
-  Contract: "bg-purple-100 text-purple-800",
-  Drawing: "bg-green-100 text-green-800",
-  Photo: "bg-amber-100 text-amber-800",
-  Email: "bg-pink-100 text-pink-800",
-  Report: "bg-cyan-100 text-cyan-800",
-  Invoice: "bg-red-100 text-red-800",
-  Quote: "bg-indigo-100 text-indigo-800",
-  Other: "bg-stone-100 text-stone-800",
+  "Project Spec Sheet": "bg-info-50 text-info",
+  Contract: "bg-accent-100 text-accent",
+  Drawing: "bg-success-50 text-success",
+  Photo: "bg-warning/10 text-warning",
+  Email: "bg-accent-100 text-accent",
+  Report: "bg-info-50 text-info",
+  Invoice: "bg-destructive-50 text-destructive",
+  Quote: "bg-warning/10 text-warning",
+  Other: "bg-muted text-muted-foreground",
 };
 
 const typeIcons = {
@@ -198,7 +198,7 @@ export default function DocumentList({ documents = [], projectId, isLoading }) {
             <DialogTrigger asChild>
               <Button
                 size="sm"
-                className="bg-amber-700 hover:bg-amber-800"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
                 onClick={() => handleOpenDialog()}
               >
                 <Plus className="h-4 w-4 mr-1" />
@@ -215,7 +215,7 @@ export default function DocumentList({ documents = [], projectId, isLoading }) {
                 {!editingDocument && (
                   <div className="space-y-2">
                     <Label>File *</Label>
-                    <div className="border-2 border-dashed border-stone-200 rounded-lg p-6 text-center">
+                    <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
                       <input
                         type="file"
                         onChange={handleFileChange}
@@ -224,15 +224,12 @@ export default function DocumentList({ documents = [], projectId, isLoading }) {
                       />
                       <label htmlFor="file-upload" className="cursor-pointer">
                         {file ? (
-                          <div className="flex items-center justify-center gap-2 text-stone-700">
-                            <File className="h-5 w-5" />
-                            <span>{file.name}</span>
-                          </div>
-                        ) : (
-                          <div className="text-stone-500">
-                            <Upload className="h-8 w-8 mx-auto mb-2 text-stone-400" />
+                          <div className="flex items-center justify-center gap-2 text-foreground">
+...
+                          <div className="text-muted-foreground">
+                            <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
                             <p>Click to select a file</p>
-                            <p className="text-sm text-stone-400 mt-1">
+                            <p className="text-sm text-muted-foreground mt-1">
                               PDF, Images, Documents
                             </p>
                           </div>
@@ -297,7 +294,7 @@ export default function DocumentList({ documents = [], projectId, isLoading }) {
                   </Button>
                   <Button
                     type="submit"
-                    className="bg-amber-700 hover:bg-amber-800"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground"
                     disabled={isSubmitting}
                   >
                     {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
@@ -313,12 +310,12 @@ export default function DocumentList({ documents = [], projectId, isLoading }) {
         {isLoading ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-16 bg-stone-100 animate-pulse rounded-lg" />
+              <div key={i} className="h-16 bg-muted animate-pulse rounded-lg" />
             ))}
           </div>
         ) : filteredDocuments.length === 0 ? (
-          <div className="text-center py-8 text-stone-500">
-            <FileText className="h-10 w-10 mx-auto mb-3 text-stone-300" />
+          <div className="text-center py-8 text-muted-foreground">
+            <FileText className="h-10 w-10 mx-auto mb-3 text-muted-foreground" />
             <p>{typeFilter === "all" ? "No documents uploaded yet" : `No ${typeFilter.toLowerCase()} documents`}</p>
           </div>
         ) : (
@@ -336,22 +333,22 @@ export default function DocumentList({ documents = [], projectId, isLoading }) {
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex items-start gap-3">
-                            <div className="h-10 w-10 rounded-lg bg-stone-100 flex items-center justify-center">
-                              <IconComponent className="h-5 w-5 text-stone-600" />
+                            <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center">
+                              <IconComponent className="h-5 w-5 text-muted-foreground" />
                             </div>
                             <div>
-                              <h4 className="font-medium text-stone-900">{doc.name}</h4>
+                              <h4 className="font-medium text-foreground">{doc.name}</h4>
                               <div className="flex flex-wrap items-center gap-2 mt-1">
                                 <Badge className={typeColors[doc.type]}>{doc.type}</Badge>
                                 {doc.version && (
-                                  <span className="text-xs text-stone-500">{doc.version}</span>
+                                  <span className="text-xs text-muted-foreground">{doc.version}</span>
                                 )}
-                                <span className="text-xs text-stone-400">
+                                <span className="text-xs text-muted-foreground">
                                   {format(new Date(doc.created_date), "MMM d, yyyy")}
                                 </span>
                               </div>
                               {doc.description && (
-                                <p className="text-sm text-stone-500 mt-1">{doc.description}</p>
+                                <p className="text-sm text-muted-foreground mt-1">{doc.description}</p>
                               )}
                             </div>
                           </div>
@@ -362,7 +359,7 @@ export default function DocumentList({ documents = [], projectId, isLoading }) {
                               rel="noopener noreferrer"
                               className="p-2 hover:bg-stone-100 rounded-lg transition-colors"
                             >
-                              <ExternalLink className="h-4 w-4 text-stone-500" />
+                              <ExternalLink className="h-4 w-4 text-muted-foreground" />
                             </a>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>

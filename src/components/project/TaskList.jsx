@@ -46,18 +46,18 @@ import { format } from "date-fns";
 import { toast } from "sonner";
 
 const statusConfig = {
-  "To Do": { icon: Circle, color: "bg-stone-100 text-stone-700 border-stone-200" },
-  "In Progress": { icon: Clock, color: "bg-blue-100 text-blue-700 border-blue-200" },
-  "Blocked": { icon: AlertCircle, color: "bg-red-100 text-red-700 border-red-200" },
-  "Completed": { icon: CheckCircle2, color: "bg-green-100 text-green-700 border-green-200" },
-  "Snagging": { icon: AlertCircle, color: "bg-amber-100 text-amber-700 border-amber-200" },
+  "To Do": { icon: Circle, color: "bg-muted text-muted-foreground border-border" },
+  "In Progress": { icon: Clock, color: "bg-info-50 text-info border-primary-200" },
+  "Blocked": { icon: AlertCircle, color: "bg-destructive-50 text-destructive-700 border-destructive-200" },
+  "Completed": { icon: CheckCircle2, color: "bg-success-50 text-success border-success" },
+  "Snagging": { icon: AlertCircle, color: "bg-warning/10 text-warning border-warning/20" },
 };
 
 const priorityConfig = {
-  "Low": "bg-stone-100 text-stone-600",
-  "Medium": "bg-blue-100 text-blue-600",
-  "High": "bg-orange-100 text-orange-600",
-  "Critical": "bg-red-100 text-red-600",
+  "Low": "bg-muted text-muted-foreground",
+  "Medium": "bg-info-50 text-info",
+  "High": "bg-warning/10 text-warning",
+  "Critical": "bg-destructive-50 text-destructive",
 };
 
 const emptyTask = {
@@ -178,7 +178,7 @@ export default function TaskList({ tasks = [], projectId, isLoading }) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex items-center gap-2">
-          <Filter className="h-4 w-4 text-stone-400" />
+          <Filter className="h-4 w-4 text-muted-foreground" />
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-[160px]">
               <SelectValue placeholder="Filter by status" />
@@ -193,7 +193,7 @@ export default function TaskList({ tasks = [], projectId, isLoading }) {
             </SelectContent>
           </Select>
         </div>
-        <Button onClick={openCreate} className="bg-amber-700 hover:bg-amber-800">
+        <Button onClick={openCreate} className="bg-primary hover:bg-primary/90 text-primary-foreground">
           <Plus className="h-4 w-4 mr-2" />
           Add Task
         </Button>
@@ -203,8 +203,8 @@ export default function TaskList({ tasks = [], projectId, isLoading }) {
       {filteredTasks.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
-            <ListTodo className="h-12 w-12 text-stone-300 mx-auto mb-4" />
-            <p className="text-stone-500">
+            <ListTodo className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <p className="text-muted-foreground">
               {statusFilter === "all" ? "No tasks yet" : `No ${statusFilter} tasks`}
             </p>
           </CardContent>
@@ -222,11 +222,11 @@ export default function TaskList({ tasks = [], projectId, isLoading }) {
                       <DropdownMenuTrigger asChild>
                         <button className="mt-1 hover:opacity-70 transition-opacity">
                           <StatusIcon className={`h-5 w-5 ${
-                            task.status === "Completed" ? "text-green-500" :
-                            task.status === "Blocked" ? "text-red-500" :
-                            task.status === "In Progress" ? "text-blue-500" :
-                            task.status === "Snagging" ? "text-amber-500" :
-                            "text-stone-400"
+                            task.status === "Completed" ? "text-success" :
+                            task.status === "Blocked" ? "text-destructive" :
+                            task.status === "In Progress" ? "text-info" :
+                            task.status === "Snagging" ? "text-warning" :
+                            "text-muted-foreground"
                           }`} />
                         </button>
                       </DropdownMenuTrigger>
@@ -246,11 +246,11 @@ export default function TaskList({ tasks = [], projectId, isLoading }) {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <h4 className={`font-medium ${task.status === "Completed" ? "line-through text-stone-400" : "text-stone-900"}`}>
+                          <h4 className={`font-medium ${task.status === "Completed" ? "line-through text-muted-foreground" : "text-foreground"}`}>
                             {task.name}
                           </h4>
                           {task.description && (
-                            <p className="text-sm text-stone-500 mt-1 line-clamp-2">
+                            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
                               {task.description}
                             </p>
                           )}
@@ -268,7 +268,7 @@ export default function TaskList({ tasks = [], projectId, isLoading }) {
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => deleteMutation.mutate(task.id)}
-                              className="text-red-600"
+                              className="text-destructive"
                             >
                               <Trash2 className="h-4 w-4 mr-2" />
                               Delete
@@ -447,7 +447,7 @@ export default function TaskList({ tasks = [], projectId, isLoading }) {
               <Button type="button" variant="outline" onClick={closeDialog}>
                 Cancel
               </Button>
-              <Button type="submit" className="bg-amber-700 hover:bg-amber-800" disabled={isSaving}>
+              <Button type="submit" className="bg-primary hover:bg-primary/90 text-primary-foreground" disabled={isSaving}>
                 {isSaving && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                 {editingTask ? "Update Task" : "Create Task"}
               </Button>
