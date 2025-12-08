@@ -158,7 +158,7 @@ export default function WorkflowLibrary() {
         </div>
       ) : filteredWorkflows.length === 0 ? (
         <div className="text-center py-12">
-          <GitBranch className="h-12 w-12 mx-auto text-[var(--color-charcoal)] opacity-50 mb-4" />
+          <GitBranch className="h-12 w-12 mx-auto text-muted-foreground opacity-50 mb-4" />
           <h3 className="text-lg font-medium text-[var(--color-midnight)]">No workflows found</h3>
           <p className="text-[var(--color-charcoal)] mb-4">
             {search || categoryFilter !== "all"
