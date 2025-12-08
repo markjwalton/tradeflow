@@ -354,7 +354,7 @@ Create a detailed, actionable prompt that can be used by an AI coding assistant.
             <Lightbulb className="h-6 w-6 text-warning" />
             {isNew ? "New Concept" : formData.name}
           </h1>
-          <p className="text-charcoal-700">Design and test before adding to playground</p>
+          <p className="text-muted-foreground">Design and test before adding to playground</p>
         </div>
         <div className="flex items-center gap-2">
           {statusIcon}

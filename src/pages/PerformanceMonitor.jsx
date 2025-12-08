@@ -944,7 +944,7 @@ Provide:
             <Activity className="h-6 w-6 text-primary" />
             Performance Monitor
           </h1>
-          <p className="text-charcoal-700">Track page sizes, load times, and identify refactoring needs</p>
+          <p className="text-muted-foreground">Track page sizes, load times, and identify refactoring needs</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setShowThresholdEditor(true)}>
@@ -979,7 +979,7 @@ Provide:
                     {item.status === "running" && <Loader2 className="h-4 w-4 text-info animate-spin" />}
                     {item.status === "done" && <CheckCircle2 className="h-4 w-4 text-success" />}
                   </div>
-                  <span className={item.status === "pending" ? "text-muted-foreground" : "text-charcoal-700"}>
+                  <span className={item.status === "pending" ? "text-muted-foreground" : "text-muted-foreground"}>
                     {item.name}
                   </span>
                   {item.details && (
@@ -1145,7 +1145,7 @@ Provide:
                     <div key={issue.id} className="flex items-center justify-between p-3 bg-destructive-50 rounded-lg">
                       <div>
                         <p className="font-medium">{issue.resource_name}</p>
-                        <p className="text-sm text-charcoal-700">{issue.description}</p>
+                        <p className="text-sm text-muted-foreground">{issue.description}</p>
                       </div>
                       <div className="flex gap-2">
                         <Button 

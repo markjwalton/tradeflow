@@ -542,7 +542,7 @@ Create a development prompt that:
             <BookOpen className="h-6 w-6 text-primary" />
             Knowledge Manager
           </h1>
-          <p className="text-charcoal-700">
+          <p className="text-muted-foreground">
             Track updates across Tailwind, React, and shadcn/ui with RuleBook integration
           </p>
         </div>
@@ -574,7 +574,7 @@ Create a development prompt that:
             <Loader2 className="h-4 w-4 animate-spin text-primary" />
               <span className="text-sm font-medium">{syncProgress.message}</span>
             </div>
-            <span className="text-sm text-charcoal-700">
+            <span className="text-sm text-muted-foreground">
               {syncProgress.current} / {syncProgress.total}
             </span>
           </div>
@@ -652,7 +652,7 @@ Create a development prompt that:
                         {release.is_major && <Badge>Major</Badge>}
                         <Badge variant="outline">{release.status}</Badge>
                       </CardTitle>
-                      <p className="text-sm text-charcoal-700">Released: {release.release_date || "Unknown"}</p>
+                      <p className="text-sm text-muted-foreground">Released: {release.release_date || "Unknown"}</p>
                     </div>
                     {release.changelog_url && (
                       <Button variant="outline" size="sm" asChild>
@@ -669,7 +669,7 @@ Create a development prompt that:
                         {release.new_features.map((feature, idx) => (
                           <div key={idx} className={`p-2 ${techConfig.bgColor} rounded-lg`}>
                             <p className="text-body-small">{feature.name}</p>
-                            <p className="text-xs text-charcoal-700">{feature.description}</p>
+                            <p className="text-xs text-muted-foreground">{feature.description}</p>
                           </div>
                         ))}
                       </div>
@@ -685,7 +685,7 @@ Create a development prompt that:
         <TabsContent value="components" className="space-y-4">
           <div className="flex gap-4 mb-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-charcoal-700" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search components..."
                 value={searchQuery}
@@ -744,7 +744,7 @@ Create a development prompt that:
               {recommendations.length === 0 ? (
                 <div className="text-center py-8">
                   <Sparkles className="h-12 w-12 mx-auto mb-4" />
-                  <p className="text-charcoal-700">
+                  <p className="text-muted-foreground">
                     Generate recommendations to get AI insights with RuleBook alignment
                   </p>
                 </div>
@@ -763,7 +763,7 @@ Create a development prompt that:
                               </Badge>
                             )}
                           </div>
-                          <p className="text-sm text-charcoal-700">{rec.description}</p>
+                          <p className="text-sm text-muted-foreground">{rec.description}</p>
                         </div>
                         <div className="flex gap-2">
                           <Badge className={
@@ -780,7 +780,7 @@ Create a development prompt that:
                       {rec.reasoning && (
                         <div className="mt-3 p-3 bg-primary-50 rounded-lg">
                           <p className="text-xs font-medium mb-1">Development Prompt & RuleBook Context:</p>
-                          <p className="text-sm text-charcoal-700 whitespace-pre-wrap">{rec.reasoning}</p>
+                          <p className="text-sm text-muted-foreground whitespace-pre-wrap">{rec.reasoning}</p>
                         </div>
                       )}
 
@@ -828,7 +828,7 @@ Create a development prompt that:
           <div className="space-y-4 py-4">
             <div>
               <Label>Recommendation</Label>
-              <p className="text-sm text-charcoal-700 mt-1">{roadmapDialog.rec?.title}</p>
+              <p className="text-sm text-muted-foreground mt-1">{roadmapDialog.rec?.title}</p>
             </div>
             <div>
               <Label>Priority</Label>

@@ -348,7 +348,7 @@ export default function APIManager() {
             <Key className="h-6 w-6 text-primary" />
             API Manager
           </h1>
-          <p className="text-charcoal-700">Manage API keys, monitor usage, and view analytics</p>
+          <p className="text-muted-foreground">Manage API keys, monitor usage, and view analytics</p>
         </div>
       </div>
 
@@ -473,7 +473,7 @@ export default function APIManager() {
                 <div className="mt-4 p-4 bg-warning/10 border border-warning/20 rounded-lg flex items-center justify-between">
                   <div>
                     <h4 className="font-medium text-warning">Test Your Lookups</h4>
-                    <p className="text-sm text-secondary">
+                    <p className="text-sm text-muted-foreground">
                       Test Address, Email, and Phone validation APIs with the configured Ideal Postcodes key.
                     </p>
                   </div>
