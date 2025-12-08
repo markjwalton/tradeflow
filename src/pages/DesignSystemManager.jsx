@@ -288,7 +288,6 @@ For each recommendation, provide:
           </Button>
           <Button 
             onClick={() => setShowThemeCreator(true)}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground"
           >
             <Palette className="h-4 w-4 mr-2" />
             Create Custom Theme
@@ -567,7 +566,7 @@ For each recommendation, provide:
           {recommendations.length === 0 ? (
             <Card>
               <CardContent className="py-12 text-center">
-                <Sparkles className="h-12 w-12 mx-auto mb-4 opacity-50 text-charcoal-700" />
+                <Sparkles className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p className="text-charcoal-700">No recommendations yet</p>
                 <p className="text-sm text-charcoal-700 mt-1">
                   Run AI analysis to get update recommendations
@@ -592,7 +591,7 @@ For each recommendation, provide:
                             {rec.impact}
                           </Badge>
                           {rec.breaking_change && (
-                            <Badge className="bg-destructive-50 text-destructive-700">
+                            <Badge className="bg-destructive-50 text-destructive">
                               Breaking
                             </Badge>
                           )}
@@ -604,7 +603,7 @@ For each recommendation, provide:
                         className={
                           rec.status === "pending_review" ? "border-warning" :
                           rec.status === "accepted" ? "border-success" :
-                          "border-charcoal-300"
+                          "border-border"
                         }
                       >
                         {rec.status}
@@ -666,7 +665,7 @@ For each recommendation, provide:
                         <Button 
                           size="sm"
                           onClick={() => handleAcceptRecommendation(rec)}
-                          className="bg-success hover:bg-success/90 text-success-foreground"
+                          className="bg-success hover:bg-success/90 text-white"
                         >
                           <CheckCircle2 className="h-3 w-3 mr-1" />
                           Accept & Add to Roadmap
@@ -747,7 +746,7 @@ For each recommendation, provide:
             {customerPackages.length === 0 && (
               <Card className="border-dashed md:col-span-2">
                 <CardContent className="py-12 text-center">
-                  <Users className="h-12 w-12 mx-auto mb-4 opacity-50 text-charcoal-700" />
+                  <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
                   <p className="text-charcoal-700">No customer packages yet</p>
                 </CardContent>
               </Card>
@@ -886,7 +885,6 @@ For each recommendation, provide:
               <Button 
                 onClick={handleCreatePackage}
                 disabled={createMutation.isPending}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 {createMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                 Create Package
