@@ -15,30 +15,28 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'File path required' }, { status: 400 });
     }
 
-    // In Base44, files are in /src directory
-    // Remove any leading slashes or 'src/' from filePath
-    const cleanPath = filePath.replace(/^(src\/|\/)+/, '');
-    
-    const possiblePaths = [
-      `/src/${cleanPath}`,
-      `/src/src/${cleanPath}`,
-    ];
-
-    for (const fullPath of possiblePaths) {
-      try {
-        const content = await Deno.readTextFile(fullPath);
-        return Response.json({ content, path: fullPath });
-      } catch (error) {
-        // Try next path
-        continue;
+    // List all directories to debug
+    const rootEntries = [];
+    try {
+      for await (const entry of Deno.readDir('/')) {
+        rootEntries.push(entry.name);
       }
-    }
-    
-    // If no path worked, return error
+    } catch {}
+
+    const srcEntries = [];
+    try {
+      for await (const entry of Deno.readDir('/src')) {
+        srcEntries.push(entry.name);
+      }
+    } catch {}
+
     return Response.json({ 
-      error: 'File not found in any location',
-      tried: possiblePaths
-    }, { status: 404 });
+      error: 'Debug info',
+      rootEntries,
+      srcEntries,
+      requestedFile: filePath
+    }, { status: 200 });
+
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
