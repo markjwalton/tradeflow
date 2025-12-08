@@ -279,13 +279,19 @@ export default function PageBuilder() {
     e.preventDefault();
     
     const element = e.target;
-    const path = getElementPath(element);
+    const currentClasses = element.className || '';
+    const tagName = element.tagName.toLowerCase();
+    const textContent = element.textContent?.substring(0, 50) || '';
+    
+    // Highlight selected element
+    element.style.outline = '2px solid var(--color-primary)';
+    element.style.outlineOffset = '2px';
     
     setSelectedElement({
-      element,
-      path,
-      currentClasses: element.className,
-      tagName: element.tagName.toLowerCase(),
+      currentClasses,
+      tagName,
+      textContent,
+      originalElement: element
     });
     setShowTokenPicker(true);
   };
@@ -310,7 +316,7 @@ export default function PageBuilder() {
   const applyTokenToElement = (tokenClass, tokenType) => {
     if (!selectedElement) return;
 
-    const { currentClasses } = selectedElement;
+    const { currentClasses, originalElement } = selectedElement;
     let newClasses = currentClasses;
 
     // Remove conflicting classes based on token type
@@ -335,7 +341,6 @@ export default function PageBuilder() {
     } else if (tokenType === 'transition') {
       newClasses = currentClasses.replace(/transition-[^\s]+/g, '');
     } else if (tokenType === 'button') {
-      // Replace all button-related classes
       newClasses = '';
     }
 
@@ -347,6 +352,12 @@ export default function PageBuilder() {
       new RegExp(`class="${escapedClasses}"`, 'g'),
       `class="${newClasses}"`
     );
+
+    // Clear highlight
+    if (originalElement) {
+      originalElement.style.outline = '';
+      originalElement.style.outlineOffset = '';
+    }
 
     setFormData({ ...formData, current_content_jsx: updatedContent });
     setShowTokenPicker(false);
@@ -849,14 +860,21 @@ export default function PageBuilder() {
       </Dialog>
 
       {/* Token Picker Dialog */}
-      <Dialog open={showTokenPicker} onOpenChange={setShowTokenPicker}>
+      <Dialog open={showTokenPicker} onOpenChange={(open) => {
+        if (!open && selectedElement?.originalElement) {
+          selectedElement.originalElement.style.outline = '';
+          selectedElement.originalElement.style.outlineOffset = '';
+        }
+        setShowTokenPicker(open);
+      }}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Apply Design Token</DialogTitle>
             {selectedElement && (
-              <p className="text-sm text-[var(--color-charcoal)]">
-                Selected: <code className="text-xs bg-muted px-1 py-0.5 rounded">{selectedElement.tagName}</code>
-              </p>
+              <div className="text-sm text-[var(--color-charcoal)]">
+                <p>Selected: <code className="text-xs bg-muted px-1 py-0.5 rounded">{selectedElement.tagName}</code></p>
+                <p className="text-xs mt-1 truncate">Current: {selectedElement.currentClasses || 'no classes'}</p>
+              </div>
             )}
           </DialogHeader>
           
