@@ -17,17 +17,30 @@ Deno.serve(async (req) => {
 
     // Read the file from the project directory
     const projectRoot = Deno.cwd();
-    const fullPath = `${projectRoot}/src/${filePath}`;
+    
+    // Try multiple possible paths
+    const possiblePaths = [
+      `${projectRoot}/src/${filePath}`,
+      `${projectRoot}/${filePath}`,
+      `${projectRoot}/app/src/${filePath}`,
+    ];
 
-    try {
-      const content = await Deno.readTextFile(fullPath);
-      return Response.json({ content });
-    } catch (error) {
-      if (error instanceof Deno.errors.NotFound) {
-        return Response.json({ error: 'File not found' }, { status: 404 });
+    for (const fullPath of possiblePaths) {
+      try {
+        const content = await Deno.readTextFile(fullPath);
+        return Response.json({ content, path: fullPath });
+      } catch (error) {
+        // Try next path
+        continue;
       }
-      throw error;
     }
+    
+    // If no path worked, return error
+    return Response.json({ 
+      error: 'File not found in any location',
+      tried: possiblePaths,
+      cwd: projectRoot
+    }, { status: 404 });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
