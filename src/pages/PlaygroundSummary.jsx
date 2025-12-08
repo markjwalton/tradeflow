@@ -579,7 +579,7 @@ export default function PlaygroundSummary() {
           {/* Items Grid */}
           {allLoading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+              <Loader2 className="h-8 w-8 animate-spin" />
             </div>
           ) : filteredItems.length === 0 ? (
             <div className="text-center py-12 text-charcoal-700">
