@@ -345,7 +345,7 @@ export default function APIManager() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)] font-heading">
-            <Key className="h-6 w-6 text-[var(--color-primary)]" />
+            <Key className="h-6 w-6 text-primary-500" />
             API Manager
           </h1>
           <p className="text-[var(--color-charcoal)]">Manage API keys, monitor usage, and view analytics</p>
@@ -528,7 +528,7 @@ export default function APIManager() {
                 </Select>
               )}
             </div>
-            <Button className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white" onClick={() => openEditor()}>
+            <Button className="bg-primary-500 hover:bg-primary-600 text-white" onClick={() => openEditor()}>
               <Plus className="h-4 w-4 mr-2" />
               Add API
             </Button>

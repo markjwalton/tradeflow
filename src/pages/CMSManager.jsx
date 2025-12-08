@@ -124,7 +124,7 @@ export default function CMSManager() {
       return (
         <div className="text-center py-12 text-[var(--color-charcoal)]">
           <p>No {type} yet</p>
-          <Button className="mt-4 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white" onClick={() => openEditor()}>
+          <Button className="mt-4 bg-primary-500 hover:bg-primary-600 text-white" onClick={() => openEditor()}>
             <Plus className="h-4 w-4 mr-2" />
             Create {type.slice(0, -1)}
           </Button>

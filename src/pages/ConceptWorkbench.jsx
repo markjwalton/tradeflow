@@ -329,7 +329,7 @@ Create a detailed, actionable prompt that can be used by an AI coding assistant.
   };
 
   const statusIcon = {
-    passed: <CheckCircle2 className="h-5 w-5 text-success" />,
+    passed: <CheckCircle2 className="h-5 w-5 text-success-foreground" />,
     failed: <XCircle className="h-5 w-5 text-destructive" />,
     pending: <Circle className="h-5 w-5 text-muted-foreground" />,
   }[formData.test_status || "pending"];
@@ -351,7 +351,7 @@ Create a detailed, actionable prompt that can be used by an AI coding assistant.
         </Button>
         <div className="flex-1">
           <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
-            <Lightbulb className="h-6 w-6 text-warning" />
+            <Lightbulb className="h-6 w-6 text-warning-foreground" />
             {isNew ? "New Concept" : formData.name}
           </h1>
           <p className="text-[var(--color-charcoal)]">Design and test before adding to playground</p>
@@ -379,7 +379,7 @@ Create a detailed, actionable prompt that can be used by an AI coding assistant.
         </Button>
         {!isNew && formData.test_status === "passed" && (
           <Button 
-            className="bg-success hover:bg-success/90 text-success-foreground"
+            className="bg-success-foreground hover:bg-primary-600 text-white"
             onClick={() => setShowPushDialog(true)}
           >
             <ArrowUpCircle className="h-4 w-4 mr-2" />
@@ -492,14 +492,14 @@ Create a detailed, actionable prompt that can be used by an AI coding assistant.
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-accent-600" />
+                  <Sparkles className="h-5 w-5 text-accent-400" />
                   Suggestions
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">
                   {formData.ai_suggestions.map((s, i) => (
-                    <li key={i} className="text-sm bg-accent-50 p-2 rounded">{s}</li>
+                    <li key={i} className="text-sm bg-accent-100 p-2 rounded">{s}</li>
                   ))}
                 </ul>
               </CardContent>
@@ -513,7 +513,7 @@ Create a detailed, actionable prompt that can be used by an AI coding assistant.
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <ArrowUpCircle className="h-5 w-5 text-success" />
+              <ArrowUpCircle className="h-5 w-5 text-success-foreground" />
               Push Concept Forward
             </DialogTitle>
           </DialogHeader>
@@ -527,13 +527,13 @@ Create a detailed, actionable prompt that can be used by an AI coding assistant.
                 <SelectContent>
                   <SelectItem value="playground">
                     <div className="flex items-center gap-2">
-                      <FlaskConical className="h-4 w-4 text-accent-600" />
+                      <FlaskConical className="h-4 w-4 text-accent-400" />
                       Playground (for further testing)
                     </div>
                   </SelectItem>
                   <SelectItem value="library">
                     <div className="flex items-center gap-2">
-                      <Database className="h-4 w-4 text-info" />
+                      <Database className="h-4 w-4 text-info-foreground" />
                       Library (production ready)
                     </div>
                   </SelectItem>
@@ -568,7 +568,7 @@ Create a detailed, actionable prompt that can be used by an AI coding assistant.
               </Button>
               <Button 
                 onClick={pushTarget === "playground" ? pushToPlayground : pushToLibrary}
-                className="flex-1 bg-success hover:bg-success/90 text-success-foreground"
+                className="flex-1 bg-success-foreground hover:bg-primary-600 text-white"
               >
                 Push to {pushTarget === "playground" ? "Playground" : "Library"}
               </Button>

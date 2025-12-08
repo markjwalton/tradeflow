@@ -383,7 +383,7 @@ Return as JSON with a "suggestions" array of strings.`,
                       }`}
                     >
                       <span className="text-sm">{test.name}</span>
-                      {isPassed && <CheckCircle2 className="h-4 w-4 text-success" />}
+                      {isPassed && <CheckCircle2 className="h-4 w-4 text-success-foreground" />}
                       {isFailed && <XCircle className="h-4 w-4 text-destructive" />}
                       {!isPassed && !isFailed && <Circle className="h-4 w-4 text-muted-foreground" />}
                     </div>
@@ -413,7 +413,7 @@ Return as JSON with a "suggestions" array of strings.`,
       <Card className="mt-6">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-accent-600" />
+            <Sparkles className="h-5 w-5 text-accent-400" />
             AI Improvement Suggestions
           </CardTitle>
           <Button onClick={generateAISuggestions} disabled={isGenerating}>
@@ -426,7 +426,7 @@ Return as JSON with a "suggestions" array of strings.`,
             <ul className="space-y-2">
               {item.ai_suggestions.map((suggestion, i) => (
                 <li key={i} className="flex items-start gap-2 p-3 bg-warning/10 rounded-lg">
-                  <Sparkles className="h-4 w-4 text-warning mt-0.5 flex-shrink-0" />
+                  <Sparkles className="h-4 w-4 text-warning-foreground mt-0.5 flex-shrink-0" />
                   <span className="text-sm">{suggestion}</span>
                 </li>
               ))}
