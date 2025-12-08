@@ -92,14 +92,15 @@ export default function CSSAudit() {
 
       for (const filePath of filesToScan) {
         try {
-          const response = await fetch(`/src/${filePath}`);
-          if (!response.ok) {
+          // Read file using base44 function instead of fetch
+          const readResult = await base44.functions.invoke('readFileContent', { filePath });
+          if (!readResult.data?.success || !readResult.data?.content) {
             processed++;
             setProgress(Math.round((processed / filesToScan.length) * 100));
             continue;
           }
           
-          const content = await response.text();
+          const content = readResult.data.content;
           const fileViolations = [];
           
           // Apply all regex patterns directly
