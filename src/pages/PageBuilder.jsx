@@ -879,7 +879,7 @@ export default function PageBuilder() {
           </DialogHeader>
           
           <Tabs defaultValue="colors">
-            <TabsList className="grid grid-cols-3 w-full">
+            <TabsList className="grid grid-cols-2 w-full">
               <TabsTrigger value="colors">Colors</TabsTrigger>
               <TabsTrigger value="typography">Typography</TabsTrigger>
               <TabsTrigger value="spacing">Spacing</TabsTrigger>
