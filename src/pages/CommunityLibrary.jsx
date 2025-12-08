@@ -286,7 +286,7 @@ export default function CommunityLibrary() {
 
         <TabsContent value="available" className="mt-4">
           {newItems.length === 0 ? (
-            <div className="text-center py-12 text-charcoal-700">
+            <div className="text-center py-12 text-muted-foreground">
               <Package className="h-12 w-12 mx-auto mb-4 opacity-30" />
               <p>No new items available</p>
             </div>
@@ -299,7 +299,7 @@ export default function CommunityLibrary() {
 
         <TabsContent value="updates" className="mt-4">
           {itemsWithUpdates.length === 0 ? (
-            <div className="text-center py-12 text-charcoal-700">
+            <div className="text-center py-12 text-muted-foreground">
               <RefreshCw className="h-12 w-12 mx-auto mb-4 opacity-30" />
               <p>All items are up to date</p>
             </div>
@@ -316,7 +316,7 @@ export default function CommunityLibrary() {
 
         <TabsContent value="installed" className="mt-4">
           {tenantItems.length === 0 ? (
-            <div className="text-center py-12 text-charcoal-700">
+            <div className="text-center py-12 text-muted-foreground">
               <Download className="h-12 w-12 mx-auto mb-4 opacity-30" />
               <p>No items installed yet</p>
             </div>

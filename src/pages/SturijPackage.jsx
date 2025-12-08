@@ -364,7 +364,7 @@ When updating existing code:
                 <CardTitle className="text-midnight-900">What is Sturij?</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <p className="text-charcoal-700">
+                <p className="text-muted-foreground">
                   Sturij is a comprehensive design system built specifically for Base44 applications. 
                   It provides a cohesive visual language with warm, professional aesthetics inspired by 
                   natural materials and craftsmanship.
@@ -453,7 +453,7 @@ When updating existing code:
                         </div>
                         <div>
                           <div className="font-medium text-midnight-900">{file.name}</div>
-                          <p className="text-sm text-charcoal-700">{file.description}</p>
+                          <p className="text-sm text-muted-foreground">{file.description}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
@@ -521,7 +521,7 @@ When updating existing code:
                         <div className="flex-1">
                           <div className="font-medium text-midnight-900">{token.name}</div>
                           {token.var && (
-                            <code className="text-xs text-charcoal-700 bg-card px-2 py-0.5 rounded">
+                            <code className="text-xs text-muted-foreground bg-card px-2 py-0.5 rounded">
                               var({token.var})
                             </code>
                           )}
@@ -532,14 +532,14 @@ When updating existing code:
                               className="w-10 h-10 rounded-md border border-border"
                               style={{ backgroundColor: token.hex }}
                             />
-                            <code className="text-sm text-charcoal-700">{token.hex}</code>
+                            <code className="text-sm text-muted-foreground">{token.hex}</code>
                           </div>
                         )}
                         {token.value && (
-                          <code className="text-sm text-charcoal-700">{token.value}</code>
+                          <code className="text-sm text-muted-foreground">{token.value}</code>
                         )}
                         {token.usage && (
-                          <span className="text-sm text-charcoal-700">{token.usage}</span>
+                          <span className="text-sm text-muted-foreground">{token.usage}</span>
                         )}
                       </div>
                     ))}
@@ -566,7 +566,7 @@ When updating existing code:
                         <h3 className="font-heading font-medium text-midnight-900 mb-1">
                           {step.title}
                         </h3>
-                        <p className="text-sm text-charcoal-700 mb-2">
+                        <p className="text-sm text-muted-foreground mb-2">
                           {step.description}
                         </p>
                         <div className="relative">
@@ -689,7 +689,7 @@ When updating existing code:
                 <h3 className="text-xl font-heading text-midnight-900 mb-2">
                   Interactive Component Showcase
                 </h3>
-                <p className="text-charcoal-700 mb-6">
+                <p className="text-muted-foreground mb-6">
                   View live examples of all design tokens, components, and patterns
                 </p>
                 <Button 
@@ -716,7 +716,7 @@ When updating existing code:
                 <h3 className="text-xl font-heading text-midnight-900 mb-2">
                   Ready to implement?
                 </h3>
-                <p className="text-charcoal-700">
+                <p className="text-muted-foreground">
                   All files are already in your Base44 project and ready to use
                 </p>
               </div>
