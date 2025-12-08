@@ -118,7 +118,7 @@ export default function PackageDetail() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -130,7 +130,7 @@ export default function PackageDetail() {
           <CardContent className="py-12 text-center">
             <AlertCircle className="h-12 w-12 mx-auto mb-4 text-warning" />
             <h2 className="text-lg font-heading text-midnight-900">Package Not Found</h2>
-            <p className="text-charcoal-700 mt-2">The requested package could not be found.</p>
+            <p className="text-muted-foreground mt-2">The requested package could not be found.</p>
             <Link to={createPageUrl("DesignSystemManager")}>
               <Button className="mt-4">Back to Manager</Button>
             </Link>
@@ -165,7 +165,7 @@ export default function PackageDetail() {
               <Badge className={statusColors[pkg.status]}>{pkg.status}</Badge>
               <Badge variant="outline">v{pkg.version}</Badge>
             </div>
-            <p className="text-charcoal-700 mt-1">
+            <p className="text-muted-foreground mt-1">
               <code className="text-sm">{pkg.package_code}</code>
             </p>
           </div>
@@ -240,21 +240,21 @@ export default function PackageDetail() {
                 ) : (
                   <>
                     <div>
-                      <Label className="text-charcoal-700">Description</Label>
+                      <Label className="text-muted-foreground">Description</Label>
                       <p className="text-midnight-900">{pkg.description || "No description"}</p>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label className="text-charcoal-700">Type</Label>
+                        <Label className="text-muted-foreground">Type</Label>
                         <p className="text-midnight-900 capitalize">{pkg.package_type?.replace("_", " ")}</p>
                       </div>
                       <div>
-                        <Label className="text-charcoal-700">Tailwind</Label>
+                        <Label className="text-muted-foreground">Tailwind</Label>
                         <p className="text-midnight-900">{pkg.tailwind_version}</p>
                       </div>
                     </div>
                     <div>
-                      <Label className="text-charcoal-700">Created</Label>
+                      <Label className="text-muted-foreground">Created</Label>
                       <p className="text-midnight-900">
                         {pkg.created_date ? format(new Date(pkg.created_date), "PPP") : "Unknown"}
                       </p>
@@ -282,7 +282,7 @@ export default function PackageDetail() {
                       <Package className="h-8 w-8 text-primary" />
                       <div>
                         <p className="font-medium text-midnight-900">{parentPkg.package_name}</p>
-                        <p className="text-sm text-charcoal-700">v{pkg.parent_version}</p>
+                        <p className="text-sm text-muted-foreground">v{pkg.parent_version}</p>
                       </div>
                     </div>
                     {pkg.update_available && (
@@ -305,15 +305,15 @@ export default function PackageDetail() {
                   </CardHeader>
                   <CardContent className="space-y-2">
                     <div>
-                      <Label className="text-charcoal-700">Company</Label>
+                      <Label className="text-muted-foreground">Company</Label>
                       <p className="text-midnight-900">{pkg.customer_company || "Not set"}</p>
                     </div>
                     <div>
-                      <Label className="text-charcoal-700">Contact</Label>
+                      <Label className="text-muted-foreground">Contact</Label>
                       <p className="text-midnight-900">{pkg.customer_name || "Not set"}</p>
                     </div>
                     <div>
-                      <Label className="text-charcoal-700">Email</Label>
+                      <Label className="text-muted-foreground">Email</Label>
                       <p className="text-midnight-900">{pkg.customer_email || "Not set"}</p>
                     </div>
                   </CardContent>
@@ -332,28 +332,28 @@ export default function PackageDetail() {
                       <p className="text-lg font-medium text-midnight-900">
                         {Object.keys(pkg.design_tokens?.colors || {}).length}
                       </p>
-                      <p className="text-xs text-charcoal-700">Colors</p>
+                      <p className="text-xs text-muted-foreground">Colors</p>
                     </div>
                     <div className="p-3 bg-background rounded-lg text-center">
                       <Type className="h-5 w-5 mx-auto mb-1 text-secondary" />
                       <p className="text-lg font-medium text-midnight-900">
                         {Object.keys(pkg.design_tokens?.typography || {}).length}
                       </p>
-                      <p className="text-xs text-charcoal-700">Typography</p>
+                      <p className="text-xs text-muted-foreground">Typography</p>
                     </div>
                     <div className="p-3 bg-background rounded-lg text-center">
                       <Maximize className="h-5 w-5 mx-auto mb-1 text-accent" />
                       <p className="text-lg font-medium text-midnight-900">
                         {Object.keys(pkg.design_tokens?.spacing || {}).length}
                       </p>
-                      <p className="text-xs text-charcoal-700">Spacing</p>
+                      <p className="text-xs text-muted-foreground">Spacing</p>
                     </div>
                     <div className="p-3 bg-background rounded-lg text-center">
                       <Layers className="h-5 w-5 mx-auto mb-1 text-info" />
                       <p className="text-lg font-medium text-midnight-900">
                         {Object.keys(pkg.design_tokens?.effects || {}).length}
                       </p>
-                      <p className="text-xs text-charcoal-700">Effects</p>
+                      <p className="text-xs text-muted-foreground">Effects</p>
                     </div>
                   </div>
                 </CardContent>
@@ -379,7 +379,7 @@ export default function PackageDetail() {
             </CardHeader>
             <CardContent>
               {(pkg.changelog || []).length === 0 ? (
-                <p className="text-charcoal-700 text-center py-8">No version history yet</p>
+                <p className="text-muted-foreground text-center py-8">No version history yet</p>
               ) : (
                 <div className="space-y-4">
                   {[...(pkg.changelog || [])].reverse().map((entry, idx) => (
@@ -393,7 +393,7 @@ export default function PackageDetail() {
                         </Badge>
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm text-charcoal-700">
+                        <p className="text-sm text-muted-foreground">
                           {entry.date ? format(new Date(entry.date), "PPP") : "Unknown date"}
                         </p>
                         <ul className="mt-2 space-y-1">

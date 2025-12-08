@@ -228,7 +228,7 @@ export default function Projects() {
                   <Badge className={statusColors[project.status]}>{project.status}</Badge>
                   <Badge className={priorityColors[project.priority]}>{project.priority}</Badge>
                 </div>
-                <p className="text-sm text-charcoal-700">Customer: {getCustomerName(project.customer_id)}</p>
+                <p className="text-sm text-muted-foreground">Customer: {getCustomerName(project.customer_id)}</p>
                 <div className="space-y-1">
                   <div className="flex justify-between text-sm">
                     <span>Budget</span>
@@ -243,7 +243,7 @@ export default function Projects() {
       </div>
 
       {filteredProjects.length === 0 && (
-        <div className="text-center py-12 text-charcoal-700">
+        <div className="text-center py-12 text-muted-foreground">
           No projects found. Create your first project to get started.
         </div>
       )}

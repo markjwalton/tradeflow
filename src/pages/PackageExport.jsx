@@ -234,7 +234,7 @@ export default function PackageExport() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -254,7 +254,7 @@ export default function PackageExport() {
               <Download className="h-6 w-6 text-primary" />
               Export Package
             </h1>
-            <p className="text-charcoal-700">
+            <p className="text-muted-foreground">
               {pkg?.package_name} v{pkg?.version}
             </p>
           </div>
@@ -307,19 +307,19 @@ export default function PackageExport() {
               <Label className="text-sm font-medium">Token Summary</Label>
               <div className="mt-2 space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-charcoal-700">Colors</span>
+                  <span className="text-muted-foreground">Colors</span>
                   <Badge variant="outline">{Object.keys(pkg?.design_tokens?.colors || {}).length}</Badge>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-charcoal-700">Typography</span>
+                  <span className="text-muted-foreground">Typography</span>
                   <Badge variant="outline">{Object.keys(pkg?.design_tokens?.typography || {}).length}</Badge>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-charcoal-700">Spacing</span>
+                  <span className="text-muted-foreground">Spacing</span>
                   <Badge variant="outline">{Object.keys(pkg?.design_tokens?.spacing || {}).length}</Badge>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-charcoal-700">Effects</span>
+                  <span className="text-muted-foreground">Effects</span>
                   <Badge variant="outline">{Object.keys(pkg?.design_tokens?.effects || {}).length}</Badge>
                 </div>
               </div>
