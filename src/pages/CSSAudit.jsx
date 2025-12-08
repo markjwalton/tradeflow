@@ -349,7 +349,7 @@ export default function CSSAudit() {
                               </Badge>
                             )}
                           </div>
-                          <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); handleAutoFixFile(filePath); }} disabled={fileData.autoFixable === 0}>
+                          <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); handleAutoFixFile(filePath); }}>
                             <Wrench className="h-3 w-3 mr-2" />Fix
                           </Button>
                         </div>
