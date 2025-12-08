@@ -279,14 +279,14 @@ Return JSON with entity names as keys and arrays of records as values.`,
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64 bg-[var(--color-background)]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+      <div className="flex items-center justify-center h-64 bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
       </div>
     );
   }
 
   return (
-    <div className="p-6 space-y-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 space-y-6 bg-background min-h-screen">
       {/* Header */}
       <Card className="bg-gradient-to-r from-primary-500 to-midnight-900 text-white border-0">
         <CardContent className="py-6">
@@ -300,9 +300,9 @@ Return JSON with entity names as keys and arrays of records as values.`,
                 <p className="text-white/80 mt-1">Manage test data for pages and features</p>
                 <div className="flex gap-3 mt-4">
                   <Badge className="bg-white/20">{stats.total} Items</Badge>
-                  <Badge className="bg-success-50 text-success-foreground">{stats.verified} Verified</Badge>
-                  <Badge className="bg-warning/10 text-warning-foreground">{stats.pending} Pending</Badge>
-                  <Badge className="bg-destructive-50 text-destructive-700">{stats.noData} No Data</Badge>
+                  <Badge className="bg-success-50 text-success">{stats.verified} Verified</Badge>
+                  <Badge className="bg-warning/10 text-warning">{stats.pending} Pending</Badge>
+                  <Badge className="bg-destructive-50 text-destructive">{stats.noData} No Data</Badge>
                 </div>
               </div>
             </div>
@@ -313,7 +313,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
               <Button 
               onClick={bulkVerify}
               disabled={isOperating || stats.pending === 0}
-              className="bg-white text-accent-700 hover:bg-accent-100"
+              className="bg-white text-accent hover:bg-accent-100"
               >
                 <CheckCircle2 className="h-4 w-4 mr-2" />
                 Verify All ({stats.pending})
@@ -332,7 +332,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
                 {operation.type === "verify" ? (
                   <Loader2 className="h-5 w-5 animate-spin" />
                 ) : (
-                  <CheckCircle2 className="h-5 w-5 text-success-foreground" />
+                  <CheckCircle2 className="h-5 w-5 text-success" />
                 )}
                 {operation.type === "verify" ? "Verifying..." : "Verification Complete"}
               </CardTitle>
@@ -392,7 +392,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
         <CardContent>
           {filteredItems.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              <CheckCircle2 className="h-10 w-10 mx-auto mb-2 text-success-foreground" />
+              <CheckCircle2 className="h-10 w-10 mx-auto mb-2 text-success" />
               <p>No items in this category</p>
             </div>
           ) : (
@@ -413,9 +413,9 @@ Return JSON with entity names as keys and arrays of records as values.`,
                     <tr key={item.id} className="hover:bg-muted">
                       <td className="p-3">
                         {item.type === "page" ? (
-                          <Layout className="h-4 w-4 text-info-foreground" />
+                          <Layout className="h-4 w-4 text-info" />
                         ) : (
-                          <Zap className="h-4 w-4 text-warning-foreground" />
+                          <Zap className="h-4 w-4 text-warning" />
                         )}
                       </td>
                       <td className="p-3 font-medium">{item.name}</td>
@@ -427,7 +427,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
                             <XCircle className="h-3 w-3" /> No Data
                           </Badge>
                         ) : item.testStatus === "verified" ? (
-                          <Badge className="bg-success-50 text-success-foreground gap-1">
+                          <Badge className="bg-success-50 text-success gap-1">
                             <CheckCircle2 className="h-3 w-3" /> Verified
                           </Badge>
                         ) : (

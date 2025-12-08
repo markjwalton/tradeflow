@@ -389,7 +389,6 @@ export default function ProjectForm() {
           </Link>
           <Button
             type="submit"
-            className="bg-primary hover:bg-primary/90 text-primary-foreground"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
