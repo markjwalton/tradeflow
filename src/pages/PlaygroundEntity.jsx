@@ -218,7 +218,7 @@ Return as JSON with a "suggestions" array of strings.`,
             <Database className="h-6 w-6 text-accent" />
             {item.source_name}
           </h1>
-          <p className="text-charcoal-700">Entity Playground</p>
+          <p className="text-muted-foreground">Entity Playground</p>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="outline">v{item.current_version || 1}</Badge>
