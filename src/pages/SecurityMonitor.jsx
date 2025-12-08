@@ -1041,9 +1041,9 @@ function PolicyEditorForm({ policy, viewMode, selectedTenantId, tenants, onSave,
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+      <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
         <div className="flex items-center gap-2">
-          <Globe className="h-4 w-4 text-blue-600" />
+          <Globe className="h-4 w-4 text-info" />
           <Label>Global Policy</Label>
         </div>
         <Switch
@@ -1138,9 +1138,9 @@ function BackupEditorForm({ backup, viewMode, selectedTenantId, tenants, entityT
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+      <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
         <div className="flex items-center gap-2">
-          <Globe className="h-4 w-4 text-blue-600" />
+          <Globe className="h-4 w-4 text-info" />
           <Label>Global Backup</Label>
         </div>
         <Switch
