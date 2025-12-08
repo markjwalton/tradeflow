@@ -520,14 +520,7 @@ export default function Layout({ children, currentPageName }) {
     <TenantContext.Provider value={tenantContextValue}>
       {/* Adobe Fonts - Load in head */}
       <link rel="stylesheet" href="https://use.typekit.net/iwm1gcu.css" />
-      <style dangerouslySetInnerHTML={{ __html: `
-        @font-face {
-          font-family: degular-display;
-        }
-        @font-face {
-          font-family: mrs-eaves-xl-serif-narrow;
-        }
-      ` }} />
+
       {/* Inject Sturij Design System CSS Variables */}
       <style dangerouslySetInnerHTML={{ __html: cssVariables }} />
       <div className="min-h-screen flex flex-col bg-[var(--color-background)]">

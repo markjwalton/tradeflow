@@ -104,7 +104,7 @@
   --shadow-modal: var(--shadow-2xl);
 
   /* Additional Color Tokens */
-  --color-white: #ffffff;
+  --color-white: var(--background-50);
 
   /* Additional Color Tokens */
   --color-background-paper: #ffffff;

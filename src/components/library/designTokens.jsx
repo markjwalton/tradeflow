@@ -144,7 +144,7 @@ export const typography = {
   fonts: {
     heading: 'degular-display, system-ui, sans-serif',
     body: 'mrs-eaves-xl-serif-narrow, Georgia, serif',
-    mono: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace'
+    mono: 'ui-monospace, SFMono-Regular, SF Mono, Menlo, monospace'
   },
   
   sizes: {
@@ -373,7 +373,7 @@ h1, h2, h3, h4, h5, h6 {
   /* Typography */
   --font-heading: degular-display, system-ui, sans-serif;
   --font-body: mrs-eaves-xl-serif-narrow, Georgia, serif;
-  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  --font-mono: ui-monospace, SFMono-Regular, SF Mono, Menlo, monospace;
 
   /* Spacing */
   --spacing-1: 0.25rem;
