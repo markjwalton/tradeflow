@@ -35,16 +35,16 @@ import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
 
 const statusIcons = {
-  passed: <CheckCircle2 className="h-4 w-4 text-success" />,
+  passed: <CheckCircle2 className="h-4 w-4 text-success-foreground" />,
   failed: <XCircle className="h-4 w-4 text-destructive" />,
   pending: <Circle className="h-4 w-4 text-muted-foreground" />,
-  skipped: <Circle className="h-4 w-4 text-warning" />,
+  skipped: <Circle className="h-4 w-4 text-warning-foreground" />,
 };
 
 const typeIcons = {
-  entity: <Database className="h-4 w-4 text-accent-600" />,
-  page: <Layout className="h-4 w-4 text-info" />,
-  feature: <Zap className="h-4 w-4 text-warning" />,
+  entity: <Database className="h-4 w-4 text-accent-400" />,
+  page: <Layout className="h-4 w-4 text-info-foreground" />,
+  feature: <Zap className="h-4 w-4 text-warning-foreground" />,
 };
 
 const itemStatusColors = {
@@ -288,7 +288,7 @@ export default function PlaygroundSummary() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
-            <FlaskConical className="h-6 w-6 text-[var(--color-primary)]" />
+            <FlaskConical className="h-6 w-6 text-primary-500" />
             Development Playground
           </h1>
           <p className="text-[var(--color-charcoal)]">Test, modify, and validate templates before deployment</p>
@@ -349,7 +349,7 @@ export default function PlaygroundSummary() {
             )}
           </Button>
           <Link to={createPageUrl("ConceptWorkbench")}>
-            <Button className="bg-warning hover:bg-warning/90 text-warning-foreground">
+            <Button className="bg-warning hover:bg-secondary-600 text-white">
               <Lightbulb className="h-4 w-4 mr-2" />
               New Concept
             </Button>
@@ -359,10 +359,10 @@ export default function PlaygroundSummary() {
 
       {/* Progress Banner */}
       {(isSyncing || isClearing) && (syncProgress.total > 0 || clearProgress.total > 0) && (
-        <Card className="mb-6 border-info/20 bg-info-50">
+        <Card className="mb-6 border-info-foreground/20 bg-info-50">
           <CardContent className="py-4">
             <div className="flex items-center gap-4">
-              <Loader2 className="h-5 w-5 animate-spin text-info" />
+              <Loader2 className="h-5 w-5 animate-spin text-info-foreground" />
               <div className="flex-1">
                 <div className="flex justify-between mb-1 text-sm">
                   <span className="font-medium">
@@ -409,22 +409,22 @@ export default function PlaygroundSummary() {
                 <div className="text-sm text-[var(--color-charcoal)]">Library Items</div>
               </CardContent>
             </Card>
-            <Card className="border-[var(--color-info)]/30 bg-[var(--color-info)]/10">
+            <Card className="border-info-foreground/30 bg-info-50">
               <CardContent className="pt-4">
-                <div className="text-2xl font-bold text-[var(--color-info)]">{stats.modified}</div>
-                <div className="text-sm text-[var(--color-info-dark)]">Being Modified</div>
+                <div className="text-2xl font-bold text-info-foreground">{stats.modified}</div>
+                <div className="text-sm text-midnight-700">Being Modified</div>
               </CardContent>
             </Card>
-            <Card className="border-[var(--color-success)]/30 bg-[var(--color-success)]/10">
+            <Card className="border-success-foreground/30 bg-success-50">
               <CardContent className="pt-4">
-                <div className="text-2xl font-bold text-[var(--color-success)]">{stats.ready}</div>
-                <div className="text-sm text-[var(--color-success-dark)]">Ready to Promote</div>
+                <div className="text-2xl font-bold text-success-foreground">{stats.ready}</div>
+                <div className="text-sm text-primary-700">Ready to Promote</div>
               </CardContent>
             </Card>
-            <Card className="border-[var(--color-warning)]/30 bg-[var(--color-warning)]/10">
+            <Card className="border-warning/30 bg-warning/10">
               <CardContent className="pt-4">
-                <div className="text-2xl font-bold text-[var(--color-warning)]">{stats.concepts}</div>
-                <div className="text-sm text-[var(--color-warning-dark)]">Active Concepts</div>
+                <div className="text-2xl font-bold text-warning-foreground">{stats.concepts}</div>
+                <div className="text-sm text-secondary-700">Active Concepts</div>
               </CardContent>
             </Card>
           </div>
@@ -435,7 +435,7 @@ export default function PlaygroundSummary() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Edit className="h-5 w-5 text-info" />
+                  <Edit className="h-5 w-5 text-info-foreground" />
                   Items Being Modified ({activeItems.length})
                 </CardTitle>
               </CardHeader>
@@ -470,7 +470,7 @@ export default function PlaygroundSummary() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Lightbulb className="h-5 w-5 text-warning" />
+                  <Lightbulb className="h-5 w-5 text-warning-foreground" />
                   Active Concepts ({activeConcepts.length})
                 </CardTitle>
               </CardHeader>
@@ -512,25 +512,25 @@ export default function PlaygroundSummary() {
             <CardContent>
               <div className="flex items-center justify-between text-sm">
                 <div className="flex flex-col items-center p-4 bg-warning/10 rounded-lg flex-1">
-                  <Beaker className="h-8 w-8 text-warning mb-2" />
+                  <Beaker className="h-8 w-8 text-warning-foreground mb-2" />
                   <span className="font-medium">Concept</span>
                   <span className="text-muted-foreground text-xs">New ideas</span>
                 </div>
                 <ArrowRight className="h-5 w-5 text-muted-foreground" />
-                <div className="flex flex-col items-center p-4 bg-accent-50 rounded-lg flex-1">
-                  <FlaskConical className="h-8 w-8 text-accent-600 mb-2" />
+                <div className="flex flex-col items-center p-4 bg-accent-100 rounded-lg flex-1">
+                  <FlaskConical className="h-8 w-8 text-accent-400 mb-2" />
                   <span className="font-medium">Playground</span>
                   <span className="text-muted-foreground text-xs">Test & refine</span>
                 </div>
                 <ArrowRight className="h-5 w-5 text-muted-foreground" />
                 <div className="flex flex-col items-center p-4 bg-info-50 rounded-lg flex-1">
-                  <Database className="h-8 w-8 text-info mb-2" />
+                  <Database className="h-8 w-8 text-info-foreground mb-2" />
                   <span className="font-medium">Library</span>
                   <span className="text-muted-foreground text-xs">Production ready</span>
                 </div>
                 <ArrowRight className="h-5 w-5 text-muted-foreground" />
                 <div className="flex flex-col items-center p-4 bg-success-50 rounded-lg flex-1">
-                  <Play className="h-8 w-8 text-success mb-2" />
+                  <Play className="h-8 w-8 text-success-foreground mb-2" />
                   <span className="font-medium">Sprint</span>
                   <span className="text-muted-foreground text-xs">Implementation</span>
                 </div>

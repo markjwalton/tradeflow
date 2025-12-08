@@ -288,7 +288,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
   return (
     <div className="p-6 space-y-6 bg-[var(--color-background)] min-h-screen">
       {/* Header */}
-      <Card className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-midnight)] text-white border-0">
+      <Card className="bg-gradient-to-r from-primary-500 to-midnight-900 text-white border-0">
         <CardContent className="py-6">
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-4">
@@ -311,9 +311,9 @@ Return JSON with entity names as keys and arrays of records as values.`,
                 <RefreshCw className="h-4 w-4" />
               </Button>
               <Button 
-                onClick={bulkVerify}
-                disabled={isOperating || stats.pending === 0}
-                className="bg-white text-accent-800 hover:bg-accent-50"
+              onClick={bulkVerify}
+              disabled={isOperating || stats.pending === 0}
+              className="bg-white text-accent-400 hover:bg-accent-100"
               >
                 <CheckCircle2 className="h-4 w-4 mr-2" />
                 Verify All ({stats.pending})
@@ -325,7 +325,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
 
       {/* Operation Progress */}
       {(operation.type === "verify" || operation.type === "complete") && (
-        <Card className={operation.type === "complete" ? "border-success/20 bg-success-50" : ""}>
+        <Card className={operation.type === "complete" ? "border-success-foreground/20 bg-success-50" : ""}>
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg flex items-center gap-2">
