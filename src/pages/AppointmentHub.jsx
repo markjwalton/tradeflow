@@ -208,22 +208,22 @@ export default function AppointmentHub() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--color-background)]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[var(--color-background)] flex items-center justify-center p-4">
-        <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <Card className="max-w-md w-full border-border bg-card">
           <CardContent className="pt-6 text-center">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-destructive-50 flex items-center justify-center">
-              <AlertCircle className="h-8 w-8 text-destructive-700" />
+              <AlertCircle className="h-8 w-8 text-destructive" />
             </div>
-            <h2 className="text-xl font-semibold mb-2 text-[var(--color-midnight)]">Link Invalid</h2>
-            <p className="text-[var(--color-charcoal)]">{error}</p>
+            <h2 className="text-xl font-semibold mb-2 text-midnight-900">Link Invalid</h2>
+            <p className="text-charcoal-700">{error}</p>
           </CardContent>
         </Card>
       </div>
@@ -232,16 +232,16 @@ export default function AppointmentHub() {
 
   if (bookingComplete) {
     return (
-      <div className="min-h-screen bg-[var(--color-background)] flex items-center justify-center p-4">
-        <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <Card className="max-w-md w-full border-border bg-card">
           <CardContent className="pt-6 text-center">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-success-50 flex items-center justify-center">
-              <CheckCircle className="h-8 w-8 text-success-foreground" />
+              <CheckCircle className="h-8 w-8 text-success" />
             </div>
-            <h2 className="text-xl font-semibold mb-2 text-[var(--color-midnight)]">
+            <h2 className="text-xl font-semibold mb-2 text-midnight-900">
               {actionType === "cancel" ? "Appointment Cancelled" : "Appointment Booked!"}
             </h2>
-            <p className="text-[var(--color-charcoal)]">
+            <p className="text-charcoal-700">
               {actionType === "cancel"
                 ? "Your appointment has been cancelled."
                 : "Please check your email and click the confirmation link to confirm your appointment."}
@@ -255,17 +255,17 @@ export default function AppointmentHub() {
   // Show cancellation confirmation
   if (actionType === "cancel" && existingAppointment) {
     return (
-      <div className="min-h-screen bg-[var(--color-background)] flex items-center justify-center p-4">
-        <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <Card className="max-w-md w-full border-border bg-card">
           <CardHeader>
-            <CardTitle className="text-center text-[var(--color-midnight)]">Cancel Appointment?</CardTitle>
+            <CardTitle className="text-center text-midnight-900">Cancel Appointment?</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="bg-[var(--color-background)] rounded-lg p-4">
-              <p className="font-medium text-[var(--color-midnight)]">{format(new Date(existingAppointment.appointmentDate), "EEEE, d MMMM yyyy")}</p>
-              <p className="text-[var(--color-charcoal)]">{existingAppointment.appointmentTime} - {existingAppointment.location}</p>
+            <div className="bg-background rounded-lg p-4">
+              <p className="font-medium text-midnight-900">{format(new Date(existingAppointment.appointmentDate), "EEEE, d MMMM yyyy")}</p>
+              <p className="text-charcoal-700">{existingAppointment.appointmentTime} - {existingAppointment.location}</p>
             </div>
-            <p className="text-[var(--color-charcoal)] text-center">Are you sure you want to cancel this appointment?</p>
+            <p className="text-charcoal-700 text-center">Are you sure you want to cancel this appointment?</p>
             <div className="flex gap-3">
               <Button
                 variant="outline"
@@ -291,23 +291,23 @@ export default function AppointmentHub() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--color-background)] p-4">
+    <div className="min-h-screen bg-background p-4">
       <div className="max-w-4xl mx-auto">
-        <Card className="mb-6 border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+        <Card className="mb-6 border-border bg-card">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-[var(--color-midnight)]">
+            <CardTitle className="flex items-center gap-2 text-midnight-900">
               <Calendar className="h-6 w-6" />
               {existingAppointment ? "Change Your Appointment" : "Book Your Design Visit"}
             </CardTitle>
-            <p className="text-[var(--color-charcoal)]">
+            <p className="text-charcoal-700">
               Hello {verifiedData?.firstName}, select an available time slot below
             </p>
           </CardHeader>
         </Card>
 
         {Object.keys(blocksByLocation).length === 0 ? (
-          <Card className="border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
-            <CardContent className="py-8 text-center text-[var(--color-charcoal)]">
+          <Card className="border-border bg-card">
+            <CardContent className="py-8 text-center text-charcoal-700">
               <Calendar className="h-12 w-12 mx-auto mb-4 opacity-30" />
               <p>No available appointment slots at the moment.</p>
               <p className="text-sm">Please check back later or request a callback.</p>
@@ -316,9 +316,9 @@ export default function AppointmentHub() {
         ) : (
           <>
             {Object.entries(blocksByLocation).map(([location, blocks]) => (
-              <Card key={location} className="mb-4 border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+              <Card key={location} className="mb-4 border-border bg-card">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-lg flex items-center gap-2 text-[var(--color-midnight)]">
+                  <CardTitle className="text-lg flex items-center gap-2 text-midnight-900">
                     <MapPin className="h-5 w-5" />
                     {location}
                   </CardTitle>
@@ -331,14 +331,14 @@ export default function AppointmentHub() {
                         onClick={() => setSelectedBlock(block)}
                         className={`p-4 rounded-lg border-2 text-left transition-all ${
                           selectedBlock?.id === block.id
-                            ? "border-primary-500 bg-primary-100"
-                            : "border-border hover:border-primary-300 hover:bg-muted"
+                            ? "border-primary bg-primary-50"
+                            : "border-border hover:border-primary/50 hover:bg-muted"
                         }`}
                       >
-                        <div className="font-medium text-[var(--color-midnight)]">
+                        <div className="font-medium text-midnight-900">
                           {format(new Date(block.date), "EEE, d MMM")}
                         </div>
-                        <div className="flex items-center gap-1 text-[var(--color-charcoal)] mt-1">
+                        <div className="flex items-center gap-1 text-charcoal-700 mt-1">
                           <Clock className="h-4 w-4" />
                           {block.startTime}
                           {block.endTime && ` - ${block.endTime}`}
@@ -351,12 +351,12 @@ export default function AppointmentHub() {
             ))}
 
             {selectedBlock && (
-              <Card className="mt-6 border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+              <Card className="mt-6 border-border bg-card">
                 <CardHeader>
-                  <CardTitle className="text-lg text-[var(--color-midnight)]">Complete Your Booking</CardTitle>
+                  <CardTitle className="text-lg text-midnight-900">Complete Your Booking</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="bg-primary-100 rounded-lg p-4">
+                  <div className="bg-primary-50 rounded-lg p-4">
                     <p className="font-medium text-foreground">Selected Appointment:</p>
                     <p className="text-foreground">{format(new Date(selectedBlock.date), "EEEE, d MMMM yyyy")} at {selectedBlock.startTime}</p>
                     <p className="text-muted-foreground">{selectedBlock.location}</p>
@@ -373,8 +373,8 @@ export default function AppointmentHub() {
                   </div>
 
                   <div className="bg-warning/10 border border-warning/20 rounded-lg p-4 text-sm">
-                    <p className="font-medium text-warning-foreground">Important:</p>
-                    <p className="text-warning-foreground">
+                    <p className="font-medium text-warning">Important:</p>
+                    <p className="text-warning">
                       After booking, you will receive an email asking you to confirm your appointment. 
                       Please click the confirmation link to secure your slot.
                     </p>

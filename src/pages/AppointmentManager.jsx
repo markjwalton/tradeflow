@@ -196,11 +196,11 @@ export default function AppointmentManager() {
   ).sort((a, b) => a.appointmentDate.localeCompare(b.appointmentDate));
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Appointment Manager</h1>
-          <p className="text-[var(--color-charcoal)]">Manage appointment slots and bookings</p>
+          <h1 className="text-2xl font-light font-display text-midnight-900">Appointment Manager</h1>
+          <p className="text-charcoal-700">Manage appointment slots and bookings</p>
         </div>
       </div>
 
@@ -218,9 +218,9 @@ export default function AppointmentManager() {
 
         {/* Diary Tab */}
         <TabsContent value="diary">
-          <Card className="border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+          <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-[var(--color-midnight)]">
+              <CardTitle className="flex items-center gap-2 text-midnight-900">
                 <Calendar className="h-5 w-5" />
                 Upcoming Appointments
               </CardTitle>
@@ -228,10 +228,10 @@ export default function AppointmentManager() {
             <CardContent>
               {loadingAppointments ? (
                 <div className="flex justify-center py-8">
-                  <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+                  <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
                 </div>
               ) : upcomingAppointments.length === 0 ? (
-                <div className="text-center py-8 text-[var(--color-charcoal)]">
+                <div className="text-center py-8 text-charcoal-700">
                   No upcoming appointments
                 </div>
               ) : (
@@ -255,14 +255,14 @@ export default function AppointmentManager() {
                           <div className="text-sm text-muted-foreground">{apt.appointmentTime}</div>
                         </TableCell>
                         <TableCell>
-                          <div className="text-[var(--color-midnight)]">{apt.customerFirstName} {apt.customerLastName}</div>
-                          <div className="text-sm text-[var(--color-charcoal)] flex items-center gap-1">
+                          <div className="text-midnight-900">{apt.customerFirstName} {apt.customerLastName}</div>
+                          <div className="text-sm text-charcoal-700 flex items-center gap-1">
                             <Phone className="h-3 w-3" />
                             {apt.customerMobile}
                           </div>
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-1 text-[var(--color-charcoal)]">
+                          <div className="flex items-center gap-1 text-charcoal-700">
                             <MapPin className="h-4 w-4" />
                             {apt.location}
                           </div>
@@ -299,10 +299,10 @@ export default function AppointmentManager() {
             <CardContent>
               {loadingBlocks ? (
                 <div className="flex justify-center py-8">
-                  <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+                  <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
                 </div>
               ) : blocks.length === 0 ? (
-                <div className="text-center py-8 text-[var(--color-charcoal)]">
+                <div className="text-center py-8 text-charcoal-700">
                   No appointment slots configured
                 </div>
               ) : (
@@ -326,7 +326,7 @@ export default function AppointmentManager() {
                           {block.startTime} - {block.endTime || ""}
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-1 text-[var(--color-charcoal)]">
+                          <div className="flex items-center gap-1 text-charcoal-700">
                             <MapPin className="h-4 w-4" />
                             {block.location}
                           </div>
@@ -368,7 +368,7 @@ export default function AppointmentManager() {
             </CardHeader>
             <CardContent>
               {enquiries.length === 0 ? (
-                <div className="text-center py-8 text-[var(--color-charcoal)]">
+                <div className="text-center py-8 text-charcoal-700">
                   No pending callback requests
                 </div>
               ) : (
@@ -378,10 +378,10 @@ export default function AppointmentManager() {
                       <CardContent className="pt-4">
                         <div className="flex items-start justify-between">
                           <div>
-                            <h3 className="font-medium text-[var(--color-midnight)]">
+                            <h3 className="font-medium text-midnight-900">
                               {enquiry.firstName} {enquiry.lastName}
                             </h3>
-                            <div className="text-sm text-[var(--color-charcoal)] space-y-1 mt-1">
+                            <div className="text-sm text-charcoal-700 space-y-1 mt-1">
                               <div className="flex items-center gap-2">
                                 <Phone className="h-4 w-4" />
                                 {enquiry.mobile}
@@ -516,10 +516,10 @@ export default function AppointmentManager() {
                 >
                   <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium text-[var(--color-midnight)]">
+                    <div className="font-medium text-midnight-900">
                       {format(new Date(block.date), "EEEE, d MMMM yyyy")}
                     </div>
-                    <div className="text-sm text-[var(--color-charcoal)] flex items-center gap-4 mt-1">
+                    <div className="text-sm text-charcoal-700 flex items-center gap-4 mt-1">
                         <span className="flex items-center gap-1">
                           <Clock className="h-4 w-4" />
                           {block.startTime}

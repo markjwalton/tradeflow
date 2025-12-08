@@ -85,22 +85,22 @@ export default function AppointmentConfirm() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--color-background)]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[var(--color-background)] flex items-center justify-center p-4">
-        <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <Card className="max-w-md w-full border-border bg-card">
           <CardContent className="pt-6 text-center">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-destructive-50 flex items-center justify-center">
-              <AlertCircle className="h-8 w-8 text-destructive-700" />
+              <AlertCircle className="h-8 w-8 text-destructive" />
             </div>
-            <h2 className="text-xl font-semibold mb-2 text-[var(--color-midnight)]">Confirmation Failed</h2>
-            <p className="text-[var(--color-charcoal)]">{error}</p>
+            <h2 className="text-xl font-semibold mb-2 text-midnight-900">Confirmation Failed</h2>
+            <p className="text-charcoal-700">{error}</p>
           </CardContent>
         </Card>
       </div>
@@ -108,36 +108,36 @@ export default function AppointmentConfirm() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--color-background)] flex items-center justify-center p-4">
-      <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <Card className="max-w-md w-full border-border bg-card">
         <CardContent className="pt-6 text-center">
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-success-50 flex items-center justify-center">
-            <CheckCircle className="h-8 w-8 text-success-foreground" />
+            <CheckCircle className="h-8 w-8 text-success" />
           </div>
-          <h2 className="text-xl font-semibold mb-2 text-[var(--color-midnight)]">
+          <h2 className="text-xl font-semibold mb-2 text-midnight-900">
             {alreadyConfirmed ? "Already Confirmed" : "Appointment Confirmed!"}
           </h2>
-          <p className="text-[var(--color-charcoal)] mb-4">
+          <p className="text-charcoal-700 mb-4">
             {alreadyConfirmed
               ? "This appointment was already confirmed."
               : "Thank you for confirming your design visit."}
           </p>
           
           {appointment && (
-            <div className="bg-[var(--color-background)] rounded-lg p-4 text-left">
+            <div className="bg-background rounded-lg p-4 text-left">
               <div className="flex items-center gap-2 mb-2">
-                <Calendar className="h-5 w-5 text-[var(--color-charcoal)]" />
-                <span className="font-medium text-[var(--color-midnight)]">Appointment Details</span>
+                <Calendar className="h-5 w-5 text-charcoal-700" />
+                <span className="font-medium text-midnight-900">Appointment Details</span>
               </div>
-              <p className="text-[var(--color-charcoal)]">
+              <p className="text-charcoal-700">
                 {format(new Date(appointment.appointmentDate), "EEEE, d MMMM yyyy")}
               </p>
-              <p className="text-[var(--color-charcoal)]">{appointment.appointmentTime}</p>
-              <p className="text-[var(--color-charcoal)]">{appointment.location}</p>
+              <p className="text-charcoal-700">{appointment.appointmentTime}</p>
+              <p className="text-charcoal-700">{appointment.location}</p>
             </div>
           )}
 
-          <p className="text-sm text-[var(--color-charcoal)] mt-4">
+          <p className="text-sm text-charcoal-700 mt-4">
             A confirmation email has been sent to you.
           </p>
         </CardContent>

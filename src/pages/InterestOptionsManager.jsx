@@ -116,15 +116,15 @@ export default function InterestOptionsManager() {
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto bg-[var(--color-background)] min-h-screen">
-      <Card className="border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+    <div className="p-6 max-w-3xl mx-auto bg-background min-h-screen">
+      <Card className="border-border bg-card">
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle className="flex items-center gap-2 text-[var(--color-midnight)]">
+            <CardTitle className="flex items-center gap-2 text-midnight-900">
               <Settings className="h-5 w-5" />
               Interest Options
             </CardTitle>
-            <p className="text-sm text-[var(--color-charcoal)] mt-1">
+            <p className="text-sm text-charcoal-700 mt-1">
               Manage the dropdown options shown on the enquiry form
             </p>
           </div>
@@ -136,10 +136,10 @@ export default function InterestOptionsManager() {
         <CardContent>
           {isLoading ? (
             <div className="flex justify-center py-8">
-              <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+              <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
             </div>
           ) : options.length === 0 ? (
-            <div className="text-center py-8 text-[var(--color-charcoal)]">
+            <div className="text-center py-8 text-charcoal-700">
               No options configured. Add your first option above.
             </div>
           ) : (
@@ -170,8 +170,8 @@ export default function InterestOptionsManager() {
                                     <GripVertical className="h-4 w-4 text-muted-foreground cursor-grab" />
                                   </div>
                                 </TableCell>
-                                <TableCell className="font-medium text-[var(--color-midnight)]">{option.label}</TableCell>
-                                <TableCell className="text-[var(--color-charcoal)]">{option.value}</TableCell>
+                                <TableCell className="font-medium text-midnight-900">{option.label}</TableCell>
+                                <TableCell className="text-charcoal-700">{option.value}</TableCell>
                                 <TableCell>
                                   <Switch
                                     checked={option.isActive !== false}
