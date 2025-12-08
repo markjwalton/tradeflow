@@ -87,19 +87,19 @@ export default function ProjectsOverview() {
   });
 
   const statusColors = {
-    Planning: "bg-blue-100 text-blue-800 border-blue-200",
-    Active: "bg-green-100 text-green-800 border-green-200",
-    "On Hold": "bg-yellow-100 text-yellow-800 border-yellow-200",
-    Completed: "bg-stone-100 text-stone-800 border-stone-200",
-    Archived: "bg-stone-100 text-stone-600 border-stone-200",
+    Planning: "bg-info-50 text-info-foreground border-primary-200",
+    Active: "bg-success-50 text-success-foreground border-success",
+    "On Hold": "bg-warning/10 text-warning-foreground border-warning/20",
+    Completed: "bg-muted text-muted-foreground border-border",
+    Archived: "bg-muted text-muted-foreground border-border",
   };
 
   const typeColors = {
-    "New Build": "bg-indigo-100 text-indigo-800",
-    Extension: "bg-purple-100 text-purple-800",
-    Renovation: "bg-pink-100 text-pink-800",
-    Conservation: "bg-amber-100 text-amber-800",
-    Commercial: "bg-cyan-100 text-cyan-800",
+    "New Build": "bg-info-50 text-info-foreground",
+    Extension: "bg-accent-100 text-accent-700",
+    Renovation: "bg-accent-200 text-accent-800",
+    Conservation: "bg-warning/10 text-warning-foreground",
+    Commercial: "bg-info-50 text-info-foreground",
   };
 
   return (
@@ -107,11 +107,11 @@ export default function ProjectsOverview() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-stone-900">Projects</h1>
-          <p className="text-stone-500 mt-1">Manage all your construction projects</p>
+          <h1 className="text-2xl lg:text-3xl font-bold text-foreground">Projects</h1>
+          <p className="text-muted-foreground mt-1">Manage all your construction projects</p>
         </div>
         <Link to={createPageUrl("ProjectForm")}>
-          <Button className="bg-amber-700 hover:bg-amber-800">
+          <Button className="bg-warning hover:bg-warning/90 text-warning-foreground">
             <Plus className="h-4 w-4 mr-2" />
             New Project
           </Button>
@@ -123,7 +123,7 @@ export default function ProjectsOverview() {
         <CardContent className="pt-6">
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search by name, client, reference, location..."
                 value={searchTerm}
@@ -206,15 +206,15 @@ export default function ProjectsOverview() {
       ) : sortedProjects.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
-            <FolderKanban className="h-12 w-12 text-stone-300 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-stone-900 mb-2">No projects found</h3>
-            <p className="text-stone-500 mb-6 max-w-sm mx-auto">
+            <FolderKanban className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-foreground mb-2">No projects found</h3>
+            <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
               {searchTerm || statusFilter !== "all" || typeFilter !== "all"
                 ? "Try adjusting your search or filters"
                 : "Get started by creating your first project"}
             </p>
             <Link to={createPageUrl("ProjectForm")}>
-              <Button className="bg-amber-700 hover:bg-amber-800">
+              <Button className="bg-warning hover:bg-warning/90 text-warning-foreground">
                 <Plus className="h-4 w-4 mr-2" />
                 Create Project
               </Button>
@@ -228,20 +228,20 @@ export default function ProjectsOverview() {
               key={project.id}
               to={createPageUrl(`ProjectDetails?id=${project.id}`)}
             >
-              <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-l-amber-600">
+              <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-l-warning">
                 <CardContent className="pt-6">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-semibold text-stone-900 truncate">
+                        <h3 className="font-semibold text-foreground truncate">
                           {project.name}
                         </h3>
                         {project.isHighPriority && (
-                          <AlertTriangle className="h-4 w-4 text-red-500 flex-shrink-0" />
+                          <AlertTriangle className="h-4 w-4 text-destructive flex-shrink-0" />
                         )}
                       </div>
                       {project.projectRef && (
-                        <p className="text-xs text-stone-400 font-mono">
+                        <p className="text-xs text-muted-foreground font-mono">
                           {project.projectRef}
                         </p>
                       )}
@@ -259,20 +259,20 @@ export default function ProjectsOverview() {
                     )}
                   </div>
 
-                  <div className="space-y-2 text-sm text-stone-600">
+                  <div className="space-y-2 text-sm text-muted-foreground">
                     <div className="flex items-center gap-2">
-                      <User className="h-4 w-4 text-stone-400" />
+                      <User className="h-4 w-4 text-muted-foreground" />
                       <span className="truncate">{getCustomerName(project.customerId) || project.clientName}</span>
                     </div>
                     {project.location && (
                       <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-stone-400" />
+                        <MapPin className="h-4 w-4 text-muted-foreground" />
                         <span className="truncate">{project.location}</span>
                       </div>
                     )}
                     {project.estimatedEndDate && (
                       <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-stone-400" />
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
                         <span>
                           Due {format(new Date(project.estimatedEndDate), "MMM d, yyyy")}
                         </span>
@@ -281,27 +281,27 @@ export default function ProjectsOverview() {
                   </div>
 
                   {project.budget && (
-                    <div className="mt-4 pt-4 border-t border-stone-100">
+                    <div className="mt-4 pt-4 border-t border-border">
                       <div className="flex justify-between text-sm">
-                        <span className="text-stone-500">Budget</span>
-                        <span className="font-semibold text-stone-900">
+                        <span className="text-muted-foreground">Budget</span>
+                        <span className="font-semibold text-foreground">
                           £{project.budget.toLocaleString()}
                         </span>
                       </div>
                       {project.currentSpend !== undefined && project.currentSpend !== null && (
                         <div className="mt-2">
-                          <div className="flex justify-between text-xs text-stone-500 mb-1">
+                          <div className="flex justify-between text-xs text-muted-foreground mb-1">
                             <span>Spent</span>
                             <span>£{project.currentSpend.toLocaleString()}</span>
                           </div>
-                          <div className="h-2 bg-stone-100 rounded-full overflow-hidden">
+                          <div className="h-2 bg-muted rounded-full overflow-hidden">
                             <div
                               className={`h-full rounded-full ${
                                 (project.currentSpend / project.budget) > 0.9
-                                  ? "bg-red-500"
+                                  ? "bg-destructive"
                                   : (project.currentSpend / project.budget) > 0.7
-                                  ? "bg-yellow-500"
-                                  : "bg-green-500"
+                                  ? "bg-warning"
+                                  : "bg-success"
                               }`}
                               style={{
                                 width: `${Math.min(100, (project.currentSpend / project.budget) * 100)}%`,

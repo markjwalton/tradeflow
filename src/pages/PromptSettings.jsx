@@ -149,8 +149,8 @@ export default function PromptSettings() {
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
-            <Sparkles className="h-6 w-6 text-purple-600" />
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
+            <Sparkles className="h-6 w-6 text-accent-600" />
             Prompt Settings
           </h1>
           <p className="text-[var(--color-charcoal)]">Manage AI reasoning prompts for input fields</p>
@@ -190,7 +190,7 @@ export default function PromptSettings() {
             <div key={contextType}>
               <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
                 <Badge>{contextTypes.find(c => c.value === contextType)?.label || contextType}</Badge>
-                <span className="text-gray-400 text-sm font-normal">({contextPrompts.length})</span>
+                <span className="text-muted-foreground text-sm font-normal">({contextPrompts.length})</span>
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {contextPrompts.map((prompt) => (
@@ -199,13 +199,13 @@ export default function PromptSettings() {
                       <CardTitle className="text-base flex items-center gap-2">
                         {prompt.name}
                         {prompt.is_default && (
-                          <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                          <Star className="h-4 w-4 text-warning fill-warning" />
                         )}
                       </CardTitle>
-                      <p className="text-sm text-gray-500">{prompt.description}</p>
+                      <p className="text-sm text-muted-foreground">{prompt.description}</p>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-xs text-gray-500 mb-3 line-clamp-2">
+                      <div className="text-xs text-muted-foreground mb-3 line-clamp-2">
                         {prompt.system_prompt}
                       </div>
                       <div className="flex items-center gap-2 mb-3">
@@ -221,7 +221,7 @@ export default function PromptSettings() {
                             <Star className="h-3 w-3" />
                           </Button>
                         )}
-                        <Button size="sm" variant="ghost" className="text-red-600" onClick={() => deleteMutation.mutate(prompt.id)}>
+                        <Button size="sm" variant="ghost" className="text-destructive" onClick={() => deleteMutation.mutate(prompt.id)}>
                           <Trash2 className="h-3 w-3" />
                         </Button>
                       </div>

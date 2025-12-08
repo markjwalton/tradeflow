@@ -358,8 +358,8 @@ Only suggest NEW relationships not already in existingRelationships.`,
       {/* Header */}
       <div className="flex items-center justify-between p-4 bg-[var(--color-background-paper)] border-b border-[var(--color-background-muted)]">
         <div className="flex items-center gap-4">
-          <h1 className="text-xl font-bold flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
-            <Database className="h-5 w-5 text-purple-600" />
+          <h1 className="text-xl font-bold font-display flex items-center gap-2 text-[var(--color-midnight)]">
+            <Database className="h-5 w-5 text-accent-600" />
             ERD Editor
           </h1>
           <CustomProjectSelector
@@ -368,7 +368,7 @@ Only suggest NEW relationships not already in existingRelationships.`,
             showCreateOption={false}
           />
           {currentProject && (
-            <Badge className="bg-indigo-100 text-indigo-800">{currentProject.name}</Badge>
+            <Badge className="bg-info-50 text-info-foreground">{currentProject.name}</Badge>
           )}
         </div>
         <div className="flex items-center gap-2">
@@ -396,7 +396,7 @@ Only suggest NEW relationships not already in existingRelationships.`,
           <Link2 className="h-4 w-4 mr-1" />
           {isConnecting ? "Click Target..." : "Add Relationship"}
         </Button>
-        <div className="w-px h-6 bg-gray-300 mx-1" />
+        <div className="w-px h-6 bg-border mx-1" />
         <Button size="sm" variant="outline" onClick={handleAutoLayout}>
           <Grid3X3 className="h-4 w-4 mr-1" />
           Auto Layout
@@ -414,7 +414,7 @@ Only suggest NEW relationships not already in existingRelationships.`,
           )}
           AI Analyze
         </Button>
-        <div className="w-px h-6 bg-gray-300 mx-1" />
+        <div className="w-px h-6 bg-border mx-1" />
         {selectedEntityId && (
           <>
             <Button 
@@ -428,7 +428,7 @@ Only suggest NEW relationships not already in existingRelationships.`,
             <Button 
               size="sm" 
               variant="outline"
-              className="text-red-600"
+              className="text-destructive"
               onClick={() => {
                 if (confirm("Delete this entity?")) {
                   deleteEntityMutation.mutate(selectedEntityId);

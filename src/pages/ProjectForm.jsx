@@ -142,7 +142,7 @@ export default function ProjectForm() {
   if (isEditing && loadingProject) {
     return (
       <div className="p-6 lg:p-8 flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-amber-700" />
+        <Loader2 className="h-8 w-8 animate-spin text-warning" />
       </div>
     );
   }
@@ -157,10 +157,10 @@ export default function ProjectForm() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-stone-900">
+          <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
             {isEditing ? "Edit Project" : "Create New Project"}
           </h1>
-          <p className="text-stone-500 mt-1">
+          <p className="text-muted-foreground mt-1">
             {isEditing ? "Update project details" : "Set up a new construction project"}
           </p>
         </div>
@@ -289,7 +289,7 @@ export default function ProjectForm() {
                   ))}
                 </SelectContent>
               </Select>
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-muted-foreground">
                 Or enter client details manually below
               </p>
             </div>
@@ -389,7 +389,7 @@ export default function ProjectForm() {
           </Link>
           <Button
             type="submit"
-            className="bg-amber-700 hover:bg-amber-800"
+            className="bg-warning hover:bg-warning/90 text-warning-foreground"
             disabled={isSubmitting}
           >
             {isSubmitting ? (

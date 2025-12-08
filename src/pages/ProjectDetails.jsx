@@ -82,19 +82,19 @@ export default function ProjectDetails() {
   });
 
   const statusColors = {
-    Planning: "bg-blue-100 text-blue-800 border-blue-200",
-    Active: "bg-green-100 text-green-800 border-green-200",
-    "On Hold": "bg-yellow-100 text-yellow-800 border-yellow-200",
-    Completed: "bg-stone-100 text-stone-800 border-stone-200",
-    Archived: "bg-stone-100 text-stone-600 border-stone-200",
+    Planning: "bg-info-50 text-info-foreground border-primary-200",
+    Active: "bg-success-50 text-success-foreground border-success",
+    "On Hold": "bg-warning/10 text-warning-foreground border-warning/20",
+    Completed: "bg-muted text-muted-foreground border-border",
+    Archived: "bg-muted text-muted-foreground border-border",
   };
 
   const typeColors = {
-    "New Build": "bg-indigo-100 text-indigo-800",
-    Extension: "bg-purple-100 text-purple-800",
-    Renovation: "bg-pink-100 text-pink-800",
-    Conservation: "bg-amber-100 text-amber-800",
-    Commercial: "bg-cyan-100 text-cyan-800",
+    "New Build": "bg-info-50 text-info-foreground",
+    Extension: "bg-accent-100 text-accent-700",
+    Renovation: "bg-accent-200 text-accent-800",
+    Conservation: "bg-warning/10 text-warning-foreground",
+    Commercial: "bg-info-50 text-info-foreground",
   };
 
   // Calculate task stats
@@ -133,9 +133,9 @@ export default function ProjectDetails() {
       <div className="p-6 lg:p-8">
         <Card>
           <CardContent className="py-12 text-center">
-            <AlertTriangle className="h-12 w-12 text-amber-500 mx-auto mb-4" />
+            <AlertTriangle className="h-12 w-12 text-warning mx-auto mb-4" />
             <h2 className="text-xl font-semibold mb-2">Project Not Found</h2>
-            <p className="text-stone-500 mb-4">
+            <p className="text-muted-foreground mb-4">
               The project you're looking for doesn't exist or has been deleted.
             </p>
             <Link to={createPageUrl("ProjectsOverview")}>
@@ -159,7 +159,7 @@ export default function ProjectDetails() {
           </Link>
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-2xl lg:text-3xl font-bold text-stone-900">
+              <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
                 {project.name}
               </h1>
               {project.isHighPriority && (
@@ -171,7 +171,7 @@ export default function ProjectDetails() {
             </div>
             <div className="flex flex-wrap items-center gap-2">
               {project.projectRef && (
-                <span className="text-sm text-stone-500 font-mono">
+                <span className="text-sm text-muted-foreground font-mono">
                   {project.projectRef}
                 </span>
               )}
@@ -205,7 +205,7 @@ export default function ProjectDetails() {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="bg-stone-100">
+        <TabsList className="bg-muted">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <ClipboardList className="h-4 w-4" />
             <span className="hidden sm:inline">Overview</span>
@@ -277,7 +277,7 @@ export default function ProjectDetails() {
                     <CardTitle>Description</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-stone-600 whitespace-pre-wrap">{project.description}</p>
+                    <p className="text-muted-foreground whitespace-pre-wrap">{project.description}</p>
                   </CardContent>
                 </Card>
               )}
@@ -292,26 +292,26 @@ export default function ProjectDetails() {
                     <div className="flex-1">
                       <Progress value={completionPercentage} className="h-3" />
                     </div>
-                    <span className="text-lg font-semibold text-stone-900">
+                    <span className="text-lg font-semibold text-foreground">
                       {completionPercentage}%
                     </span>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    <div className="p-3 bg-stone-50 rounded-lg text-center">
-                      <p className="text-2xl font-bold text-stone-900">{taskStats.total}</p>
-                      <p className="text-sm text-stone-500">Total</p>
+                    <div className="p-3 bg-muted rounded-lg text-center">
+                      <p className="text-2xl font-bold text-foreground">{taskStats.total}</p>
+                      <p className="text-sm text-muted-foreground">Total</p>
                     </div>
-                    <div className="p-3 bg-green-50 rounded-lg text-center">
-                      <p className="text-2xl font-bold text-green-600">{taskStats.completed}</p>
-                      <p className="text-sm text-stone-500">Completed</p>
+                    <div className="p-3 bg-success-50 rounded-lg text-center">
+                      <p className="text-2xl font-bold text-success">{taskStats.completed}</p>
+                      <p className="text-sm text-muted-foreground">Completed</p>
                     </div>
-                    <div className="p-3 bg-blue-50 rounded-lg text-center">
-                      <p className="text-2xl font-bold text-blue-600">{taskStats.inProgress}</p>
-                      <p className="text-sm text-stone-500">In Progress</p>
+                    <div className="p-3 bg-info-50 rounded-lg text-center">
+                      <p className="text-2xl font-bold text-info">{taskStats.inProgress}</p>
+                      <p className="text-sm text-muted-foreground">In Progress</p>
                     </div>
-                    <div className="p-3 bg-red-50 rounded-lg text-center">
-                      <p className="text-2xl font-bold text-red-600">{taskStats.blocked}</p>
-                      <p className="text-sm text-stone-500">Blocked</p>
+                    <div className="p-3 bg-destructive-50 rounded-lg text-center">
+                      <p className="text-2xl font-bold text-destructive">{taskStats.blocked}</p>
+                      <p className="text-sm text-muted-foreground">Blocked</p>
                     </div>
                   </div>
                 </CardContent>
@@ -324,7 +324,7 @@ export default function ProjectDetails() {
                     <CardTitle>Notes</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-stone-600 whitespace-pre-wrap">{project.notes}</p>
+                    <p className="text-muted-foreground whitespace-pre-wrap">{project.notes}</p>
                   </CardContent>
                 </Card>
               )}
@@ -339,17 +339,17 @@ export default function ProjectDetails() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full bg-amber-100 flex items-center justify-center">
-                      <User className="h-5 w-5 text-amber-700" />
+                    <div className="h-10 w-10 rounded-full bg-warning/10 flex items-center justify-center">
+                      <User className="h-5 w-5 text-warning-foreground" />
                     </div>
                     <div>
-                      <p className="font-medium text-stone-900">{project.clientName}</p>
+                      <p className="font-medium text-foreground">{project.clientName}</p>
                     </div>
                   </div>
                   {project.clientEmail && (
                     <a
                       href={`mailto:${project.clientEmail}`}
-                      className="flex items-center gap-2 text-sm text-blue-600 hover:underline"
+                      className="flex items-center gap-2 text-sm text-info hover:underline"
                     >
                       <Mail className="h-4 w-4" />
                       {project.clientEmail}
@@ -358,7 +358,7 @@ export default function ProjectDetails() {
                   {project.clientPhone && (
                     <a
                       href={`tel:${project.clientPhone}`}
-                      className="flex items-center gap-2 text-sm text-stone-600"
+                      className="flex items-center gap-2 text-sm text-muted-foreground"
                     >
                       <Phone className="h-4 w-4" />
                       {project.clientPhone}
@@ -375,19 +375,19 @@ export default function ProjectDetails() {
                 <CardContent className="space-y-4">
                   {project.location && (
                     <div className="flex items-start gap-3">
-                      <MapPin className="h-5 w-5 text-stone-400 mt-0.5" />
+                      <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
                       <div>
-                        <p className="text-sm text-stone-500">Location</p>
-                        <p className="text-stone-900">{project.location}</p>
+                        <p className="text-sm text-muted-foreground">Location</p>
+                        <p className="text-foreground">{project.location}</p>
                       </div>
                     </div>
                   )}
                   {project.startDate && (
                     <div className="flex items-start gap-3">
-                      <Calendar className="h-5 w-5 text-stone-400 mt-0.5" />
+                      <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
                       <div>
-                        <p className="text-sm text-stone-500">Start Date</p>
-                        <p className="text-stone-900">
+                        <p className="text-sm text-muted-foreground">Start Date</p>
+                        <p className="text-foreground">
                           {format(new Date(project.startDate), "MMMM d, yyyy")}
                         </p>
                       </div>
@@ -395,10 +395,10 @@ export default function ProjectDetails() {
                   )}
                   {project.estimatedEndDate && (
                     <div className="flex items-start gap-3">
-                      <Clock className="h-5 w-5 text-stone-400 mt-0.5" />
+                      <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
                       <div>
-                        <p className="text-sm text-stone-500">Estimated End</p>
-                        <p className="text-stone-900">
+                        <p className="text-sm text-muted-foreground">Estimated End</p>
+                        <p className="text-foreground">
                           {format(new Date(project.estimatedEndDate), "MMMM d, yyyy")}
                         </p>
                       </div>
@@ -415,15 +415,15 @@ export default function ProjectDetails() {
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center gap-2 mb-2">
-                      <PoundSterling className="h-5 w-5 text-stone-400" />
-                      <span className="text-2xl font-bold text-stone-900">
+                      <PoundSterling className="h-5 w-5 text-muted-foreground" />
+                      <span className="text-2xl font-bold text-foreground">
                         £{project.budget.toLocaleString()}
                       </span>
                     </div>
                     {project.currentSpend !== undefined && project.currentSpend !== null && (
                       <>
                         <div className="flex justify-between text-sm mb-2">
-                          <span className="text-stone-500">Spent</span>
+                          <span className="text-muted-foreground">Spent</span>
                           <span className="font-medium">
                             £{project.currentSpend.toLocaleString()}
                           </span>
@@ -431,10 +431,10 @@ export default function ProjectDetails() {
                         <Progress
                           value={(project.currentSpend / project.budget) * 100}
                           className={`h-2 ${
-                            project.currentSpend / project.budget > 0.9 ? "[&>div]:bg-red-500" : ""
+                            project.currentSpend / project.budget > 0.9 ? "[&>div]:bg-destructive" : ""
                           }`}
                         />
-                        <p className="text-xs text-stone-500 mt-2">
+                        <p className="text-xs text-muted-foreground mt-2">
                           £{(project.budget - project.currentSpend).toLocaleString()} remaining
                         </p>
                       </>
