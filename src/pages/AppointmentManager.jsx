@@ -262,7 +262,7 @@ export default function AppointmentManager() {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-1 text-charcoal-700">
+                          <div className="flex items-center gap-1 text-muted-foreground">
                             <MapPin className="h-4 w-4" />
                             {apt.location}
                           </div>
@@ -299,10 +299,10 @@ export default function AppointmentManager() {
             <CardContent>
               {loadingBlocks ? (
                 <div className="flex justify-center py-8">
-                  <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                 </div>
               ) : blocks.length === 0 ? (
-                <div className="text-center py-8 text-charcoal-700">
+                <div className="text-center py-8 text-muted-foreground">
                   No appointment slots configured
                 </div>
               ) : (
@@ -326,7 +326,7 @@ export default function AppointmentManager() {
                           {block.startTime} - {block.endTime || ""}
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-1 text-charcoal-700">
+                          <div className="flex items-center gap-1 text-muted-foreground">
                             <MapPin className="h-4 w-4" />
                             {block.location}
                           </div>
@@ -368,7 +368,7 @@ export default function AppointmentManager() {
             </CardHeader>
             <CardContent>
               {enquiries.length === 0 ? (
-                <div className="text-center py-8 text-charcoal-700">
+                <div className="text-center py-8 text-muted-foreground">
                   No pending callback requests
                 </div>
               ) : (
@@ -381,7 +381,7 @@ export default function AppointmentManager() {
                             <h3 className="font-medium text-midnight-900">
                               {enquiry.firstName} {enquiry.lastName}
                             </h3>
-                            <div className="text-sm text-charcoal-700 space-y-1 mt-1">
+                            <div className="text-sm text-muted-foreground space-y-1 mt-1">
                               <div className="flex items-center gap-2">
                                 <Phone className="h-4 w-4" />
                                 {enquiry.mobile}
@@ -519,7 +519,7 @@ export default function AppointmentManager() {
                     <div className="font-medium text-midnight-900">
                       {format(new Date(block.date), "EEEE, d MMMM yyyy")}
                     </div>
-                    <div className="text-sm text-charcoal-700 flex items-center gap-4 mt-1">
+                    <div className="text-sm text-muted-foreground flex items-center gap-4 mt-1">
                         <span className="flex items-center gap-1">
                           <Clock className="h-4 w-4" />
                           {block.startTime}
