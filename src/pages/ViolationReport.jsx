@@ -346,15 +346,17 @@ For EACH pattern, provide the EXACT string found in code, not a description.`,
                     </div>
                     
                     <div className="space-y-2">
-                      <div>
-                        <span className="text-xs text-muted-foreground">Pattern:</span>
-                        <code className="block bg-muted p-3 rounded text-sm font-mono font-bold mt-1">
-                          {pattern.pattern}
-                        </code>
-                      </div>
-                      {pattern.example_usage && (
+                      {(pattern.pattern || pattern.example_usage) && (
                         <div>
-                          <span className="text-xs text-muted-foreground">Example usage:</span>
+                          <span className="text-xs text-muted-foreground">Code Pattern:</span>
+                          <code className="block bg-primary/10 p-3 rounded text-sm font-mono font-bold mt-1 border-l-4 border-primary">
+                            {pattern.pattern || pattern.example_usage?.match(/className=["'][^"']+["']|var\([^)]+\)|[a-z-]+:\s*[^;]+/)?.[0] || "Pattern not extracted"}
+                          </code>
+                        </div>
+                      )}
+                      {pattern.example_usage && (
+                        <div className="mt-2">
+                          <span className="text-xs text-muted-foreground">Full context:</span>
                           <code className="block bg-muted/50 p-2 rounded text-xs font-mono mt-1 text-muted-foreground">
                             {pattern.example_usage}
                           </code>
