@@ -23,13 +23,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Loader2, Sparkles, Check, X, Edit, BookOpen, AlertTriangle, CheckCircle, Info, Eye } from "lucide-react";
+import { Loader2, Sparkles, Check, X, Edit, BookOpen, AlertTriangle, CheckCircle, Info, Eye, MessageCircle, Send } from "lucide-react";
 import { toast } from "sonner";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function ViolationReport() {
   const [analyzing, setAnalyzing] = useState(false);
@@ -39,6 +46,11 @@ export default function ViolationReport() {
   const [showReference, setShowReference] = useState(true);
   const [globalsCss, setGlobalsCss] = useState(null);
   const [validating, setValidating] = useState(false);
+  const [aiDialogOpen, setAiDialogOpen] = useState(false);
+  const [selectedPattern, setSelectedPattern] = useState(null);
+  const [aiQuestion, setAiQuestion] = useState("");
+  const [aiAnswer, setAiAnswer] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
   
   const queryClient = useQueryClient();
 
@@ -232,6 +244,46 @@ For EACH pattern, provide the EXACT string found in code, not a description.`,
   const handleRejectPattern = (pattern) => {
     setPatterns(prev => prev.filter(p => p.id !== pattern.id));
     toast.success("Pattern rejected");
+  };
+
+  const handleAskAI = (pattern) => {
+    setSelectedPattern(pattern);
+    setAiQuestion("");
+    setAiAnswer("");
+    setAiDialogOpen(true);
+  };
+
+  const handleSendQuestion = async () => {
+    if (!aiQuestion.trim()) return;
+    
+    setAiLoading(true);
+    try {
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are a CSS/design token expert helping a developer understand a pattern found in their codebase.
+
+PATTERN DETAILS:
+- Code Pattern: ${selectedPattern.pattern || selectedPattern.example_usage || "N/A"}
+- Category: ${selectedPattern.category}
+- Status: ${selectedPattern.status}
+- Severity: ${selectedPattern.severity || "N/A"}
+- Issue: ${selectedPattern.issue || "N/A"}
+- Suggested Fix: ${selectedPattern.suggested_fix || "N/A"}
+- Found in: ${selectedPattern.found_in?.join(", ") || "N/A"}
+- Full Context: ${selectedPattern.example_usage || "N/A"}
+
+DEVELOPER'S QUESTION:
+${aiQuestion}
+
+Provide a clear, concise explanation that helps them understand this pattern and make an informed decision. If they're asking about why something is flagged, explain the reasoning. If they're asking about the fix, explain what it does and why it's better.`
+      });
+
+      setAiAnswer(result);
+    } catch (error) {
+      toast.error("Failed to get AI response: " + error.message);
+      setAiAnswer("Sorry, I couldn't process your question. Please try again.");
+    } finally {
+      setAiLoading(false);
+    }
   };
 
   const validatePatternAgainstGlobals = (pattern) => {
@@ -445,6 +497,14 @@ For EACH pattern, provide the EXACT string found in code, not a description.`,
                   </div>
                   
                   <div className="flex gap-2 ml-4">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handleAskAI(pattern)}
+                      title="Ask AI"
+                    >
+                      <MessageCircle className="h-4 w-4" />
+                    </Button>
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button size="sm" variant="ghost">
@@ -526,6 +586,76 @@ For EACH pattern, provide the EXACT string found in code, not a description.`,
           ))}
         </div>
       )}
+
+      {/* AI Explanation Dialog */}
+      <Dialog open={aiDialogOpen} onOpenChange={setAiDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Ask AI About This Pattern</DialogTitle>
+            <DialogDescription>
+              Get detailed explanations about why this pattern was flagged and how to fix it
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedPattern && (
+            <div className="space-y-4 py-4">
+              <div className="p-3 bg-muted rounded-lg">
+                <div className="text-sm font-medium mb-2">Pattern:</div>
+                <code className="text-sm font-mono">
+                  {selectedPattern.pattern || selectedPattern.example_usage || "N/A"}
+                </code>
+                <div className="flex gap-2 mt-2">
+                  <Badge className={statusColors[selectedPattern.status]}>
+                    {selectedPattern.status}
+                  </Badge>
+                  {selectedPattern.severity && (
+                    <Badge className={severityColors[selectedPattern.severity]}>
+                      {selectedPattern.severity}
+                    </Badge>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Your Question:</label>
+                <Textarea
+                  placeholder="e.g., Why is this flagged? What's wrong with this approach? Can you explain the suggested fix?"
+                  value={aiQuestion}
+                  onChange={(e) => setAiQuestion(e.target.value)}
+                  rows={3}
+                />
+                <Button 
+                  onClick={handleSendQuestion}
+                  disabled={aiLoading || !aiQuestion.trim()}
+                  className="w-full"
+                >
+                  {aiLoading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Thinking...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="h-4 w-4 mr-2" />
+                      Ask AI
+                    </>
+                  )}
+                </Button>
+              </div>
+
+              {aiAnswer && (
+                <div className="mt-4 p-4 bg-primary/5 rounded-lg border border-primary/20">
+                  <div className="text-sm font-medium mb-2 flex items-center gap-2">
+                    <Sparkles className="h-4 w-4 text-primary" />
+                    AI Explanation:
+                  </div>
+                  <div className="text-sm whitespace-pre-wrap">{aiAnswer}</div>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Edit Dialog */}
       <AlertDialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
