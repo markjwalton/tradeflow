@@ -122,7 +122,7 @@ export default function CMSManager() {
 
     if (items.length === 0) {
       return (
-        <div className="text-center py-12 text-charcoal-700">
+        <div className="text-center py-12 text-muted-foreground">
           <p>No {type} yet</p>
           <Button className="mt-4" onClick={() => openEditor()}>
             <Plus className="h-4 w-4 mr-2" />
@@ -139,7 +139,7 @@ export default function CMSManager() {
             <div>
               <h3 className="font-medium text-midnight-900">{item.title || item.name}</h3>
               <div className="flex items-center gap-2 mt-1">
-                <span className="text-sm text-charcoal-700">/{item.slug}</span>
+                <span className="text-sm text-muted-foreground">/{item.slug}</span>
                 {statusBadge(item.status)}
               </div>
             </div>
@@ -171,7 +171,7 @@ export default function CMSManager() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-light text-midnight-900 font-heading">CMS</h1>
-          <p className="text-charcoal-700">Manage content for external websites</p>
+          <p className="text-muted-foreground">Manage content for external websites</p>
         </div>
         {isGlobalAdmin && (
           <CMSTenantSelector 

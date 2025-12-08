@@ -58,7 +58,7 @@ export default function StandaloneAPIStrategy() {
           <Globe className="h-6 w-6 text-primary-500" />
           Multi-Tenant Standalone API Strategy
         </h1>
-        <p className="text-[var(--color-charcoal)]">
+        <p className="text-muted-foreground">
           Architecture for sharing functionality between main app and standalone Base44 instances
         </p>
       </div>
@@ -84,7 +84,7 @@ export default function StandaloneAPIStrategy() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-[var(--color-charcoal)]">
+              <p className="text-muted-foreground">
                 This strategy enables standalone Base44 tenant instances to receive functionality updates 
                 from the main application through secure API connectivity. Each standalone instance 
                 maintains its own data while syncing templates, configurations, and design system updates.
@@ -121,28 +121,28 @@ export default function StandaloneAPIStrategy() {
                   <Server className="h-5 w-5 text-primary-500" />
                   <div>
                     <p className="font-medium">Standalone Instance Manager</p>
-                    <p className="text-sm text-[var(--color-charcoal)]">Configure and monitor all connected instances</p>
+                    <p className="text-sm text-muted-foreground">Configure and monitor all connected instances</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-[var(--color-background)] rounded-lg">
                   <BarChart3 className="h-5 w-5 text-[var(--color-secondary)]" />
                   <div>
                     <p className="font-medium">API Performance Dashboard</p>
-                    <p className="text-sm text-[var(--color-charcoal)]">Monitor all tenant API calls and latency</p>
+                    <p className="text-sm text-muted-foreground">Monitor all tenant API calls and latency</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-[var(--color-background)] rounded-lg">
                   <Bell className="h-5 w-5 text-accent-400" />
                   <div>
                     <p className="font-medium">Feature Notification System</p>
-                    <p className="text-sm text-[var(--color-charcoal)]">Notify instances of new available features</p>
+                    <p className="text-sm text-muted-foreground">Notify instances of new available features</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-[var(--color-background)] rounded-lg">
                   <Sparkles className="h-5 w-5 text-purple-600" />
                   <div>
                     <p className="font-medium">AI Problem Analyzer</p>
-                    <p className="text-sm text-[var(--color-charcoal)]">Diagnose connectivity and performance issues</p>
+                    <p className="text-sm text-muted-foreground">Diagnose connectivity and performance issues</p>
                   </div>
                 </div>
               </CardContent>
@@ -157,28 +157,28 @@ export default function StandaloneAPIStrategy() {
                   <Settings className="h-5 w-5 text-primary-500" />
                   <div>
                     <p className="font-medium">Connection Setup Wizard</p>
-                    <p className="text-sm text-[var(--color-charcoal)]">Step-by-step API connection and verification</p>
+                    <p className="text-sm text-muted-foreground">Step-by-step API connection and verification</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-[var(--color-background)] rounded-lg">
                   <BarChart3 className="h-5 w-5 text-[var(--color-secondary)]" />
                   <div>
                     <p className="font-medium">Local Performance Monitor</p>
-                    <p className="text-sm text-[var(--color-charcoal)]">Track API health and sync status</p>
+                    <p className="text-sm text-muted-foreground">Track API health and sync status</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-[var(--color-background)] rounded-lg">
                   <Package className="h-5 w-5 text-[var(--color-accent)]" />
                   <div>
                     <p className="font-medium">Feature Availability Browser</p>
-                    <p className="text-sm text-[var(--color-charcoal)]">View and deploy available features</p>
+                    <p className="text-sm text-muted-foreground">View and deploy available features</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-[var(--color-background)] rounded-lg">
                   <Sparkles className="h-5 w-5 text-purple-600" />
                   <div>
                     <p className="font-medium">AI Troubleshooter</p>
-                    <p className="text-sm text-[var(--color-charcoal)]">Diagnose and resolve local issues</p>
+                    <p className="text-sm text-muted-foreground">Diagnose and resolve local issues</p>
                   </div>
                 </div>
               </CardContent>
@@ -205,7 +205,7 @@ export default function StandaloneAPIStrategy() {
                         <Icon className="h-5 w-5 text-primary-500" />
                         <div>
                           <p className="font-medium">{item.name}</p>
-                          <p className="text-sm text-[var(--color-charcoal)]">{item.notes}</p>
+                          <p className="text-sm text-muted-foreground">{item.notes}</p>
                         </div>
                       </div>
                       <Badge className={
@@ -437,7 +437,7 @@ export default function StandaloneAPIStrategy() {
                     </div>
                     <div>
                       <p className="font-medium">{item.title}</p>
-                      <p className="text-sm text-[var(--color-charcoal)]">{item.desc}</p>
+                      <p className="text-sm text-muted-foreground">{item.desc}</p>
                     </div>
                   </div>
                 ))}

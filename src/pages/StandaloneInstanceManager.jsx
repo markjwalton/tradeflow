@@ -226,7 +226,7 @@ export default function StandaloneInstanceManager() {
             <Server className="h-6 w-6 text-primary-500" />
             Standalone Instance Manager
           </h1>
-          <p className="text-charcoal-700">Manage API connections to standalone Base44 tenant instances</p>
+          <p className="text-muted-foreground">Manage API connections to standalone Base44 tenant instances</p>
         </div>
         <div className="flex gap-2">
           <Link to={createPageUrl("StandaloneAPIStrategy")}>

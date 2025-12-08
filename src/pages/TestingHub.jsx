@@ -456,7 +456,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
                 {operation.total > 0 && (
                   <div className="mt-2">
                     <Progress value={(operation.progress / operation.total) * 100} className="h-2" />
-                    <p className="text-sm text-charcoal-700 mt-1">
+                    <p className="text-sm text-muted-foreground mt-1">
                       {operation.progress} / {operation.total}
                     </p>
                   </div>
@@ -500,7 +500,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
           <Card className="border-border">
             <CardContent className="p-0">
               {filteredItems.length === 0 ? (
-                <div className="text-center py-12 text-charcoal-700">
+                <div className="text-center py-12 text-muted-foreground">
                   <CheckCircle2 className="h-10 w-10 mx-auto mb-2 text-success" />
                   <p>No items in this category</p>
                 </div>
@@ -586,7 +586,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
             <CardContent>
               <ScrollArea className="h-[400px]">
                 {testDataSets.length === 0 ? (
-                  <p className="text-center py-8 text-charcoal-700">No test data yet</p>
+                  <p className="text-center py-8 text-muted-foreground">No test data yet</p>
                 ) : (
                   <div className="space-y-3">
                     {testDataSets.map(td => {
@@ -600,7 +600,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
                           <div className="flex items-center justify-between">
                             <div>
                               <p className="font-medium text-midnight-900">{get(td, "source_name")}</p>
-                              <p className="text-sm text-charcoal-700">
+                              <p className="text-sm text-muted-foreground">
                                 {get(td, "source_type")} • {recordCount} records • v{version}
                                 {prevVersions.length > 0 && ` (${prevVersions.length} previous)`}
                               </p>
@@ -637,7 +637,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-charcoal-700 mb-4">
+                <p className="text-sm text-muted-foreground mb-4">
                   {pageTemplates.length} pages in library
                 </p>
                 <Button onClick={() => syncFromLibrary("page")} disabled={isOperating}>
@@ -655,7 +655,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-charcoal-700 mb-4">
+                <p className="text-sm text-muted-foreground mb-4">
                   {featureTemplates.length} features in library
                 </p>
                 <Button onClick={() => syncFromLibrary("feature")} disabled={isOperating}>
@@ -671,7 +671,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
               <CardTitle className="text-midnight-900">Relationship Architecture</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-sm text-charcoal-700 space-y-4">
+              <div className="text-sm text-muted-foreground space-y-4">
               <div className="p-4 bg-background rounded-lg font-mono text-xs">
                   <pre>{`
 Library Templates (Source of Truth)
