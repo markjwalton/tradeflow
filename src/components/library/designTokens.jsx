@@ -371,8 +371,8 @@ h1, h2, h3, h4, h5, h6 {
   --color-info: #5a7a8b;
 
   /* Typography */
-  --font-heading: "Degular Display Light", system-ui, sans-serif;
-  --font-body: "Mrs Eaves XL Serif", Georgia, serif;
+  --font-heading: degular-display, system-ui, sans-serif;
+  --font-body: mrs-eaves-xl-serif-narrow, Georgia, serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
 
   /* Spacing */
