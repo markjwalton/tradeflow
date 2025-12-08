@@ -374,49 +374,56 @@ export default function CSSAudit() {
     const scanPromise = simulateScanning();
     
     try {
+      // Fetch actual file contents for priority files
+      const priorityFiles = [
+        "Layout.js", "globals.css", "pages/Dashboard.jsx", 
+        "pages/ComponentShowcase.jsx", "components/library/designTokens.js"
+      ];
+
+      let fileContents = {};
+      for (const file of priorityFiles) {
+        try {
+          const response = await fetch(`/src/${file}`);
+          if (response.ok) {
+            fileContents[file] = await response.text();
+          }
+        } catch (e) {
+          console.log(`Could not fetch ${file}`);
+        }
+      }
+
       const result = await base44.integrations.Core.InvokeLLM({
-        prompt: `You are a CSS/design token auditor. Analyze ALL ${filesToScan.length} files in this codebase for design token violations.
+        prompt: `You are a CSS/design token auditor. CRITICALLY ANALYZE these ${priorityFiles.length} files for design token violations.
 
-COMPREHENSIVE FILE LIST (${filesToScan.length} files):
-${filesToScan.map((f, i) => `${i + 1}. ${f}`).join('\n')}
+    ACTUAL FILE CONTENTS TO ANALYZE:
+    ${Object.entries(fileContents).map(([path, content]) => `
+    === FILE: ${path} ===
+    ${content.substring(0, 15000)}
+    === END ${path} ===
+    `).join('\n')}
 
-KNOWN ISSUES TO PRIORITIZE:
-- Layout.js: Hardcoded colors (#ffffff, etc), pixel spacing
-- Dashboard.jsx: Hardcoded colors #4A5D4E, #D4A574, #5a7a8b, #d9b4a7, #eceae5
-- ComponentShowcase.jsx: Multiple hardcoded hex colors
-- designTokens.js: Wrong font format - quoted Adobe fonts
+    DESIGN TOKENS REFERENCE:
+    - Colors: var(--color-primary), var(--color-secondary), var(--color-accent), var(--color-midnight), var(--color-charcoal)
+    - Semantic: bg-primary, text-primary, border-border, bg-muted, text-muted-foreground
+    - Spacing: var(--spacing-1) through var(--spacing-32)
+    - Fonts: degular-display, mrs-eaves-xl-serif-narrow (NO QUOTES)
 
-DESIGN TOKENS REFERENCE (from globals.css):
-- Colors: var(--color-primary), var(--color-secondary), var(--color-accent), var(--color-midnight), var(--color-charcoal)
-- Color scales: var(--primary-50) through var(--primary-900), etc.
-- Spacing: var(--spacing-1) through var(--spacing-32)
-- Typography colors: var(--text-primary), var(--text-secondary), var(--text-body), var(--text-muted)
-- Fonts: Should be unquoted - degular-display, mrs-eaves-xl-serif-narrow, source-code-pro
+    VIOLATIONS TO DETECT:
+    1. CRITICAL - Quoted fonts: "degular-display", "mrs-eaves-xl-serif-narrow"
+    2. CRITICAL - Inline styles with hardcoded values: style={{backgroundColor: '#fff'}}
+    3. HIGH - Hardcoded hex: #4A5D4E, #D4A574, #ffffff, rgb(74, 93, 78)
+    4. HIGH - Hardcoded Tailwind colors: bg-[#4A5D4E], text-gray-500
+    5. MEDIUM - Hardcoded spacing: padding: 16px, px-4 (use var(--spacing-4) or p-4)
+    6. MEDIUM - Hardcoded font sizes: fontSize: 14px
+    7. LOW - Generic Tailwind grays: text-gray-400 (use text-muted-foreground)
 
-VIOLATIONS TO DETECT (by severity):
-1. CRITICAL - Quoted Adobe fonts (will fail to load): font-family: "degular-display"
-2. CRITICAL - Wrong font names: "Degular Display Light", "Mrs Eaves XL Serif"  
-3. CRITICAL - Inline styles in JSX (style={{...}}) with hardcoded values
-4. HIGH - Hardcoded hex colors: #4A5D4E, #D4A574, #ffffff, #000000, etc.
-5. HIGH - Hardcoded RGB/RGBA colors: rgb(74, 93, 78), rgba(212, 165, 116, 0.5)
-6. HIGH - className with hardcoded colors: bg-[#4A5D4E], text-[#D4A574]
-7. MEDIUM - Hardcoded pixel spacing: padding: 16px, margin: 20px, gap: 12px
-8. MEDIUM - Hardcoded font sizes: fontSize: 14px, text-[14px]
-9. MEDIUM - Hardcoded border radius: borderRadius: 8px, rounded-[8px]
-10. LOW - Generic Tailwind grays (gray-100, gray-500) instead of semantic tokens
-11. LOW - Generic Tailwind colors (blue-500, red-600) instead of semantic tokens
+    For EACH file analyzed, provide:
+    - Exact line/code with violation
+    - Severity + specific issue
+    - Current problematic code
+    - Exact recommended fix
 
-SCAN EVERY SINGLE FILE IN THE LIST. For each file WITH violations, provide:
-- File path
-- Total violation count
-- Critical count
-- List of specific violations with:
-  - Severity (critical/high/medium/low)
-  - Issue description
-  - Current code
-  - Recommended fix with proper token
-
-Return a comprehensive audit report.`,
+    Return detailed audit report with ALL violations found.`,
         response_json_schema: {
           type: "object",
           properties: {
@@ -424,6 +431,7 @@ Return a comprehensive audit report.`,
               type: "object",
               properties: {
                 totalFiles: { type: "number" },
+                filesAnalyzed: { type: "number" },
                 totalViolations: { type: "number" },
                 criticalCount: { type: "number" },
                 highCount: { type: "number" },
