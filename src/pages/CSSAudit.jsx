@@ -60,12 +60,19 @@ export default function CSSAudit() {
     // Line height - should use CSS variables
     { pattern: /leading-(none|tight|snug|normal|relaxed|loose|[0-9]+)/g, type: "line-height", replacement: "Use CSS variables --leading-*" },
     
-    // Color classes - check for hardcoded colors
-    { pattern: /text-(gray|slate|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(50|100|200|300|400|500|600|700|800|900)/g, type: "text-color", replacement: "Use design system color tokens: text-[var(--color-*)]" },
-    { pattern: /bg-(gray|slate|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(50|100|200|300|400|500|600|700|800|900)/g, type: "bg-color", replacement: "Use design system color tokens: bg-[var(--color-*)]" },
+    // Color classes - check for hardcoded Tailwind colors instead of semantic tokens
+    { pattern: /text-(gray|slate|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(50|100|200|300|400|500|600|700|800|900)/g, type: "text-color-hardcoded", replacement: "Use semantic color classes: text-primary, text-secondary, text-muted, text-accent, text-destructive OR text-[var(--color-*)]" },
+    { pattern: /bg-(gray|slate|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(50|100|200|300|400|500|600|700|800|900)/g, type: "bg-color-hardcoded", replacement: "Use semantic color classes: bg-primary, bg-secondary, bg-muted, bg-accent, bg-destructive OR bg-[var(--color-*)]" },
+    { pattern: /border-(gray|slate|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(50|100|200|300|400|500|600|700|800|900)/g, type: "border-color-hardcoded", replacement: "Use semantic color classes: border-primary, border-muted OR border-[var(--color-*)]" },
     
     // Spacing - should use semantic spacing tokens
-    { pattern: /\b(p|px|py|pt|pb|pl|pr|m|mx|my|mt|mb|ml|mr|gap|space-[xy])-(0|px|0\.5|1|1\.5|2|2\.5|3|3\.5|4|5|6|7|8|9|10|11|12|14|16|20|24|28|32|36|40|44|48|52|56|60|64|72|80|96)\b/g, type: "spacing", replacement: "Consider using CSS variables --spacing-* for consistency" },
+    { pattern: /\b(p|px|py|pt|pb|pl|pr|m|mx|my|mt|mb|ml|mr|gap|space-[xy])-(0|px|0\.5|1|1\.5|2|2\.5|3|3\.5|4|5|6|7|8|9|10|11|12|14|16|20|24|28|32|36|40|44|48|52|56|60|64|72|80|96)\b/g, type: "spacing-hardcoded", replacement: "Consider using CSS variables --spacing-* for consistency" },
+    
+    // Shadow classes - should use CSS variables
+    { pattern: /shadow-(xs|sm|md|lg|xl|2xl|inner|none)/g, type: "shadow-hardcoded", replacement: "Use CSS variables --shadow-* (e.g., [box-shadow:var(--shadow-md)])" },
+    
+    // Border radius - should use CSS variables
+    { pattern: /rounded-(none|xs|sm|md|lg|xl|2xl|3xl|full)/g, type: "radius-hardcoded", replacement: "Use CSS variables --radius-* (e.g., [border-radius:var(--radius-lg)])" },
   ];
 
   const scanProject = async () => {
