@@ -397,6 +397,13 @@
   --sidebar-ring: var(--primary-300);
 }
 
+@theme {
+  /* === FONT FAMILY THEME TOKENS === */
+  --font-sans: "degular-display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "mrs-eaves-xl-serif-narrow", Georgia, "Times New Roman", serif;
+  --font-mono: "source-code-pro", "SF Mono", Monaco, Inconsolata, "Roboto Mono", monospace;
+}
+
 @theme inline {
   /* === TAILWIND COLOR MAPPINGS === */
   --color-background: var(--background);
