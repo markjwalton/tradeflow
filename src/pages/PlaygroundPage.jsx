@@ -393,7 +393,7 @@ Return as JSON with a "suggestions" array of strings.`,
             <ul className="space-y-2">
               {item.ai_suggestions.map((suggestion, i) => (
                 <li key={i} className="flex items-start gap-2 p-3 bg-accent-100 rounded-lg">
-                  <span className="text-accent-700 font-bold">{i + 1}.</span>
+                  <span className="text-accent font-bold">{i + 1}.</span>
                   <span className="text-sm">{suggestion}</span>
                 </li>
               ))}

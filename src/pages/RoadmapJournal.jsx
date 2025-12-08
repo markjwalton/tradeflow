@@ -684,7 +684,7 @@ Return as JSON:
                       </div>
                       
                       {entry.ai_generated_prompt && (
-                        <div className="mt-4 bg-accent-50 border border-accent/20 rounded-lg p-4">
+                        <div className="mt-4 bg-accent-100 border border-accent/20 rounded-lg p-4">
                           <div className="flex items-center justify-between mb-2">
                             <span className="text-sm font-medium text-accent">Prompt to continue this discussion</span>
                             <div className="flex gap-1">
