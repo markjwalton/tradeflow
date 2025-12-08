@@ -271,7 +271,7 @@ Return a JSON object with a "suggestions" array where each item has:
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64 bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -284,7 +284,7 @@ Return a JSON object with a "suggestions" array where each item has:
             <Library className="h-6 w-6" />
             Node Template Library
           </h1>
-          <p className="text-charcoal-700 text-sm mt-1">
+          <p className="text-muted-foreground text-sm mt-1">
             Create and manage reusable node templates with functional specifications
           </p>
         </div>
@@ -337,7 +337,7 @@ Return a JSON object with a "suggestions" array where each item has:
 
       {/* Templates grouped by area */}
       {Object.keys(groupedTemplates).length === 0 ? (
-        <div className="text-center py-12 text-charcoal-700">
+        <div className="text-center py-12 text-muted-foreground">
           <Library className="h-16 w-16 mx-auto mb-4 opacity-30" />
           <p className="text-lg">No templates yet</p>
           <p className="text-sm">Create your first template to start building your library.</p>

@@ -310,7 +310,7 @@ When updating existing code:
               <h1 className="text-3xl font-heading text-midnight-900">
                 Sturij Design System Package
               </h1>
-              <p className="text-charcoal-700">
+              <p className="text-muted-foreground">
                 Complete UI theme package for Base44 applications
               </p>
             </div>

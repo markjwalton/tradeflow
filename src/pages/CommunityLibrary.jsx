@@ -221,7 +221,7 @@ export default function CommunityLibrary() {
   if (loadingCommunity || loadingTenant) {
     return (
       <div className="flex justify-center items-center h-64 bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -234,7 +234,7 @@ export default function CommunityLibrary() {
             <Package className="h-6 w-6" />
             Community Library
           </h1>
-          <p className="text-charcoal-700">Browse and import shared templates</p>
+          <p className="text-muted-foreground">Browse and import shared templates</p>
         </div>
         {itemsWithUpdates.length > 0 && (
           <Badge className="bg-warning/10 text-warning text-sm py-1 px-3">

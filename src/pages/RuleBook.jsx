@@ -219,7 +219,7 @@ export default function RuleBook() {
             <BookOpen className="h-6 w-6 text-primary" />
             Development Rule Book
           </h1>
-          <p className="text-charcoal-700">Maintain rules for AI-assisted development</p>
+          <p className="text-muted-foreground">Maintain rules for AI-assisted development</p>
         </div>
         <div className="flex gap-2">
           {copiedRules.length > 0 && (
@@ -269,7 +269,7 @@ export default function RuleBook() {
 
       {isLoading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
       ) : (
         <div className="space-y-4">
