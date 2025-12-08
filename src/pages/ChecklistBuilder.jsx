@@ -163,7 +163,7 @@ export default function ChecklistBuilder() {
   if (!checklistId && !showNewDialog) {
     return (
       <div className="h-screen flex items-center justify-center bg-background">
-        <Card className="w-96 p-6 border-background-muted bg-card">
+        <Card className="w-96 p-6 border-border bg-card">
           <h2 className="text-lg font-semibold mb-4 text-midnight-900">No Checklist Selected</h2>
           <div className="space-y-3">
             <Button onClick={() => setShowNewDialog(true)} className="w-full">
@@ -184,7 +184,7 @@ export default function ChecklistBuilder() {
   return (
     <div className="h-screen flex flex-col bg-background">
       {/* Header */}
-      <div className="bg-card border-b border-background-muted px-4 py-3 flex items-center justify-between">
+      <div className="bg-card border-b border-border px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link to={createPageUrl("ChecklistTemplates")}>
             <Button variant="ghost" size="sm">

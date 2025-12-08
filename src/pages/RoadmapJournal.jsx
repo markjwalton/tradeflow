@@ -25,13 +25,13 @@ import { toast } from "sonner";
 import moment from "moment";
 
 const entryTypes = [
-  { value: "brainstorming", label: "Brainstorming", icon: Brain, color: "bg-accent-100 text-accent-700" },
-  { value: "question", label: "Question", icon: HelpCircle, color: "bg-info-50 text-info-foreground" },
-  { value: "advice", label: "Advice", icon: MessageSquare, color: "bg-success-50 text-success-foreground" },
-  { value: "idea", label: "Idea", icon: Lightbulb, color: "bg-warning/10 text-warning-foreground" },
-  { value: "decision", label: "Decision", icon: CheckCircle, color: "bg-success-50 text-success-foreground" },
+  { value: "brainstorming", label: "Brainstorming", icon: Brain, color: "bg-accent-100 text-accent" },
+  { value: "question", label: "Question", icon: HelpCircle, color: "bg-info-50 text-info" },
+  { value: "advice", label: "Advice", icon: MessageSquare, color: "bg-success-50 text-success" },
+  { value: "idea", label: "Idea", icon: Lightbulb, color: "bg-warning/10 text-warning" },
+  { value: "decision", label: "Decision", icon: CheckCircle, color: "bg-success-50 text-success" },
   { value: "update", label: "Update", icon: MessageSquare, color: "bg-muted text-muted-foreground" },
-  { value: "blocker", label: "Blocker", icon: AlertTriangle, color: "bg-destructive-50 text-destructive-700" },
+  { value: "blocker", label: "Blocker", icon: AlertTriangle, color: "bg-destructive-50 text-destructive" },
 ];
 
 const contextCategories = [
@@ -423,8 +423,8 @@ Return as JSON:
 
   if (!itemId) {
     return (
-      <div className="p-6 bg-[var(--color-background)]">
-        <p className="text-[var(--color-charcoal)]">No roadmap item selected.</p>
+      <div className="p-6 bg-background">
+        <p className="text-charcoal-700">No roadmap item selected.</p>
         <Button variant="outline" className="mt-4" onClick={() => navigate(-1)}>
           <ArrowLeft className="h-4 w-4 mr-2" /> Go Back
         </Button>
@@ -434,8 +434,8 @@ Return as JSON:
 
   if (itemLoading) {
     return (
-      <div className="flex justify-center items-center h-64 bg-[var(--color-background)]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+      <div className="flex justify-center items-center h-64 bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
       </div>
     );
   }
@@ -443,7 +443,7 @@ Return as JSON:
   const currentPrompt = devPrompt || item?.development_prompt || "";
 
   return (
-    <div className="p-6 max-w-5xl mx-auto bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 max-w-5xl mx-auto bg-background min-h-screen">
       {/* Header */}
       <div className="flex items-start justify-between gap-4 mb-6">
         <div className="flex items-center gap-4">
@@ -451,8 +451,8 @@ Return as JSON:
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">{item?.title}</h1>
-            <p className="text-[var(--color-charcoal)]">{item?.description}</p>
+            <h1 className="text-2xl font-light font-display text-midnight-900">{item?.title}</h1>
+            <p className="text-charcoal-700">{item?.description}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -712,7 +712,7 @@ Return as JSON:
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
-                <MessageSquare className="h-5 w-5 text-info-foreground" />
+                <MessageSquare className="h-5 w-5 text-info" />
                 Live Chat Journal
               </CardTitle>
               <p className="text-sm text-muted-foreground">Quick captures from AI chat sessions (hidden from main roadmap)</p>
@@ -829,7 +829,7 @@ Return as JSON:
                 <CardTitle className="text-lg flex items-center gap-2">
                   <Brain className="h-5 w-5" />
                   AI Review
-                  <Badge className={item.ai_review.status === "accepted" ? "bg-success-50 text-success-foreground" : item.ai_review.status === "needs_work" ? "bg-warning/10 text-warning-foreground" : "bg-info-50 text-info-foreground"}>
+                  <Badge className={item.ai_review.status === "accepted" ? "bg-success-50 text-success" : item.ai_review.status === "needs_work" ? "bg-warning/10 text-warning" : "bg-info-50 text-info"}>
                     {item.ai_review.status === "accepted" ? "Accepted" : item.ai_review.status === "needs_work" ? "Needs Work" : "Pending Review"}
                   </Badge>
                 </CardTitle>
@@ -844,7 +844,7 @@ Return as JSON:
                   <div className="space-y-3">
                     <h4 className="font-medium">Recommendations</h4>
                     {item.ai_review.recommendations.map((rec, index) => (
-                      <div key={index} className={`border rounded-lg p-3 ${rec.accepted === true ? "bg-success-50 border-success" : rec.accepted === false ? "bg-muted border-border opacity-60" : "bg-card"}`}>
+                      <div key={index} className={`border rounded-lg p-3 ${rec.accepted === true ? "bg-success-50 border-success/20" : rec.accepted === false ? "bg-muted border-border opacity-60" : "bg-card"}`}>
                         <div className="flex items-start justify-between gap-2">
                           <div>
                             <Badge variant="outline" className="mb-2">{rec.type}</Badge>
@@ -852,7 +852,7 @@ Return as JSON:
                           </div>
                           {rec.accepted === undefined && (
                             <div className="flex gap-1">
-                              <Button size="icon" variant="ghost" className="h-8 w-8 text-success-foreground" onClick={() => handleRecommendationAction(index, true)}>
+                              <Button size="icon" variant="ghost" className="h-8 w-8 text-success" onClick={() => handleRecommendationAction(index, true)}>
                                 <ThumbsUp className="h-4 w-4" />
                               </Button>
                               <Button size="icon" variant="ghost" className="h-8 w-8 text-destructive" onClick={() => handleRecommendationAction(index, false)}>
@@ -861,7 +861,7 @@ Return as JSON:
                             </div>
                           )}
                           {rec.accepted !== undefined && (
-                            <Badge className={rec.accepted ? "bg-success-50 text-success-foreground" : "bg-muted text-muted-foreground"}>
+                            <Badge className={rec.accepted ? "bg-success-50 text-success" : "bg-muted text-muted-foreground"}>
                               {rec.accepted ? "Accepted" : "Rejected"}
                             </Badge>
                           )}
@@ -872,7 +872,7 @@ Return as JSON:
                 )}
 
                 <div className="flex gap-2 pt-4 border-t">
-                  <Button onClick={acceptAndProceed} className="bg-success-foreground hover:bg-primary-600 text-white">
+                  <Button onClick={acceptAndProceed} className="bg-success hover:bg-success/90 text-success-foreground">
                     <CheckCircle className="h-4 w-4 mr-2" /> Accept & Mark Ready
                   </Button>
                   <Button onClick={sendBackToRoadmap} variant="outline">

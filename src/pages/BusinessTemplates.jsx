@@ -37,15 +37,15 @@ const categories = [
 ];
 
 const categoryColors = {
-  "Professional Services": "bg-info-50 text-info-foreground",
-  "Construction": "bg-warning/10 text-warning-foreground",
-  "Retail": "bg-accent-100 text-accent-700",
-  "Healthcare": "bg-success-50 text-success-foreground",
-  "Technology": "bg-accent-100 text-accent-700",
-  "Manufacturing": "bg-warning/10 text-warning-foreground",
-  "Finance": "bg-success-50 text-success-foreground",
-  "Education": "bg-info-50 text-info-foreground",
-  "Custom": "bg-primary-100 text-primary-700",
+  "Professional Services": "bg-info-50 text-info",
+  "Construction": "bg-warning/10 text-warning",
+  "Retail": "bg-accent-100 text-accent",
+  "Healthcare": "bg-success-50 text-success",
+  "Technology": "bg-accent-100 text-accent",
+  "Manufacturing": "bg-warning/10 text-warning",
+  "Finance": "bg-success-50 text-success",
+  "Education": "bg-info-50 text-info",
+  "Custom": "bg-primary-100 text-primary",
   "Other": "bg-muted text-muted-foreground",
 };
 
@@ -143,27 +143,27 @@ export default function BusinessTemplates() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64 bg-[var(--color-background)]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+      <div className="flex items-center justify-center h-64 bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
       </div>
     );
   }
 
   return (
-    <div className="p-6 max-w-6xl mx-auto bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 max-w-6xl mx-auto bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-midnight-900">
             <Building2 className="h-6 w-6" />
             Business Templates
             {currentProject && (
-              <Badge className="bg-primary-100 text-primary-700">
+              <Badge className="bg-primary-100 text-primary">
                 <Folder className="h-3 w-3 mr-1" />
                 {currentProject.name}
               </Badge>
             )}
           </h1>
-          <p className="text-[var(--color-charcoal)] mt-1">
+          <p className="text-charcoal-700 mt-1">
             Pre-defined templates with entities, pages, and features
           </p>
         </div>
@@ -211,7 +211,7 @@ export default function BusinessTemplates() {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <CardTitle className="text-lg flex items-center gap-2">
-                    {template.is_starred && <Star className="h-4 w-4 fill-warning-foreground text-warning-foreground" />}
+                    {template.is_starred && <Star className="h-4 w-4 fill-warning text-warning" />}
                     {template.name}
                   </CardTitle>
                   {template.category && (
@@ -272,9 +272,9 @@ export default function BusinessTemplates() {
               
               {/* Relationships & Workflows */}
               {(template.entity_relationships?.length > 0 || template.workflows?.length > 0) && (
-                <div className="flex items-center gap-2 text-xs text-accent-700 mb-3">
+                <div className="flex items-center gap-2 text-xs text-accent mb-3">
                   <GitBranch className="h-3 w-3" />
-                  <span className="text-accent-700">
+                  <span className="text-accent">
                     {template.entity_relationships?.length || 0} relationships, {template.workflows?.length || 0} workflows
                   </span>
                 </div>
@@ -299,7 +299,7 @@ export default function BusinessTemplates() {
         ))}
 
         {filteredTemplates.length === 0 && (
-          <div className="col-span-full text-center py-12 text-[var(--color-charcoal)]">
+          <div className="col-span-full text-center py-12 text-charcoal-700">
             <Building2 className="h-12 w-12 mx-auto mb-3 opacity-30" />
             <p>No templates found</p>
             <Button variant="link" onClick={() => setShowBuilder(true)}>

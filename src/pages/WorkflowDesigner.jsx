@@ -246,10 +246,10 @@ export default function WorkflowDesigner() {
 
   if (!workflowId && !showNewDialog) {
     return (
-      <div className="h-screen flex items-center justify-center bg-[var(--color-background)]">
-        <Card className="w-96 border-background-muted bg-card">
+      <div className="h-screen flex items-center justify-center bg-background">
+        <Card className="w-96 border-border bg-card">
           <CardHeader>
-            <CardTitle className="text-[var(--color-midnight)]">No Workflow Selected</CardTitle>
+            <CardTitle className="text-midnight-900">No Workflow Selected</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <Button onClick={() => setShowNewDialog(true)} className="w-full">
@@ -268,9 +268,9 @@ export default function WorkflowDesigner() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-[var(--color-background)]">
+    <div className="h-screen flex flex-col bg-background">
       {/* Header */}
-      <div className="bg-card border-b border-background-muted px-4 py-3 flex items-center justify-between">
+      <div className="bg-card border-b border-border px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link to={createPageUrl("WorkflowLibrary")}>
             <Button variant="ghost" size="sm">
@@ -279,7 +279,7 @@ export default function WorkflowDesigner() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-lg font-semibold text-[var(--color-midnight)]">
+            <h1 className="text-lg font-semibold text-midnight-900">
               {workflow?.name || "New Workflow"}
             </h1>
             <p className="text-sm text-muted-foreground">
@@ -344,7 +344,7 @@ export default function WorkflowDesigner() {
             <div className="flex-1 overflow-auto p-4">
               {loadingWorkflow || loadingSteps ? (
                 <div className="h-full flex items-center justify-center">
-                  <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+                  <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
                 </div>
               ) : (
                 <WorkflowCanvas
