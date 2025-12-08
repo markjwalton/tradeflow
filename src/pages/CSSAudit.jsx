@@ -262,17 +262,78 @@ Return empty array if file doesn't exist or has no issues.`,
     try {
       const selected = findings.filter(f => selectedFindings.includes(f.file));
       
+      // Fetch RuleBook for context
+      const rules = await base44.entities.DevelopmentRule.filter({ is_active: true });
+      const ruleContext = rules
+        .filter(r => r.category === "ui_ux" || r.tags?.includes("design-tokens"))
+        .map(r => `- ${r.title}: ${r.description}`)
+        .join("\n");
+      
       for (const finding of selected) {
         const issuesList = finding.issues.map((issue, idx) => 
-          `${idx + 1}. Line ${issue.line}: ${issue.element} - "${issue.current_class}"\n   → ${issue.replacement}`
+          `${idx + 1}. Line ${issue.line}: ${issue.element} - "${issue.current_class}"\n   Suggested: ${issue.replacement}`
         ).join("\n");
+
+        // Generate detailed development prompt with AI
+        const aiPrompt = await base44.integrations.Core.InvokeLLM({
+          prompt: `Generate a detailed development prompt for fixing hardcoded CSS in ${finding.file}
+
+**File:** ${finding.file}
+**Issues (${finding.totalIssues}):**
+${issuesList}
+
+**Design System Tokens Available:**
+- Typography: text-h1, text-h2, text-h3, text-h4, text-h5, text-h6
+- Body text: text-body-large, text-body-base, text-body-small, text-body-muted
+- Caption: text-caption
+- Colors: text-[var(--color-*)], bg-[var(--color-*)]
+- Spacing: --spacing-* variables
+
+**RuleBook Guidelines:**
+${ruleContext || "No specific rules defined"}
+
+Create a development prompt that:
+1. Lists all specific find/replace operations needed
+2. References relevant RuleBook guidelines
+3. Includes code examples using our semantic tokens
+4. Groups similar changes for efficiency
+5. Highlights any breaking changes or considerations`,
+          response_json_schema: {
+            type: "object",
+            properties: {
+              prompt: { type: "string" },
+              find_replace_operations: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    find: { type: "string" },
+                    replace: { type: "string" },
+                    note: { type: "string" }
+                  }
+                }
+              },
+              rulebook_references: {
+                type: "array",
+                items: { type: "string" }
+              }
+            }
+          }
+        });
+
+        const findReplaceSection = aiPrompt.find_replace_operations
+          ?.map((op, idx) => `${idx + 1}. Find: \`${op.find}\`\n   Replace: \`${op.replace}\`\n   ${op.note}`)
+          .join("\n\n") || "";
 
         await base44.entities.RoadmapItem.create({
           title: `Fix hardcoded CSS in ${finding.file.split('/').pop()}`,
-          description: `Replace hardcoded typography classes with semantic tokens in ${finding.file}
+          description: `${aiPrompt.prompt}
 
-**Issues Found (${finding.totalIssues}):**
-${issuesList}
+**Find/Replace Operations:**
+${findReplaceSection}
+
+**RuleBook References:**
+${aiPrompt.rulebook_references?.map(r => `- ${r}`).join("\n") || "None"}
 
 **Priority Breakdown:**
 - High: ${finding.highSeverity}
@@ -281,12 +342,13 @@ ${issuesList}
           priority: defaultPriority,
           status: "backlog",
           source: "ai_assistant",
-          tags: ["css-audit", "design-tokens", "refactoring"]
+          tags: ["css-audit", "design-tokens", "refactoring"],
+          development_prompt: aiPrompt.prompt
         });
       }
 
       queryClient.invalidateQueries({ queryKey: ["roadmapItems"] });
-      toast.success(`Created ${selected.length} roadmap items`);
+      toast.success(`Created ${selected.length} roadmap items with AI prompts`);
       setSelectedFindings([]);
     } catch (error) {
       toast.error("Failed: " + error.message);
