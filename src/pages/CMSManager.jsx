@@ -103,9 +103,9 @@ export default function CMSManager() {
   const statusBadge = (status) => {
     const colors = {
       draft: "bg-muted text-muted-foreground",
-      published: "bg-success-50 text-success-foreground",
-      archived: "bg-destructive-50 text-destructive-700",
-      active: "bg-success-50 text-success-foreground",
+      published: "bg-success-50 text-success",
+      archived: "bg-destructive-50 text-destructive",
+      active: "bg-success-50 text-success",
       inactive: "bg-muted text-muted-foreground"
     };
     return <Badge className={colors[status] || "bg-gray-100"}>{status}</Badge>;

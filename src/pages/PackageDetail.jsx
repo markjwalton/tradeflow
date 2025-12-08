@@ -117,20 +117,20 @@ export default function PackageDetail() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--color-background)]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
       </div>
     );
   }
 
   if (!pkg) {
     return (
-      <div className="p-6 bg-[var(--color-background)] min-h-screen">
-        <Card className="max-w-md mx-auto border-[var(--color-background-muted)]">
+      <div className="p-6 bg-background min-h-screen">
+        <Card className="max-w-md mx-auto border-border">
           <CardContent className="py-12 text-center">
-            <AlertCircle className="h-12 w-12 mx-auto mb-4 text-[var(--color-warning)]" />
-            <h2 className="text-lg font-heading text-[var(--color-midnight)]">Package Not Found</h2>
-            <p className="text-[var(--color-charcoal)] mt-2">The requested package could not be found.</p>
+            <AlertCircle className="h-12 w-12 mx-auto mb-4 text-warning" />
+            <h2 className="text-lg font-heading text-midnight-900">Package Not Found</h2>
+            <p className="text-charcoal-700 mt-2">The requested package could not be found.</p>
             <Link to={createPageUrl("DesignSystemManager")}>
               <Button className="mt-4">Back to Manager</Button>
             </Link>
@@ -142,12 +142,12 @@ export default function PackageDetail() {
 
   const statusColors = {
     draft: "bg-muted text-muted-foreground",
-    published: "bg-success-50 text-success-foreground",
-    deprecated: "bg-warning/10 text-warning-foreground"
+    published: "bg-success-50 text-success",
+    deprecated: "bg-warning/10 text-warning"
   };
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
@@ -158,14 +158,14 @@ export default function PackageDetail() {
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <Package className="h-6 w-6 text-primary-500" />
-              <h1 className="text-2xl font-heading text-[var(--color-midnight)]">
+              <Package className="h-6 w-6 text-primary" />
+              <h1 className="text-2xl font-heading text-midnight-900">
                 {pkg.package_name}
               </h1>
               <Badge className={statusColors[pkg.status]}>{pkg.status}</Badge>
               <Badge variant="outline">v{pkg.version}</Badge>
             </div>
-            <p className="text-[var(--color-charcoal)] mt-1">
+            <p className="text-charcoal-700 mt-1">
               <code className="text-sm">{pkg.package_code}</code>
             </p>
           </div>
@@ -174,7 +174,7 @@ export default function PackageDetail() {
           {pkg.status === "draft" && (
             <Button 
               onClick={handlePublish}
-              className="bg-success-foreground hover:bg-primary-600 text-white"
+              className="bg-success hover:bg-success/90 text-success-foreground"
             >
               <CheckCircle2 className="h-4 w-4 mr-2" />
               Publish
@@ -207,9 +207,9 @@ export default function PackageDetail() {
         <TabsContent value="overview" className="space-y-4">
           <div className="grid md:grid-cols-2 gap-4">
             {/* Package Info */}
-            <Card className="border-background-muted">
+            <Card className="border-border">
               <CardHeader>
-                <CardTitle className="text-[var(--color-midnight)]">Package Information</CardTitle>
+                <CardTitle className="text-midnight-900">Package Information</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {isEditing ? (
@@ -240,22 +240,22 @@ export default function PackageDetail() {
                 ) : (
                   <>
                     <div>
-                      <Label className="text-[var(--color-charcoal)]">Description</Label>
-                      <p className="text-[var(--color-midnight)]">{pkg.description || "No description"}</p>
+                      <Label className="text-charcoal-700">Description</Label>
+                      <p className="text-midnight-900">{pkg.description || "No description"}</p>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label className="text-[var(--color-charcoal)]">Type</Label>
-                        <p className="text-[var(--color-midnight)] capitalize">{pkg.package_type?.replace("_", " ")}</p>
+                        <Label className="text-charcoal-700">Type</Label>
+                        <p className="text-midnight-900 capitalize">{pkg.package_type?.replace("_", " ")}</p>
                       </div>
                       <div>
-                        <Label className="text-[var(--color-charcoal)]">Tailwind</Label>
-                        <p className="text-[var(--color-midnight)]">{pkg.tailwind_version}</p>
+                        <Label className="text-charcoal-700">Tailwind</Label>
+                        <p className="text-midnight-900">{pkg.tailwind_version}</p>
                       </div>
                     </div>
                     <div>
-                      <Label className="text-[var(--color-charcoal)]">Created</Label>
-                      <p className="text-[var(--color-midnight)]">
+                      <Label className="text-charcoal-700">Created</Label>
+                      <p className="text-midnight-900">
                         {pkg.created_date ? format(new Date(pkg.created_date), "PPP") : "Unknown"}
                       </p>
                     </div>
@@ -270,25 +270,25 @@ export default function PackageDetail() {
             {/* Parent Package / Customer Info */}
             <div className="space-y-4">
               {parentPkg && (
-                <Card className="border-background-muted">
+                <Card className="border-border">
                   <CardHeader>
-                    <CardTitle className="text-[var(--color-midnight)] flex items-center gap-2">
+                    <CardTitle className="text-midnight-900 flex items-center gap-2">
                       <GitBranch className="h-4 w-4" />
                       Based On
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center gap-3">
-                      <Package className="h-8 w-8 text-primary-500" />
+                      <Package className="h-8 w-8 text-primary" />
                       <div>
-                        <p className="font-medium text-[var(--color-midnight)]">{parentPkg.package_name}</p>
-                        <p className="text-sm text-[var(--color-charcoal)]">v{pkg.parent_version}</p>
+                        <p className="font-medium text-midnight-900">{parentPkg.package_name}</p>
+                        <p className="text-sm text-charcoal-700">v{pkg.parent_version}</p>
                       </div>
                     </div>
                     {pkg.update_available && (
                       <div className="mt-3 p-2 bg-warning/10 rounded-lg flex items-center gap-2">
-                        <AlertCircle className="h-4 w-4 text-warning-foreground" />
-                        <span className="text-sm text-warning-foreground">Update available</span>
+                        <AlertCircle className="h-4 w-4 text-warning" />
+                        <span className="text-sm text-warning">Update available</span>
                       </div>
                     )}
                   </CardContent>
@@ -296,64 +296,64 @@ export default function PackageDetail() {
               )}
 
               {pkg.package_type === "customer_theme" && (
-                <Card className="border-background-muted">
+                <Card className="border-border">
                   <CardHeader>
-                    <CardTitle className="text-[var(--color-midnight)] flex items-center gap-2">
+                    <CardTitle className="text-midnight-900 flex items-center gap-2">
                       <Building2 className="h-4 w-4" />
                       Customer
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-2">
                     <div>
-                      <Label className="text-[var(--color-charcoal)]">Company</Label>
-                      <p className="text-[var(--color-midnight)]">{pkg.customer_company || "Not set"}</p>
+                      <Label className="text-charcoal-700">Company</Label>
+                      <p className="text-midnight-900">{pkg.customer_company || "Not set"}</p>
                     </div>
                     <div>
-                      <Label className="text-[var(--color-charcoal)]">Contact</Label>
-                      <p className="text-[var(--color-midnight)]">{pkg.customer_name || "Not set"}</p>
+                      <Label className="text-charcoal-700">Contact</Label>
+                      <p className="text-midnight-900">{pkg.customer_name || "Not set"}</p>
                     </div>
                     <div>
-                      <Label className="text-[var(--color-charcoal)]">Email</Label>
-                      <p className="text-[var(--color-midnight)]">{pkg.customer_email || "Not set"}</p>
+                      <Label className="text-charcoal-700">Email</Label>
+                      <p className="text-midnight-900">{pkg.customer_email || "Not set"}</p>
                     </div>
                   </CardContent>
                 </Card>
               )}
 
               {/* Token Summary */}
-              <Card className="border-background-muted">
+              <Card className="border-border">
                 <CardHeader>
-                  <CardTitle className="text-[var(--color-midnight)]">Token Summary</CardTitle>
+                  <CardTitle className="text-midnight-900">Token Summary</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-3 bg-background rounded-lg text-center">
-                      <Palette className="h-5 w-5 mx-auto mb-1 text-primary-500" />
-                      <p className="text-lg font-medium text-[var(--color-midnight)]">
+                      <Palette className="h-5 w-5 mx-auto mb-1 text-primary" />
+                      <p className="text-lg font-medium text-midnight-900">
                         {Object.keys(pkg.design_tokens?.colors || {}).length}
                       </p>
-                      <p className="text-xs text-[var(--color-charcoal)]">Colors</p>
+                      <p className="text-xs text-charcoal-700">Colors</p>
                     </div>
                     <div className="p-3 bg-background rounded-lg text-center">
-                      <Type className="h-5 w-5 mx-auto mb-1 text-secondary-400" />
-                      <p className="text-lg font-medium text-[var(--color-midnight)]">
+                      <Type className="h-5 w-5 mx-auto mb-1 text-secondary" />
+                      <p className="text-lg font-medium text-midnight-900">
                         {Object.keys(pkg.design_tokens?.typography || {}).length}
                       </p>
-                      <p className="text-xs text-[var(--color-charcoal)]">Typography</p>
+                      <p className="text-xs text-charcoal-700">Typography</p>
                     </div>
                     <div className="p-3 bg-background rounded-lg text-center">
-                      <Maximize className="h-5 w-5 mx-auto mb-1 text-accent-400" />
-                      <p className="text-lg font-medium text-[var(--color-midnight)]">
+                      <Maximize className="h-5 w-5 mx-auto mb-1 text-accent" />
+                      <p className="text-lg font-medium text-midnight-900">
                         {Object.keys(pkg.design_tokens?.spacing || {}).length}
                       </p>
-                      <p className="text-xs text-[var(--color-charcoal)]">Spacing</p>
+                      <p className="text-xs text-charcoal-700">Spacing</p>
                     </div>
                     <div className="p-3 bg-background rounded-lg text-center">
-                      <Layers className="h-5 w-5 mx-auto mb-1 text-info-foreground" />
-                      <p className="text-lg font-medium text-[var(--color-midnight)]">
+                      <Layers className="h-5 w-5 mx-auto mb-1 text-info" />
+                      <p className="text-lg font-medium text-midnight-900">
                         {Object.keys(pkg.design_tokens?.effects || {}).length}
                       </p>
-                      <p className="text-xs text-[var(--color-charcoal)]">Effects</p>
+                      <p className="text-xs text-charcoal-700">Effects</p>
                     </div>
                   </div>
                 </CardContent>
@@ -373,36 +373,36 @@ export default function PackageDetail() {
 
         {/* Versions Tab */}
         <TabsContent value="versions">
-          <Card className="border-[var(--color-background-muted)]">
+          <Card className="border-border">
             <CardHeader>
-              <CardTitle className="text-[var(--color-midnight)]">Version History</CardTitle>
+              <CardTitle className="text-midnight-900">Version History</CardTitle>
             </CardHeader>
             <CardContent>
               {(pkg.changelog || []).length === 0 ? (
-                <p className="text-[var(--color-charcoal)] text-center py-8">No version history yet</p>
+                <p className="text-charcoal-700 text-center py-8">No version history yet</p>
               ) : (
                 <div className="space-y-4">
                   {[...(pkg.changelog || [])].reverse().map((entry, idx) => (
                     <div 
                       key={idx} 
-                      className="flex gap-4 p-4 border border-background-muted rounded-lg"
+                      className="flex gap-4 p-4 border border-border rounded-lg"
                     >
                       <div className="flex-shrink-0">
-                        <Badge className="bg-primary-100 text-primary-700">
+                        <Badge className="bg-primary-100 text-primary">
                           v{entry.version}
                         </Badge>
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm text-[var(--color-charcoal)]">
+                        <p className="text-sm text-charcoal-700">
                           {entry.date ? format(new Date(entry.date), "PPP") : "Unknown date"}
                         </p>
                         <ul className="mt-2 space-y-1">
                           {(entry.changes || []).map((change, i) => (
-                            <li key={i} className="text-sm text-[var(--color-midnight)]">• {change}</li>
+                            <li key={i} className="text-sm text-midnight-900">• {change}</li>
                           ))}
                         </ul>
                         {entry.breaking_changes && (
-                          <Badge className="mt-2 bg-destructive-50 text-destructive-700">
+                          <Badge className="mt-2 bg-destructive-50 text-destructive">
                             Breaking Changes
                           </Badge>
                         )}
@@ -417,30 +417,18 @@ export default function PackageDetail() {
 
         {/* Settings Tab */}
         <TabsContent value="settings">
-          <Card className="border-[var(--color-background-muted)]">
+          <Card className="border-border">
             <CardHeader>
-              <CardTitle className="text-[var(--color-midnight)]">Package Settings</CardTitle>
+              <CardTitle className="text-midnight-900">Package Settings</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label>Status</Label>
-                <Select 
-                  value={pkg.status} 
-                  onValueChange={(v) => updateMutation.mutate({ status: v })}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="published">Published</SelectItem>
-                    <SelectItem value="deprecated">Deprecated</SelectItem>
-                  </SelectContent>
-                </Select>
+...
               </div>
 
-              <div className="pt-4 border-t border-background-muted">
-                <h4 className="font-medium text-[var(--color-midnight)] mb-2">Danger Zone</h4>
+              <div className="pt-4 border-t border-border">
+                <h4 className="font-medium text-midnight-900 mb-2">Danger Zone</h4>
                 <Button 
                   variant="destructive"
                   onClick={() => {

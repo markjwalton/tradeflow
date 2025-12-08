@@ -35,24 +35,24 @@ import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
 
 const statusIcons = {
-  passed: <CheckCircle2 className="h-4 w-4 text-success-foreground" />,
+  passed: <CheckCircle2 className="h-4 w-4 text-success" />,
   failed: <XCircle className="h-4 w-4 text-destructive" />,
   pending: <Circle className="h-4 w-4 text-muted-foreground" />,
-  skipped: <Circle className="h-4 w-4 text-warning-foreground" />,
+  skipped: <Circle className="h-4 w-4 text-warning" />,
 };
 
 const typeIcons = {
-  entity: <Database className="h-4 w-4 text-accent-400" />,
-  page: <Layout className="h-4 w-4 text-info-foreground" />,
-  feature: <Zap className="h-4 w-4 text-warning-foreground" />,
+  entity: <Database className="h-4 w-4 text-accent" />,
+  page: <Layout className="h-4 w-4 text-info" />,
+  feature: <Zap className="h-4 w-4 text-warning" />,
 };
 
 const itemStatusColors = {
   synced: "bg-muted text-muted-foreground",
-  modified: "bg-info-50 text-info-foreground",
-  testing: "bg-warning/10 text-warning-foreground",
-  ready: "bg-success-50 text-success-foreground",
-  promoted: "bg-accent-100 text-accent-700",
+  modified: "bg-info-50 text-info",
+  testing: "bg-warning/10 text-warning",
+  ready: "bg-success-50 text-success",
+  promoted: "bg-accent-100 text-accent",
 };
 
 export default function PlaygroundSummary() {
@@ -284,14 +284,14 @@ export default function PlaygroundSummary() {
   };
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
-            <FlaskConical className="h-6 w-6 text-primary-500" />
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-midnight-900">
+            <FlaskConical className="h-6 w-6 text-primary" />
             Development Playground
           </h1>
-          <p className="text-[var(--color-charcoal)]">Test, modify, and validate templates before deployment</p>
+          <p className="text-charcoal-700">Test, modify, and validate templates before deployment</p>
         </div>
         <div className="flex gap-2">
           <Link to={createPageUrl("LivePreview")}>
@@ -359,10 +359,10 @@ export default function PlaygroundSummary() {
 
       {/* Progress Banner */}
       {(isSyncing || isClearing) && (syncProgress.total > 0 || clearProgress.total > 0) && (
-        <Card className="mb-6 border-info-foreground/20 bg-info-50">
+        <Card className="mb-6 border-info/20 bg-info-50">
           <CardContent className="py-4">
             <div className="flex items-center gap-4">
-              <Loader2 className="h-5 w-5 animate-spin text-info-foreground" />
+              <Loader2 className="h-5 w-5 animate-spin text-info" />
               <div className="flex-1">
                 <div className="flex justify-between mb-1 text-sm">
                   <span className="font-medium">
@@ -405,26 +405,26 @@ export default function PlaygroundSummary() {
           <div className="grid grid-cols-4 gap-4">
             <Card>
               <CardContent className="pt-4">
-                <div className="text-2xl font-bold text-[var(--color-midnight)]">{stats.total}</div>
-                <div className="text-sm text-[var(--color-charcoal)]">Library Items</div>
+                <div className="text-2xl font-bold text-midnight-900">{stats.total}</div>
+                <div className="text-sm text-charcoal-700">Library Items</div>
               </CardContent>
             </Card>
-            <Card className="border-info-foreground/30 bg-info-50">
+            <Card className="border-info/30 bg-info-50">
               <CardContent className="pt-4">
-                <div className="text-2xl font-bold text-info-foreground">{stats.modified}</div>
-                <div className="text-sm text-midnight-700">Being Modified</div>
+                <div className="text-2xl font-bold text-info">{stats.modified}</div>
+                <div className="text-sm text-midnight-900">Being Modified</div>
               </CardContent>
             </Card>
-            <Card className="border-success-foreground/30 bg-success-50">
+            <Card className="border-success/30 bg-success-50">
               <CardContent className="pt-4">
-                <div className="text-2xl font-bold text-success-foreground">{stats.ready}</div>
-                <div className="text-sm text-primary-700">Ready to Promote</div>
+                <div className="text-2xl font-bold text-success">{stats.ready}</div>
+                <div className="text-sm text-primary">Ready to Promote</div>
               </CardContent>
             </Card>
             <Card className="border-warning/30 bg-warning/10">
               <CardContent className="pt-4">
-                <div className="text-2xl font-bold text-warning-foreground">{stats.concepts}</div>
-                <div className="text-sm text-secondary-700">Active Concepts</div>
+                <div className="text-2xl font-bold text-warning">{stats.concepts}</div>
+                <div className="text-sm text-secondary">Active Concepts</div>
               </CardContent>
             </Card>
           </div>
@@ -435,13 +435,13 @@ export default function PlaygroundSummary() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Edit className="h-5 w-5 text-info-foreground" />
+                  <Edit className="h-5 w-5 text-info" />
                   Items Being Modified ({activeItems.length})
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {activeItems.length === 0 ? (
-                  <p className="text-[var(--color-charcoal)] text-center py-4">No items currently being modified</p>
+                  <p className="text-charcoal-700 text-center py-4">No items currently being modified</p>
                 ) : (
                   <div className="space-y-2">
                     {activeItems.slice(0, 5).map(item => (
@@ -470,14 +470,14 @@ export default function PlaygroundSummary() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Lightbulb className="h-5 w-5 text-warning-foreground" />
+                  <Lightbulb className="h-5 w-5 text-warning" />
                   Active Concepts ({activeConcepts.length})
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {activeConcepts.length === 0 ? (
                   <div className="text-center py-4">
-                    <p className="text-[var(--color-charcoal)] mb-2">No concepts in progress</p>
+                    <p className="text-charcoal-700 mb-2">No concepts in progress</p>
                     <Link to={createPageUrl("ConceptWorkbench")}>
                       <Button size="sm" variant="outline">
                         <Lightbulb className="h-4 w-4 mr-2" />
@@ -512,25 +512,25 @@ export default function PlaygroundSummary() {
             <CardContent>
               <div className="flex items-center justify-between text-sm">
                 <div className="flex flex-col items-center p-4 bg-warning/10 rounded-lg flex-1">
-                  <Beaker className="h-8 w-8 text-warning-foreground mb-2" />
+                  <Beaker className="h-8 w-8 text-warning mb-2" />
                   <span className="font-medium">Concept</span>
                   <span className="text-muted-foreground text-xs">New ideas</span>
                 </div>
                 <ArrowRight className="h-5 w-5 text-muted-foreground" />
                 <div className="flex flex-col items-center p-4 bg-accent-100 rounded-lg flex-1">
-                  <FlaskConical className="h-8 w-8 text-accent-400 mb-2" />
+                  <FlaskConical className="h-8 w-8 text-accent mb-2" />
                   <span className="font-medium">Playground</span>
                   <span className="text-muted-foreground text-xs">Test & refine</span>
                 </div>
                 <ArrowRight className="h-5 w-5 text-muted-foreground" />
                 <div className="flex flex-col items-center p-4 bg-info-50 rounded-lg flex-1">
-                  <Database className="h-8 w-8 text-info-foreground mb-2" />
+                  <Database className="h-8 w-8 text-info mb-2" />
                   <span className="font-medium">Library</span>
                   <span className="text-muted-foreground text-xs">Production ready</span>
                 </div>
                 <ArrowRight className="h-5 w-5 text-muted-foreground" />
                 <div className="flex flex-col items-center p-4 bg-success-50 rounded-lg flex-1">
-                  <Play className="h-8 w-8 text-success-foreground mb-2" />
+                  <Play className="h-8 w-8 text-success mb-2" />
                   <span className="font-medium">Sprint</span>
                   <span className="text-muted-foreground text-xs">Implementation</span>
                 </div>
@@ -579,10 +579,10 @@ export default function PlaygroundSummary() {
           {/* Items Grid */}
           {allLoading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+              <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
             </div>
           ) : filteredItems.length === 0 ? (
-            <div className="text-center py-12 text-[var(--color-charcoal)]">
+            <div className="text-center py-12 text-charcoal-700">
               <FlaskConical className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p>No items match your filters</p>
               <Button variant="outline" className="mt-4" onClick={syncLibraryToPlayground}>
@@ -637,7 +637,7 @@ export default function PlaygroundSummary() {
           </div>
 
           {conceptItems.length === 0 ? (
-            <div className="text-center py-12 text-[var(--color-charcoal)]">
+            <div className="text-center py-12 text-charcoal-700">
               <Lightbulb className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p>No concepts yet</p>
               <p className="text-sm mt-1">Create a new entity, page, or feature concept</p>

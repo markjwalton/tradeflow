@@ -407,7 +407,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
                   <Badge className="bg-warning/80">{stats.pending} Pending</Badge>
                   <Badge className="bg-destructive/80">{stats.noData} No Data</Badge>
                   {stats.orphaned > 0 && (
-                    <Badge className="bg-accent-400/80">{stats.orphaned} Orphaned</Badge>
+                    <Badge className="bg-accent/80">{stats.orphaned} Orphaned</Badge>
                   )}
                 </div>
               </div>
@@ -497,7 +497,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
           </div>
 
           {/* Items Table */}
-          <Card className="border-background-muted">
+          <Card className="border-border">
             <CardContent className="p-0">
               {filteredItems.length === 0 ? (
                 <div className="text-center py-12 text-charcoal-700">
@@ -517,7 +517,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
                       <th className="text-right p-3">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-background-muted">
+                  <tbody className="divide-y divide-border">
                     {filteredItems.map(item => (
                       <tr key={item.id} className="hover:bg-background">
                         <td className="p-3">
@@ -544,11 +544,11 @@ Return JSON with entity names as keys and arrays of records as values.`,
                         </td>
                         <td className="p-3 text-center">
                           {!item.hasTestData ? (
-                            <Badge className="bg-destructive-50 text-destructive-700">No Data</Badge>
+                            <Badge className="bg-destructive-50 text-destructive">No Data</Badge>
                           ) : item.testStatus === "verified" ? (
-                            <Badge className="bg-success-50 text-success-foreground">Verified</Badge>
+                            <Badge className="bg-success-50 text-success">Verified</Badge>
                           ) : (
-                            <Badge className="bg-warning/10 text-warning-foreground">Pending</Badge>
+                            <Badge className="bg-warning/10 text-warning">Pending</Badge>
                           )}
                         </td>
                         <td className="p-3 text-right">
@@ -579,14 +579,14 @@ Return JSON with entity names as keys and arrays of records as values.`,
 
         {/* Test Data Tab */}
         <TabsContent value="data" className="space-y-4">
-          <Card className="border-background-muted">
+          <Card className="border-border">
             <CardHeader>
-              <CardTitle className="text-[var(--color-midnight)]">Test Data Records</CardTitle>
+              <CardTitle className="text-midnight-900">Test Data Records</CardTitle>
             </CardHeader>
             <CardContent>
               <ScrollArea className="h-[400px]">
                 {testDataSets.length === 0 ? (
-                  <p className="text-center py-8 text-[var(--color-charcoal)]">No test data yet</p>
+                  <p className="text-center py-8 text-charcoal-700">No test data yet</p>
                 ) : (
                   <div className="space-y-3">
                     {testDataSets.map(td => {
@@ -596,20 +596,20 @@ Return JSON with entity names as keys and arrays of records as values.`,
                       const prevVersions = get(td, "previous_versions") || [];
                       
                       return (
-                        <div key={td.id} className="p-4 border border-[var(--color-background-muted)] rounded-lg">
+                        <div key={td.id} className="p-4 border border-border rounded-lg">
                           <div className="flex items-center justify-between">
                             <div>
-                              <p className="font-medium text-[var(--color-midnight)]">{get(td, "source_name")}</p>
-                              <p className="text-sm text-[var(--color-charcoal)]">
+                              <p className="font-medium text-midnight-900">{get(td, "source_name")}</p>
+                              <p className="text-sm text-charcoal-700">
                                 {get(td, "source_type")} • {recordCount} records • v{version}
                                 {prevVersions.length > 0 && ` (${prevVersions.length} previous)`}
                               </p>
                             </div>
                             <div className="flex items-center gap-2">
                               <Badge className={
-                                get(td, "test_status") === "verified" ? "bg-success-50 text-success-foreground" :
-                                get(td, "test_status") === "stale" ? "bg-accent-100 text-accent-700" :
-                                "bg-warning/10 text-warning-foreground"
+                                get(td, "test_status") === "verified" ? "bg-success-50 text-success" :
+                                get(td, "test_status") === "stale" ? "bg-accent-100 text-accent" :
+                                "bg-warning/10 text-warning"
                               }>
                                 {get(td, "test_status")}
                               </Badge>
@@ -629,10 +629,10 @@ Return JSON with entity names as keys and arrays of records as values.`,
         {/* Sync Tab */}
         <TabsContent value="sync" className="space-y-4">
           <div className="grid md:grid-cols-2 gap-4">
-            <Card className="border-background-muted">
+            <Card className="border-border">
               <CardHeader>
-                <CardTitle className="text-[var(--color-midnight)] flex items-center gap-2">
-                  <Layout className="h-5 w-5 text-info-foreground" />
+                <CardTitle className="text-midnight-900 flex items-center gap-2">
+                  <Layout className="h-5 w-5 text-info" />
                   Pages
                 </CardTitle>
               </CardHeader>
@@ -647,10 +647,10 @@ Return JSON with entity names as keys and arrays of records as values.`,
               </CardContent>
             </Card>
 
-            <Card className="border-background-muted">
+            <Card className="border-border">
               <CardHeader>
-                <CardTitle className="text-[var(--color-midnight)] flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-warning-foreground" />
+                <CardTitle className="text-midnight-900 flex items-center gap-2">
+                  <Zap className="h-5 w-5 text-warning" />
                   Features
                 </CardTitle>
               </CardHeader>
@@ -666,12 +666,12 @@ Return JSON with entity names as keys and arrays of records as values.`,
             </Card>
           </div>
 
-          <Card className="border-background-muted">
+          <Card className="border-border">
             <CardHeader>
-              <CardTitle className="text-[var(--color-midnight)]">Relationship Architecture</CardTitle>
+              <CardTitle className="text-midnight-900">Relationship Architecture</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-sm text-[var(--color-charcoal)] space-y-4">
+              <div className="text-sm text-charcoal-700 space-y-4">
               <div className="p-4 bg-background rounded-lg font-mono text-xs">
                   <pre>{`
 Library Templates (Source of Truth)
