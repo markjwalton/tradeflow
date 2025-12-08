@@ -342,8 +342,8 @@ Return ALL unique patterns found, grouped by classification.`,
                     
                     <div className="mt-2">
                       <p className="text-xs text-muted-foreground">
-                        Found in: {pattern.found_in.slice(0, 3).join(", ")}
-                        {pattern.found_in.length > 3 && ` +${pattern.found_in.length - 3} more`}
+                        Found in: {pattern.found_in?.slice(0, 3).map(f => typeof f === 'string' ? f : JSON.stringify(f)).join(", ") || 'N/A'}
+                        {pattern.found_in?.length > 3 && ` +${pattern.found_in.length - 3} more`}
                       </p>
                     </div>
                   </div>
