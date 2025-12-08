@@ -118,7 +118,7 @@ export default function StandaloneAPIStrategy() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center gap-3 p-3 bg-[var(--color-background)] rounded-lg">
-                  <Server className="h-5 w-5 text-[var(--color-primary)]" />
+                  <Server className="h-5 w-5 text-primary-500" />
                   <div>
                     <p className="font-medium">Standalone Instance Manager</p>
                     <p className="text-sm text-[var(--color-charcoal)]">Configure and monitor all connected instances</p>
@@ -132,7 +132,7 @@ export default function StandaloneAPIStrategy() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-[var(--color-background)] rounded-lg">
-                  <Bell className="h-5 w-5 text-[var(--color-accent)]" />
+                  <Bell className="h-5 w-5 text-accent-400" />
                   <div>
                     <p className="font-medium">Feature Notification System</p>
                     <p className="text-sm text-[var(--color-charcoal)]">Notify instances of new available features</p>
@@ -154,7 +154,7 @@ export default function StandaloneAPIStrategy() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center gap-3 p-3 bg-[var(--color-background)] rounded-lg">
-                  <Settings className="h-5 w-5 text-[var(--color-primary)]" />
+                  <Settings className="h-5 w-5 text-primary-500" />
                   <div>
                     <p className="font-medium">Connection Setup Wizard</p>
                     <p className="text-sm text-[var(--color-charcoal)]">Step-by-step API connection and verification</p>
@@ -202,7 +202,7 @@ export default function StandaloneAPIStrategy() {
                   return (
                     <div key={item.name} className="flex items-center justify-between p-3 border rounded-lg">
                       <div className="flex items-center gap-3">
-                        <Icon className="h-5 w-5 text-[var(--color-primary)]" />
+                        <Icon className="h-5 w-5 text-primary-500" />
                         <div>
                           <p className="font-medium">{item.name}</p>
                           <p className="text-sm text-[var(--color-charcoal)]">{item.notes}</p>
@@ -253,7 +253,7 @@ export default function StandaloneAPIStrategy() {
 
               <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                 <h4 className="font-medium text-blue-800 flex items-center gap-2">
-                  <Info className="h-4 w-4" />
+                  <Info className="h-4 w-4 text-info-foreground" />
                   Workarounds Available
                 </h4>
                 <ul className="mt-2 space-y-1 text-sm text-blue-700">
@@ -335,9 +335,9 @@ export default function StandaloneAPIStrategy() {
                 {/* API Layer */}
                 <div className="p-4 border-2 border-[var(--color-secondary)] rounded-lg">
                   <h4 className="font-semibold text-[var(--color-secondary)] mb-4 flex items-center gap-2">
-                    <Link2 className="h-5 w-5" />
+                    <Link2 className="h-5 w-5 text-secondary-400" />
                     API Layer
-                  </h4>
+                    </h4>
                   <div className="space-y-2 text-sm">
                     <div className="p-2 bg-[var(--color-background)] rounded flex items-center gap-2">
                       <ArrowRight className="h-4 w-4" />
@@ -365,9 +365,9 @@ export default function StandaloneAPIStrategy() {
                 {/* Standalone Instance */}
                 <div className="p-4 border-2 border-[var(--color-accent)] rounded-lg">
                   <h4 className="font-semibold text-[var(--color-accent-dark)] mb-4 flex items-center gap-2">
-                    <Globe className="h-5 w-5" />
+                    <Globe className="h-5 w-5 text-accent-400" />
                     Standalone Instance
-                  </h4>
+                    </h4>
                   <div className="space-y-2 text-sm">
                     <div className="p-2 bg-[var(--color-background)] rounded">• Local Data Store</div>
                     <div className="p-2 bg-[var(--color-background)] rounded">• API Connector</div>
@@ -432,7 +432,7 @@ export default function StandaloneAPIStrategy() {
                   { step: 10, title: "Activation", desc: "Mark connection as active and start monitoring" },
                 ].map((item) => (
                   <div key={item.step} className="flex items-start gap-4 p-3 border rounded-lg">
-                    <div className="w-8 h-8 rounded-full bg-[var(--color-primary)] text-white flex items-center justify-center font-bold text-sm">
+                    <div className="w-8 h-8 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold text-sm">
                       {item.step}
                     </div>
                     <div>

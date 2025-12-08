@@ -223,7 +223,7 @@ export default function StandaloneInstanceManager() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)] font-heading">
-            <Server className="h-6 w-6 text-[var(--color-primary)]" />
+            <Server className="h-6 w-6 text-primary-500" />
             Standalone Instance Manager
           </h1>
           <p className="text-[var(--color-charcoal)]">Manage API connections to standalone Base44 tenant instances</p>
@@ -481,7 +481,7 @@ export default function StandaloneInstanceManager() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Package className="h-5 w-5 text-[var(--color-primary)]" />
+                <Package className="h-5 w-5 text-primary-500" />
                 Available Features for Sync
               </CardTitle>
             </CardHeader>
@@ -568,7 +568,7 @@ export default function StandaloneInstanceManager() {
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Server className="h-5 w-5 text-[var(--color-primary)]" />
+              <Server className="h-5 w-5 text-primary-500" />
               {selectedInstance ? "Configure Instance" : "Add Standalone Instance"}
             </DialogTitle>
           </DialogHeader>
@@ -579,7 +579,7 @@ export default function StandaloneInstanceManager() {
               <React.Fragment key={s}>
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                   s < wizardStep ? "bg-green-600 text-white" :
-                  s === wizardStep ? "bg-[var(--color-primary)] text-white" :
+                  s === wizardStep ? "bg-primary-500 text-white" :
                   "bg-gray-200 text-gray-500"
                 }`}>
                   {s < wizardStep ? <CheckCircle2 className="h-4 w-4" /> : s}
