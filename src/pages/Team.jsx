@@ -187,7 +187,7 @@ export default function Team() {
                 <div className="flex items-start justify-between">
                   <div>
                     <CardTitle className="text-lg text-midnight-900">{member.name}</CardTitle>
-                    {member.role && <p className="text-sm text-charcoal-700 mt-1">{member.role}</p>}
+                    {member.role && <p className="text-sm text-muted-foreground mt-1">{member.role}</p>}
                   </div>
                   <div className="flex gap-1">
                     <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(member)}>
@@ -202,16 +202,16 @@ export default function Team() {
               <CardContent className="space-y-3">
                 <Badge className={availabilityColors[member.availability]}>{member.availability?.replace("_", " ")}</Badge>
                 {member.email && (
-                  <p className="text-sm text-charcoal-700 flex items-center gap-2">
+                  <p className="text-sm text-muted-foreground flex items-center gap-2">
                     <Mail className="h-3 w-3" />{member.email}
                   </p>
                 )}
                 {member.phone && (
-                  <p className="text-sm text-charcoal-700 flex items-center gap-2">
+                  <p className="text-sm text-muted-foreground flex items-center gap-2">
                     <Phone className="h-3 w-3" />{member.phone}
                   </p>
                 )}
-                <p className="text-sm text-charcoal-700 flex items-center gap-2">
+                <p className="text-sm text-muted-foreground flex items-center gap-2">
                   <Calendar className="h-3 w-3" />{holidaysRemaining} days remaining
                 </p>
                 {member.skills?.length > 0 && (
@@ -228,7 +228,7 @@ export default function Team() {
       </div>
 
       {filteredMembers.length === 0 && (
-        <div className="text-center py-12 text-charcoal-700">
+        <div className="text-center py-12 text-muted-foreground">
           No team members found. Add your first team member to get started.
         </div>
       )}

@@ -262,7 +262,7 @@ For each recommendation, provide:
             <Package className="h-6 w-6 text-primary" />
             Design System Manager
           </h1>
-          <p className="text-charcoal-700">
+          <p className="text-muted-foreground">
             Version control, package distribution, and AI-assisted updates
           </p>
         </div>
@@ -305,7 +305,7 @@ For each recommendation, provide:
                 <p className="font-medium text-midnight-900">
                   {pendingRecs.length} update recommendations pending review
                 </p>
-                <p className="text-sm text-charcoal-700">
+                <p className="text-sm text-muted-foreground">
                   AI has identified improvements for your design system
                 </p>
               </div>
@@ -371,10 +371,10 @@ For each recommendation, provide:
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-charcoal-700 mb-4">
+                    <p className="text-sm text-muted-foreground mb-4">
                       {pkg.description}
                     </p>
-                    <div className="flex items-center justify-between text-xs text-charcoal-700 mb-3">
+                    <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
                       <span>Tailwind {pkg.tailwind_version}</span>
                       <span>{pkg.component_list?.length || 0} components</span>
                     </div>
@@ -403,7 +403,7 @@ For each recommendation, provide:
                 <Card className="border-dashed md:col-span-2">
                   <CardContent className="py-12 text-center">
                     <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p className="text-charcoal-700">No core packages yet</p>
+                    <p className="text-muted-foreground">No core packages yet</p>
                     <Button 
                       className="mt-4"
                       onClick={() => setShowCreateDialog(true)}
@@ -433,7 +433,7 @@ For each recommendation, provide:
                             {pkg.package_name}
                           </CardTitle>
                           <div className="flex items-center gap-2 mt-1">
-                            <code className="text-xs text-charcoal-700">{pkg.package_code}</code>
+                            <code className="text-xs text-muted-foreground">{pkg.package_code}</code>
                             {pkg.update_available && (
                               <Badge className="bg-warning/10 text-warning">
                                 Update Available

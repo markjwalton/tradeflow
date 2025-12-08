@@ -45,11 +45,11 @@ export default function Home() {
         <h1 className="text-3xl font-light font-display mb-2 text-midnight-900">
           Welcome to {tenant?.name || "Your Portal"}
         </h1>
-        <p className="text-charcoal-700 mb-8">Select a section to get started</p>
+        <p className="text-muted-foreground mb-8">Select a section to get started</p>
         
         {navItems.length === 0 ? (
           <Card className="border-background-muted">
-            <CardContent className="py-8 text-center text-charcoal-700">
+            <CardContent className="py-8 text-center text-muted-foreground">
               No navigation items configured for this tenant yet.
             </CardContent>
           </Card>

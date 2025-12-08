@@ -233,7 +233,7 @@ export default function Estimates() {
                   <CardTitle className="text-lg flex items-center gap-2 text-midnight-900">
                     <FileText className="h-4 w-4" />{estimate.title}
                   </CardTitle>
-                  {estimate.project_id && <p className="text-sm text-charcoal-700 mt-1">Project: {getProjectName(estimate.project_id)}</p>}
+                  {estimate.project_id && <p className="text-sm text-muted-foreground mt-1">Project: {getProjectName(estimate.project_id)}</p>}
                 </div>
                 <div className="flex gap-1">
                   <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleDuplicate(estimate)}><Copy className="h-4 w-4" /></Button>
@@ -245,8 +245,8 @@ export default function Estimates() {
             <CardContent className="space-y-3">
               <Badge className={statusColors[estimate.status]}>{estimate.status}</Badge>
               <div className="space-y-1 text-sm">
-                <div className="flex justify-between"><span className="text-charcoal-700">Subtotal</span><span>£{estimate.subtotal?.toLocaleString()}</span></div>
-                <div className="flex justify-between"><span className="text-charcoal-700">VAT ({estimate.vat_rate}%)</span><span>£{estimate.vat_amount?.toLocaleString()}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span>£{estimate.subtotal?.toLocaleString()}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">VAT ({estimate.vat_rate}%)</span><span>£{estimate.vat_amount?.toLocaleString()}</span></div>
                 <div className="flex justify-between font-semibold border-t pt-1"><span>Total</span><span>£{estimate.total?.toLocaleString()}</span></div>
               </div>
             </CardContent>
@@ -255,7 +255,7 @@ export default function Estimates() {
       </div>
 
       {filteredEstimates.length === 0 && (
-        <div className="text-center py-12 text-charcoal-700">No estimates found. Create your first estimate to get started.</div>
+        <div className="text-center py-12 text-muted-foreground">No estimates found. Create your first estimate to get started.</div>
       )}
 
       <Dialog open={showForm} onOpenChange={setShowForm}>
