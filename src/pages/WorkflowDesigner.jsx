@@ -344,7 +344,7 @@ export default function WorkflowDesigner() {
             <div className="flex-1 overflow-auto p-4">
               {loadingWorkflow || loadingSteps ? (
                 <div className="h-full flex items-center justify-center">
-                  <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+                  <Loader2 className="h-8 w-8 animate-spin" />
                 </div>
               ) : (
                 <WorkflowCanvas

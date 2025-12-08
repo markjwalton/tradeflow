@@ -386,7 +386,7 @@ Return a JSON object with a "pages" array containing page templates.`,
 
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+          <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       ) : filteredPages.length === 0 ? (
         <div className="text-center py-12 text-charcoal-700">
