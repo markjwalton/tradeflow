@@ -78,6 +78,7 @@ import TestingHub from './pages/TestingHub';
 import DebugProjectWorkspace from './pages/DebugProjectWorkspace';
 import DebugProjectEditor from './pages/DebugProjectEditor';
 import KnowledgeManager from './pages/KnowledgeManager';
+import PageBuilder from './pages/PageBuilder';
 import __Layout from './Layout.jsx';
 
 
@@ -162,6 +163,7 @@ export const PAGES = {
     "DebugProjectWorkspace": DebugProjectWorkspace,
     "DebugProjectEditor": DebugProjectEditor,
     "KnowledgeManager": KnowledgeManager,
+    "PageBuilder": PageBuilder,
 }
 
 export const pagesConfig = {
