@@ -167,7 +167,7 @@ export default function InterestOptionsManager() {
                               >
                                 <TableCell>
                                   <div {...provided.dragHandleProps}>
-                                    <GripVertical className="h-4 w-4 text-gray-400 cursor-grab" />
+                                    <GripVertical className="h-4 w-4 text-muted-foreground cursor-grab" />
                                   </div>
                                 </TableCell>
                                 <TableCell className="font-medium text-[var(--color-midnight)]">{option.label}</TableCell>
@@ -190,7 +190,7 @@ export default function InterestOptionsManager() {
                                     <Button
                                       variant="ghost"
                                       size="sm"
-                                      className="text-red-500"
+                                      className="text-destructive"
                                       onClick={() => deleteMutation.mutate(option.id)}
                                     >
                                       <Trash2 className="h-4 w-4" />

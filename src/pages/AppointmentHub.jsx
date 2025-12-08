@@ -372,9 +372,9 @@ export default function AppointmentHub() {
                     />
                   </div>
 
-                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm">
-                    <p className="font-medium text-amber-800">Important:</p>
-                    <p className="text-amber-700">
+                  <div className="bg-warning/10 border border-warning/20 rounded-lg p-4 text-sm">
+                    <p className="font-medium text-warning-foreground">Important:</p>
+                    <p className="text-warning-foreground">
                       After booking, you will receive an email asking you to confirm your appointment. 
                       Please click the confirmation link to secure your slot.
                     </p>

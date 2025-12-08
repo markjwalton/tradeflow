@@ -47,11 +47,11 @@ import { toast } from "sonner";
 import { format, addDays } from "date-fns";
 
 const statusColors = {
-  pending_confirmation: "bg-amber-100 text-amber-700",
-  confirmed: "bg-green-100 text-green-700",
-  cancelled: "bg-red-100 text-red-700",
-  completed: "bg-blue-100 text-blue-700",
-  rescheduled: "bg-purple-100 text-purple-700",
+  pending_confirmation: "bg-warning/10 text-warning-foreground",
+  confirmed: "bg-success-50 text-success-foreground",
+  cancelled: "bg-destructive-50 text-destructive-700",
+  completed: "bg-info-50 text-info-foreground",
+  rescheduled: "bg-accent-100 text-accent-700",
 };
 
 export default function AppointmentManager() {
@@ -199,7 +199,7 @@ export default function AppointmentManager() {
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>Appointment Manager</h1>
+          <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Appointment Manager</h1>
           <p className="text-[var(--color-charcoal)]">Manage appointment slots and bookings</p>
         </div>
       </div>
@@ -211,7 +211,7 @@ export default function AppointmentManager() {
           <TabsTrigger value="callbacks">
             Callbacks
             {enquiries.length > 0 && (
-              <Badge className="ml-2 bg-red-500">{enquiries.length}</Badge>
+              <Badge className="ml-2 bg-destructive text-destructive-foreground">{enquiries.length}</Badge>
             )}
           </TabsTrigger>
         </TabsList>
@@ -252,7 +252,7 @@ export default function AppointmentManager() {
                           <div className="font-medium">
                             {format(new Date(apt.appointmentDate), "EEE, d MMM yyyy")}
                           </div>
-                          <div className="text-sm text-gray-500">{apt.appointmentTime}</div>
+                          <div className="text-sm text-muted-foreground">{apt.appointmentTime}</div>
                         </TableCell>
                         <TableCell>
                           <div className="text-[var(--color-midnight)]">{apt.customerFirstName} {apt.customerLastName}</div>
@@ -337,7 +337,7 @@ export default function AppointmentManager() {
                             {(block.currentBookings || 0) >= (block.maxBookings || 1) ? (
                               <Badge variant="secondary">Full</Badge>
                             ) : (
-                              <Badge className="bg-green-100 text-green-700">Available</Badge>
+                              <Badge className="bg-success-50 text-success-foreground">Available</Badge>
                             )}
                           </div>
                         </TableCell>
@@ -345,7 +345,7 @@ export default function AppointmentManager() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="text-red-500"
+                            className="text-destructive"
                             onClick={() => deleteBlockMutation.mutate(block.id)}
                           >
                             <Trash2 className="h-4 w-4" />
@@ -512,7 +512,7 @@ export default function AppointmentManager() {
                   key={block.id}
                   onClick={() => bookForCustomerMutation.mutate({ enquiry: selectedEnquiry, block })}
                   disabled={bookForCustomerMutation.isPending}
-                  className="w-full p-4 border rounded-lg text-left hover:border-blue-500 hover:bg-blue-50 transition-all"
+                  className="w-full p-4 border rounded-lg text-left hover:border-primary hover:bg-primary/10 transition-all"
                 >
                   <div className="flex items-center justify-between">
                   <div>

@@ -370,7 +370,7 @@ export default function SystemSpecification() {
           <h2 className="font-semibold text-[var(--color-midnight)]">System Specification</h2>
           <div className="flex items-center gap-2 mt-1">
             <Badge variant="outline">v{SPEC_VERSION}</Badge>
-            <span className="text-xs text-gray-500">{LAST_UPDATED}</span>
+            <span className="text-xs text-muted-foreground">{LAST_UPDATED}</span>
           </div>
         </div>
         <ScrollArea className="h-[calc(100vh-180px)]">
@@ -384,8 +384,8 @@ export default function SystemSpecification() {
                   onClick={() => setActiveSection(section.id)}
                   className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-sm transition-colors ${
                     isActive
-                      ? "bg-blue-50 text-blue-700 font-medium"
-                      : "hover:bg-gray-100 text-gray-700"
+                      ? "bg-info-50 text-info-foreground font-medium"
+                      : "hover:bg-muted text-muted-foreground"
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -406,11 +406,11 @@ export default function SystemSpecification() {
               <>
                 <div className="flex items-center gap-3 mb-6">
                   {React.createElement(currentSection.icon, {
-                    className: "h-8 w-8 text-blue-600",
+                    className: "h-8 w-8 text-info",
                   })}
                   <div>
                     <h1 className="text-2xl font-bold">{currentSection.title}</h1>
-                    <p className="text-gray-600">
+                    <p className="text-muted-foreground">
                       {currentSection.content.description}
                     </p>
                   </div>
@@ -426,7 +426,7 @@ export default function SystemSpecification() {
                       <ul className="space-y-2">
                         {currentSection.content.keyCapabilities.map((cap, i) => (
                           <li key={i} className="flex items-start gap-2">
-                            <ChevronRight className="h-4 w-4 mt-0.5 text-blue-500" />
+                            <ChevronRight className="h-4 w-4 mt-0.5 text-info" />
                             <span>{cap}</span>
                           </li>
                         ))}
@@ -445,7 +445,7 @@ export default function SystemSpecification() {
                       <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         {currentSection.content.features.map((feature, i) => (
                           <li key={i} className="flex items-start gap-2">
-                            <CheckSquare className="h-4 w-4 mt-0.5 text-green-500 flex-shrink-0" />
+                            <CheckSquare className="h-4 w-4 mt-0.5 text-success flex-shrink-0" />
                             <span className="text-sm">{feature}</span>
                           </li>
                         ))}
@@ -465,12 +465,12 @@ export default function SystemSpecification() {
                         {currentSection.content.entities.map((entity, i) => (
                           <div
                             key={i}
-                            className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"
+                            className="flex items-center gap-3 p-3 bg-muted rounded-lg"
                           >
-                            <Database className="h-5 w-5 text-blue-500" />
+                            <Database className="h-5 w-5 text-info" />
                             <div>
                               <div className="font-medium">{entity.name}</div>
-                              <div className="text-sm text-gray-600">
+                              <div className="text-sm text-muted-foreground">
                                 {entity.purpose}
                               </div>
                             </div>
@@ -491,7 +491,7 @@ export default function SystemSpecification() {
                       <ul className="space-y-2">
                         {currentSection.content.pages.map((page, i) => (
                           <li key={i} className="flex items-start gap-2">
-                            <Layout className="h-4 w-4 mt-0.5 text-purple-500" />
+                            <Layout className="h-4 w-4 mt-0.5 text-accent-500" />
                             <span className="text-sm">{page}</span>
                           </li>
                         ))}
@@ -512,16 +512,16 @@ export default function SystemSpecification() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="border-l-2 border-blue-500 pl-4">
+                  <div className="border-l-2 border-info pl-4">
                     <div className="flex items-center gap-2">
                       <Badge>v1.0.0</Badge>
-                      <span className="text-sm text-gray-500">2025-11-30</span>
+                      <span className="text-sm text-muted-foreground">2025-11-30</span>
                     </div>
                     <p className="text-sm mt-1">
                       Initial specification document covering all core platform
                       functionality.
                     </p>
-                    <ul className="text-sm text-gray-600 mt-2 space-y-1">
+                    <ul className="text-sm text-muted-foreground mt-2 space-y-1">
                       <li>• Entity, Page, Feature libraries with AI generation</li>
                       <li>• Workflow designer with drag-and-drop canvas</li>
                       <li>• Form and Checklist builders</li>
