@@ -57,6 +57,41 @@ export default function PageBuilder() {
   const [showCompare, setShowCompare] = useState(false);
   const [compareVersions, setCompareVersions] = useState([null, null]);
   const [showTokens, setShowTokens] = useState(false);
+  const [interactiveMode, setInteractiveMode] = useState(false);
+  const [selectedElement, setSelectedElement] = useState(null);
+  const [showTokenPicker, setShowTokenPicker] = useState(false);
+
+  const TOKEN_LIBRARY = {
+    colors: [
+      { name: "Primary", value: "text-[var(--color-primary)]", bg: "bg-[var(--color-primary)]" },
+      { name: "Secondary", value: "text-[var(--color-secondary)]", bg: "bg-[var(--color-secondary)]" },
+      { name: "Accent", value: "text-[var(--color-accent)]", bg: "bg-[var(--color-accent)]" },
+      { name: "Midnight", value: "text-[var(--color-midnight)]", bg: "bg-[var(--color-midnight)]" },
+      { name: "Charcoal", value: "text-[var(--color-charcoal)]", bg: "bg-[var(--color-charcoal)]" },
+      { name: "Background", value: "text-[var(--color-background)]", bg: "bg-[var(--color-background)]" },
+    ],
+    spacing: [
+      { name: "1 (0.25rem)", value: "p-[var(--spacing-1)]", m: "m-[var(--spacing-1)]" },
+      { name: "2 (0.5rem)", value: "p-[var(--spacing-2)]", m: "m-[var(--spacing-2)]" },
+      { name: "3 (0.75rem)", value: "p-[var(--spacing-3)]", m: "m-[var(--spacing-3)]" },
+      { name: "4 (1rem)", value: "p-[var(--spacing-4)]", m: "m-[var(--spacing-4)]" },
+      { name: "6 (1.5rem)", value: "p-[var(--spacing-6)]", m: "m-[var(--spacing-6)]" },
+      { name: "8 (2rem)", value: "p-[var(--spacing-8)]", m: "m-[var(--spacing-8)]" },
+    ],
+    radius: [
+      { name: "Small", value: "rounded-[var(--radius-sm)]" },
+      { name: "Medium", value: "rounded-[var(--radius-md)]" },
+      { name: "Large", value: "rounded-[var(--radius-lg)]" },
+      { name: "XL", value: "rounded-[var(--radius-xl)]" },
+      { name: "Full", value: "rounded-[var(--radius-full)]" },
+    ],
+    shadows: [
+      { name: "Small", value: "shadow-[var(--shadow-sm)]" },
+      { name: "Medium", value: "shadow-[var(--shadow-md)]" },
+      { name: "Large", value: "shadow-[var(--shadow-lg)]" },
+      { name: "XL", value: "shadow-[var(--shadow-xl)]" },
+    ],
+  };
 
   const [formData, setFormData] = useState({
     page_name: "",
@@ -204,16 +239,85 @@ export default function PageBuilder() {
     });
   };
 
+  const handleElementClick = (e) => {
+    if (!interactiveMode) return;
+    e.stopPropagation();
+    e.preventDefault();
+    
+    const element = e.target;
+    const path = getElementPath(element);
+    
+    setSelectedElement({
+      element,
+      path,
+      currentClasses: element.className,
+      tagName: element.tagName.toLowerCase(),
+    });
+    setShowTokenPicker(true);
+  };
+
+  const getElementPath = (element) => {
+    const path = [];
+    let current = element;
+    while (current && current !== document.body) {
+      let selector = current.tagName.toLowerCase();
+      if (current.id) selector += `#${current.id}`;
+      if (current.className) selector += `.${current.className.split(' ').join('.')}`;
+      path.unshift(selector);
+      current = current.parentElement;
+    }
+    return path.join(' > ');
+  };
+
+  const applyTokenToElement = (tokenClass, tokenType) => {
+    if (!selectedElement) return;
+
+    const { currentClasses } = selectedElement;
+    let newClasses = currentClasses;
+
+    // Remove conflicting classes based on token type
+    if (tokenType === 'color-text') {
+      newClasses = currentClasses.replace(/text-\[var\(--color-[^\]]+\)\]/g, '');
+    } else if (tokenType === 'color-bg') {
+      newClasses = currentClasses.replace(/bg-\[var\(--color-[^\]]+\)\]/g, '');
+    } else if (tokenType === 'spacing-p') {
+      newClasses = currentClasses.replace(/p-\[var\(--spacing-[^\]]+\)\]/g, '');
+    } else if (tokenType === 'spacing-m') {
+      newClasses = currentClasses.replace(/m-\[var\(--spacing-[^\]]+\)\]/g, '');
+    } else if (tokenType === 'radius') {
+      newClasses = currentClasses.replace(/rounded-\[var\(--radius-[^\]]+\)\]/g, '');
+    } else if (tokenType === 'shadow') {
+      newClasses = currentClasses.replace(/shadow-\[var\(--shadow-[^\]]+\)\]/g, '');
+    }
+
+    newClasses = `${newClasses.trim()} ${tokenClass}`.trim();
+
+    // Update JSX content
+    const updatedContent = formData.current_content_jsx.replace(
+      new RegExp(`class="${currentClasses}"`, 'g'),
+      `class="${newClasses}"`
+    );
+
+    setFormData({ ...formData, current_content_jsx: updatedContent });
+    setShowTokenPicker(false);
+    setSelectedElement(null);
+    toast.success("Token applied!");
+  };
+
   const renderPreview = (content, includeShell) => {
     try {
+      const previewContent = (
+        <div 
+          dangerouslySetInnerHTML={{ __html: content }}
+          onClick={handleElementClick}
+          style={{ cursor: interactiveMode ? 'pointer' : 'default' }}
+        />
+      );
+
       if (includeShell) {
-        return (
-          <AppShellPreview>
-            <div dangerouslySetInnerHTML={{ __html: content }} />
-          </AppShellPreview>
-        );
+        return <AppShellPreview>{previewContent}</AppShellPreview>;
       } else {
-        return <div dangerouslySetInnerHTML={{ __html: content }} />;
+        return previewContent;
       }
     } catch (e) {
       return (
@@ -436,7 +540,17 @@ export default function PageBuilder() {
             </TabsContent>
 
             <TabsContent value="preview" className="mt-4">
-              <div className="border rounded-lg overflow-hidden bg-white">
+              <div className="mb-3 flex items-center gap-2">
+                <Switch
+                  checked={interactiveMode}
+                  onCheckedChange={setInteractiveMode}
+                  id="interactive"
+                />
+                <Label htmlFor="interactive" className="cursor-pointer">
+                  Interactive Mode (click elements to apply tokens)
+                </Label>
+              </div>
+              <div className={`border rounded-lg overflow-hidden bg-white ${interactiveMode ? 'ring-2 ring-[var(--color-primary)]/30' : ''}`}>
                 {renderPreview(formData.current_content_jsx, formData.includes_app_shell)}
               </div>
             </TabsContent>
@@ -681,6 +795,127 @@ export default function PageBuilder() {
             <DialogTitle>Compare Versions</DialogTitle>
           </DialogHeader>
           {renderVersionComparison(compareVersions[0], compareVersions[1])}
+        </DialogContent>
+      </Dialog>
+
+      {/* Token Picker Dialog */}
+      <Dialog open={showTokenPicker} onOpenChange={setShowTokenPicker}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Apply Design Token</DialogTitle>
+            {selectedElement && (
+              <p className="text-sm text-[var(--color-charcoal)]">
+                Selected: <code className="text-xs bg-muted px-1 py-0.5 rounded">{selectedElement.tagName}</code>
+              </p>
+            )}
+          </DialogHeader>
+          
+          <Tabs defaultValue="colors">
+            <TabsList>
+              <TabsTrigger value="colors">Colors</TabsTrigger>
+              <TabsTrigger value="spacing">Spacing</TabsTrigger>
+              <TabsTrigger value="radius">Radius</TabsTrigger>
+              <TabsTrigger value="shadows">Shadows</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="colors" className="space-y-4">
+              <div>
+                <Label className="mb-2 block">Text Color</Label>
+                <div className="grid grid-cols-3 gap-2">
+                  {TOKEN_LIBRARY.colors.map((token) => (
+                    <Button
+                      key={token.value}
+                      variant="outline"
+                      className="justify-start gap-2"
+                      onClick={() => applyTokenToElement(token.value, 'color-text')}
+                    >
+                      <div className={`w-4 h-4 rounded ${token.bg}`} />
+                      {token.name}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <Label className="mb-2 block">Background Color</Label>
+                <div className="grid grid-cols-3 gap-2">
+                  {TOKEN_LIBRARY.colors.map((token) => (
+                    <Button
+                      key={token.bg}
+                      variant="outline"
+                      className="justify-start gap-2"
+                      onClick={() => applyTokenToElement(token.bg, 'color-bg')}
+                    >
+                      <div className={`w-4 h-4 rounded ${token.bg}`} />
+                      {token.name}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="spacing" className="space-y-4">
+              <div>
+                <Label className="mb-2 block">Padding</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  {TOKEN_LIBRARY.spacing.map((token) => (
+                    <Button
+                      key={token.value}
+                      variant="outline"
+                      className="justify-start"
+                      onClick={() => applyTokenToElement(token.value, 'spacing-p')}
+                    >
+                      {token.name}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <Label className="mb-2 block">Margin</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  {TOKEN_LIBRARY.spacing.map((token) => (
+                    <Button
+                      key={token.m}
+                      variant="outline"
+                      className="justify-start"
+                      onClick={() => applyTokenToElement(token.m, 'spacing-m')}
+                    >
+                      {token.name}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="radius">
+              <div className="grid grid-cols-2 gap-2">
+                {TOKEN_LIBRARY.radius.map((token) => (
+                  <Button
+                    key={token.value}
+                    variant="outline"
+                    className="justify-start"
+                    onClick={() => applyTokenToElement(token.value, 'radius')}
+                  >
+                    {token.name}
+                  </Button>
+                ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="shadows">
+              <div className="grid grid-cols-2 gap-2">
+                {TOKEN_LIBRARY.shadows.map((token) => (
+                  <Button
+                    key={token.value}
+                    variant="outline"
+                    className="justify-start"
+                    onClick={() => applyTokenToElement(token.value, 'shadow')}
+                  >
+                    {token.name}
+                  </Button>
+                ))}
+              </div>
+            </TabsContent>
+          </Tabs>
         </DialogContent>
       </Dialog>
     </div>
