@@ -99,7 +99,7 @@ export default function NavigationManager() {
   });
 
   // Tab button style helper
-  const tabStyle = (tab) => `px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+  const tabStyle = (tab) => `px-4 py-2 text-body-base rounded-lg transition-colors ${
     activeTab === tab 
       ? "bg-[var(--color-primary)] text-white" 
       : "bg-[var(--color-background)] text-[var(--color-charcoal)] hover:bg-[var(--color-background)]/80 border border-[var(--color-charcoal)]/20"
