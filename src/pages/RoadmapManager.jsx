@@ -296,7 +296,7 @@ export default function RoadmapManager() {
             <Lightbulb className="h-6 w-6 text-secondary" />
             Roadmap Manager
           </h1>
-          <p className="text-charcoal-700">Track ideas, requirements, and development tasks</p>
+          <p className="text-muted-foreground">Track ideas, requirements, and development tasks</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="icon" onClick={() => setShowSettings(true)}>
@@ -375,7 +375,7 @@ export default function RoadmapManager() {
 
           <TabsContent value="roadmap" className="mt-6">
             {roadmapItems.length === 0 ? (
-              <div className="text-center py-12 text-charcoal-700">
+              <div className="text-center py-12 text-muted-foreground">
                 <Lightbulb className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>No items in roadmap. Add your first idea!</p>
               </div>
@@ -396,7 +396,7 @@ export default function RoadmapManager() {
 
           <TabsContent value="development" className="mt-6">
             {developmentItems.length === 0 ? (
-              <div className="text-center py-12 text-charcoal-700">
+              <div className="text-center py-12 text-muted-foreground">
                 <Code className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>No items in development. Set items to "Planned" to move them here.</p>
               </div>
@@ -432,7 +432,7 @@ export default function RoadmapManager() {
 
           <TabsContent value="completed" className="mt-6">
             {completedItems.length === 0 ? (
-              <div className="text-center py-12 text-charcoal-700">
+              <div className="text-center py-12 text-muted-foreground">
                 <Code className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>No completed items yet.</p>
               </div>

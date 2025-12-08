@@ -245,7 +245,7 @@ Return a JSON object with:
               </Badge>
             )}
           </h1>
-          <p className="text-charcoal-700">Reusable entity templates for business applications</p>
+          <p className="text-muted-foreground">Reusable entity templates for business applications</p>
         </div>
         <div className="flex gap-2">
           <CustomProjectSelector
@@ -305,7 +305,7 @@ Return a JSON object with:
           <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       ) : filteredEntities.length === 0 ? (
-        <div className="text-center py-12 text-charcoal-700">
+        <div className="text-center py-12 text-muted-foreground">
           <Database className="h-12 w-12 mx-auto mb-4 opacity-50" />
           <p>No entity templates found</p>
           <p className="text-sm mt-1">Create your first entity or use AI to generate one</p>

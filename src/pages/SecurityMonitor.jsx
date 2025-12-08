@@ -425,7 +425,7 @@ Provide:
             <Shield className="h-6 w-6 text-success" />
             Security Monitor
           </h1>
-          <p className="text-charcoal-700">Monitor security events, policies, and compliance</p>
+          <p className="text-muted-foreground">Monitor security events, policies, and compliance</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setShowPolicyEditor(true)}>
@@ -587,7 +587,7 @@ Provide:
                           {eventTypeIcons[event.event_type]}
                           <div>
                             <p className="font-medium">{event.event_type.replace(/_/g, " ")}</p>
-                            <p className="text-sm text-charcoal-700">{event.description || event.user_email}</p>
+                            <p className="text-sm text-muted-foreground">{event.description || event.user_email}</p>
                             <p className="text-xs text-muted-foreground">
                               {event.ip_address} • {format(new Date(event.created_date), "MMM d, HH:mm")}
                             </p>
@@ -932,7 +932,7 @@ Provide:
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold">AI Security Audit History</h2>
-              <p className="text-sm text-charcoal-700">Collapsible audit logs with roadmap integration</p>
+              <p className="text-sm text-muted-foreground">Collapsible audit logs with roadmap integration</p>
             </div>
             <Button onClick={generateSecurityAudit} disabled={isGeneratingAudit}>
               {isGeneratingAudit ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}

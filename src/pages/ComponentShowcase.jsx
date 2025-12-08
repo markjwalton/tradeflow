@@ -77,7 +77,7 @@ function ShowcaseSection({ id, title, description, count, children }) {
       </button>
       {expanded && (
         <div className="px-6 pb-6">
-          {description && <p className="text-sm text-charcoal-700 mb-4">{description}</p>}
+          {description && <p className="text-sm text-muted-foreground mb-4">{description}</p>}
           <div className="space-y-6">{children}</div>
         </div>
       )}
@@ -157,7 +157,7 @@ export default function ComponentShowcase() {
               <h1 className="text-2xl font-display text-midnight-900">
                 Component Library
               </h1>
-              <p className="text-sm text-charcoal-700">
+              <p className="text-sm text-muted-foreground">
                 Production-ready components using Sturij design tokens
               </p>
             </div>
