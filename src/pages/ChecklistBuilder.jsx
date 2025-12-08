@@ -223,7 +223,7 @@ export default function ChecklistBuilder() {
       <div className="flex-1 overflow-auto p-6">
         {isLoading ? (
           <div className="h-full flex items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+            <Loader2 className="h-8 w-8 animate-spin" />
           </div>
         ) : (
           <div className="max-w-2xl mx-auto">
