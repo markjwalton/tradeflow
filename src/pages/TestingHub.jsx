@@ -391,7 +391,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
   return (
     <div className="p-6 space-y-6 bg-[var(--color-background)] min-h-screen">
       {/* Header */}
-      <Card className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-midnight)] text-white border-0">
+      <Card className="bg-gradient-to-r from-primary-500 to-midnight-900 text-white border-0">
         <CardContent className="py-6">
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-4">
@@ -403,11 +403,11 @@ Return JSON with entity names as keys and arrays of records as values.`,
                 <p className="text-white/80 mt-1">Robust data management with preserved relationships</p>
                 <div className="flex gap-3 mt-4">
                   <Badge className="bg-white/20">{stats.total} Items</Badge>
-                  <Badge className="bg-green-500/80">{stats.verified} Verified</Badge>
-                  <Badge className="bg-amber-500/80">{stats.pending} Pending</Badge>
-                  <Badge className="bg-red-500/80">{stats.noData} No Data</Badge>
+                  <Badge className="bg-success-foreground/80">{stats.verified} Verified</Badge>
+                  <Badge className="bg-warning/80">{stats.pending} Pending</Badge>
+                  <Badge className="bg-destructive/80">{stats.noData} No Data</Badge>
                   {stats.orphaned > 0 && (
-                    <Badge className="bg-purple-500/80">{stats.orphaned} Orphaned</Badge>
+                    <Badge className="bg-accent-400/80">{stats.orphaned} Orphaned</Badge>
                   )}
                 </div>
               </div>
@@ -419,7 +419,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
               <Button 
                 onClick={bulkVerify}
                 disabled={isOperating || stats.pending === 0}
-                className="bg-white text-[var(--color-primary)] hover:bg-white/90"
+                className="bg-white text-primary-500 hover:bg-white/90"
               >
                 <CheckCircle2 className="h-4 w-4 mr-2" />
                 Verify All ({stats.pending})
@@ -427,7 +427,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
               <Button 
                 onClick={bulkGenerate}
                 disabled={isOperating || stats.noData === 0}
-                className="bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-dark)] text-white"
+                className="bg-secondary-400 hover:bg-secondary-500 text-white"
               >
                 <Sparkles className="h-4 w-4 mr-2" />
                 Generate All ({stats.noData})

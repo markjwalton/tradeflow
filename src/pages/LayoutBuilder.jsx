@@ -278,7 +278,7 @@ Create 4-8 zones for a complete layout.`,
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-heading text-[var(--color-midnight)] flex items-center gap-2">
-            <Layout className="h-6 w-6 text-[var(--color-primary)]" />
+            <Layout className="h-6 w-6 text-primary-500" />
             Layout Builder
           </h1>
           <p className="text-[var(--color-charcoal)]">
@@ -293,7 +293,7 @@ Create 4-8 zones for a complete layout.`,
           <Button 
             onClick={() => setShowSaveDialog(true)}
             disabled={zones.length === 0}
-            className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+            className="bg-primary-500 hover:bg-primary-600 text-white"
           >
             <Save className="h-4 w-4 mr-2" />
             Save Pattern
@@ -304,7 +304,7 @@ Create 4-8 zones for a complete layout.`,
       <div className="grid grid-cols-12 gap-6">
         {/* Left Sidebar - Presets & Saved Patterns */}
         <div className="col-span-3 space-y-4">
-          <Card className="border-[var(--color-background-muted)]">
+          <Card className="border-background-muted">
             <CardHeader className="py-3">
               <CardTitle className="text-sm text-[var(--color-midnight)]">Presets</CardTitle>
             </CardHeader>
@@ -324,7 +324,7 @@ Create 4-8 zones for a complete layout.`,
             </CardContent>
           </Card>
 
-          <Card className="border-[var(--color-background-muted)]">
+          <Card className="border-background-muted">
             <CardHeader className="py-3">
               <CardTitle className="text-sm text-[var(--color-midnight)]">Saved Patterns</CardTitle>
             </CardHeader>
@@ -365,7 +365,7 @@ Create 4-8 zones for a complete layout.`,
             </CardContent>
           </Card>
 
-          <Card className="border-[var(--color-background-muted)]">
+          <Card className="border-background-muted">
             <CardHeader className="py-3">
               <CardTitle className="text-sm text-[var(--color-midnight)]">Zone Types</CardTitle>
             </CardHeader>
@@ -384,7 +384,7 @@ Create 4-8 zones for a complete layout.`,
 
         {/* Main Canvas */}
         <div className="col-span-6">
-          <Card className="border-[var(--color-background-muted)]">
+          <Card className="border-background-muted">
             <CardHeader className="flex flex-row items-center justify-between py-3">
               <CardTitle className="text-sm text-[var(--color-midnight)]">Layout Canvas (12-column grid)</CardTitle>
               <Button variant="outline" size="sm" onClick={handleAddZone}>
@@ -395,7 +395,7 @@ Create 4-8 zones for a complete layout.`,
             <CardContent>
               {/* Grid Preview */}
               <div 
-                className="relative bg-[var(--color-background)] rounded-lg p-4 min-h-[400px]"
+                className="relative bg-background rounded-lg p-4 min-h-[400px]"
                 style={{
                   display: "grid",
                   gridTemplateColumns: "repeat(12, 1fr)",
@@ -407,7 +407,7 @@ Create 4-8 zones for a complete layout.`,
                 {Array.from({ length: 12 }).map((_, i) => (
                   <div 
                     key={`col-${i}`} 
-                    className="absolute top-0 bottom-0 border-l border-dashed border-[var(--color-charcoal)]/10"
+                    className="absolute top-0 bottom-0 border-l border-dashed border-charcoal-300"
                     style={{ left: `${(i / 12) * 100}%` }}
                   />
                 ))}
@@ -418,7 +418,7 @@ Create 4-8 zones for a complete layout.`,
                     key={zone.id}
                     onClick={() => setSelectedZone(zone.id)}
                     className={`rounded-lg p-2 cursor-pointer transition-all ${getPurposeColor(zone.purpose)} ${
-                      selectedZone === zone.id ? "ring-2 ring-[var(--color-primary)] ring-offset-2" : ""
+                      selectedZone === zone.id ? "ring-2 ring-primary-500 ring-offset-2" : ""
                     }`}
                     style={{
                       gridColumnStart: zone.col_start,
@@ -453,7 +453,7 @@ Create 4-8 zones for a complete layout.`,
 
         {/* Right Sidebar - Zone Properties */}
         <div className="col-span-3 space-y-4">
-          <Card className="border-[var(--color-background-muted)]">
+          <Card className="border-background-muted">
             <CardHeader className="py-3">
               <CardTitle className="text-sm text-[var(--color-midnight)]">Zone Properties</CardTitle>
             </CardHeader>
@@ -551,7 +551,7 @@ Create 4-8 zones for a complete layout.`,
           </Card>
 
           {zones.length > 0 && (
-            <Card className="border-[var(--color-background-muted)]">
+            <Card className="border-background-muted">
               <CardHeader className="py-3">
                 <CardTitle className="text-sm text-[var(--color-midnight)]">Generated Code</CardTitle>
               </CardHeader>
@@ -626,7 +626,7 @@ Create 4-8 zones for a complete layout.`,
               <Button 
                 onClick={handleSave}
                 disabled={saveMutation.isPending}
-                className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+                className="bg-primary-500 hover:bg-primary-600 text-white"
               >
                 {saveMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                 Save Pattern

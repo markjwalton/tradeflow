@@ -539,7 +539,7 @@ Create a development prompt that:
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-h2 flex items-center gap-2">
-            <BookOpen className="h-6 w-6 text-[var(--color-primary)]" />
+            <BookOpen className="h-6 w-6 text-primary-500" />
             Knowledge Manager
           </h1>
           <p className="text-[var(--color-charcoal)]">
@@ -557,7 +557,7 @@ Create a development prompt that:
               key={key}
               variant={activeTech === key ? "default" : "outline"}
               onClick={() => setActiveTech(key)}
-              className={activeTech === key ? "bg-[var(--color-primary)]" : ""}
+              className={activeTech === key ? "bg-primary-500" : ""}
             >
               <Icon className="h-4 w-4 mr-2" />
               {config.name}
@@ -568,10 +568,10 @@ Create a development prompt that:
 
       {/* Progress Bar */}
       {syncProgress.total > 0 && (
-        <div className="mb-4 p-4 bg-white border border-[var(--color-background-muted)] rounded-lg">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <Loader2 className="h-4 w-4 animate-spin text-[var(--color-primary)]" />
+        <div className="mb-4 p-4 bg-white border border-background-muted rounded-lg">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <Loader2 className="h-4 w-4 animate-spin text-primary-500" />
               <span className="text-sm font-medium">{syncProgress.message}</span>
             </div>
             <span className="text-sm text-[var(--color-charcoal)]">
@@ -583,14 +583,14 @@ Create a development prompt that:
       )}
 
       {/* RuleBook Status */}
-      <div className="mb-4 p-3 bg-[var(--color-primary)]/5 border border-[var(--color-primary)]/20 rounded-lg flex items-center justify-between">
+      <div className="mb-4 p-3 bg-primary-50 border border-primary-200 rounded-lg flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <FileText className="h-4 w-4 text-[var(--color-primary)]" />
+          <FileText className="h-4 w-4 text-primary-500" />
           <span className="text-sm text-[var(--color-midnight)]">
             RuleBook: {rules.length} active rules loaded for AI reasoning
           </span>
         </div>
-        <Badge className="bg-[var(--color-primary)]/20 text-[var(--color-primary)]">
+        <Badge className="bg-primary-100 text-primary-700">
           {rules.filter(r => r.category === "ui_ux").length} UI/UX rules
         </Badge>
       </div>
@@ -708,8 +708,8 @@ Create a development prompt that:
                     key={comp}
                     className={`p-3 rounded-lg border text-center ${
                       synced 
-                        ? "bg-[var(--color-success)]/10 border-[var(--color-success)]/30" 
-                        : "bg-white border-[var(--color-background-muted)]"
+                        ? "bg-success-50 border-success/30" 
+                        : "bg-white border-background-muted"
                     }`}
                   >
                     <p className="text-body-small">{comp}</p>
@@ -734,7 +734,7 @@ Create a development prompt that:
                 <Button 
                   onClick={handleGenerateRecommendations} 
                   disabled={analyzing}
-                  className="bg-[var(--color-primary)]"
+                  className="bg-primary-500 hover:bg-primary-600"
                 >
                   {analyzing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
                   Generate from Releases
@@ -758,7 +758,7 @@ Create a development prompt that:
                           <div className="flex items-center gap-2">
                             <h4 className="text-h6">{rec.title}</h4>
                             {rec.status === "accepted" && (
-                              <Badge className="bg-[var(--color-success)]/20 text-[var(--color-success)]">
+                              <Badge className="bg-success-50 text-success-foreground">
                                 <CheckCircle2 className="h-3 w-3 mr-1" />
                                 In Roadmap
                               </Badge>
@@ -768,9 +768,9 @@ Create a development prompt that:
                         </div>
                         <div className="flex gap-2">
                           <Badge className={
-                            rec.impact === "high" ? "bg-red-100 text-red-800" :
-                            rec.impact === "medium" ? "bg-yellow-100 text-yellow-800" :
-                            "bg-green-100 text-green-800"
+                            rec.impact === "high" ? "bg-destructive-50 text-destructive-700" :
+                            rec.impact === "medium" ? "bg-warning/10 text-warning-foreground" :
+                            "bg-success-50 text-success-foreground"
                           }>
                             {rec.impact}
                           </Badge>
@@ -779,7 +779,7 @@ Create a development prompt that:
                       </div>
 
                       {rec.reasoning && (
-                        <div className="mt-3 p-3 bg-[var(--color-primary)]/5 rounded-lg">
+                        <div className="mt-3 p-3 bg-primary-50 rounded-lg">
                           <p className="text-xs font-medium mb-1">Development Prompt & RuleBook Context:</p>
                           <p className="text-sm text-[var(--color-charcoal)] whitespace-pre-wrap">{rec.reasoning}</p>
                         </div>
@@ -848,7 +848,7 @@ Create a development prompt that:
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setRoadmapDialog({ open: false, rec: null })}>Cancel</Button>
-            <Button onClick={handleAddToRoadmap} className="bg-[var(--color-primary)]">
+            <Button onClick={handleAddToRoadmap} className="bg-primary-500 hover:bg-primary-600">
               <Plus className="h-4 w-4 mr-2" />
               Add to Roadmap
             </Button>

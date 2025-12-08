@@ -42,14 +42,14 @@ export default function LearnedPatterns() {
   });
 
   const statusColors = {
-    verified: "bg-green-100 text-green-800 border-green-200",
-    violation: "bg-red-100 text-red-800 border-red-200"
+    verified: "bg-success-50 text-success-foreground border-success",
+    violation: "bg-destructive-50 text-destructive-700 border-destructive-200"
   };
 
   const severityColors = {
     critical: "bg-destructive text-white",
-    high: "bg-warning text-white",
-    medium: "bg-info text-white",
+    high: "bg-warning-foreground text-white",
+    medium: "bg-info-foreground text-white",
     low: "bg-muted text-muted-foreground"
   };
 
@@ -125,7 +125,7 @@ export default function LearnedPatterns() {
             <CardTitle className="text-xs">Verified</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-success">{stats.verified}</div>
+            <div className="text-2xl font-bold text-success-foreground">{stats.verified}</div>
           </CardContent>
         </Card>
         <Card>
@@ -141,7 +141,7 @@ export default function LearnedPatterns() {
             <CardTitle className="text-xs">User Modified</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-info">{stats.userModified}</div>
+            <div className="text-2xl font-bold text-info-foreground">{stats.userModified}</div>
           </CardContent>
         </Card>
       </div>
@@ -208,7 +208,7 @@ export default function LearnedPatterns() {
         <div className="space-y-3">
           {filteredPatterns.map((pattern) => (
             <Card key={pattern.id} className="border-l-4" style={{
-              borderLeftColor: pattern.status === 'verified' ? 'var(--color-success)' : 'var(--color-destructive)'
+              borderLeftColor: pattern.status === 'verified' ? 'var(--success)' : 'var(--destructive)'
             }}>
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
@@ -240,7 +240,7 @@ export default function LearnedPatterns() {
                     <div className="space-y-2">
                       <div>
                         <span className="text-xs text-muted-foreground">Pattern:</span>
-                        <code className="block bg-primary/10 p-3 rounded text-sm font-mono font-bold mt-1 border-l-4 border-primary">
+                        <code className="block bg-primary-100 p-3 rounded text-sm font-mono font-bold mt-1 border-l-4 border-primary-500">
                           {pattern.pattern}
                         </code>
                       </div>
@@ -254,8 +254,8 @@ export default function LearnedPatterns() {
                     
                     {pattern.suggested_fix && (
                       <div className="mt-2">
-                        <p className="text-xs text-success mb-1">Suggested Fix:</p>
-                        <code className="block bg-success/10 p-2 rounded text-sm font-mono">
+                        <p className="text-xs text-success-foreground mb-1">Suggested Fix:</p>
+                        <code className="block bg-success-50 p-2 rounded text-sm font-mono">
                           {pattern.suggested_fix}
                         </code>
                       </div>

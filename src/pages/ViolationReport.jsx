@@ -333,8 +333,8 @@ Provide a clear, concise explanation that helps them understand this pattern and
 
   const severityColors = {
     critical: "bg-destructive text-white",
-    high: "bg-warning text-white",
-    medium: "bg-info text-white",
+    high: "bg-warning-foreground text-white",
+    medium: "bg-info-foreground text-white",
     low: "bg-muted text-muted-foreground"
   };
 
@@ -430,7 +430,7 @@ Provide a clear, concise explanation that helps them understand this pattern and
         <div className="space-y-3 mt-6">
           {patterns.map((pattern) => (
             <Card key={pattern.id} className="border-l-4" style={{
-              borderLeftColor: pattern.status === 'verified' ? 'var(--color-success)' : 'var(--color-destructive)'
+              borderLeftColor: pattern.status === 'verified' ? 'var(--success)' : 'var(--destructive)'
             }}>
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
@@ -520,8 +520,8 @@ Provide a clear, concise explanation that helps them understand this pattern and
                             const validation = validatePatternAgainstGlobals(pattern);
                             return (
                               <div className={`p-2 rounded text-xs ${
-                                validation.valid === true ? 'bg-success/10 border border-success' :
-                                validation.valid === false ? 'bg-destructive/10 border border-destructive' :
+                                validation.valid === true ? 'bg-success-50 border border-success' :
+                                validation.valid === false ? 'bg-destructive-50 border border-destructive' :
                                 'bg-muted'
                               }`}>
                                 <strong>globals.css Check:</strong> {validation.message}
