@@ -399,13 +399,20 @@ export default function PageBuilder() {
         setFormData({ ...formData, current_content_jsx: updatedContent });
         toast.success("Token applied!");
 
-        // Update selected element with new classes for next application
+        // Keep element selected but update classes
         setSelectedElement({
           ...selectedElement,
           currentClasses: newClasses
         });
+        
+        // Don't close the picker - keep it open for multiple applications
       } else {
-        toast.warning("Applied visually - save to persist changes");
+        // Still update the element reference for next application
+        setSelectedElement({
+          ...selectedElement,
+          currentClasses: newClasses
+        });
+        toast.warning("Applied visually - may need manual save");
       }
     } catch (error) {
       console.error('Error applying token:', error);
