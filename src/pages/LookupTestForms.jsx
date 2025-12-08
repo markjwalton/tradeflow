@@ -76,8 +76,8 @@ export default function LookupTestForms() {
               />
 
               {postcodeResult && (
-                <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-                  <h4 className="font-medium text-green-800 mb-2 flex items-center gap-2">
+                <div className="mt-4 p-4 bg-success-50 border border-success rounded-lg">
+                  <h4 className="font-medium text-success-foreground mb-2 flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4" />
                     Selected Address
                   </h4>
@@ -87,7 +87,7 @@ export default function LookupTestForms() {
                 </div>
               )}
 
-              <div className="text-sm text-gray-500 space-y-1">
+              <div className="text-sm text-muted-foreground space-y-1">
                 <p><strong>Test postcodes:</strong></p>
                 <ul className="list-disc list-inside space-y-1">
                   <li><code>SW1A 1AA</code> - Buckingham Palace</li>
