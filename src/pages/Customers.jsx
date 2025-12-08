@@ -23,8 +23,8 @@ import { Plus, Search, Pencil, Trash2, Loader2, Mail, Phone, Building2 } from "l
 import { toast } from "sonner";
 
 const statusColors = {
-  lead: "bg-warning/10 text-warning-foreground",
-  active: "bg-success-50 text-success-foreground",
+  lead: "bg-warning/10 text-warning",
+  active: "bg-success-50 text-success",
   inactive: "bg-muted text-muted-foreground",
 };
 
@@ -142,16 +142,16 @@ export default function Customers() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64 bg-[var(--color-background)]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+      <div className="flex items-center justify-center h-64 bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
       </div>
     );
   }
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Customers</h1>
+        <h1 className="text-2xl font-light font-display text-midnight-900">Customers</h1>
         <Button onClick={() => { resetForm(); setEditingCustomer(null); setShowForm(true); }}>
           <Plus className="h-4 w-4 mr-2" />
           New Customer
@@ -187,9 +187,9 @@ export default function Customers() {
             <CardHeader className="pb-2">
               <div className="flex items-start justify-between">
                 <div>
-                  <CardTitle className="text-lg text-[var(--color-midnight)]">{customer.name}</CardTitle>
+                  <CardTitle className="text-lg text-midnight-900">{customer.name}</CardTitle>
                   {customer.company && (
-                    <p className="text-sm text-[var(--color-charcoal)] flex items-center gap-1 mt-1">
+                    <p className="text-sm text-charcoal-700 flex items-center gap-1 mt-1">
                       <Building2 className="h-3 w-3" />
                       {customer.company}
                     </p>
@@ -208,13 +208,13 @@ export default function Customers() {
             <CardContent className="space-y-3">
               <Badge className={statusColors[customer.status]}>{customer.status}</Badge>
               {customer.email && (
-                <p className="text-sm text-[var(--color-charcoal)] flex items-center gap-2">
+                <p className="text-sm text-charcoal-700 flex items-center gap-2">
                   <Mail className="h-3 w-3" />
                   {customer.email}
                 </p>
               )}
               {customer.phone && (
-                <p className="text-sm text-[var(--color-charcoal)] flex items-center gap-2">
+                <p className="text-sm text-charcoal-700 flex items-center gap-2">
                   <Phone className="h-3 w-3" />
                   {customer.phone}
                 </p>
@@ -232,7 +232,7 @@ export default function Customers() {
       </div>
 
       {filteredCustomers.length === 0 && (
-        <div className="text-center py-12 text-[var(--color-charcoal)]">
+        <div className="text-center py-12 text-charcoal-700">
           No customers found. Add your first customer to get started.
         </div>
       )}

@@ -22,10 +22,10 @@ import { Plus, Search, Pencil, Trash2, Loader2, Mail, Phone, Calendar } from "lu
 import { toast } from "sonner";
 
 const availabilityColors = {
-  available: "bg-success-50 text-success-foreground",
-  busy: "bg-warning/10 text-warning-foreground",
-  on_leave: "bg-info-50 text-info-foreground",
-  unavailable: "bg-destructive-50 text-destructive-700",
+  available: "bg-success-50 text-success",
+  busy: "bg-warning/10 text-warning",
+  on_leave: "bg-info-50 text-info",
+  unavailable: "bg-destructive-50 text-destructive",
 };
 
 export default function Team() {
@@ -138,16 +138,16 @@ export default function Team() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64 bg-[var(--color-background)]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+      <div className="flex items-center justify-center h-64 bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
       </div>
     );
   }
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Team</h1>
+        <h1 className="text-2xl font-light font-display text-midnight-900">Team</h1>
         <Button onClick={() => { resetForm(); setEditingMember(null); setShowForm(true); }}>
           <Plus className="h-4 w-4 mr-2" />
           Add Team Member
@@ -186,8 +186,8 @@ export default function Team() {
               <CardHeader className="pb-2">
                 <div className="flex items-start justify-between">
                   <div>
-                    <CardTitle className="text-lg text-[var(--color-midnight)]">{member.name}</CardTitle>
-                    {member.role && <p className="text-sm text-[var(--color-charcoal)] mt-1">{member.role}</p>}
+                    <CardTitle className="text-lg text-midnight-900">{member.name}</CardTitle>
+                    {member.role && <p className="text-sm text-charcoal-700 mt-1">{member.role}</p>}
                   </div>
                   <div className="flex gap-1">
                     <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(member)}>
@@ -202,16 +202,16 @@ export default function Team() {
               <CardContent className="space-y-3">
                 <Badge className={availabilityColors[member.availability]}>{member.availability?.replace("_", " ")}</Badge>
                 {member.email && (
-                  <p className="text-sm text-[var(--color-charcoal)] flex items-center gap-2">
+                  <p className="text-sm text-charcoal-700 flex items-center gap-2">
                     <Mail className="h-3 w-3" />{member.email}
                   </p>
                 )}
                 {member.phone && (
-                  <p className="text-sm text-[var(--color-charcoal)] flex items-center gap-2">
+                  <p className="text-sm text-charcoal-700 flex items-center gap-2">
                     <Phone className="h-3 w-3" />{member.phone}
                   </p>
                 )}
-                <p className="text-sm text-[var(--color-charcoal)] flex items-center gap-2">
+                <p className="text-sm text-charcoal-700 flex items-center gap-2">
                   <Calendar className="h-3 w-3" />{holidaysRemaining} days remaining
                 </p>
                 {member.skills?.length > 0 && (
@@ -228,7 +228,7 @@ export default function Team() {
       </div>
 
       {filteredMembers.length === 0 && (
-        <div className="text-center py-12 text-[var(--color-charcoal)]">
+        <div className="text-center py-12 text-charcoal-700">
           No team members found. Add your first team member to get started.
         </div>
       )}

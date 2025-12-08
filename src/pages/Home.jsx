@@ -29,8 +29,8 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--color-background)]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
       </div>
     );
   }
@@ -40,16 +40,16 @@ export default function Home() {
   const getChildren = (parentId) => navItems.filter(i => i.parent_id === parentId).sort((a, b) => (a.order || 0) - (b.order || 0));
 
   return (
-    <div className="min-h-screen bg-[var(--color-background)] p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-light font-display mb-2 text-[var(--color-midnight)]">
+        <h1 className="text-3xl font-light font-display mb-2 text-midnight-900">
           Welcome to {tenant?.name || "Your Portal"}
         </h1>
-        <p className="text-[var(--color-charcoal)] mb-8">Select a section to get started</p>
+        <p className="text-charcoal-700 mb-8">Select a section to get started</p>
         
         {navItems.length === 0 ? (
           <Card className="border-background-muted">
-            <CardContent className="py-8 text-center text-[var(--color-charcoal)]">
+            <CardContent className="py-8 text-center text-charcoal-700">
               No navigation items configured for this tenant yet.
             </CardContent>
           </Card>
@@ -66,7 +66,7 @@ export default function Home() {
               return (
                 <Card key={item.id} className="hover:shadow-md transition-shadow border-background-muted bg-card">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg text-[var(--color-midnight)]">
+                    <CardTitle className="flex items-center gap-2 text-lg text-midnight-900">
                       <Icon className="h-5 w-5 text-primary-500" />
                       {item.name}
                     </CardTitle>

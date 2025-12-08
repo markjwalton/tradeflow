@@ -24,9 +24,9 @@ import { toast } from "sonner";
 
 const statusColors = {
   draft: "bg-muted text-muted-foreground",
-  sent: "bg-info-50 text-info-foreground",
-  approved: "bg-success-50 text-success-foreground",
-  rejected: "bg-destructive-50 text-destructive-700",
+  sent: "bg-info-50 text-info",
+  approved: "bg-success-50 text-success",
+  rejected: "bg-destructive-50 text-destructive",
 };
 
 export default function Estimates() {
@@ -191,16 +191,16 @@ export default function Estimates() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64 bg-[var(--color-background)]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+      <div className="flex items-center justify-center h-64 bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
       </div>
     );
   }
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Estimates</h1>
+        <h1 className="text-2xl font-light font-display text-midnight-900">Estimates</h1>
         <Button onClick={() => { resetForm(); setEditingEstimate(null); setShowForm(true); }}>
           <Plus className="h-4 w-4 mr-2" />
           New Estimate
@@ -230,10 +230,10 @@ export default function Estimates() {
             <CardHeader className="pb-2">
               <div className="flex items-start justify-between">
                 <div>
-                  <CardTitle className="text-lg flex items-center gap-2 text-[var(--color-midnight)]">
+                  <CardTitle className="text-lg flex items-center gap-2 text-midnight-900">
                     <FileText className="h-4 w-4" />{estimate.title}
                   </CardTitle>
-                  {estimate.project_id && <p className="text-sm text-[var(--color-charcoal)] mt-1">Project: {getProjectName(estimate.project_id)}</p>}
+                  {estimate.project_id && <p className="text-sm text-charcoal-700 mt-1">Project: {getProjectName(estimate.project_id)}</p>}
                 </div>
                 <div className="flex gap-1">
                   <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleDuplicate(estimate)}><Copy className="h-4 w-4" /></Button>
@@ -245,8 +245,8 @@ export default function Estimates() {
             <CardContent className="space-y-3">
               <Badge className={statusColors[estimate.status]}>{estimate.status}</Badge>
               <div className="space-y-1 text-sm">
-                <div className="flex justify-between"><span className="text-[var(--color-charcoal)]">Subtotal</span><span>£{estimate.subtotal?.toLocaleString()}</span></div>
-                <div className="flex justify-between"><span className="text-[var(--color-charcoal)]">VAT ({estimate.vat_rate}%)</span><span>£{estimate.vat_amount?.toLocaleString()}</span></div>
+                <div className="flex justify-between"><span className="text-charcoal-700">Subtotal</span><span>£{estimate.subtotal?.toLocaleString()}</span></div>
+                <div className="flex justify-between"><span className="text-charcoal-700">VAT ({estimate.vat_rate}%)</span><span>£{estimate.vat_amount?.toLocaleString()}</span></div>
                 <div className="flex justify-between font-semibold border-t pt-1"><span>Total</span><span>£{estimate.total?.toLocaleString()}</span></div>
               </div>
             </CardContent>
@@ -255,7 +255,7 @@ export default function Estimates() {
       </div>
 
       {filteredEstimates.length === 0 && (
-        <div className="text-center py-12 text-[var(--color-charcoal)]">No estimates found. Create your first estimate to get started.</div>
+        <div className="text-center py-12 text-charcoal-700">No estimates found. Create your first estimate to get started.</div>
       )}
 
       <Dialog open={showForm} onOpenChange={setShowForm}>
