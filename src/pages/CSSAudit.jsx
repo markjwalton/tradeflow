@@ -16,6 +16,7 @@ export default function CSSAudit() {
   const [scanProgress, setScanProgress] = useState(0);
   const [scannedFiles, setScannedFiles] = useState([]);
   const [currentFile, setCurrentFile] = useState("");
+  const [totalFiles, setTotalFiles] = useState(0);
 
   const handleAnalyze = async () => {
     setAnalyzing(true);
@@ -105,6 +106,7 @@ export default function CSSAudit() {
     };
     
     const filesToScan = generateFileList();
+    setTotalFiles(filesToScan.length);
     
     // Simulate scanning progress with faster animation for many files
     const simulateScanning = async () => {
@@ -323,7 +325,7 @@ Return a comprehensive audit report.`,
             {scannedFiles.length > 0 && (
               <div>
                 <div className="text-xs text-[var(--color-charcoal)] mb-2">
-                  Scanned {scannedFiles.filter(f => f.status === "complete").length} of {filesToScan.length} files
+                  Scanned {scannedFiles.filter(f => f.status === "complete").length} of {totalFiles} files
                 </div>
                 <div className="max-h-60 overflow-y-auto space-y-1 border border-[var(--color-background-muted)] rounded-lg p-3 bg-[var(--color-background-subtle)]">
                 {scannedFiles.slice(-20).map((file, idx) => (
