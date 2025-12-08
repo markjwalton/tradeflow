@@ -37,8 +37,18 @@ export default function ViolationReport() {
   const [editingPattern, setEditingPattern] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [showReference, setShowReference] = useState(true);
+  const [globalsCss, setGlobalsCss] = useState(null);
+  const [validating, setValidating] = useState(false);
   
   const queryClient = useQueryClient();
+
+  // Fetch globals.css on mount
+  React.useEffect(() => {
+    fetch('/src/globals.css')
+      .then(res => res.text())
+      .then(css => setGlobalsCss(css))
+      .catch(err => console.error('Failed to load globals.css:', err));
+  }, []);
 
   // Fetch learned patterns from DB
   const { data: learnedPatterns = [] } = useQuery({
@@ -224,6 +234,46 @@ For EACH pattern, provide the EXACT string found in code, not a description.`,
     toast.success("Pattern rejected");
   };
 
+  const validatePatternAgainstGlobals = (pattern) => {
+    if (!globalsCss) return { valid: null, message: "globals.css not loaded" };
+    
+    const patternStr = pattern.pattern || pattern.example_usage || "";
+    
+    // Extract CSS variable references like var(--color-background)
+    const varMatches = patternStr.match(/var\(--[a-z0-9-]+\)/gi) || [];
+    const missingVars = [];
+    
+    for (const varRef of varMatches) {
+      const varName = varRef.match(/--([a-z0-9-]+)/i)?.[1];
+      if (varName && !globalsCss.includes(`--${varName}:`)) {
+        missingVars.push(`--${varName}`);
+      }
+    }
+    
+    // Extract bg-[...] or other arbitrary values
+    const arbitraryValues = patternStr.match(/\w+-\[var\(--[a-z0-9-]+\)\]/gi) || [];
+    const missingArbitraryVars = [];
+    
+    for (const arbVal of arbitraryValues) {
+      const varName = arbVal.match(/--([a-z0-9-]+)/i)?.[1];
+      if (varName && !globalsCss.includes(`--${varName}:`)) {
+        missingArbitraryVars.push(`--${varName}`);
+      }
+    }
+    
+    const allMissing = [...missingVars, ...missingArbitraryVars];
+    
+    if (allMissing.length > 0) {
+      return {
+        valid: false,
+        message: `Missing CSS variables: ${allMissing.join(', ')}`,
+        missingVars: allMissing
+      };
+    }
+    
+    return { valid: true, message: "All CSS variables exist in globals.css" };
+  };
+
   const statusColors = {
     verified: "bg-green-100 text-green-800 border-green-200",
     violation: "bg-red-100 text-red-800 border-red-200"
@@ -404,6 +454,28 @@ For EACH pattern, provide the EXACT string found in code, not a description.`,
                       <PopoverContent className="w-96">
                         <div className="space-y-3">
                           <h4 className="font-medium">Pattern Analysis</h4>
+                          
+                          {/* Validation against globals.css */}
+                          {globalsCss && (() => {
+                            const validation = validatePatternAgainstGlobals(pattern);
+                            return (
+                              <div className={`p-2 rounded text-xs ${
+                                validation.valid === true ? 'bg-success/10 border border-success' :
+                                validation.valid === false ? 'bg-destructive/10 border border-destructive' :
+                                'bg-muted'
+                              }`}>
+                                <strong>globals.css Check:</strong> {validation.message}
+                                {validation.missingVars && (
+                                  <div className="mt-1 space-y-1">
+                                    {validation.missingVars.map(v => (
+                                      <code key={v} className="block text-destructive">{v}</code>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })()}
+                          
                           <div>
                             <p className="text-xs text-muted-foreground mb-1">Expected tokens for {pattern.category}:</p>
                             <div className="flex flex-wrap gap-1">
