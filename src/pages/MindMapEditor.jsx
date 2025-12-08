@@ -989,12 +989,12 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
       {/* Canvas and History Panel */}
       <div className="flex-1 flex">
         {!selectedMindMapId ? (
-          <div className="h-full flex items-center justify-center text-charcoal-700">
+          <div className="h-full flex items-center justify-center">
             Select or create a mind map to get started
           </div>
         ) : loadingNodes || loadingConnections ? (
           <div className="h-full flex items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+            <Loader2 className="h-8 w-8 animate-spin" />
           </div>
         ) : (
           <div className="flex-1">
