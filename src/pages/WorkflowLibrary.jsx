@@ -167,7 +167,7 @@ export default function WorkflowLibrary() {
           </p>
           {!search && categoryFilter === "all" && (
             <Link to={createPageUrl("WorkflowDesigner")}>
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
+              <Button>
                 <Plus className="h-4 w-4 mr-2" />
                 Create Workflow
               </Button>

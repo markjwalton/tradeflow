@@ -267,7 +267,7 @@ export default function FormBuilder() {
             <div className="h-full flex items-center justify-center">
               <div className="text-center text-charcoal-700">
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
-                  <Plus className="h-8 w-8 text-charcoal-700" />
+                  <Plus className="h-8 w-8" />
                 </div>
                 <h3 className="font-medium text-midnight-900">No fields yet</h3>
                 <p className="text-sm">Add fields from the palette on the left</p>
