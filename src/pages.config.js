@@ -79,6 +79,7 @@ import DebugProjectWorkspace from './pages/DebugProjectWorkspace';
 import DebugProjectEditor from './pages/DebugProjectEditor';
 import KnowledgeManager from './pages/KnowledgeManager';
 import PageBuilder from './pages/PageBuilder';
+import CSSAudit from './pages/CSSAudit';
 import __Layout from './Layout.jsx';
 
 
@@ -164,6 +165,7 @@ export const PAGES = {
     "DebugProjectEditor": DebugProjectEditor,
     "KnowledgeManager": KnowledgeManager,
     "PageBuilder": PageBuilder,
+    "CSSAudit": CSSAudit,
 }
 
 export const pagesConfig = {
