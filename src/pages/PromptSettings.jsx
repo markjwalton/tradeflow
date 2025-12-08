@@ -150,7 +150,7 @@ export default function PromptSettings() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
-            <Sparkles className="h-6 w-6 text-accent-600" />
+            <Sparkles className="h-6 w-6 text-accent-400" />
             Prompt Settings
           </h1>
           <p className="text-[var(--color-charcoal)]">Manage AI reasoning prompts for input fields</p>
@@ -199,7 +199,7 @@ export default function PromptSettings() {
                       <CardTitle className="text-base flex items-center gap-2">
                         {prompt.name}
                         {prompt.is_default && (
-                          <Star className="h-4 w-4 text-warning fill-warning" />
+                          <Star className="h-4 w-4 text-warning-foreground fill-warning-foreground" />
                         )}
                       </CardTitle>
                       <p className="text-sm text-muted-foreground">{prompt.description}</p>

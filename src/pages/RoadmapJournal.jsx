@@ -691,12 +691,12 @@ Return as JSON:
                               <Button size="sm" variant="ghost" onClick={() => copyToClipboard(entry.ai_generated_prompt)}>
                                 <Copy className="h-3 w-3 mr-1" /> Copy
                               </Button>
-                              <Button size="sm" variant="ghost" className="text-accent-700" onClick={() => sendToChat(entry.ai_generated_prompt)}>
+                              <Button size="sm" variant="ghost" className="text-accent-600" onClick={() => sendToChat(entry.ai_generated_prompt)}>
                                 <Send className="h-3 w-3 mr-1" /> Send
                               </Button>
                             </div>
                           </div>
-                          <p className="text-sm text-accent-900 whitespace-pre-wrap">{entry.ai_generated_prompt}</p>
+                          <p className="text-sm text-accent-800 whitespace-pre-wrap">{entry.ai_generated_prompt}</p>
                         </div>
                       )}
                     </CardContent>

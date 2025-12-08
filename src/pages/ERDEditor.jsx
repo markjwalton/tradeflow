@@ -359,7 +359,7 @@ Only suggest NEW relationships not already in existingRelationships.`,
       <div className="flex items-center justify-between p-4 bg-[var(--color-background-paper)] border-b border-[var(--color-background-muted)]">
         <div className="flex items-center gap-4">
           <h1 className="text-xl font-bold font-display flex items-center gap-2 text-[var(--color-midnight)]">
-            <Database className="h-5 w-5 text-accent-600" />
+            <Database className="h-5 w-5 text-accent-400" />
             ERD Editor
           </h1>
           <CustomProjectSelector

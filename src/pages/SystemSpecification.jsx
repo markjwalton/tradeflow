@@ -491,7 +491,7 @@ export default function SystemSpecification() {
                       <ul className="space-y-2">
                         {currentSection.content.pages.map((page, i) => (
                           <li key={i} className="flex items-start gap-2">
-                            <Layout className="h-4 w-4 mt-0.5 text-accent-600" />
+                            <Layout className="h-4 w-4 mt-0.5 text-accent-400" />
                             <span className="text-sm">{page}</span>
                           </li>
                         ))}
