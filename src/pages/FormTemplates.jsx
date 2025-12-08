@@ -35,12 +35,12 @@ import {
 import { toast } from "sonner";
 
 const categoryColors = {
-  survey: "bg-info-50 text-info-foreground",
-  checkin: "bg-success-50 text-success-foreground",
-  assessment: "bg-accent-100 text-accent-700",
-  data_capture: "bg-info-50 text-info-foreground",
-  approval: "bg-warning/10 text-warning-foreground",
-  feedback: "bg-accent-100 text-accent-700",
+  survey: "bg-info-50 text-info",
+  checkin: "bg-success-50 text-success",
+  assessment: "bg-accent-100 text-accent",
+  data_capture: "bg-info-50 text-info",
+  approval: "bg-warning/10 text-warning",
+  feedback: "bg-accent-100 text-accent",
   custom: "bg-muted text-muted-foreground",
 };
 
@@ -166,7 +166,7 @@ export default function FormTemplates() {
                     <CardTitle className="text-lg flex items-center gap-2">
                       {form.name}
                       {form.isActive !== false ? (
-                        <CheckCircle className="h-4 w-4 text-success-foreground" />
+                        <CheckCircle className="h-4 w-4 text-success" />
                       ) : (
                         <XCircle className="h-4 w-4 text-muted-foreground" />
                       )}

@@ -108,10 +108,10 @@ export default function TenantManager() {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto bg-[var(--color-background)] min-h-screen">
-      <Card className="border-background-muted bg-card">
+    <div className="p-6 max-w-4xl mx-auto bg-background min-h-screen">
+      <Card className="border-border bg-card">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-[var(--color-midnight)]">Tenant Manager</CardTitle>
+          <CardTitle className="text-midnight-900">Tenant Manager</CardTitle>
           <Button onClick={() => { setEditingTenant(null); setIsFormOpen(true); }}>
             <Plus className="h-4 w-4 mr-2" />
             Add Tenant
@@ -119,30 +119,30 @@ export default function TenantManager() {
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="text-center py-8 text-[var(--color-charcoal)]">Loading...</div>
+            <div className="text-center py-8 text-charcoal-700">Loading...</div>
           ) : tenants.length === 0 ? (
-            <div className="text-center py-8 text-[var(--color-charcoal)]">
+            <div className="text-center py-8 text-charcoal-700">
               No tenants yet. Add one to get started.
             </div>
           ) : (
             <div className="space-y-2">
               {tenants.map((tenant) => (
-                <div key={tenant.id} className="border border-background-muted rounded-lg shadow-sm overflow-hidden">
+                <div key={tenant.id} className="border border-border rounded-lg shadow-sm overflow-hidden">
                   <div className="flex items-center gap-3 p-3 bg-card">
                     <button 
                       onClick={() => toggleExpand(tenant.id)}
                       className="p-1 hover:bg-background rounded"
                     >
                       {expandedTenants.has(tenant.id) ? (
-                        <ChevronDown className="h-4 w-4 text-[var(--color-charcoal)]" />
+                        <ChevronDown className="h-4 w-4 text-charcoal-700" />
                       ) : (
-                        <ChevronRight className="h-4 w-4 text-[var(--color-charcoal)]" />
+                        <ChevronRight className="h-4 w-4 text-charcoal-700" />
                       )}
                     </button>
-                    <Building2 className="h-5 w-5 text-[var(--color-charcoal)]" />
+                    <Building2 className="h-5 w-5 text-charcoal-700" />
                     <div className="flex-1">
-                      <span className="font-medium text-[var(--color-midnight)]">{tenant.name}</span>
-                      <span className="text-sm text-[var(--color-charcoal)] ml-2">/{tenant.slug}</span>
+                      <span className="font-medium text-midnight-900">{tenant.name}</span>
+                      <span className="text-sm text-charcoal-700 ml-2">/{tenant.slug}</span>
                     </div>
                     <Badge variant={tenant.is_active !== false ? "default" : "secondary"}>
                       {tenant.is_active !== false ? (
@@ -159,11 +159,11 @@ export default function TenantManager() {
                     </Button>
                   </div>
                   {expandedTenants.has(tenant.id) && (
-                    <div className="p-3 bg-background border-t border-background-muted space-y-4">
+                    <div className="p-3 bg-background border-t border-border space-y-4">
                       <TenantAccessRequests tenantId={tenant.id} />
                       <TenantRoleManager tenantId={tenant.id} />
                       <TenantUserManager tenantId={tenant.id} />
-                      <div className="text-sm text-[var(--color-charcoal)] bg-card p-3 rounded border border-background-muted">
+                      <div className="text-sm text-charcoal-700 bg-card p-3 rounded border border-border">
                         <strong>Invite Link:</strong>{" "}
                         <code className="bg-background px-2 py-1 rounded">
                           {window.location.origin}/TenantAccess?tenant={tenant.slug}

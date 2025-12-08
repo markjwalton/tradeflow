@@ -191,9 +191,9 @@ export default function FormBuilder() {
 
   if (!formId && !showNewDialog) {
     return (
-      <div className="h-screen flex items-center justify-center bg-[var(--color-background)]">
-        <Card className="w-96 p-6 border-background-muted bg-card">
-          <h2 className="text-lg font-semibold mb-4 text-[var(--color-midnight)]">No Form Selected</h2>
+      <div className="h-screen flex items-center justify-center bg-background">
+        <Card className="w-96 p-6 border-border bg-card">
+          <h2 className="text-lg font-semibold mb-4 text-midnight-900">No Form Selected</h2>
           <div className="space-y-3">
             <Button onClick={() => setShowNewDialog(true)} className="w-full">
               <Plus className="h-4 w-4 mr-2" />
@@ -213,7 +213,7 @@ export default function FormBuilder() {
   return (
     <div className="h-screen flex flex-col bg-background">
       {/* Header */}
-      <div className="bg-card border-b border-background-muted px-4 py-3 flex items-center justify-between">
+      <div className="bg-card border-b border-border px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link to={createPageUrl("FormTemplates")}>
             <Button variant="ghost" size="sm">
@@ -222,7 +222,7 @@ export default function FormBuilder() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-lg font-semibold text-[var(--color-midnight)]">{formData.name || "New Form"}</h1>
+            <h1 className="text-lg font-semibold text-midnight-900">{formData.name || "New Form"}</h1>
             <div className="flex items-center gap-2">
               {formData.code && <Badge variant="outline">{formData.code}</Badge>}
               {formData.category && (

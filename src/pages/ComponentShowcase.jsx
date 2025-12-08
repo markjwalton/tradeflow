@@ -51,11 +51,11 @@ const categories = [
   { id: "typography", label: "Typography", icon: Type, count: 13, color: "bg-primary" },
   { id: "buttons", label: "Buttons", icon: MousePointer, count: 11, color: "bg-secondary" },
   { id: "cards", label: "Cards", icon: Square, count: 8, color: "bg-accent" },
-  { id: "forms", label: "Forms", icon: FormInput, count: 10, color: "bg-[var(--color-midnight)]" },
+  { id: "forms", label: "Forms", icon: FormInput, count: 10, color: "bg-midnight-900" },
   { id: "layouts", label: "Layouts", icon: Layout, count: 12, color: "bg-primary" },
   { id: "navigation", label: "Navigation", icon: NavIcon, count: 8, color: "bg-secondary" },
   { id: "dataDisplay", label: "Data Display", icon: BarChart3, count: 9, color: "bg-accent" },
-  { id: "feedback", label: "Feedback", icon: Bell, count: 11, color: "bg-[var(--color-midnight)]" },
+  { id: "feedback", label: "Feedback", icon: Bell, count: 11, color: "bg-midnight-900" },
 ];
 
 // Section wrapper component - Matching Figma style
@@ -63,22 +63,22 @@ function ShowcaseSection({ id, title, description, count, children }) {
   const [expanded, setExpanded] = useState(true);
   
   return (
-    <section id={id} className="mb-[var(--spacing-6)] scroll-mt-24 bg-card rounded-[var(--radius-xl)] border border-background-muted overflow-hidden">
+    <section id={id} className="mb-6 scroll-mt-24 bg-card rounded-xl border border-border overflow-hidden">
       <button 
         onClick={() => setExpanded(!expanded)}
-        className="w-full px-[var(--spacing-6)] py-[var(--spacing-4)] flex items-center justify-between hover:bg-muted transition-fast"
+        className="w-full px-6 py-4 flex items-center justify-between hover:bg-muted transition-fast"
       >
-        <div className="flex items-center gap-[var(--spacing-3)]">
-          <h3 className="text-[length:var(--font-size-lg)] font-display text-[var(--color-midnight)]">
+        <div className="flex items-center gap-3">
+          <h3 className="text-lg font-display text-midnight-900">
             {title}
           </h3>
         </div>
-        <ChevronDown className={cn("h-5 w-5 text-[var(--color-charcoal)] transition-transform", !expanded && "-rotate-90")} />
+        <ChevronDown className={cn("h-5 w-5 text-charcoal-700 transition-transform", !expanded && "-rotate-90")} />
       </button>
       {expanded && (
-        <div className="px-[var(--spacing-6)] pb-[var(--spacing-6)]">
-          {description && <p className="text-[length:var(--font-size-sm)] text-[var(--color-charcoal)] mb-[var(--spacing-4)]">{description}</p>}
-          <div className="space-y-[var(--spacing-6)]">{children}</div>
+        <div className="px-6 pb-6">
+          {description && <p className="text-sm text-charcoal-700 mb-4">{description}</p>}
+          <div className="space-y-6">{children}</div>
         </div>
       )}
     </section>
@@ -88,9 +88,9 @@ function ShowcaseSection({ id, title, description, count, children }) {
 // Component demo wrapper - Matching Figma card style
 function ComponentDemo({ title, children, code }) {
   return (
-    <div className="space-y-[var(--spacing-3)]">
-      {title && <p className="text-[length:var(--font-size-sm)] font-medium text-[var(--color-midnight)]">{title}</p>}
-      <div className="p-[var(--spacing-4)] bg-muted rounded-[var(--radius-lg)] border border-background-muted">
+    <div className="space-y-3">
+      {title && <p className="text-sm font-medium text-midnight-900">{title}</p>}
+      <div className="p-4 bg-muted rounded-lg border border-border">
         {children}
       </div>
     </div>
@@ -145,19 +145,19 @@ export default function ComponentShowcase() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-background)]">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-card border-b border-background-muted">
+      <div className="bg-card border-b border-border">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-[var(--radius-lg)] bg-primary flex items-center justify-center">
-              <Package className="h-5 w-5 text-white" />
+            <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
+              <Package className="h-5 w-5 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-[length:var(--font-size-2xl)] font-display text-[var(--color-midnight)]">
+              <h1 className="text-2xl font-display text-midnight-900">
                 Component Library
               </h1>
-              <p className="text-[length:var(--font-size-sm)] text-[var(--color-charcoal)]">
+              <p className="text-sm text-charcoal-700">
                 Production-ready components using Sturij design tokens
               </p>
             </div>
