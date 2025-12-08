@@ -140,7 +140,7 @@ export default function FormTemplates() {
         </div>
       ) : filteredForms.length === 0 ? (
         <div className="text-center py-12">
-          <FileText className="h-12 w-12 mx-auto text-[var(--color-charcoal)] opacity-30 mb-4" />
+          <FileText className="h-12 w-12 mx-auto opacity-30 mb-4 text-muted-foreground" />
           <h3 className="text-lg font-medium text-[var(--color-midnight)]">No forms found</h3>
           <p className="text-[var(--color-charcoal)] mb-4">
             {search || categoryFilter !== "all"
@@ -166,7 +166,7 @@ export default function FormTemplates() {
                     <CardTitle className="text-lg flex items-center gap-2">
                       {form.name}
                       {form.isActive !== false ? (
-                        <CheckCircle className="h-4 w-4 text-success" />
+                        <CheckCircle className="h-4 w-4 text-success-foreground" />
                       ) : (
                         <XCircle className="h-4 w-4 text-muted-foreground" />
                       )}

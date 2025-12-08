@@ -116,7 +116,7 @@ export default function WorkflowLibrary() {
           </p>
         </div>
         <Link to={createPageUrl("WorkflowDesigner")}>
-          <Button className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
+          <Button className="bg-primary-500 hover:bg-primary-600 text-white">
             <Plus className="h-4 w-4 mr-2" />
             Create Workflow
           </Button>
@@ -167,7 +167,7 @@ export default function WorkflowLibrary() {
           </p>
           {!search && categoryFilter === "all" && (
             <Link to={createPageUrl("WorkflowDesigner")}>
-              <Button className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
+              <Button className="bg-primary-500 hover:bg-primary-600 text-white">
                 <Plus className="h-4 w-4 mr-2" />
                 Create Workflow
               </Button>
@@ -184,7 +184,7 @@ export default function WorkflowLibrary() {
                     <CardTitle className="text-lg flex items-center gap-2">
                       {workflow.name}
                       {workflow.isActive ? (
-                        <CheckCircle className="h-4 w-4 text-success" />
+                        <CheckCircle className="h-4 w-4 text-success-foreground" />
                       ) : (
                         <XCircle className="h-4 w-4 text-muted-foreground" />
                       )}
