@@ -37,10 +37,10 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 
 const statusColors = {
-  draft: "bg-yellow-100 text-yellow-700",
-  ready: "bg-blue-100 text-blue-700",
-  building: "bg-purple-100 text-purple-700",
-  deployed: "bg-green-100 text-green-700",
+  draft: "bg-warning/10 text-warning-foreground",
+  ready: "bg-info-50 text-info-foreground",
+  building: "bg-accent-100 text-accent-700",
+  deployed: "bg-success-50 text-success-foreground",
 };
 
 export default function GeneratedApps() {
@@ -122,14 +122,14 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>Generated Apps</h1>
+          <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Generated Apps</h1>
           <p className="text-[var(--color-charcoal)]">App specifications generated from mind maps</p>
         </div>
       </div>
 
       {/* Search */}
       <div className="relative mb-6 max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -160,7 +160,7 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
                     <div className="flex-1">
                       <CardTitle className="text-lg">{app.name}</CardTitle>
                       {app.description && (
-                        <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                        <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
                           {app.description}
                         </p>
                       )}
@@ -186,7 +186,7 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
                         </DropdownMenuItem>
                         <DropdownMenuItem 
                           onClick={() => deleteMutation.mutate(app.id)}
-                          className="text-red-600"
+                          className="text-destructive"
                         >
                           <Trash2 className="h-4 w-4 mr-2" />
                           Delete
@@ -208,7 +208,7 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
                     )}
                   </div>
                   
-                  <div className="flex gap-4 text-sm text-gray-500">
+                  <div className="flex gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <Database className="h-4 w-4" />
                       {entityCount} entities
@@ -223,7 +223,7 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
                     </div>
                   </div>
                   
-                  <div className="text-xs text-gray-400 mt-3">
+                  <div className="text-xs text-muted-foreground mt-3">
                     Created {format(new Date(app.created_date), "MMM d, yyyy")}
                   </div>
 
@@ -239,7 +239,7 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
                     </Button>
                     <Button 
                       size="sm" 
-                      className="flex-1 bg-green-600 hover:bg-green-700"
+                      className="flex-1 bg-success hover:bg-success"
                       onClick={() => copyForChat(app)}
                     >
                       <Copy className="h-4 w-4 mr-1" />
@@ -286,7 +286,7 @@ function GeneratedAppDetailDialog({ open, onOpenChange, app }) {
         <DialogHeader>
           <DialogTitle>{app.name}</DialogTitle>
           {app.description && (
-            <p className="text-sm text-gray-500">{app.description}</p>
+            <p className="text-sm text-muted-foreground">{app.description}</p>
           )}
         </DialogHeader>
 
@@ -321,16 +321,16 @@ function GeneratedAppDetailDialog({ open, onOpenChange, app }) {
                           onClick={() => copySchema(entity)}
                         >
                           {copiedJson === entity.name ? (
-                            <Check className="h-3 w-3 text-green-500" />
+                            <Check className="h-3 w-3 text-success" />
                           ) : (
                             <Copy className="h-3 w-3" />
                           )}
                         </Button>
                       </CardTitle>
-                      <p className="text-sm text-gray-500">{entity.description}</p>
+                      <p className="text-sm text-muted-foreground">{entity.description}</p>
                     </CardHeader>
                     <CardContent className="pt-0">
-                      <div className="bg-slate-50 rounded p-2 text-xs font-mono overflow-x-auto">
+                      <div className="bg-muted rounded p-2 text-xs font-mono overflow-x-auto">
                         <pre>
                           {JSON.stringify(entity.schema?.properties || {}, null, 2)}
                         </pre>
@@ -349,12 +349,12 @@ function GeneratedAppDetailDialog({ open, onOpenChange, app }) {
                   <Card key={page.name}>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-base">{page.name}</CardTitle>
-                      <p className="text-sm text-gray-500">{page.description}</p>
+                      <p className="text-sm text-muted-foreground">{page.description}</p>
                     </CardHeader>
                     <CardContent className="pt-0 space-y-2">
                       {page.features?.length > 0 && (
                         <div className="flex flex-wrap gap-1">
-                          <span className="text-xs text-gray-500 mr-1">Features:</span>
+                          <span className="text-xs text-muted-foreground mr-1">Features:</span>
                           {page.features.map((f) => (
                             <Badge key={f} variant="secondary" className="text-xs">
                               {f}
@@ -364,7 +364,7 @@ function GeneratedAppDetailDialog({ open, onOpenChange, app }) {
                       )}
                       {page.entities_used?.length > 0 && (
                         <div className="flex flex-wrap gap-1">
-                          <span className="text-xs text-gray-500 mr-1">Uses:</span>
+                          <span className="text-xs text-muted-foreground mr-1">Uses:</span>
                           {page.entities_used.map((e) => (
                             <Badge key={e} variant="outline" className="text-xs">
                               {e}
@@ -386,18 +386,18 @@ function GeneratedAppDetailDialog({ open, onOpenChange, app }) {
                   <Card key={idx}>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-base">{feature.name}</CardTitle>
-                      <p className="text-sm text-gray-500">{feature.description}</p>
+                      <p className="text-sm text-muted-foreground">{feature.description}</p>
                     </CardHeader>
                     <CardContent className="pt-0 space-y-2">
                       {feature.page && (
                         <div className="text-xs">
-                          <span className="text-gray-500">Page: </span>
+                          <span className="text-muted-foreground">Page: </span>
                           <Badge variant="secondary">{feature.page}</Badge>
                         </div>
                       )}
                       {feature.entities?.length > 0 && (
                         <div className="flex flex-wrap gap-1">
-                          <span className="text-xs text-gray-500 mr-1">Entities:</span>
+                          <span className="text-xs text-muted-foreground mr-1">Entities:</span>
                           {feature.entities.map((e) => (
                             <Badge key={e} variant="outline" className="text-xs">
                               {e}

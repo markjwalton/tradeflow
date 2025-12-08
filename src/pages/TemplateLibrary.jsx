@@ -24,23 +24,23 @@ import { toast } from "sonner";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const nodeTypes = [
-  { value: "central", label: "Central Topic", color: "#3b82f6" },
-  { value: "main_branch", label: "Main Branch", color: "#10b981" },
-  { value: "sub_branch", label: "Sub Branch", color: "#f59e0b" },
-  { value: "feature", label: "Feature", color: "#8b5cf6" },
-  { value: "entity", label: "Entity", color: "#ec4899" },
-  { value: "page", label: "Page", color: "#06b6d4" },
-  { value: "note", label: "Note", color: "#84cc16" },
+  { value: "central", label: "Central Topic", color: "var(--color-info)" },
+  { value: "main_branch", label: "Main Branch", color: "var(--color-success)" },
+  { value: "sub_branch", label: "Sub Branch", color: "var(--color-warning)" },
+  { value: "feature", label: "Feature", color: "var(--color-accent-500)" },
+  { value: "entity", label: "Entity", color: "var(--color-accent-400)" },
+  { value: "page", label: "Page", color: "var(--color-info)" },
+  { value: "note", label: "Note", color: "var(--color-success)" },
 ];
 
 const categoryColors = {
-  central: "bg-blue-100 text-blue-700",
-  main_branch: "bg-green-100 text-green-700",
-  sub_branch: "bg-amber-100 text-amber-700",
-  feature: "bg-purple-100 text-purple-700",
-  entity: "bg-pink-100 text-pink-700",
-  page: "bg-cyan-100 text-cyan-700",
-  note: "bg-lime-100 text-lime-700",
+  central: "bg-info-50 text-info-foreground",
+  main_branch: "bg-success-50 text-success-foreground",
+  sub_branch: "bg-warning/10 text-warning-foreground",
+  feature: "bg-accent-100 text-accent-700",
+  entity: "bg-accent-100 text-accent-700",
+  page: "bg-info-50 text-info-foreground",
+  note: "bg-success-50 text-success-foreground",
 };
 
 
@@ -280,7 +280,7 @@ Return a JSON object with a "suggestions" array where each item has:
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
             <Library className="h-6 w-6" />
             Node Template Library
           </h1>
@@ -303,7 +303,7 @@ Return a JSON object with a "suggestions" array where each item has:
       {/* Filters */}
       <div className="flex gap-4 mb-6">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search templates..."
             value={search}
@@ -346,7 +346,7 @@ Return a JSON object with a "suggestions" array where each item has:
         <div className="space-y-8">
           {Object.entries(groupedTemplates).sort().map(([area, areaTemplates]) => (
             <div key={area}>
-              <h2 className="text-lg font-semibold mb-3 text-gray-700">{area}</h2>
+              <h2 className="text-lg font-semibold mb-3 text-muted-foreground">{area}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {areaTemplates.map(template => (
                   <Card key={template.id} className="hover:shadow-md transition-shadow">
@@ -366,7 +366,7 @@ Return a JSON object with a "suggestions" array where each item has:
                           <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleEdit(template)}>
                             <Pencil className="h-3 w-3" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-red-500" onClick={() => deleteMutation.mutate(template.id)}>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => deleteMutation.mutate(template.id)}>
                             <Trash2 className="h-3 w-3" />
                           </Button>
                         </div>
@@ -376,7 +376,7 @@ Return a JSON object with a "suggestions" array where each item has:
                       <Badge className={categoryColors[template.category]}>{template.category}</Badge>
                       
                       {template.specification_notes && (
-                        <p className="text-sm text-gray-600 line-clamp-3">
+                        <p className="text-sm text-muted-foreground line-clamp-3">
                           {template.specification_notes}
                         </p>
                       )}
@@ -509,9 +509,9 @@ Return a JSON object with a "suggestions" array where each item has:
           </DialogHeader>
           <div className="space-y-4">
             {/* AI Suggest */}
-            <div className="p-3 bg-purple-50 rounded-lg space-y-2">
+            <div className="p-3 bg-accent-50 rounded-lg space-y-2">
               <label className="text-sm font-medium flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-purple-600" />
+                <Sparkles className="h-4 w-4 text-accent-600" />
                 AI Suggest Areas
               </label>
               <Textarea
@@ -564,20 +564,20 @@ Return a JSON object with a "suggestions" array where each item has:
               <ScrollArea className="h-48 border rounded-lg">
                 <div className="p-2 space-y-1">
                   {functionalAreas.length === 0 ? (
-                    <p className="text-sm text-gray-500 text-center py-4">No areas yet. Add some above.</p>
+                    <p className="text-sm text-muted-foreground text-center py-4">No areas yet. Add some above.</p>
                   ) : (
                     functionalAreas.map(area => (
-                      <div key={area.id} className="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
+                      <div key={area.id} className="flex items-center justify-between p-2 hover:bg-muted rounded">
                         <div>
                           <span className="font-medium text-sm">{area.name}</span>
                           {area.description && (
-                            <p className="text-xs text-gray-500">{area.description}</p>
+                            <p className="text-xs text-muted-foreground">{area.description}</p>
                           )}
                         </div>
                         <Button 
                           variant="ghost" 
                           size="icon" 
-                          className="h-7 w-7 text-red-500"
+                          className="h-7 w-7 text-destructive"
                           onClick={() => deleteAreaMutation.mutate(area.id)}
                         >
                           <Trash2 className="h-3 w-3" />

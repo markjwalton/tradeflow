@@ -15,10 +15,10 @@ import { ChevronLeft, ChevronRight, Loader2, Circle } from "lucide-react";
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, isSameMonth, isSameDay, addMonths, subMonths } from "date-fns";
 
 const statusColors = {
-  todo: "bg-gray-400",
-  in_progress: "bg-blue-400",
-  review: "bg-purple-400",
-  completed: "bg-green-400",
+  todo: "bg-muted",
+  in_progress: "bg-info",
+  review: "bg-accent-400",
+  completed: "bg-success",
 };
 
 export default function Calendar() {
@@ -88,26 +88,26 @@ export default function Calendar() {
       days.push(
         <div
           key={currentDay.toString()}
-          className={`min-h-24 border border-gray-100 p-1 cursor-pointer transition-colors
-            ${!isCurrentMonth ? "bg-gray-50 text-gray-400" : "bg-white"}
-            ${isToday ? "bg-blue-50" : ""}
-            ${isSelected ? "ring-2 ring-blue-500" : ""}
-            hover:bg-gray-50`}
+          className={`min-h-24 border border-border p-1 cursor-pointer transition-colors
+            ${!isCurrentMonth ? "bg-muted text-muted-foreground" : "bg-card"}
+            ${isToday ? "bg-info-50" : ""}
+            ${isSelected ? "ring-2 ring-primary" : ""}
+            hover:bg-muted`}
           onClick={() => setSelectedDate(currentDay)}
         >
-          <div className={`text-sm font-medium mb-1 ${isToday ? "text-blue-600" : ""}`}>
+          <div className={`text-sm font-medium mb-1 ${isToday ? "text-info" : ""}`}>
             {format(currentDay, "d")}
           </div>
           <div className="space-y-1">
             {dayTasks.slice(0, 3).map((task) => (
-              <div key={task.id} className="text-xs truncate px-1 py-0.5 rounded border-l-2 border-blue-400 bg-white">
+              <div key={task.id} className="text-xs truncate px-1 py-0.5 rounded border-l-2 border-info bg-card">
                 <span className={`inline-block w-1.5 h-1.5 rounded-full mr-1 ${statusColors[task.status]}`} />
                 {task.title}
               </div>
             ))}
-            {dayTasks.length > 3 && <div className="text-xs text-gray-500">+{dayTasks.length - 3} more</div>}
+            {dayTasks.length > 3 && <div className="text-xs text-muted-foreground">+{dayTasks.length - 3} more</div>}
             {dayAbsences.map((absence) => (
-              <div key={absence.id} className="text-xs truncate px-1 py-0.5 rounded bg-purple-100 text-purple-700">
+              <div key={absence.id} className="text-xs truncate px-1 py-0.5 rounded bg-accent-100 text-accent-700">
                 {getTeamMemberName(absence.team_member_id)} - {absence.absence_type}
               </div>
             ))}
@@ -130,7 +130,7 @@ export default function Calendar() {
   return (
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>Calendar</h1>
+        <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Calendar</h1>
         <Select value={filterProject} onValueChange={setFilterProject}>
           <SelectTrigger className="w-48"><SelectValue placeholder="Filter by project" /></SelectTrigger>
           <SelectContent>
@@ -161,10 +161,10 @@ export default function Calendar() {
           </Card>
 
           <div className="mt-4 flex gap-4 text-sm">
-            <div className="flex items-center gap-2"><Circle className="h-3 w-3 fill-gray-400 text-gray-400" /> To Do</div>
-            <div className="flex items-center gap-2"><Circle className="h-3 w-3 fill-blue-400 text-blue-400" /> In Progress</div>
-            <div className="flex items-center gap-2"><Circle className="h-3 w-3 fill-purple-400 text-purple-400" /> Review</div>
-            <div className="flex items-center gap-2"><Circle className="h-3 w-3 fill-green-400 text-green-400" /> Completed</div>
+            <div className="flex items-center gap-2"><Circle className="h-3 w-3 fill-muted text-muted" /> To Do</div>
+            <div className="flex items-center gap-2"><Circle className="h-3 w-3 fill-info text-info" /> In Progress</div>
+            <div className="flex items-center gap-2"><Circle className="h-3 w-3 fill-accent-400 text-accent-400" /> Review</div>
+            <div className="flex items-center gap-2"><Circle className="h-3 w-3 fill-success text-success" /> Completed</div>
           </div>
         </div>
 
@@ -200,9 +200,9 @@ export default function Calendar() {
                       <h3 className="text-sm font-medium mb-2">Absences</h3>
                       <div className="space-y-2">
                         {selectedDateAbsences.map((absence) => (
-                          <div key={absence.id} className="p-2 bg-purple-50 rounded-lg">
+                          <div key={absence.id} className="p-2 bg-accent-50 rounded-lg">
                             <span className="font-medium text-sm">{getTeamMemberName(absence.team_member_id)}</span>
-                            <p className="text-xs text-purple-700 capitalize">{absence.absence_type?.replace("_", " ")}</p>
+                            <p className="text-xs text-accent-700 capitalize">{absence.absence_type?.replace("_", " ")}</p>
                           </div>
                         ))}
                       </div>

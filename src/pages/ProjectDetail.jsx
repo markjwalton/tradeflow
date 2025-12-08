@@ -28,18 +28,18 @@ import { createPageUrl } from "@/utils";
 import { format } from "date-fns";
 
 const statusColors = {
-  draft: "bg-gray-100 text-gray-700",
-  active: "bg-green-100 text-green-700",
-  on_hold: "bg-yellow-100 text-yellow-700",
-  completed: "bg-blue-100 text-blue-700",
-  cancelled: "bg-red-100 text-red-700",
+  draft: "bg-muted text-muted-foreground",
+  active: "bg-success-50 text-success-foreground",
+  on_hold: "bg-warning/10 text-warning-foreground",
+  completed: "bg-info-50 text-info-foreground",
+  cancelled: "bg-destructive-50 text-destructive-700",
 };
 
 const taskStatusColors = {
-  todo: "bg-gray-100 text-gray-700",
-  in_progress: "bg-blue-100 text-blue-700",
-  review: "bg-purple-100 text-purple-700",
-  completed: "bg-green-100 text-green-700",
+  todo: "bg-muted text-muted-foreground",
+  in_progress: "bg-info-50 text-info-foreground",
+  review: "bg-accent-100 text-accent-700",
+  completed: "bg-success-50 text-success-foreground",
 };
 
 export default function ProjectDetail() {
@@ -168,7 +168,7 @@ export default function ProjectDetail() {
       <div className="flex items-center gap-4 mb-6">
         <Button variant="ghost" size="icon" asChild><Link to={createPageUrl("Projects")}><ArrowLeft className="h-4 w-4" /></Link></Button>
         <div className="flex-1">
-          <h1 className="text-2xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>{project.name}</h1>
+          <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">{project.name}</h1>
           <p className="text-[var(--color-charcoal)]">Customer: {getCustomerName(project.customer_id)}</p>
         </div>
         <Badge className={statusColors[project.status]}>{project.status}</Badge>
@@ -238,7 +238,7 @@ export default function ProjectDetail() {
                   </div>
                   <div className="flex gap-1">
                     <Button variant="ghost" size="icon" onClick={() => handleEditTask(task)}><Pencil className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="icon" className="text-red-500" onClick={() => deleteTaskMutation.mutate(task.id)}><Trash2 className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="icon" className="text-destructive" onClick={() => deleteTaskMutation.mutate(task.id)}><Trash2 className="h-4 w-4" /></Button>
                   </div>
                 </CardContent>
               </Card>

@@ -37,16 +37,16 @@ const categories = [
 ];
 
 const categoryColors = {
-  "Professional Services": "bg-blue-100 text-blue-700",
-  "Construction": "bg-amber-100 text-amber-700",
-  "Retail": "bg-pink-100 text-pink-700",
-  "Healthcare": "bg-green-100 text-green-700",
-  "Technology": "bg-purple-100 text-purple-700",
-  "Manufacturing": "bg-orange-100 text-orange-700",
-  "Finance": "bg-emerald-100 text-emerald-700",
-  "Education": "bg-cyan-100 text-cyan-700",
-  "Custom": "bg-indigo-100 text-indigo-700",
-  "Other": "bg-gray-100 text-gray-700",
+  "Professional Services": "bg-info-50 text-info-foreground",
+  "Construction": "bg-warning/10 text-warning-foreground",
+  "Retail": "bg-accent-100 text-accent-700",
+  "Healthcare": "bg-success-50 text-success-foreground",
+  "Technology": "bg-accent-100 text-accent-700",
+  "Manufacturing": "bg-warning/10 text-warning-foreground",
+  "Finance": "bg-success-50 text-success-foreground",
+  "Education": "bg-info-50 text-info-foreground",
+  "Custom": "bg-primary-100 text-primary-700",
+  "Other": "bg-muted text-muted-foreground",
 };
 
 export default function BusinessTemplates() {
@@ -153,11 +153,11 @@ export default function BusinessTemplates() {
     <div className="p-6 max-w-6xl mx-auto bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
             <Building2 className="h-6 w-6" />
             Business Templates
             {currentProject && (
-              <Badge className="bg-indigo-100 text-indigo-800">
+              <Badge className="bg-primary-100 text-primary-700">
                 <Folder className="h-3 w-3 mr-1" />
                 {currentProject.name}
               </Badge>
@@ -182,7 +182,7 @@ export default function BusinessTemplates() {
       {/* Filters */}
       <div className="flex gap-3 mb-6">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -211,7 +211,7 @@ export default function BusinessTemplates() {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <CardTitle className="text-lg flex items-center gap-2">
-                    {template.is_starred && <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />}
+                    {template.is_starred && <Star className="h-4 w-4 fill-warning text-warning" />}
                     {template.name}
                   </CardTitle>
                   {template.category && (
@@ -227,7 +227,7 @@ export default function BusinessTemplates() {
                     onClick={() => toggleStar(template)}
                     title={template.is_starred ? "Remove from featured" : "Add to featured"}
                   >
-                    <Star className={`h-4 w-4 ${template.is_starred ? "fill-yellow-500 text-yellow-500" : ""}`} />
+                    <Star className={`h-4 w-4 ${template.is_starred ? "fill-warning text-warning" : ""}`} />
                   </Button>
                   <Button size="icon" variant="ghost" onClick={() => handleEdit(template)}>
                     <Edit2 className="h-4 w-4" />
@@ -235,7 +235,7 @@ export default function BusinessTemplates() {
                   <Button 
                     size="icon" 
                     variant="ghost" 
-                    className="text-red-500 hover:text-red-600"
+                    className="text-destructive hover:text-destructive"
                     onClick={() => deleteMutation.mutate(template.id)}
                   >
                     <Trash2 className="h-4 w-4" />
