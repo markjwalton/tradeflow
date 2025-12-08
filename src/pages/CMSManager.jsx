@@ -102,11 +102,11 @@ export default function CMSManager() {
 
   const statusBadge = (status) => {
     const colors = {
-      draft: "bg-gray-100 text-gray-700",
-      published: "bg-green-100 text-green-700",
-      archived: "bg-red-100 text-red-700",
-      active: "bg-green-100 text-green-700",
-      inactive: "bg-gray-100 text-gray-700"
+      draft: "bg-muted text-muted-foreground",
+      published: "bg-success-50 text-success-foreground",
+      archived: "bg-destructive-50 text-destructive-700",
+      active: "bg-success-50 text-success-foreground",
+      inactive: "bg-muted text-muted-foreground"
     };
     return <Badge className={colors[status] || "bg-gray-100"}>{status}</Badge>;
   };
@@ -115,16 +115,16 @@ export default function CMSManager() {
     if (isLoading) {
       return (
         <div className="flex justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+          <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
         </div>
       );
     }
 
     if (items.length === 0) {
       return (
-        <div className="text-center py-12 text-[var(--color-charcoal)]">
+        <div className="text-center py-12 text-charcoal-700">
           <p>No {type} yet</p>
-          <Button className="mt-4 bg-primary-500 hover:bg-primary-600 text-white" onClick={() => openEditor()}>
+          <Button className="mt-4 bg-primary hover:bg-primary/90 text-primary-foreground" onClick={() => openEditor()}>
             <Plus className="h-4 w-4 mr-2" />
             Create {type.slice(0, -1)}
           </Button>
@@ -135,11 +135,11 @@ export default function CMSManager() {
     return (
       <div className="space-y-2">
         {items.map(item => (
-          <div key={item.id} className="flex items-center justify-between p-4 bg-[var(--color-background-paper)] rounded-[var(--radius-lg)] border border-[var(--color-background-muted)] hover:shadow-[var(--shadow-sm)] transition-shadow">
+          <div key={item.id} className="flex items-center justify-between p-4 bg-card rounded-lg border border-border hover:shadow-sm transition-shadow">
             <div>
-              <h3 className="font-medium text-[var(--color-midnight)]">{item.title || item.name}</h3>
+              <h3 className="font-medium text-midnight-900">{item.title || item.name}</h3>
               <div className="flex items-center gap-2 mt-1">
-                <span className="text-sm text-[var(--color-charcoal)]">/{item.slug}</span>
+                <span className="text-sm text-charcoal-700">/{item.slug}</span>
                 {statusBadge(item.status)}
               </div>
             </div>
@@ -167,11 +167,11 @@ export default function CMSManager() {
   };
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light text-[var(--color-midnight)] font-heading">CMS</h1>
-          <p className="text-[var(--color-charcoal)]">Manage content for external websites</p>
+          <h1 className="text-2xl font-light text-midnight-900 font-heading">CMS</h1>
+          <p className="text-charcoal-700">Manage content for external websites</p>
         </div>
         {isGlobalAdmin && (
           <CMSTenantSelector 
