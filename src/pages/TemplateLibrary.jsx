@@ -34,13 +34,13 @@ const nodeTypes = [
 ];
 
 const categoryColors = {
-  central: "bg-info-50 text-info-foreground",
-  main_branch: "bg-success-50 text-success-foreground",
-  sub_branch: "bg-warning/10 text-warning-foreground",
-  feature: "bg-accent-100 text-accent-700",
-  entity: "bg-accent-100 text-accent-700",
-  page: "bg-info-50 text-info-foreground",
-  note: "bg-success-50 text-success-foreground",
+  central: "bg-info-50 text-info",
+  main_branch: "bg-success-50 text-success",
+  sub_branch: "bg-warning/10 text-warning",
+  feature: "bg-accent-100 text-accent",
+  entity: "bg-accent-100 text-accent",
+  page: "bg-info-50 text-info",
+  note: "bg-success-50 text-success",
 };
 
 
@@ -270,21 +270,21 @@ Return a JSON object with a "suggestions" array where each item has:
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64 bg-[var(--color-background)]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+      <div className="flex items-center justify-center h-64 bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
       </div>
     );
   }
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-midnight-900">
             <Library className="h-6 w-6" />
             Node Template Library
           </h1>
-          <p className="text-[var(--color-charcoal)] text-sm mt-1">
+          <p className="text-charcoal-700 text-sm mt-1">
             Create and manage reusable node templates with functional specifications
           </p>
         </div>
@@ -337,7 +337,7 @@ Return a JSON object with a "suggestions" array where each item has:
 
       {/* Templates grouped by area */}
       {Object.keys(groupedTemplates).length === 0 ? (
-        <div className="text-center py-12 text-[var(--color-charcoal)]">
+        <div className="text-center py-12 text-charcoal-700">
           <Library className="h-16 w-16 mx-auto mb-4 opacity-30" />
           <p className="text-lg">No templates yet</p>
           <p className="text-sm">Create your first template to start building your library.</p>
@@ -511,7 +511,7 @@ Return a JSON object with a "suggestions" array where each item has:
             {/* AI Suggest */}
             <div className="p-3 bg-accent-100 rounded-lg space-y-2">
               <label className="text-sm font-medium flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-accent-700" />
+                <Sparkles className="h-4 w-4 text-accent" />
                 AI Suggest Areas
               </label>
               <Textarea

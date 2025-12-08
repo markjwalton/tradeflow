@@ -16,9 +16,9 @@ import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, isSa
 
 const statusColors = {
   todo: "bg-muted",
-  in_progress: "bg-info-foreground",
-  review: "bg-accent-400",
-  completed: "bg-success-foreground",
+  in_progress: "bg-info",
+  review: "bg-accent",
+  completed: "bg-success",
 };
 
 export default function Calendar() {
@@ -100,14 +100,14 @@ export default function Calendar() {
           </div>
           <div className="space-y-1">
             {dayTasks.slice(0, 3).map((task) => (
-              <div key={task.id} className="text-xs truncate px-1 py-0.5 rounded border-l-2 border-info-foreground bg-card">
+              <div key={task.id} className="text-xs truncate px-1 py-0.5 rounded border-l-2 border-info bg-card">
                 <span className={`inline-block w-1.5 h-1.5 rounded-full mr-1 ${statusColors[task.status]}`} />
                 {task.title}
               </div>
             ))}
             {dayTasks.length > 3 && <div className="text-xs text-muted-foreground">+{dayTasks.length - 3} more</div>}
             {dayAbsences.map((absence) => (
-              <div key={absence.id} className="text-xs truncate px-1 py-0.5 rounded bg-accent-50 text-accent-700">
+              <div key={absence.id} className="text-xs truncate px-1 py-0.5 rounded bg-accent-50 text-accent">
                 {getTeamMemberName(absence.team_member_id)} - {absence.absence_type}
               </div>
             ))}
@@ -124,13 +124,13 @@ export default function Calendar() {
   const selectedDateAbsences = selectedDate ? getAbsencesForDate(selectedDate) : [];
 
   if (isLoading) {
-    return <div className="flex items-center justify-center h-64 bg-[var(--color-background)]"><Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" /></div>;
+    return <div className="flex items-center justify-center h-64 bg-background"><Loader2 className="h-8 w-8 animate-spin text-charcoal-700" /></div>;
   }
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Calendar</h1>
+        <h1 className="text-2xl font-light font-display text-midnight-900">Calendar</h1>
         <Select value={filterProject} onValueChange={setFilterProject}>
           <SelectTrigger className="w-48"><SelectValue placeholder="Filter by project" /></SelectTrigger>
           <SelectContent>
@@ -146,14 +146,14 @@ export default function Calendar() {
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <Button variant="ghost" size="icon" onClick={() => setCurrentDate(subMonths(currentDate, 1))}><ChevronLeft className="h-4 w-4" /></Button>
-                <CardTitle className="text-[var(--color-midnight)]">{format(currentDate, "MMMM yyyy")}</CardTitle>
+                <CardTitle className="text-midnight-900">{format(currentDate, "MMMM yyyy")}</CardTitle>
                 <Button variant="ghost" size="icon" onClick={() => setCurrentDate(addMonths(currentDate, 1))}><ChevronRight className="h-4 w-4" /></Button>
               </div>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-7 mb-2">
                 {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => (
-                  <div key={d} className="text-center text-sm font-medium text-[var(--color-charcoal)] py-2">{d}</div>
+                  <div key={d} className="text-center text-sm font-medium text-charcoal-700 py-2">{d}</div>
                 ))}
               </div>
               <div className="border border-background-muted rounded-lg overflow-hidden">{rows}</div>
@@ -162,38 +162,38 @@ export default function Calendar() {
 
           <div className="mt-4 flex gap-4 text-sm">
             <div className="flex items-center gap-2"><Circle className="h-3 w-3 fill-muted text-muted" /> To Do</div>
-            <div className="flex items-center gap-2"><Circle className="h-3 w-3 fill-info-foreground text-info-foreground" /> In Progress</div>
-            <div className="flex items-center gap-2"><Circle className="h-3 w-3 fill-accent-400 text-accent-400" /> Review</div>
-            <div className="flex items-center gap-2"><Circle className="h-3 w-3 fill-success-foreground text-success-foreground" /> Completed</div>
+            <div className="flex items-center gap-2"><Circle className="h-3 w-3 fill-info text-info" /> In Progress</div>
+            <div className="flex items-center gap-2"><Circle className="h-3 w-3 fill-accent text-accent" /> Review</div>
+            <div className="flex items-center gap-2"><Circle className="h-3 w-3 fill-success text-success" /> Completed</div>
           </div>
         </div>
 
         <div className="w-80">
           <Card className="border-background-muted bg-card">
             <CardHeader>
-              <CardTitle className="text-lg text-[var(--color-midnight)]">{selectedDate ? format(selectedDate, "EEEE, MMMM d") : "Select a date"}</CardTitle>
+              <CardTitle className="text-lg text-midnight-900">{selectedDate ? format(selectedDate, "EEEE, MMMM d") : "Select a date"}</CardTitle>
             </CardHeader>
             <CardContent>
               {selectedDate ? (
                 <div className="space-y-4">
                   {selectedDateTasks.length > 0 ? (
                     <div>
-                      <h3 className="text-sm font-medium mb-2 text-[var(--color-midnight)]">Tasks</h3>
+                      <h3 className="text-sm font-medium mb-2 text-midnight-900">Tasks</h3>
                       <div className="space-y-2">
                         {selectedDateTasks.map((task) => (
                           <div key={task.id} className="p-2 bg-background rounded-lg">
                             <div className="flex items-center gap-2">
                               <span className={`w-2 h-2 rounded-full ${statusColors[task.status]}`} />
-                              <span className="font-medium text-sm text-[var(--color-midnight)]">{task.title}</span>
+                              <span className="font-medium text-sm text-midnight-900">{task.title}</span>
                             </div>
-                            <p className="text-xs text-[var(--color-charcoal)] mt-1">{getProjectName(task.project_id)}</p>
+                            <p className="text-xs text-charcoal-700 mt-1">{getProjectName(task.project_id)}</p>
                             <Badge className="mt-1 text-xs" variant="outline">{task.priority}</Badge>
                           </div>
                         ))}
                       </div>
                     </div>
                   ) : (
-                    <p className="text-sm text-[var(--color-charcoal)]">No tasks scheduled</p>
+                    <p className="text-sm text-charcoal-700">No tasks scheduled</p>
                   )}
                   {selectedDateAbsences.length > 0 && (
                     <div>
@@ -202,7 +202,7 @@ export default function Calendar() {
                         {selectedDateAbsences.map((absence) => (
                           <div key={absence.id} className="p-2 bg-accent-100 rounded-lg">
                             <span className="font-medium text-sm">{getTeamMemberName(absence.team_member_id)}</span>
-                            <p className="text-xs text-accent-800 capitalize">{absence.absence_type?.replace("_", " ")}</p>
+                            <p className="text-xs text-accent capitalize">{absence.absence_type?.replace("_", " ")}</p>
                           </div>
                         ))}
                       </div>
@@ -210,7 +210,7 @@ export default function Calendar() {
                   )}
                 </div>
               ) : (
-                <p className="text-sm text-[var(--color-charcoal)]">Click on a date to see details</p>
+                <p className="text-sm text-charcoal-700">Click on a date to see details</p>
               )}
             </CardContent>
           </Card>

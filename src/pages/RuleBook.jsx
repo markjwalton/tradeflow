@@ -33,26 +33,26 @@ import {
 import { toast } from "sonner";
 
 const categories = [
-  { value: "security", label: "Security", icon: Shield, color: "bg-destructive-50 text-destructive-700" },
-  { value: "architecture", label: "Architecture", icon: Layout, color: "bg-accent-100 text-accent-700" },
-  { value: "data", label: "Data", icon: Database, color: "bg-primary-100 text-primary-700" },
-  { value: "ui_ux", label: "UI/UX", icon: Eye, color: "bg-accent-100 text-accent-700" },
-  { value: "performance", label: "Performance", icon: Zap, color: "bg-warning/10 text-warning-foreground" },
-  { value: "accessibility", label: "Accessibility", icon: Eye, color: "bg-success-50 text-success-foreground" },
-  { value: "testing", label: "Testing", icon: TestTube, color: "bg-warning/10 text-warning-foreground" },
+  { value: "security", label: "Security", icon: Shield, color: "bg-destructive-50 text-destructive" },
+  { value: "architecture", label: "Architecture", icon: Layout, color: "bg-accent-100 text-accent" },
+  { value: "data", label: "Data", icon: Database, color: "bg-primary-100 text-primary" },
+  { value: "ui_ux", label: "UI/UX", icon: Eye, color: "bg-accent-100 text-accent" },
+  { value: "performance", label: "Performance", icon: Zap, color: "bg-warning/10 text-warning" },
+  { value: "accessibility", label: "Accessibility", icon: Eye, color: "bg-success-50 text-success" },
+  { value: "testing", label: "Testing", icon: TestTube, color: "bg-warning/10 text-warning" },
   { value: "documentation", label: "Documentation", icon: FileText, color: "bg-muted text-muted-foreground" },
   { value: "other", label: "Other", icon: BookOpen, color: "bg-muted text-muted-foreground" },
 ];
 
 const priorities = [
-  { value: "critical", label: "Critical", color: "bg-destructive text-destructive-foreground" },
-  { value: "high", label: "High", color: "bg-warning text-warning-foreground" },
-  { value: "medium", label: "Medium", color: "bg-primary text-primary-foreground" },
+  { value: "critical", label: "Critical", color: "bg-destructive text-white" },
+  { value: "high", label: "High", color: "bg-warning text-white" },
+  { value: "medium", label: "Medium", color: "bg-primary text-white" },
   { value: "low", label: "Low", color: "bg-muted text-muted-foreground" },
 ];
 
 const enforcements = [
-  { value: "must", label: "MUST", color: "text-destructive-700 font-bold" },
+  { value: "must", label: "MUST", color: "text-destructive font-bold" },
   { value: "should", label: "SHOULD", color: "text-warning font-semibold" },
   { value: "could", label: "COULD", color: "text-muted-foreground" },
 ];
@@ -212,14 +212,14 @@ export default function RuleBook() {
   const getEnforcementInfo = (enf) => enforcements.find(e => e.value === enf) || enforcements[1];
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
-            <BookOpen className="h-6 w-6 text-primary-500" />
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-midnight-900">
+            <BookOpen className="h-6 w-6 text-primary" />
             Development Rule Book
           </h1>
-          <p className="text-[var(--color-charcoal)]">Maintain rules for AI-assisted development</p>
+          <p className="text-charcoal-700">Maintain rules for AI-assisted development</p>
         </div>
         <div className="flex gap-2">
           {copiedRules.length > 0 && (
@@ -269,7 +269,7 @@ export default function RuleBook() {
 
       {isLoading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+          <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
         </div>
       ) : (
         <div className="space-y-4">
@@ -321,7 +321,7 @@ export default function RuleBook() {
                                   <div className="flex items-start gap-3 flex-1">
                                     <button
                                       onClick={() => toggleRuleSelection(rule.id)}
-                                      className={`mt-1 h-5 w-5 rounded border flex items-center justify-center ${isSelected ? "bg-primary-500 border-primary-500 text-white" : "border-border"}`}
+                                      className={`mt-1 h-5 w-5 rounded border flex items-center justify-center ${isSelected ? "bg-primary border-primary text-white" : "border-border"}`}
                                     >
                                       {isSelected && <Check className="h-3 w-3" />}
                                     </button>
