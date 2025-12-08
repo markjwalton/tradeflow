@@ -884,7 +884,7 @@ export default function APIManager() {
                     <span className="w-32 font-medium truncate">{api.name}</span>
                     <div className="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-[var(--color-info)]" 
+                        className="h-full bg-info" 
                         style={{ 
                           width: `${analytics.total24h > 0 ? (api.calls / analytics.total24h * 100) : 0}%` 
                         }}
@@ -1248,7 +1248,7 @@ function LookupStatsTab({ lookupLogs, tenants }) {
                   </div>
                   <div className="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-[var(--color-info)]" 
+                      className="h-full bg-info" 
                       style={{ width: `${filteredLogs.length > 0 ? (data.count / filteredLogs.length * 100) : 0}%` }}
                     />
                   </div>
