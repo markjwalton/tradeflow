@@ -6,14 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+
 import {
   Select,
   SelectContent,
@@ -33,8 +26,6 @@ export default function CSSAudit() {
   const [searchQuery, setSearchQuery] = useState("");
   const [fileContent, setFileContent] = useState("");
   const [highlightedCode, setHighlightedCode] = useState(null);
-  const [showPasteDialog, setShowPasteDialog] = useState(false);
-  const [pasteContent, setPasteContent] = useState("");
 
   // Load verification status from localStorage
   React.useEffect(() => {
@@ -350,27 +341,37 @@ export default function CSSAudit() {
       return files;
     };
 
-  const handleScanFile = async (filePath, content = null) => {
+  const handleLoadFile = async (filePath) => {
     if (!filePath) return;
 
-    setAnalyzing(true);
     setSelectedFile(filePath);
     setFileReport(null);
     setFileContent("");
     setHighlightedCode(null);
 
     try {
-      let fileContent = content;
+      const response = await fetch(`/${filePath}`);
+      if (!response.ok) throw new Error(`Failed to load`);
+      const content = await response.text();
+      setFileContent(content);
+      toast.success("File loaded");
+    } catch (err) {
+      toast.error("Could not load file");
+    }
+  };
 
-      // If no content provided, prompt user to paste it
-      if (!fileContent) {
-        toast.error("Please use the 'Paste Content' button to load file content");
-        setAnalyzing(false);
-        return;
-      }
+  const handleScanFile = async () => {
+    if (!selectedFile || !fileContent) {
+      toast.error("Please select and load a file first");
+      return;
+    }
 
-      console.log(`Analyzing ${filePath}, ${fileContent.length} characters`);
-      setFileContent(fileContent);
+    setAnalyzing(true);
+    setFileReport(null);
+    setHighlightedCode(null);
+
+    try {
+      console.log(`Analyzing ${selectedFile}, ${fileContent.length} characters`);
 
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `You are a CSS/design token auditor. Analyze this SINGLE FILE comprehensively for ALL design token violations.
@@ -460,15 +461,7 @@ For each violation provide:
     }, 100);
   };
 
-  const handlePasteAndScan = () => {
-    if (!selectedFile || !pasteContent) {
-      toast.error("Please select a file and paste content");
-      return;
-    }
-    setShowPasteDialog(false);
-    handleScanFile(selectedFile, pasteContent);
-    setPasteContent("");
-  };
+
 
   const generateAIPrompt = () => {
     if (!fileReport || fileReport.violations.length === 0) return;
@@ -496,66 +489,65 @@ For each violation provide:
 
   return (
     <div className="p-6 max-w-7xl mx-auto bg-[var(--color-background)] min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">
-            File-by-File CSS Audit
-          </h1>
-          <p className="text-[var(--color-charcoal)] mt-1">
-            Scan files individually for comprehensive violation detection
-          </p>
+      <div className="mb-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">
+              File-by-File CSS Audit
+            </h1>
+            <p className="text-[var(--color-charcoal)] mt-1">
+              Select a file, load it, then scan for violations
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <Badge variant="outline" className="gap-2">
+              <CheckCircle2 className="h-3 w-3 text-[var(--color-success)]" />
+              {verifiedCount} Verified
+            </Badge>
+            <Badge variant="outline" className="gap-2">
+              <AlertTriangle className="h-3 w-3 text-[var(--color-warning)]" />
+              {needsWorkCount} Need Work
+            </Badge>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <Badge variant="outline" className="gap-2">
-            <CheckCircle2 className="h-3 w-3 text-[var(--color-success)]" />
-            {verifiedCount} Verified
-          </Badge>
-          <Badge variant="outline" className="gap-2">
-            <AlertTriangle className="h-3 w-3 text-[var(--color-warning)]" />
-            {needsWorkCount} Need Work
-          </Badge>
-        </div>
-      </div>
 
-      <div className="grid grid-cols-[300px_1fr_400px] gap-6">
-        {/* File List Sidebar */}
-        <Card className="h-[calc(100vh-200px)] flex flex-col">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm">Files ({fileList.length})</CardTitle>
-            <input
-              type="text"
-              placeholder="Search files..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="mt-2 px-3 py-1.5 text-sm border rounded-lg w-full"
-            />
-          </CardHeader>
-          <CardContent className="flex-1 overflow-y-auto space-y-1 p-3">
-            {filteredFiles.map(file => (
-              <button
-                key={file}
-                onClick={() => {
-                  setSelectedFile(file);
-                  setShowPasteDialog(true);
-                }}
-                disabled={analyzing}
-                className={`w-full text-left px-2 py-1.5 rounded text-xs font-mono hover:bg-[var(--color-background-subtle)] transition-colors flex items-center gap-2 ${
-                  selectedFile === file ? 'bg-[var(--color-primary)]/10 border border-[var(--color-primary)]' : ''
-                } ${verifiedFiles[file] ? 'opacity-50' : ''}`}
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex gap-3 items-end">
+              <div className="flex-1">
+                <label className="text-sm font-medium mb-2 block">Select File</label>
+                <Select value={selectedFile || ""} onValueChange={handleLoadFile}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choose a file to audit..." />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[400px]">
+                    {filteredFiles.map(file => (
+                      <SelectItem key={file} value={file}>
+                        <div className="flex items-center gap-2">
+                          {verifiedFiles[file] && <CheckCircle2 className="h-3 w-3 text-[var(--color-success)]" />}
+                          <span className="font-mono text-xs">{file}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button 
+                onClick={handleScanFile} 
+                disabled={!fileContent || analyzing}
+                className="gap-2"
               >
-                {verifiedFiles[file] ? (
-                  <CheckCircle2 className="h-3 w-3 text-[var(--color-success)] flex-shrink-0" />
-                ) : (
-                  <FileCode className="h-3 w-3 text-[var(--color-charcoal)] flex-shrink-0" />
-                )}
-                <span className="truncate">{file}</span>
-              </button>
-            ))}
+                {analyzing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                Scan for Violations
+              </Button>
+            </div>
           </CardContent>
         </Card>
+      </div>
 
+      <div className="grid grid-cols-[1fr_400px] gap-6">
         {/* Results Panel */}
-        <div className="space-y-4 overflow-y-auto max-h-[calc(100vh-200px)]">{analyzing && (
+        <div className="space-y-4 overflow-y-auto max-h-[calc(100vh-300px)]">{analyzing && (
           <Card>
             <CardContent className="py-8 text-center">
               <Loader2 className="h-8 w-8 animate-spin mx-auto mb-3 text-[var(--color-primary)]" />
@@ -694,54 +686,28 @@ For each violation provide:
 
             {/* File Content Preview */}
             {fileContent && (
-            <Card className="h-[calc(100vh-200px)] flex flex-col">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm">File Content</CardTitle>
-              <p className="text-xs text-[var(--color-charcoal)]">Click violations to highlight</p>
-            </CardHeader>
-            <CardContent className="flex-1 overflow-y-auto p-0">
-              <pre 
-                id="file-content-display"
-                className="text-xs font-mono p-4 whitespace-pre-wrap break-words"
-                dangerouslySetInnerHTML={{
-                  __html: highlightedCode 
-                    ? fileContent.replace(
-                        highlightedCode,
-                        `<mark class="bg-yellow-200 px-1">${highlightedCode}</mark>`
-                      )
-                    : fileContent
-                }}
-              />
-            </CardContent>
-            </Card>
+              <Card className="h-[calc(100vh-300px)] flex flex-col">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm">File Content</CardTitle>
+                  <p className="text-xs text-[var(--color-charcoal)]">Click violations to highlight</p>
+                </CardHeader>
+                <CardContent className="flex-1 overflow-y-auto p-0">
+                  <pre 
+                    id="file-content-display"
+                    className="text-xs font-mono p-4 whitespace-pre-wrap break-words"
+                    dangerouslySetInnerHTML={{
+                      __html: highlightedCode 
+                        ? fileContent.replace(
+                            highlightedCode,
+                            `<mark class="bg-yellow-200 px-1">${highlightedCode}</mark>`
+                          )
+                        : fileContent
+                    }}
+                  />
+                </CardContent>
+              </Card>
             )}
             </div>
-
-            {/* Paste Content Dialog */}
-            <Dialog open={showPasteDialog} onOpenChange={setShowPasteDialog}>
-            <DialogContent className="max-w-3xl max-h-[80vh]">
-              <DialogHeader>
-                <DialogTitle>Paste File Content</DialogTitle>
-                <DialogDescription>
-                  Copy and paste the content of <code className="text-xs bg-muted px-1 rounded">{selectedFile}</code> to scan for violations
-                </DialogDescription>
-              </DialogHeader>
-              <Textarea
-                value={pasteContent}
-                onChange={(e) => setPasteContent(e.target.value)}
-                placeholder="Paste file content here..."
-                className="min-h-[400px] font-mono text-xs"
-              />
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setShowPasteDialog(false)}>
-                  Cancel
-                </Button>
-                <Button onClick={handlePasteAndScan} disabled={!pasteContent}>
-                  Scan Content
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-            </Dialog>
             </div>
             );
             }
