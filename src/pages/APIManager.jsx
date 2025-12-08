@@ -51,7 +51,7 @@ import {
   Cell
 } from "recharts";
 
-const COLORS = ["#22c55e", "#ef4444", "#f59e0b", "#3b82f6"];
+const COLORS = ["var(--color-success)", "var(--color-destructive)", "var(--color-warning)", "var(--color-info)"];
 
 import { MapPin, Mail, Phone } from "lucide-react";
 
@@ -385,10 +385,10 @@ export default function APIManager() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5 text-purple-600" />
+                <Shield className="h-5 w-5 text-accent" />
                 Base44 Platform Secrets
-              </CardTitle>
-              <p className="text-sm text-gray-500">
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">
                 These secrets are configured in your Base44 app settings and available for use in backend functions.
               </p>
             </CardHeader>
@@ -402,23 +402,23 @@ export default function APIManager() {
                     <div 
                       key={mapping.secretName} 
                       className={`flex items-center justify-between p-4 rounded-lg border ${
-                        isConfigured ? "bg-green-50 border-green-200" : "bg-gray-50 border-gray-200"
+                        isConfigured ? "bg-success-50 border-success/20" : "bg-muted border-border"
                       }`}
                     >
                       <div className="flex items-center gap-4">
-                        <div className={`p-2 rounded-lg ${isConfigured ? "bg-green-100" : "bg-gray-200"}`}>
+                        <div className={`p-2 rounded-lg ${isConfigured ? "bg-success-50" : "bg-muted"}`}>
                           {isConfigured ? (
-                            <CheckCircle2 className="h-5 w-5 text-green-600" />
+                            <CheckCircle2 className="h-5 w-5 text-success" />
                           ) : (
-                            <XCircle className="h-5 w-5 text-gray-400" />
+                            <XCircle className="h-5 w-5 text-muted-foreground" />
                           )}
                         </div>
                         <div>
                           <div className="font-medium flex items-center gap-2">
                             {mapping.name}
-                            {isConfigured && <Badge className="bg-green-100 text-green-700">Configured</Badge>}
-                          </div>
-                          <code className="text-xs text-gray-500">{mapping.secretName}</code>
+                            {isConfigured && <Badge className="bg-success-50 text-success">Configured</Badge>}
+                            </div>
+                            <code className="text-xs text-muted-foreground">{mapping.secretName}</code>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
@@ -460,7 +460,7 @@ export default function APIManager() {
                           </Link>
                         )}
                         {!isConfigured && (
-                          <span className="text-xs text-gray-500">Not configured in Base44 settings</span>
+                          <span className="text-xs text-muted-foreground">Not configured in Base44 settings</span>
                         )}
                       </div>
                     </div>
@@ -470,15 +470,15 @@ export default function APIManager() {
               
               {/* Quick link to test forms */}
               {secretsWithTestForms.length > 0 && (
-                <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-center justify-between">
+                <div className="mt-4 p-4 bg-warning/10 border border-warning/20 rounded-lg flex items-center justify-between">
                   <div>
-                    <h4 className="font-medium text-amber-800">Test Your Lookups</h4>
-                    <p className="text-sm text-amber-700">
+                    <h4 className="font-medium text-warning">Test Your Lookups</h4>
+                    <p className="text-sm text-secondary">
                       Test Address, Email, and Phone validation APIs with the configured Ideal Postcodes key.
                     </p>
                   </div>
                   <Link to={createPageUrl("LookupTestForms")}>
-                    <Button className="bg-amber-600 hover:bg-amber-700">
+                    <Button className="bg-warning hover:bg-warning/90 text-warning-foreground">
                       <Zap className="h-4 w-4 mr-2" />
                       Open Lookup Test Forms
                     </Button>
@@ -486,9 +486,9 @@ export default function APIManager() {
                 </div>
               )}
               
-              <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                <h4 className="font-medium text-blue-800 mb-2">How to add secrets</h4>
-                <p className="text-sm text-blue-700">
+              <div className="mt-6 p-4 bg-info-50 rounded-lg">
+                <h4 className="font-medium text-info mb-2">How to add secrets</h4>
+                <p className="text-sm text-info">
                   Secrets are added via the Base44 dashboard under Settings → Environment Variables. 
                   Once added, they appear here and can be used in backend functions.
                 </p>
@@ -536,11 +536,11 @@ export default function APIManager() {
 
           {loadingApis ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+              <Loader2 className="h-8 w-8 animate-spin" />
             </div>
           ) : displayedApis.length === 0 ? (
             <Card>
-              <CardContent className="py-12 text-center text-gray-500">
+              <CardContent className="py-12 text-center text-muted-foreground">
                 <Key className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>No {apiViewMode === "global" ? "global" : "tenant"} API configurations yet</p>
                 <Button className="mt-4" onClick={() => openEditor()}>
@@ -553,8 +553,8 @@ export default function APIManager() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {displayedApis.map(api => (
                 <Card key={api.id} className={
-                  api.status === "error" ? "border-red-200" :
-                  api.status === "inactive" ? "border-gray-300" : ""
+                  api.status === "error" ? "border-destructive/20" :
+                  api.status === "inactive" ? "border-border" : ""
                 }>
                   <CardHeader className="pb-2">
                     <div className="flex items-start justify-between">
@@ -568,9 +568,9 @@ export default function APIManager() {
                         )}
                       </div>
                       <Badge className={
-                        api.status === "active" ? "bg-green-100 text-green-700" :
-                        api.status === "error" ? "bg-red-100 text-red-700" :
-                        "bg-gray-100 text-gray-700"
+                        api.status === "active" ? "bg-success-50 text-success" :
+                        api.status === "error" ? "bg-destructive-50 text-destructive" :
+                        "bg-muted text-muted-foreground"
                       }>
                         {api.status === "active" && <CheckCircle2 className="h-3 w-3 mr-1" />}
                         {api.status === "error" && <XCircle className="h-3 w-3 mr-1" />}
@@ -578,7 +578,7 @@ export default function APIManager() {
                       </Badge>
                     </div>
                     {!api.is_global && api.tenant_id && (
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-muted-foreground">
                         {tenants.find(t => t.id === api.tenant_id)?.name || "Unknown tenant"}
                       </p>
                     )}
@@ -587,14 +587,14 @@ export default function APIManager() {
                     <div className="space-y-2 text-sm">
                       {api.provider && (
                         <div className="flex justify-between">
-                          <span className="text-gray-500">Provider</span>
+                          <span className="text-muted-foreground">Provider</span>
                           <span className="font-medium">{api.provider}</span>
                         </div>
                       )}
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-500">API Key</span>
+                        <span className="text-muted-foreground">API Key</span>
                         <div className="flex items-center gap-1">
-                          <code className="text-xs bg-gray-100 px-2 py-0.5 rounded">
+                          <code className="text-xs bg-muted px-2 py-0.5 rounded">
                             {showKey[api.id] ? api.api_key_encrypted : api.api_key_masked}
                           </code>
                           <Button 
@@ -620,18 +620,18 @@ export default function APIManager() {
                       </div>
                       {api.last_checked && (
                         <div className="flex justify-between">
-                          <span className="text-gray-500">Last checked</span>
+                          <span className="text-muted-foreground">Last checked</span>
                           <span className="text-xs">{format(new Date(api.last_checked), "MMM d, HH:mm")}</span>
                         </div>
                       )}
                       {api.last_error && (
-                        <div className="text-xs text-red-600 bg-red-50 p-2 rounded">
+                        <div className="text-xs text-destructive bg-destructive-50 p-2 rounded">
                           {api.last_error}
                         </div>
                       )}
                       {api.token_rate > 0 && (
                         <div className="flex justify-between text-xs mt-2 pt-2 border-t">
-                          <span className="text-gray-500">Rate</span>
+                          <span className="text-muted-foreground">Rate</span>
                           <span className="font-medium">
                             £{api.token_rate} / {api.billing_unit?.replace("_", " ")}
                           </span>
@@ -663,7 +663,7 @@ export default function APIManager() {
                       <Button 
                         size="sm" 
                         variant="ghost" 
-                        className="text-red-500"
+                        className="text-destructive"
                         onClick={() => {
                           if (confirm("Delete this API configuration?")) {
                             deleteMutation.mutate(api.id);
@@ -684,7 +684,7 @@ export default function APIManager() {
         <TabsContent value="logs" className="space-y-4">
           <div className="flex gap-4 items-center">
             <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search endpoints..."
                 value={logFilters.search}
@@ -736,7 +736,7 @@ export default function APIManager() {
                   </TableRow>
                 ) : filteredLogs.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                    <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                       No logs found
                     </TableCell>
                   </TableRow>
@@ -753,19 +753,19 @@ export default function APIManager() {
                       </TableCell>
                       <TableCell>
                         {log.success ? (
-                          <Badge className="bg-green-100 text-green-700">
+                          <Badge className="bg-success-50 text-success">
                             {log.status_code || 200}
                           </Badge>
                         ) : (
-                          <Badge className="bg-red-100 text-red-700">
+                          <Badge className="bg-destructive-50 text-destructive">
                             {log.status_code || "Error"}
                           </Badge>
                         )}
                       </TableCell>
                       <TableCell>
                         <span className={
-                          log.response_time_ms > 1000 ? "text-red-600" :
-                          log.response_time_ms > 500 ? "text-amber-600" : "text-green-600"
+                          log.response_time_ms > 1000 ? "text-destructive" :
+                          log.response_time_ms > 500 ? "text-warning" : "text-success"
                         }>
                           {log.response_time_ms}ms
                         </span>
@@ -798,8 +798,8 @@ export default function APIManager() {
                   <span className="text-sm">Success Rate</span>
                 </div>
                 <div className={`text-2xl font-bold ${
-                  parseFloat(analytics.successRate) >= 99 ? "text-green-600" :
-                  parseFloat(analytics.successRate) >= 95 ? "text-amber-600" : "text-red-600"
+                  parseFloat(analytics.successRate) >= 99 ? "text-success" :
+                  parseFloat(analytics.successRate) >= 95 ? "text-warning" : "text-destructive"
                 }`}>
                   {analytics.successRate}%
                 </div>
@@ -812,8 +812,8 @@ export default function APIManager() {
                   <span className="text-sm">Avg Response</span>
                 </div>
                 <div className={`text-2xl font-bold ${
-                  analytics.avgResponseTime < 500 ? "text-green-600" :
-                  analytics.avgResponseTime < 1000 ? "text-amber-600" : "text-red-600"
+                  analytics.avgResponseTime < 500 ? "text-success" :
+                  analytics.avgResponseTime < 1000 ? "text-warning" : "text-destructive"
                 }`}>
                   {analytics.avgResponseTime}ms
                 </div>
@@ -844,8 +844,8 @@ export default function APIManager() {
                       <XAxis dataKey="hour" tick={{ fontSize: 10 }} />
                       <YAxis />
                       <Tooltip />
-                      <Bar dataKey="success" stackId="a" fill="#22c55e" name="Success" />
-                      <Bar dataKey="failed" stackId="a" fill="#ef4444" name="Failed" />
+                      <Bar dataKey="success" stackId="a" fill="var(--color-success)" name="Success" />
+                      <Bar dataKey="failed" stackId="a" fill="var(--color-destructive)" name="Failed" />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -864,7 +864,7 @@ export default function APIManager() {
                       <XAxis dataKey="hour" tick={{ fontSize: 10 }} />
                       <YAxis />
                       <Tooltip />
-                      <Line type="monotone" dataKey="avgTime" stroke="#3b82f6" name="Avg Time (ms)" />
+                      <Line type="monotone" dataKey="avgTime" stroke="var(--color-info)" name="Avg Time (ms)" />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -882,7 +882,7 @@ export default function APIManager() {
                 {analytics.byApi.map((api, i) => (
                   <div key={api.name} className="flex items-center gap-4">
                     <span className="w-32 font-medium truncate">{api.name}</span>
-                    <div className="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="flex-1 h-4 bg-muted rounded-full overflow-hidden">
                       <div 
                         className="h-full bg-info" 
                         style={{ 
@@ -891,7 +891,7 @@ export default function APIManager() {
                       />
                     </div>
                     <span className="w-16 text-right text-sm">{api.calls} calls</span>
-                    <span className="w-16 text-right text-sm text-green-600">
+                    <span className="w-16 text-right text-sm text-success">
                       {api.calls > 0 ? ((api.success / api.calls) * 100).toFixed(0) : 100}%
                     </span>
                   </div>
@@ -941,16 +941,16 @@ export default function APIManager() {
                   <CardContent>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-gray-500">API Calls (Global)</span>
+                        <span className="text-muted-foreground">API Calls (Global)</span>
                         <span className="font-medium">{totalCalls}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-500">Tokens Used</span>
+                        <span className="text-muted-foreground">Tokens Used</span>
                         <span className="font-medium">{totalTokens.toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between pt-2 border-t">
-                        <span className="text-gray-500">Estimated Cost</span>
-                        <span className="font-bold text-green-600">£{totalCost.toFixed(4)}</span>
+                        <span className="text-muted-foreground">Estimated Cost</span>
+                        <span className="font-bold text-success">£{totalCost.toFixed(4)}</span>
                       </div>
                     </div>
                   </CardContent>
@@ -991,7 +991,7 @@ export default function APIManager() {
                         <TableCell className="font-medium">{log.api_name}</TableCell>
                         <TableCell className="font-mono text-xs">{log.endpoint}</TableCell>
                         <TableCell>{log.tokens_used || 0}</TableCell>
-                        <TableCell className="text-green-600">
+                        <TableCell className="text-success">
                           £{(log.cost || 0).toFixed(4)}
                         </TableCell>
                       </TableRow>
@@ -1016,9 +1016,9 @@ export default function APIManager() {
           </DialogHeader>
           <div className="space-y-4">
             {/* Global vs Tenant Toggle */}
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
               <div className="flex items-center gap-2">
-                <Globe className="h-4 w-4 text-blue-600" />
+                <Globe className="h-4 w-4 text-info" />
                 <Label>Global API (available to all tenants)</Label>
               </div>
               <Switch
@@ -1173,11 +1173,11 @@ function LookupStatsTab({ lookupLogs, tenants }) {
   }, [filteredLogs]);
 
   const lookupTypeLabels = {
-    address_autocomplete: { label: "Address Autocomplete", icon: MapPin, color: "text-blue-600" },
-    address_lookup: { label: "Address Lookup", icon: MapPin, color: "text-blue-600" },
-    postcode_lookup: { label: "Postcode Lookup", icon: MapPin, color: "text-green-600" },
-    email_validation: { label: "Email Validation", icon: Mail, color: "text-purple-600" },
-    phone_validation: { label: "Phone Validation", icon: Phone, color: "text-amber-600" }
+    address_autocomplete: { label: "Address Autocomplete", icon: MapPin, color: "text-info" },
+    address_lookup: { label: "Address Lookup", icon: MapPin, color: "text-info" },
+    postcode_lookup: { label: "Postcode Lookup", icon: MapPin, color: "text-success" },
+    email_validation: { label: "Email Validation", icon: Mail, color: "text-accent" },
+    phone_validation: { label: "Phone Validation", icon: Phone, color: "text-warning" }
   };
 
   return (
@@ -1204,28 +1204,28 @@ function LookupStatsTab({ lookupLogs, tenants }) {
       <div className="grid grid-cols-4 gap-4">
         <Card>
           <CardContent className="pt-4">
-            <div className="text-sm text-gray-500">Lookups (24h)</div>
+            <div className="text-sm text-muted-foreground">Lookups (24h)</div>
             <div className="text-2xl font-bold">{stats.total24h}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4">
-            <div className="text-sm text-gray-500">Lookups (7d)</div>
+            <div className="text-sm text-muted-foreground">Lookups (7d)</div>
             <div className="text-2xl font-bold">{stats.total7d}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4">
-            <div className="text-sm text-gray-500">Success Rate</div>
-            <div className={`text-2xl font-bold ${parseFloat(stats.successRate) >= 95 ? "text-green-600" : "text-amber-600"}`}>
+            <div className="text-sm text-muted-foreground">Success Rate</div>
+            <div className={`text-2xl font-bold ${parseFloat(stats.successRate) >= 95 ? "text-success" : "text-warning"}`}>
               {stats.successRate}%
             </div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4">
-            <div className="text-sm text-gray-500">Total Cost</div>
-            <div className="text-2xl font-bold text-green-600">£{stats.totalCost.toFixed(4)}</div>
+            <div className="text-sm text-muted-foreground">Total Cost</div>
+            <div className="text-2xl font-bold text-success">£{stats.totalCost.toFixed(4)}</div>
           </CardContent>
         </Card>
       </div>
@@ -1238,7 +1238,7 @@ function LookupStatsTab({ lookupLogs, tenants }) {
         <CardContent>
           <div className="space-y-4">
             {Object.entries(stats.byType).map(([type, data]) => {
-              const config = lookupTypeLabels[type] || { label: type, icon: MapPin, color: "text-gray-600" };
+              const config = lookupTypeLabels[type] || { label: type, icon: MapPin, color: "text-muted-foreground" };
               const Icon = config.icon;
               return (
                 <div key={type} className="flex items-center gap-4">
@@ -1246,19 +1246,19 @@ function LookupStatsTab({ lookupLogs, tenants }) {
                     <Icon className="h-4 w-4" />
                     <span className="font-medium">{config.label}</span>
                   </div>
-                  <div className="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden">
+                  <div className="flex-1 h-4 bg-muted rounded-full overflow-hidden">
                     <div 
                       className="h-full bg-info" 
                       style={{ width: `${filteredLogs.length > 0 ? (data.count / filteredLogs.length * 100) : 0}%` }}
                     />
                   </div>
                   <span className="w-20 text-right text-sm">{data.count} calls</span>
-                  <span className="w-24 text-right text-sm text-green-600">£{data.cost.toFixed(4)}</span>
+                  <span className="w-24 text-right text-sm text-success">£{data.cost.toFixed(4)}</span>
                 </div>
               );
             })}
             {Object.keys(stats.byType).length === 0 && (
-              <p className="text-gray-500 text-center py-8">No lookup data yet</p>
+              <p className="text-muted-foreground text-center py-8">No lookup data yet</p>
             )}
           </div>
         </CardContent>
@@ -1297,7 +1297,7 @@ function LookupStatsTab({ lookupLogs, tenants }) {
                       <TableCell>{addressCount}</TableCell>
                       <TableCell>{emailCount}</TableCell>
                       <TableCell>{phoneCount}</TableCell>
-                      <TableCell className="text-green-600 font-medium">£{cost.toFixed(4)}</TableCell>
+                      <TableCell className="text-success font-medium">£{cost.toFixed(4)}</TableCell>
                     </TableRow>
                   );
                 })}
@@ -1347,12 +1347,12 @@ function LookupStatsTab({ lookupLogs, tenants }) {
                     </TableCell>
                     <TableCell>
                       {log.success ? (
-                        <Badge className="bg-green-100 text-green-700">Success</Badge>
+                        <Badge className="bg-success-50 text-success">Success</Badge>
                       ) : (
-                        <Badge className="bg-red-100 text-red-700">Failed</Badge>
+                        <Badge className="bg-destructive-50 text-destructive">Failed</Badge>
                       )}
-                    </TableCell>
-                    <TableCell className="text-green-600 text-xs">
+                      </TableCell>
+                      <TableCell className="text-success text-xs">
                       £{(log.cost || 0).toFixed(4)}
                     </TableCell>
                   </TableRow>
