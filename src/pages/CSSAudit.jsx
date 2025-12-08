@@ -266,8 +266,11 @@ Return empty array if file doesn't exist or has no issues.`,
 
   const createRoadmapItems = async () => {
     setCreatingRoadmap(true);
+    setRoadmapProgress({ current: 0, total: 0, file: "" });
+    
     try {
       const selected = findings.filter(f => selectedFindings.includes(f.file));
+      setRoadmapProgress({ current: 0, total: selected.length, file: "Fetching RuleBook..." });
       
       // Fetch RuleBook for context
       const rules = await base44.entities.DevelopmentRule.filter({ is_active: true });
@@ -276,25 +279,33 @@ Return empty array if file doesn't exist or has no issues.`,
         .map(r => `- ${r.title}: ${r.description}`)
         .join("\n");
       
-      for (const finding of selected) {
-        const issuesList = finding.issues.map((issue, idx) => 
+      for (let i = 0; i < selected.length; i++) {
+        const finding = selected[i];
+        const fileName = finding.file.split('/').pop();
+        setRoadmapProgress({ current: i, total: selected.length, file: `Processing ${fileName}...` });
+        
+        const issuesList = finding.issues.slice(0, 20).map((issue, idx) => 
           `${idx + 1}. Line ${issue.line}: ${issue.element} - "${issue.current_class}"\n   Suggested: ${issue.replacement}`
         ).join("\n");
 
-        // Generate detailed development prompt with AI
-        const aiPrompt = await base44.integrations.Core.InvokeLLM({
-          prompt: `Generate a detailed development prompt for fixing hardcoded CSS in ${finding.file}
+        try {
+          // Generate detailed development prompt with AI
+          const aiPrompt = await base44.integrations.Core.InvokeLLM({
+            prompt: `Generate a detailed development prompt for fixing hardcoded CSS in ${finding.file}
 
 **File:** ${finding.file}
-**Issues (${finding.totalIssues}):**
+**Total Issues:** ${finding.totalIssues}
+**Sample Issues (first 20):**
 ${issuesList}
 
 **Design System Tokens Available:**
-- Typography: text-h1, text-h2, text-h3, text-h4, text-h5, text-h6
-- Body text: text-body-large, text-body-base, text-body-small, text-body-muted
-- Caption: text-caption
-- Colors: text-[var(--color-*)], bg-[var(--color-*)]
-- Spacing: --spacing-* variables
+- Typography: text-h1, text-h2, text-h3, text-h4, text-h5, text-h6, text-body-large, text-body-base, text-body-small, text-body-muted, text-caption
+- Semantic Colors: text-primary, text-secondary, text-muted, text-accent, text-destructive (or use text-[var(--color-*)])
+- Background Colors: bg-primary, bg-secondary, bg-muted, bg-accent, bg-destructive (or use bg-[var(--color-*)])
+- Border Colors: border-primary, border-muted (or use border-[var(--color-*)])
+- Spacing: --spacing-* CSS variables
+- Shadows: --shadow-* CSS variables
+- Radius: --radius-* CSS variables
 
 **RuleBook Guidelines:**
 ${ruleContext || "No specific rules defined"}
@@ -305,36 +316,36 @@ Create a development prompt that:
 3. Includes code examples using our semantic tokens
 4. Groups similar changes for efficiency
 5. Highlights any breaking changes or considerations`,
-          response_json_schema: {
-            type: "object",
-            properties: {
-              prompt: { type: "string" },
-              find_replace_operations: {
-                type: "array",
-                items: {
-                  type: "object",
-                  properties: {
-                    find: { type: "string" },
-                    replace: { type: "string" },
-                    note: { type: "string" }
+            response_json_schema: {
+              type: "object",
+              properties: {
+                prompt: { type: "string" },
+                find_replace_operations: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      find: { type: "string" },
+                      replace: { type: "string" },
+                      note: { type: "string" }
+                    }
                   }
+                },
+                rulebook_references: {
+                  type: "array",
+                  items: { type: "string" }
                 }
-              },
-              rulebook_references: {
-                type: "array",
-                items: { type: "string" }
               }
             }
-          }
-        });
+          });
 
-        const findReplaceSection = aiPrompt.find_replace_operations
-          ?.map((op, idx) => `${idx + 1}. Find: \`${op.find}\`\n   Replace: \`${op.replace}\`\n   ${op.note}`)
-          .join("\n\n") || "";
+          const findReplaceSection = aiPrompt.find_replace_operations
+            ?.map((op, idx) => `${idx + 1}. Find: \`${op.find}\`\n   Replace: \`${op.replace}\`\n   ${op.note}`)
+            .join("\n\n") || "";
 
-        await base44.entities.RoadmapItem.create({
-          title: `Fix hardcoded CSS in ${finding.file.split('/').pop()}`,
-          description: `${aiPrompt.prompt}
+          await base44.entities.RoadmapItem.create({
+            title: `Fix hardcoded CSS in ${fileName}`,
+            description: `${aiPrompt.prompt}
 
 **Find/Replace Operations:**
 ${findReplaceSection}
@@ -342,23 +353,31 @@ ${findReplaceSection}
 **RuleBook References:**
 ${aiPrompt.rulebook_references?.map(r => `- ${r}`).join("\n") || "None"}
 
-**Priority Breakdown:**
-- High: ${finding.highSeverity}
-- Medium: ${finding.mediumSeverity}`,
-          category: "improvement",
-          priority: defaultPriority,
-          status: "backlog",
-          source: "ai_assistant",
-          tags: ["css-audit", "design-tokens", "refactoring"],
-          development_prompt: aiPrompt.prompt
-        });
+**Issue Breakdown:**
+- Total Issues: ${finding.totalIssues}
+- High Severity: ${finding.highSeverity}
+- Medium Severity: ${finding.mediumSeverity}`,
+            category: "improvement",
+            priority: defaultPriority,
+            status: "backlog",
+            source: "ai_assistant",
+            tags: ["css-audit", "design-tokens", "refactoring"],
+            development_prompt: aiPrompt.prompt
+          });
+        } catch (itemError) {
+          console.error(`Failed to process ${fileName}:`, itemError);
+          toast.error(`Failed to process ${fileName}: ${itemError.message}`);
+        }
       }
 
+      setRoadmapProgress({ current: selected.length, total: selected.length, file: "Complete!" });
       queryClient.invalidateQueries({ queryKey: ["roadmapItems"] });
       toast.success(`Created ${selected.length} roadmap items with AI prompts`);
       setSelectedFindings([]);
+      setTimeout(() => setRoadmapProgress({ current: 0, total: 0, file: "" }), 2000);
     } catch (error) {
       toast.error("Failed: " + error.message);
+      console.error("Roadmap creation error:", error);
     } finally {
       setCreatingRoadmap(false);
     }
