@@ -164,7 +164,7 @@ export default function ChecklistBuilder() {
     return (
       <div className="h-screen flex items-center justify-center bg-background">
         <Card className="w-96 p-6 border-border bg-card">
-          <h2 className="text-lg font-semibold mb-4 text-midnight-900">No Checklist Selected</h2>
+          <CardTitle className="text-midnight-900">No Checklist Selected</CardTitle>
           <div className="space-y-3">
             <Button onClick={() => setShowNewDialog(true)} className="w-full">
               <Plus className="h-4 w-4 mr-2" />
@@ -238,7 +238,7 @@ export default function ChecklistBuilder() {
 
               {checklistData.items.length === 0 ? (
                 <div className="text-center py-8 text-charcoal-700">
-                  <CheckSquare className="h-12 w-12 mx-auto text-charcoal-700 opacity-30 mb-2" />
+                  <CheckSquare className="h-12 w-12 mx-auto opacity-30 mb-2" />
                   <p>No items yet. Click "Add Item" to get started.</p>
                 </div>
               ) : (
