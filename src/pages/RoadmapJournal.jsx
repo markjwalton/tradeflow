@@ -684,19 +684,19 @@ Return as JSON:
                       </div>
                       
                       {entry.ai_generated_prompt && (
-                        <div className="mt-4 bg-accent-50 border border-accent-200 rounded-lg p-4">
+                        <div className="mt-4 bg-accent-50 border border-accent/20 rounded-lg p-4">
                           <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm font-medium text-accent-700">Prompt to continue this discussion</span>
+                            <span className="text-sm font-medium text-accent">Prompt to continue this discussion</span>
                             <div className="flex gap-1">
                               <Button size="sm" variant="ghost" onClick={() => copyToClipboard(entry.ai_generated_prompt)}>
                                 <Copy className="h-3 w-3 mr-1" /> Copy
                               </Button>
-                              <Button size="sm" variant="ghost" className="text-accent-700" onClick={() => sendToChat(entry.ai_generated_prompt)}>
+                              <Button size="sm" variant="ghost" className="text-accent" onClick={() => sendToChat(entry.ai_generated_prompt)}>
                                 <Send className="h-3 w-3 mr-1" /> Send
                               </Button>
                             </div>
                           </div>
-                          <p className="text-sm text-accent-700 whitespace-pre-wrap">{entry.ai_generated_prompt}</p>
+                          <p className="text-sm text-accent whitespace-pre-wrap">{entry.ai_generated_prompt}</p>
                         </div>
                       )}
                     </CardContent>
@@ -809,7 +809,7 @@ Return as JSON:
                     <Button onClick={() => copyToClipboard(currentPrompt)} variant="outline">
                       <Copy className="h-4 w-4 mr-2" /> Copy
                     </Button>
-                    <Button onClick={() => sendToChat(currentPrompt)} className="bg-accent-400 hover:bg-accent-500 text-white">
+                    <Button onClick={() => sendToChat(currentPrompt)} className="bg-accent hover:bg-accent/90 text-accent-foreground">
                       <Send className="h-4 w-4 mr-2" /> Send to Chat
                     </Button>
                     <Button onClick={generateAIReview} disabled={isGeneratingReview} variant="secondary">

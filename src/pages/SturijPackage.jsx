@@ -607,10 +607,10 @@ When updating existing code:
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="absolute top-2 right-2 h-6 w-6 p-0 bg-[var(--color-background-paper)]/10 hover:bg-[var(--color-background-paper)]/20"
+                          className="absolute top-2 right-2 h-6 w-6 p-0 bg-white/10 hover:bg-white/20"
                           onClick={() => copyToClipboard(example.code, `example-${idx}`)}
                         >
-                          <Copy className="h-3 w-3 text-[var(--color-background-paper)]" />
+                          <Copy className="h-3 w-3 text-background-50" />
                         </Button>
                       </div>
                     </div>
@@ -624,19 +624,19 @@ When updating existing code:
           <TabsContent value="llm" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-[var(--color-midnight)]">
-                  <Sparkles className="h-5 w-5 text-secondary-400" />
+                <CardTitle className="flex items-center gap-2 text-midnight-900">
+                  <Sparkles className="h-5 w-5 text-secondary" />
                   LLM Implementation Guidelines
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="relative">
-                  <pre className="bg-[var(--color-midnight)] text-[var(--color-background-paper)] p-6 rounded-[var(--radius-lg)] text-sm overflow-x-auto whitespace-pre-wrap max-h-[600px] overflow-y-auto">
+                  <pre className="bg-midnight-900 text-background-50 p-6 rounded-lg text-sm overflow-x-auto whitespace-pre-wrap max-h-[600px] overflow-y-auto">
                     {llmGuidelines}
                   </pre>
                   <Button
                     size="sm"
-                    className="absolute top-4 right-4 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+                    className="absolute top-4 right-4 bg-primary hover:bg-primary/90 text-primary-foreground"
                     onClick={() => copyToClipboard(llmGuidelines, 'llm-guide')}
                   >
                     <Copy className="h-3 w-3 mr-2" />
@@ -648,15 +648,15 @@ When updating existing code:
 
             <Card className="border-warning bg-warning/5">
               <CardHeader>
-                <CardTitle className="text-[var(--color-midnight)]">Quick Reference</CardTitle>
+                <CardTitle className="text-midnight-900">Quick Reference</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-2 gap-4 text-sm">
                   <div>
-                    <h5 className="font-heading font-medium text-[var(--color-midnight)] mb-2">
+                    <h5 className="font-heading font-medium text-midnight-900 mb-2">
                       ✅ Always Use
                     </h5>
-                    <ul className="space-y-1 text-[var(--color-charcoal)]">
+                    <ul className="space-y-1 text-charcoal-700">
                       <li>• text-[var(--color-midnight)]</li>
                       <li>• bg-[var(--color-background)]</li>
                       <li>• border-[var(--color-background-muted)]</li>
@@ -668,7 +668,7 @@ When updating existing code:
                     <h5 className="font-heading font-medium text-destructive mb-2">
                       ❌ Never Use
                     </h5>
-                    <ul className="space-y-1 text-[var(--color-charcoal)]">
+                    <ul className="space-y-1 text-charcoal-700">
                       <li>• text-gray-500, bg-blue-100</li>
                       <li>• inline style attributes</li>
                       <li>• Hardcoded color values (#hex)</li>
@@ -685,11 +685,11 @@ When updating existing code:
           <TabsContent value="showcase" className="space-y-6">
             <Card>
               <CardContent className="py-12 text-center">
-                <Eye className="h-16 w-16 mx-auto mb-4 text-primary-500" />
-                <h3 className="text-xl font-heading text-[var(--color-midnight)] mb-2">
+                <Eye className="h-16 w-16 mx-auto mb-4 text-primary" />
+                <h3 className="text-xl font-heading text-midnight-900 mb-2">
                   Interactive Component Showcase
                 </h3>
-                <p className="text-[var(--color-charcoal)] mb-6">
+                <p className="text-charcoal-700 mb-6">
                   View live examples of all design tokens, components, and patterns
                 </p>
                 <Button 
@@ -709,11 +709,11 @@ When updating existing code:
         </Tabs>
 
         {/* Download Section */}
-        <Card className="mt-8 border-primary-500">
+        <Card className="mt-8 border-primary/20">
           <CardContent className="py-8">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-xl font-heading text-[var(--color-midnight)] mb-2">
+                <h3 className="text-xl font-heading text-midnight-900 mb-2">
                   Ready to implement?
                 </h3>
                 <p className="text-charcoal-700">

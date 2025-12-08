@@ -265,7 +265,7 @@ export default function DashboardManager() {
         )}
 
         {activeTab === "staging" && (
-          <div className="flex-1 overflow-auto p-6 bg-[var(--color-background)]">
+          <div className="flex-1 overflow-auto p-6 bg-background">
             <WidgetStaging 
               widgets={widgets}
               onEdit={(widget) => {
@@ -277,7 +277,7 @@ export default function DashboardManager() {
         )}
 
         {activeTab === "library" && (
-          <div className="flex-1 overflow-auto p-6 bg-[var(--color-background)]">
+          <div className="flex-1 overflow-auto p-6 bg-background">
             <WidgetLibraryManager widgets={widgets} />
           </div>
         )}
