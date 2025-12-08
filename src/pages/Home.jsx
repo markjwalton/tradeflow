@@ -48,7 +48,7 @@ export default function Home() {
         <p className="text-[var(--color-charcoal)] mb-8">Select a section to get started</p>
         
         {navItems.length === 0 ? (
-          <Card className="border-[var(--color-background-muted)]">
+          <Card className="border-background-muted">
             <CardContent className="py-8 text-center text-[var(--color-charcoal)]">
               No navigation items configured for this tenant yet.
             </CardContent>
@@ -64,7 +64,7 @@ export default function Home() {
                 : null;
 
               return (
-                <Card key={item.id} className="hover:shadow-md transition-shadow border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+                <Card key={item.id} className="hover:shadow-md transition-shadow border-background-muted bg-card">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-lg text-[var(--color-midnight)]">
                       <Icon className="h-5 w-5 text-primary-500" />

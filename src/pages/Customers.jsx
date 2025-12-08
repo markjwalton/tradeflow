@@ -183,7 +183,7 @@ export default function Customers() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredCustomers.map((customer) => (
-          <Card key={customer.id} className="hover:shadow-md transition-shadow border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+          <Card key={customer.id} className="hover:shadow-md transition-shadow border-background-muted bg-card">
             <CardHeader className="pb-2">
               <div className="flex items-start justify-between">
                 <div>

@@ -216,7 +216,7 @@ export default function RuleBook() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
-            <BookOpen className="h-6 w-6 text-[var(--color-primary)]" />
+            <BookOpen className="h-6 w-6 text-primary-500" />
             Development Rule Book
           </h1>
           <p className="text-[var(--color-charcoal)]">Maintain rules for AI-assisted development</p>

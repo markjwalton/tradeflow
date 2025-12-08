@@ -204,7 +204,7 @@ export default function Projects() {
         {filteredProjects.map((project) => {
           const budgetProgress = project.budget > 0 ? (project.spend / project.budget) * 100 : 0;
           return (
-            <Card key={project.id} className="hover:shadow-md transition-shadow border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+            <Card key={project.id} className="hover:shadow-md transition-shadow border-background-muted bg-card">
               <CardHeader className="pb-2">
                 <div className="flex items-start justify-between">
                   <CardTitle className="text-lg text-[var(--color-midnight)]">{project.name}</CardTitle>

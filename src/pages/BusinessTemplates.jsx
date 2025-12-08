@@ -227,7 +227,7 @@ export default function BusinessTemplates() {
                     onClick={() => toggleStar(template)}
                     title={template.is_starred ? "Remove from featured" : "Add to featured"}
                   >
-                    <Star className={`h-4 w-4 ${template.is_starred ? "fill-warning-foreground text-warning-foreground" : ""}`} />
+                    <Star className={`h-4 w-4 ${template.is_starred ? "fill-warning text-warning" : ""}`} />
                   </Button>
                   <Button size="icon" variant="ghost" onClick={() => handleEdit(template)}>
                     <Edit2 className="h-4 w-4" />
@@ -272,7 +272,7 @@ export default function BusinessTemplates() {
               
               {/* Relationships & Workflows */}
               {(template.entity_relationships?.length > 0 || template.workflows?.length > 0) && (
-                <div className="flex items-center gap-2 text-xs text-accent-600 mb-3">
+                <div className="flex items-center gap-2 text-xs text-accent-700 mb-3">
                   <GitBranch className="h-3 w-3" />
                   <span className="text-accent-700">
                     {template.entity_relationships?.length || 0} relationships, {template.workflows?.length || 0} workflows

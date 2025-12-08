@@ -142,7 +142,7 @@ export default function Calendar() {
 
       <div className="flex gap-6">
         <div className="flex-1">
-          <Card className="border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+          <Card className="border-background-muted bg-card">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <Button variant="ghost" size="icon" onClick={() => setCurrentDate(subMonths(currentDate, 1))}><ChevronLeft className="h-4 w-4" /></Button>
@@ -156,7 +156,7 @@ export default function Calendar() {
                   <div key={d} className="text-center text-sm font-medium text-[var(--color-charcoal)] py-2">{d}</div>
                 ))}
               </div>
-              <div className="border border-[var(--color-background-muted)] rounded-lg overflow-hidden">{rows}</div>
+              <div className="border border-background-muted rounded-lg overflow-hidden">{rows}</div>
             </CardContent>
           </Card>
 
@@ -169,7 +169,7 @@ export default function Calendar() {
         </div>
 
         <div className="w-80">
-          <Card className="border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+          <Card className="border-background-muted bg-card">
             <CardHeader>
               <CardTitle className="text-lg text-[var(--color-midnight)]">{selectedDate ? format(selectedDate, "EEEE, MMMM d") : "Select a date"}</CardTitle>
             </CardHeader>
@@ -181,7 +181,7 @@ export default function Calendar() {
                       <h3 className="text-sm font-medium mb-2 text-[var(--color-midnight)]">Tasks</h3>
                       <div className="space-y-2">
                         {selectedDateTasks.map((task) => (
-                          <div key={task.id} className="p-2 bg-[var(--color-background)] rounded-lg">
+                          <div key={task.id} className="p-2 bg-background rounded-lg">
                             <div className="flex items-center gap-2">
                               <span className={`w-2 h-2 rounded-full ${statusColors[task.status]}`} />
                               <span className="font-medium text-sm text-[var(--color-midnight)]">{task.title}</span>

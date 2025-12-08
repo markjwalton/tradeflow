@@ -182,7 +182,7 @@ export default function Team() {
         {filteredMembers.map((member) => {
           const holidaysRemaining = (member.annual_holiday_days || 25) - (member.holidays_used || 0);
           return (
-            <Card key={member.id} className="hover:shadow-md transition-shadow border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+            <Card key={member.id} className="hover:shadow-md transition-shadow border-background-muted bg-card">
               <CardHeader className="pb-2">
                 <div className="flex items-start justify-between">
                   <div>

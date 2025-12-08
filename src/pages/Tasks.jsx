@@ -212,7 +212,7 @@ export default function Tasks() {
 
       <div className="space-y-3">
         {filteredTasks.map((task) => (
-          <Card key={task.id} className="hover:shadow-md transition-shadow border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+          <Card key={task.id} className="hover:shadow-md transition-shadow border-background-muted bg-card">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
