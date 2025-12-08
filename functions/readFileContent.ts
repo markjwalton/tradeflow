@@ -37,8 +37,7 @@ Deno.serve(async (req) => {
     // If no path worked, return error
     return Response.json({ 
       error: 'File not found in any location',
-      tried: possiblePaths,
-      cwd: projectRoot
+      tried: possiblePaths
     }, { status: 404 });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
