@@ -154,7 +154,7 @@ export default function WorkflowLibrary() {
       {/* Workflow Grid */}
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+          <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       ) : filteredWorkflows.length === 0 ? (
         <div className="text-center py-12">
