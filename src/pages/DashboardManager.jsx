@@ -237,7 +237,7 @@ export default function DashboardManager() {
                       Create widgets in the staging area or use AI to generate recommendations.
                     </p>
                     <div className="flex justify-center gap-2">
-                      <Button variant="outline" onClick={() => setActiveTab("staging")}
+                      <Button variant="outline" onClick={() => setActiveTab("staging")}>
                         <Plus className="h-4 w-4 mr-1" />
                         Create Widget
                       </Button>
