@@ -417,9 +417,9 @@ Return a JSON object with a "features" array containing feature templates.`,
                   <Card key={feature.id} className="hover:shadow-md transition-shadow">
                     <CardHeader className="pb-2">
                       <div className="flex items-start justify-between">
-                        <CardTitle className="text-base flex items-center gap-2">
-                          <Zap className="h-4 w-4 text-warning" />
-                          {feature.name}
+                       <CardTitle className="text-base flex items-center gap-2">
+                         <Zap className="h-4 w-4 text-warning-foreground" />
+                         {feature.name}
                           {feature.is_custom && (
                             <Badge variant="outline" className="text-xs">Custom</Badge>
                           )}
@@ -618,9 +618,9 @@ Return a JSON object with a "features" array containing feature templates.`,
                       <div className="flex items-start gap-3">
                         <Checkbox checked={selectedBulkFeatures.includes(index)} />
                         <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <Zap className="h-4 w-4 text-warning" />
-                            <span className="font-medium">{feature.name}</span>
+                         <div className="flex items-center gap-2">
+                           <Zap className="h-4 w-4 text-warning-foreground" />
+                           <span className="font-medium">{feature.name}</span>
                             <Badge className={categoryColors[feature.category] || "bg-muted"}>{feature.category}</Badge>
                             <Badge className={complexityColors[feature.complexity || "medium"]}>{feature.complexity || "medium"}</Badge>
                           </div>
