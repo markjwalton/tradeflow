@@ -283,10 +283,6 @@ export default function PageBuilder() {
     const tagName = element.tagName.toLowerCase();
     const textContent = element.textContent?.substring(0, 50) || '';
     
-    // Highlight selected element
-    element.style.outline = '2px solid var(--color-primary)';
-    element.style.outlineOffset = '2px';
-    
     setSelectedElement({
       currentClasses,
       tagName,
@@ -295,6 +291,14 @@ export default function PageBuilder() {
     });
     setShowTokenPicker(true);
   };
+
+  // Apply highlight to selected element
+  React.useEffect(() => {
+    if (selectedElement?.originalElement) {
+      selectedElement.originalElement.style.outline = '2px solid var(--color-primary)';
+      selectedElement.originalElement.style.outlineOffset = '2px';
+    }
+  }, [selectedElement]);
 
   const getElementPath = (element) => {
     const path = [];
