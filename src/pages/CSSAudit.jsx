@@ -573,11 +573,11 @@ export default function CSSAudit() {
           </div>
           <div className="flex gap-2">
             <Badge variant="outline" className="gap-2">
-              <CheckCircle2 className="h-3 w-3 text-[var(--color-success)]" />
+              <CheckCircle2 className="h-3 w-3 text-success-foreground" />
               {verifiedCount} Verified
             </Badge>
             <Badge variant="outline" className="gap-2">
-              <AlertTriangle className="h-3 w-3 text-[var(--color-warning)]" />
+              <AlertTriangle className="h-3 w-3 text-warning-foreground" />
               {needsWorkCount} Need Work
             </Badge>
           </div>
@@ -596,7 +596,7 @@ export default function CSSAudit() {
                     {filteredFiles.map(file => (
                       <SelectItem key={file} value={file}>
                         <div className="flex items-center gap-2">
-                          {verifiedFiles[file] && <CheckCircle2 className="h-3 w-3 text-[var(--color-success)]" />}
+                          {verifiedFiles[file] && <CheckCircle2 className="h-3 w-3 text-success-foreground" />}
                           <span className="font-mono text-xs">{file}</span>
                         </div>
                       </SelectItem>
@@ -622,8 +622,8 @@ export default function CSSAudit() {
         <div className="space-y-4 overflow-y-auto max-h-[calc(100vh-300px)]">{analyzing && (
           <Card>
             <CardContent className="py-8 text-center">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-3 text-[var(--color-primary)]" />
-              <p className="text-sm text-[var(--color-charcoal)]">Analyzing {selectedFile}...</p>
+              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-3 text-primary-500" />
+              <p className="text-sm text-muted-foreground">Analyzing {selectedFile}...</p>
             </CardContent>
           </Card>
         )}
@@ -641,12 +641,12 @@ export default function CSSAudit() {
                         {activeCounts.total} violations
                       </Badge>
                       {activeCounts.critical > 0 && (
-                        <Badge className="bg-[var(--color-destructive)] text-white">
+                        <Badge className="bg-destructive text-white">
                           {activeCounts.critical} critical
                         </Badge>
                       )}
                       {activeCounts.high > 0 && (
-                        <Badge className="bg-[var(--color-warning)] text-white">
+                        <Badge className="bg-warning text-white">
                           {activeCounts.high} high
                         </Badge>
                       )}
@@ -750,11 +750,11 @@ export default function CSSAudit() {
               ) : (
                 <Card className="border-dashed border-2 border-[var(--color-success)]">
                   <CardContent className="py-12 text-center">
-                    <CheckCircle2 className="h-12 w-12 mx-auto mb-3 text-[var(--color-success)]" />
-                    <h3 className="text-lg font-medium text-[var(--color-success)] mb-2">
+                    <CheckCircle2 className="h-12 w-12 mx-auto mb-3 text-success-foreground" />
+                    <h3 className="text-lg font-medium text-success-foreground mb-2">
                       No Violations Found!
                     </h3>
-                    <p className="text-[var(--color-charcoal)]">
+                    <p className="text-muted-foreground">
                       This file follows all design token guidelines
                     </p>
                   </CardContent>
@@ -766,9 +766,9 @@ export default function CSSAudit() {
           {!fileReport && !analyzing && (
             <Card className="border-dashed h-[400px] flex items-center justify-center">
               <CardContent className="text-center">
-                <FileCode className="h-12 w-12 mx-auto mb-3 text-[var(--color-charcoal)]/30" />
+                <FileCode className="h-12 w-12 mx-auto mb-3 text-muted-foreground/30" />
                 <h3 className="text-base font-medium mb-2">Select a file to audit</h3>
-                <p className="text-sm text-[var(--color-charcoal)]">
+                <p className="text-sm text-muted-foreground">
                   Click any file from the list to scan for violations
                 </p>
               </CardContent>

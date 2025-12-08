@@ -300,9 +300,9 @@ Return JSON with entity names as keys and arrays of records as values.`,
                 <p className="text-white/80 mt-1">Manage test data for pages and features</p>
                 <div className="flex gap-3 mt-4">
                   <Badge className="bg-white/20">{stats.total} Items</Badge>
-                  <Badge className="bg-success/80 text-success-foreground">{stats.verified} Verified</Badge>
-                  <Badge className="bg-warning/80 text-warning-foreground">{stats.pending} Pending</Badge>
-                  <Badge className="bg-destructive/80 text-destructive-foreground">{stats.noData} No Data</Badge>
+                  <Badge className="bg-success-50 text-success-foreground">{stats.verified} Verified</Badge>
+                  <Badge className="bg-warning/10 text-warning-foreground">{stats.pending} Pending</Badge>
+                  <Badge className="bg-destructive-50 text-destructive-700">{stats.noData} No Data</Badge>
                 </div>
               </div>
             </div>
@@ -313,7 +313,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
               <Button 
                 onClick={bulkVerify}
                 disabled={isOperating || stats.pending === 0}
-                className="bg-white text-accent-700 hover:bg-accent-50"
+                className="bg-white text-accent-800 hover:bg-accent-50"
               >
                 <CheckCircle2 className="h-4 w-4 mr-2" />
                 Verify All ({stats.pending})
@@ -332,7 +332,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
                 {operation.type === "verify" ? (
                   <Loader2 className="h-5 w-5 animate-spin" />
                 ) : (
-                  <CheckCircle2 className="h-5 w-5 text-success" />
+                  <CheckCircle2 className="h-5 w-5 text-success-foreground" />
                 )}
                 {operation.type === "verify" ? "Verifying..." : "Verification Complete"}
               </CardTitle>
@@ -392,7 +392,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
         <CardContent>
           {filteredItems.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              <CheckCircle2 className="h-10 w-10 mx-auto mb-2 text-success" />
+              <CheckCircle2 className="h-10 w-10 mx-auto mb-2 text-success-foreground" />
               <p>No items in this category</p>
             </div>
           ) : (
@@ -413,9 +413,9 @@ Return JSON with entity names as keys and arrays of records as values.`,
                     <tr key={item.id} className="hover:bg-muted">
                       <td className="p-3">
                         {item.type === "page" ? (
-                          <Layout className="h-4 w-4 text-info" />
+                          <Layout className="h-4 w-4 text-info-foreground" />
                         ) : (
-                          <Zap className="h-4 w-4 text-warning" />
+                          <Zap className="h-4 w-4 text-warning-foreground" />
                         )}
                       </td>
                       <td className="p-3 font-medium">{item.name}</td>

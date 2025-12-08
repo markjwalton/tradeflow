@@ -407,7 +407,7 @@ Provide a clear, concise explanation that helps them understand this pattern and
               <CardTitle className="text-sm">Verified</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-success">
+              <div className="text-3xl font-bold text-success-foreground">
                 {patterns.filter(p => p.status === 'verified').length}
               </div>
             </CardContent>

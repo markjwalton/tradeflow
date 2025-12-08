@@ -301,7 +301,7 @@ export default function ProjectsOverview() {
                                   ? "bg-destructive"
                                   : (project.currentSpend / project.budget) > 0.7
                                   ? "bg-warning"
-                                  : "bg-success"
+                                  : "bg-success-foreground"
                               }`}
                               style={{
                                 width: `${Math.min(100, (project.currentSpend / project.budget) * 100)}%`,

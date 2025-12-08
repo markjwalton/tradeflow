@@ -162,7 +162,7 @@ export default function ChecklistTemplates() {
                     <CardTitle className="text-lg flex items-center gap-2">
                       {checklist.name}
                       {checklist.isActive !== false ? (
-                        <CheckCircle className="h-4 w-4 text-success" />
+                        <CheckCircle className="h-4 w-4 text-success-foreground" />
                       ) : (
                         <XCircle className="h-4 w-4 text-muted-foreground" />
                       )}
