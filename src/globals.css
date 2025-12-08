@@ -436,93 +436,93 @@ css
 
   /* Semantic Typography Classes */
   .text-h1 {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-3xl);
-    font-weight: 300;
-    line-height: var(--line-height-tight);
-    letter-spacing: var(--tracking-tight);
-    color: var(--color-midnight);
+    font-family: var(--font-heading) !important;
+    font-size: var(--font-size-3xl) !important;
+    font-weight: 300 !important;
+    line-height: var(--line-height-tight) !important;
+    letter-spacing: var(--tracking-tight) !important;
+    color: var(--color-midnight) !important;
   }
 
   .text-h2 {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-2xl);
-    font-weight: 300;
-    line-height: var(--line-height-tight);
-    letter-spacing: var(--tracking-tight);
-    color: var(--color-midnight);
+    font-family: var(--font-heading) !important;
+    font-size: var(--font-size-2xl) !important;
+    font-weight: 300 !important;
+    line-height: var(--line-height-tight) !important;
+    letter-spacing: var(--tracking-tight) !important;
+    color: var(--color-midnight) !important;
   }
 
   .text-h3 {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-xl);
-    font-weight: 300;
-    line-height: var(--line-height-snug);
-    letter-spacing: var(--tracking-tight);
-    color: var(--color-midnight);
+    font-family: var(--font-heading) !important;
+    font-size: var(--font-size-xl) !important;
+    font-weight: 300 !important;
+    line-height: var(--line-height-snug) !important;
+    letter-spacing: var(--tracking-tight) !important;
+    color: var(--color-midnight) !important;
   }
 
   .text-h4 {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-lg);
-    font-weight: 300;
-    line-height: var(--line-height-snug);
-    letter-spacing: var(--tracking-tight);
-    color: var(--color-midnight);
+    font-family: var(--font-heading) !important;
+    font-size: var(--font-size-lg) !important;
+    font-weight: 300 !important;
+    line-height: var(--line-height-snug) !important;
+    letter-spacing: var(--tracking-tight) !important;
+    color: var(--color-midnight) !important;
   }
 
   .text-h5 {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-base);
-    font-weight: 300;
-    line-height: var(--line-height-normal);
-    letter-spacing: var(--tracking-tight);
-    color: var(--color-midnight);
+    font-family: var(--font-heading) !important;
+    font-size: var(--font-size-base) !important;
+    font-weight: 300 !important;
+    line-height: var(--line-height-normal) !important;
+    letter-spacing: var(--tracking-tight) !important;
+    color: var(--color-midnight) !important;
   }
 
   .text-h6 {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-sm);
-    font-weight: 500;
-    line-height: var(--line-height-normal);
-    letter-spacing: var(--tracking-tight);
-    color: var(--color-midnight);
+    font-family: var(--font-heading) !important;
+    font-size: var(--font-size-sm) !important;
+    font-weight: 500 !important;
+    line-height: var(--line-height-normal) !important;
+    letter-spacing: var(--tracking-tight) !important;
+    color: var(--color-midnight) !important;
   }
 
   .text-body-large {
-    font-family: var(--font-body);
-    font-size: var(--font-size-lg);
-    line-height: var(--line-height-relaxed);
-    color: var(--color-charcoal);
+    font-family: var(--font-body) !important;
+    font-size: var(--font-size-lg) !important;
+    line-height: var(--line-height-relaxed) !important;
+    color: var(--color-charcoal) !important;
   }
 
   .text-body-base {
-    font-family: var(--font-body);
-    font-size: var(--font-size-base);
-    line-height: var(--line-height-relaxed);
-    color: var(--color-charcoal);
+    font-family: var(--font-body) !important;
+    font-size: var(--font-size-base) !important;
+    line-height: var(--line-height-relaxed) !important;
+    color: var(--color-charcoal) !important;
   }
 
   .text-body-small {
-    font-family: var(--font-body);
-    font-size: var(--font-size-sm);
-    line-height: var(--line-height-normal);
-    color: var(--color-charcoal);
+    font-family: var(--font-body) !important;
+    font-size: var(--font-size-sm) !important;
+    line-height: var(--line-height-normal) !important;
+    color: var(--color-charcoal) !important;
   }
 
   .text-body-muted {
-    font-family: var(--font-body);
-    font-size: var(--font-size-sm);
-    line-height: var(--line-height-relaxed);
-    color: var(--color-charcoal-400);
+    font-family: var(--font-body) !important;
+    font-size: var(--font-size-sm) !important;
+    line-height: var(--line-height-relaxed) !important;
+    color: var(--color-charcoal-400) !important;
   }
 
   .text-caption {
-    font-family: var(--font-body);
-    font-size: var(--font-size-xs);
-    line-height: var(--line-height-normal);
-    color: var(--color-charcoal-400);
-    font-style: italic;
+    font-family: var(--font-body) !important;
+    font-size: var(--font-size-xs) !important;
+    line-height: var(--line-height-normal) !important;
+    color: var(--color-charcoal-400) !important;
+    font-style: italic !important;
   }
 
   /* Card styles */
