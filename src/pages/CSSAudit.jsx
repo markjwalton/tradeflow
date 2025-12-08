@@ -36,6 +36,7 @@ export default function CSSAudit() {
   const [highlightedCode, setHighlightedCode] = useState(null);
   const [showPasteDialog, setShowPasteDialog] = useState(false);
   const [pasteContent, setPasteContent] = useState("");
+  const [deletedViolations, setDeletedViolations] = useState(new Set());
 
   // Load verification status from localStorage
   React.useEffect(() => {
@@ -358,6 +359,7 @@ export default function CSSAudit() {
     setFileReport(null);
     setFileContent("");
     setHighlightedCode(null);
+    setDeletedViolations(new Set());
   };
 
   const handlePasteContent = () => {
@@ -508,6 +510,20 @@ export default function CSSAudit() {
     }, 100);
   };
 
+  const handleDeleteViolation = (idx) => {
+    setDeletedViolations(prev => new Set([...prev, idx]));
+  };
+
+  // Filter violations by deleted set
+  const activeViolations = fileReport?.violations?.filter((_, idx) => !deletedViolations.has(idx)) || [];
+  const activeCounts = {
+    total: activeViolations.length,
+    critical: activeViolations.filter(v => v.severity === 'critical').length,
+    high: activeViolations.filter(v => v.severity === 'high').length,
+    medium: activeViolations.filter(v => v.severity === 'medium').length,
+    low: activeViolations.filter(v => v.severity === 'low').length
+  };
+
 
 
   const generateAIPrompt = () => {
@@ -609,32 +625,32 @@ export default function CSSAudit() {
               <Card>
                 <CardHeader>
                   <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle className="text-base font-mono">{fileReport.filePath}</CardTitle>
-                      <div className="flex gap-2 mt-2">
-                        <Badge variant={fileReport.totalViolations === 0 ? "default" : "destructive"}>
-                          {fileReport.totalViolations} violations
+                  <div>
+                    <CardTitle className="text-base font-mono">{fileReport.filePath}</CardTitle>
+                    <div className="flex gap-2 mt-2">
+                      <Badge variant={activeCounts.total === 0 ? "default" : "destructive"}>
+                        {activeCounts.total} violations
+                      </Badge>
+                      {activeCounts.critical > 0 && (
+                        <Badge className="bg-[var(--color-destructive)] text-white">
+                          {activeCounts.critical} critical
                         </Badge>
-                        {fileReport.criticalCount > 0 && (
-                          <Badge className="bg-[var(--color-destructive)] text-white">
-                            {fileReport.criticalCount} critical
-                          </Badge>
-                        )}
-                        {fileReport.highCount > 0 && (
-                          <Badge className="bg-[var(--color-warning)] text-white">
-                            {fileReport.highCount} high
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      {fileReport.totalViolations > 0 && (
-                        <Button onClick={generateAIPrompt} variant="default" className="gap-2">
-                          <Sparkles className="h-4 w-4" />
-                          Copy AI Prompt
-                        </Button>
                       )}
-                      {fileReport.totalViolations === 0 && !verifiedFiles[selectedFile] && (
+                      {activeCounts.high > 0 && (
+                        <Badge className="bg-[var(--color-warning)] text-white">
+                          {activeCounts.high} high
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    {activeCounts.total > 0 && (
+                      <Button onClick={generateAIPrompt} variant="default" className="gap-2">
+                        <Sparkles className="h-4 w-4" />
+                        Copy AI Prompt
+                      </Button>
+                    )}
+                    {activeCounts.total === 0 && !verifiedFiles[selectedFile] && (
                         <Button onClick={() => markFileVerified(selectedFile)} className="gap-2">
                           <CheckCircle2 className="h-4 w-4" />
                           Mark as Verified
@@ -651,9 +667,11 @@ export default function CSSAudit() {
               </Card>
 
               {/* Violations List */}
-              {fileReport.violations.length > 0 ? (
+              {activeViolations.length > 0 ? (
                 <div className="space-y-3">
-                  {fileReport.violations.map((v, idx) => (
+                  {activeViolations.map((v, idx) => {
+                    const originalIdx = fileReport.violations.indexOf(v);
+                    return (
                     <Card 
                       key={idx} 
                       className="border-l-4 cursor-pointer hover:shadow-md transition-shadow" 
@@ -681,13 +699,25 @@ export default function CSSAudit() {
                               <p className="text-xs text-[var(--color-charcoal)] mt-1">
                                 Line {v.lineNumber}
                               </p>
-                            )}
-                          </div>
-                        </div>
+                              )}
+                              </div>
+                              <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteViolation(originalIdx);
+                              }}
+                              className="gap-1 text-[var(--color-charcoal)] hover:text-[var(--color-destructive)]"
+                              >
+                              <Trash2 className="h-3 w-3" />
+                              Dismiss
+                              </Button>
+                              </div>
                         <div className="space-y-2 mt-3">
-                          <div>
+                          <div onClick={() => handleViolationClick(v.currentCode)} className="cursor-pointer">
                             <span className="text-xs font-mono text-[var(--color-destructive)]">Current:</span>
-                            <code className="block text-xs bg-[var(--color-muted)] p-2 rounded mt-1 font-mono">
+                            <code className="block text-xs bg-[var(--color-muted)] p-2 rounded mt-1 font-mono hover:bg-[var(--color-muted)]/80">
                               {v.currentCode}
                             </code>
                           </div>
@@ -699,9 +729,10 @@ export default function CSSAudit() {
                           </div>
                         </div>
                       </CardContent>
-                    </Card>
-                  ))}
-                </div>
+                      </Card>
+                      );
+                      })}
+                      </div>
               ) : (
                 <Card className="border-dashed border-2 border-[var(--color-success)]">
                   <CardContent className="py-12 text-center">
