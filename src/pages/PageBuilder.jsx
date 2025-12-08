@@ -106,6 +106,13 @@ export default function PageBuilder() {
       { name: "3XL (1.875rem)", value: "text-[var(--font-size-3xl)]" },
       { name: "4XL (2.25rem)", value: "text-[var(--font-size-4xl)]" },
     ],
+    fontWeights: [
+      { name: "Light (300)", value: "font-light" },
+      { name: "Normal (400)", value: "font-normal" },
+      { name: "Medium (500)", value: "font-medium" },
+      { name: "Semibold (600)", value: "font-semibold" },
+      { name: "Bold (700)", value: "font-bold" },
+    ],
     borders: [
       { name: "Primary", value: "border-[var(--color-primary)]" },
       { name: "Secondary", value: "border-[var(--color-secondary)]" },
@@ -346,6 +353,8 @@ export default function PageBuilder() {
         classArray = classArray.filter(c => !c.match(/^font-\[var\(--font-/) && !c.match(/^font-(sans|serif|mono|heading|body)$/));
       } else if (tokenType === 'font-size') {
         classArray = classArray.filter(c => !c.match(/^text-\[var\(--font-size-/) && !c.match(/^text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)$/));
+      } else if (tokenType === 'font-weight') {
+        classArray = classArray.filter(c => !c.match(/^font-(thin|extralight|light|normal|medium|semibold|bold|extrabold|black)$/));
       } else if (tokenType === 'border') {
         classArray = classArray.filter(c => !c.match(/^border-\[var\(--color-/) && !c.match(/^border-(white|black|gray-|slate-|zinc-|neutral-|stone-|red-|orange-|amber-|yellow-|lime-|green-|emerald-|teal-|cyan-|sky-|blue-|indigo-|violet-|purple-|fuchsia-|pink-|rose-)/));
       } else if (tokenType === 'transition') {
@@ -1010,6 +1019,21 @@ export default function PageBuilder() {
                       variant="outline"
                       className="justify-start"
                       onClick={() => applyTokenToElement(token.value, 'font-size')}
+                    >
+                      {token.name}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <Label className="mb-2 block">Font Weight</Label>
+                <div className="grid grid-cols-3 gap-2">
+                  {TOKEN_LIBRARY.fontWeights.map((token) => (
+                    <Button
+                      key={token.value}
+                      variant="outline"
+                      className="justify-start"
+                      onClick={() => applyTokenToElement(token.value, 'font-weight')}
                     >
                       {token.name}
                     </Button>
