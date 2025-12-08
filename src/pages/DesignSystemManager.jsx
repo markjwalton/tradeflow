@@ -255,14 +255,14 @@ For each recommendation, provide:
   };
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-h2 flex items-center gap-2">
-            <Package className="h-6 w-6 text-primary-500" />
+            <Package className="h-6 w-6 text-primary" />
             Design System Manager
           </h1>
-          <p className="text-[var(--color-charcoal)]">
+          <p className="text-charcoal-700">
             Version control, package distribution, and AI-assisted updates
           </p>
         </div>
@@ -271,7 +271,6 @@ For each recommendation, provide:
             variant="outline" 
             onClick={analyzePackageUpdates}
             disabled={isAnalyzing}
-            className="border-background-muted"
           >
             {isAnalyzing ? (
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -283,14 +282,13 @@ For each recommendation, provide:
           <Button 
             variant="outline"
             onClick={() => setShowCreateDialog(true)}
-            className="border-background-muted"
           >
             <Plus className="h-4 w-4 mr-2" />
             Core Package
           </Button>
           <Button 
             onClick={() => setShowThemeCreator(true)}
-            className="bg-primary-500 hover:bg-primary-600 text-white"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground"
           >
             <Palette className="h-4 w-4 mr-2" />
             Create Custom Theme
@@ -300,15 +298,15 @@ For each recommendation, provide:
 
       {/* Alert for pending recommendations */}
       {pendingRecs.length > 0 && (
-        <Card className="mb-6 border-warning bg-warning/5">
+        <Card className="mb-6 border-warning/30 bg-warning/5">
           <CardContent className="py-4">
             <div className="flex items-center gap-3">
-              <AlertCircle className="h-5 w-5 text-warning-foreground" />
+              <AlertCircle className="h-5 w-5 text-warning" />
               <div className="flex-1">
-                <p className="font-medium text-[var(--color-midnight)]">
+                <p className="font-medium text-midnight-900">
                   {pendingRecs.length} update recommendations pending review
                 </p>
-                <p className="text-sm text-[var(--color-charcoal)]">
+                <p className="text-sm text-charcoal-700">
                   AI has identified improvements for your design system
                 </p>
               </div>
@@ -358,26 +356,26 @@ For each recommendation, provide:
             </h2>
             <div className="grid md:grid-cols-2 gap-4">
               {corePackages.map(pkg => (
-                <Card key={pkg.id} className="border-background-muted">
+                <Card key={pkg.id}>
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div>
-                        <CardTitle className="text-[var(--color-midnight)] flex items-center gap-2">
-                          <Palette className="h-5 w-5 text-primary-500" />
+                        <CardTitle className="text-midnight-900 flex items-center gap-2">
+                          <Palette className="h-5 w-5 text-primary" />
                           {pkg.package_name}
                         </CardTitle>
-                        <code className="text-xs text-[var(--color-charcoal)]">{pkg.package_code}</code>
+                        <code className="text-xs text-charcoal-700">{pkg.package_code}</code>
                       </div>
-                      <Badge className="bg-success-50 text-success-foreground">
+                      <Badge className="bg-success-50 text-success">
                         v{pkg.version}
                       </Badge>
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-[var(--color-charcoal)] mb-4">
+                    <p className="text-sm text-charcoal-700 mb-4">
                       {pkg.description}
                     </p>
-                    <div className="flex items-center justify-between text-xs text-[var(--color-charcoal)] mb-3">
+                    <div className="flex items-center justify-between text-xs text-charcoal-700 mb-3">
                       <span>Tailwind {pkg.tailwind_version}</span>
                       <span>{pkg.component_list?.length || 0} components</span>
                     </div>
@@ -403,12 +401,12 @@ For each recommendation, provide:
                 </Card>
               ))}
               {corePackages.length === 0 && (
-                <Card className="border-dashed border-background-muted md:col-span-2">
+                <Card className="border-dashed md:col-span-2">
                   <CardContent className="py-12 text-center">
-                    <Package className="h-12 w-12 mx-auto mb-4 opacity-50 text-[var(--color-charcoal)]" />
-                    <p className="text-[var(--color-charcoal)]">No core packages yet</p>
+                    <Package className="h-12 w-12 mx-auto mb-4 opacity-50 text-charcoal-700" />
+                    <p className="text-charcoal-700">No core packages yet</p>
                     <Button 
-                      className="mt-4 bg-primary-500 hover:bg-primary-600 text-white"
+                      className="mt-4 bg-primary hover:bg-primary/90 text-primary-foreground"
                       onClick={() => setShowCreateDialog(true)}
                     >
                       Create Sturij Core Package
@@ -427,24 +425,24 @@ For each recommendation, provide:
               </h2>
               <div className="grid md:grid-cols-2 gap-4">
                 {customerPackages.map(pkg => (
-                  <Card key={pkg.id} className="border-background-muted">
+                  <Card key={pkg.id}>
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div>
-                          <CardTitle className="text-[var(--color-midnight)] flex items-center gap-2">
-                            <Building2 className="h-5 w-5 text-secondary-400" />
+                          <CardTitle className="text-midnight-900 flex items-center gap-2">
+                            <Building2 className="h-5 w-5 text-secondary" />
                             {pkg.package_name}
                           </CardTitle>
                           <div className="flex items-center gap-2 mt-1">
-                            <code className="text-xs text-[var(--color-charcoal)]">{pkg.package_code}</code>
+                            <code className="text-xs text-charcoal-700">{pkg.package_code}</code>
                             {pkg.update_available && (
-                              <Badge className="bg-warning/10 text-warning-foreground">
+                              <Badge className="bg-warning/10 text-warning">
                                 Update Available
                               </Badge>
                             )}
                           </div>
                         </div>
-                        <Badge className="bg-info-50 text-info-foreground">
+                        <Badge className="bg-info-50 text-info">
                           v{pkg.version}
                         </Badge>
                       </div>
@@ -452,17 +450,17 @@ For each recommendation, provide:
                     <CardContent>
                       <div className="space-y-2 mb-4">
                         <div className="flex items-center gap-2 text-sm">
-                          <Building2 className="h-4 w-4 text-[var(--color-charcoal)]" />
-                          <span className="text-[var(--color-charcoal)]">{pkg.customer_company}</span>
+                          <Building2 className="h-4 w-4 text-charcoal-700" />
+                          <span className="text-charcoal-700">{pkg.customer_company}</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm">
-                          <Mail className="h-4 w-4 text-[var(--color-charcoal)]" />
-                          <span className="text-[var(--color-charcoal)]">{pkg.customer_email}</span>
+                          <Mail className="h-4 w-4 text-charcoal-700" />
+                          <span className="text-charcoal-700">{pkg.customer_email}</span>
                         </div>
                         {pkg.parent_package_id && (
                           <div className="flex items-center gap-2 text-sm">
-                            <GitBranch className="h-4 w-4 text-[var(--color-charcoal)]" />
-                            <span className="text-[var(--color-charcoal)]">
+                            <GitBranch className="h-4 w-4 text-charcoal-700" />
+                            <span className="text-charcoal-700">
                               Based on {packages.find(p => p.id === pkg.parent_package_id)?.package_name} v{pkg.parent_version}
                             </span>
                           </div>
@@ -501,7 +499,7 @@ For each recommendation, provide:
               Component Library
             </h2>
             <Link to={createPageUrl("ComponentShowcase")}>
-              <Button variant="outline" className="border-[var(--color-background-muted)]">
+              <Button variant="outline">
                 <Eye className="h-4 w-4 mr-2" />
                 View Showcase
               </Button>
@@ -509,11 +507,11 @@ For each recommendation, provide:
           </div>
 
           {components.length === 0 ? (
-            <Card className="border-[var(--color-background-muted)]">
+            <Card>
               <CardContent className="py-12 text-center">
-                <FileCode className="h-12 w-12 mx-auto mb-4 opacity-50 text-[var(--color-charcoal)]" />
-                <p className="text-[var(--color-charcoal)]">No component specifications yet</p>
-                <p className="text-sm text-[var(--color-charcoal)] mt-1">
+                <FileCode className="h-12 w-12 mx-auto mb-4 opacity-50 text-charcoal-700" />
+                <p className="text-charcoal-700">No component specifications yet</p>
+                <p className="text-sm text-charcoal-700 mt-1">
                   Components will be cataloged when you create packages
                 </p>
               </CardContent>
@@ -521,9 +519,9 @@ For each recommendation, provide:
           ) : (
             <div className="grid md:grid-cols-3 gap-4">
               {components.map(comp => (
-                <Card key={comp.id} className="border-[var(--color-background-muted)]">
+                <Card key={comp.id}>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-base text-[var(--color-midnight)]">
+                    <CardTitle className="text-base text-midnight-900">
                       {comp.component_name}
                     </CardTitle>
                     <div className="flex items-center gap-2 mt-1">
@@ -534,10 +532,10 @@ For each recommendation, provide:
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-[var(--color-charcoal)] mb-3">
+                    <p className="text-sm text-charcoal-700 mb-3">
                       {comp.description}
                     </p>
-                    <div className="text-xs text-[var(--color-charcoal)]">
+                    <div className="text-xs text-charcoal-700">
                       {comp.design_tokens_used?.length || 0} tokens used
                     </div>
                   </CardContent>
@@ -556,7 +554,7 @@ For each recommendation, provide:
             <Button 
               onClick={analyzePackageUpdates}
               disabled={isAnalyzing}
-              className="bg-primary-500 hover:bg-primary-600 text-white"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               {isAnalyzing ? (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -568,11 +566,11 @@ For each recommendation, provide:
           </div>
 
           {recommendations.length === 0 ? (
-            <Card className="border-[var(--color-background-muted)]">
+            <Card>
               <CardContent className="py-12 text-center">
-                <Sparkles className="h-12 w-12 mx-auto mb-4 opacity-50 text-[var(--color-charcoal)]" />
-                <p className="text-[var(--color-charcoal)]">No recommendations yet</p>
-                <p className="text-sm text-[var(--color-charcoal)] mt-1">
+                <Sparkles className="h-12 w-12 mx-auto mb-4 opacity-50 text-charcoal-700" />
+                <p className="text-charcoal-700">No recommendations yet</p>
+                <p className="text-sm text-charcoal-700 mt-1">
                   Run AI analysis to get update recommendations
                 </p>
               </CardContent>
