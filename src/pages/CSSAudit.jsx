@@ -13,9 +13,50 @@ export default function CSSAudit() {
   const [report, setReport] = useState(null);
   const [expandedFiles, setExpandedFiles] = useState({});
   const [copiedReport, setCopiedReport] = useState(false);
+  const [scanProgress, setScanProgress] = useState(0);
+  const [scannedFiles, setScannedFiles] = useState([]);
+  const [currentFile, setCurrentFile] = useState("");
 
   const handleAnalyze = async () => {
     setAnalyzing(true);
+    setScanProgress(0);
+    setScannedFiles([]);
+    setCurrentFile("");
+    
+    // Files to scan
+    const filesToScan = [
+      "Layout.js",
+      "Dashboard.jsx", 
+      "ComponentShowcase.jsx",
+      "components/library/designTokens.js",
+      "NavigationBreadcrumb.jsx",
+      "DashboardSettings.jsx",
+      "pages/Home.jsx",
+      "pages/Projects.jsx"
+    ];
+    
+    // Simulate scanning progress
+    const simulateScanning = async () => {
+      for (let i = 0; i < filesToScan.length; i++) {
+        await new Promise(resolve => setTimeout(resolve, 400));
+        setCurrentFile(filesToScan[i]);
+        setScanProgress(((i + 1) / filesToScan.length) * 100);
+        setScannedFiles(prev => [...prev, { 
+          path: filesToScan[i], 
+          status: "scanning",
+          timestamp: new Date().toISOString()
+        }]);
+        
+        await new Promise(resolve => setTimeout(resolve, 300));
+        setScannedFiles(prev => prev.map((f, idx) => 
+          idx === i ? { ...f, status: "complete" } : f
+        ));
+      }
+    };
+    
+    // Start scanning simulation
+    const scanPromise = simulateScanning();
+    
     try {
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `You are a CSS/design token auditor. Analyze the following codebase for design token violations.
@@ -95,10 +136,16 @@ Return a comprehensive audit report.`,
         }
       });
       
+      // Wait for scanning animation to complete
+      await scanPromise;
+      
       setReport(result);
+      setCurrentFile("");
+      setScanProgress(100);
       toast.success("Analysis complete");
     } catch (error) {
       toast.error("Analysis failed: " + error.message);
+      setScannedFiles(prev => prev.map(f => ({ ...f, status: "error" })));
     }
     setAnalyzing(false);
   };
@@ -168,9 +215,53 @@ Return a comprehensive audit report.`,
 
       {analyzing && (
         <Card className="mb-6">
-          <CardContent className="py-12 text-center">
-            <Loader2 className="h-8 w-8 animate-spin text-[var(--color-primary)] mx-auto mb-3" />
-            <p className="text-[var(--color-charcoal)]">AI is analyzing your codebase for design token violations...</p>
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Scanning Files
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* Progress Bar */}
+            <div>
+              <div className="flex justify-between text-sm mb-2">
+                <span className="text-[var(--color-charcoal)]">
+                  {currentFile ? `Scanning: ${currentFile}` : "Preparing analysis..."}
+                </span>
+                <span className="font-mono text-[var(--color-charcoal)]">{Math.round(scanProgress)}%</span>
+              </div>
+              <div className="h-2 bg-[var(--color-background-muted)] rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-[var(--color-primary)] transition-all duration-300"
+                  style={{ width: `${scanProgress}%` }}
+                />
+              </div>
+            </div>
+            
+            {/* Scanned Files List */}
+            {scannedFiles.length > 0 && (
+              <div className="max-h-60 overflow-y-auto space-y-1 border border-[var(--color-background-muted)] rounded-lg p-3 bg-[var(--color-background-subtle)]">
+                {scannedFiles.map((file, idx) => (
+                  <div 
+                    key={idx} 
+                    className="flex items-center gap-2 text-sm font-mono"
+                  >
+                    {file.status === "scanning" && (
+                      <Loader2 className="h-3 w-3 animate-spin text-[var(--color-primary)]" />
+                    )}
+                    {file.status === "complete" && (
+                      <CheckCircle2 className="h-3 w-3 text-[var(--color-success)]" />
+                    )}
+                    {file.status === "error" && (
+                      <AlertTriangle className="h-3 w-3 text-[var(--color-destructive)]" />
+                    )}
+                    <span className={file.status === "complete" ? "text-[var(--color-success)]" : "text-[var(--color-charcoal)]"}>
+                      {file.path}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
