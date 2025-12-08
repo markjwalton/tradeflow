@@ -248,10 +248,10 @@ For each recommendation, provide:
   const pendingRecs = recommendations.filter(r => r.status === "pending_review");
 
   const impactColors = {
-    low: "bg-info-50 text-info-foreground",
-    medium: "bg-warning/10 text-warning-foreground",
-    high: "bg-secondary-100 text-secondary-700",
-    critical: "bg-destructive-50 text-destructive-700"
+    low: "bg-info-50 text-info",
+    medium: "bg-warning/10 text-warning",
+    high: "bg-secondary-100 text-secondary",
+    critical: "bg-destructive-50 text-destructive"
   };
 
   return (
@@ -580,15 +580,13 @@ For each recommendation, provide:
               {recommendations.map(rec => (
                 <Card 
                   key={rec.id}
-                  className={`border-[var(--color-background-muted)] ${
-                    rec.status === "accepted" ? "opacity-60" : ""
-                  }`}
+                  className={rec.status === "accepted" ? "opacity-60" : ""}
                 >
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <CardTitle className="text-base text-[var(--color-midnight)]">
+                          <CardTitle className="text-base text-midnight-900">
                             {rec.title}
                           </CardTitle>
                           <Badge className={impactColors[rec.impact]}>
@@ -616,34 +614,34 @@ For each recommendation, provide:
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
-                      <p className="text-sm text-[var(--color-charcoal)] mb-2">
+                      <p className="text-sm text-charcoal-700 mb-2">
                         {rec.description}
                       </p>
                       {rec.reasoning && (
-                        <div className="bg-accent-100 p-3 rounded-[var(--radius-md)] text-sm">
-                          <p className="font-medium text-[var(--color-midnight)] mb-1">AI Reasoning:</p>
-                          <p className="text-[var(--color-charcoal)]">{rec.reasoning}</p>
+                        <div className="bg-accent-100 p-3 rounded-md text-sm">
+                          <p className="font-medium text-midnight-900 mb-1">AI Reasoning:</p>
+                          <p className="text-charcoal-700">{rec.reasoning}</p>
                         </div>
                       )}
                     </div>
 
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
-                        <span className="text-[var(--color-charcoal)] font-medium">Current:</span>
-                        <span className="ml-2 text-[var(--color-midnight)]">{rec.current_version}</span>
+                        <span className="text-charcoal-700 font-medium">Current:</span>
+                        <span className="ml-2 text-midnight-900">{rec.current_version}</span>
                       </div>
                       <div>
-                        <span className="text-[var(--color-charcoal)] font-medium">Recommended:</span>
-                        <span className="ml-2 text-[var(--color-midnight)]">{rec.recommended_version}</span>
+                        <span className="text-charcoal-700 font-medium">Recommended:</span>
+                        <span className="ml-2 text-midnight-900">{rec.recommended_version}</span>
                       </div>
                       <div>
-                        <span className="text-[var(--color-charcoal)] font-medium">Effort:</span>
-                        <Badge className="ml-2 bg-[var(--color-charcoal)]/10 text-[var(--color-charcoal)]">
+                        <span className="text-charcoal-700 font-medium">Effort:</span>
+                        <Badge className="ml-2 bg-charcoal-100 text-charcoal-700">
                           {rec.effort}
                         </Badge>
                       </div>
                       <div>
-                        <span className="text-[var(--color-charcoal)] font-medium">Impact:</span>
+                        <span className="text-charcoal-700 font-medium">Impact:</span>
                         <Badge className={`ml-2 ${impactColors[rec.impact]}`}>
                           {rec.impact}
                         </Badge>
@@ -652,11 +650,11 @@ For each recommendation, provide:
 
                     {rec.benefits?.length > 0 && (
                       <div>
-                        <p className="text-sm font-medium text-[var(--color-midnight)] mb-1">Benefits:</p>
-                        <ul className="text-sm text-[var(--color-charcoal)] space-y-1">
+                        <p className="text-sm font-medium text-midnight-900 mb-1">Benefits:</p>
+                        <ul className="text-sm text-charcoal-700 space-y-1">
                           {rec.benefits.map((b, i) => (
                             <li key={i} className="flex items-start gap-2">
-                              <CheckCircle2 className="h-4 w-4 text-success-foreground mt-0.5 flex-shrink-0" />
+                              <CheckCircle2 className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
                               {b}
                             </li>
                           ))}
@@ -665,11 +663,11 @@ For each recommendation, provide:
                     )}
 
                     {rec.status === "pending_review" && (
-                      <div className="flex gap-2 pt-2 border-t border-[var(--color-background-muted)]">
+                      <div className="flex gap-2 pt-2 border-t border-border">
                         <Button 
                           size="sm"
                           onClick={() => handleAcceptRecommendation(rec)}
-                          className="bg-success-foreground hover:bg-primary-600 text-white"
+                          className="bg-success hover:bg-success/90 text-success-foreground"
                         >
                           <CheckCircle2 className="h-3 w-3 mr-1" />
                           Accept & Add to Roadmap
@@ -685,9 +683,9 @@ For each recommendation, provide:
                     )}
 
                     {rec.roadmap_item_id && (
-                      <div className="pt-2 border-t border-[var(--color-background-muted)]">
+                      <div className="pt-2 border-t border-border">
                         <Link to={createPageUrl("RoadmapManager")}>
-                          <Badge className="bg-info-50 text-info-foreground cursor-pointer">
+                          <Badge className="bg-info-50 text-info cursor-pointer">
                             <Zap className="h-3 w-3 mr-1" />
                             View in Roadmap
                           </Badge>
@@ -705,31 +703,31 @@ For each recommendation, provide:
         <TabsContent value="customers" className="space-y-4">
           <div className="grid md:grid-cols-2 gap-4">
             {customerPackages.map(pkg => (
-              <Card key={pkg.id} className="border-[var(--color-background-muted)]">
+              <Card key={pkg.id}>
                 <CardHeader>
-                  <CardTitle className="text-[var(--color-midnight)]">
+                  <CardTitle className="text-midnight-900">
                     {pkg.customer_company || pkg.customer_name}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div>
-                    <p className="text-sm font-medium text-[var(--color-midnight)]">Package</p>
-                    <p className="text-sm text-[var(--color-charcoal)]">{pkg.package_name} v{pkg.version}</p>
+                    <p className="text-sm font-medium text-midnight-900">Package</p>
+                    <p className="text-sm text-charcoal-700">{pkg.package_name} v{pkg.version}</p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-[var(--color-midnight)]">Contact</p>
-                    <p className="text-sm text-[var(--color-charcoal)]">{pkg.customer_email}</p>
+                    <p className="text-sm font-medium text-midnight-900">Contact</p>
+                    <p className="text-sm text-charcoal-700">{pkg.customer_email}</p>
                   </div>
                   {pkg.parent_package_id && (
                     <div>
-                      <p className="text-sm font-medium text-[var(--color-midnight)]">Based On</p>
-                      <p className="text-sm text-[var(--color-charcoal)]">
+                      <p className="text-sm font-medium text-midnight-900">Based On</p>
+                      <p className="text-sm text-charcoal-700">
                         {packages.find(p => p.id === pkg.parent_package_id)?.package_name} v{pkg.parent_version}
                       </p>
                     </div>
                   )}
                   {pkg.last_sync_check && (
-                    <div className="flex items-center gap-2 text-xs text-[var(--color-charcoal)]">
+                    <div className="flex items-center gap-2 text-xs text-charcoal-700">
                       <Clock className="h-3 w-3" />
                       Last checked: {format(new Date(pkg.last_sync_check), "MMM d, yyyy")}
                     </div>
@@ -748,10 +746,10 @@ For each recommendation, provide:
               </Card>
             ))}
             {customerPackages.length === 0 && (
-              <Card className="border-dashed border-[var(--color-background-muted)] md:col-span-2">
+              <Card className="border-dashed md:col-span-2">
                 <CardContent className="py-12 text-center">
-                  <Users className="h-12 w-12 mx-auto mb-4 opacity-50 text-[var(--color-charcoal)]" />
-                  <p className="text-[var(--color-charcoal)]">No customer packages yet</p>
+                  <Users className="h-12 w-12 mx-auto mb-4 opacity-50 text-charcoal-700" />
+                  <p className="text-charcoal-700">No customer packages yet</p>
                 </CardContent>
               </Card>
             )}
@@ -763,12 +761,12 @@ For each recommendation, provide:
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="text-[var(--color-midnight)]">Create Design System Package</DialogTitle>
+            <DialogTitle className="text-midnight-900">Create Design System Package</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-body-small text-[var(--color-midnight)]">Package Name *</label>
+                <label className="text-body-small text-midnight-900">Package Name *</label>
                 <Input
                   value={formData.package_name}
                   onChange={(e) => setFormData({ ...formData, package_name: e.target.value })}
@@ -776,7 +774,7 @@ For each recommendation, provide:
                 />
               </div>
               <div>
-                <label className="text-body-small text-[var(--color-midnight)]">Package Code *</label>
+                <label className="text-body-small text-midnight-900">Package Code *</label>
                 <Input
                   value={formData.package_code}
                   onChange={(e) => setFormData({ ...formData, package_code: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
@@ -787,7 +785,7 @@ For each recommendation, provide:
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-body-small text-[var(--color-midnight)]">Package Type</label>
+                <label className="text-body-small text-midnight-900">Package Type</label>
                 <Select 
                   value={formData.package_type} 
                   onValueChange={(v) => setFormData({ ...formData, package_type: v })}
@@ -803,7 +801,7 @@ For each recommendation, provide:
                 </Select>
               </div>
               <div>
-                <label className="text-body-small text-[var(--color-midnight)]">Version</label>
+                <label className="text-body-small text-midnight-900">Version</label>
                 <Input
                   value={formData.version}
                   onChange={(e) => setFormData({ ...formData, version: e.target.value })}
@@ -814,13 +812,13 @@ For each recommendation, provide:
 
             {formData.package_type === "customer_theme" && (
               <>
-                <div className="border-t border-background-muted pt-4">
+                <div className="border-t border-border pt-4">
                   <h4 className="text-h5 mb-3">
                     Customer Information
                   </h4>
                   <div className="space-y-3">
                     <div>
-                      <label className="text-body-small text-[var(--color-midnight)]">Customer Name</label>
+                      <label className="text-body-small text-midnight-900">Customer Name</label>
                       <Input
                         value={formData.customer_name}
                         onChange={(e) => setFormData({ ...formData, customer_name: e.target.value })}
@@ -828,7 +826,7 @@ For each recommendation, provide:
                       />
                     </div>
                     <div>
-                      <label className="text-body-small text-[var(--color-midnight)]">Company</label>
+                      <label className="text-body-small text-midnight-900">Company</label>
                       <Input
                         value={formData.customer_company}
                         onChange={(e) => setFormData({ ...formData, customer_company: e.target.value })}
@@ -836,7 +834,7 @@ For each recommendation, provide:
                       />
                     </div>
                     <div>
-                      <label className="text-body-small text-[var(--color-midnight)]">Email</label>
+                      <label className="text-body-small text-midnight-900">Email</label>
                       <Input
                         type="email"
                         value={formData.customer_email}
@@ -848,7 +846,7 @@ For each recommendation, provide:
                 </div>
 
                 <div>
-                  <label className="text-body-small text-[var(--color-midnight)]">Based On Package</label>
+                  <label className="text-body-small text-midnight-900">Based On Package</label>
                   <Select 
                     value={formData.parent_package_id || ""} 
                     onValueChange={(v) => setFormData({ 
@@ -873,7 +871,7 @@ For each recommendation, provide:
             )}
 
             <div>
-              <label className="text-body-small text-[var(--color-midnight)]">Description</label>
+              <label className="text-body-small text-midnight-900">Description</label>
               <Textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -889,7 +887,7 @@ For each recommendation, provide:
               <Button 
                 onClick={handleCreatePackage}
                 disabled={createMutation.isPending}
-                className="bg-primary-500 hover:bg-primary-600 text-white"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 {createMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                 Create Package
