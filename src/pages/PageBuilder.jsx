@@ -325,34 +325,38 @@ export default function PageBuilder() {
 
     try {
       const { currentClasses, originalElement } = selectedElement;
-      let newClasses = currentClasses;
+      
+      // Split classes into array for precise filtering
+      let classArray = currentClasses.split(/\s+/).filter(Boolean);
 
       // Remove conflicting classes based on token type
       if (tokenType === 'color-text') {
-        newClasses = currentClasses.replace(/text-\[var\(--color-[^\]]+\)\]/g, '').replace(/text-(white|black|gray-\d+|slate-\d+|zinc-\d+|neutral-\d+|stone-\d+|red-\d+|orange-\d+|amber-\d+|yellow-\d+|lime-\d+|green-\d+|emerald-\d+|teal-\d+|cyan-\d+|sky-\d+|blue-\d+|indigo-\d+|violet-\d+|purple-\d+|fuchsia-\d+|pink-\d+|rose-\d+)/g, '');
+        classArray = classArray.filter(c => !c.match(/^text-\[var\(--color-/) && !c.match(/^text-(white|black|gray-|slate-|zinc-|neutral-|stone-|red-|orange-|amber-|yellow-|lime-|green-|emerald-|teal-|cyan-|sky-|blue-|indigo-|violet-|purple-|fuchsia-|pink-|rose-)/));
       } else if (tokenType === 'color-bg') {
-        newClasses = currentClasses.replace(/bg-\[var\(--color-[^\]]+\)\]/g, '').replace(/bg-(white|black|transparent|gray-\d+|slate-\d+|zinc-\d+|neutral-\d+|stone-\d+|red-\d+|orange-\d+|amber-\d+|yellow-\d+|lime-\d+|green-\d+|emerald-\d+|teal-\d+|cyan-\d+|sky-\d+|blue-\d+|indigo-\d+|violet-\d+|purple-\d+|fuchsia-\d+|pink-\d+|rose-\d+)/g, '');
+        classArray = classArray.filter(c => !c.match(/^bg-\[var\(--color-/) && !c.match(/^bg-(white|black|transparent|gray-|slate-|zinc-|neutral-|stone-|red-|orange-|amber-|yellow-|lime-|green-|emerald-|teal-|cyan-|sky-|blue-|indigo-|violet-|purple-|fuchsia-|pink-|rose-)/));
       } else if (tokenType === 'spacing-p') {
-        newClasses = currentClasses.replace(/p-\[var\(--spacing-[^\]]+\)\]/g, '').replace(/p[xytblr]?-\d+/g, '');
+        classArray = classArray.filter(c => !c.match(/^p-\[var\(--spacing-/) && !c.match(/^p[xytblr]?-/));
       } else if (tokenType === 'spacing-m') {
-        newClasses = currentClasses.replace(/m-\[var\(--spacing-[^\]]+\)\]/g, '').replace(/m[xytblr]?-\d+/g, '');
+        classArray = classArray.filter(c => !c.match(/^m-\[var\(--spacing-/) && !c.match(/^m[xytblr]?-/));
       } else if (tokenType === 'radius') {
-        newClasses = currentClasses.replace(/rounded-\[var\(--radius-[^\]]+\)\]/g, '').replace(/rounded(-none|-sm|-md|-lg|-xl|-2xl|-3xl|-full)?/g, '');
+        classArray = classArray.filter(c => !c.match(/^rounded-\[var\(--radius-/) && !c.match(/^rounded/));
       } else if (tokenType === 'shadow') {
-        newClasses = currentClasses.replace(/shadow-\[var\(--shadow-[^\]]+\)\]/g, '').replace(/shadow(-sm|-md|-lg|-xl|-2xl|-inner|-none)?/g, '');
+        classArray = classArray.filter(c => !c.match(/^shadow-\[var\(--shadow-/) && !c.match(/^shadow/));
       } else if (tokenType === 'font-family') {
-        newClasses = currentClasses.replace(/font-\[var\(--font-[^\]]+\)\]/g, '').replace(/font-(sans|serif|mono|heading|body)/g, '');
+        classArray = classArray.filter(c => !c.match(/^font-\[var\(--font-/) && !c.match(/^font-(sans|serif|mono|heading|body)$/));
       } else if (tokenType === 'font-size') {
-        newClasses = currentClasses.replace(/text-\[var\(--font-size-[^\]]+\)\]/g, '').replace(/text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)/g, '');
+        classArray = classArray.filter(c => !c.match(/^text-\[var\(--font-size-/) && !c.match(/^text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)$/));
       } else if (tokenType === 'border') {
-        newClasses = currentClasses.replace(/border-\[var\(--color-[^\]]+\)\]/g, '').replace(/border-(white|black|gray-\d+|slate-\d+|zinc-\d+|neutral-\d+|stone-\d+|red-\d+|orange-\d+|amber-\d+|yellow-\d+|lime-\d+|green-\d+|emerald-\d+|teal-\d+|cyan-\d+|sky-\d+|blue-\d+|indigo-\d+|violet-\d+|purple-\d+|fuchsia-\d+|pink-\d+|rose-\d+)/g, '');
+        classArray = classArray.filter(c => !c.match(/^border-\[var\(--color-/) && !c.match(/^border-(white|black|gray-|slate-|zinc-|neutral-|stone-|red-|orange-|amber-|yellow-|lime-|green-|emerald-|teal-|cyan-|sky-|blue-|indigo-|violet-|purple-|fuchsia-|pink-|rose-)/));
       } else if (tokenType === 'transition') {
-        newClasses = currentClasses.replace(/transition-[^\s]+/g, '');
+        classArray = classArray.filter(c => !c.match(/^transition/));
       } else if (tokenType === 'button') {
-        newClasses = '';
+        classArray = [];
       }
 
-      newClasses = `${newClasses.trim()} ${tokenClass}`.trim();
+      // Add new token class
+      classArray.push(tokenClass);
+      const newClasses = classArray.join(' ');
 
       // Apply directly to DOM element for immediate visual feedback
       if (originalElement) {
