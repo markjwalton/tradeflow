@@ -376,7 +376,7 @@ When updating existing code:
                     <h3 className="font-heading font-medium text-midnight-900 mb-2">
                       Design Tokens
                     </h3>
-                    <p className="text-sm text-[var(--color-charcoal)]">
+                    <p className="text-sm text-muted-foreground">
                       Complete color palette, typography, spacing, and effects system
                     </p>
                   </div>
@@ -386,7 +386,7 @@ When updating existing code:
                     <h3 className="font-heading font-medium text-midnight-900 mb-2">
                       Components
                     </h3>
-                    <p className="text-sm text-[var(--color-charcoal)]">
+                    <p className="text-sm text-muted-foreground">
                       Pre-built, themed React components ready to use
                     </p>
                   </div>
@@ -396,7 +396,7 @@ When updating existing code:
                     <h3 className="font-heading font-medium text-midnight-900 mb-2">
                       LLM Optimized
                     </h3>
-                    <p className="text-sm text-[var(--color-charcoal)]">
+                    <p className="text-sm text-muted-foreground">
                       Clear guidelines for AI-assisted development
                     </p>
                   </div>
@@ -656,7 +656,7 @@ When updating existing code:
                     <h5 className="font-heading font-medium text-midnight-900 mb-2">
                       ✅ Always Use
                     </h5>
-                    <ul className="space-y-1 text-charcoal-700">
+                    <ul className="space-y-1 text-muted-foreground">
                       <li>• text-[var(--color-midnight)]</li>
                       <li>• bg-[var(--color-background)]</li>
                       <li>• border-[var(--color-background-muted)]</li>
@@ -668,7 +668,7 @@ When updating existing code:
                     <h5 className="font-heading font-medium text-destructive mb-2">
                       ❌ Never Use
                     </h5>
-                    <ul className="space-y-1 text-charcoal-700">
+                    <ul className="space-y-1 text-muted-foreground">
                       <li>• text-gray-500, bg-blue-100</li>
                       <li>• inline style attributes</li>
                       <li>• Hardcoded color values (#hex)</li>
