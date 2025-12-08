@@ -147,7 +147,7 @@ export default function ProjectDetail() {
   const getTeamMemberName = (memberId) => teamMembers.find((m) => m.id === memberId)?.name || "Unassigned";
 
   if (isLoading) {
-    return <div className="flex items-center justify-center h-64 bg-background"><Loader2 className="h-8 w-8 animate-spin text-charcoal-700" /></div>;
+    return <div className="flex items-center justify-center h-64 bg-background"><Loader2 className="h-8 w-8 animate-spin" /></div>;
   }
 
   if (!project) {

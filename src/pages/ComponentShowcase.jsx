@@ -73,7 +73,7 @@ function ShowcaseSection({ id, title, description, count, children }) {
             {title}
           </h3>
         </div>
-        <ChevronDown className={cn("h-5 w-5 text-charcoal-700 transition-transform", !expanded && "-rotate-90")} />
+        <ChevronDown className={cn("h-5 w-5 transition-transform", !expanded && "-rotate-90")} />
       </button>
       {expanded && (
         <div className="px-6 pb-6">
