@@ -72,12 +72,15 @@ export default function CSSAudit() {
   const [fixing, setFixing] = useState(false);
 
   const handleScan = async () => {
+    toast.error("File scanning is not available in this environment. Use the base44 AI assistant to audit files instead.");
+    return;
+    
     setScanning(true);
     setProgress(0);
     const newFindings = {};
 
     try {
-      // Hardcoded comprehensive file list
+      // Note: File scanning via fetch is not available in Base44 environment
       const filesToScan = [
         'Layout.js', 'globals.css',
         'pages/Dashboard.js', 'pages/Home.js', 'pages/NavigationManager.js', 'pages/TenantAccess.js',
@@ -154,8 +157,11 @@ export default function CSSAudit() {
   };
 
   const handleAutoFixFile = async (filePath) => {
+    toast.error("Auto-fix is not available in this environment. Use the base44 AI assistant to fix files instead.");
+    return;
+    
     try {
-      // Read current file content
+      // Note: File access via fetch is not available in Base44 environment
       const response = await fetch(`/src/${filePath}`);
       if (!response.ok) throw new Error('Failed to read file');
       const content = await response.text();
@@ -322,39 +328,43 @@ export default function CSSAudit() {
 
               return (
                 <Card key={filePath} className={isSelected ? "ring-2 ring-[var(--color-primary)]" : ""}>
+                  <CardHeader className="py-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center [gap:var(--spacing-3)]">
+                        <Checkbox
+                          checked={isSelected}
+                          onCheckedChange={(checked) => {
+                            setSelectedForFix(prev => checked ? [...prev, fileIndex] : prev.filter(i => i !== fileIndex));
+                          }}
+                        />
+                        <Collapsible open={isExpanded} onOpenChange={() => setExpandedFiles(prev => ({ ...prev, [filePath]: !prev[filePath] }))}>
+                          <CollapsibleTrigger asChild>
+                            <button className="flex items-center gap-2">
+                              {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                              <FileCode className="h-4 w-4" />
+                              <span className="font-mono text-sm">{filePath}</span>
+                            </button>
+                          </CollapsibleTrigger>
+                        </Collapsible>
+                        <Badge variant="secondary">{fileData.totalIssues}</Badge>
+                        {fileData.criticalCount > 0 && (
+                          <Badge className="bg-[var(--color-destructive)] text-white">
+                            <AlertTriangle className="h-3 w-3 mr-1" />{fileData.criticalCount}
+                          </Badge>
+                        )}
+                        {fileData.autoFixable > 0 && (
+                          <Badge className="bg-[var(--color-success)] text-white">
+                            <Wrench className="h-3 w-3 mr-1" />{fileData.autoFixable}
+                          </Badge>
+                        )}
+                      </div>
+                      <Button variant="outline" size="sm" onClick={() => handleAutoFixFile(filePath)}>
+                        <Wrench className="h-3 w-3 mr-2" />Fix
+                      </Button>
+                    </div>
+                  </CardHeader>
                   <Collapsible open={isExpanded} onOpenChange={() => setExpandedFiles(prev => ({ ...prev, [filePath]: !prev[filePath] }))}>
-                    <CollapsibleTrigger className="w-full">
-                      <CardHeader className="py-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center [gap:var(--spacing-3)]">
-                            <Checkbox
-                              checked={isSelected}
-                              onCheckedChange={(checked) => {
-                                setSelectedForFix(prev => checked ? [...prev, fileIndex] : prev.filter(i => i !== fileIndex));
-                              }}
-                              onClick={(e) => e.stopPropagation()}
-                            />
-                            {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-                            <FileCode className="h-4 w-4" />
-                            <span className="font-mono text-sm">{filePath}</span>
-                            <Badge variant="secondary">{fileData.totalIssues}</Badge>
-                            {fileData.criticalCount > 0 && (
-                              <Badge className="bg-[var(--color-destructive)] text-white">
-                                <AlertTriangle className="h-3 w-3 mr-1" />{fileData.criticalCount}
-                              </Badge>
-                            )}
-                            {fileData.autoFixable > 0 && (
-                              <Badge className="bg-[var(--color-success)] text-white">
-                                <Wrench className="h-3 w-3 mr-1" />{fileData.autoFixable}
-                              </Badge>
-                            )}
-                          </div>
-                          <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); handleAutoFixFile(filePath); }}>
-                            <Wrench className="h-3 w-3 mr-2" />Fix
-                          </Button>
-                        </div>
-                      </CardHeader>
-                    </CollapsibleTrigger>
+                    <CollapsibleTrigger />
                     <CollapsibleContent>
                       <CardContent className="pt-0 space-y-2">
                         {fileData.violations.map((v, idx) => (
