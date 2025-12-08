@@ -23,6 +23,8 @@ export default function CSSAudit() {
   const [fileReport, setFileReport] = useState(null);
   const [verifiedFiles, setVerifiedFiles] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
+  const [fileContent, setFileContent] = useState("");
+  const [highlightedCode, setHighlightedCode] = useState(null);
 
   // Load verification status from localStorage
   React.useEffect(() => {
@@ -344,6 +346,8 @@ export default function CSSAudit() {
     setAnalyzing(true);
     setSelectedFile(filePath);
     setFileReport(null);
+    setFileContent("");
+    setHighlightedCode(null);
     
     try {
       // Fetch file content directly from the frontend
@@ -368,6 +372,7 @@ export default function CSSAudit() {
       }
 
       console.log(`Successfully fetched ${filePath}, ${fileContent.length} characters`);
+      setFileContent(fileContent);
 
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: `You are a CSS/design token auditor. Analyze this SINGLE FILE comprehensively for ALL design token violations.
@@ -447,6 +452,16 @@ For each violation provide:
     localStorage.setItem('cssAudit_verifiedFiles', JSON.stringify(updated));
   };
 
+  const handleViolationClick = (code) => {
+    setHighlightedCode(code);
+    setTimeout(() => {
+      const codeBlock = document.getElementById('file-content-display');
+      if (codeBlock) {
+        codeBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 100);
+  };
+
   const generateAIPrompt = () => {
     if (!fileReport || fileReport.violations.length === 0) return;
 
@@ -494,7 +509,7 @@ For each violation provide:
         </div>
       </div>
 
-      <div className="grid grid-cols-[300px_1fr] gap-6">
+      <div className="grid grid-cols-[300px_1fr_400px] gap-6">
         {/* File List Sidebar */}
         <Card className="h-[calc(100vh-200px)] flex flex-col">
           <CardHeader className="pb-3">
@@ -529,7 +544,7 @@ For each violation provide:
         </Card>
 
         {/* Results Panel */}
-        <div className="space-y-4">{analyzing && (
+        <div className="space-y-4 overflow-y-auto max-h-[calc(100vh-200px)]">{analyzing && (
           <Card>
             <CardContent className="py-8 text-center">
               <Loader2 className="h-8 w-8 animate-spin mx-auto mb-3 text-[var(--color-primary)]" />
@@ -589,12 +604,17 @@ For each violation provide:
               {fileReport.violations.length > 0 ? (
                 <div className="space-y-3">
                   {fileReport.violations.map((v, idx) => (
-                    <Card key={idx} className="border-l-4" style={{
-                      borderLeftColor: v.severity === "critical" ? "var(--color-destructive)" : 
-                                      v.severity === "high" ? "var(--color-warning)" : 
-                                      v.severity === "medium" ? "var(--color-info)" : 
-                                      "var(--color-charcoal)"
-                    }}>
+                    <Card 
+                      key={idx} 
+                      className="border-l-4 cursor-pointer hover:shadow-md transition-shadow" 
+                      style={{
+                        borderLeftColor: v.severity === "critical" ? "var(--color-destructive)" : 
+                                        v.severity === "high" ? "var(--color-warning)" : 
+                                        v.severity === "medium" ? "var(--color-info)" : 
+                                        "var(--color-charcoal)"
+                      }}
+                      onClick={() => handleViolationClick(v.currentCode)}
+                    >
                       <CardContent className="pt-4">
                         <div className="flex items-start gap-2 mb-2">
                           <Badge className={
@@ -658,9 +678,33 @@ For each violation provide:
                 </p>
               </CardContent>
             </Card>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
+            )}
+            </div>
+
+            {/* File Content Preview */}
+            {fileContent && (
+            <Card className="h-[calc(100vh-200px)] flex flex-col">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm">File Content</CardTitle>
+              <p className="text-xs text-[var(--color-charcoal)]">Click violations to highlight</p>
+            </CardHeader>
+            <CardContent className="flex-1 overflow-y-auto p-0">
+              <pre 
+                id="file-content-display"
+                className="text-xs font-mono p-4 whitespace-pre-wrap break-words"
+                dangerouslySetInnerHTML={{
+                  __html: highlightedCode 
+                    ? fileContent.replace(
+                        highlightedCode,
+                        `<mark class="bg-yellow-200 px-1">${highlightedCode}</mark>`
+                      )
+                    : fileContent
+                }}
+              />
+            </CardContent>
+            </Card>
+            )}
+            </div>
+            </div>
+            );
+            }
