@@ -308,7 +308,7 @@ export default function Layout({ children, currentPageName }) {
                   const tenantAccessUrl = createPageUrl("TenantAccess");
                   base44.auth.logout(window.location.origin + tenantAccessUrl);
                 }}
-                className="gap-2 text-gray-600"
+                className="gap-2 text-muted-foreground"
               >
                 <LogOut className="h-4 w-4" />
                 Logout
