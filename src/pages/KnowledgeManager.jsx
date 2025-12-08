@@ -44,8 +44,8 @@ const TECH_CONFIGS = {
   tailwind: {
     name: "Tailwind CSS",
     icon: Palette,
-    color: "text-cyan-600",
-    bgColor: "bg-cyan-50",
+    color: "text-info",
+    bgColor: "bg-info-50",
     categories: [
       { id: "core_concepts", name: "Core Concepts" },
       { id: "layout", name: "Layout" },
@@ -61,8 +61,8 @@ const TECH_CONFIGS = {
   react: {
     name: "React",
     icon: Component,
-    color: "text-blue-600",
-    bgColor: "bg-blue-50",
+    color: "text-info",
+    bgColor: "bg-info-50",
     categories: [
       { id: "hooks", name: "Hooks" },
       { id: "components", name: "Components" },
@@ -75,8 +75,8 @@ const TECH_CONFIGS = {
   shadcn: {
     name: "shadcn/ui",
     icon: Box,
-    color: "text-purple-600",
-    bgColor: "bg-purple-50",
+    color: "text-accent",
+    bgColor: "bg-accent-100",
     categories: [
       { id: "form", name: "Form Components" },
       { id: "data_display", name: "Data Display" },
@@ -100,15 +100,15 @@ const TECH_CONFIGS = {
   lucide: {
     name: "Lucide Icons",
     icon: Sparkles,
-    color: "text-orange-600",
-    bgColor: "bg-orange-50",
+    color: "text-secondary",
+    bgColor: "bg-secondary-100",
     categories: []
   },
   base44: {
     name: "Base44",
     icon: Database,
-    color: "text-green-600",
-    bgColor: "bg-green-50",
+    color: "text-success",
+    bgColor: "bg-success-50",
     categories: [
       { id: "entities", name: "Entity Operations" },
       { id: "auth", name: "Authentication" },
