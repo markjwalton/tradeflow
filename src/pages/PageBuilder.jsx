@@ -325,7 +325,7 @@ export default function PageBuilder() {
 
     try {
       const { currentClasses, originalElement } = selectedElement;
-      
+
       // Split classes into array for precise filtering
       let classArray = currentClasses.split(/\s+/).filter(Boolean);
 
@@ -358,15 +358,10 @@ export default function PageBuilder() {
       classArray.push(tokenClass);
       const newClasses = classArray.join(' ');
 
-      // Apply directly to DOM element for immediate visual feedback
-      if (originalElement) {
-        originalElement.className = newClasses;
-      }
-
-      // Update JSX content - try to find and replace the class attribute
+      // Update JSX content FIRST - try to find and replace the class attribute
       let updatedContent = formData.current_content_jsx;
       const escapedClasses = escapeRegex(currentClasses.trim());
-      
+
       // Try multiple patterns to find and replace
       const patterns = [
         { regex: new RegExp(`className\\s*=\\s*"${escapedClasses}"`, 'g'), replacement: `className="${newClasses}"` },
@@ -391,9 +386,21 @@ export default function PageBuilder() {
         toast.success("Token applied!");
       }
 
+      // Update form data
       setFormData({ ...formData, current_content_jsx: updatedContent });
-      setShowTokenPicker(false);
-      // Keep element selected so user can continue styling
+
+      // Apply to DOM element for immediate visual feedback
+      if (originalElement) {
+        originalElement.className = newClasses;
+      }
+
+      // Update selected element state with new classes so next click works
+      setSelectedElement({
+        ...selectedElement,
+        currentClasses: newClasses
+      });
+
+      // Keep element selected with outline
       if (originalElement) {
         originalElement.style.outline = '2px solid var(--color-primary)';
         originalElement.style.outlineOffset = '2px';
