@@ -367,40 +367,48 @@ export default function PageBuilder() {
       classArray.push(tokenClass);
       const newClasses = classArray.join(' ');
 
-      // Update JSX content FIRST - try to find and replace the class attribute
+      // Apply to DOM immediately for visual feedback
+      if (originalElement) {
+        originalElement.className = newClasses;
+      }
+
+      // Find className in JSX by looking for the tag and nearby text
       let updatedContent = formData.current_content_jsx;
-      const escapedClasses = escapeRegex(currentClasses.trim());
+      const tagName = selectedElement.tagName;
 
-      // Try multiple patterns to find and replace
-      const patterns = [
-        { regex: new RegExp(`className\\s*=\\s*"${escapedClasses}"`, 'g'), replacement: `className="${newClasses}"` },
-        { regex: new RegExp(`className\\s*=\\s*'${escapedClasses}'`, 'g'), replacement: `className="${newClasses}"` },
-        { regex: new RegExp(`class\\s*=\\s*"${escapedClasses}"`, 'g'), replacement: `class="${newClasses}"` },
-        { regex: new RegExp(`class\\s*=\\s*'${escapedClasses}'`, 'g'), replacement: `class="${newClasses}"` },
-      ];
+      // Find all className attributes and replace the one that matches current classes
+      const classNameRegex = /className=["']([^"']*)["']/g;
+      let match;
+      let foundMatch = false;
 
-      let replaced = false;
-      for (const { regex, replacement } of patterns) {
-        if (regex.test(updatedContent)) {
-          updatedContent = updatedContent.replace(regex, replacement);
-          replaced = true;
+      while ((match = classNameRegex.exec(formData.current_content_jsx)) !== null) {
+        const foundClasses = match[1];
+        // Check if this is our target by comparing class lists (order-independent)
+        const foundSet = new Set(foundClasses.split(/\s+/).filter(Boolean));
+        const currentSet = new Set(currentClasses.split(/\s+/).filter(Boolean));
+
+        if (foundSet.size === currentSet.size && [...foundSet].every(c => currentSet.has(c))) {
+          // Found it! Replace this specific occurrence
+          updatedContent = formData.current_content_jsx.substring(0, match.index) +
+            `className="${newClasses}"` +
+            formData.current_content_jsx.substring(match.index + match[0].length);
+          foundMatch = true;
           break;
         }
       }
 
-      if (!replaced) {
-        console.warn('Could not find class in JSX. Current classes:', currentClasses);
-        toast.warning("Style applied visually, but couldn't update code");
-      } else {
+      if (foundMatch) {
+        setFormData({ ...formData, current_content_jsx: updatedContent });
         toast.success("Token applied!");
+
+        // Update selected element with new classes for next application
+        setSelectedElement({
+          ...selectedElement,
+          currentClasses: newClasses
+        });
+      } else {
+        toast.warning("Applied visually - save to persist changes");
       }
-
-      // Update form data
-      setFormData({ ...formData, current_content_jsx: updatedContent });
-
-      // Close picker so user clicks element again for fresh reference
-      setShowTokenPicker(false);
-      setSelectedElement(null);
     } catch (error) {
       console.error('Error applying token:', error);
       toast.error("Failed to apply token: " + error.message);
