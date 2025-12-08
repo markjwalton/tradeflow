@@ -105,7 +105,7 @@ export default function DebugProjectEditor() {
       <div className="mb-4 p-3 bg-warning/10 border border-warning/20 rounded-lg flex items-center gap-2">
         <AlertTriangle className="h-5 w-5 text-warning-foreground" />
         <span className="text-warning-foreground font-medium">DEBUG MODE</span>
-        <span className="text-secondary-700 text-sm">
+        <span className="text-muted-foreground text-sm">
           – {isEditing ? "Edit mode with mock data" : "Create mode (empty form)"}
         </span>
         <div className="ml-auto flex gap-2">

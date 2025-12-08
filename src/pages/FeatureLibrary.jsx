@@ -338,7 +338,7 @@ Return a JSON object with a "features" array containing feature templates.`,
               </Badge>
             )}
           </h1>
-          <p className="text-charcoal-700">Reusable feature templates for applications</p>
+          <p className="text-muted-foreground">Reusable feature templates for applications</p>
         </div>
         <div className="flex gap-2">
           <CustomProjectSelector
@@ -400,7 +400,7 @@ Return a JSON object with a "features" array containing feature templates.`,
           <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       ) : filteredFeatures.length === 0 ? (
-        <div className="text-center py-12 text-charcoal-700">
+        <div className="text-center py-12 text-muted-foreground">
           <Zap className="h-12 w-12 mx-auto mb-4 opacity-50" />
           <p>No feature templates found</p>
         </div>
