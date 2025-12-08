@@ -164,14 +164,20 @@ For EACH pattern, provide the EXACT string found in code, not a description.`,
 
   const handleConfirmPattern = async (pattern) => {
     try {
+      // Ensure pattern field exists - required by entity schema
+      const patternString = pattern.pattern || 
+        pattern.example_usage?.match(/className=["'][^"']+["']|var\([^)]+\)|[a-z-]+:\s*[^;]+/)?.[0] || 
+        "Pattern extraction failed";
+      
       // Save confirmed pattern to database for learning
       await base44.entities.CSSPattern.create({
-        pattern: pattern.pattern,
+        pattern: patternString,
         category: pattern.category,
         status: pattern.status,
         severity: pattern.severity || null,
         found_in: pattern.found_in,
         occurrences: pattern.occurrences,
+        issue: pattern.issue || null,
         suggested_fix: pattern.suggested_fix || null,
         confirmed_by_user: true,
         confirmed_date: new Date().toISOString()
@@ -183,6 +189,7 @@ For EACH pattern, provide the EXACT string found in code, not a description.`,
       // Remove from current list
       setPatterns(prev => prev.filter(p => p.id !== pattern.id));
     } catch (error) {
+      console.error("Save error:", error);
       toast.error("Failed to save pattern: " + error.message);
     }
   };
