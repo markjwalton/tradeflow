@@ -162,31 +162,52 @@ Return found violations with line snippets.`,
 
   const handleAutoFixFile = async (filePath) => {
     try {
-      const fixPrompt = `Auto-fix design token violations in ${filePath}:
+      // Read current file content
+      const response = await fetch(`/src/${filePath}`);
+      if (!response.ok) throw new Error('Failed to read file');
+      const content = await response.text();
 
-1. Remove quotes from Adobe Font names (degular-display, mrs-eaves-xl-serif-narrow)
-2. Replace hardcoded spacing (4px→var(--spacing-1), 12px→var(--spacing-3), etc.)
-3. Apply other auto-fixable patterns
-
-Return the fixed file content.`;
-
-      const result = await base44.integrations.Core.InvokeLLM({
-        prompt: fixPrompt,
-        response_json_schema: {
-          type: "object",
-          properties: {
-            content: { type: "string" },
-            fixesApplied: { type: "number" }
-          }
-        }
+      // Apply auto-fixes
+      let fixed = content;
+      
+      // Fix 1: Remove quotes from Adobe Fonts
+      fixed = fixed.replace(/font-family:\s*(['"])(degular-display|Degular Display|mrs-eaves-xl-serif-narrow|Mrs Eaves|source-code-pro|Source Code)\1/gi, 
+        (match, quote, name) => `font-family: ${name.toLowerCase().replace(/\s+/g, '-')}`);
+      
+      // Fix 2: Common spacing mappings
+      const spacingMap = {
+        '4px': 'var(--spacing-1)', '8px': 'var(--spacing-2)', '12px': 'var(--spacing-3)',
+        '16px': 'var(--spacing-4)', '20px': 'var(--spacing-5)', '24px': 'var(--spacing-6)',
+        '32px': 'var(--spacing-8)', '40px': 'var(--spacing-10)', '48px': 'var(--spacing-12)'
+      };
+      Object.entries(spacingMap).forEach(([px, token]) => {
+        const regex = new RegExp(`(padding|margin|gap):\\s*${px}`, 'gi');
+        fixed = fixed.replace(regex, (match, prop) => `${prop}: ${token}`);
       });
 
-      toast.success(`Applied ${result.fixesApplied} fixes to ${filePath}`);
-      
-      // Remove from findings
-      const updated = { ...findings };
-      delete updated[filePath];
-      setFindings(updated);
+      // Fix 3: Wrong font names
+      fixed = fixed.replace(/Degular Display Light/g, 'degular-display');
+      fixed = fixed.replace(/Mrs Eaves XL Serif/g, 'mrs-eaves-xl-serif-narrow');
+
+      if (fixed === content) {
+        toast.info('No changes needed');
+        return;
+      }
+
+      // Write back to file
+      const updateResult = await base44.functions.invoke('updateFileContent', {
+        filePath,
+        newContent: fixed
+      });
+
+      if (updateResult.data.success) {
+        toast.success(`Auto-fixed ${filePath}`);
+        
+        // Remove from findings
+        const updated = { ...findings };
+        delete updated[filePath];
+        setFindings(updated);
+      }
     } catch (error) {
       toast.error(`Fix failed: ${error.message}`);
     }
