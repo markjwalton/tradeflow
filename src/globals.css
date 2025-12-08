@@ -3,9 +3,6 @@ css
 @tailwind components;
 @tailwind utilities;
 
-/* Adobe Fonts */
-@import url("https://use.typekit.net/iwm1gcu.css");
-
 @layer base {
   :root {
     /* Shadcn Base Tokens */
