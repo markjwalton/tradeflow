@@ -134,12 +134,12 @@ export default function TenantManager() {
                       className="p-1 hover:bg-background rounded"
                     >
                       {expandedTenants.has(tenant.id) ? (
-                        <ChevronDown className="h-4 w-4 text-charcoal-700" />
+                        <ChevronDown className="h-4 w-4" />
                       ) : (
-                        <ChevronRight className="h-4 w-4 text-charcoal-700" />
+                        <ChevronRight className="h-4 w-4" />
                       )}
                     </button>
-                    <Building2 className="h-5 w-5 text-charcoal-700" />
+                    <Building2 className="h-5 w-5" />
                     <div className="flex-1">
                       <span className="font-medium text-midnight-900">{tenant.name}</span>
                       <span className="text-sm text-charcoal-700 ml-2">/{tenant.slug}</span>
