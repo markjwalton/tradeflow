@@ -150,7 +150,7 @@ export default function CMSManager() {
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="text-red-500"
+                className="text-destructive"
                 onClick={() => {
                   if (confirm("Delete this item?")) {
                     deleteMutation.mutate(item.id);

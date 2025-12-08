@@ -49,27 +49,27 @@ import AuditLogCard from "@/components/monitoring/AuditLogCard";
 const COLORS = ["#22c55e", "#f59e0b", "#ef4444", "#3b82f6", "#8b5cf6"];
 
 const severityColors = {
-  info: "bg-gray-100 text-gray-700",
-  low: "bg-blue-100 text-blue-700",
-  medium: "bg-amber-100 text-amber-700",
-  high: "bg-orange-100 text-orange-700",
-  critical: "bg-red-100 text-red-700"
+  info: "bg-muted text-muted-foreground",
+  low: "bg-info-50 text-info",
+  medium: "bg-warning/10 text-warning",
+  high: "bg-secondary-100 text-secondary",
+  critical: "bg-destructive-50 text-destructive"
 };
 
 const eventTypeIcons = {
-  login_success: <LogIn className="h-4 w-4 text-green-600" />,
-  login_failed: <ShieldX className="h-4 w-4 text-red-600" />,
-  logout: <LogOut className="h-4 w-4 text-gray-600" />,
-  password_change: <Key className="h-4 w-4 text-blue-600" />,
-  permission_denied: <Lock className="h-4 w-4 text-amber-600" />,
-  suspicious_activity: <AlertOctagon className="h-4 w-4 text-orange-600" />,
-  brute_force: <ShieldAlert className="h-4 w-4 text-red-600" />,
-  sql_injection: <AlertTriangle className="h-4 w-4 text-red-600" />,
-  xss_attempt: <AlertTriangle className="h-4 w-4 text-red-600" />,
-  rate_limit: <Clock className="h-4 w-4 text-amber-600" />,
-  api_abuse: <Activity className="h-4 w-4 text-orange-600" />,
-  data_export: <Download className="h-4 w-4 text-blue-600" />,
-  config_change: <Settings className="h-4 w-4 text-purple-600" />
+  login_success: <LogIn className="h-4 w-4 text-success" />,
+  login_failed: <ShieldX className="h-4 w-4 text-destructive" />,
+  logout: <LogOut className="h-4 w-4 text-muted-foreground" />,
+  password_change: <Key className="h-4 w-4 text-info" />,
+  permission_denied: <Lock className="h-4 w-4 text-warning" />,
+  suspicious_activity: <AlertOctagon className="h-4 w-4 text-secondary" />,
+  brute_force: <ShieldAlert className="h-4 w-4 text-destructive" />,
+  sql_injection: <AlertTriangle className="h-4 w-4 text-destructive" />,
+  xss_attempt: <AlertTriangle className="h-4 w-4 text-destructive" />,
+  rate_limit: <Clock className="h-4 w-4 text-warning" />,
+  api_abuse: <Activity className="h-4 w-4 text-secondary" />,
+  data_export: <Download className="h-4 w-4 text-info" />,
+  config_change: <Settings className="h-4 w-4 text-accent" />
 };
 
 const policyCategories = [
@@ -490,19 +490,19 @@ Provide:
         <TabsContent value="overview" className="space-y-6">
           {/* Stats Cards */}
           <div className="grid grid-cols-5 gap-4">
-            <Card className={stats.unreviewedCritical > 0 ? "border-red-200" : "border-green-200"}>
+            <Card className={stats.unreviewedCritical > 0 ? "border-destructive/20" : "border-success/20"}>
               <CardContent className="pt-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-sm text-gray-500">Security Status</div>
-                    <div className={`text-2xl font-bold ${stats.unreviewedCritical > 0 ? "text-red-600" : "text-green-600"}`}>
+                    <div className="text-sm text-muted-foreground">Security Status</div>
+                    <div className={`text-2xl font-bold ${stats.unreviewedCritical > 0 ? "text-destructive" : "text-success"}`}>
                       {stats.unreviewedCritical > 0 ? "Alert" : "Secure"}
                     </div>
                   </div>
                   {stats.unreviewedCritical > 0 ? (
-                    <ShieldAlert className="h-10 w-10 text-red-500" />
+                    <ShieldAlert className="h-10 w-10 text-destructive" />
                   ) : (
-                    <ShieldCheck className="h-10 w-10 text-green-500" />
+                    <ShieldCheck className="h-10 w-10 text-success" />
                   )}
                 </div>
               </CardContent>
@@ -510,37 +510,37 @@ Provide:
 
             <Card>
               <CardContent className="pt-4">
-                <div className="text-sm text-gray-500">Events (24h)</div>
+                <div className="text-sm text-muted-foreground">Events (24h)</div>
                 <div className="text-2xl font-bold">{stats.total24h}</div>
-                <p className="text-xs text-gray-400">{stats.total7d} this week</p>
+                <p className="text-xs text-muted-foreground">{stats.total7d} this week</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardContent className="pt-4">
-                <div className="text-sm text-gray-500">Login Success Rate</div>
-                <div className={`text-2xl font-bold ${parseFloat(stats.loginSuccessRate) >= 95 ? "text-green-600" : "text-amber-600"}`}>
+                <div className="text-sm text-muted-foreground">Login Success Rate</div>
+                <div className={`text-2xl font-bold ${parseFloat(stats.loginSuccessRate) >= 95 ? "text-success" : "text-warning"}`}>
                   {stats.loginSuccessRate}%
                 </div>
-                <p className="text-xs text-gray-400">{stats.failedLogins} failed today</p>
+                <p className="text-xs text-muted-foreground">{stats.failedLogins} failed today</p>
               </CardContent>
             </Card>
 
-            <Card className={stats.attacks > 0 ? "border-red-200" : ""}>
+            <Card className={stats.attacks > 0 ? "border-destructive/20" : ""}>
               <CardContent className="pt-4">
-                <div className="text-sm text-gray-500">Attacks Detected</div>
-                <div className={`text-2xl font-bold ${stats.attacks > 0 ? "text-red-600" : "text-green-600"}`}>
+                <div className="text-sm text-muted-foreground">Attacks Detected</div>
+                <div className={`text-2xl font-bold ${stats.attacks > 0 ? "text-destructive" : "text-success"}`}>
                   {stats.attacks}
                 </div>
-                <p className="text-xs text-gray-400">{stats.blockedEvents} blocked</p>
+                <p className="text-xs text-muted-foreground">{stats.blockedEvents} blocked</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardContent className="pt-4">
-                <div className="text-sm text-gray-500">Active Policies</div>
+                <div className="text-sm text-muted-foreground">Active Policies</div>
                 <div className="text-2xl font-bold">{filteredPolicies.filter(p => p.is_active).length}</div>
-                <p className="text-xs text-gray-400">{filteredBackups.length} backup configs</p>
+                <p className="text-xs text-muted-foreground">{filteredBackups.length} backup configs</p>
               </CardContent>
             </Card>
           </div>
@@ -558,9 +558,9 @@ Provide:
                     <XAxis dataKey="hour" tick={{ fontSize: 10 }} />
                     <YAxis />
                     <Tooltip />
-                    <Area type="monotone" dataKey="logins" stackId="1" stroke="#22c55e" fill="#22c55e" name="Successful Logins" />
-                    <Area type="monotone" dataKey="failed" stackId="1" stroke="#f59e0b" fill="#f59e0b" name="Failed Logins" />
-                    <Area type="monotone" dataKey="attacks" stackId="1" stroke="#ef4444" fill="#ef4444" name="Attacks" />
+                    <Area type="monotone" dataKey="logins" stackId="1" stroke="var(--color-success)" fill="var(--color-success)" name="Successful Logins" />
+                    <Area type="monotone" dataKey="failed" stackId="1" stroke="var(--color-warning)" fill="var(--color-warning)" name="Failed Logins" />
+                    <Area type="monotone" dataKey="attacks" stackId="1" stroke="var(--color-destructive)" fill="var(--color-destructive)" name="Attacks" />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -569,9 +569,9 @@ Provide:
 
           {/* Critical Events Needing Review */}
           {stats.unreviewedCritical > 0 && (
-            <Card className="border-red-200">
+            <Card className="border-destructive/20">
               <CardHeader>
-                <CardTitle className="text-red-700 flex items-center gap-2">
+                <CardTitle className="text-destructive flex items-center gap-2">
                   <AlertTriangle className="h-5 w-5" />
                   Critical Events Requiring Review ({stats.unreviewedCritical})
                 </CardTitle>
@@ -582,13 +582,13 @@ Provide:
                     .filter(e => (e.severity === "critical" || e.severity === "high") && !e.reviewed)
                     .slice(0, 5)
                     .map(event => (
-                      <div key={event.id} className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                      <div key={event.id} className="flex items-center justify-between p-3 bg-destructive-50 rounded-lg">
                         <div className="flex items-center gap-3">
                           {eventTypeIcons[event.event_type]}
                           <div>
                             <p className="font-medium">{event.event_type.replace(/_/g, " ")}</p>
-                            <p className="text-sm text-gray-600">{event.description || event.user_email}</p>
-                            <p className="text-xs text-gray-400">
+                            <p className="text-sm text-charcoal-700">{event.description || event.user_email}</p>
+                            <p className="text-xs text-muted-foreground">
                               {event.ip_address} • {format(new Date(event.created_date), "MMM d, HH:mm")}
                             </p>
                           </div>
@@ -616,8 +616,8 @@ Provide:
             </div>
           ) : Object.keys(eventsByType).length === 0 ? (
             <Card>
-              <CardContent className="py-12 text-center text-gray-500">
-                <ShieldCheck className="h-12 w-12 mx-auto mb-4 text-green-500" />
+              <CardContent className="py-12 text-center text-muted-foreground">
+                <ShieldCheck className="h-12 w-12 mx-auto mb-4 text-success" />
                 <p>No security events recorded</p>
               </CardContent>
             </Card>
@@ -629,13 +629,13 @@ Provide:
                 const hasCritical = group.critical > 0 || group.high > 0;
                 
                 return (
-                  <Card key={type} className={hasCritical ? "border-red-200" : ""}>
+                  <Card key={type} className={hasCritical ? "border-destructive/20" : ""}>
                     <button
                       onClick={() => toggleEventType(type)}
                       className="w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
                     >
                       <div className="flex items-center gap-4">
-                        {isExpanded ? <ChevronDown className="h-5 w-5 text-gray-400" /> : <ChevronRight className="h-5 w-5 text-gray-400" />}
+                        {isExpanded ? <ChevronDown className="h-5 w-5 text-muted-foreground" /> : <ChevronRight className="h-5 w-5 text-muted-foreground" />}
                         <div className="flex items-center gap-2">
                           {eventTypeIcons[type]}
                           <span className="font-medium capitalize">{type.replace(/_/g, " ")}</span>
@@ -644,9 +644,9 @@ Provide:
                       </div>
                       
                       <div className="flex items-center gap-3">
-                        {group.critical > 0 && <Badge className="bg-red-100 text-red-700">{group.critical} Critical</Badge>}
-                        {group.high > 0 && <Badge className="bg-orange-100 text-orange-700">{group.high} High</Badge>}
-                        {group.medium > 0 && <Badge className="bg-amber-100 text-amber-700">{group.medium} Medium</Badge>}
+                        {group.critical > 0 && <Badge className="bg-destructive-50 text-destructive">{group.critical} Critical</Badge>}
+                        {group.high > 0 && <Badge className="bg-secondary-100 text-secondary">{group.high} High</Badge>}
+                        {group.medium > 0 && <Badge className="bg-warning/10 text-warning">{group.medium} Medium</Badge>}
                         {group.unreviewed > 0 && <Badge variant="outline">{group.unreviewed} Unreviewed</Badge>}
                       </div>
                     </button>
@@ -667,7 +667,7 @@ Provide:
                           </TableHeader>
                           <TableBody>
                             {group.events.slice(0, 20).map(event => (
-                              <TableRow key={event.id} className={event.blocked ? "bg-red-50" : ""}>
+                              <TableRow key={event.id} className={event.blocked ? "bg-destructive-50" : ""}>
                                 <TableCell className="text-sm">
                                   {format(new Date(event.created_date), "MMM d, HH:mm:ss")}
                                 </TableCell>
@@ -680,8 +680,8 @@ Provide:
                                   </Badge>
                                 </TableCell>
                                 <TableCell>
-                                  {event.blocked && <Badge className="bg-red-100 text-red-700">Blocked</Badge>}
-                                  {event.reviewed && <Badge className="bg-green-100 text-green-700">Reviewed</Badge>}
+                                  {event.blocked && <Badge className="bg-destructive-50 text-destructive">Blocked</Badge>}
+                                  {event.reviewed && <Badge className="bg-success-50 text-success">Reviewed</Badge>}
                                 </TableCell>
                                 <TableCell>
                                   {!event.reviewed && (
@@ -711,22 +711,22 @@ Provide:
           <div className="grid grid-cols-3 gap-4">
             <Card>
               <CardContent className="pt-4">
-                <div className="text-sm text-gray-500">Successful Logins (24h)</div>
-                <div className="text-3xl font-bold text-green-600">{stats.successfulLogins}</div>
+                <div className="text-sm text-muted-foreground">Successful Logins (24h)</div>
+                <div className="text-3xl font-bold text-success">{stats.successfulLogins}</div>
               </CardContent>
             </Card>
-            <Card className={stats.failedLogins > 10 ? "border-red-200" : ""}>
+            <Card className={stats.failedLogins > 10 ? "border-destructive/20" : ""}>
               <CardContent className="pt-4">
-                <div className="text-sm text-gray-500">Failed Logins (24h)</div>
-                <div className={`text-3xl font-bold ${stats.failedLogins > 10 ? "text-red-600" : "text-amber-600"}`}>
+                <div className="text-sm text-muted-foreground">Failed Logins (24h)</div>
+                <div className={`text-3xl font-bold ${stats.failedLogins > 10 ? "text-destructive" : "text-warning"}`}>
                   {stats.failedLogins}
                 </div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-4">
-                <div className="text-sm text-gray-500">Success Rate</div>
-                <div className={`text-3xl font-bold ${parseFloat(stats.loginSuccessRate) >= 95 ? "text-green-600" : "text-amber-600"}`}>
+                <div className="text-sm text-muted-foreground">Success Rate</div>
+                <div className={`text-3xl font-bold ${parseFloat(stats.loginSuccessRate) >= 95 ? "text-success" : "text-warning"}`}>
                   {stats.loginSuccessRate}%
                 </div>
               </CardContent>
@@ -754,18 +754,18 @@ Provide:
                     .filter(e => e.event_type === "login_success" || e.event_type === "login_failed")
                     .slice(0, 50)
                     .map(event => (
-                      <TableRow key={event.id} className={event.event_type === "login_failed" ? "bg-red-50" : ""}>
+                      <TableRow key={event.id} className={event.event_type === "login_failed" ? "bg-destructive-50" : ""}>
                         <TableCell className="text-sm">
                           {format(new Date(event.created_date), "MMM d, HH:mm:ss")}
                         </TableCell>
                         <TableCell>
                           {event.event_type === "login_success" ? (
-                            <Badge className="bg-green-100 text-green-700">
+                            <Badge className="bg-success-50 text-success">
                               <CheckCircle2 className="h-3 w-3 mr-1" />
                               Success
                             </Badge>
                           ) : (
-                            <Badge className="bg-red-100 text-red-700">
+                            <Badge className="bg-destructive-50 text-destructive">
                               <XCircle className="h-3 w-3 mr-1" />
                               Failed
                             </Badge>
@@ -794,7 +794,7 @@ Provide:
               <Card key={category.value}>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-base flex items-center gap-2">
-                    <Icon className="h-5 w-5 text-blue-600" />
+                    <Icon className="h-5 w-5 text-info" />
                     {category.label}
                     <Badge variant="outline">{categoryPolicies.length}</Badge>
                   </CardTitle>
@@ -810,16 +810,16 @@ Provide:
                           />
                           <div>
                             <p className="font-medium">{policy.name}</p>
-                            <p className="text-sm text-gray-500">{policy.description}</p>
+                            <p className="text-sm text-muted-foreground">{policy.description}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
                           <Badge variant="outline">{policy.enforcement}</Badge>
-                          {policy.is_global && <Badge className="bg-blue-100 text-blue-700">Global</Badge>}
+                          {policy.is_global && <Badge className="bg-info-50 text-info">Global</Badge>}
                           <Button size="sm" variant="ghost" onClick={() => { setEditingPolicy(policy); setShowPolicyEditor(true); }}>
                             <Edit className="h-3 w-3" />
                           </Button>
-                          <Button size="sm" variant="ghost" className="text-red-500" onClick={() => deletePolicyMutation.mutate(policy.id)}>
+                          <Button size="sm" variant="ghost" className="text-destructive" onClick={() => deletePolicyMutation.mutate(policy.id)}>
                             <Trash2 className="h-3 w-3" />
                           </Button>
                         </div>
@@ -833,7 +833,7 @@ Provide:
 
           {filteredPolicies.length === 0 && (
             <Card>
-              <CardContent className="py-12 text-center text-gray-500">
+              <CardContent className="py-12 text-center text-muted-foreground">
                 <Shield className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>No security policies defined</p>
                 <Button className="mt-4" onClick={() => setShowPolicyEditor(true)}>
@@ -856,7 +856,7 @@ Provide:
 
           {filteredBackups.length === 0 ? (
             <Card>
-              <CardContent className="py-12 text-center text-gray-500">
+              <CardContent className="py-12 text-center text-muted-foreground">
                 <HardDrive className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>No backup configurations</p>
                 <Button className="mt-4" onClick={() => setShowBackupEditor(true)}>
@@ -872,7 +872,7 @@ Provide:
                   <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-base flex items-center gap-2">
-                        <HardDrive className="h-5 w-5 text-blue-600" />
+                        <HardDrive className="h-5 w-5 text-info" />
                         {backup.name}
                       </CardTitle>
                       <Switch 
@@ -884,30 +884,30 @@ Provide:
                   <CardContent>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-gray-500">Type</span>
+                        <span className="text-muted-foreground">Type</span>
                         <Badge variant="outline">{backup.backup_type}</Badge>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-500">Frequency</span>
+                        <span className="text-muted-foreground">Frequency</span>
                         <span>{backup.frequency}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-500">Retention</span>
+                        <span className="text-muted-foreground">Retention</span>
                         <span>{backup.retention_days} days</span>
                       </div>
                       {backup.last_backup && (
                         <div className="flex justify-between">
-                          <span className="text-gray-500">Last Backup</span>
+                          <span className="text-muted-foreground">Last Backup</span>
                           <span>{format(new Date(backup.last_backup), "MMM d, HH:mm")}</span>
                         </div>
                       )}
                       {backup.last_backup_status && (
                         <div className="flex justify-between">
-                          <span className="text-gray-500">Status</span>
+                          <span className="text-muted-foreground">Status</span>
                           <Badge className={
-                            backup.last_backup_status === "success" ? "bg-green-100 text-green-700" :
-                            backup.last_backup_status === "failed" ? "bg-red-100 text-red-700" :
-                            "bg-amber-100 text-amber-700"
+                            backup.last_backup_status === "success" ? "bg-success-50 text-success" :
+                            backup.last_backup_status === "failed" ? "bg-destructive-50 text-destructive" :
+                            "bg-warning/10 text-warning"
                           }>
                             {backup.last_backup_status}
                           </Badge>
@@ -943,9 +943,9 @@ Provide:
           {isGeneratingAudit && (
             <Card>
               <CardContent className="py-12 text-center">
-                <Loader2 className="h-12 w-12 mx-auto mb-4 animate-spin text-purple-600" />
+                <Loader2 className="h-12 w-12 mx-auto mb-4 animate-spin text-accent" />
                 <p className="font-medium">Running security audit...</p>
-                <p className="text-sm text-gray-500 mt-2">Analyzing policies, events, and configurations</p>
+                <p className="text-sm text-muted-foreground mt-2">Analyzing policies, events, and configurations</p>
               </CardContent>
             </Card>
           )}
@@ -967,7 +967,7 @@ Provide:
 
           {!isGeneratingAudit && securityAudits.length === 0 && (
             <Card>
-              <CardContent className="py-12 text-center text-gray-500">
+              <CardContent className="py-12 text-center text-muted-foreground">
                 <Shield className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>No security audits yet</p>
                 <p className="text-sm mt-2">Run an AI security audit to get comprehensive analysis</p>

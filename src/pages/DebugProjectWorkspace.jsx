@@ -124,7 +124,7 @@ export default function DebugProjectWorkspace() {
           </Link>
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-2xl lg:text-3xl font-bold text-stone-900">
+              <h1 className="text-2xl lg:text-3xl font-bold text-midnight-900">
                 {mockProject.name}
               </h1>
               {mockProject.isHighPriority && (
@@ -135,7 +135,7 @@ export default function DebugProjectWorkspace() {
               )}
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-sm text-stone-500 font-mono">
+              <span className="text-sm text-muted-foreground font-mono">
                 {mockProject.projectRef}
               </span>
               <Badge className={`${statusColors[mockProject.status]} border`}>
@@ -157,7 +157,7 @@ export default function DebugProjectWorkspace() {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="bg-stone-100">
+        <TabsList className="bg-muted">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <ClipboardList className="h-4 w-4" />
             <span className="hidden sm:inline">Overview</span>
@@ -203,7 +203,7 @@ export default function DebugProjectWorkspace() {
                   <CardTitle>Description</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-stone-600 whitespace-pre-wrap">{mockProject.description}</p>
+                  <p className="text-charcoal-700 whitespace-pre-wrap">{mockProject.description}</p>
                 </CardContent>
               </Card>
 
@@ -217,26 +217,26 @@ export default function DebugProjectWorkspace() {
                     <div className="flex-1">
                       <Progress value={completionPercentage} className="h-3" />
                     </div>
-                    <span className="text-lg font-semibold text-stone-900">
+                    <span className="text-lg font-semibold text-midnight-900">
                       {completionPercentage}%
                     </span>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    <div className="p-3 bg-stone-50 rounded-lg text-center">
-                      <p className="text-2xl font-bold text-stone-900">{taskStats.total}</p>
-                      <p className="text-sm text-stone-500">Total</p>
+                    <div className="p-3 bg-muted rounded-lg text-center">
+                      <p className="text-2xl font-bold text-midnight-900">{taskStats.total}</p>
+                      <p className="text-sm text-muted-foreground">Total</p>
                     </div>
                     <div className="p-3 bg-success-50 rounded-lg text-center">
                       <p className="text-2xl font-bold text-success">{taskStats.completed}</p>
-                      <p className="text-sm text-stone-500">Completed</p>
+                      <p className="text-sm text-muted-foreground">Completed</p>
                     </div>
                     <div className="p-3 bg-info-50 rounded-lg text-center">
                       <p className="text-2xl font-bold text-info">{taskStats.inProgress}</p>
-                      <p className="text-sm text-stone-500">In Progress</p>
+                      <p className="text-sm text-muted-foreground">In Progress</p>
                     </div>
                     <div className="p-3 bg-destructive-50 rounded-lg text-center">
                       <p className="text-2xl font-bold text-destructive">{taskStats.blocked}</p>
-                      <p className="text-sm text-stone-500">Blocked</p>
+                      <p className="text-sm text-muted-foreground">Blocked</p>
                     </div>
                   </div>
                 </CardContent>
@@ -248,7 +248,7 @@ export default function DebugProjectWorkspace() {
                   <CardTitle>Notes</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-stone-600 whitespace-pre-wrap">{mockProject.notes}</p>
+                  <p className="text-charcoal-700 whitespace-pre-wrap">{mockProject.notes}</p>
                 </CardContent>
               </Card>
             </div>
@@ -265,13 +265,13 @@ export default function DebugProjectWorkspace() {
                     <div className="h-10 w-10 rounded-full bg-secondary-100 flex items-center justify-center">
                       <User className="h-5 w-5 text-secondary" />
                     </div>
-                    <p className="font-medium text-stone-900">{mockProject.clientName}</p>
+                    <p className="font-medium text-midnight-900">{mockProject.clientName}</p>
                   </div>
                   <a href={`mailto:${mockProject.clientEmail}`} className="flex items-center gap-2 text-sm text-info hover:underline">
                     <Mail className="h-4 w-4" />
                     {mockProject.clientEmail}
                   </a>
-                  <a href={`tel:${mockProject.clientPhone}`} className="flex items-center gap-2 text-sm text-stone-600">
+                  <a href={`tel:${mockProject.clientPhone}`} className="flex items-center gap-2 text-sm text-charcoal-700">
                     <Phone className="h-4 w-4" />
                     {mockProject.clientPhone}
                   </a>
@@ -285,26 +285,26 @@ export default function DebugProjectWorkspace() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-start gap-3">
-                    <MapPin className="h-5 w-5 text-stone-400 mt-0.5" />
+                    <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
                     <div>
-                      <p className="text-sm text-stone-500">Location</p>
-                      <p className="text-stone-900">{mockProject.location}</p>
+                      <p className="text-sm text-muted-foreground">Location</p>
+                      <p className="text-midnight-900">{mockProject.location}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <Calendar className="h-5 w-5 text-stone-400 mt-0.5" />
+                    <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
                     <div>
-                      <p className="text-sm text-stone-500">Start Date</p>
-                      <p className="text-stone-900">
+                      <p className="text-sm text-muted-foreground">Start Date</p>
+                      <p className="text-midnight-900">
                         {format(new Date(mockProject.startDate), "MMMM d, yyyy")}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <Clock className="h-5 w-5 text-stone-400 mt-0.5" />
+                    <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
                     <div>
-                      <p className="text-sm text-stone-500">Estimated End</p>
-                      <p className="text-stone-900">
+                      <p className="text-sm text-muted-foreground">Estimated End</p>
+                      <p className="text-midnight-900">
                         {format(new Date(mockProject.estimatedEndDate), "MMMM d, yyyy")}
                       </p>
                     </div>
@@ -319,17 +319,17 @@ export default function DebugProjectWorkspace() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center gap-2 mb-2">
-                    <PoundSterling className="h-5 w-5 text-stone-400" />
-                    <span className="text-2xl font-bold text-stone-900">
+                    <PoundSterling className="h-5 w-5 text-muted-foreground" />
+                    <span className="text-2xl font-bold text-midnight-900">
                       £{mockProject.budget.toLocaleString()}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm mb-2">
-                    <span className="text-stone-500">Spent</span>
+                    <span className="text-muted-foreground">Spent</span>
                     <span className="font-medium">£{mockProject.currentSpend.toLocaleString()}</span>
                   </div>
                   <Progress value={(mockProject.currentSpend / mockProject.budget) * 100} className="h-2" />
-                  <p className="text-xs text-stone-500 mt-2">
+                  <p className="text-xs text-muted-foreground mt-2">
                     £{(mockProject.budget - mockProject.currentSpend).toLocaleString()} remaining
                   </p>
                 </CardContent>
@@ -350,7 +350,7 @@ export default function DebugProjectWorkspace() {
                   <div key={task.id} className="flex items-center justify-between p-3 border rounded-lg">
                     <div>
                       <p className="font-medium">{task.title}</p>
-                      <p className="text-sm text-stone-500">Due: {task.dueDate}</p>
+                      <p className="text-sm text-muted-foreground">Due: {task.dueDate}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge variant={task.priority === "High" ? "destructive" : "secondary"}>{task.priority}</Badge>
@@ -372,8 +372,8 @@ export default function DebugProjectWorkspace() {
         <TabsContent value="gantt">
           <Card>
             <CardContent className="py-12 text-center">
-              <GanttChartSquare className="h-12 w-12 mx-auto mb-4 text-stone-300" />
-              <p className="text-stone-500">Gantt chart visualization would appear here</p>
+              <GanttChartSquare className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+              <p className="text-muted-foreground">Gantt chart visualization would appear here</p>
             </CardContent>
           </Card>
         </TabsContent>
@@ -389,17 +389,17 @@ export default function DebugProjectWorkspace() {
                 {mockContacts.map((contact) => (
                   <div key={contact.id} className="flex items-center justify-between p-3 border rounded-lg">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-stone-100 flex items-center justify-center">
-                        <User className="h-5 w-5 text-stone-500" />
+                      <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
+                        <User className="h-5 w-5 text-muted-foreground" />
                       </div>
                       <div>
                         <p className="font-medium">{contact.name}</p>
-                        <p className="text-sm text-stone-500">{contact.role}</p>
+                        <p className="text-sm text-muted-foreground">{contact.role}</p>
                       </div>
                     </div>
                     <div className="text-right text-sm">
-                      <p className="text-blue-600">{contact.email}</p>
-                      <p className="text-stone-500">{contact.phone}</p>
+                      <p className="text-info">{contact.email}</p>
+                      <p className="text-muted-foreground">{contact.phone}</p>
                     </div>
                   </div>
                 ))}
@@ -419,13 +419,13 @@ export default function DebugProjectWorkspace() {
                 {mockDocuments.map((doc) => (
                   <div key={doc.id} className="flex items-center justify-between p-3 border rounded-lg">
                     <div className="flex items-center gap-3">
-                      <FileText className="h-5 w-5 text-stone-400" />
+                      <FileText className="h-5 w-5 text-muted-foreground" />
                       <div>
                         <p className="font-medium">{doc.name}</p>
-                        <p className="text-sm text-stone-500">{doc.category}</p>
+                        <p className="text-sm text-muted-foreground">{doc.category}</p>
                       </div>
                     </div>
-                    <p className="text-sm text-stone-500">{doc.uploadedDate}</p>
+                    <p className="text-sm text-muted-foreground">{doc.uploadedDate}</p>
                   </div>
                 ))}
               </div>
@@ -444,16 +444,16 @@ export default function DebugProjectWorkspace() {
                 {mockSiteVisits.map((visit) => (
                   <div key={visit.id} className="p-4 border rounded-lg">
                     <div className="flex items-center gap-2 mb-2">
-                      <Calendar className="h-4 w-4 text-stone-400" />
+                      <Calendar className="h-4 w-4 text-muted-foreground" />
                       <span className="font-medium">{visit.visitDate}</span>
                     </div>
-                    <p className="text-sm text-stone-500 mb-2">Attendees: {visit.attendees.join(", ")}</p>
-                    <p className="text-stone-700 mb-2">{visit.notes}</p>
+                    <p className="text-sm text-muted-foreground mb-2">Attendees: {visit.attendees.join(", ")}</p>
+                    <p className="text-charcoal-700 mb-2">{visit.notes}</p>
                     <div className="text-sm">
-                      <span className="font-medium text-stone-600">Actions:</span>
+                      <span className="font-medium text-charcoal-700">Actions:</span>
                       <ul className="list-disc list-inside ml-2">
                         {visit.actionItems.map((item, i) => (
-                          <li key={i} className="text-stone-500">{item}</li>
+                          <li key={i} className="text-muted-foreground">{item}</li>
                         ))}
                       </ul>
                     </div>
@@ -480,7 +480,7 @@ export default function DebugProjectWorkspace() {
                       </div>
                       <div>
                         <p className="font-medium">{alloc.memberName}</p>
-                        <p className="text-sm text-stone-500">{alloc.role}</p>
+                        <p className="text-sm text-muted-foreground">{alloc.role}</p>
                       </div>
                     </div>
                     <Badge variant="outline">{alloc.hoursAllocated} hrs</Badge>
