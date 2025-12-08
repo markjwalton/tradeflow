@@ -136,7 +136,7 @@ export default function DashboardManager() {
       <div className="bg-[var(--color-background-paper)] border-b border-[var(--color-background-muted)] px-4 py-3 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-3">
           <LayoutDashboard className="h-5 w-5 text-[var(--color-primary)]" />
-          <h1 className="font-light text-lg text-[var(--color-midnight)] font-heading">Dashboard Manager</h1>
+          <h1 className="text-h4">Dashboard Manager</h1>
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="h-8">
               <TabsTrigger value="dashboard" className="text-xs px-3">
@@ -232,7 +232,7 @@ export default function DashboardManager() {
                 <Card className="max-w-lg mx-auto mt-12 border-[var(--color-background-muted)]">
                   <CardContent className="py-12 text-center">
                     <LayoutDashboard className="h-12 w-12 mx-auto mb-4 text-[var(--color-background-muted)]" />
-                    <h3 className="font-light text-lg mb-2 text-[var(--color-midnight)] font-heading">No Widgets Yet</h3>
+                    <h3 className="text-h4 mb-2">No Widgets Yet</h3>
                     <p className="text-[var(--color-charcoal)] mb-4">
                       Create widgets in the staging area or use AI to generate recommendations.
                     </p>
@@ -322,7 +322,7 @@ function WidgetLibraryManager({ widgets }) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Published Widget Library</h2>
+        <h2 className="text-h4">Published Widget Library</h2>
         <Badge variant="secondary">{publishedWidgets.length} widgets</Badge>
       </div>
 
