@@ -80,6 +80,7 @@ import DebugProjectEditor from './pages/DebugProjectEditor';
 import KnowledgeManager from './pages/KnowledgeManager';
 import PageBuilder from './pages/PageBuilder';
 import CSSAudit from './pages/CSSAudit';
+import ViolationReport from './pages/ViolationReport';
 import __Layout from './Layout.jsx';
 
 
@@ -166,6 +167,7 @@ export const PAGES = {
     "KnowledgeManager": KnowledgeManager,
     "PageBuilder": PageBuilder,
     "CSSAudit": CSSAudit,
+    "ViolationReport": ViolationReport,
 }
 
 export const pagesConfig = {
