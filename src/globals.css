@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Adobe Fonts - Must load first */
 @import url("https://use.typekit.net/iwm1gcu.css");
 
