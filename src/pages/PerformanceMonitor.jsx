@@ -1311,7 +1311,6 @@ Provide:
             <Button 
               onClick={generateSystemReview} 
               disabled={isGeneratingSystemReview}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               {isGeneratingSystemReview ? (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />

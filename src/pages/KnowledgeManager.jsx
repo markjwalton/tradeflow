@@ -734,8 +734,7 @@ Create a development prompt that:
                 <Button 
                   onClick={handleGenerateRecommendations} 
                   disabled={analyzing}
-                  className="bg-primary hover:bg-primary/90"
-                >
+                  >
                   {analyzing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
                   Generate from Releases
                 </Button>
@@ -744,7 +743,7 @@ Create a development prompt that:
             <CardContent>
               {recommendations.length === 0 ? (
                 <div className="text-center py-8">
-                  <Sparkles className="h-12 w-12 mx-auto mb-4 text-charcoal-700" />
+                  <Sparkles className="h-12 w-12 mx-auto mb-4" />
                   <p className="text-charcoal-700">
                     Generate recommendations to get AI insights with RuleBook alignment
                   </p>
@@ -848,7 +847,7 @@ Create a development prompt that:
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setRoadmapDialog({ open: false, rec: null })}>Cancel</Button>
-            <Button onClick={handleAddToRoadmap} className="bg-primary hover:bg-primary/90">
+            <Button onClick={handleAddToRoadmap}>
               <Plus className="h-4 w-4 mr-2" />
               Add to Roadmap
             </Button>
