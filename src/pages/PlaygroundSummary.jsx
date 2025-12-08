@@ -349,7 +349,7 @@ export default function PlaygroundSummary() {
             )}
           </Button>
           <Link to={createPageUrl("ConceptWorkbench")}>
-            <Button className="bg-warning hover:bg-secondary-600 text-white">
+            <Button className="bg-warning hover:bg-warning/90 text-warning-foreground">
               <Lightbulb className="h-4 w-4 mr-2" />
               New Concept
             </Button>

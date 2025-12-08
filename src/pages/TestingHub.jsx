@@ -637,7 +637,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-[var(--color-charcoal)] mb-4">
+                <p className="text-sm text-charcoal-700 mb-4">
                   {pageTemplates.length} pages in library
                 </p>
                 <Button onClick={() => syncFromLibrary("page")} disabled={isOperating}>
@@ -655,7 +655,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-[var(--color-charcoal)] mb-4">
+                <p className="text-sm text-charcoal-700 mb-4">
                   {featureTemplates.length} features in library
                 </p>
                 <Button onClick={() => syncFromLibrary("feature")} disabled={isOperating}>
