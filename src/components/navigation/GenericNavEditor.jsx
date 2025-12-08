@@ -406,7 +406,7 @@ export default function GenericNavEditor({
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>{title}</CardTitle>
-        <div className="flex gap-2">
+        <div className="flex [gap:var(--spacing-2)]">
           {/* Copy from global template for tenant configs */}
           {tenantId && !isGlobal && items.length === 0 && globalConfigs.length > 0 && (
             <Button variant="outline" onClick={handleCopyFromGlobal}>
@@ -443,7 +443,7 @@ export default function GenericNavEditor({
               <DragDropContext onDragEnd={handleDragEnd}>
                 <Droppable droppableId="nav-list">
                   {(provided) => (
-                    <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-1 mb-6">
+                    <div {...provided.droppableProps} ref={provided.innerRef} className="[&>*+*]:mt-[var(--spacing-1)] [margin-bottom:var(--spacing-6)]">
                       {flatList.map((item, index) => (
                         <Draggable key={item._id} draggableId={item._id} index={index}>
                           {(provided) => (
@@ -454,7 +454,7 @@ export default function GenericNavEditor({
                                 ...provided.draggableProps.style,
                                 marginLeft: (item.depth || 0) * 24 
                               }}
-                              className={`flex items-center gap-3 p-3 bg-[var(--color-background-paper)] border border-[var(--color-background-muted)] rounded-lg hover:bg-[var(--color-primary)]/5 hover:border-[var(--color-primary)]/30 transition-all group ${!item.is_visible ? "opacity-50" : ""}`}
+                              className={`flex items-center [gap:var(--spacing-3)] [padding:var(--spacing-3)] bg-[var(--color-background-paper)] border border-[var(--color-background-muted)] [border-radius:var(--radius-lg)] hover:bg-[var(--color-primary)]/5 hover:border-[var(--color-primary)]/30 [transition:var(--duration-200)] group ${!item.is_visible ? "opacity-50" : ""}`}
                             >
                               <div {...provided.dragHandleProps} className="cursor-grab text-[var(--color-charcoal)]/50 hover:text-[var(--color-charcoal)]">
                                 <GripVertical className="h-4 w-4" />
@@ -471,7 +471,7 @@ export default function GenericNavEditor({
                                 <div className="w-5" /> 
                               )}
                               
-                              <div className="flex items-center gap-2 flex-1">
+                              <div className="flex items-center [gap:var(--spacing-2)] flex-1">
                                 {renderIcon(item.icon, "h-4 w-4")}
                                 <span className="text-body-base text-[var(--color-midnight)]">{item.name}</span>
                                 {item.item_type === "folder" && (
@@ -479,7 +479,7 @@ export default function GenericNavEditor({
                                 )}
                               </div>
 
-                              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <div className="flex items-center [gap:var(--spacing-1)] opacity-0 group-hover:opacity-100 [transition:var(--duration-200)]">
                                 {/* Move Menu */}
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
@@ -568,20 +568,20 @@ export default function GenericNavEditor({
 
             {/* Unallocated Pages */}
             {unallocatedSlugs.length > 0 && (
-              <div className="border-t pt-4">
+              <div className="border-t [padding-top:var(--spacing-4)]">
                 <button 
                   onClick={() => setUnallocatedExpanded(!unallocatedExpanded)}
-                  className="flex items-center gap-2 text-[var(--color-charcoal)] hover:text-[var(--color-midnight)] text-body-base mb-3"
+                  className="flex items-center [gap:var(--spacing-2)] text-[var(--color-charcoal)] hover:text-[var(--color-midnight)] text-body-base [margin-bottom:var(--spacing-3)]"
                 >
                   {unallocatedExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                   <FolderOpen className="h-4 w-4" />
                   Unallocated Pages ({unallocatedSlugs.length})
                 </button>
                 {unallocatedExpanded && (
-                        <div className="space-y-2">
+                        <div className="[&>*+*]:mt-[var(--spacing-2)]">
                           {/* AI Recommend All Button */}
                           {unallocatedSlugs.length > 0 && (
-                            <div className="flex justify-end mb-2">
+                            <div className="flex justify-end [margin-bottom:var(--spacing-2)]">
                               <Button
                                 variant="outline"
                                 size="sm"
@@ -613,10 +613,10 @@ export default function GenericNavEditor({
                           {unallocatedSlugs.map(slug => (
                       <div 
                         key={slug} 
-                        className="flex items-center gap-3 p-3 bg-[var(--color-background-paper)] border border-dashed border-[var(--color-charcoal)]/30 rounded-lg hover:bg-[var(--color-background)] transition-all group"
+                        className="flex items-center [gap:var(--spacing-3)] [padding:var(--spacing-3)] bg-[var(--color-background-paper)] border border-dashed border-[var(--color-charcoal)]/30 [border-radius:var(--radius-lg)] hover:bg-[var(--color-background)] [transition:var(--duration-200)] group"
                       >
                         <div className="w-5" />
-                        <div className="flex items-center gap-2 flex-1">
+                        <div className="flex items-center [gap:var(--spacing-2)] flex-1">
                           <File className="h-4 w-4 text-[var(--color-charcoal)]" />
                           <span className="text-body-base text-[var(--color-charcoal)]">{slug.replace(/([A-Z])/g, ' $1').trim()}</span>
                           <span className="text-caption text-[var(--color-charcoal)] font-mono">/{slug.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()}</span>
@@ -627,7 +627,7 @@ export default function GenericNavEditor({
                             </Badge>
                           )}
                         </div>
-                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex items-center [gap:var(--spacing-1)] opacity-0 group-hover:opacity-100 [transition:var(--duration-200)]">
                           <Button 
                             variant="ghost" 
                             size="icon" 
@@ -659,7 +659,7 @@ export default function GenericNavEditor({
 
             {/* All Pages Reference List */}
             {items.length > 0 && (
-              <div className="border-t pt-4 mt-4">
+              <div className="border-t [padding-top:var(--spacing-4)] [margin-top:var(--spacing-4)]">
                 <button 
                   onClick={() => setAllPagesExpanded(!allPagesExpanded)}
                   className="flex items-center gap-2 text-[var(--color-charcoal)] hover:text-[var(--color-midnight)] text-body-base mb-3"
@@ -669,7 +669,7 @@ export default function GenericNavEditor({
                   All Pages ({items.filter(i => i.item_type !== "folder").length})
                 </button>
                 {allPagesExpanded && (
-                  <div className="space-y-1 pl-6">
+                  <div className="[&>*+*]:mt-[var(--spacing-1)] [padding-left:var(--spacing-6)]">
                     {items
                       .filter(i => i.item_type !== "folder")
                       .sort((a, b) => a.name.localeCompare(b.name))
@@ -720,7 +720,7 @@ export default function GenericNavEditor({
           <DialogHeader>
             <DialogTitle className="text-[var(--color-midnight)]">{editingItem !== null ? "Edit Item" : "Add Navigation Item"}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="[&>*+*]:mt-[var(--spacing-4)]">
             <div>
               <Label>Name *</Label>
               <Input
@@ -818,7 +818,7 @@ export default function GenericNavEditor({
                 <Label>Default Collapsed</Label>
               </div>
             )}
-            <div className="flex justify-end gap-2 pt-4">
+            <div className="flex justify-end [gap:var(--spacing-2)] [padding-top:var(--spacing-4)]">
               <Button variant="outline" onClick={closeDialog}>Cancel</Button>
               <Button className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white" onClick={handleSaveItem}>Save</Button>
             </div>
