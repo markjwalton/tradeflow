@@ -658,7 +658,7 @@ export default function CSSAudit() {
                 <div className="max-h-60 overflow-y-auto space-y-1 border border-[var(--color-background-muted)] rounded-lg p-3 bg-[var(--color-background-subtle)]">
                 {scannedFiles.slice(-20).map((file, idx) => (
                   <div 
-                    key={idx} 
+                    key={`${file.path}-${idx}`} 
                     className="flex items-center gap-2 text-sm font-mono"
                   >
                     {file.status === "scanning" && (
