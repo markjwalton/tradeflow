@@ -930,13 +930,29 @@ export default function PageBuilder() {
               </div>
             )}
           </DialogHeader>
-          
-          <Tabs defaultValue="colors">
+
+          <Tabs defaultValue={(() => {
+            const tag = selectedElement?.tagName.toLowerCase();
+            if (['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'span', 'label'].includes(tag)) return 'typography';
+            if (['button', 'a'].includes(tag)) return 'colors';
+            return 'spacing';
+          })()}>
             <TabsList className="grid grid-cols-2 w-full">
-              <TabsTrigger value="colors">Colors</TabsTrigger>
-              <TabsTrigger value="typography">Typography</TabsTrigger>
-              <TabsTrigger value="spacing">Spacing</TabsTrigger>
-              <TabsTrigger value="effects">Effects</TabsTrigger>
+              {(() => {
+                const tag = selectedElement?.tagName.toLowerCase();
+                const isText = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'span', 'label', 'a'].includes(tag);
+                const isButton = tag === 'button';
+                const isContainer = ['div', 'section', 'article', 'main', 'aside', 'header', 'footer', 'nav'].includes(tag);
+
+                return (
+                  <>
+                    {(isText || isButton) && <TabsTrigger value="colors">Colors</TabsTrigger>}
+                    {isText && <TabsTrigger value="typography">Typography</TabsTrigger>}
+                    {(isContainer || isButton) && <TabsTrigger value="spacing">Spacing</TabsTrigger>}
+                    {(isContainer || isButton) && <TabsTrigger value="effects">Effects</TabsTrigger>}
+                  </>
+                );
+              })()}
             </TabsList>
 
             <TabsContent value="colors" className="space-y-4">
