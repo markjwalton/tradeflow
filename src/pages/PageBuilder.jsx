@@ -91,6 +91,21 @@ export default function PageBuilder() {
       { name: "Large", value: "shadow-[var(--shadow-lg)]" },
       { name: "XL", value: "shadow-[var(--shadow-xl)]" },
     ],
+    fonts: [
+      { name: "Heading", value: "font-[var(--font-heading)]" },
+      { name: "Body", value: "font-[var(--font-body)]" },
+      { name: "Mono", value: "font-[var(--font-mono)]" },
+    ],
+    fontSizes: [
+      { name: "XS (0.75rem)", value: "text-[var(--font-size-xs)]" },
+      { name: "SM (0.875rem)", value: "text-[var(--font-size-sm)]" },
+      { name: "Base (1rem)", value: "text-[var(--font-size-base)]" },
+      { name: "LG (1.125rem)", value: "text-[var(--font-size-lg)]" },
+      { name: "XL (1.25rem)", value: "text-[var(--font-size-xl)]" },
+      { name: "2XL (1.5rem)", value: "text-[var(--font-size-2xl)]" },
+      { name: "3XL (1.875rem)", value: "text-[var(--font-size-3xl)]" },
+      { name: "4XL (2.25rem)", value: "text-[var(--font-size-4xl)]" },
+    ],
   };
 
   const [formData, setFormData] = useState({
@@ -292,6 +307,10 @@ export default function PageBuilder() {
       newClasses = currentClasses.replace(/rounded-\[var\(--radius-[^\]]+\)\]/g, '');
     } else if (tokenType === 'shadow') {
       newClasses = currentClasses.replace(/shadow-\[var\(--shadow-[^\]]+\)\]/g, '');
+    } else if (tokenType === 'font-family') {
+      newClasses = currentClasses.replace(/font-\[var\(--font-[^\]]+\)\]/g, '');
+    } else if (tokenType === 'font-size') {
+      newClasses = currentClasses.replace(/text-\[var\(--font-size-[^\]]+\)\]/g, '');
     }
 
     newClasses = `${newClasses.trim()} ${tokenClass}`.trim();
@@ -816,11 +835,11 @@ export default function PageBuilder() {
           </DialogHeader>
           
           <Tabs defaultValue="colors">
-            <TabsList>
+            <TabsList className="grid grid-cols-3 w-full">
               <TabsTrigger value="colors">Colors</TabsTrigger>
+              <TabsTrigger value="typography">Typography</TabsTrigger>
               <TabsTrigger value="spacing">Spacing</TabsTrigger>
-              <TabsTrigger value="radius">Radius</TabsTrigger>
-              <TabsTrigger value="shadows">Shadows</TabsTrigger>
+              <TabsTrigger value="effects">Effects</TabsTrigger>
             </TabsList>
 
             <TabsContent value="colors" className="space-y-4">
@@ -851,6 +870,39 @@ export default function PageBuilder() {
                       onClick={() => applyTokenToElement(token.bg, 'color-bg')}
                     >
                       <div className={`w-4 h-4 rounded ${token.bg}`} />
+                      {token.name}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="typography" className="space-y-4">
+              <div>
+                <Label className="mb-2 block">Font Family</Label>
+                <div className="grid grid-cols-3 gap-2">
+                  {TOKEN_LIBRARY.fonts.map((token) => (
+                    <Button
+                      key={token.value}
+                      variant="outline"
+                      className="justify-start"
+                      onClick={() => applyTokenToElement(token.value, 'font-family')}
+                    >
+                      {token.name}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <Label className="mb-2 block">Font Size</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  {TOKEN_LIBRARY.fontSizes.map((token) => (
+                    <Button
+                      key={token.value}
+                      variant="outline"
+                      className="justify-start"
+                      onClick={() => applyTokenToElement(token.value, 'font-size')}
+                    >
                       {token.name}
                     </Button>
                   ))}
@@ -891,33 +943,36 @@ export default function PageBuilder() {
               </div>
             </TabsContent>
 
-            <TabsContent value="radius">
-              <div className="grid grid-cols-2 gap-2">
-                {TOKEN_LIBRARY.radius.map((token) => (
-                  <Button
-                    key={token.value}
-                    variant="outline"
-                    className="justify-start"
-                    onClick={() => applyTokenToElement(token.value, 'radius')}
-                  >
-                    {token.name}
-                  </Button>
-                ))}
+            <TabsContent value="effects" className="space-y-4">
+              <div>
+                <Label className="mb-2 block">Border Radius</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  {TOKEN_LIBRARY.radius.map((token) => (
+                    <Button
+                      key={token.value}
+                      variant="outline"
+                      className="justify-start"
+                      onClick={() => applyTokenToElement(token.value, 'radius')}
+                    >
+                      {token.name}
+                    </Button>
+                  ))}
+                </div>
               </div>
-            </TabsContent>
-
-            <TabsContent value="shadows">
-              <div className="grid grid-cols-2 gap-2">
-                {TOKEN_LIBRARY.shadows.map((token) => (
-                  <Button
-                    key={token.value}
-                    variant="outline"
-                    className="justify-start"
-                    onClick={() => applyTokenToElement(token.value, 'shadow')}
-                  >
-                    {token.name}
-                  </Button>
-                ))}
+              <div>
+                <Label className="mb-2 block">Shadow</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  {TOKEN_LIBRARY.shadows.map((token) => (
+                    <Button
+                      key={token.value}
+                      variant="outline"
+                      className="justify-start"
+                      onClick={() => applyTokenToElement(token.value, 'shadow')}
+                    >
+                      {token.name}
+                    </Button>
+                  ))}
+                </div>
               </div>
             </TabsContent>
           </Tabs>
