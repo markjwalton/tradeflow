@@ -111,7 +111,7 @@ export default function WorkflowLibrary() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-light font-display text-midnight-900">Workflow Library</h1>
-          <p className="text-charcoal-700">
+          <p className="text-muted-foreground">
             Manage and create workflow templates for your business processes
           </p>
         </div>
@@ -160,7 +160,7 @@ export default function WorkflowLibrary() {
         <div className="text-center py-12">
           <GitBranch className="h-12 w-12 mx-auto text-muted-foreground opacity-50 mb-4" />
           <h3 className="text-lg font-medium text-midnight-900">No workflows found</h3>
-          <p className="text-charcoal-700 mb-4">
+          <p className="text-muted-foreground mb-4">
             {search || categoryFilter !== "all"
               ? "Try adjusting your filters"
               : "Create your first workflow to get started"}

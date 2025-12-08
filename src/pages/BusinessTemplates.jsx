@@ -163,7 +163,7 @@ export default function BusinessTemplates() {
               </Badge>
             )}
           </h1>
-          <p className="text-charcoal-700 mt-1">
+          <p className="text-muted-foreground mt-1">
             Pre-defined templates with entities, pages, and features
           </p>
         </div>
@@ -299,7 +299,7 @@ export default function BusinessTemplates() {
         ))}
 
         {filteredTemplates.length === 0 && (
-          <div className="col-span-full text-center py-12 text-charcoal-700">
+          <div className="col-span-full text-center py-12 text-muted-foreground">
             <Building2 className="h-12 w-12 mx-auto mb-3 opacity-30" />
             <p>No templates found</p>
             <Button variant="link" onClick={() => setShowBuilder(true)}>

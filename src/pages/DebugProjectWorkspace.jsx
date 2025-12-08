@@ -111,7 +111,7 @@ export default function DebugProjectWorkspace() {
       <div className="mb-4 p-3 bg-warning/10 border border-warning/20 rounded-lg flex items-center gap-2">
         <AlertTriangle className="h-5 w-5 text-warning" />
         <span className="text-warning font-medium">DEBUG MODE</span>
-        <span className="text-secondary text-sm">– Using static mock data, no database calls</span>
+        <span className="text-muted-foreground text-sm">– Using static mock data, no database calls</span>
       </div>
 
       {/* Header */}
@@ -203,7 +203,7 @@ export default function DebugProjectWorkspace() {
                   <CardTitle>Description</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-charcoal-700 whitespace-pre-wrap">{mockProject.description}</p>
+                  <p className="text-muted-foreground whitespace-pre-wrap">{mockProject.description}</p>
                 </CardContent>
               </Card>
 
@@ -248,7 +248,7 @@ export default function DebugProjectWorkspace() {
                   <CardTitle>Notes</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-charcoal-700 whitespace-pre-wrap">{mockProject.notes}</p>
+                  <p className="text-muted-foreground whitespace-pre-wrap">{mockProject.notes}</p>
                 </CardContent>
               </Card>
             </div>
@@ -271,7 +271,7 @@ export default function DebugProjectWorkspace() {
                     <Mail className="h-4 w-4" />
                     {mockProject.clientEmail}
                   </a>
-                  <a href={`tel:${mockProject.clientPhone}`} className="flex items-center gap-2 text-sm text-charcoal-700">
+                  <a href={`tel:${mockProject.clientPhone}`} className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Phone className="h-4 w-4" />
                     {mockProject.clientPhone}
                   </a>
@@ -448,9 +448,9 @@ export default function DebugProjectWorkspace() {
                       <span className="font-medium">{visit.visitDate}</span>
                     </div>
                     <p className="text-sm text-muted-foreground mb-2">Attendees: {visit.attendees.join(", ")}</p>
-                    <p className="text-charcoal-700 mb-2">{visit.notes}</p>
+                    <p className="text-muted-foreground mb-2">{visit.notes}</p>
                     <div className="text-sm">
-                      <span className="font-medium text-charcoal-700">Actions:</span>
+                      <span className="font-medium text-muted-foreground">Actions:</span>
                       <ul className="list-disc list-inside ml-2">
                         {visit.actionItems.map((item, i) => (
                           <li key={i} className="text-muted-foreground">{item}</li>
