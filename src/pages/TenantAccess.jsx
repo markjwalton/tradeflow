@@ -240,7 +240,7 @@ export default function TenantAccess() {
                 </div>
                 <div className="space-y-2">
                   {allPendingRequests.map(req => (
-                    <div key={req.id} className="flex items-center gap-3 p-3 bg-[var(--color-warning)]/10 border border-[var(--color-warning)]/30 rounded-lg">
+                    <div key={req.id} className="flex items-center gap-3 p-3 bg-warning/10 border border-warning/30 rounded-lg">
                       <Clock className="h-5 w-5 text-[var(--color-warning)] flex-shrink-0" />
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-sm truncate text-[var(--color-midnight)]">{req.tenant?.name || "Unknown"}</p>
