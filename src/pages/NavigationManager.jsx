@@ -113,15 +113,15 @@ export default function NavigationManager() {
           <div className="flex items-center justify-between [margin-bottom:var(--spacing-6)]">
             <div className="flex [gap:var(--spacing-2)] flex-wrap">
               <button className={tabStyle("admin")} onClick={() => setActiveTab("admin")}>
-                <Cog className="h-4 w-4 mr-2 inline" />
+                <Cog className="h-4 w-4 [margin-right:var(--spacing-2)] inline" />
                 Admin Console
               </button>
               <button className={tabStyle("app")} onClick={() => setActiveTab("app")}>
-                <FileCode className="h-4 w-4 mr-2 inline" />
+                <FileCode className="h-4 w-4 [margin-right:var(--spacing-2)] inline" />
                 App Pages
               </button>
               <button className={tabStyle("tenant")} onClick={() => setActiveTab("tenant")}>
-                <Users className="h-4 w-4 mr-2 inline" />
+                <Users className="h-4 w-4 [margin-right:var(--spacing-2)] inline" />
                 Tenant Navigation
               </button>
             </div>
@@ -161,7 +161,7 @@ export default function NavigationManager() {
               />
 
               {selectedTenantId === "__global__" ? (
-                <div className="text-center py-12 text-[var(--color-charcoal)]">
+                <div className="text-center [padding-block:var(--spacing-12)] text-[var(--color-charcoal)]">
                   Select a tenant to manage their navigation
                 </div>
               ) : (
@@ -257,7 +257,7 @@ function TenantNavEditor({ tenantId, items = [], isLoading }) {
   });
 
   if (isLoading) {
-    return <div className="text-center py-8 text-[var(--color-charcoal)]">Loading...</div>;
+    return <div className="text-center [padding-block:var(--spacing-8)] text-[var(--color-charcoal)]">Loading...</div>;
   }
 
   return (
@@ -270,7 +270,7 @@ function TenantNavEditor({ tenantId, items = [], isLoading }) {
       </div>
       
       {items.length === 0 ? (
-        <div className="text-center py-8 text-[var(--color-charcoal)]">
+        <div className="text-center [padding-block:var(--spacing-8)] text-[var(--color-charcoal)]">
           No navigation items. Add items or copy from global template.
         </div>
       ) : (
