@@ -4,15 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Override Tailwind defaults with Adobe Fonts */
-.font-sans {
-  font-family: var(--font-family-body) !important;
-}
-
-.font-heading {
-  font-family: var(--font-family-display) !important;
-}
-
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -851,6 +842,15 @@
  * Utility classes for design tokens
  */
 @layer utilities {
+  /* Override Tailwind's .font-sans with Adobe Fonts */
+  .font-sans {
+    font-family: var(--font-family-body) !important;
+  }
+
+  .font-heading {
+    font-family: var(--font-family-display) !important;
+  }
+
   /* Shadow Utilities */
   .shadow-card {
     box-shadow: var(--shadow-card);
