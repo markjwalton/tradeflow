@@ -63,10 +63,10 @@ function ShowcaseSection({ id, title, description, count, children }) {
   const [expanded, setExpanded] = useState(true);
   
   return (
-    <section id={id} className="mb-[var(--spacing-6)] scroll-mt-24 bg-[var(--color-background-paper)] rounded-[var(--radius-xl)] border border-[var(--color-background-muted)] overflow-hidden">
+    <section id={id} className="mb-[var(--spacing-6)] scroll-mt-24 bg-card rounded-[var(--radius-xl)] border border-background-muted overflow-hidden">
       <button 
         onClick={() => setExpanded(!expanded)}
-        className="w-full px-[var(--spacing-6)] py-[var(--spacing-4)] flex items-center justify-between hover:bg-[var(--color-background-subtle)] transition-[var(--transition-fast)]"
+        className="w-full px-[var(--spacing-6)] py-[var(--spacing-4)] flex items-center justify-between hover:bg-muted transition-fast"
       >
         <div className="flex items-center gap-[var(--spacing-3)]">
           <h3 className="text-[length:var(--font-size-lg)] font-display text-[var(--color-midnight)]">
@@ -90,7 +90,7 @@ function ComponentDemo({ title, children, code }) {
   return (
     <div className="space-y-[var(--spacing-3)]">
       {title && <p className="text-[length:var(--font-size-sm)] font-medium text-[var(--color-midnight)]">{title}</p>}
-      <div className="p-[var(--spacing-4)] bg-[var(--color-background-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-background-muted)]">
+      <div className="p-[var(--spacing-4)] bg-muted rounded-[var(--radius-lg)] border border-background-muted">
         {children}
       </div>
     </div>
@@ -147,10 +147,10 @@ export default function ComponentShowcase() {
   return (
     <div className="min-h-screen bg-[var(--color-background)]">
       {/* Header */}
-      <div className="bg-[var(--color-background-paper)] border-b border-[var(--color-background-muted)]">
+      <div className="bg-card border-b border-background-muted">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-[var(--radius-lg)] bg-[var(--color-primary)] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-[var(--radius-lg)] bg-primary flex items-center justify-center">
               <Package className="h-5 w-5 text-white" />
             </div>
             <div>

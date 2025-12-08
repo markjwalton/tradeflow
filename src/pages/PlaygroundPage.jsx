@@ -380,7 +380,7 @@ Return as JSON with a "suggestions" array of strings.`,
       <Card className="mt-6">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-accent-400" />
+            <Sparkles className="h-5 w-5 text-accent-700" />
             AI Suggestions
           </CardTitle>
           <Button onClick={generateAISuggestions} disabled={isGenerating} variant="outline">
@@ -393,7 +393,7 @@ Return as JSON with a "suggestions" array of strings.`,
             <ul className="space-y-2">
               {item.ai_suggestions.map((suggestion, i) => (
                 <li key={i} className="flex items-start gap-2 p-3 bg-accent-100 rounded-lg">
-                  <span className="text-accent-400 font-bold">{i + 1}.</span>
+                  <span className="text-accent-700 font-bold">{i + 1}.</span>
                   <span className="text-sm">{suggestion}</span>
                 </li>
               ))}

@@ -413,7 +413,7 @@ Return as JSON with a "suggestions" array of strings.`,
       <Card className="mt-6">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-accent-400" />
+            <Sparkles className="h-5 w-5 text-accent-700" />
             AI Improvement Suggestions
           </CardTitle>
           <Button onClick={generateAISuggestions} disabled={isGenerating}>
