@@ -25,15 +25,15 @@ import { format } from "date-fns";
 
 const statusColors = {
   todo: "bg-muted text-muted-foreground",
-  in_progress: "bg-info-50 text-info-foreground",
-  review: "bg-accent-100 text-accent-700",
-  completed: "bg-success-50 text-success-foreground",
+  in_progress: "bg-info-50 text-info",
+  review: "bg-accent-100 text-accent",
+  completed: "bg-success-50 text-success",
 };
 
 const priorityColors = {
   low: "bg-muted text-muted-foreground",
-  medium: "bg-warning/10 text-warning-foreground",
-  high: "bg-destructive-50 text-destructive-700",
+  medium: "bg-warning/10 text-warning",
+  high: "bg-destructive-50 text-destructive",
 };
 
 export default function Tasks() {
@@ -159,16 +159,16 @@ export default function Tasks() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64 bg-[var(--color-background)]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+      <div className="flex items-center justify-center h-64 bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
       </div>
     );
   }
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Tasks</h1>
+        <h1 className="text-2xl font-light font-display text-midnight-900">Tasks</h1>
         <Button onClick={() => { resetForm(); setEditingTask(null); setShowForm(true); }}>
           <Plus className="h-4 w-4 mr-2" />
           New Task
@@ -217,11 +217,11 @@ export default function Tasks() {
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <h3 className="font-medium text-[var(--color-midnight)]">{task.title}</h3>
+                    <h3 className="font-medium text-midnight-900">{task.title}</h3>
                     <Badge className={statusColors[task.status]}>{task.status?.replace("_", " ")}</Badge>
                     <Badge className={priorityColors[task.priority]}>{task.priority}</Badge>
                   </div>
-                  <div className="flex items-center gap-4 text-sm text-[var(--color-charcoal)]">
+                  <div className="flex items-center gap-4 text-sm text-charcoal-700">
                     <span>Project: {getProjectName(task.project_id)}</span>
                     <span>Assigned: {getTeamMemberName(task.assigned_to)}</span>
                     {task.due_date && (
@@ -247,7 +247,7 @@ export default function Tasks() {
       </div>
 
       {filteredTasks.length === 0 && (
-        <div className="text-center py-12 text-[var(--color-charcoal)]">
+        <div className="text-center py-12 text-charcoal-700">
           No tasks found. Create your first task to get started.
         </div>
       )}

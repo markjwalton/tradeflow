@@ -37,10 +37,10 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 
 const statusColors = {
-  draft: "bg-warning/10 text-warning-foreground",
-  ready: "bg-info-50 text-info-foreground",
-  building: "bg-accent-100 text-accent-700",
-  deployed: "bg-success-50 text-success-foreground",
+  draft: "bg-warning/10 text-warning",
+  ready: "bg-info-50 text-info",
+  building: "bg-accent-100 text-accent",
+  deployed: "bg-success-50 text-success",
 };
 
 export default function GeneratedApps() {
@@ -239,7 +239,7 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
                     </Button>
                     <Button 
                       size="sm" 
-                      className="flex-1 bg-success-foreground hover:bg-primary-600 text-white"
+                      className="flex-1 bg-success hover:bg-primary text-white"
                       onClick={() => copyForChat(app)}
                     >
                       <Copy className="h-4 w-4 mr-1" />
@@ -321,7 +321,7 @@ function GeneratedAppDetailDialog({ open, onOpenChange, app }) {
                           onClick={() => copySchema(entity)}
                         >
                           {copiedJson === entity.name ? (
-                            <Check className="h-3 w-3 text-success-foreground" />
+                            <Check className="h-3 w-3 text-success" />
                           ) : (
                             <Copy className="h-3 w-3" />
                           )}
