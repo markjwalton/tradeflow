@@ -397,24 +397,32 @@ export default function CSSAudit() {
       - Colors: var(--color-primary), var(--color-secondary), var(--color-accent), var(--color-midnight), var(--color-charcoal)
       - Semantic: bg-primary, text-primary, border-border, bg-muted, text-muted-foreground
       - Spacing: var(--spacing-1) through var(--spacing-32), p-4, gap-4, etc.
-      - Fonts: degular-display, mrs-eaves-xl-serif-narrow (NO QUOTES)
+      - Fonts: degular-display, mrs-eaves-xl-serif-narrow (NO QUOTES in CSS/style attributes)
 
       VIOLATIONS TO DETECT:
-      1. CRITICAL - Quoted fonts: "degular-display", "mrs-eaves-xl-serif-narrow"
+      1. CRITICAL - Quoted fonts IN CSS: font-family: "degular-display" or fontFamily: "mrs-eaves-xl-serif-narrow"
       2. CRITICAL - Inline styles with hardcoded values: style={{backgroundColor: '#fff'}}
-      3. HIGH - Hardcoded hex: #4A5D4E, #D4A574, #ffffff (NOT in comments or var() definitions)
+      3. HIGH - Hardcoded hex colors IN CODE: #4A5D4E, #D4A574 (NOT in comments or var() definitions)
       4. HIGH - Hardcoded Tailwind colors: bg-[#4A5D4E], text-gray-500, text-gray-400
       5. MEDIUM - Hardcoded spacing in inline styles: padding: 16px, margin: 8px
       6. MEDIUM - Hardcoded font sizes in inline styles: fontSize: 14px
       7. LOW - Generic Tailwind grays: text-gray-400, bg-gray-100 (use semantic colors)
 
+      DO NOT FLAG AS VIOLATIONS:
+      - Tailwind utility classes: font-display, font-body, font-mono (these are VALID)
+      - Text content describing fonts: "using Mrs Eaves font" in <p> tags
+      - CSS variable definitions in globals.css
+      - Design token references: var(--font-display), var(--color-primary)
+      - Comments mentioning fonts or colors
+      - Import statements
+      - className values using design tokens
+
       CRITICAL RULES:
-      - ONLY report violations that exist in the actual code above
+      - ONLY report violations in ACTUAL CSS/style code
       - Provide the EXACT code snippet as it appears (copy-paste from content)
       - Verify each violation exists before including it
-      - Do NOT make up violations
-      - Do NOT report valid CSS variable definitions as violations
-      - Do NOT report design token references as violations
+      - Do NOT flag text content or descriptions
+      - Do NOT flag valid Tailwind utility classes
       - If no violations exist, return an empty violations array
 
       For each REAL violation provide:
