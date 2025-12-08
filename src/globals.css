@@ -654,6 +654,13 @@ css
     color: var(--text-body);
   }
 
+  /* Force design token fonts on shadcn components */
+  [role="dialog"] h2,
+  [role="dialog"] h3,
+  .dialog-title {
+    font-family: var(--font-family-display) !important;
+  }
+
   /* Typography Utilities - Complete token application */
   .text-h1 {
     font-family: var(--font-family-display) !important;
