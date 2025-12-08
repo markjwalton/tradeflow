@@ -24,16 +24,16 @@ export default function CSSAudit() {
     setScannedFiles([]);
     setCurrentFile("");
     
-    // Generate comprehensive file list - all pages, components, and layout
+    // Generate COMPLETE file list - all 221 files
     const generateFileList = () => {
       const files = [];
       
       // Core files
       files.push("Layout.js", "globals.css");
       
-      // All pages (based on snapshot)
+      // ALL pages from snapshot
       const pages = [
-        "Dashboard", "Home", "ComponentShowcase", "DesignTokens",
+        "CSSAudit", "Dashboard", "Home", "ComponentShowcase", "DesignTokens",
         "TenantAccess", "TenantManager", "NavigationManager", "Setup",
         "Projects", "Tasks", "Customers", "Team", "Estimates", "Calendar",
         "ProjectDetail", "MindMapEditor", "RuleBook", "PackageLibrary",
@@ -59,10 +59,21 @@ export default function CSSAudit() {
       ];
       pages.forEach(p => files.push(`pages/${p}.jsx`));
       
-      // UI components
-      files.push("components/ui/card.jsx", "components/ui/button.jsx", "components/ui/input.jsx");
+      // ALL UI components (shadcn/ui)
+      const uiComponents = [
+        "accordion", "alert-dialog", "alert", "aspect-ratio", "avatar", "badge",
+        "breadcrumb", "button", "calendar", "card", "carousel", "chart",
+        "checkbox", "collapsible", "command", "context-menu", "dialog",
+        "drawer", "dropdown-menu", "form", "hover-card", "input", "input-otp",
+        "label", "menubar", "navigation-menu", "pagination", "popover",
+        "progress", "radio-group", "resizable", "scroll-area", "select",
+        "separator", "sheet", "skeleton", "slider", "sonner", "switch",
+        "table", "tabs", "textarea", "toast", "toaster", "toggle-group",
+        "toggle", "tooltip"
+      ];
+      uiComponents.forEach(c => files.push(`components/ui/${c}.jsx`));
       
-      // Library components
+      // ALL library components
       files.push(
         "components/library/designTokens.js",
         "components/library/Typography.jsx",
@@ -72,15 +83,31 @@ export default function CSSAudit() {
         "components/library/Layouts.jsx",
         "components/library/Navigation.jsx",
         "components/library/DataDisplay.jsx",
-        "components/library/Feedback.jsx"
+        "components/library/Feedback.jsx",
+        "components/library/EntityBuilder.jsx",
+        "components/library/PageBuilder.jsx",
+        "components/library/FeatureBuilder.jsx",
+        "components/library/CustomProjectSelector.jsx",
+        "components/library/SaveToLibraryButton.jsx",
+        "components/library/AddGroupToProjectDialog.jsx",
+        "components/library/PagePreview.jsx",
+        "components/library/index.js"
       );
       
       // Navigation components
       files.push(
         "components/navigation/NavigationBreadcrumb.jsx",
         "components/navigation/GenericNavEditor.jsx",
+        "components/navigation/NavigationItemForm.jsx",
+        "components/navigation/NavigationItemRow.jsx",
         "components/navigation/NavIconMap.jsx",
-        "components/navigation/NavTypes.jsx"
+        "components/navigation/NavTypes.jsx",
+        "components/navigation/NavUtils.jsx",
+        "components/navigation/NavigationDataProvider.jsx",
+        "components/navigation/NavigationRenderer.jsx",
+        "components/navigation/StandaloneNavigation.jsx",
+        "components/navigation/TenantSelector.jsx",
+        "components/navigation/UnallocationConfirmDialog.jsx"
       );
       
       // Dashboard components
@@ -88,17 +115,210 @@ export default function CSSAudit() {
         "components/dashboard/DashboardSettings.jsx",
         "components/dashboard/DashboardWidgetCard.jsx",
         "components/dashboard/WidgetRenderer.jsx",
-        "components/dashboard/TechNewsWidget.jsx"
+        "components/dashboard/TechNewsWidget.jsx",
+        "components/dashboard/DashboardGrid.jsx",
+        "components/dashboard/WidgetLibrarySidebar.jsx",
+        "components/dashboard/WidgetStaging.jsx",
+        "components/dashboard/AIWidgetGenerator.jsx",
+        "components/dashboard/WidgetConfigEditor.jsx",
+        "components/dashboard/useDashboardSettings.jsx",
+        "components/dashboard/TestDataCoverageWidget.jsx"
       );
       
-      // Other major components
+      // Tenant components
       files.push(
         "components/tenants/TenantForm.jsx",
         "components/tenants/TenantRoleManager.jsx",
         "components/tenants/TenantUserManager.jsx",
+        "components/tenants/TenantAccessRequests.jsx"
+      );
+      
+      // MindMap components
+      files.push(
         "components/mindmap/MindMapCanvas.jsx",
         "components/mindmap/MindMapNode.jsx",
+        "components/mindmap/MindMapConnection.jsx",
+        "components/mindmap/MindMapToolbar.jsx",
+        "components/mindmap/GeneratedSpecDialog.jsx",
+        "components/mindmap/VersionHistoryPanel.jsx",
+        "components/mindmap/ForkVersionDialog.jsx",
+        "components/mindmap/PublishVersionDialog.jsx",
+        "components/mindmap/EntityDetailDialog.jsx",
+        "components/mindmap/EntityRelationshipDiagram.jsx",
+        "components/mindmap/WorkflowDialog.jsx",
+        "components/mindmap/TenantForkDialog.jsx",
+        "components/mindmap/AddNodeDialog.jsx",
+        "components/mindmap/NodeDetailPanel.jsx",
+        "components/mindmap/NewMindMapDialog.jsx",
+        "components/mindmap/layoutMindMapNodes.js"
+      );
+      
+      // Template components
+      files.push(
+        "components/templates/BusinessTemplateBuilder.jsx",
+        "components/templates/TemplateEntityEditor.jsx",
+        "components/templates/TemplatePageEditor.jsx",
+        "components/templates/TemplateFeatureEditor.jsx"
+      );
+      
+      // Generated app components
+      files.push(
+        "components/generated-app/AppNavigationManager.jsx",
+        "components/generated-app/DependencyResolver.jsx",
+        "components/generated-app/SystemFunctionManager.jsx",
+        "components/generated-app/AIDependencyAnalyzer.jsx"
+      );
+      
+      // Workflow components
+      files.push(
+        "components/workflow/WorkflowStepPalette.jsx",
+        "components/workflow/WorkflowCanvas.jsx",
+        "components/workflow/WorkflowStepEditor.jsx",
+        "components/workflow/WorkflowSettings.jsx",
+        "components/workflow/TriggerEditor.jsx",
+        "components/workflow/AIWorkflowGenerator.jsx"
+      );
+      
+      // Form components
+      files.push(
+        "components/forms/FormFieldPalette.jsx",
+        "components/forms/FormFieldEditor.jsx",
+        "components/forms/DynamicFormRenderer.jsx",
+        "components/forms/FormSettings.jsx",
+        "components/forms/AIFormGenerator.jsx",
+        "components/forms/AddressFinderField.jsx",
+        "components/forms/EmailValidationField.jsx",
+        "components/forms/PhoneValidationField.jsx",
+        "components/forms/PostcodeLookupField.jsx"
+      );
+      
+      // Checklist components
+      files.push("components/checklists/AIChecklistGenerator.jsx");
+      
+      // ERD components
+      files.push(
+        "components/erd/ERDCanvas.jsx",
+        "components/erd/ERDEntityBox.jsx",
+        "components/erd/ERDRelationshipLine.jsx",
+        "components/erd/ERDEntityEditor.jsx",
+        "components/erd/ERDRelationshipEditor.jsx",
+        "components/erd/AddFromLibraryDialog.jsx"
+      );
+      
+      // Project components
+      files.push(
+        "components/project/TaskList.jsx",
+        "components/project/ContactList.jsx",
+        "components/project/DocumentList.jsx",
+        "components/project/SiteVisitList.jsx",
+        "components/project/ProjectTeam.jsx",
+        "components/project/ClientAccessManager.jsx",
+        "components/project/GanttChart.jsx",
+        "components/project/DesignPhaseList.jsx",
+        "components/project/ManufactureStepList.jsx"
+      );
+      
+      // AI Assistant components
+      files.push(
         "components/ai-assistant/GlobalAIAssistant.jsx",
+        "components/ai-assistant/AIInputAssistant.jsx",
+        "components/ai-assistant/AIInputTrigger.jsx",
+        "components/ai-assistant/ChatHighlightCapture.jsx",
+        "components/ai-assistant/QuickCapture.jsx"
+      );
+      
+      // Roadmap components
+      files.push(
+        "components/roadmap/RoadmapItemCard.jsx",
+        "components/roadmap/JournalDialog.jsx",
+        "components/roadmap/DevelopmentPromptDialog.jsx",
+        "components/roadmap/RoadmapSettingsDialog.jsx"
+      );
+      
+      // Playground components
+      files.push(
+        "components/playground/PlaygroundEditor.jsx",
+        "components/playground/VersionHistory.jsx",
+        "components/playground/PlaygroundJournalPanel.jsx",
+        "components/playground/PromoteToLibraryDialog.jsx",
+        "components/playground/LivePageRenderer.jsx"
+      );
+      
+      // CMS components
+      files.push(
+        "components/cms/CMSPageEditor.jsx",
+        "components/cms/CMSProductEditor.jsx",
+        "components/cms/CMSBlogEditor.jsx",
+        "components/cms/CMSFormEditor.jsx",
+        "components/cms/CMSApiKeyManager.jsx",
+        "components/cms/CMSSubmissions.jsx",
+        "components/cms/CMSNavigationEditor.jsx",
+        "components/cms/CMSAssetManager.jsx",
+        "components/cms/CMSTemplateManager.jsx",
+        "components/cms/CMSTenantSelector.jsx"
+      );
+      
+      // Monitoring components
+      files.push(
+        "components/monitoring/AuditLogCard.jsx",
+        "components/monitoring/PerformanceAuditCard.jsx"
+      );
+      
+      // Test data components
+      files.push(
+        "components/test-data/AIQualityReport.jsx",
+        "components/test-data/EntitySchemaValidator.jsx",
+        "components/test-data/TestDataSettingsDialog.jsx"
+      );
+      
+      // Testing components
+      files.push(
+        "components/testing/TestDataProvider.jsx",
+        "components/testing/TestDataDisplay.jsx",
+        "components/testing/StandaloneTestData.jsx",
+        "components/testing/LivePreviewNavigation.jsx",
+        "components/testing/TestingDataService.jsx"
+      );
+      
+      // Layout components
+      files.push(
+        "components/layout/PageLayout.jsx"
+      );
+      
+      // Sturij components
+      files.push(
+        "components/sturij/PageHeader.jsx",
+        "components/sturij/ContentSection.jsx",
+        "components/sturij/FeatureCard.jsx",
+        "components/sturij/StatCard.jsx",
+        "components/sturij/StatusBadge.jsx",
+        "components/sturij/DataRow.jsx",
+        "components/sturij/index.jsx"
+      );
+      
+      // Design system components
+      files.push(
+        "components/design-system/ThemeTokenEditor.jsx",
+        "components/design-system/ThemeCreatorDialog.jsx"
+      );
+      
+      // Knowledge components
+      files.push(
+        "components/knowledge/ShadcnReference.jsx",
+        "components/knowledge/TailwindReference.jsx",
+        "components/knowledge/ReactReference.jsx",
+        "components/knowledge/LucideReference.jsx",
+        "components/knowledge/Base44Reference.jsx",
+        "components/knowledge/NewsFeed.jsx"
+      );
+      
+      // Page builder components
+      files.push(
+        "components/page-builder/AppShellPreview.jsx"
+      );
+      
+      // Common components
+      files.push(
         "components/common/PageSettingsDialog.jsx"
       );
       
@@ -157,15 +377,20 @@ DESIGN TOKENS REFERENCE (from globals.css):
 - Typography colors: var(--text-primary), var(--text-secondary), var(--text-body), var(--text-muted)
 - Fonts: Should be unquoted - degular-display, mrs-eaves-xl-serif-narrow, source-code-pro
 
-VIOLATIONS TO DETECT:
-1. CRITICAL - Quoted Adobe fonts (will fail to load): font-family: "degular-display" 
-2. CRITICAL - Wrong font names: "Degular Display Light", "Mrs Eaves XL Serif"
-3. HIGH - Hardcoded hex colors: #4A5D4E, #D4A574, etc.
-4. MEDIUM - Hardcoded pixel spacing: padding: 16px
-5. MEDIUM - Hardcoded font sizes
-6. LOW - Generic Tailwind grays instead of semantic tokens
+VIOLATIONS TO DETECT (by severity):
+1. CRITICAL - Quoted Adobe fonts (will fail to load): font-family: "degular-display"
+2. CRITICAL - Wrong font names: "Degular Display Light", "Mrs Eaves XL Serif"  
+3. CRITICAL - Inline styles in JSX (style={{...}}) with hardcoded values
+4. HIGH - Hardcoded hex colors: #4A5D4E, #D4A574, #ffffff, #000000, etc.
+5. HIGH - Hardcoded RGB/RGBA colors: rgb(74, 93, 78), rgba(212, 165, 116, 0.5)
+6. HIGH - className with hardcoded colors: bg-[#4A5D4E], text-[#D4A574]
+7. MEDIUM - Hardcoded pixel spacing: padding: 16px, margin: 20px, gap: 12px
+8. MEDIUM - Hardcoded font sizes: fontSize: 14px, text-[14px]
+9. MEDIUM - Hardcoded border radius: borderRadius: 8px, rounded-[8px]
+10. LOW - Generic Tailwind grays (gray-100, gray-500) instead of semantic tokens
+11. LOW - Generic Tailwind colors (blue-500, red-600) instead of semantic tokens
 
-Examine ALL ${filesToScan.length} files. For each file WITH violations, provide:
+SCAN EVERY SINGLE FILE IN THE LIST. For each file WITH violations, provide:
 - File path
 - Total violation count
 - Critical count
