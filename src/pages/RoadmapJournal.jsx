@@ -424,7 +424,7 @@ Return as JSON:
   if (!itemId) {
     return (
       <div className="p-6 bg-background">
-        <p className="text-charcoal-700">No roadmap item selected.</p>
+        <p className="text-muted-foreground">No roadmap item selected.</p>
         <Button variant="outline" className="mt-4" onClick={() => navigate(-1)}>
           <ArrowLeft className="h-4 w-4 mr-2" /> Go Back
         </Button>
@@ -452,7 +452,7 @@ Return as JSON:
           </Button>
           <div>
             <h1 className="text-2xl font-light font-display text-midnight-900">{item?.title}</h1>
-            <p className="text-charcoal-700">{item?.description}</p>
+            <p className="text-muted-foreground">{item?.description}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
