@@ -447,8 +447,23 @@ export default function CSSAudit() {
         }
       });
 
-      setFileReport(result);
-      toast.success(`Found ${result.totalViolations} violations in ${selectedFile}`);
+      // Validate violations - only keep ones where the code actually exists in the file
+      const validatedViolations = result.violations.filter(v => {
+        return fileContent.includes(v.currentCode);
+      });
+
+      const validatedResult = {
+        ...result,
+        violations: validatedViolations,
+        totalViolations: validatedViolations.length,
+        criticalCount: validatedViolations.filter(v => v.severity === 'critical').length,
+        highCount: validatedViolations.filter(v => v.severity === 'high').length,
+        mediumCount: validatedViolations.filter(v => v.severity === 'medium').length,
+        lowCount: validatedViolations.filter(v => v.severity === 'low').length
+      };
+
+      setFileReport(validatedResult);
+      toast.success(`Found ${validatedResult.totalViolations} violations in ${selectedFile}`);
     } catch (error) {
       toast.error("Analysis failed: " + error.message);
     }
