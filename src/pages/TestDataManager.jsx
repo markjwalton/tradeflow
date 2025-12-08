@@ -280,7 +280,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64 bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
@@ -288,7 +288,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
   return (
     <div className="p-6 space-y-6 bg-background min-h-screen">
       {/* Header */}
-      <Card className="bg-gradient-to-r from-primary-500 to-midnight-900 text-white border-0">
+      <Card className="bg-gradient-to-r from-primary to-midnight-900 text-white border-0">
         <CardContent className="py-6">
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-4">

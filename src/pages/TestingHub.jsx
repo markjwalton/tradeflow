@@ -383,7 +383,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64 bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
@@ -535,11 +535,11 @@ Return JSON with entity names as keys and arrays of records as values.`,
                             <Link2 className="h-4 w-4 mx-auto text-success" title="Linked" />
                           )}
                         </td>
-                        <td className="p-3 text-center text-charcoal-700">{item.entityCount}</td>
-                        <td className="p-3 text-center text-charcoal-700">
+                        <td className="p-3 text-center">{item.entityCount}</td>
+                        <td className="p-3 text-center">
                           {item.recordCount}
                           {item.canRollback && (
-                            <RotateCcw className="h-3 w-3 inline ml-1 text-charcoal-700" title="Has versions" />
+                            <RotateCcw className="h-3 w-3 inline ml-1" title="Has versions" />
                           )}
                         </td>
                         <td className="p-3 text-center">

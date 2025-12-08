@@ -60,7 +60,7 @@ export default function Dashboard() {
   if (isLoading) {
     return (
       <div className="p-6 flex items-center justify-center h-64 bg-background">
-        <RefreshCw className="h-6 w-6 animate-spin text-primary" />
+        <RefreshCw className="h-6 w-6 animate-spin" />
       </div>
     );
   }
