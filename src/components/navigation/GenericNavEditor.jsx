@@ -473,9 +473,9 @@ export default function GenericNavEditor({
                               
                               <div className="flex items-center gap-2 flex-1">
                                 {renderIcon(item.icon, "h-4 w-4")}
-                                <span className="font-medium text-[var(--color-midnight)]">{item.name}</span>
+                                <span className="text-body-base text-[var(--color-midnight)]">{item.name}</span>
                                 {item.item_type === "folder" && (
-                                  <Badge className="text-xs bg-[var(--color-secondary)]/20 text-[var(--color-secondary-dark)]">Folder</Badge>
+                                  <Badge className="text-caption bg-[var(--color-secondary)]/20 text-[var(--color-secondary-dark)]">Folder</Badge>
                                 )}
                               </div>
 
@@ -517,7 +517,7 @@ export default function GenericNavEditor({
                                       .length > 0 && (
                                       <>
                                         <DropdownMenuSeparator />
-                                        <div className="px-2 py-1.5 text-xs font-medium text-[var(--color-charcoal)]">Pages</div>
+                                        <div className="px-2 py-1.5 text-caption text-[var(--color-charcoal)]">Pages</div>
                                         {getParentOptions(item._id)
                                           .filter(p => p._id !== item.parent_id && p.item_type !== "folder")
                                           .sort((a, b) => a.name.localeCompare(b.name))
@@ -618,10 +618,10 @@ export default function GenericNavEditor({
                         <div className="w-5" />
                         <div className="flex items-center gap-2 flex-1">
                           <File className="h-4 w-4 text-[var(--color-charcoal)]" />
-                          <span className="font-medium text-[var(--color-charcoal)]">{slug.replace(/([A-Z])/g, ' $1').trim()}</span>
-                          <span className="text-xs text-[var(--color-charcoal)] font-mono">/{slug.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()}</span>
+                          <span className="text-body-base text-[var(--color-charcoal)]">{slug.replace(/([A-Z])/g, ' $1').trim()}</span>
+                          <span className="text-caption text-[var(--color-charcoal)] font-mono">/{slug.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()}</span>
                           {aiRecommendations[slug] && (
-                            <Badge className="bg-[var(--color-accent)]/20 text-[var(--color-accent-dark)] text-xs">
+                            <Badge className="bg-[var(--color-accent)]/20 text-[var(--color-accent-dark)] text-caption">
                               <Sparkles className="h-3 w-3 mr-1" />
                               {aiRecommendations[slug]}
                             </Badge>
@@ -662,7 +662,7 @@ export default function GenericNavEditor({
               <div className="border-t pt-4 mt-4">
                 <button 
                   onClick={() => setAllPagesExpanded(!allPagesExpanded)}
-                  className="flex items-center gap-2 text-[var(--color-charcoal)] hover:text-[var(--color-midnight)] font-medium mb-3"
+                  className="flex items-center gap-2 text-[var(--color-charcoal)] hover:text-[var(--color-midnight)] text-body-base mb-3"
                 >
                   {allPagesExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                   <File className="h-4 w-4" />
@@ -690,12 +690,12 @@ export default function GenericNavEditor({
                             className={`flex items-center gap-3 p-2 rounded-lg hover:bg-[var(--color-background)] transition-all text-sm ${!item.is_visible ? "opacity-50" : ""}`}
                           >
                             {renderIcon(item.icon, "h-3 w-3 text-[var(--color-charcoal)]")}
-                            <span className="font-medium text-[var(--color-midnight)]">{item.name}</span>
+                            <span className="text-body-base text-[var(--color-midnight)]">{item.name}</span>
                             {parentPath && (
-                              <span className="text-xs text-[var(--color-charcoal)]">in {parentPath}</span>
+                              <span className="text-caption text-[var(--color-charcoal)]">in {parentPath}</span>
                             )}
                             {!item.is_visible && (
-                              <Badge className="text-xs bg-[var(--color-charcoal)]/10 text-[var(--color-charcoal)]">Hidden</Badge>
+                              <Badge className="text-caption bg-[var(--color-charcoal)]/10 text-[var(--color-charcoal)]">Hidden</Badge>
                             )}
                           </div>
                         );
