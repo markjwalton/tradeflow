@@ -99,19 +99,19 @@ export default function NavigationManager() {
   });
 
   // Tab button style helper
-  const tabStyle = (tab) => `px-4 py-2 text-body-base rounded-lg transition-colors ${
+  const tabStyle = (tab) => `text-body-base [padding:var(--spacing-2)_var(--spacing-4)] [border-radius:var(--radius-lg)] [transition:var(--duration-200)] ${
     activeTab === tab 
       ? "bg-[var(--color-primary)] text-white" 
       : "bg-[var(--color-background)] text-[var(--color-charcoal)] hover:bg-[var(--color-background)]/80 border border-[var(--color-charcoal)]/20"
   }`;
 
   return (
-    <div className="p-6 max-w-4xl mx-auto bg-[var(--color-background)] min-h-screen">
+    <div className="[padding:var(--spacing-6)] max-w-4xl mx-auto bg-[var(--color-background)] min-h-screen">
       {isGlobalAdmin ? (
         <>
           {/* Tab Navigation */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex gap-2 flex-wrap">
+          <div className="flex items-center justify-between [margin-bottom:var(--spacing-6)]">
+            <div className="flex [gap:var(--spacing-2)] flex-wrap">
               <button className={tabStyle("admin")} onClick={() => setActiveTab("admin")}>
                 <Cog className="h-4 w-4 mr-2 inline" />
                 Admin Console
@@ -140,7 +140,7 @@ export default function NavigationManager() {
 
           {activeTab === "app" && (
             <div>
-              <div className="mb-4 p-3 bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/30 rounded-lg text-[var(--color-midnight)]">
+              <div className="[margin-bottom:var(--spacing-4)] [padding:var(--spacing-3)] bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/30 [border-radius:var(--radius-lg)] text-[var(--color-midnight)]">
                 <strong>App Pages</strong> are tenant-facing pages. 
                 Use this to organize which pages appear in tenant navigation.
               </div>
@@ -152,7 +152,7 @@ export default function NavigationManager() {
           )}
 
           {activeTab === "tenant" && (
-            <div className="space-y-4">
+            <div className="[&>*+*]:mt-[var(--spacing-4)]">
               <TenantSelector
                 tenants={tenants}
                 selectedTenantId={selectedTenantId}
@@ -261,8 +261,8 @@ function TenantNavEditor({ tenantId, items = [], isLoading }) {
   }
 
   return (
-    <div className="border rounded-lg p-4 bg-white">
-      <div className="flex justify-between items-center mb-4">
+    <div className="border [border-radius:var(--radius-lg)] [padding:var(--spacing-4)] bg-white">
+      <div className="flex justify-between items-center [margin-bottom:var(--spacing-4)]">
         <h3 className="text-h5">Tenant Navigation Items</h3>
         <Button size="sm" className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white" onClick={() => { setEditingItem(null); setShowForm(true); }}>
           Add Item
@@ -274,9 +274,9 @@ function TenantNavEditor({ tenantId, items = [], isLoading }) {
           No navigation items. Add items or copy from global template.
         </div>
       ) : (
-        <div className="space-y-2">
+        <div className="[&>*+*]:mt-[var(--spacing-2)]">
           {items.map((item) => (
-            <div key={item.id} className="flex items-center gap-3 p-3 border rounded-lg bg-[var(--color-background)]">
+            <div key={item.id} className="flex items-center [gap:var(--spacing-3)] [padding:var(--spacing-3)] border [border-radius:var(--radius-lg)] bg-[var(--color-background)]">
               <span className="flex-1 text-[var(--color-midnight)]">{item.name}</span>
               <span className="text-caption text-[var(--color-charcoal)]">{item.page_url}</span>
               <Button variant="ghost" size="sm" onClick={() => { setEditingItem(item); setShowForm(true); }}>
