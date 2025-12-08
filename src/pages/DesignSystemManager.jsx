@@ -353,7 +353,7 @@ For each recommendation, provide:
         <TabsContent value="packages" className="space-y-4">
           {/* Core Packages */}
           <div>
-            <h2 className="text-lg font-heading text-[var(--color-midnight)] mb-3">
+            <h2 className="text-h4 mb-3">
               Core Packages
             </h2>
             <div className="grid md:grid-cols-2 gap-4">
@@ -497,7 +497,7 @@ For each recommendation, provide:
         {/* Components Tab */}
         <TabsContent value="components" className="space-y-4">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-heading text-[var(--color-midnight)]">
+            <h2 className="text-h4">
               Component Library
             </h2>
             <Link to={createPageUrl("ComponentShowcase")}>
@@ -550,7 +550,7 @@ For each recommendation, provide:
         {/* Recommendations Tab */}
         <TabsContent value="recommendations" className="space-y-4">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-heading text-[var(--color-midnight)]">
+            <h2 className="text-h4">
               AI Update Recommendations
             </h2>
             <Button 
