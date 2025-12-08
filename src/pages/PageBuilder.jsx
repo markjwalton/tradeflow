@@ -29,6 +29,9 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import {
+  ScrollArea
+} from "@/components/ui/scroll-area";
+import {
   Plus,
   Pencil,
   Trash2,
@@ -39,6 +42,7 @@ import {
   GitCompare,
   Copy,
   FileCode,
+  Palette,
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
@@ -52,6 +56,7 @@ export default function PageBuilder() {
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [showCompare, setShowCompare] = useState(false);
   const [compareVersions, setCompareVersions] = useState([null, null]);
+  const [showTokens, setShowTokens] = useState(false);
 
   const [formData, setFormData] = useState({
     page_name: "",
@@ -367,6 +372,10 @@ export default function PageBuilder() {
                 <Eye className="h-4 w-4 mr-2" />
                 Preview
               </TabsTrigger>
+              <TabsTrigger value="tokens">
+                <Palette className="h-4 w-4 mr-2" />
+                Design Tokens
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="edit" className="space-y-4 mt-4">
@@ -430,6 +439,153 @@ export default function PageBuilder() {
               <div className="border rounded-lg overflow-hidden bg-white">
                 {renderPreview(formData.current_content_jsx, formData.includes_app_shell)}
               </div>
+            </TabsContent>
+
+            <TabsContent value="tokens" className="mt-4">
+              <ScrollArea className="h-96 border rounded-lg p-4">
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="font-medium mb-3">Colors</h3>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded bg-[var(--color-primary)]" />
+                        <code className="text-xs">var(--color-primary)</code>
+                        <Button variant="ghost" size="sm" onClick={() => {
+                          navigator.clipboard.writeText("var(--color-primary)");
+                          toast.success("Copied!");
+                        }}>
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded bg-[var(--color-secondary)]" />
+                        <code className="text-xs">var(--color-secondary)</code>
+                        <Button variant="ghost" size="sm" onClick={() => {
+                          navigator.clipboard.writeText("var(--color-secondary)");
+                          toast.success("Copied!");
+                        }}>
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded bg-[var(--color-accent)]" />
+                        <code className="text-xs">var(--color-accent)</code>
+                        <Button variant="ghost" size="sm" onClick={() => {
+                          navigator.clipboard.writeText("var(--color-accent)");
+                          toast.success("Copied!");
+                        }}>
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded bg-[var(--color-midnight)]" />
+                        <code className="text-xs">var(--color-midnight)</code>
+                        <Button variant="ghost" size="sm" onClick={() => {
+                          navigator.clipboard.writeText("var(--color-midnight)");
+                          toast.success("Copied!");
+                        }}>
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded bg-[var(--color-charcoal)]" />
+                        <code className="text-xs">var(--color-charcoal)</code>
+                        <Button variant="ghost" size="sm" onClick={() => {
+                          navigator.clipboard.writeText("var(--color-charcoal)");
+                          toast.success("Copied!");
+                        }}>
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded bg-[var(--color-background)]" />
+                        <code className="text-xs">var(--color-background)</code>
+                        <Button variant="ghost" size="sm" onClick={() => {
+                          navigator.clipboard.writeText("var(--color-background)");
+                          toast.success("Copied!");
+                        }}>
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="font-medium mb-3">Typography</h3>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center justify-between p-2 bg-muted/50 rounded">
+                        <code className="text-xs">var(--font-heading)</code>
+                        <Button variant="ghost" size="sm" onClick={() => {
+                          navigator.clipboard.writeText("var(--font-heading)");
+                          toast.success("Copied!");
+                        }}>
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                      </div>
+                      <div className="flex items-center justify-between p-2 bg-muted/50 rounded">
+                        <code className="text-xs">var(--font-body)</code>
+                        <Button variant="ghost" size="sm" onClick={() => {
+                          navigator.clipboard.writeText("var(--font-body)");
+                          toast.success("Copied!");
+                        }}>
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="font-medium mb-3">Spacing</h3>
+                    <div className="space-y-2 text-sm">
+                      {[1, 2, 3, 4, 6, 8, 12, 16].map(n => (
+                        <div key={n} className="flex items-center justify-between p-2 bg-muted/50 rounded">
+                          <code className="text-xs">var(--spacing-{n})</code>
+                          <Button variant="ghost" size="sm" onClick={() => {
+                            navigator.clipboard.writeText(`var(--spacing-${n})`);
+                            toast.success("Copied!");
+                          }}>
+                            <Copy className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="font-medium mb-3">Shadows</h3>
+                    <div className="space-y-2 text-sm">
+                      {['sm', 'md', 'lg', 'xl'].map(size => (
+                        <div key={size} className="flex items-center justify-between p-2 bg-muted/50 rounded">
+                          <code className="text-xs">var(--shadow-{size})</code>
+                          <Button variant="ghost" size="sm" onClick={() => {
+                            navigator.clipboard.writeText(`var(--shadow-${size})`);
+                            toast.success("Copied!");
+                          }}>
+                            <Copy className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="font-medium mb-3">Border Radius</h3>
+                    <div className="space-y-2 text-sm">
+                      {['sm', 'md', 'lg', 'xl', 'full'].map(size => (
+                        <div key={size} className="flex items-center justify-between p-2 bg-muted/50 rounded">
+                          <code className="text-xs">var(--radius-{size})</code>
+                          <Button variant="ghost" size="sm" onClick={() => {
+                            navigator.clipboard.writeText(`var(--radius-${size})`);
+                            toast.success("Copied!");
+                          }}>
+                            <Copy className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </ScrollArea>
             </TabsContent>
           </Tabs>
 
