@@ -15,8 +15,9 @@ css
     --font-family-body: mrs-eaves-xl-serif-narrow, Georgia, serif;
 
     /* CRITICAL: Alias for components - no quotes on font names! */
-    --font-heading: degular-display, system-ui, sans-serif;
-    --font-body: mrs-eaves-xl-serif-narrow, Georgia, serif;
+    /* Updated from outline, simplified for mapping */
+    --font-heading: degular-display;
+    --font-body: mrs-eaves-xl-serif-narrow;
     --font-family-mono:
       "source-code-pro", "SF Mono", Monaco, Inconsolata,
       "Roboto Mono", monospace;
@@ -347,6 +348,10 @@ css
     --z-tooltip: 1070;
     --z-toast: 1080;
     --z-max: 9999;
+
+    /* Override Tailwind CSS variables */
+    --font-sans: degular-display;
+    --font-serif: mrs-eaves-xl-serif-narrow;
   }
 
   /* Force custom fonts everywhere */
@@ -369,7 +374,7 @@ css
 
   /* Override Tailwind font-sans */
   .font-sans {
-    font-family: degular-display, system-ui, sans-serif !important;
+    font-family: degular-display !important;
   }
 
   .font-light {
@@ -725,6 +730,8 @@ css
   /* New font aliases from outline */
   --font-heading: var(--font-heading);
   --font-body: var(--font-body);
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
 
   /* === TEXT COLOR MAPPINGS === */
   --color-text-primary: var(--text-primary);
@@ -801,15 +808,6 @@ css
 
   /* === DURATION MAPPINGS === */
   /* Removing individual duration mappings in favor of combined transition values */
-  /* --transition-duration-75: var(--duration-75); */
-  /* --transition-duration-100: var(--duration-100); */
-  /* --transition-duration-150: var(--duration-150); */
-  /* --transition-duration-200: var(--duration-200); */
-  /* --transition-duration-300: var(--duration-300); */
-  /* --transition-duration-500: var(--duration-500); */
-  /* --transition-duration-700: var(--duration-700); */
-  /* --transition-duration-1000: var(--duration-1000); */
-  /* New transition mappings from outline */
   --transition-custom-fast: var(--transition-fast);
   --transition-custom-normal: var(--transition-normal);
   --transition-custom-slow: var(--transition-slow);
@@ -832,16 +830,16 @@ css
 @layer utilities {
   /* Override Tailwind's .font-sans with Adobe Fonts */
   .font-sans {
-    font-family: degular-display, system-ui, sans-serif !important;
+    font-family: degular-display !important;
   }
 
   /* Updated/Added font family utilities from outline */
   .font-heading {
-    font-family: degular-display, system-ui, sans-serif !important;
+    font-family: degular-display !important;
   }
 
   .font-body {
-    font-family: mrs-eaves-xl-serif-narrow, Georgia, serif !important;
+    font-family: mrs-eaves-xl-serif-narrow !important;
   }
 
   .font-display {
@@ -850,8 +848,13 @@ css
 
   /* Modified .font-light to include font-weight */
   .font-light {
-    font-family: degular-display, system-ui, sans-serif !important;
-    font-weight: 300;
+    font-family: degular-display !important;
+    font-weight: 300 !important;
+  }
+
+  /* New .font-serif utility */
+  .font-serif {
+    font-family: mrs-eaves-xl-serif-narrow !important;
   }
 
   /* Sticky header utility */
