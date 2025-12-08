@@ -304,7 +304,7 @@ When updating existing code:
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
             <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20">
-              <Package className="h-6 w-6 text-[var(--color-primary)]" />
+              <Package className="h-6 w-6 text-primary-500" />
             </div>
             <div>
               <h1 className="text-3xl font-heading text-[var(--color-midnight)]">
@@ -316,14 +316,14 @@ When updating existing code:
             </div>
           </div>
           <div className="flex gap-2 mt-4">
-            <Badge className="bg-[var(--color-success)]/20 text-[var(--color-success-dark)]">
+            <Badge className="bg-success-50 text-success-foreground">
               <CheckCircle2 className="h-3 w-3 mr-1" />
               Production Ready
             </Badge>
-            <Badge className="bg-[var(--color-info)]/20 text-[var(--color-info-dark)]">
+            <Badge className="bg-info-50 text-info-foreground">
               v1.0.0
             </Badge>
-            <Badge className="bg-[var(--color-secondary)]/20 text-[var(--color-secondary-dark)]">
+            <Badge className="bg-secondary-100 text-secondary-700">
               Base44 Compatible
             </Badge>
           </div>
@@ -372,7 +372,7 @@ When updating existing code:
                 
                 <div className="grid md:grid-cols-3 gap-4">
                   <div className="p-4 bg-[var(--color-background-subtle)] rounded-[var(--radius-lg)]">
-                    <Palette className="h-8 w-8 text-[var(--color-primary)] mb-3" />
+                    <Palette className="h-8 w-8 text-primary-500 mb-3" />
                     <h3 className="font-heading font-medium text-[var(--color-midnight)] mb-2">
                       Design Tokens
                     </h3>
@@ -382,7 +382,7 @@ When updating existing code:
                   </div>
                   
                   <div className="p-4 bg-[var(--color-background-subtle)] rounded-[var(--radius-lg)]">
-                    <Layers className="h-8 w-8 text-[var(--color-secondary)] mb-3" />
+                    <Layers className="h-8 w-8 text-secondary-400 mb-3" />
                     <h3 className="font-heading font-medium text-[var(--color-midnight)] mb-2">
                       Components
                     </h3>
@@ -392,7 +392,7 @@ When updating existing code:
                   </div>
                   
                   <div className="p-4 bg-[var(--color-background-subtle)] rounded-[var(--radius-lg)]">
-                    <Zap className="h-8 w-8 text-[var(--color-accent-dark)] mb-3" />
+                    <Zap className="h-8 w-8 text-accent-400 mb-3" />
                     <h3 className="font-heading font-medium text-[var(--color-midnight)] mb-2">
                       LLM Optimized
                     </h3>
@@ -403,32 +403,32 @@ When updating existing code:
                 </div>
 
                 <div className="bg-[var(--color-primary)]/10 p-4 rounded-[var(--radius-lg)] border border-[var(--color-primary)]/20">
-                  <h4 className="font-heading font-medium text-[var(--color-primary-dark)] mb-2">
+                  <h4 className="font-heading font-medium text-primary-700 mb-2">
                     Key Features
                   </h4>
                   <ul className="space-y-1 text-sm text-[var(--color-midnight)]">
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-[var(--color-success)] mt-0.5 flex-shrink-0" />
+                      <CheckCircle2 className="h-4 w-4 text-success-foreground mt-0.5 flex-shrink-0" />
                       <span>Complete CSS variable system with semantic naming</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-[var(--color-success)] mt-0.5 flex-shrink-0" />
+                      <CheckCircle2 className="h-4 w-4 text-success-foreground mt-0.5 flex-shrink-0" />
                       <span>Full color palette with 50-900 shades for each color</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-[var(--color-success)] mt-0.5 flex-shrink-0" />
+                      <CheckCircle2 className="h-4 w-4 text-success-foreground mt-0.5 flex-shrink-0" />
                       <span>Typography system with custom fonts and scales</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-[var(--color-success)] mt-0.5 flex-shrink-0" />
+                      <CheckCircle2 className="h-4 w-4 text-success-foreground mt-0.5 flex-shrink-0" />
                       <span>Spacing, shadows, and border radius tokens</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-[var(--color-success)] mt-0.5 flex-shrink-0" />
+                      <CheckCircle2 className="h-4 w-4 text-success-foreground mt-0.5 flex-shrink-0" />
                       <span>Ready-to-use React components</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-[var(--color-success)] mt-0.5 flex-shrink-0" />
+                      <CheckCircle2 className="h-4 w-4 text-success-foreground mt-0.5 flex-shrink-0" />
                       <span>Interactive showcase and documentation</span>
                     </li>
                   </ul>
@@ -449,7 +449,7 @@ When updating existing code:
                     <div key={idx} className="flex items-center justify-between p-4 bg-[var(--color-background-subtle)] rounded-[var(--radius-lg)] border border-[var(--color-background-muted)]">
                       <div className="flex items-center gap-3">
                         <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[var(--color-background-paper)]">
-                          <FileText className="h-5 w-5 text-[var(--color-primary)]" />
+                          <FileText className="h-5 w-5 text-primary-500" />
                         </div>
                         <div>
                           <div className="font-medium text-[var(--color-midnight)]">{file.name}</div>
@@ -559,7 +559,7 @@ When updating existing code:
                 <div className="space-y-4">
                   {implementationSteps.map((step) => (
                     <div key={step.step} className="flex gap-4">
-                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[var(--color-primary)] text-white font-heading flex-shrink-0">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-500 text-white font-heading flex-shrink-0">
                         {step.step}
                       </div>
                       <div className="flex-1">
@@ -625,7 +625,7 @@ When updating existing code:
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-[var(--color-midnight)]">
-                  <Sparkles className="h-5 w-5 text-[var(--color-secondary)]" />
+                  <Sparkles className="h-5 w-5 text-secondary-400" />
                   LLM Implementation Guidelines
                 </CardTitle>
               </CardHeader>
@@ -646,7 +646,7 @@ When updating existing code:
               </CardContent>
             </Card>
 
-            <Card className="border-[var(--color-warning)] bg-[var(--color-warning)]/5">
+            <Card className="border-warning bg-warning/5">
               <CardHeader>
                 <CardTitle className="text-[var(--color-midnight)]">Quick Reference</CardTitle>
               </CardHeader>

@@ -422,7 +422,7 @@ Provide:
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)] font-heading">
-            <Shield className="h-6 w-6 text-[var(--color-success)]" />
+            <Shield className="h-6 w-6 text-success-foreground" />
             Security Monitor
           </h1>
           <p className="text-[var(--color-charcoal)]">Monitor security events, policies, and compliance</p>

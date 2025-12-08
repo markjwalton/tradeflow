@@ -153,16 +153,16 @@ export default function CommunityLibrary() {
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-3">
               <div className={`p-2 rounded-lg ${item.is_global ? "bg-blue-100" : "bg-purple-100"}`}>
-                <Icon className={`h-5 w-5 ${item.is_global ? "text-blue-600" : "text-purple-600"}`} />
+                <Icon className={`h-5 w-5 ${item.is_global ? "text-info-foreground" : "text-accent-400"}`} />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <h3 className="font-medium truncate">{item.name}</h3>
                   <Badge variant="outline" className="text-xs">v{item.version}</Badge>
                   {item.is_global ? (
-                    <Globe className="h-3 w-3 text-blue-500" title="Global" />
+                    <Globe className="h-3 w-3 text-info-foreground" title="Global" />
                   ) : (
-                    <Users className="h-3 w-3 text-purple-500" title="Community" />
+                    <Users className="h-3 w-3 text-accent-400" title="Community" />
                   )}
                 </div>
                 <p className="text-sm text-gray-500 truncate">{item.description}</p>
@@ -335,9 +335,9 @@ export default function CommunityLibrary() {
                       <CardContent className="p-4">
                         <div className="flex items-start justify-between">
                           <div className="flex items-start gap-3">
-                            <div className={`p-2 rounded-lg ${tenantItem.is_custom ? "bg-purple-100" : "bg-blue-100"}`}>
+                            <div className={`p-2 rounded-lg ${tenantItem.is_custom ? "bg-accent-100" : "bg-info-50"}`}>
                               {React.createElement(itemTypeIcons[tenantItem.item_type] || Package, {
-                                className: `h-5 w-5 ${tenantItem.is_custom ? "text-purple-600" : "text-blue-600"}`
+                                className: `h-5 w-5 ${tenantItem.is_custom ? "text-accent-400" : "text-info-foreground"}`
                               })}
                             </div>
                             <div>

@@ -135,7 +135,7 @@ export default function DashboardManager() {
       {/* Header */}
       <div className="bg-[var(--color-background-paper)] border-b border-[var(--color-background-muted)] px-4 py-3 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-3">
-          <LayoutDashboard className="h-5 w-5 text-[var(--color-primary)]" />
+          <LayoutDashboard className="h-5 w-5 text-primary-500" />
           <h1 className="text-h4">Dashboard Manager</h1>
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="h-8">
@@ -198,7 +198,7 @@ export default function DashboardManager() {
 
           <Button 
             size="sm" 
-            className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+            className="bg-primary-500 hover:bg-primary-600 text-white"
             onClick={() => setShowAIGenerator(true)}
           >
             <Sparkles className="h-3 w-3 mr-1" />
@@ -242,7 +242,7 @@ export default function DashboardManager() {
                         Create Widget
                       </Button>
                       <Button 
-                        className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+                        className="bg-primary-500 hover:bg-primary-600 text-white"
                         onClick={() => setShowAIGenerator(true)}
                       >
                         <Sparkles className="h-4 w-4 mr-1" />
