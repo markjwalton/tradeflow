@@ -327,7 +327,7 @@ export default function LivePreview() {
             <button
               key={item.id}
               onClick={() => selectItem(item)}
-              className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 bg-white hover:bg-[var(--color-primary)]/10 hover:border-[var(--color-primary)]/30 transition-all text-left group"
+              className="flex items-center gap-3 p-3 rounded-lg border border-border bg-card hover:bg-[var(--color-primary)]/10 hover:border-[var(--color-primary)]/30 transition-all text-left group"
             >
               <div className="p-2 bg-[var(--color-primary)]/10 rounded-lg text-[var(--color-primary)] group-hover:bg-[var(--color-primary)]/20">
                 <Layout className="h-4 w-4" />
@@ -362,7 +362,7 @@ export default function LivePreview() {
               <button
                 key={item.id}
                 onClick={() => selectItem(item)}
-                className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 bg-white hover:bg-[var(--color-secondary)]/10 hover:border-[var(--color-secondary)]/30 transition-all text-left group"
+                className="flex items-center gap-3 p-3 rounded-lg border border-border bg-card hover:bg-[var(--color-secondary)]/10 hover:border-[var(--color-secondary)]/30 transition-all text-left group"
               >
                 <div className="p-2 bg-[var(--color-secondary)]/10 rounded-lg text-[var(--color-secondary)] group-hover:bg-[var(--color-secondary)]/20">
                   <Zap className="h-4 w-4" />

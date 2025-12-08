@@ -296,13 +296,13 @@ Return JSON with entity names as keys and arrays of records as values.`,
                 <FlaskConical className="h-8 w-8" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>Test Data Manager</h1>
+                <h1 className="text-2xl font-bold font-display">Test Data Manager</h1>
                 <p className="text-white/80 mt-1">Manage test data for pages and features</p>
                 <div className="flex gap-3 mt-4">
                   <Badge className="bg-white/20">{stats.total} Items</Badge>
-                  <Badge className="bg-green-500/80">{stats.verified} Verified</Badge>
-                  <Badge className="bg-amber-500/80">{stats.pending} Pending</Badge>
-                  <Badge className="bg-red-500/80">{stats.noData} No Data</Badge>
+                  <Badge className="bg-success/80 text-success-foreground">{stats.verified} Verified</Badge>
+                  <Badge className="bg-warning/80 text-warning-foreground">{stats.pending} Pending</Badge>
+                  <Badge className="bg-destructive/80 text-destructive-foreground">{stats.noData} No Data</Badge>
                 </div>
               </div>
             </div>
@@ -313,7 +313,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
               <Button 
                 onClick={bulkVerify}
                 disabled={isOperating || stats.pending === 0}
-                className="bg-white text-purple-700 hover:bg-purple-50"
+                className="bg-white text-accent-700 hover:bg-accent-50"
               >
                 <CheckCircle2 className="h-4 w-4 mr-2" />
                 Verify All ({stats.pending})
@@ -325,14 +325,14 @@ Return JSON with entity names as keys and arrays of records as values.`,
 
       {/* Operation Progress */}
       {(operation.type === "verify" || operation.type === "complete") && (
-        <Card className={operation.type === "complete" ? "border-green-200 bg-green-50" : ""}>
+        <Card className={operation.type === "complete" ? "border-success/20 bg-success-50" : ""}>
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg flex items-center gap-2">
                 {operation.type === "verify" ? (
                   <Loader2 className="h-5 w-5 animate-spin" />
                 ) : (
-                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  <CheckCircle2 className="h-5 w-5 text-success" />
                 )}
                 {operation.type === "verify" ? "Verifying..." : "Verification Complete"}
               </CardTitle>
@@ -351,9 +351,9 @@ Return JSON with entity names as keys and arrays of records as values.`,
               
               {operation.type === "complete" && operation.results.some(r => !r.success) && (
                 <div className="mt-3 max-h-40 overflow-auto border rounded p-2 bg-white">
-                  <p className="text-sm font-medium text-red-600 mb-2">Failed Items:</p>
+                  <p className="text-sm font-medium text-destructive mb-2">Failed Items:</p>
                   {operation.results.filter(r => !r.success).map((r, i) => (
-                    <div key={i} className="text-sm text-red-600">• {r.name}: {r.error}</div>
+                    <div key={i} className="text-sm text-destructive">• {r.name}: {r.error}</div>
                   ))}
                 </div>
               )}
@@ -366,9 +366,9 @@ Return JSON with entity names as keys and arrays of records as values.`,
       <div className="flex gap-2">
         {[
           { key: "all", label: "All", count: stats.total },
-          { key: "noData", label: "No Data", count: stats.noData, color: "text-red-600" },
-          { key: "pending", label: "Pending", count: stats.pending, color: "text-amber-600" },
-          { key: "verified", label: "Verified", count: stats.verified, color: "text-green-600" },
+          { key: "noData", label: "No Data", count: stats.noData, color: "text-destructive" },
+          { key: "pending", label: "Pending", count: stats.pending, color: "text-warning" },
+          { key: "verified", label: "Verified", count: stats.verified, color: "text-success" },
         ].map(f => (
           <Button
             key={f.key}
@@ -391,14 +391,14 @@ Return JSON with entity names as keys and arrays of records as values.`,
         </CardHeader>
         <CardContent>
           {filteredItems.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              <CheckCircle2 className="h-10 w-10 mx-auto mb-2 text-green-500" />
+            <div className="text-center py-8 text-muted-foreground">
+              <CheckCircle2 className="h-10 w-10 mx-auto mb-2 text-success" />
               <p>No items in this category</p>
             </div>
           ) : (
             <div className="border rounded-lg overflow-hidden">
               <table className="w-full text-sm">
-                <thead className="bg-gray-50">
+                <thead className="bg-muted">
                   <tr>
                     <th className="text-left p-3">Type</th>
                     <th className="text-left p-3">Name</th>
@@ -410,12 +410,12 @@ Return JSON with entity names as keys and arrays of records as values.`,
                 </thead>
                 <tbody className="divide-y">
                   {filteredItems.map(item => (
-                    <tr key={item.id} className="hover:bg-gray-50">
+                    <tr key={item.id} className="hover:bg-muted">
                       <td className="p-3">
                         {item.type === "page" ? (
-                          <Layout className="h-4 w-4 text-blue-600" />
+                          <Layout className="h-4 w-4 text-info" />
                         ) : (
-                          <Zap className="h-4 w-4 text-amber-600" />
+                          <Zap className="h-4 w-4 text-warning" />
                         )}
                       </td>
                       <td className="p-3 font-medium">{item.name}</td>
@@ -427,7 +427,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
                             <XCircle className="h-3 w-3" /> No Data
                           </Badge>
                         ) : item.testStatus === "verified" ? (
-                          <Badge className="bg-green-100 text-green-700 gap-1">
+                          <Badge className="bg-success-50 text-success-foreground gap-1">
                             <CheckCircle2 className="h-3 w-3" /> Verified
                           </Badge>
                         ) : (

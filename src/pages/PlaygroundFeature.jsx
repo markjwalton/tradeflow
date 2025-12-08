@@ -17,9 +17,9 @@ import PlaygroundJournalPanel from "@/components/playground/PlaygroundJournalPan
 import PromoteToLibraryDialog from "@/components/playground/PromoteToLibraryDialog";
 
 const complexityColors = {
-  simple: "bg-green-100 text-green-700",
-  medium: "bg-yellow-100 text-yellow-700",
-  complex: "bg-red-100 text-red-700",
+  simple: "bg-success-50 text-success-foreground",
+  medium: "bg-warning/10 text-warning-foreground",
+  complex: "bg-destructive-50 text-destructive-700",
 };
 
 export default function PlaygroundFeature() {
@@ -218,9 +218,9 @@ Return as JSON with a "suggestions" array of strings.`,
   }
 
   const statusIcon = {
-    passed: <CheckCircle2 className="h-5 w-5 text-green-600" />,
-    failed: <XCircle className="h-5 w-5 text-red-600" />,
-    pending: <Circle className="h-5 w-5 text-gray-400" />,
+    passed: <CheckCircle2 className="h-5 w-5 text-success" />,
+    failed: <XCircle className="h-5 w-5 text-destructive" />,
+    pending: <Circle className="h-5 w-5 text-muted-foreground" />,
   }[item.test_status];
 
   return (
@@ -231,8 +231,8 @@ Return as JSON with a "suggestions" array of strings.`,
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div className="flex-1">
-          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
-            <Zap className="h-6 w-6 text-amber-600" />
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
+            <Zap className="h-6 w-6 text-warning" />
             {item.source_name}
           </h1>
           <p className="text-[var(--color-charcoal)]">Feature Playground</p>
@@ -241,9 +241,9 @@ Return as JSON with a "suggestions" array of strings.`,
           <Badge variant="outline">v{item.current_version || 1}</Badge>
           {statusIcon}
           <Badge className={
-            item.test_status === "passed" ? "bg-green-100 text-green-800" :
-            item.test_status === "failed" ? "bg-red-100 text-red-800" :
-            "bg-gray-100 text-gray-800"
+            item.test_status === "passed" ? "bg-success-50 text-success-foreground" :
+            item.test_status === "failed" ? "bg-destructive-50 text-destructive-700" :
+            "bg-muted text-muted-foreground"
           }>
             {item.test_status}
           </Badge>
@@ -262,7 +262,7 @@ Return as JSON with a "suggestions" array of strings.`,
         </Button>
         <Button 
           variant="outline" 
-          className="text-green-700 border-green-300 hover:bg-green-50"
+          className="text-success border-success/30 hover:bg-success-50"
           onClick={() => setShowPromote(true)}
           disabled={item.test_status !== "passed"}
         >
@@ -283,11 +283,11 @@ Return as JSON with a "suggestions" array of strings.`,
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-600 mb-4">{template.description}</p>
+            <p className="text-muted-foreground mb-4">{template.description}</p>
             <div className="grid grid-cols-2 gap-4">
               {template.entities_used?.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-medium text-gray-500 mb-2">Entities Used</h4>
+                  <h4 className="text-sm font-medium text-muted-foreground mb-2">Entities Used</h4>
                   <div className="flex flex-wrap gap-1">
                     {template.entities_used.map(e => (
                       <Badge key={e} variant="outline">{e}</Badge>
@@ -300,7 +300,7 @@ Return as JSON with a "suggestions" array of strings.`,
                   <h4 className="text-sm font-medium text-gray-500 mb-2">Triggers</h4>
                   <div className="flex flex-wrap gap-1">
                     {template.triggers.map(t => (
-                      <Badge key={t} className="bg-blue-100 text-blue-800">{t}</Badge>
+                      <Badge key={t} className="bg-info-50 text-info-foreground">{t}</Badge>
                     ))}
                   </div>
                 </div>
@@ -310,7 +310,7 @@ Return as JSON with a "suggestions" array of strings.`,
                   <h4 className="text-sm font-medium text-gray-500 mb-2">Integrations</h4>
                   <div className="flex flex-wrap gap-1">
                     {template.integrations.map(i => (
-                      <Badge key={i} className="bg-purple-100 text-purple-800">{i}</Badge>
+                      <Badge key={i} className="bg-accent-100 text-accent-700">{i}</Badge>
                     ))}
                   </div>
                 </div>
@@ -335,7 +335,7 @@ Return as JSON with a "suggestions" array of strings.`,
                     <ul className="space-y-1">
                       {template.requirements.map((r, i) => (
                         <li key={i} className="text-sm flex items-start gap-2">
-                          <CheckCircle2 className="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                          <CheckCircle2 className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
                           {r}
                         </li>
                       ))}
@@ -347,7 +347,7 @@ Return as JSON with a "suggestions" array of strings.`,
                     <h4 className="text-sm font-medium text-gray-500 mb-2">User Stories</h4>
                     <ul className="space-y-2">
                       {template.user_stories.map((s, i) => (
-                        <li key={i} className="text-sm bg-slate-50 p-2 rounded italic">
+                        <li key={i} className="text-sm bg-muted p-2 rounded italic">
                           "{s}"
                         </li>
                       ))}
@@ -355,11 +355,11 @@ Return as JSON with a "suggestions" array of strings.`,
                   </div>
                 )}
                 {!template.requirements?.length && !template.user_stories?.length && (
-                  <p className="text-gray-500">No requirements or user stories defined</p>
+                  <p className="text-muted-foreground">No requirements or user stories defined</p>
                 )}
               </div>
             ) : (
-              <p className="text-gray-500">Template not found</p>
+              <p className="text-muted-foreground">Template not found</p>
             )}
           </CardContent>
         </Card>
@@ -379,13 +379,13 @@ Return as JSON with a "suggestions" array of strings.`,
                     <div 
                       key={i} 
                       className={`flex items-center justify-between p-2 rounded ${
-                        isPassed ? "bg-green-50" : isFailed ? "bg-red-50" : "bg-gray-50"
+                        isPassed ? "bg-success-50" : isFailed ? "bg-destructive-50" : "bg-muted"
                       }`}
                     >
                       <span className="text-sm">{test.name}</span>
-                      {isPassed && <CheckCircle2 className="h-4 w-4 text-green-600" />}
-                      {isFailed && <XCircle className="h-4 w-4 text-red-600" />}
-                      {!isPassed && !isFailed && <Circle className="h-4 w-4 text-gray-400" />}
+                      {isPassed && <CheckCircle2 className="h-4 w-4 text-success" />}
+                      {isFailed && <XCircle className="h-4 w-4 text-destructive" />}
+                      {!isPassed && !isFailed && <Circle className="h-4 w-4 text-muted-foreground" />}
                     </div>
                   );
                 })}
@@ -413,7 +413,7 @@ Return as JSON with a "suggestions" array of strings.`,
       <Card className="mt-6">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-purple-600" />
+            <Sparkles className="h-5 w-5 text-accent-600" />
             AI Improvement Suggestions
           </CardTitle>
           <Button onClick={generateAISuggestions} disabled={isGenerating}>
@@ -425,14 +425,14 @@ Return as JSON with a "suggestions" array of strings.`,
           {item.ai_suggestions?.length > 0 ? (
             <ul className="space-y-2">
               {item.ai_suggestions.map((suggestion, i) => (
-                <li key={i} className="flex items-start gap-2 p-3 bg-amber-50 rounded-lg">
-                  <Sparkles className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                <li key={i} className="flex items-start gap-2 p-3 bg-warning/10 rounded-lg">
+                  <Sparkles className="h-4 w-4 text-warning mt-0.5 flex-shrink-0" />
                   <span className="text-sm">{suggestion}</span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-gray-500 text-center py-4">No suggestions yet. Click "AI Suggest Improvements" to get AI-powered enhancement ideas.</p>
+            <p className="text-muted-foreground text-center py-4">No suggestions yet. Click "AI Suggest Improvements" to get AI-powered enhancement ideas.</p>
           )}
         </CardContent>
       </Card>

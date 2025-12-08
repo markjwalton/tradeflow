@@ -210,9 +210,9 @@ Return as JSON with a "suggestions" array of strings.`,
   }
 
   const statusIcon = {
-    passed: <CheckCircle2 className="h-5 w-5 text-green-600" />,
-    failed: <XCircle className="h-5 w-5 text-red-600" />,
-    pending: <Circle className="h-5 w-5 text-gray-400" />,
+    passed: <CheckCircle2 className="h-5 w-5 text-success" />,
+    failed: <XCircle className="h-5 w-5 text-destructive" />,
+    pending: <Circle className="h-5 w-5 text-muted-foreground" />,
   }[item.test_status];
 
   return (
@@ -223,8 +223,8 @@ Return as JSON with a "suggestions" array of strings.`,
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div className="flex-1">
-          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
-            <Layout className="h-6 w-6 text-blue-600" />
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
+            <Layout className="h-6 w-6 text-info" />
             {item.source_name}
           </h1>
           <p className="text-[var(--color-charcoal)]">Page Playground</p>
@@ -233,9 +233,9 @@ Return as JSON with a "suggestions" array of strings.`,
           <Badge variant="outline">v{item.current_version || 1}</Badge>
           {statusIcon}
           <Badge className={
-            item.test_status === "passed" ? "bg-green-100 text-green-800" :
-            item.test_status === "failed" ? "bg-red-100 text-red-800" :
-            "bg-gray-100 text-gray-800"
+            item.test_status === "passed" ? "bg-success-50 text-success-foreground" :
+            item.test_status === "failed" ? "bg-destructive-50 text-destructive-700" :
+            "bg-muted text-muted-foreground"
           }>
             {item.test_status}
           </Badge>
@@ -254,7 +254,7 @@ Return as JSON with a "suggestions" array of strings.`,
         </Button>
         <Button 
           variant="outline" 
-          className="text-green-700 border-green-300 hover:bg-green-50"
+          className="text-success border-success/30 hover:bg-success-50"
           onClick={() => setShowPromote(true)}
           disabled={item.test_status !== "passed"}
         >
@@ -288,7 +288,7 @@ Return as JSON with a "suggestions" array of strings.`,
             {template ? (
               <div className="space-y-4">
                 <div>
-                  <h4 className="text-sm font-medium text-gray-500 mb-1">Description</h4>
+                  <h4 className="text-sm font-medium text-muted-foreground mb-1">Description</h4>
                   <p className="text-sm">{template.description || "No description"}</p>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
@@ -316,7 +316,7 @@ Return as JSON with a "suggestions" array of strings.`,
                     <h4 className="text-sm font-medium text-gray-500 mb-2">Components ({template.components.length})</h4>
                     <div className="space-y-1">
                       {template.components.map((c, i) => (
-                        <div key={i} className="text-sm bg-slate-50 p-2 rounded">
+                        <div key={i} className="text-sm bg-muted p-2 rounded">
                           <span className="font-medium">{c.name}</span>
                           {c.type && <Badge variant="outline" className="ml-2 text-xs">{c.type}</Badge>}
                         </div>
@@ -326,7 +326,7 @@ Return as JSON with a "suggestions" array of strings.`,
                 )}
               </div>
             ) : (
-              <p className="text-gray-500">Template not found</p>
+              <p className="text-muted-foreground">Template not found</p>
             )}
           </CardContent>
         </Card>
@@ -346,13 +346,13 @@ Return as JSON with a "suggestions" array of strings.`,
                     <div 
                       key={i} 
                       className={`flex items-center justify-between p-2 rounded ${
-                        isPassed ? "bg-green-50" : isFailed ? "bg-red-50" : "bg-gray-50"
+                        isPassed ? "bg-success-50" : isFailed ? "bg-destructive-50" : "bg-muted"
                       }`}
                     >
                       <span className="text-sm">{test.name}</span>
-                      {isPassed && <CheckCircle2 className="h-4 w-4 text-green-600" />}
-                      {isFailed && <XCircle className="h-4 w-4 text-red-600" />}
-                      {!isPassed && !isFailed && <Circle className="h-4 w-4 text-gray-400" />}
+                      {isPassed && <CheckCircle2 className="h-4 w-4 text-success" />}
+                      {isFailed && <XCircle className="h-4 w-4 text-destructive" />}
+                      {!isPassed && !isFailed && <Circle className="h-4 w-4 text-muted-foreground" />}
                     </div>
                   );
                 })}
@@ -380,7 +380,7 @@ Return as JSON with a "suggestions" array of strings.`,
       <Card className="mt-6">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-purple-600" />
+            <Sparkles className="h-5 w-5 text-accent-600" />
             AI Suggestions
           </CardTitle>
           <Button onClick={generateAISuggestions} disabled={isGenerating} variant="outline">
@@ -392,14 +392,14 @@ Return as JSON with a "suggestions" array of strings.`,
           {item.ai_suggestions?.length > 0 ? (
             <ul className="space-y-2">
               {item.ai_suggestions.map((suggestion, i) => (
-                <li key={i} className="flex items-start gap-2 p-3 bg-purple-50 rounded-lg">
-                  <span className="text-purple-600 font-bold">{i + 1}.</span>
+                <li key={i} className="flex items-start gap-2 p-3 bg-accent-50 rounded-lg">
+                  <span className="text-accent-600 font-bold">{i + 1}.</span>
                   <span className="text-sm">{suggestion}</span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-gray-500 text-center py-4">No suggestions yet. Click "Generate Suggestions" to get AI-powered improvements.</p>
+            <p className="text-muted-foreground text-center py-4">No suggestions yet. Click "Generate Suggestions" to get AI-powered improvements.</p>
           )}
         </CardContent>
       </Card>
