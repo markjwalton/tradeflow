@@ -140,7 +140,7 @@ export default function NavigationManager() {
 
           {activeTab === "app" && (
             <div>
-              <div className="mb-4 p-3 bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/30 rounded-lg text-sm text-[var(--color-midnight)]">
+              <div className="mb-4 p-3 bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/30 rounded-lg text-body-small text-[var(--color-midnight)]">
                 <strong>App Pages</strong> are tenant-facing pages. 
                 Use this to organize which pages appear in tenant navigation.
               </div>
@@ -278,7 +278,7 @@ function TenantNavEditor({ tenantId, items = [], isLoading }) {
           {items.map((item) => (
             <div key={item.id} className="flex items-center gap-3 p-3 border rounded-lg bg-[var(--color-background)]">
               <span className="flex-1 text-[var(--color-midnight)]">{item.name}</span>
-              <span className="text-sm text-[var(--color-charcoal)]">{item.page_url}</span>
+              <span className="text-body-small text-[var(--color-charcoal)]">{item.page_url}</span>
               <Button variant="ghost" size="sm" onClick={() => { setEditingItem(item); setShowForm(true); }}>
                 Edit
               </Button>
