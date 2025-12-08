@@ -112,18 +112,18 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64 bg-[var(--color-background)]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+      <div className="flex items-center justify-center h-64 bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
       </div>
     );
   }
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Generated Apps</h1>
-          <p className="text-[var(--color-charcoal)]">App specifications generated from mind maps</p>
+          <h1 className="text-2xl font-light font-display text-midnight-900">Generated Apps</h1>
+          <p className="text-charcoal-700">App specifications generated from mind maps</p>
         </div>
       </div>
 
@@ -140,7 +140,7 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
 
       {/* Apps Grid */}
       {filteredApps.length === 0 ? (
-        <div className="text-center py-12 text-[var(--color-charcoal)]">
+        <div className="text-center py-12 text-charcoal-700">
           <Package className="h-12 w-12 mx-auto mb-4 opacity-30" />
           <p>No generated apps yet.</p>
           <p className="text-sm">Generate an app from a mind map to see it here.</p>

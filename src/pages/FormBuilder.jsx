@@ -192,7 +192,7 @@ export default function FormBuilder() {
   if (!formId && !showNewDialog) {
     return (
       <div className="h-screen flex items-center justify-center bg-[var(--color-background)]">
-        <Card className="w-96 p-6 border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+        <Card className="w-96 p-6 border-background-muted bg-card">
           <h2 className="text-lg font-semibold mb-4 text-[var(--color-midnight)]">No Form Selected</h2>
           <div className="space-y-3">
             <Button onClick={() => setShowNewDialog(true)} className="w-full">
@@ -211,9 +211,9 @@ export default function FormBuilder() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-[var(--color-background)]">
+    <div className="h-screen flex flex-col bg-background">
       {/* Header */}
-      <div className="bg-[var(--color-background-paper)] border-b border-[var(--color-background-muted)] px-4 py-3 flex items-center justify-between">
+      <div className="bg-card border-b border-background-muted px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link to={createPageUrl("FormTemplates")}>
             <Button variant="ghost" size="sm">
@@ -261,15 +261,15 @@ export default function FormBuilder() {
         <div className="flex-1 overflow-auto p-6">
           {isLoading ? (
             <div className="h-full flex items-center justify-center">
-              <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+              <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
             </div>
           ) : formData.fields.length === 0 ? (
             <div className="h-full flex items-center justify-center">
-              <div className="text-center text-[var(--color-charcoal)]">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--color-background)] flex items-center justify-center">
-                  <Plus className="h-8 w-8 text-[var(--color-charcoal)]" />
+              <div className="text-center text-charcoal-700">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
+                  <Plus className="h-8 w-8 text-charcoal-700" />
                 </div>
-                <h3 className="font-medium text-[var(--color-midnight)]">No fields yet</h3>
+                <h3 className="font-medium text-midnight-900">No fields yet</h3>
                 <p className="text-sm">Add fields from the palette on the left</p>
               </div>
             </div>

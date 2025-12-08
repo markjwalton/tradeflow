@@ -162,9 +162,9 @@ export default function ChecklistBuilder() {
 
   if (!checklistId && !showNewDialog) {
     return (
-      <div className="h-screen flex items-center justify-center bg-[var(--color-background)]">
-        <Card className="w-96 p-6 border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
-          <h2 className="text-lg font-semibold mb-4 text-[var(--color-midnight)]">No Checklist Selected</h2>
+      <div className="h-screen flex items-center justify-center bg-background">
+        <Card className="w-96 p-6 border-background-muted bg-card">
+          <h2 className="text-lg font-semibold mb-4 text-midnight-900">No Checklist Selected</h2>
           <div className="space-y-3">
             <Button onClick={() => setShowNewDialog(true)} className="w-full">
               <Plus className="h-4 w-4 mr-2" />
@@ -182,9 +182,9 @@ export default function ChecklistBuilder() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-[var(--color-background)]">
+    <div className="h-screen flex flex-col bg-background">
       {/* Header */}
-      <div className="bg-[var(--color-background-paper)] border-b border-[var(--color-background-muted)] px-4 py-3 flex items-center justify-between">
+      <div className="bg-card border-b border-background-muted px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link to={createPageUrl("ChecklistTemplates")}>
             <Button variant="ghost" size="sm">
@@ -193,7 +193,7 @@ export default function ChecklistBuilder() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-lg font-semibold text-[var(--color-midnight)]">{checklistData.name || "New Checklist"}</h1>
+            <h1 className="text-lg font-semibold text-midnight-900">{checklistData.name || "New Checklist"}</h1>
             <div className="flex items-center gap-2">
               {checklistData.code && <Badge variant="outline">{checklistData.code}</Badge>}
               {checklistData.category && (
@@ -223,7 +223,7 @@ export default function ChecklistBuilder() {
       <div className="flex-1 overflow-auto p-6">
         {isLoading ? (
           <div className="h-full flex items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+            <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
           </div>
         ) : (
           <div className="max-w-2xl mx-auto">
@@ -237,8 +237,8 @@ export default function ChecklistBuilder() {
               </div>
 
               {checklistData.items.length === 0 ? (
-                <div className="text-center py-8 text-[var(--color-charcoal)]">
-                  <CheckSquare className="h-12 w-12 mx-auto text-[var(--color-charcoal)] opacity-30 mb-2" />
+                <div className="text-center py-8 text-charcoal-700">
+                  <CheckSquare className="h-12 w-12 mx-auto text-charcoal-700 opacity-30 mb-2" />
                   <p>No items yet. Click "Add Item" to get started.</p>
                 </div>
               ) : (

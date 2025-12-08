@@ -93,11 +93,11 @@ export default function FormTemplates() {
   });
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Form Templates</h1>
-          <p className="text-[var(--color-charcoal)]">Create and manage reusable form templates</p>
+          <h1 className="text-2xl font-light font-display text-midnight-900">Form Templates</h1>
+          <p className="text-charcoal-700">Create and manage reusable form templates</p>
         </div>
         <Link to={createPageUrl("FormBuilder")}>
           <Button>
@@ -136,13 +136,13 @@ export default function FormTemplates() {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+          <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
         </div>
       ) : filteredForms.length === 0 ? (
         <div className="text-center py-12">
           <FileText className="h-12 w-12 mx-auto opacity-30 mb-4 text-muted-foreground" />
-          <h3 className="text-lg font-medium text-[var(--color-midnight)]">No forms found</h3>
-          <p className="text-[var(--color-charcoal)] mb-4">
+          <h3 className="text-lg font-medium text-midnight-900">No forms found</h3>
+          <p className="text-charcoal-700 mb-4">
             {search || categoryFilter !== "all"
               ? "Try adjusting your filters"
               : "Create your first form template"}
