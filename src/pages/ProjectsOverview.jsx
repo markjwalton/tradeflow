@@ -214,7 +214,7 @@ export default function ProjectsOverview() {
                 : "Get started by creating your first project"}
             </p>
             <Link to={createPageUrl("ProjectForm")}>
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
+              <Button>
                 <Plus className="h-4 w-4 mr-2" />
                 Create Project
               </Button>
