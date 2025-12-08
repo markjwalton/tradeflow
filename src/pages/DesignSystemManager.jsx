@@ -403,10 +403,10 @@ For each recommendation, provide:
               {corePackages.length === 0 && (
                 <Card className="border-dashed md:col-span-2">
                   <CardContent className="py-12 text-center">
-                    <Package className="h-12 w-12 mx-auto mb-4 opacity-50 text-charcoal-700" />
+                    <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p className="text-charcoal-700">No core packages yet</p>
                     <Button 
-                      className="mt-4 bg-primary hover:bg-primary/90 text-primary-foreground"
+                      className="mt-4"
                       onClick={() => setShowCreateDialog(true)}
                     >
                       Create Sturij Core Package
@@ -468,7 +468,7 @@ For each recommendation, provide:
                       </div>
                       <div className="flex gap-2">
                         {pkg.update_available && (
-                          <Button size="sm" className="bg-warning hover:bg-secondary-600 text-white">
+                          <Button size="sm" className="bg-warning hover:bg-warning/90 text-white">
                             <RefreshCw className="h-3 w-3 mr-1" />
                             Update
                           </Button>
@@ -509,7 +509,7 @@ For each recommendation, provide:
           {components.length === 0 ? (
             <Card>
               <CardContent className="py-12 text-center">
-                <FileCode className="h-12 w-12 mx-auto mb-4 opacity-50 text-charcoal-700" />
+                <FileCode className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p className="text-charcoal-700">No component specifications yet</p>
                 <p className="text-sm text-charcoal-700 mt-1">
                   Components will be cataloged when you create packages
@@ -554,7 +554,6 @@ For each recommendation, provide:
             <Button 
               onClick={analyzePackageUpdates}
               disabled={isAnalyzing}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               {isAnalyzing ? (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
