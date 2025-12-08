@@ -300,7 +300,7 @@ export default function PageBuilder() {
   // Apply highlight to selected element
   React.useEffect(() => {
     if (selectedElement?.originalElement) {
-      selectedElement.originalElement.style.outline = '2px solid var(--color-primary)';
+      selectedElement.originalElement.style.outline = '2px solid var(--primary)';
       selectedElement.originalElement.style.outlineOffset = '2px';
     }
   }, [selectedElement]);
@@ -486,7 +486,7 @@ export default function PageBuilder() {
           <h1 className="text-2xl font-heading text-[var(--color-midnight)]">Page Design Builder</h1>
           <p className="text-[var(--color-charcoal)]">Create and manage UI page designs with version control</p>
         </div>
-        <Button onClick={() => openEditor()} className="bg-[var(--color-primary)]">
+        <Button onClick={() => openEditor()} className="bg-primary-500 hover:bg-primary-600 text-white">
           <Plus className="h-4 w-4 mr-2" />
           New Page
         </Button>
@@ -501,7 +501,7 @@ export default function PageBuilder() {
             <FileCode className="h-12 w-12 mx-auto mb-4 text-[var(--color-charcoal)]" />
             <h3 className="text-lg font-medium mb-2">No pages yet</h3>
             <p className="text-[var(--color-charcoal)] mb-4">Create your first UI page to get started</p>
-            <Button onClick={() => openEditor()} className="bg-[var(--color-primary)]">
+            <Button onClick={() => openEditor()} className="bg-primary-500 hover:bg-primary-600 text-white">
               <Plus className="h-4 w-4 mr-2" />
               Create Page
             </Button>
@@ -523,7 +523,7 @@ export default function PageBuilder() {
               <CardContent>
                 <div className="space-y-3">
                   <div className="flex items-center gap-2 text-sm">
-                    <Badge className={page.includes_app_shell ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}>
+                    <Badge className={page.includes_app_shell ? "bg-success-50 text-success-foreground" : "bg-muted text-muted-foreground"}>
                       {page.includes_app_shell ? "With Shell" : "Content Only"}
                     </Badge>
                     <span className="text-[var(--color-charcoal)]">
@@ -669,7 +669,7 @@ export default function PageBuilder() {
                   Interactive Mode (click elements to apply tokens)
                 </Label>
               </div>
-              <div className={`border rounded-lg overflow-hidden bg-white ${interactiveMode ? 'ring-2 ring-[var(--color-primary)]/30' : ''}`}>
+              <div className={`border rounded-lg overflow-hidden bg-white ${interactiveMode ? 'ring-2 ring-primary-500/30' : ''}`}>
                 {renderPreview(formData.current_content_jsx, formData.includes_app_shell)}
               </div>
             </TabsContent>
@@ -824,7 +824,7 @@ export default function PageBuilder() {
 
           <DialogFooter>
             <Button variant="outline" onClick={closeEditor}>Cancel</Button>
-            <Button onClick={handleSave} className="bg-[var(--color-primary)]">
+            <Button onClick={handleSave} className="bg-primary-500 hover:bg-primary-600 text-white">
               <Save className="h-4 w-4 mr-2" />
               Save
             </Button>
@@ -857,7 +857,7 @@ export default function PageBuilder() {
                   <div className="flex items-center gap-2">
                     <Badge>v{version.version_number}</Badge>
                     {version.version_number === selectedPage.current_version_number && (
-                      <Badge className="bg-green-100 text-green-800">Current</Badge>
+                      <Badge className="bg-success-50 text-success-foreground">Current</Badge>
                     )}
                   </div>
                   <p className="text-sm text-[var(--color-charcoal)] mt-1">{version.change_summary}</p>

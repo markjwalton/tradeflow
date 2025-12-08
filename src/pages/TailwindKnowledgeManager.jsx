@@ -498,7 +498,7 @@ Analyze and provide 3-5 specific recommendations to:
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-heading text-[var(--color-midnight)] flex items-center gap-2">
-            <BookOpen className="h-6 w-6 text-[var(--color-primary)]" />
+            <BookOpen className="h-6 w-6 text-primary-500" />
             Tailwind Knowledge Manager
           </h1>
           <p className="text-[var(--color-charcoal)]">
@@ -513,7 +513,7 @@ Analyze and provide 3-5 specific recommendations to:
           <Button 
             onClick={handleSyncDocs} 
             disabled={syncing}
-            className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+            className="bg-primary-500 hover:bg-primary-600 text-white"
           >
             {syncing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Download className="h-4 w-4 mr-2" />}
             Sync Documentation
@@ -523,10 +523,10 @@ Analyze and provide 3-5 specific recommendations to:
 
       {/* Progress Bar */}
       {syncProgress.total > 0 && (
-        <div className="mb-4 p-4 bg-white border border-[var(--color-background-muted)] rounded-lg">
+        <div className="mb-4 p-4 bg-white border border-background-muted rounded-lg">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
-              <Loader2 className="h-4 w-4 animate-spin text-[var(--color-primary)]" />
+              <Loader2 className="h-4 w-4 animate-spin text-primary-500" />
               <span className="text-sm font-medium text-[var(--color-midnight)]">
                 {syncProgress.message}
               </span>
@@ -565,7 +565,7 @@ Analyze and provide 3-5 specific recommendations to:
               <Loader2 className="h-8 w-8 animate-spin mx-auto text-[var(--color-charcoal)]" />
             </div>
           ) : releases.length === 0 ? (
-            <Card className="border-[var(--color-background-muted)]">
+            <Card className="border-background-muted">
               <CardContent className="py-12 text-center">
                 <GitBranch className="h-12 w-12 mx-auto mb-4 text-[var(--color-charcoal)]" />
                 <h3 className="text-lg font-medium text-[var(--color-midnight)]">No Releases Tracked</h3>
@@ -581,13 +581,13 @@ Analyze and provide 3-5 specific recommendations to:
                       <CardTitle className="text-[var(--color-midnight)] flex items-center gap-2">
                         Tailwind CSS v{release.version}
                         {release.is_major && (
-                          <Badge className="bg-[var(--color-primary)]/20 text-[var(--color-primary)]">Major</Badge>
+                          <Badge className="bg-primary-100 text-primary-700">Major</Badge>
                         )}
                         <Badge className={
-                          release.status === "new" ? "bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]" :
-                          release.status === "reviewed" ? "bg-[var(--color-info)]/20 text-[var(--color-info)]" :
-                          release.status === "adopted" ? "bg-[var(--color-success)]/20 text-[var(--color-success)]" :
-                          "bg-[var(--color-charcoal)]/20 text-[var(--color-charcoal)]"
+                          release.status === "new" ? "bg-warning/10 text-warning-foreground" :
+                          release.status === "reviewed" ? "bg-info-50 text-info-foreground" :
+                          release.status === "adopted" ? "bg-success-50 text-success-foreground" :
+                          "bg-muted text-muted-foreground"
                         }>
                           {release.status}
                         </Badge>
@@ -609,7 +609,7 @@ Analyze and provide 3-5 specific recommendations to:
                         size="sm" 
                         onClick={() => handleAnalyzeRelease(release)}
                         disabled={analyzing}
-                        className="bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-dark)] text-white"
+                        className="bg-secondary-400 hover:bg-secondary-500 text-white"
                       >
                         {analyzing ? <Loader2 className="h-3 w-3 mr-1 animate-spin" /> : <Sparkles className="h-3 w-3 mr-1" />}
                         Analyze Impact
@@ -621,12 +621,12 @@ Analyze and provide 3-5 specific recommendations to:
                     {release.new_features?.length > 0 && (
                       <div className="mb-4">
                         <h4 className="text-sm font-medium text-[var(--color-midnight)] mb-2 flex items-center gap-1">
-                          <Zap className="h-4 w-4 text-[var(--color-success)]" />
+                          <Zap className="h-4 w-4 text-success-foreground" />
                           New Features
                         </h4>
                         <div className="grid md:grid-cols-2 gap-2">
                           {release.new_features.map((feature, idx) => (
-                            <div key={idx} className="p-2 bg-[var(--color-background)] rounded-lg">
+                            <div key={idx} className="p-2 bg-background rounded-lg">
                               <p className="font-medium text-sm text-[var(--color-midnight)]">{feature.name}</p>
                               <p className="text-xs text-[var(--color-charcoal)]">{feature.description}</p>
                             </div>
@@ -637,9 +637,9 @@ Analyze and provide 3-5 specific recommendations to:
 
                     {/* AI Analysis */}
                     {release.ai_analysis && (
-                      <div className="p-4 bg-[var(--color-primary)]/5 rounded-lg border border-[var(--color-primary)]/20">
+                      <div className="p-4 bg-primary-50 rounded-lg border border-primary-200">
                         <h4 className="text-sm font-medium text-[var(--color-midnight)] mb-2 flex items-center gap-1">
-                          <Sparkles className="h-4 w-4 text-[var(--color-primary)]" />
+                          <Sparkles className="h-4 w-4 text-primary-500" />
                           AI Analysis
                         </h4>
                         <p className="text-sm text-[var(--color-charcoal)] mb-3">{release.ai_analysis.summary}</p>
@@ -650,7 +650,7 @@ Analyze and provide 3-5 specific recommendations to:
                             <ul className="text-xs text-[var(--color-charcoal)] space-y-1">
                               {release.ai_analysis.priority_updates.map((update, i) => (
                                 <li key={i} className="flex items-start gap-1">
-                                  <ArrowUp className="h-3 w-3 mt-0.5 text-[var(--color-warning)]" />
+                                  <ArrowUp className="h-3 w-3 mt-0.5 text-warning-foreground" />
                                   {update}
                                 </li>
                               ))}
@@ -659,9 +659,9 @@ Analyze and provide 3-5 specific recommendations to:
                         )}
                         
                         <Badge className={
-                          release.ai_analysis.impact_on_library?.includes("high") ? "bg-[var(--color-destructive)]/20 text-[var(--color-destructive)]" :
-                          release.ai_analysis.impact_on_library?.includes("medium") ? "bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]" :
-                          "bg-[var(--color-success)]/20 text-[var(--color-success)]"
+                          release.ai_analysis.impact_on_library?.includes("high") ? "bg-destructive-50 text-destructive-700" :
+                          release.ai_analysis.impact_on_library?.includes("medium") ? "bg-warning/10 text-warning-foreground" :
+                          "bg-success-50 text-success-foreground"
                         }>
                           Impact: {release.ai_analysis.impact_on_library || "Unknown"}
                         </Badge>
@@ -703,7 +703,7 @@ Analyze and provide 3-5 specific recommendations to:
               <Loader2 className="h-8 w-8 animate-spin mx-auto text-[var(--color-charcoal)]" />
             </div>
           ) : Object.keys(groupedKnowledge).length === 0 ? (
-            <Card className="border-[var(--color-background-muted)]">
+            <Card className="border-background-muted">
               <CardContent className="py-12 text-center">
                 <FileText className="h-12 w-12 mx-auto mb-4 text-[var(--color-charcoal)]" />
                 <h3 className="text-lg font-medium text-[var(--color-midnight)]">No Knowledge Synced</h3>
@@ -723,13 +723,13 @@ Analyze and provide 3-5 specific recommendations to:
                     <CardContent>
                       <div className="grid md:grid-cols-2 gap-3">
                         {items.map((item) => (
-                          <div key={item.id} className="p-3 bg-[var(--color-background)] rounded-lg">
+                          <div key={item.id} className="p-3 bg-background rounded-lg">
                             <h4 className="font-medium text-[var(--color-midnight)]">{item.topic}</h4>
                             <p className="text-sm text-[var(--color-charcoal)] line-clamp-2">{item.content}</p>
                             {item.utility_classes?.length > 0 && (
                               <div className="flex flex-wrap gap-1 mt-2">
                                 {item.utility_classes.slice(0, 4).map((uc, i) => (
-                                  <code key={i} className="text-xs px-1.5 py-0.5 bg-[var(--color-midnight)] text-white rounded">
+                                  <code key={i} className="text-xs px-1.5 py-0.5 bg-midnight-900 text-white rounded">
                                     {uc.class_name}
                                   </code>
                                 ))}
@@ -766,7 +766,7 @@ Analyze and provide 3-5 specific recommendations to:
                 <Button 
                   onClick={handleGenerateRecommendations}
                   disabled={analyzing || releases.length === 0}
-                  className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+                  className="bg-primary-500 hover:bg-primary-600 text-white"
                 >
                   {analyzing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
                   From Releases
@@ -787,13 +787,13 @@ Analyze and provide 3-5 specific recommendations to:
               ) : (
                 <div className="space-y-3">
                   {recommendations.map((rec) => (
-                    <div key={rec.id} className="p-4 border border-[var(--color-background-muted)] rounded-lg">
+                    <div key={rec.id} className="p-4 border border-background-muted rounded-lg">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
                             <h4 className="font-medium text-[var(--color-midnight)]">{rec.title}</h4>
                             {rec.status === "accepted" && (
-                              <Badge className="bg-[var(--color-success)]/20 text-[var(--color-success)]">
+                              <Badge className="bg-success-50 text-success-foreground">
                                 <CheckCircle2 className="h-3 w-3 mr-1" />
                                 In Roadmap
                               </Badge>
@@ -803,9 +803,9 @@ Analyze and provide 3-5 specific recommendations to:
                         </div>
                         <div className="flex items-center gap-2">
                           <Badge className={
-                            rec.impact === "high" ? "bg-[var(--color-destructive)]/20 text-[var(--color-destructive)]" :
-                            rec.impact === "medium" ? "bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]" :
-                            "bg-[var(--color-success)]/20 text-[var(--color-success)]"
+                            rec.impact === "high" ? "bg-destructive-50 text-destructive-700" :
+                            rec.impact === "medium" ? "bg-warning/10 text-warning-foreground" :
+                            "bg-success-50 text-success-foreground"
                           }>
                             {rec.impact} impact
                           </Badge>
@@ -819,7 +819,7 @@ Analyze and provide 3-5 specific recommendations to:
                       
                       {/* Expanded Development Prompt */}
                       {rec.reasoning && (
-                        <div className="mt-3 p-3 bg-[var(--color-primary)]/5 rounded-lg border border-[var(--color-primary)]/20">
+                        <div className="mt-3 p-3 bg-primary-50 rounded-lg border border-primary-200">
                           <p className="text-xs font-medium text-[var(--color-midnight)] mb-1">Development Prompt:</p>
                           <p className="text-sm text-[var(--color-charcoal)] whitespace-pre-wrap">{rec.reasoning}</p>
                         </div>
@@ -892,7 +892,7 @@ Analyze and provide 3-5 specific recommendations to:
             </Button>
             <Button 
               onClick={handleAddToRoadmap}
-              className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+              className="bg-primary-500 hover:bg-primary-600 text-white"
             >
               <Plus className="h-4 w-4 mr-2" />
               Add to Roadmap

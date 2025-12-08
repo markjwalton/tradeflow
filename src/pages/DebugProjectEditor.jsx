@@ -102,10 +102,10 @@ export default function DebugProjectEditor() {
   return (
     <div className="p-6 lg:p-8 max-w-4xl mx-auto">
       {/* Debug Banner */}
-      <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-2">
-        <AlertTriangle className="h-5 w-5 text-amber-600" />
-        <span className="text-amber-800 font-medium">DEBUG MODE</span>
-        <span className="text-amber-700 text-sm">
+      <div className="mb-4 p-3 bg-warning/10 border border-warning/20 rounded-lg flex items-center gap-2">
+        <AlertTriangle className="h-5 w-5 text-warning-foreground" />
+        <span className="text-warning-foreground font-medium">DEBUG MODE</span>
+        <span className="text-secondary-700 text-sm">
           – {isEditing ? "Edit mode with mock data" : "Create mode (empty form)"}
         </span>
         <div className="ml-auto flex gap-2">
@@ -353,7 +353,7 @@ export default function DebugProjectEditor() {
               Cancel
             </Button>
           </Link>
-          <Button type="submit" className="bg-amber-700 hover:bg-amber-800">
+          <Button type="submit" className="bg-secondary-700 hover:bg-secondary-800 text-white">
             <Save className="h-4 w-4 mr-2" />
             {isEditing ? "Update Project" : "Create Project"}
           </Button>
@@ -361,9 +361,9 @@ export default function DebugProjectEditor() {
       </form>
 
       {/* Live Form Data Preview */}
-      <Card className="mt-8 border-dashed border-amber-300 bg-amber-50/50">
+      <Card className="mt-8 border-dashed border-warning/30 bg-warning/10">
         <CardHeader>
-          <CardTitle className="text-amber-800">Live Form Data (Debug)</CardTitle>
+          <CardTitle className="text-warning-foreground">Live Form Data (Debug)</CardTitle>
         </CardHeader>
         <CardContent>
           <pre className="text-xs overflow-auto bg-white p-3 rounded border max-h-64">
