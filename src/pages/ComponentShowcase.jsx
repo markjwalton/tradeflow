@@ -69,7 +69,7 @@ function ShowcaseSection({ id, title, description, count, children }) {
         className="w-full px-[var(--spacing-6)] py-[var(--spacing-4)] flex items-center justify-between hover:bg-[var(--color-background-subtle)] transition-[var(--transition-fast)]"
       >
         <div className="flex items-center gap-[var(--spacing-3)]">
-          <h3 className="text-[length:var(--font-size-lg)] font-[var(--font-heading)] text-[var(--color-midnight)]">
+          <h3 className="text-[length:var(--font-size-lg)] font-display text-[var(--color-midnight)]">
             {title}
           </h3>
         </div>
@@ -154,7 +154,7 @@ export default function ComponentShowcase() {
               <Package className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h1 className="text-[length:var(--font-size-2xl)] font-[var(--font-heading)] text-[var(--color-midnight)]">
+              <h1 className="text-[length:var(--font-size-2xl)] font-display text-[var(--color-midnight)]">
                 Component Library
               </h1>
               <p className="text-[length:var(--font-size-sm)] text-[var(--color-charcoal)]">
