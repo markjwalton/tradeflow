@@ -646,7 +646,7 @@ export default function CSSAudit() {
                         </Badge>
                       )}
                       {activeCounts.high > 0 && (
-                        <Badge className="bg-warning-foreground text-white">
+                        <Badge className="bg-warning text-white">
                           {activeCounts.high} high
                         </Badge>
                       )}
@@ -696,8 +696,8 @@ export default function CSSAudit() {
                         <div className="flex items-start gap-2 mb-2">
                           <Badge className={
                             v.severity === "critical" ? "bg-destructive text-white" :
-                            v.severity === "high" ? "bg-warning-foreground text-white" :
-                            v.severity === "medium" ? "bg-info-foreground text-white" :
+                            v.severity === "high" ? "bg-warning text-white" :
+                            v.severity === "medium" ? "bg-info text-white" :
                             "bg-charcoal-700 text-white"
                           }>
                             {v.severity}

@@ -109,7 +109,7 @@ export default function TenantManager() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto bg-[var(--color-background)] min-h-screen">
-      <Card className="border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+      <Card className="border-background-muted bg-card">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-[var(--color-midnight)]">Tenant Manager</CardTitle>
           <Button onClick={() => { setEditingTenant(null); setIsFormOpen(true); }}>
@@ -127,11 +127,11 @@ export default function TenantManager() {
           ) : (
             <div className="space-y-2">
               {tenants.map((tenant) => (
-                <div key={tenant.id} className="border border-[var(--color-background-muted)] rounded-lg shadow-sm overflow-hidden">
-                  <div className="flex items-center gap-3 p-3 bg-[var(--color-background-paper)]">
+                <div key={tenant.id} className="border border-background-muted rounded-lg shadow-sm overflow-hidden">
+                  <div className="flex items-center gap-3 p-3 bg-card">
                     <button 
                       onClick={() => toggleExpand(tenant.id)}
-                      className="p-1 hover:bg-[var(--color-background)] rounded"
+                      className="p-1 hover:bg-background rounded"
                     >
                       {expandedTenants.has(tenant.id) ? (
                         <ChevronDown className="h-4 w-4 text-[var(--color-charcoal)]" />
@@ -159,13 +159,13 @@ export default function TenantManager() {
                     </Button>
                   </div>
                   {expandedTenants.has(tenant.id) && (
-                    <div className="p-3 bg-[var(--color-background)] border-t border-[var(--color-background-muted)] space-y-4">
+                    <div className="p-3 bg-background border-t border-background-muted space-y-4">
                       <TenantAccessRequests tenantId={tenant.id} />
                       <TenantRoleManager tenantId={tenant.id} />
                       <TenantUserManager tenantId={tenant.id} />
-                      <div className="text-sm text-[var(--color-charcoal)] bg-[var(--color-background-paper)] p-3 rounded border border-[var(--color-background-muted)]">
+                      <div className="text-sm text-[var(--color-charcoal)] bg-card p-3 rounded border border-background-muted">
                         <strong>Invite Link:</strong>{" "}
-                        <code className="bg-[var(--color-background)] px-2 py-1 rounded">
+                        <code className="bg-background px-2 py-1 rounded">
                           {window.location.origin}/TenantAccess?tenant={tenant.slug}
                         </code>
                       </div>

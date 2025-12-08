@@ -247,7 +247,7 @@ export default function WorkflowDesigner() {
   if (!workflowId && !showNewDialog) {
     return (
       <div className="h-screen flex items-center justify-center bg-[var(--color-background)]">
-        <Card className="w-96 border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+        <Card className="w-96 border-background-muted bg-card">
           <CardHeader>
             <CardTitle className="text-[var(--color-midnight)]">No Workflow Selected</CardTitle>
           </CardHeader>
@@ -270,7 +270,7 @@ export default function WorkflowDesigner() {
   return (
     <div className="h-screen flex flex-col bg-[var(--color-background)]">
       {/* Header */}
-      <div className="bg-[var(--color-background-paper)] border-b border-[var(--color-background-muted)] px-4 py-3 flex items-center justify-between">
+      <div className="bg-card border-b border-background-muted px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link to={createPageUrl("WorkflowLibrary")}>
             <Button variant="ghost" size="sm">

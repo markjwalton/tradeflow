@@ -313,7 +313,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
               <Button 
               onClick={bulkVerify}
               disabled={isOperating || stats.pending === 0}
-              className="bg-white text-accent-400 hover:bg-accent-100"
+              className="bg-white text-accent-700 hover:bg-accent-100"
               >
                 <CheckCircle2 className="h-4 w-4 mr-2" />
                 Verify All ({stats.pending})
