@@ -325,7 +325,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
 
       {/* Operation Progress */}
       {(operation.type === "verify" || operation.type === "complete") && (
-        <Card className={operation.type === "complete" ? "border-success-foreground/20 bg-success-50" : ""}>
+        <Card className={operation.type === "complete" ? "border-success/20 bg-success-50" : ""}>
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg flex items-center gap-2">

@@ -351,7 +351,7 @@ export default function RoadmapManager() {
 
       {isLoading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+          <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       ) : (
         <Tabs value={activeTab} onValueChange={setActiveTab}>
