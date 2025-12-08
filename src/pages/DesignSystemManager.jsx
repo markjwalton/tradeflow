@@ -449,17 +449,17 @@ For each recommendation, provide:
                     <CardContent>
                       <div className="space-y-2 mb-4">
                         <div className="flex items-center gap-2 text-sm">
-                          <Building2 className="h-4 w-4 text-charcoal-700" />
-                          <span className="text-charcoal-700">{pkg.customer_company}</span>
+                          <Building2 className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-muted-foreground">{pkg.customer_company}</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm">
-                          <Mail className="h-4 w-4 text-charcoal-700" />
-                          <span className="text-charcoal-700">{pkg.customer_email}</span>
+                          <Mail className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-muted-foreground">{pkg.customer_email}</span>
                         </div>
                         {pkg.parent_package_id && (
                           <div className="flex items-center gap-2 text-sm">
-                            <GitBranch className="h-4 w-4 text-charcoal-700" />
-                            <span className="text-charcoal-700">
+                            <GitBranch className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-muted-foreground">
                               Based on {packages.find(p => p.id === pkg.parent_package_id)?.package_name} v{pkg.parent_version}
                             </span>
                           </div>
@@ -509,8 +509,8 @@ For each recommendation, provide:
             <Card>
               <CardContent className="py-12 text-center">
                 <FileCode className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p className="text-charcoal-700">No component specifications yet</p>
-                <p className="text-sm text-charcoal-700 mt-1">
+                <p className="text-muted-foreground">No component specifications yet</p>
+                <p className="text-sm text-muted-foreground mt-1">
                   Components will be cataloged when you create packages
                 </p>
               </CardContent>
@@ -525,16 +525,16 @@ For each recommendation, provide:
                     </CardTitle>
                     <div className="flex items-center gap-2 mt-1">
                       <Badge variant="outline" className="text-xs">{comp.category}</Badge>
-                      <Badge className="bg-charcoal-100 text-charcoal-700 text-xs">
+                      <Badge className="bg-muted text-muted-foreground text-xs">
                         v{comp.version}
                       </Badge>
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-charcoal-700 mb-3">
+                    <p className="text-sm text-muted-foreground mb-3">
                       {comp.description}
                     </p>
-                    <div className="text-xs text-charcoal-700">
+                    <div className="text-xs text-muted-foreground">
                       {comp.design_tokens_used?.length || 0} tokens used
                     </div>
                   </CardContent>
@@ -567,8 +567,8 @@ For each recommendation, provide:
             <Card>
               <CardContent className="py-12 text-center">
                 <Sparkles className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p className="text-charcoal-700">No recommendations yet</p>
-                <p className="text-sm text-charcoal-700 mt-1">
+                <p className="text-muted-foreground">No recommendations yet</p>
+                <p className="text-sm text-muted-foreground mt-1">
                   Run AI analysis to get update recommendations
                 </p>
               </CardContent>
@@ -612,34 +612,34 @@ For each recommendation, provide:
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
-                      <p className="text-sm text-charcoal-700 mb-2">
+                      <p className="text-sm text-muted-foreground mb-2">
                         {rec.description}
                       </p>
                       {rec.reasoning && (
                         <div className="bg-accent-100 p-3 rounded-md text-sm">
                           <p className="font-medium text-midnight-900 mb-1">AI Reasoning:</p>
-                          <p className="text-charcoal-700">{rec.reasoning}</p>
+                          <p className="text-muted-foreground">{rec.reasoning}</p>
                         </div>
                       )}
                     </div>
 
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
-                        <span className="text-charcoal-700 font-medium">Current:</span>
+                        <span className="text-muted-foreground font-medium">Current:</span>
                         <span className="ml-2 text-midnight-900">{rec.current_version}</span>
                       </div>
                       <div>
-                        <span className="text-charcoal-700 font-medium">Recommended:</span>
+                        <span className="text-muted-foreground font-medium">Recommended:</span>
                         <span className="ml-2 text-midnight-900">{rec.recommended_version}</span>
                       </div>
                       <div>
-                        <span className="text-charcoal-700 font-medium">Effort:</span>
-                        <Badge className="ml-2 bg-charcoal-100 text-charcoal-700">
+                        <span className="text-muted-foreground font-medium">Effort:</span>
+                        <Badge className="ml-2 bg-muted text-muted-foreground">
                           {rec.effort}
                         </Badge>
                       </div>
                       <div>
-                        <span className="text-charcoal-700 font-medium">Impact:</span>
+                        <span className="text-muted-foreground font-medium">Impact:</span>
                         <Badge className={`ml-2 ${impactColors[rec.impact]}`}>
                           {rec.impact}
                         </Badge>
@@ -649,7 +649,7 @@ For each recommendation, provide:
                     {rec.benefits?.length > 0 && (
                       <div>
                         <p className="text-sm font-medium text-midnight-900 mb-1">Benefits:</p>
-                        <ul className="text-sm text-charcoal-700 space-y-1">
+                        <ul className="text-sm text-muted-foreground space-y-1">
                           {rec.benefits.map((b, i) => (
                             <li key={i} className="flex items-start gap-2">
                               <CheckCircle2 className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
@@ -665,7 +665,7 @@ For each recommendation, provide:
                         <Button 
                           size="sm"
                           onClick={() => handleAcceptRecommendation(rec)}
-                          className="bg-success hover:bg-success/90 text-white"
+                          className="bg-success hover:bg-success/90 text-success-foreground"
                         >
                           <CheckCircle2 className="h-3 w-3 mr-1" />
                           Accept & Add to Roadmap
@@ -710,22 +710,22 @@ For each recommendation, provide:
                 <CardContent className="space-y-3">
                   <div>
                     <p className="text-sm font-medium text-midnight-900">Package</p>
-                    <p className="text-sm text-charcoal-700">{pkg.package_name} v{pkg.version}</p>
+                    <p className="text-sm text-muted-foreground">{pkg.package_name} v{pkg.version}</p>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-midnight-900">Contact</p>
-                    <p className="text-sm text-charcoal-700">{pkg.customer_email}</p>
+                    <p className="text-sm text-muted-foreground">{pkg.customer_email}</p>
                   </div>
                   {pkg.parent_package_id && (
                     <div>
                       <p className="text-sm font-medium text-midnight-900">Based On</p>
-                      <p className="text-sm text-charcoal-700">
+                      <p className="text-sm text-muted-foreground">
                         {packages.find(p => p.id === pkg.parent_package_id)?.package_name} v{pkg.parent_version}
                       </p>
                     </div>
                   )}
                   {pkg.last_sync_check && (
-                    <div className="flex items-center gap-2 text-xs text-charcoal-700">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <Clock className="h-3 w-3" />
                       Last checked: {format(new Date(pkg.last_sync_check), "MMM d, yyyy")}
                     </div>
@@ -747,7 +747,7 @@ For each recommendation, provide:
               <Card className="border-dashed md:col-span-2">
                 <CardContent className="py-12 text-center">
                   <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p className="text-charcoal-700">No customer packages yet</p>
+                  <p className="text-muted-foreground">No customer packages yet</p>
                 </CardContent>
               </Card>
             )}
