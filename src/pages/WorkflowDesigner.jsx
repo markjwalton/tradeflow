@@ -282,7 +282,7 @@ export default function WorkflowDesigner() {
             <h1 className="text-lg font-semibold text-[var(--color-midnight)]">
               {workflow?.name || "New Workflow"}
             </h1>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-muted-foreground">
               {workflow?.code && <Badge variant="outline">{workflow.code}</Badge>}
               {workflow?.category && (
                 <Badge className="ml-2" variant="secondary">
@@ -413,7 +413,7 @@ export default function WorkflowDesigner() {
                 }
                 placeholder="e.g., bespoke_furniture"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 Unique identifier for this workflow
               </p>
             </div>

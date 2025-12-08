@@ -30,14 +30,14 @@ import PagePreview from "@/components/library/PagePreview";
 const categories = ["Dashboard", "List", "Detail", "Form", "Report", "Settings", "Custom", "Other"];
 
 const categoryColors = {
-  Dashboard: "bg-blue-100 text-blue-800",
-  List: "bg-green-100 text-green-800",
-  Detail: "bg-purple-100 text-purple-800",
-  Form: "bg-yellow-100 text-yellow-800",
-  Report: "bg-orange-100 text-orange-800",
-  Settings: "bg-gray-100 text-gray-800",
-  Custom: "bg-indigo-100 text-indigo-800",
-  Other: "bg-slate-100 text-slate-800",
+  Dashboard: "bg-info-50 text-info-foreground",
+  List: "bg-success-50 text-success-foreground",
+  Detail: "bg-accent-100 text-accent-700",
+  Form: "bg-warning/10 text-warning-foreground",
+  Report: "bg-warning/10 text-warning-foreground",
+  Settings: "bg-muted text-muted-foreground",
+  Custom: "bg-primary-100 text-primary-700",
+  Other: "bg-muted text-muted-foreground",
 };
 
 export default function PageLibrary() {
@@ -318,10 +318,10 @@ Return a JSON object with a "pages" array containing page templates.`,
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)] font-heading">
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
             Page Library
             {currentProject && (
-              <Badge className="bg-indigo-100 text-indigo-800">
+              <Badge className="bg-primary-100 text-primary-700">
                 <Folder className="h-3 w-3 mr-1" />
                 {currentProject.name}
               </Badge>
@@ -351,7 +351,7 @@ Return a JSON object with a "pages" array containing page templates.`,
 
       <div className="flex gap-4 mb-6">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search pages..."
             value={searchQuery}
@@ -398,15 +398,15 @@ Return a JSON object with a "pages" array containing page templates.`,
           {Object.entries(groupedPages).map(([groupName, groupPages]) => (
             <div key={groupName}>
               <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                <Badge className={categoryColors[groupName] || "bg-slate-100 text-slate-800"}>{groupName}</Badge>
-                <span className="text-gray-400 text-sm font-normal">({groupPages.length})</span>
+                <Badge className={categoryColors[groupName] || "bg-muted text-muted-foreground"}>{groupName}</Badge>
+                <span className="text-muted-foreground text-sm font-normal">({groupPages.length})</span>
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {groupPages.map((page) => (
                   <Card key={page.id} className="hover:shadow-md transition-shadow">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-base flex items-center gap-2">
-                        <Layout className="h-4 w-4 text-blue-600" />
+                        <Layout className="h-4 w-4 text-info" />
                         {page.name}
                         {page.is_custom && (
                           <Badge variant="outline" className="text-xs">Custom</Badge>
@@ -420,7 +420,7 @@ Return a JSON object with a "pages" array containing page templates.`,
                           <Badge key={entity} variant="outline" className="text-xs">{entity}</Badge>
                         ))}
                       </div>
-                      <div className="text-xs text-gray-500 mb-3">
+                      <div className="text-xs text-muted-foreground mb-3">
                         {page.components?.length || 0} components · {page.actions?.length || 0} actions
                       </div>
                       <div className="flex gap-1">
@@ -434,7 +434,7 @@ Return a JSON object with a "pages" array containing page templates.`,
                           <Copy className="h-3 w-3" />
                         </Button>
                         {!page.custom_project_id && projects.length > 0 && (
-                          <Button size="sm" variant="ghost" onClick={() => setAddToProjectItem(page)} title="Add to Project" className="text-indigo-600">
+                          <Button size="sm" variant="ghost" onClick={() => setAddToProjectItem(page)} title="Add to Project" className="text-primary">
                             <Folder className="h-3 w-3" />
                           </Button>
                         )}
@@ -443,7 +443,7 @@ Return a JSON object with a "pages" array containing page templates.`,
                             <BookmarkPlus className="h-3 w-3" />
                           </Button>
                         )}
-                        <Button size="sm" variant="ghost" className="text-red-600" onClick={() => deleteMutation.mutate(page.id)} title="Delete">
+                        <Button size="sm" variant="ghost" className="text-destructive" onClick={() => deleteMutation.mutate(page.id)} title="Delete">
                           <Trash2 className="h-3 w-3" />
                         </Button>
                       </div>
@@ -462,7 +462,7 @@ Return a JSON object with a "pages" array containing page templates.`,
             <DialogTitle>
               {editingPage?.id ? "Edit Page" : "Create Page"}
               {selectedProjectId && currentProject && (
-                <Badge className="ml-2 bg-indigo-100 text-indigo-800">{currentProject.name}</Badge>
+                <Badge className="ml-2 bg-primary-100 text-primary-700">{currentProject.name}</Badge>
               )}
             </DialogTitle>
           </DialogHeader>
@@ -481,12 +481,12 @@ Return a JSON object with a "pages" array containing page templates.`,
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Folder className="h-5 w-5 text-indigo-600" />
+              <Folder className="h-5 w-5 text-primary" />
               Add "{addToProjectItem?.name}" to Project
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <p className="text-sm text-gray-600">Select a custom project:</p>
+            <p className="text-sm text-muted-foreground">Select a custom project:</p>
             <div className="space-y-2">
               {projects.map((project) => (
                 <Button
@@ -517,7 +517,7 @@ Return a JSON object with a "pages" array containing page templates.`,
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-purple-600" />
+              <Sparkles className="h-5 w-5 text-accent-600" />
               Generate Page with AI
             </DialogTitle>
           </DialogHeader>
@@ -544,17 +544,17 @@ Return a JSON object with a "pages" array containing page templates.`,
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Database className="h-5 w-5 text-blue-600" />
+              <Database className="h-5 w-5 text-info" />
               Generate Pages from Entities
             </DialogTitle>
           </DialogHeader>
           <div className="flex-1 overflow-auto space-y-4">
             {bulkGeneratedPages.length === 0 ? (
               <>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-muted-foreground">
                   AI will analyze your {projectEntities.length} entities and suggest relevant pages.
                 </p>
-                <div className="bg-slate-50 rounded-lg p-3">
+                <div className="bg-muted rounded-lg p-3">
                   <p className="text-sm font-medium mb-2">Entities to analyze:</p>
                   <div className="flex flex-wrap gap-1">
                     {projectEntities.map(e => (
@@ -573,7 +573,7 @@ Return a JSON object with a "pages" array containing page templates.`,
             ) : (
               <>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-muted-foreground">
                     Select pages to add ({selectedBulkPages.length}/{bulkGeneratedPages.length} selected)
                   </p>
                   <Button
@@ -605,9 +605,9 @@ Return a JSON object with a "pages" array containing page templates.`,
                           <div className="flex items-center gap-2">
                             <Layout className="h-4 w-4 text-[var(--color-info)]" />
                             <span className="font-medium">{page.name}</span>
-                            <Badge className={categoryColors[page.category] || "bg-slate-100"}>{page.category}</Badge>
+                            <Badge className={categoryColors[page.category] || "bg-muted"}>{page.category}</Badge>
                           </div>
-                          <p className="text-sm text-gray-500 mt-1">{page.description}</p>
+                          <p className="text-sm text-muted-foreground mt-1">{page.description}</p>
                           {page.entities_used?.length > 0 && (
                             <div className="flex flex-wrap gap-1 mt-2">
                               {page.entities_used.map(e => (
@@ -639,7 +639,7 @@ Return a JSON object with a "pages" array containing page templates.`,
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Layout className="h-5 w-5 text-blue-600" />
+              <Layout className="h-5 w-5 text-info" />
               {previewPage?.name}
               {previewPage?.category && (
                 <Badge className={categoryColors[previewPage.category]}>{previewPage.category}</Badge>
@@ -648,7 +648,7 @@ Return a JSON object with a "pages" array containing page templates.`,
           </DialogHeader>
           {previewPage && (
             <div className="space-y-4">
-              <p className="text-gray-600 text-sm">{previewPage.description}</p>
+              <p className="text-muted-foreground text-sm">{previewPage.description}</p>
               
               {/* Visual Preview */}
               <PagePreview page={previewPage} />
@@ -657,7 +657,7 @@ Return a JSON object with a "pages" array containing page templates.`,
               <div className="grid grid-cols-2 gap-4">
                 {previewPage.entities_used?.length > 0 && (
                   <div>
-                    <h4 className="text-xs font-medium text-gray-500 mb-1">Entities</h4>
+                    <h4 className="text-xs font-medium text-muted-foreground mb-1">Entities</h4>
                     <div className="flex flex-wrap gap-1">
                       {previewPage.entities_used.map(e => (
                         <Badge key={e} variant="outline" className="text-xs">{e}</Badge>
@@ -668,10 +668,10 @@ Return a JSON object with a "pages" array containing page templates.`,
 
                 {previewPage.features?.length > 0 && (
                   <div>
-                    <h4 className="text-xs font-medium text-gray-500 mb-1">Features</h4>
+                    <h4 className="text-xs font-medium text-muted-foreground mb-1">Features</h4>
                     <div className="flex flex-wrap gap-1">
                       {previewPage.features.map(f => (
-                        <Badge key={f} className="bg-purple-100 text-purple-800 text-xs">{f}</Badge>
+                        <Badge key={f} className="bg-accent-100 text-accent-700 text-xs">{f}</Badge>
                       ))}
                     </div>
                   </div>

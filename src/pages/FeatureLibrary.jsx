@@ -28,21 +28,21 @@ import CustomProjectSelector from "@/components/library/CustomProjectSelector";
 const categories = ["Communication", "Automation", "Integration", "Reporting", "Security", "Workflow", "UI/UX", "Custom", "Other"];
 
 const categoryColors = {
-  Communication: "bg-blue-100 text-blue-800",
-  Automation: "bg-green-100 text-green-800",
-  Integration: "bg-purple-100 text-purple-800",
-  Reporting: "bg-yellow-100 text-yellow-800",
-  Security: "bg-red-100 text-red-800",
-  Workflow: "bg-orange-100 text-orange-800",
-  "UI/UX": "bg-pink-100 text-pink-800",
-  Custom: "bg-indigo-100 text-indigo-800",
-  Other: "bg-gray-100 text-gray-800",
+  Communication: "bg-info-50 text-info-foreground",
+  Automation: "bg-success-50 text-success-foreground",
+  Integration: "bg-accent-100 text-accent-700",
+  Reporting: "bg-warning/10 text-warning-foreground",
+  Security: "bg-destructive-50 text-destructive-700",
+  Workflow: "bg-warning/10 text-warning-foreground",
+  "UI/UX": "bg-accent-100 text-accent-700",
+  Custom: "bg-primary-100 text-primary-700",
+  Other: "bg-muted text-muted-foreground",
 };
 
 const complexityColors = {
-  simple: "bg-green-100 text-green-700",
-  medium: "bg-yellow-100 text-yellow-700",
-  complex: "bg-red-100 text-red-700",
+  simple: "bg-success-50 text-success-foreground",
+  medium: "bg-warning/10 text-warning-foreground",
+  complex: "bg-destructive-50 text-destructive-700",
 };
 
 export default function FeatureLibrary() {
@@ -329,10 +329,10 @@ Return a JSON object with a "features" array containing feature templates.`,
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)] font-heading">
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
             Feature Library
             {currentProject && (
-              <Badge className="bg-indigo-100 text-indigo-800">
+              <Badge className="bg-primary-100 text-primary-700">
                 <Folder className="h-3 w-3 mr-1" />
                 {currentProject.name}
               </Badge>
@@ -362,7 +362,7 @@ Return a JSON object with a "features" array containing feature templates.`,
 
       <div className="flex gap-4 mb-6">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search features..."
             value={searchQuery}
@@ -409,8 +409,8 @@ Return a JSON object with a "features" array containing feature templates.`,
           {Object.entries(groupedFeatures).map(([groupName, groupFeatures]) => (
             <div key={groupName}>
               <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                <Badge className={categoryColors[groupName] || "bg-slate-100 text-slate-800"}>{groupName}</Badge>
-                <span className="text-gray-400 text-sm font-normal">({groupFeatures.length})</span>
+                <Badge className={categoryColors[groupName] || "bg-muted text-muted-foreground"}>{groupName}</Badge>
+                <span className="text-muted-foreground text-sm font-normal">({groupFeatures.length})</span>
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {groupFeatures.map((feature) => (
@@ -418,7 +418,7 @@ Return a JSON object with a "features" array containing feature templates.`,
                     <CardHeader className="pb-2">
                       <div className="flex items-start justify-between">
                         <CardTitle className="text-base flex items-center gap-2">
-                          <Zap className="h-4 w-4 text-amber-600" />
+                          <Zap className="h-4 w-4 text-warning" />
                           {feature.name}
                           {feature.is_custom && (
                             <Badge variant="outline" className="text-xs">Custom</Badge>
@@ -436,7 +436,7 @@ Return a JSON object with a "features" array containing feature templates.`,
                           <Badge key={tag} variant="outline" className="text-xs">{tag}</Badge>
                         ))}
                       </div>
-                      <div className="text-xs text-gray-500 mb-3">
+                      <div className="text-xs text-muted-foreground mb-3">
                         {feature.entities_used?.length || 0} entities · {feature.integrations?.length || 0} integrations
                       </div>
                       <div className="flex gap-1">
@@ -450,7 +450,7 @@ Return a JSON object with a "features" array containing feature templates.`,
                           <Copy className="h-3 w-3" />
                         </Button>
                         {!feature.custom_project_id && projects.length > 0 && (
-                          <Button size="sm" variant="ghost" onClick={() => setAddToProjectItem(feature)} title="Add to Project" className="text-indigo-600">
+                          <Button size="sm" variant="ghost" onClick={() => setAddToProjectItem(feature)} title="Add to Project" className="text-primary">
                             <Folder className="h-3 w-3" />
                           </Button>
                         )}
@@ -459,7 +459,7 @@ Return a JSON object with a "features" array containing feature templates.`,
                             <BookmarkPlus className="h-3 w-3" />
                           </Button>
                         )}
-                        <Button size="sm" variant="ghost" className="text-red-600" onClick={() => deleteMutation.mutate(feature.id)} title="Delete">
+                        <Button size="sm" variant="ghost" className="text-destructive" onClick={() => deleteMutation.mutate(feature.id)} title="Delete">
                           <Trash2 className="h-3 w-3" />
                         </Button>
                       </div>
@@ -478,7 +478,7 @@ Return a JSON object with a "features" array containing feature templates.`,
             <DialogTitle>
               {editingFeature?.id ? "Edit Feature" : "Create Feature"}
               {selectedProjectId && currentProject && (
-                <Badge className="ml-2 bg-indigo-100 text-indigo-800">{currentProject.name}</Badge>
+                <Badge className="ml-2 bg-primary-100 text-primary-700">{currentProject.name}</Badge>
               )}
             </DialogTitle>
           </DialogHeader>
@@ -497,12 +497,12 @@ Return a JSON object with a "features" array containing feature templates.`,
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Folder className="h-5 w-5 text-indigo-600" />
+              <Folder className="h-5 w-5 text-primary" />
               Add "{addToProjectItem?.name}" to Project
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <p className="text-sm text-gray-600">Select a custom project:</p>
+            <p className="text-sm text-muted-foreground">Select a custom project:</p>
             <div className="space-y-2">
               {projects.map((project) => (
                 <Button
@@ -533,7 +533,7 @@ Return a JSON object with a "features" array containing feature templates.`,
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-purple-600" />
+              <Sparkles className="h-5 w-5 text-accent-600" />
               Generate Feature with AI
             </DialogTitle>
           </DialogHeader>
@@ -560,17 +560,17 @@ Return a JSON object with a "features" array containing feature templates.`,
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Database className="h-5 w-5 text-amber-600" />
+              <Database className="h-5 w-5 text-warning" />
               Generate Features from Entities
             </DialogTitle>
           </DialogHeader>
           <div className="flex-1 overflow-auto space-y-4">
             {bulkGeneratedFeatures.length === 0 ? (
               <>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-muted-foreground">
                   AI will analyze your {projectEntities.length} entities and suggest relevant features.
                 </p>
-                <div className="bg-slate-50 rounded-lg p-3">
+                <div className="bg-muted rounded-lg p-3">
                   <p className="text-sm font-medium mb-2">Entities to analyze:</p>
                   <div className="flex flex-wrap gap-1">
                     {projectEntities.map(e => (
@@ -589,7 +589,7 @@ Return a JSON object with a "features" array containing feature templates.`,
             ) : (
               <>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-muted-foreground">
                     Select features to add ({selectedBulkFeatures.length}/{bulkGeneratedFeatures.length} selected)
                   </p>
                   <Button
@@ -621,10 +621,10 @@ Return a JSON object with a "features" array containing feature templates.`,
                           <div className="flex items-center gap-2">
                             <Zap className="h-4 w-4 text-[var(--color-warning)]" />
                             <span className="font-medium">{feature.name}</span>
-                            <Badge className={categoryColors[feature.category] || "bg-slate-100"}>{feature.category}</Badge>
+                            <Badge className={categoryColors[feature.category] || "bg-muted"}>{feature.category}</Badge>
                             <Badge className={complexityColors[feature.complexity || "medium"]}>{feature.complexity || "medium"}</Badge>
                           </div>
-                          <p className="text-sm text-gray-500 mt-1">{feature.description}</p>
+                          <p className="text-sm text-muted-foreground mt-1">{feature.description}</p>
                           {feature.entities_used?.length > 0 && (
                             <div className="flex flex-wrap gap-1 mt-2">
                               {feature.entities_used.map(e => (
@@ -656,29 +656,29 @@ Return a JSON object with a "features" array containing feature templates.`,
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Zap className="h-5 w-5 text-amber-600" />
+              <Zap className="h-5 w-5 text-warning" />
               {previewFeature?.name}
             </DialogTitle>
           </DialogHeader>
           {previewFeature && (
             <div className="space-y-4">
               <div>
-                <p className="text-gray-600">{previewFeature.description}</p>
+                <p className="text-muted-foreground">{previewFeature.description}</p>
               </div>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-gray-500">Category:</span>
+                  <span className="text-muted-foreground">Category:</span>
                   <Badge className={`ml-2 ${categoryColors[previewFeature.category]}`}>{previewFeature.category}</Badge>
                 </div>
                 <div>
-                  <span className="text-gray-500">Complexity:</span>
+                  <span className="text-muted-foreground">Complexity:</span>
                   <Badge className={`ml-2 ${complexityColors[previewFeature.complexity || "medium"]}`}>{previewFeature.complexity || "medium"}</Badge>
                 </div>
               </div>
               
               {previewFeature.entities_used?.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Entities Used</h4>
+                  <h4 className="text-sm font-medium text-muted-foreground mb-2">Entities Used</h4>
                   <div className="flex flex-wrap gap-1">
                     {previewFeature.entities_used.map(e => (
                       <Badge key={e} variant="outline">{e}</Badge>
@@ -689,10 +689,10 @@ Return a JSON object with a "features" array containing feature templates.`,
 
               {previewFeature.triggers?.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Triggers</h4>
+                  <h4 className="text-sm font-medium text-muted-foreground mb-2">Triggers</h4>
                   <div className="flex flex-wrap gap-1">
                     {previewFeature.triggers.map(t => (
-                      <Badge key={t} className="bg-blue-100 text-blue-800">{t}</Badge>
+                      <Badge key={t} className="bg-info-50 text-info-foreground">{t}</Badge>
                     ))}
                   </div>
                 </div>
@@ -700,10 +700,10 @@ Return a JSON object with a "features" array containing feature templates.`,
 
               {previewFeature.integrations?.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Integrations</h4>
+                  <h4 className="text-sm font-medium text-muted-foreground mb-2">Integrations</h4>
                   <div className="flex flex-wrap gap-1">
                     {previewFeature.integrations.map(i => (
-                      <Badge key={i} className="bg-purple-100 text-purple-800">{i}</Badge>
+                      <Badge key={i} className="bg-accent-100 text-accent-700">{i}</Badge>
                     ))}
                   </div>
                 </div>
@@ -711,8 +711,8 @@ Return a JSON object with a "features" array containing feature templates.`,
 
               {previewFeature.requirements?.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Requirements</h4>
-                  <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                  <h4 className="text-sm font-medium text-muted-foreground mb-2">Requirements</h4>
+                  <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
                     {previewFeature.requirements.map((r, i) => (
                       <li key={i}>{r}</li>
                     ))}
@@ -722,8 +722,8 @@ Return a JSON object with a "features" array containing feature templates.`,
 
               {previewFeature.user_stories?.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">User Stories</h4>
-                  <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                  <h4 className="text-sm font-medium text-muted-foreground mb-2">User Stories</h4>
+                  <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
                     {previewFeature.user_stories.map((s, i) => (
                       <li key={i}>{s}</li>
                     ))}
@@ -733,7 +733,7 @@ Return a JSON object with a "features" array containing feature templates.`,
 
               {previewFeature.tags?.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Tags</h4>
+                  <h4 className="text-sm font-medium text-muted-foreground mb-2">Tags</h4>
                   <div className="flex flex-wrap gap-1">
                     {previewFeature.tags.map(t => (
                       <Badge key={t} variant="outline" className="text-xs">{t}</Badge>

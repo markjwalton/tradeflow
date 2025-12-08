@@ -36,13 +36,13 @@ import {
 import { toast } from "sonner";
 
 const categoryColors = {
-  sales: "bg-green-100 text-green-800",
-  project: "bg-blue-100 text-blue-800",
-  manufacturing: "bg-purple-100 text-purple-800",
-  installation: "bg-orange-100 text-orange-800",
-  service: "bg-cyan-100 text-cyan-800",
-  admin: "bg-gray-100 text-gray-800",
-  custom: "bg-pink-100 text-pink-800",
+  sales: "bg-success-50 text-success-foreground",
+  project: "bg-info-50 text-info-foreground",
+  manufacturing: "bg-accent-100 text-accent-700",
+  installation: "bg-warning/10 text-warning-foreground",
+  service: "bg-info-50 text-info-foreground",
+  admin: "bg-muted text-muted-foreground",
+  custom: "bg-accent-100 text-accent-700",
 };
 
 export default function WorkflowLibrary() {
@@ -110,7 +110,7 @@ export default function WorkflowLibrary() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>Workflow Library</h1>
+          <h1 className="text-2xl font-light font-display text-[var(--color-midnight)]">Workflow Library</h1>
           <p className="text-[var(--color-charcoal)]">
             Manage and create workflow templates for your business processes
           </p>
@@ -126,7 +126,7 @@ export default function WorkflowLibrary() {
       {/* Filters */}
       <div className="flex gap-4 mb-6">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search workflows..."
             value={search}
@@ -184,12 +184,12 @@ export default function WorkflowLibrary() {
                     <CardTitle className="text-lg flex items-center gap-2">
                       {workflow.name}
                       {workflow.isActive ? (
-                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        <CheckCircle className="h-4 w-4 text-success" />
                       ) : (
-                        <XCircle className="h-4 w-4 text-gray-400" />
+                        <XCircle className="h-4 w-4 text-muted-foreground" />
                       )}
                     </CardTitle>
-                    <p className="text-sm text-gray-500 mt-1">{workflow.code}</p>
+                    <p className="text-sm text-muted-foreground mt-1">{workflow.code}</p>
                   </div>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -213,7 +213,7 @@ export default function WorkflowLibrary() {
                         Duplicate
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        className="text-red-600"
+                        className="text-destructive"
                         onClick={() => deleteMutation.mutate(workflow.id)}
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
@@ -225,7 +225,7 @@ export default function WorkflowLibrary() {
               </CardHeader>
               <CardContent>
                 {workflow.description && (
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
                     {workflow.description}
                   </p>
                 )}
@@ -243,7 +243,7 @@ export default function WorkflowLibrary() {
                   )}
                 </div>
                 <div className="mt-4 pt-3 border-t flex justify-between items-center">
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-muted-foreground">
                     v{workflow.version || 1}
                   </span>
                   <Link
