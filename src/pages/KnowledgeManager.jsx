@@ -568,7 +568,7 @@ Create a development prompt that:
 
       {/* Progress Bar */}
       {syncProgress.total > 0 && (
-        <div className="mb-4 p-4 bg-white border border-border rounded-lg">
+        <div className="mb-4 p-4 bg-card border border-border rounded-lg">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             <Loader2 className="h-4 w-4 animate-spin text-primary" />

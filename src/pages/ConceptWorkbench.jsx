@@ -329,32 +329,32 @@ Create a detailed, actionable prompt that can be used by an AI coding assistant.
   };
 
   const statusIcon = {
-    passed: <CheckCircle2 className="h-5 w-5 text-success-foreground" />,
+    passed: <CheckCircle2 className="h-5 w-5 text-success" />,
     failed: <XCircle className="h-5 w-5 text-destructive" />,
     pending: <Circle className="h-5 w-5 text-muted-foreground" />,
   }[formData.test_status || "pending"];
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64 bg-[var(--color-background)]">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+      <div className="flex justify-center items-center h-64 bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
       </div>
     );
   }
 
   return (
-    <div className="p-6 max-w-5xl mx-auto bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 max-w-5xl mx-auto bg-background min-h-screen">
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
         <Button variant="ghost" size="icon" onClick={() => navigate(createPageUrl("PlaygroundSummary"))}>
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div className="flex-1">
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
-            <Lightbulb className="h-6 w-6 text-warning-foreground" />
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-midnight-900">
+            <Lightbulb className="h-6 w-6 text-warning" />
             {isNew ? "New Concept" : formData.name}
           </h1>
-          <p className="text-[var(--color-charcoal)]">Design and test before adding to playground</p>
+          <p className="text-charcoal-700">Design and test before adding to playground</p>
         </div>
         <div className="flex items-center gap-2">
           {statusIcon}
@@ -379,7 +379,7 @@ Create a detailed, actionable prompt that can be used by an AI coding assistant.
         </Button>
         {!isNew && formData.test_status === "passed" && (
           <Button 
-            className="bg-success-foreground hover:bg-primary-600 text-white"
+            className="bg-success hover:bg-success/90 text-success-foreground"
             onClick={() => setShowPushDialog(true)}
           >
             <ArrowUpCircle className="h-4 w-4 mr-2" />
@@ -469,13 +469,13 @@ Create a detailed, actionable prompt that can be used by an AI coding assistant.
               {formData.test_results ? (
                 <div className="space-y-2">
                   {formData.test_results.passed?.map((t, i) => (
-                    <div key={i} className="flex items-center gap-2 text-sm text-success-foreground bg-success-50 p-2 rounded">
+                    <div key={i} className="flex items-center gap-2 text-sm text-success bg-success-50 p-2 rounded">
                       <CheckCircle2 className="h-4 w-4" />
                       {t}
                     </div>
                   ))}
                   {formData.test_results.failed?.map((t, i) => (
-                    <div key={i} className="flex items-center gap-2 text-sm text-destructive-700 bg-destructive-50 p-2 rounded">
+                    <div key={i} className="flex items-center gap-2 text-sm text-destructive bg-destructive-50 p-2 rounded">
                       <XCircle className="h-4 w-4" />
                       {t}
                     </div>
@@ -492,7 +492,7 @@ Create a detailed, actionable prompt that can be used by an AI coding assistant.
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-accent-700" />
+                  <Sparkles className="h-5 w-5 text-accent" />
                   Suggestions
                 </CardTitle>
               </CardHeader>
@@ -513,7 +513,7 @@ Create a detailed, actionable prompt that can be used by an AI coding assistant.
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <ArrowUpCircle className="h-5 w-5 text-success-foreground" />
+              <ArrowUpCircle className="h-5 w-5 text-success" />
               Push Concept Forward
             </DialogTitle>
           </DialogHeader>
@@ -527,13 +527,13 @@ Create a detailed, actionable prompt that can be used by an AI coding assistant.
                 <SelectContent>
                   <SelectItem value="playground">
                     <div className="flex items-center gap-2">
-                      <FlaskConical className="h-4 w-4 text-accent-700" />
+                      <FlaskConical className="h-4 w-4 text-accent" />
                       Playground (for further testing)
                     </div>
                   </SelectItem>
                   <SelectItem value="library">
                     <div className="flex items-center gap-2">
-                      <Database className="h-4 w-4 text-info-foreground" />
+                      <Database className="h-4 w-4 text-info" />
                       Library (production ready)
                     </div>
                   </SelectItem>
@@ -542,7 +542,7 @@ Create a detailed, actionable prompt that can be used by an AI coding assistant.
             </div>
 
             {pushTarget === "library" && (
-              <div className="bg-warning/10 p-3 rounded-lg text-sm text-warning-foreground">
+              <div className="bg-warning/10 p-3 rounded-lg text-sm text-warning">
                 <strong>Note:</strong> Pushing directly to library skips the playground testing phase. 
                 Only do this if the concept is fully validated.
               </div>
@@ -568,7 +568,7 @@ Create a detailed, actionable prompt that can be used by an AI coding assistant.
               </Button>
               <Button 
                 onClick={pushTarget === "playground" ? pushToPlayground : pushToLibrary}
-                className="flex-1 bg-success-foreground hover:bg-primary-600 text-white"
+                className="flex-1 bg-success hover:bg-success/90 text-success-foreground"
               >
                 Push to {pushTarget === "playground" ? "Playground" : "Library"}
               </Button>
