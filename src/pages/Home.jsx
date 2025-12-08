@@ -67,7 +67,7 @@ export default function Home() {
                 <Card key={item.id} className="hover:shadow-md transition-shadow border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-lg text-[var(--color-midnight)]">
-                      <Icon className="h-5 w-5 text-[var(--color-primary)]" />
+                      <Icon className="h-5 w-5 text-primary-500" />
                       {item.name}
                     </CardTitle>
                   </CardHeader>
@@ -83,7 +83,7 @@ export default function Home() {
                             <li key={child.id}>
                               <Link 
                                 to={childUrl}
-                                className="flex items-center gap-2 text-sm text-[var(--color-charcoal)] hover:text-[var(--color-midnight)] py-1"
+                                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground py-1"
                               >
                                 <ChevronRight className="h-4 w-4" />
                                 <ChildIcon className="h-4 w-4" />
@@ -96,12 +96,12 @@ export default function Home() {
                     ) : pageUrl ? (
                       <Link 
                         to={pageUrl}
-                        className="text-sm text-[var(--color-primary)] hover:text-[var(--color-primary-dark)] hover:underline"
+                        className="text-sm text-primary-500 hover:text-primary-600 hover:underline"
                       >
                         Open →
                       </Link>
                     ) : (
-                      <span className="text-sm text-[var(--color-charcoal)]/50">No content</span>
+                      <span className="text-sm text-muted-foreground/50">No content</span>
                     )}
                   </CardContent>
                 </Card>

@@ -712,7 +712,7 @@ Return as JSON:
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
-                <MessageSquare className="h-5 w-5 text-info" />
+                <MessageSquare className="h-5 w-5 text-info-foreground" />
                 Live Chat Journal
               </CardTitle>
               <p className="text-sm text-muted-foreground">Quick captures from AI chat sessions (hidden from main roadmap)</p>
@@ -733,7 +733,7 @@ Return as JSON:
                     const TypeIcon = typeInfo.icon;
                     
                     return (
-                      <Card key={entry.id} className="border-l-4 border-l-info">
+                      <Card key={entry.id} className="border-l-4 border-l-info-foreground">
                         <CardContent className="pt-4">
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-2 flex-wrap">
@@ -809,7 +809,7 @@ Return as JSON:
                     <Button onClick={() => copyToClipboard(currentPrompt)} variant="outline">
                       <Copy className="h-4 w-4 mr-2" /> Copy
                     </Button>
-                    <Button onClick={() => sendToChat(currentPrompt)} className="bg-accent-600 hover:bg-accent-700 text-accent-foreground">
+                    <Button onClick={() => sendToChat(currentPrompt)} className="bg-accent-400 hover:bg-accent-500 text-white">
                       <Send className="h-4 w-4 mr-2" /> Send to Chat
                     </Button>
                     <Button onClick={generateAIReview} disabled={isGeneratingReview} variant="secondary">
@@ -852,7 +852,7 @@ Return as JSON:
                           </div>
                           {rec.accepted === undefined && (
                             <div className="flex gap-1">
-                              <Button size="icon" variant="ghost" className="h-8 w-8 text-success" onClick={() => handleRecommendationAction(index, true)}>
+                              <Button size="icon" variant="ghost" className="h-8 w-8 text-success-foreground" onClick={() => handleRecommendationAction(index, true)}>
                                 <ThumbsUp className="h-4 w-4" />
                               </Button>
                               <Button size="icon" variant="ghost" className="h-8 w-8 text-destructive" onClick={() => handleRecommendationAction(index, false)}>
@@ -872,7 +872,7 @@ Return as JSON:
                 )}
 
                 <div className="flex gap-2 pt-4 border-t">
-                  <Button onClick={acceptAndProceed} className="bg-success hover:bg-success/90 text-success-foreground">
+                  <Button onClick={acceptAndProceed} className="bg-success-foreground hover:bg-primary-600 text-white">
                     <CheckCircle className="h-4 w-4 mr-2" /> Accept & Mark Ready
                   </Button>
                   <Button onClick={sendBackToRoadmap} variant="outline">

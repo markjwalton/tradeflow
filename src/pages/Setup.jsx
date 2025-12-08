@@ -64,7 +64,7 @@ export default function Setup() {
       <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--color-background)]">
         <Card className="max-w-md w-full border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
           <CardContent className="pt-6 text-center space-y-4">
-            <CheckCircle className="h-12 w-12 text-success mx-auto" />
+            <CheckCircle className="h-12 w-12 text-success-foreground mx-auto" />
             <div>
               <h2 className="text-xl font-semibold text-[var(--color-midnight)]">Already a Global Admin</h2>
               <p className="text-[var(--color-charcoal)]">You already have global admin access.</p>

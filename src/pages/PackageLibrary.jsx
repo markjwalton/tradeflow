@@ -102,7 +102,7 @@ function FileItem({ name, file, description, onCopy }) {
           onClick={handleCopy}
           className="gap-1"
         >
-          {copied ? <Check className="h-3 w-3 text-success" /> : <Copy className="h-3 w-3" />}
+          {copied ? <Check className="h-3 w-3 text-success-foreground" /> : <Copy className="h-3 w-3" />}
           {copied ? "Copied" : "Copy Path"}
         </Button>
       </div>
@@ -223,7 +223,7 @@ function PackageCard({ pkg }) {
             <ol className="space-y-3">
               {pkg.setup.map((step, i) => (
                 <li key={i} className="flex gap-3 p-3 bg-info-50 rounded-lg">
-                  <span className="flex-shrink-0 w-6 h-6 bg-info text-info-foreground rounded-full flex items-center justify-center text-sm font-medium">
+                  <span className="flex-shrink-0 w-6 h-6 bg-info-foreground text-white rounded-full flex items-center justify-center text-sm font-medium">
                     {i + 1}
                   </span>
                   <span className="text-sm">{step}</span>
