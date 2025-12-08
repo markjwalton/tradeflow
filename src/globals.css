@@ -5,13 +5,31 @@ css
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .font-sans {
+    font-family: var(--font-body) !important;
+  }
+  
+  .font-heading {
+    font-family: var(--font-heading) !important;
+  }
+  
+  .font-body {
+    font-family: var(--font-body) !important;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
   }
   
   body {
-    font-family: var(--font-body);
+    font-family: var(--font-body) !important;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading) !important;
   }
   
   :root {
