@@ -42,11 +42,11 @@ import { format } from "date-fns";
 import { toast } from "sonner";
 
 const statusColors = {
-  "Not Started": "bg-stone-100 text-stone-800",
-  "In Progress": "bg-blue-100 text-blue-800",
-  "Under Review": "bg-yellow-100 text-yellow-800",
-  "Approved": "bg-green-100 text-green-800",
-  "Revision Required": "bg-red-100 text-red-800",
+  "Not Started": "bg-muted text-muted-foreground",
+  "In Progress": "bg-info-50 text-info",
+  "Under Review": "bg-warning/10 text-warning",
+  "Approved": "bg-success-50 text-success",
+  "Revision Required": "bg-destructive-50 text-destructive",
 };
 
 const emptyPhase = {
@@ -171,7 +171,7 @@ export default function DesignPhaseList({ projectFilter, projects }) {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button
-              className="bg-amber-700 hover:bg-amber-800"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
               onClick={() => handleOpenDialog()}
             >
               <Plus className="h-4 w-4 mr-2" />
@@ -282,7 +282,7 @@ export default function DesignPhaseList({ projectFilter, projects }) {
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-amber-700 hover:bg-amber-800"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
                   disabled={isSubmitting}
                 >
                   {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
@@ -297,9 +297,9 @@ export default function DesignPhaseList({ projectFilter, projects }) {
       {filteredPhases.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
-            <FileImage className="h-12 w-12 text-stone-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-stone-900 mb-2">No design phases</h3>
-            <p className="text-stone-500">Add your first design phase to get started</p>
+            <FileImage className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-foreground mb-2">No design phases</h3>
+            <p className="text-muted-foreground">Add your first design phase to get started</p>
           </CardContent>
         </Card>
       ) : (
@@ -309,8 +309,8 @@ export default function DesignPhaseList({ projectFilter, projects }) {
               <CardContent className="pt-6">
                 <div className="flex items-start justify-between mb-3">
                   <div>
-                    <h3 className="font-semibold text-stone-900">{phase.name}</h3>
-                    <p className="text-sm text-stone-500">{getProjectName(phase.projectId)}</p>
+                    <h3 className="font-semibold text-foreground">{phase.name}</h3>
+                    <p className="text-sm text-muted-foreground">{getProjectName(phase.projectId)}</p>
                   </div>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -325,7 +325,7 @@ export default function DesignPhaseList({ projectFilter, projects }) {
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => deleteMutation.mutate(phase.id)}
-                        className="text-red-600"
+                        className="text-destructive"
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
                         Delete
@@ -342,16 +342,16 @@ export default function DesignPhaseList({ projectFilter, projects }) {
                   </Badge>
                 )}
 
-                <div className="mt-4 space-y-2 text-sm text-stone-600">
+                <div className="mt-4 space-y-2 text-sm text-muted-foreground">
                   {phase.designer && (
                     <div className="flex items-center gap-2">
-                      <User className="h-4 w-4 text-stone-400" />
+                      <User className="h-4 w-4 text-muted-foreground" />
                       {teamMembers.find((m) => m.email === phase.designer)?.name || phase.designer}
                     </div>
                   )}
                   {phase.dueDate && (
                     <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-stone-400" />
+                      <Calendar className="h-4 w-4 text-muted-foreground" />
                       Due {format(new Date(phase.dueDate), "MMM d, yyyy")}
                     </div>
                   )}

@@ -43,11 +43,11 @@ import { format } from "date-fns";
 import { toast } from "sonner";
 
 const statusColors = {
-  Pending: "bg-stone-100 text-stone-800",
-  "In Production": "bg-blue-100 text-blue-800",
-  "Quality Check": "bg-yellow-100 text-yellow-800",
-  Complete: "bg-green-100 text-green-800",
-  "On Hold": "bg-red-100 text-red-800",
+  Pending: "bg-muted text-muted-foreground",
+  "In Production": "bg-info-50 text-info",
+  "Quality Check": "bg-warning/10 text-warning",
+  Complete: "bg-success-50 text-success",
+  "On Hold": "bg-destructive-50 text-destructive",
 };
 
 const emptyStep = {
@@ -190,7 +190,7 @@ export default function ManufactureStepList({ projectFilter, projects }) {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button
-              className="bg-amber-700 hover:bg-amber-800"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
               onClick={() => handleOpenDialog()}
             >
               <Plus className="h-4 w-4 mr-2" />
@@ -329,7 +329,7 @@ export default function ManufactureStepList({ projectFilter, projects }) {
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-amber-700 hover:bg-amber-800"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
                   disabled={isSubmitting}
                 >
                   {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
@@ -344,9 +344,9 @@ export default function ManufactureStepList({ projectFilter, projects }) {
       {Object.keys(groupedSteps).length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
-            <Factory className="h-12 w-12 text-stone-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-stone-900 mb-2">No manufacturing steps</h3>
-            <p className="text-stone-500">Add your first manufacturing step to get started</p>
+            <Factory className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-foreground mb-2">No manufacturing steps</h3>
+            <p className="text-muted-foreground">Add your first manufacturing step to get started</p>
           </CardContent>
         </Card>
       ) : (
@@ -354,7 +354,7 @@ export default function ManufactureStepList({ projectFilter, projects }) {
           {Object.entries(groupedSteps).map(([projectId, projectSteps]) => (
             <Card key={projectId}>
               <CardContent className="pt-6">
-                <h3 className="font-semibold text-stone-900 mb-4">
+                <h3 className="font-semibold text-foreground mb-4">
                   {getProjectName(projectId)}
                 </h3>
                 <div className="space-y-3">
@@ -365,15 +365,15 @@ export default function ManufactureStepList({ projectFilter, projects }) {
                         key={step.id}
                         className="flex items-center gap-4 p-3 bg-stone-50 rounded-lg"
                       >
-                        <div className="flex-shrink-0 w-8 h-8 bg-stone-200 rounded-full flex items-center justify-center text-sm font-medium">
+                        <div className="flex-shrink-0 w-8 h-8 bg-primary-200 rounded-full flex items-center justify-center text-sm font-medium text-primary">
                           {step.order || index + 1}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="font-medium text-stone-900">{step.name}</span>
+                            <span className="font-medium text-foreground">{step.name}</span>
                             <Badge className={statusColors[step.status]}>{step.status}</Badge>
                           </div>
-                          <div className="flex flex-wrap gap-3 text-sm text-stone-500 mt-1">
+                          <div className="flex flex-wrap gap-3 text-sm text-muted-foreground mt-1">
                             {step.assignedTo && (
                               <span className="flex items-center gap-1">
                                 <User className="h-3 w-3" />
@@ -407,7 +407,7 @@ export default function ManufactureStepList({ projectFilter, projects }) {
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => deleteMutation.mutate(step.id)}
-                              className="text-red-600"
+                              className="text-destructive"
                             >
                               <Trash2 className="h-4 w-4 mr-2" />
                               Delete
