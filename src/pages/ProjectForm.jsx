@@ -142,7 +142,7 @@ export default function ProjectForm() {
   if (isEditing && loadingProject) {
     return (
       <div className="p-6 lg:p-8 flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-warning" />
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -389,7 +389,7 @@ export default function ProjectForm() {
           </Link>
           <Button
             type="submit"
-            className="bg-warning hover:bg-warning/90 text-warning-foreground"
+            className="bg-primary-500 hover:bg-primary-600 text-white"
             disabled={isSubmitting}
           >
             {isSubmitting ? (

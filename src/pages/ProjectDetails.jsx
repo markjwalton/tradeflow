@@ -133,7 +133,7 @@ export default function ProjectDetails() {
       <div className="p-6 lg:p-8">
         <Card>
           <CardContent className="py-12 text-center">
-            <AlertTriangle className="h-12 w-12 text-warning mx-auto mb-4" />
+            <AlertTriangle className="h-12 w-12 text-warning-foreground mx-auto mb-4" />
             <h2 className="text-xl font-semibold mb-2">Project Not Found</h2>
             <p className="text-muted-foreground mb-4">
               The project you're looking for doesn't exist or has been deleted.
@@ -302,11 +302,11 @@ export default function ProjectDetails() {
                       <p className="text-sm text-muted-foreground">Total</p>
                     </div>
                     <div className="p-3 bg-success-50 rounded-lg text-center">
-                      <p className="text-2xl font-bold text-success">{taskStats.completed}</p>
+                      <p className="text-2xl font-bold text-success-foreground">{taskStats.completed}</p>
                       <p className="text-sm text-muted-foreground">Completed</p>
                     </div>
                     <div className="p-3 bg-info-50 rounded-lg text-center">
-                      <p className="text-2xl font-bold text-info">{taskStats.inProgress}</p>
+                      <p className="text-2xl font-bold text-info-foreground">{taskStats.inProgress}</p>
                       <p className="text-sm text-muted-foreground">In Progress</p>
                     </div>
                     <div className="p-3 bg-destructive-50 rounded-lg text-center">
@@ -349,7 +349,7 @@ export default function ProjectDetails() {
                   {project.clientEmail && (
                     <a
                       href={`mailto:${project.clientEmail}`}
-                      className="flex items-center gap-2 text-sm text-info hover:underline"
+                      className="flex items-center gap-2 text-sm text-info-foreground hover:underline"
                     >
                       <Mail className="h-4 w-4" />
                       {project.clientEmail}
