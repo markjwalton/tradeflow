@@ -354,12 +354,12 @@ Only suggest NEW relationships not already in existingRelationships.`,
   };
 
   return (
-    <div className="h-screen flex flex-col bg-[var(--color-background)]">
+    <div className="h-screen flex flex-col bg-background">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 bg-card border-b border-background-muted">
+      <div className="flex items-center justify-between p-4 bg-card border-b border-border">
         <div className="flex items-center gap-4">
-          <h1 className="text-xl font-bold font-display flex items-center gap-2 text-[var(--color-midnight)]">
-            <Database className="h-5 w-5 text-accent-400" />
+          <h1 className="text-xl font-bold font-display flex items-center gap-2 text-midnight-900">
+            <Database className="h-5 w-5 text-accent" />
             ERD Editor
           </h1>
           <CustomProjectSelector
@@ -368,7 +368,7 @@ Only suggest NEW relationships not already in existingRelationships.`,
             showCreateOption={false}
           />
           {currentProject && (
-            <Badge className="bg-info-50 text-info-foreground">{currentProject.name}</Badge>
+            <Badge className="bg-info-50 text-info">{currentProject.name}</Badge>
           )}
         </div>
         <div className="flex items-center gap-2">
@@ -378,7 +378,7 @@ Only suggest NEW relationships not already in existingRelationships.`,
       </div>
 
       {/* Toolbar */}
-      <div className="flex items-center gap-2 p-2 bg-background border-b border-background-muted">
+      <div className="flex items-center gap-2 p-2 bg-background border-b border-border">
         <Button size="sm" onClick={handleAddEntity}>
           <Plus className="h-4 w-4 mr-1" />
           Add Entity
@@ -445,12 +445,12 @@ Only suggest NEW relationships not already in existingRelationships.`,
       <div className="flex-1 overflow-hidden">
         {isLoading ? (
           <div className="h-full flex items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+            <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
           </div>
         ) : entities.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-[var(--color-charcoal)]">
+          <div className="h-full flex flex-col items-center justify-center text-charcoal-700">
             <Database className="h-16 w-16 mb-4 opacity-30" />
-            <p className="text-lg font-medium text-[var(--color-midnight)]">No entities yet</p>
+            <p className="text-lg font-medium text-midnight-900">No entities yet</p>
             <p className="text-sm mb-4">Add entities to start building your ERD</p>
             <Button onClick={handleAddEntity}>
               <Plus className="h-4 w-4 mr-1" />

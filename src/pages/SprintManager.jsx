@@ -120,14 +120,14 @@ export default function SprintManager() {
   const completedSprints = sprints.filter(s => s.status === "completed");
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
+    <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-[var(--color-midnight)]">
-            <Play className="h-6 w-6 text-success-foreground" />
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-midnight-900">
+            <Play className="h-6 w-6 text-success" />
             Sprint Manager
           </h1>
-          <p className="text-[var(--color-charcoal)]">Manage development sprints and track progress</p>
+          <p className="text-charcoal-700">Manage development sprints and track progress</p>
         </div>
         <Button onClick={() => openDialog()}>
           <Plus className="h-4 w-4 mr-2" />
@@ -137,15 +137,15 @@ export default function SprintManager() {
 
       {isLoading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-[var(--color-charcoal)]" />
+          <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
         </div>
       ) : (
         <div className="space-y-8">
           {/* Active Sprints */}
           {activeSprints.length > 0 && (
             <div>
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-[var(--color-midnight)]">
-                <Play className="h-5 w-5 text-success-foreground" />
+              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-midnight-900">
+                <Play className="h-5 w-5 text-success" />
                 Active Sprints
               </h2>
               <div className="grid gap-4">
@@ -169,7 +169,7 @@ export default function SprintManager() {
           {planningSprints.length > 0 && (
             <div>
               <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-info-foreground" />
+                <Calendar className="h-5 w-5 text-info" />
                 Planning
               </h2>
               <div className="grid gap-4">
@@ -214,7 +214,7 @@ export default function SprintManager() {
           )}
 
           {sprints.length === 0 && (
-            <div className="text-center py-12 text-[var(--color-charcoal)]">
+            <div className="text-center py-12 text-charcoal-700">
               <Play className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p>No sprints yet. Create your first sprint!</p>
             </div>
@@ -339,7 +339,7 @@ function SprintCard({ sprint, items, onEdit, onDelete, onStatusChange, onCopy, o
                   <Button size="sm" variant="outline" onClick={() => onCopy(combinedPrompt)}>
                     <Copy className="h-3 w-3 mr-1" /> Copy All
                   </Button>
-                  <Button size="sm" className="bg-accent-400 hover:bg-accent-500 text-white" onClick={() => onSend(combinedPrompt)}>
+                  <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground" onClick={() => onSend(combinedPrompt)}>
                     <Send className="h-3 w-3 mr-1" /> Send to Chat
                   </Button>
                 </>
@@ -361,7 +361,7 @@ function SprintCard({ sprint, items, onEdit, onDelete, onStatusChange, onCopy, o
                           <Button size="sm" variant="ghost" onClick={() => onCopy(item.development_prompt)}>
                             <Copy className="h-3 w-3 mr-1" /> Copy
                           </Button>
-                          <Button size="sm" variant="ghost" className="text-accent-700" onClick={() => onSend(item.development_prompt)}>
+                          <Button size="sm" variant="ghost" className="text-accent" onClick={() => onSend(item.development_prompt)}>
                             <Send className="h-3 w-3 mr-1" /> Send
                           </Button>
                         </div>

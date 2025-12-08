@@ -59,7 +59,7 @@ export default function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="p-6 flex items-center justify-center h-64 bg-[var(--color-background)]">
+      <div className="p-6 flex items-center justify-center h-64 bg-background">
         <RefreshCw className="h-6 w-6 animate-spin text-primary" />
       </div>
     );
@@ -77,7 +77,7 @@ export default function Dashboard() {
   );
 
   return (
-    <div className={`p-6 bg-[var(--color-background)] min-h-screen ${settings.compactMode ? "space-y-4" : ""}`}>
+    <div className={`p-6 bg-background min-h-screen ${settings.compactMode ? "space-y-4" : ""}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
