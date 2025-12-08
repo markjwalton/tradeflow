@@ -237,7 +237,7 @@ export default function ChecklistBuilder() {
               </div>
 
               {checklistData.items.length === 0 ? (
-                <div className="text-center py-8 text-charcoal-700">
+                <div className="text-center py-8 text-muted-foreground">
                   <CheckSquare className="h-12 w-12 mx-auto opacity-30 mb-2" />
                   <p>No items yet. Click "Add Item" to get started.</p>
                 </div>
