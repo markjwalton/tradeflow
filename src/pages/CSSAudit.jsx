@@ -1,11 +1,19 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Loader2, AlertTriangle, CheckCircle2, ChevronDown, ChevronRight, FileCode, Sparkles, Copy, Check } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Loader2, AlertTriangle, CheckCircle2, ChevronDown, ChevronRight, FileCode, Sparkles, Copy, Check, Save, History, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function CSSAudit() {
@@ -17,6 +25,14 @@ export default function CSSAudit() {
   const [scannedFiles, setScannedFiles] = useState([]);
   const [currentFile, setCurrentFile] = useState("");
   const [totalFiles, setTotalFiles] = useState(0);
+  const [selectedReportId, setSelectedReportId] = useState(null);
+  const [savingReport, setSavingReport] = useState(false);
+
+  // Fetch saved reports
+  const { data: savedReports = [], refetch: refetchReports } = useQuery({
+    queryKey: ['cssAuditReports'],
+    queryFn: () => base44.entities.CSSAuditReport.list('-created_date', 50)
+  });
 
   const handleAnalyze = async () => {
     setAnalyzing(true);
@@ -446,16 +462,67 @@ Return a comprehensive audit report.`,
       
       // Wait for scanning animation to complete
       await scanPromise;
-      
+
       setReport(result);
       setCurrentFile("");
       setScanProgress(100);
-      toast.success("Analysis complete");
+
+      // Auto-save report
+      await saveReport(result);
+
+      toast.success("Analysis complete & saved");
     } catch (error) {
       toast.error("Analysis failed: " + error.message);
       setScannedFiles(prev => prev.map(f => ({ ...f, status: "error" })));
     }
     setAnalyzing(false);
+  };
+
+  const saveReport = async (reportData) => {
+    try {
+      setSavingReport(true);
+      await base44.entities.CSSAuditReport.create({
+        name: `CSS Audit - ${new Date().toLocaleString()}`,
+        scan_date: new Date().toISOString(),
+        total_files_scanned: reportData.summary.totalFiles,
+        summary: reportData.summary,
+        files: reportData.files,
+        report_data: JSON.stringify(reportData)
+      });
+      await refetchReports();
+    } catch (error) {
+      toast.error("Failed to save report: " + error.message);
+    } finally {
+      setSavingReport(false);
+    }
+  };
+
+  const loadReport = async (reportId) => {
+    try {
+      const savedReport = savedReports.find(r => r.id === reportId);
+      if (savedReport) {
+        const reportData = JSON.parse(savedReport.report_data);
+        setReport(reportData);
+        setSelectedReportId(reportId);
+        toast.success("Report loaded");
+      }
+    } catch (error) {
+      toast.error("Failed to load report: " + error.message);
+    }
+  };
+
+  const deleteReport = async (reportId) => {
+    try {
+      await base44.entities.CSSAuditReport.delete(reportId);
+      await refetchReports();
+      if (selectedReportId === reportId) {
+        setReport(null);
+        setSelectedReportId(null);
+      }
+      toast.success("Report deleted");
+    } catch (error) {
+      toast.error("Failed to delete report: " + error.message);
+    }
   };
 
   const handleCopyReport = () => {
@@ -507,7 +574,35 @@ Return a comprehensive audit report.`,
             AI-powered analysis of design token violations
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center flex-wrap">
+          {savedReports.length > 0 && (
+            <Select value={selectedReportId || ""} onValueChange={loadReport}>
+              <SelectTrigger className="w-[280px]">
+                <History className="h-4 w-4 mr-2" />
+                <SelectValue placeholder="Load saved report..." />
+              </SelectTrigger>
+              <SelectContent>
+                {savedReports.map(r => (
+                  <SelectItem key={r.id} value={r.id}>
+                    <div className="flex items-center justify-between w-full">
+                      <span className="truncate">{r.name}</span>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 ml-2"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteReport(r.id);
+                        }}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
           {report && (
             <Button variant="outline" onClick={handleCopyReport}>
               {copiedReport ? <Check className="h-4 w-4 mr-2" /> : <Copy className="h-4 w-4 mr-2" />}
