@@ -694,7 +694,7 @@ When updating existing code:
                 </p>
                 <Button 
                   size="lg"
-                  className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
                   onClick={() => {
                     const url = window.location.origin + "/ComponentShowcase";
                     window.open(url, '_blank');
@@ -732,7 +732,7 @@ When updating existing code:
                   View Showcase
                 </Button>
                 <Button 
-                  className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
                   onClick={() => toast.success("Package documentation ready to use!")}
                 >
                   <CheckCircle2 className="h-4 w-4 mr-2" />

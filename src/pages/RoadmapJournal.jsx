@@ -661,7 +661,7 @@ Return as JSON:
                               href={att.url} 
                               target="_blank" 
                               rel="noopener noreferrer"
-                              className="flex items-center gap-1 bg-info-50 text-info-foreground rounded px-2 py-1 text-sm hover:bg-info-50/80"
+                              className="flex items-center gap-1 bg-info-50 text-info rounded px-2 py-1 text-sm hover:bg-info-50/80"
                             >
                               <FileText className="h-3 w-3" />
                               {att.friendly_name}
@@ -757,7 +757,7 @@ Return as JSON:
                                   href={att.url} 
                                   target="_blank" 
                                   rel="noopener noreferrer"
-                                  className="flex items-center gap-1 bg-info-50 text-info-foreground rounded px-2 py-1 text-sm hover:bg-info-50/80"
+                                  className="flex items-center gap-1 bg-info-50 text-info rounded px-2 py-1 text-sm hover:bg-info-50/80"
                                 >
                                   <FileText className="h-3 w-3" />
                                   {att.friendly_name}
