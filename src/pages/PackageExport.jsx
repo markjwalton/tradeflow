@@ -251,7 +251,7 @@ export default function PackageExport() {
           </Link>
           <div>
             <h1 className="text-2xl font-heading text-[var(--color-midnight)] flex items-center gap-2">
-              <Download className="h-6 w-6 text-[var(--color-primary)]" />
+              <Download className="h-6 w-6 text-primary-500" />
               Export Package
             </h1>
             <p className="text-[var(--color-charcoal)]">
@@ -264,7 +264,7 @@ export default function PackageExport() {
             <Copy className="h-4 w-4 mr-2" />
             Copy
           </Button>
-          <Button onClick={downloadFile} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
+          <Button onClick={downloadFile} className="bg-primary-500 hover:bg-primary-600 text-white">
             <Download className="h-4 w-4 mr-2" />
             Download
           </Button>
@@ -273,7 +273,7 @@ export default function PackageExport() {
 
       <div className="grid md:grid-cols-4 gap-6">
         {/* Options Sidebar */}
-        <Card className="border-[var(--color-background-muted)]">
+        <Card className="border-background-muted">
           <CardHeader>
             <CardTitle className="text-[var(--color-midnight)] flex items-center gap-2">
               <Settings className="h-4 w-4" />
@@ -303,7 +303,7 @@ export default function PackageExport() {
               />
             </div>
 
-            <div className="pt-4 border-t border-[var(--color-background-muted)]">
+            <div className="pt-4 border-t border-background-muted">
               <Label className="text-sm font-medium">Token Summary</Label>
               <div className="mt-2 space-y-2 text-sm">
                 <div className="flex justify-between">

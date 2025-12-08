@@ -141,9 +141,9 @@ export default function PackageDetail() {
   }
 
   const statusColors = {
-    draft: "bg-[var(--color-charcoal)]/20 text-[var(--color-charcoal)]",
-    published: "bg-[var(--color-success)]/20 text-[var(--color-success-dark)]",
-    deprecated: "bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]"
+    draft: "bg-muted text-muted-foreground",
+    published: "bg-success-50 text-success-foreground",
+    deprecated: "bg-warning/10 text-warning-foreground"
   };
 
   return (
@@ -158,7 +158,7 @@ export default function PackageDetail() {
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <Package className="h-6 w-6 text-[var(--color-primary)]" />
+              <Package className="h-6 w-6 text-primary-500" />
               <h1 className="text-2xl font-heading text-[var(--color-midnight)]">
                 {pkg.package_name}
               </h1>
@@ -174,7 +174,7 @@ export default function PackageDetail() {
           {pkg.status === "draft" && (
             <Button 
               onClick={handlePublish}
-              className="bg-[var(--color-success)] hover:bg-[var(--color-success-dark)] text-white"
+              className="bg-success-foreground hover:bg-primary-600 text-white"
             >
               <CheckCircle2 className="h-4 w-4 mr-2" />
               Publish
@@ -207,7 +207,7 @@ export default function PackageDetail() {
         <TabsContent value="overview" className="space-y-4">
           <div className="grid md:grid-cols-2 gap-4">
             {/* Package Info */}
-            <Card className="border-[var(--color-background-muted)]">
+            <Card className="border-background-muted">
               <CardHeader>
                 <CardTitle className="text-[var(--color-midnight)]">Package Information</CardTitle>
               </CardHeader>
@@ -270,7 +270,7 @@ export default function PackageDetail() {
             {/* Parent Package / Customer Info */}
             <div className="space-y-4">
               {parentPkg && (
-                <Card className="border-[var(--color-background-muted)]">
+                <Card className="border-background-muted">
                   <CardHeader>
                     <CardTitle className="text-[var(--color-midnight)] flex items-center gap-2">
                       <GitBranch className="h-4 w-4" />
@@ -279,16 +279,16 @@ export default function PackageDetail() {
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center gap-3">
-                      <Package className="h-8 w-8 text-[var(--color-primary)]" />
+                      <Package className="h-8 w-8 text-primary-500" />
                       <div>
                         <p className="font-medium text-[var(--color-midnight)]">{parentPkg.package_name}</p>
                         <p className="text-sm text-[var(--color-charcoal)]">v{pkg.parent_version}</p>
                       </div>
                     </div>
                     {pkg.update_available && (
-                      <div className="mt-3 p-2 bg-[var(--color-warning)]/10 rounded-lg flex items-center gap-2">
-                        <AlertCircle className="h-4 w-4 text-[var(--color-warning)]" />
-                        <span className="text-sm text-[var(--color-warning-dark)]">Update available</span>
+                      <div className="mt-3 p-2 bg-warning/10 rounded-lg flex items-center gap-2">
+                        <AlertCircle className="h-4 w-4 text-warning-foreground" />
+                        <span className="text-sm text-warning-foreground">Update available</span>
                       </div>
                     )}
                   </CardContent>
@@ -296,7 +296,7 @@ export default function PackageDetail() {
               )}
 
               {pkg.package_type === "customer_theme" && (
-                <Card className="border-[var(--color-background-muted)]">
+                <Card className="border-background-muted">
                   <CardHeader>
                     <CardTitle className="text-[var(--color-midnight)] flex items-center gap-2">
                       <Building2 className="h-4 w-4" />
@@ -321,35 +321,35 @@ export default function PackageDetail() {
               )}
 
               {/* Token Summary */}
-              <Card className="border-[var(--color-background-muted)]">
+              <Card className="border-background-muted">
                 <CardHeader>
                   <CardTitle className="text-[var(--color-midnight)]">Token Summary</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="p-3 bg-[var(--color-background)] rounded-lg text-center">
-                      <Palette className="h-5 w-5 mx-auto mb-1 text-[var(--color-primary)]" />
+                    <div className="p-3 bg-background rounded-lg text-center">
+                      <Palette className="h-5 w-5 mx-auto mb-1 text-primary-500" />
                       <p className="text-lg font-medium text-[var(--color-midnight)]">
                         {Object.keys(pkg.design_tokens?.colors || {}).length}
                       </p>
                       <p className="text-xs text-[var(--color-charcoal)]">Colors</p>
                     </div>
-                    <div className="p-3 bg-[var(--color-background)] rounded-lg text-center">
-                      <Type className="h-5 w-5 mx-auto mb-1 text-[var(--color-secondary)]" />
+                    <div className="p-3 bg-background rounded-lg text-center">
+                      <Type className="h-5 w-5 mx-auto mb-1 text-secondary-400" />
                       <p className="text-lg font-medium text-[var(--color-midnight)]">
                         {Object.keys(pkg.design_tokens?.typography || {}).length}
                       </p>
                       <p className="text-xs text-[var(--color-charcoal)]">Typography</p>
                     </div>
-                    <div className="p-3 bg-[var(--color-background)] rounded-lg text-center">
-                      <Maximize className="h-5 w-5 mx-auto mb-1 text-[var(--color-accent)]" />
+                    <div className="p-3 bg-background rounded-lg text-center">
+                      <Maximize className="h-5 w-5 mx-auto mb-1 text-accent-400" />
                       <p className="text-lg font-medium text-[var(--color-midnight)]">
                         {Object.keys(pkg.design_tokens?.spacing || {}).length}
                       </p>
                       <p className="text-xs text-[var(--color-charcoal)]">Spacing</p>
                     </div>
-                    <div className="p-3 bg-[var(--color-background)] rounded-lg text-center">
-                      <Layers className="h-5 w-5 mx-auto mb-1 text-[var(--color-info)]" />
+                    <div className="p-3 bg-background rounded-lg text-center">
+                      <Layers className="h-5 w-5 mx-auto mb-1 text-info-foreground" />
                       <p className="text-lg font-medium text-[var(--color-midnight)]">
                         {Object.keys(pkg.design_tokens?.effects || {}).length}
                       </p>
@@ -385,10 +385,10 @@ export default function PackageDetail() {
                   {[...(pkg.changelog || [])].reverse().map((entry, idx) => (
                     <div 
                       key={idx} 
-                      className="flex gap-4 p-4 border border-[var(--color-background-muted)] rounded-lg"
+                      className="flex gap-4 p-4 border border-background-muted rounded-lg"
                     >
                       <div className="flex-shrink-0">
-                        <Badge className="bg-[var(--color-primary)]/20 text-[var(--color-primary)]">
+                        <Badge className="bg-primary-100 text-primary-700">
                           v{entry.version}
                         </Badge>
                       </div>
@@ -402,7 +402,7 @@ export default function PackageDetail() {
                           ))}
                         </ul>
                         {entry.breaking_changes && (
-                          <Badge className="mt-2 bg-[var(--color-destructive)]/20 text-[var(--color-destructive)]">
+                          <Badge className="mt-2 bg-destructive-50 text-destructive-700">
                             Breaking Changes
                           </Badge>
                         )}
@@ -439,7 +439,7 @@ export default function PackageDetail() {
                 </Select>
               </div>
 
-              <div className="pt-4 border-t border-[var(--color-background-muted)]">
+              <div className="pt-4 border-t border-background-muted">
                 <h4 className="font-medium text-[var(--color-midnight)] mb-2">Danger Zone</h4>
                 <Button 
                   variant="destructive"
