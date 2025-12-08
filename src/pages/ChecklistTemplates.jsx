@@ -94,7 +94,7 @@ export default function ChecklistTemplates() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-light font-display text-midnight-900">Checklist Templates</h1>
-          <p className="text-charcoal-700">Create and manage reusable checklists</p>
+          <p className="text-muted-foreground">Create and manage reusable checklists</p>
         </div>
         <Link to={createPageUrl("ChecklistBuilder")}>
           <Button>
@@ -138,7 +138,7 @@ export default function ChecklistTemplates() {
         <div className="text-center py-12">
           <ListChecks className="h-12 w-12 mx-auto opacity-30 mb-4 text-muted-foreground" />
           <h3 className="text-lg font-medium text-midnight-900">No checklists found</h3>
-          <p className="text-charcoal-700 mb-4">
+          <p className="text-muted-foreground mb-4">
             {search || categoryFilter !== "all"
               ? "Try adjusting your filters"
               : "Create your first checklist template"}

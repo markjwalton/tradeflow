@@ -265,7 +265,7 @@ export default function FormBuilder() {
             </div>
           ) : formData.fields.length === 0 ? (
             <div className="h-full flex items-center justify-center">
-              <div className="text-center text-charcoal-700">
+              <div className="text-center text-muted-foreground">
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
                   <Plus className="h-8 w-8" />
                 </div>

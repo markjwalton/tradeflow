@@ -97,7 +97,7 @@ export default function FormTemplates() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-light font-display text-midnight-900">Form Templates</h1>
-          <p className="text-charcoal-700">Create and manage reusable form templates</p>
+          <p className="text-muted-foreground">Create and manage reusable form templates</p>
         </div>
         <Link to={createPageUrl("FormBuilder")}>
           <Button>
@@ -142,7 +142,7 @@ export default function FormTemplates() {
         <div className="text-center py-12">
           <FileText className="h-12 w-12 mx-auto opacity-30 mb-4 text-muted-foreground" />
           <h3 className="text-lg font-medium text-midnight-900">No forms found</h3>
-          <p className="text-charcoal-700 mb-4">
+          <p className="text-muted-foreground mb-4">
             {search || categoryFilter !== "all"
               ? "Try adjusting your filters"
               : "Create your first form template"}
