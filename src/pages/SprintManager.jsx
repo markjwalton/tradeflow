@@ -109,10 +109,10 @@ export default function SprintManager() {
   };
 
   const statusColors = {
-    planning: "bg-info-50 text-info-foreground",
-    active: "bg-success-50 text-success-foreground",
+    planning: "bg-info-50 text-info",
+    active: "bg-success-50 text-success",
     completed: "bg-muted text-muted-foreground",
-    cancelled: "bg-destructive-50 text-destructive-700",
+    cancelled: "bg-destructive-50 text-destructive",
   };
 
   const activeSprints = sprints.filter(s => s.status === "active");
@@ -279,10 +279,10 @@ function SprintCard({ sprint, items, onEdit, onDelete, onStatusChange, onCopy, o
   const [expanded, setExpanded] = useState(false);
 
   const statusColors = {
-    planning: "bg-info-50 text-info-foreground",
-    active: "bg-success-50 text-success-foreground",
+    planning: "bg-info-50 text-info",
+    active: "bg-success-50 text-success",
     completed: "bg-muted text-muted-foreground",
-    cancelled: "bg-destructive-50 text-destructive-700",
+    cancelled: "bg-destructive-50 text-destructive",
   };
 
   const combinedPrompt = items
