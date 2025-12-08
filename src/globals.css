@@ -399,7 +399,7 @@
 
 @theme {
   /* === FONT FAMILY THEME TOKENS === */
-  --font-sans: "degular-display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "mrs-eaves-xl-serif-narrow", Georgia, "Times New Roman", serif;
   --font-serif: "mrs-eaves-xl-serif-narrow", Georgia, "Times New Roman", serif;
   --font-mono: "source-code-pro", "SF Mono", Monaco, Inconsolata, "Roboto Mono", monospace;
 }
