@@ -145,13 +145,13 @@ function IssuesGroupedView({ issues, generateAIRecommendation, isGeneratingRecom
           }>
             <button
               onClick={() => toggleSeverity(severity)}
-              className="w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+              className="w-full p-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
             >
               <div className="flex items-center gap-4">
                 {isExpanded ? (
-                  <ChevronDown className="h-5 w-5 text-gray-400" />
+                  <ChevronDown className="h-5 w-5 text-muted-foreground" />
                 ) : (
-                  <ChevronRight className="h-5 w-5 text-gray-400" />
+                  <ChevronRight className="h-5 w-5 text-muted-foreground" />
                 )}
                 <div className="flex items-center gap-2">
                   {severityIcons[severity]}
@@ -193,7 +193,7 @@ function IssuesGroupedView({ issues, generateAIRecommendation, isGeneratingRecom
                           <Badge variant="outline">{issue.issue_type.replace(/_/g, " ")}</Badge>
                           <Badge variant="outline">{issue.status}</Badge>
                         </div>
-                        <p className="text-sm text-charcoal-700 mb-2">{issue.description}</p>
+                        <p className="text-sm text-muted-foreground mb-2">{issue.description}</p>
                         
                         {issue.ai_recommendation && (
                           <div className="bg-accent-100 p-3 rounded-lg mt-2">
@@ -201,7 +201,7 @@ function IssuesGroupedView({ issues, generateAIRecommendation, isGeneratingRecom
                               <Sparkles className="h-4 w-4" />
                               AI Recommendation
                             </div>
-                            <p className="text-sm text-midnight-900">{issue.ai_recommendation}</p>
+                            <p className="text-sm text-foreground">{issue.ai_recommendation}</p>
                             {issue.suggested_actions?.length > 0 && (
                               <ul className="mt-2 space-y-1">
                                 {issue.suggested_actions.map((action, i) => (
@@ -313,13 +313,13 @@ function MetricsGroupedView({ metrics, getThreshold }) {
           <Card key={type}>
             <button
               onClick={() => toggleType(type)}
-              className="w-full p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+              className="w-full p-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
             >
               <div className="flex items-center gap-4">
                 {isExpanded ? (
-                  <ChevronDown className="h-5 w-5 text-gray-400" />
+                  <ChevronDown className="h-5 w-5 text-muted-foreground" />
                 ) : (
-                  <ChevronRight className="h-5 w-5 text-gray-400" />
+                  <ChevronRight className="h-5 w-5 text-muted-foreground" />
                 )}
                 <div className="flex items-center gap-2">
                   <Icon className="h-5 w-5 text-info" />
@@ -940,7 +940,7 @@ Provide:
     <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-midnight-900 font-heading">
+          <h1 className="text-2xl font-light flex items-center gap-2 text-foreground font-heading">
             <Activity className="h-6 w-6 text-primary" />
             Performance Monitor
           </h1>
@@ -1181,7 +1181,7 @@ Provide:
             </div>
           ) : filteredMetrics.length === 0 ? (
             <Card>
-              <CardContent className="py-12 text-center text-gray-500">
+              <CardContent className="py-12 text-center text-muted-foreground">
                 No metrics yet. Run a scan to collect data.
               </CardContent>
             </Card>

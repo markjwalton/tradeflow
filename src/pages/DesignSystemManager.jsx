@@ -302,7 +302,7 @@ For each recommendation, provide:
             <div className="flex items-center gap-3">
               <AlertCircle className="h-5 w-5 text-warning" />
               <div className="flex-1">
-                <p className="font-medium text-midnight-900">
+                <p className="font-medium text-foreground">
                   {pendingRecs.length} update recommendations pending review
                 </p>
                 <p className="text-sm text-muted-foreground">
@@ -359,11 +359,11 @@ For each recommendation, provide:
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div>
-                        <CardTitle className="text-midnight-900 flex items-center gap-2">
+                        <CardTitle className="text-foreground flex items-center gap-2">
                           <Palette className="h-5 w-5 text-primary" />
                           {pkg.package_name}
                         </CardTitle>
-                        <code className="text-xs text-charcoal-700">{pkg.package_code}</code>
+                        <code className="text-xs text-muted-foreground">{pkg.package_code}</code>
                       </div>
                       <Badge className="bg-success-50 text-success">
                         v{pkg.version}
@@ -428,7 +428,7 @@ For each recommendation, provide:
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div>
-                          <CardTitle className="text-midnight-900 flex items-center gap-2">
+                          <CardTitle className="text-foreground flex items-center gap-2">
                             <Building2 className="h-5 w-5 text-secondary" />
                             {pkg.package_name}
                           </CardTitle>
@@ -520,7 +520,7 @@ For each recommendation, provide:
               {components.map(comp => (
                 <Card key={comp.id}>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-base text-midnight-900">
+                    <CardTitle className="text-base text-foreground">
                       {comp.component_name}
                     </CardTitle>
                     <div className="flex items-center gap-2 mt-1">
@@ -584,7 +584,7 @@ For each recommendation, provide:
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <CardTitle className="text-base text-midnight-900">
+                          <CardTitle className="text-base text-foreground">
                             {rec.title}
                           </CardTitle>
                           <Badge className={impactColors[rec.impact]}>
@@ -617,7 +617,7 @@ For each recommendation, provide:
                       </p>
                       {rec.reasoning && (
                         <div className="bg-accent-100 p-3 rounded-md text-sm">
-                          <p className="font-medium text-midnight-900 mb-1">AI Reasoning:</p>
+                          <p className="font-medium text-foreground mb-1">AI Reasoning:</p>
                           <p className="text-muted-foreground">{rec.reasoning}</p>
                         </div>
                       )}
@@ -626,11 +626,11 @@ For each recommendation, provide:
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
                         <span className="text-muted-foreground font-medium">Current:</span>
-                        <span className="ml-2 text-midnight-900">{rec.current_version}</span>
+                        <span className="ml-2 text-foreground">{rec.current_version}</span>
                       </div>
                       <div>
                         <span className="text-muted-foreground font-medium">Recommended:</span>
-                        <span className="ml-2 text-midnight-900">{rec.recommended_version}</span>
+                        <span className="ml-2 text-foreground">{rec.recommended_version}</span>
                       </div>
                       <div>
                         <span className="text-muted-foreground font-medium">Effort:</span>
@@ -648,7 +648,7 @@ For each recommendation, provide:
 
                     {rec.benefits?.length > 0 && (
                       <div>
-                        <p className="text-sm font-medium text-midnight-900 mb-1">Benefits:</p>
+                        <p className="text-sm font-medium text-foreground mb-1">Benefits:</p>
                         <ul className="text-sm text-muted-foreground space-y-1">
                           {rec.benefits.map((b, i) => (
                             <li key={i} className="flex items-start gap-2">
@@ -703,22 +703,22 @@ For each recommendation, provide:
             {customerPackages.map(pkg => (
               <Card key={pkg.id}>
                 <CardHeader>
-                  <CardTitle className="text-midnight-900">
+                  <CardTitle className="text-foreground">
                     {pkg.customer_company || pkg.customer_name}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div>
-                    <p className="text-sm font-medium text-midnight-900">Package</p>
+                    <p className="text-sm font-medium text-foreground">Package</p>
                     <p className="text-sm text-muted-foreground">{pkg.package_name} v{pkg.version}</p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-midnight-900">Contact</p>
+                    <p className="text-sm font-medium text-foreground">Contact</p>
                     <p className="text-sm text-muted-foreground">{pkg.customer_email}</p>
                   </div>
                   {pkg.parent_package_id && (
                     <div>
-                      <p className="text-sm font-medium text-midnight-900">Based On</p>
+                      <p className="text-sm font-medium text-foreground">Based On</p>
                       <p className="text-sm text-muted-foreground">
                         {packages.find(p => p.id === pkg.parent_package_id)?.package_name} v{pkg.parent_version}
                       </p>
@@ -759,12 +759,12 @@ For each recommendation, provide:
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="text-midnight-900">Create Design System Package</DialogTitle>
+            <DialogTitle className="text-foreground">Create Design System Package</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-body-small text-midnight-900">Package Name *</label>
+                <label className="text-body-small text-foreground">Package Name *</label>
                 <Input
                   value={formData.package_name}
                   onChange={(e) => setFormData({ ...formData, package_name: e.target.value })}
@@ -772,7 +772,7 @@ For each recommendation, provide:
                 />
               </div>
               <div>
-                <label className="text-body-small text-midnight-900">Package Code *</label>
+                <label className="text-body-small text-foreground">Package Code *</label>
                 <Input
                   value={formData.package_code}
                   onChange={(e) => setFormData({ ...formData, package_code: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
@@ -783,7 +783,7 @@ For each recommendation, provide:
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-body-small text-midnight-900">Package Type</label>
+                <label className="text-body-small text-foreground">Package Type</label>
                 <Select 
                   value={formData.package_type} 
                   onValueChange={(v) => setFormData({ ...formData, package_type: v })}
@@ -799,7 +799,7 @@ For each recommendation, provide:
                 </Select>
               </div>
               <div>
-                <label className="text-body-small text-midnight-900">Version</label>
+                <label className="text-body-small text-foreground">Version</label>
                 <Input
                   value={formData.version}
                   onChange={(e) => setFormData({ ...formData, version: e.target.value })}
@@ -816,7 +816,7 @@ For each recommendation, provide:
                   </h4>
                   <div className="space-y-3">
                     <div>
-                      <label className="text-body-small text-midnight-900">Customer Name</label>
+                      <label className="text-body-small text-foreground">Customer Name</label>
                       <Input
                         value={formData.customer_name}
                         onChange={(e) => setFormData({ ...formData, customer_name: e.target.value })}
@@ -824,7 +824,7 @@ For each recommendation, provide:
                       />
                     </div>
                     <div>
-                      <label className="text-body-small text-midnight-900">Company</label>
+                      <label className="text-body-small text-foreground">Company</label>
                       <Input
                         value={formData.customer_company}
                         onChange={(e) => setFormData({ ...formData, customer_company: e.target.value })}
@@ -832,7 +832,7 @@ For each recommendation, provide:
                       />
                     </div>
                     <div>
-                      <label className="text-body-small text-midnight-900">Email</label>
+                      <label className="text-body-small text-foreground">Email</label>
                       <Input
                         type="email"
                         value={formData.customer_email}
@@ -844,7 +844,7 @@ For each recommendation, provide:
                 </div>
 
                 <div>
-                  <label className="text-body-small text-midnight-900">Based On Package</label>
+                  <label className="text-body-small text-foreground">Based On Package</label>
                   <Select 
                     value={formData.parent_package_id || ""} 
                     onValueChange={(v) => setFormData({ 
@@ -869,7 +869,7 @@ For each recommendation, provide:
             )}
 
             <div>
-              <label className="text-body-small text-midnight-900">Description</label>
+              <label className="text-body-small text-foreground">Description</label>
               <Textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}

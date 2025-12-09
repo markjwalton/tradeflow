@@ -586,11 +586,11 @@ Create a development prompt that:
       <div className="mb-4 p-3 bg-primary-50 border border-primary/20 rounded-lg flex items-center justify-between">
         <div className="flex items-center gap-2">
           <FileText className="h-4 w-4 text-primary" />
-          <span className="text-sm text-midnight-900">
+          <span className="text-sm text-foreground">
             RuleBook: {rules.length} active rules loaded for AI reasoning
           </span>
         </div>
-        <Badge className="bg-primary-100 text-primary">
+        <Badge className="bg-primary/10 text-primary">
           {rules.filter(r => r.category === "ui_ux").length} UI/UX rules
         </Badge>
       </div>
@@ -637,7 +637,7 @@ Create a development prompt that:
               <CardContent className="py-12 text-center">
                 <TechIcon className={`h-12 w-12 mx-auto mb-4 ${techConfig.color}`} />
                 <h3 className="text-h4">No {techConfig.name} Releases Tracked</h3>
-                <p className="text-charcoal-700 mt-2">Click "Check for Updates" to find the latest releases</p>
+                <p className="text-muted-foreground mt-2">Click "Check for Updates" to find the latest releases</p>
               </CardContent>
             </Card>
           ) : (
