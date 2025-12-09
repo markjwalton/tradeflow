@@ -211,7 +211,6 @@ export default function Layout({ children, currentPageName }) {
     return <div className="min-h-screen bg-[var(--color-background)]">{children}</div>;
   }
 
-  // Fullscreen pages with their own navigation
   if (fullscreenPages.includes(currentPageName)) {
     const fullscreenContextValue = {
       tenant: currentTenant,
@@ -224,40 +223,8 @@ export default function Layout({ children, currentPageName }) {
     };
     return (
       <TenantContext.Provider value={fullscreenContextValue}>
-        <div className="min-h-screen flex flex-col">
-          {/* Minimal Top Bar */}
-          <header className="h-14 bg-[var(--color-background-paper)] border-b border-[var(--color-background-muted)] flex items-center justify-between px-4">
-            <div className="flex items-center gap-3">
-              <span className="font-semibold text-[var(--color-midnight)]">Admin Console</span>
-              <span className="text-muted-foreground">|</span>
-              <span className="text-muted-foreground">{currentPageName}</span>
-            </div>
-            <div className="flex items-center gap-3">
-              {currentUser && (
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <User className="h-4 w-4" />
-                  <span>{currentUser.email}</span>
-                </div>
-              )}
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => {
-                  const tenantAccessUrl = createPageUrl("TenantAccess");
-                  base44.auth.logout(window.location.origin + tenantAccessUrl);
-                }}
-                className="gap-2 text-muted-foreground"
-              >
-                <LogOut className="h-4 w-4" />
-                Logout
-              </Button>
-            </div>
-          </header>
-          <main className="flex-1 overflow-hidden">
-            {children}
-          </main>
-          <GlobalAIAssistant />
-        </div>
+        <div className="min-h-screen">{children}</div>
+        <GlobalAIAssistant />
       </TenantContext.Provider>
     );
   }
