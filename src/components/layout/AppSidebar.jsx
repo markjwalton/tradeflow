@@ -99,15 +99,16 @@ export function AppSidebar({ navItems = [] }) {
           <button
             onClick={() => toggleFolder(item.id)}
             className={cn(
-              "w-full flex items-center justify-center [padding:var(--spacing-3)] [border-radius:var(--radius-lg)] transition-colors group",
+              "w-full flex items-center justify-center transition-colors group",
+              "[padding:var(--spacing-3)] [border-radius:var(--radius-lg)]",
               childActive ? "bg-sidebar-primary" : "hover:bg-sidebar-accent"
             )}
           >
             <FolderIcon className={cn(
               "h-5 w-5 transition-colors",
               childActive 
-                ? "[color:var(--sidebar-primary-foreground)]"
-                : "[color:var(--secondary-400)] group-hover:[color:var(--sidebar-foreground)]"
+                ? "text-sidebar-primary-foreground"
+                : "text-secondary-400 group-hover:text-sidebar-foreground"
             )} />
           </button>
         );
@@ -119,7 +120,7 @@ export function AppSidebar({ navItems = [] }) {
                 {folderButton}
               </TooltipTrigger>
               <TooltipContent side="right" className="text-base [padding:var(--spacing-3)]">
-                {item.name}
+                {item.tooltip_text || item.name}
               </TooltipContent>
             </Tooltip>
             {isExpanded && hasChildren && (
@@ -147,9 +148,9 @@ export function AppSidebar({ navItems = [] }) {
               isExpanded ? <ChevronDown className="h-4 w-4 text-sidebar-foreground/50" /> : <ChevronRight className="h-4 w-4 text-sidebar-foreground/50" />
             )}
             {isExpanded ? (
-              <FolderOpen className="h-5 w-5 [color:var(--secondary-400)]" />
+              <FolderOpen className="h-5 w-5 text-secondary-400" />
             ) : (
-              <Folder className="h-5 w-5 [color:var(--secondary-400)]" />
+              <Folder className="h-5 w-5 text-secondary-400" />
             )}
             <span className="flex-1 text-left">{item.name}</span>
           </button>
@@ -184,8 +185,8 @@ export function AppSidebar({ navItems = [] }) {
         <ChildIcon className={cn(
           "h-5 w-5 flex-shrink-0 transition-colors",
           isActive 
-            ? "[color:var(--sidebar-primary-foreground)]" 
-            : "[color:var(--primary-600)] group-hover:[color:var(--sidebar-foreground)]"
+            ? "text-sidebar-primary-foreground" 
+            : "text-primary-600 group-hover:text-sidebar-foreground"
         )} />
         {showLabels && <span className={cn("truncate text-sm", isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground/70")}>{item.name}</span>}
       </Link>
@@ -198,10 +199,10 @@ export function AppSidebar({ navItems = [] }) {
             {linkContent}
           </TooltipTrigger>
           <TooltipContent side="right" className="text-base [padding:var(--spacing-3)]">
-            {item.name}
+            {item.tooltip_text || item.name}
           </TooltipContent>
-        </Tooltip>
-      );
+          </Tooltip>
+          );
     }
     
     return linkContent;
