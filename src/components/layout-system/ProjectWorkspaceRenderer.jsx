@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import { getValueByBinding, formatValue, getIntentClasses } from "./utils";
-import RightPanelEditor from "./RightPanelEditor";
+import LayoutConfigEditor from "./LayoutConfigEditor";
 
 /**
  * Renders the project_workspace pattern
