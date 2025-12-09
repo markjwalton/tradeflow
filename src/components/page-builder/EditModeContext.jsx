@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { base44 } from "@/api/base44Client";
 
 const EditModeContext = createContext(null);
 
@@ -12,16 +13,40 @@ export function EditModeProvider({ children }) {
   const [pageTextElements, setPageTextElements] = useState([]);
   const [customProperties, setCustomProperties] = useState([]);
 
-  // Load edit mode state from localStorage
+  // Load edit mode state from user preferences
   useEffect(() => {
-    const savedEditMode = localStorage.getItem("editMode") === "true";
-    setIsEditMode(savedEditMode);
+    const loadEditMode = async () => {
+      try {
+        const user = await base44.auth.me();
+        if (user?.ui_preferences?.liveEditMode !== undefined) {
+          setIsEditMode(user.ui_preferences.liveEditMode);
+        }
+      } catch (e) {
+        // User not logged in or error
+      }
+    };
+    loadEditMode();
+
+    // Listen for preference changes
+    const handlePreferencesChange = (event) => {
+      if (event.detail.liveEditMode !== undefined) {
+        setIsEditMode(event.detail.liveEditMode);
+        if (!event.detail.liveEditMode) {
+          // Clean up when exiting edit mode
+          setShowComponentPalette(false);
+          setShowTokenPicker(false);
+          setSelectedElement(null);
+        }
+      }
+    };
+
+    window.addEventListener('ui-preferences-changed', handlePreferencesChange);
+    return () => window.removeEventListener('ui-preferences-changed', handlePreferencesChange);
   }, []);
 
   const toggleEditMode = () => {
     const newValue = !isEditMode;
     setIsEditMode(newValue);
-    localStorage.setItem("editMode", newValue.toString());
     
     if (!newValue) {
       // Clean up when exiting edit mode

@@ -2,12 +2,19 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
-import { X, ChevronDown, ChevronUp, Layout, Palette, Layers, Settings, Maximize2, Minimize2 } from "lucide-react";
+import { X, ChevronDown, ChevronUp, Layout, Palette, Layers, Settings, Maximize2, Minimize2, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 export function TopEditorPanel({ isOpen, onClose }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [viewMode, setViewMode] = useState("focus"); // 'focus' or 'full'
+  const [hasChanges, setHasChanges] = useState(false);
+
+  const handleApplyChanges = () => {
+    toast.success("Changes applied");
+    setHasChanges(false);
+  };
 
   if (!isOpen) return null;
 
@@ -30,6 +37,16 @@ export function TopEditorPanel({ isOpen, onClose }) {
         </div>
         
         <div className="flex items-center gap-2">
+          {hasChanges && (
+            <Button
+              size="sm"
+              onClick={handleApplyChanges}
+              className="bg-primary text-primary-foreground hover:bg-primary/90"
+            >
+              <Check className="h-4 w-4 mr-1" />
+              Apply Changes
+            </Button>
+          )}
           <Button
             variant="ghost"
             size="sm"

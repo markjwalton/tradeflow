@@ -165,6 +165,7 @@ function ProfileMenu({ user }) {
     showAIAssistant: true,
     showPageEditor: true,
     showEditorBubble: true,
+    liveEditMode: false,
   });
 
   useEffect(() => {
@@ -176,6 +177,7 @@ function ProfileMenu({ user }) {
             showAIAssistant: currentUser.ui_preferences.showAIAssistant ?? true,
             showPageEditor: currentUser.ui_preferences.showPageEditor ?? true,
             showEditorBubble: currentUser.ui_preferences.showEditorBubble ?? true,
+            liveEditMode: currentUser.ui_preferences.liveEditMode ?? false,
           });
         }
       } catch (e) {
@@ -264,6 +266,16 @@ function ProfileMenu({ user }) {
               id="editor-bubble"
               checked={preferences.showEditorBubble}
               onCheckedChange={(checked) => updatePreference('showEditorBubble', checked)}
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="live-edit" className="text-sm cursor-pointer">
+              Live Edit Mode
+            </Label>
+            <Switch
+              id="live-edit"
+              checked={preferences.liveEditMode}
+              onCheckedChange={(checked) => updatePreference('liveEditMode', checked)}
             />
           </div>
         </div>

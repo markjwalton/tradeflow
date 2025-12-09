@@ -256,15 +256,6 @@ export function PageSettingsPanel({ currentPageName }) {
         </SheetHeader>
 
         <div className="space-y-6 py-6 px-6">
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <Label>Live Edit Mode</Label>
-              <p className="text-xs text-muted-foreground">
-                Click elements to style them with design tokens
-              </p>
-            </div>
-            <Switch checked={isEditMode} onCheckedChange={toggleEditMode} />
-          </div>
 
           {customProperties.length > 0 && (
             <Collapsible open={propertiesOpen} onOpenChange={setPropertiesOpen}>
