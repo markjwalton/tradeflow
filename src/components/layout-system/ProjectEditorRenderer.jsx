@@ -184,6 +184,7 @@ function FieldComponent({ field, value, onChange }) {
       );
     
     case "DatePickerField":
+    case "DateField":
       return (
         <Input
           type="date"
