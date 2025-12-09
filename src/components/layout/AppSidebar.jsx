@@ -47,6 +47,8 @@ export function AppSidebar({ navItems = [] }) {
     const isFolder = item.item_type === "folder";
     const Icon = getIcon(item.icon);
     const isExpanded = expandedFolders.has(item.id);
+    const iconSize = item.icon_size || 20;
+    const iconStrokeWidth = item.icon_stroke_width || 2;
 
     // Build page URL from page_url field
     const pageUrl = item.page_url || "";
@@ -70,12 +72,12 @@ export function AppSidebar({ navItems = [] }) {
               childActive ? "bg-sidebar-primary" : "hover:bg-sidebar-accent"
             )}
           >
-            <FolderIcon className={cn(
-              "h-5 w-5 transition-colors",
-              childActive 
-                ? "text-sidebar-primary-foreground"
-                : "text-secondary-400 group-hover:text-sidebar-foreground"
-            )} />
+            <FolderIcon 
+              className="transition-colors" 
+              size={iconSize}
+              strokeWidth={iconStrokeWidth}
+              style={{ color: childActive ? 'var(--sidebar-primary-foreground)' : 'var(--secondary-400)' }}
+            />
           </button>
         );
         
@@ -113,7 +115,7 @@ export function AppSidebar({ navItems = [] }) {
             {hasChildren && (
               isExpanded ? <ChevronDown className="h-4 w-4 text-sidebar-foreground/50" /> : <ChevronRight className="h-4 w-4 text-sidebar-foreground/50" />
             )}
-            <FolderIcon className="h-5 w-5 text-secondary-400" />
+            <FolderIcon size={iconSize} strokeWidth={iconStrokeWidth} style={{ color: 'var(--secondary-400)' }} />
             <span className="flex-1 text-left">{item.name}</span>
           </button>
           {isExpanded && hasChildren && (
@@ -146,12 +148,12 @@ export function AppSidebar({ navItems = [] }) {
             : "hover:bg-sidebar-accent"
         )}
       >
-        <ChildIcon className={cn(
-          "h-5 w-5 flex-shrink-0 transition-colors",
-          isActive 
-            ? "text-sidebar-primary-foreground" 
-            : "text-primary-600 group-hover:text-sidebar-foreground"
-        )} />
+        <ChildIcon 
+          className="flex-shrink-0 transition-colors"
+          size={iconSize}
+          strokeWidth={iconStrokeWidth}
+          style={{ color: isActive ? 'var(--sidebar-primary-foreground)' : 'var(--primary-600)' }}
+        />
         {showLabels && <span className={cn("truncate text-sm", isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground/70")}>{item.name}</span>}
       </Link>
     );

@@ -68,6 +68,8 @@ export default function NavigationItemForm({
     item_type: "page",
     page_url: "",
     icon: "",
+    icon_size: 20,
+    icon_stroke_width: 2,
     tooltip_text: "",
     is_visible: true,
     parent_id: "",
@@ -82,6 +84,8 @@ export default function NavigationItemForm({
         item_type: item.item_type || (item.page_slug || item.page_url ? "page" : "folder"),
         page_url: item.page_url || item.page_slug || "",
         icon: item.icon || "",
+        icon_size: item.icon_size || 20,
+        icon_stroke_width: item.icon_stroke_width || 2,
         tooltip_text: item.tooltip_text || "",
         is_visible: item.is_visible !== false,
         parent_id: item.parent_id || "",
@@ -94,6 +98,8 @@ export default function NavigationItemForm({
         item_type: "page",
         page_url: "",
         icon: "",
+        icon_size: 20,
+        icon_stroke_width: 2,
         tooltip_text: "",
         is_visible: true,
         parent_id: "",
@@ -195,7 +201,7 @@ export default function NavigationItemForm({
                     <>
                       {(() => {
                         const IconComp = getIconByName(formData.icon);
-                        return IconComp ? <IconComp className="h-4 w-4" /> : null;
+                        return IconComp ? <IconComp className="h-5 w-5" strokeWidth={formData.icon_stroke_width} /> : null;
                       })()}
                       {formData.icon}
                     </>
@@ -235,6 +241,46 @@ export default function NavigationItemForm({
               </PopoverContent>
             </Popover>
           </div>
+
+          {formData.icon && (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="icon_size">Icon Size: {formData.icon_size}px</Label>
+                <Input
+                  id="icon_size"
+                  type="range"
+                  min="16"
+                  max="32"
+                  step="2"
+                  value={formData.icon_size}
+                  onChange={(e) => setFormData({ ...formData, icon_size: Number(e.target.value) })}
+                />
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>16px</span>
+                  <span>24px</span>
+                  <span>32px</span>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="icon_stroke_width">Stroke Weight: {formData.icon_stroke_width}</Label>
+                <Input
+                  id="icon_stroke_width"
+                  type="range"
+                  min="1"
+                  max="3"
+                  step="0.25"
+                  value={formData.icon_stroke_width}
+                  onChange={(e) => setFormData({ ...formData, icon_stroke_width: Number(e.target.value) })}
+                />
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>Light (1)</span>
+                  <span>Regular (2)</span>
+                  <span>Bold (3)</span>
+                </div>
+              </div>
+            </>
+          )}
 
           {/* Parent Selection - supports up to 2 levels of nesting */}
           <div className="space-y-2">
