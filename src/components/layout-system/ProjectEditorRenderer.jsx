@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronDown } from "lucide-react";
 import { getValueByBinding, setValueByBinding } from "./utils";
 
 /**
@@ -12,6 +14,7 @@ import { getValueByBinding, setValueByBinding } from "./utils";
  */
 export default function ProjectEditorRenderer({ config, data, onAction }) {
   const [formData, setFormData] = useState(data || {});
+  const [openSections, setOpenSections] = useState(new Set((config.sections || []).map(s => s.id)));
 
   const handleFieldChange = (binding, value) => {
     setFormData(prev => setValueByBinding(prev, binding, value));
@@ -31,6 +34,18 @@ export default function ProjectEditorRenderer({ config, data, onAction }) {
 
   const isTwoColumn = config.layout === "twoColumn";
 
+  const toggleSection = (sectionId) => {
+    setOpenSections(prev => {
+      const next = new Set(prev);
+      if (next.has(sectionId)) {
+        next.delete(sectionId);
+      } else {
+        next.add(sectionId);
+      }
+      return next;
+    });
+  };
+
   return (
     <div className="p-6 lg:p-8 max-w-5xl mx-auto">
       {/* Page Header */}
@@ -44,36 +59,55 @@ export default function ProjectEditorRenderer({ config, data, onAction }) {
       </div>
 
       {/* Form Sections */}
-      <div className="space-y-6">
+      <div className="space-y-4">
         {(config.sections || []).map((section) => (
-          <Card key={section.id}>
-            <CardHeader>
-              <CardTitle>{section.title}</CardTitle>
-              {section.description && (
-                <p className="text-sm text-muted-foreground">{section.description}</p>
-              )}
-            </CardHeader>
-            <CardContent>
-              <div className={`grid ${isTwoColumn ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"} gap-4`}>
-                {(section.fields || []).map(field => (
-                  <div key={field.id} className={field.component === "TextAreaField" ? "md:col-span-2" : ""}>
-                    <label className="text-sm font-medium mb-1 block">
-                      {field.label}
-                      {field.required && <span className="text-destructive ml-1">*</span>}
-                    </label>
-                    <FieldComponent
-                      field={field}
-                      value={getValueByBinding(formData, field.binding)}
-                      onChange={(value) => handleFieldChange(field.binding, value)}
+          <Collapsible
+            key={section.id}
+            open={openSections.has(section.id)}
+            onOpenChange={() => toggleSection(section.id)}
+          >
+            <Card>
+              <CollapsibleTrigger asChild>
+                <CardHeader className="cursor-pointer hover:bg-muted/50 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-lg">{section.title}</CardTitle>
+                      {section.description && (
+                        <CardDescription className="mt-1">{section.description}</CardDescription>
+                      )}
+                    </div>
+                    <ChevronDown
+                      className={`h-5 w-5 text-muted-foreground transition-transform ${
+                        openSections.has(section.id) ? "transform rotate-180" : ""
+                      }`}
                     />
-                    {field.helpText && (
-                      <p className="text-xs text-muted-foreground mt-1">{field.helpText}</p>
-                    )}
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                </CardHeader>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <CardContent className="pt-4">
+                  <div className={`grid ${isTwoColumn ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"} gap-4`}>
+                    {(section.fields || []).map(field => (
+                      <div key={field.id} className={field.component === "TextAreaField" ? "md:col-span-2" : ""}>
+                        <label className="text-sm font-medium mb-1 block">
+                          {field.label}
+                          {field.required && <span className="text-destructive ml-1">*</span>}
+                        </label>
+                        <FieldComponent
+                          field={field}
+                          value={getValueByBinding(formData, field.binding)}
+                          onChange={(value) => handleFieldChange(field.binding, value)}
+                        />
+                        {field.helpText && (
+                          <p className="text-xs text-muted-foreground mt-1">{field.helpText}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </CollapsibleContent>
+            </Card>
+          </Collapsible>
         ))}
       </div>
 
