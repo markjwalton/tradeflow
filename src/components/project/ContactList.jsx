@@ -267,12 +267,12 @@ export default function ContactList({ contacts = [], projectId, isLoading }) {
           <div className="space-y-4">
             {Object.entries(groupedContacts).map(([role, roleContacts]) => (
               <div key={role}>
-                <h4 className="text-sm font-medium text-stone-500 mb-2">{role}s</h4>
+                <h4 className="text-sm font-medium text-muted-foreground mb-2">{role}s</h4>
                 <div className="space-y-2">
                   {roleContacts.map((contact) => (
                     <div
                       key={contact.id}
-                      className="p-4 rounded-lg border border-stone-200 bg-white hover:shadow-sm transition-shadow"
+                      className="p-4 rounded-lg border border-border bg-card hover:shadow-sm transition-shadow"
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex items-start gap-3">
@@ -301,7 +301,7 @@ export default function ContactList({ contacts = [], projectId, isLoading }) {
                               {contact.email && (
                                 <a
                                   href={`mailto:${contact.email}`}
-                                  className="text-blue-600 hover:underline flex items-center gap-1"
+                                  className="text-info hover:underline flex items-center gap-1"
                                 >
                                   <Mail className="h-3 w-3" />
                                   {contact.email}
@@ -310,7 +310,7 @@ export default function ContactList({ contacts = [], projectId, isLoading }) {
                               {contact.phone && (
                                 <a
                                   href={`tel:${contact.phone}`}
-                                  className="text-stone-600 hover:underline flex items-center gap-1"
+                                  className="text-muted-foreground hover:underline flex items-center gap-1"
                                 >
                                   <Phone className="h-3 w-3" />
                                   {contact.phone}
@@ -332,7 +332,7 @@ export default function ContactList({ contacts = [], projectId, isLoading }) {
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => deleteMutation.mutate(contact.id)}
-                              className="text-red-600"
+                              className="text-destructive"
                             >
                               <Trash2 className="h-4 w-4 mr-2" />
                               Delete

@@ -363,9 +363,9 @@ export default function ManufactureStepList({ projectFilter, projects }) {
                     .map((step, index) => (
                       <div
                         key={step.id}
-                        className="flex items-center gap-4 p-3 bg-stone-50 rounded-lg"
+                        className="flex items-center gap-4 p-3 bg-muted/50 rounded-lg"
                       >
-                        <div className="flex-shrink-0 w-8 h-8 bg-primary-200 rounded-full flex items-center justify-center text-sm font-medium text-primary">
+                        <div className="flex-shrink-0 w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-sm font-medium text-primary">
                           {step.order || index + 1}
                         </div>
                         <div className="flex-1 min-w-0">
