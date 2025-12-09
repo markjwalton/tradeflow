@@ -18,7 +18,7 @@ export default function ProjectEditorRenderer({ config, data, onAction }) {
   };
 
   const handlePrimaryAction = () => {
-    if (onAction && config.actions.primary.actionId) {
+    if (onAction && config.actions?.primary?.actionId) {
       onAction(config.actions.primary.actionId, formData);
     }
   };
@@ -45,7 +45,7 @@ export default function ProjectEditorRenderer({ config, data, onAction }) {
 
       {/* Form Sections */}
       <div className="space-y-6">
-        {config.sections.map((section) => (
+        {(config.sections || []).map((section) => (
           <Card key={section.id}>
             <CardHeader>
               <CardTitle>{section.title}</CardTitle>
@@ -55,7 +55,7 @@ export default function ProjectEditorRenderer({ config, data, onAction }) {
             </CardHeader>
             <CardContent>
               <div className={`grid ${isTwoColumn ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"} gap-4`}>
-                {section.fields.map(field => (
+                {(section.fields || []).map(field => (
                   <div key={field.id} className={field.component === "TextAreaField" ? "md:col-span-2" : ""}>
                     <label className="text-sm font-medium mb-1 block">
                       {field.label}
@@ -79,7 +79,7 @@ export default function ProjectEditorRenderer({ config, data, onAction }) {
 
       {/* Actions */}
       <div className="mt-8 flex gap-3 justify-end">
-        {config.actions.secondary?.map((action, idx) => (
+        {(config.actions?.secondary || []).map((action, idx) => (
           <Button
             key={idx}
             variant={action.variant || "secondary"}
@@ -88,9 +88,11 @@ export default function ProjectEditorRenderer({ config, data, onAction }) {
             {action.label}
           </Button>
         ))}
-        <Button onClick={handlePrimaryAction}>
-          {config.actions.primary.label}
-        </Button>
+        {config.actions?.primary && (
+          <Button onClick={handlePrimaryAction}>
+            {config.actions.primary.label}
+          </Button>
+        )}
       </div>
     </div>
   );

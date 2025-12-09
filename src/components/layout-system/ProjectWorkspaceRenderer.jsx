@@ -13,14 +13,14 @@ export default function ProjectWorkspaceRenderer({ config, data, onAction }) {
   const [editorOpen, setEditorOpen] = useState(false);
 
   // Extract page header values
-  const pageTitle = getValueByBinding(data, config.pageHeader.titleBinding);
-  const metaValues = config.pageHeader.meta.map(m => ({
+  const pageTitle = getValueByBinding(data, config.pageHeader?.titleBinding);
+  const metaValues = (config.pageHeader?.meta || []).map(m => ({
     label: m.label,
     value: getValueByBinding(data, m.binding)
   }));
 
   // Extract summary metrics
-  const metrics = config.summary.metrics.map(m => ({
+  const metrics = (config.summary?.metrics || []).map(m => ({
     ...m,
     value: getValueByBinding(data, m.valueBinding)
   }));
@@ -67,7 +67,7 @@ export default function ProjectWorkspaceRenderer({ config, data, onAction }) {
       <div className={`grid ${isTwoColumn ? "grid-cols-1 lg:grid-cols-3" : "grid-cols-1"} gap-6`}>
         {/* Primary Sections */}
         <div className={isTwoColumn ? "lg:col-span-2 space-y-6" : "space-y-6"}>
-          {config.primarySections.map((section) => (
+          {(config.primarySections || []).map((section) => (
             <Card key={section.id}>
               <CardHeader>
                 <CardTitle>{section.title}</CardTitle>
@@ -82,7 +82,7 @@ export default function ProjectWorkspaceRenderer({ config, data, onAction }) {
         {/* Secondary Sections (Sidebar in two-column) */}
         {config.secondarySections && config.secondarySections.length > 0 && (
           <div className="space-y-6">
-            {config.secondarySections.map((section) => (
+            {(config.secondarySections || []).map((section) => (
               <Card key={section.id}>
                 <CardHeader>
                   <CardTitle>{section.title}</CardTitle>
