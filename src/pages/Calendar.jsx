@@ -142,7 +142,7 @@ export default function Calendar() {
 
       <div className="flex gap-6">
         <div className="flex-1">
-          <Card className="border-background-muted bg-card">
+          <Card className="bg-card">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <Button variant="ghost" size="icon" onClick={() => setCurrentDate(subMonths(currentDate, 1))}><ChevronLeft className="h-4 w-4" /></Button>
