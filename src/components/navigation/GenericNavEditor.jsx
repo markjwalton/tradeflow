@@ -70,7 +70,9 @@ export default function GenericNavEditor({
   showCopyButton = false,
   copyButtonLabel = "Copy from Template",
   tenantId = null,
-  isGlobal = true
+  isGlobal = true,
+  syncUnallocatedPages,
+  isSyncing = false
 }) {
   const queryClient = useQueryClient();
   const [showDialog, setShowDialog] = useState(false);
