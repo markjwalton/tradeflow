@@ -48,14 +48,14 @@ export function LiveEditWrapper({ children }) {
 
   useEffect(() => {
     if (isEditMode) {
-      // Only extract HTML on initial edit mode activation
-      if (!currentPageContent) {
-        const container = document.createElement('div');
-        const childrenContainer = document.querySelector('[data-page-content]');
-        if (childrenContainer) {
-          setCurrentPageContent(childrenContainer.innerHTML);
-        }
+      // Extract HTML on edit mode activation
+      const childrenContainer = document.querySelector('[data-page-content]');
+      if (childrenContainer && !currentPageContent) {
+        setCurrentPageContent(childrenContainer.innerHTML);
       }
+    } else {
+      // Clear content when exiting edit mode to force fresh load
+      setCurrentPageContent("");
     }
   }, [isEditMode]);
 
@@ -163,6 +163,10 @@ export function LiveEditWrapper({ children }) {
 
   return (
     <>
+      <div data-page-content style={{ display: isEditMode ? 'none' : 'block' }}>
+        {children}
+      </div>
+
       {isEditMode && (
         <>
           <div className="fixed top-20 right-6 z-40 flex gap-2">
@@ -184,10 +188,6 @@ export function LiveEditWrapper({ children }) {
             </InteractiveSelector>
           )}
         </>
-      )}
-
-      {!isEditMode && (
-        <div data-page-content>{children}</div>
       )}
 
       <Dialog open={showTokenPicker} onOpenChange={setShowTokenPicker}>
