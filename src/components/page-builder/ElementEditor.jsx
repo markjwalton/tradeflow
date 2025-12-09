@@ -24,7 +24,7 @@ const fontWeights = [
 const radiusTokens = ["none", "sm", "md", "lg", "xl", "2xl", "full"];
 
 export function ElementEditor({ selectedElement, onApplyStyle }) {
-  const [activeSection, setActiveSection] = useState("colors");
+  const [activeSection, setActiveSection] = useState("current");
 
   // Parse current element classes
   const currentStyles = useMemo(() => {
@@ -89,6 +89,7 @@ export function ElementEditor({ selectedElement, onApplyStyle }) {
   };
 
   const sections = [
+    { id: "current", label: "Current" },
     { id: "colors", label: "Colors" },
     { id: "spacing", label: "Spacing" },
     { id: "typography", label: "Typography" },
@@ -96,21 +97,78 @@ export function ElementEditor({ selectedElement, onApplyStyle }) {
   ];
 
   return (
-    <div className="space-y-4">
-      {/* Section Tabs */}
-      <div className="flex gap-2 border-b pb-2">
+    <div className="space-y-2">
+      {/* Section Tabs - Compact */}
+      <div className="flex gap-1 border-b">
         {sections.map(section => (
           <Button
             key={section.id}
             variant={activeSection === section.id ? "default" : "ghost"}
             size="sm"
             onClick={() => setActiveSection(section.id)}
-            className="text-xs"
+            className="text-xs h-7 px-3"
           >
             {section.label}
           </Button>
         ))}
       </div>
+
+      {/* Current Styles Tab */}
+      {activeSection === "current" && (
+        <div className="space-y-3 py-2">
+          <div className="grid grid-cols-2 gap-3 text-xs">
+            {currentStyles.textColor && (
+              <div>
+                <Label className="text-xs text-muted-foreground">Text Color</Label>
+                <Badge className="mt-1 w-full justify-center">text-{currentStyles.textColor}</Badge>
+              </div>
+            )}
+            {currentStyles.bgColor && (
+              <div>
+                <Label className="text-xs text-muted-foreground">Background</Label>
+                <Badge className="mt-1 w-full justify-center">bg-{currentStyles.bgColor}</Badge>
+              </div>
+            )}
+            {currentStyles.fontSize && (
+              <div>
+                <Label className="text-xs text-muted-foreground">Font Size</Label>
+                <Badge className="mt-1 w-full justify-center">text-{currentStyles.fontSize}</Badge>
+              </div>
+            )}
+            {currentStyles.fontWeight && (
+              <div>
+                <Label className="text-xs text-muted-foreground">Font Weight</Label>
+                <Badge className="mt-1 w-full justify-center">
+                  {fontWeights.find(w => w.value === currentStyles.fontWeight)?.label}
+                </Badge>
+              </div>
+            )}
+            {currentStyles.padding && (
+              <div>
+                <Label className="text-xs text-muted-foreground">Padding</Label>
+                <Badge className="mt-1 w-full justify-center">p-{currentStyles.padding}</Badge>
+              </div>
+            )}
+            {currentStyles.margin && (
+              <div>
+                <Label className="text-xs text-muted-foreground">Margin</Label>
+                <Badge className="mt-1 w-full justify-center">m-{currentStyles.margin}</Badge>
+              </div>
+            )}
+            {currentStyles.borderRadius && (
+              <div>
+                <Label className="text-xs text-muted-foreground">Border Radius</Label>
+                <Badge className="mt-1 w-full justify-center">rounded-{currentStyles.borderRadius}</Badge>
+              </div>
+            )}
+          </div>
+          {!currentStyles.textColor && !currentStyles.bgColor && !currentStyles.fontSize && 
+           !currentStyles.fontWeight && !currentStyles.padding && !currentStyles.margin && 
+           !currentStyles.borderRadius && (
+            <p className="text-xs text-muted-foreground text-center py-4">No styles applied yet</p>
+          )}
+        </div>
+      )}
 
       {/* Colors Section */}
       {activeSection === "colors" && (
