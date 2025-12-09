@@ -109,9 +109,9 @@ export default function TenantManager() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto bg-background min-h-screen">
-      <Card className="border-border bg-card">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-midnight-900">Tenant Manager</CardTitle>
+      <Card className="bg-card">
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle className="text-foreground">Tenant Manager</CardTitle>
           <Button onClick={() => { setEditingTenant(null); setIsFormOpen(true); }}>
             <Plus className="h-4 w-4 mr-2" />
             Add Tenant
@@ -141,7 +141,7 @@ export default function TenantManager() {
                     </button>
                     <Building2 className="h-5 w-5" />
                     <div className="flex-1">
-                      <span className="font-medium text-midnight-900">{tenant.name}</span>
+                      <span className="font-medium text-foreground">{tenant.name}</span>
                       <span className="text-sm text-muted-foreground ml-2">/{tenant.slug}</span>
                     </div>
                     <Badge variant={tenant.is_active !== false ? "default" : "secondary"}>

@@ -153,11 +153,11 @@ export default function BusinessTemplates() {
     <div className="p-6 max-w-6xl mx-auto bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-midnight-900">
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
             <Building2 className="h-6 w-6" />
             Business Templates
             {currentProject && (
-              <Badge className="bg-primary-100 text-primary">
+              <Badge className="bg-primary/10 text-primary">
                 <Folder className="h-3 w-3 mr-1" />
                 {currentProject.name}
               </Badge>

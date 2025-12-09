@@ -236,10 +236,10 @@ Return a JSON object with:
     <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-midnight-900">
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
             Entity Library
             {currentProject && (
-              <Badge className="bg-primary-100 text-primary">
+              <Badge className="bg-primary/10 text-primary">
                 <Folder className="h-3 w-3 mr-1" />
                 {currentProject.name}
               </Badge>
@@ -420,10 +420,10 @@ Return a JSON object with:
         <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {editingEntity?.id ? "Edit Entity" : "Create Entity"}
-              {selectedProjectId && currentProject && (
-                <Badge className="ml-2 bg-primary-100 text-primary">{currentProject.name}</Badge>
-              )}
+            {editingEntity?.id ? "Edit Entity" : "Create Entity"}
+            {selectedProjectId && currentProject && (
+              <Badge className="ml-2 bg-primary/10 text-primary">{currentProject.name}</Badge>
+            )}
             </DialogTitle>
           </DialogHeader>
           <EntityBuilder
@@ -474,7 +474,7 @@ Return a JSON object with:
             ) : (
               <>
                 {/* Step 2: Select Related Items */}
-                <div className="flex items-center gap-2 text-sm text-muted-foreground bg-primary-100 p-2 rounded">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground bg-primary/10 p-2 rounded">
                   <Check className="h-4 w-4 text-primary" />
                   Adding to: <strong>{projects.find(p => p.id === addToProjectTargetId)?.name}</strong>
                   <Button variant="ghost" size="sm" className="ml-auto h-6 text-xs" onClick={() => setAddToProjectTargetId(null)}>Change</Button>

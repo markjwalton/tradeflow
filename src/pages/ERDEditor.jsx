@@ -358,7 +358,7 @@ Only suggest NEW relationships not already in existingRelationships.`,
       {/* Header */}
       <div className="flex items-center justify-between p-4 bg-card border-b border-border">
         <div className="flex items-center gap-4">
-          <h1 className="text-xl font-bold font-display flex items-center gap-2 text-midnight-900">
+          <h1 className="text-xl font-bold font-display flex items-center gap-2 text-foreground">
             <Database className="h-5 w-5 text-accent" />
             ERD Editor
           </h1>
