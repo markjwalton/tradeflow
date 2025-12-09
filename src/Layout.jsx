@@ -244,10 +244,9 @@ export default function Layout({ children, currentPageName }) {
         setCheckingAccess(false);
       }
     };
-    };
 
     checkAccess();
-    }, []); // Empty deps - only run once on mount
+  }, []); // Empty deps - only run once on mount
 
   // Pages without layout wrapper (TenantAccess, Setup render without chrome)
   if (currentPageName === "TenantAccess" || currentPageName === "Setup") {
