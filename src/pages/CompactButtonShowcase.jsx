@@ -35,18 +35,18 @@ export default function CompactButtonShowcase() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-background">
-      <div className="w-full max-w-3xl space-y-2">
+    <div className="min-h-screen flex items-center justify-center p-2 bg-background">
+      <div className="w-full max-w-3xl space-y-1">
         {/* Spacing */}
         <div className="border rounded-lg overflow-hidden bg-card">
           <button
             onClick={() => toggleCategory("spacing")}
-            className="w-full px-4 py-2 text-left font-medium hover:bg-muted transition-colors"
+            className="w-full px-3 py-1.5 text-sm text-left font-medium hover:bg-muted transition-colors"
           >
             Spacing
           </button>
           {openCategory === "spacing" && (
-            <div className="px-4 pb-4">
+            <div className="px-2 pb-2">
               <div className="flex justify-center">
                 <div className="inline-grid grid-cols-12 gap-0.5">
                   {spacingTokens.map((value) => (
@@ -68,12 +68,12 @@ export default function CompactButtonShowcase() {
         <div className="border rounded-lg overflow-hidden bg-card">
           <button
             onClick={() => toggleCategory("fontSize")}
-            className="w-full px-4 py-2 text-left font-medium hover:bg-muted transition-colors"
+            className="w-full px-3 py-1.5 text-sm text-left font-medium hover:bg-muted transition-colors"
           >
             Font Size
           </button>
           {openCategory === "fontSize" && (
-            <div className="px-4 pb-4">
+            <div className="px-2 pb-2">
               <div className="flex justify-center">
                 <div className="inline-grid grid-cols-8 gap-0.5">
                   {fontSizes.map((value) => (
@@ -95,12 +95,12 @@ export default function CompactButtonShowcase() {
         <div className="border rounded-lg overflow-hidden bg-card">
           <button
             onClick={() => toggleCategory("fontWeight")}
-            className="w-full px-4 py-2 text-left font-medium hover:bg-muted transition-colors"
+            className="w-full px-3 py-1.5 text-sm text-left font-medium hover:bg-muted transition-colors"
           >
             Font Weight
           </button>
           {openCategory === "fontWeight" && (
-            <div className="px-4 pb-4">
+            <div className="px-2 pb-2">
               <div className="flex justify-center">
                 <div className="inline-grid grid-cols-5 gap-0.5">
                   {fontWeights.map((weight) => (
@@ -122,12 +122,12 @@ export default function CompactButtonShowcase() {
         <div className="border rounded-lg overflow-hidden bg-card">
           <button
             onClick={() => toggleCategory("radius")}
-            className="w-full px-4 py-2 text-left font-medium hover:bg-muted transition-colors"
+            className="w-full px-3 py-1.5 text-sm text-left font-medium hover:bg-muted transition-colors"
           >
             Border Radius
           </button>
           {openCategory === "radius" && (
-            <div className="px-4 pb-4">
+            <div className="px-2 pb-2">
               <div className="flex justify-center">
                 <div className="inline-grid grid-cols-7 gap-0.5">
                   {radiusOptions.map((value) => (
@@ -149,15 +149,15 @@ export default function CompactButtonShowcase() {
         <div className="border rounded-lg overflow-hidden bg-card">
           <button
             onClick={() => toggleCategory("colors")}
-            className="w-full px-4 py-2 text-left font-medium hover:bg-muted transition-colors"
+            className="w-full px-3 py-1.5 text-sm text-left font-medium hover:bg-muted transition-colors"
           >
             Colors
           </button>
           {openCategory === "colors" && (
-            <div className="px-4 pb-4 space-y-3">
+            <div className="px-2 pb-2 space-y-2">
               {Object.entries(colorTokens).map(([category, tokens]) => (
                 <div key={category}>
-                  <div className="text-xs text-muted-foreground mb-1.5 capitalize">{category}</div>
+                  <div className="text-xs text-muted-foreground mb-1 capitalize">{category}</div>
                   <div className="flex justify-center">
                     <div className="inline-grid grid-cols-10 gap-0.5">
                       {tokens.map((token) => (
