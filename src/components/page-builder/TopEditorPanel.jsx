@@ -39,7 +39,7 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
               alt="Editor icon" 
               className="h-8 w-8"
             />
-            <div className="brand">editor</div>
+            <div style={{ fontFamily: '"degular-display", sans-serif', fontSize: '2.5rem', fontWeight: 800, lineHeight: 1, letterSpacing: '-0.02em' }}>editor</div>
           </div>
         </div>
         
