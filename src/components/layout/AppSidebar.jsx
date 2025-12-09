@@ -3,6 +3,7 @@ import { useAppSidebar } from "./SidebarContext";
 import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, ChevronRight, Folder, FolderOpen, Home, Building2, Users, Settings, Package, LayoutDashboard, Navigation, Shield, GitBranch, Database } from "lucide-react";
 import { useState } from "react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const iconMap = {
   Home,
@@ -63,7 +64,7 @@ export function AppSidebar({ navItems = [] }) {
     return iconMap[iconName] || Home;
   };
 
-  const renderNavItem = (item, isChild = false) => {
+  const renderNavItem = (item, isChild = false, isTopLevel = false) => {
     const isFolder = item.item_type === "folder";
     const Icon = getIcon(item.icon);
     const isExpanded = expandedFolders.has(item.id);
@@ -73,6 +74,8 @@ export function AppSidebar({ navItems = [] }) {
     const currentPath = location.pathname.split("/").pop();
     const itemPath = pageUrl.split("?")[0];
     const isActive = currentPath === itemPath;
+    
+    const iconColorClass = isTopLevel ? "text-primary" : (isFolder ? "text-secondary" : "");
 
     if (isFolder) {
       const hasChildren = item.children && item.children.length > 0;
@@ -90,15 +93,15 @@ export function AppSidebar({ navItems = [] }) {
               isExpanded ? <ChevronDown className="h-4 w-4 text-sidebar-foreground/50" /> : <ChevronRight className="h-4 w-4 text-sidebar-foreground/50" />
             )}
             {isExpanded ? (
-              <FolderOpen className="h-5 w-5 text-secondary" />
+              <FolderOpen className={cn("h-5 w-5", iconColorClass)} />
             ) : (
-              <Folder className="h-5 w-5 text-secondary" />
+              <Folder className={cn("h-5 w-5", iconColorClass)} />
             )}
             {showLabels && <span className="flex-1 text-left">{item.name}</span>}
           </button>
           {isExpanded && hasChildren && showLabels && (
             <div className="[padding-bottom:var(--spacing-2)] [gap:var(--spacing-1)] [padding-left:var(--spacing-3)] flex flex-col">
-              {item.children.map((child) => renderNavItem(child, true))}
+              {item.children.map((child) => renderNavItem(child, true, false))}
             </div>
           )}
         </div>
@@ -110,7 +113,7 @@ export function AppSidebar({ navItems = [] }) {
     // Build proper page URL - handle both slugs and full paths
     const fullPageUrl = pageUrl.startsWith("/") ? pageUrl : `/page/${pageUrl.split("?")[0]}${pageUrl.includes("?") ? "?" + pageUrl.split("?")[1] : ""}`;
     
-    return (
+    const linkContent = (
       <Link
         key={item.id}
         to={fullPageUrl}
@@ -124,10 +127,25 @@ export function AppSidebar({ navItems = [] }) {
             : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
         )}
       >
-        <ChildIcon className="h-5 w-5 flex-shrink-0" />
+        <ChildIcon className={cn("h-5 w-5 flex-shrink-0", iconColorClass)} />
         {showLabels && <span className="truncate text-sm">{item.name}</span>}
       </Link>
     );
+    
+    if (!showLabels) {
+      return (
+        <Tooltip key={item.id}>
+          <TooltipTrigger asChild>
+            {linkContent}
+          </TooltipTrigger>
+          <TooltipContent side="right">
+            {item.name}
+          </TooltipContent>
+        </Tooltip>
+      );
+    }
+    
+    return linkContent;
   };
 
   // Flatten navigation for icon mode
@@ -158,13 +176,15 @@ export function AppSidebar({ navItems = [] }) {
       )}
     >
       {mode !== "hidden" && (
-        <nav className={cn(
-          "flex-1 overflow-y-auto",
-          showLabels ? "[padding:var(--spacing-3)] [gap:var(--spacing-1)]" : "[padding-top:var(--spacing-3)] [padding-bottom:var(--spacing-3)] [gap:var(--spacing-2)]",
-          "flex flex-col"
-        )}>
-          {itemsToRender.map((item) => renderNavItem(item))}
-        </nav>
+        <TooltipProvider delayDuration={300}>
+          <nav className={cn(
+            "flex-1 overflow-y-auto",
+            showLabels ? "[padding:var(--spacing-3)] [gap:var(--spacing-1)]" : "[padding-top:var(--spacing-3)] [padding-bottom:var(--spacing-3)] [gap:var(--spacing-2)]",
+            "flex flex-col"
+          )}>
+            {itemsToRender.map((item) => renderNavItem(item, false, !item.parent_id))}
+          </nav>
+        </TooltipProvider>
       )}
     </aside>
   );
