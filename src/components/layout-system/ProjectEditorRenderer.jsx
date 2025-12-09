@@ -78,7 +78,7 @@ export default function ProjectEditorRenderer({ config, data, onAction }) {
 
       {/* Form Sections */}
       <div className="space-y-4">
-        {(config.sections || []).map((section) => (
+        {(currentConfig.sections || []).map((section) => (
           <Collapsible
             key={section.id}
             open={openSections.has(section.id)}
