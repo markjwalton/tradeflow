@@ -1001,6 +1001,15 @@
     color: var(--text-subtle);
   }
 
+  .text-editor-brand {
+    font-family: var(--font-family-display);
+    font-size: var(--text-4xl);
+    font-weight: 900;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+    color: var(--text-primary);
+  }
+
   /* Typography Color Utilities */
   .text-primary {
     color: var(--text-primary);

@@ -33,13 +33,13 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
     >
       <div className="flex items-center justify-between px-6 py-2 border-b bg-muted/30">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/b7a61dbf6_black_logo_300x300_transparent.png" 
               alt="Editor icon" 
-              className="h-12 w-12"
+              className="h-6 w-6"
             />
-            <h2 className="text-4xl font-display font-black tracking-tight" style={{ fontStretch: 'condensed' }}>editor</h2>
+            <h2 className="text-editor-brand">editor</h2>
           </div>
         </div>
         
