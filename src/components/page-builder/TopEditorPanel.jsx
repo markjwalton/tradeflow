@@ -15,7 +15,7 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
     setViewMode(mode);
     if (onViewModeChange) onViewModeChange(mode);
     // Update layout margin
-    const marginTop = mode === 'full' ? '500px' : '180px';
+    const marginTop = mode === 'full' ? '500px' : '120px';
     document.querySelector('[data-editor-layout]')?.style.setProperty('margin-top', marginTop);
   };
 
@@ -29,18 +29,15 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
   return (
     <div 
       className="fixed top-0 left-0 right-0 z-[100] bg-card border-b transition-all duration-300"
-      style={{ height: isCollapsed ? '56px' : (viewMode === 'focus' ? '180px' : '500px') }}
+      style={{ height: isCollapsed ? '44px' : (viewMode === 'focus' ? '120px' : '500px') }}
     >
-      <div className="flex items-center justify-between px-6 py-3 border-b bg-muted/30">
+      <div className="flex items-center justify-between px-6 py-2 border-b bg-muted/30">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded bg-primary/10 flex items-center justify-center">
-              <Layout className="h-4 w-4 text-primary" />
-            </div>
-            <div>
-              <h2 className="text-sm font-semibold">Page Editor</h2>
-              <p className="text-xs text-muted-foreground">{viewMode === 'focus' ? 'Focus' : 'Full'} View</p>
-            </div>
+            <svg width="32" height="32" viewBox="0 0 300 300" fill="currentColor" className="text-foreground">
+              <path d="M150,10 L280,70 L280,170 L220,260 L80,260 L20,170 L20,70 Z M60,90 L240,160 M240,90 L150,260" stroke="white" strokeWidth="12" fill="currentColor"/>
+            </svg>
+            <h2 className="text-lg font-display font-black tracking-tight" style={{ fontStretch: 'condensed' }}>editor</h2>
           </div>
         </div>
         
@@ -63,17 +60,6 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
           >
             {viewMode === 'focus' ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsCollapsed(!isCollapsed)}
-          >
-            {isCollapsed ? (
-              <ChevronDown className="h-4 w-4" />
-            ) : (
-              <ChevronUp className="h-4 w-4" />
-            )}
-          </Button>
           <Button variant="ghost" size="sm" onClick={onClose}>
             <X className="h-4 w-4" />
           </Button>
@@ -81,7 +67,11 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
       </div>
 
       {!isCollapsed && (
-        <div className="px-6 py-4 bg-background" style={{ height: viewMode === 'focus' ? '124px' : '444px', overflowY: viewMode === 'focus' ? 'hidden' : 'auto' }}>
+        <div className="px-6 py-4" style={{ 
+          height: viewMode === 'focus' ? '76px' : '456px', 
+          overflowY: viewMode === 'focus' ? 'hidden' : 'auto',
+          backgroundColor: 'var(--color-editor-background, var(--color-background))'
+        }}>
           {viewMode === 'focus' ? (
             <div className="h-full flex items-center justify-center border-2 border-dashed border-muted rounded-lg">
               <div className="text-center">

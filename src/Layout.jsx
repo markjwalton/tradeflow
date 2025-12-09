@@ -327,7 +327,7 @@ export default function Layout({ children, currentPageName }) {
               // Track view mode for layout adjustment
             }}
           />
-          <div data-editor-layout style={{ marginTop: editorPanelOpen ? '180px' : '0', transition: 'margin-top 300ms ease-in-out' }}>
+          <div data-editor-layout style={{ marginTop: editorPanelOpen ? '120px' : '0', transition: 'margin-top 300ms ease-in-out' }}>
             <AppShell user={currentUser} tenant={currentTenant} navItems={navItems}>
               <LiveEditWrapper>{children}</LiveEditWrapper>
             </AppShell>

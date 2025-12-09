@@ -83,6 +83,7 @@ export default function SiteSettings() {
     headerBackground: "background",
     panelBackground: "card",
     footerBackground: "background",
+    editorBackground: "card",
     overlayColor: "midnight-900",
     overlayOpacity: 60,
     overlayBlur: "md",
@@ -105,6 +106,7 @@ export default function SiteSettings() {
           headerBackground: "background",
           panelBackground: "card",
           footerBackground: "background",
+          editorBackground: "card",
           overlayColor: "midnight-900",
           overlayOpacity: 60,
           overlayBlur: "md",
@@ -145,6 +147,10 @@ export default function SiteSettings() {
       });
       setOriginalSettings(settings);
       setHasChanges(false);
+
+      // Update CSS variable for editor background
+      document.documentElement.style.setProperty('--color-editor-background', `var(--color-${settings.editorBackground})`);
+
       window.dispatchEvent(new CustomEvent('site-settings-changed', { detail: settings }));
       toast.success("Site settings saved");
     } catch (e) {
@@ -321,8 +327,39 @@ export default function SiteSettings() {
                 </Select>
               </div>
             </div>
-          </CardContent>
-        </Card>
+
+            <div className="space-y-2">
+              <Label htmlFor="editor-background">Editor Panel</Label>
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-8 h-8 rounded border-2 flex-shrink-0"
+                  style={{ backgroundColor: `var(--color-${settings.editorBackground})` }}
+                />
+                <Select
+                  value={settings.editorBackground}
+                  onValueChange={(value) => setSettings({ ...settings, editorBackground: value })}
+                >
+                  <SelectTrigger id="editor-background" className="flex-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {colorTokens.map((color) => (
+                      <SelectItem key={color.value} value={color.value}>
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-4 h-4 rounded border"
+                            style={{ backgroundColor: `var(--color-${color.value})` }}
+                          />
+                          {color.label}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            </CardContent>
+            </Card>
 
         <Card>
           <CardHeader>
