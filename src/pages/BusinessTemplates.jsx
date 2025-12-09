@@ -45,7 +45,7 @@ const categoryColors = {
   "Manufacturing": "bg-warning/10 text-warning",
   "Finance": "bg-success-50 text-success",
   "Education": "bg-info-50 text-info",
-  "Custom": "bg-primary-100 text-primary",
+  "Custom": "bg-primary/10 text-primary",
   "Other": "bg-muted text-muted-foreground",
 };
 
