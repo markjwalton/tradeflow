@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -22,7 +22,29 @@ export function PageSettingsPanel({ currentPageName }) {
   const { isEditMode, toggleEditMode, currentPageData, currentPageContent, setCurrentPageContent } = useEditMode();
   const [isOpen, setIsOpen] = useState(false);
   const [showCode, setShowCode] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const handlePreferencesChange = (event) => {
+      setIsVisible(event.detail.showPageEditor ?? true);
+    };
+
+    const loadPreferences = async () => {
+      try {
+        const user = await base44.auth.me();
+        if (user?.ui_preferences?.showPageEditor !== undefined) {
+          setIsVisible(user.ui_preferences.showPageEditor);
+        }
+      } catch (e) {
+        // User not logged in or error - show by default
+      }
+    };
+
+    loadPreferences();
+    window.addEventListener('ui-preferences-changed', handlePreferencesChange);
+    return () => window.removeEventListener('ui-preferences-changed', handlePreferencesChange);
+  }, []);
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.UIPage.update(id, data),
