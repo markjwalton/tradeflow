@@ -44,9 +44,9 @@ export function AppHeader({ user, navItems = [] }) {
 
           <Link to={createPageUrl("Dashboard")} className="flex items-center gap-2">
             <img
-              src="https://framerusercontent.com/images/XKDSOBYkjTdAvMPFrNk5WIrHI.png"
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/c94580ddf_sturij-logo.png"
               alt="Sturij"
-              className="h-6 w-auto"
+              className="h-8 w-auto"
             />
           </Link>
         </div>
