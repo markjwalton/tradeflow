@@ -46,7 +46,8 @@ export function AppHeader({ user, navItems = [] }) {
             <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/c94580ddf_sturij-logo.png"
               alt="Sturij"
-              className="h-8 w-auto"
+              className="w-auto"
+              style={{ height: '51px' }}
             />
           </Link>
         </div>
