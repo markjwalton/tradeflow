@@ -28,7 +28,7 @@ export default function LookupTestForms() {
   return (
     <div className="p-6 max-w-4xl mx-auto bg-background min-h-screen">
       <div className="mb-6">
-        <h1 className="text-2xl font-light flex items-center gap-2 text-foreground" style={{ fontFamily: 'var(--font-heading)' }}>
+        <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
           <CheckCircle2 className="h-6 w-6 text-success" />
           Lookup API Test Forms
         </h1>

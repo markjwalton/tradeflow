@@ -33,7 +33,7 @@ export default function TestDataSettingsDialog({
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Settings className="h-5 w-5 text-purple-600" />
+            <Settings className="h-5 w-5 text-accent" />
             Test Data Settings
           </DialogTitle>
         </DialogHeader>
@@ -41,7 +41,7 @@ export default function TestDataSettingsDialog({
         <div className="space-y-6 py-4">
           {/* Generation Settings */}
           <div className="space-y-4">
-            <h4 className="font-medium text-sm text-gray-700 border-b pb-2">Generation</h4>
+            <h4 className="font-medium text-sm text-foreground border-b pb-2">Generation</h4>
             
             <div className="flex items-center justify-between">
               <Label htmlFor="batchSize" className="text-sm">Batch Size</Label>
@@ -72,7 +72,7 @@ export default function TestDataSettingsDialog({
 
           {/* Display Settings */}
           <div className="space-y-4">
-            <h4 className="font-medium text-sm text-gray-700 border-b pb-2">Display</h4>
+            <h4 className="font-medium text-sm text-foreground border-b pb-2">Display</h4>
             
             <div className="flex items-center justify-between">
               <Label htmlFor="expandCategories" className="text-sm">Expand Categories by Default</Label>
@@ -112,7 +112,7 @@ export default function TestDataSettingsDialog({
 
           {/* Seeding Settings */}
           <div className="space-y-4">
-            <h4 className="font-medium text-sm text-gray-700 border-b pb-2">Database Seeding</h4>
+            <h4 className="font-medium text-sm text-foreground border-b pb-2">Database Seeding</h4>
             
             <div className="flex items-center justify-between">
               <Label htmlFor="confirmSeed" className="text-sm">Confirm Before Seeding</Label>
