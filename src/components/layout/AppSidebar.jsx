@@ -95,9 +95,9 @@ export function AppSidebar({ navItems = [] }) {
               isExpanded ? <ChevronDown className="h-4 w-4 text-sidebar-foreground/50" /> : <ChevronRight className="h-4 w-4 text-sidebar-foreground/50" />
             )}
             {isExpanded ? (
-              <FolderOpen className={cn("h-5 w-5", iconColorClass)} />
+              <FolderOpen className="h-5 w-5" style={{ color: 'var(--secondary-400)' }} />
             ) : (
-              <Folder className={cn("h-5 w-5", iconColorClass)} />
+              <Folder className="h-5 w-5" style={{ color: 'var(--secondary-400)' }} />
             )}
             {showLabels && <span className="flex-1 text-left">{item.name}</span>}
           </button>
