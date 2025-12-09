@@ -842,6 +842,17 @@
 }
 
 @layer utilities {
+  /* Brand Typography */
+  .brand {
+    font-family: "degular-display", sans-serif !important;
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+    font-style: normal !important;
+    line-height: 1 !important;
+    letter-spacing: -0.02em !important;
+    color: var(--text-primary) !important;
+  }
+
   /* Shadow Utilities */
   .shadow-card {
     box-shadow: var(--shadow-card);
