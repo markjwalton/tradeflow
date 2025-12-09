@@ -17,6 +17,7 @@ import { EditModeProvider } from "@/components/page-builder/EditModeContext";
 import { PageSettingsPanel } from "@/components/page-builder/PageSettingsPanel";
 import { LiveEditWrapper } from "@/components/page-builder/LiveEditWrapper";
 import { TopEditorPanel } from "@/components/page-builder/TopEditorPanel";
+import { Palette } from "lucide-react";
 
 export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ export default function Layout({ children, currentPageName }) {
   const [navConfig, setNavConfig] = useState(null);
   const [navItems, setNavItems] = useState([]);
   const [editorPanelOpen, setEditorPanelOpen] = useState(false);
+  const [showEditorBubble, setShowEditorBubble] = useState(true);
   
   const urlParams = new URLSearchParams(window.location.search);
   const tenantSlug = urlParams.get("tenant");
@@ -79,6 +81,27 @@ export default function Layout({ children, currentPageName }) {
         } catch (e) {
           console.error("Nav config error:", e);
         }
+        
+        // Load editor bubble preference
+        const handlePreferencesChange = (event) => {
+          setShowEditorBubble(event.detail.showEditorBubble ?? true);
+        };
+
+        const loadBubblePreference = async () => {
+          try {
+            const user = await base44.auth.me();
+            if (user?.ui_preferences?.showEditorBubble !== undefined) {
+              setShowEditorBubble(user.ui_preferences.showEditorBubble);
+            }
+          } catch (e) {
+            // User not logged in or error
+          }
+        };
+
+        loadBubblePreference();
+        window.addEventListener('ui-preferences-changed', handlePreferencesChange);
+        
+        return () => window.removeEventListener('ui-preferences-changed', handlePreferencesChange);
         
         // Get public pages from config or use defaults
         const configPublicPages = loadedNavConfig?.public_pages || ["TenantAccess", "Setup", "Dashboard"];
@@ -298,22 +321,24 @@ export default function Layout({ children, currentPageName }) {
             isOpen={editorPanelOpen} 
             onClose={() => setEditorPanelOpen(false)} 
           />
-          <div style={{ marginTop: editorPanelOpen ? '0' : '0' }}>
+          <div style={{ marginTop: editorPanelOpen ? '200px' : '0', transition: 'margin-top 300ms ease-in-out' }}>
             <AppShell user={currentUser} tenant={currentTenant} navItems={navItems}>
               <LiveEditWrapper>{children}</LiveEditWrapper>
             </AppShell>
           </div>
           <PageSettingsPanel currentPageName={currentPageName} />
           <GlobalAIAssistant />
-          
-          {/* Temporary toggle button for testing */}
-          <Button
-            onClick={() => setEditorPanelOpen(!editorPanelOpen)}
-            className="fixed bottom-6 left-6 h-14 w-14 rounded-full shadow-2xl bg-secondary text-white hover:bg-secondary/90 border-2 border-white z-[60]"
-            title="Toggle Editor Panel"
-          >
-            {editorPanelOpen ? "✕" : "✏️"}
-          </Button>
+
+          {/* Editor bubble button */}
+          {showEditorBubble && (
+            <Button
+              onClick={() => setEditorPanelOpen(!editorPanelOpen)}
+              className="fixed bottom-6 left-6 h-14 w-14 rounded-full shadow-2xl bg-secondary text-white hover:bg-secondary/90 border-2 border-white z-[60]"
+              title="Toggle Editor Panel"
+            >
+              {editorPanelOpen ? "✕" : <Palette className="h-6 w-6" />}
+            </Button>
+          )}
         </SidebarProvider>
       </EditModeProvider>
     </TenantContext.Provider>

@@ -164,7 +164,7 @@ function ProfileMenu({ user }) {
   const [preferences, setPreferences] = useState({
     showAIAssistant: true,
     showPageEditor: true,
-    liveEditMode: false,
+    showEditorBubble: true,
   });
 
   useEffect(() => {
@@ -175,7 +175,7 @@ function ProfileMenu({ user }) {
           setPreferences({
             showAIAssistant: currentUser.ui_preferences.showAIAssistant ?? true,
             showPageEditor: currentUser.ui_preferences.showPageEditor ?? true,
-            liveEditMode: currentUser.ui_preferences.liveEditMode ?? false,
+            showEditorBubble: currentUser.ui_preferences.showEditorBubble ?? true,
           });
         }
       } catch (e) {
@@ -257,13 +257,13 @@ function ProfileMenu({ user }) {
             />
           </div>
           <div className="flex items-center justify-between">
-            <Label htmlFor="live-edit" className="text-sm cursor-pointer">
-              Live Edit Mode
+            <Label htmlFor="editor-bubble" className="text-sm cursor-pointer">
+              Editor Bubble
             </Label>
             <Switch
-              id="live-edit"
-              checked={preferences.liveEditMode}
-              onCheckedChange={(checked) => updatePreference('liveEditMode', checked)}
+              id="editor-bubble"
+              checked={preferences.showEditorBubble}
+              onCheckedChange={(checked) => updatePreference('showEditorBubble', checked)}
             />
           </div>
         </div>
