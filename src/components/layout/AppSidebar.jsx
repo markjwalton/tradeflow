@@ -149,27 +149,20 @@ export function AppSidebar({ navItems = [] }) {
     return linkContent;
   };
 
-  // Flatten navigation for icon mode - preserve top-level status
+  // Flatten navigation for icon mode
   const getFlattenedItems = (items) => {
     const flattened = [];
-    const flatten = (itemList, isTopLevel = false) => {
+    const flatten = (itemList) => {
       itemList.forEach((item) => {
         if (item.item_type === "page") {
-          flattened.push({ ...item, _isTopLevel: isTopLevel });
+          flattened.push(item);
         }
         if (item.children && item.children.length > 0) {
-          flatten(item.children, false);
+          flatten(item.children);
         }
       });
     };
-    // First level items without parent_id are top-level
-    items.forEach((item) => {
-      if (item.item_type === "page" && !item.parent_id) {
-        flattened.push({ ...item, _isTopLevel: true });
-      } else if (item.item_type === "folder") {
-        flatten(item.children, !item.parent_id);
-      }
-    });
+    flatten(items);
     return flattened;
   };
 
