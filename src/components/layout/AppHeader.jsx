@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Menu, ChevronDown, LogOut, User } from "lucide-react";
 import { useAppSidebar } from "./SidebarContext";
-import { PageSwitcher } from "./PageSwitcher";
+import { AppBreadcrumb } from "./AppBreadcrumb";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 
@@ -48,8 +48,8 @@ export function AppHeader({ user, navItems = [] }) {
           </Link>
         </div>
 
-        <div className="flex-1 flex justify-center">
-          <PageSwitcher navItems={navItems} />
+        <div className="flex-1 flex items-center px-4">
+          <AppBreadcrumb organizedNavigation={navItems} />
         </div>
 
         <div className="flex items-center gap-2">
