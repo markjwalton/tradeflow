@@ -45,7 +45,7 @@ export default function RightPanelEditor({ isOpen, onClose, config, data, onActi
           </div>
 
           <div className="space-y-4">
-            {config.fields.map(field => (
+            {(config.fields || []).map(field => (
               <div key={field.id}>
                 <label className="text-sm font-medium mb-1 block">{field.label}</label>
                 <FieldComponent
