@@ -75,7 +75,8 @@ export function AppSidebar({ navItems = [] }) {
     const itemPath = pageUrl.split("?")[0];
     const isActive = currentPath === itemPath;
     
-    const iconColorClass = isTopLevel ? "text-primary" : (isFolder ? "text-secondary" : "");
+    // Color logic: folders always secondary, top-level pages primary
+    const iconColorClass = isFolder ? "text-secondary" : (isTopLevel ? "text-primary" : "");
 
     if (isFolder) {
       const hasChildren = item.children && item.children.length > 0;
