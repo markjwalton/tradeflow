@@ -108,8 +108,8 @@ export function AppSidebar({ navItems = [] }) {
 
     const ChildIcon = getIcon(item.icon);
     
-    // Use createPageUrl for proper routing
-    const fullPageUrl = pageUrl.startsWith("/") ? pageUrl : `/page/${pageUrl}`;
+    // Build proper page URL - handle both slugs and full paths
+    const fullPageUrl = pageUrl.startsWith("/") ? pageUrl : `/page/${pageUrl.split("?")[0]}${pageUrl.includes("?") ? "?" + pageUrl.split("?")[1] : ""}`;
     
     return (
       <Link
