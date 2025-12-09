@@ -53,6 +53,58 @@ export default function NavigationManager() {
     }
   };
 
+  // Sync unallocated pages mutation
+  const syncUnallocatedPages = useMutation({
+    mutationFn: async (configType) => {
+      const configs = await base44.entities.NavigationConfig.filter({ config_type: configType });
+      if (configs.length === 0) return { added: 0, message: "No config found" };
+      
+      const config = configs[0];
+      const sourceSlugs = config.source_slugs || [];
+      const items = config.items || [];
+      
+      // Get all allocated page slugs (pages that are in the items array)
+      const allocatedSlugs = items
+        .filter(item => item.item_type === "page")
+        .map(item => item.slug)
+        .filter(Boolean);
+      
+      // Find orphaned pages (in source_slugs but not allocated)
+      const orphanedPages = sourceSlugs.filter(slug => !allocatedSlugs.includes(slug));
+      
+      if (orphanedPages.length === 0) {
+        return { added: 0, message: "No orphaned pages found" };
+      }
+      
+      // Add orphaned pages to items as unallocated (no parent_id)
+      const newItems = [...items];
+      orphanedPages.forEach(slug => {
+        // Check if already exists in items (shouldn't, but double check)
+        if (!newItems.some(item => item.slug === slug)) {
+          newItems.push({
+            name: slug,
+            slug: slug,
+            icon: "File",
+            is_visible: true,
+            parent_id: null,
+            item_type: "page",
+            order: newItems.length
+          });
+        }
+      });
+      
+      await base44.entities.NavigationConfig.update(config.id, { items: newItems });
+      return { added: orphanedPages.length, message: `Added ${orphanedPages.length} orphaned page(s)` };
+    },
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: ["navConfig"] });
+      toast.success(result.message);
+    },
+    onError: (error) => {
+      toast.error("Sync failed: " + error.message);
+    }
+  });
+
   // Set custom properties for the side panel
   useEffect(() => {
     setCustomProperties([
@@ -154,6 +206,8 @@ export default function NavigationManager() {
             <GenericNavEditor
               title="Admin Console Navigation"
               configType="admin_console"
+              syncUnallocatedPages={() => syncUnallocatedPages.mutate("admin_console")}
+              isSyncing={syncUnallocatedPages.isPending}
             />
           )}
 
@@ -166,6 +220,8 @@ export default function NavigationManager() {
               <GenericNavEditor
                 title="App Pages Navigation (Global Template)"
                 configType="app_pages_source"
+                syncUnallocatedPages={() => syncUnallocatedPages.mutate("app_pages_source")}
+                isSyncing={syncUnallocatedPages.isPending}
               />
             </div>
           )}
@@ -187,6 +243,8 @@ export default function NavigationManager() {
                 <GenericNavEditor
                   title={`Tenant Navigation: ${tenants.find(t => t.id === selectedTenantId)?.name || 'Unknown'}`}
                   configType={`tenant_nav_${selectedTenantId}`}
+                  syncUnallocatedPages={() => syncUnallocatedPages.mutate(`tenant_nav_${selectedTenantId}`)}
+                  isSyncing={syncUnallocatedPages.isPending}
                   showCopyButton={true}
                   copyButtonLabel="Copy from App Pages Template"
                   onCopyFromTemplate={async () => {
