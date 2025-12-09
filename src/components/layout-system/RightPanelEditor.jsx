@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { X } from "lucide-react";
 import { getValueByBinding, setValueByBinding } from "./utils";
 
@@ -120,6 +121,17 @@ function FieldComponent({ field, value, onChange }) {
           value={value || ""}
           onChange={(e) => onChange(e.target.value)}
         />
+      );
+    
+    case "CheckboxField":
+      return (
+        <div className="flex items-center gap-2">
+          <Checkbox
+            checked={value || false}
+            onCheckedChange={onChange}
+          />
+          <label className="text-sm">{field.label}</label>
+        </div>
       );
     
     default:
