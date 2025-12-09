@@ -43,8 +43,9 @@ const iconMap = {
 export function AppSidebar({ navItems = [] }) {
   const { mode, isHidden } = useAppSidebar();
   const location = useLocation();
-  // Start with all folders collapsed (empty set)
   const [expandedFolders, setExpandedFolders] = useState(new Set());
+  
+  const isIconsOnly = mode === "icons";
 
   const widthClass =
     mode === "expanded" ? "w-64" : mode === "icons" ? "w-16" : "w-0";
@@ -65,6 +66,17 @@ export function AppSidebar({ navItems = [] }) {
     return iconMap[iconName] || Home;
   };
 
+  // Check if any child is active
+  const isChildActive = (item) => {
+    if (!item.children || item.children.length === 0) return false;
+    return item.children.some(child => {
+      const childUrl = child.page_url || "";
+      const childPath = childUrl.split("?")[0];
+      const currentPath = location.pathname.split("/").pop();
+      return currentPath === childPath;
+    });
+  };
+
   const renderNavItem = (item, isChild = false, isTopLevel = false) => {
     const isFolder = item.item_type === "folder";
     const Icon = getIcon(item.icon);
@@ -78,14 +90,24 @@ export function AppSidebar({ navItems = [] }) {
 
     if (isFolder) {
       const hasChildren = item.children && item.children.length > 0;
+      const childActive = isChildActive(item);
       
-      // In icon mode, folders are not expandable - just show as collapsed icon
-      if (!showLabels) {
+      // In icon mode, folders show single icon with active state if child is active
+      if (isIconsOnly) {
         const folderButton = (
           <button
-            className="w-full flex items-center justify-center [padding:var(--spacing-3)] [border-radius:var(--radius-lg)] transition-colors hover:bg-sidebar-accent group"
+            onClick={() => toggleFolder(item.id)}
+            className={cn(
+              "w-full flex items-center justify-center [padding:var(--spacing-3)] [border-radius:var(--radius-lg)] transition-colors group",
+              childActive ? "bg-sidebar-primary" : "hover:bg-sidebar-accent"
+            )}
           >
-            <Folder className="h-5 w-5 transition-colors [color:var(--secondary-400)] group-hover:[color:var(--sidebar-foreground)]" />
+            <Folder className={cn(
+              "h-5 w-5 transition-colors",
+              childActive 
+                ? "[color:var(--sidebar-primary-foreground)]"
+                : "[color:var(--secondary-400)] group-hover:[color:var(--sidebar-foreground)]"
+            )} />
           </button>
         );
         
@@ -107,8 +129,9 @@ export function AppSidebar({ navItems = [] }) {
           <button
             onClick={() => toggleFolder(item.id)}
             className={cn(
-              "w-full flex items-center transition-colors text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
+              "w-full flex items-center transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground",
               "[gap:var(--spacing-3)] [padding-left:var(--spacing-3)] [padding-right:var(--spacing-3)] [padding-top:var(--spacing-2)] [padding-bottom:var(--spacing-2)] [border-radius:var(--radius-lg)]",
+              childActive ? "text-sidebar-foreground" : "text-sidebar-foreground/70",
               isExpanded && "text-sidebar-foreground"
             )}
           >
@@ -176,27 +199,10 @@ export function AppSidebar({ navItems = [] }) {
     return linkContent;
   };
 
-  // Flatten navigation for icon mode - include folders AND pages
-  const getFlattenedItems = (items) => {
-    const flattened = [];
-    const flatten = (itemList, parentId = null) => {
-      itemList.forEach((item) => {
-        // Add the item (folder or page)
-        flattened.push({
-          ...item,
-          _isTopLevel: !parentId  // Mark if this is a top-level item
-        });
-        // Recursively add children
-        if (item.children && item.children.length > 0) {
-          flatten(item.children, item.id);
-        }
-      });
-    };
-    flatten(items);
-    return flattened;
-  };
-
-  const itemsToRender = showLabels ? navItems : getFlattenedItems(navItems);
+  // In icons-only mode, only show top-level items
+  const itemsToRender = isIconsOnly 
+    ? navItems.filter(item => !item.parent_id)
+    : navItems;
 
   return (
     <aside
