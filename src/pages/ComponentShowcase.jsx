@@ -7,6 +7,7 @@ import {
   Copy, Search, RefreshCw, ExternalLink
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ShowcaseEditMode } from "@/components/showcase/ShowcaseEditMode";
 
 // Typography
 import { H1, H2, H3, H4, H5, H6, BodyText, MutedText, SmallText, LargeText, CodeText, LinkText, Caption } from "@/components/library/Typography";
@@ -145,25 +146,26 @@ export default function ComponentShowcase() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="bg-card border-b border-border">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-              <Package className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-display text-midnight-900">
-                Component Library
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Production-ready components using Sturij design tokens
-              </p>
+    <ShowcaseEditMode>
+      <div className="min-h-screen bg-background">
+        {/* Header */}
+        <div className="bg-card border-b border-border">
+          <div className="max-w-7xl mx-auto px-6 py-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
+                <Package className="h-5 w-5 text-primary-foreground" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-display text-midnight-900">
+                  Component Library
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                  Production-ready components using Sturij design tokens
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Typography Section */}
