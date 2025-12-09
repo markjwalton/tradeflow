@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -65,12 +66,12 @@ export function AppHeader({ user, navItems = [] }) {
 function ProfileMenu({ user }) {
   if (!user) return null;
 
-  const [preferences, setPreferences] = React.useState({
+  const [preferences, setPreferences] = useState({
     showAIAssistant: true,
     showPageEditor: true,
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     const loadPreferences = async () => {
       try {
         const currentUser = await base44.auth.me();
