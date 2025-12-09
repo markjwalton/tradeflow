@@ -232,7 +232,7 @@ export default function DashboardManager() {
                 <Card className="max-w-lg mx-auto mt-12">
                   <CardContent className="py-12 text-center">
                     <LayoutDashboard className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                    <h3 className="text-h4 mb-2">No Widgets Yet</h3>
+                    <h3 className="text-h4 mb-2 text-foreground">No Widgets Yet</h3>
                     <p className="text-muted-foreground mb-4">
                       Create widgets in the staging area or use AI to generate recommendations.
                     </p>

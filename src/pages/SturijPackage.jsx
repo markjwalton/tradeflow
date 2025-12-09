@@ -307,7 +307,7 @@ When updating existing code:
               <Package className="h-6 w-6 text-primary" />
             </div>
             <div>
-              <h1 className="text-3xl font-heading text-midnight-900">
+              <h1 className="text-3xl font-heading text-foreground">
                 Sturij Design System Package
               </h1>
               <p className="text-muted-foreground">
@@ -323,7 +323,7 @@ When updating existing code:
             <Badge className="bg-info-50 text-info">
               v1.0.0
             </Badge>
-            <Badge className="bg-secondary-100 text-secondary">
+            <Badge className="bg-secondary/10 text-secondary">
               Base44 Compatible
             </Badge>
           </div>
@@ -361,7 +361,7 @@ When updating existing code:
           <TabsContent value="overview" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-midnight-900">What is Sturij?</CardTitle>
+                <CardTitle className="text-foreground">What is Sturij?</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-muted-foreground">
@@ -373,7 +373,7 @@ When updating existing code:
                 <div className="grid md:grid-cols-3 gap-4">
                   <div className="p-4 bg-muted rounded-lg">
                     <Palette className="h-8 w-8 text-primary mb-3" />
-                    <h3 className="font-heading font-medium text-midnight-900 mb-2">
+                    <h3 className="font-heading font-medium text-foreground mb-2">
                       Design Tokens
                     </h3>
                     <p className="text-sm text-muted-foreground">
@@ -383,7 +383,7 @@ When updating existing code:
                   
                   <div className="p-4 bg-muted rounded-lg">
                     <Layers className="h-8 w-8 text-secondary mb-3" />
-                    <h3 className="font-heading font-medium text-midnight-900 mb-2">
+                    <h3 className="font-heading font-medium text-foreground mb-2">
                       Components
                     </h3>
                     <p className="text-sm text-muted-foreground">
@@ -393,7 +393,7 @@ When updating existing code:
                   
                   <div className="p-4 bg-muted rounded-lg">
                     <Zap className="h-8 w-8 text-accent mb-3" />
-                    <h3 className="font-heading font-medium text-midnight-900 mb-2">
+                    <h3 className="font-heading font-medium text-foreground mb-2">
                       LLM Optimized
                     </h3>
                     <p className="text-sm text-muted-foreground">
@@ -406,29 +406,29 @@ When updating existing code:
                   <h4 className="font-heading font-medium text-primary mb-2">
                     Key Features
                   </h4>
-                  <ul className="space-y-1 text-sm text-midnight-900">
+                  <ul className="space-y-1 text-sm text-foreground">
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-success-foreground mt-0.5 flex-shrink-0" />
+                      <CheckCircle2 className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
                       <span>Complete CSS variable system with semantic naming</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-success-foreground mt-0.5 flex-shrink-0" />
+                      <CheckCircle2 className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
                       <span>Full color palette with 50-900 shades for each color</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-success-foreground mt-0.5 flex-shrink-0" />
+                      <CheckCircle2 className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
                       <span>Typography system with custom fonts and scales</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-success-foreground mt-0.5 flex-shrink-0" />
+                      <CheckCircle2 className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
                       <span>Spacing, shadows, and border radius tokens</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-success-foreground mt-0.5 flex-shrink-0" />
+                      <CheckCircle2 className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
                       <span>Ready-to-use React components</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-success-foreground mt-0.5 flex-shrink-0" />
+                      <CheckCircle2 className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
                       <span>Interactive showcase and documentation</span>
                     </li>
                   </ul>
@@ -441,7 +441,7 @@ When updating existing code:
           <TabsContent value="files" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-midnight-900">Package Contents</CardTitle>
+                <CardTitle className="text-foreground">Package Contents</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -452,13 +452,13 @@ When updating existing code:
                           <FileText className="h-5 w-5 text-primary" />
                         </div>
                         <div>
-                          <div className="font-medium text-midnight-900">{file.name}</div>
+                          <div className="font-medium text-foreground">{file.name}</div>
                           <p className="text-sm text-muted-foreground">{file.description}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
                         <Badge variant="outline">{file.type}</Badge>
-                        <Badge className="bg-charcoal-100 text-charcoal-700">
+                        <Badge className="bg-muted text-muted-foreground">
                           {file.size}
                         </Badge>
                       </div>
@@ -470,7 +470,7 @@ When updating existing code:
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-midnight-900">File Structure</CardTitle>
+                <CardTitle className="text-foreground">File Structure</CardTitle>
               </CardHeader>
               <CardContent>
                 <pre className="bg-midnight-900 text-background-50 p-4 rounded-lg text-sm font-mono overflow-x-auto">
@@ -510,7 +510,7 @@ When updating existing code:
             {Object.entries(designTokenDocs).map(([category, tokens]) => (
               <Card key={category}>
                 <CardHeader>
-                  <CardTitle className="text-midnight-900 capitalize">
+                  <CardTitle className="text-foreground capitalize">
                     {category}
                   </CardTitle>
                 </CardHeader>
@@ -519,7 +519,7 @@ When updating existing code:
                     {tokens.map((token, idx) => (
                       <div key={idx} className="flex items-center justify-between p-3 bg-background-subtle rounded-lg">
                         <div className="flex-1">
-                          <div className="font-medium text-midnight-900">{token.name}</div>
+                          <div className="font-medium text-foreground">{token.name}</div>
                           {token.var && (
                             <code className="text-xs text-muted-foreground bg-card px-2 py-0.5 rounded">
                               var({token.var})
@@ -553,7 +553,7 @@ When updating existing code:
           <TabsContent value="usage" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-midnight-900">Implementation Steps</CardTitle>
+                <CardTitle className="text-foreground">Implementation Steps</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -563,7 +563,7 @@ When updating existing code:
                         {step.step}
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-heading font-medium text-midnight-900 mb-1">
+                        <h3 className="font-heading font-medium text-foreground mb-1">
                           {step.title}
                         </h3>
                         <p className="text-sm text-muted-foreground mb-2">
@@ -591,13 +591,13 @@ When updating existing code:
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-midnight-900">Code Examples</CardTitle>
+                <CardTitle className="text-foreground">Code Examples</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {usageExamples.map((example, idx) => (
                     <div key={idx}>
-                      <h4 className="font-heading font-medium text-midnight-900 mb-2">
+                      <h4 className="font-heading font-medium text-foreground mb-2">
                         {example.title}
                       </h4>
                       <div className="relative">
@@ -624,7 +624,7 @@ When updating existing code:
           <TabsContent value="llm" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-midnight-900">
+                <CardTitle className="flex items-center gap-2 text-foreground">
                   <Sparkles className="h-5 w-5 text-secondary" />
                   LLM Implementation Guidelines
                 </CardTitle>
@@ -648,12 +648,12 @@ When updating existing code:
 
             <Card className="border-warning bg-warning/5">
               <CardHeader>
-                <CardTitle className="text-midnight-900">Quick Reference</CardTitle>
+                <CardTitle className="text-foreground">Quick Reference</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-2 gap-4 text-sm">
                   <div>
-                    <h5 className="font-heading font-medium text-midnight-900 mb-2">
+                    <h5 className="font-heading font-medium text-foreground mb-2">
                       ✅ Always Use
                     </h5>
                     <ul className="space-y-1 text-muted-foreground">
@@ -686,7 +686,7 @@ When updating existing code:
             <Card>
               <CardContent className="py-12 text-center">
                 <Eye className="h-16 w-16 mx-auto mb-4 text-primary" />
-                <h3 className="text-xl font-heading text-midnight-900 mb-2">
+                <h3 className="text-xl font-heading text-foreground mb-2">
                   Interactive Component Showcase
                 </h3>
                 <p className="text-muted-foreground mb-6">
@@ -713,7 +713,7 @@ When updating existing code:
           <CardContent className="py-8">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-xl font-heading text-midnight-900 mb-2">
+                <h3 className="text-xl font-heading text-foreground mb-2">
                   Ready to implement?
                 </h3>
                 <p className="text-muted-foreground">

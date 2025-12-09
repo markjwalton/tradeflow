@@ -230,7 +230,7 @@ export default function CommunityLibrary() {
     <div className="p-6 max-w-6xl mx-auto bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-midnight-900 font-heading">
+          <h1 className="text-2xl font-light flex items-center gap-2 text-foreground font-heading">
             <Package className="h-6 w-6" />
             Community Library
           </h1>

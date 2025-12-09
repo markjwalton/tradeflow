@@ -244,8 +244,8 @@ export default function CommunityPublish() {
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className={`p-2 rounded-lg ${published ? "bg-green-100" : "bg-gray-100"}`}>
-                <Icon className={`h-5 w-5 ${published ? "text-green-600" : "text-gray-600"}`} />
+              <div className={`p-2 rounded-lg ${published ? "bg-success-50" : "bg-muted"}`}>
+                <Icon className={`h-5 w-5 ${published ? "text-success" : "text-muted-foreground"}`} />
               </div>
               <div>
                 <div className="flex items-center gap-2">
@@ -257,7 +257,7 @@ export default function CommunityPublish() {
                     </Badge>
                   )}
                 </div>
-                <p className="text-sm text-gray-500 line-clamp-1">{item.description}</p>
+                <p className="text-sm text-muted-foreground line-clamp-1">{item.description}</p>
               </div>
             </div>
             <Button 
@@ -288,7 +288,7 @@ export default function CommunityPublish() {
     
     if (items.length === 0) {
       return (
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-muted-foreground">
           No {itemTypeLabels[itemType].toLowerCase()}s found
         </div>
       );
@@ -322,15 +322,15 @@ export default function CommunityPublish() {
           const publishedCount = categoryItems.filter(item => isPublished(item, itemType)).length;
 
           return (
-            <div key={category} className={isExpanded ? "bg-gray-50 rounded-lg" : ""}>
+            <div key={category} className={isExpanded ? "bg-muted rounded-lg" : ""}>
               <button
                 onClick={() => toggleCategory(categoryKey)}
-                className="w-full flex items-center gap-3 px-3 py-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="w-full flex items-center gap-3 px-3 py-2 hover:bg-muted rounded-lg transition-colors"
               >
                 {isExpanded ? (
-                  <ChevronDown className="h-4 w-4 text-gray-400" />
+                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
                 ) : (
-                  <ChevronRight className="h-4 w-4 text-gray-400" />
+                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
                 )}
                 {isExpanded ? (
                   <FolderOpen className="h-4 w-4 text-amber-500" />
@@ -357,7 +357,7 @@ export default function CommunityPublish() {
   if (!isGlobalAdmin) {
     return (
       <div className="p-6 text-center">
-        <p className="text-gray-500">Only global admins can publish to the community library.</p>
+        <p className="text-muted-foreground">Only global admins can publish to the community library.</p>
       </div>
     );
   }
@@ -365,11 +365,11 @@ export default function CommunityPublish() {
   return (
     <div className="p-6 max-w-4xl mx-auto bg-[var(--color-background)] min-h-screen">
       <div className="mb-6">
-        <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)]" style={{ fontFamily: 'var(--font-heading)' }}>
+        <h1 className="text-2xl font-light flex items-center gap-2 text-foreground font-heading">
           <Upload className="h-6 w-6" />
           Publish to Community
         </h1>
-        <p className="text-[var(--color-charcoal)]">Share templates with all tenants</p>
+        <p className="text-muted-foreground">Share templates with all tenants</p>
       </div>
 
       <Card className="mb-6 bg-blue-50 border-blue-200">
@@ -427,7 +427,7 @@ export default function CommunityPublish() {
                   {React.createElement(itemTypeIcons[selectedItem.itemType], { className: "h-5 w-5" })}
                   <span className="font-medium">{selectedItem.item.name}</span>
                 </div>
-                <p className="text-sm text-gray-500 mt-1">{selectedItem.item.description}</p>
+                <p className="text-sm text-muted-foreground mt-1">{selectedItem.item.description}</p>
               </div>
 
               <div>
