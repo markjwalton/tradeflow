@@ -247,9 +247,9 @@ export default function WorkflowDesigner() {
   if (!workflowId && !showNewDialog) {
     return (
       <div className="h-screen flex items-center justify-center bg-background">
-        <Card className="w-96 border-border bg-card">
+        <Card className="w-96 bg-card">
           <CardHeader>
-            <CardTitle className="text-midnight-900">No Workflow Selected</CardTitle>
+            <CardTitle className="text-foreground">No Workflow Selected</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <Button onClick={() => setShowNewDialog(true)} className="w-full">
@@ -279,7 +279,7 @@ export default function WorkflowDesigner() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-lg font-semibold text-midnight-900">
+            <h1 className="text-lg font-semibold text-foreground">
               {workflow?.name || "New Workflow"}
             </h1>
             <p className="text-sm text-muted-foreground">

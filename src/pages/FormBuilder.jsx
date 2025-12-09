@@ -192,8 +192,8 @@ export default function FormBuilder() {
   if (!formId && !showNewDialog) {
     return (
       <div className="h-screen flex items-center justify-center bg-background">
-        <Card className="w-96 p-6 border-border bg-card">
-          <h2 className="text-lg font-semibold mb-4 text-midnight-900">No Form Selected</h2>
+        <Card className="w-96 p-6 bg-card">
+          <h2 className="text-lg font-semibold mb-4 text-foreground">No Form Selected</h2>
           <div className="space-y-3">
             <Button onClick={() => setShowNewDialog(true)} className="w-full">
               <Plus className="h-4 w-4 mr-2" />
@@ -222,7 +222,7 @@ export default function FormBuilder() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-lg font-semibold text-midnight-900">{formData.name || "New Form"}</h1>
+            <h1 className="text-lg font-semibold text-foreground">{formData.name || "New Form"}</h1>
             <div className="flex items-center gap-2">
               {formData.code && <Badge variant="outline">{formData.code}</Badge>}
               {formData.category && (
@@ -269,7 +269,7 @@ export default function FormBuilder() {
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
                   <Plus className="h-8 w-8" />
                 </div>
-                <h3 className="font-medium text-midnight-900">No fields yet</h3>
+                <h3 className="font-medium text-foreground">No fields yet</h3>
                 <p className="text-sm">Add fields from the palette on the left</p>
               </div>
             </div>
@@ -286,10 +286,10 @@ export default function FormBuilder() {
                               <div
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
-                                className={`border rounded-lg p-3 bg-card transition-all cursor-pointer ${
+                                className={`border border-border rounded-lg p-3 bg-card transition-all cursor-pointer ${
                                   selectedFieldIndex === index
-                                    ? "ring-2 ring-primary border-primary"
-                                    : "hover:border-border"
+                                    ? "ring-2 ring-primary"
+                                    : "hover:border-primary/50"
                                 } ${snapshot.isDragging ? "shadow-lg" : ""}`}
                                 onClick={() => setSelectedFieldIndex(index)}
                               >

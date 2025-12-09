@@ -163,8 +163,8 @@ export default function ChecklistBuilder() {
   if (!checklistId && !showNewDialog) {
     return (
       <div className="h-screen flex items-center justify-center bg-background">
-        <Card className="w-96 p-6 border-border bg-card">
-          <CardTitle className="text-midnight-900">No Checklist Selected</CardTitle>
+        <Card className="w-96 p-6 bg-card">
+          <CardTitle className="text-foreground">No Checklist Selected</CardTitle>
           <div className="space-y-3">
             <Button onClick={() => setShowNewDialog(true)} className="w-full">
               <Plus className="h-4 w-4 mr-2" />
@@ -193,7 +193,7 @@ export default function ChecklistBuilder() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-lg font-semibold text-midnight-900">{checklistData.name || "New Checklist"}</h1>
+            <h1 className="text-lg font-semibold text-foreground">{checklistData.name || "New Checklist"}</h1>
             <div className="flex items-center gap-2">
               {checklistData.code && <Badge variant="outline">{checklistData.code}</Badge>}
               {checklistData.category && (
@@ -252,10 +252,10 @@ export default function ChecklistBuilder() {
                               <div
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
-                                className={`border rounded-lg p-3 bg-card transition-all ${
+                                className={`border border-border rounded-lg p-3 bg-card transition-all ${
                                   editingItemIndex === index
                                     ? "ring-2 ring-primary"
-                                    : "hover:border-border"
+                                    : "hover:border-primary/50"
                                 } ${snapshot.isDragging ? "shadow-lg" : ""}`}
                               >
                                 {editingItemIndex === index ? (

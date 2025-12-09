@@ -292,7 +292,7 @@ export default function RoadmapManager() {
     <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-midnight-900">
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
             <Lightbulb className="h-6 w-6 text-secondary" />
             Roadmap Manager
           </h1>
@@ -311,14 +311,14 @@ export default function RoadmapManager() {
 
       {/* Focused Item Banner */}
       {focusedItem && (
-        <div className="mb-6 p-4 bg-primary-100 border border-primary/20 rounded-lg">
+        <div className="mb-6 p-4 bg-primary/10 border border-primary/20 rounded-lg">
           <div className="flex items-center gap-2 mb-2">
             <Focus className="h-5 w-5 text-primary" />
             <span className="font-semibold text-primary">Current Focus</span>
           </div>
           <p className="text-foreground font-medium">{focusedItem.title}</p>
           {focusedItem.description && (
-            <p className="text-primary text-sm mt-1">{focusedItem.description}</p>
+            <p className="text-muted-foreground text-sm mt-1">{focusedItem.description}</p>
           )}
           <div className="flex gap-2 mt-3">
             <Button size="sm" variant="outline" onClick={() => handleOpenJournal(focusedItem)}>
