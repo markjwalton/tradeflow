@@ -153,20 +153,20 @@ Return a JSON object with this structure:
   };
 
   const fieldTypeColors = {
-    text: "bg-blue-100 text-blue-800",
-    textarea: "bg-blue-100 text-blue-800",
-    number: "bg-green-100 text-green-800",
-    date: "bg-purple-100 text-purple-800",
-    datetime: "bg-purple-100 text-purple-800",
-    select: "bg-amber-100 text-amber-800",
-    multiselect: "bg-amber-100 text-amber-800",
-    checkbox: "bg-cyan-100 text-cyan-800",
-    radio: "bg-cyan-100 text-cyan-800",
-    file: "bg-pink-100 text-pink-800",
-    image: "bg-pink-100 text-pink-800",
-    rating: "bg-yellow-100 text-yellow-800",
-    section: "bg-gray-100 text-gray-800",
-    instructions: "bg-gray-100 text-gray-800",
+    text: "bg-info-50 text-info",
+    textarea: "bg-info-50 text-info",
+    number: "bg-success-50 text-success",
+    date: "bg-accent/10 text-accent",
+    datetime: "bg-accent/10 text-accent",
+    select: "bg-warning/10 text-warning",
+    multiselect: "bg-warning/10 text-warning",
+    checkbox: "bg-info-50 text-info",
+    radio: "bg-info-50 text-info",
+    file: "bg-accent-100 text-accent",
+    image: "bg-accent-100 text-accent",
+    rating: "bg-secondary/10 text-secondary",
+    section: "bg-muted text-muted-foreground",
+    instructions: "bg-muted text-muted-foreground",
   };
 
   return (
@@ -174,7 +174,7 @@ Return a JSON object with this structure:
       <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-amber-500" />
+            <Sparkles className="h-5 w-5 text-warning" />
             AI Form Generator
           </DialogTitle>
           <DialogDescription>
@@ -188,14 +188,14 @@ Return a JSON object with this structure:
         <ScrollArea className="flex-1 pr-4">
           {phase === "input" && (
             <div className="space-y-4">
-              <p className="text-sm text-[var(--color-charcoal)]">
+              <p className="text-sm text-muted-foreground">
                 Enter the information you want to capture. Don't worry about field types - AI will figure that out.
               </p>
 
               {fields.map((field, index) => (
                 <Card key={index} className="p-4">
                   <div className="flex items-start gap-3">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[var(--color-primary)]/10 text-[var(--color-primary)] font-semibold text-sm flex-shrink-0">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-semibold text-sm flex-shrink-0">
                       {index + 1}
                     </div>
                     <div className="flex-1 space-y-2">
@@ -217,7 +217,7 @@ Return a JSON object with this structure:
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="text-[var(--color-destructive)] h-8 w-8 p-0"
+                        className="text-destructive h-8 w-8 p-0"
                         onClick={() => removeField(index)}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -233,7 +233,7 @@ Return a JSON object with this structure:
               </Button>
 
               <div className="flex justify-end pt-4">
-                <Button onClick={handleFinishInput} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
+                <Button onClick={handleFinishInput}>
                   Continue
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
@@ -243,10 +243,10 @@ Return a JSON object with this structure:
 
           {phase === "context" && (
             <div className="space-y-4">
-              <div className="bg-[var(--color-info)]/10 border border-[var(--color-info)]/30 rounded-lg p-4">
+              <div className="bg-info/10 border border-info/30 rounded-lg p-4">
                 <div className="flex items-start gap-2">
-                  <Lightbulb className="h-5 w-5 text-[var(--color-info)] flex-shrink-0 mt-0.5" />
-                  <div className="text-sm text-[var(--color-info-dark)]">
+                  <Lightbulb className="h-5 w-5 text-info flex-shrink-0 mt-0.5" />
+                  <div className="text-sm text-info">
                     <p className="font-medium mb-1">You've added {fields.filter(f => f.name.trim()).length} fields:</p>
                     <ul className="list-disc list-inside space-y-0.5">
                       {fields.filter(f => f.name.trim()).map((f, i) => (
@@ -278,7 +278,7 @@ Return a JSON object with this structure:
                 <Button variant="outline" onClick={() => setPhase("input")}>
                   Back
                 </Button>
-                <Button onClick={handleGenerate} className="bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-dark)] text-white">
+                <Button onClick={handleGenerate} className="bg-secondary text-secondary-foreground hover:bg-secondary/90">
                   <Sparkles className="h-4 w-4 mr-2" />
                   Generate Form
                 </Button>
@@ -288,9 +288,9 @@ Return a JSON object with this structure:
 
           {phase === "generating" && (
             <div className="flex flex-col items-center justify-center py-12">
-              <Loader2 className="h-12 w-12 animate-spin text-[var(--color-primary)] mb-4" />
-              <p className="text-lg font-medium text-[var(--color-midnight)]">Generating your form...</p>
-              <p className="text-sm text-[var(--color-charcoal)] mt-1">
+              <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
+              <p className="text-lg font-medium text-foreground">Generating your form...</p>
+              <p className="text-sm text-muted-foreground mt-1">
                 AI is configuring field types and validation
               </p>
             </div>
@@ -298,9 +298,9 @@ Return a JSON object with this structure:
 
           {phase === "result" && generatedForm && (
             <div className="space-y-4">
-              <Card className="p-4 bg-gradient-to-r from-[var(--color-primary)]/10 to-[var(--color-accent)]/10">
-                <h3 className="font-semibold text-lg text-[var(--color-midnight)]">{generatedForm.formName}</h3>
-                <p className="text-sm text-[var(--color-charcoal)] mt-1">{generatedForm.formDescription}</p>
+              <Card className="p-4 bg-gradient-to-r from-primary/10 to-accent/10">
+                <h3 className="font-semibold text-lg text-foreground">{generatedForm.formName}</h3>
+                <p className="text-sm text-muted-foreground mt-1">{generatedForm.formDescription}</p>
                 <div className="flex gap-2 mt-2">
                   <Badge>{generatedForm.category}</Badge>
                   <Badge variant="outline">{generatedForm.fields?.length} fields</Badge>
@@ -312,14 +312,14 @@ Return a JSON object with this structure:
                 {generatedForm.fields?.map((field, index) => (
                   <Card key={index} className="p-3">
                     <div className="flex items-center gap-2">
-                      <span className="font-medium text-[var(--color-midnight)]">{field.label}</span>
-                      {field.required && <span className="text-[var(--color-destructive)]">*</span>}
-                      <Badge className={fieldTypeColors[field.type] || "bg-gray-100"}>
+                      <span className="font-medium text-foreground">{field.label}</span>
+                      {field.required && <span className="text-destructive">*</span>}
+                      <Badge className={fieldTypeColors[field.type] || "bg-muted text-muted-foreground"}>
                         {field.type}
                       </Badge>
                     </div>
                     {field.helpText && (
-                      <p className="text-xs text-[var(--color-charcoal)] mt-1">{field.helpText}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{field.helpText}</p>
                     )}
                     {field.options?.length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-2">
@@ -350,7 +350,7 @@ Return a JSON object with this structure:
                 <Button variant="outline" onClick={() => setPhase("context")}>
                   Back & Refine
                 </Button>
-                <Button onClick={handleApply} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
+                <Button onClick={handleApply}>
                   <Sparkles className="h-4 w-4 mr-2" />
                   Apply Form
                 </Button>

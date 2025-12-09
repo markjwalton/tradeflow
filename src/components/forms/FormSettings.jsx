@@ -23,7 +23,7 @@ export default function FormSettings({ open, onOpenChange, formData, onUpdate })
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-[var(--color-midnight)]">Form Settings</DialogTitle>
+          <DialogTitle className="text-foreground">Form Settings</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -92,7 +92,7 @@ export default function FormSettings({ open, onOpenChange, formData, onUpdate })
                 <SelectItem value="Customer">Customer</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-xs text-[var(--color-charcoal)] mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               Form data will be saved to this entity
             </p>
           </div>
@@ -122,7 +122,7 @@ export default function FormSettings({ open, onOpenChange, formData, onUpdate })
             />
           </div>
 
-          <Button onClick={() => onOpenChange(false)} className="w-full bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
+          <Button onClick={() => onOpenChange(false)} className="w-full">
             Done
           </Button>
         </div>
