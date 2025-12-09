@@ -149,20 +149,27 @@ export function AppSidebar({ navItems = [] }) {
     return linkContent;
   };
 
-  // Flatten navigation for icon mode
+  // Flatten navigation for icon mode - preserve top-level status
   const getFlattenedItems = (items) => {
     const flattened = [];
-    const flatten = (itemList) => {
+    const flatten = (itemList, isTopLevel = false) => {
       itemList.forEach((item) => {
         if (item.item_type === "page") {
-          flattened.push(item);
+          flattened.push({ ...item, _isTopLevel: isTopLevel });
         }
         if (item.children && item.children.length > 0) {
-          flatten(item.children);
+          flatten(item.children, false);
         }
       });
     };
-    flatten(items);
+    // First level items without parent_id are top-level
+    items.forEach((item) => {
+      if (item.item_type === "page" && !item.parent_id) {
+        flattened.push({ ...item, _isTopLevel: true });
+      } else if (item.item_type === "folder") {
+        flatten(item.children, !item.parent_id);
+      }
+    });
     return flattened;
   };
 
@@ -183,7 +190,7 @@ export function AppSidebar({ navItems = [] }) {
             showLabels ? "[padding:var(--spacing-3)] [gap:var(--spacing-1)]" : "[padding-top:var(--spacing-3)] [padding-bottom:var(--spacing-3)] [gap:var(--spacing-2)]",
             "flex flex-col"
           )}>
-            {itemsToRender.map((item) => renderNavItem(item, false, !item.parent_id))}
+            {itemsToRender.map((item) => renderNavItem(item, false, !item.parent_id || item._isTopLevel))}
           </nav>
         </TooltipProvider>
       )}
