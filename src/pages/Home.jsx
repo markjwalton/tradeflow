@@ -42,13 +42,13 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-light font-display mb-2 text-midnight-900">
+        <h1 className="text-3xl font-light font-display mb-2 text-foreground">
           Welcome to {tenant?.name || "Your Portal"}
         </h1>
         <p className="text-muted-foreground mb-8">Select a section to get started</p>
         
         {navItems.length === 0 ? (
-          <Card className="border-background-muted">
+          <Card className="border-border">
             <CardContent className="py-8 text-center text-muted-foreground">
               No navigation items configured for this tenant yet.
             </CardContent>
@@ -64,9 +64,9 @@ export default function Home() {
                 : null;
 
               return (
-                <Card key={item.id} className="hover:shadow-md transition-shadow border-background-muted bg-card">
+                <Card key={item.id} className="hover:shadow-md transition-shadow bg-card">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg text-midnight-900">
+                    <CardTitle className="flex items-center gap-2 text-lg text-foreground">
                       <Icon className="h-5 w-5 text-primary" />
                       {item.name}
                     </CardTitle>

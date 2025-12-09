@@ -221,7 +221,7 @@ export default function ClientAccessManager({ projectId }) {
             {accessList.map((access) => (
               <div
                 key={access.id}
-                className="flex items-center justify-between p-3 bg-stone-50 rounded-lg"
+                className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
               >
                 <div>
                   <div className="flex items-center gap-2">
@@ -269,7 +269,7 @@ export default function ClientAccessManager({ projectId }) {
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => deleteMutation.mutate(access.id)}
-                        className="text-red-600"
+                        className="text-destructive"
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
                         Revoke Access

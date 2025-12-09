@@ -157,7 +157,7 @@ export default function Projects() {
   return (
     <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light font-display text-midnight-900">Projects</h1>
+        <h1 className="text-2xl font-light font-display text-foreground">Projects</h1>
         <Button onClick={() => { resetForm(); setEditingProject(null); setShowForm(true); }}>
           <Plus className="h-4 w-4 mr-2" />
           New Project
@@ -204,10 +204,10 @@ export default function Projects() {
         {filteredProjects.map((project) => {
           const budgetProgress = project.budget > 0 ? (project.spend / project.budget) * 100 : 0;
           return (
-            <Card key={project.id} className="hover:shadow-md transition-shadow border-background-muted bg-card">
+            <Card key={project.id} className="hover:shadow-md transition-shadow bg-card">
               <CardHeader className="pb-2">
                 <div className="flex items-start justify-between">
-                  <CardTitle className="text-lg text-midnight-900">{project.name}</CardTitle>
+                  <CardTitle className="text-lg text-foreground">{project.name}</CardTitle>
                   <div className="flex gap-1">
                     <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
                       <Link to={createPageUrl("ProjectDetail") + `?id=${project.id}`}>

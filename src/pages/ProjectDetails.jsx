@@ -90,11 +90,11 @@ export default function ProjectDetails() {
   };
 
   const typeColors = {
-    "New Build": "bg-info-50 text-info-foreground",
-    Extension: "bg-accent-100 text-accent-700",
-    Renovation: "bg-accent-200 text-accent-800",
-    Conservation: "bg-warning/10 text-warning-foreground",
-    Commercial: "bg-info-50 text-info-foreground",
+    "New Build": "bg-info-50 text-info",
+    Extension: "bg-accent/10 text-accent",
+    Renovation: "bg-accent/20 text-accent",
+    Conservation: "bg-warning/10 text-warning",
+    Commercial: "bg-info-50 text-info",
   };
 
   // Calculate task stats
