@@ -11,10 +11,6 @@ export function AppBreadcrumb({ organizedNavigation = [] }) {
   const currentSlug = segments[segments.length - 1] || "";
 
   const trail = findBreadcrumbTrail(organizedNavigation, currentSlug);
-  if (trail.length === 0) return null;
-
-  const isTopLevel = trail.length === 1 && !trail[0].children?.length;
-  if (isTopLevel) return null;
 
   const crumbs = trail.map((item, index) => {
     const isLast = index === trail.length - 1;
