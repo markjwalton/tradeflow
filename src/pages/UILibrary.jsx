@@ -13,6 +13,7 @@ import LayoutShowcase from "../pages/LayoutShowcase";
 import NavigationShowcase from "../pages/NavigationShowcase";
 import DataDisplayShowcase from "../pages/DataDisplayShowcase";
 import FeedbackShowcase from "../pages/FeedbackShowcase";
+import CompactButtonShowcase from "../pages/CompactButtonShowcase";
 
 export default function UILibrary() {
   const [openSections, setOpenSections] = useState(["typography"]);
@@ -29,6 +30,12 @@ export default function UILibrary() {
       title: "Buttons",
       description: "Button variants and interactive elements",
       component: ButtonsShowcase,
+    },
+    {
+      id: "compact-buttons",
+      title: "Compact Buttons",
+      description: "Ultra-small buttons for dense UI controls",
+      component: CompactButtonShowcase,
     },
     {
       id: "cards",
