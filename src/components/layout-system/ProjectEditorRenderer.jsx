@@ -131,7 +131,7 @@ export default function ProjectEditorRenderer({ config, data, onAction }) {
 
       {/* Actions */}
       <div className="mt-8 flex gap-3 justify-end">
-        {(config.actions?.secondary || []).map((action, idx) => (
+        {(currentConfig.actions?.secondary || []).map((action, idx) => (
           <Button
             key={idx}
             variant={action.variant || "secondary"}
@@ -140,12 +140,20 @@ export default function ProjectEditorRenderer({ config, data, onAction }) {
             {action.label}
           </Button>
         ))}
-        {config.actions?.primary && (
+        {currentConfig.actions?.primary && (
           <Button onClick={handlePrimaryAction}>
-            {config.actions.primary.label}
+            {currentConfig.actions.primary.label}
           </Button>
         )}
       </div>
+
+      {/* Layout Config Editor */}
+      <LayoutConfigEditor
+        isOpen={configEditorOpen}
+        onClose={() => setConfigEditorOpen(false)}
+        config={currentConfig}
+        onSave={handleConfigSave}
+      />
     </div>
   );
 }
