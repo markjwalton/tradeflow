@@ -94,6 +94,7 @@ export function AppSidebar({ navItems = [] }) {
       
       // In icon mode, folders show single icon with active state if child is active
       if (isIconsOnly) {
+        const FolderIcon = isExpanded ? FolderOpen : Folder;
         const folderButton = (
           <button
             onClick={() => toggleFolder(item.id)}
@@ -102,7 +103,7 @@ export function AppSidebar({ navItems = [] }) {
               childActive ? "bg-sidebar-primary" : "hover:bg-sidebar-accent"
             )}
           >
-            <Folder className={cn(
+            <FolderIcon className={cn(
               "h-5 w-5 transition-colors",
               childActive 
                 ? "[color:var(--sidebar-primary-foreground)]"
