@@ -118,7 +118,7 @@ export function AppSidebar({ navItems = [] }) {
               <TooltipTrigger asChild>
                 {folderButton}
               </TooltipTrigger>
-              <TooltipContent side="right">
+              <TooltipContent side="right" className="text-base [padding:var(--spacing-3)]">
                 {item.name}
               </TooltipContent>
             </Tooltip>
@@ -197,7 +197,7 @@ export function AppSidebar({ navItems = [] }) {
           <TooltipTrigger asChild>
             {linkContent}
           </TooltipTrigger>
-          <TooltipContent side="right">
+          <TooltipContent side="right" className="text-base [padding:var(--spacing-3)]">
             {item.name}
           </TooltipContent>
         </Tooltip>
