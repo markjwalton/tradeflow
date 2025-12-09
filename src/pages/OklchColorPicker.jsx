@@ -3,6 +3,7 @@ import { OklchColorTool } from "@/components/color-tools/OklchColorTool";
 import { OklchGradientTool } from "@/components/color-tools/OklchGradientTool";
 import { OklchPaletteTool } from "@/components/color-tools/OklchPaletteTool";
 import { ColorLibrary } from "@/components/color-tools/ColorLibrary";
+import { OklchBulkConverter } from "@/components/color-tools/OklchBulkConverter";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
@@ -48,10 +49,11 @@ export default function OklchColorPicker() {
         </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="picker">Color Picker</TabsTrigger>
             <TabsTrigger value="gradient">Gradients</TabsTrigger>
             <TabsTrigger value="palette">Palettes</TabsTrigger>
+            <TabsTrigger value="convert">Bulk Convert</TabsTrigger>
             <TabsTrigger value="library">Library</TabsTrigger>
           </TabsList>
           
@@ -65,6 +67,10 @@ export default function OklchColorPicker() {
           
           <TabsContent value="palette">
             <OklchPaletteTool onSave={handleSave} />
+          </TabsContent>
+          
+          <TabsContent value="convert">
+            <OklchBulkConverter />
           </TabsContent>
           
           <TabsContent value="library">
