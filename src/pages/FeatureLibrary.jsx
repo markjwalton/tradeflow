@@ -609,7 +609,7 @@ Return a JSON object with a "features" array containing feature templates.`,
                     <div 
                       key={index} 
                       className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                       selectedBulkFeatures.includes(index) ? "border-warning bg-warning/10" : "hover:bg-muted"
+                        selectedBulkFeatures.includes(index) ? "border-warning bg-warning/10" : "hover:bg-muted"
                       }`}
                       onClick={() => setSelectedBulkFeatures(prev => 
                         prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]

@@ -288,9 +288,9 @@ export default function AppointmentManager() {
 
         {/* Manage Slots Tab */}
         <TabsContent value="slots">
-          <Card className="border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+          <Card className="border-border bg-card">
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-[var(--color-midnight)]">Appointment Slots</CardTitle>
+              <CardTitle className="text-foreground">Appointment Slots</CardTitle>
               <Button onClick={() => setShowBlockDialog(true)}>
                 <Plus className="h-4 w-4 mr-2" />
                 Add Slot
@@ -362,9 +362,9 @@ export default function AppointmentManager() {
 
         {/* Callbacks Tab */}
         <TabsContent value="callbacks">
-          <Card className="border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+          <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle className="text-[var(--color-midnight)]">Callback Requests</CardTitle>
+              <CardTitle className="text-foreground">Callback Requests</CardTitle>
             </CardHeader>
             <CardContent>
               {enquiries.length === 0 ? (
@@ -374,7 +374,7 @@ export default function AppointmentManager() {
               ) : (
                 <div className="space-y-4">
                   {enquiries.map((enquiry) => (
-                    <Card key={enquiry.id} className="border border-[var(--color-background-muted)]">
+                    <Card key={enquiry.id} className="border border-border">
                       <CardContent className="pt-4">
                         <div className="flex items-start justify-between">
                           <div>
@@ -516,7 +516,7 @@ export default function AppointmentManager() {
                 >
                   <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium text-midnight-900">
+                    <div className="font-medium text-foreground">
                       {format(new Date(block.date), "EEEE, d MMMM yyyy")}
                     </div>
                     <div className="text-sm text-muted-foreground flex items-center gap-4 mt-1">
