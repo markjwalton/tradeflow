@@ -115,16 +115,13 @@ export default function ProjectWorkspaceRenderer({ config, data, onAction }) {
         )}
       </div>
 
-      {/* Right Panel Editor */}
-      {config.editor && (
-        <RightPanelEditor
-          isOpen={editorOpen}
-          onClose={() => setEditorOpen(false)}
-          config={config.editor}
-          data={data}
-          onAction={onAction}
-        />
-      )}
+      {/* Layout Config Editor */}
+      <LayoutConfigEditor
+        isOpen={editorOpen}
+        onClose={() => setEditorOpen(false)}
+        config={currentConfig}
+        onSave={handleConfigSave}
+      />
     </div>
   );
 }
