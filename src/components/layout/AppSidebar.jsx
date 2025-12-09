@@ -76,8 +76,8 @@ export function AppSidebar({ navItems = [] }) {
     const itemPath = pageUrl.split("?")[0];
     const isActive = currentPath === itemPath;
 
-    // Color logic: folders use warm beige (secondary), pages use sage green (primary)
-    const iconColorClass = isFolder ? "text-secondary-400" : "text-primary-600";
+    // Color logic: folders use warm beige, pages use sage green
+    const iconColorClass = isFolder ? "text-[var(--secondary-400)]" : "text-[var(--primary-600)]";
 
     if (isFolder) {
       const hasChildren = item.children && item.children.length > 0;
