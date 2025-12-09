@@ -181,16 +181,17 @@ export function InteractiveSelector({
     <div
       ref={containerRef}
       className={cn(
-        "relative",
+        "relative w-full",
         isActive && "cursor-crosshair",
         className
       )}
-      style={{ position: 'relative' }}
     >
-      <div ref={overlayRef}>
+      <div ref={overlayRef} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none', zIndex: 9998 }}>
         {renderHighlight()}
       </div>
-      {children}
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        {children}
+      </div>
     </div>
   );
 }
