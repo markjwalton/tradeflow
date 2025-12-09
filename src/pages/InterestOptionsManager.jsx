@@ -120,7 +120,7 @@ export default function InterestOptionsManager() {
       <Card className="border-border bg-card">
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle className="flex items-center gap-2 text-midnight-900">
+            <CardTitle className="flex items-center gap-2 text-foreground">
               <Settings className="h-5 w-5" />
               Interest Options
             </CardTitle>
@@ -170,7 +170,7 @@ export default function InterestOptionsManager() {
                                     <GripVertical className="h-4 w-4 text-muted-foreground cursor-grab" />
                                   </div>
                                 </TableCell>
-                                <TableCell className="font-medium text-midnight-900">{option.label}</TableCell>
+                                <TableCell className="font-medium text-foreground">{option.label}</TableCell>
                                 <TableCell className="text-muted-foreground">{option.value}</TableCell>
                                 <TableCell>
                                   <Switch

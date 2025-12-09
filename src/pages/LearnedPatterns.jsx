@@ -101,7 +101,7 @@ export default function LearnedPatterns() {
               Back to Report
             </Button>
           </div>
-          <h1 className="text-2xl font-light font-display text-midnight-900">
+          <h1 className="text-2xl font-light font-display text-foreground">
             Learned CSS Patterns
           </h1>
           <p className="text-muted-foreground mt-1">
@@ -240,7 +240,7 @@ export default function LearnedPatterns() {
                     <div className="space-y-2">
                       <div>
                         <span className="text-xs text-muted-foreground">Pattern:</span>
-                        <code className="block bg-primary-100 p-3 rounded text-sm font-mono font-bold mt-1 border-l-4 border-primary">
+                        <code className="block bg-primary/10 p-3 rounded text-sm font-mono font-bold mt-1 border-l-4 border-primary">
                           {pattern.pattern}
                         </code>
                       </div>

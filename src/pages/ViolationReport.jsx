@@ -367,7 +367,7 @@ Provide a clear, concise explanation that helps them understand this pattern and
     <div className="p-6 max-w-7xl mx-auto grid grid-cols-[1fr_300px] gap-6">
       <div className="col-span-2 flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display text-midnight">
+          <h1 className="text-2xl font-light font-display text-foreground">
             Interactive Violation Report
           </h1>
           <p className="text-muted-foreground mt-1">
@@ -458,7 +458,7 @@ Provide a clear, concise explanation that helps them understand this pattern and
                       {(pattern.pattern || pattern.example_usage) && (
                         <div>
                           <span className="text-xs text-muted-foreground">Code Pattern:</span>
-                          <code className="block bg-primary-100 p-3 rounded text-sm font-mono font-bold mt-1 border-l-4 border-primary">
+                          <code className="block bg-primary/10 p-3 rounded text-sm font-mono font-bold mt-1 border-l-4 border-primary">
                             {pattern.pattern || pattern.example_usage?.match(/className=["'][^"']+["']|var\([^)]+\)|[a-z-]+:\s*[^;]+/)?.[0] || "Pattern not extracted"}
                           </code>
                         </div>
@@ -644,7 +644,7 @@ Provide a clear, concise explanation that helps them understand this pattern and
               </div>
 
               {aiAnswer && (
-                <div className="mt-4 p-4 bg-primary-50 rounded-lg border border-primary/20">
+                <div className="mt-4 p-4 bg-primary/10 rounded-lg border border-primary/20">
                   <div className="text-sm font-medium mb-2 flex items-center gap-2">
                     <Sparkles className="h-4 w-4 text-primary" />
                     AI Explanation:
