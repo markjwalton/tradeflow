@@ -102,22 +102,22 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
               <div key={category} className="mb-3">
                 <p className={editorClasses.category}>{category}</p>
                 <div className="grid grid-cols-10 gap-1">
-                      {tokens.map((token) => (
-                        <button
-                          key={token}
-                          className={cn(
-                            editorClasses.swatch,
-                            `bg-${token}`,
-                            currentStyles.textColor === token && editorClasses.swatchActive
-                          )}
-                          onClick={() => handleApplyColor("text", token)}
-                          title={token}
-                        >
-                          {currentStyles.textColor === token && (
-                            <Check className="h-3 w-3 text-white mx-auto drop-shadow" />
-                          )}
-                        </button>
-                      ))}
+                      {tokens.map((token) => {
+                        const bgClass = `bg-${token}`;
+                        return (
+                          <button
+                            key={token}
+                            className={cn(editorClasses.swatch, currentStyles.textColor === token && editorClasses.swatchActive)}
+                            style={{ backgroundColor: `var(--${token})` }}
+                            onClick={() => handleApplyColor("text", token)}
+                            title={token}
+                          >
+                            {currentStyles.textColor === token && (
+                              <Check className="h-3 w-3 text-white mx-auto drop-shadow" />
+                            )}
+                          </button>
+                        );
+                      })}
                 </div>
               </div>
             ))}
@@ -131,22 +131,22 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
               <div key={category} className="mb-3">
                 <p className={editorClasses.category}>{category}</p>
                 <div className="grid grid-cols-10 gap-1">
-                      {tokens.map((token) => (
-                        <button
-                          key={token}
-                          className={cn(
-                            editorClasses.swatch,
-                            `bg-${token}`,
-                            currentStyles.bgColor === token && editorClasses.swatchActive
-                          )}
-                          onClick={() => handleApplyColor("background", token)}
-                          title={token}
-                        >
-                          {currentStyles.bgColor === token && (
-                            <Check className="h-3 w-3 text-white mx-auto drop-shadow" />
-                          )}
-                        </button>
-                      ))}
+                      {tokens.map((token) => {
+                        const bgClass = `bg-${token}`;
+                        return (
+                          <button
+                            key={token}
+                            className={cn(editorClasses.swatch, currentStyles.bgColor === token && editorClasses.swatchActive)}
+                            style={{ backgroundColor: `var(--${token})` }}
+                            onClick={() => handleApplyColor("background", token)}
+                            title={token}
+                          >
+                            {currentStyles.bgColor === token && (
+                              <Check className="h-3 w-3 text-white mx-auto drop-shadow" />
+                            )}
+                          </button>
+                        );
+                      })}
                 </div>
               </div>
             ))}
