@@ -83,6 +83,8 @@ import CSSAudit from './pages/CSSAudit';
 import ViolationReport from './pages/ViolationReport';
 import LearnedPatterns from './pages/LearnedPatterns';
 import LayoutPatternManager from './pages/LayoutPatternManager';
+import UILibrary from './pages/UILibrary';
+import Components from './pages/Components';
 import __Layout from './Layout.jsx';
 
 
@@ -172,6 +174,8 @@ export const PAGES = {
     "ViolationReport": ViolationReport,
     "LearnedPatterns": LearnedPatterns,
     "LayoutPatternManager": LayoutPatternManager,
+    "UILibrary": UILibrary,
+    "Components": Components,
 }
 
 export const pagesConfig = {
