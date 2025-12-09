@@ -96,7 +96,7 @@ export default function CompactButtonShowcase() {
         </CardHeader>
         <CardContent>
           <Label className={editorClasses.label}>Border Radius</Label>
-          <div className="grid grid-cols-4 gap-1 mt-2">
+          <div className="grid grid-cols-7 gap-1 mt-2">
             {radiusOptions.map((value) => (
               <CompactButton
                 key={value}
