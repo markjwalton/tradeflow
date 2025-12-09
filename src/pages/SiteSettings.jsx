@@ -69,12 +69,19 @@ const blurOptions = [
   { value: "xl", label: "Extra Large" },
 ];
 
+const navigationModes = [
+  { value: "expanded", label: "Open (Full Sidebar)" },
+  { value: "icons", label: "Icons Only" },
+  { value: "hidden", label: "Hidden" },
+];
+
 export default function SiteSettings() {
   const [settings, setSettings] = useState({
     backgroundColor: "background-50",
     overlayColor: "midnight-900",
     overlayOpacity: 60,
     overlayBlur: "md",
+    defaultNavigationMode: "expanded",
   });
 
   useEffect(() => {
@@ -112,6 +119,34 @@ export default function SiteSettings() {
       </div>
 
       <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Navigation Settings</CardTitle>
+            <CardDescription>Configure default navigation appearance</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="navigation-mode">Default Navigation Mode</Label>
+              <Select
+                value={settings.defaultNavigationMode}
+                onValueChange={(value) => setSettings({ ...settings, defaultNavigationMode: value })}
+              >
+                <SelectTrigger id="navigation-mode">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {navigationModes.map((mode) => (
+                    <SelectItem key={mode.value} value={mode.value}>
+                      {mode.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">How the sidebar appears by default on all pages</p>
+            </div>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>Background Settings</CardTitle>
