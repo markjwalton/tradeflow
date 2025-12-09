@@ -406,38 +406,33 @@ export default function GenericNavEditor({
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>{title}</CardTitle>
-        <div className="flex [gap:var(--spacing-2)]">
-          {/* Copy from global template for tenant configs */}
-          {tenantId && !isGlobal && items.length === 0 && globalConfigs.length > 0 && (
-            <Button variant="outline" onClick={handleCopyFromGlobal}>
-              <Copy className="h-4 w-4 mr-2" />
-              Copy from Global
-            </Button>
-          )}
-          {showCopyButton && onCopyFromTemplate && items.length === 0 && (
-            <Button variant="outline" onClick={onCopyFromTemplate}>
-              <Copy className="h-4 w-4 mr-2" />
-              {copyButtonLabel}
-            </Button>
-          )}
-          {syncUnallocatedPages && (
-            <Button 
-              variant="outline" 
-              onClick={syncUnallocatedPages}
-              disabled={isSyncing}
-              title="Scan config and refresh unallocated pages"
-            >
-              {isSyncing ? (
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              ) : (
-                <Sparkles className="h-4 w-4 mr-2" />
-              )}
-              Sync Pages
-            </Button>
-          )}
+      {title && (
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>{title}</CardTitle>
+        </CardHeader>
+      )}
+      <CardContent className="[padding-top:var(--spacing-4)]">
+        <div className="flex justify-between items-center [margin-bottom:var(--spacing-3)]">
+          <div className="flex [gap:var(--spacing-2)]">
+            {syncUnallocatedPages && (
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={syncUnallocatedPages}
+                disabled={isSyncing}
+                title="Scan config and refresh unallocated pages"
+              >
+                {isSyncing ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Sparkles className="h-4 w-4 mr-2" />
+                )}
+                Sync Pages
+              </Button>
+            )}
+          </div>
           <Button 
+            size="sm"
             className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
             onClick={() => { 
               setEditingItem(null); 
@@ -449,7 +444,6 @@ export default function GenericNavEditor({
             Add Item
           </Button>
         </div>
-      </CardHeader>
       <CardContent>
         {isLoading ? (
           <div className="text-center py-8 text-[var(--color-charcoal)]">Loading...</div>
@@ -731,12 +725,12 @@ export default function GenericNavEditor({
         )}
       </CardContent>
 
-      {/* Edit Dialog */}
-      <Dialog open={showDialog} onOpenChange={closeDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className="text-[var(--color-midnight)]">{editingItem !== null ? "Edit Item" : "Add Navigation Item"}</DialogTitle>
-          </DialogHeader>
+      {/* Edit Sidebar */}
+      <Sheet open={showDialog} onOpenChange={closeDialog}>
+        <SheetContent className="w-96">
+          <SheetHeader>
+            <SheetTitle className="text-[var(--color-midnight)]">{editingItem !== null ? "Edit Item" : "Add Navigation Item"}</SheetTitle>
+          </SheetHeader>
           <div className="[&>*+*]:mt-[var(--spacing-4)]">
             <div>
               <Label>Name *</Label>
@@ -835,13 +829,15 @@ export default function GenericNavEditor({
                 <Label>Default Collapsed</Label>
               </div>
             )}
-            <div className="flex justify-end [gap:var(--spacing-2)] [padding-top:var(--spacing-4)]">
-              <Button variant="outline" onClick={closeDialog}>Cancel</Button>
-              <Button className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white" onClick={handleSaveItem}>Save</Button>
-            </div>
           </div>
-        </DialogContent>
-      </Dialog>
+          <SheetFooter className="[margin-top:var(--spacing-6)]">
+            <div className="flex gap-3 w-full">
+              <Button variant="outline" onClick={closeDialog} className="flex-1">Cancel</Button>
+              <Button className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white flex-1" onClick={handleSaveItem}>Save</Button>
+            </div>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
     </Card>
   );
 }

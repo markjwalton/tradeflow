@@ -3,7 +3,13 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTenant } from "@/Layout";
 import { Button } from "@/components/ui/button";
-
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+} from "@/components/ui/sheet";
 import { FileCode, Loader2, Cog, Users } from "lucide-react";
 import { toast } from "sonner";
 
@@ -19,6 +25,7 @@ const generateId = () => Math.random().toString(36).substr(2, 9);
 export default function NavigationManager() {
   const tenantContext = useTenant();
   const [currentUser, setCurrentUser] = useState(null);
+  const [pageData, setPageData] = useState(null);
   const queryClient = useQueryClient();
   const { setCustomProperties } = useEditMode();
   
@@ -28,6 +35,9 @@ export default function NavigationManager() {
   
   useEffect(() => {
     base44.auth.me().then(setCurrentUser).catch(() => {});
+    base44.entities.UIPage.filter({ slug: "NavigationManager" })
+      .then(pages => pages.length > 0 && setPageData(pages[0]))
+      .catch(() => {});
   }, []);
   
   const isGlobalAdmin = currentUser?.is_global_admin === true;
@@ -184,19 +194,46 @@ export default function NavigationManager() {
     enabled: activeTab === "tenant" && selectedTenantId !== "__global__",
   });
 
-  // Tab button style helper
-  const tabStyle = (tab) => `font-body [padding:var(--spacing-2)_var(--spacing-4)] [border-radius:var(--radius-lg)] [transition:var(--duration-200)] ${
+  // Get site settings for button styling
+  const [siteSettings, setSiteSettings] = useState({});
+  
+  useEffect(() => {
+    base44.auth.me()
+      .then(user => setSiteSettings(user?.site_settings || {}))
+      .catch(() => {});
+  }, []);
+
+  // Tab button style helper - uses site settings
+  const buttonSizeClass = {
+    sm: "text-sm [padding:var(--spacing-1.5)_var(--spacing-3)]",
+    md: "[padding:var(--spacing-2)_var(--spacing-4)]",
+    lg: "text-lg [padding:var(--spacing-3)_var(--spacing-5)]"
+  }[siteSettings.buttonSize || "md"];
+
+  const tabStyle = (tab) => `font-body ${buttonSizeClass} [border-radius:var(--radius-lg)] [transition:var(--duration-200)] ${
     activeTab === tab 
-      ? "bg-[var(--color-primary)] text-white" 
-      : "bg-[var(--color-background)] text-[var(--color-foreground)] hover:bg-[var(--color-muted)] border border-[var(--color-border)]"
+      ? `bg-[var(--${siteSettings.selectedButtonColor || "primary"})] text-white` 
+      : `bg-[var(--color-background)] text-[var(--color-foreground)] hover:bg-[var(--${siteSettings.ghostButtonHoverColor || "muted"})] border border-[var(--color-border)]`
   }`;
 
   return (
     <div className="[padding:var(--spacing-6)] max-w-4xl mx-auto bg-[var(--color-background)] min-h-screen">
       {isGlobalAdmin ? (
         <>
+          {/* Page Header */}
+          <div className="[margin-bottom:var(--spacing-6)]">
+            <h1 className="text-3xl font-display text-[var(--color-text-primary)] [margin-bottom:var(--spacing-2)]">
+              Navigation Manager
+            </h1>
+            {pageData?.page_description && (
+              <p className="text-[var(--color-text-muted)]">
+                {pageData.page_description}
+              </p>
+            )}
+          </div>
+
           {/* Tab Navigation */}
-          <div className="flex [gap:var(--spacing-2)] flex-wrap [margin-bottom:var(--spacing-6)]">
+          <div className="flex [gap:var(--spacing-2)] flex-wrap [margin-bottom:var(--spacing-4)]">
             <button className={tabStyle("admin")} onClick={() => setActiveTab("admin")}>
               <Cog className="h-4 w-4 [margin-right:var(--spacing-2)] inline" />
               Admin Console
@@ -214,7 +251,7 @@ export default function NavigationManager() {
           {/* Tab Content */}
           {activeTab === "admin" && (
             <GenericNavEditor
-              title="Admin Console Navigation"
+              title=""
               configType="admin_console"
               syncUnallocatedPages={() => syncUnallocatedPages.mutate("admin_console")}
               isSyncing={syncUnallocatedPages.isPending}
@@ -222,18 +259,12 @@ export default function NavigationManager() {
           )}
 
           {activeTab === "app" && (
-            <div>
-              <div className="font-body [margin-bottom:var(--spacing-4)] [padding:var(--spacing-3)] bg-[var(--color-secondary-50)] border border-[var(--color-secondary-200)] [border-radius:var(--radius-lg)] text-[var(--color-foreground)]">
-                <strong className="font-display">App Pages</strong> are tenant-facing pages. 
-                Use this to organize which pages appear in tenant navigation.
-              </div>
-              <GenericNavEditor
-                title="App Pages Navigation (Global Template)"
-                configType="app_pages_source"
-                syncUnallocatedPages={() => syncUnallocatedPages.mutate("app_pages_source")}
-                isSyncing={syncUnallocatedPages.isPending}
-              />
-            </div>
+            <GenericNavEditor
+              title=""
+              configType="app_pages_source"
+              syncUnallocatedPages={() => syncUnallocatedPages.mutate("app_pages_source")}
+              isSyncing={syncUnallocatedPages.isPending}
+            />
           )}
 
           {activeTab === "tenant" && (
