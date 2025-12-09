@@ -19,12 +19,10 @@ export function InteractiveSelector({
       
       const target = e.target;
       
-      // Skip if clicking on overlay itself or buttons/inputs
+      // Skip if clicking on overlay itself
       if (
         target === overlayRef.current ||
-        target.closest('[data-interactive-ignore]') ||
-        target.tagName === 'BUTTON' ||
-        target.tagName === 'INPUT'
+        target.closest('[data-interactive-ignore]')
       ) {
         setHoveredElement(null);
         return;
@@ -48,9 +46,7 @@ export function InteractiveSelector({
       // Skip non-editable elements
       if (
         target === overlayRef.current ||
-        target.closest('[data-interactive-ignore]') ||
-        target.tagName === 'BUTTON' ||
-        target.tagName === 'INPUT'
+        target.closest('[data-interactive-ignore]')
       ) {
         return;
       }
