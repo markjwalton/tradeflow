@@ -155,13 +155,18 @@ export default function SiteSettings() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="background-color">Background Color</Label>
-              <Select
-                value={settings.backgroundColor}
-                onValueChange={(value) => setSettings({ ...settings, backgroundColor: value })}
-              >
-                <SelectTrigger id="background-color">
-                  <SelectValue />
-                </SelectTrigger>
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-8 h-8 rounded border-2 flex-shrink-0"
+                  style={{ backgroundColor: `var(--${settings.backgroundColor})` }}
+                />
+                <Select
+                  value={settings.backgroundColor}
+                  onValueChange={(value) => setSettings({ ...settings, backgroundColor: value })}
+                >
+                  <SelectTrigger id="background-color" className="flex-1">
+                    <SelectValue />
+                  </SelectTrigger>
                 <SelectContent>
                   {colorTokens.map((color) => (
                     <SelectItem key={color.value} value={color.value}>
@@ -188,27 +193,27 @@ export default function SiteSettings() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="overlay-color">Overlay Color</Label>
-              <Select
-                value={settings.overlayColor}
-                onValueChange={(value) => setSettings({ ...settings, overlayColor: value })}
-              >
-                <SelectTrigger id="overlay-color">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {colorTokens.map((color) => (
-                    <SelectItem key={color.value} value={color.value}>
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="w-4 h-4 rounded border"
-                          style={{ backgroundColor: `var(--${color.value})` }}
-                        />
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-8 h-8 rounded border-2 flex-shrink-0"
+                  style={{ backgroundColor: `var(--${settings.overlayColor})` }}
+                />
+                <Select
+                  value={settings.overlayColor}
+                  onValueChange={(value) => setSettings({ ...settings, overlayColor: value })}
+                >
+                  <SelectTrigger id="overlay-color" className="flex-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {colorTokens.map((color) => (
+                      <SelectItem key={color.value} value={color.value}>
                         {color.label}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <div className="space-y-2">
