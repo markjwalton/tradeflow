@@ -5,14 +5,14 @@ import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Import showcase components
-import { Typography } from "@/components/library/Typography";
-import { Buttons } from "@/components/library/Buttons";
-import { Cards } from "@/components/library/Cards";
-import { Forms } from "@/components/library/Forms";
-import { Layouts } from "@/components/library/Layouts";
-import { Navigation } from "@/components/library/Navigation";
-import { DataDisplay } from "@/components/library/DataDisplay";
-import { Feedback } from "@/components/library/Feedback";
+import TypographyShowcase from "../pages/TypographyShowcase";
+import ButtonsShowcase from "../pages/ButtonsShowcase";
+import CardsShowcase from "../pages/CardsShowcase";
+import FormsShowcase from "../pages/FormsShowcase";
+import LayoutShowcase from "../pages/LayoutShowcase";
+import NavigationShowcase from "../pages/NavigationShowcase";
+import DataDisplayShowcase from "../pages/DataDisplayShowcase";
+import FeedbackShowcase from "../pages/FeedbackShowcase";
 
 export default function UILibrary() {
   const [openSections, setOpenSections] = useState(["typography"]);
@@ -22,49 +22,49 @@ export default function UILibrary() {
       id: "typography",
       title: "Typography",
       description: "Text styles and typographic components using design tokens",
-      component: Typography,
+      component: TypographyShowcase,
     },
     {
       id: "buttons",
       title: "Buttons",
       description: "Button variants and interactive elements",
-      component: Buttons,
+      component: ButtonsShowcase,
     },
     {
       id: "cards",
       title: "Cards",
       description: "Card components for content containers",
-      component: Cards,
+      component: CardsShowcase,
     },
     {
       id: "forms",
       title: "Forms",
       description: "Form inputs and validation components",
-      component: Forms,
+      component: FormsShowcase,
     },
     {
       id: "layouts",
       title: "Layouts",
       description: "Layout patterns and containers",
-      component: Layouts,
+      component: LayoutShowcase,
     },
     {
       id: "navigation",
       title: "Navigation",
       description: "Navigation components and patterns",
-      component: Navigation,
+      component: NavigationShowcase,
     },
     {
       id: "data",
       title: "Data Display",
       description: "Tables, lists, and data visualization",
-      component: DataDisplay,
+      component: DataDisplayShowcase,
     },
     {
       id: "feedback",
       title: "Feedback",
       description: "Alerts, toasts, and loading states",
-      component: Feedback,
+      component: FeedbackShowcase,
     },
   ];
 
