@@ -143,6 +143,8 @@ export default function SiteSettings() {
       await base44.auth.updateMe({
         site_settings: settings,
       });
+      setOriginalSettings(settings);
+      setHasChanges(false);
       window.dispatchEvent(new CustomEvent('site-settings-changed', { detail: settings }));
       toast.success("Site settings saved");
     } catch (e) {
