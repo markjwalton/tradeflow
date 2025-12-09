@@ -9,11 +9,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Menu, ChevronDown, LogOut, User } from "lucide-react";
+import { Menu, ChevronDown, LogOut, User, Settings as SettingsIcon } from "lucide-react";
 import { useAppSidebar } from "./SidebarContext";
 import { AppBreadcrumb } from "./AppBreadcrumb";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 export function AppHeader({ user, navItems = [] }) {
   const { cycleMode } = useAppSidebar();
@@ -63,6 +65,42 @@ export function AppHeader({ user, navItems = [] }) {
 function ProfileMenu({ user }) {
   if (!user) return null;
 
+  const [preferences, setPreferences] = React.useState({
+    showAIAssistant: true,
+    showPageEditor: true,
+  });
+
+  React.useEffect(() => {
+    const loadPreferences = async () => {
+      try {
+        const currentUser = await base44.auth.me();
+        if (currentUser?.ui_preferences) {
+          setPreferences({
+            showAIAssistant: currentUser.ui_preferences.showAIAssistant ?? true,
+            showPageEditor: currentUser.ui_preferences.showPageEditor ?? true,
+          });
+        }
+      } catch (e) {
+        console.error("Failed to load preferences:", e);
+      }
+    };
+    loadPreferences();
+  }, []);
+
+  const updatePreference = async (key, value) => {
+    const newPrefs = { ...preferences, [key]: value };
+    setPreferences(newPrefs);
+    
+    try {
+      await base44.auth.updateMe({
+        ui_preferences: newPrefs,
+      });
+      window.dispatchEvent(new CustomEvent('ui-preferences-changed', { detail: newPrefs }));
+    } catch (e) {
+      console.error("Failed to save preferences:", e);
+    }
+  };
+
   const initials = user.full_name
     ? user.full_name
         .split(" ")
@@ -93,11 +131,34 @@ function ProfileMenu({ user }) {
           <ChevronDown className="w-3 h-3 ml-1 hidden sm:inline" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-64">
+      <DropdownMenuContent align="end" className="w-72">
         <DropdownMenuLabel>{user.full_name || user.email}</DropdownMenuLabel>
         <DropdownMenuItem disabled className="text-[11px]">
           {user.email}
         </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <div className="px-2 py-3 space-y-3">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="ai-assistant" className="text-sm cursor-pointer">
+              AI Assistant
+            </Label>
+            <Switch
+              id="ai-assistant"
+              checked={preferences.showAIAssistant}
+              onCheckedChange={(checked) => updatePreference('showAIAssistant', checked)}
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="page-editor" className="text-sm cursor-pointer">
+              Page Editor
+            </Label>
+            <Switch
+              id="page-editor"
+              checked={preferences.showPageEditor}
+              onCheckedChange={(checked) => updatePreference('showPageEditor', checked)}
+            />
+          </div>
+        </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {

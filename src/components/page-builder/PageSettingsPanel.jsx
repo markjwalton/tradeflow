@@ -62,7 +62,7 @@ export function PageSettingsPanel({ currentPageName }) {
         <Button
           variant="ghost"
           size="icon"
-          className="fixed bottom-6 right-20 h-14 w-14 rounded-full shadow-2xl bg-primary text-white hover:bg-primary/90 border-2 border-white"
+          className="fixed bottom-6 right-24 h-14 w-14 rounded-full shadow-2xl bg-primary text-white hover:bg-primary/90 border-2 border-white"
           style={{ zIndex: 1050 }}
           title="Page Settings"
         >
