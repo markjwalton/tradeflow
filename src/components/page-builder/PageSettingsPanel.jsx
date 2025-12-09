@@ -119,8 +119,13 @@ export function PageSettingsPanel({ currentPageName }) {
 
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                 <p className="text-xs text-blue-900">
-                  <strong>Tip:</strong> Click any element on the page to style it with design tokens. Use the component palette to add new sections.
+                  <strong>How to use:</strong>
                 </p>
+                <ul className="text-xs text-blue-900 mt-2 space-y-1 list-disc list-inside">
+                  <li>Click any element to edit its text, colors, spacing</li>
+                  <li>Use the component palette to add pre-built sections</li>
+                  <li>Changes are live - save when ready</li>
+                </ul>
               </div>
             </>
           )}

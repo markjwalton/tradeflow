@@ -5,6 +5,7 @@ import { useEditMode } from "./EditModeContext";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Palette, Package } from "lucide-react";
@@ -55,13 +56,17 @@ export function LiveEditWrapper({ children }) {
   }, [isEditMode, children, setCurrentPageContent]);
 
   const handleElementSelect = (elementData) => {
+    const isTextElement = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'P', 'SPAN', 'LABEL', 'BUTTON', 'A'].includes(elementData.tagName.toUpperCase());
+    
     setSelectedElement({
       id: elementData.id,
       currentClasses: elementData.className,
       tagName: elementData.tagName,
-      textContent: elementData.textContent,
+      textContent: elementData.element.textContent,
+      innerHTML: elementData.element.innerHTML,
       originalElement: elementData.element,
       path: elementData.path,
+      isTextElement,
     });
     setShowTokenPicker(true);
   };
@@ -123,6 +128,35 @@ export function LiveEditWrapper({ children }) {
     toast.success("Token applied");
   };
 
+  const updateElementText = (newText) => {
+    if (!selectedElement) return;
+
+    const { originalElement, id } = selectedElement;
+
+    // Update DOM
+    if (originalElement) {
+      originalElement.textContent = newText;
+    }
+
+    // Update content in state
+    let updatedContent = currentPageContent;
+    if (id) {
+      // Find the element by data-element-id and replace its text content
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = currentPageContent;
+      const targetElement = tempDiv.querySelector(`[data-element-id="${id}"]`);
+      
+      if (targetElement) {
+        targetElement.textContent = newText;
+        updatedContent = tempDiv.innerHTML;
+      }
+    }
+
+    setCurrentPageContent(updatedContent);
+    setSelectedElement({ ...selectedElement, textContent: newText });
+    toast.success("Text updated");
+  };
+
   if (!isEditMode) {
     return children;
   }
@@ -158,13 +192,32 @@ export function LiveEditWrapper({ children }) {
             )}
           </DialogHeader>
 
-          <Tabs defaultValue="colors">
-            <TabsList className="grid grid-cols-4 w-full">
+          <Tabs defaultValue={selectedElement?.isTextElement ? "content" : "colors"}>
+            <TabsList className="grid grid-cols-5 w-full">
+              {selectedElement?.isTextElement && <TabsTrigger value="content">Content</TabsTrigger>}
               <TabsTrigger value="colors">Colors</TabsTrigger>
               <TabsTrigger value="spacing">Spacing</TabsTrigger>
               <TabsTrigger value="radius">Radius</TabsTrigger>
               <TabsTrigger value="shadows">Shadows</TabsTrigger>
             </TabsList>
+
+            {selectedElement?.isTextElement && (
+              <TabsContent value="content" className="space-y-4">
+                <div>
+                  <Label className="mb-2 block">Edit Text Content</Label>
+                  <Textarea
+                    value={selectedElement.textContent || ''}
+                    onChange={(e) => updateElementText(e.target.value)}
+                    placeholder="Enter text..."
+                    rows={4}
+                    className="font-body"
+                  />
+                  <p className="text-xs text-muted-foreground mt-2">
+                    Edit the text that appears in this {selectedElement.tagName} element
+                  </p>
+                </div>
+              </TabsContent>
+            )}
 
             <TabsContent value="colors" className="space-y-4">
               <div>
