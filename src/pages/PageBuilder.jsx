@@ -47,6 +47,7 @@ import {
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 import AppShellPreview from "@/components/page-builder/AppShellPreview";
+import { InteractiveSelector } from "@/components/page-builder/InteractiveSelector";
 
 export default function PageBuilder() {
   const queryClient = useQueryClient();
@@ -278,32 +279,17 @@ export default function PageBuilder() {
     });
   };
 
-  const handleElementClick = (e) => {
-    if (!interactiveMode) return;
-    e.stopPropagation();
-    e.preventDefault();
-    
-    const element = e.target;
-    const currentClasses = element.className || '';
-    const tagName = element.tagName.toLowerCase();
-    const textContent = element.textContent?.substring(0, 50) || '';
-    
+  const handleElementSelect = (elementData) => {
     setSelectedElement({
-      currentClasses,
-      tagName,
-      textContent,
-      originalElement: element
+      id: elementData.id,
+      currentClasses: elementData.className,
+      tagName: elementData.tagName,
+      textContent: elementData.textContent,
+      originalElement: elementData.element,
+      path: elementData.path,
     });
     setShowTokenPicker(true);
   };
-
-  // Apply highlight to selected element
-  React.useEffect(() => {
-    if (selectedElement?.originalElement) {
-      selectedElement.originalElement.style.outline = '2px solid var(--primary)';
-      selectedElement.originalElement.style.outlineOffset = '2px';
-    }
-  }, [selectedElement]);
 
   const getElementPath = (element) => {
     const path = [];
@@ -329,7 +315,7 @@ export default function PageBuilder() {
     }
 
     try {
-      const { currentClasses, originalElement } = selectedElement;
+      const { currentClasses, originalElement, id } = selectedElement;
 
       // Split classes into array for precise filtering
       let classArray = currentClasses.split(/\s+/).filter(Boolean);
@@ -370,49 +356,58 @@ export default function PageBuilder() {
         originalElement.className = newClasses;
       }
 
-      // Find className in JSX by looking for the tag and nearby text
+      // Find and replace in JSX using data-element-id
       let updatedContent = formData.current_content_jsx;
-      const tagName = selectedElement.tagName;
-
-      // Find all className attributes and replace the one that matches current classes
-      const classNameRegex = /className=["']([^"']*)["']/g;
-      let match;
       let foundMatch = false;
 
-      while ((match = classNameRegex.exec(formData.current_content_jsx)) !== null) {
-        const foundClasses = match[1];
-        // Check if this is our target by comparing class lists (order-independent)
-        const foundSet = new Set(foundClasses.split(/\s+/).filter(Boolean));
-        const currentSet = new Set(currentClasses.split(/\s+/).filter(Boolean));
-
-        if (foundSet.size === currentSet.size && [...foundSet].every(c => currentSet.has(c))) {
-          // Found it! Replace this specific occurrence
-          updatedContent = formData.current_content_jsx.substring(0, match.index) +
-            `className="${newClasses}"` +
-            formData.current_content_jsx.substring(match.index + match[0].length);
+      // Try to find by data-element-id first (most reliable)
+      if (id) {
+        const idRegex = new RegExp(`data-element-id=["']${id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}["'][^>]*className=["']([^"']*)["']`, 'g');
+        const match = idRegex.exec(formData.current_content_jsx);
+        
+        if (match) {
+          updatedContent = formData.current_content_jsx.replace(
+            new RegExp(`(data-element-id=["']${id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}["'][^>]*className=)["'][^"']*["']`),
+            `$1"${newClasses}"`
+          );
           foundMatch = true;
-          break;
+        }
+      }
+
+      // Fallback: try to match by className
+      if (!foundMatch) {
+        const classNameRegex = /className=["']([^"']*)["']/g;
+        let match;
+
+        while ((match = classNameRegex.exec(formData.current_content_jsx)) !== null) {
+          const foundClasses = match[1];
+          const foundSet = new Set(foundClasses.split(/\s+/).filter(Boolean));
+          const currentSet = new Set(currentClasses.split(/\s+/).filter(Boolean));
+
+          if (foundSet.size === currentSet.size && [...foundSet].every(c => currentSet.has(c))) {
+            updatedContent = formData.current_content_jsx.substring(0, match.index) +
+              `className="${newClasses}"` +
+              formData.current_content_jsx.substring(match.index + match[0].length);
+            foundMatch = true;
+            break;
+          }
         }
       }
 
       if (foundMatch) {
         setFormData({ ...formData, current_content_jsx: updatedContent });
-        toast.success("Token applied!");
-
-        // Keep element selected but update classes
-        setSelectedElement({
-          ...selectedElement,
-          currentClasses: newClasses
-        });
+        toast.success("Token applied & saved!");
         
-        // Don't close the picker - keep it open for multiple applications
-      } else {
-        // Still update the element reference for next application
         setSelectedElement({
           ...selectedElement,
           currentClasses: newClasses
         });
-        toast.warning("Applied visually - may need manual save");
+      } else {
+        setSelectedElement({
+          ...selectedElement,
+          currentClasses: newClasses
+        });
+        toast.info("Applied visually - add data-element-id to JSX for persistence");
       }
     } catch (error) {
       console.error('Error applying token:', error);
@@ -431,12 +426,12 @@ export default function PageBuilder() {
       const wrappedContent = includeShell ? <AppShellPreview>{previewContent}</AppShellPreview> : previewContent;
 
       return (
-        <div
-          onClick={handleElementClick}
-          style={{ cursor: interactiveMode ? 'pointer' : 'default' }}
+        <InteractiveSelector
+          isActive={interactiveMode}
+          onElementSelect={handleElementSelect}
         >
           {wrappedContent}
-        </div>
+        </InteractiveSelector>
       );
     } catch (e) {
       return (
@@ -929,9 +924,10 @@ export default function PageBuilder() {
           <DialogHeader>
             <DialogTitle>Apply Design Token</DialogTitle>
             {selectedElement && (
-              <div className="text-sm text-[var(--color-charcoal)]">
-                <p>Selected: <code className="text-xs bg-muted px-1 py-0.5 rounded">{selectedElement.tagName}</code></p>
-                <p className="text-xs mt-1 truncate">Current: {selectedElement.currentClasses || 'no classes'}</p>
+              <div className="text-sm text-[var(--color-charcoal)] space-y-1">
+                <p>Element: <code className="text-xs bg-muted px-1 py-0.5 rounded">{selectedElement.tagName}</code></p>
+                <p className="text-xs truncate" title={selectedElement.path}>Path: {selectedElement.path}</p>
+                <p className="text-xs truncate">Classes: {selectedElement.currentClasses || 'none'}</p>
               </div>
             )}
           </DialogHeader>
