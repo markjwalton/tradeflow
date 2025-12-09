@@ -183,7 +183,7 @@ export function AppSidebar({ navItems = [] }) {
             showLabels ? "[padding:var(--spacing-3)] [gap:var(--spacing-1)]" : "[padding-top:var(--spacing-3)] [padding-bottom:var(--spacing-3)] [gap:var(--spacing-2)]",
             "flex flex-col"
           )}>
-            {itemsToRender.map((item) => renderNavItem(item, false, !item.parent_id || item._isTopLevel))}
+            {itemsToRender.map((item) => renderNavItem(item, false, !item.parent_id))}
           </nav>
         </TooltipProvider>
       )}
