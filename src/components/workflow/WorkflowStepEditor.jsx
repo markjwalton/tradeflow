@@ -88,13 +88,13 @@ export default function WorkflowStepEditor({
   const otherSteps = allSteps.filter((s) => s.id !== step.id);
 
   return (
-    <div className="w-96 bg-[var(--color-background-paper)] border-l border-[var(--color-background-muted)] flex flex-col">
+    <div className="w-96 bg-card border-l border-border flex flex-col">
       {/* Header */}
-      <div className="p-3 border-b border-[var(--color-background-muted)] flex items-center justify-between">
-        <h3 className="font-semibold text-[var(--color-midnight)]">Edit Step</h3>
+      <div className="p-3 border-b border-border flex items-center justify-between">
+        <h3 className="font-semibold text-foreground">Edit Step</h3>
         <div className="flex items-center gap-2">
           {hasChanges && (
-            <Button size="sm" onClick={handleSave} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
+            <Button size="sm" onClick={handleSave}>
               <Save className="h-3 w-3 mr-1" />
               Save
             </Button>
@@ -284,7 +284,7 @@ export default function WorkflowStepEditor({
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="w-full text-[var(--color-destructive)]"
+                          className="w-full text-destructive"
                           onClick={() => removeDecisionOption(i)}
                         >
                           <Trash2 className="h-3 w-3 mr-1" />
@@ -390,11 +390,11 @@ export default function WorkflowStepEditor({
       </ScrollArea>
 
       {/* Footer */}
-      <div className="p-3 border-t border-[var(--color-background-muted)]">
+      <div className="p-3 border-t border-border">
         <Button
           variant="destructive"
           size="sm"
-          className="w-full bg-[var(--color-destructive)] hover:bg-[var(--color-destructive-dark)] text-white"
+          className="w-full"
           onClick={onDelete}
         >
           <Trash2 className="h-4 w-4 mr-2" />

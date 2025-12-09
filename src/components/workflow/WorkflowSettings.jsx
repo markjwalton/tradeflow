@@ -76,7 +76,7 @@ export default function WorkflowSettings({ open, onOpenChange, workflow, onUpdat
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle className="text-[var(--color-midnight)]">Workflow Settings</DialogTitle>
+          <DialogTitle className="text-foreground">Workflow Settings</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -215,7 +215,7 @@ export default function WorkflowSettings({ open, onOpenChange, workflow, onUpdat
                   {tag}
                   <button
                     onClick={() => removeTag(tag)}
-                    className="hover:text-[var(--color-destructive)]"
+                    className="hover:text-destructive"
                   >
                     <X className="h-3 w-3" />
                   </button>
@@ -233,7 +233,7 @@ export default function WorkflowSettings({ open, onOpenChange, workflow, onUpdat
           </div>
 
           <div className="flex gap-2 pt-4">
-            <Button onClick={handleSave} disabled={isSaving} className="flex-1 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
+            <Button onClick={handleSave} disabled={isSaving} className="flex-1">
               {isSaving && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
               Save Settings
             </Button>

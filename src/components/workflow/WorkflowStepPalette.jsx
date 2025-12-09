@@ -19,73 +19,73 @@ const stepTypes = [
     type: "task",
     label: "Task",
     icon: CheckSquare,
-    color: "bg-blue-100 text-blue-700 border-blue-200",
+    color: "bg-info-50 text-info border-info/20",
     description: "A general task to complete",
   },
   {
     type: "milestone",
     label: "Milestone",
     icon: Flag,
-    color: "bg-green-100 text-green-700 border-green-200",
+    color: "bg-success-50 text-success border-success/20",
     description: "Mark a key achievement",
   },
   {
     type: "decision",
     label: "Decision",
     icon: GitBranch,
-    color: "bg-purple-100 text-purple-700 border-purple-200",
+    color: "bg-accent/10 text-accent border-accent/20",
     description: "Branch based on a decision",
   },
   {
     type: "approval",
     label: "Approval",
     icon: UserCheck,
-    color: "bg-amber-100 text-amber-700 border-amber-200",
+    color: "bg-warning/10 text-warning border-warning/20",
     description: "Requires approval to proceed",
   },
   {
     type: "form",
     label: "Form",
     icon: FileText,
-    color: "bg-cyan-100 text-cyan-700 border-cyan-200",
+    color: "bg-info-50 text-info border-info/20",
     description: "Capture data via a form",
   },
   {
     type: "checklist",
     label: "Checklist",
     icon: ListChecks,
-    color: "bg-indigo-100 text-indigo-700 border-indigo-200",
+    color: "bg-primary-100 text-primary border-primary/20",
     description: "Complete a checklist",
   },
   {
     type: "integration",
     label: "Integration",
     icon: Plug,
-    color: "bg-pink-100 text-pink-700 border-pink-200",
+    color: "bg-accent-100 text-accent border-accent/20",
     description: "Trigger external action",
   },
   {
     type: "notification",
     label: "Notification",
     icon: Bell,
-    color: "bg-orange-100 text-orange-700 border-orange-200",
+    color: "bg-warning/10 text-warning border-warning/20",
     description: "Send a notification",
   },
   {
     type: "wait",
     label: "Wait",
     icon: Clock,
-    color: "bg-gray-100 text-gray-700 border-gray-200",
+    color: "bg-muted text-muted-foreground border-border",
     description: "Wait for time or event",
   },
 ];
 
 export default function WorkflowStepPalette({ onAddStep }) {
   return (
-    <div className="w-64 bg-[var(--color-background-paper)] border-r border-[var(--color-background-muted)] flex flex-col">
-      <div className="p-3 border-b border-[var(--color-background-muted)]">
-        <h3 className="font-semibold text-sm text-[var(--color-midnight)]">Add Step</h3>
-        <p className="text-xs text-[var(--color-charcoal)]">Click to add to workflow</p>
+    <div className="w-64 bg-card border-r border-border flex flex-col">
+      <div className="p-3 border-b border-border">
+        <h3 className="font-semibold text-sm text-foreground">Add Step</h3>
+        <p className="text-xs text-muted-foreground">Click to add to workflow</p>
       </div>
       <ScrollArea className="flex-1">
         <div className="p-3 space-y-2">
