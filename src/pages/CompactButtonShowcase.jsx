@@ -160,22 +160,25 @@ export default function CompactButtonShowcase() {
                   <div className="text-xs text-muted-foreground mb-1 capitalize">{category}</div>
                   <div className="flex justify-center">
                     <div className="inline-grid grid-cols-10 gap-0.5">
-                      {tokens.map((token) => (
-                        <button
-                          key={token}
-                          className={cn(
-                            "h-7 w-7 rounded border-2 transition-all flex items-center justify-center",
-                            activeColor === token ? "border-foreground ring-2 ring-offset-1 ring-foreground" : "border-transparent hover:border-muted"
-                          )}
-                          style={{ backgroundColor: `var(--${token})` }}
-                          onClick={() => setActiveColor(token)}
-                          title={token}
-                        >
-                          {activeColor === token && (
-                            <Check className="h-3 w-3 text-white drop-shadow" />
-                          )}
-                        </button>
-                      ))}
+                      {tokens.map((token) => {
+                        const cssVar = `var(--${token})`;
+                        return (
+                          <button
+                            key={token}
+                            className={cn(
+                              "h-7 w-7 rounded border transition-all flex items-center justify-center",
+                              activeColor === token ? "border-foreground shadow-md" : "border-border hover:border-muted-foreground"
+                            )}
+                            style={{ backgroundColor: cssVar }}
+                            onClick={() => setActiveColor(token)}
+                            title={token}
+                          >
+                            {activeColor === token && (
+                              <Check className="h-3 w-3 text-white drop-shadow-lg" />
+                            )}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
