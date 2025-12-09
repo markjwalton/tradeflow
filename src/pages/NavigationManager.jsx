@@ -53,49 +53,58 @@ export default function NavigationManager() {
     }
   };
 
-  // Sync unallocated pages mutation - scans file system and updates source_slugs
+  // Sync unallocated pages mutation - manually adds known showcase pages to source_slugs
   const syncUnallocatedPages = useMutation({
     mutationFn: async (configType) => {
-      try {
-        // Read all page files from the functions/readFileContent backend
-        const response = await base44.functions.invoke('readFileContent', { 
-          file_path: 'pages' 
-        });
-        
-        const pageFiles = response.data?.files || [];
-        const allPageSlugs = pageFiles
-          .filter(f => f.endsWith('.js') || f.endsWith('.jsx'))
-          .map(f => f.replace(/\.(js|jsx)$/, ''))
-          .filter(slug => slug !== 'index'); // Exclude index.js if exists
-        
-        const configs = await base44.entities.NavigationConfig.filter({ config_type: configType });
-        if (configs.length === 0) {
-          return { added: 0, message: "No config found" };
-        }
-        
-        const config = configs[0];
-        const currentSourceSlugs = config.source_slugs || [];
-        
-        // Find pages not in source_slugs
-        const missingPages = allPageSlugs.filter(slug => !currentSourceSlugs.includes(slug));
-        
-        if (missingPages.length === 0) {
-          return { added: 0, message: "All pages already in config" };
-        }
-        
-        // Update source_slugs with new pages
-        const updatedSourceSlugs = [...currentSourceSlugs, ...missingPages].sort();
-        await base44.entities.NavigationConfig.update(config.id, { 
-          source_slugs: updatedSourceSlugs 
-        });
-        
-        return { 
-          added: missingPages.length, 
-          message: `Added ${missingPages.length} page(s) to unallocated: ${missingPages.join(', ')}` 
-        };
-      } catch (error) {
-        throw new Error(`Sync failed: ${error.message}`);
+      // Hardcoded list of known pages that should be available
+      const knownPages = [
+        "Dashboard", "NavigationManager", "PageBuilder", "TenantManager", "LayoutPatternManager",
+        "RuleBook", "CSSAudit", "TestDataManager", "UILibrary", "Components", "BrandIdentity",
+        "ComponentPatterns", "TypographyShowcase", "ButtonsShowcase", "CardsShowcase", 
+        "FormsShowcase", "LayoutShowcase", "NavigationShowcase", "DataDisplayShowcase",
+        "FeedbackShowcase", "Projects", "ProjectDetail", "ProjectsOverview", "ProjectForm",
+        "Tasks", "Customers", "Team", "Calendar", "Estimates", "Home", "Setup", "TenantAccess",
+        "WorkflowDesigner", "WorkflowLibrary", "FormBuilder", "FormTemplates", 
+        "ChecklistBuilder", "ChecklistTemplates", "AppointmentHub", "AppointmentConfirm",
+        "AppointmentManager", "WebsiteEnquiryForm", "InterestOptionsManager", "MindMapEditor",
+        "TemplateLibrary", "CommunityLibrary", "CommunityPublish", "PackageLibrary",
+        "SturijPackage", "GeneratedApps", "PackageExport", "BusinessTemplates", "EntityLibrary",
+        "FeatureLibrary", "PageLibrary", "PlaygroundSummary", "SprintManager", "RoadmapManager",
+        "LearnedPatterns", "DesignSystemManager", "SecurityMonitor", "PerformanceMonitor",
+        "APIManager", "CMSManager", "KnowledgeManager", "RoadmapJournal", "ConceptWorkbench",
+        "LivePreview", "TestingHub", "DebugProjectWorkspace", "DebugProjectEditor",
+        "LayoutBuilder", "LookupTestForms", "ViolationReport", "DesignTokens", "TokenPreview",
+        "ERDEditor", "SystemSpecification", "PromptSettings", "DashboardManager",
+        "PlaygroundEntity", "PlaygroundPage", "PlaygroundFeature", "StandaloneAPIStrategy",
+        "StandaloneInstanceManager", "ProjectDetails", "TailwindKnowledgeManager",
+        "ComponentShowcase", "PackageDetail"
+      ];
+      
+      const configs = await base44.entities.NavigationConfig.filter({ config_type: configType });
+      if (configs.length === 0) {
+        return { added: 0, message: "No config found" };
       }
+      
+      const config = configs[0];
+      const currentSourceSlugs = config.source_slugs || [];
+      
+      // Find pages not in source_slugs
+      const missingPages = knownPages.filter(slug => !currentSourceSlugs.includes(slug));
+      
+      if (missingPages.length === 0) {
+        return { added: 0, message: "All pages already in config" };
+      }
+      
+      // Update source_slugs with new pages
+      const updatedSourceSlugs = [...currentSourceSlugs, ...missingPages].sort();
+      await base44.entities.NavigationConfig.update(config.id, { 
+        source_slugs: updatedSourceSlugs 
+      });
+      
+      return { 
+        added: missingPages.length, 
+        message: `Added ${missingPages.length} page(s) to source_slugs` 
+      };
     },
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ["navConfig"] });
