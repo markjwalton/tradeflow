@@ -38,9 +38,6 @@ export function InteractiveSelector({
     const handleClick = (e) => {
       if (!isActive) return;
       
-      e.preventDefault();
-      e.stopPropagation();
-      
       const target = e.target;
       
       // Skip non-editable elements
@@ -50,6 +47,14 @@ export function InteractiveSelector({
       ) {
         return;
       }
+
+      // Allow normal interaction with buttons, inputs, links, etc.
+      if (target.tagName === 'BUTTON' || target.tagName === 'INPUT' || target.tagName === 'A' || target.tagName === 'SELECT') {
+        return;
+      }
+
+      e.preventDefault();
+      e.stopPropagation();
 
       const editableElement = findEditableElement(target);
       if (editableElement) {
