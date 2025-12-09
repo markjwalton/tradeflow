@@ -50,16 +50,23 @@ export default function Layout({ children, currentPageName }) {
             
             // Use items from NavigationConfig - convert to format with proper IDs
             if (loadedNavConfig.items?.length > 0) {
-              loadedNavItems = loadedNavConfig.items.map((item, idx) => ({
-                id: item.parent_id || `nav-item-${idx}`,
-                name: item.name,
-                item_type: item.item_type,
-                page_url: item.slug,
-                icon: item.icon,
-                order: item.order,
-                is_visible: item.is_visible,
-                parent_id: item.parent_id,
-              }));
+              loadedNavItems = loadedNavConfig.items.map((item, idx) => {
+                // Generate ID: for folders use generated ID, for pages use slug
+                const itemId = item.item_type === 'folder' 
+                  ? `folder_${item.name.toLowerCase().replace(/[^a-z0-9]+/g, '_')}`
+                  : item.slug || `page_${idx}`;
+                
+                return {
+                  id: itemId,
+                  name: item.name,
+                  item_type: item.item_type,
+                  page_url: item.slug,
+                  icon: item.icon,
+                  order: item.order,
+                  is_visible: item.is_visible,
+                  parent_id: item.parent_id,
+                };
+              });
               setNavItems(loadedNavItems);
             }
           }
