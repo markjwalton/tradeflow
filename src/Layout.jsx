@@ -46,13 +46,20 @@ export default function Layout({ children, currentPageName }) {
   const isTenantPage = false;
 
   useEffect(() => {
-    // Load editor bubble preference once
+    // Load editor bubble preference and reset live edit mode on page load
     const loadBubblePreference = async () => {
       try {
         const user = await base44.auth.me();
         if (user?.ui_preferences?.showEditorBubble !== undefined) {
           setShowEditorBubble(user.ui_preferences.showEditorBubble);
         }
+        // Always turn off live edit mode on page load
+        await base44.auth.updateMe({
+          ui_preferences: {
+            ...(user.ui_preferences || {}),
+            liveEditMode: false
+          }
+        });
       } catch (e) {
         // User not logged in or error
       }
@@ -64,7 +71,7 @@ export default function Layout({ children, currentPageName }) {
 
     loadBubblePreference();
     window.addEventListener('ui-preferences-changed', handlePreferencesChange);
-    
+
     const checkAccess = async () => {
       try {
         let loadedNavConfig = null;
