@@ -81,19 +81,18 @@ export function AppSidebar({ navItems = [] }) {
           <button
             onClick={() => toggleFolder(item.id)}
             className={cn(
-              "w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-white/70 hover:bg-white/5 hover:text-white",
+              "w-full flex items-center transition-colors text-white/70 hover:bg-white/5 hover:text-white",
+              showLabels ? "gap-3 px-3 py-2 rounded-lg" : "justify-center p-3 rounded-lg",
               isExpanded && "text-white"
             )}
           >
-            {hasChildren && showLabels ? (
+            {hasChildren && showLabels && (
               isExpanded ? <ChevronDown className="h-4 w-4 text-white/50" /> : <ChevronRight className="h-4 w-4 text-white/50" />
-            ) : (
-              <div className="w-4" />
             )}
             {isExpanded ? (
-              <FolderOpen className="h-4 w-4 text-[var(--color-secondary)]" />
+              <FolderOpen className="h-5 w-5 text-[var(--color-secondary)]" />
             ) : (
-              <Folder className="h-4 w-4 text-[var(--color-secondary)]" />
+              <Folder className="h-5 w-5 text-[var(--color-secondary)]" />
             )}
             {showLabels && <span className="flex-1 text-left">{item.name}</span>}
           </button>
@@ -116,13 +115,14 @@ export function AppSidebar({ navItems = [] }) {
         key={item.id}
         to={fullPageUrl}
         className={cn(
-          "flex items-center gap-2 px-3 py-2 rounded-lg transition-colors",
+          "flex items-center rounded-lg transition-colors",
+          showLabels ? "gap-3 px-3 py-2" : "justify-center p-3",
           isActive
             ? "bg-white/10 text-white"
             : "text-white/70 hover:bg-white/5 hover:text-white"
         )}
       >
-        <ChildIcon className="h-4 w-4 flex-shrink-0" />
+        <ChildIcon className="h-5 w-5 flex-shrink-0" />
         {showLabels && <span className="truncate">{item.name}</span>}
       </Link>
     );
@@ -137,7 +137,10 @@ export function AppSidebar({ navItems = [] }) {
       )}
     >
       {mode !== "hidden" && (
-        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+        <nav className={cn(
+          "flex-1 overflow-y-auto",
+          showLabels ? "p-3 space-y-1" : "py-3 px-1 space-y-2"
+        )}>
           {navItems.map((item) => renderNavItem(item))}
         </nav>
       )}
