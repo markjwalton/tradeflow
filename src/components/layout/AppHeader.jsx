@@ -256,6 +256,13 @@ function ProfileMenu({ user }) {
           </div>
         </div>
         <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link to={createPageUrl("SiteSettings")} className="flex items-center">
+            <SettingsIcon className="w-4 h-4 mr-2" />
+            Site Settings
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
             const tenantAccessUrl = createPageUrl("TenantAccess");

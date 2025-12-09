@@ -12,7 +12,12 @@ import {
   SheetTrigger,
   SheetFooter,
 } from "@/components/ui/sheet";
-import { Settings, Save, Code, Eye } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { Settings, Save, Code, Eye, ChevronDown, Pencil } from "lucide-react";
 import { useEditMode } from "./EditModeContext";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
@@ -24,6 +29,12 @@ export function PageSettingsPanel({ currentPageName }) {
   const [showCode, setShowCode] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [textOverrides, setTextOverrides] = useState({});
+  const [propertiesOpen, setPropertiesOpen] = useState(false);
+  const [textOverridesOpen, setTextOverridesOpen] = useState(false);
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [editingDescription, setEditingDescription] = useState(false);
+  const [pageTitle, setPageTitle] = useState("");
+  const [pageDescription, setPageDescription] = useState("");
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -43,6 +54,13 @@ export function PageSettingsPanel({ currentPageName }) {
     };
 
     loadPreferences();
+    
+    // Extract initial page title and description
+    const titleEl = document.querySelector('h1');
+    const descEl = document.querySelector('p.text-muted-foreground');
+    if (titleEl) setPageTitle(titleEl.textContent || "");
+    if (descEl) setPageDescription(descEl.textContent || "");
+
     window.addEventListener('ui-preferences-changed', handlePreferencesChange);
     return () => window.removeEventListener('ui-preferences-changed', handlePreferencesChange);
   }, []);
@@ -118,12 +136,62 @@ export function PageSettingsPanel({ currentPageName }) {
         </Button>
       </SheetTrigger>
       <SheetContent className="w-96">
-        <SheetHeader>
-          <SheetTitle>Page Settings</SheetTitle>
-          <p className="text-sm text-muted-foreground">{currentPageName}</p>
+        <SheetHeader className="px-6">
+          <div className="flex items-center justify-between">
+            <SheetTitle className="flex items-center gap-2">
+              {editingTitle && isEditMode ? (
+                <Input
+                  value={pageTitle}
+                  onChange={(e) => {
+                    setPageTitle(e.target.value);
+                    const titleEl = document.querySelector('h1');
+                    if (titleEl) titleEl.textContent = e.target.value;
+                  }}
+                  onBlur={() => setEditingTitle(false)}
+                  autoFocus
+                  className="h-8"
+                />
+              ) : (
+                <>
+                  Page Settings
+                  {isEditMode && (
+                    <Pencil
+                      className="h-3 w-3 text-muted-foreground cursor-pointer hover:text-foreground"
+                      onClick={() => setEditingTitle(true)}
+                    />
+                  )}
+                </>
+              )}
+            </SheetTitle>
+          </div>
+          <div className="flex items-center gap-2">
+            {editingDescription && isEditMode ? (
+              <Input
+                value={pageDescription}
+                onChange={(e) => {
+                  setPageDescription(e.target.value);
+                  const descEl = document.querySelector('p.text-muted-foreground');
+                  if (descEl) descEl.textContent = e.target.value;
+                }}
+                onBlur={() => setEditingDescription(false)}
+                autoFocus
+                className="h-7 text-sm"
+              />
+            ) : (
+              <>
+                <p className="text-sm text-muted-foreground">{currentPageName}</p>
+                {isEditMode && (
+                  <Pencil
+                    className="h-3 w-3 text-muted-foreground cursor-pointer hover:text-foreground"
+                    onClick={() => setEditingDescription(true)}
+                  />
+                )}
+              </>
+            )}
+          </div>
         </SheetHeader>
 
-        <div className="space-y-6 py-6">
+        <div className="space-y-6 py-6 px-6">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label>Live Edit Mode</Label>
@@ -135,75 +203,89 @@ export function PageSettingsPanel({ currentPageName }) {
           </div>
 
           {!isEditMode && customProperties.length > 0 && (
-            <div className="border-t pt-4 space-y-4">
-              <div>
-                <Label className="text-sm font-medium">Page Properties</Label>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Custom settings for this page
-                </p>
-              </div>
-              <div className="space-y-4">
-                {customProperties.map((prop) => (
-                  <div key={prop.key} className="space-y-2">
-                    <Label className="text-sm">{prop.label}</Label>
-                    {prop.description && (
-                      <p className="text-xs text-muted-foreground">{prop.description}</p>
-                    )}
-                    {prop.type === "boolean" && (
-                      <Switch
-                        checked={prop.value}
-                        onCheckedChange={(checked) => prop.onChange(checked)}
-                      />
-                    )}
-                    {prop.type === "select" && (
-                      <select
-                        value={prop.value}
-                        onChange={(e) => prop.onChange(e.target.value)}
-                        className="w-full px-3 py-2 border rounded-md text-sm"
-                      >
-                        {prop.options.map((opt) => (
-                          <option key={opt.value} value={opt.value}>
-                            {opt.label}
-                          </option>
-                        ))}
-                      </select>
-                    )}
+            <Collapsible open={propertiesOpen} onOpenChange={setPropertiesOpen}>
+              <div className="border rounded-lg">
+                <CollapsibleTrigger className="flex items-center justify-between w-full px-4 py-3 hover:bg-muted/50 transition-colors">
+                  <div>
+                    <Label className="text-sm font-medium cursor-pointer">Page Properties</Label>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Custom settings for this page
+                    </p>
                   </div>
-                ))}
+                  <ChevronDown className={`h-4 w-4 transition-transform ${propertiesOpen ? 'rotate-180' : ''}`} />
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="px-4 pb-4 space-y-4 border-t pt-4">
+                    {customProperties.map((prop) => (
+                      <div key={prop.key} className="space-y-2">
+                        <Label className="text-sm">{prop.label}</Label>
+                        {prop.description && (
+                          <p className="text-xs text-muted-foreground">{prop.description}</p>
+                        )}
+                        {prop.type === "boolean" && (
+                          <Switch
+                            checked={prop.value}
+                            onCheckedChange={(checked) => prop.onChange(checked)}
+                          />
+                        )}
+                        {prop.type === "select" && (
+                          <select
+                            value={prop.value}
+                            onChange={(e) => prop.onChange(e.target.value)}
+                            className="w-full px-3 py-2 border rounded-md text-sm"
+                          >
+                            {prop.options.map((opt) => (
+                              <option key={opt.value} value={opt.value}>
+                                {opt.label}
+                              </option>
+                            ))}
+                          </select>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </CollapsibleContent>
               </div>
-            </div>
+            </Collapsible>
           )}
 
           {!isEditMode && pageTextElements.length > 0 && (
-            <div className="border-t pt-4 space-y-4">
-              <div>
-                <Label className="text-sm font-medium">Text Overrides</Label>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Edit text content on this page
-                </p>
-              </div>
-              <div className="space-y-3 max-h-96 overflow-y-auto">
-                {pageTextElements.map((element) => (
-                  <div key={element.id} className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-xs text-muted-foreground uppercase">
-                        {element.tagName}
-                      </Label>
-                    </div>
-                    <Input
-                      value={textOverrides[element.id] ?? element.text}
-                      onChange={(e) => {
-                        const newValue = e.target.value;
-                        setTextOverrides(prev => ({ ...prev, [element.id]: newValue }));
-                        element.element.textContent = newValue;
-                      }}
-                      className="text-sm"
-                      placeholder={element.text}
-                    />
+            <Collapsible open={textOverridesOpen} onOpenChange={setTextOverridesOpen}>
+              <div className="border rounded-lg">
+                <CollapsibleTrigger className="flex items-center justify-between w-full px-4 py-3 hover:bg-muted/50 transition-colors">
+                  <div>
+                    <Label className="text-sm font-medium cursor-pointer">Text Overrides</Label>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Edit text content on this page
+                    </p>
                   </div>
-                ))}
+                  <ChevronDown className={`h-4 w-4 transition-transform ${textOverridesOpen ? 'rotate-180' : ''}`} />
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="px-4 pb-4 space-y-3 max-h-96 overflow-y-auto border-t pt-4">
+                    {pageTextElements.map((element) => (
+                      <div key={element.id} className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <Label className="text-xs text-muted-foreground uppercase">
+                            {element.tagName}
+                          </Label>
+                        </div>
+                        <Input
+                          value={textOverrides[element.id] ?? element.text}
+                          onChange={(e) => {
+                            const newValue = e.target.value;
+                            setTextOverrides(prev => ({ ...prev, [element.id]: newValue }));
+                            element.element.textContent = newValue;
+                          }}
+                          className="text-sm"
+                          placeholder={element.text}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </CollapsibleContent>
               </div>
-            </div>
+            </Collapsible>
           )}
 
           {isEditMode && (

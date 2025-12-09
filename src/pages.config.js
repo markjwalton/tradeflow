@@ -90,6 +90,7 @@ import ComponentPatterns from './pages/ComponentPatterns';
 import JSONSchemaBuilder from './pages/JSONSchemaBuilder';
 import FormSchemaBuilder from './pages/FormSchemaBuilder';
 import DesignTokenEditor from './pages/DesignTokenEditor';
+import SiteSettings from './pages/SiteSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -186,6 +187,7 @@ export const PAGES = {
     "JSONSchemaBuilder": JSONSchemaBuilder,
     "FormSchemaBuilder": FormSchemaBuilder,
     "DesignTokenEditor": DesignTokenEditor,
+    "SiteSettings": SiteSettings,
 }
 
 export const pagesConfig = {
