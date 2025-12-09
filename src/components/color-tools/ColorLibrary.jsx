@@ -6,10 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Trash2, Star, Copy, Check, Search } from "lucide-react";
-import { useTenant } from "@/layout";
 
-export function ColorLibrary() {
-  const { tenantId } = useTenant();
+export function ColorLibrary({ tenantId }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [copied, setCopied] = useState(null);
   const queryClient = useQueryClient();

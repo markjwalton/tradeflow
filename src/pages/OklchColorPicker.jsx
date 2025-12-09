@@ -59,7 +59,7 @@ export default function OklchColorPicker() {
           </TabsContent>
           
           <TabsContent value="library">
-            <ColorLibrary />
+            <ColorLibrary tenantId={tenantId} />
           </TabsContent>
         </Tabs>
         
