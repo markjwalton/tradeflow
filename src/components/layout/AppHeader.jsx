@@ -10,13 +10,27 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Menu, ChevronDown, LogOut, User, Settings as SettingsIcon } from "lucide-react";
+import { Menu, ChevronDown, LogOut, User, Settings as SettingsIcon, Search } from "lucide-react";
 import { useAppSidebar } from "./SidebarContext";
 import { AppBreadcrumb } from "./AppBreadcrumb";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { useNavigate } from "react-router-dom";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export function AppHeader({ user, navItems = [] }) {
   const { cycleMode } = useAppSidebar();
@@ -53,10 +67,94 @@ export function AppHeader({ user, navItems = [] }) {
         </div>
 
         <div className="flex items-center gap-2 ml-auto">
+          <PageSearchBar navItems={navItems} />
           <ProfileMenu user={user} />
         </div>
       </div>
     </header>
+  );
+}
+
+function PageSearchBar({ navItems = [] }) {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+
+  // Flatten all pages from nav structure
+  const getAllPages = (items, category = "") => {
+    let pages = [];
+    items.forEach(item => {
+      if (item.item_type === "folder") {
+        if (item.children) {
+          pages = pages.concat(getAllPages(item.children, item.name));
+        }
+      } else {
+        pages.push({
+          name: item.name,
+          slug: item.page_url?.split("?")[0] || "",
+          category: category || "Pages",
+          icon: item.icon
+        });
+      }
+    });
+    return pages;
+  };
+
+  const allPages = getAllPages(navItems);
+
+  // Group pages by category
+  const categorizedPages = allPages.reduce((acc, page) => {
+    if (!acc[page.category]) {
+      acc[page.category] = [];
+    }
+    acc[page.category].push(page);
+    return acc;
+  }, {});
+
+  const handleSelect = (slug) => {
+    setOpen(false);
+    setSearch("");
+    navigate(createPageUrl(slug));
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-[200px] justify-between text-muted-foreground"
+        >
+          <Search className="mr-2 h-4 w-4" />
+          <span className="text-xs">Search pages...</span>
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[400px] p-0" align="end">
+        <Command>
+          <CommandInput 
+            placeholder="Search pages..." 
+            value={search}
+            onValueChange={setSearch}
+          />
+          <CommandList>
+            <CommandEmpty>No pages found.</CommandEmpty>
+            {Object.entries(categorizedPages).map(([category, pages]) => (
+              <CommandGroup key={category} heading={category}>
+                {pages.map((page) => (
+                  <CommandItem
+                    key={page.slug}
+                    onSelect={() => handleSelect(page.slug)}
+                  >
+                    {page.name}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            ))}
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 }
 
