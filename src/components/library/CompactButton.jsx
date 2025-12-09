@@ -17,6 +17,7 @@ export function CompactButton({
       variant={isActive ? "default" : "outline"}
       className={cn(
         "h-7 w-7 p-0 text-[9px] font-medium min-w-0 flex items-center justify-center",
+        isActive && "border-2 border-primary",
         className
       )}
       {...props}
