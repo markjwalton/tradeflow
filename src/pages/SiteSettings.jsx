@@ -86,6 +86,9 @@ export default function SiteSettings() {
     overlayColor: "midnight-900",
     overlayOpacity: 60,
     overlayBlur: "md",
+    buttonSize: "md",
+    ghostButtonHoverColor: "muted",
+    selectedButtonColor: "primary",
   });
   const [originalSettings, setOriginalSettings] = useState(null);
   const [hasChanges, setHasChanges] = useState(false);
@@ -103,6 +106,9 @@ export default function SiteSettings() {
           overlayColor: "midnight-900",
           overlayOpacity: 60,
           overlayBlur: "md",
+          buttonSize: "md",
+          ghostButtonHoverColor: "muted",
+          selectedButtonColor: "primary",
         };
         const loadedSettings = user?.site_settings || defaultSettings;
         setSettings(loadedSettings);
@@ -415,6 +421,93 @@ export default function SiteSettings() {
               />
               <div className="absolute inset-0 flex items-center justify-center">
                 <p className="text-white text-sm font-medium drop-shadow-lg">Overlay Preview</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Button Settings</CardTitle>
+            <CardDescription>Control button appearance for view navigation</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="button-size">Button Size</Label>
+              <Select
+                value={settings.buttonSize}
+                onValueChange={(value) => setSettings({ ...settings, buttonSize: value })}
+              >
+                <SelectTrigger id="button-size">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="sm">Small</SelectItem>
+                  <SelectItem value="md">Medium</SelectItem>
+                  <SelectItem value="lg">Large</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="ghost-hover">Unselected Button Hover</Label>
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-8 h-8 rounded border-2 flex-shrink-0"
+                  style={{ backgroundColor: `var(--${settings.ghostButtonHoverColor})` }}
+                />
+                <Select
+                  value={settings.ghostButtonHoverColor}
+                  onValueChange={(value) => setSettings({ ...settings, ghostButtonHoverColor: value })}
+                >
+                  <SelectTrigger id="ghost-hover" className="flex-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {colorTokens.map((color) => (
+                      <SelectItem key={color.value} value={color.value}>
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-4 h-4 rounded border"
+                            style={{ backgroundColor: `var(--${color.value})` }}
+                          />
+                          {color.label}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="selected-color">Selected Button Color</Label>
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-8 h-8 rounded border-2 flex-shrink-0"
+                  style={{ backgroundColor: `var(--${settings.selectedButtonColor})` }}
+                />
+                <Select
+                  value={settings.selectedButtonColor}
+                  onValueChange={(value) => setSettings({ ...settings, selectedButtonColor: value })}
+                >
+                  <SelectTrigger id="selected-color" className="flex-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {colorTokens.map((color) => (
+                      <SelectItem key={color.value} value={color.value}>
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-4 h-4 rounded border"
+                            style={{ backgroundColor: `var(--${color.value})` }}
+                          />
+                          {color.label}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </CardContent>

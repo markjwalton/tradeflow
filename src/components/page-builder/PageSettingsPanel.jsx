@@ -36,6 +36,7 @@ export function PageSettingsPanel({ currentPageName }) {
   const [editingDescription, setEditingDescription] = useState(false);
   const [pageTitle, setPageTitle] = useState("");
   const [pageDescription, setPageDescription] = useState("");
+  const [pageDescriptionEditable, setPageDescriptionEditable] = useState("");
   const [navigationMode, setNavigationMode] = useState("expanded");
   const [showBreadcrumb, setShowBreadcrumb] = useState(true);
   const [isParentPage, setIsParentPage] = useState(false);
@@ -86,6 +87,9 @@ export function PageSettingsPanel({ currentPageName }) {
           const breadcrumbVisible = page.show_breadcrumb ?? !isParent;
           setShowBreadcrumb(breadcrumbVisible);
           setOriginalShowBreadcrumb(breadcrumbVisible);
+          
+          // Load page description
+          setPageDescriptionEditable(page.page_description || "");
         }
       } catch (e) {
         console.error("Failed to load page settings:", e);
@@ -151,6 +155,7 @@ export function PageSettingsPanel({ currentPageName }) {
       ...currentPageData,
       navigation_mode: navigationMode,
       show_breadcrumb: showBreadcrumb,
+      page_description: pageDescriptionEditable,
     };
 
     if (currentPageContent) {
@@ -371,6 +376,20 @@ export function PageSettingsPanel({ currentPageName }) {
                 </p>
               </div>
               <Switch checked={showBreadcrumb} onCheckedChange={setShowBreadcrumb} />
+            </div>
+
+            <div className="pt-2 border-t space-y-2">
+              <Label className="text-sm font-medium">Page Description</Label>
+              <p className="text-xs text-muted-foreground">
+                Optional description shown below page title
+              </p>
+              <Textarea
+                value={pageDescriptionEditable}
+                onChange={(e) => setPageDescriptionEditable(e.target.value)}
+                placeholder="Enter page description..."
+                className="text-sm"
+                rows={3}
+              />
             </div>
           </div>
 
