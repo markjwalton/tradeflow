@@ -35,11 +35,10 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-3">
             <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/b7a61dbf6_black_logo_300x300_transparent.png" 
-              alt="Editor icon" 
-              className="h-8 w-8"
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/ad5ea2e54_editor.png" 
+              alt="Editor branding" 
+              className="h-8"
             />
-            <div style={{ fontFamily: '"degular-display", sans-serif', fontSize: '2.5rem', fontWeight: 700, lineHeight: 1, letterSpacing: '-0.02em' }}>editor</div>
           </div>
         </div>
         
