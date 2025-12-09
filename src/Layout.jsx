@@ -13,15 +13,9 @@ import GlobalAIAssistant from "@/components/ai-assistant/GlobalAIAssistant";
 import { AppShell } from "@/components/layout/AppShell";
 import { SidebarProvider } from "@/components/layout/SidebarContext";
 
-// Tenant admin pages - for users with admin role in a tenant (minimal hardcoded list)
-const tenantAdminPages = [
-  { name: "Navigation Manager", slug: "NavigationManager", icon: Navigation },
-];
-
 export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
   
-  // No caching - always fetch fresh on mount
   const [checkingAccess, setCheckingAccess] = useState(true);
   const [hasAccess, setHasAccess] = useState(false);
   const [accessDeniedReason, setAccessDeniedReason] = useState(null);
@@ -30,11 +24,8 @@ export default function Layout({ children, currentPageName }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [isGlobalAdmin, setIsGlobalAdmin] = useState(false);
   const [isTenantAdmin, setIsTenantAdmin] = useState(false);
-  const [customAdminNav, setCustomAdminNav] = useState(null);
   const [navConfig, setNavConfig] = useState(null);
-  const [expandedFolders, setExpandedFolders] = useState(new Set());
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
-  const [pageSearchOpen, setPageSearchOpen] = useState(false);
+  const [navItems, setNavItems] = useState([]);
   
   const urlParams = new URLSearchParams(window.location.search);
   const tenantSlug = urlParams.get("tenant");
