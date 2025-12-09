@@ -22,7 +22,7 @@ export default function CompactButtonShowcase() {
   const radiusOptions = ["none", "sm", "md", "lg", "xl", "2xl", "full"];
 
   return (
-    <div className="p-6 max-w-5xl mx-auto space-y-8">
+    <div className="p-6 w-full space-y-8">
       <div>
         <h1 className="text-4xl font-display mb-2">Compact Buttons</h1>
         <p className="text-muted-foreground">28×28px square buttons for dense editor UIs</p>
@@ -33,10 +33,8 @@ export default function CompactButtonShowcase() {
           <CardTitle>Spacing Controls</CardTitle>
           <CardDescription>Square buttons for padding/margin selection</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label className={editorClasses.label}>Padding</Label>
-            <div className="grid grid-cols-12 gap-1 mt-2">
+        <CardContent>
+          <div className="grid grid-cols-12 gap-1">
               {spacingTokens.map((value) => (
                 <CompactButton
                   key={value}
@@ -56,25 +54,20 @@ export default function CompactButtonShowcase() {
           <CardTitle>Typography Controls</CardTitle>
           <CardDescription>Compact controls for font properties</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label className={editorClasses.label}>Font Size</Label>
-            <div className="grid grid-cols-8 gap-1 mt-2">
-              {fontSizes.map((value) => (
-                <CompactButton
-                  key={value}
-                  isActive={activeFontSize === value}
-                  onClick={() => setActiveFontSize(value)}
-                >
-                  {value}
-                </CompactButton>
-              ))}
-            </div>
+        <CardContent className="space-y-3">
+          <div className="grid grid-cols-8 gap-1">
+            {fontSizes.map((value) => (
+              <CompactButton
+                key={value}
+                isActive={activeFontSize === value}
+                onClick={() => setActiveFontSize(value)}
+              >
+                {value}
+              </CompactButton>
+            ))}
           </div>
 
-          <div>
-            <Label className={editorClasses.label}>Font Weight</Label>
-            <div className="grid grid-cols-5 gap-1 mt-2">
+          <div className="grid grid-cols-5 gap-1">
               {fontWeights.map((weight) => (
                 <CompactButton
                   key={weight.value}
@@ -95,8 +88,7 @@ export default function CompactButtonShowcase() {
           <CardDescription>Radius token selection</CardDescription>
         </CardHeader>
         <CardContent>
-          <Label className={editorClasses.label}>Border Radius</Label>
-          <div className="grid grid-cols-7 gap-1 mt-2">
+          <div className="grid grid-cols-7 gap-1">
             {radiusOptions.map((value) => (
               <CompactButton
                 key={value}
