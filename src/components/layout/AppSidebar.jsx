@@ -129,7 +129,7 @@ export function AppSidebar({ navItems = [] }) {
             : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
         )}
       >
-        <ChildIcon className={cn("h-5 w-5 flex-shrink-0", iconColorClass)} />
+        <ChildIcon className="h-5 w-5 flex-shrink-0" style={{ color: 'var(--primary-600)' }} />
         {showLabels && <span className="truncate text-sm">{item.name}</span>}
       </Link>
     );
