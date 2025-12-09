@@ -23,7 +23,7 @@ const fontWeights = [
 ];
 const radiusTokens = ["none", "sm", "md", "lg", "xl", "2xl", "full"];
 
-export function ElementEditor({ selectedElement, activeSection, onApplyStyle }) {
+export function ElementEditor({ selectedElement, activeSection, showHeader = true, onApplyStyle }) {
 
   // Parse current element classes
   const currentStyles = useMemo(() => {
@@ -89,6 +89,12 @@ export function ElementEditor({ selectedElement, activeSection, onApplyStyle }) 
 
   return (
     <div className="space-y-2">
+      {showHeader && (
+        <div className="text-sm text-muted-foreground mb-3 pb-3 border-b">
+          <p>Selected: <code className="text-xs bg-muted px-2 py-1 rounded">{selectedElement.tagName}</code></p>
+          <p className="text-xs truncate mt-1">Path: {selectedElement.path}</p>
+        </div>
+      )}
 
       {/* Current Styles Tab */}
       {activeSection === "current" && (
@@ -232,14 +238,14 @@ export function ElementEditor({ selectedElement, activeSection, onApplyStyle }) 
                 </Badge>
               )}
             </div>
-            <div className="grid grid-cols-7 gap-2">
+            <div className="grid grid-cols-7 gap-1">
               {spacingTokens.map((value) => (
                 <Button
                   key={value}
                   variant={currentStyles.padding === value ? "default" : "outline"}
                   size="sm"
                   onClick={() => handleApplySpacing("padding", value)}
-                  className="text-xs h-8"
+                  className="text-xs h-7 px-1"
                 >
                   {value}
                 </Button>
@@ -256,14 +262,14 @@ export function ElementEditor({ selectedElement, activeSection, onApplyStyle }) 
                 </Badge>
               )}
             </div>
-            <div className="grid grid-cols-7 gap-2">
+            <div className="grid grid-cols-7 gap-1">
               {spacingTokens.map((value) => (
                 <Button
                   key={value}
                   variant={currentStyles.margin === value ? "default" : "outline"}
                   size="sm"
                   onClick={() => handleApplySpacing("margin", value)}
-                  className="text-xs h-8"
+                  className="text-xs h-7 px-1"
                 >
                   {value}
                 </Button>
@@ -285,14 +291,14 @@ export function ElementEditor({ selectedElement, activeSection, onApplyStyle }) 
                 </Badge>
               )}
             </div>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 gap-1">
               {fontSizes.map((size) => (
                 <Button
                   key={size}
                   variant={currentStyles.fontSize === size ? "default" : "outline"}
                   size="sm"
                   onClick={() => handleApplyTypography("size", size)}
-                  className="text-xs"
+                  className="text-xs h-7 px-2"
                 >
                   {size}
                 </Button>
@@ -309,14 +315,14 @@ export function ElementEditor({ selectedElement, activeSection, onApplyStyle }) 
                 </Badge>
               )}
             </div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-1">
               {fontWeights.map((weight) => (
                 <Button
                   key={weight.value}
                   variant={currentStyles.fontWeight === weight.value ? "default" : "outline"}
                   size="sm"
                   onClick={() => handleApplyTypography("weight", weight.value)}
-                  className="text-xs"
+                  className="text-xs h-7 px-2"
                 >
                   {weight.label}
                 </Button>
@@ -338,14 +344,14 @@ export function ElementEditor({ selectedElement, activeSection, onApplyStyle }) 
                 </Badge>
               )}
             </div>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 gap-1">
               {radiusTokens.map((radius) => (
                 <Button
                   key={radius}
                   variant={currentStyles.borderRadius === radius ? "default" : "outline"}
                   size="sm"
                   onClick={() => handleApplyRadius(radius)}
-                  className="text-xs"
+                  className="text-xs h-7 px-2"
                 >
                   {radius}
                 </Button>
