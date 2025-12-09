@@ -37,7 +37,14 @@ export default function ProjectEditorRenderer({ config, data, onAction }) {
     }
   };
 
-  const isTwoColumn = config.layout === "twoColumn";
+  const handleConfigSave = (newConfig) => {
+    setCurrentConfig(newConfig);
+    if (onAction) {
+      onAction("config.update", { config: newConfig });
+    }
+  };
+
+  const isTwoColumn = currentConfig.layout === "twoColumn";
 
   const toggleSection = (sectionId) => {
     setOpenSections(prev => {
