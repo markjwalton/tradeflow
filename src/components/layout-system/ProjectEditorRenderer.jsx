@@ -18,6 +18,8 @@ export default function ProjectEditorRenderer({ config, data, onAction }) {
   const [openSections, setOpenSections] = useState(
     new Set((config.sections || []).filter(s => s.defaultOpen !== false).map(s => s.id))
   );
+  const [configEditorOpen, setConfigEditorOpen] = useState(false);
+  const [currentConfig, setCurrentConfig] = useState(config);
 
   const handleFieldChange = (binding, value) => {
     setFormData(prev => setValueByBinding(prev, binding, value));
