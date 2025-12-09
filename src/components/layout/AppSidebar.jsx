@@ -85,7 +85,7 @@ export function AppSidebar({ navItems = [] }) {
           <button
             className="w-full flex items-center justify-center [padding:var(--spacing-3)] [border-radius:var(--radius-lg)] transition-colors hover:bg-sidebar-accent group"
           >
-            <Folder className="h-5 w-5 text-secondary-400 group-hover:text-sidebar-foreground transition-colors" />
+            <Folder className="h-5 w-5 transition-colors [color:var(--secondary-400)] group-hover:[color:var(--sidebar-foreground)]" />
           </button>
         );
         
@@ -116,9 +116,9 @@ export function AppSidebar({ navItems = [] }) {
               isExpanded ? <ChevronDown className="h-4 w-4 text-sidebar-foreground/50" /> : <ChevronRight className="h-4 w-4 text-sidebar-foreground/50" />
             )}
             {isExpanded ? (
-              <FolderOpen className="h-5 w-5 text-secondary-400" />
+              <FolderOpen className="h-5 w-5 [color:var(--secondary-400)]" />
             ) : (
-              <Folder className="h-5 w-5 text-secondary-400" />
+              <Folder className="h-5 w-5 [color:var(--secondary-400)]" />
             )}
             <span className="flex-1 text-left">{item.name}</span>
           </button>
@@ -153,8 +153,8 @@ export function AppSidebar({ navItems = [] }) {
         <ChildIcon className={cn(
           "h-5 w-5 flex-shrink-0 transition-colors",
           isActive 
-            ? "text-sidebar-primary-foreground" 
-            : "text-primary-600 group-hover:text-sidebar-foreground"
+            ? "[color:var(--sidebar-primary-foreground)]" 
+            : "[color:var(--primary-600)] group-hover:[color:var(--sidebar-foreground)]"
         )} />
         {showLabels && <span className={cn("truncate text-sm", isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground/70")}>{item.name}</span>}
       </Link>
