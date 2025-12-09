@@ -270,7 +270,7 @@ Return a JSON object with this structure:
           <Sparkles className="h-5 w-5 text-warning" />
           <h2 className="text-lg font-semibold">AI Workflow Generator</h2>
         </div>
-        <p className="text-sm text-[var(--color-charcoal)]">
+        <p className="text-sm text-muted-foreground">
           {phase === "input" && "Describe your workflow steps and let AI build the details"}
           {phase === "context" && "Add any additional context for the AI"}
           {phase === "generating" && "AI is generating your workflow..."}
@@ -296,7 +296,7 @@ Return a JSON object with this structure:
                             <Card 
                               ref={provided.innerRef}
                               {...provided.draggableProps}
-                              className={`p-4 ${snapshot.isDragging ? "shadow-lg ring-2 ring-primary/30" : ""}`}
+                              className={`p-4 ${snapshot.isDragging ? "shadow-lg ring-2 ring-primary/20" : ""}`}
                             >
                               <div className="flex items-start gap-3">
                                 <div 

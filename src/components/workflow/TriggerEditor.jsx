@@ -357,7 +357,7 @@ export default function TriggerEditor({ triggers = [], onChange }) {
       </div>
 
       {triggers.length === 0 ? (
-        <div className="text-center py-4 text-muted-foreground text-sm border border-border rounded-lg bg-muted">
+        <div className="text-center py-4 text-muted-foreground text-sm border border-border rounded-lg bg-muted/50">
           No triggers configured
         </div>
       ) : (
@@ -365,14 +365,14 @@ export default function TriggerEditor({ triggers = [], onChange }) {
           {triggers.map((trigger, triggerIndex) => (
             <Card key={trigger.triggerId} className="overflow-hidden">
               <CardHeader
-                className="py-2 px-3 cursor-pointer hover:bg-muted"
+                className="py-2 px-3 cursor-pointer hover:bg-muted/50"
                 onClick={() =>
                   setExpandedIndex(expandedIndex === triggerIndex ? null : triggerIndex)
                 }
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Zap className="h-4 w-4 text-secondary" />
+                    <Zap className="h-4 w-4 text-warning" />
                     <span className="font-medium text-sm">
                       {triggerEvents.find((e) => e.value === trigger.event)?.label || trigger.event}
                     </span>
@@ -447,7 +447,7 @@ export default function TriggerEditor({ triggers = [], onChange }) {
                             return (
                               <div
                                 key={action.actionId}
-                                className="border border-border rounded p-2 bg-muted"
+                                className="border border-border rounded p-2 bg-muted/50"
                               >
                                 <div className="flex items-center justify-between">
                                   <div className="flex items-center gap-2">
