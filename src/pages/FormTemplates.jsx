@@ -96,7 +96,7 @@ export default function FormTemplates() {
     <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display text-midnight-900">Form Templates</h1>
+          <h1 className="text-2xl font-light font-display text-foreground">Form Templates</h1>
           <p className="text-muted-foreground">Create and manage reusable form templates</p>
         </div>
         <Link to={createPageUrl("FormBuilder")}>
@@ -141,7 +141,7 @@ export default function FormTemplates() {
       ) : filteredForms.length === 0 ? (
         <div className="text-center py-12">
           <FileText className="h-12 w-12 mx-auto opacity-30 mb-4 text-muted-foreground" />
-          <h3 className="text-lg font-medium text-midnight-900">No forms found</h3>
+          <h3 className="text-lg font-medium text-foreground">No forms found</h3>
           <p className="text-muted-foreground mb-4">
             {search || categoryFilter !== "all"
               ? "Try adjusting your filters"

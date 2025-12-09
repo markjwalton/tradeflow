@@ -912,7 +912,7 @@ Return ONLY a JSON array of strings, each being a short label (2-4 words max) fo
     <div className="h-screen flex flex-col bg-background">
       {/* Header */}
       <div className="flex items-center gap-4 p-4 bg-card border-b border-border">
-        <h1 className="text-xl font-bold text-midnight-900" style={{ fontFamily: 'var(--font-heading)' }}>Mind Map Editor</h1>
+        <h1 className="text-xl font-bold text-foreground" style={{ fontFamily: 'var(--font-heading)' }}>Mind Map Editor</h1>
         
         <Select value={selectedMindMapId || ""} onValueChange={(id) => {
           setSelectedMindMapId(id);
