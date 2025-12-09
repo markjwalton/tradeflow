@@ -18,6 +18,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Settings, Save, Code, Eye, ChevronDown, Pencil } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useEditMode } from "./EditModeContext";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
@@ -115,10 +116,13 @@ export function PageSettingsPanel({ currentPageName }) {
       data: {
         ...currentPageData,
         current_content_jsx: currentPageContent,
+        navigation_mode: navigationMode,
         versions: [...(currentPageData.versions || []), newVersion],
         current_version_number: newVersion.version_number,
       },
     });
+
+    window.dispatchEvent(new CustomEvent('page-settings-saved', { detail: { navigationMode } }));
   };
 
   if (!isVisible) return null;
@@ -288,6 +292,23 @@ export function PageSettingsPanel({ currentPageName }) {
               </div>
             </Collapsible>
           )}
+
+          <div className="border rounded-lg p-4">
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">Navigation Mode</Label>
+              <p className="text-xs text-muted-foreground mb-3">Default sidebar state for this page</p>
+              <Select value={navigationMode} onValueChange={setNavigationMode}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="expanded">Open (Full Sidebar)</SelectItem>
+                  <SelectItem value="icons">Icons Only</SelectItem>
+                  <SelectItem value="hidden">Hidden</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
 
           {isEditMode && (
             <>
