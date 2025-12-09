@@ -8,11 +8,12 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+} from "@/components/ui/sheet";
 import {
   Select,
   SelectContent,
@@ -444,7 +445,8 @@ export default function GenericNavEditor({
             Add Item
           </Button>
         </div>
-      <CardContent>
+
+        {/* Content Area */}
         {isLoading ? (
           <div className="text-center py-8 text-[var(--color-charcoal)]">Loading...</div>
         ) : (
@@ -724,6 +726,7 @@ export default function GenericNavEditor({
           </>
         )}
       </CardContent>
+    </Card>
 
       {/* Edit Sidebar */}
       <Sheet open={showDialog} onOpenChange={closeDialog}>
@@ -838,6 +841,5 @@ export default function GenericNavEditor({
           </SheetFooter>
         </SheetContent>
       </Sheet>
-    </Card>
   );
 }
