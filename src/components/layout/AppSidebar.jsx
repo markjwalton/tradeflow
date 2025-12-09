@@ -113,14 +113,21 @@ export function AppSidebar({ navItems = [] }) {
         );
         
         return (
-          <Tooltip key={item.id}>
-            <TooltipTrigger asChild>
-              {folderButton}
-            </TooltipTrigger>
-            <TooltipContent side="right">
-              {item.name}
-            </TooltipContent>
-          </Tooltip>
+          <div key={item.id}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                {folderButton}
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                {item.name}
+              </TooltipContent>
+            </Tooltip>
+            {isExpanded && hasChildren && (
+              <div className="flex flex-col [gap:var(--spacing-1)] [margin-top:var(--spacing-1)]">
+                {item.children.map((child) => renderNavItem(child, true, false))}
+              </div>
+            )}
+          </div>
         );
       }
       
