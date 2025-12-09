@@ -86,7 +86,7 @@ export default function ProjectWorkspaceRenderer({ config, data, onAction }) {
       <div className={`grid ${isTwoColumn ? "grid-cols-1 lg:grid-cols-3" : "grid-cols-1"} gap-6`}>
         {/* Primary Sections */}
         <div className={isTwoColumn ? "lg:col-span-2 space-y-6" : "space-y-6"}>
-          {(config.primarySections || []).map((section) => (
+          {(currentConfig.primarySections || []).map((section) => (
             <Card key={section.id}>
               <CardHeader>
                 <CardTitle>{section.title}</CardTitle>
