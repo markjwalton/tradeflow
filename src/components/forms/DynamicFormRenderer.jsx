@@ -187,7 +187,7 @@ export default function DynamicFormRenderer({
       case "select":
         return (
           <Select value={value || ""} onValueChange={(v) => handleChange(field.fieldId, v)}>
-            <SelectTrigger className={error ? "border-red-500" : ""}>
+            <SelectTrigger className={error ? "border-destructive" : ""}>
               <SelectValue placeholder={field.placeholder || "Select..."} />
             </SelectTrigger>
             <SelectContent>

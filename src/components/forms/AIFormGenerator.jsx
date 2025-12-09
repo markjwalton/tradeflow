@@ -335,12 +335,12 @@ Return a JSON object with this structure:
               </div>
 
               {generatedForm.aiNotes && (
-                <Card className="p-3 bg-[var(--color-secondary)]/10 border-[var(--color-secondary)]/30">
+                <Card className="p-3 bg-secondary/10 border-secondary/30">
                   <div className="flex items-start gap-2">
-                    <Lightbulb className="h-4 w-4 text-[var(--color-secondary)] flex-shrink-0 mt-0.5" />
+                    <Lightbulb className="h-4 w-4 text-secondary flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-sm font-medium text-[var(--color-secondary-dark)]">AI Recommendations</p>
-                      <p className="text-sm text-[var(--color-secondary-dark)] mt-1">{generatedForm.aiNotes}</p>
+                      <p className="text-sm font-medium text-secondary">AI Recommendations</p>
+                      <p className="text-sm text-secondary mt-1">{generatedForm.aiNotes}</p>
                     </div>
                   </div>
                 </Card>
