@@ -150,16 +150,19 @@ export function AppSidebar({ navItems = [] }) {
     return linkContent;
   };
 
-  // Flatten navigation for icon mode
+  // Flatten navigation for icon mode - include folders AND pages
   const getFlattenedItems = (items) => {
     const flattened = [];
-    const flatten = (itemList) => {
+    const flatten = (itemList, parentId = null) => {
       itemList.forEach((item) => {
-        if (item.item_type === "page") {
-          flattened.push(item);
-        }
+        // Add the item (folder or page)
+        flattened.push({
+          ...item,
+          _isTopLevel: !parentId  // Mark if this is a top-level item
+        });
+        // Recursively add children
         if (item.children && item.children.length > 0) {
-          flatten(item.children);
+          flatten(item.children, item.id);
         }
       });
     };
