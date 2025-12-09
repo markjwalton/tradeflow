@@ -87,6 +87,7 @@ import UILibrary from './pages/UILibrary';
 import Components from './pages/Components';
 import BrandIdentity from './pages/BrandIdentity';
 import ComponentPatterns from './pages/ComponentPatterns';
+import JSONSchemaBuilder from './pages/JSONSchemaBuilder';
 import __Layout from './Layout.jsx';
 
 
@@ -180,6 +181,7 @@ export const PAGES = {
     "Components": Components,
     "BrandIdentity": BrandIdentity,
     "ComponentPatterns": ComponentPatterns,
+    "JSONSchemaBuilder": JSONSchemaBuilder,
 }
 
 export const pagesConfig = {
