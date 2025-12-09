@@ -101,8 +101,6 @@ export default function Layout({ children, currentPageName }) {
         loadBubblePreference();
         window.addEventListener('ui-preferences-changed', handlePreferencesChange);
         
-        return () => window.removeEventListener('ui-preferences-changed', handlePreferencesChange);
-        
         // Get public pages from config or use defaults
         const configPublicPages = loadedNavConfig?.public_pages || ["TenantAccess", "Setup", "Dashboard"];
         
@@ -246,7 +244,12 @@ export default function Layout({ children, currentPageName }) {
     };
 
     checkAccess();
-  }, []); // Empty deps - only run once on mount
+    
+    // Cleanup for preferences listener
+    return () => {
+      window.removeEventListener('ui-preferences-changed', () => {});
+    };
+  }, [currentPageName]); // Re-run when page changes
 
   // Pages without layout wrapper (TenantAccess, Setup render without chrome)
   if (currentPageName === "TenantAccess" || currentPageName === "Setup") {
