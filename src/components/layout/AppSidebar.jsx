@@ -215,12 +215,12 @@ export function AppSidebar({ navItems = [] }) {
 
   return (
     <aside
-      className={cn(
-        "hidden lg:flex lg:flex-col lg:h-full bg-sidebar text-sidebar-foreground border-r border-sidebar-border transition-[width] duration-300 ease-in-out",
-        isHidden && "lg:w-0",
-        !isHidden && widthClass
-      )}
-    >
+        className={cn(
+          "hidden lg:flex lg:flex-col lg:h-screen lg:sticky lg:top-0 bg-sidebar text-sidebar-foreground border-r border-sidebar-border transition-[width] duration-300 ease-in-out",
+          isHidden && "lg:w-0",
+          !isHidden && widthClass
+        )}
+      >
       {mode !== "hidden" && (
         <TooltipProvider delayDuration={300}>
           <nav className={cn(
