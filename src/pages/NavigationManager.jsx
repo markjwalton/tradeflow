@@ -249,26 +249,25 @@ export default function NavigationManager() {
           </div>
 
           {/* Tab Content */}
-          <TabsContent value="admin">
+          {activeTab === "admin" && (
             <GenericNavEditor
               title=""
               configType="admin_console"
               syncUnallocatedPages={() => syncUnallocatedPages.mutate("admin_console")}
               isSyncing={syncUnallocatedPages.isPending}
             />
-          </TabsContent>
+          )}
 
-          <TabsContent value="app">
+          {activeTab === "app" && (
             <GenericNavEditor
               title=""
               configType="app_pages_source"
               syncUnallocatedPages={() => syncUnallocatedPages.mutate("app_pages_source")}
               isSyncing={syncUnallocatedPages.isPending}
             />
-          </TabsContent>
+          )}
 
-          <TabsContent value="tenant">
-            {activeTab === "tenant" && (
+          {activeTab === "tenant" && (
             <div className="[&>*+*]:mt-[var(--spacing-4)]">
               <TenantSelector
                 tenants={tenants}
@@ -315,8 +314,7 @@ export default function NavigationManager() {
                 />
               )}
             </div>
-            )}
-          </TabsContent>
+          )}
         </>
       ) : (
         <TenantNavEditor 
