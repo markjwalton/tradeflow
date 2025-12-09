@@ -18,6 +18,12 @@ export default function DebugProjectWorkspace() {
 
   const handleAction = (actionId, data) => {
     console.log("Action triggered:", actionId, data);
+    
+    if (actionId === "navigation.editor") {
+      window.location.href = createPageUrl("DebugProjectEditor");
+      return;
+    }
+    
     alert(`Action: ${actionId}\n\nThis is debug mode - no actual database updates.\n\nData received:\n${JSON.stringify(data, null, 2)}`);
   };
 

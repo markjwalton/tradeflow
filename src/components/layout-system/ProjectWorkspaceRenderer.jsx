@@ -43,10 +43,21 @@ export default function ProjectWorkspaceRenderer({ config, data, onAction }) {
             ))}
           </div>
         </div>
-        <Button variant="outline" onClick={() => setEditorOpen(true)}>
-          <Pencil className="h-4 w-4 mr-2" />
-          Quick Edit
-        </Button>
+        <div className="flex gap-2">
+          {(config.pageHeader?.actions || []).map((action, idx) => (
+            <Button
+              key={idx}
+              variant={action.variant || "default"}
+              onClick={() => onAction?.(action.actionId, data)}
+            >
+              {action.label}
+            </Button>
+          ))}
+          <Button variant="outline" onClick={() => setEditorOpen(true)}>
+            <Pencil className="h-4 w-4 mr-2" />
+            Quick Edit
+          </Button>
+        </div>
       </div>
 
       {/* Summary Metrics */}
