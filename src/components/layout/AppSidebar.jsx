@@ -43,6 +43,7 @@ const iconMap = {
 export function AppSidebar({ navItems = [] }) {
   const { mode, isHidden } = useAppSidebar();
   const location = useLocation();
+  // Start with all folders collapsed (empty set)
   const [expandedFolders, setExpandedFolders] = useState(new Set());
 
   const widthClass =
@@ -68,15 +69,15 @@ export function AppSidebar({ navItems = [] }) {
     const isFolder = item.item_type === "folder";
     const Icon = getIcon(item.icon);
     const isExpanded = expandedFolders.has(item.id);
-    
+
     // Build page URL from page_url field
     const pageUrl = item.page_url || "";
     const currentPath = location.pathname.split("/").pop();
     const itemPath = pageUrl.split("?")[0];
     const isActive = currentPath === itemPath;
-    
-    // Color logic: folders always secondary, top-level pages primary
-    const iconColorClass = isFolder ? "text-secondary" : (isTopLevel ? "text-primary" : "");
+
+    // Color logic: folders always secondary, pages always primary
+    const iconColorClass = isFolder ? "text-secondary" : "text-primary";
 
     if (isFolder) {
       const hasChildren = item.children && item.children.length > 0;
