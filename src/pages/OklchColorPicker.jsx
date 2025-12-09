@@ -1,16 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { OklchColorTool } from "@/components/color-tools/OklchColorTool";
 import { OklchGradientTool } from "@/components/color-tools/OklchGradientTool";
 import { OklchPaletteTool } from "@/components/color-tools/OklchPaletteTool";
 import { ColorLibrary } from "@/components/color-tools/ColorLibrary";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { base44 } from "@/api/base44Client";
-import { useTenant } from "@/layout";
 import { toast } from "sonner";
 
 export default function OklchColorPicker() {
   const [activeTab, setActiveTab] = useState("picker");
-  const { tenantId } = useTenant();
+  const [tenantId, setTenantId] = useState(null);
+  
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tenantSlug = urlParams.get("tenant");
+    if (tenantSlug) {
+      base44.entities.Tenant.filter({ slug: tenantSlug }).then(tenants => {
+        if (tenants.length > 0) setTenantId(tenants[0].id);
+      });
+    }
+  }, []);
   
   const handleSave = async (paletteData) => {
     try {
