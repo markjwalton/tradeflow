@@ -244,8 +244,13 @@ export default function Layout({ children, currentPageName }) {
     };
     return (
       <TenantContext.Provider value={fullscreenContextValue}>
-        <div className="min-h-screen">{children}</div>
-        <GlobalAIAssistant />
+        <EditModeProvider>
+          <div className="min-h-screen">
+            <LiveEditWrapper>{children}</LiveEditWrapper>
+          </div>
+          <PageSettingsPanel currentPageName={currentPageName} />
+          <GlobalAIAssistant />
+        </EditModeProvider>
       </TenantContext.Provider>
     );
   }

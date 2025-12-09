@@ -62,10 +62,11 @@ export function PageSettingsPanel({ currentPageName }) {
         <Button
           variant="ghost"
           size="icon"
-          className="fixed bottom-6 right-6 z-50 h-12 w-12 rounded-full shadow-lg bg-white hover:bg-gray-50 border border-gray-200"
+          className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-2xl bg-primary text-white hover:bg-primary/90 border-2 border-white"
+          style={{ zIndex: 9999 }}
           title="Page Settings"
         >
-          <Settings className="h-5 w-5" />
+          <Settings className="h-6 w-6" />
         </Button>
       </SheetTrigger>
       <SheetContent className="w-96">
