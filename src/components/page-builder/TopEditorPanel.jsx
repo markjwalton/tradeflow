@@ -34,10 +34,12 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
       <div className="flex items-center justify-between px-6 py-2 border-b bg-muted/30">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <svg width="32" height="32" viewBox="0 0 300 300" fill="currentColor" className="text-foreground">
-              <path d="M150,10 L280,70 L280,170 L220,260 L80,260 L20,170 L20,70 Z M60,90 L240,160 M240,90 L150,260" stroke="white" strokeWidth="12" fill="currentColor"/>
-            </svg>
-            <h2 className="text-lg font-display font-black tracking-tight" style={{ fontStretch: 'condensed' }}>editor</h2>
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/b7a61dbf6_black_logo_300x300_transparent.png" 
+              alt="Editor icon" 
+              className="h-12 w-12"
+            />
+            <h2 className="text-4xl font-display font-black tracking-tight" style={{ fontStretch: 'condensed' }}>editor</h2>
           </div>
         </div>
         
