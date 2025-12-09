@@ -23,8 +23,7 @@ const fontWeights = [
 ];
 const radiusTokens = ["none", "sm", "md", "lg", "xl", "2xl", "full"];
 
-export function ElementEditor({ selectedElement, onApplyStyle }) {
-  const [activeSection, setActiveSection] = useState("current");
+export function ElementEditor({ selectedElement, activeSection, onApplyStyle }) {
 
   // Parse current element classes
   const currentStyles = useMemo(() => {
@@ -88,30 +87,8 @@ export function ElementEditor({ selectedElement, onApplyStyle }) {
     onApplyStyle?.({ className: `rounded-${value}` });
   };
 
-  const sections = [
-    { id: "current", label: "Current" },
-    { id: "colors", label: "Colors" },
-    { id: "spacing", label: "Spacing" },
-    { id: "typography", label: "Typography" },
-    { id: "borders", label: "Borders" },
-  ];
-
   return (
     <div className="space-y-2">
-      {/* Section Tabs - Compact */}
-      <div className="flex gap-1 border-b">
-        {sections.map(section => (
-          <Button
-            key={section.id}
-            variant={activeSection === section.id ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setActiveSection(section.id)}
-            className="text-xs h-7 px-3"
-          >
-            {section.label}
-          </Button>
-        ))}
-      </div>
 
       {/* Current Styles Tab */}
       {activeSection === "current" && (

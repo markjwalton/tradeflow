@@ -17,6 +17,7 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [viewMode, setViewMode] = useState("focus"); // 'focus' or 'full'
   const [hasChanges, setHasChanges] = useState(false);
+  const [activeTab, setActiveTab] = useState("current");
 
   const handleViewModeChange = (mode) => {
     setViewMode(mode);
@@ -39,7 +40,7 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
       style={{ height: isCollapsed ? '44px' : (viewMode === 'focus' ? '120px' : '500px') }}
     >
       <div className="flex items-center justify-between px-6 py-2 border-b bg-muted/30">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-6">
           <div className="flex items-center gap-3">
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/ad5ea2e54_editor.png" 
@@ -47,6 +48,22 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
               className="h-6"
             />
           </div>
+
+          {viewMode === 'focus' && selectedElement && (
+            <div className="flex gap-1">
+              {["current", "colors", "spacing", "typography", "borders"].map(tab => (
+                <Button
+                  key={tab}
+                  variant={activeTab === tab ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setActiveTab(tab)}
+                  className="text-xs h-7 px-3 capitalize"
+                >
+                  {tab}
+                </Button>
+              ))}
+            </div>
+          )}
         </div>
         
         <div className="flex items-center gap-2">
@@ -89,6 +106,7 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
                 </div>
                 <ElementEditor 
                   selectedElement={selectedElement}
+                  activeSection={activeTab}
                   onApplyStyle={(style) => {
                     setHasChanges(true);
                     // Dispatch event to LiveEditWrapper to apply the style
