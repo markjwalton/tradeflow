@@ -18,6 +18,29 @@ export default function GlobalAIAssistant() {
   const [isCaptureOpen, setIsCaptureOpen] = useState(false);
   const [isQuickCaptureOpen, setIsQuickCaptureOpen] = useState(false);
   const [lastOutput, setLastOutput] = useState("");
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const handlePreferencesChange = (event) => {
+      setIsVisible(event.detail.showAIAssistant ?? true);
+    };
+
+    const loadPreferences = async () => {
+      try {
+        const { base44 } = await import("@/api/base44Client");
+        const user = await base44.auth.me();
+        if (user?.ui_preferences?.showAIAssistant !== undefined) {
+          setIsVisible(user.ui_preferences.showAIAssistant);
+        }
+      } catch (e) {
+        // User not logged in or error - show by default
+      }
+    };
+
+    loadPreferences();
+    window.addEventListener('ui-preferences-changed', handlePreferencesChange);
+    return () => window.removeEventListener('ui-preferences-changed', handlePreferencesChange);
+  }, []);
 
   // Reminder timer every 10 minutes
   useEffect(() => {
@@ -50,12 +73,15 @@ export default function GlobalAIAssistant() {
     navigator.clipboard.writeText(text);
   };
 
+  if (!isVisible) return null;
+
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] z-50"
+            className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-2xl bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] border-2 border-white"
+            style={{ zIndex: 1050 }}
             size="icon"
           >
             <Sparkles className="h-6 w-6" />
