@@ -272,9 +272,6 @@ export default function Layout({ children, currentPageName }) {
     </TenantContext.Provider>
   );
 }
-  
-  // Icon map for custom nav items
-  const iconMap = {
     Home, Navigation, Building2, Shield, Package, GitBranch, Database, 
     Layout: LayoutIcon, Zap, Workflow, Settings, Lightbulb, Globe, Key, Gauge, BookOpen, FlaskConical,
     Folder, FolderOpen, LayoutDashboard,
