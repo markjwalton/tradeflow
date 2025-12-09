@@ -89,6 +89,8 @@ export default function SiteSettings() {
     buttonSize: "md",
     ghostButtonHoverColor: "muted",
     selectedButtonColor: "primary",
+    iconOnlyParentHoverColor: "primary-100",
+    iconOnlyPageHoverColor: "muted",
   });
   const [originalSettings, setOriginalSettings] = useState(null);
   const [hasChanges, setHasChanges] = useState(false);
@@ -109,6 +111,8 @@ export default function SiteSettings() {
           buttonSize: "md",
           ghostButtonHoverColor: "muted",
           selectedButtonColor: "primary",
+          iconOnlyParentHoverColor: "primary-100",
+          iconOnlyPageHoverColor: "muted",
         };
         const loadedSettings = user?.site_settings || defaultSettings;
         setSettings(loadedSettings);
@@ -492,6 +496,76 @@ export default function SiteSettings() {
                   onValueChange={(value) => setSettings({ ...settings, selectedButtonColor: value })}
                 >
                   <SelectTrigger id="selected-color" className="flex-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {colorTokens.map((color) => (
+                      <SelectItem key={color.value} value={color.value}>
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-4 h-4 rounded border"
+                            style={{ backgroundColor: `var(--color-${color.value})` }}
+                          />
+                          {color.label}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Navigation Icon Tooltips</CardTitle>
+            <CardDescription>Control hover colors for icon-only navigation mode</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="parent-hover">Parent/Folder Hover Color</Label>
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-8 h-8 rounded border-2 flex-shrink-0"
+                  style={{ backgroundColor: `var(--color-${settings.iconOnlyParentHoverColor})` }}
+                />
+                <Select
+                  value={settings.iconOnlyParentHoverColor}
+                  onValueChange={(value) => setSettings({ ...settings, iconOnlyParentHoverColor: value })}
+                >
+                  <SelectTrigger id="parent-hover" className="flex-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {colorTokens.map((color) => (
+                      <SelectItem key={color.value} value={color.value}>
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-4 h-4 rounded border"
+                            style={{ backgroundColor: `var(--color-${color.value})` }}
+                          />
+                          {color.label}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="page-hover">Page Hover Color</Label>
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-8 h-8 rounded border-2 flex-shrink-0"
+                  style={{ backgroundColor: `var(--color-${settings.iconOnlyPageHoverColor})` }}
+                />
+                <Select
+                  value={settings.iconOnlyPageHoverColor}
+                  onValueChange={(value) => setSettings({ ...settings, iconOnlyPageHoverColor: value })}
+                >
+                  <SelectTrigger id="page-hover" className="flex-1">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
