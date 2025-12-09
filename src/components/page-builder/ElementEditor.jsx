@@ -100,7 +100,7 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
             </div>
             {Object.entries(colorTokens).map(([category, tokens]) => (
               <div key={category} className="mb-3">
-                <p className="text-xs text-muted-foreground mb-1 capitalize">{category}</p>
+                <p className={editorClasses.category}>{category}</p>
                 <div className="grid grid-cols-10 gap-1">
                       {tokens.map((token) => (
                         <button
