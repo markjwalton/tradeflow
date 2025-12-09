@@ -47,15 +47,22 @@ export default function Layout({ children, currentPageName }) {
           if (navConfigs.length > 0) {
             loadedNavConfig = navConfigs[0];
             setNavConfig(loadedNavConfig);
+            
+            // Use items from NavigationConfig - convert to format with proper IDs
+            if (loadedNavConfig.items?.length > 0) {
+              loadedNavItems = loadedNavConfig.items.map((item, idx) => ({
+                id: item.parent_id || `nav-item-${idx}`,
+                name: item.name,
+                item_type: item.item_type,
+                page_url: item.slug,
+                icon: item.icon,
+                order: item.order,
+                is_visible: item.is_visible,
+                parent_id: item.parent_id,
+              }));
+              setNavItems(loadedNavItems);
+            }
           }
-          
-          // Fetch NavigationItems separately with proper filtering
-          const allNavItems = await base44.entities.NavigationItem.filter({ 
-            tenant_id: "__global__",
-            is_visible: true 
-          });
-          loadedNavItems = allNavItems;
-          setNavItems(loadedNavItems);
         } catch (e) {
           console.error("Nav config error:", e);
         }
