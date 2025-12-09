@@ -92,6 +92,7 @@ import FormSchemaBuilder from './pages/FormSchemaBuilder';
 import DesignTokenEditor from './pages/DesignTokenEditor';
 import SiteSettings from './pages/SiteSettings';
 import CompactButtonShowcase from './pages/CompactButtonShowcase';
+import OklchColorPicker from './pages/OklchColorPicker';
 import __Layout from './Layout.jsx';
 
 
@@ -190,6 +191,7 @@ export const PAGES = {
     "DesignTokenEditor": DesignTokenEditor,
     "SiteSettings": SiteSettings,
     "CompactButtonShowcase": CompactButtonShowcase,
+    "OklchColorPicker": OklchColorPicker,
 }
 
 export const pagesConfig = {
