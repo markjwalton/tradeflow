@@ -150,13 +150,8 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
       {activeSection === "colors" && (
         <div className="space-y-4">
           <div>
-            <div className="flex items-center justify-between mb-2">
+            <div className="mb-2">
               <Label className="text-xs font-medium">Text Color</Label>
-              {currentStyles.textColor && (
-                <Badge variant="outline" className="text-xs">
-                  {currentStyles.textColor}
-                </Badge>
-              )}
             </div>
             {Object.entries(colorTokens).map(([category, tokens]) => (
               <div key={category} className="mb-3">
@@ -184,13 +179,8 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
           </div>
 
           <div>
-            <div className="flex items-center justify-between mb-2">
+            <div className="mb-2">
               <Label className="text-xs font-medium">Background</Label>
-              {currentStyles.bgColor && (
-                <Badge variant="outline" className="text-xs">
-                  {currentStyles.bgColor}
-                </Badge>
-              )}
             </div>
             {Object.entries(colorTokens).map(([category, tokens]) => (
               <div key={category} className="mb-3">
@@ -223,13 +213,8 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
       {activeSection === "spacing" && (
         <div className="space-y-4">
           <div>
-            <div className="flex items-center justify-between mb-2">
+            <div className="mb-2">
               <Label className="text-xs font-medium">Padding</Label>
-              {currentStyles.padding && (
-                <Badge variant="outline" className="text-xs">
-                  p-{currentStyles.padding}
-                </Badge>
-              )}
             </div>
             <div className="grid grid-cols-7 gap-1">
               {spacingTokens.map((value) => (
@@ -247,13 +232,8 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
           </div>
 
           <div>
-            <div className="flex items-center justify-between mb-2">
+            <div className="mb-2">
               <Label className="text-xs font-medium">Margin</Label>
-              {currentStyles.margin && (
-                <Badge variant="outline" className="text-xs">
-                  m-{currentStyles.margin}
-                </Badge>
-              )}
             </div>
             <div className="grid grid-cols-7 gap-1">
               {spacingTokens.map((value) => (
@@ -276,13 +256,8 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
       {activeSection === "typography" && (
         <div className="space-y-4">
           <div>
-            <div className="flex items-center justify-between mb-2">
+            <div className="mb-2">
               <Label className="text-xs font-medium">Font Size</Label>
-              {currentStyles.fontSize && (
-                <Badge variant="outline" className="text-xs">
-                  text-{currentStyles.fontSize}
-                </Badge>
-              )}
             </div>
             <div className="grid grid-cols-4 gap-1">
               {fontSizes.map((size) => (
@@ -300,13 +275,8 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
           </div>
 
           <div>
-            <div className="flex items-center justify-between mb-2">
+            <div className="mb-2">
               <Label className="text-xs font-medium">Font Weight</Label>
-              {currentStyles.fontWeight && (
-                <Badge variant="outline" className="text-xs">
-                  {fontWeights.find(w => w.value === currentStyles.fontWeight)?.label}
-                </Badge>
-              )}
             </div>
             <div className="grid grid-cols-3 gap-1">
               {fontWeights.map((weight) => (
@@ -329,13 +299,8 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
       {activeSection === "borders" && (
         <div className="space-y-4">
           <div>
-            <div className="flex items-center justify-between mb-2">
+            <div className="mb-2">
               <Label className="text-xs font-medium">Border Radius</Label>
-              {currentStyles.borderRadius && (
-                <Badge variant="outline" className="text-xs">
-                  rounded-{currentStyles.borderRadius}
-                </Badge>
-              )}
             </div>
             <div className="grid grid-cols-4 gap-1">
               {radiusTokens.map((radius) => (
