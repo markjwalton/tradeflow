@@ -1016,6 +1016,14 @@
     color: var(--text-inverse);
   }
 
+  /* Icon Color Utilities */
+  .text-primary-600 {
+    color: var(--primary-600);
+  }
+  .text-secondary-400 {
+    color: var(--secondary-400);
+  }
+
   /* Color Scale Utilities */
   .bg-primary-50 {
     background-color: var(--primary-50);
