@@ -35,16 +35,15 @@ export default function CompactButtonShowcase() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-12 gap-1">
-              {spacingTokens.map((value) => (
-                <CompactButton
-                  key={value}
-                  isActive={activeSpacing === value}
-                  onClick={() => setActiveSpacing(value)}
-                >
-                  {value}
-                </CompactButton>
-              ))}
-            </div>
+            {spacingTokens.map((value) => (
+              <CompactButton
+                key={value}
+                isActive={activeSpacing === value}
+                onClick={() => setActiveSpacing(value)}
+              >
+                {value}
+              </CompactButton>
+            ))}
           </div>
         </CardContent>
       </Card>
@@ -68,16 +67,15 @@ export default function CompactButtonShowcase() {
           </div>
 
           <div className="grid grid-cols-5 gap-1">
-              {fontWeights.map((weight) => (
-                <CompactButton
-                  key={weight.value}
-                  isActive={activeWeight === weight.value}
-                  onClick={() => setActiveWeight(weight.value)}
-                >
-                  {weight.label}
-                </CompactButton>
-              ))}
-            </div>
+            {fontWeights.map((weight) => (
+              <CompactButton
+                key={weight.value}
+                isActive={activeWeight === weight.value}
+                onClick={() => setActiveWeight(weight.value)}
+              >
+                {weight.label}
+              </CompactButton>
+            ))}
           </div>
         </CardContent>
       </Card>
