@@ -89,13 +89,6 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
 
   return (
     <div className="space-y-2">
-      {showHeader && (
-        <div className="text-sm text-muted-foreground mb-3 pb-3 border-b">
-          <p>Selected: <code className="text-xs bg-muted px-2 py-1 rounded">{selectedElement.tagName}</code></p>
-          <p className="text-xs truncate mt-1">Path: {selectedElement.path}</p>
-        </div>
-      )}
-
       {/* Current Styles Tab */}
       {activeSection === "current" && (
         <div className="space-y-3 py-2">
