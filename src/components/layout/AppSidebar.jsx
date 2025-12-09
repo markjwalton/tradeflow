@@ -92,10 +92,10 @@ export function AppSidebar({ navItems = [] }) {
     if (isFolder) {
       const hasChildren = item.children && item.children.length > 0;
       const childActive = isChildActive(item);
-      
+      const FolderIcon = item.icon ? getIcon(item.icon) : (isExpanded ? FolderOpen : Folder);
+
       // In icon mode, folders show single icon with active state if child is active
       if (isIconsOnly) {
-        const FolderIcon = isExpanded ? FolderOpen : Folder;
         const folderButton = (
           <button
             onClick={() => toggleFolder(item.id)}
@@ -148,11 +148,7 @@ export function AppSidebar({ navItems = [] }) {
             {hasChildren && (
               isExpanded ? <ChevronDown className="h-4 w-4 text-sidebar-foreground/50" /> : <ChevronRight className="h-4 w-4 text-sidebar-foreground/50" />
             )}
-            {isExpanded ? (
-              <FolderOpen className="h-5 w-5 text-secondary-400" />
-            ) : (
-              <Folder className="h-5 w-5 text-secondary-400" />
-            )}
+            <FolderIcon className="h-5 w-5 text-secondary-400" />
             <span className="flex-1 text-left">{item.name}</span>
           </button>
           {isExpanded && hasChildren && (
