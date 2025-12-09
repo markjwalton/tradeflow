@@ -108,7 +108,7 @@ export default function EntityRelationshipDiagram({
         <ScrollArea className="h-[600px]">
           <div className="p-4">
             {entities.length === 0 ? (
-              <div className="text-center py-12 text-gray-500">
+              <div className="text-center py-12 text-muted-foreground">
                 <Database className="h-12 w-12 mx-auto mb-4 opacity-30" />
                 <p>No entities defined yet.</p>
                 <p className="text-sm">Mark nodes as "Entity" type to see them here.</p>
@@ -139,10 +139,10 @@ export default function EntityRelationshipDiagram({
                             {getFieldsList(entity.schema).map(field => (
                               <div
                                 key={field.name}
-                                className="flex items-center justify-between text-xs px-2 py-1 rounded bg-gray-50"
+                                className="flex items-center justify-between text-xs px-2 py-1 rounded bg-muted"
                               >
                                 <span className="flex items-center gap-1">
-                                  {field.isRelationship && <Link2 className="h-3 w-3 text-blue-500" />}
+                                  {field.isRelationship && <Link2 className="h-3 w-3 text-info" />}
                                   {field.name}
                                 </span>
                                 <Badge variant="outline" className="text-xs h-5">
@@ -151,13 +151,13 @@ export default function EntityRelationshipDiagram({
                               </div>
                             ))}
                             {Object.keys(entity.schema.properties).length > 8 && (
-                              <p className="text-xs text-gray-400 text-center">
+                              <p className="text-xs text-muted-foreground text-center">
                                 +{Object.keys(entity.schema.properties).length - 8} more fields
                               </p>
                             )}
                           </div>
                         ) : (
-                          <p className="text-xs text-gray-400 text-center py-2">
+                          <p className="text-xs text-muted-foreground text-center py-2">
                             No schema defined
                           </p>
                         )}
@@ -182,7 +182,7 @@ export default function EntityRelationshipDiagram({
                           <Badge style={{ backgroundColor: entities.find(e => e.name === link.source)?.color }}>
                             {link.source}
                           </Badge>
-                          <div className="flex items-center gap-1 text-sm text-gray-500">
+                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
                             <span className="font-mono text-xs">.{link.field}</span>
                             <ArrowRight className="h-4 w-4" />
                           </div>
@@ -199,7 +199,7 @@ export default function EntityRelationshipDiagram({
                 )}
 
                 {/* Summary Stats */}
-                <div className="flex gap-4 text-sm text-gray-500 pt-4 border-t">
+                <div className="flex gap-4 text-sm text-muted-foreground pt-4 border-t">
                   <span>{entities.length} entities</span>
                   <span>{relationshipLinks.length} relationships</span>
                   <span>

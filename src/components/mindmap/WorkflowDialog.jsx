@@ -13,10 +13,10 @@ import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 
 const statusIcons = {
-  start: <Play className="h-4 w-4 text-green-500" />,
-  process: <Clock className="h-4 w-4 text-blue-500" />,
-  decision: <AlertCircle className="h-4 w-4 text-amber-500" />,
-  end: <CheckCircle2 className="h-4 w-4 text-green-600" />,
+  start: <Play className="h-4 w-4 text-success" />,
+  process: <Clock className="h-4 w-4 text-info" />,
+  decision: <AlertCircle className="h-4 w-4 text-warning" />,
+  end: <CheckCircle2 className="h-4 w-4 text-success" />,
 };
 
 export default function WorkflowDialog({
@@ -167,7 +167,7 @@ Return JSON:
           </Button>
 
           {entityNodes.length === 0 && (
-            <p className="text-sm text-amber-600 text-center">
+            <p className="text-sm text-warning text-center">
               Mark some nodes as "Entity" type first to generate workflows.
             </p>
           )}
@@ -185,12 +185,12 @@ Return JSON:
                       onClick={() => setSelectedWorkflow(wf)}
                       className={`w-full text-left p-2 rounded text-sm transition-colors ${
                         selectedWorkflow?.name === wf.name
-                          ? "bg-blue-100 border-blue-300 border"
-                          : "bg-gray-50 hover:bg-gray-100"
+                          ? "bg-info-50 border-info border"
+                          : "bg-muted hover:bg-muted/80"
                       }`}
                     >
                       <div className="font-medium">{wf.name}</div>
-                      <div className="text-xs text-gray-500 truncate">
+                      <div className="text-xs text-muted-foreground truncate">
                         {wf.entities_involved?.join(", ")}
                       </div>
                     </button>
@@ -204,18 +204,18 @@ Return JSON:
                   <div className="space-y-4">
                     <div>
                       <h3 className="font-medium text-lg">{selectedWorkflow.name}</h3>
-                      <p className="text-sm text-gray-600">{selectedWorkflow.description}</p>
+                      <p className="text-sm text-muted-foreground">{selectedWorkflow.description}</p>
                     </div>
 
                     <div className="flex flex-wrap gap-2">
-                      <span className="text-xs text-gray-500">Entities:</span>
+                      <span className="text-xs text-muted-foreground">Entities:</span>
                       {selectedWorkflow.entities_involved?.map(e => (
                         <Badge key={e} variant="outline" className="text-xs">{e}</Badge>
                       ))}
                     </div>
 
                     <div className="text-sm">
-                      <span className="text-gray-500">Trigger:</span>{" "}
+                      <span className="text-muted-foreground">Trigger:</span>{" "}
                       <span className="font-medium">{selectedWorkflow.trigger}</span>
                     </div>
 
@@ -225,12 +225,12 @@ Return JSON:
                         {selectedWorkflow.steps?.map((step, i) => (
                           <div
                             key={i}
-                            className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg"
+                            className="flex items-start gap-3 p-3 bg-muted rounded-lg"
                           >
                             <div className="flex flex-col items-center">
                               {statusIcons[step.type] || statusIcons.process}
                               {i < selectedWorkflow.steps.length - 1 && (
-                                <div className="w-px h-8 bg-gray-300 mt-1" />
+                                <div className="w-px h-8 bg-border mt-1" />
                               )}
                             </div>
                             <div className="flex-1">
@@ -243,7 +243,7 @@ Return JSON:
                                 )}
                               </div>
                               {step.statusChange && (
-                                <div className="flex items-center gap-1 mt-1 text-xs text-gray-500">
+                                <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
                                   <ArrowRight className="h-3 w-3" />
                                   {step.statusChange}
                                 </div>
@@ -255,7 +255,7 @@ Return JSON:
                     </ScrollArea>
                   </div>
                 ) : (
-                  <div className="h-full flex items-center justify-center text-gray-400">
+                  <div className="h-full flex items-center justify-center text-muted-foreground">
                     Select a workflow to view details
                   </div>
                 )}
@@ -264,7 +264,7 @@ Return JSON:
           )}
 
           {workflows.length === 0 && !isGenerating && entityNodes.length > 0 && (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-muted-foreground">
               <Play className="h-12 w-12 mx-auto mb-4 opacity-30" />
               <p>Click "Generate Workflows" to analyze your entities</p>
               <p className="text-sm">and discover common business processes.</p>

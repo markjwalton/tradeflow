@@ -108,9 +108,9 @@ export default function TenantForkDialog({
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="p-3 bg-blue-50 rounded-lg text-sm">
-            <p className="font-medium text-blue-800">Create a tenant-specific copy</p>
-            <p className="text-blue-600 text-xs mt-1">
+          <div className="p-3 bg-info-50 rounded-lg text-sm">
+            <p className="font-medium text-info">Create a tenant-specific copy</p>
+            <p className="text-info text-xs mt-1">
               This will create a customizable version of "{currentMindMap?.name}" 
               that the tenant can modify independently.
             </p>

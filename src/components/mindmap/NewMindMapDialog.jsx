@@ -25,16 +25,16 @@ import { Loader2, FileText, Building2, Sparkles, Plus, Star, Filter } from "luci
 import { toast } from "sonner";
 
 const categoryColors = {
-  "Professional Services": "bg-blue-100 text-blue-700",
-  "Construction": "bg-amber-100 text-amber-700",
-  "Retail": "bg-pink-100 text-pink-700",
-  "Healthcare": "bg-green-100 text-green-700",
-  "Technology": "bg-purple-100 text-purple-700",
-  "Manufacturing": "bg-orange-100 text-orange-700",
-  "Finance": "bg-emerald-100 text-emerald-700",
-  "Education": "bg-cyan-100 text-cyan-700",
-  "Custom": "bg-indigo-100 text-indigo-700",
-  "Other": "bg-gray-100 text-gray-700",
+  "Professional Services": "bg-info-50 text-info",
+  "Construction": "bg-warning/10 text-warning",
+  "Retail": "bg-accent-100 text-accent",
+  "Healthcare": "bg-success-50 text-success",
+  "Technology": "bg-accent/10 text-accent",
+  "Manufacturing": "bg-warning text-warning-foreground",
+  "Finance": "bg-success-50 text-success",
+  "Education": "bg-info-50 text-info",
+  "Custom": "bg-primary-100 text-primary",
+  "Other": "bg-muted text-muted-foreground",
 };
 
 const categories = [
@@ -384,7 +384,7 @@ Start with central node at index 0.`,
               <ScrollArea className="h-64 border rounded-lg p-2">
                 <div className="space-y-2">
                   {templates.length === 0 ? (
-                    <div className="text-center py-8 text-gray-500">
+                    <div className="text-center py-8 text-muted-foreground">
                       <Building2 className="h-10 w-10 mx-auto mb-2 opacity-30" />
                       <p>No templates available</p>
                       <p className="text-xs">Create templates in Business Templates page</p>
@@ -395,8 +395,8 @@ Start with central node at index 0.`,
                         key={template.id}
                         className={`cursor-pointer transition-all ${
                           selectedTemplate?.id === template.id
-                            ? "ring-2 ring-blue-500 bg-blue-50"
-                            : "hover:bg-gray-50"
+                            ? "ring-2 ring-info bg-info-50"
+                            : "hover:bg-muted"
                         }`}
                         onClick={() => setSelectedTemplate(template)}
                       >
@@ -405,7 +405,7 @@ Start with central node at index 0.`,
                             <div className="flex-1">
                               <p className="font-medium flex items-center gap-2">
                                 {template.is_starred && (
-                                  <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
+                                  <Star className="h-4 w-4 fill-warning text-warning" />
                                 )}
                                 {template.name}
                               </p>
@@ -415,7 +415,7 @@ Start with central node at index 0.`,
                                 </Badge>
                               )}
                               {(template.summary || template.description) && (
-                                <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                                <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
                                   {template.summary || template.description}
                                 </p>
                               )}
@@ -430,12 +430,12 @@ Start with central node at index 0.`,
             </div>
 
             {selectedTemplate && (
-              <div className="bg-blue-50 rounded-lg p-3 text-sm">
-                <div className="flex items-center gap-2 text-blue-700 font-medium">
+              <div className="bg-info-50 rounded-lg p-3 text-sm">
+                <div className="flex items-center gap-2 text-info font-medium">
                   <Sparkles className="h-4 w-4" />
                   AI will generate the complete mind map structure
                 </div>
-                <p className="text-blue-600 mt-1">
+                <p className="text-info mt-1">
                   Including entities, pages, features, and relationships from the template specification.
                 </p>
               </div>
