@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CompactButton } from "@/components/library/CompactButton";
 
 const colorTokens = {
   primary: ["primary-50", "primary-100", "primary-200", "primary-300", "primary-400", "primary-500", "primary-600", "primary-700", "primary-800", "primary-900"],
@@ -161,15 +162,13 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
             </div>
             <div className="grid grid-cols-7 gap-1">
               {spacingTokens.map((value) => (
-                <Button
+                <CompactButton
                   key={value}
-                  variant={currentStyles.padding === value ? "default" : "outline"}
-                  size="sm"
+                  isActive={currentStyles.padding === value}
                   onClick={() => handleApplySpacing("padding", value)}
-                  className="text-xs h-7 px-1"
                 >
                   {value}
-                </Button>
+                </CompactButton>
               ))}
             </div>
           </div>
@@ -180,15 +179,13 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
             </div>
             <div className="grid grid-cols-7 gap-1">
               {spacingTokens.map((value) => (
-                <Button
+                <CompactButton
                   key={value}
-                  variant={currentStyles.margin === value ? "default" : "outline"}
-                  size="sm"
+                  isActive={currentStyles.margin === value}
                   onClick={() => handleApplySpacing("margin", value)}
-                  className="text-xs h-7 px-1"
                 >
                   {value}
-                </Button>
+                </CompactButton>
               ))}
             </div>
           </div>
@@ -204,15 +201,13 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
             </div>
             <div className="grid grid-cols-4 gap-1">
               {fontSizes.map((size) => (
-                <Button
+                <CompactButton
                   key={size}
-                  variant={currentStyles.fontSize === size ? "default" : "outline"}
-                  size="sm"
+                  isActive={currentStyles.fontSize === size}
                   onClick={() => handleApplyTypography("size", size)}
-                  className="text-xs h-7 px-2"
                 >
                   {size}
-                </Button>
+                </CompactButton>
               ))}
             </div>
           </div>
@@ -223,15 +218,13 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
             </div>
             <div className="grid grid-cols-3 gap-1">
               {fontWeights.map((weight) => (
-                <Button
+                <CompactButton
                   key={weight.value}
-                  variant={currentStyles.fontWeight === weight.value ? "default" : "outline"}
-                  size="sm"
+                  isActive={currentStyles.fontWeight === weight.value}
                   onClick={() => handleApplyTypography("weight", weight.value)}
-                  className="text-xs h-7 px-2"
                 >
                   {weight.label}
-                </Button>
+                </CompactButton>
               ))}
             </div>
           </div>
@@ -247,15 +240,13 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
             </div>
             <div className="grid grid-cols-4 gap-1">
               {radiusTokens.map((radius) => (
-                <Button
+                <CompactButton
                   key={radius}
-                  variant={currentStyles.borderRadius === radius ? "default" : "outline"}
-                  size="sm"
+                  isActive={currentStyles.borderRadius === radius}
                   onClick={() => handleApplyRadius(radius)}
-                  className="text-xs h-7 px-2"
                 >
                   {radius}
-                </Button>
+                </CompactButton>
               ))}
             </div>
           </div>

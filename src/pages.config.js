@@ -91,6 +91,7 @@ import JSONSchemaBuilder from './pages/JSONSchemaBuilder';
 import FormSchemaBuilder from './pages/FormSchemaBuilder';
 import DesignTokenEditor from './pages/DesignTokenEditor';
 import SiteSettings from './pages/SiteSettings';
+import CompactButtonShowcase from './pages/CompactButtonShowcase';
 import __Layout from './Layout.jsx';
 
 
@@ -188,6 +189,7 @@ export const PAGES = {
     "FormSchemaBuilder": FormSchemaBuilder,
     "DesignTokenEditor": DesignTokenEditor,
     "SiteSettings": SiteSettings,
+    "CompactButtonShowcase": CompactButtonShowcase,
 }
 
 export const pagesConfig = {
