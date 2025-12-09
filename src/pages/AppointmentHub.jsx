@@ -222,7 +222,7 @@ export default function AppointmentHub() {
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-destructive-50 flex items-center justify-center">
               <AlertCircle className="h-8 w-8 text-destructive" />
             </div>
-            <h2 className="text-xl font-semibold mb-2 text-midnight-900">Link Invalid</h2>
+            <h2 className="text-xl font-semibold mb-2 text-foreground">Link Invalid</h2>
             <p className="text-muted-foreground">{error}</p>
           </CardContent>
         </Card>
@@ -238,7 +238,7 @@ export default function AppointmentHub() {
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-success-50 flex items-center justify-center">
               <CheckCircle className="h-8 w-8 text-success" />
             </div>
-            <h2 className="text-xl font-semibold mb-2 text-midnight-900">
+            <h2 className="text-xl font-semibold mb-2 text-foreground">
               {actionType === "cancel" ? "Appointment Cancelled" : "Appointment Booked!"}
             </h2>
             <p className="text-muted-foreground">
@@ -258,14 +258,14 @@ export default function AppointmentHub() {
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <Card className="max-w-md w-full border-border bg-card">
           <CardHeader>
-            <CardTitle className="text-center text-midnight-900">Cancel Appointment?</CardTitle>
+            <CardTitle className="text-center text-foreground">Cancel Appointment?</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="bg-background rounded-lg p-4">
-              <p className="font-medium text-midnight-900">{format(new Date(existingAppointment.appointmentDate), "EEEE, d MMMM yyyy")}</p>
-              <p className="text-charcoal-700">{existingAppointment.appointmentTime} - {existingAppointment.location}</p>
+              <p className="font-medium text-foreground">{format(new Date(existingAppointment.appointmentDate), "EEEE, d MMMM yyyy")}</p>
+              <p className="text-muted-foreground">{existingAppointment.appointmentTime} - {existingAppointment.location}</p>
             </div>
-            <p className="text-charcoal-700 text-center">Are you sure you want to cancel this appointment?</p>
+            <p className="text-muted-foreground text-center">Are you sure you want to cancel this appointment?</p>
             <div className="flex gap-3">
               <Button
                 variant="outline"
@@ -295,11 +295,11 @@ export default function AppointmentHub() {
       <div className="max-w-4xl mx-auto">
         <Card className="mb-6 border-border bg-card">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-midnight-900">
+            <CardTitle className="flex items-center gap-2 text-foreground">
               <Calendar className="h-6 w-6" />
               {existingAppointment ? "Change Your Appointment" : "Book Your Design Visit"}
             </CardTitle>
-            <p className="text-charcoal-700">
+            <p className="text-muted-foreground">
               Hello {verifiedData?.firstName}, select an available time slot below
             </p>
           </CardHeader>
@@ -318,7 +318,7 @@ export default function AppointmentHub() {
             {Object.entries(blocksByLocation).map(([location, blocks]) => (
               <Card key={location} className="mb-4 border-border bg-card">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-lg flex items-center gap-2 text-midnight-900">
+                  <CardTitle className="text-lg flex items-center gap-2 text-foreground">
                     <MapPin className="h-5 w-5" />
                     {location}
                   </CardTitle>
@@ -331,11 +331,11 @@ export default function AppointmentHub() {
                         onClick={() => setSelectedBlock(block)}
                         className={`p-4 rounded-lg border-2 text-left transition-all ${
                           selectedBlock?.id === block.id
-                            ? "border-primary bg-primary-50"
+                            ? "border-primary bg-primary/10"
                             : "border-border hover:border-primary/50 hover:bg-muted"
                         }`}
                       >
-                        <div className="font-medium text-midnight-900">
+                        <div className="font-medium text-foreground">
                           {format(new Date(block.date), "EEE, d MMM")}
                         </div>
                         <div className="flex items-center gap-1 text-muted-foreground mt-1">
@@ -353,10 +353,10 @@ export default function AppointmentHub() {
             {selectedBlock && (
               <Card className="mt-6 border-border bg-card">
                 <CardHeader>
-                  <CardTitle className="text-lg text-midnight-900">Complete Your Booking</CardTitle>
+                  <CardTitle className="text-lg text-foreground">Complete Your Booking</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="bg-primary-50 rounded-lg p-4">
+                  <div className="bg-primary/10 rounded-lg p-4">
                     <p className="font-medium text-foreground">Selected Appointment:</p>
                     <p className="text-foreground">{format(new Date(selectedBlock.date), "EEEE, d MMMM yyyy")} at {selectedBlock.startTime}</p>
                     <p className="text-muted-foreground">{selectedBlock.location}</p>

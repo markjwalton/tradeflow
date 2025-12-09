@@ -135,7 +135,7 @@ export default function WebsiteEnquiryForm() {
                 <Mail className="h-8 w-8 text-success" />
               )}
             </div>
-            <h2 className="text-xl font-semibold mb-2 text-midnight-900">
+            <h2 className="text-xl font-semibold mb-2 text-foreground">
               {submissionType === "callback" ? "Callback Requested!" : "Check Your Email!"}
             </h2>
             <p className="text-muted-foreground">
@@ -153,7 +153,7 @@ export default function WebsiteEnquiryForm() {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <Card className="max-w-lg w-full border-border bg-card">
         <CardHeader>
-          <CardTitle className="text-2xl text-center text-midnight-900">Get Started</CardTitle>
+          <CardTitle className="text-2xl text-center text-foreground">Get Started</CardTitle>
           <p className="text-center text-muted-foreground">Tell us about your project</p>
         </CardHeader>
         <CardContent className="space-y-4">

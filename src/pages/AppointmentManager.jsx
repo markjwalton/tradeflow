@@ -199,7 +199,7 @@ export default function AppointmentManager() {
     <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display text-midnight-900">Appointment Manager</h1>
+          <h1 className="text-2xl font-light font-display text-foreground">Appointment Manager</h1>
           <p className="text-muted-foreground">Manage appointment slots and bookings</p>
         </div>
       </div>
@@ -220,7 +220,7 @@ export default function AppointmentManager() {
         <TabsContent value="diary">
           <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-midnight-900">
+              <CardTitle className="flex items-center gap-2 text-foreground">
                 <Calendar className="h-5 w-5" />
                 Upcoming Appointments
               </CardTitle>
@@ -228,7 +228,7 @@ export default function AppointmentManager() {
             <CardContent>
               {loadingAppointments ? (
                 <div className="flex justify-center py-8">
-                  <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
+                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                 </div>
               ) : upcomingAppointments.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
@@ -255,7 +255,7 @@ export default function AppointmentManager() {
                           <div className="text-sm text-muted-foreground">{apt.appointmentTime}</div>
                         </TableCell>
                         <TableCell>
-                          <div className="text-midnight-900">{apt.customerFirstName} {apt.customerLastName}</div>
+                          <div className="text-foreground">{apt.customerFirstName} {apt.customerLastName}</div>
                           <div className="text-sm text-muted-foreground flex items-center gap-1">
                             <Phone className="h-3 w-3" />
                             {apt.customerMobile}

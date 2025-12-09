@@ -99,7 +99,7 @@ export default function AppointmentConfirm() {
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-destructive-50 flex items-center justify-center">
               <AlertCircle className="h-8 w-8 text-destructive" />
             </div>
-            <h2 className="text-xl font-semibold mb-2 text-midnight-900">Confirmation Failed</h2>
+            <h2 className="text-xl font-semibold mb-2 text-foreground">Confirmation Failed</h2>
             <p className="text-muted-foreground">{error}</p>
           </CardContent>
         </Card>
@@ -114,7 +114,7 @@ export default function AppointmentConfirm() {
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-success-50 flex items-center justify-center">
             <CheckCircle className="h-8 w-8 text-success" />
           </div>
-          <h2 className="text-xl font-semibold mb-2 text-midnight-900">
+          <h2 className="text-xl font-semibold mb-2 text-foreground">
             {alreadyConfirmed ? "Already Confirmed" : "Appointment Confirmed!"}
           </h2>
           <p className="text-muted-foreground mb-4">
@@ -127,7 +127,7 @@ export default function AppointmentConfirm() {
             <div className="bg-background rounded-lg p-4 text-left">
               <div className="flex items-center gap-2 mb-2">
                 <Calendar className="h-5 w-5 text-muted-foreground" />
-                <span className="font-medium text-midnight-900">Appointment Details</span>
+                <span className="font-medium text-foreground">Appointment Details</span>
               </div>
               <p className="text-muted-foreground">
                 {format(new Date(appointment.appointmentDate), "EEEE, d MMMM yyyy")}
