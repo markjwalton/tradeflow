@@ -339,19 +339,19 @@ export default function Layout({ children, currentPageName }) {
           {showEditorBubble && (
             <Button
               onClick={async () => {
-                setEditorPanelOpen(!editorPanelOpen);
+                const newState = !editorPanelOpen;
+                setEditorPanelOpen(newState);
                 // Toggle live edit mode
                 try {
                   const user = await base44.auth.me();
-                  const newLiveEditMode = !editorPanelOpen;
                   await base44.auth.updateMe({
                     ui_preferences: {
                       ...(user.ui_preferences || {}),
-                      liveEditMode: newLiveEditMode
+                      liveEditMode: newState
                     }
                   });
                   window.dispatchEvent(new CustomEvent('ui-preferences-changed', { 
-                    detail: { liveEditMode: newLiveEditMode } 
+                    detail: { liveEditMode: newState } 
                   }));
                 } catch (e) {
                   console.error("Failed to toggle live edit:", e);

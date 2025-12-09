@@ -48,8 +48,9 @@ export function InteractiveSelector({
         return;
       }
 
-      // Allow normal interaction with buttons, inputs, links, etc.
-      if (target.tagName === 'BUTTON' || target.tagName === 'INPUT' || target.tagName === 'A' || target.tagName === 'SELECT') {
+      // Allow normal interaction with interactive elements
+      const interactiveTags = ['BUTTON', 'INPUT', 'A', 'SELECT', 'TEXTAREA'];
+      if (interactiveTags.includes(target.tagName) || target.closest('button')) {
         return;
       }
 

@@ -85,7 +85,28 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
           >
             {viewMode === 'focus' ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
           </Button>
-          <Button variant="ghost" size="sm" onClick={onClose}>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={async () => {
+              onClose();
+              // Turn off live edit mode
+              try {
+                const user = await base44.auth.me();
+                await base44.auth.updateMe({
+                  ui_preferences: {
+                    ...(user.ui_preferences || {}),
+                    liveEditMode: false
+                  }
+                });
+                window.dispatchEvent(new CustomEvent('ui-preferences-changed', { 
+                  detail: { liveEditMode: false } 
+                }));
+              } catch (e) {
+                console.error("Failed to turn off live edit:", e);
+              }
+            }}
+          >
             <X className="h-4 w-4" />
           </Button>
         </div>
