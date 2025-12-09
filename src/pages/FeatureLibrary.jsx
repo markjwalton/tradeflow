@@ -329,10 +329,10 @@ Return a JSON object with a "features" array containing feature templates.`,
     <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-midnight-900">
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
             Feature Library
             {currentProject && (
-              <Badge className="bg-primary-100 text-primary">
+              <Badge className="bg-primary/10 text-primary">
                 <Folder className="h-3 w-3 mr-1" />
                 {currentProject.name}
               </Badge>
@@ -478,7 +478,7 @@ Return a JSON object with a "features" array containing feature templates.`,
             <DialogTitle>
               {editingFeature?.id ? "Edit Feature" : "Create Feature"}
               {selectedProjectId && currentProject && (
-                <Badge className="ml-2 bg-primary-100 text-primary">{currentProject.name}</Badge>
+                <Badge className="ml-2 bg-primary/10 text-primary">{currentProject.name}</Badge>
               )}
             </DialogTitle>
           </DialogHeader>

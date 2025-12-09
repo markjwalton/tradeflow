@@ -122,7 +122,7 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
     <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display text-midnight-900">Generated Apps</h1>
+          <h1 className="text-2xl font-light font-display text-foreground">Generated Apps</h1>
           <p className="text-muted-foreground">App specifications generated from mind maps</p>
         </div>
       </div>
