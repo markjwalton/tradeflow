@@ -5,7 +5,10 @@ import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Copy, Check, Plus, Trash2, Save, RefreshCw } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { base44 } from "@/api/base44Client";
+import { Copy, Check, Sparkles, Upload, Save, X, Loader2, RefreshCw } from "lucide-react";
 
 export function OklchPaletteTool({ onSave }) {
   const [baseColor, setBaseColor] = useState({ l: 0.6, c: 0.15, h: 180 });
@@ -13,6 +16,12 @@ export function OklchPaletteTool({ onSave }) {
   const [colorCount, setColorCount] = useState(5);
   const [colors, setColors] = useState([]);
   const [paletteName, setPaletteName] = useState("");
+  const [paletteDescription, setPaletteDescription] = useState("");
+  const [paletteTags, setPaletteTags] = useState([]);
+  const [tagInput, setTagInput] = useState("");
+  const [aiPrompt, setAiPrompt] = useState("");
+  const [brandColors, setBrandColors] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(null);
   
   const oklchToRgb = (l, c, h) => {
@@ -106,21 +115,201 @@ export function OklchPaletteTool({ onSave }) {
     setCopied(`${format}-${color.name}`);
     setTimeout(() => setCopied(null), 2000);
   };
+
+  const generateAINames = async () => {
+    setIsGenerating(true);
+    try {
+      const prompt = `Generate creative, descriptive names for these colors: ${colors.map((c, i) => `Color ${i + 1}: oklch(${c.l.toFixed(3)} ${c.c.toFixed(3)} ${c.h.toFixed(1)})`).join(", ")}. Return a JSON array of names only.`;
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: { type: "object", properties: { names: { type: "array", items: { type: "string" } } } }
+      });
+      if (result.names) {
+        setColors(colors.map((c, i) => ({ ...c, name: result.names[i] || c.name })));
+      }
+    } catch (e) {
+      console.error("AI naming failed:", e);
+    }
+    setIsGenerating(false);
+  };
+
+  const generateAITags = async () => {
+    setIsGenerating(true);
+    try {
+      const prompt = `Generate 3-5 relevant tags for a color palette with these colors: ${colors.map(c => c.name).join(", ")}. Consider mood, style, use case. Return a JSON array of lowercase tags.`;
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: { type: "object", properties: { tags: { type: "array", items: { type: "string" } } } }
+      });
+      if (result.tags) {
+        setPaletteTags(result.tags);
+      }
+    } catch (e) {
+      console.error("AI tag generation failed:", e);
+    }
+    setIsGenerating(false);
+  };
+
+  const generateFromPrompt = async () => {
+    if (!aiPrompt.trim()) return;
+    setIsGenerating(true);
+    try {
+      const prompt = `Create a color palette based on: "${aiPrompt}". Generate ${colorCount} colors in OKLCH format. Return JSON with: name, description, colors array (each with name, lightness 0-1, chroma 0-0.4, hue 0-360).`;
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            description: { type: "string" },
+            colors: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  lightness: { type: "number" },
+                  chroma: { type: "number" },
+                  hue: { type: "number" }
+                }
+              }
+            }
+          }
+        }
+      });
+      if (result.colors) {
+        setPaletteName(result.name || aiPrompt);
+        setPaletteDescription(result.description || "");
+        setColors(result.colors.map(c => ({
+          l: c.lightness,
+          c: c.chroma,
+          h: c.hue,
+          name: c.name
+        })));
+      }
+    } catch (e) {
+      console.error("AI palette generation failed:", e);
+    }
+    setIsGenerating(false);
+  };
+
+  const generateFromBrandColors = async () => {
+    if (!brandColors.trim()) return;
+    setIsGenerating(true);
+    try {
+      const prompt = `Create a harmonious color palette of ${colorCount} colors based on these brand colors: ${brandColors}. Return JSON with: name, description, colors array (each with name, lightness 0-1, chroma 0-0.4, hue 0-360).`;
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            description: { type: "string" },
+            colors: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  lightness: { type: "number" },
+                  chroma: { type: "number" },
+                  hue: { type: "number" }
+                }
+              }
+            }
+          }
+        }
+      });
+      if (result.colors) {
+        setPaletteName(result.name || "Brand Palette");
+        setPaletteDescription(result.description || "");
+        setColors(result.colors.map(c => ({
+          l: c.lightness,
+          c: c.chroma,
+          h: c.hue,
+          name: c.name
+        })));
+      }
+    } catch (e) {
+      console.error("AI brand palette failed:", e);
+    }
+    setIsGenerating(false);
+  };
+
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setIsGenerating(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const prompt = `Analyze this image and extract a harmonious color palette of ${colorCount} colors. Return JSON with: name, description, colors array (each with name, lightness 0-1, chroma 0-0.4, hue 0-360).`;
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        file_urls: [file_url],
+        response_json_schema: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            description: { type: "string" },
+            colors: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  lightness: { type: "number" },
+                  chroma: { type: "number" },
+                  hue: { type: "number" }
+                }
+              }
+            }
+          }
+        }
+      });
+      if (result.colors) {
+        setPaletteName(result.name || "Photo Palette");
+        setPaletteDescription(result.description || "");
+        setColors(result.colors.map(c => ({
+          l: c.lightness,
+          c: c.chroma,
+          h: c.hue,
+          name: c.name
+        })));
+      }
+    } catch (e) {
+      console.error("Photo analysis failed:", e);
+    }
+    setIsGenerating(false);
+  };
+
+  const addTag = () => {
+    if (tagInput.trim() && !paletteTags.includes(tagInput.trim())) {
+      setPaletteTags([...paletteTags, tagInput.trim()]);
+      setTagInput("");
+    }
+  };
+
+  const removeTag = (tag) => {
+    setPaletteTags(paletteTags.filter(t => t !== tag));
+  };
   
   const handleSave = () => {
-    if (onSave && paletteName) {
+    if (onSave && paletteName && colors.length > 0) {
       const paletteData = {
         name: paletteName,
+        description: paletteDescription,
         category: "palette",
         colors: colors.map(color => ({
           name: color.name,
           oklch: `oklch(${color.l.toFixed(3)} ${color.c.toFixed(3)} ${color.h.toFixed(1)})`,
           hex: oklchToRgb(color.l, color.c, color.h)
         })),
-        tags: [paletteType]
+        tags: paletteTags.length > 0 ? paletteTags : [paletteType]
       };
       onSave(paletteData);
       setPaletteName("");
+      setPaletteDescription("");
+      setPaletteTags([]);
     }
   };
   
@@ -128,7 +317,54 @@ export function OklchPaletteTool({ onSave }) {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Base Color</CardTitle>
+          <CardTitle>AI Palette Generation</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label>Generate from Prompt</Label>
+            <div className="flex gap-2">
+              <Textarea
+                value={aiPrompt}
+                onChange={(e) => setAiPrompt(e.target.value)}
+                placeholder="e.g., Modern tech startup, Ocean sunset, Vintage coffee shop..."
+                rows={2}
+                className="flex-1"
+              />
+              <Button onClick={generateFromPrompt} disabled={isGenerating || !aiPrompt.trim()}>
+                {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+              </Button>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Generate from Brand Colors</Label>
+            <div className="flex gap-2">
+              <Input
+                value={brandColors}
+                onChange={(e) => setBrandColors(e.target.value)}
+                placeholder="e.g., #FF5733, #3498DB, sage green..."
+              />
+              <Button onClick={generateFromBrandColors} disabled={isGenerating || !brandColors.trim()}>
+                {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+              </Button>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Upload Photo for Palette</Label>
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoUpload}
+              disabled={isGenerating}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Manual Palette Generator</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div 
@@ -179,14 +415,7 @@ export function OklchPaletteTool({ onSave }) {
               />
             </div>
           </div>
-        </CardContent>
-      </Card>
-      
-      <Card>
-        <CardHeader>
-          <CardTitle>Palette Settings</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Type</Label>
@@ -222,59 +451,111 @@ export function OklchPaletteTool({ onSave }) {
         </CardContent>
       </Card>
       
-      <Card>
-        <CardHeader>
-          <CardTitle>Generated Palette</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {colors.map((color, index) => (
-            <div key={index} className="space-y-2">
-              <div className="flex items-center gap-2">
-                <div 
-                  className="h-12 flex-1 rounded border"
-                  style={{ backgroundColor: oklchToRgb(color.l, color.c, color.h) }}
-                />
-                <div className="flex flex-col gap-1">
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={() => copyColor(color, "hex")}
-                    className="h-7 px-2"
-                  >
-                    {copied === `hex-${color.name}` ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-                  </Button>
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={() => copyColor(color, "oklch")}
-                    className="h-7 px-2"
-                  >
-                    {copied === `oklch-${color.name}` ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-                  </Button>
+      {colors.length > 0 && (
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
+            <CardTitle>Generated Palette</CardTitle>
+            <div className="flex gap-2">
+              <Button size="sm" variant="outline" onClick={generateAINames} disabled={isGenerating}>
+                <Sparkles className="h-4 w-4 mr-1" />AI Names
+              </Button>
+              <Button size="sm" variant="outline" onClick={generateAITags} disabled={isGenerating}>
+                <Sparkles className="h-4 w-4 mr-1" />AI Tags
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {colors.map((color, index) => (
+              <div key={index} className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <div 
+                    className="h-12 flex-1 rounded border"
+                    style={{ backgroundColor: oklchToRgb(color.l, color.c, color.h) }}
+                  />
+                  <Input
+                    value={color.name}
+                    onChange={(e) => {
+                      const updated = [...colors];
+                      updated[index].name = e.target.value;
+                      setColors(updated);
+                    }}
+                    className="flex-1"
+                  />
+                  <div className="flex flex-col gap-1">
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => copyColor(color, "hex")}
+                      className="h-7 px-2"
+                    >
+                      {copied === `hex-${color.name}` ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => copyColor(color, "oklch")}
+                      className="h-7 px-2"
+                    >
+                      {copied === `oklch-${color.name}` ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                    </Button>
+                  </div>
+                </div>
+                <div className="text-xs text-muted-foreground font-mono">
+                  {oklchToRgb(color.l, color.c, color.h)}
                 </div>
               </div>
-              <div className="text-xs text-muted-foreground flex justify-between">
-                <span>{color.name}</span>
-                <span className="font-mono">{oklchToRgb(color.l, color.c, color.h)}</span>
-              </div>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
+            ))}
+          </CardContent>
+        </Card>
+      )}
       
-      {onSave && (
+      {onSave && colors.length > 0 && (
         <Card>
           <CardHeader>
             <CardTitle>Save to Library</CardTitle>
           </CardHeader>
-          <CardContent className="flex gap-2">
-            <Input 
-              placeholder="Palette name..." 
-              value={paletteName}
-              onChange={(e) => setPaletteName(e.target.value)}
-            />
-            <Button onClick={handleSave} disabled={!paletteName}>
-              <Save className="h-4 w-4 mr-2" /> Save
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label>Palette Name</Label>
+              <Input 
+                placeholder="e.g., Ocean Breeze" 
+                value={paletteName}
+                onChange={(e) => setPaletteName(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Description</Label>
+              <Input
+                value={paletteDescription}
+                onChange={(e) => setPaletteDescription(e.target.value)}
+                placeholder="e.g., Cool tones inspired by coastal waters"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Tags</Label>
+              <div className="flex gap-2">
+                <Input
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && addTag()}
+                  placeholder="Add tag..."
+                />
+                <Button onClick={addTag} size="sm">Add</Button>
+              </div>
+              <div className="flex flex-wrap gap-1 mt-2">
+                {paletteTags.map(tag => (
+                  <Badge key={tag} variant="secondary" className="gap-1">
+                    {tag}
+                    <X className="h-3 w-3 cursor-pointer" onClick={() => removeTag(tag)} />
+                  </Badge>
+                ))}
+              </div>
+            </div>
+
+            <Button onClick={handleSave} className="w-full" disabled={!paletteName}>
+              <Save className="h-4 w-4 mr-2" /> Save to Library
             </Button>
           </CardContent>
         </Card>
