@@ -52,7 +52,7 @@ const severityColors = {
   info: "bg-muted text-muted-foreground",
   low: "bg-info-50 text-info",
   medium: "bg-warning/10 text-warning",
-  high: "bg-secondary-100 text-secondary",
+  high: "bg-accent-100 text-accent",
   critical: "bg-destructive-50 text-destructive"
 };
 
@@ -474,7 +474,7 @@ Provide:
           <TabsTrigger value="events">
             Events
             {stats.unreviewedCritical > 0 && (
-              <Badge className="ml-2 bg-red-500">{stats.unreviewedCritical}</Badge>
+              <Badge className="ml-2 bg-destructive text-destructive-foreground">{stats.unreviewedCritical}</Badge>
             )}
           </TabsTrigger>
           <TabsTrigger value="logins">Login Monitor</TabsTrigger>
@@ -645,7 +645,7 @@ Provide:
                       
                       <div className="flex items-center gap-3">
                         {group.critical > 0 && <Badge className="bg-destructive-50 text-destructive">{group.critical} Critical</Badge>}
-                        {group.high > 0 && <Badge className="bg-secondary-100 text-secondary">{group.high} High</Badge>}
+                        {group.high > 0 && <Badge className="bg-accent-100 text-accent">{group.high} High</Badge>}
                         {group.medium > 0 && <Badge className="bg-warning/10 text-warning">{group.medium} Medium</Badge>}
                         {group.unreviewed > 0 && <Badge variant="outline">{group.unreviewed} Unreviewed</Badge>}
                       </div>

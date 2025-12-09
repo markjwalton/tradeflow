@@ -538,7 +538,7 @@ Create a development prompt that:
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-h2 flex items-center gap-2">
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
             <BookOpen className="h-6 w-6 text-primary" />
             Knowledge Manager
           </h1>
@@ -636,7 +636,7 @@ Create a development prompt that:
             <Card>
               <CardContent className="py-12 text-center">
                 <TechIcon className={`h-12 w-12 mx-auto mb-4 ${techConfig.color}`} />
-                <h3 className="text-h4">No {techConfig.name} Releases Tracked</h3>
+                <h3 className="text-lg font-semibold">No {techConfig.name} Releases Tracked</h3>
                 <p className="text-muted-foreground mt-2">Click "Check for Updates" to find the latest releases</p>
               </CardContent>
             </Card>
@@ -668,7 +668,7 @@ Create a development prompt that:
                       <div className="grid md:grid-cols-2 gap-2">
                         {release.new_features.map((feature, idx) => (
                           <div key={idx} className={`p-2 ${techConfig.bgColor} rounded-lg`}>
-                            <p className="text-body-small">{feature.name}</p>
+                            <p className="text-sm">{feature.name}</p>
                             <p className="text-xs text-muted-foreground">{feature.description}</p>
                           </div>
                         ))}
@@ -712,7 +712,7 @@ Create a development prompt that:
                         : "bg-white border-border"
                     }`}
                   >
-                    <p className="text-body-small">{comp}</p>
+                    <p className="text-sm">{comp}</p>
                     {synced && <CheckCircle2 className="h-3 w-3 mx-auto mt-1 text-success" />}
                   </div>
                 );
@@ -755,7 +755,7 @@ Create a development prompt that:
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <h4 className="text-h6">{rec.title}</h4>
+                            <h4 className="font-medium">{rec.title}</h4>
                             {rec.status === "accepted" && (
                               <Badge className="bg-success-50 text-success">
                                 <CheckCircle2 className="h-3 w-3 mr-1" />

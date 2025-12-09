@@ -68,7 +68,7 @@ const statusColors = {
 const severityColors = {
   low: "bg-info-50 text-info",
   medium: "bg-warning/10 text-warning",
-  high: "bg-secondary-100 text-secondary",
+  high: "bg-accent-100 text-accent",
   critical: "bg-destructive-50 text-destructive"
 };
 
@@ -141,7 +141,7 @@ function IssuesGroupedView({ issues, generateAIRecommendation, isGeneratingRecom
         return (
           <Card key={severity} className={
             severity === "critical" ? "border-destructive/20" :
-            severity === "high" ? "border-secondary/20" : ""
+            severity === "high" ? "border-accent/20" : ""
           }>
             <button
               onClick={() => toggleSeverity(severity)}
@@ -1032,7 +1032,7 @@ Provide:
           <TabsTrigger value="issues">
             Issues ({openIssues.length})
             {criticalIssues.length > 0 && (
-              <Badge className="ml-2 bg-red-500">{criticalIssues.length}</Badge>
+              <Badge className="ml-2 bg-destructive text-destructive-foreground">{criticalIssues.length}</Badge>
             )}
           </TabsTrigger>
           <TabsTrigger value="reports">Reports</TabsTrigger>
