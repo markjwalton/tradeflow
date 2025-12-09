@@ -272,9 +272,6 @@ export default function Layout({ children, currentPageName }) {
     </TenantContext.Provider>
   );
 }
-
-  // OLD CODE BELOW - TO BE REMOVED
-  let displayPages = [];
   
   // Icon map for custom nav items
   const iconMap = {
