@@ -202,7 +202,7 @@ export function PageSettingsPanel({ currentPageName }) {
             <Switch checked={isEditMode} onCheckedChange={toggleEditMode} />
           </div>
 
-          {!isEditMode && customProperties.length > 0 && (
+          {customProperties.length > 0 && (
             <Collapsible open={propertiesOpen} onOpenChange={setPropertiesOpen}>
               <div className="border rounded-lg">
                 <CollapsibleTrigger className="flex items-center justify-between w-full px-4 py-3 hover:bg-muted/50 transition-colors">
@@ -249,7 +249,7 @@ export function PageSettingsPanel({ currentPageName }) {
             </Collapsible>
           )}
 
-          {!isEditMode && pageTextElements.length > 0 && (
+          {pageTextElements.length > 0 && (
             <Collapsible open={textOverridesOpen} onOpenChange={setTextOverridesOpen}>
               <div className="border rounded-lg">
                 <CollapsibleTrigger className="flex items-center justify-between w-full px-4 py-3 hover:bg-muted/50 transition-colors">
@@ -320,16 +320,7 @@ export function PageSettingsPanel({ currentPageName }) {
                 )}
               </div>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                <p className="text-xs text-blue-900">
-                  <strong>How to use:</strong>
-                </p>
-                <ul className="text-xs text-blue-900 mt-2 space-y-1 list-disc list-inside">
-                  <li>Click any element to edit its text, colors, spacing</li>
-                  <li>Use the component palette to add pre-built sections</li>
-                  <li>Changes are live - save when ready</li>
-                </ul>
-              </div>
+
             </>
           )}
         </div>
