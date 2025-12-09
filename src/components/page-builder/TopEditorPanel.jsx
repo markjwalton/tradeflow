@@ -9,6 +9,7 @@ import { ComponentPalettePanel } from "./ComponentPalettePanel";
 import { StylingPanel } from "./StylingPanel";
 import { LayoutBuilderPanel } from "./LayoutBuilderPanel";
 import { PageSettingsTab } from "./PageSettingsTab";
+import { ElementEditor } from "./ElementEditor";
 import { useEditMode } from "./EditModeContext";
 
 export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
@@ -81,27 +82,18 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
         }}>
           {viewMode === 'focus' ? (
             selectedElement ? (
-              <div className="h-full flex flex-col gap-4">
-                <div className="text-sm text-muted-foreground">
+              <div className="h-full overflow-auto">
+                <div className="text-sm text-muted-foreground mb-3 pb-3 border-b">
                   <p>Selected: <code className="text-xs bg-muted px-2 py-1 rounded">{selectedElement.tagName}</code></p>
                   <p className="text-xs truncate mt-1">Path: {selectedElement.path}</p>
                 </div>
-                <div className="flex gap-2">
-                  <StylingPanel 
-                    selectedElement={selectedElement}
-                    onApplyStyle={(style) => {
-                      setHasChanges(true);
-                      toast.info("Style applied");
-                    }}
-                  />
-                  <LayoutBuilderPanel 
-                    selectedElement={selectedElement}
-                    onApplyLayout={(layout) => {
-                      setHasChanges(true);
-                      toast.info("Layout applied");
-                    }}
-                  />
-                </div>
+                <ElementEditor 
+                  selectedElement={selectedElement}
+                  onApplyStyle={(style) => {
+                    setHasChanges(true);
+                    toast.info("Style applied");
+                  }}
+                />
               </div>
             ) : (
               <div className="h-full flex items-center justify-center border-2 border-dashed border-muted rounded-lg">
