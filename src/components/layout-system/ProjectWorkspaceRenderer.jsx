@@ -53,10 +53,12 @@ export default function ProjectWorkspaceRenderer({ config, data, onAction }) {
               {action.label}
             </Button>
           ))}
-          <Button variant="outline" onClick={() => setEditorOpen(true)}>
-            <Pencil className="h-4 w-4 mr-2" />
-            Quick Edit
-          </Button>
+          {config.editor && (
+            <Button variant="outline" onClick={() => setEditorOpen(true)}>
+              <Pencil className="h-4 w-4 mr-2" />
+              Configure Layout
+            </Button>
+          )}
         </div>
       </div>
 
