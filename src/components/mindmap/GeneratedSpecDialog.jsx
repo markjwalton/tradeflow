@@ -143,7 +143,7 @@ ${JSON.stringify(e.schema, null, 2)}
                   setSaveName(mindMap?.name ? `${mindMap.name} App` : "New App");
                   setShowSaveForm(true);
                 }}
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-info hover:bg-info/90 text-info-foreground"
               >
                 <Save className="h-4 w-4 mr-2" />
                 Save as Generated App
@@ -175,7 +175,7 @@ ${JSON.stringify(e.schema, null, 2)}
               <Button
                 onClick={handleSaveGeneratedApp}
                 disabled={isSaving || !saveName.trim()}
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-info hover:bg-info/90 text-info-foreground"
               >
                 {isSaving && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                 Save
