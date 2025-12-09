@@ -103,8 +103,8 @@ export default function DebugProjectEditor() {
     <div className="p-6 lg:p-8 max-w-4xl mx-auto">
       {/* Debug Banner */}
       <div className="mb-4 p-3 bg-warning/10 border border-warning/20 rounded-lg flex items-center gap-2">
-        <AlertTriangle className="h-5 w-5 text-warning-foreground" />
-        <span className="text-warning-foreground font-medium">DEBUG MODE</span>
+        <AlertTriangle className="h-5 w-5 text-warning" />
+        <span className="text-warning font-medium">DEBUG MODE</span>
         <span className="text-muted-foreground text-sm">
           – {isEditing ? "Edit mode with mock data" : "Create mode (empty form)"}
         </span>
@@ -126,7 +126,7 @@ export default function DebugProjectEditor() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-midnight-900">
+          <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
             {isEditing ? "Edit Project" : "Create New Project"}
           </h1>
           <p className="text-muted-foreground mt-1">
@@ -363,7 +363,7 @@ export default function DebugProjectEditor() {
       {/* Live Form Data Preview */}
       <Card className="mt-8 border-dashed border-warning/30 bg-warning/10">
         <CardHeader>
-          <CardTitle className="text-warning-foreground">Live Form Data (Debug)</CardTitle>
+          <CardTitle className="text-warning">Live Form Data (Debug)</CardTitle>
         </CardHeader>
         <CardContent>
           <pre className="text-xs overflow-auto bg-white p-3 rounded border max-h-64">

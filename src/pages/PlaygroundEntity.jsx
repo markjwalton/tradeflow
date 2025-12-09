@@ -214,7 +214,7 @@ Return as JSON with a "suggestions" array of strings.`,
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div className="flex-1">
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-midnight-900">
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
             <Database className="h-6 w-6 text-accent" />
             {item.source_name}
           </h1>

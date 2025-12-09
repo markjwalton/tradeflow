@@ -223,11 +223,11 @@ Return as JSON with a "suggestions" array of strings.`,
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div className="flex-1">
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-midnight-900">
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
             <Layout className="h-6 w-6 text-info" />
             {item.source_name}
           </h1>
-          <p className="text-charcoal-700">Page Playground</p>
+          <p className="text-muted-foreground">Page Playground</p>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="outline">v{item.current_version || 1}</Badge>
