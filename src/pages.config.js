@@ -82,6 +82,7 @@ import PageBuilder from './pages/PageBuilder';
 import CSSAudit from './pages/CSSAudit';
 import ViolationReport from './pages/ViolationReport';
 import LearnedPatterns from './pages/LearnedPatterns';
+import LayoutPatternManager from './pages/LayoutPatternManager';
 import __Layout from './Layout.jsx';
 
 
@@ -170,6 +171,7 @@ export const PAGES = {
     "CSSAudit": CSSAudit,
     "ViolationReport": ViolationReport,
     "LearnedPatterns": LearnedPatterns,
+    "LayoutPatternManager": LayoutPatternManager,
 }
 
 export const pagesConfig = {
