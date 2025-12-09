@@ -53,48 +53,49 @@ export default function NavigationManager() {
     }
   };
 
-  // Sync unallocated pages mutation
+  // Sync unallocated pages mutation - scans file system and updates source_slugs
   const syncUnallocatedPages = useMutation({
     mutationFn: async (configType) => {
-      const configs = await base44.entities.NavigationConfig.filter({ config_type: configType });
-      if (configs.length === 0) return { added: 0, message: "No config found" };
-      
-      const config = configs[0];
-      const sourceSlugs = config.source_slugs || [];
-      const items = config.items || [];
-      
-      // Get all allocated page slugs (pages that are in the items array)
-      const allocatedSlugs = items
-        .filter(item => item.item_type === "page")
-        .map(item => item.slug)
-        .filter(Boolean);
-      
-      // Find orphaned pages (in source_slugs but not allocated)
-      const orphanedPages = sourceSlugs.filter(slug => !allocatedSlugs.includes(slug));
-      
-      if (orphanedPages.length === 0) {
-        return { added: 0, message: "No orphaned pages found" };
-      }
-      
-      // Add orphaned pages to items as unallocated (no parent_id)
-      const newItems = [...items];
-      orphanedPages.forEach(slug => {
-        // Check if already exists in items (shouldn't, but double check)
-        if (!newItems.some(item => item.slug === slug)) {
-          newItems.push({
-            name: slug,
-            slug: slug,
-            icon: "File",
-            is_visible: true,
-            parent_id: null,
-            item_type: "page",
-            order: newItems.length
-          });
+      try {
+        // Read all page files from the functions/readFileContent backend
+        const response = await base44.functions.invoke('readFileContent', { 
+          file_path: 'pages' 
+        });
+        
+        const pageFiles = response.data?.files || [];
+        const allPageSlugs = pageFiles
+          .filter(f => f.endsWith('.js') || f.endsWith('.jsx'))
+          .map(f => f.replace(/\.(js|jsx)$/, ''))
+          .filter(slug => slug !== 'index'); // Exclude index.js if exists
+        
+        const configs = await base44.entities.NavigationConfig.filter({ config_type: configType });
+        if (configs.length === 0) {
+          return { added: 0, message: "No config found" };
         }
-      });
-      
-      await base44.entities.NavigationConfig.update(config.id, { items: newItems });
-      return { added: orphanedPages.length, message: `Added ${orphanedPages.length} orphaned page(s)` };
+        
+        const config = configs[0];
+        const currentSourceSlugs = config.source_slugs || [];
+        
+        // Find pages not in source_slugs
+        const missingPages = allPageSlugs.filter(slug => !currentSourceSlugs.includes(slug));
+        
+        if (missingPages.length === 0) {
+          return { added: 0, message: "All pages already in config" };
+        }
+        
+        // Update source_slugs with new pages
+        const updatedSourceSlugs = [...currentSourceSlugs, ...missingPages].sort();
+        await base44.entities.NavigationConfig.update(config.id, { 
+          source_slugs: updatedSourceSlugs 
+        });
+        
+        return { 
+          added: missingPages.length, 
+          message: `Added ${missingPages.length} page(s) to unallocated: ${missingPages.join(', ')}` 
+        };
+      } catch (error) {
+        throw new Error(`Sync failed: ${error.message}`);
+      }
     },
     onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ["navConfig"] });
