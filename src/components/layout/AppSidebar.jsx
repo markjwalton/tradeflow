@@ -81,17 +81,41 @@ export function AppSidebar({ navItems = [] }) {
 
     if (isFolder) {
       const hasChildren = item.children && item.children.length > 0;
+      
+      // In icon mode, folders are not expandable - just show as collapsed icon
+      if (!showLabels) {
+        const folderButton = (
+          <button
+            className="w-full flex items-center justify-center [padding:var(--spacing-3)] [border-radius:var(--radius-lg)] transition-colors text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+          >
+            <Folder className="h-5 w-5" style={{ color: 'var(--secondary-400)' }} />
+          </button>
+        );
+        
+        return (
+          <Tooltip key={item.id}>
+            <TooltipTrigger asChild>
+              {folderButton}
+            </TooltipTrigger>
+            <TooltipContent side="right">
+              {item.name}
+            </TooltipContent>
+          </Tooltip>
+        );
+      }
+      
+      // Expanded mode - folders are expandable
       return (
         <div key={item.id} className={isExpanded && showLabels ? "bg-sidebar-accent [border-radius:var(--radius-lg)] [margin-bottom:var(--spacing-1)]" : ""}>
           <button
             onClick={() => toggleFolder(item.id)}
             className={cn(
               "w-full flex items-center transition-colors text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
-              showLabels ? "[gap:var(--spacing-3)] [padding-left:var(--spacing-3)] [padding-right:var(--spacing-3)] [padding-top:var(--spacing-2)] [padding-bottom:var(--spacing-2)] [border-radius:var(--radius-lg)]" : "justify-center [padding:var(--spacing-3)] [border-radius:var(--radius-lg)]",
+              "[gap:var(--spacing-3)] [padding-left:var(--spacing-3)] [padding-right:var(--spacing-3)] [padding-top:var(--spacing-2)] [padding-bottom:var(--spacing-2)] [border-radius:var(--radius-lg)]",
               isExpanded && "text-sidebar-foreground"
             )}
           >
-            {hasChildren && showLabels && (
+            {hasChildren && (
               isExpanded ? <ChevronDown className="h-4 w-4 text-sidebar-foreground/50" /> : <ChevronRight className="h-4 w-4 text-sidebar-foreground/50" />
             )}
             {isExpanded ? (
@@ -99,9 +123,9 @@ export function AppSidebar({ navItems = [] }) {
             ) : (
               <Folder className="h-5 w-5" style={{ color: 'var(--secondary-400)' }} />
             )}
-            {showLabels && <span className="flex-1 text-left">{item.name}</span>}
+            <span className="flex-1 text-left">{item.name}</span>
           </button>
-          {isExpanded && hasChildren && showLabels && (
+          {isExpanded && hasChildren && (
             <div className="[padding-bottom:var(--spacing-2)] [gap:var(--spacing-1)] [padding-left:var(--spacing-3)] flex flex-col">
               {item.children.map((child) => renderNavItem(child, true, false))}
             </div>
