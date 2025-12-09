@@ -422,6 +422,21 @@ export default function GenericNavEditor({
               {copyButtonLabel}
             </Button>
           )}
+          {syncUnallocatedPages && (
+            <Button 
+              variant="outline" 
+              onClick={syncUnallocatedPages}
+              disabled={isSyncing}
+              title="Scan config and refresh unallocated pages"
+            >
+              {isSyncing ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Sparkles className="h-4 w-4 mr-2" />
+              )}
+              Sync Pages
+            </Button>
+          )}
           <Button 
             className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
             onClick={() => { 
