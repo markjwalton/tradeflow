@@ -21,19 +21,19 @@ export default function ProjectWorkspaceRenderer({ config, data, onAction }) {
   };
 
   // Extract page header values
-  const pageTitle = getValueByBinding(data, config.pageHeader?.titleBinding);
-  const metaValues = (config.pageHeader?.meta || []).map(m => ({
+  const pageTitle = getValueByBinding(data, currentConfig.pageHeader?.titleBinding);
+  const metaValues = (currentConfig.pageHeader?.meta || []).map(m => ({
     label: m.label,
     value: getValueByBinding(data, m.binding)
   }));
 
   // Extract summary metrics
-  const metrics = (config.summary?.metrics || []).map(m => ({
+  const metrics = (currentConfig.summary?.metrics || []).map(m => ({
     ...m,
     value: getValueByBinding(data, m.valueBinding)
   }));
 
-  const isTwoColumn = config.layout === "twoColumn";
+  const isTwoColumn = currentConfig.layout === "twoColumn";
 
   return (
     <div className="p-6 lg:p-8">
