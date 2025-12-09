@@ -323,8 +323,11 @@ export default function Layout({ children, currentPageName }) {
           <TopEditorPanel 
             isOpen={editorPanelOpen} 
             onClose={() => setEditorPanelOpen(false)} 
+            onViewModeChange={(mode) => {
+              // Track view mode for layout adjustment
+            }}
           />
-          <div style={{ marginTop: editorPanelOpen ? '200px' : '0', transition: 'margin-top 300ms ease-in-out' }}>
+          <div data-editor-layout style={{ marginTop: editorPanelOpen ? '180px' : '0', transition: 'margin-top 300ms ease-in-out' }}>
             <AppShell user={currentUser} tenant={currentTenant} navItems={navItems}>
               <LiveEditWrapper>{children}</LiveEditWrapper>
             </AppShell>
@@ -335,7 +338,25 @@ export default function Layout({ children, currentPageName }) {
           {/* Editor bubble button */}
           {showEditorBubble && (
             <Button
-              onClick={() => setEditorPanelOpen(!editorPanelOpen)}
+              onClick={async () => {
+                setEditorPanelOpen(!editorPanelOpen);
+                // Toggle live edit mode
+                try {
+                  const user = await base44.auth.me();
+                  const newLiveEditMode = !editorPanelOpen;
+                  await base44.auth.updateMe({
+                    ui_preferences: {
+                      ...(user.ui_preferences || {}),
+                      liveEditMode: newLiveEditMode
+                    }
+                  });
+                  window.dispatchEvent(new CustomEvent('ui-preferences-changed', { 
+                    detail: { liveEditMode: newLiveEditMode } 
+                  }));
+                } catch (e) {
+                  console.error("Failed to toggle live edit:", e);
+                }
+              }}
               className="fixed bottom-6 left-6 h-14 w-14 rounded-full shadow-2xl bg-secondary text-white hover:bg-secondary/90 border-2 border-white z-[60]"
               title="Toggle Editor Panel"
             >

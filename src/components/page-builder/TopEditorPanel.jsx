@@ -6,10 +6,18 @@ import { X, ChevronDown, ChevronUp, Layout, Palette, Layers, Settings, Maximize2
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-export function TopEditorPanel({ isOpen, onClose }) {
+export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [viewMode, setViewMode] = useState("focus"); // 'focus' or 'full'
   const [hasChanges, setHasChanges] = useState(false);
+
+  const handleViewModeChange = (mode) => {
+    setViewMode(mode);
+    if (onViewModeChange) onViewModeChange(mode);
+    // Update layout margin
+    const marginTop = mode === 'full' ? '500px' : '180px';
+    document.querySelector('[data-editor-layout]')?.style.setProperty('margin-top', marginTop);
+  };
 
   const handleApplyChanges = () => {
     toast.success("Changes applied");
@@ -20,8 +28,8 @@ export function TopEditorPanel({ isOpen, onClose }) {
 
   return (
     <div 
-      className="fixed top-0 left-0 right-0 z-[100] bg-card border-b shadow-lg transition-all duration-300"
-      style={{ height: isCollapsed ? '56px' : (viewMode === 'focus' ? '200px' : '400px') }}
+      className="fixed top-0 left-0 right-0 z-[100] bg-card border-b transition-all duration-300"
+      style={{ height: isCollapsed ? '56px' : (viewMode === 'focus' ? '180px' : '500px') }}
     >
       <div className="flex items-center justify-between px-6 py-3 border-b bg-muted/30">
         <div className="flex items-center gap-3">
@@ -50,7 +58,7 @@ export function TopEditorPanel({ isOpen, onClose }) {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setViewMode(viewMode === 'focus' ? 'full' : 'focus')}
+            onClick={() => handleViewModeChange(viewMode === 'focus' ? 'full' : 'focus')}
             title={viewMode === 'focus' ? 'Switch to Full View' : 'Switch to Focus View'}
           >
             {viewMode === 'focus' ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
@@ -73,30 +81,14 @@ export function TopEditorPanel({ isOpen, onClose }) {
       </div>
 
       {!isCollapsed && (
-        <div className="px-6 py-4 bg-background overflow-y-auto" style={{ maxHeight: viewMode === 'focus' ? '144px' : '344px' }}>
+        <div className="px-6 py-4 bg-background" style={{ height: viewMode === 'focus' ? '124px' : '444px', overflowY: viewMode === 'focus' ? 'hidden' : 'auto' }}>
           {viewMode === 'focus' ? (
-            <Card className="p-4">
-              <p className="text-sm font-medium mb-3">Quick Styling Tokens</p>
-              <div className="space-y-3">
-                <div>
-                  <p className="text-xs text-muted-foreground mb-2">Colors</p>
-                  <div className="flex gap-2 flex-wrap">
-                    <Button variant="outline" size="sm" className="h-7 px-2 text-xs">Primary</Button>
-                    <Button variant="outline" size="sm" className="h-7 px-2 text-xs">Secondary</Button>
-                    <Button variant="outline" size="sm" className="h-7 px-2 text-xs">Accent</Button>
-                  </div>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground mb-2">Spacing</p>
-                  <div className="flex gap-2 flex-wrap">
-                    <Button variant="outline" size="sm" className="h-7 px-2 text-xs">sm</Button>
-                    <Button variant="outline" size="sm" className="h-7 px-2 text-xs">md</Button>
-                    <Button variant="outline" size="sm" className="h-7 px-2 text-xs">lg</Button>
-                  </div>
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">Select an element to see its tokens</p>
+            <div className="h-full flex items-center justify-center border-2 border-dashed border-muted rounded-lg">
+              <div className="text-center">
+                <Layers className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                <p className="text-sm font-medium text-muted-foreground">Select an element for properties and token options</p>
               </div>
-            </Card>
+            </div>
           ) : (
           <Tabs defaultValue="components" className="w-full">
             <TabsList className="grid w-full grid-cols-4 mb-4">
