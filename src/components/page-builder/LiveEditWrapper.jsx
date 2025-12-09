@@ -47,13 +47,17 @@ export function LiveEditWrapper({ children }) {
   } = useEditMode();
 
   useEffect(() => {
-    if (isEditMode && children) {
-      // Extract HTML from children
-      const container = document.createElement('div');
-      container.innerHTML = children?.props?.dangerouslySetInnerHTML?.__html || '';
-      setCurrentPageContent(container.innerHTML);
+    if (isEditMode) {
+      // Only extract HTML on initial edit mode activation
+      if (!currentPageContent) {
+        const container = document.createElement('div');
+        const childrenContainer = document.querySelector('[data-page-content]');
+        if (childrenContainer) {
+          setCurrentPageContent(childrenContainer.innerHTML);
+        }
+      }
     }
-  }, [isEditMode, children, setCurrentPageContent]);
+  }, [isEditMode]);
 
   const handleElementSelect = (elementData) => {
     const isTextElement = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'P', 'SPAN', 'LABEL', 'BUTTON', 'A'].includes(elementData.tagName.toUpperCase());
@@ -157,28 +161,34 @@ export function LiveEditWrapper({ children }) {
     toast.success("Text updated");
   };
 
-  if (!isEditMode) {
-    return children;
-  }
-
   return (
     <>
-      <div className="fixed top-20 right-6 z-40 flex gap-2">
-        <ComponentPalette onInsertComponent={handleInsertComponent} />
-        <Button
-          variant="outline"
-          size="sm"
-          className="gap-2 bg-white shadow-md"
-          onClick={() => setShowTokenPicker(true)}
-        >
-          <Palette className="h-4 w-4" />
-          Tokens
-        </Button>
-      </div>
+      {isEditMode && (
+        <>
+          <div className="fixed top-20 right-6 z-40 flex gap-2">
+            <ComponentPalette onInsertComponent={handleInsertComponent} />
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2 bg-white shadow-md"
+              onClick={() => setShowTokenPicker(true)}
+            >
+              <Palette className="h-4 w-4" />
+              Tokens
+            </Button>
+          </div>
 
-      <InteractiveSelector isActive={isEditMode} onElementSelect={handleElementSelect}>
-        <div data-live-edit-content dangerouslySetInnerHTML={{ __html: currentPageContent }} />
-      </InteractiveSelector>
+          {currentPageContent && (
+            <InteractiveSelector isActive={isEditMode} onElementSelect={handleElementSelect}>
+              <div data-live-edit-content dangerouslySetInnerHTML={{ __html: currentPageContent }} />
+            </InteractiveSelector>
+          )}
+        </>
+      )}
+
+      {!isEditMode && (
+        <div data-page-content>{children}</div>
+      )}
 
       <Dialog open={showTokenPicker} onOpenChange={setShowTokenPicker}>
         <DialogContent className="max-w-2xl">
