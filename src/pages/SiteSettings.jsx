@@ -166,7 +166,7 @@ export default function SiteSettings() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--${settings.backgroundColor})` }}
+                  style={{ backgroundColor: `var(--color-${settings.backgroundColor})` }}
                 />
                 <Select
                   value={settings.backgroundColor}
@@ -197,7 +197,7 @@ export default function SiteSettings() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--${settings.navbarBackground})` }}
+                  style={{ backgroundColor: `var(--color-${settings.navbarBackground})` }}
                 />
                 <Select
                   value={settings.navbarBackground}
@@ -228,7 +228,7 @@ export default function SiteSettings() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--${settings.headerBackground})` }}
+                  style={{ backgroundColor: `var(--color-${settings.headerBackground})` }}
                 />
                 <Select
                   value={settings.headerBackground}
@@ -259,7 +259,7 @@ export default function SiteSettings() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--${settings.panelBackground})` }}
+                  style={{ backgroundColor: `var(--color-${settings.panelBackground})` }}
                 />
                 <Select
                   value={settings.panelBackground}
@@ -290,7 +290,7 @@ export default function SiteSettings() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--${settings.footerBackground})` }}
+                  style={{ backgroundColor: `var(--color-${settings.footerBackground})` }}
                 />
                 <Select
                   value={settings.footerBackground}
@@ -330,7 +330,7 @@ export default function SiteSettings() {
                 {settings.overlayColor !== "none" && (
                   <div
                     className="w-8 h-8 rounded border-2 flex-shrink-0"
-                    style={{ backgroundColor: `var(--${settings.overlayColor})` }}
+                    style={{ backgroundColor: `var(--color-${settings.overlayColor})` }}
                   />
                 )}
                 {settings.overlayColor === "none" && (
@@ -350,7 +350,7 @@ export default function SiteSettings() {
                           {color.value !== "none" && (
                             <div
                               className="w-4 h-4 rounded border"
-                              style={{ backgroundColor: `var(--${color.value})` }}
+                              style={{ backgroundColor: `var(--color-${color.value})` }}
                             />
                           )}
                           {color.label}
@@ -408,7 +408,7 @@ export default function SiteSettings() {
                 <div 
                   className="absolute inset-0" 
                   style={{
-                    backgroundColor: `var(--${settings.overlayColor})`,
+                    backgroundColor: `var(--color-${settings.overlayColor})`,
                     opacity: settings.overlayOpacity / 100,
                   }}
                 />
@@ -454,7 +454,7 @@ export default function SiteSettings() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--${settings.ghostButtonHoverColor})` }}
+                  style={{ backgroundColor: `var(--color-${settings.ghostButtonHoverColor})` }}
                 />
                 <Select
                   value={settings.ghostButtonHoverColor}
@@ -469,7 +469,7 @@ export default function SiteSettings() {
                         <div className="flex items-center gap-2">
                           <div
                             className="w-4 h-4 rounded border"
-                            style={{ backgroundColor: `var(--${color.value})` }}
+                            style={{ backgroundColor: `var(--color-${color.value})` }}
                           />
                           {color.label}
                         </div>
@@ -485,7 +485,7 @@ export default function SiteSettings() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--${settings.selectedButtonColor})` }}
+                  style={{ backgroundColor: `var(--color-${settings.selectedButtonColor})` }}
                 />
                 <Select
                   value={settings.selectedButtonColor}
@@ -500,7 +500,7 @@ export default function SiteSettings() {
                         <div className="flex items-center gap-2">
                           <div
                             className="w-4 h-4 rounded border"
-                            style={{ backgroundColor: `var(--${color.value})` }}
+                            style={{ backgroundColor: `var(--color-${color.value})` }}
                           />
                           {color.label}
                         </div>
