@@ -582,7 +582,7 @@ export default function PlaygroundSummary() {
               <Loader2 className="h-8 w-8 animate-spin" />
             </div>
           ) : filteredItems.length === 0 ? (
-            <div className="text-center py-12 text-charcoal-700">
+            <div className="text-center py-12 text-muted-foreground">
               <FlaskConical className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p>No items match your filters</p>
               <Button variant="outline" className="mt-4" onClick={syncLibraryToPlayground}>
@@ -637,7 +637,7 @@ export default function PlaygroundSummary() {
           </div>
 
           {conceptItems.length === 0 ? (
-            <div className="text-center py-12 text-charcoal-700">
+            <div className="text-center py-12 text-muted-foreground">
               <Lightbulb className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p>No concepts yet</p>
               <p className="text-sm mt-1">Create a new entity, page, or feature concept</p>
