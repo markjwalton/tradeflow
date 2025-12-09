@@ -335,6 +335,46 @@ export default function BrandIdentity() {
         </CardContent>
       </Card>
 
+      {/* Editor Branding */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Editor Branding</CardTitle>
+          <CardDescription>
+            Distinct visual identity for page editing and styling tools
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="bg-muted/30 p-8 rounded-lg border-2">
+            <div className="flex items-center gap-3">
+              <svg width="48" height="48" viewBox="0 0 300 300" fill="currentColor" className="text-foreground">
+                <path d="M150,10 L280,70 L280,170 L220,260 L80,260 L20,170 L20,70 Z M60,90 L240,160 M240,90 L150,260" stroke="white" strokeWidth="12" fill="currentColor"/>
+              </svg>
+              <h2 className="text-4xl font-display font-black tracking-tight" style={{ fontStretch: 'condensed' }}>editor</h2>
+            </div>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <h4 className="text-sm font-semibold">Font</h4>
+              <p className="text-sm text-muted-foreground">Degular Display Black</p>
+            </div>
+            <div className="space-y-2">
+              <h4 className="text-sm font-semibold">Style</h4>
+              <p className="text-sm text-muted-foreground">Condensed, Bold</p>
+            </div>
+            <div className="space-y-2">
+              <h4 className="text-sm font-semibold">Usage</h4>
+              <p className="text-sm text-muted-foreground">Editor panels, tools</p>
+            </div>
+          </div>
+          
+          <p className="text-sm text-muted-foreground">
+            The editor branding uses a geometric icon paired with bold, condensed typography 
+            to create a distinct identity for page editing and styling functionality within the platform.
+          </p>
+        </CardContent>
+      </Card>
+
       {/* Brand Principles */}
       <Card className="bg-primary-50 border-primary-200">
         <CardHeader>
