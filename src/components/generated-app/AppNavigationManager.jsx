@@ -128,7 +128,7 @@ export default function AppNavigationManager({
       </div>
 
       {showSettings && (
-        <Card className="bg-muted"
+        <Card className="bg-muted">
           <CardContent className="pt-4 space-y-3">
             <div className="grid grid-cols-2 gap-4">
               <div>
