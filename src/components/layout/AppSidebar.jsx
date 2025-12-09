@@ -107,10 +107,14 @@ export function AppSidebar({ navItems = [] }) {
     }
 
     const ChildIcon = getIcon(item.icon);
+    
+    // Use createPageUrl for proper routing
+    const fullPageUrl = pageUrl.startsWith("/") ? pageUrl : `/page/${pageUrl}`;
+    
     return (
       <Link
         key={item.id}
-        to={item.page_url}
+        to={fullPageUrl}
         className={cn(
           "flex items-center gap-2 px-3 py-2 rounded-lg transition-colors",
           isActive
