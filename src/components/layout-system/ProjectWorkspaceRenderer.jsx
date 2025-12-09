@@ -11,6 +11,14 @@ import LayoutConfigEditor from "./LayoutConfigEditor";
  */
 export default function ProjectWorkspaceRenderer({ config, data, onAction }) {
   const [editorOpen, setEditorOpen] = useState(false);
+  const [currentConfig, setCurrentConfig] = useState(config);
+
+  const handleConfigSave = (newConfig) => {
+    setCurrentConfig(newConfig);
+    if (onAction) {
+      onAction("config.update", { config: newConfig });
+    }
+  };
 
   // Extract page header values
   const pageTitle = getValueByBinding(data, config.pageHeader?.titleBinding);
