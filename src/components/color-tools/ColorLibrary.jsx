@@ -5,11 +5,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Trash2, Star, Copy, Check, Search } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Trash2, Star, Copy, Check, Search, Plus, X, Upload, Sparkles } from "lucide-react";
 
 export function ColorLibrary({ tenantId }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [copied, setCopied] = useState(null);
+  const [showHex, setShowHex] = useState(true);
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [newPalette, setNewPalette] = useState({ name: "", description: "", colorCount: 5, colors: [], tags: [] });
+  const [tagInput, setTagInput] = useState("");
+  const [cssInput, setCssInput] = useState("");
   const queryClient = useQueryClient();
   
   const { data: palettes = [], isLoading } = useQuery({
@@ -39,6 +48,70 @@ export function ColorLibrary({ tenantId }) {
     setCopied(palette.id);
     setTimeout(() => setCopied(null), 2000);
   };
+
+  const copyColorRef = (color) => {
+    const text = showHex ? color.hex : color.oklch;
+    navigator.clipboard.writeText(text);
+    setCopied(color.hex);
+    setTimeout(() => setCopied(null), 2000);
+  };
+
+  const addTag = () => {
+    if (tagInput.trim() && !newPalette.tags.includes(tagInput.trim())) {
+      setNewPalette({ ...newPalette, tags: [...newPalette.tags, tagInput.trim()] });
+      setTagInput("");
+    }
+  };
+
+  const removeTag = (tag) => {
+    setNewPalette({ ...newPalette, tags: newPalette.tags.filter(t => t !== tag) });
+  };
+
+  const parseCSS = () => {
+    const matches = cssInput.matchAll(/oklch\(([\d.]+)\s+([\d.]+)\s+([\d.]+)\)/g);
+    const colors = Array.from(matches).map((match, i) => ({
+      name: `Color ${i + 1}`,
+      oklch: `oklch(${match[1]} ${match[2]} ${match[3]})`,
+      hex: "#cccccc"
+    }));
+    setNewPalette({ ...newPalette, colors, colorCount: colors.length });
+  };
+
+  const generateAINames = async () => {
+    const prompt = `Generate descriptive names for these colors: ${newPalette.colors.map((c, i) => `Color ${i + 1}: ${c.oklch}`).join(", ")}. Return a JSON array of names only.`;
+    const result = await base44.integrations.Core.InvokeLLM({
+      prompt,
+      response_json_schema: { type: "object", properties: { names: { type: "array", items: { type: "string" } } } }
+    });
+    if (result.names) {
+      setNewPalette({
+        ...newPalette,
+        colors: newPalette.colors.map((c, i) => ({ ...c, name: result.names[i] || c.name }))
+      });
+    }
+  };
+
+  const saveMutation = useMutation({
+    mutationFn: (data) => base44.entities.ColorPalette.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["colorPalettes"]);
+      setAddDialogOpen(false);
+      setNewPalette({ name: "", description: "", colorCount: 5, colors: [], tags: [] });
+      setCssInput("");
+    }
+  });
+
+  const handleSave = () => {
+    if (!newPalette.name || newPalette.colors.length === 0) return;
+    saveMutation.mutate({
+      tenant_id: tenantId || "__global__",
+      name: newPalette.name,
+      description: newPalette.description,
+      category: "palette",
+      colors: newPalette.colors,
+      tags: newPalette.tags
+    });
+  };
   
   const filteredPalettes = palettes.filter(p => 
     p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -52,14 +125,114 @@ export function ColorLibrary({ tenantId }) {
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0">
           <CardTitle>Color Library</CardTitle>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Label htmlFor="format-toggle" className="text-sm">Hex</Label>
+              <Switch id="format-toggle" checked={!showHex} onCheckedChange={(checked) => setShowHex(!checked)} />
+              <Label htmlFor="format-toggle" className="text-sm">OKLCH</Label>
+            </div>
+            <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm"><Plus className="h-4 w-4 mr-1" />Add to Library</Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>Add Palette to Library</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Palette Name</Label>
+                    <Input 
+                      value={newPalette.name}
+                      onChange={(e) => setNewPalette({ ...newPalette, name: e.target.value })}
+                      placeholder="e.g., Sunset Gradient"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Description</Label>
+                    <Input 
+                      value={newPalette.description}
+                      onChange={(e) => setNewPalette({ ...newPalette, description: e.target.value })}
+                      placeholder="e.g., Warm sunset colors from orange to purple"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Tags</Label>
+                    <div className="flex gap-2">
+                      <Input 
+                        value={tagInput}
+                        onChange={(e) => setTagInput(e.target.value)}
+                        onKeyPress={(e) => e.key === "Enter" && addTag()}
+                        placeholder="Add tag..."
+                      />
+                      <Button onClick={addTag} size="sm">Add</Button>
+                    </div>
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {newPalette.tags.map(tag => (
+                        <Badge key={tag} variant="secondary" className="gap-1">
+                          {tag}
+                          <X className="h-3 w-3 cursor-pointer" onClick={() => removeTag(tag)} />
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Import from CSS</Label>
+                    <Textarea 
+                      value={cssInput}
+                      onChange={(e) => setCssInput(e.target.value)}
+                      placeholder="Paste CSS with oklch() values..."
+                      rows={4}
+                    />
+                    <Button onClick={parseCSS} size="sm" variant="outline">
+                      <Upload className="h-4 w-4 mr-1" />Parse CSS
+                    </Button>
+                  </div>
+                  {newPalette.colors.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <Label>Colors ({newPalette.colors.length})</Label>
+                        <Button onClick={generateAINames} size="sm" variant="outline">
+                          <Sparkles className="h-4 w-4 mr-1" />AI Name Colors
+                        </Button>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        {newPalette.colors.map((color, i) => (
+                          <div key={i} className="flex gap-2 items-center">
+                            <div className="h-10 w-10 rounded border" style={{ backgroundColor: color.hex }} />
+                            <Input 
+                              value={color.name}
+                              onChange={(e) => {
+                                const updated = [...newPalette.colors];
+                                updated[i].name = e.target.value;
+                                setNewPalette({ ...newPalette, colors: updated });
+                              }}
+                              placeholder="Color name"
+                              className="flex-1"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex justify-end gap-2">
+                    <Button variant="outline" onClick={() => setAddDialogOpen(false)}>Cancel</Button>
+                    <Button onClick={handleSave} disabled={!newPalette.name || newPalette.colors.length === 0}>
+                      Save Palette
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="flex gap-2">
             <Search className="h-4 w-4 text-muted-foreground mt-3" />
             <Input 
-              placeholder="Search palettes..." 
+              placeholder="Search by name or tags..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -145,8 +318,21 @@ export function ColorLibrary({ tenantId }) {
                         <div className="text-xs text-center text-muted-foreground">
                           {color.name}
                         </div>
-                        <div className="text-xs text-center font-mono">
-                          {color.hex}
+                        <div className="flex items-center justify-center gap-1">
+                          <div className="text-xs text-center font-mono">
+                            {showHex ? color.hex : color.oklch}
+                          </div>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-5 w-5 p-0"
+                            onClick={() => copyColorRef(color)}
+                          >
+                            {copied === color.hex ? 
+                              <Check className="h-3 w-3" /> : 
+                              <Copy className="h-3 w-3" />
+                            }
+                          </Button>
                         </div>
                       </div>
                     ))}
