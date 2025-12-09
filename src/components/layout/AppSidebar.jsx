@@ -118,7 +118,7 @@ export function AppSidebar({ navItems = [] }) {
           "flex items-center rounded-lg transition-colors",
           showLabels 
             ? (isChild ? "gap-2 px-2 py-2" : "gap-3 px-3 py-2") 
-            : "justify-center p-3 w-full",
+            : "justify-center p-3",
           isActive
             ? "bg-white/10 text-white"
             : "text-white/70 hover:bg-white/5 hover:text-white"
@@ -160,7 +160,7 @@ export function AppSidebar({ navItems = [] }) {
       {mode !== "hidden" && (
         <nav className={cn(
           "flex-1 overflow-y-auto",
-          showLabels ? "p-3 space-y-1" : "py-3 px-1 space-y-2"
+          showLabels ? "p-3 space-y-1" : "py-3 space-y-2"
         )}>
           {itemsToRender.map((item) => renderNavItem(item))}
         </nav>
