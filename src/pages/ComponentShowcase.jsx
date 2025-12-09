@@ -152,9 +152,11 @@ export default function ComponentShowcase() {
         <div className="bg-card border-b border-border">
           <div className="max-w-7xl mx-auto px-6 py-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-                <Package className="h-5 w-5 text-primary-foreground" />
-              </div>
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/b7a61dbf6_black_logo_300x300_transparent.png" 
+                alt="Editor icon" 
+                className="h-10 w-10"
+              />
               <div>
                 <h1 className="text-2xl font-display text-midnight-900">
                   Component Library
