@@ -497,8 +497,8 @@ Analyze and provide 3-5 specific recommendations to:
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-heading text-[var(--color-midnight)] flex items-center gap-2">
-            <BookOpen className="h-6 w-6 text-primary-500" />
+          <h1 className="text-2xl font-heading text-foreground flex items-center gap-2">
+            <BookOpen className="h-6 w-6 text-primary" />
             Tailwind Knowledge Manager
           </h1>
           <p className="text-muted-foreground">
@@ -527,7 +527,7 @@ Analyze and provide 3-5 specific recommendations to:
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               <Loader2 className="h-4 w-4 animate-spin text-primary-500" />
-              <span className="text-sm font-medium text-[var(--color-midnight)]">
+              <span className="text-sm font-medium text-foreground">
                 {syncProgress.message}
               </span>
             </div>
@@ -568,7 +568,7 @@ Analyze and provide 3-5 specific recommendations to:
             <Card className="border-background-muted">
               <CardContent className="py-12 text-center">
                 <GitBranch className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <h3 className="text-lg font-medium text-[var(--color-midnight)]">No Releases Tracked</h3>
+                <h3 className="text-lg font-medium text-foreground">No Releases Tracked</h3>
                 <p className="text-muted-foreground mt-2">Click "Check for Updates" to find the latest Tailwind CSS releases</p>
               </CardContent>
             </Card>
@@ -578,10 +578,10 @@ Analyze and provide 3-5 specific recommendations to:
                 <Card key={release.id} className="border-[var(--color-background-muted)]">
                   <CardHeader className="flex flex-row items-start justify-between">
                     <div>
-                      <CardTitle className="text-[var(--color-midnight)] flex items-center gap-2">
+                      <CardTitle className="text-foreground flex items-center gap-2">
                         Tailwind CSS v{release.version}
                         {release.is_major && (
-                          <Badge className="bg-primary-100 text-primary-700">Major</Badge>
+                          <Badge className="bg-primary/10 text-primary">Major</Badge>
                         )}
                         <Badge className={
                           release.status === "new" ? "bg-warning/10 text-warning-foreground" :
@@ -592,7 +592,7 @@ Analyze and provide 3-5 specific recommendations to:
                           {release.status}
                         </Badge>
                       </CardTitle>
-                      <p className="text-sm text-[var(--color-charcoal)]">
+                      <p className="text-sm text-muted-foreground">
                         Released: {release.release_date || "Unknown"}
                       </p>
                     </div>
@@ -620,15 +620,15 @@ Analyze and provide 3-5 specific recommendations to:
                     {/* New Features */}
                     {release.new_features?.length > 0 && (
                       <div className="mb-4">
-                        <h4 className="text-sm font-medium text-[var(--color-midnight)] mb-2 flex items-center gap-1">
-                          <Zap className="h-4 w-4 text-success-foreground" />
+                        <h4 className="text-sm font-medium text-foreground mb-2 flex items-center gap-1">
+                          <Zap className="h-4 w-4 text-success" />
                           New Features
                         </h4>
                         <div className="grid md:grid-cols-2 gap-2">
                           {release.new_features.map((feature, idx) => (
                             <div key={idx} className="p-2 bg-background rounded-lg">
-                              <p className="font-medium text-sm text-[var(--color-midnight)]">{feature.name}</p>
-                              <p className="text-xs text-[var(--color-charcoal)]">{feature.description}</p>
+                              <p className="font-medium text-sm text-foreground">{feature.name}</p>
+                              <p className="text-xs text-muted-foreground">{feature.description}</p>
                             </div>
                           ))}
                         </div>
@@ -638,19 +638,19 @@ Analyze and provide 3-5 specific recommendations to:
                     {/* AI Analysis */}
                     {release.ai_analysis && (
                       <div className="p-4 bg-primary-50 rounded-lg border border-primary-200">
-                        <h4 className="text-sm font-medium text-[var(--color-midnight)] mb-2 flex items-center gap-1">
-                          <Sparkles className="h-4 w-4 text-primary-500" />
+                        <h4 className="text-sm font-medium text-foreground mb-2 flex items-center gap-1">
+                          <Sparkles className="h-4 w-4 text-primary" />
                           AI Analysis
                         </h4>
-                        <p className="text-sm text-[var(--color-charcoal)] mb-3">{release.ai_analysis.summary}</p>
+                        <p className="text-sm text-muted-foreground mb-3">{release.ai_analysis.summary}</p>
                         
                         {release.ai_analysis.priority_updates?.length > 0 && (
                           <div className="mb-2">
-                            <p className="text-xs font-medium text-[var(--color-midnight)] mb-1">Priority Updates:</p>
-                            <ul className="text-xs text-[var(--color-charcoal)] space-y-1">
+                            <p className="text-xs font-medium text-foreground mb-1">Priority Updates:</p>
+                            <ul className="text-xs text-muted-foreground space-y-1">
                               {release.ai_analysis.priority_updates.map((update, i) => (
                                 <li key={i} className="flex items-start gap-1">
-                                  <ArrowUp className="h-3 w-3 mt-0.5 text-warning-foreground" />
+                                  <ArrowUp className="h-3 w-3 mt-0.5 text-warning" />
                                   {update}
                                 </li>
                               ))}
@@ -659,9 +659,9 @@ Analyze and provide 3-5 specific recommendations to:
                         )}
                         
                         <Badge className={
-                          release.ai_analysis.impact_on_library?.includes("high") ? "bg-destructive-50 text-destructive-700" :
-                          release.ai_analysis.impact_on_library?.includes("medium") ? "bg-warning/10 text-warning-foreground" :
-                          "bg-success-50 text-success-foreground"
+                          release.ai_analysis.impact_on_library?.includes("high") ? "bg-destructive-50 text-destructive" :
+                          release.ai_analysis.impact_on_library?.includes("medium") ? "bg-warning/10 text-warning" :
+                          "bg-success-50 text-success"
                         }>
                           Impact: {release.ai_analysis.impact_on_library || "Unknown"}
                         </Badge>
@@ -706,7 +706,7 @@ Analyze and provide 3-5 specific recommendations to:
             <Card className="border-background-muted">
               <CardContent className="py-12 text-center">
                 <FileText className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <h3 className="text-lg font-medium text-[var(--color-midnight)]">No Knowledge Synced</h3>
+                <h3 className="text-lg font-medium text-foreground">No Knowledge Synced</h3>
                 <p className="text-muted-foreground mt-2">Click "Sync Documentation" to extract Tailwind CSS knowledge</p>
               </CardContent>
             </Card>
@@ -716,7 +716,7 @@ Analyze and provide 3-5 specific recommendations to:
                 {Object.entries(groupedKnowledge).map(([category, items]) => (
                   <Card key={category} className="border-[var(--color-background-muted)]">
                     <CardHeader>
-                      <CardTitle className="text-[var(--color-midnight)] capitalize">
+                      <CardTitle className="text-foreground capitalize">
                         {category.replace(/_/g, " ")}
                       </CardTitle>
                     </CardHeader>
@@ -724,8 +724,8 @@ Analyze and provide 3-5 specific recommendations to:
                       <div className="grid md:grid-cols-2 gap-3">
                         {items.map((item) => (
                           <div key={item.id} className="p-3 bg-background rounded-lg">
-                            <h4 className="font-medium text-[var(--color-midnight)]">{item.topic}</h4>
-                            <p className="text-sm text-[var(--color-charcoal)] line-clamp-2">{item.content}</p>
+                            <h4 className="font-medium text-foreground">{item.topic}</h4>
+                            <p className="text-sm text-muted-foreground line-clamp-2">{item.content}</p>
                             {item.utility_classes?.length > 0 && (
                               <div className="flex flex-wrap gap-1 mt-2">
                                 {item.utility_classes.slice(0, 4).map((uc, i) => (
@@ -734,7 +734,7 @@ Analyze and provide 3-5 specific recommendations to:
                                   </code>
                                 ))}
                                 {item.utility_classes.length > 4 && (
-                                  <span className="text-xs text-[var(--color-charcoal)]">+{item.utility_classes.length - 4} more</span>
+                                  <span className="text-xs text-muted-foreground">+{item.utility_classes.length - 4} more</span>
                                 )}
                               </div>
                             )}
@@ -753,7 +753,7 @@ Analyze and provide 3-5 specific recommendations to:
         <TabsContent value="recommendations">
           <Card className="border-[var(--color-background-muted)]">
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-[var(--color-midnight)]">AI-Generated Recommendations</CardTitle>
+              <CardTitle className="text-foreground">AI-Generated Recommendations</CardTitle>
               <div className="flex gap-2">
                 <Button 
                   variant="outline"
@@ -791,21 +791,21 @@ Analyze and provide 3-5 specific recommendations to:
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <h4 className="font-medium text-[var(--color-midnight)]">{rec.title}</h4>
+                            <h4 className="font-medium text-foreground">{rec.title}</h4>
                             {rec.status === "accepted" && (
-                              <Badge className="bg-success-50 text-success-foreground">
+                              <Badge className="bg-success-50 text-success">
                                 <CheckCircle2 className="h-3 w-3 mr-1" />
                                 In Roadmap
                               </Badge>
                             )}
                           </div>
-                          <p className="text-sm text-[var(--color-charcoal)]">{rec.description}</p>
+                          <p className="text-sm text-muted-foreground">{rec.description}</p>
                         </div>
                         <div className="flex items-center gap-2">
                           <Badge className={
-                            rec.impact === "high" ? "bg-destructive-50 text-destructive-700" :
-                            rec.impact === "medium" ? "bg-warning/10 text-warning-foreground" :
-                            "bg-success-50 text-success-foreground"
+                            rec.impact === "high" ? "bg-destructive-50 text-destructive" :
+                            rec.impact === "medium" ? "bg-warning/10 text-warning" :
+                            "bg-success-50 text-success"
                           }>
                             {rec.impact} impact
                           </Badge>
@@ -820,8 +820,8 @@ Analyze and provide 3-5 specific recommendations to:
                       {/* Expanded Development Prompt */}
                       {rec.reasoning && (
                         <div className="mt-3 p-3 bg-primary-50 rounded-lg border border-primary-200">
-                          <p className="text-xs font-medium text-[var(--color-midnight)] mb-1">Development Prompt:</p>
-                          <p className="text-sm text-[var(--color-charcoal)] whitespace-pre-wrap">{rec.reasoning}</p>
+                          <p className="text-xs font-medium text-foreground mb-1">Development Prompt:</p>
+                          <p className="text-sm text-muted-foreground whitespace-pre-wrap">{rec.reasoning}</p>
                         </div>
                       )}
                       
@@ -869,7 +869,7 @@ Analyze and provide 3-5 specific recommendations to:
           <div className="space-y-4 py-4">
             <div>
               <Label className="text-sm font-medium">Recommendation</Label>
-              <p className="text-sm text-[var(--color-charcoal)] mt-1">{roadmapDialog.rec?.title}</p>
+              <p className="text-sm text-muted-foreground mt-1">{roadmapDialog.rec?.title}</p>
             </div>
             <div>
               <Label className="text-sm font-medium">Priority</Label>

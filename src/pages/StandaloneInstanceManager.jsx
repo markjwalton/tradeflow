@@ -203,9 +203,9 @@ export default function StandaloneInstanceManager() {
   // Status badge
   const StatusBadge = ({ status }) => {
     const configs = {
-      connected: { icon: CheckCircle2, class: "bg-success-50 text-success-foreground", label: "Connected" },
-      error: { icon: XCircle, class: "bg-destructive-50 text-destructive-700", label: "Error" },
-      pending_setup: { icon: Clock, class: "bg-warning/10 text-warning-foreground", label: "Pending Setup" },
+      connected: { icon: CheckCircle2, class: "bg-success-50 text-success", label: "Connected" },
+      error: { icon: XCircle, class: "bg-destructive-50 text-destructive", label: "Error" },
+      pending_setup: { icon: Clock, class: "bg-warning/10 text-warning", label: "Pending Setup" },
       disconnected: { icon: AlertTriangle, class: "bg-muted text-muted-foreground", label: "Disconnected" },
     };
     const config = configs[status] || configs.disconnected;
@@ -222,8 +222,8 @@ export default function StandaloneInstanceManager() {
     <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-midnight-900 font-heading">
-            <Server className="h-6 w-6 text-primary-500" />
+          <h1 className="text-2xl font-light flex items-center gap-2 text-foreground font-heading">
+            <Server className="h-6 w-6 text-primary" />
             Standalone Instance Manager
           </h1>
           <p className="text-muted-foreground">Manage API connections to standalone Base44 tenant instances</p>
@@ -247,10 +247,10 @@ export default function StandaloneInstanceManager() {
         <Card>
           <CardContent className="pt-4">
             <div className="flex items-center gap-2 text-muted-foreground text-sm mb-1">
-              <CheckCircle2 className="h-4 w-4 text-success-foreground" />
+              <CheckCircle2 className="h-4 w-4 text-success" />
               Connected
             </div>
-            <div className="text-2xl font-bold text-success-foreground">{stats.connected}</div>
+            <div className="text-2xl font-bold text-success">{stats.connected}</div>
           </CardContent>
         </Card>
         <Card>
@@ -268,7 +268,7 @@ export default function StandaloneInstanceManager() {
               <Clock className="h-4 w-4 text-warning-foreground" />
               Pending
             </div>
-            <div className="text-2xl font-bold text-warning-foreground">{stats.pending}</div>
+            <div className="text-2xl font-bold text-warning">{stats.pending}</div>
           </CardContent>
         </Card>
         <Card>
@@ -286,7 +286,7 @@ export default function StandaloneInstanceManager() {
               <Zap className="h-4 w-4" />
               Avg Latency
             </div>
-            <div className={`text-2xl font-bold ${stats.avgLatency > 500 ? "text-warning-foreground" : "text-success-foreground"}`}>
+            <div className={`text-2xl font-bold ${stats.avgLatency > 500 ? "text-warning" : "text-success"}`}>
               {stats.avgLatency}ms
             </div>
           </CardContent>
@@ -368,7 +368,7 @@ export default function StandaloneInstanceManager() {
                           </div>
                         )}
                         {instance.last_error && (
-                          <div className="mt-2 p-2 bg-destructive-50 rounded text-xs text-destructive-700">
+                          <div className="mt-2 p-2 bg-destructive-50 rounded text-xs text-destructive">
                             {instance.last_error}
                           </div>
                         )}
@@ -460,10 +460,10 @@ export default function StandaloneInstanceManager() {
                         <TableCell className="font-medium">{instance.instance_name}</TableCell>
                         <TableCell>{tenant?.name || "-"}</TableCell>
                         <TableCell><StatusBadge status={instance.connection_status} /></TableCell>
-                        <TableCell className={instance.avg_latency_ms > 500 ? "text-warning-foreground" : "text-success-foreground"}>
+                        <TableCell className={instance.avg_latency_ms > 500 ? "text-warning" : "text-success"}>
                           {instance.avg_latency_ms || instance.last_ping_latency_ms || 0}ms
                         </TableCell>
-                        <TableCell className={errorRate > 5 ? "text-destructive" : "text-success-foreground"}>
+                        <TableCell className={errorRate > 5 ? "text-destructive" : "text-success"}>
                           {errorRate}%
                         </TableCell>
                         <TableCell>{instanceLogs.length}</TableCell>
@@ -481,7 +481,7 @@ export default function StandaloneInstanceManager() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Package className="h-5 w-5 text-primary-500" />
+                <Package className="h-5 w-5 text-primary" />
                 Available Features for Sync
               </CardTitle>
             </CardHeader>
@@ -501,7 +501,7 @@ export default function StandaloneInstanceManager() {
                           {feature.instances_notified?.length || 0} notified
                         </Badge>
                         {feature.is_api_enabled ? (
-                          <Badge className="bg-success-50 text-success-foreground">API Enabled</Badge>
+                          <Badge className="bg-success-50 text-success">API Enabled</Badge>
                         ) : (
                           <Badge className="bg-muted text-muted-foreground">Not Ready</Badge>
                         )}
@@ -545,12 +545,12 @@ export default function StandaloneInstanceManager() {
                         <TableCell><Badge variant="outline">{log.method}</Badge></TableCell>
                         <TableCell>
                           {log.success ? (
-                            <Badge className="bg-success-50 text-success-foreground">{log.status_code || 200}</Badge>
+                            <Badge className="bg-success-50 text-success">{log.status_code || 200}</Badge>
                           ) : (
-                            <Badge className="bg-destructive-50 text-destructive-700">{log.error_type || "Error"}</Badge>
+                            <Badge className="bg-destructive-50 text-destructive">{log.error_type || "Error"}</Badge>
                           )}
                         </TableCell>
-                        <TableCell className={log.latency_ms > 500 ? "text-warning-foreground" : "text-success-foreground"}>
+                        <TableCell className={log.latency_ms > 500 ? "text-warning" : "text-success"}>
                           {log.latency_ms}ms
                         </TableCell>
                       </TableRow>
@@ -568,7 +568,7 @@ export default function StandaloneInstanceManager() {
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Server className="h-5 w-5 text-primary-500" />
+              <Server className="h-5 w-5 text-primary" />
               {selectedInstance ? "Configure Instance" : "Add Standalone Instance"}
             </DialogTitle>
           </DialogHeader>
@@ -579,12 +579,12 @@ export default function StandaloneInstanceManager() {
               <React.Fragment key={s}>
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                   s < wizardStep ? "bg-success-foreground text-white" :
-                  s === wizardStep ? "bg-primary-500 text-white" :
+                  s === wizardStep ? "bg-primary text-primary-foreground" :
                   "bg-muted text-muted-foreground"
                 }`}>
                   {s < wizardStep ? <CheckCircle2 className="h-4 w-4" /> : s}
                 </div>
-                {s < 5 && <div className={`w-8 h-0.5 ${s < wizardStep ? "bg-success-foreground" : "bg-muted"}`} />}
+                {s < 5 && <div className={`w-8 h-0.5 ${s < wizardStep ? "bg-success" : "bg-muted"}`} />}
               </React.Fragment>
             ))}
           </div>
@@ -630,14 +630,14 @@ export default function StandaloneInstanceManager() {
             <div className="space-y-4">
               <h3 className="font-medium">Step 2: API Key Configuration</h3>
               <div className="p-4 bg-warning/10 border border-warning/30 rounded-lg">
-                <h4 className="font-medium text-warning-foreground flex items-center gap-2">
+                <h4 className="font-medium text-warning flex items-center gap-2">
                   <Shield className="h-4 w-4" />
                   Generated API Key
                 </h4>
                 <code className="block mt-2 p-2 bg-white rounded text-sm font-mono break-all">
                   {selectedInstance?.api_key || generateApiKey()}
                 </code>
-                <p className="text-sm text-warning-foreground mt-2">
+                <p className="text-sm text-warning mt-2">
                   Copy this key and add it to the standalone instance's secrets as <code>MAIN_APP_API_KEY</code>
                 </p>
               </div>
@@ -652,8 +652,8 @@ export default function StandaloneInstanceManager() {
                 {Object.entries(testResults).map(([name, result]) => (
                   <div key={name} className="flex items-center justify-between p-3 border rounded-lg">
                     <div className="flex items-center gap-2">
-                      {result.status === "running" && <Loader2 className="h-4 w-4 animate-spin text-info-foreground" />}
-                      {result.status === "passed" && <CheckCircle2 className="h-4 w-4 text-success-foreground" />}
+                      {result.status === "running" && <Loader2 className="h-4 w-4 animate-spin text-info" />}
+                      {result.status === "passed" && <CheckCircle2 className="h-4 w-4 text-success" />}
                       {result.status === "failed" && <XCircle className="h-4 w-4 text-destructive" />}
                       <span>{result.label}</span>
                     </div>
@@ -691,7 +691,7 @@ export default function StandaloneInstanceManager() {
           {/* Step 5: Complete */}
           {wizardStep === 5 && (
             <div className="space-y-4 text-center">
-              <CheckCircle2 className="h-16 w-16 text-success-foreground mx-auto" />
+              <CheckCircle2 className="h-16 w-16 text-success mx-auto" />
               <h3 className="text-xl font-medium">Setup Complete!</h3>
               <p className="text-muted-foreground">
                 The standalone instance is now connected and will receive feature updates.

@@ -452,7 +452,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
             <div className="flex items-center gap-3">
               <Loader2 className="h-5 w-5 animate-spin text-primary" />
               <div className="flex-1">
-                <p className="font-medium text-midnight-900">{operation.message}</p>
+                <p className="font-medium text-foreground">{operation.message}</p>
                 {operation.total > 0 && (
                   <div className="mt-2">
                     <Progress value={(operation.progress / operation.total) * 100} className="h-2" />
@@ -527,7 +527,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
                             <Zap className="h-4 w-4 text-warning" />
                           )}
                         </td>
-                        <td className="p-3 font-medium text-midnight-900">{item.name}</td>
+                        <td className="p-3 font-medium text-foreground">{item.name}</td>
                         <td className="p-3 text-center">
                           {item.syncStatus === "orphaned" ? (
                             <Link2Off className="h-4 w-4 mx-auto text-accent" title="Orphaned" />
@@ -581,7 +581,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
         <TabsContent value="data" className="space-y-4">
           <Card className="border-border">
             <CardHeader>
-              <CardTitle className="text-midnight-900">Test Data Records</CardTitle>
+              <CardTitle className="text-foreground">Test Data Records</CardTitle>
             </CardHeader>
             <CardContent>
               <ScrollArea className="h-[400px]">
@@ -599,7 +599,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
                         <div key={td.id} className="p-4 border border-border rounded-lg">
                           <div className="flex items-center justify-between">
                             <div>
-                              <p className="font-medium text-midnight-900">{get(td, "source_name")}</p>
+                              <p className="font-medium text-foreground">{get(td, "source_name")}</p>
                               <p className="text-sm text-muted-foreground">
                                 {get(td, "source_type")} • {recordCount} records • v{version}
                                 {prevVersions.length > 0 && ` (${prevVersions.length} previous)`}
@@ -631,7 +631,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
           <div className="grid md:grid-cols-2 gap-4">
             <Card className="border-border">
               <CardHeader>
-                <CardTitle className="text-midnight-900 flex items-center gap-2">
+                <CardTitle className="text-foreground flex items-center gap-2">
                   <Layout className="h-5 w-5 text-info" />
                   Pages
                 </CardTitle>
@@ -649,7 +649,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
 
             <Card className="border-border">
               <CardHeader>
-                <CardTitle className="text-midnight-900 flex items-center gap-2">
+                <CardTitle className="text-foreground flex items-center gap-2">
                   <Zap className="h-5 w-5 text-warning" />
                   Features
                 </CardTitle>
@@ -668,7 +668,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
 
           <Card className="border-border">
             <CardHeader>
-              <CardTitle className="text-midnight-900">Relationship Architecture</CardTitle>
+              <CardTitle className="text-foreground">Relationship Architecture</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-sm text-muted-foreground space-y-4">
