@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CompactButton } from "@/components/library/CompactButton";
+import { editorClasses } from "./editorTokens";
 
 const colorTokens = {
   primary: ["primary-50", "primary-100", "primary-200", "primary-300", "primary-400", "primary-500", "primary-600", "primary-700", "primary-800", "primary-900"],
@@ -95,7 +96,7 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
         <div className="space-y-4">
           <div>
             <div className="mb-2">
-              <Label className="text-xs font-medium">Text Color</Label>
+              <Label className={editorClasses.label}>Text Color</Label>
             </div>
             {Object.entries(colorTokens).map(([category, tokens]) => (
               <div key={category} className="mb-3">
@@ -105,9 +106,9 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
                         <button
                           key={token}
                           className={cn(
-                            "h-7 w-7 rounded border transition-all hover:scale-110",
+                            editorClasses.swatch,
                             `bg-${token}`,
-                            currentStyles.textColor === token && "ring-2 ring-primary ring-offset-1"
+                            currentStyles.textColor === token && editorClasses.swatchActive
                           )}
                           onClick={() => handleApplyColor("text", token)}
                           title={token}
@@ -124,19 +125,19 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
 
           <div>
             <div className="mb-2">
-              <Label className="text-xs font-medium">Background</Label>
+              <Label className={editorClasses.label}>Background</Label>
             </div>
             {Object.entries(colorTokens).map(([category, tokens]) => (
               <div key={category} className="mb-3">
-                <p className="text-xs text-muted-foreground mb-1 capitalize">{category}</p>
+                <p className={editorClasses.category}>{category}</p>
                 <div className="grid grid-cols-10 gap-1">
                       {tokens.map((token) => (
                         <button
                           key={token}
                           className={cn(
-                            "h-7 w-7 rounded border transition-all hover:scale-110",
+                            editorClasses.swatch,
                             `bg-${token}`,
-                            currentStyles.bgColor === token && "ring-2 ring-primary ring-offset-1"
+                            currentStyles.bgColor === token && editorClasses.swatchActive
                           )}
                           onClick={() => handleApplyColor("background", token)}
                           title={token}
@@ -158,7 +159,7 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
         <div className="space-y-4">
           <div>
             <div className="mb-2">
-              <Label className="text-xs font-medium">Padding</Label>
+              <Label className={editorClasses.label}>Padding</Label>
             </div>
             <div className="grid grid-cols-7 gap-1">
               {spacingTokens.map((value) => (
@@ -175,7 +176,7 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
 
           <div>
             <div className="mb-2">
-              <Label className="text-xs font-medium">Margin</Label>
+              <Label className={editorClasses.label}>Margin</Label>
             </div>
             <div className="grid grid-cols-7 gap-1">
               {spacingTokens.map((value) => (
@@ -197,7 +198,7 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
         <div className="space-y-4">
           <div>
             <div className="mb-2">
-              <Label className="text-xs font-medium">Font Size</Label>
+              <Label className={editorClasses.label}>Font Size</Label>
             </div>
             <div className="grid grid-cols-4 gap-1">
               {fontSizes.map((size) => (
@@ -214,7 +215,7 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
 
           <div>
             <div className="mb-2">
-              <Label className="text-xs font-medium">Font Weight</Label>
+              <Label className={editorClasses.label}>Font Weight</Label>
             </div>
             <div className="grid grid-cols-3 gap-1">
               {fontWeights.map((weight) => (
@@ -236,7 +237,7 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
         <div className="space-y-4">
           <div>
             <div className="mb-2">
-              <Label className="text-xs font-medium">Border Radius</Label>
+              <Label className={editorClasses.label}>Border Radius</Label>
             </div>
             <div className="grid grid-cols-4 gap-1">
               {radiusTokens.map((radius) => (
