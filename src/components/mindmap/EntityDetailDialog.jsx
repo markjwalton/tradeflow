@@ -316,7 +316,7 @@ Return JSON with this structure:
             <ScrollArea className="h-64 border rounded-lg p-2">
               <div className="space-y-2">
                 {fields.map((field, index) => (
-                  <div key={index} className="grid grid-cols-12 gap-2 items-start p-2 bg-gray-50 rounded">
+                  <div key={index} className="grid grid-cols-12 gap-2 items-start p-2 bg-muted rounded">
                     <div className="col-span-3">
                       <Input
                         value={field.name}
@@ -370,7 +370,7 @@ Return JSON with this structure:
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 text-red-500"
+                        className="h-8 w-8 text-destructive"
                         onClick={() => handleRemoveField(index)}
                       >
                         <Trash2 className="h-3 w-3" />
@@ -400,7 +400,7 @@ Return JSON with this structure:
                 ))}
                 
                 {fields.length === 0 && (
-                  <p className="text-sm text-gray-500 text-center py-4">
+                  <p className="text-sm text-muted-foreground text-center py-4">
                     No fields defined. Add fields manually or use AI Enhance.
                   </p>
                 )}

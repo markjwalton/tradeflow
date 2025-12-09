@@ -42,15 +42,15 @@ export default function ForkVersionDialog({
         </DialogHeader>
         
         <div className="space-y-4 mt-4">
-          <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+          <div className="flex items-center gap-4 p-3 bg-muted rounded-lg">
             <div className="text-center">
-              <p className="text-sm text-gray-500">Current</p>
+              <p className="text-sm text-muted-foreground">Current</p>
               <p className="text-xl font-bold">v{currentMindMap?.version || 1}</p>
             </div>
-            <div className="text-2xl text-gray-300">→</div>
+            <div className="text-2xl text-muted-foreground">→</div>
             <div className="text-center">
-              <p className="text-sm text-gray-500">New</p>
-              <p className="text-xl font-bold text-blue-600">v{nextVersion}</p>
+              <p className="text-sm text-muted-foreground">New</p>
+              <p className="text-xl font-bold text-info">v{nextVersion}</p>
             </div>
           </div>
 
@@ -62,7 +62,7 @@ export default function ForkVersionDialog({
               placeholder="Describe what you plan to change in this version..."
               rows={3}
             />
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               These notes help track the evolution of your architecture.
             </p>
           </div>

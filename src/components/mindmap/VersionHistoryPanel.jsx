@@ -8,9 +8,9 @@ import { GitBranch, GitFork, Lock, Clock, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 
 const statusColors = {
-  draft: "bg-yellow-100 text-yellow-700",
-  published: "bg-green-100 text-green-700",
-  archived: "bg-gray-100 text-gray-700",
+  draft: "bg-warning/10 text-warning",
+  published: "bg-success-50 text-success",
+  archived: "bg-muted text-muted-foreground",
 };
 
 export default function VersionHistoryPanel({ 
@@ -63,9 +63,9 @@ export default function VersionHistoryPanel({
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-3">
           {isLoading ? (
-            <p className="text-sm text-gray-500">Loading versions...</p>
+            <p className="text-sm text-muted-foreground">Loading versions...</p>
           ) : allVersions.length === 0 ? (
-            <p className="text-sm text-gray-500">No version history</p>
+            <p className="text-sm text-muted-foreground">No version history</p>
           ) : (
             allVersions.map((version) => {
               const isCurrent = version.id === currentMindMap.id;
@@ -74,17 +74,17 @@ export default function VersionHistoryPanel({
                   key={version.id}
                   className={`p-3 rounded-lg border transition-colors cursor-pointer ${
                     isCurrent 
-                      ? "border-blue-500 bg-blue-50" 
-                      : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                      ? "border-info bg-info-50" 
+                      : "border-border hover:border-border/60 hover:bg-muted"
                   }`}
                   onClick={() => !isCurrent && onSelectVersion(version.id)}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-2">
                       {version.status === "published" ? (
-                        <Lock className="h-4 w-4 text-green-600" />
+                        <Lock className="h-4 w-4 text-success" />
                       ) : (
-                        <GitFork className="h-4 w-4 text-gray-400" />
+                        <GitFork className="h-4 w-4 text-muted-foreground" />
                       )}
                       <span className="font-medium">v{version.version || 1}</span>
                     </div>
@@ -93,17 +93,17 @@ export default function VersionHistoryPanel({
                     </Badge>
                   </div>
                   
-                  <p className="text-sm text-gray-600 mt-1 truncate">
+                  <p className="text-sm text-muted-foreground mt-1 truncate">
                     {version.name}
                   </p>
                   
                   {version.change_notes && (
-                    <p className="text-xs text-gray-500 mt-1 line-clamp-2">
+                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
                       {version.change_notes}
                     </p>
                   )}
                   
-                  <div className="flex items-center gap-1 text-xs text-gray-400 mt-2">
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground mt-2">
                     <Clock className="h-3 w-3" />
                     {version.published_date 
                       ? format(new Date(version.published_date), "MMM d, yyyy")
@@ -112,7 +112,7 @@ export default function VersionHistoryPanel({
                   </div>
                   
                   {isCurrent && (
-                    <div className="flex items-center gap-1 text-xs text-blue-600 mt-1">
+                    <div className="flex items-center gap-1 text-xs text-info mt-1">
                       <ChevronRight className="h-3 w-3" />
                       Current
                     </div>
