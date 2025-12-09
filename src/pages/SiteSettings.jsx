@@ -181,7 +181,7 @@ export default function SiteSettings() {
                         <div className="flex items-center gap-2">
                           <div
                             className="w-4 h-4 rounded border"
-                            style={{ backgroundColor: `var(--${color.value})` }}
+                            style={{ backgroundColor: `var(--color-${color.value})` }}
                           />
                           {color.label}
                         </div>
@@ -212,7 +212,7 @@ export default function SiteSettings() {
                         <div className="flex items-center gap-2">
                           <div
                             className="w-4 h-4 rounded border"
-                            style={{ backgroundColor: `var(--${color.value})` }}
+                            style={{ backgroundColor: `var(--color-${color.value})` }}
                           />
                           {color.label}
                         </div>
@@ -243,7 +243,7 @@ export default function SiteSettings() {
                         <div className="flex items-center gap-2">
                           <div
                             className="w-4 h-4 rounded border"
-                            style={{ backgroundColor: `var(--${color.value})` }}
+                            style={{ backgroundColor: `var(--color-${color.value})` }}
                           />
                           {color.label}
                         </div>
@@ -274,7 +274,7 @@ export default function SiteSettings() {
                         <div className="flex items-center gap-2">
                           <div
                             className="w-4 h-4 rounded border"
-                            style={{ backgroundColor: `var(--${color.value})` }}
+                            style={{ backgroundColor: `var(--color-${color.value})` }}
                           />
                           {color.label}
                         </div>
@@ -305,7 +305,7 @@ export default function SiteSettings() {
                         <div className="flex items-center gap-2">
                           <div
                             className="w-4 h-4 rounded border"
-                            style={{ backgroundColor: `var(--${color.value})` }}
+                            style={{ backgroundColor: `var(--color-${color.value})` }}
                           />
                           {color.label}
                         </div>
