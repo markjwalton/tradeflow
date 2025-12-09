@@ -50,14 +50,32 @@ export default function DebugProjectEditor() {
 
   if (!pattern) {
     return (
-      <div className="p-6 text-center">
+      <div className="p-6 text-center space-y-4">
         <p className="text-destructive">Pattern not found. Please create it in Layout Pattern Manager.</p>
+        <Link to={createPageUrl("LayoutPatternManager")}>
+          <Button>Go to Pattern Manager</Button>
+        </Link>
       </div>
     );
   }
 
-  const layoutConfig = JSON.parse(pattern.config_json);
-  const sampleData = pattern.sample_data_json ? JSON.parse(pattern.sample_data_json) : { project: {} };
+  let layoutConfig, sampleData;
+  try {
+    layoutConfig = JSON.parse(pattern.config_json);
+    sampleData = pattern.sample_data_json ? JSON.parse(pattern.sample_data_json) : { project: {} };
+  } catch (parseError) {
+    return (
+      <div className="p-6 text-center space-y-4">
+        <p className="text-destructive">Error parsing pattern configuration: {parseError.message}</p>
+        <pre className="text-left text-xs bg-muted p-4 rounded overflow-auto max-w-2xl mx-auto">
+          {pattern.config_json}
+        </pre>
+        <Link to={createPageUrl("LayoutPatternManager")}>
+          <Button>Fix in Pattern Manager</Button>
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div>
