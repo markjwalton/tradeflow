@@ -251,7 +251,7 @@ export default function CommunityPublish() {
                 <div className="flex items-center gap-2">
                   <h3 className="font-medium">{item.name}</h3>
                   {published && (
-                    <Badge className="bg-green-100 text-green-700 text-xs">
+                    <Badge className="bg-success-50 text-success text-xs">
                       <Globe className="h-3 w-3 mr-1" />
                       v{version}
                     </Badge>

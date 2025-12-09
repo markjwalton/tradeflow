@@ -367,7 +367,7 @@ export default function SystemSpecification() {
       {/* Sidebar */}
       <div className="w-64 border-r border-border bg-card">
         <div className="p-4 border-b border-border">
-          <h2 className="font-semibold text-midnight-900">System Specification</h2>
+          <h2 className="font-semibold text-foreground">System Specification</h2>
           <div className="flex items-center gap-2 mt-1">
             <Badge variant="outline">v{SPEC_VERSION}</Badge>
             <span className="text-xs text-muted-foreground">{LAST_UPDATED}</span>

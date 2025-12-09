@@ -124,7 +124,7 @@ export default function DebugProjectWorkspace() {
           </Link>
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-2xl lg:text-3xl font-bold text-midnight-900">
+              <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
                 {mockProject.name}
               </h1>
               {mockProject.isHighPriority && (
@@ -217,13 +217,13 @@ export default function DebugProjectWorkspace() {
                     <div className="flex-1">
                       <Progress value={completionPercentage} className="h-3" />
                     </div>
-                    <span className="text-lg font-semibold text-midnight-900">
+                    <span className="text-lg font-semibold text-foreground">
                       {completionPercentage}%
                     </span>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     <div className="p-3 bg-muted rounded-lg text-center">
-                      <p className="text-2xl font-bold text-midnight-900">{taskStats.total}</p>
+                      <p className="text-2xl font-bold text-foreground">{taskStats.total}</p>
                       <p className="text-sm text-muted-foreground">Total</p>
                     </div>
                     <div className="p-3 bg-success-50 rounded-lg text-center">
@@ -265,7 +265,7 @@ export default function DebugProjectWorkspace() {
                     <div className="h-10 w-10 rounded-full bg-secondary-100 flex items-center justify-center">
                       <User className="h-5 w-5 text-secondary" />
                     </div>
-                    <p className="font-medium text-midnight-900">{mockProject.clientName}</p>
+                    <p className="font-medium text-foreground">{mockProject.clientName}</p>
                   </div>
                   <a href={`mailto:${mockProject.clientEmail}`} className="flex items-center gap-2 text-sm text-info hover:underline">
                     <Mail className="h-4 w-4" />
@@ -288,14 +288,14 @@ export default function DebugProjectWorkspace() {
                     <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
                     <div>
                       <p className="text-sm text-muted-foreground">Location</p>
-                      <p className="text-midnight-900">{mockProject.location}</p>
+                      <p className="text-foreground">{mockProject.location}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
                     <div>
                       <p className="text-sm text-muted-foreground">Start Date</p>
-                      <p className="text-midnight-900">
+                      <p className="text-foreground">
                         {format(new Date(mockProject.startDate), "MMMM d, yyyy")}
                       </p>
                     </div>
@@ -304,7 +304,7 @@ export default function DebugProjectWorkspace() {
                     <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
                     <div>
                       <p className="text-sm text-muted-foreground">Estimated End</p>
-                      <p className="text-midnight-900">
+                      <p className="text-foreground">
                         {format(new Date(mockProject.estimatedEndDate), "MMMM d, yyyy")}
                       </p>
                     </div>
@@ -320,7 +320,7 @@ export default function DebugProjectWorkspace() {
                 <CardContent>
                   <div className="flex items-center gap-2 mb-2">
                     <PoundSterling className="h-5 w-5 text-muted-foreground" />
-                    <span className="text-2xl font-bold text-midnight-900">
+                    <span className="text-2xl font-bold text-foreground">
                       £{mockProject.budget.toLocaleString()}
                     </span>
                   </div>
@@ -475,7 +475,7 @@ export default function DebugProjectWorkspace() {
                 {mockAllocations.map((alloc) => (
                   <div key={alloc.id} className="flex items-center justify-between p-3 border rounded-lg">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-secondary-100 flex items-center justify-center">
+                      <div className="h-10 w-10 rounded-full bg-secondary/10 flex items-center justify-center">
                         <User className="h-5 w-5 text-secondary" />
                       </div>
                       <div>
