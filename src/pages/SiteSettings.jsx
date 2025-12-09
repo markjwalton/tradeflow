@@ -5,8 +5,14 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Save } from "lucide-react";
+import { Save, X } from "lucide-react";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+
+const overlayColorOptions = [
+  { value: "none", label: "None" },
+  { value: "primary-50", label: "Primary 50" },
+];
 
 const colorTokens = [
   { value: "primary-50", label: "Primary 50" },
@@ -70,12 +76,19 @@ const blurOptions = [
 ];
 
 export default function SiteSettings() {
+  const navigate = useNavigate();
   const [settings, setSettings] = useState({
     backgroundColor: "background-50",
+    navbarBackground: "sidebar",
+    headerBackground: "background",
+    panelBackground: "card",
+    footerBackground: "background",
     overlayColor: "midnight-900",
     overlayOpacity: 60,
     overlayBlur: "md",
   });
+  const [originalSettings, setOriginalSettings] = useState(null);
+  const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -83,6 +96,7 @@ export default function SiteSettings() {
         const user = await base44.auth.me();
         if (user?.site_settings) {
           setSettings(user.site_settings);
+          setOriginalSettings(user.site_settings);
         }
       } catch (e) {
         console.error("Failed to load site settings:", e);
@@ -90,6 +104,22 @@ export default function SiteSettings() {
     };
     loadSettings();
   }, []);
+
+  useEffect(() => {
+    if (originalSettings) {
+      setHasChanges(JSON.stringify(settings) !== JSON.stringify(originalSettings));
+    }
+  }, [settings, originalSettings]);
+
+  const handleCancel = () => {
+    if (hasChanges) {
+      if (window.confirm("You have unsaved changes. Are you sure you want to cancel?")) {
+        navigate(-1);
+      }
+    } else {
+      navigate(-1);
+    }
+  };
 
   const handleSave = async () => {
     try {
@@ -115,15 +145,15 @@ export default function SiteSettings() {
         <Card>
           <CardHeader>
             <CardTitle>Background Settings</CardTitle>
-            <CardDescription>Control the main background color</CardDescription>
+            <CardDescription>Control background colors for different areas</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="background-color">Background Color</Label>
+              <Label htmlFor="background-color">Main Background</Label>
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--${settings.backgroundColor})` }}
+                  style={{ backgroundColor: `var(--color-${settings.backgroundColor})` }}
                 />
                 <Select
                   value={settings.backgroundColor}
@@ -135,7 +165,137 @@ export default function SiteSettings() {
                   <SelectContent>
                     {colorTokens.map((color) => (
                       <SelectItem key={color.value} value={color.value}>
-                        {color.label}
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-4 h-4 rounded border"
+                            style={{ backgroundColor: `var(--color-${color.value})` }}
+                          />
+                          {color.label}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="navbar-background">Navigation Bar</Label>
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-8 h-8 rounded border-2 flex-shrink-0"
+                  style={{ backgroundColor: `var(--color-${settings.navbarBackground})` }}
+                />
+                <Select
+                  value={settings.navbarBackground}
+                  onValueChange={(value) => setSettings({ ...settings, navbarBackground: value })}
+                >
+                  <SelectTrigger id="navbar-background" className="flex-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {colorTokens.map((color) => (
+                      <SelectItem key={color.value} value={color.value}>
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-4 h-4 rounded border"
+                            style={{ backgroundColor: `var(--color-${color.value})` }}
+                          />
+                          {color.label}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="header-background">Header</Label>
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-8 h-8 rounded border-2 flex-shrink-0"
+                  style={{ backgroundColor: `var(--color-${settings.headerBackground})` }}
+                />
+                <Select
+                  value={settings.headerBackground}
+                  onValueChange={(value) => setSettings({ ...settings, headerBackground: value })}
+                >
+                  <SelectTrigger id="header-background" className="flex-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {colorTokens.map((color) => (
+                      <SelectItem key={color.value} value={color.value}>
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-4 h-4 rounded border"
+                            style={{ backgroundColor: `var(--color-${color.value})` }}
+                          />
+                          {color.label}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="panel-background">Settings Panel</Label>
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-8 h-8 rounded border-2 flex-shrink-0"
+                  style={{ backgroundColor: `var(--color-${settings.panelBackground})` }}
+                />
+                <Select
+                  value={settings.panelBackground}
+                  onValueChange={(value) => setSettings({ ...settings, panelBackground: value })}
+                >
+                  <SelectTrigger id="panel-background" className="flex-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {colorTokens.map((color) => (
+                      <SelectItem key={color.value} value={color.value}>
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-4 h-4 rounded border"
+                            style={{ backgroundColor: `var(--color-${color.value})` }}
+                          />
+                          {color.label}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="footer-background">Footer</Label>
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-8 h-8 rounded border-2 flex-shrink-0"
+                  style={{ backgroundColor: `var(--color-${settings.footerBackground})` }}
+                />
+                <Select
+                  value={settings.footerBackground}
+                  onValueChange={(value) => setSettings({ ...settings, footerBackground: value })}
+                >
+                  <SelectTrigger id="footer-background" className="flex-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {colorTokens.map((color) => (
+                      <SelectItem key={color.value} value={color.value}>
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-4 h-4 rounded border"
+                            style={{ backgroundColor: `var(--color-${color.value})` }}
+                          />
+                          {color.label}
+                        </div>
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -154,10 +314,15 @@ export default function SiteSettings() {
             <div className="space-y-2">
               <Label htmlFor="overlay-color">Overlay Color</Label>
               <div className="flex items-center gap-3">
-                <div
-                  className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--${settings.overlayColor})` }}
-                />
+                {settings.overlayColor !== "none" && (
+                  <div
+                    className="w-8 h-8 rounded border-2 flex-shrink-0"
+                    style={{ backgroundColor: `var(--color-${settings.overlayColor})` }}
+                  />
+                )}
+                {settings.overlayColor === "none" && (
+                  <div className="w-8 h-8 rounded border-2 flex-shrink-0 bg-transparent" />
+                )}
                 <Select
                   value={settings.overlayColor}
                   onValueChange={(value) => setSettings({ ...settings, overlayColor: value })}
@@ -166,9 +331,17 @@ export default function SiteSettings() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {colorTokens.map((color) => (
+                    {overlayColorOptions.concat(colorTokens).map((color) => (
                       <SelectItem key={color.value} value={color.value}>
-                        {color.label}
+                        <div className="flex items-center gap-2">
+                          {color.value !== "none" && (
+                            <div
+                              className="w-4 h-4 rounded border"
+                              style={{ backgroundColor: `var(--color-${color.value})` }}
+                            />
+                          )}
+                          {color.label}
+                        </div>
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -218,11 +391,18 @@ export default function SiteSettings() {
                 <p className="text-sm text-midnight-900 font-medium">Sample content behind overlay</p>
                 <p className="text-xs text-charcoal-600 mt-1">This shows how the overlay will appear over your content</p>
               </div>
+              {settings.overlayColor !== "none" && (
+                <div 
+                  className="absolute inset-0" 
+                  style={{
+                    backgroundColor: `var(--color-${settings.overlayColor})`,
+                    opacity: settings.overlayOpacity / 100,
+                  }}
+                />
+              )}
               <div 
                 className="absolute inset-0" 
                 style={{
-                  backgroundColor: `var(--${settings.overlayColor})`,
-                  opacity: settings.overlayOpacity / 100,
                   backdropFilter: settings.overlayBlur !== 'none' ? `blur(${settings.overlayBlur === 'sm' ? '4px' : settings.overlayBlur === 'md' ? '8px' : settings.overlayBlur === 'lg' ? '12px' : '16px'})` : 'none'
                 }}
               />
@@ -233,8 +413,12 @@ export default function SiteSettings() {
           </CardContent>
         </Card>
 
-        <div className="flex justify-end">
-          <Button onClick={handleSave} size="lg">
+        <div className="flex justify-end gap-3">
+          <Button onClick={handleCancel} variant="outline" size="lg">
+            <X className="h-4 w-4 mr-2" />
+            Cancel
+          </Button>
+          <Button onClick={handleSave} size="lg" disabled={!hasChanges}>
             <Save className="h-4 w-4 mr-2" />
             Save Settings
           </Button>
