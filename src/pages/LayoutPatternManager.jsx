@@ -19,7 +19,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Eye, Copy, Trash2, Edit, Layout, Sparkles } from "lucide-react";
+import { Plus, Eye, Copy, Trash2, Settings, Layout, Sparkles, ChevronDown, ChevronUp, GripVertical, RotateCcw } from "lucide-react";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { Switch } from "@/components/ui/switch";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { toast } from "sonner";
 import { createPageUrl } from "@/utils";
 import { useNavigate } from "react-router-dom";
@@ -38,15 +41,33 @@ export default function LayoutPatternManager() {
     category: "workspace",
     entity_type: "",
     config_json: "",
+    default_config_json: "",
     sample_data_json: "",
     tags: [],
     is_active: true,
+    default_collapsed: false,
+    order: 0,
     version: 1
   });
+  const [collapsedCards, setCollapsedCards] = useState(new Set());
 
   const { data: patterns = [], isLoading } = useQuery({
     queryKey: ["layoutPatterns"],
-    queryFn: () => base44.entities.LayoutPattern.list()
+    queryFn: async () => {
+      const data = await base44.entities.LayoutPattern.list();
+      const sorted = [...data].sort((a, b) => (a.order || 0) - (b.order || 0));
+      
+      // Initialize collapsed state
+      const initialCollapsed = new Set();
+      sorted.forEach(p => {
+        if (p.default_collapsed) {
+          initialCollapsed.add(p.id);
+        }
+      });
+      setCollapsedCards(initialCollapsed);
+      
+      return sorted;
+    }
   });
 
   const createMutation = useMutation({
@@ -85,12 +106,52 @@ export default function LayoutPatternManager() {
       category: "workspace",
       entity_type: "",
       config_json: "",
+      default_config_json: "",
       sample_data_json: "",
       tags: [],
       is_active: true,
+      default_collapsed: false,
+      order: 0,
       version: 1
     });
     setEditingPattern(null);
+  };
+
+  const handleResetToDefault = () => {
+    if (editingPattern?.default_config_json) {
+      setFormData({ ...formData, config_json: editingPattern.default_config_json });
+      toast.success("Config reset to default");
+    } else {
+      toast.error("No default config available");
+    }
+  };
+
+  const handleDragEnd = (result) => {
+    if (!result.destination) return;
+
+    const items = Array.from(filteredPatterns);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    // Update order for all items
+    const updates = items.map((item, index) => 
+      updateMutation.mutate({ id: item.id, data: { ...item, order: index } }, { onSuccess: () => {} })
+    );
+
+    toast.success("Pattern order updated");
+    queryClient.invalidateQueries({ queryKey: ["layoutPatterns"] });
+  };
+
+  const toggleCollapse = (id) => {
+    setCollapsedCards(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
   };
 
   const handleEdit = (pattern) => {
@@ -183,58 +244,105 @@ export default function LayoutPatternManager() {
         </Button>
       </div>
 
-      {/* Pattern Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredPatterns.map((pattern) => (
-          <Card key={pattern.id} className="hover:shadow-md transition-shadow">
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div>
-                  <CardTitle className="text-base mb-1">{pattern.name}</CardTitle>
-                  <p className="text-xs text-muted-foreground font-mono">{pattern.pattern_id}</p>
-                </div>
-                {!pattern.is_active && <Badge variant="outline">Inactive</Badge>}
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <p className="text-sm text-muted-foreground line-clamp-2">
-                {pattern.description || "No description"}
-              </p>
-              
-              <div className="flex gap-2 flex-wrap">
-                <Badge className={categoryColors[pattern.category]}>
-                  {pattern.category}
-                </Badge>
-                {pattern.entity_type && (
-                  <Badge variant="outline">{pattern.entity_type}</Badge>
-                )}
-                <Badge variant="secondary">v{pattern.version}</Badge>
-              </div>
+      {/* Pattern Grid with Drag & Drop */}
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId="patterns">
+          {(provided) => (
+            <div 
+              {...provided.droppableProps} 
+              ref={provided.innerRef}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+            >
+              {filteredPatterns.map((pattern, index) => (
+                <Draggable key={pattern.id} draggableId={pattern.id} index={index}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      className={snapshot.isDragging ? "opacity-50" : ""}
+                    >
+                      <Collapsible
+                        open={!collapsedCards.has(pattern.id)}
+                        onOpenChange={() => toggleCollapse(pattern.id)}
+                      >
+                        <Card className="hover:shadow-md transition-shadow">
+                          <CardHeader>
+                            <div className="flex items-start justify-between gap-2">
+                              <div {...provided.dragHandleProps} className="cursor-grab active:cursor-grabbing pt-1">
+                                <GripVertical className="h-4 w-4 text-muted-foreground" />
+                              </div>
+                              <div className="flex-1">
+                                <CardTitle className="text-base mb-1">{pattern.name}</CardTitle>
+                                <p className="text-xs text-muted-foreground font-mono">{pattern.pattern_id}</p>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                {!pattern.is_active && <Badge variant="outline">Inactive</Badge>}
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  onClick={() => handleEdit(pattern)}
+                                  className="h-8 w-8 p-0"
+                                >
+                                  <Settings className="h-4 w-4" />
+                                </Button>
+                                <CollapsibleTrigger asChild>
+                                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                    {collapsedCards.has(pattern.id) ? (
+                                      <ChevronDown className="h-4 w-4" />
+                                    ) : (
+                                      <ChevronUp className="h-4 w-4" />
+                                    )}
+                                  </Button>
+                                </CollapsibleTrigger>
+                              </div>
+                            </div>
+                          </CardHeader>
+                          <CollapsibleContent>
+                            <CardContent className="space-y-3">
+                              <p className="text-sm text-muted-foreground line-clamp-2">
+                                {pattern.description || "No description"}
+                              </p>
+                              
+                              <div className="flex gap-2 flex-wrap">
+                                <Badge className={categoryColors[pattern.category]}>
+                                  {pattern.category}
+                                </Badge>
+                                {pattern.entity_type && (
+                                  <Badge variant="outline">{pattern.entity_type}</Badge>
+                                )}
+                                <Badge variant="secondary">v{pattern.version}</Badge>
+                              </div>
 
-              <div className="flex gap-2 pt-2">
-                <Button variant="outline" size="sm" onClick={() => handleTestInBuilder(pattern)}>
-                  <Eye className="h-3 w-3 mr-1" />
-                  Test
-                </Button>
-                <Button variant="ghost" size="sm" onClick={() => handleEdit(pattern)}>
-                  <Edit className="h-3 w-3" />
-                </Button>
-                <Button variant="ghost" size="sm" onClick={() => handleDuplicate(pattern)}>
-                  <Copy className="h-3 w-3" />
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => deleteMutation.mutate(pattern.id)}
-                  className="text-destructive"
-                >
-                  <Trash2 className="h-3 w-3" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                              <div className="flex gap-2 pt-2">
+                                <Button variant="outline" size="sm" onClick={() => handleTestInBuilder(pattern)}>
+                                  <Eye className="h-3 w-3 mr-1" />
+                                  Test
+                                </Button>
+                                <Button variant="ghost" size="sm" onClick={() => handleDuplicate(pattern)}>
+                                  <Copy className="h-3 w-3" />
+                                </Button>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm" 
+                                  onClick={() => deleteMutation.mutate(pattern.id)}
+                                  className="text-destructive"
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            </CardContent>
+                          </CollapsibleContent>
+                        </Card>
+                      </Collapsible>
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
 
       {filteredPatterns.length === 0 && !isLoading && (
         <div className="text-center py-12">
@@ -304,13 +412,37 @@ export default function LayoutPatternManager() {
             </div>
 
             <div>
-              <label className="text-sm font-medium mb-1 block">Config JSON *</label>
+              <label className="text-sm font-medium mb-1 block flex items-center justify-between">
+                Config JSON *
+                {editingPattern?.default_config_json && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={handleResetToDefault}
+                    className="h-7 text-xs gap-1"
+                  >
+                    <RotateCcw className="h-3 w-3" />
+                    Reset to Default
+                  </Button>
+                )}
+              </label>
               <Textarea
                 value={formData.config_json}
                 onChange={(e) => setFormData({ ...formData, config_json: e.target.value })}
                 className="font-mono text-xs"
                 placeholder='{"patternId": "...", ...}'
                 rows={8}
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium mb-1 block">Default Config JSON</label>
+              <Textarea
+                value={formData.default_config_json}
+                onChange={(e) => setFormData({ ...formData, default_config_json: e.target.value })}
+                className="font-mono text-xs"
+                placeholder='Store original config for reset...'
+                rows={4}
               />
             </div>
 
@@ -323,6 +455,23 @@ export default function LayoutPatternManager() {
                 placeholder='{"project": {...}}'
                 rows={6}
               />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <label className="text-sm font-medium">Collapsed by Default</label>
+                <Switch
+                  checked={formData.default_collapsed}
+                  onCheckedChange={(checked) => setFormData({ ...formData, default_collapsed: checked })}
+                />
+              </div>
+              <div className="flex items-center justify-between p-3 border rounded-lg">
+                <label className="text-sm font-medium">Active</label>
+                <Switch
+                  checked={formData.is_active}
+                  onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
+                />
+              </div>
             </div>
 
             <div className="flex gap-2 justify-end pt-4">
