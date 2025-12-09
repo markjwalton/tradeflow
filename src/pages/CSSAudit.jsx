@@ -793,7 +793,7 @@ export default function CSSAudit() {
                         <React.Fragment key={i}>
                           {part}
                           {i < arr.length - 1 && (
-                            <mark className="bg-yellow-300 px-1 code-highlight font-bold">
+                            <mark className="bg-warning/30 px-1 code-highlight font-bold">
                               {highlightedCode}
                             </mark>
                           )}

@@ -214,7 +214,7 @@ export default function SprintManager() {
           )}
 
           {sprints.length === 0 && (
-            <div className="text-center py-12 text-charcoal-700">
+            <div className="text-center py-12 text-muted-foreground">
               <Play className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p>No sprints yet. Create your first sprint!</p>
             </div>
