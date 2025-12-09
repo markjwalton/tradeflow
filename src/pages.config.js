@@ -88,6 +88,7 @@ import Components from './pages/Components';
 import BrandIdentity from './pages/BrandIdentity';
 import ComponentPatterns from './pages/ComponentPatterns';
 import JSONSchemaBuilder from './pages/JSONSchemaBuilder';
+import FormSchemaBuilder from './pages/FormSchemaBuilder';
 import __Layout from './Layout.jsx';
 
 
@@ -182,6 +183,7 @@ export const PAGES = {
     "BrandIdentity": BrandIdentity,
     "ComponentPatterns": ComponentPatterns,
     "JSONSchemaBuilder": JSONSchemaBuilder,
+    "FormSchemaBuilder": FormSchemaBuilder,
 }
 
 export const pagesConfig = {
