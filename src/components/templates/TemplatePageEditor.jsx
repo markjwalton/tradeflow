@@ -70,11 +70,11 @@ export default function TemplatePageEditor({ page, entities = [], onSave, onCanc
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium text-[var(--color-midnight)]">Name</label>
+                <label className="text-sm font-medium">Name</label>
                 <Input value={name} onChange={(e) => setName(e.target.value)} />
               </div>
               <div>
-                <label className="text-sm font-medium text-[var(--color-midnight)]">Layout</label>
+                <label className="text-sm font-medium">Layout</label>
                 <Select value={layout} onValueChange={setLayout}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -85,13 +85,13 @@ export default function TemplatePageEditor({ page, entities = [], onSave, onCanc
             </div>
 
             <div>
-              <label className="text-sm font-medium text-[var(--color-midnight)]">Description</label>
+              <label className="text-sm font-medium">Description</label>
               <Input value={description} onChange={(e) => setDescription(e.target.value)} />
             </div>
 
             <div>
-              <label className="text-sm font-medium text-[var(--color-midnight)]">Entities Used</label>
-              <div className="flex flex-wrap gap-2 mt-2 p-3 bg-[var(--color-background)] rounded-lg">
+              <label className="text-sm font-medium">Entities Used</label>
+              <div className="flex flex-wrap gap-2 mt-2 p-3 bg-muted rounded-lg">
                 {entities.map((entity) => (
                   <Badge
                     key={entity.name}
@@ -106,26 +106,26 @@ export default function TemplatePageEditor({ page, entities = [], onSave, onCanc
             </div>
 
             <div>
-              <label className="text-sm font-medium text-[var(--color-midnight)]">Features</label>
+              <label className="text-sm font-medium">Features</label>
               <div className="flex gap-2 mt-1">
                 <Input value={featureInput} onChange={(e) => setFeatureInput(e.target.value)} placeholder="Add feature..." onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addFeature())} />
                 <Button variant="outline" onClick={addFeature}>Add</Button>
               </div>
               <div className="flex flex-wrap gap-1 mt-2">
                 {features.map((f) => (
-                  <Badge key={f} variant="secondary" className="gap-1">{f}<button onClick={() => setFeatures(features.filter(x => x !== f))} className="hover:text-[var(--color-destructive)]">×</button></Badge>
+                  <Badge key={f} variant="secondary" className="gap-1">{f}<button onClick={() => setFeatures(features.filter(x => x !== f))} className="hover:text-destructive">×</button></Badge>
                 ))}
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label className="text-sm font-medium text-[var(--color-midnight)]">Components</label>
+                <label className="text-sm font-medium">Components</label>
                 <Button size="sm" variant="outline" onClick={addComponent}><Plus className="h-3 w-3 mr-1" />Add</Button>
               </div>
               <div className="space-y-2">
                 {components.map((comp, idx) => (
-                  <div key={idx} className="flex gap-2 items-center p-2 bg-[var(--color-background)] rounded">
+                  <div key={idx} className="flex gap-2 items-center p-2 bg-muted rounded">
                     <Input value={comp.name} onChange={(e) => { const u = [...components]; u[idx] = {...comp, name: e.target.value}; setComponents(u); }} placeholder="Name" className="flex-1" />
                     <Select value={comp.type} onValueChange={(v) => { const u = [...components]; u[idx] = {...comp, type: v}; setComponents(u); }}>
                       <SelectTrigger className="w-28"><SelectValue /></SelectTrigger>
@@ -133,7 +133,7 @@ export default function TemplatePageEditor({ page, entities = [], onSave, onCanc
                         {componentTypes.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
                       </SelectContent>
                     </Select>
-                    <Button size="icon" variant="ghost" className="text-[var(--color-destructive)]" onClick={() => setComponents(components.filter((_, i) => i !== idx))}>
+                    <Button size="icon" variant="ghost" className="text-destructive" onClick={() => setComponents(components.filter((_, i) => i !== idx))}>
                       <Trash2 className="h-3 w-3" />
                     </Button>
                   </div>
@@ -142,21 +142,21 @@ export default function TemplatePageEditor({ page, entities = [], onSave, onCanc
             </div>
 
             <div>
-              <label className="text-sm font-medium text-[var(--color-midnight)]">Actions</label>
+              <label className="text-sm font-medium">Actions</label>
               <div className="flex gap-2 mt-1">
                 <Input value={actionInput} onChange={(e) => setActionInput(e.target.value)} placeholder="Add action..." onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addAction())} />
                 <Button variant="outline" onClick={addAction}>Add</Button>
               </div>
               <div className="flex flex-wrap gap-1 mt-2">
                 {actions.map((a) => (
-                  <Badge key={a} variant="secondary" className="gap-1">{a}<button onClick={() => setActions(actions.filter(x => x !== a))} className="hover:text-[var(--color-destructive)]">×</button></Badge>
+                  <Badge key={a} variant="secondary" className="gap-1">{a}<button onClick={() => setActions(actions.filter(x => x !== a))} className="hover:text-destructive">×</button></Badge>
                 ))}
               </div>
             </div>
 
             <div className="flex justify-end gap-2 pt-4">
               <Button variant="outline" onClick={onCancel}>Cancel</Button>
-              <Button onClick={handleSave} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">Save Changes</Button>
+              <Button onClick={handleSave}>Save Changes</Button>
             </div>
           </div>
         </ScrollArea>

@@ -72,25 +72,25 @@ export default function TemplateEntityEditor({ entity, onSave, onCancel }) {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium text-[var(--color-midnight)]">Name</label>
+                <label className="text-sm font-medium">Name</label>
                 <Input value={name} onChange={(e) => setName(e.target.value)} />
               </div>
               <div>
-                <label className="text-sm font-medium text-[var(--color-midnight)]">Description</label>
+                <label className="text-sm font-medium">Description</label>
                 <Input value={description} onChange={(e) => setDescription(e.target.value)} />
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label className="text-sm font-medium text-[var(--color-midnight)]">Fields</label>
+                <label className="text-sm font-medium">Fields</label>
                 <Button size="sm" variant="outline" onClick={addField}>
                   <Plus className="h-3 w-3 mr-1" />Add Field
                 </Button>
               </div>
               <div className="space-y-2">
                 {fields.map((field, idx) => (
-                  <div key={idx} className="flex gap-2 items-center p-2 bg-[var(--color-background)] rounded">
+                  <div key={idx} className="flex gap-2 items-center p-2 bg-muted rounded">
                     <Input
                       value={field.name}
                       onChange={(e) => updateField(idx, { name: e.target.value })}
@@ -109,7 +109,7 @@ export default function TemplateEntityEditor({ entity, onSave, onCancel }) {
                       placeholder="Description"
                       className="flex-1"
                     />
-                    <Button size="icon" variant="ghost" className="text-[var(--color-destructive)]" onClick={() => setFields(fields.filter((_, i) => i !== idx))}>
+                    <Button size="icon" variant="ghost" className="text-destructive" onClick={() => setFields(fields.filter((_, i) => i !== idx))}>
                       <Trash2 className="h-3 w-3" />
                     </Button>
                   </div>
@@ -119,7 +119,7 @@ export default function TemplateEntityEditor({ entity, onSave, onCancel }) {
 
             <div className="flex justify-end gap-2 pt-4">
               <Button variant="outline" onClick={onCancel}>Cancel</Button>
-              <Button onClick={handleSave} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">Save Changes</Button>
+              <Button onClick={handleSave}>Save Changes</Button>
             </div>
           </div>
         </ScrollArea>

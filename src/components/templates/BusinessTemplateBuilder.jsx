@@ -322,11 +322,11 @@ Also suggest optimal workflows for this business type.`,
           {/* Basic Info */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium text-[var(--color-midnight)]">Template Name *</label>
+              <label className="text-sm font-medium">Template Name *</label>
               <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g., Construction Company" />
             </div>
             <div>
-              <label className="text-sm font-medium text-[var(--color-midnight)]">Category</label>
+              <label className="text-sm font-medium">Category</label>
               <Select value={category} onValueChange={setCategory}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -338,7 +338,7 @@ Also suggest optimal workflows for this business type.`,
 
           {/* Description with AI Enhance */}
           <div>
-            <label className="text-sm font-medium text-[var(--color-midnight)]">Description</label>
+            <label className="text-sm font-medium">Description</label>
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -349,7 +349,7 @@ Also suggest optimal workflows for this business type.`,
 
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="text-sm font-medium text-[var(--color-midnight)]">Business Summary</label>
+              <label className="text-sm font-medium">Business Summary</label>
               <Button size="sm" variant="outline" onClick={handleEnhanceSummary} disabled={isEnhancing}>
                 {isEnhancing ? <Loader2 className="h-3 w-3 mr-1 animate-spin" /> : <Sparkles className="h-3 w-3 mr-1" />}
                 AI Enhance
@@ -365,14 +365,14 @@ Also suggest optimal workflows for this business type.`,
 
           {/* Tags */}
           <div>
-            <label className="text-sm font-medium text-[var(--color-midnight)]">Tags</label>
+            <label className="text-sm font-medium">Tags</label>
             <div className="flex gap-2 mt-1">
               <Input value={tagInput} onChange={(e) => setTagInput(e.target.value)} placeholder="Add tag..." onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addTag())} />
               <Button variant="outline" onClick={addTag}><Plus className="h-4 w-4" /></Button>
             </div>
             <div className="flex flex-wrap gap-1 mt-2">
               {tags.map((tag) => (
-                <Badge key={tag} variant="secondary" className="gap-1">{tag}<button onClick={() => setTags(tags.filter(t => t !== tag))} className="hover:text-[var(--color-destructive)]">×</button></Badge>
+                <Badge key={tag} variant="secondary" className="gap-1">{tag}<button onClick={() => setTags(tags.filter(t => t !== tag))} className="hover:text-destructive">×</button></Badge>
               ))}
             </div>
           </div>
@@ -486,15 +486,15 @@ Also suggest optimal workflows for this business type.`,
 
           {/* AI Organize Section */}
           {selectedEntities.length >= 2 && (
-            <Card className="bg-[var(--color-accent)]/10 border-[var(--color-accent)]">
+            <Card className="bg-accent/10 border-accent/20">
               <CardContent className="pt-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="font-medium flex items-center gap-2 text-[var(--color-midnight)]">
-                      <GitBranch className="h-4 w-4 text-[var(--color-accent-dark)]" />
+                    <h4 className="font-medium flex items-center gap-2">
+                      <GitBranch className="h-4 w-4 text-accent" />
                       Entity Relationships & Workflows
                     </h4>
-                    <p className="text-sm text-[var(--color-charcoal)]">
+                    <p className="text-sm text-muted-foreground">
                       {entityRelationships.length} relationships, {workflows.length} workflows defined
                     </p>
                   </div>
@@ -507,12 +507,12 @@ Also suggest optimal workflows for this business type.`,
                 {entityRelationships.length > 0 && (
                   <div className="mt-3 space-y-1">
                     {entityRelationships.map((rel, idx) => (
-                      <div key={idx} className="text-xs bg-[var(--color-background-paper)] rounded px-2 py-1 flex items-center gap-2">
-                        <span className="font-medium text-[var(--color-midnight)]">{rel.source}</span>
-                        <span className="text-[var(--color-charcoal)]">→</span>
+                      <div key={idx} className="text-xs bg-card rounded px-2 py-1 flex items-center gap-2">
+                        <span className="font-medium">{rel.source}</span>
+                        <span className="text-muted-foreground">→</span>
                         <Badge variant="outline" className="text-xs">{rel.type}</Badge>
-                        <span className="text-[var(--color-charcoal)]">→</span>
-                        <span className="font-medium text-[var(--color-midnight)]">{rel.target}</span>
+                        <span className="text-muted-foreground">→</span>
+                        <span className="font-medium">{rel.target}</span>
                       </div>
                     ))}
                   </div>
@@ -534,9 +534,9 @@ Also suggest optimal workflows for this business type.`,
         </div>
       </ScrollArea>
 
-      <div className="flex justify-end gap-2 pt-4 border-t border-[var(--color-background-muted)] mt-4">
+      <div className="flex justify-end gap-2 pt-4 border-t mt-4">
         <Button variant="outline" onClick={onCancel}>Cancel</Button>
-        <Button onClick={handleSave} disabled={!name.trim() || isSaving} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
+        <Button onClick={handleSave} disabled={!name.trim() || isSaving}>
           {isSaving && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
           Save Template
         </Button>
@@ -580,7 +580,7 @@ function LibrarySelector({ title, items, selectedItems, onAdd, onRemove, onEdit,
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-[var(--color-midnight)]">{title}</span>
+        <span className="text-sm font-medium">{title}</span>
         <Button size="sm" variant="outline" onClick={() => setShowLibrary(!showLibrary)}>
           <Plus className="h-3 w-3 mr-1" />
           Add from Library
@@ -588,15 +588,15 @@ function LibrarySelector({ title, items, selectedItems, onAdd, onRemove, onEdit,
       </div>
 
       {showLibrary && availableItems.length > 0 && (
-        <div className="grid grid-cols-2 gap-2 p-3 bg-[var(--color-background)] rounded-lg max-h-48 overflow-y-auto">
+        <div className="grid grid-cols-2 gap-2 p-3 bg-muted rounded-lg max-h-48 overflow-y-auto">
           {availableItems.map((item) => (
-            <Card key={item.id} className="cursor-pointer hover:bg-[var(--color-primary)]/10 transition-colors" onClick={() => { onAdd(item); setShowLibrary(false); }}>
+            <Card key={item.id} className="cursor-pointer hover:bg-primary/10 transition-colors" onClick={() => { onAdd(item); setShowLibrary(false); }}>
               <CardContent className="p-2">
                 <div className="flex items-center gap-2">
-                  <Icon className="h-3 w-3 text-[var(--color-charcoal)]" />
-                  <span className="text-sm font-medium truncate text-[var(--color-midnight)]">{item.name}</span>
+                  <Icon className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+                  <span className="text-sm font-medium truncate">{item.name}</span>
                 </div>
-                <p className="text-xs text-[var(--color-charcoal)] truncate mt-1">{item.description}</p>
+                <p className="text-xs text-muted-foreground truncate mt-1">{item.description}</p>
               </CardContent>
             </Card>
           ))}
@@ -604,7 +604,7 @@ function LibrarySelector({ title, items, selectedItems, onAdd, onRemove, onEdit,
       )}
 
       {selectedItems.length === 0 ? (
-        <p className="text-sm text-[var(--color-charcoal)] text-center py-4">No items selected</p>
+        <p className="text-sm text-muted-foreground text-center py-4">No items selected</p>
       ) : (
         <div className="grid grid-cols-2 gap-2">
           {selectedItems.map((item, idx) => (
@@ -613,16 +613,16 @@ function LibrarySelector({ title, items, selectedItems, onAdd, onRemove, onEdit,
                 <div className="flex items-start justify-between">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <Icon className="h-4 w-4 text-[var(--color-primary)] flex-shrink-0" />
-                      <span className="font-medium text-sm truncate text-[var(--color-midnight)]">{item.name}</span>
+                      <Icon className="h-4 w-4 text-primary flex-shrink-0" />
+                      <span className="font-medium text-sm truncate">{item.name}</span>
                     </div>
-                    <p className="text-xs text-[var(--color-charcoal)] mt-1 line-clamp-2">{item.description}</p>
+                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{item.description}</p>
                   </div>
                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <Button size="icon" variant="ghost" className="h-6 w-6" onClick={() => onEdit(idx)}>
                       <Edit className="h-3 w-3" />
                     </Button>
-                    <Button size="icon" variant="ghost" className="h-6 w-6 text-[var(--color-destructive)]" onClick={() => onRemove(idx)}>
+                    <Button size="icon" variant="ghost" className="h-6 w-6 text-destructive" onClick={() => onRemove(idx)}>
                       <Trash2 className="h-3 w-3" />
                     </Button>
                   </div>
