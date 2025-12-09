@@ -23,13 +23,13 @@ const nodeTypes = [
 ];
 
 const categoryColors = {
-  central: "bg-blue-100 text-blue-700",
-  main_branch: "bg-green-100 text-green-700",
-  sub_branch: "bg-amber-100 text-amber-700",
-  feature: "bg-purple-100 text-purple-700",
-  entity: "bg-pink-100 text-pink-700",
-  page: "bg-cyan-100 text-cyan-700",
-  note: "bg-lime-100 text-lime-700",
+  central: "bg-info-50 text-info",
+  main_branch: "bg-success-50 text-success",
+  sub_branch: "bg-warning/10 text-warning",
+  feature: "bg-accent/10 text-accent",
+  entity: "bg-accent-100 text-accent",
+  page: "bg-info-50 text-info",
+  note: "bg-success/10 text-success",
 };
 
 export default function NodeDetailPanel({ node, onUpdate, onClose, onEditEntity }) {
@@ -70,9 +70,9 @@ export default function NodeDetailPanel({ node, onUpdate, onClose, onEditEntity 
   return (
     <div className="w-80 bg-white border-l flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center justify-between p-3 border-b bg-gray-50">
+      <div className="flex items-center justify-between p-3 border-b bg-muted">
         <div className="flex items-center gap-2">
-          <FileText className="h-4 w-4 text-gray-500" />
+          <FileText className="h-4 w-4 text-muted-foreground" />
           <span className="font-medium text-sm">Node Details</span>
         </div>
         <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onClose}>
@@ -84,7 +84,7 @@ export default function NodeDetailPanel({ node, onUpdate, onClose, onEditEntity 
       <div className="flex-1 overflow-auto p-4 space-y-4">
         {/* Node Name */}
         <div>
-          <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Name</label>
+          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Name</label>
           <Input
             value={text}
             onChange={(e) => handleChange("text", e.target.value)}
@@ -94,7 +94,7 @@ export default function NodeDetailPanel({ node, onUpdate, onClose, onEditEntity 
 
         {/* Node Type */}
         <div>
-          <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Type</label>
+          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Type</label>
           <Select value={nodeType} onValueChange={(v) => handleChange("node_type", v)}>
             <SelectTrigger className="mt-1">
               <SelectValue />
@@ -122,7 +122,7 @@ export default function NodeDetailPanel({ node, onUpdate, onClose, onEditEntity 
 
         {/* Specification Notes */}
         <div>
-          <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
             Specification Notes
           </label>
           <Textarea
@@ -132,7 +132,7 @@ export default function NodeDetailPanel({ node, onUpdate, onClose, onEditEntity 
             rows={8}
             className="mt-1 text-sm"
           />
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             Document functional requirements for this node.
           </p>
         </div>
@@ -141,7 +141,7 @@ export default function NodeDetailPanel({ node, onUpdate, onClose, onEditEntity 
         {nodeType === "entity" && (
           <Button
             variant="outline"
-            className="w-full text-purple-600 border-purple-200 hover:bg-purple-50"
+            className="w-full text-accent border-accent/20 hover:bg-accent/10"
             onClick={() => onEditEntity(node)}
           >
             <Database className="h-4 w-4 mr-2" />
@@ -152,7 +152,7 @@ export default function NodeDetailPanel({ node, onUpdate, onClose, onEditEntity 
 
       {/* Footer */}
       {hasChanges && (
-        <div className="p-3 border-t bg-gray-50">
+        <div className="p-3 border-t bg-muted">
           <Button className="w-full" onClick={handleSave}>
             <Save className="h-4 w-4 mr-2" />
             Save Changes

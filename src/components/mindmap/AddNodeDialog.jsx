@@ -35,13 +35,13 @@ const nodeTypes = [
 ];
 
 const categoryColors = {
-  central: "bg-blue-100 text-blue-700",
-  main_branch: "bg-green-100 text-green-700",
-  sub_branch: "bg-amber-100 text-amber-700",
-  feature: "bg-purple-100 text-purple-700",
-  entity: "bg-pink-100 text-pink-700",
-  page: "bg-cyan-100 text-cyan-700",
-  note: "bg-lime-100 text-lime-700",
+  central: "bg-info-50 text-info",
+  main_branch: "bg-success-50 text-success",
+  sub_branch: "bg-warning/10 text-warning",
+  feature: "bg-accent/10 text-accent",
+  entity: "bg-accent-100 text-accent",
+  page: "bg-info-50 text-info",
+  note: "bg-success/10 text-success",
 };
 
 export default function AddNodeDialog({
@@ -285,7 +285,7 @@ Return a JSON object with a "suggestions" array.`,
                 placeholder="Enter detailed functional requirements..."
                 rows={5}
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 Document detailed requirements, acceptance criteria, or implementation notes.
               </p>
             </div>
@@ -305,7 +305,7 @@ Return a JSON object with a "suggestions" array.`,
             {/* Filters */}
             <div className="flex gap-2">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -341,7 +341,7 @@ Return a JSON object with a "suggestions" array.`,
             <ScrollArea className="h-80">
               <div className="space-y-2 pr-4">
                 {filteredTemplates.length === 0 ? (
-                  <div className="text-center py-8 text-gray-500">
+                  <div className="text-center py-8 text-muted-foreground">
                     <Library className="h-12 w-12 mx-auto mb-3 opacity-30" />
                     <p>No templates found.</p>
                     <p className="text-sm">Try adjusting your filters or create templates in the Template Library.</p>
@@ -350,7 +350,7 @@ Return a JSON object with a "suggestions" array.`,
                   filteredTemplates.map(template => (
                     <div
                       key={template.id}
-                      className="border rounded-lg p-3 hover:bg-gray-50 cursor-pointer transition-colors"
+                      className="border rounded-lg p-3 hover:bg-muted cursor-pointer transition-colors"
                       onClick={() => handleAddTemplate(template)}
                     >
                       <div className="flex items-start justify-between">
@@ -365,7 +365,7 @@ Return a JSON object with a "suggestions" array.`,
                             )}
                           </div>
                           {template.specification_notes && (
-                            <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
                               {template.specification_notes}
                             </p>
                           )}
@@ -460,7 +460,7 @@ Return a JSON object with a "suggestions" array.`,
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <label className="text-sm font-medium">Select suggestions to use:</label>
-                  <span className="text-xs text-gray-500">{selectedSuggestions.length} selected</span>
+                  <span className="text-xs text-muted-foreground">{selectedSuggestions.length} selected</span>
                 </div>
                 
                 <ScrollArea className="h-48">
@@ -470,8 +470,8 @@ Return a JSON object with a "suggestions" array.`,
                         key={index}
                         className={`border rounded-lg p-3 cursor-pointer transition-colors ${
                           selectedSuggestions.includes(index) 
-                            ? "border-blue-500 bg-blue-50" 
-                            : "hover:bg-gray-50"
+                            ? "border-info bg-info-50" 
+                            : "hover:bg-muted"
                         }`}
                         onClick={() => toggleSuggestionSelection(index)}
                       >
@@ -485,7 +485,7 @@ Return a JSON object with a "suggestions" array.`,
                               <span className="font-medium">{suggestion.name}</span>
                               <Badge className={categoryColors[aiCategory]}>{aiCategory}</Badge>
                             </div>
-                            <p className="text-sm text-gray-500 mt-1">
+                            <p className="text-sm text-muted-foreground mt-1">
                               {suggestion.specification_notes}
                             </p>
                           </div>

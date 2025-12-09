@@ -153,7 +153,7 @@ ${JSON.stringify(e.schema, null, 2)}
         </DialogHeader>
 
         {showSaveForm && (
-          <div className="border rounded-lg p-4 bg-blue-50 space-y-3 mb-4">
+          <div className="border rounded-lg p-4 bg-info-50 space-y-3 mb-4">
             <div>
               <label className="text-sm font-medium">App Name</label>
               <Input
@@ -225,7 +225,7 @@ ${JSON.stringify(e.schema, null, 2)}
                   checked={selectedEntities.length === entities.length && entities.length > 0}
                   onCheckedChange={selectAllEntities}
                 />
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-muted-foreground">
                   {selectedEntities.length} selected
                 </span>
               </div>
@@ -236,7 +236,7 @@ ${JSON.stringify(e.schema, null, 2)}
                   size="sm"
                 >
                   {copiedAll ? (
-                    <Check className="h-4 w-4 mr-1 text-green-500" />
+                    <Check className="h-4 w-4 mr-1 text-success" />
                   ) : (
                     <Copy className="h-4 w-4 mr-1" />
                   )}
@@ -245,7 +245,7 @@ ${JSON.stringify(e.schema, null, 2)}
                 <Button
                   onClick={copyForChat}
                   size="sm"
-                  className="bg-green-600 hover:bg-green-700"
+                  className="bg-success hover:bg-success/90 text-success-foreground"
                 >
                   <Copy className="h-4 w-4 mr-1" />
                   Copy for Chat
@@ -280,7 +280,7 @@ ${JSON.stringify(e.schema, null, 2)}
                               )}
                             </Button>
                           </CardTitle>
-                          <p className="text-sm text-gray-500 mt-1">
+                          <p className="text-sm text-muted-foreground mt-1">
                             {entity.description}
                           </p>
                         </div>
@@ -306,12 +306,12 @@ ${JSON.stringify(e.schema, null, 2)}
                   <Card key={page.name}>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-base">{page.name}</CardTitle>
-                      <p className="text-sm text-gray-500">{page.description}</p>
+                      <p className="text-sm text-muted-foreground">{page.description}</p>
                     </CardHeader>
                     <CardContent className="pt-0 space-y-2">
                       {page.features?.length > 0 && (
                         <div className="flex flex-wrap gap-1">
-                          <span className="text-xs text-gray-500 mr-1">Features:</span>
+                          <span className="text-xs text-muted-foreground mr-1">Features:</span>
                           {page.features.map((f) => (
                             <Badge key={f} variant="secondary" className="text-xs">
                               {f}
@@ -321,7 +321,7 @@ ${JSON.stringify(e.schema, null, 2)}
                       )}
                       {page.entities_used?.length > 0 && (
                         <div className="flex flex-wrap gap-1">
-                          <span className="text-xs text-gray-500 mr-1">Uses:</span>
+                          <span className="text-xs text-muted-foreground mr-1">Uses:</span>
                           {page.entities_used.map((e) => (
                             <Badge key={e} variant="outline" className="text-xs">
                               {e}
@@ -343,18 +343,18 @@ ${JSON.stringify(e.schema, null, 2)}
                   <Card key={idx}>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-base">{feature.name}</CardTitle>
-                      <p className="text-sm text-gray-500">{feature.description}</p>
+                      <p className="text-sm text-muted-foreground">{feature.description}</p>
                     </CardHeader>
                     <CardContent className="pt-0 space-y-2">
                       {feature.page && (
                         <div className="text-xs">
-                          <span className="text-gray-500">Page: </span>
+                          <span className="text-muted-foreground">Page: </span>
                           <Badge variant="secondary">{feature.page}</Badge>
                         </div>
                       )}
                       {feature.entities?.length > 0 && (
                         <div className="flex flex-wrap gap-1">
-                          <span className="text-xs text-gray-500 mr-1">Entities:</span>
+                          <span className="text-xs text-muted-foreground mr-1">Entities:</span>
                           {feature.entities.map((e) => (
                             <Badge key={e} variant="outline" className="text-xs">
                               {e}

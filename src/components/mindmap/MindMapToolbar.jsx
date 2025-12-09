@@ -18,14 +18,14 @@ import {
 import { Plus, Trash2, Link, LayoutGrid, FileText, Sparkles, Lightbulb, Rocket, GitFork, Lock, History, Database, Play, Building2, Focus, X } from "lucide-react";
 
 const statusColors = {
-  draft: "bg-yellow-100 text-yellow-700",
-  published: "bg-green-100 text-green-700",
-  archived: "bg-gray-100 text-gray-700",
+  draft: "bg-warning/10 text-warning",
+  published: "bg-success-50 text-success",
+  archived: "bg-muted text-muted-foreground",
 };
 
 const ToolbarGroup = ({ children, label }) => (
   <div className="flex items-center gap-1">
-    {label && <span className="text-[10px] text-gray-400 uppercase tracking-wider mr-1 hidden lg:inline">{label}</span>}
+    {label && <span className="text-[10px] text-muted-foreground uppercase tracking-wider mr-1 hidden lg:inline">{label}</span>}
     {children}
   </div>
 );
@@ -98,7 +98,7 @@ export default function MindMapToolbar({
                   variant="ghost"
                   onClick={onDeleteSelected}
                   disabled={!hasSelection}
-                  className="h-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+                  className="h-8 text-destructive hover:text-destructive hover:bg-destructive-50"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -126,7 +126,7 @@ export default function MindMapToolbar({
                   <Button
                     size="sm"
                     onClick={() => onFocusBranch(null)}
-                    className="h-8 bg-amber-500 hover:bg-amber-600 text-white"
+                    className="h-8 bg-warning hover:bg-warning/90 text-warning-foreground"
                   >
                     <X className="h-4 w-4 mr-1" />
                     Exit Focus
@@ -169,7 +169,7 @@ export default function MindMapToolbar({
                   disabled={!hasSelection || isGenerating || isSuggesting}
                   className="h-8"
                 >
-                  <Sparkles className={`h-4 w-4 mr-1 ${isGenerating ? "animate-pulse text-purple-500" : ""}`} />
+                  <Sparkles className={`h-4 w-4 mr-1 ${isGenerating ? "animate-pulse text-accent" : ""}`} />
                   Expand
                 </Button>
               </TooltipTrigger>
@@ -184,7 +184,7 @@ export default function MindMapToolbar({
                   disabled={isGenerating || isSuggesting || isGeneratingApp}
                   className="h-8"
                 >
-                  <Lightbulb className={`h-4 w-4 mr-1 ${isSuggesting ? "animate-pulse text-yellow-500" : ""}`} />
+                  <Lightbulb className={`h-4 w-4 mr-1 ${isSuggesting ? "animate-pulse text-warning" : ""}`} />
                   Suggest
                 </Button>
               </TooltipTrigger>
@@ -225,7 +225,7 @@ export default function MindMapToolbar({
                 size="sm"
                 onClick={onGenerateApp}
                 disabled={isGenerating || isSuggesting || isGeneratingApp}
-                className="h-8 bg-green-600 hover:bg-green-700"
+                className="h-8 bg-success hover:bg-success/90 text-success-foreground"
               >
                 <Rocket className={`h-4 w-4 mr-1 ${isGeneratingApp ? "animate-pulse" : ""}`} />
                 Generate App
@@ -279,7 +279,7 @@ export default function MindMapToolbar({
                   variant="ghost"
                   onClick={onForkToTenant}
                   disabled={isGenerating || isSuggesting || isGeneratingApp}
-                  className="h-8 text-indigo-600 hover:bg-indigo-50"
+                  className="h-8 text-primary hover:bg-primary-100"
                 >
                   <Building2 className="h-4 w-4" />
                 </Button>
@@ -294,7 +294,7 @@ export default function MindMapToolbar({
                     variant="ghost"
                     onClick={onPublishVersion}
                     disabled={isGenerating || isSuggesting || isGeneratingApp}
-                    className="h-8 text-green-600 hover:bg-green-50"
+                    className="h-8 text-success hover:bg-success-50"
                   >
                     <Lock className="h-4 w-4" />
                   </Button>
