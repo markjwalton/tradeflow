@@ -76,12 +76,8 @@ export default function Layout({ children, currentPageName }) {
         setCurrentUser(user);
         setIsGlobalAdmin(user.is_global_admin === true);
         
-        // Get standalone pages from config
         const configStandalonePages = loadedNavConfig?.standalone_pages || [];
-        
-        // Check if page is in admin nav items
-        const adminNavItems = loadedNavConfig?.items || [];
-        const isAdminPage = adminNavItems.some(item => item.slug === currentPageName) || configStandalonePages.includes(currentPageName);
+        const isAdminPage = loadedNavItems.some(item => item.slug === currentPageName) || configStandalonePages.includes(currentPageName);
         
         // Global admin pages: for is_global_admin OR tenant admins (with tenant context)
         if (isAdminPage) {
