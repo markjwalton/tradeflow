@@ -94,10 +94,19 @@ export default function SiteSettings() {
     const loadSettings = async () => {
       try {
         const user = await base44.auth.me();
-        if (user?.site_settings) {
-          setSettings(user.site_settings);
-          setOriginalSettings(user.site_settings);
-        }
+        const defaultSettings = {
+          backgroundColor: "background-50",
+          navbarBackground: "sidebar",
+          headerBackground: "background",
+          panelBackground: "card",
+          footerBackground: "background",
+          overlayColor: "midnight-900",
+          overlayOpacity: 60,
+          overlayBlur: "md",
+        };
+        const loadedSettings = user?.site_settings || defaultSettings;
+        setSettings(loadedSettings);
+        setOriginalSettings(loadedSettings);
       } catch (e) {
         console.error("Failed to load site settings:", e);
       }
@@ -106,9 +115,7 @@ export default function SiteSettings() {
   }, []);
 
   useEffect(() => {
-    if (originalSettings) {
-      setHasChanges(JSON.stringify(settings) !== JSON.stringify(originalSettings));
-    }
+    setHasChanges(JSON.stringify(settings) !== JSON.stringify(originalSettings));
   }, [settings, originalSettings]);
 
   const handleCancel = () => {
@@ -153,7 +160,7 @@ export default function SiteSettings() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--color-${settings.backgroundColor})` }}
+                  style={{ backgroundColor: `var(--${settings.backgroundColor})` }}
                 />
                 <Select
                   value={settings.backgroundColor}
@@ -168,7 +175,7 @@ export default function SiteSettings() {
                         <div className="flex items-center gap-2">
                           <div
                             className="w-4 h-4 rounded border"
-                            style={{ backgroundColor: `var(--color-${color.value})` }}
+                            style={{ backgroundColor: `var(--${color.value})` }}
                           />
                           {color.label}
                         </div>
@@ -184,7 +191,7 @@ export default function SiteSettings() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--color-${settings.navbarBackground})` }}
+                  style={{ backgroundColor: `var(--${settings.navbarBackground})` }}
                 />
                 <Select
                   value={settings.navbarBackground}
@@ -199,7 +206,7 @@ export default function SiteSettings() {
                         <div className="flex items-center gap-2">
                           <div
                             className="w-4 h-4 rounded border"
-                            style={{ backgroundColor: `var(--color-${color.value})` }}
+                            style={{ backgroundColor: `var(--${color.value})` }}
                           />
                           {color.label}
                         </div>
@@ -215,7 +222,7 @@ export default function SiteSettings() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--color-${settings.headerBackground})` }}
+                  style={{ backgroundColor: `var(--${settings.headerBackground})` }}
                 />
                 <Select
                   value={settings.headerBackground}
@@ -230,7 +237,7 @@ export default function SiteSettings() {
                         <div className="flex items-center gap-2">
                           <div
                             className="w-4 h-4 rounded border"
-                            style={{ backgroundColor: `var(--color-${color.value})` }}
+                            style={{ backgroundColor: `var(--${color.value})` }}
                           />
                           {color.label}
                         </div>
@@ -246,7 +253,7 @@ export default function SiteSettings() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--color-${settings.panelBackground})` }}
+                  style={{ backgroundColor: `var(--${settings.panelBackground})` }}
                 />
                 <Select
                   value={settings.panelBackground}
@@ -261,7 +268,7 @@ export default function SiteSettings() {
                         <div className="flex items-center gap-2">
                           <div
                             className="w-4 h-4 rounded border"
-                            style={{ backgroundColor: `var(--color-${color.value})` }}
+                            style={{ backgroundColor: `var(--${color.value})` }}
                           />
                           {color.label}
                         </div>
@@ -277,7 +284,7 @@ export default function SiteSettings() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--color-${settings.footerBackground})` }}
+                  style={{ backgroundColor: `var(--${settings.footerBackground})` }}
                 />
                 <Select
                   value={settings.footerBackground}
@@ -292,7 +299,7 @@ export default function SiteSettings() {
                         <div className="flex items-center gap-2">
                           <div
                             className="w-4 h-4 rounded border"
-                            style={{ backgroundColor: `var(--color-${color.value})` }}
+                            style={{ backgroundColor: `var(--${color.value})` }}
                           />
                           {color.label}
                         </div>
@@ -317,7 +324,7 @@ export default function SiteSettings() {
                 {settings.overlayColor !== "none" && (
                   <div
                     className="w-8 h-8 rounded border-2 flex-shrink-0"
-                    style={{ backgroundColor: `var(--color-${settings.overlayColor})` }}
+                    style={{ backgroundColor: `var(--${settings.overlayColor})` }}
                   />
                 )}
                 {settings.overlayColor === "none" && (
@@ -337,7 +344,7 @@ export default function SiteSettings() {
                           {color.value !== "none" && (
                             <div
                               className="w-4 h-4 rounded border"
-                              style={{ backgroundColor: `var(--color-${color.value})` }}
+                              style={{ backgroundColor: `var(--${color.value})` }}
                             />
                           )}
                           {color.label}
@@ -395,7 +402,7 @@ export default function SiteSettings() {
                 <div 
                   className="absolute inset-0" 
                   style={{
-                    backgroundColor: `var(--color-${settings.overlayColor})`,
+                    backgroundColor: `var(--${settings.overlayColor})`,
                     opacity: settings.overlayOpacity / 100,
                   }}
                 />
