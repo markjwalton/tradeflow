@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 
 export default function DebugProjectWorkspace() {
-  const { data: pattern, isLoading } = useQuery({
+  const { data: pattern, isLoading, error } = useQuery({
     queryKey: ["layoutPattern", "project_workspace"],
     queryFn: async () => {
       const patterns = await base44.entities.LayoutPattern.filter({ pattern_id: "project_workspace" });
@@ -25,6 +25,14 @@ export default function DebugProjectWorkspace() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6 text-center">
+        <p className="text-destructive">Error loading pattern: {error.message}</p>
       </div>
     );
   }
