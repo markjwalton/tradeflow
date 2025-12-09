@@ -9,6 +9,7 @@ export function EditModeProvider({ children }) {
   const [selectedElement, setSelectedElement] = useState(null);
   const [currentPageContent, setCurrentPageContent] = useState("");
   const [currentPageData, setCurrentPageData] = useState(null);
+  const [pageTextElements, setPageTextElements] = useState([]);
 
   // Load edit mode state from localStorage
   useEffect(() => {
@@ -42,6 +43,8 @@ export function EditModeProvider({ children }) {
     setCurrentPageContent,
     currentPageData,
     setCurrentPageData,
+    pageTextElements,
+    setPageTextElements,
   };
 
   return (

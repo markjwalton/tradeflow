@@ -19,10 +19,11 @@ import { base44 } from "@/api/base44Client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function PageSettingsPanel({ currentPageName }) {
-  const { isEditMode, toggleEditMode, currentPageData, currentPageContent, setCurrentPageContent } = useEditMode();
+  const { isEditMode, toggleEditMode, currentPageData, currentPageContent, setCurrentPageContent, pageTextElements, setPageTextElements } = useEditMode();
   const [isOpen, setIsOpen] = useState(false);
   const [showCode, setShowCode] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+  const [textOverrides, setTextOverrides] = useState({});
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -45,6 +46,29 @@ export function PageSettingsPanel({ currentPageName }) {
     window.addEventListener('ui-preferences-changed', handlePreferencesChange);
     return () => window.removeEventListener('ui-preferences-changed', handlePreferencesChange);
   }, []);
+
+  // Extract text elements when panel opens
+  useEffect(() => {
+    if (isOpen && !isEditMode) {
+      const elements = [];
+      const container = document.querySelector('[data-page-content]');
+      if (container) {
+        const headings = container.querySelectorAll('h1, h2, h3, h4, h5, h6, button, label');
+        headings.forEach((el, idx) => {
+          const text = el.textContent?.trim();
+          if (text && text.length > 0 && text.length < 200) {
+            elements.push({
+              id: `element-${idx}`,
+              tagName: el.tagName.toLowerCase(),
+              text: text,
+              element: el,
+            });
+          }
+        });
+      }
+      setPageTextElements(elements);
+    }
+  }, [isOpen, isEditMode, setPageTextElements]);
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.UIPage.update(id, data),
@@ -109,6 +133,38 @@ export function PageSettingsPanel({ currentPageName }) {
             </div>
             <Switch checked={isEditMode} onCheckedChange={toggleEditMode} />
           </div>
+
+          {!isEditMode && pageTextElements.length > 0 && (
+            <div className="border-t pt-4 space-y-4">
+              <div>
+                <Label className="text-sm font-medium">Text Overrides</Label>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Edit text content on this page
+                </p>
+              </div>
+              <div className="space-y-3 max-h-96 overflow-y-auto">
+                {pageTextElements.map((element) => (
+                  <div key={element.id} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-xs text-muted-foreground uppercase">
+                        {element.tagName}
+                      </Label>
+                    </div>
+                    <Input
+                      value={textOverrides[element.id] ?? element.text}
+                      onChange={(e) => {
+                        const newValue = e.target.value;
+                        setTextOverrides(prev => ({ ...prev, [element.id]: newValue }));
+                        element.element.textContent = newValue;
+                      }}
+                      className="text-sm"
+                      placeholder={element.text}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {isEditMode && (
             <>
