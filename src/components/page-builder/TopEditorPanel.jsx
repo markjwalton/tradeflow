@@ -121,13 +121,10 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
           {viewMode === 'focus' ? (
             selectedElement ? (
               <div className="h-full overflow-auto">
-                <div className="text-sm text-muted-foreground mb-3 pb-3 border-b">
-                  <p>Selected: <code className="text-xs bg-muted px-2 py-1 rounded">{selectedElement.tagName}</code></p>
-                  <p className="text-xs truncate mt-1">Path: {selectedElement.path}</p>
-                </div>
                 <ElementEditor 
                   selectedElement={selectedElement}
                   activeSection={activeTab}
+                  showHeader={true}
                   onApplyStyle={(style) => {
                     setHasChanges(true);
                     // Dispatch event to LiveEditWrapper to apply the style
