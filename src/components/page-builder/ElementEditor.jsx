@@ -16,11 +16,11 @@ const colorTokens = {
 const spacingTokens = ["0", "1", "2", "3", "4", "5", "6", "8", "10", "12", "16", "20", "24", "32"];
 const fontSizes = ["xs", "sm", "base", "lg", "xl", "2xl", "3xl", "4xl"];
 const fontWeights = [
-  { value: "300", label: "Light" },
-  { value: "400", label: "Normal" },
-  { value: "500", label: "Medium" },
-  { value: "600", label: "Semibold" },
-  { value: "700", label: "Bold" }
+  { value: "300", label: "L" },
+  { value: "400", label: "N" },
+  { value: "500", label: "M" },
+  { value: "600", label: "SB" },
+  { value: "700", label: "B" }
 ];
 const radiusTokens = ["none", "sm", "md", "lg", "xl", "2xl", "full"];
 
@@ -101,22 +101,22 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
               <div key={category} className="mb-3">
                 <p className="text-xs text-muted-foreground mb-1 capitalize">{category}</p>
                 <div className="grid grid-cols-10 gap-1">
-                  {tokens.map((token) => (
-                    <button
-                      key={token}
-                      className={cn(
-                        "h-6 w-full rounded border transition-all hover:scale-110",
-                        `bg-${token}`,
-                        currentStyles.textColor === token && "ring-2 ring-primary ring-offset-1"
-                      )}
-                      onClick={() => handleApplyColor("text", token)}
-                      title={token}
-                    >
-                      {currentStyles.textColor === token && (
-                        <Check className="h-3 w-3 text-white mx-auto drop-shadow" />
-                      )}
-                    </button>
-                  ))}
+                      {tokens.map((token) => (
+                        <button
+                          key={token}
+                          className={cn(
+                            "h-7 w-7 rounded border transition-all hover:scale-110",
+                            `bg-${token}`,
+                            currentStyles.textColor === token && "ring-2 ring-primary ring-offset-1"
+                          )}
+                          onClick={() => handleApplyColor("text", token)}
+                          title={token}
+                        >
+                          {currentStyles.textColor === token && (
+                            <Check className="h-3 w-3 text-white mx-auto drop-shadow" />
+                          )}
+                        </button>
+                      ))}
                 </div>
               </div>
             ))}
@@ -130,22 +130,22 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
               <div key={category} className="mb-3">
                 <p className="text-xs text-muted-foreground mb-1 capitalize">{category}</p>
                 <div className="grid grid-cols-10 gap-1">
-                  {tokens.map((token) => (
-                    <button
-                      key={token}
-                      className={cn(
-                        "h-6 w-full rounded border transition-all hover:scale-110",
-                        `bg-${token}`,
-                        currentStyles.bgColor === token && "ring-2 ring-primary ring-offset-1"
-                      )}
-                      onClick={() => handleApplyColor("background", token)}
-                      title={token}
-                    >
-                      {currentStyles.bgColor === token && (
-                        <Check className="h-3 w-3 text-white mx-auto drop-shadow" />
-                      )}
-                    </button>
-                  ))}
+                      {tokens.map((token) => (
+                        <button
+                          key={token}
+                          className={cn(
+                            "h-7 w-7 rounded border transition-all hover:scale-110",
+                            `bg-${token}`,
+                            currentStyles.bgColor === token && "ring-2 ring-primary ring-offset-1"
+                          )}
+                          onClick={() => handleApplyColor("background", token)}
+                          title={token}
+                        >
+                          {currentStyles.bgColor === token && (
+                            <Check className="h-3 w-3 text-white mx-auto drop-shadow" />
+                          )}
+                        </button>
+                      ))}
                 </div>
               </div>
             ))}
