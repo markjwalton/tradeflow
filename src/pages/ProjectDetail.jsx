@@ -168,7 +168,7 @@ export default function ProjectDetail() {
       <div className="flex items-center gap-4 mb-6">
         <Button variant="ghost" size="icon" asChild><Link to={createPageUrl("Projects")}><ArrowLeft className="h-4 w-4" /></Link></Button>
         <div className="flex-1">
-          <h1 className="text-2xl font-light font-display text-midnight-900">{project.name}</h1>
+          <h1 className="text-2xl font-light font-display text-foreground">{project.name}</h1>
           <p className="text-muted-foreground">Customer: {getCustomerName(project.customer_id)}</p>
         </div>
         <Badge className={statusColors[project.status]}>{project.status}</Badge>
@@ -179,7 +179,7 @@ export default function ProjectDetail() {
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-info-50 rounded-lg"><Clock className="h-5 w-5 text-info" /></div>
-              <div><p className="text-sm text-muted-foreground">Tasks</p><p className="text-xl font-bold text-midnight-900">{tasks.length}</p></div>
+              <div><p className="text-sm text-muted-foreground">Tasks</p><p className="text-xl font-bold text-foreground">{tasks.length}</p></div>
             </div>
           </CardContent>
         </Card>
@@ -187,7 +187,7 @@ export default function ProjectDetail() {
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-success-50 rounded-lg"><CheckCircle2 className="h-5 w-5 text-success" /></div>
-              <div><p className="text-sm text-muted-foreground">Completed</p><p className="text-xl font-bold text-midnight-900">{completedTasks}</p></div>
+              <div><p className="text-sm text-muted-foreground">Completed</p><p className="text-xl font-bold text-foreground">{completedTasks}</p></div>
             </div>
           </CardContent>
         </Card>
@@ -228,7 +228,7 @@ export default function ProjectDetail() {
                 <CardContent className="p-4 flex items-center justify-between">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-medium text-midnight-900">{task.title}</span>
+                      <span className="font-medium text-foreground">{task.title}</span>
                       <Badge className={taskStatusColors[task.status]}>{task.status?.replace("_", " ")}</Badge>
                     </div>
                     <div className="flex gap-4 text-sm text-muted-foreground mt-1">
@@ -258,7 +258,7 @@ export default function ProjectDetail() {
               <Card key={contact.id} className="border-border bg-card">
                 <CardContent className="p-4">
                   <div className="flex justify-between">
-                    <div><p className="font-medium text-midnight-900">{contact.name}</p><Badge variant="outline" className="mt-1">{contact.role}</Badge></div>
+                    <div><p className="font-medium text-foreground">{contact.name}</p><Badge variant="outline" className="mt-1">{contact.role}</Badge></div>
                     <Button variant="ghost" size="icon" className="text-destructive" onClick={() => deleteContactMutation.mutate(contact.id)}><Trash2 className="h-4 w-4" /></Button>
                   </div>
                   {contact.company && <p className="text-sm text-muted-foreground mt-2">{contact.company}</p>}
@@ -276,9 +276,9 @@ export default function ProjectDetail() {
             {estimates.map((estimate) => (
               <Card key={estimate.id} className="border-border bg-card">
                 <CardContent className="p-4">
-                  <p className="font-medium text-midnight-900">{estimate.title}</p>
+                  <p className="font-medium text-foreground">{estimate.title}</p>
                   <Badge className="mt-1">{estimate.status}</Badge>
-                  <p className="text-lg font-bold mt-2 text-midnight-900">£{estimate.total?.toLocaleString()}</p>
+                  <p className="text-lg font-bold mt-2 text-foreground">£{estimate.total?.toLocaleString()}</p>
                 </CardContent>
               </Card>
             ))}
