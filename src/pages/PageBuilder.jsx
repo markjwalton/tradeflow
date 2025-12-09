@@ -48,6 +48,7 @@ import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 import AppShellPreview from "@/components/page-builder/AppShellPreview";
 import { InteractiveSelector } from "@/components/page-builder/InteractiveSelector";
+import { ComponentPalette } from "@/components/page-builder/ComponentPalette";
 
 export default function PageBuilder() {
   const queryClient = useQueryClient();
@@ -249,6 +250,12 @@ export default function PageBuilder() {
     } else {
       createMutation.mutate(formData);
     }
+  };
+
+  const handleInsertComponent = (componentCode) => {
+    // Insert at end of current content
+    const updatedContent = formData.current_content_jsx + '\n\n' + componentCode;
+    setFormData({ ...formData, current_content_jsx: updatedContent });
   };
 
   const handleRevertToVersion = (version) => {
@@ -481,10 +488,13 @@ export default function PageBuilder() {
           <h1 className="text-2xl font-heading text-[var(--color-midnight)]">Page Design Builder</h1>
           <p className="text-muted-foreground">Create and manage UI page designs with version control</p>
         </div>
-        <Button onClick={() => openEditor()} className="bg-primary-500 hover:bg-primary-600 text-white">
-          <Plus className="h-4 w-4 mr-2" />
-          New Page
-        </Button>
+        <div className="flex gap-2">
+          <ComponentPalette onInsertComponent={handleInsertComponent} />
+          <Button onClick={() => openEditor()} className="bg-primary-500 hover:bg-primary-600 text-white">
+            <Plus className="h-4 w-4 mr-2" />
+            New Page
+          </Button>
+        </div>
       </div>
 
       {/* Pages Grid */}
@@ -597,6 +607,9 @@ export default function PageBuilder() {
             </TabsList>
 
             <TabsContent value="edit" className="space-y-4 mt-4">
+              <div className="mb-4">
+                <ComponentPalette onInsertComponent={handleInsertComponent} />
+              </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label>Page Name *</Label>
