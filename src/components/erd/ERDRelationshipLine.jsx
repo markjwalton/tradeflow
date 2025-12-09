@@ -60,7 +60,7 @@ export default function ERDRelationshipLine({
       {/* Visible path */}
       <path
         d={`M ${startX} ${startY} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${endX} ${endY}`}
-        stroke={isHovered ? "#4f46e5" : "#6366f1"}
+        stroke={isHovered ? "var(--primary-700)" : "var(--primary)"}
         strokeWidth={isHovered ? "3" : "2"}
         fill="none"
         markerEnd={getMarker()}
@@ -74,8 +74,8 @@ export default function ERDRelationshipLine({
         width="48"
         height="20"
         rx="4"
-        fill={isHovered ? "#4f46e5" : "white"}
-        stroke="#6366f1"
+        fill={isHovered ? "var(--primary-700)" : "var(--card)"}
+        stroke="var(--primary)"
         strokeWidth="1"
       />
 
@@ -84,7 +84,7 @@ export default function ERDRelationshipLine({
         x={midX}
         y={midY + 4}
         textAnchor="middle"
-        className={`text-xs font-medium ${isHovered ? "fill-white" : "fill-indigo-600"}`}
+        className={`text-xs font-medium ${isHovered ? "fill-white" : "fill-primary"}`}
       >
         {getRelSymbol()}
       </text>
@@ -98,14 +98,14 @@ export default function ERDRelationshipLine({
             width="80"
             height="16"
             rx="2"
-            fill="white"
+            fill="var(--card)"
             fillOpacity="0.9"
           />
           <text
             x={midX}
             y={midY + 25}
             textAnchor="middle"
-            className="text-[10px] fill-gray-500"
+            className="text-[10px] fill-muted-foreground"
           >
             {relationship.fieldName}
           </text>
@@ -125,8 +125,8 @@ export default function ERDRelationshipLine({
             cx={midX + 35}
             cy={midY}
             r="10"
-            fill="#ef4444"
-            className="hover:fill-red-600"
+            fill="var(--destructive)"
+            className="hover:fill-destructive-700"
           />
           <text
             x={midX + 35}

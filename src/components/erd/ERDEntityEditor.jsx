@@ -161,7 +161,7 @@ export default function ERDEntityEditor({ entity, onSave, onCancel }) {
         </div>
         <div className="space-y-2 max-h-64 overflow-auto">
           {fields.map((field, index) => (
-            <div key={index} className="flex gap-2 items-start p-2 bg-gray-50 rounded-lg">
+            <div key={index} className="flex gap-2 items-start p-2 bg-muted rounded-lg">
               <div className="flex-1 grid grid-cols-3 gap-2">
                 <Input
                   value={field.name}
@@ -184,13 +184,13 @@ export default function ERDEntityEditor({ entity, onSave, onCancel }) {
                     checked={field.required}
                     onCheckedChange={(c) => updateField(index, { required: c })}
                   />
-                  <span className="text-xs text-gray-500">Required</span>
+                  <span className="text-xs text-muted-foreground">Required</span>
                 </div>
               </div>
               <Button
                 size="sm"
                 variant="ghost"
-                className="text-red-600 h-8 w-8 p-0"
+                className="text-destructive h-8 w-8 p-0"
                 onClick={() => removeField(index)}
                 disabled={fields.length === 1}
               >

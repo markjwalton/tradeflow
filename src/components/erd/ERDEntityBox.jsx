@@ -3,11 +3,11 @@ import { Badge } from "@/components/ui/badge";
 import { Key, Link2, ChevronDown, ChevronRight } from "lucide-react";
 
 const fieldTypeColors = {
-  string: "text-green-600",
-  number: "text-blue-600",
-  boolean: "text-orange-600",
-  array: "text-purple-600",
-  object: "text-pink-600",
+  string: "text-success",
+  number: "text-info",
+  boolean: "text-warning",
+  array: "text-accent",
+  object: "text-accent",
 };
 
 export default function ERDEntityBox({
@@ -27,12 +27,12 @@ export default function ERDEntityBox({
 
   return (
     <div
-      className={`absolute bg-white rounded-lg shadow-lg border-2 cursor-pointer select-none transition-all ${
+      className={`absolute bg-card rounded-lg shadow-lg border-2 cursor-pointer select-none transition-all ${
         isSelected
-          ? "border-indigo-500 ring-2 ring-indigo-200"
+          ? "border-primary ring-2 ring-primary/20"
           : isConnecting
-          ? "border-green-400 hover:border-green-500"
-          : "border-gray-200 hover:border-gray-300"
+          ? "border-success hover:border-success"
+          : "border-border hover:border-border"
       }`}
       style={{
         left: position.x,
@@ -56,7 +56,7 @@ export default function ERDEntityBox({
     >
       {/* Entity Header */}
       <div 
-        className={`bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-3 py-2 ${isExpanded ? 'rounded-t-md' : 'rounded-md'} flex items-center justify-between`}
+        className={`bg-gradient-to-r from-primary to-accent text-primary-foreground px-3 py-2 ${isExpanded ? 'rounded-t-md' : 'rounded-md'} flex items-center justify-between`}
         onClick={(e) => {
           e.stopPropagation();
           onToggleExpand();
@@ -71,7 +71,7 @@ export default function ERDEntityBox({
           )}
           <span className="font-semibold text-sm">{entity.name}</span>
         </div>
-        <Badge variant="secondary" className="bg-white/20 text-white text-xs">
+        <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground text-xs">
           {fields.length}
         </Badge>
       </div>
@@ -81,7 +81,7 @@ export default function ERDEntityBox({
         <>
           <div className="p-2 max-h-64 overflow-auto">
             {fields.length === 0 ? (
-              <p className="text-xs text-gray-400 italic p-2">No fields defined</p>
+              <p className="text-xs text-muted-foreground italic p-2">No fields defined</p>
             ) : (
               <table className="w-full text-xs">
                 <tbody>
@@ -93,26 +93,26 @@ export default function ERDEntityBox({
                     return (
                       <tr 
                         key={fieldName} 
-                        className="border-b border-gray-100 last:border-0 hover:bg-gray-50"
+                        className="border-b border-border last:border-0 hover:bg-muted"
                       >
                         <td className="py-1.5 pr-2">
                           <div className="flex items-center gap-1">
                             {isPrimaryKey && (
-                              <Key className="h-3 w-3 text-yellow-500" />
+                              <Key className="h-3 w-3 text-warning" />
                             )}
                             {isForeignKey && !isPrimaryKey && (
-                              <Link2 className="h-3 w-3 text-blue-400" />
+                              <Link2 className="h-3 w-3 text-info" />
                             )}
-                            <span className={`font-medium ${isRequired ? "text-gray-900" : "text-gray-600"}`}>
+                            <span className={`font-medium ${isRequired ? "" : "text-muted-foreground"}`}>
                               {fieldName}
                             </span>
-                            {isRequired && <span className="text-red-400">*</span>}
+                            {isRequired && <span className="text-destructive">*</span>}
                           </div>
                         </td>
-                        <td className={`py-1.5 text-right ${fieldTypeColors[fieldDef.type] || "text-gray-500"}`}>
+                        <td className={`py-1.5 text-right ${fieldTypeColors[fieldDef.type] || "text-muted-foreground"}`}>
                           {fieldDef.type}
                           {fieldDef.enum && (
-                            <span className="text-gray-400 ml-1">
+                            <span className="text-muted-foreground ml-1">
                               [{fieldDef.enum.length}]
                             </span>
                           )}

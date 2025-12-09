@@ -153,9 +153,9 @@ export default function ERDCanvas({
   return (
     <div
       ref={canvasRef}
-      className="relative w-full h-full overflow-hidden bg-slate-100"
+      className="relative w-full h-full overflow-hidden bg-muted"
       style={{
-        backgroundImage: "radial-gradient(circle, #cbd5e1 1px, transparent 1px)",
+        backgroundImage: "radial-gradient(circle, var(--border) 1px, transparent 1px)",
         backgroundSize: `${20 * zoom}px ${20 * zoom}px`,
         cursor: isPanning ? "grabbing" : isConnecting ? "crosshair" : "default",
       }}
@@ -166,7 +166,7 @@ export default function ERDCanvas({
       onWheel={handleWheel}
     >
       {/* Zoom Controls */}
-      <div className="absolute top-3 right-3 z-10 flex items-center gap-1 bg-white rounded-lg shadow-md border p-1">
+      <div className="absolute top-3 right-3 z-10 flex items-center gap-1 bg-card rounded-lg shadow-md border p-1">
         <Button size="sm" variant="ghost" onClick={handleZoomOut} className="h-8 w-8 p-0">
           <ZoomOut className="h-4 w-4" />
         </Button>
@@ -174,7 +174,7 @@ export default function ERDCanvas({
         <Button size="sm" variant="ghost" onClick={handleZoomIn} className="h-8 w-8 p-0">
           <ZoomIn className="h-4 w-4" />
         </Button>
-        <div className="w-px h-5 bg-gray-200 mx-1" />
+        <div className="w-px h-5 bg-border mx-1" />
         <Button size="sm" variant="ghost" onClick={handleResetView} className="h-8 w-8 p-0">
           <RotateCcw className="h-4 w-4" />
         </Button>
@@ -199,7 +199,7 @@ export default function ERDCanvas({
             refY="3.5"
             orient="auto"
           >
-            <polygon points="0 0, 10 3.5, 0 7" fill="#6366f1" />
+            <polygon points="0 0, 10 3.5, 0 7" fill="var(--primary)" />
           </marker>
           <marker
             id="arrowhead-many"
@@ -209,7 +209,7 @@ export default function ERDCanvas({
             refY="5"
             orient="auto"
           >
-            <path d="M 0 0 L 10 5 L 0 10 M 5 0 L 5 10" stroke="#6366f1" fill="none" strokeWidth="1.5" />
+            <path d="M 0 0 L 10 5 L 0 10 M 5 0 L 5 10" stroke="var(--primary)" fill="none" strokeWidth="1.5" />
           </marker>
         </defs>
         <g className="pointer-events-auto">
