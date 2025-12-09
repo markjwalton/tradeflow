@@ -85,6 +85,8 @@ import LearnedPatterns from './pages/LearnedPatterns';
 import LayoutPatternManager from './pages/LayoutPatternManager';
 import UILibrary from './pages/UILibrary';
 import Components from './pages/Components';
+import BrandIdentity from './pages/BrandIdentity';
+import ComponentPatterns from './pages/ComponentPatterns';
 import __Layout from './Layout.jsx';
 
 
@@ -176,6 +178,8 @@ export const PAGES = {
     "LayoutPatternManager": LayoutPatternManager,
     "UILibrary": UILibrary,
     "Components": Components,
+    "BrandIdentity": BrandIdentity,
+    "ComponentPatterns": ComponentPatterns,
 }
 
 export const pagesConfig = {
