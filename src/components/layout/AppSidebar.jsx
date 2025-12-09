@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { useAppSidebar } from "./SidebarContext";
 import { Link, useLocation } from "react-router-dom";
-import { ChevronDown, ChevronRight, Folder, FolderOpen, Home, Building2, Users, Settings, Package, LayoutDashboard } from "lucide-react";
+import { ChevronDown, ChevronRight, Folder, FolderOpen, Home, Building2, Users, Settings, Package, LayoutDashboard, Navigation, Shield, GitBranch, Database } from "lucide-react";
 import { useState } from "react";
 
 const iconMap = {
@@ -13,6 +13,30 @@ const iconMap = {
   LayoutDashboard,
   Folder,
   FolderOpen,
+  Navigation: LayoutDashboard,
+  Shield: Settings,
+  GitBranch: Package,
+  Database: Package,
+  Layout: LayoutDashboard,
+  Zap: Package,
+  Workflow: Package,
+  Lightbulb: Package,
+  Globe: Package,
+  Key: Settings,
+  Gauge: LayoutDashboard,
+  BookOpen: Package,
+  FlaskConical: Package,
+  Palette: Package,
+  Sparkles: Package,
+  Type: Package,
+  MousePointer: Package,
+  Square: Package,
+  FormInput: Package,
+  BarChart3: LayoutDashboard,
+  Bell: Package,
+  Upload: Package,
+  File: Package,
+  Eye: Package,
 };
 
 export function AppSidebar({ navItems = [] }) {
@@ -43,7 +67,12 @@ export function AppSidebar({ navItems = [] }) {
     const isFolder = item.item_type === "folder";
     const Icon = getIcon(item.icon);
     const isExpanded = expandedFolders.has(item.id);
-    const isActive = location.pathname.includes(item.page_url?.split("?")[0] || "");
+    
+    // Build page URL from page_url field
+    const pageUrl = item.page_url || "";
+    const currentPath = location.pathname.split("/").pop();
+    const itemPath = pageUrl.split("?")[0];
+    const isActive = currentPath === itemPath;
 
     if (isFolder) {
       const hasChildren = item.children && item.children.length > 0;
