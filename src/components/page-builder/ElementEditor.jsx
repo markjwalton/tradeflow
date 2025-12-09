@@ -89,63 +89,6 @@ export function ElementEditor({ selectedElement, activeSection, showHeader = tru
 
   return (
     <div className="space-y-2">
-      {/* Current Styles Tab */}
-      {activeSection === "current" && (
-        <div className="space-y-3 py-2">
-          <div className="grid grid-cols-2 gap-3 text-xs">
-            {currentStyles.textColor && (
-              <div>
-                <Label className="text-xs text-muted-foreground">Text Color</Label>
-                <Badge className="mt-1 w-full justify-center">text-{currentStyles.textColor}</Badge>
-              </div>
-            )}
-            {currentStyles.bgColor && (
-              <div>
-                <Label className="text-xs text-muted-foreground">Background</Label>
-                <Badge className="mt-1 w-full justify-center">bg-{currentStyles.bgColor}</Badge>
-              </div>
-            )}
-            {currentStyles.fontSize && (
-              <div>
-                <Label className="text-xs text-muted-foreground">Font Size</Label>
-                <Badge className="mt-1 w-full justify-center">text-{currentStyles.fontSize}</Badge>
-              </div>
-            )}
-            {currentStyles.fontWeight && (
-              <div>
-                <Label className="text-xs text-muted-foreground">Font Weight</Label>
-                <Badge className="mt-1 w-full justify-center">
-                  {fontWeights.find(w => w.value === currentStyles.fontWeight)?.label}
-                </Badge>
-              </div>
-            )}
-            {currentStyles.padding && (
-              <div>
-                <Label className="text-xs text-muted-foreground">Padding</Label>
-                <Badge className="mt-1 w-full justify-center">p-{currentStyles.padding}</Badge>
-              </div>
-            )}
-            {currentStyles.margin && (
-              <div>
-                <Label className="text-xs text-muted-foreground">Margin</Label>
-                <Badge className="mt-1 w-full justify-center">m-{currentStyles.margin}</Badge>
-              </div>
-            )}
-            {currentStyles.borderRadius && (
-              <div>
-                <Label className="text-xs text-muted-foreground">Border Radius</Label>
-                <Badge className="mt-1 w-full justify-center">rounded-{currentStyles.borderRadius}</Badge>
-              </div>
-            )}
-          </div>
-          {!currentStyles.textColor && !currentStyles.bgColor && !currentStyles.fontSize && 
-           !currentStyles.fontWeight && !currentStyles.padding && !currentStyles.margin && 
-           !currentStyles.borderRadius && (
-            <p className="text-xs text-muted-foreground text-center py-4">No styles applied yet</p>
-          )}
-        </div>
-      )}
-
       {/* Colors Section */}
       {activeSection === "colors" && (
         <div className="space-y-4">
