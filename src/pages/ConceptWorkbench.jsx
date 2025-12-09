@@ -350,7 +350,7 @@ Create a detailed, actionable prompt that can be used by an AI coding assistant.
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div className="flex-1">
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-midnight-900">
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
             <Lightbulb className="h-6 w-6 text-warning" />
             {isNew ? "New Concept" : formData.name}
           </h1>

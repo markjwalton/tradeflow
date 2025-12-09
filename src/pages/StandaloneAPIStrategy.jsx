@@ -54,8 +54,8 @@ export default function StandaloneAPIStrategy() {
   return (
     <div className="p-6 bg-[var(--color-background)] min-h-screen">
       <div className="mb-6">
-        <h1 className="text-2xl font-light flex items-center gap-2 text-[var(--color-midnight)] font-heading">
-          <Globe className="h-6 w-6 text-primary-500" />
+        <h1 className="text-2xl font-light flex items-center gap-2 text-foreground font-heading">
+          <Globe className="h-6 w-6 text-primary" />
           Multi-Tenant Standalone API Strategy
         </h1>
         <p className="text-muted-foreground">
@@ -118,7 +118,7 @@ export default function StandaloneAPIStrategy() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center gap-3 p-3 bg-[var(--color-background)] rounded-lg">
-                  <Server className="h-5 w-5 text-primary-500" />
+                  <Server className="h-5 w-5 text-primary" />
                   <div>
                     <p className="font-medium">Standalone Instance Manager</p>
                     <p className="text-sm text-muted-foreground">Configure and monitor all connected instances</p>
@@ -154,7 +154,7 @@ export default function StandaloneAPIStrategy() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center gap-3 p-3 bg-[var(--color-background)] rounded-lg">
-                  <Settings className="h-5 w-5 text-primary-500" />
+                  <Settings className="h-5 w-5 text-primary" />
                   <div>
                     <p className="font-medium">Connection Setup Wizard</p>
                     <p className="text-sm text-muted-foreground">Step-by-step API connection and verification</p>
@@ -202,7 +202,7 @@ export default function StandaloneAPIStrategy() {
                   return (
                     <div key={item.name} className="flex items-center justify-between p-3 border rounded-lg">
                       <div className="flex items-center gap-3">
-                        <Icon className="h-5 w-5 text-primary-500" />
+                        <Icon className="h-5 w-5 text-primary" />
                         <div>
                           <p className="font-medium">{item.name}</p>
                           <p className="text-sm text-muted-foreground">{item.notes}</p>
@@ -253,7 +253,7 @@ export default function StandaloneAPIStrategy() {
 
               <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                 <h4 className="font-medium text-blue-800 flex items-center gap-2">
-                  <Info className="h-4 w-4 text-info-foreground" />
+                  <Info className="h-4 w-4 text-info" />
                   Workarounds Available
                 </h4>
                 <ul className="mt-2 space-y-1 text-sm text-blue-700">
@@ -296,7 +296,7 @@ export default function StandaloneAPIStrategy() {
                             {item.severity}
                           </Badge>
                         </div>
-                        <p className="text-sm mt-1 text-gray-700">
+                        <p className="text-sm mt-1 text-muted-foreground">
                           <strong>Mitigation:</strong> {item.mitigation}
                         </p>
                       </div>
@@ -385,22 +385,22 @@ export default function StandaloneAPIStrategy() {
                 <div className="flex items-center justify-center gap-4 text-sm">
                   <div className="p-3 bg-[var(--color-primary)]/10 rounded-lg text-center">
                     <p className="font-medium">Main App</p>
-                    <p className="text-xs text-gray-500">Source of Truth</p>
+                    <p className="text-xs text-muted-foreground">Source of Truth</p>
                   </div>
                   <ArrowRight className="h-6 w-6 text-gray-400" />
                   <div className="p-3 bg-[var(--color-secondary)]/10 rounded-lg text-center">
                     <p className="font-medium">API Request</p>
-                    <p className="text-xs text-gray-500">Authenticated + Logged</p>
+                    <p className="text-xs text-muted-foreground">Authenticated + Logged</p>
                   </div>
                   <ArrowRight className="h-6 w-6 text-gray-400" />
                   <div className="p-3 bg-[var(--color-accent)]/20 rounded-lg text-center">
                     <p className="font-medium">Standalone</p>
-                    <p className="text-xs text-gray-500">Receives Templates</p>
+                    <p className="text-xs text-muted-foreground">Receives Templates</p>
                   </div>
                   <ArrowRight className="h-6 w-6 text-gray-400" />
                   <div className="p-3 bg-green-100 rounded-lg text-center">
                     <p className="font-medium">Local Deploy</p>
-                    <p className="text-xs text-gray-500">Uses Locally</p>
+                    <p className="text-xs text-muted-foreground">Uses Locally</p>
                   </div>
                 </div>
               </div>
@@ -432,7 +432,7 @@ export default function StandaloneAPIStrategy() {
                   { step: 10, title: "Activation", desc: "Mark connection as active and start monitoring" },
                 ].map((item) => (
                   <div key={item.step} className="flex items-start gap-4 p-3 border rounded-lg">
-                    <div className="w-8 h-8 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold text-sm">
+                    <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm">
                       {item.step}
                     </div>
                     <div>
@@ -456,19 +456,19 @@ export default function StandaloneAPIStrategy() {
               <CardContent className="space-y-3">
                 <div className="p-3 border rounded-lg">
                   <p className="font-medium">Standalone API Health Widget</p>
-                  <p className="text-sm text-[var(--color-charcoal)]">Shows all instances with connection status, latency, and alerts</p>
+                  <p className="text-sm text-muted-foreground">Shows all instances with connection status, latency, and alerts</p>
                 </div>
                 <div className="p-3 border rounded-lg">
                   <p className="font-medium">API Performance by Tenant Page</p>
-                  <p className="text-sm text-[var(--color-charcoal)]">Detailed metrics per tenant with graphs and AI analysis</p>
+                  <p className="text-sm text-muted-foreground">Detailed metrics per tenant with graphs and AI analysis</p>
                 </div>
                 <div className="p-3 border rounded-lg">
                   <p className="font-medium">Feature Deployment Tracker</p>
-                  <p className="text-sm text-[var(--color-charcoal)]">Which features are deployed to which instances</p>
+                  <p className="text-sm text-muted-foreground">Which features are deployed to which instances</p>
                 </div>
                 <div className="p-3 border rounded-lg">
                   <p className="font-medium">AI Problem Detector</p>
-                  <p className="text-sm text-[var(--color-charcoal)]">Auto-detect degradation, generate recommendations</p>
+                  <p className="text-sm text-muted-foreground">Auto-detect degradation, generate recommendations</p>
                 </div>
               </CardContent>
             </Card>
@@ -480,19 +480,19 @@ export default function StandaloneAPIStrategy() {
               <CardContent className="space-y-3">
                 <div className="p-3 border rounded-lg">
                   <p className="font-medium">Connection Health Indicator</p>
-                  <p className="text-sm text-[var(--color-charcoal)]">Real-time status with last ping time</p>
+                  <p className="text-sm text-muted-foreground">Real-time status with last ping time</p>
                 </div>
                 <div className="p-3 border rounded-lg">
                   <p className="font-medium">Local API Performance</p>
-                  <p className="text-sm text-[var(--color-charcoal)]">Latency graphs and error rates</p>
+                  <p className="text-sm text-muted-foreground">Latency graphs and error rates</p>
                 </div>
                 <div className="p-3 border rounded-lg">
                   <p className="font-medium">Available Features List</p>
-                  <p className="text-sm text-[var(--color-charcoal)]">New features with deploy option</p>
+                  <p className="text-sm text-muted-foreground">New features with deploy option</p>
                 </div>
                 <div className="p-3 border rounded-lg">
                   <p className="font-medium">AI Troubleshooter</p>
-                  <p className="text-sm text-[var(--color-charcoal)]">Diagnose local issues with solutions</p>
+                  <p className="text-sm text-muted-foreground">Diagnose local issues with solutions</p>
                 </div>
               </CardContent>
             </Card>

@@ -287,11 +287,11 @@ export default function PlaygroundSummary() {
     <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-midnight-900">
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
             <FlaskConical className="h-6 w-6 text-primary" />
             Development Playground
           </h1>
-          <p className="text-charcoal-700">Test, modify, and validate templates before deployment</p>
+          <p className="text-muted-foreground">Test, modify, and validate templates before deployment</p>
         </div>
         <div className="flex gap-2">
           <Link to={createPageUrl("LivePreview")}>
@@ -405,14 +405,14 @@ export default function PlaygroundSummary() {
           <div className="grid grid-cols-4 gap-4">
             <Card>
               <CardContent className="pt-4">
-                <div className="text-2xl font-bold text-midnight-900">{stats.total}</div>
-                <div className="text-sm text-charcoal-700">Library Items</div>
+                <div className="text-2xl font-bold text-foreground">{stats.total}</div>
+                <div className="text-sm text-muted-foreground">Library Items</div>
               </CardContent>
             </Card>
             <Card className="border-info/30 bg-info-50">
               <CardContent className="pt-4">
                 <div className="text-2xl font-bold text-info">{stats.modified}</div>
-                <div className="text-sm text-midnight-900">Being Modified</div>
+                <div className="text-sm text-foreground">Being Modified</div>
               </CardContent>
             </Card>
             <Card className="border-success/30 bg-success-50">
@@ -441,7 +441,7 @@ export default function PlaygroundSummary() {
               </CardHeader>
               <CardContent>
                 {activeItems.length === 0 ? (
-                  <p className="text-charcoal-700 text-center py-4">No items currently being modified</p>
+                  <p className="text-muted-foreground text-center py-4">No items currently being modified</p>
                 ) : (
                   <div className="space-y-2">
                     {activeItems.slice(0, 5).map(item => (
@@ -477,7 +477,7 @@ export default function PlaygroundSummary() {
               <CardContent>
                 {activeConcepts.length === 0 ? (
                   <div className="text-center py-4">
-                    <p className="text-charcoal-700 mb-2">No concepts in progress</p>
+                    <p className="text-muted-foreground mb-2">No concepts in progress</p>
                     <Link to={createPageUrl("ConceptWorkbench")}>
                       <Button size="sm" variant="outline">
                         <Lightbulb className="h-4 w-4 mr-2" />
@@ -607,7 +607,7 @@ export default function PlaygroundSummary() {
                     </div>
                   </CardHeader>
                   <CardContent className="pt-0">
-                    <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
+                    <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
                       <span>v{item.current_version || 1}</span>
                       {item.group && <Badge variant="outline">{item.group}</Badge>}
                     </div>
