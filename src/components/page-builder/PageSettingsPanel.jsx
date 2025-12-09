@@ -35,6 +35,7 @@ export function PageSettingsPanel({ currentPageName }) {
   const [editingDescription, setEditingDescription] = useState(false);
   const [pageTitle, setPageTitle] = useState("");
   const [pageDescription, setPageDescription] = useState("");
+  const [navigationMode, setNavigationMode] = useState("expanded");
   const queryClient = useQueryClient();
 
   useEffect(() => {
