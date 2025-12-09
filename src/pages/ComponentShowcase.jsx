@@ -775,5 +775,6 @@ export default function ComponentShowcase() {
 
       </div>
     </div>
+    </ShowcaseEditMode>
   );
 }
