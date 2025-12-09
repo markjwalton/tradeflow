@@ -14,7 +14,9 @@ import { getValueByBinding, setValueByBinding } from "./utils";
  */
 export default function ProjectEditorRenderer({ config, data, onAction }) {
   const [formData, setFormData] = useState(data || {});
-  const [openSections, setOpenSections] = useState(new Set((config.sections || []).map(s => s.id)));
+  const [openSections, setOpenSections] = useState(
+    new Set((config.sections || []).filter(s => s.defaultOpen !== false).map(s => s.id))
+  );
 
   const handleFieldChange = (binding, value) => {
     setFormData(prev => setValueByBinding(prev, binding, value));
