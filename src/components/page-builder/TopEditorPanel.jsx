@@ -37,7 +37,7 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/ad5ea2e54_editor.png" 
               alt="Editor branding" 
-              className="h-8"
+              className="h-6"
             />
           </div>
         </div>
