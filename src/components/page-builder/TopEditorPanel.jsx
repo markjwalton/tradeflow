@@ -5,6 +5,10 @@ import { Card } from "@/components/ui/card";
 import { X, ChevronDown, ChevronUp, Layout, Palette, Layers, Settings, Maximize2, Minimize2, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { ComponentPalettePanel } from "./ComponentPalettePanel";
+import { StylingPanel } from "./StylingPanel";
+import { LayoutBuilderPanel } from "./LayoutBuilderPanel";
+import { PageSettingsTab } from "./PageSettingsTab";
 
 export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -103,78 +107,43 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
 
             <TabsContent value="components" className="space-y-4">
               <Card className="p-4">
-                <p className="text-sm text-muted-foreground">
-                  Component library and palette will be accessible here
-                </p>
-                <div className="grid grid-cols-6 gap-2 mt-3">
-                  {["Button", "Input", "Card", "Table", "Form", "Chart"].map((comp) => (
-                    <div
-                      key={comp}
-                      className="p-3 border rounded-lg text-center hover:bg-muted/50 cursor-pointer transition-colors"
-                    >
-                      <div className="h-8 w-8 mx-auto mb-1 rounded bg-primary/10 flex items-center justify-center">
-                        <Layers className="h-4 w-4 text-primary" />
-                      </div>
-                      <p className="text-xs">{comp}</p>
-                    </div>
-                  ))}
-                </div>
+                <ComponentPalettePanel />
               </Card>
             </TabsContent>
 
             <TabsContent value="styling" className="space-y-4">
               <Card className="p-4">
-                <p className="text-sm text-muted-foreground">
-                  Quick edit styling controls will appear here when elements are selected
-                </p>
-                <div className="grid grid-cols-4 gap-3 mt-3">
-                  {["Colors", "Spacing", "Typography", "Borders"].map((style) => (
-                    <div
-                      key={style}
-                      className="p-4 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
-                    >
-                      <Palette className="h-5 w-5 text-primary mb-2" />
-                      <p className="text-sm font-medium">{style}</p>
-                    </div>
-                  ))}
-                </div>
+                <StylingPanel 
+                  selectedElement={null}
+                  onApplyStyle={(style) => {
+                    setHasChanges(true);
+                    toast.info("Style applied");
+                  }}
+                />
               </Card>
             </TabsContent>
 
             <TabsContent value="layout" className="space-y-4">
               <Card className="p-4">
-                <p className="text-sm text-muted-foreground">
-                  Layout builder and pattern manager will be integrated here
-                </p>
-                <div className="grid grid-cols-3 gap-3 mt-3">
-                  {["Grid", "Flexbox", "Stack"].map((layout) => (
-                    <div
-                      key={layout}
-                      className="p-4 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
-                    >
-                      <Layout className="h-5 w-5 text-primary mb-2" />
-                      <p className="text-sm font-medium">{layout}</p>
-                    </div>
-                  ))}
-                </div>
+                <LayoutBuilderPanel 
+                  selectedElement={null}
+                  onApplyLayout={(layout) => {
+                    setHasChanges(true);
+                    toast.info("Layout applied");
+                  }}
+                />
               </Card>
             </TabsContent>
 
             <TabsContent value="settings" className="space-y-4">
               <Card className="p-4">
-                <p className="text-sm text-muted-foreground">
-                  Page settings and configuration options will be available here
-                </p>
-                <div className="space-y-2 mt-3">
-                  <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 cursor-pointer">
-                    <span className="text-sm">Navigation Mode</span>
-                    <span className="text-xs text-muted-foreground">Expanded</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 cursor-pointer">
-                    <span className="text-sm">Breadcrumb</span>
-                    <span className="text-xs text-muted-foreground">Visible</span>
-                  </div>
-                </div>
+                <PageSettingsTab 
+                  pageSettings={{}}
+                  onUpdateSettings={(settings) => {
+                    setHasChanges(true);
+                    toast.info("Settings updated");
+                  }}
+                />
               </Card>
             </TabsContent>
           </Tabs>
