@@ -76,8 +76,8 @@ export function AppSidebar({ navItems = [] }) {
     const itemPath = pageUrl.split("?")[0];
     const isActive = currentPath === itemPath;
 
-    // Color logic: folders use warm beige, pages use sage green
-    const iconColorClass = isFolder ? "text-[var(--secondary-400)]" : "text-[var(--primary-600)]";
+    // Debug: Log item type and color
+    console.log(`Item: ${item.name}, Type: ${item.item_type}, isFolder: ${isFolder}`);
 
     if (isFolder) {
       const hasChildren = item.children && item.children.length > 0;
