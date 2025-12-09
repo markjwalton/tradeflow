@@ -158,7 +158,7 @@ export default function CompactButtonShowcase() {
                           "h-7 w-7 rounded border transition-all flex items-center justify-center",
                           activeColor === token ? "border-foreground shadow-md" : "border-border hover:border-muted-foreground"
                         )}
-                        style={{ backgroundColor: `var(--color-${token})` }}
+                        style={{ backgroundColor: `var(--${token})` }}
                         onClick={() => setActiveColor(token)}
                         title={token}
                       >
