@@ -128,6 +128,25 @@ export function AppSidebar({ navItems = [] }) {
     );
   };
 
+  // Flatten navigation for icon mode
+  const getFlattenedItems = (items) => {
+    const flattened = [];
+    const flatten = (itemList) => {
+      itemList.forEach((item) => {
+        if (item.item_type === "page") {
+          flattened.push(item);
+        }
+        if (item.children && item.children.length > 0) {
+          flatten(item.children);
+        }
+      });
+    };
+    flatten(items);
+    return flattened;
+  };
+
+  const itemsToRender = showLabels ? navItems : getFlattenedItems(navItems);
+
   return (
     <aside
       className={cn(
@@ -141,7 +160,7 @@ export function AppSidebar({ navItems = [] }) {
           "flex-1 overflow-y-auto",
           showLabels ? "p-3 space-y-1" : "py-3 px-1 space-y-2"
         )}>
-          {navItems.map((item) => renderNavItem(item))}
+          {itemsToRender.map((item) => renderNavItem(item))}
         </nav>
       )}
     </aside>
