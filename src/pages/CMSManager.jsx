@@ -137,7 +137,7 @@ export default function CMSManager() {
         {items.map(item => (
           <div key={item.id} className="flex items-center justify-between p-4 bg-card rounded-lg border border-border hover:shadow-sm transition-shadow">
             <div>
-              <h3 className="font-medium text-midnight-900">{item.title || item.name}</h3>
+              <h3 className="font-medium text-foreground">{item.title || item.name}</h3>
               <div className="flex items-center gap-2 mt-1">
                 <span className="text-sm text-muted-foreground">/{item.slug}</span>
                 {statusBadge(item.status)}
@@ -170,7 +170,7 @@ export default function CMSManager() {
     <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light text-midnight-900 font-heading">CMS</h1>
+          <h1 className="text-2xl font-light text-foreground font-heading">CMS</h1>
           <p className="text-muted-foreground">Manage content for external websites</p>
         </div>
         {isGlobalAdmin && (

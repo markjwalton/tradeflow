@@ -344,7 +344,7 @@ export default function APIManager() {
     <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-midnight-900 font-heading">
+          <h1 className="text-2xl font-light flex items-center gap-2 text-foreground font-heading">
             <Key className="h-6 w-6 text-primary" />
             API Manager
           </h1>

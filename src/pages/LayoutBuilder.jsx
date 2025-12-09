@@ -277,7 +277,7 @@ Create 4-8 zones for a complete layout.`,
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-heading text-midnight-900 flex items-center gap-2">
+          <h1 className="text-2xl font-heading text-foreground flex items-center gap-2">
             <Layout className="h-6 w-6 text-primary" />
             Layout Builder
           </h1>
@@ -306,7 +306,7 @@ Create 4-8 zones for a complete layout.`,
         <div className="col-span-3 space-y-4">
           <Card className="border-border">
             <CardHeader className="py-3">
-              <CardTitle className="text-sm text-midnight-900">Presets</CardTitle>
+              <CardTitle className="text-sm text-foreground">Presets</CardTitle>
             </CardHeader>
             <CardContent className="pt-0">
               <div className="space-y-2">
@@ -316,7 +316,7 @@ Create 4-8 zones for a complete layout.`,
                     onClick={() => handleLoadPreset(preset)}
                     className="w-full text-left p-2 rounded-lg hover:bg-background transition-colors text-sm"
                   >
-                    <p className="font-medium text-midnight-900">{preset.name}</p>
+                    <p className="font-medium text-foreground">{preset.name}</p>
                     <p className="text-xs text-muted-foreground">{preset.zones.length} zones</p>
                   </button>
                 ))}
@@ -326,7 +326,7 @@ Create 4-8 zones for a complete layout.`,
 
           <Card className="border-border">
             <CardHeader className="py-3">
-              <CardTitle className="text-sm text-midnight-900">Saved Patterns</CardTitle>
+              <CardTitle className="text-sm text-foreground">Saved Patterns</CardTitle>
             </CardHeader>
             <CardContent className="pt-0">
               <ScrollArea className="h-[200px]">
@@ -345,7 +345,7 @@ Create 4-8 zones for a complete layout.`,
                       >
                         <div className="flex items-center justify-between">
                           <button onClick={() => handleLoadPattern(pattern)} className="text-left flex-1">
-                            <p className="font-medium text-sm text-midnight-900">{pattern.name}</p>
+                            <p className="font-medium text-sm text-foreground">{pattern.name}</p>
                             <p className="text-xs text-muted-foreground">{pattern.zones?.length || 0} zones</p>
                           </button>
                           <Button 
@@ -367,7 +367,7 @@ Create 4-8 zones for a complete layout.`,
 
           <Card className="border-border">
             <CardHeader className="py-3">
-              <CardTitle className="text-sm text-midnight-900">Zone Types</CardTitle>
+              <CardTitle className="text-sm text-foreground">Zone Types</CardTitle>
             </CardHeader>
             <CardContent className="pt-0">
               <div className="grid grid-cols-2 gap-1">
@@ -386,7 +386,7 @@ Create 4-8 zones for a complete layout.`,
         <div className="col-span-6">
           <Card className="border-border">
             <CardHeader className="flex flex-row items-center justify-between py-3">
-              <CardTitle className="text-sm text-midnight-900">Layout Canvas (12-column grid)</CardTitle>
+              <CardTitle className="text-sm text-foreground">Layout Canvas (12-column grid)</CardTitle>
               <Button variant="outline" size="sm" onClick={handleAddZone}>
                 <Plus className="h-3 w-3 mr-1" />
                 Add Zone
@@ -407,7 +407,7 @@ Create 4-8 zones for a complete layout.`,
                 {Array.from({ length: 12 }).map((_, i) => (
                   <div 
                     key={`col-${i}`} 
-                    className="absolute top-0 bottom-0 border-l border-dashed border-charcoal-300"
+                    className="absolute top-0 bottom-0 border-l border-dashed border-border"
                     style={{ left: `${(i / 12) * 100}%` }}
                   />
                 ))}
@@ -455,7 +455,7 @@ Create 4-8 zones for a complete layout.`,
         <div className="col-span-3 space-y-4">
           <Card className="border-border">
             <CardHeader className="py-3">
-              <CardTitle className="text-sm text-midnight-900">Zone Properties</CardTitle>
+              <CardTitle className="text-sm text-foreground">Zone Properties</CardTitle>
             </CardHeader>
             <CardContent className="pt-0">
               {selectedZone ? (
@@ -553,7 +553,7 @@ Create 4-8 zones for a complete layout.`,
           {zones.length > 0 && (
             <Card className="border-border">
               <CardHeader className="py-3">
-                <CardTitle className="text-sm text-midnight-900">Generated Code</CardTitle>
+                <CardTitle className="text-sm text-foreground">Generated Code</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
                 <ScrollArea className="h-[150px]">
@@ -583,7 +583,7 @@ Create 4-8 zones for a complete layout.`,
       <Dialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-midnight-900">Save Layout Pattern</DialogTitle>
+            <DialogTitle className="text-foreground">Save Layout Pattern</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
