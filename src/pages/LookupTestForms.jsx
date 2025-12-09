@@ -28,11 +28,11 @@ export default function LookupTestForms() {
   return (
     <div className="p-6 max-w-4xl mx-auto bg-background min-h-screen">
       <div className="mb-6">
-        <h1 className="text-2xl font-light flex items-center gap-2 text-midnight-900" style={{ fontFamily: 'var(--font-heading)' }}>
+        <h1 className="text-2xl font-light flex items-center gap-2 text-foreground" style={{ fontFamily: 'var(--font-heading)' }}>
           <CheckCircle2 className="h-6 w-6 text-success" />
           Lookup API Test Forms
         </h1>
-        <p className="text-charcoal-700">Test Address Finder, Email Validation, and Phone Validation APIs</p>
+        <p className="text-muted-foreground">Test Address Finder, Email Validation, and Phone Validation APIs</p>
       </div>
 
       <Tabs defaultValue="postcode" className="space-y-6">
@@ -136,8 +136,8 @@ export default function LookupTestForms() {
               />
 
               {results.address && (
-                <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-                  <h4 className="font-medium text-green-800 mb-2 flex items-center gap-2">
+                <div className="mt-4 p-4 bg-success-50 border border-success/20 rounded-lg">
+                  <h4 className="font-medium text-success mb-2 flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4" />
                     Selected Address
                   </h4>

@@ -451,7 +451,7 @@ Return as JSON:
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-2xl font-light font-display text-midnight-900">{item?.title}</h1>
+            <h1 className="text-2xl font-light font-display text-foreground">{item?.title}</h1>
             <p className="text-muted-foreground">{item?.description}</p>
           </div>
         </div>
