@@ -1,15 +1,14 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { CompactButton } from "@/components/library/CompactButton";
-import { Label } from "@/components/ui/label";
-import { editorClasses } from "@/components/page-builder/editorTokens";
-import { Code, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function CompactButtonShowcase() {
+  const [openCategory, setOpenCategory] = useState(null);
   const [activeSpacing, setActiveSpacing] = useState("4");
   const [activeFontSize, setActiveFontSize] = useState("base");
   const [activeWeight, setActiveWeight] = useState("500");
+  const [activeRadius, setActiveRadius] = useState("md");
   const [activeColor, setActiveColor] = useState("primary-500");
   
   const spacingTokens = ["0", "1", "2", "3", "4", "5", "6", "8", "10", "12", "16", "20"];
@@ -25,176 +24,166 @@ export default function CompactButtonShowcase() {
   
   const colorTokens = {
     primary: ["primary-50", "primary-100", "primary-200", "primary-300", "primary-400", "primary-500", "primary-600", "primary-700", "primary-800", "primary-900"],
+    secondary: ["secondary-50", "secondary-100", "secondary-200", "secondary-300", "secondary-400", "secondary-500", "secondary-600", "secondary-700", "secondary-800", "secondary-900"],
+    accent: ["accent-50", "accent-100", "accent-200", "accent-300", "accent-400", "accent-500", "accent-600", "accent-700", "accent-800", "accent-900"],
+    charcoal: ["charcoal-50", "charcoal-100", "charcoal-200", "charcoal-300", "charcoal-400", "charcoal-500", "charcoal-600", "charcoal-700", "charcoal-800", "charcoal-900"],
+    midnight: ["midnight-50", "midnight-100", "midnight-200", "midnight-300", "midnight-400", "midnight-500", "midnight-600", "midnight-700", "midnight-800", "midnight-900"],
+  };
+
+  const toggleCategory = (category) => {
+    setOpenCategory(openCategory === category ? null : category);
   };
 
   return (
-    <div className="p-6 w-full space-y-8">
-      <div>
-        <h1 className="text-4xl font-display mb-2">Compact Buttons</h1>
-        <p className="text-muted-foreground">28×28px square buttons for dense editor UIs</p>
+    <div className="min-h-screen flex items-center justify-center p-6 bg-background">
+      <div className="w-full max-w-3xl space-y-2">
+        {/* Spacing */}
+        <div className="border rounded-lg overflow-hidden bg-card">
+          <button
+            onClick={() => toggleCategory("spacing")}
+            className="w-full px-4 py-2 text-left font-medium hover:bg-muted transition-colors"
+          >
+            Spacing
+          </button>
+          {openCategory === "spacing" && (
+            <div className="px-4 pb-4">
+              <div className="flex justify-center">
+                <div className="inline-grid grid-cols-12 gap-0.5">
+                  {spacingTokens.map((value) => (
+                    <CompactButton
+                      key={value}
+                      isActive={activeSpacing === value}
+                      onClick={() => setActiveSpacing(value)}
+                    >
+                      {value}
+                    </CompactButton>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Typography - Font Size */}
+        <div className="border rounded-lg overflow-hidden bg-card">
+          <button
+            onClick={() => toggleCategory("fontSize")}
+            className="w-full px-4 py-2 text-left font-medium hover:bg-muted transition-colors"
+          >
+            Font Size
+          </button>
+          {openCategory === "fontSize" && (
+            <div className="px-4 pb-4">
+              <div className="flex justify-center">
+                <div className="inline-grid grid-cols-8 gap-0.5">
+                  {fontSizes.map((value) => (
+                    <CompactButton
+                      key={value}
+                      isActive={activeFontSize === value}
+                      onClick={() => setActiveFontSize(value)}
+                    >
+                      {value}
+                    </CompactButton>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Typography - Font Weight */}
+        <div className="border rounded-lg overflow-hidden bg-card">
+          <button
+            onClick={() => toggleCategory("fontWeight")}
+            className="w-full px-4 py-2 text-left font-medium hover:bg-muted transition-colors"
+          >
+            Font Weight
+          </button>
+          {openCategory === "fontWeight" && (
+            <div className="px-4 pb-4">
+              <div className="flex justify-center">
+                <div className="inline-grid grid-cols-5 gap-0.5">
+                  {fontWeights.map((weight) => (
+                    <CompactButton
+                      key={weight.value}
+                      isActive={activeWeight === weight.value}
+                      onClick={() => setActiveWeight(weight.value)}
+                    >
+                      {weight.label}
+                    </CompactButton>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Border Radius */}
+        <div className="border rounded-lg overflow-hidden bg-card">
+          <button
+            onClick={() => toggleCategory("radius")}
+            className="w-full px-4 py-2 text-left font-medium hover:bg-muted transition-colors"
+          >
+            Border Radius
+          </button>
+          {openCategory === "radius" && (
+            <div className="px-4 pb-4">
+              <div className="flex justify-center">
+                <div className="inline-grid grid-cols-7 gap-0.5">
+                  {radiusOptions.map((value) => (
+                    <CompactButton
+                      key={value}
+                      isActive={activeRadius === value}
+                      onClick={() => setActiveRadius(value)}
+                    >
+                      {value}
+                    </CompactButton>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Colors */}
+        <div className="border rounded-lg overflow-hidden bg-card">
+          <button
+            onClick={() => toggleCategory("colors")}
+            className="w-full px-4 py-2 text-left font-medium hover:bg-muted transition-colors"
+          >
+            Colors
+          </button>
+          {openCategory === "colors" && (
+            <div className="px-4 pb-4 space-y-3">
+              {Object.entries(colorTokens).map(([category, tokens]) => (
+                <div key={category}>
+                  <div className="text-xs text-muted-foreground mb-1.5 capitalize">{category}</div>
+                  <div className="flex justify-center">
+                    <div className="inline-grid grid-cols-10 gap-0.5">
+                      {tokens.map((token) => (
+                        <button
+                          key={token}
+                          className={cn(
+                            "h-7 w-7 rounded border-2 transition-all flex items-center justify-center",
+                            activeColor === token ? "border-foreground ring-2 ring-offset-1 ring-foreground" : "border-transparent hover:border-muted"
+                          )}
+                          style={{ backgroundColor: `var(--${token})` }}
+                          onClick={() => setActiveColor(token)}
+                          title={token}
+                        >
+                          {activeColor === token && (
+                            <Check className="h-3 w-3 text-white drop-shadow" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Spacing Controls</CardTitle>
-          <CardDescription>Square buttons for padding/margin selection</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-12 gap-0.5">
-            {spacingTokens.map((value) => (
-              <CompactButton
-                key={value}
-                isActive={activeSpacing === value}
-                onClick={() => setActiveSpacing(value)}
-              >
-                {value}
-              </CompactButton>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Typography Controls</CardTitle>
-          <CardDescription>Compact controls for font properties</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="grid grid-cols-8 gap-0.5">
-            {fontSizes.map((value) => (
-              <CompactButton
-                key={value}
-                isActive={activeFontSize === value}
-                onClick={() => setActiveFontSize(value)}
-              >
-                {value}
-              </CompactButton>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-5 gap-0.5">
-            {fontWeights.map((weight) => (
-              <CompactButton
-                key={weight.value}
-                isActive={activeWeight === weight.value}
-                onClick={() => setActiveWeight(weight.value)}
-              >
-                {weight.label}
-              </CompactButton>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Border Radius</CardTitle>
-          <CardDescription>Radius token selection</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-7 gap-0.5">
-            {radiusOptions.map((value) => (
-              <CompactButton
-                key={value}
-                isActive={false}
-                onClick={() => {}}
-              >
-                {value}
-              </CompactButton>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Color Swatches</CardTitle>
-          <CardDescription>Compact color selectors for theme tokens</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-10 gap-0.5">
-            {colorTokens.primary.map((token) => (
-              <button
-                key={token}
-                className={cn(editorClasses.swatch, activeColor === token && editorClasses.swatchActive)}
-                style={{ backgroundColor: `var(--${token})` }}
-                onClick={() => setActiveColor(token)}
-                title={token}
-              >
-                {activeColor === token && (
-                  <Check className="h-3 w-3 text-white mx-auto drop-shadow" />
-                )}
-              </button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Code className="h-5 w-5" />
-            Code Example
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <pre className="bg-muted p-4 rounded-lg text-xs overflow-x-auto">
-{`import { CompactButton } from "@/components/library/CompactButton";
-import { Label } from "@/components/ui/label";
-import { editorClasses } from "@/components/page-builder/editorTokens";
-
-const [active, setActive] = useState("4");
-
-<Label className={editorClasses.label}>Padding</Label>
-<div className="grid grid-cols-7 gap-1">
-  {spacingOptions.map((option) => (
-    <CompactButton
-      key={option}
-      isActive={active === option}
-      onClick={() => setActive(option)}
-    >
-      {option}
-    </CompactButton>
-  ))}
-</div>`}
-          </pre>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Design Tokens</CardTitle>
-          <CardDescription>Specifications from editorTokens.js</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div>
-              <p className="text-sm font-medium mb-2">Size</p>
-              <code className="text-xs bg-muted px-2 py-1 rounded">28×28px (h-7 w-7)</code>
-            </div>
-            <div>
-              <p className="text-sm font-medium mb-2">Padding</p>
-              <code className="text-xs bg-muted px-2 py-1 rounded">p-0 (square, centered)</code>
-            </div>
-            <div>
-              <p className="text-sm font-medium mb-2">Font Size</p>
-              <code className="text-xs bg-muted px-2 py-1 rounded">text-[9px]</code>
-            </div>
-            <div>
-              <p className="text-sm font-medium mb-2">Font Weight</p>
-              <code className="text-xs bg-muted px-2 py-1 rounded">font-medium (500)</code>
-            </div>
-            <div>
-              <p className="text-sm font-medium mb-2">Grid Gap</p>
-              <code className="text-xs bg-muted px-2 py-1 rounded">gap-0.5 (2px - half button padding)</code>
-            </div>
-            <div>
-              <p className="text-sm font-medium mb-2">Border Radius</p>
-              <code className="text-xs bg-muted px-2 py-1 rounded">var(--radius-md)</code>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
