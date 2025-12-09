@@ -4,12 +4,12 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTenant } from "@/Layout";
 import { Button } from "@/components/ui/button";
 
-import { Settings, FileCode, Loader2, Cog, Users } from "lucide-react";
+import { FileCode, Loader2, Cog, Users } from "lucide-react";
 import { toast } from "sonner";
 
 import GenericNavEditor from "@/components/navigation/GenericNavEditor";
 import TenantSelector from "@/components/navigation/TenantSelector";
-import PageSettingsDialog from "@/components/common/PageSettingsDialog";
+import { useEditMode } from "@/components/page-builder/EditModeContext";
 
 // Slugs are now loaded from NavigationConfig.source_slugs - no hardcoded lists
 
@@ -20,6 +20,7 @@ export default function NavigationManager() {
   const tenantContext = useTenant();
   const [currentUser, setCurrentUser] = useState(null);
   const queryClient = useQueryClient();
+  const { setCustomProperties } = useEditMode();
   
   const [selectedTenantId, setSelectedTenantId] = useState(
     tenantContext?.tenantId || "__global__"
@@ -38,25 +39,48 @@ export default function NavigationManager() {
     return settings.defaultTab || "admin";
   });
   
-  const [showSettings, setShowSettings] = useState(false);
   const [pageSettings, setPageSettings] = useState(() => {
     const saved = localStorage.getItem("navManager_settings");
-    return saved ? JSON.parse(saved) : { defaultTab: "admin" };
+    return saved ? JSON.parse(saved) : { defaultTab: "admin", defaultCollapsed: false };
   });
 
-  const settingsOptions = [
-    { key: "defaultTab", label: "Default Tab", type: "select", options: [
-      { value: "admin", label: "Admin Console" },
-      { value: "app", label: "App Pages" },
-      { value: "tenant", label: "Tenant Navigation" }
-    ], description: "Which tab to show by default" },
-    { key: "defaultCollapsed", label: "Folders Start Collapsed", type: "boolean", description: "All folders start collapsed on page load" }
-  ];
-
-  const handleSaveSettings = (newSettings) => {
+  const handleSaveSettings = (key, value) => {
+    const newSettings = { ...pageSettings, [key]: value };
     setPageSettings(newSettings);
     localStorage.setItem("navManager_settings", JSON.stringify(newSettings));
+    if (key === "defaultTab") {
+      setActiveTab(value);
+    }
   };
+
+  // Set custom properties for the side panel
+  useEffect(() => {
+    setCustomProperties([
+      {
+        key: "defaultTab",
+        label: "Default Tab",
+        type: "select",
+        value: pageSettings.defaultTab || "admin",
+        options: [
+          { value: "admin", label: "Admin Console" },
+          { value: "app", label: "App Pages" },
+          { value: "tenant", label: "Tenant Navigation" }
+        ],
+        description: "Which tab to show by default",
+        onChange: (value) => handleSaveSettings("defaultTab", value)
+      },
+      {
+        key: "defaultCollapsed",
+        label: "Folders Start Collapsed",
+        type: "boolean",
+        value: pageSettings.defaultCollapsed || false,
+        description: "All folders start collapsed on page load",
+        onChange: (value) => handleSaveSettings("defaultCollapsed", value)
+      }
+    ]);
+
+    return () => setCustomProperties([]);
+  }, [pageSettings, setCustomProperties]);
 
   // Fetch tenants for selector
   const { data: tenants = [] } = useQuery({
@@ -110,24 +134,19 @@ export default function NavigationManager() {
       {isGlobalAdmin ? (
         <>
           {/* Tab Navigation */}
-          <div className="flex items-center justify-between [margin-bottom:var(--spacing-6)]">
-            <div className="flex [gap:var(--spacing-2)] flex-wrap">
-              <button className={tabStyle("admin")} onClick={() => setActiveTab("admin")}>
-                <Cog className="h-4 w-4 [margin-right:var(--spacing-2)] inline" />
-                Admin Console
-              </button>
-              <button className={tabStyle("app")} onClick={() => setActiveTab("app")}>
-                <FileCode className="h-4 w-4 [margin-right:var(--spacing-2)] inline" />
-                App Pages
-              </button>
-              <button className={tabStyle("tenant")} onClick={() => setActiveTab("tenant")}>
-                <Users className="h-4 w-4 [margin-right:var(--spacing-2)] inline" />
-                Tenant Navigation
-              </button>
-            </div>
-            <Button variant="ghost" size="icon" onClick={() => setShowSettings(true)}>
-              <Settings className="h-5 w-5" />
-            </Button>
+          <div className="flex [gap:var(--spacing-2)] flex-wrap [margin-bottom:var(--spacing-6)]">
+            <button className={tabStyle("admin")} onClick={() => setActiveTab("admin")}>
+              <Cog className="h-4 w-4 [margin-right:var(--spacing-2)] inline" />
+              Admin Console
+            </button>
+            <button className={tabStyle("app")} onClick={() => setActiveTab("app")}>
+              <FileCode className="h-4 w-4 [margin-right:var(--spacing-2)] inline" />
+              App Pages
+            </button>
+            <button className={tabStyle("tenant")} onClick={() => setActiveTab("tenant")}>
+              <Users className="h-4 w-4 [margin-right:var(--spacing-2)] inline" />
+              Tenant Navigation
+            </button>
           </div>
 
           {/* Tab Content */}
@@ -205,15 +224,6 @@ export default function NavigationManager() {
           isLoading={tenantLoading}
         />
       )}
-
-      <PageSettingsDialog
-        isOpen={showSettings}
-        onClose={() => setShowSettings(false)}
-        settings={pageSettings}
-        onSave={handleSaveSettings}
-        options={settingsOptions}
-        title="Navigation Manager Settings"
-      />
     </div>
   );
 }
@@ -263,7 +273,7 @@ function TenantNavEditor({ tenantId, items = [], isLoading }) {
     <div className="border [border-radius:var(--radius-lg)] [padding:var(--spacing-4)] bg-[var(--color-background)]">
       <div className="flex justify-between items-center [margin-bottom:var(--spacing-4)]">
         <h3 className="font-display text-h5">Tenant Navigation Items</h3>
-        <Button size="sm" className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-600)] text-[var(--color-primary-foreground)]" onClick={() => { setEditingItem(null); setShowForm(true); }}>
+        <Button size="sm" className="bg-primary-500 hover:bg-primary-600 text-white" onClick={() => { setEditingItem(null); setShowForm(true); }}>
           Add Item
         </Button>
       </div>
@@ -281,7 +291,7 @@ function TenantNavEditor({ tenantId, items = [], isLoading }) {
               <Button variant="ghost" size="sm" onClick={() => { setEditingItem(item); setShowForm(true); }}>
                 Edit
               </Button>
-              <Button variant="ghost" size="sm" className="text-[var(--color-destructive)]" onClick={() => deleteMutation.mutate(item.id)}>
+              <Button variant="ghost" size="sm" className="text-destructive" onClick={() => deleteMutation.mutate(item.id)}>
                 Delete
               </Button>
             </div>

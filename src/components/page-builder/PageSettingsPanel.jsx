@@ -19,7 +19,7 @@ import { base44 } from "@/api/base44Client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function PageSettingsPanel({ currentPageName }) {
-  const { isEditMode, toggleEditMode, currentPageData, currentPageContent, setCurrentPageContent, pageTextElements, setPageTextElements } = useEditMode();
+  const { isEditMode, toggleEditMode, currentPageData, currentPageContent, setCurrentPageContent, pageTextElements, setPageTextElements, customProperties } = useEditMode();
   const [isOpen, setIsOpen] = useState(false);
   const [showCode, setShowCode] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -133,6 +133,46 @@ export function PageSettingsPanel({ currentPageName }) {
             </div>
             <Switch checked={isEditMode} onCheckedChange={toggleEditMode} />
           </div>
+
+          {!isEditMode && customProperties.length > 0 && (
+            <div className="border-t pt-4 space-y-4">
+              <div>
+                <Label className="text-sm font-medium">Page Properties</Label>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Custom settings for this page
+                </p>
+              </div>
+              <div className="space-y-4">
+                {customProperties.map((prop) => (
+                  <div key={prop.key} className="space-y-2">
+                    <Label className="text-sm">{prop.label}</Label>
+                    {prop.description && (
+                      <p className="text-xs text-muted-foreground">{prop.description}</p>
+                    )}
+                    {prop.type === "boolean" && (
+                      <Switch
+                        checked={prop.value}
+                        onCheckedChange={(checked) => prop.onChange(checked)}
+                      />
+                    )}
+                    {prop.type === "select" && (
+                      <select
+                        value={prop.value}
+                        onChange={(e) => prop.onChange(e.target.value)}
+                        className="w-full px-3 py-2 border rounded-md text-sm"
+                      >
+                        {prop.options.map((opt) => (
+                          <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {!isEditMode && pageTextElements.length > 0 && (
             <div className="border-t pt-4 space-y-4">
