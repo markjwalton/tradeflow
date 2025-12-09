@@ -46,7 +46,7 @@ export function AppShell({ children, user, tenant, navItems = [] }) {
       <div className="flex flex-1">
         <AppSidebar navItems={organizedNavItems} />
         <div className="flex-1 flex flex-col overflow-hidden">
-          <AppContent>{children}</AppContent>
+          <AppContent navItems={organizedNavItems}>{children}</AppContent>
         </div>
       </div>
 
