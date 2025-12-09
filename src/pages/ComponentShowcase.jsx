@@ -4,7 +4,7 @@ import {
   Navigation as NavIcon, BarChart3, Bell, ChevronDown, ChevronRight,
   Mail, Settings, Users, Home, Star, Zap, Package, Plus, Edit, Trash2,
   BookOpen, Figma, Database, Grid3X3, Sparkles, Wrench, Download, Eye,
-  Copy, Search, RefreshCw, ExternalLink
+  Copy, Search, RefreshCw, ExternalLink, MousePointerClick
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ShowcaseEditMode } from "@/components/showcase/ShowcaseEditMode";
