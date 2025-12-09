@@ -203,14 +203,8 @@ export default function NavigationManager() {
       .catch(() => {});
   }, []);
 
-  // Tab button style helper - uses site settings
-  const buttonSizeClass = {
-    sm: "text-sm [padding:var(--spacing-1.5)_var(--spacing-3)]",
-    md: "[padding:var(--spacing-2)_var(--spacing-4)]",
-    lg: "text-lg [padding:var(--spacing-3)_var(--spacing-5)]"
-  }[siteSettings.buttonSize || "md"];
-
-  const tabStyle = (tab) => `font-body ${buttonSizeClass} [border-radius:var(--radius-lg)] [transition:var(--duration-200)] ${
+  // Tab button style helper - compact for smaller window
+  const tabStyle = (tab) => `font-body text-sm px-3 py-1.5 [border-radius:var(--radius-lg)] [transition:var(--duration-200)] ${
     activeTab === tab 
       ? `bg-[var(--${siteSettings.selectedButtonColor || "primary"})] text-white` 
       : `bg-[var(--color-background)] text-[var(--color-foreground)] hover:bg-[var(--${siteSettings.ghostButtonHoverColor || "muted"})] border border-[var(--color-border)]`
@@ -233,18 +227,18 @@ export default function NavigationManager() {
           </div>
 
           {/* Tab Navigation */}
-          <div className="flex [gap:var(--spacing-2)] flex-wrap [margin-bottom:var(--spacing-4)]">
+          <div className="flex gap-2 [margin-bottom:var(--spacing-4)]">
             <button className={tabStyle("admin")} onClick={() => setActiveTab("admin")}>
-              <Cog className="h-4 w-4 [margin-right:var(--spacing-2)] inline" />
-              Admin Console
+              <Cog className="h-3.5 w-3.5 mr-1.5 inline" />
+              Admin
             </button>
             <button className={tabStyle("app")} onClick={() => setActiveTab("app")}>
-              <FileCode className="h-4 w-4 [margin-right:var(--spacing-2)] inline" />
+              <FileCode className="h-3.5 w-3.5 mr-1.5 inline" />
               App Pages
             </button>
             <button className={tabStyle("tenant")} onClick={() => setActiveTab("tenant")}>
-              <Users className="h-4 w-4 [margin-right:var(--spacing-2)] inline" />
-              Tenant Navigation
+              <Users className="h-3.5 w-3.5 mr-1.5 inline" />
+              Tenant
             </button>
           </div>
 
