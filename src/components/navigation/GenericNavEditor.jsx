@@ -423,27 +423,28 @@ export default function GenericNavEditor({
                 onClick={syncUnallocatedPages}
                 disabled={isSyncing}
                 title="Scan config and refresh unallocated pages"
+                className="h-8 px-2 text-xs"
               >
                 {isSyncing ? (
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  <Loader2 className="h-3 w-3 mr-1 animate-spin" />
                 ) : (
-                  <Sparkles className="h-4 w-4 mr-2" />
+                  <Sparkles className="h-3 w-3 mr-1" />
                 )}
-                Sync Pages
+                Sync
               </Button>
             )}
           </div>
           <Button 
             size="sm"
-            className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+            className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white h-8 px-2 text-xs"
             onClick={() => { 
               setEditingItem(null); 
               setFormData({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null, item_type: "page", default_collapsed: false }); 
               setShowDialog(true); 
             }}
           >
-            <Plus className="h-4 w-4 mr-2" />
-            Add Item
+            <Plus className="h-3 w-3 mr-1" />
+            Add
           </Button>
         </div>
 
@@ -493,12 +494,12 @@ export default function GenericNavEditor({
                                 )}
                               </div>
 
-                              <div className="flex items-center [gap:var(--spacing-1)] opacity-0 group-hover:opacity-100 [transition:var(--duration-200)]">
+                              <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 [transition:var(--duration-200)]">
                                 {/* Move Menu */}
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="icon" title="Move to...">
-                                      <MoveRight className="h-4 w-4" />
+                                    <Button variant="ghost" size="sm" className="h-7 w-7 p-0" title="Move to...">
+                                      <MoveRight className="h-3 w-3" />
                                     </Button>
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent align="end" className="w-56 max-h-80 overflow-y-auto">
@@ -550,17 +551,17 @@ export default function GenericNavEditor({
                                   </DropdownMenuContent>
                                 </DropdownMenu>
                                 
-                                <Button variant="ghost" size="icon" onClick={() => handleDuplicate(item)} title="Duplicate">
-                                  <Copy className="h-4 w-4" />
+                                <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => handleDuplicate(item)} title="Duplicate">
+                                  <Copy className="h-3 w-3" />
                                 </Button>
-                                <Button variant="ghost" size="icon" onClick={() => handleEdit(item)} title="Edit">
-                                  <Pencil className="h-4 w-4" />
+                                <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => handleEdit(item)} title="Edit">
+                                  <Pencil className="h-3 w-3" />
                                 </Button>
-                                <Button variant="ghost" size="icon" onClick={() => handleUnallocate(item)} title="Remove">
-                                  <Power className="h-4 w-4 text-[var(--color-success)]" />
+                                <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => handleUnallocate(item)} title="Remove">
+                                  <Power className="h-3 w-3 text-[var(--color-success)]" />
                                 </Button>
-                                <Button variant="ghost" size="icon" className="text-[var(--color-destructive)]" onClick={() => handleDelete(item)} title="Delete">
-                                  <Trash2 className="h-4 w-4" />
+                                <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-[var(--color-destructive)]" onClick={() => handleDelete(item)} title="Delete">
+                                  <Trash2 className="h-3 w-3" />
                                 </Button>
                               </div>
 
@@ -599,6 +600,7 @@ export default function GenericNavEditor({
                               <Button
                                 variant="outline"
                                 size="sm"
+                                className="h-7 px-2 text-xs"
                                 onClick={async () => {
                                   setLoadingRecommendations(true);
                                   try {
@@ -641,10 +643,11 @@ export default function GenericNavEditor({
                             </Badge>
                           )}
                         </div>
-                        <div className="flex items-center [gap:var(--spacing-1)] opacity-0 group-hover:opacity-100 [transition:var(--duration-200)]">
+                        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 [transition:var(--duration-200)]">
                           <Button 
                             variant="ghost" 
-                            size="icon" 
+                            size="sm"
+                            className="h-7 w-7 p-0"
                             onClick={() => {
                               const name = slug.replace(/([A-Z])/g, ' $1').trim();
                               setEditingItem(null);
@@ -653,15 +656,16 @@ export default function GenericNavEditor({
                             }}
                             title="Edit & allocate"
                           >
-                            <Pencil className="h-4 w-4" />
+                            <Pencil className="h-3 w-3" />
                           </Button>
                           <Button 
                             variant="ghost" 
-                            size="icon" 
+                            size="sm"
+                            className="h-7 w-7 p-0"
                             onClick={() => handleAllocate(slug)}
                             title="Quick allocate"
                           >
-                            <Power className="h-4 w-4 text-[var(--color-destructive)]" />
+                            <Power className="h-3 w-3 text-[var(--color-destructive)]" />
                           </Button>
                         </div>
                       </div>
