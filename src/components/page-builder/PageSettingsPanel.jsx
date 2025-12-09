@@ -37,6 +37,8 @@ export function PageSettingsPanel({ currentPageName }) {
   const [pageTitle, setPageTitle] = useState("");
   const [pageDescription, setPageDescription] = useState("");
   const [navigationMode, setNavigationMode] = useState("expanded");
+  const [showBreadcrumb, setShowBreadcrumb] = useState(true);
+  const [isParentPage, setIsParentPage] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -63,9 +65,30 @@ export function PageSettingsPanel({ currentPageName }) {
     if (titleEl) setPageTitle(titleEl.textContent || "");
     if (descEl) setPageDescription(descEl.textContent || "");
 
+    // Load page settings including breadcrumb visibility
+    const loadPageSettings = async () => {
+      try {
+        const pages = await base44.entities.UIPage.filter({ slug: currentPageName });
+        if (pages.length > 0) {
+          const page = pages[0];
+          setNavigationMode(page.navigation_mode || "expanded");
+          
+          // Check if this page is a parent (has no parent_page_id or is top level)
+          const isParent = !page.parent_page_id;
+          setIsParentPage(isParent);
+          
+          // Set breadcrumb visibility - default based on parent/child status
+          setShowBreadcrumb(page.show_breadcrumb ?? !isParent);
+        }
+      } catch (e) {
+        console.error("Failed to load page settings:", e);
+      }
+    };
+    loadPageSettings();
+
     window.addEventListener('ui-preferences-changed', handlePreferencesChange);
     return () => window.removeEventListener('ui-preferences-changed', handlePreferencesChange);
-  }, []);
+  }, [currentPageName]);
 
   // Extract text elements when panel opens
   useEffect(() => {
@@ -117,12 +140,13 @@ export function PageSettingsPanel({ currentPageName }) {
         ...currentPageData,
         current_content_jsx: currentPageContent,
         navigation_mode: navigationMode,
+        show_breadcrumb: showBreadcrumb,
         versions: [...(currentPageData.versions || []), newVersion],
         current_version_number: newVersion.version_number,
       },
     });
 
-    window.dispatchEvent(new CustomEvent('page-settings-saved', { detail: { navigationMode } }));
+    window.dispatchEvent(new CustomEvent('page-settings-saved', { detail: { navigationMode, showBreadcrumb } }));
   };
 
   if (!isVisible) return null;
@@ -293,7 +317,7 @@ export function PageSettingsPanel({ currentPageName }) {
             </Collapsible>
           )}
 
-          <div className="border rounded-lg p-4">
+          <div className="border rounded-lg p-4 space-y-4">
             <div className="space-y-2">
               <Label className="text-sm font-medium">Navigation Mode</Label>
               <p className="text-xs text-muted-foreground mb-3">Default sidebar state for this page</p>
@@ -307,6 +331,16 @@ export function PageSettingsPanel({ currentPageName }) {
                   <SelectItem value="hidden">Hidden</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t">
+              <div className="space-y-0.5">
+                <Label className="text-sm font-medium">Show Breadcrumb</Label>
+                <p className="text-xs text-muted-foreground">
+                  {isParentPage ? "Hidden by default for parent pages" : "Shown by default for child pages"}
+                </p>
+              </div>
+              <Switch checked={showBreadcrumb} onCheckedChange={setShowBreadcrumb} />
             </div>
           </div>
 
