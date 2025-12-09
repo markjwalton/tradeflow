@@ -279,7 +279,7 @@ export default function ProjectTeam({ projectId, tasks = [], isLoading: isLoadin
               return (
                 <div
                   key={allocation.id}
-                  className="p-4 rounded-lg border border-stone-200 bg-white hover:shadow-sm transition-shadow"
+                  className="p-4 rounded-lg border border-border bg-card hover:shadow-sm transition-shadow"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
@@ -317,7 +317,7 @@ export default function ProjectTeam({ projectId, tasks = [], isLoading: isLoadin
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => deleteMutation.mutate(allocation.id)}
-                          className="text-red-600"
+                          className="text-destructive"
                         >
                           <Trash2 className="h-4 w-4 mr-2" />
                           Remove

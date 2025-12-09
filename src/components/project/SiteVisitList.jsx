@@ -349,7 +349,7 @@ export default function SiteVisitList({ reports = [], projectId, isLoading }) {
                     {formData.actionItems.map((action, index) => (
                       <div
                         key={index}
-                        className="flex items-center justify-between p-2 bg-stone-50 rounded"
+                        className="flex items-center justify-between p-2 bg-muted/50 rounded"
                       >
                         <span className="text-sm">{action}</span>
                         <Button
@@ -369,7 +369,7 @@ export default function SiteVisitList({ reports = [], projectId, isLoading }) {
               {/* Photos */}
               <div className="space-y-2">
                 <Label>Photos</Label>
-                <div className="border-2 border-dashed border-stone-200 rounded-lg p-4">
+                <div className="border-2 border-dashed border-border rounded-lg p-4">
                   <input
                     type="file"
                     accept="image/*"
@@ -380,7 +380,7 @@ export default function SiteVisitList({ reports = [], projectId, isLoading }) {
                   />
                   <label
                     htmlFor="photo-upload"
-                    className="cursor-pointer flex flex-col items-center text-stone-500"
+                    className="cursor-pointer flex flex-col items-center text-muted-foreground"
                   >
                     {isUploading ? (
                       <Loader2 className="h-6 w-6 animate-spin" />
@@ -404,7 +404,7 @@ export default function SiteVisitList({ reports = [], projectId, isLoading }) {
                         <button
                           type="button"
                           onClick={() => handleRemovePhoto(index)}
-                          className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
                         >
                           ×
                         </button>
@@ -451,7 +451,7 @@ export default function SiteVisitList({ reports = [], projectId, isLoading }) {
                 <AccordionItem
                   key={report.id}
                   value={report.id}
-                  className="border border-stone-200 rounded-lg px-4"
+                  className="border border-border rounded-lg px-4"
                 >
                   <AccordionTrigger className="hover:no-underline">
                     <div className="flex items-center gap-4 text-left">
@@ -549,7 +549,7 @@ export default function SiteVisitList({ reports = [], projectId, isLoading }) {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="text-red-600 hover:text-red-700"
+                          className="text-destructive hover:text-destructive/90"
                           onClick={() => deleteMutation.mutate(report.id)}
                         >
                           <Trash2 className="h-4 w-4 mr-1" />

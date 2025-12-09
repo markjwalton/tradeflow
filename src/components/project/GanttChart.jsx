@@ -189,7 +189,7 @@ export default function GanttChart({ tasks = [], project, isLoading }) {
           <div style={{ minWidth: `${chartWidth + 250}px` }}>
             {/* Header - Days */}
             <div className="flex border-b sticky top-0 bg-white z-10">
-              <div className="w-[250px] flex-shrink-0 p-3 border-r bg-muted font-medium text-sm text-muted-foreground">
+              <div className="w-[250px] flex-shrink-0 p-3 border-r bg-muted/50 font-medium text-sm text-muted-foreground">
                 Task
               </div>
               <div className="flex">
@@ -197,8 +197,8 @@ export default function GanttChart({ tasks = [], project, isLoading }) {
                   <div
                     key={idx}
                     className={`flex-shrink-0 text-center border-r p-1 ${
-                      isWeekend(date) ? "bg-muted" : "bg-background"
-                    } ${isSameDay(date, today) ? "bg-primary-100" : ""}`}
+                      isWeekend(date) ? "bg-muted/50" : "bg-background"
+                    } ${isSameDay(date, today) ? "bg-primary/10" : ""}`}
                     style={{ width: dayWidth }}
                   >
                     <div className="text-xs text-muted-foreground">{format(date, "EEE")}</div>
@@ -221,7 +221,7 @@ export default function GanttChart({ tasks = [], project, isLoading }) {
                 const position = getTaskPosition(task);
                 
                 return (
-                  <div key={task.id} className="flex border-b hover:bg-muted">
+                  <div key={task.id} className="flex border-b hover:bg-muted/30">
                     {/* Task Name Column */}
                     <div className={`w-[250px] flex-shrink-0 p-3 border-r border-l-4 ${priorityBorders[task.priority] || "border-l-border"}`}>
                       <div className="flex items-center gap-2">
@@ -263,8 +263,8 @@ export default function GanttChart({ tasks = [], project, isLoading }) {
                         <div
                           key={idx}
                           className={`flex-shrink-0 border-r h-full ${
-                            isWeekend(date) ? "bg-muted" : ""
-                          } ${isSameDay(date, today) ? "bg-primary-100/50" : ""}`}
+                            isWeekend(date) ? "bg-muted/30" : ""
+                          } ${isSameDay(date, today) ? "bg-primary/10" : ""}`}
                           style={{ width: dayWidth }}
                           onDrop={(e) => handleDrop(e, idx)}
                           onDragOver={(e) => e.preventDefault()}
@@ -316,7 +316,7 @@ export default function GanttChart({ tasks = [], project, isLoading }) {
 
             {/* Project Timeline Summary */}
             {project?.startDate && project?.estimatedEndDate && (
-              <div className="flex border-t-2 border-primary-200 bg-primary-100">
+              <div className="flex border-t-2 border-primary/20 bg-primary/10">
                 <div className="w-[250px] flex-shrink-0 p-3 border-r font-medium text-sm text-primary">
                   📅 Project Timeline
                 </div>
@@ -329,7 +329,7 @@ export default function GanttChart({ tasks = [], project, isLoading }) {
                     return (
                       <div
                         key={idx}
-                        className={`flex-shrink-0 border-r h-12 ${isInProject ? "bg-primary-200/50" : ""}`}
+                        className={`flex-shrink-0 border-r h-12 ${isInProject ? "bg-primary/20" : ""}`}
                         style={{ width: dayWidth }}
                       />
                     );
