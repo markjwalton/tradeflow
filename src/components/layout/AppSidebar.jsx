@@ -1,45 +1,11 @@
 import { cn } from "@/lib/utils";
 import { useAppSidebar } from "./SidebarContext";
 import { Link, useLocation } from "react-router-dom";
-import { ChevronDown, ChevronRight, Folder, FolderOpen, Home, Building2, Users, Settings, Package, LayoutDashboard, Navigation, Shield, GitBranch, Database } from "lucide-react";
+import { ChevronDown, ChevronRight, Folder, FolderOpen, Home } from "lucide-react";
 import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { createPageUrl } from "@/utils";
-
-const iconMap = {
-  Home,
-  Building2,
-  Users,
-  Settings,
-  Package,
-  LayoutDashboard,
-  Folder,
-  FolderOpen,
-  Navigation: LayoutDashboard,
-  Shield: Settings,
-  GitBranch: Package,
-  Database: Package,
-  Layout: LayoutDashboard,
-  Zap: Package,
-  Workflow: Package,
-  Lightbulb: Package,
-  Globe: Package,
-  Key: Settings,
-  Gauge: LayoutDashboard,
-  BookOpen: Package,
-  FlaskConical: Package,
-  Palette: Package,
-  Sparkles: Package,
-  Type: Package,
-  MousePointer: Package,
-  Square: Package,
-  FormInput: Package,
-  BarChart3: LayoutDashboard,
-  Bell: Package,
-  Upload: Package,
-  File: Package,
-  Eye: Package,
-};
+import { getIconByName } from "@/components/navigation/NavIconMap";
 
 export function AppSidebar({ navItems = [] }) {
   const { mode, isHidden } = useAppSidebar();
@@ -63,8 +29,7 @@ export function AppSidebar({ navItems = [] }) {
   };
 
   const getIcon = (iconName) => {
-    if (!iconName) return Home;
-    return iconMap[iconName] || Home;
+    return getIconByName(iconName, Home);
   };
 
   // Check if any child is active
