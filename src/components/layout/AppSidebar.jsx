@@ -63,7 +63,7 @@ export function AppSidebar({ navItems = [] }) {
     return iconMap[iconName] || Home;
   };
 
-  const renderNavItem = (item) => {
+  const renderNavItem = (item, isChild = false) => {
     const isFolder = item.item_type === "folder";
     const Icon = getIcon(item.icon);
     const isExpanded = expandedFolders.has(item.id);
@@ -97,8 +97,8 @@ export function AppSidebar({ navItems = [] }) {
             {showLabels && <span className="flex-1 text-left">{item.name}</span>}
           </button>
           {isExpanded && hasChildren && showLabels && (
-            <div className="pb-2 space-y-0.5">
-              {item.children.map((child) => renderNavItem(child))}
+            <div className="pb-2 space-y-0.5 pl-3">
+              {item.children.map((child) => renderNavItem(child, true))}
             </div>
           )}
         </div>
@@ -116,14 +116,14 @@ export function AppSidebar({ navItems = [] }) {
         to={fullPageUrl}
         className={cn(
           "flex items-center rounded-lg transition-colors",
-          showLabels ? "gap-3 px-3 py-2" : "justify-center p-3",
+          showLabels ? (isChild ? "gap-2 px-2 py-2" : "gap-3 px-3 py-2") : "justify-center p-3",
           isActive
             ? "bg-white/10 text-white"
             : "text-white/70 hover:bg-white/5 hover:text-white"
         )}
       >
         <ChildIcon className="h-5 w-5 flex-shrink-0" />
-        {showLabels && <span className="truncate">{item.name}</span>}
+        {showLabels && <span className="truncate text-sm">{item.name}</span>}
       </Link>
     );
   };
