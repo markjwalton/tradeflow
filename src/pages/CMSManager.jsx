@@ -108,7 +108,7 @@ export default function CMSManager() {
       active: "bg-success-50 text-success",
       inactive: "bg-muted text-muted-foreground"
     };
-    return <Badge className={colors[status] || "bg-gray-100"}>{status}</Badge>;
+    return <Badge className={colors[status] || "bg-muted"}>{status}</Badge>;
   };
 
   const renderList = (items, type, isLoading, deleteMutation) => {

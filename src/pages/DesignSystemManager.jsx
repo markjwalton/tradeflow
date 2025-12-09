@@ -250,7 +250,7 @@ For each recommendation, provide:
   const impactColors = {
     low: "bg-info-50 text-info",
     medium: "bg-warning/10 text-warning",
-    high: "bg-secondary-100 text-secondary",
+    high: "bg-accent-100 text-accent",
     critical: "bg-destructive-50 text-destructive"
   };
 
@@ -258,7 +258,7 @@ For each recommendation, provide:
     <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-h2 flex items-center gap-2">
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
             <Package className="h-6 w-6 text-primary" />
             Design System Manager
           </h1>
@@ -350,7 +350,7 @@ For each recommendation, provide:
         <TabsContent value="packages" className="space-y-4">
           {/* Core Packages */}
           <div>
-            <h2 className="text-h4 mb-3">
+            <h2 className="text-lg font-semibold mb-3">
               Core Packages
             </h2>
             <div className="grid md:grid-cols-2 gap-4">
@@ -764,7 +764,7 @@ For each recommendation, provide:
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-body-small text-foreground">Package Name *</label>
+                <label className="text-sm font-medium text-foreground">Package Name *</label>
                 <Input
                   value={formData.package_name}
                   onChange={(e) => setFormData({ ...formData, package_name: e.target.value })}
@@ -811,7 +811,7 @@ For each recommendation, provide:
             {formData.package_type === "customer_theme" && (
               <>
                 <div className="border-t border-border pt-4">
-                  <h4 className="text-h5 mb-3">
+                  <h4 className="text-lg font-medium mb-3">
                     Customer Information
                   </h4>
                   <div className="space-y-3">
