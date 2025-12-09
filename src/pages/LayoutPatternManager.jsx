@@ -82,8 +82,11 @@ export default function LayoutPatternManager() {
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.LayoutPattern.update(id, data),
-    onSuccess: () => {
+    onSuccess: (result, variables) => {
       queryClient.invalidateQueries({ queryKey: ["layoutPatterns"] });
+      if (variables.data?.pattern_id) {
+        queryClient.invalidateQueries({ queryKey: ["layoutPattern", variables.data.pattern_id] });
+      }
       setShowDialog(false);
       resetForm();
       toast.success("Pattern updated");
