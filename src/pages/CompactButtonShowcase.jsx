@@ -36,7 +36,7 @@ export default function CompactButtonShowcase() {
         <CardContent className="space-y-4">
           <div>
             <Label className={editorClasses.label}>Padding</Label>
-            <div className="grid grid-cols-7 gap-1 mt-2">
+            <div className="grid grid-cols-12 gap-1 mt-2">
               {spacingTokens.map((value) => (
                 <CompactButton
                   key={value}
@@ -59,7 +59,7 @@ export default function CompactButtonShowcase() {
         <CardContent className="space-y-4">
           <div>
             <Label className={editorClasses.label}>Font Size</Label>
-            <div className="grid grid-cols-4 gap-1 mt-2">
+            <div className="grid grid-cols-8 gap-1 mt-2">
               {fontSizes.map((value) => (
                 <CompactButton
                   key={value}
