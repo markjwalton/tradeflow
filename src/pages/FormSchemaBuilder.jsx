@@ -58,8 +58,9 @@ export default function FormSchemaBuilder() {
 
     if (!destination) return;
 
-    // Dragging from palette to editor
-    if (source.droppableId === "palette" && destination.droppableId === "editor") {
+    // Dragging from any palette to editor
+    const isPaletteSource = source.droppableId.startsWith("palette");
+    if (isPaletteSource && destination.droppableId === "editor") {
       const control = [...LAYOUT_CONTROLS, ...FIELD_CONTROLS, ...COMPOSITE_CONTROLS].find(
         c => c.id === result.draggableId.replace("palette-", "")
       );
