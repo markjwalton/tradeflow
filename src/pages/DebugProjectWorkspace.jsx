@@ -73,27 +73,10 @@ export default function DebugProjectWorkspace() {
   }
 
   return (
-    <div>
-      {/* Debug Banner */}
-      <div className="p-3 bg-warning/10 border-b border-warning/20 flex items-center gap-2">
-        <AlertTriangle className="h-5 w-5 text-warning" />
-        <span className="text-warning font-medium">DEBUG MODE</span>
-        <span className="text-muted-foreground text-sm">
-          – Using data from LayoutPattern database
-        </span>
-        <div className="ml-auto">
-          <Link to={createPageUrl("LayoutPatternManager")}>
-            <Button variant="outline" size="sm">Manage Pattern</Button>
-          </Link>
-        </div>
-      </div>
-
-      {/* Render layout using the new system */}
-      <LayoutRenderer
-        config={layoutConfig}
-        data={mockProjectData}
-        onAction={handleAction}
-      />
-    </div>
+    <LayoutRenderer
+      config={layoutConfig}
+      data={mockProjectData}
+      onAction={handleAction}
+    />
   );
 }

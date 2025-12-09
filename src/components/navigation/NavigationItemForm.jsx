@@ -68,6 +68,7 @@ export default function NavigationItemForm({
     item_type: "page",
     page_url: "",
     icon: "",
+    tooltip_text: "",
     is_visible: true,
     parent_id: "",
     roles: [],
@@ -81,6 +82,7 @@ export default function NavigationItemForm({
         item_type: item.item_type || (item.page_slug || item.page_url ? "page" : "folder"),
         page_url: item.page_url || item.page_slug || "",
         icon: item.icon || "",
+        tooltip_text: item.tooltip_text || "",
         is_visible: item.is_visible !== false,
         parent_id: item.parent_id || "",
         roles: item.roles || [],
@@ -92,6 +94,7 @@ export default function NavigationItemForm({
         item_type: "page",
         page_url: "",
         icon: "",
+        tooltip_text: "",
         is_visible: true,
         parent_id: "",
         roles: [],
@@ -121,6 +124,17 @@ export default function NavigationItemForm({
               placeholder="Dashboard"
               required
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="tooltip_text">Tooltip Text (optional)</Label>
+            <Input
+              id="tooltip_text"
+              value={formData.tooltip_text || ""}
+              onChange={(e) => setFormData({ ...formData, tooltip_text: e.target.value })}
+              placeholder="Leave empty to use name"
+            />
+            <p className="text-xs text-muted-foreground">Custom text shown on hover</p>
           </div>
           
           {/* Type Selection */}
