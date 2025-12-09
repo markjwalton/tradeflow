@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 export function AppContent({ children, navItems = [] }) {
   const location = useLocation();
   const currentPage = location.pathname.split("/").pop();
-  const showBreadcrumbs = currentPage && currentPage !== "Dashboard";
+  const showBreadcrumbs = currentPage !== ""; // Always show breadcrumbs except empty path
 
   return (
     <main className="flex-1 overflow-y-auto">
