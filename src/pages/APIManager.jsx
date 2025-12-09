@@ -784,7 +784,7 @@ export default function APIManager() {
           <div className="grid grid-cols-4 gap-4">
             <Card>
               <CardContent className="pt-4">
-                <div className="flex items-center gap-2 text-gray-500 mb-1">
+                <div className="flex items-center gap-2 text-muted-foreground mb-1">
                   <Zap className="h-4 w-4" />
                   <span className="text-sm">Calls (24h)</span>
                 </div>
@@ -793,7 +793,7 @@ export default function APIManager() {
             </Card>
             <Card>
               <CardContent className="pt-4">
-                <div className="flex items-center gap-2 text-gray-500 mb-1">
+                <div className="flex items-center gap-2 text-muted-foreground mb-1">
                   <CheckCircle2 className="h-4 w-4" />
                   <span className="text-sm">Success Rate</span>
                 </div>
@@ -807,7 +807,7 @@ export default function APIManager() {
             </Card>
             <Card>
               <CardContent className="pt-4">
-                <div className="flex items-center gap-2 text-gray-500 mb-1">
+                <div className="flex items-center gap-2 text-muted-foreground mb-1">
                   <Clock className="h-4 w-4" />
                   <span className="text-sm">Avg Response</span>
                 </div>
@@ -821,7 +821,7 @@ export default function APIManager() {
             </Card>
             <Card>
               <CardContent className="pt-4">
-                <div className="flex items-center gap-2 text-gray-500 mb-1">
+                <div className="flex items-center gap-2 text-muted-foreground mb-1">
                   <Activity className="h-4 w-4" />
                   <span className="text-sm">Calls (7d)</span>
                 </div>
@@ -1326,7 +1326,7 @@ function LookupStatsTab({ lookupLogs, tenants }) {
             </TableHeader>
             <TableBody>
               {filteredLogs.slice(0, 50).map(log => {
-                const config = lookupTypeLabels[log.lookup_type] || { label: log.lookup_type, icon: MapPin, color: "text-gray-600" };
+                const config = lookupTypeLabels[log.lookup_type] || { label: log.lookup_type, icon: MapPin, color: "text-muted-foreground" };
                 const Icon = config.icon;
                 return (
                   <TableRow key={log.id}>
