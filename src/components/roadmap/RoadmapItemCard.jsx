@@ -57,16 +57,16 @@ export default function RoadmapItemCard({
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <Card className={`hover:shadow-md transition-shadow border-[var(--color-background-muted)] ${item.is_focused ? "ring-2 ring-[var(--color-accent-500)]" : ""} ${item.is_starred ? "border-[var(--color-warning)]" : ""}`}>
+      <Card className={`hover:shadow-md transition-shadow border-border ${item.is_focused ? "ring-2 ring-accent" : ""} ${item.is_starred ? "border-warning" : ""}`}>
         <CardHeader className="pb-2">
           <div className="flex items-start justify-between">
             <CollapsibleTrigger className="flex items-center gap-2 text-left flex-1">
-              {isOpen ? <ChevronDown className="h-4 w-4 text-[var(--color-charcoal)]" /> : <ChevronRight className="h-4 w-4 text-[var(--color-charcoal)]" />}
+              {isOpen ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
               <div className="flex items-center gap-2">
-                {item.is_starred && <Star className="h-4 w-4 text-[var(--color-warning)] fill-[var(--color-warning)]" />}
-                {item.is_focused && <Focus className="h-4 w-4 text-[var(--color-accent-600)]" />}
+                {item.is_starred && <Star className="h-4 w-4 text-warning fill-warning" />}
+                {item.is_focused && <Focus className="h-4 w-4 text-accent" />}
                 <CatIcon className="h-4 w-4" />
-                <CardTitle className="text-base text-[var(--color-midnight)]">{item.title}</CardTitle>
+                <CardTitle className="text-base text-foreground">{item.title}</CardTitle>
               </div>
             </CollapsibleTrigger>
             <DropdownMenu>
@@ -77,11 +77,11 @@ export default function RoadmapItemCard({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => onToggleStar(item)}>
-                  <Star className={`h-4 w-4 mr-2 ${item.is_starred ? "fill-[var(--color-warning)] text-[var(--color-warning)]" : ""}`} />
+                  <Star className={`h-4 w-4 mr-2 ${item.is_starred ? "fill-warning text-warning" : ""}`} />
                   {item.is_starred ? "Unstar" : "Star"}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => onToggleFocus(item)}>
-                  <Focus className={`h-4 w-4 mr-2 ${item.is_focused ? "text-[var(--color-accent-dark)]" : ""}`} />
+                  <Focus className={`h-4 w-4 mr-2 ${item.is_focused ? "text-accent" : ""}`} />
                   {item.is_focused ? "Remove Focus" : "Set Focus"}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -93,7 +93,7 @@ export default function RoadmapItemCard({
                                         <Edit className="h-4 w-4 mr-2" /> Edit
                                       </DropdownMenuItem>
                                       {onDelete && (
-                                        <DropdownMenuItem className="text-[var(--color-destructive)]" onClick={() => onDelete(item.id)}>
+                                        <DropdownMenuItem className="text-destructive" onClick={() => onDelete(item.id)}>
                                           <Trash2 className="h-4 w-4 mr-2" /> Delete
                                         </DropdownMenuItem>
                                       )}
@@ -116,7 +116,7 @@ export default function RoadmapItemCard({
         <CollapsibleContent>
           <CardContent className="pt-0">
             {item.description && (
-              <p className="text-sm text-[var(--color-charcoal)] mb-3">{item.description}</p>
+              <p className="text-sm text-muted-foreground mb-3">{item.description}</p>
             )}
             {item.tags?.length > 0 && (
               <div className="flex flex-wrap gap-1 mb-2">
@@ -126,10 +126,10 @@ export default function RoadmapItemCard({
               </div>
             )}
             {item.target_phase && (
-              <p className="text-xs text-[var(--color-charcoal)]">Phase: {item.target_phase}</p>
+              <p className="text-xs text-muted-foreground">Phase: {item.target_phase}</p>
             )}
             {item.notes && (
-              <p className="text-xs text-[var(--color-charcoal)] mt-2 italic">{item.notes}</p>
+              <p className="text-xs text-muted-foreground mt-2 italic">{item.notes}</p>
             )}
             <div className="flex gap-2 mt-3">
                 <Button size="sm" variant="outline" onClick={handleViewJournal}>
