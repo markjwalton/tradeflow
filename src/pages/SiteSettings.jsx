@@ -166,26 +166,21 @@ export default function SiteSettings() {
                 >
                   <SelectTrigger id="background-color" className="flex-1">
                     <SelectValue />
-                  </SelectTrigger>
-                <SelectContent>
-                  {colorTokens.map((color) => (
-                    <SelectItem key={color.value} value={color.value}>
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="w-4 h-4 rounded border"
-                          style={{ backgroundColor: `var(--${color.value})` }}
-                        />
+                    </SelectTrigger>
+                    <SelectContent>
+                    {colorTokens.map((color) => (
+                      <SelectItem key={color.value} value={color.value}>
                         {color.label}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-        </Card>
+                      </SelectItem>
+                    ))}
+                    </SelectContent>
+                    </Select>
+                    </div>
+                    </div>
+                    </CardContent>
+                    </Card>
 
-        <Card>
+                    <Card>
           <CardHeader>
             <CardTitle>Overlay Settings</CardTitle>
             <CardDescription>Configure the overlay appearance for modals and panels</CardDescription>
