@@ -249,7 +249,31 @@ export default function Layout({ children, currentPageName }) {
     return null;
   }
 
-  // Build navigation based on context
+  const tenantContextValue = {
+    tenant: currentTenant,
+    tenantId: currentTenant?.id,
+    tenantSlug: currentTenant?.slug,
+    tenantName: currentTenant?.name,
+    userRoles,
+    isGlobalAdmin,
+    isTenantAdmin,
+  };
+
+  return (
+    <TenantContext.Provider value={tenantContextValue}>
+      <link rel="stylesheet" href="https://use.typekit.net/iwm1gcu.css" />
+      <style dangerouslySetInnerHTML={{ __html: cssVariables }} />
+      <SidebarProvider>
+        <AppShell user={currentUser} tenant={currentTenant} navItems={navItems}>
+          {children}
+        </AppShell>
+        <GlobalAIAssistant />
+      </SidebarProvider>
+    </TenantContext.Provider>
+  );
+}
+
+  // OLD CODE BELOW - TO BE REMOVED
   let displayPages = [];
   
   // Icon map for custom nav items
