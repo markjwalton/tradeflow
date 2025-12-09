@@ -389,7 +389,7 @@ export default function TriggerEditor({ triggers = [], onChange }) {
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="h-6 w-6 p-0 text-[var(--color-destructive)]"
+                      className="h-6 w-6 p-0 text-destructive"
                       onClick={(e) => {
                         e.stopPropagation();
                         deleteTrigger(triggerIndex);
