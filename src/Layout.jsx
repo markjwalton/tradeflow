@@ -46,6 +46,25 @@ export default function Layout({ children, currentPageName }) {
   const isTenantPage = false;
 
   useEffect(() => {
+    // Load editor bubble preference once
+    const loadBubblePreference = async () => {
+      try {
+        const user = await base44.auth.me();
+        if (user?.ui_preferences?.showEditorBubble !== undefined) {
+          setShowEditorBubble(user.ui_preferences.showEditorBubble);
+        }
+      } catch (e) {
+        // User not logged in or error
+      }
+    };
+
+    const handlePreferencesChange = (event) => {
+      setShowEditorBubble(event.detail.showEditorBubble ?? true);
+    };
+
+    loadBubblePreference();
+    window.addEventListener('ui-preferences-changed', handlePreferencesChange);
+    
     const checkAccess = async () => {
       try {
         let loadedNavConfig = null;
@@ -81,25 +100,6 @@ export default function Layout({ children, currentPageName }) {
         } catch (e) {
           console.error("Nav config error:", e);
         }
-        
-        // Load editor bubble preference
-        const handlePreferencesChange = (event) => {
-          setShowEditorBubble(event.detail.showEditorBubble ?? true);
-        };
-
-        const loadBubblePreference = async () => {
-          try {
-            const user = await base44.auth.me();
-            if (user?.ui_preferences?.showEditorBubble !== undefined) {
-              setShowEditorBubble(user.ui_preferences.showEditorBubble);
-            }
-          } catch (e) {
-            // User not logged in or error
-          }
-        };
-
-        loadBubblePreference();
-        window.addEventListener('ui-preferences-changed', handlePreferencesChange);
         
         // Get public pages from config or use defaults
         const configPublicPages = loadedNavConfig?.public_pages || ["TenantAccess", "Setup", "Dashboard"];
@@ -245,11 +245,11 @@ export default function Layout({ children, currentPageName }) {
 
     checkAccess();
     
-    // Cleanup for preferences listener
+    // Cleanup event listener
     return () => {
-      window.removeEventListener('ui-preferences-changed', () => {});
+      window.removeEventListener('ui-preferences-changed', handlePreferencesChange);
     };
-  }, [currentPageName]); // Re-run when page changes
+  }, [currentPageName]);
 
   // Pages without layout wrapper (TenantAccess, Setup render without chrome)
   if (currentPageName === "TenantAccess" || currentPageName === "Setup") {
