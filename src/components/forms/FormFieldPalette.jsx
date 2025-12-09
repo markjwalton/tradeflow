@@ -39,10 +39,10 @@ const fieldTypes = [
 
 export default function FormFieldPalette({ onAddField }) {
   return (
-    <div className="w-64 bg-[var(--color-background-paper)] border-r border-[var(--color-background-muted)] flex flex-col">
-      <div className="p-3 border-b border-[var(--color-background-muted)]">
-        <h3 className="font-semibold text-sm text-[var(--color-midnight)]">Add Field</h3>
-        <p className="text-xs text-[var(--color-charcoal)]">Click to add to form</p>
+    <div className="w-64 bg-card border-r border-border flex flex-col">
+      <div className="p-3 border-b border-border">
+        <h3 className="font-semibold text-sm text-foreground">Add Field</h3>
+        <p className="text-xs text-muted-foreground">Click to add to form</p>
       </div>
       <ScrollArea className="flex-1">
         <div className="p-3 space-y-2">
@@ -52,13 +52,13 @@ export default function FormFieldPalette({ onAddField }) {
               <button
                 key={field.type}
                 onClick={() => onAddField(field.type)}
-                className="w-full p-3 rounded-lg border border-[var(--color-background-muted)] text-left transition-all hover:shadow-md hover:border-[var(--color-primary)]/30 bg-[var(--color-background-paper)]"
+                className="w-full p-3 rounded-lg border border-border text-left transition-all hover:shadow-md hover:border-primary/30 bg-card"
               >
                 <div className="flex items-center gap-2">
-                  <Icon className="h-4 w-4 text-[var(--color-charcoal)]" />
-                  <span className="font-medium text-sm text-[var(--color-midnight)]">{field.label}</span>
+                  <Icon className="h-4 w-4 text-muted-foreground" />
+                  <span className="font-medium text-sm text-foreground">{field.label}</span>
                 </div>
-                <p className="text-xs text-[var(--color-charcoal)] mt-1">{field.description}</p>
+                <p className="text-xs text-muted-foreground mt-1">{field.description}</p>
               </button>
             );
           })}
