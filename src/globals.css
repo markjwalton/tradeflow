@@ -1001,7 +1001,7 @@
     color: var(--text-subtle);
   }
 
-  .text-editor-brand {
+  .brand {
     font-family: "degular-display", sans-serif;
     font-size: 2.5rem;
     font-weight: 800;

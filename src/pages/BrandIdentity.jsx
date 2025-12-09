@@ -351,7 +351,7 @@ export default function BrandIdentity() {
                 alt="Editor icon" 
                 className="h-12 w-12"
               />
-              <h2 className="text-editor-brand">editor</h2>
+              <div className="brand">editor</div>
             </div>
           </div>
           

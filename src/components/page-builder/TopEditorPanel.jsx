@@ -39,7 +39,7 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
               alt="Editor icon" 
               className="h-8 w-8"
             />
-            <h2 className="text-editor-brand">editor</h2>
+            <div className="brand">editor</div>
           </div>
         </div>
         
