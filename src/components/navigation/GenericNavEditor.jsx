@@ -406,6 +406,7 @@ export default function GenericNavEditor({
   const flatList = buildFlatList();
 
   return (
+    <>
     <Card>
       {title && (
         <CardHeader className="flex flex-row items-center justify-between">
@@ -841,5 +842,6 @@ export default function GenericNavEditor({
           </SheetFooter>
         </SheetContent>
       </Sheet>
+    </>
   );
 }
