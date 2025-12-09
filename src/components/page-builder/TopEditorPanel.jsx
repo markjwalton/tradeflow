@@ -9,8 +9,10 @@ import { ComponentPalettePanel } from "./ComponentPalettePanel";
 import { StylingPanel } from "./StylingPanel";
 import { LayoutBuilderPanel } from "./LayoutBuilderPanel";
 import { PageSettingsTab } from "./PageSettingsTab";
+import { useEditMode } from "./EditModeContext";
 
 export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
+  const { selectedElement } = useEditMode();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [viewMode, setViewMode] = useState("focus"); // 'focus' or 'full'
   const [hasChanges, setHasChanges] = useState(false);
@@ -78,12 +80,37 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
           backgroundColor: 'var(--color-editor-background, var(--color-background))'
         }}>
           {viewMode === 'focus' ? (
-            <div className="h-full flex items-center justify-center border-2 border-dashed border-muted rounded-lg">
-              <div className="text-center">
-                <Layers className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                <p className="text-sm font-medium text-muted-foreground">Select an element for properties and token options</p>
+            selectedElement ? (
+              <div className="h-full flex flex-col gap-4">
+                <div className="text-sm text-muted-foreground">
+                  <p>Selected: <code className="text-xs bg-muted px-2 py-1 rounded">{selectedElement.tagName}</code></p>
+                  <p className="text-xs truncate mt-1">Path: {selectedElement.path}</p>
+                </div>
+                <div className="flex gap-2">
+                  <StylingPanel 
+                    selectedElement={selectedElement}
+                    onApplyStyle={(style) => {
+                      setHasChanges(true);
+                      toast.info("Style applied");
+                    }}
+                  />
+                  <LayoutBuilderPanel 
+                    selectedElement={selectedElement}
+                    onApplyLayout={(layout) => {
+                      setHasChanges(true);
+                      toast.info("Layout applied");
+                    }}
+                  />
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="h-full flex items-center justify-center border-2 border-dashed border-muted rounded-lg">
+                <div className="text-center">
+                  <Layers className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                  <p className="text-sm font-medium text-muted-foreground">Click any element on the page to edit</p>
+                </div>
+              </div>
+            )
           ) : (
           <Tabs defaultValue="components" className="w-full">
             <TabsList className="grid w-full grid-cols-4 mb-4">
@@ -111,7 +138,7 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
 
             <TabsContent value="styling">
               <StylingPanel 
-                selectedElement={null}
+                selectedElement={selectedElement}
                 onApplyStyle={(style) => {
                   setHasChanges(true);
                   toast.info("Style applied");
@@ -121,7 +148,7 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
 
             <TabsContent value="layout">
               <LayoutBuilderPanel 
-                selectedElement={null}
+                selectedElement={selectedElement}
                 onApplyLayout={(layout) => {
                   setHasChanges(true);
                   toast.info("Layout applied");
