@@ -10,8 +10,6 @@ export function LiveEditWrapper({ children }) {
     isEditMode,
     selectedElement,
     setSelectedElement,
-    currentPageContent,
-    setCurrentPageContent,
   } = useEditMode();
 
   const [liveEditActive, setLiveEditActive] = useState(false);
@@ -35,18 +33,7 @@ export function LiveEditWrapper({ children }) {
     return () => window.removeEventListener('ui-preferences-changed', handlePreferencesChange);
   }, []);
 
-  useEffect(() => {
-    if (liveEditActive) {
-      // Extract HTML on edit mode activation
-      const childrenContainer = document.querySelector('[data-page-content]');
-      if (childrenContainer && !currentPageContent) {
-        setCurrentPageContent(childrenContainer.innerHTML);
-      }
-    } else {
-      // Clear content when exiting edit mode to force fresh load
-      setCurrentPageContent("");
-    }
-  }, [liveEditActive]);
+
 
   useEffect(() => {
     const handleApplyStyle = (event) => {
