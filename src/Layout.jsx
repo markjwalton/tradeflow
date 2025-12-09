@@ -1,64 +1,17 @@
 import React, { useEffect, useState, createContext, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { cssVariables } from "@/components/library/designTokens";
-import { 
-  Home, 
-  Navigation, 
-  Building2, 
-  RefreshCw,
-  ChevronDown,
-  ChevronRight,
-  Loader2,
-  LogOut,
-  User,
-  Shield,
-  Package,
-  GitBranch,
-  Database,
-  Layout as LayoutIcon,
-  Zap,
-  Workflow,
-  Settings,
-  Lightbulb,
-  Globe,
-  Folder,
-  FolderOpen,
-  Menu,
-  X
-} from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 // Tenant Context
 export const TenantContext = createContext(null);
 export const useTenant = () => useContext(TenantContext);
 
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import GlobalAIAssistant from "@/components/ai-assistant/GlobalAIAssistant";
-import NavigationBreadcrumb from "@/components/navigation/NavigationBreadcrumb";
-
-// Additional icons for nav items
-import { BookOpen, FlaskConical, Key, Gauge, Palette, Sparkles, Type, MousePointer, Square, FormInput, BarChart3, Bell, Users, Upload, File, Eye, LayoutDashboard } from "lucide-react";
+import { AppShell } from "@/components/layout/AppShell";
+import { SidebarProvider } from "@/components/layout/SidebarContext";
 
 // Tenant admin pages - for users with admin role in a tenant (minimal hardcoded list)
 const tenantAdminPages = [
