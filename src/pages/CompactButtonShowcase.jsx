@@ -46,7 +46,7 @@ export default function CompactButtonShowcase() {
             Spacing
           </button>
           {openCategory === "spacing" && (
-            <div className="p-1">
+            <div className="px-1 py-0.5">
               <div className="inline-grid grid-cols-12 gap-0.5">
                 {spacingTokens.map((value) => (
                   <CompactButton
@@ -71,7 +71,7 @@ export default function CompactButtonShowcase() {
             Font Size
           </button>
           {openCategory === "fontSize" && (
-            <div className="p-1">
+            <div className="px-1 py-0.5">
               <div className="inline-grid grid-cols-8 gap-0.5">
                 {fontSizes.map((value) => (
                   <CompactButton
@@ -96,7 +96,7 @@ export default function CompactButtonShowcase() {
             Font Weight
           </button>
           {openCategory === "fontWeight" && (
-            <div className="p-1">
+            <div className="px-1 py-0.5">
               <div className="inline-grid grid-cols-5 gap-0.5">
                 {fontWeights.map((weight) => (
                   <CompactButton
@@ -121,7 +121,7 @@ export default function CompactButtonShowcase() {
             Border Radius
           </button>
           {openCategory === "radius" && (
-            <div className="p-1">
+            <div className="px-1 py-0.5">
               <div className="inline-grid grid-cols-7 gap-0.5">
                 {radiusOptions.map((value) => (
                   <CompactButton
@@ -146,7 +146,7 @@ export default function CompactButtonShowcase() {
             Colors
           </button>
           {openCategory === "colors" && (
-            <div className="p-1 space-y-1">
+            <div className="px-1 py-0.5 space-y-0.5">
               {Object.entries(colorTokens).map(([category, tokens]) => (
                 <div key={category}>
                   <div className="text-xs text-muted-foreground mb-0.5 capitalize px-1">{category}</div>
