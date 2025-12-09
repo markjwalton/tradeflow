@@ -105,46 +105,38 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="components" className="space-y-4">
-              <Card className="p-4">
-                <ComponentPalettePanel />
-              </Card>
+            <TabsContent value="components">
+              <ComponentPalettePanel />
             </TabsContent>
 
-            <TabsContent value="styling" className="space-y-4">
-              <Card className="p-4">
-                <StylingPanel 
-                  selectedElement={null}
-                  onApplyStyle={(style) => {
-                    setHasChanges(true);
-                    toast.info("Style applied");
-                  }}
-                />
-              </Card>
+            <TabsContent value="styling">
+              <StylingPanel 
+                selectedElement={null}
+                onApplyStyle={(style) => {
+                  setHasChanges(true);
+                  toast.info("Style applied");
+                }}
+              />
             </TabsContent>
 
-            <TabsContent value="layout" className="space-y-4">
-              <Card className="p-4">
-                <LayoutBuilderPanel 
-                  selectedElement={null}
-                  onApplyLayout={(layout) => {
-                    setHasChanges(true);
-                    toast.info("Layout applied");
-                  }}
-                />
-              </Card>
+            <TabsContent value="layout">
+              <LayoutBuilderPanel 
+                selectedElement={null}
+                onApplyLayout={(layout) => {
+                  setHasChanges(true);
+                  toast.info("Layout applied");
+                }}
+              />
             </TabsContent>
 
-            <TabsContent value="settings" className="space-y-4">
-              <Card className="p-4">
-                <PageSettingsTab 
-                  pageSettings={{}}
-                  onUpdateSettings={(settings) => {
-                    setHasChanges(true);
-                    toast.info("Settings updated");
-                  }}
-                />
-              </Card>
+            <TabsContent value="settings">
+              <PageSettingsTab 
+                pageSettings={{}}
+                onUpdateSettings={(settings) => {
+                  setHasChanges(true);
+                  toast.info("Settings updated");
+                }}
+              />
             </TabsContent>
           </Tabs>
           )}
