@@ -99,9 +99,9 @@ export default function ProjectWorkspaceRenderer({ config, data, onAction }) {
         </div>
 
         {/* Secondary Sections (Sidebar in two-column) */}
-        {config.secondarySections && config.secondarySections.length > 0 && (
+        {currentConfig.secondarySections && currentConfig.secondarySections.length > 0 && (
           <div className="space-y-6">
-            {(config.secondarySections || []).map((section) => (
+            {(currentConfig.secondarySections || []).map((section) => (
               <Card key={section.id}>
                 <CardHeader>
                   <CardTitle>{section.title}</CardTitle>
