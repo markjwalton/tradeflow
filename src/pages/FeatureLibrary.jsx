@@ -35,7 +35,7 @@ const categoryColors = {
   Security: "bg-destructive-50 text-destructive",
   Workflow: "bg-warning/10 text-warning",
   "UI/UX": "bg-accent-100 text-accent",
-  Custom: "bg-primary-100 text-primary",
+  Custom: "bg-primary/10 text-primary",
   Other: "bg-muted text-muted-foreground",
 };
 

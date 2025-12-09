@@ -123,7 +123,7 @@ export default function SprintManager() {
     <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-midnight-900">
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
             <Play className="h-6 w-6 text-success" />
             Sprint Manager
           </h1>
@@ -144,7 +144,7 @@ export default function SprintManager() {
           {/* Active Sprints */}
           {activeSprints.length > 0 && (
             <div>
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-midnight-900">
+              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-foreground">
                 <Play className="h-5 w-5 text-success" />
                 Active Sprints
               </h2>

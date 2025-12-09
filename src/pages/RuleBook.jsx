@@ -35,7 +35,7 @@ import { toast } from "sonner";
 const categories = [
   { value: "security", label: "Security", icon: Shield, color: "bg-destructive-50 text-destructive" },
   { value: "architecture", label: "Architecture", icon: Layout, color: "bg-accent-100 text-accent" },
-  { value: "data", label: "Data", icon: Database, color: "bg-primary-100 text-primary" },
+  { value: "data", label: "Data", icon: Database, color: "bg-primary/10 text-primary" },
   { value: "ui_ux", label: "UI/UX", icon: Eye, color: "bg-accent-100 text-accent" },
   { value: "performance", label: "Performance", icon: Zap, color: "bg-warning/10 text-warning" },
   { value: "accessibility", label: "Accessibility", icon: Eye, color: "bg-success-50 text-success" },
@@ -215,7 +215,7 @@ export default function RuleBook() {
     <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-midnight-900">
+          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
             <BookOpen className="h-6 w-6 text-primary" />
             Development Rule Book
           </h1>

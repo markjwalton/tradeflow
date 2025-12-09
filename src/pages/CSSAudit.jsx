@@ -564,7 +564,7 @@ export default function CSSAudit() {
       <div className="mb-6 space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-light font-display text-midnight-900">
+            <h1 className="text-2xl font-light font-display text-foreground">
               File-by-File CSS Audit
             </h1>
             <p className="text-muted-foreground mt-1">

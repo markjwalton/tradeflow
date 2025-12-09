@@ -38,7 +38,7 @@ const categoryColors = {
   HR: "bg-accent-100 text-accent",
   Inventory: "bg-warning/10 text-warning",
   Communication: "bg-info-50 text-info",
-  Custom: "bg-primary-100 text-primary",
+  Custom: "bg-primary/10 text-primary",
   Other: "bg-muted text-muted-foreground",
 };
 

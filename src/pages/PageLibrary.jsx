@@ -36,7 +36,7 @@ const categoryColors = {
   Form: "bg-warning/10 text-warning",
   Report: "bg-warning/10 text-warning",
   Settings: "bg-muted text-muted-foreground",
-  Custom: "bg-primary-100 text-primary",
+  Custom: "bg-primary/10 text-primary",
   Other: "bg-muted text-muted-foreground",
 };
 
