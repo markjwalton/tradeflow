@@ -147,7 +147,7 @@ export default function Team() {
   return (
     <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light font-display text-midnight-900">Team</h1>
+        <h1 className="text-2xl font-light font-display text-foreground">Team</h1>
         <Button onClick={() => { resetForm(); setEditingMember(null); setShowForm(true); }}>
           <Plus className="h-4 w-4 mr-2" />
           Add Team Member
@@ -182,11 +182,11 @@ export default function Team() {
         {filteredMembers.map((member) => {
           const holidaysRemaining = (member.annual_holiday_days || 25) - (member.holidays_used || 0);
           return (
-            <Card key={member.id} className="hover:shadow-md transition-shadow border-background-muted bg-card">
+            <Card key={member.id} className="hover:shadow-md transition-shadow bg-card">
               <CardHeader className="pb-2">
                 <div className="flex items-start justify-between">
                   <div>
-                    <CardTitle className="text-lg text-midnight-900">{member.name}</CardTitle>
+                    <CardTitle className="text-lg text-foreground">{member.name}</CardTitle>
                     {member.role && <p className="text-sm text-muted-foreground mt-1">{member.role}</p>}
                   </div>
                   <div className="flex gap-1">

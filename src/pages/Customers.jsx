@@ -151,7 +151,7 @@ export default function Customers() {
   return (
     <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light font-display text-midnight-900">Customers</h1>
+        <h1 className="text-2xl font-light font-display text-foreground">Customers</h1>
         <Button onClick={() => { resetForm(); setEditingCustomer(null); setShowForm(true); }}>
           <Plus className="h-4 w-4 mr-2" />
           New Customer
@@ -183,11 +183,11 @@ export default function Customers() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredCustomers.map((customer) => (
-          <Card key={customer.id} className="hover:shadow-md transition-shadow border-background-muted bg-card">
+          <Card key={customer.id} className="hover:shadow-md transition-shadow bg-card">
             <CardHeader className="pb-2">
               <div className="flex items-start justify-between">
                 <div>
-                  <CardTitle className="text-lg text-midnight-900">{customer.name}</CardTitle>
+                  <CardTitle className="text-lg text-foreground">{customer.name}</CardTitle>
                   {customer.company && (
                     <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
                       <Building2 className="h-3 w-3" />

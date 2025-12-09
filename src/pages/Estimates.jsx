@@ -200,7 +200,7 @@ export default function Estimates() {
   return (
     <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light font-display text-midnight-900">Estimates</h1>
+        <h1 className="text-2xl font-light font-display text-foreground">Estimates</h1>
         <Button onClick={() => { resetForm(); setEditingEstimate(null); setShowForm(true); }}>
           <Plus className="h-4 w-4 mr-2" />
           New Estimate
@@ -226,11 +226,11 @@ export default function Estimates() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredEstimates.map((estimate) => (
-          <Card key={estimate.id} className="hover:shadow-md transition-shadow border-background-muted bg-card">
+          <Card key={estimate.id} className="hover:shadow-md transition-shadow bg-card">
             <CardHeader className="pb-2">
               <div className="flex items-start justify-between">
                 <div>
-                  <CardTitle className="text-lg flex items-center gap-2 text-midnight-900">
+                  <CardTitle className="text-lg flex items-center gap-2 text-foreground">
                     <FileText className="h-4 w-4" />{estimate.title}
                   </CardTitle>
                   {estimate.project_id && <p className="text-sm text-muted-foreground mt-1">Project: {getProjectName(estimate.project_id)}</p>}

@@ -90,24 +90,24 @@ export default function Calendar() {
           key={currentDay.toString()}
           className={`min-h-24 border border-border p-1 cursor-pointer transition-colors
             ${!isCurrentMonth ? "bg-muted text-muted-foreground" : "bg-card"}
-            ${isToday ? "bg-info-50" : ""}
+            ${isToday ? "bg-primary/10" : ""}
             ${isSelected ? "ring-2 ring-primary" : ""}
-            hover:bg-muted`}
+            hover:bg-muted/50`}
           onClick={() => setSelectedDate(currentDay)}
         >
-          <div className={`text-sm font-medium mb-1 ${isToday ? "text-info-foreground" : ""}`}>
+          <div className={`text-sm font-medium mb-1 ${isToday ? "text-primary" : ""}`}>
             {format(currentDay, "d")}
           </div>
           <div className="space-y-1">
             {dayTasks.slice(0, 3).map((task) => (
-              <div key={task.id} className="text-xs truncate px-1 py-0.5 rounded border-l-2 border-info bg-card">
+              <div key={task.id} className="text-xs truncate px-1 py-0.5 rounded border-l-2 border-primary/30 bg-card">
                 <span className={`inline-block w-1.5 h-1.5 rounded-full mr-1 ${statusColors[task.status]}`} />
-                {task.title}
+                {task.name}
               </div>
             ))}
             {dayTasks.length > 3 && <div className="text-xs text-muted-foreground">+{dayTasks.length - 3} more</div>}
             {dayAbsences.map((absence) => (
-              <div key={absence.id} className="text-xs truncate px-1 py-0.5 rounded bg-accent-50 text-accent">
+              <div key={absence.id} className="text-xs truncate px-1 py-0.5 rounded bg-accent/10 text-accent">
                 {getTeamMemberName(absence.team_member_id)} - {absence.absence_type}
               </div>
             ))}
@@ -130,7 +130,7 @@ export default function Calendar() {
   return (
     <div className="p-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light font-display text-midnight-900">Calendar</h1>
+        <h1 className="text-2xl font-light font-display text-foreground">Calendar</h1>
         <Select value={filterProject} onValueChange={setFilterProject}>
           <SelectTrigger className="w-48"><SelectValue placeholder="Filter by project" /></SelectTrigger>
           <SelectContent>
@@ -146,7 +146,7 @@ export default function Calendar() {
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <Button variant="ghost" size="icon" onClick={() => setCurrentDate(subMonths(currentDate, 1))}><ChevronLeft className="h-4 w-4" /></Button>
-                <CardTitle className="text-midnight-900">{format(currentDate, "MMMM yyyy")}</CardTitle>
+                <CardTitle className="text-foreground">{format(currentDate, "MMMM yyyy")}</CardTitle>
                 <Button variant="ghost" size="icon" onClick={() => setCurrentDate(addMonths(currentDate, 1))}><ChevronRight className="h-4 w-4" /></Button>
               </div>
             </CardHeader>
@@ -156,7 +156,7 @@ export default function Calendar() {
                   <div key={d} className="text-center text-sm font-medium text-muted-foreground py-2">{d}</div>
                 ))}
               </div>
-              <div className="border border-background-muted rounded-lg overflow-hidden">{rows}</div>
+              <div className="border border-border rounded-lg overflow-hidden">{rows}</div>
             </CardContent>
           </Card>
 
@@ -169,22 +169,22 @@ export default function Calendar() {
         </div>
 
         <div className="w-80">
-          <Card className="border-background-muted bg-card">
+          <Card className="bg-card">
             <CardHeader>
-              <CardTitle className="text-lg text-midnight-900">{selectedDate ? format(selectedDate, "EEEE, MMMM d") : "Select a date"}</CardTitle>
+              <CardTitle className="text-lg text-foreground">{selectedDate ? format(selectedDate, "EEEE, MMMM d") : "Select a date"}</CardTitle>
             </CardHeader>
             <CardContent>
               {selectedDate ? (
                 <div className="space-y-4">
                   {selectedDateTasks.length > 0 ? (
                     <div>
-                      <h3 className="text-sm font-medium mb-2 text-midnight-900">Tasks</h3>
+                      <h3 className="text-sm font-medium mb-2 text-foreground">Tasks</h3>
                       <div className="space-y-2">
                         {selectedDateTasks.map((task) => (
                           <div key={task.id} className="p-2 bg-background rounded-lg">
                             <div className="flex items-center gap-2">
                               <span className={`w-2 h-2 rounded-full ${statusColors[task.status]}`} />
-                              <span className="font-medium text-sm text-midnight-900">{task.title}</span>
+                              <span className="font-medium text-sm text-foreground">{task.name}</span>
                             </div>
                             <p className="text-xs text-muted-foreground mt-1">{getProjectName(task.project_id)}</p>
                             <Badge className="mt-1 text-xs" variant="outline">{task.priority}</Badge>
@@ -200,7 +200,7 @@ export default function Calendar() {
                       <h3 className="text-sm font-medium mb-2">Absences</h3>
                       <div className="space-y-2">
                         {selectedDateAbsences.map((absence) => (
-                          <div key={absence.id} className="p-2 bg-accent-100 rounded-lg">
+                          <div key={absence.id} className="p-2 bg-accent/10 rounded-lg">
                             <span className="font-medium text-sm">{getTeamMemberName(absence.team_member_id)}</span>
                             <p className="text-xs text-accent capitalize">{absence.absence_type?.replace("_", " ")}</p>
                           </div>
