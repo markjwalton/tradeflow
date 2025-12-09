@@ -91,7 +91,8 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
                   selectedElement={selectedElement}
                   onApplyStyle={(style) => {
                     setHasChanges(true);
-                    toast.info("Style applied");
+                    // Dispatch event to LiveEditWrapper to apply the style
+                    window.dispatchEvent(new CustomEvent('apply-element-style', { detail: style }));
                   }}
                 />
               </div>
