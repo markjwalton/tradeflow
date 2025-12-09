@@ -164,6 +164,7 @@ function ProfileMenu({ user }) {
   const [preferences, setPreferences] = useState({
     showAIAssistant: true,
     showPageEditor: true,
+    liveEditMode: false,
   });
 
   useEffect(() => {
@@ -174,6 +175,7 @@ function ProfileMenu({ user }) {
           setPreferences({
             showAIAssistant: currentUser.ui_preferences.showAIAssistant ?? true,
             showPageEditor: currentUser.ui_preferences.showPageEditor ?? true,
+            liveEditMode: currentUser.ui_preferences.liveEditMode ?? false,
           });
         }
       } catch (e) {
@@ -252,6 +254,16 @@ function ProfileMenu({ user }) {
               id="page-editor"
               checked={preferences.showPageEditor}
               onCheckedChange={(checked) => updatePreference('showPageEditor', checked)}
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="live-edit" className="text-sm cursor-pointer">
+              Live Edit Mode
+            </Label>
+            <Switch
+              id="live-edit"
+              checked={preferences.liveEditMode}
+              onCheckedChange={(checked) => updatePreference('liveEditMode', checked)}
             />
           </div>
         </div>
