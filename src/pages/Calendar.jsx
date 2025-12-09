@@ -169,7 +169,7 @@ export default function Calendar() {
         </div>
 
         <div className="w-80">
-          <Card className="bg-card">
+          <Card>
             <CardHeader>
               <CardTitle className="text-lg text-foreground">{selectedDate ? format(selectedDate, "EEEE, MMMM d") : "Select a date"}</CardTitle>
             </CardHeader>
