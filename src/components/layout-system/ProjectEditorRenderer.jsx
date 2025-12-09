@@ -61,13 +61,19 @@ export default function ProjectEditorRenderer({ config, data, onAction }) {
   return (
     <div className="p-6 lg:p-8 max-w-5xl mx-auto">
       {/* Page Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">
-          {config.pageHeader.title}
-        </h1>
-        {config.pageHeader.subtitle && (
-          <p className="text-muted-foreground">{config.pageHeader.subtitle}</p>
-        )}
+      <div className="mb-8 flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-2">
+            {currentConfig.pageHeader.title}
+          </h1>
+          {currentConfig.pageHeader.subtitle && (
+            <p className="text-muted-foreground">{currentConfig.pageHeader.subtitle}</p>
+          )}
+        </div>
+        <Button variant="outline" size="sm" onClick={() => setConfigEditorOpen(true)}>
+          <Settings className="h-4 w-4 mr-2" />
+          Configure Layout
+        </Button>
       </div>
 
       {/* Form Sections */}
