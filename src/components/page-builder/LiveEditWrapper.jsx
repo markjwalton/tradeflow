@@ -107,14 +107,16 @@ export function LiveEditWrapper({ children }) {
 
   return (
     <>
-      <div data-page-content style={{ display: liveEditActive ? 'none' : 'block' }}>
-        {children}
-      </div>
-
-      {liveEditActive && currentPageContent && (
-        <InteractiveSelector isActive={liveEditActive} onElementSelect={handleElementSelect}>
-          <div data-live-edit-content dangerouslySetInnerHTML={{ __html: currentPageContent }} />
+      {liveEditActive ? (
+        <InteractiveSelector isActive={true} onElementSelect={handleElementSelect}>
+          <div data-page-content>
+            {children}
+          </div>
         </InteractiveSelector>
+      ) : (
+        <div data-page-content>
+          {children}
+        </div>
       )}
     </>
   );
