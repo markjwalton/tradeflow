@@ -214,23 +214,23 @@ export function AppSidebar({ navItems = [] }) {
 
   return (
     <aside
-        className={cn(
-          "hidden lg:flex lg:flex-col lg:h-screen lg:sticky lg:top-0 bg-sidebar text-sidebar-foreground border-r border-sidebar-border transition-[width] duration-300 ease-in-out",
-          isHidden && "lg:w-0",
-          !isHidden && widthClass
+          className={cn(
+            "hidden lg:flex lg:flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border transition-[width] duration-300 ease-in-out",
+            isHidden && "lg:w-0",
+            !isHidden && widthClass
+          )}
+        >
+        {mode !== "hidden" && (
+          <TooltipProvider delayDuration={300}>
+            <nav className={cn(
+              "flex-1",
+              showLabels ? "[padding:var(--spacing-3)] [gap:var(--spacing-1)]" : "[padding-top:var(--spacing-3)] [padding-bottom:var(--spacing-3)] [gap:var(--spacing-2)]",
+              "flex flex-col"
+            )}>
+              {itemsToRender.map((item) => renderNavItem(item, false, !item.parent_id))}
+            </nav>
+          </TooltipProvider>
         )}
-      >
-      {mode !== "hidden" && (
-        <TooltipProvider delayDuration={300}>
-          <nav className={cn(
-            "flex-1 overflow-y-auto",
-            showLabels ? "[padding:var(--spacing-3)] [gap:var(--spacing-1)]" : "[padding-top:var(--spacing-3)] [padding-bottom:var(--spacing-3)] [gap:var(--spacing-2)]",
-            "flex flex-col"
-          )}>
-            {itemsToRender.map((item) => renderNavItem(item, false, !item.parent_id))}
-          </nav>
-        </TooltipProvider>
-      )}
-    </aside>
+      </aside>
   );
 }
