@@ -47,13 +47,17 @@ export default function Layout({ children, currentPageName }) {
           if (navConfigs.length > 0) {
             loadedNavConfig = navConfigs[0];
             setNavConfig(loadedNavConfig);
-            if (loadedNavConfig.items?.length > 0) {
-              loadedNavItems = loadedNavConfig.items;
-              setNavItems(loadedNavItems);
-            }
           }
+          
+          // Fetch NavigationItems separately with proper filtering
+          const allNavItems = await base44.entities.NavigationItem.filter({ 
+            tenant_id: "__global__",
+            is_visible: true 
+          });
+          loadedNavItems = allNavItems;
+          setNavItems(loadedNavItems);
         } catch (e) {
-          // Ignore errors
+          console.error("Nav config error:", e);
         }
         
         // Get public pages from config or use defaults
