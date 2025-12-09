@@ -3,12 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { CompactButton } from "@/components/library/CompactButton";
 import { Label } from "@/components/ui/label";
 import { editorClasses } from "@/components/page-builder/editorTokens";
-import { Code } from "lucide-react";
+import { Code, Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function CompactButtonShowcase() {
   const [activeSpacing, setActiveSpacing] = useState("4");
   const [activeFontSize, setActiveFontSize] = useState("base");
   const [activeWeight, setActiveWeight] = useState("500");
+  const [activeColor, setActiveColor] = useState("primary-500");
   
   const spacingTokens = ["0", "1", "2", "3", "4", "5", "6", "8", "10", "12", "16", "20"];
   const fontSizes = ["xs", "sm", "base", "lg", "xl", "2xl", "3xl", "4xl"];
@@ -20,6 +22,10 @@ export default function CompactButtonShowcase() {
     { value: "700", label: "B" }
   ];
   const radiusOptions = ["none", "sm", "md", "lg", "xl", "2xl", "full"];
+  
+  const colorTokens = {
+    primary: ["primary-50", "primary-100", "primary-200", "primary-300", "primary-400", "primary-500", "primary-600", "primary-700", "primary-800", "primary-900"],
+  };
 
   return (
     <div className="p-6 w-full space-y-8">
@@ -34,7 +40,7 @@ export default function CompactButtonShowcase() {
           <CardDescription>Square buttons for padding/margin selection</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-12 gap-1">
+          <div className="grid grid-cols-12 gap-0.5">
             {spacingTokens.map((value) => (
               <CompactButton
                 key={value}
@@ -54,7 +60,7 @@ export default function CompactButtonShowcase() {
           <CardDescription>Compact controls for font properties</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="grid grid-cols-8 gap-1">
+          <div className="grid grid-cols-8 gap-0.5">
             {fontSizes.map((value) => (
               <CompactButton
                 key={value}
@@ -66,7 +72,7 @@ export default function CompactButtonShowcase() {
             ))}
           </div>
 
-          <div className="grid grid-cols-5 gap-1">
+          <div className="grid grid-cols-5 gap-0.5">
             {fontWeights.map((weight) => (
               <CompactButton
                 key={weight.value}
@@ -86,7 +92,7 @@ export default function CompactButtonShowcase() {
           <CardDescription>Radius token selection</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-7 gap-1">
+          <div className="grid grid-cols-7 gap-0.5">
             {radiusOptions.map((value) => (
               <CompactButton
                 key={value}
@@ -95,6 +101,30 @@ export default function CompactButtonShowcase() {
               >
                 {value}
               </CompactButton>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Color Swatches</CardTitle>
+          <CardDescription>Compact color selectors for theme tokens</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-10 gap-0.5">
+            {colorTokens.primary.map((token) => (
+              <button
+                key={token}
+                className={cn(editorClasses.swatch, activeColor === token && editorClasses.swatchActive)}
+                style={{ backgroundColor: `var(--${token})` }}
+                onClick={() => setActiveColor(token)}
+                title={token}
+              >
+                {activeColor === token && (
+                  <Check className="h-3 w-3 text-white mx-auto drop-shadow" />
+                )}
+              </button>
             ))}
           </div>
         </CardContent>
@@ -156,7 +186,7 @@ const [active, setActive] = useState("4");
             </div>
             <div>
               <p className="text-sm font-medium mb-2">Grid Gap</p>
-              <code className="text-xs bg-muted px-2 py-1 rounded">gap-1 (4px)</code>
+              <code className="text-xs bg-muted px-2 py-1 rounded">gap-0.5 (2px - half button padding)</code>
             </div>
             <div>
               <p className="text-sm font-medium mb-2">Border Radius</p>
