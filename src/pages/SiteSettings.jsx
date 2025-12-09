@@ -248,12 +248,22 @@ export default function SiteSettings() {
               </Select>
             </div>
 
-            <div className="mt-4 p-4 rounded-lg border" style={{
-              backgroundColor: `var(--${settings.overlayColor})`,
-              opacity: settings.overlayOpacity / 100,
-              backdropFilter: settings.overlayBlur !== 'none' ? `blur(${settings.overlayBlur === 'sm' ? '4px' : settings.overlayBlur === 'md' ? '8px' : settings.overlayBlur === 'lg' ? '12px' : '16px'})` : 'none'
-            }}>
-              <p className="text-white text-sm">Preview of overlay appearance</p>
+            <div className="mt-4 relative rounded-lg border overflow-hidden h-32">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary-200 to-secondary-200 p-4">
+                <p className="text-sm text-midnight-900 font-medium">Sample content behind overlay</p>
+                <p className="text-xs text-charcoal-600 mt-1">This shows how the overlay will appear over your content</p>
+              </div>
+              <div 
+                className="absolute inset-0" 
+                style={{
+                  backgroundColor: `var(--${settings.overlayColor})`,
+                  opacity: settings.overlayOpacity / 100,
+                  backdropFilter: settings.overlayBlur !== 'none' ? `blur(${settings.overlayBlur === 'sm' ? '4px' : settings.overlayBlur === 'md' ? '8px' : settings.overlayBlur === 'lg' ? '12px' : '16px'})` : 'none'
+                }}
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <p className="text-white text-sm font-medium drop-shadow-lg">Overlay Preview</p>
+              </div>
             </div>
           </CardContent>
         </Card>
