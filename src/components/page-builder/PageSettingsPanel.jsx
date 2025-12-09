@@ -39,6 +39,9 @@ export function PageSettingsPanel({ currentPageName }) {
   const [navigationMode, setNavigationMode] = useState("expanded");
   const [showBreadcrumb, setShowBreadcrumb] = useState(true);
   const [isParentPage, setIsParentPage] = useState(false);
+  const [originalNavigationMode, setOriginalNavigationMode] = useState("expanded");
+  const [originalShowBreadcrumb, setOriginalShowBreadcrumb] = useState(true);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -71,14 +74,18 @@ export function PageSettingsPanel({ currentPageName }) {
         const pages = await base44.entities.UIPage.filter({ slug: currentPageName });
         if (pages.length > 0) {
           const page = pages[0];
-          setNavigationMode(page.navigation_mode || "expanded");
+          const navMode = page.navigation_mode || "expanded";
+          setNavigationMode(navMode);
+          setOriginalNavigationMode(navMode);
           
           // Check if this page is a parent (has no parent_page_id or is top level)
           const isParent = !page.parent_page_id;
           setIsParentPage(isParent);
           
           // Set breadcrumb visibility - default based on parent/child status
-          setShowBreadcrumb(page.show_breadcrumb ?? !isParent);
+          const breadcrumbVisible = page.show_breadcrumb ?? !isParent;
+          setShowBreadcrumb(breadcrumbVisible);
+          setOriginalShowBreadcrumb(breadcrumbVisible);
         }
       } catch (e) {
         console.error("Failed to load page settings:", e);
@@ -89,6 +96,19 @@ export function PageSettingsPanel({ currentPageName }) {
     window.addEventListener('ui-preferences-changed', handlePreferencesChange);
     return () => window.removeEventListener('ui-preferences-changed', handlePreferencesChange);
   }, [currentPageName]);
+
+  useEffect(() => {
+    setHasUnsavedChanges(
+      navigationMode !== originalNavigationMode || 
+      showBreadcrumb !== originalShowBreadcrumb
+    );
+  }, [navigationMode, showBreadcrumb, originalNavigationMode, originalShowBreadcrumb]);
+
+  const handleCancel = () => {
+    setNavigationMode(originalNavigationMode);
+    setShowBreadcrumb(originalShowBreadcrumb);
+    setIsOpen(false);
+  };
 
   // Extract text elements when panel opens
   useEffect(() => {
@@ -121,32 +141,42 @@ export function PageSettingsPanel({ currentPageName }) {
     },
   });
 
-  const handleSave = () => {
-    if (!currentPageData || !currentPageContent) {
-      toast.error("No changes to save");
+  const handleSave = async () => {
+    if (!currentPageData) {
+      toast.error("No page data found");
       return;
     }
 
-    const newVersion = {
-      version_number: (currentPageData.current_version_number || 0) + 1,
-      saved_date: new Date().toISOString(),
-      content_jsx: currentPageContent,
-      change_summary: `Live edit ${new Date().toLocaleString()}`,
+    const updateData = {
+      ...currentPageData,
+      navigation_mode: navigationMode,
+      show_breadcrumb: showBreadcrumb,
     };
 
-    updateMutation.mutate({
-      id: currentPageData.id,
-      data: {
-        ...currentPageData,
-        current_content_jsx: currentPageContent,
-        navigation_mode: navigationMode,
-        show_breadcrumb: showBreadcrumb,
-        versions: [...(currentPageData.versions || []), newVersion],
-        current_version_number: newVersion.version_number,
-      },
-    });
+    if (currentPageContent) {
+      const newVersion = {
+        version_number: (currentPageData.current_version_number || 0) + 1,
+        saved_date: new Date().toISOString(),
+        content_jsx: currentPageContent,
+        change_summary: `Live edit ${new Date().toLocaleString()}`,
+      };
+      updateData.current_content_jsx = currentPageContent;
+      updateData.versions = [...(currentPageData.versions || []), newVersion];
+      updateData.current_version_number = newVersion.version_number;
+    }
 
-    window.dispatchEvent(new CustomEvent('page-settings-saved', { detail: { navigationMode, showBreadcrumb } }));
+    try {
+      await updateMutation.mutateAsync({
+        id: currentPageData.id,
+        data: updateData,
+      });
+      setOriginalNavigationMode(navigationMode);
+      setOriginalShowBreadcrumb(showBreadcrumb);
+      setHasUnsavedChanges(false);
+      window.dispatchEvent(new CustomEvent('page-settings-saved', { detail: { navigationMode, showBreadcrumb } }));
+    } catch (e) {
+      console.error("Save failed:", e);
+    }
   };
 
   if (!isVisible) return null;
@@ -381,14 +411,17 @@ export function PageSettingsPanel({ currentPageName }) {
           )}
         </div>
 
-        {isEditMode && currentPageContent && (
-          <SheetFooter>
-            <Button onClick={handleSave} className="w-full">
+        <SheetFooter className="px-6 pb-6">
+          <div className="flex gap-3 w-full">
+            <Button onClick={handleCancel} variant="outline" className="flex-1">
+              Cancel
+            </Button>
+            <Button onClick={handleSave} className="flex-1" disabled={!hasUnsavedChanges && !currentPageContent}>
               <Save className="h-4 w-4 mr-2" />
               Save Changes
             </Button>
-          </SheetFooter>
-        )}
+          </div>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   );
