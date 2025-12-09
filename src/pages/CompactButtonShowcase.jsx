@@ -46,19 +46,17 @@ export default function CompactButtonShowcase() {
             Spacing
           </button>
           {openCategory === "spacing" && (
-            <div className="px-2 pb-2">
-              <div className="flex justify-center">
-                <div className="inline-grid grid-cols-12 gap-0.5">
-                  {spacingTokens.map((value) => (
-                    <CompactButton
-                      key={value}
-                      isActive={activeSpacing === value}
-                      onClick={() => setActiveSpacing(value)}
-                    >
-                      {value}
-                    </CompactButton>
-                  ))}
-                </div>
+            <div className="p-2">
+              <div className="inline-grid grid-cols-12 gap-0.5">
+                {spacingTokens.map((value) => (
+                  <CompactButton
+                    key={value}
+                    isActive={activeSpacing === value}
+                    onClick={() => setActiveSpacing(value)}
+                  >
+                    {value}
+                  </CompactButton>
+                ))}
               </div>
             </div>
           )}
@@ -73,19 +71,17 @@ export default function CompactButtonShowcase() {
             Font Size
           </button>
           {openCategory === "fontSize" && (
-            <div className="px-2 pb-2">
-              <div className="flex justify-center">
-                <div className="inline-grid grid-cols-8 gap-0.5">
-                  {fontSizes.map((value) => (
-                    <CompactButton
-                      key={value}
-                      isActive={activeFontSize === value}
-                      onClick={() => setActiveFontSize(value)}
-                    >
-                      {value}
-                    </CompactButton>
-                  ))}
-                </div>
+            <div className="p-2">
+              <div className="inline-grid grid-cols-8 gap-0.5">
+                {fontSizes.map((value) => (
+                  <CompactButton
+                    key={value}
+                    isActive={activeFontSize === value}
+                    onClick={() => setActiveFontSize(value)}
+                  >
+                    {value}
+                  </CompactButton>
+                ))}
               </div>
             </div>
           )}
@@ -100,19 +96,17 @@ export default function CompactButtonShowcase() {
             Font Weight
           </button>
           {openCategory === "fontWeight" && (
-            <div className="px-2 pb-2">
-              <div className="flex justify-center">
-                <div className="inline-grid grid-cols-5 gap-0.5">
-                  {fontWeights.map((weight) => (
-                    <CompactButton
-                      key={weight.value}
-                      isActive={activeWeight === weight.value}
-                      onClick={() => setActiveWeight(weight.value)}
-                    >
-                      {weight.label}
-                    </CompactButton>
-                  ))}
-                </div>
+            <div className="p-2">
+              <div className="inline-grid grid-cols-5 gap-0.5">
+                {fontWeights.map((weight) => (
+                  <CompactButton
+                    key={weight.value}
+                    isActive={activeWeight === weight.value}
+                    onClick={() => setActiveWeight(weight.value)}
+                  >
+                    {weight.label}
+                  </CompactButton>
+                ))}
               </div>
             </div>
           )}
@@ -127,19 +121,17 @@ export default function CompactButtonShowcase() {
             Border Radius
           </button>
           {openCategory === "radius" && (
-            <div className="px-2 pb-2">
-              <div className="flex justify-center">
-                <div className="inline-grid grid-cols-7 gap-0.5">
-                  {radiusOptions.map((value) => (
-                    <CompactButton
-                      key={value}
-                      isActive={activeRadius === value}
-                      onClick={() => setActiveRadius(value)}
-                    >
-                      {value}
-                    </CompactButton>
-                  ))}
-                </div>
+            <div className="p-2">
+              <div className="inline-grid grid-cols-7 gap-0.5">
+                {radiusOptions.map((value) => (
+                  <CompactButton
+                    key={value}
+                    isActive={activeRadius === value}
+                    onClick={() => setActiveRadius(value)}
+                  >
+                    {value}
+                  </CompactButton>
+                ))}
               </div>
             </div>
           )}
@@ -154,32 +146,27 @@ export default function CompactButtonShowcase() {
             Colors
           </button>
           {openCategory === "colors" && (
-            <div className="px-2 pb-2 space-y-2">
+            <div className="p-2 space-y-1.5">
               {Object.entries(colorTokens).map(([category, tokens]) => (
                 <div key={category}>
-                  <div className="text-xs text-muted-foreground mb-1 capitalize">{category}</div>
-                  <div className="flex justify-center">
-                    <div className="inline-grid grid-cols-10 gap-0.5">
-                      {tokens.map((token) => {
-                        const cssVar = `var(--${token})`;
-                        return (
-                          <button
-                            key={token}
-                            className={cn(
-                              "h-7 w-7 rounded border transition-all flex items-center justify-center",
-                              activeColor === token ? "border-foreground shadow-md" : "border-border hover:border-muted-foreground"
-                            )}
-                            style={{ backgroundColor: cssVar }}
-                            onClick={() => setActiveColor(token)}
-                            title={token}
-                          >
-                            {activeColor === token && (
-                              <Check className="h-3 w-3 text-white drop-shadow-lg" />
-                            )}
-                          </button>
-                        );
-                      })}
-                    </div>
+                  <div className="text-xs text-muted-foreground mb-0.5 capitalize">{category}</div>
+                  <div className="inline-grid grid-cols-10 gap-0.5">
+                    {tokens.map((token) => (
+                      <button
+                        key={token}
+                        className={cn(
+                          "h-7 w-7 rounded border transition-all flex items-center justify-center",
+                          activeColor === token ? "border-foreground shadow-md" : "border-border hover:border-muted-foreground"
+                        )}
+                        style={{ backgroundColor: `var(--${token})` }}
+                        onClick={() => setActiveColor(token)}
+                        title={token}
+                      >
+                        {activeColor === token && (
+                          <Check className="h-3 w-3 text-white drop-shadow-lg" />
+                        )}
+                      </button>
+                    ))}
                   </div>
                 </div>
               ))}
