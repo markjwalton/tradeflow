@@ -52,7 +52,7 @@ export default function ProjectWorkspaceRenderer({ config, data, onAction }) {
           </div>
         </div>
         <div className="flex gap-2">
-          {(config.pageHeader?.actions || []).map((action, idx) => (
+          {(currentConfig.pageHeader?.actions || []).map((action, idx) => (
             <Button
               key={idx}
               variant={action.variant || "default"}
@@ -61,12 +61,10 @@ export default function ProjectWorkspaceRenderer({ config, data, onAction }) {
               {action.label}
             </Button>
           ))}
-          {config.editor && (
-            <Button variant="outline" onClick={() => setEditorOpen(true)}>
-              <Pencil className="h-4 w-4 mr-2" />
-              Configure Layout
-            </Button>
-          )}
+          <Button variant="outline" onClick={() => setEditorOpen(true)}>
+            <Pencil className="h-4 w-4 mr-2" />
+            Quick Edit
+          </Button>
         </div>
       </div>
 
