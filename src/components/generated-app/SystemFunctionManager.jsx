@@ -114,8 +114,8 @@ export default function SystemFunctionManager({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-[var(--color-midnight)]">System Functions</h3>
-          <p className="text-sm text-[var(--color-charcoal)]">Configure admin features for your app</p>
+          <h3 className="text-lg font-semibold">System Functions</h3>
+          <p className="text-sm text-muted-foreground">Configure admin features for your app</p>
         </div>
         <Badge variant="outline">
           {functions.filter(f => f.enabled).length} enabled
@@ -129,29 +129,29 @@ export default function SystemFunctionManager({
             return (
               <div key={category}>
                 <div className="flex items-center gap-2 mb-2">
-                  <Icon className="h-4 w-4 text-[var(--color-charcoal)]" />
-                  <span className="text-sm font-medium text-[var(--color-midnight)]">{category}</span>
+                  <Icon className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm font-medium">{category}</span>
                 </div>
                 <div className="space-y-2 ml-6">
                   {fns.map(fn => (
-                    <Card key={fn.id} className={fn.enabled ? "border-[var(--color-primary)]/30 bg-[var(--color-primary)]/5" : ""}>
+                    <Card key={fn.id} className={fn.enabled ? "border-primary/30 bg-primary-100" : ""}>
                       <CardContent className="py-3 px-4">
                         <div className="flex items-center justify-between">
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
-                              <span className="font-medium text-sm text-[var(--color-midnight)]">{fn.name}</span>
+                              <span className="font-medium text-sm">{fn.name}</span>
                               {fn.is_core && (
-                                <Badge className="bg-[var(--color-success)]/20 text-[var(--color-success-dark)] text-xs">Core</Badge>
+                                <Badge className="bg-success-50 text-success text-xs">Core</Badge>
                               )}
                               {fn.admin_only && (
                                 <Badge variant="outline" className="text-xs">Admin</Badge>
                               )}
                             </div>
-                            <p className="text-xs text-[var(--color-charcoal)] mt-1">{fn.description}</p>
+                            <p className="text-xs text-muted-foreground mt-1">{fn.description}</p>
                             {fn.required_entities.length > 0 && (
                               <div className="flex items-center gap-1 mt-1">
-                                <Database className="h-3 w-3 text-[var(--color-charcoal)]" />
-                                <span className="text-xs text-[var(--color-charcoal)]">
+                                <Database className="h-3 w-3 text-muted-foreground" />
+                                <span className="text-xs text-muted-foreground">
                                   Requires: {fn.required_entities.join(", ")}
                                 </span>
                               </div>

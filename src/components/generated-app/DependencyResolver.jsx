@@ -105,10 +105,10 @@ export default function DependencyResolver({
 
   if (totalSuggestions === 0) {
     return (
-      <Card className="bg-[var(--color-success)]/10 border-[var(--color-success)]/30">
+      <Card className="bg-success-50 border-success/30">
         <CardContent className="pt-4 flex items-center gap-3">
-          <CheckCircle className="h-5 w-5 text-[var(--color-success)]" />
-          <span className="text-[var(--color-success-dark)]">No additional dependencies found</span>
+          <CheckCircle className="h-5 w-5 text-success" />
+          <span className="text-success">No additional dependencies found</span>
         </CardContent>
       </Card>
     );
@@ -146,20 +146,20 @@ export default function DependencyResolver({
             <ScrollArea className="h-48">
               <div className="space-y-2">
                 {suggestedPages.map(page => (
-                  <div key={page.id || page.name} className="flex items-center gap-3 p-2 bg-[var(--color-background-paper)] rounded">
+                  <div key={page.id || page.name} className="flex items-center gap-3 p-2 bg-card rounded">
                     <Checkbox
                       checked={selectedSuggestions.pages.includes(page.id || page.name)}
                       onCheckedChange={() => toggleSelection('pages', page.id || page.name)}
                     />
                     <div className="flex-1">
-                      <span className="font-medium text-sm text-[var(--color-midnight)]">{page.name}</span>
-                      <p className="text-xs text-[var(--color-charcoal)]">{page.description}</p>
+                      <span className="font-medium text-sm">{page.name}</span>
+                      <p className="text-xs text-muted-foreground">{page.description}</p>
                     </div>
                     <Badge variant="outline" className="text-xs">{page.category}</Badge>
                   </div>
                 ))}
                 {suggestedPages.length === 0 && (
-                  <p className="text-sm text-[var(--color-charcoal)] text-center py-4">No page suggestions</p>
+                  <p className="text-sm text-muted-foreground text-center py-4">No page suggestions</p>
                 )}
               </div>
             </ScrollArea>
@@ -169,7 +169,7 @@ export default function DependencyResolver({
             <ScrollArea className="h-48">
               <div className="space-y-2">
                 {suggestedFeatures.map(feature => (
-                  <div key={feature.id || feature.name} className="flex items-center gap-3 p-2 bg-[var(--color-background-paper)] rounded">
+                  <div key={feature.id || feature.name} className="flex items-center gap-3 p-2 bg-card rounded">
                     <Checkbox
                       checked={selectedSuggestions.features.includes(feature.id || feature.name)}
                       onCheckedChange={() => toggleSelection('features', feature.id || feature.name)}
@@ -182,7 +182,7 @@ export default function DependencyResolver({
                   </div>
                 ))}
                 {suggestedFeatures.length === 0 && (
-                  <p className="text-sm text-[var(--color-charcoal)] text-center py-4">No feature suggestions</p>
+                  <p className="text-sm text-muted-foreground text-center py-4">No feature suggestions</p>
                 )}
               </div>
             </ScrollArea>
@@ -223,7 +223,7 @@ export default function DependencyResolver({
           <Button variant="outline" size="sm" onClick={() => setSelectedSuggestions({ pages: [], features: [], autoGenerate: [] })}>
             Clear All
           </Button>
-          <Button size="sm" onClick={handleApply} className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white">
+          <Button size="sm" onClick={handleApply}>
             Apply Selected
           </Button>
         </div>
