@@ -15,6 +15,7 @@ import { SidebarProvider } from "@/components/layout/SidebarContext";
 import { EditModeProvider } from "@/components/page-builder/EditModeContext";
 import { PageSettingsPanel } from "@/components/page-builder/PageSettingsPanel";
 import { LiveEditWrapper } from "@/components/page-builder/LiveEditWrapper";
+import { TopEditorPanel } from "@/components/page-builder/TopEditorPanel";
 
 export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ export default function Layout({ children, currentPageName }) {
   const [isTenantAdmin, setIsTenantAdmin] = useState(false);
   const [navConfig, setNavConfig] = useState(null);
   const [navItems, setNavItems] = useState([]);
+  const [editorPanelOpen, setEditorPanelOpen] = useState(false);
   
   const urlParams = new URLSearchParams(window.location.search);
   const tenantSlug = urlParams.get("tenant");
@@ -291,11 +293,26 @@ export default function Layout({ children, currentPageName }) {
       <style dangerouslySetInnerHTML={{ __html: cssVariables }} />
       <EditModeProvider>
         <SidebarProvider>
-          <AppShell user={currentUser} tenant={currentTenant} navItems={navItems}>
-            <LiveEditWrapper>{children}</LiveEditWrapper>
-          </AppShell>
+          <TopEditorPanel 
+            isOpen={editorPanelOpen} 
+            onClose={() => setEditorPanelOpen(false)} 
+          />
+          <div style={{ marginTop: editorPanelOpen ? '0' : '0' }}>
+            <AppShell user={currentUser} tenant={currentTenant} navItems={navItems}>
+              <LiveEditWrapper>{children}</LiveEditWrapper>
+            </AppShell>
+          </div>
           <PageSettingsPanel currentPageName={currentPageName} />
           <GlobalAIAssistant />
+          
+          {/* Temporary toggle button for testing */}
+          <Button
+            onClick={() => setEditorPanelOpen(!editorPanelOpen)}
+            className="fixed bottom-6 left-6 h-14 w-14 rounded-full shadow-2xl bg-secondary text-white hover:bg-secondary/90 border-2 border-white z-[60]"
+            title="Toggle Editor Panel"
+          >
+            {editorPanelOpen ? "✕" : "✏️"}
+          </Button>
         </SidebarProvider>
       </EditModeProvider>
     </TenantContext.Provider>
