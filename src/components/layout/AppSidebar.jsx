@@ -76,9 +76,6 @@ export function AppSidebar({ navItems = [] }) {
     const itemPath = pageUrl.split("?")[0];
     const isActive = currentPath === itemPath;
 
-    // Debug: Log item type and color
-    console.log(`Item: ${item.name}, Type: ${item.item_type}, isFolder: ${isFolder}`);
-
     if (isFolder) {
       const hasChildren = item.children && item.children.length > 0;
       
