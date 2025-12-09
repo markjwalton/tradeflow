@@ -89,6 +89,7 @@ import BrandIdentity from './pages/BrandIdentity';
 import ComponentPatterns from './pages/ComponentPatterns';
 import JSONSchemaBuilder from './pages/JSONSchemaBuilder';
 import FormSchemaBuilder from './pages/FormSchemaBuilder';
+import DesignTokenEditor from './pages/DesignTokenEditor';
 import __Layout from './Layout.jsx';
 
 
@@ -184,6 +185,7 @@ export const PAGES = {
     "ComponentPatterns": ComponentPatterns,
     "JSONSchemaBuilder": JSONSchemaBuilder,
     "FormSchemaBuilder": FormSchemaBuilder,
+    "DesignTokenEditor": DesignTokenEditor,
 }
 
 export const pagesConfig = {
