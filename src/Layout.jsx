@@ -40,19 +40,20 @@ export default function Layout({ children, currentPageName }) {
   useEffect(() => {
     const checkAccess = async () => {
       try {
-        // First, fetch nav config to get access rules (before auth check)
         let loadedNavConfig = null;
+        let loadedNavItems = [];
         try {
           const navConfigs = await base44.entities.NavigationConfig.filter({ config_type: "admin_console" });
           if (navConfigs.length > 0) {
             loadedNavConfig = navConfigs[0];
             setNavConfig(loadedNavConfig);
             if (loadedNavConfig.items?.length > 0) {
-              setCustomAdminNav(loadedNavConfig.items);
+              loadedNavItems = loadedNavConfig.items;
+              setNavItems(loadedNavItems);
             }
           }
         } catch (e) {
-          // Ignore errors, will use minimal defaults
+          // Ignore errors
         }
         
         // Get public pages from config or use defaults
