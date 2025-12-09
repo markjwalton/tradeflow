@@ -12,6 +12,9 @@ export const useTenant = () => useContext(TenantContext);
 import GlobalAIAssistant from "@/components/ai-assistant/GlobalAIAssistant";
 import { AppShell } from "@/components/layout/AppShell";
 import { SidebarProvider } from "@/components/layout/SidebarContext";
+import { EditModeProvider } from "@/components/page-builder/EditModeContext";
+import { PageSettingsPanel } from "@/components/page-builder/PageSettingsPanel";
+import { LiveEditWrapper } from "@/components/page-builder/LiveEditWrapper";
 
 export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
@@ -281,12 +284,15 @@ export default function Layout({ children, currentPageName }) {
     <TenantContext.Provider value={tenantContextValue}>
       <link rel="stylesheet" href="https://use.typekit.net/iwm1gcu.css" />
       <style dangerouslySetInnerHTML={{ __html: cssVariables }} />
-      <SidebarProvider>
-        <AppShell user={currentUser} tenant={currentTenant} navItems={navItems}>
-          {children}
-        </AppShell>
-        <GlobalAIAssistant />
-      </SidebarProvider>
+      <EditModeProvider>
+        <SidebarProvider>
+          <AppShell user={currentUser} tenant={currentTenant} navItems={navItems}>
+            <LiveEditWrapper>{children}</LiveEditWrapper>
+          </AppShell>
+          <PageSettingsPanel currentPageName={currentPageName} />
+          <GlobalAIAssistant />
+        </SidebarProvider>
+      </EditModeProvider>
     </TenantContext.Provider>
   );
 }
