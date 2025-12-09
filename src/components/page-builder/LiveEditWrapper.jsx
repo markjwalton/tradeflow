@@ -50,7 +50,38 @@ export function LiveEditWrapper({ children }) {
 
   useEffect(() => {
     const handleApplyStyle = (event) => {
-      applyStyleToElement(event.detail);
+      if (!selectedElement) return;
+
+      const { currentClasses, originalElement } = selectedElement;
+      let classArray = currentClasses.split(/\s+/).filter(Boolean);
+
+      const newClass = event.detail.className;
+      
+      // Remove conflicting classes
+      if (newClass.startsWith('text-') && !newClass.includes('muted')) {
+        classArray = classArray.filter(c => !c.match(/^text-(primary|secondary|accent|background|foreground|muted|card|destructive|success|warning|info|xs|sm|base|lg|xl|2xl|3xl|4xl)/));
+      } else if (newClass.startsWith('bg-')) {
+        classArray = classArray.filter(c => !c.match(/^bg-/));
+      } else if (newClass.match(/^p-\d+$/)) {
+        classArray = classArray.filter(c => !c.match(/^p-\d+$/));
+      } else if (newClass.match(/^m-\d+$/)) {
+        classArray = classArray.filter(c => !c.match(/^m-\d+$/));
+      } else if (newClass.startsWith('font-')) {
+        classArray = classArray.filter(c => !c.match(/^font-\d+$/));
+      } else if (newClass.startsWith('rounded-')) {
+        classArray = classArray.filter(c => !c.match(/^rounded/));
+      }
+
+      classArray.push(newClass);
+      const newClasses = classArray.join(' ');
+
+      // Update DOM
+      if (originalElement) {
+        originalElement.className = newClasses;
+      }
+
+      // Update selected element state
+      setSelectedElement({ ...selectedElement, currentClasses: newClasses });
     };
 
     window.addEventListener('apply-element-style', handleApplyStyle);
@@ -72,40 +103,7 @@ export function LiveEditWrapper({ children }) {
     });
   };
 
-  const applyStyleToElement = (styleData) => {
-    if (!selectedElement) return;
 
-    const { currentClasses, originalElement } = selectedElement;
-    let classArray = currentClasses.split(/\s+/).filter(Boolean);
-
-    // Remove conflicting class based on the new class being applied
-    const newClass = styleData.className;
-    
-    if (newClass.startsWith('text-') && !newClass.includes('muted')) {
-      classArray = classArray.filter(c => !c.match(/^text-(primary|secondary|accent|background|foreground|muted|card|destructive|success|warning|info|xs|sm|base|lg|xl|2xl|3xl|4xl)/));
-    } else if (newClass.startsWith('bg-')) {
-      classArray = classArray.filter(c => !c.match(/^bg-/));
-    } else if (newClass.match(/^p-\d+$/)) {
-      classArray = classArray.filter(c => !c.match(/^p-\d+$/));
-    } else if (newClass.match(/^m-\d+$/)) {
-      classArray = classArray.filter(c => !c.match(/^m-\d+$/));
-    } else if (newClass.startsWith('font-')) {
-      classArray = classArray.filter(c => !c.match(/^font-\d+$/));
-    } else if (newClass.startsWith('rounded-')) {
-      classArray = classArray.filter(c => !c.match(/^rounded/));
-    }
-
-    classArray.push(newClass);
-    const newClasses = classArray.join(' ');
-
-    // Update DOM
-    if (originalElement) {
-      originalElement.className = newClasses;
-    }
-
-    // Update selected element state
-    setSelectedElement({ ...selectedElement, currentClasses: newClasses });
-  };
 
   return (
     <>
