@@ -86,7 +86,7 @@ export function AppSidebar({ navItems = [] }) {
       if (!showLabels) {
         const folderButton = (
           <button
-            className="w-full flex items-center justify-center [padding:var(--spacing-3)] [border-radius:var(--radius-lg)] transition-colors text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+            className="w-full flex items-center justify-center [padding:var(--spacing-3)] [border-radius:var(--radius-lg)] transition-colors hover:bg-sidebar-accent"
           >
             <Folder className="h-5 w-5" style={{ color: 'var(--secondary-400)' }} />
           </button>
@@ -149,12 +149,12 @@ export function AppSidebar({ navItems = [] }) {
             ? (isChild ? "[gap:var(--spacing-2)] [padding-left:var(--spacing-2)] [padding-right:var(--spacing-2)] [padding-top:var(--spacing-2)] [padding-bottom:var(--spacing-2)]" : "[gap:var(--spacing-3)] [padding-left:var(--spacing-3)] [padding-right:var(--spacing-3)] [padding-top:var(--spacing-2)] [padding-bottom:var(--spacing-2)]") 
             : "justify-center [padding:var(--spacing-3)]",
           isActive
-            ? "bg-sidebar-primary text-sidebar-primary-foreground"
-            : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+            ? "bg-sidebar-primary"
+            : "hover:bg-sidebar-accent"
         )}
       >
-        <ChildIcon className="h-5 w-5 flex-shrink-0" style={{ color: 'var(--primary-600)' }} />
-        {showLabels && <span className="truncate text-sm">{item.name}</span>}
+        <ChildIcon className="h-5 w-5 flex-shrink-0" style={{ color: isActive ? 'var(--sidebar-primary-foreground)' : 'var(--primary-600)' }} />
+        {showLabels && <span className={cn("truncate text-sm", isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground/70")}>{item.name}</span>}
       </Link>
     );
     
