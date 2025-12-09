@@ -12,10 +12,10 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
 const severityColors = {
-  low: "bg-[var(--color-info)]/20 text-[var(--color-info-dark)]",
-  medium: "bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]",
-  high: "bg-[var(--color-secondary)]/20 text-[var(--color-secondary-dark)]",
-  critical: "bg-[var(--color-destructive)]/20 text-[var(--color-destructive)]"
+  low: "bg-info-50 text-info",
+  medium: "bg-warning/10 text-warning",
+  high: "bg-accent-100 text-accent",
+  critical: "bg-destructive-50 text-destructive"
 };
 
 const severityOrder = { critical: 0, high: 1, medium: 2, low: 3 };

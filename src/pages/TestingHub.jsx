@@ -391,7 +391,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
   return (
     <div className="p-6 space-y-6 bg-background min-h-screen">
       {/* Header */}
-      <Card className="bg-gradient-to-r from-primary to-midnight-900 text-white border-0">
+      <Card className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-midnight)] text-white border-0">
         <CardContent className="py-6">
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-4">
@@ -399,15 +399,15 @@ Return JSON with entity names as keys and arrays of records as values.`,
                 <FlaskConical className="h-8 w-8" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold font-heading">Testing Hub v2</h1>
+                <h1 className="text-2xl font-bold font-display">Testing Hub v2</h1>
                 <p className="text-white/80 mt-1">Robust data management with preserved relationships</p>
                 <div className="flex gap-3 mt-4">
                   <Badge className="bg-white/20">{stats.total} Items</Badge>
-                  <Badge className="bg-success/80">{stats.verified} Verified</Badge>
-                  <Badge className="bg-warning/80">{stats.pending} Pending</Badge>
-                  <Badge className="bg-destructive/80">{stats.noData} No Data</Badge>
+                  <Badge className="bg-[var(--color-success)]/80">{stats.verified} Verified</Badge>
+                  <Badge className="bg-[var(--color-warning)]/80">{stats.pending} Pending</Badge>
+                  <Badge className="bg-[var(--color-destructive)]/80">{stats.noData} No Data</Badge>
                   {stats.orphaned > 0 && (
-                    <Badge className="bg-accent/80">{stats.orphaned} Orphaned</Badge>
+                    <Badge className="bg-[var(--color-accent)]/80">{stats.orphaned} Orphaned</Badge>
                   )}
                 </div>
               </div>
@@ -427,7 +427,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
               <Button 
                 onClick={bulkGenerate}
                 disabled={isOperating || stats.noData === 0}
-                className="bg-secondary hover:bg-secondary/90 text-secondary-foreground"
+                className="bg-[var(--color-secondary)] hover:bg-[var(--color-secondary)]/90 text-[var(--color-secondary-foreground)]"
               >
                 <Sparkles className="h-4 w-4 mr-2" />
                 Generate All ({stats.noData})
@@ -447,10 +447,10 @@ Return JSON with entity names as keys and arrays of records as values.`,
 
       {/* Operation Progress */}
       {isOperating && (
-        <Card className="border-primary/30 bg-primary-50">
+        <Card className="border-[var(--color-primary)]/30 bg-[var(--color-primary)]/10">
           <CardContent className="py-4">
             <div className="flex items-center gap-3">
-              <Loader2 className="h-5 w-5 animate-spin text-primary" />
+              <Loader2 className="h-5 w-5 animate-spin text-[var(--color-primary)]" />
               <div className="flex-1">
                 <p className="font-medium text-foreground">{operation.message}</p>
                 {operation.total > 0 && (
@@ -506,7 +506,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
                 </div>
               ) : (
                 <table className="w-full text-sm">
-                  <thead className="bg-background">
+                  <thead className="bg-muted">
                     <tr>
                       <th className="text-left p-3">Type</th>
                       <th className="text-left p-3">Name</th>
@@ -519,7 +519,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
                   </thead>
                   <tbody className="divide-y divide-border">
                     {filteredItems.map(item => (
-                      <tr key={item.id} className="hover:bg-background">
+                      <tr key={item.id} className="hover:bg-muted">
                         <td className="p-3">
                           {item.type === "page" ? (
                             <Layout className="h-4 w-4 text-info" />
@@ -527,12 +527,12 @@ Return JSON with entity names as keys and arrays of records as values.`,
                             <Zap className="h-4 w-4 text-warning" />
                           )}
                         </td>
-                        <td className="p-3 font-medium text-foreground">{item.name}</td>
+                        <td className="p-3 font-medium">{item.name}</td>
                         <td className="p-3 text-center">
                           {item.syncStatus === "orphaned" ? (
-                            <Link2Off className="h-4 w-4 mx-auto text-accent" title="Orphaned" />
+                            <Link2Off className="h-4 w-4 mx-auto text-[var(--color-accent)]" title="Orphaned" />
                           ) : (
-                            <Link2 className="h-4 w-4 mx-auto text-success" title="Linked" />
+                            <Link2 className="h-4 w-4 mx-auto text-[var(--color-success)]" title="Linked" />
                           )}
                         </td>
                         <td className="p-3 text-center">{item.entityCount}</td>

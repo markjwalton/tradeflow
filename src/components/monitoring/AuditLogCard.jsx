@@ -10,12 +10,12 @@ import {
 import { format } from "date-fns";
 
 const severityColors = {
-  info: "bg-[var(--color-charcoal)]/10 text-[var(--color-charcoal)]",
-  low: "bg-[var(--color-info)]/20 text-[var(--color-info-dark)]",
-  medium: "bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]",
-  high: "bg-[var(--color-secondary)]/20 text-[var(--color-secondary-dark)]",
-  critical: "bg-[var(--color-destructive)]/20 text-[var(--color-destructive)]",
-  warning: "bg-[var(--color-warning)]/20 text-[var(--color-warning-dark)]"
+  info: "bg-muted text-muted-foreground",
+  low: "bg-info-50 text-info",
+  medium: "bg-warning/10 text-warning",
+  high: "bg-accent-100 text-accent",
+  critical: "bg-destructive-50 text-destructive",
+  warning: "bg-warning/10 text-warning"
 };
 
 const severityOrder = { critical: 0, high: 1, medium: 2, warning: 3, low: 4, info: 5 };
