@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, ChevronRight, Folder, FolderOpen, Home, Building2, Users, Settings, Package, LayoutDashboard, Navigation, Shield, GitBranch, Database } from "lucide-react";
 import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { createPageUrl } from "@/utils";
 
 const iconMap = {
   Home,
@@ -165,9 +166,11 @@ export function AppSidebar({ navItems = [] }) {
 
     const ChildIcon = getIcon(item.icon);
     
-    // Build proper page URL - handle both slugs and full paths
-    const fullPageUrl = pageUrl.startsWith("/") ? pageUrl : `/page/${pageUrl.split("?")[0]}${pageUrl.includes("?") ? "?" + pageUrl.split("?")[1] : ""}`;
-    
+    // Build proper page URL using createPageUrl
+    const pageName = pageUrl.split("?")[0];
+    const queryString = pageUrl.includes("?") ? pageUrl.split("?")[1] : "";
+    const fullPageUrl = createPageUrl(pageName) + (queryString ? `?${queryString}` : "");
+
     const linkContent = (
       <Link
         key={item.id}
