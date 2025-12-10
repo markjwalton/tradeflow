@@ -123,10 +123,10 @@
   --radius-full: 9999px;
 
   /* Component-specific radius */
-  --radius: 0.625rem;
-  --radius-button: var(--radius-lg);
-  --radius-card: var(--radius);
-  --radius-input: var(--radius-md);
+  --radius: var(--radius-xl);
+  --radius-button: var(--radius-xl);
+  --radius-card: var(--radius-xl);
+  --radius-input: var(--radius-xl);
 
   /* === ANIMATION TOKENS === */
   --duration-75: 75ms;
