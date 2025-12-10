@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Save, Plus, Calendar, Mic, FileText, CheckSquare, 
-  MessageSquare, Users, Clock, ArrowRight 
+  MessageSquare, Users, Clock, ArrowRight, Settings
 } from "lucide-react";
 import { toast } from "sonner";
 import CreateTaskDialog from "@/components/onboarding/CreateTaskDialog";
@@ -48,9 +48,9 @@ export default function OnboardingWorkflow() {
       });
     },
     onSuccess: (data) => {
-      setSessionId(data.id);
       toast.success("Onboarding session created");
-      queryClient.invalidateQueries(["onboardingSession"]);
+      // Redirect to tenant setup
+      navigate(createPageUrl("TenantSetup") + `?session=${data.id}&tenant=${data.tenant_id}`);
     },
   });
 
@@ -139,6 +139,12 @@ export default function OnboardingWorkflow() {
           </div>
         </div>
         <div className="flex gap-2">
+          <Button variant="outline" size="sm" asChild>
+            <a href={createPageUrl("TenantSetup") + `?session=${sessionId}&tenant=${session.tenant_id}`}>
+              <Settings className="mr-2 h-4 w-4" />
+              Edit Profile
+            </a>
+          </Button>
           <Button variant="outline" onClick={handleAdvanceStage}>
             Advance Stage
             <ArrowRight className="ml-2 h-4 w-4" />
