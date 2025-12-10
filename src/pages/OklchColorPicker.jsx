@@ -7,10 +7,13 @@ import { OklchBulkConverter } from "@/components/color-tools/OklchBulkConverter"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
+import { useEditMode } from "@/components/page-builder/EditModeContext";
 
 export default function OklchColorPicker() {
   const [activeTab, setActiveTab] = useState("picker");
   const [tenantId, setTenantId] = useState(null);
+  const [pageData, setPageData] = useState(null);
+  const { setCustomProperties } = useEditMode();
   
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -20,7 +23,29 @@ export default function OklchColorPicker() {
         if (tenants.length > 0) setTenantId(tenants[0].id);
       });
     }
+    base44.entities.UIPage.filter({ slug: "OklchColorPicker" })
+      .then(pages => pages.length > 0 && setPageData(pages[0]))
+      .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    setCustomProperties([
+      {
+        key: "page_description",
+        label: "Page Description",
+        type: "text",
+        value: pageData?.page_description || "",
+        description: "Description shown below the page title",
+        onChange: async (value) => {
+          if (pageData?.id) {
+            await base44.entities.UIPage.update(pageData.id, { page_description: value });
+            setPageData({ ...pageData, page_description: value });
+          }
+        }
+      }
+    ]);
+    return () => setCustomProperties([]);
+  }, [pageData, setCustomProperties]);
   
   const handleSave = async (paletteData) => {
     try {
@@ -36,57 +61,47 @@ export default function OklchColorPicker() {
   };
   
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div className="space-y-2">
-          <h1 className="text-4xl font-light font-display text-primary tracking-wide">
-            OKLCH Color Tools
-          </h1>
-          <p className="text-muted-foreground">
-            Create and explore colors using the OKLCH color space - a perceptually uniform color system
-            that provides consistent lightness across all hues.
+    <div className="[padding:var(--spacing-6)] max-w-4xl mx-auto bg-[var(--color-background)] min-h-screen">
+      <div className="[margin-bottom:var(--spacing-6)]">
+        <h1 className="text-3xl font-display text-[var(--color-text-primary)] [margin-bottom:var(--spacing-2)]">
+          OKLCH Color Tools
+        </h1>
+        {pageData?.page_description && (
+          <p className="text-[var(--color-text-muted)]">
+            {pageData.page_description}
           </p>
-        </div>
-        
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="picker">Color Picker</TabsTrigger>
-            <TabsTrigger value="gradient">Gradients</TabsTrigger>
-            <TabsTrigger value="palette">Palettes</TabsTrigger>
-            <TabsTrigger value="convert">Bulk Convert</TabsTrigger>
-            <TabsTrigger value="library">Library</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="picker">
-            <OklchColorTool />
-          </TabsContent>
-          
-          <TabsContent value="gradient">
-            <OklchGradientTool onSave={handleSave} />
-          </TabsContent>
-          
-          <TabsContent value="palette">
-            <OklchPaletteTool onSave={handleSave} />
-          </TabsContent>
-          
-          <TabsContent value="convert">
-            <OklchBulkConverter />
-          </TabsContent>
-          
-          <TabsContent value="library">
-            <ColorLibrary tenantId={tenantId} />
-          </TabsContent>
-        </Tabs>
-        
-        <div className="mt-8 p-4 bg-muted/50 rounded-lg border">
-          <h3 className="text-sm font-medium mb-2">About OKLCH</h3>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            OKLCH is a perceptually uniform color space that makes it easier to create consistent color palettes.
-            Unlike HSL/RGB, colors with the same lightness value will appear equally bright to the human eye,
-            regardless of their hue. This makes it ideal for creating accessible and harmonious design systems.
-          </p>
-        </div>
+        )}
       </div>
+      
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="picker">Color Picker</TabsTrigger>
+          <TabsTrigger value="gradient">Gradients</TabsTrigger>
+          <TabsTrigger value="palette">Palettes</TabsTrigger>
+          <TabsTrigger value="convert">Bulk Convert</TabsTrigger>
+          <TabsTrigger value="library">Library</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="picker">
+          <OklchColorTool />
+        </TabsContent>
+        
+        <TabsContent value="gradient">
+          <OklchGradientTool onSave={handleSave} />
+        </TabsContent>
+        
+        <TabsContent value="palette">
+          <OklchPaletteTool onSave={handleSave} />
+        </TabsContent>
+        
+        <TabsContent value="convert">
+          <OklchBulkConverter />
+        </TabsContent>
+        
+        <TabsContent value="library">
+          <ColorLibrary tenantId={tenantId} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
