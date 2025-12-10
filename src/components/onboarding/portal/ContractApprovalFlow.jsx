@@ -66,17 +66,17 @@ export default function ContractApprovalFlow({ sessionId, currentUser }) {
 
   return (
     <div className="space-y-6">
-      <Card className="rounded-xl border-primary/20 bg-primary/5">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileSignature className="h-5 w-5" />
-            Contract & Agreement Approval
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground">
-            Review and approve the following agreements to proceed with deployment. All required agreements must be signed.
-          </p>
+      <Card className="rounded-xl bg-gradient-to-br from-primary/5 to-secondary/5 border-primary/10">
+        <CardContent className="pt-6 pb-6">
+          <div className="flex items-start gap-4">
+            <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <FileSignature className="h-5 w-5 text-primary" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-display text-primary mb-1">Contract Approvals</h3>
+              <p className="text-sm text-muted-foreground">Review and sign agreements to complete your onboarding</p>
+            </div>
+          </div>
         </CardContent>
       </Card>
 

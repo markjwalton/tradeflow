@@ -80,12 +80,23 @@ export default function DocumentManager({ sessionId }) {
 
   return (
     <div className="space-y-6">
+      <Card className="rounded-xl bg-gradient-to-br from-primary/5 to-secondary/5 border-primary/10">
+        <CardContent className="pt-6 pb-6">
+          <div className="flex items-start gap-4">
+            <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <Upload className="h-5 w-5 text-primary" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-display text-primary mb-1">Document Management</h3>
+              <p className="text-sm text-muted-foreground">Upload project assets, specifications, and supporting documentation</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       <Card className="rounded-xl">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Upload className="h-5 w-5" />
-            Upload Documents
-          </CardTitle>
+          <CardTitle className="text-lg">Upload New Document</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
@@ -138,15 +149,19 @@ export default function DocumentManager({ sessionId }) {
 
       <Card className="rounded-xl">
         <CardHeader>
-          <CardTitle>Uploaded Documents ({documents.length})</CardTitle>
+          <CardTitle className="text-lg">Uploaded Documents</CardTitle>
+          <p className="text-sm text-muted-foreground">{documents.length} document{documents.length !== 1 ? 's' : ''} uploaded</p>
         </CardHeader>
         <CardContent>
           {documents.length === 0 ? (
-            <p className="text-center text-muted-foreground py-8">No documents uploaded yet</p>
+            <div className="text-center py-12">
+              <FileText className="h-12 w-12 mx-auto mb-3 text-muted-foreground opacity-50" />
+              <p className="text-muted-foreground">No documents uploaded yet</p>
+            </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2">
               {documents.map(doc => (
-                <div key={doc.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition">
+                <div key={doc.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/30 transition-colors">
                   <div className="flex items-center gap-3 flex-1">
                     <FileText className="h-5 w-5 text-primary" />
                     <div className="flex-1">

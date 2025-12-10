@@ -45,11 +45,27 @@ export default function TaskManager({ sessionId, currentUser }) {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <Card className="rounded-xl">
-        <CardHeader>
-          <CardTitle>My Tasks ({myTasks.length})</CardTitle>
-        </CardHeader>
+    <div className="space-y-6">
+      <Card className="rounded-xl bg-gradient-to-br from-primary/5 to-secondary/5 border-primary/10">
+        <CardContent className="pt-6 pb-6">
+          <div className="flex items-start gap-4">
+            <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <CheckSquare className="h-5 w-5 text-primary" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-display text-primary mb-1">Task Management</h3>
+              <p className="text-sm text-muted-foreground">Track action items, deliverables, and project milestones</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="rounded-xl">
+          <CardHeader>
+            <CardTitle className="text-lg">My Tasks</CardTitle>
+            <p className="text-sm text-muted-foreground">{myTasks.length} assigned to you</p>
+          </CardHeader>
         <CardContent>
           {myTasks.length === 0 ? (
             <p className="text-center text-muted-foreground py-8">No tasks assigned to you</p>
@@ -93,10 +109,11 @@ export default function TaskManager({ sessionId, currentUser }) {
         </CardContent>
       </Card>
 
-      <Card className="rounded-xl">
-        <CardHeader>
-          <CardTitle>All Tasks ({allTasks.length})</CardTitle>
-        </CardHeader>
+        <Card className="rounded-xl">
+          <CardHeader>
+            <CardTitle className="text-lg">All Tasks</CardTitle>
+            <p className="text-sm text-muted-foreground">{allTasks.length} total task{allTasks.length !== 1 ? 's' : ''}</p>
+          </CardHeader>
         <CardContent>
           {allTasks.length === 0 ? (
             <p className="text-center text-muted-foreground py-8">No tasks created yet</p>
@@ -122,7 +139,8 @@ export default function TaskManager({ sessionId, currentUser }) {
             </div>
           )}
         </CardContent>
-      </Card>
+        </Card>
+      </div>
     </div>
   );
 }
