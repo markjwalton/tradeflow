@@ -225,7 +225,7 @@ export default function NavigationManager() {
       {isGlobalAdmin ? (
         <>
           {/* Page Header */}
-          <div className="[margin-bottom:var(--spacing-6)]">
+          <div className="bg-white [margin-bottom:var(--spacing-6)] -mx-6 px-6 py-6">
             <h1 className="text-3xl font-display text-[var(--color-text-primary)] [margin-bottom:var(--spacing-2)]">
               Navigation Manager
             </h1>
@@ -236,24 +236,26 @@ export default function NavigationManager() {
             )}
           </div>
 
-          {/* Tab Navigation */}
-          <div className="flex gap-2 [margin-bottom:var(--spacing-4)]">
-            <button className={getTabClassName("admin")} style={getTabStyle("admin")} onClick={() => setActiveTab("admin")}>
-              <Cog className="h-3.5 w-3.5 mr-1.5 inline" />
-              Admin
-            </button>
-            <button className={getTabClassName("app")} style={getTabStyle("app")} onClick={() => setActiveTab("app")}>
-              <FileCode className="h-3.5 w-3.5 mr-1.5 inline" />
-              App Pages
-            </button>
-            <button className={getTabClassName("tenant")} style={getTabStyle("tenant")} onClick={() => setActiveTab("tenant")}>
-              <Users className="h-3.5 w-3.5 mr-1.5 inline" />
-              Tenant
-            </button>
-          </div>
+          {/* Background Container for Tabs and Content */}
+          <div className="bg-[var(--color-background)] -mx-6 px-6 py-6 min-h-screen">
+            {/* Tab Navigation */}
+            <div className="flex gap-2 [margin-bottom:var(--spacing-4)]">
+              <button className={getTabClassName("admin")} style={getTabStyle("admin")} onClick={() => setActiveTab("admin")}>
+                <Cog className="h-3.5 w-3.5 mr-1.5 inline" />
+                Admin
+              </button>
+              <button className={getTabClassName("app")} style={getTabStyle("app")} onClick={() => setActiveTab("app")}>
+                <FileCode className="h-3.5 w-3.5 mr-1.5 inline" />
+                App Pages
+              </button>
+              <button className={getTabClassName("tenant")} style={getTabStyle("tenant")} onClick={() => setActiveTab("tenant")}>
+                <Users className="h-3.5 w-3.5 mr-1.5 inline" />
+                Tenant
+              </button>
+            </div>
 
-          {/* Tab Content */}
-          <div className="[margin-top:var(--spacing-4)]">
+            {/* Tab Content */}
+            <div className="[margin-top:var(--spacing-4)]">
             {activeTab === "admin" && (
               <GenericNavEditor
                 title=""
@@ -320,6 +322,7 @@ export default function NavigationManager() {
               )}
             </div>
             )}
+            </div>
           </div>
         </>
       ) : (
