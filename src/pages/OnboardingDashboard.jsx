@@ -164,7 +164,7 @@ export default function OnboardingDashboard() {
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
-                            <h3 className="font-semibold text-lg" style={{ fontFamily: 'degular-display, sans-serif' }}>
+                            <h3 className="font-display font-semibold text-lg">
                               {session.tenant_id ? `Tenant: ${session.tenant_id}` : "Unnamed Session"}
                             </h3>
                             <Badge className={getStatusColor(session.status)}>
