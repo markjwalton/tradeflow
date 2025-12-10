@@ -413,6 +413,91 @@
   --radius-3xl: 1.5rem;
   --radius-full: 9999px;
 
+  /* === OKLCH COLOR MAPPINGS === */
+  /* Primary Color Scale (OKLCH) */
+  --color-oklch-primary-50: var(--primary-50);
+  --color-oklch-primary-100: var(--primary-100);
+  --color-oklch-primary-200: var(--primary-200);
+  --color-oklch-primary-300: var(--primary-300);
+  --color-oklch-primary-400: var(--primary-400);
+  --color-oklch-primary-500: var(--primary-500);
+  --color-oklch-primary-600: var(--primary-600);
+  --color-oklch-primary-700: var(--primary-700);
+  --color-oklch-primary-800: var(--primary-800);
+  --color-oklch-primary-900: var(--primary-900);
+
+  /* Secondary Color Scale (OKLCH) */
+  --color-oklch-secondary-50: var(--secondary-50);
+  --color-oklch-secondary-100: var(--secondary-100);
+  --color-oklch-secondary-200: var(--secondary-200);
+  --color-oklch-secondary-300: var(--secondary-300);
+  --color-oklch-secondary-400: var(--secondary-400);
+  --color-oklch-secondary-500: var(--secondary-500);
+  --color-oklch-secondary-600: var(--secondary-600);
+  --color-oklch-secondary-700: var(--secondary-700);
+  --color-oklch-secondary-800: var(--secondary-800);
+  --color-oklch-secondary-900: var(--secondary-900);
+
+  /* Accent Color Scale (OKLCH) */
+  --color-oklch-accent-50: var(--accent-50);
+  --color-oklch-accent-100: var(--accent-100);
+  --color-oklch-accent-200: var(--accent-200);
+  --color-oklch-accent-300: var(--accent-300);
+  --color-oklch-accent-400: var(--accent-400);
+  --color-oklch-accent-500: var(--accent-500);
+  --color-oklch-accent-600: var(--accent-600);
+  --color-oklch-accent-700: var(--accent-700);
+  --color-oklch-accent-800: var(--accent-800);
+  --color-oklch-accent-900: var(--accent-900);
+
+  /* Background Color Scale (OKLCH) */
+  --color-oklch-background-50: var(--background-50);
+  --color-oklch-background-100: var(--background-100);
+  --color-oklch-background-200: var(--background-200);
+  --color-oklch-background-300: var(--background-300);
+  --color-oklch-background-400: var(--background-400);
+  --color-oklch-background-500: var(--background-500);
+  --color-oklch-background-600: var(--background-600);
+  --color-oklch-background-700: var(--background-700);
+  --color-oklch-background-800: var(--background-800);
+  --color-oklch-background-900: var(--background-900);
+
+  /* Midnight Color Scale (OKLCH) */
+  --color-oklch-midnight-50: var(--midnight-50);
+  --color-oklch-midnight-100: var(--midnight-100);
+  --color-oklch-midnight-200: var(--midnight-200);
+  --color-oklch-midnight-300: var(--midnight-300);
+  --color-oklch-midnight-400: var(--midnight-400);
+  --color-oklch-midnight-500: var(--midnight-500);
+  --color-oklch-midnight-600: var(--midnight-600);
+  --color-oklch-midnight-700: var(--midnight-700);
+  --color-oklch-midnight-800: var(--midnight-800);
+  --color-oklch-midnight-900: var(--midnight-900);
+
+  /* Charcoal Color Scale (OKLCH) */
+  --color-oklch-charcoal-50: var(--charcoal-50);
+  --color-oklch-charcoal-100: var(--charcoal-100);
+  --color-oklch-charcoal-200: var(--charcoal-200);
+  --color-oklch-charcoal-300: var(--charcoal-300);
+  --color-oklch-charcoal-400: var(--charcoal-400);
+  --color-oklch-charcoal-500: var(--charcoal-500);
+  --color-oklch-charcoal-600: var(--charcoal-600);
+  --color-oklch-charcoal-700: var(--charcoal-700);
+  --color-oklch-charcoal-800: var(--charcoal-800);
+  --color-oklch-charcoal-900: var(--charcoal-900);
+
+  /* Destructive Color Scale (OKLCH) */
+  --color-oklch-destructive-50: var(--destructive-50);
+  --color-oklch-destructive-100: var(--destructive-100);
+  --color-oklch-destructive-200: var(--destructive-200);
+  --color-oklch-destructive-300: var(--destructive-300);
+  --color-oklch-destructive-400: var(--destructive-400);
+  --color-oklch-destructive-500: var(--destructive-500);
+  --color-oklch-destructive-600: var(--destructive-600);
+  --color-oklch-destructive-700: var(--destructive-700);
+  --color-oklch-destructive-800: var(--destructive-800);
+  --color-oklch-destructive-900: var(--destructive-900);
+
   /* === TAILWIND COLOR MAPPINGS === */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
