@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { OklchColorTool } from "@/components/color-tools/OklchColorTool";
 import { OklchGradientTool } from "@/components/color-tools/OklchGradientTool";
-import { OklchPaletteTool } from "@/components/color-tools/OklchPaletteTool";
+import OklchPaletteTool from "@/components/color-tools/OklchPaletteTool";
 import { ColorLibrary } from "@/components/color-tools/ColorLibrary";
 import { OklchBulkConverter } from "@/components/color-tools/OklchBulkConverter";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
