@@ -93,6 +93,7 @@ import DesignTokenEditor from './pages/DesignTokenEditor';
 import SiteSettings from './pages/SiteSettings';
 import CompactButtonShowcase from './pages/CompactButtonShowcase';
 import OklchColorPicker from './pages/OklchColorPicker';
+import AIOnboarding from './pages/AIOnboarding';
 import __Layout from './Layout.jsx';
 
 
@@ -192,6 +193,7 @@ export const PAGES = {
     "SiteSettings": SiteSettings,
     "CompactButtonShowcase": CompactButtonShowcase,
     "OklchColorPicker": OklchColorPicker,
+    "AIOnboarding": AIOnboarding,
 }
 
 export const pagesConfig = {
