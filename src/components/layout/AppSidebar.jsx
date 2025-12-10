@@ -154,7 +154,7 @@ export function AppSidebar({ navItems = [] }) {
           strokeWidth={iconStrokeWidth}
           style={{ color: isActive ? 'var(--sidebar-primary-foreground)' : 'var(--primary-600)' }}
         />
-        {showLabels && <span className={cn("truncate text-sm", isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground/70", isTopLevel && "font-medium")}>{item.name}</span>}
+        {showLabels && <span className={cn("truncate", isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground/70", isTopLevel && "font-medium")}>{item.name}</span>}
       </Link>
     );
     
