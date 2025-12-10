@@ -216,7 +216,7 @@ export default function NavigationManager() {
   const getTabStyle = (tab) => {
     const isActive = activeTab === tab;
     return isActive 
-      ? { backgroundColor: `var(--${siteSettings.selectedButtonColor || "primary"})` } 
+      ? { backgroundColor: `var(--color-primary)` } 
       : {};
   };
 
