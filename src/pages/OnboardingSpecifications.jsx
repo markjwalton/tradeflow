@@ -407,6 +407,30 @@ export default function OnboardingSpecifications() {
     enabled: !!sessionId
   });
 
+  const { data: tenantProfile } = useQuery({
+    queryKey: ["tenantProfile", session?.tenant_id],
+    queryFn: () => session?.tenant_id ? base44.entities.TenantProfile.filter({ tenant_id: session.tenant_id }).then(r => r[0]) : null,
+    enabled: !!session?.tenant_id
+  });
+
+  const { data: businessProfile } = useQuery({
+    queryKey: ["businessProfile", sessionId],
+    queryFn: () => sessionId ? base44.entities.BusinessProfile.filter({ onboarding_session_id: sessionId }).then(r => r[0]) : null,
+    enabled: !!sessionId
+  });
+
+  const { data: processes = [] } = useQuery({
+    queryKey: ["processes", sessionId],
+    queryFn: () => sessionId ? base44.entities.OperationalProcess.filter({ onboarding_session_id: sessionId }) : [],
+    enabled: !!sessionId
+  });
+
+  const { data: requirements = [] } = useQuery({
+    queryKey: ["requirements", sessionId],
+    queryFn: () => sessionId ? base44.entities.Requirement.filter({ onboarding_session_id: sessionId }) : [],
+    enabled: !!sessionId
+  });
+
   // AI Generation
   const generateSchemas = async () => {
     if (!sessionId || !session) {
@@ -416,26 +440,147 @@ export default function OnboardingSpecifications() {
 
     setGeneratingFor("all");
     try {
+      // Gather comprehensive context
+      const contextData = {
+        session: {
+          summary: session.high_level_summary,
+          requirements: session.single_source_of_truth,
+          status: session.status
+        },
+        tenantProfile: tenantProfile ? {
+          companyName: tenantProfile.company_name,
+          industry: businessProfile?.industry,
+          businessSize: businessProfile?.business_size,
+          goals: tenantProfile.app_goals,
+          kpis: tenantProfile.kpis
+        } : null,
+        processes: processes.map(p => ({
+          name: p.process_name,
+          type: p.process_type,
+          priority: p.priority,
+          painPoints: p.pain_points,
+          desiredOutcomes: p.desired_outcomes,
+          monthlyVolume: p.monthly_volume
+        })),
+        requirements: requirements.map(r => ({
+          type: r.requirement_type,
+          title: r.title,
+          description: r.description,
+          priority: r.priority,
+          userStory: r.user_story
+        }))
+      };
+
+      const prompt = `You are a system architect. Based on the following comprehensive business context, generate a complete system architecture.
+
+BUSINESS CONTEXT:
+${JSON.stringify(contextData, null, 2)}
+
+Generate a complete system architecture including:
+
+1. ENTITY SCHEMAS: Define all data models needed. For each entity:
+   - entity_name: string (e.g., "Customer", "Order")
+   - description: string
+   - fields: array of {name, type, required, description, enum?, default?}
+   - relationships: array of {target_entity, relationship_type, foreign_key}
+   - priority: number (1-10, where 1 is highest)
+
+2. PAGE SCHEMAS: Define all pages/screens. For each page:
+   - page_name: string (e.g., "CustomerList", "OrderDetails")
+   - page_type: "list" | "detail" | "form" | "dashboard" | "custom"
+   - description: string
+   - primary_entity: string
+   - data_sources: array of {entity, filters?, sort?}
+   - actions: array of {name, type, target}
+   - permissions: array of role strings
+   - priority: number
+
+3. FEATURE SCHEMAS: Define all features and workflows. For each feature:
+   - feature_name: string
+   - description: string
+   - user_stories: array of {role, want, so_that}
+   - workflow: array of {step, action, trigger, result}
+   - entities_involved: array of entity names
+   - pages_involved: array of page names
+   - business_rules: array of rule strings
+   - priority: "must_have" | "should_have" | "nice_to_have"
+
+4. INTEGRATION SCHEMAS: Define external services needed. For each integration:
+   - integration_name: string
+   - integration_type: "api" | "webhook" | "oauth" | "database" | "email" | "sms" | "other"
+   - description: string
+   - provider: string
+   - endpoints: array of {name, method, path, purpose}
+   - authentication: {type, credentials_needed}
+   - triggers: array of {event, action}
+   - priority: number
+
+IMPORTANT: Base everything on the provided context. Generate realistic, practical schemas that directly address the business processes and requirements described.`;
+
       const result = await base44.integrations.Core.InvokeLLM({
-        prompt: `Based on this onboarding session, generate complete system architecture:
-
-Session Summary: ${session.high_level_summary || "Not provided"}
-Business Requirements: ${session.single_source_of_truth || "Not provided"}
-
-Generate:
-1. Entity Schemas - all data models needed
-2. Page Schemas - all pages/screens needed
-3. Feature Schemas - all features and workflows
-4. Integration Schemas - external services needed
-
-Return as structured JSON.`,
+        prompt,
         response_json_schema: {
           type: "object",
           properties: {
-            entities: { type: "array", items: { type: "object" } },
-            pages: { type: "array", items: { type: "object" } },
-            features: { type: "array", items: { type: "object" } },
-            integrations: { type: "array", items: { type: "object" } }
+            entities: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  entity_name: { type: "string" },
+                  description: { type: "string" },
+                  fields: { type: "array" },
+                  relationships: { type: "array" },
+                  priority: { type: "number" }
+                }
+              }
+            },
+            pages: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  page_name: { type: "string" },
+                  page_type: { type: "string" },
+                  description: { type: "string" },
+                  primary_entity: { type: "string" },
+                  data_sources: { type: "array" },
+                  actions: { type: "array" },
+                  priority: { type: "number" }
+                }
+              }
+            },
+            features: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  feature_name: { type: "string" },
+                  description: { type: "string" },
+                  user_stories: { type: "array" },
+                  workflow: { type: "array" },
+                  entities_involved: { type: "array" },
+                  pages_involved: { type: "array" },
+                  business_rules: { type: "array" },
+                  priority: { type: "string" }
+                }
+              }
+            },
+            integrations: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  integration_name: { type: "string" },
+                  integration_type: { type: "string" },
+                  description: { type: "string" },
+                  provider: { type: "string" },
+                  endpoints: { type: "array" },
+                  authentication: { type: "object" },
+                  priority: { type: "number" }
+                }
+              }
+            }
           }
         }
       });
