@@ -1266,6 +1266,156 @@
     background-color: var(--charcoal-900);
   }
 
+  /* OKLCH Utility Classes */
+  .bg-oklch-primary-50 { background-color: var(--primary-50); }
+  .bg-oklch-primary-100 { background-color: var(--primary-100); }
+  .bg-oklch-primary-200 { background-color: var(--primary-200); }
+  .bg-oklch-primary-300 { background-color: var(--primary-300); }
+  .bg-oklch-primary-400 { background-color: var(--primary-400); }
+  .bg-oklch-primary-500 { background-color: var(--primary-500); }
+  .bg-oklch-primary-600 { background-color: var(--primary-600); }
+  .bg-oklch-primary-700 { background-color: var(--primary-700); }
+  .bg-oklch-primary-800 { background-color: var(--primary-800); }
+  .bg-oklch-primary-900 { background-color: var(--primary-900); }
+
+  .bg-oklch-secondary-50 { background-color: var(--secondary-50); }
+  .bg-oklch-secondary-100 { background-color: var(--secondary-100); }
+  .bg-oklch-secondary-200 { background-color: var(--secondary-200); }
+  .bg-oklch-secondary-300 { background-color: var(--secondary-300); }
+  .bg-oklch-secondary-400 { background-color: var(--secondary-400); }
+  .bg-oklch-secondary-500 { background-color: var(--secondary-500); }
+  .bg-oklch-secondary-600 { background-color: var(--secondary-600); }
+  .bg-oklch-secondary-700 { background-color: var(--secondary-700); }
+  .bg-oklch-secondary-800 { background-color: var(--secondary-800); }
+  .bg-oklch-secondary-900 { background-color: var(--secondary-900); }
+
+  .bg-oklch-accent-50 { background-color: var(--accent-50); }
+  .bg-oklch-accent-100 { background-color: var(--accent-100); }
+  .bg-oklch-accent-200 { background-color: var(--accent-200); }
+  .bg-oklch-accent-300 { background-color: var(--accent-300); }
+  .bg-oklch-accent-400 { background-color: var(--accent-400); }
+  .bg-oklch-accent-500 { background-color: var(--accent-500); }
+  .bg-oklch-accent-600 { background-color: var(--accent-600); }
+  .bg-oklch-accent-700 { background-color: var(--accent-700); }
+  .bg-oklch-accent-800 { background-color: var(--accent-800); }
+  .bg-oklch-accent-900 { background-color: var(--accent-900); }
+
+  .bg-oklch-charcoal-50 { background-color: var(--charcoal-50); }
+  .bg-oklch-charcoal-100 { background-color: var(--charcoal-100); }
+  .bg-oklch-charcoal-200 { background-color: var(--charcoal-200); }
+  .bg-oklch-charcoal-300 { background-color: var(--charcoal-300); }
+  .bg-oklch-charcoal-400 { background-color: var(--charcoal-400); }
+  .bg-oklch-charcoal-500 { background-color: var(--charcoal-500); }
+  .bg-oklch-charcoal-600 { background-color: var(--charcoal-600); }
+  .bg-oklch-charcoal-700 { background-color: var(--charcoal-700); }
+  .bg-oklch-charcoal-800 { background-color: var(--charcoal-800); }
+  .bg-oklch-charcoal-900 { background-color: var(--charcoal-900); }
+
+  .bg-oklch-midnight-50 { background-color: var(--midnight-50); }
+  .bg-oklch-midnight-100 { background-color: var(--midnight-100); }
+  .bg-oklch-midnight-200 { background-color: var(--midnight-200); }
+  .bg-oklch-midnight-300 { background-color: var(--midnight-300); }
+  .bg-oklch-midnight-400 { background-color: var(--midnight-400); }
+  .bg-oklch-midnight-500 { background-color: var(--midnight-500); }
+  .bg-oklch-midnight-600 { background-color: var(--midnight-600); }
+  .bg-oklch-midnight-700 { background-color: var(--midnight-700); }
+  .bg-oklch-midnight-800 { background-color: var(--midnight-800); }
+  .bg-oklch-midnight-900 { background-color: var(--midnight-900); }
+
+  .bg-oklch-background-50 { background-color: var(--background-50); }
+  .bg-oklch-background-100 { background-color: var(--background-100); }
+  .bg-oklch-background-200 { background-color: var(--background-200); }
+  .bg-oklch-background-300 { background-color: var(--background-300); }
+  .bg-oklch-background-400 { background-color: var(--background-400); }
+  .bg-oklch-background-500 { background-color: var(--background-500); }
+  .bg-oklch-background-600 { background-color: var(--background-600); }
+  .bg-oklch-background-700 { background-color: var(--background-700); }
+  .bg-oklch-background-800 { background-color: var(--background-800); }
+  .bg-oklch-background-900 { background-color: var(--background-900); }
+
+  .bg-oklch-destructive-50 { background-color: var(--destructive-50); }
+  .bg-oklch-destructive-100 { background-color: var(--destructive-100); }
+  .bg-oklch-destructive-200 { background-color: var(--destructive-200); }
+  .bg-oklch-destructive-300 { background-color: var(--destructive-300); }
+  .bg-oklch-destructive-400 { background-color: var(--destructive-400); }
+  .bg-oklch-destructive-500 { background-color: var(--destructive-500); }
+  .bg-oklch-destructive-600 { background-color: var(--destructive-600); }
+  .bg-oklch-destructive-700 { background-color: var(--destructive-700); }
+  .bg-oklch-destructive-800 { background-color: var(--destructive-800); }
+  .bg-oklch-destructive-900 { background-color: var(--destructive-900); }
+
+  .text-oklch-primary-50 { color: var(--primary-50); }
+  .text-oklch-primary-100 { color: var(--primary-100); }
+  .text-oklch-primary-200 { color: var(--primary-200); }
+  .text-oklch-primary-300 { color: var(--primary-300); }
+  .text-oklch-primary-400 { color: var(--primary-400); }
+  .text-oklch-primary-500 { color: var(--primary-500); }
+  .text-oklch-primary-600 { color: var(--primary-600); }
+  .text-oklch-primary-700 { color: var(--primary-700); }
+  .text-oklch-primary-800 { color: var(--primary-800); }
+  .text-oklch-primary-900 { color: var(--primary-900); }
+
+  .text-oklch-secondary-50 { color: var(--secondary-50); }
+  .text-oklch-secondary-100 { color: var(--secondary-100); }
+  .text-oklch-secondary-200 { color: var(--secondary-200); }
+  .text-oklch-secondary-300 { color: var(--secondary-300); }
+  .text-oklch-secondary-400 { color: var(--secondary-400); }
+  .text-oklch-secondary-500 { color: var(--secondary-500); }
+  .text-oklch-secondary-600 { color: var(--secondary-600); }
+  .text-oklch-secondary-700 { color: var(--secondary-700); }
+  .text-oklch-secondary-800 { color: var(--secondary-800); }
+  .text-oklch-secondary-900 { color: var(--secondary-900); }
+
+  .text-oklch-accent-50 { color: var(--accent-50); }
+  .text-oklch-accent-100 { color: var(--accent-100); }
+  .text-oklch-accent-200 { color: var(--accent-200); }
+  .text-oklch-accent-300 { color: var(--accent-300); }
+  .text-oklch-accent-400 { color: var(--accent-400); }
+  .text-oklch-accent-500 { color: var(--accent-500); }
+  .text-oklch-accent-600 { color: var(--accent-600); }
+  .text-oklch-accent-700 { color: var(--accent-700); }
+  .text-oklch-accent-800 { color: var(--accent-800); }
+  .text-oklch-accent-900 { color: var(--accent-900); }
+
+  .text-oklch-charcoal-50 { color: var(--charcoal-50); }
+  .text-oklch-charcoal-100 { color: var(--charcoal-100); }
+  .text-oklch-charcoal-200 { color: var(--charcoal-200); }
+  .text-oklch-charcoal-300 { color: var(--charcoal-300); }
+  .text-oklch-charcoal-400 { color: var(--charcoal-400); }
+  .text-oklch-charcoal-500 { color: var(--charcoal-500); }
+  .text-oklch-charcoal-600 { color: var(--charcoal-600); }
+  .text-oklch-charcoal-700 { color: var(--charcoal-700); }
+  .text-oklch-charcoal-800 { color: var(--charcoal-800); }
+  .text-oklch-charcoal-900 { color: var(--charcoal-900); }
+
+  .text-oklch-midnight-50 { color: var(--midnight-50); }
+  .text-oklch-midnight-100 { color: var(--midnight-100); }
+  .text-oklch-midnight-200 { color: var(--midnight-200); }
+  .text-oklch-midnight-300 { color: var(--midnight-300); }
+  .text-oklch-midnight-400 { color: var(--midnight-400); }
+  .text-oklch-midnight-500 { color: var(--midnight-500); }
+  .text-oklch-midnight-600 { color: var(--midnight-600); }
+  .text-oklch-midnight-700 { color: var(--midnight-700); }
+  .text-oklch-midnight-800 { color: var(--midnight-800); }
+  .text-oklch-midnight-900 { color: var(--midnight-900); }
+
+  .text-oklch-destructive-50 { color: var(--destructive-50); }
+  .text-oklch-destructive-100 { color: var(--destructive-100); }
+  .text-oklch-destructive-200 { color: var(--destructive-200); }
+  .text-oklch-destructive-300 { color: var(--destructive-300); }
+  .text-oklch-destructive-400 { color: var(--destructive-400); }
+  .text-oklch-destructive-500 { color: var(--destructive-500); }
+  .text-oklch-destructive-600 { color: var(--destructive-600); }
+  .text-oklch-destructive-700 { color: var(--destructive-700); }
+  .text-oklch-destructive-800 { color: var(--destructive-800); }
+  .text-oklch-destructive-900 { color: var(--destructive-900); }
+
+  .border-oklch-primary-200 { border-color: var(--primary-200); }
+  .border-oklch-primary-300 { border-color: var(--primary-300); }
+  .border-oklch-secondary-200 { border-color: var(--secondary-200); }
+  .border-oklch-accent-200 { border-color: var(--accent-200); }
+  .border-oklch-destructive-200 { border-color: var(--destructive-200); }
+
   .bg-midnight-50 {
     background-color: var(--midnight-50);
   }
