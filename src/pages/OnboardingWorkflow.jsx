@@ -8,8 +8,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  Save, Plus, Calendar, Mic, FileText, CheckSquare, 
-  MessageSquare, Users, Clock, ArrowRight, Settings, Sparkles, Loader2, Database
+  Plus, Calendar, FileText, CheckSquare, 
+  MessageSquare, Users, ArrowRight, Settings, Sparkles, Loader2, Database, ExternalLink
 } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
@@ -245,11 +245,11 @@ export default function OnboardingWorkflow() {
                   <ArrowRight className="ml-2 h-3 w-3" />
                 </Button>
               </div>
-              </div>
-
-              <WorkflowProgress status={session?.status} />
-              </div>
-              </div>
+          </div>
+          
+          <WorkflowProgress status={session?.status} />
+        </div>
+      </div>
 
       {/* Scrollable Content */}
       <ScrollArea className="flex-1">
@@ -444,9 +444,9 @@ export default function OnboardingWorkflow() {
               </div>
             </CardContent>
           </Card>
+          </div>
         </div>
-        </div>
-      </div>
+      </ScrollArea>
     </div>
   );
 }
