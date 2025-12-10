@@ -80,48 +80,48 @@ export default function OnboardingDashboard() {
 
         {/* Key Metrics */}
         <div className="grid gap-4 md:grid-cols-4 [margin-bottom:var(--spacing-4)]">
-          <Card className="[padding:var(--spacing-4)]">
-            <div className="flex flex-row items-center justify-between [margin-bottom:var(--spacing-2)]">
-              <h3 className="text-sm font-display">Active Onboardings</h3>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between [padding:var(--spacing-4)] [padding-bottom:var(--spacing-2)]">
+              <CardTitle className="text-sm">Active Onboardings</CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
-            </div>
-            <div>
+            </CardHeader>
+            <CardContent className="[padding:var(--spacing-4)] [padding-top:0]">
               <div className="text-2xl font-bold">{activeSessions.length}</div>
               <p className="text-xs text-muted-foreground">In progress</p>
-            </div>
+            </CardContent>
           </Card>
 
-          <Card className="[padding:var(--spacing-4)]">
-            <div className="flex flex-row items-center justify-between [margin-bottom:var(--spacing-2)]">
-              <h3 className="text-sm font-display">Completed</h3>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between [padding:var(--spacing-4)] [padding-bottom:var(--spacing-2)]">
+              <CardTitle className="text-sm">Completed</CardTitle>
               <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
-            </div>
-            <div>
+            </CardHeader>
+            <CardContent className="[padding:var(--spacing-4)] [padding-top:0]">
               <div className="text-2xl font-bold">{completedSessions.length}</div>
               <p className="text-xs text-muted-foreground">This quarter</p>
-            </div>
+            </CardContent>
           </Card>
 
-          <Card className="[padding:var(--spacing-4)]">
-            <div className="flex flex-row items-center justify-between [margin-bottom:var(--spacing-2)]">
-              <h3 className="text-sm font-display">Overdue Tasks</h3>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between [padding:var(--spacing-4)] [padding-bottom:var(--spacing-2)]">
+              <CardTitle className="text-sm">Overdue Tasks</CardTitle>
               <AlertTriangle className="h-4 w-4 text-destructive" />
-            </div>
-            <div>
+            </CardHeader>
+            <CardContent className="[padding:var(--spacing-4)] [padding-top:0]">
               <div className="text-2xl font-bold text-destructive">{overdueTasks.length}</div>
               <p className="text-xs text-muted-foreground">Requires attention</p>
-            </div>
+            </CardContent>
           </Card>
 
-          <Card className="[padding:var(--spacing-4)]">
-            <div className="flex flex-row items-center justify-between [margin-bottom:var(--spacing-2)]">
-              <h3 className="text-sm font-display">Avg. Time to Complete</h3>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between [padding:var(--spacing-4)] [padding-bottom:var(--spacing-2)]">
+              <CardTitle className="text-sm">Avg. Time to Complete</CardTitle>
               <Clock className="h-4 w-4 text-muted-foreground" />
-            </div>
-            <div>
+            </CardHeader>
+            <CardContent className="[padding:var(--spacing-4)] [padding-top:0]">
               <div className="text-2xl font-bold">12.5</div>
               <p className="text-xs text-muted-foreground">Days</p>
-            </div>
+            </CardContent>
           </Card>
         </div>
 
