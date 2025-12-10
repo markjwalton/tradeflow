@@ -98,6 +98,7 @@ import OnboardingDashboard from './pages/OnboardingDashboard';
 import TenantOnboardingPortal from './pages/TenantOnboardingPortal';
 import OnboardingSpecifications from './pages/OnboardingSpecifications';
 import OnboardingPortalPrototype from './pages/OnboardingPortalPrototype';
+import OnboardingDocuments from './pages/OnboardingDocuments';
 import __Layout from './Layout.jsx';
 
 
@@ -202,6 +203,7 @@ export const PAGES = {
     "TenantOnboardingPortal": TenantOnboardingPortal,
     "OnboardingSpecifications": OnboardingSpecifications,
     "OnboardingPortalPrototype": OnboardingPortalPrototype,
+    "OnboardingDocuments": OnboardingDocuments,
 }
 
 export const pagesConfig = {
