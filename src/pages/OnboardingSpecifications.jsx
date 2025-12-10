@@ -529,8 +529,14 @@ IMPORTANT: Base everything on the provided context. Generate realistic, practica
                 properties: {
                   entity_name: { type: "string" },
                   description: { type: "string" },
-                  fields: { type: "array" },
-                  relationships: { type: "array" },
+                  fields: { 
+                    type: "array",
+                    items: { type: "object" }
+                  },
+                  relationships: { 
+                    type: "array",
+                    items: { type: "object" }
+                  },
                   priority: { type: "number" }
                 }
               }
@@ -544,8 +550,14 @@ IMPORTANT: Base everything on the provided context. Generate realistic, practica
                   page_type: { type: "string" },
                   description: { type: "string" },
                   primary_entity: { type: "string" },
-                  data_sources: { type: "array" },
-                  actions: { type: "array" },
+                  data_sources: { 
+                    type: "array",
+                    items: { type: "object" }
+                  },
+                  actions: { 
+                    type: "array",
+                    items: { type: "object" }
+                  },
                   priority: { type: "number" }
                 }
               }
@@ -557,11 +569,26 @@ IMPORTANT: Base everything on the provided context. Generate realistic, practica
                 properties: {
                   feature_name: { type: "string" },
                   description: { type: "string" },
-                  user_stories: { type: "array" },
-                  workflow: { type: "array" },
-                  entities_involved: { type: "array" },
-                  pages_involved: { type: "array" },
-                  business_rules: { type: "array" },
+                  user_stories: { 
+                    type: "array",
+                    items: { type: "object" }
+                  },
+                  workflow: { 
+                    type: "array",
+                    items: { type: "object" }
+                  },
+                  entities_involved: { 
+                    type: "array",
+                    items: { type: "string" }
+                  },
+                  pages_involved: { 
+                    type: "array",
+                    items: { type: "string" }
+                  },
+                  business_rules: { 
+                    type: "array",
+                    items: { type: "string" }
+                  },
                   priority: { type: "string" }
                 }
               }
@@ -575,7 +602,10 @@ IMPORTANT: Base everything on the provided context. Generate realistic, practica
                   integration_type: { type: "string" },
                   description: { type: "string" },
                   provider: { type: "string" },
-                  endpoints: { type: "array" },
+                  endpoints: { 
+                    type: "array",
+                    items: { type: "object" }
+                  },
                   authentication: { type: "object" },
                   priority: { type: "number" }
                 }
