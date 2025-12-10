@@ -81,44 +81,44 @@ export default function OnboardingDashboard() {
         {/* Key Metrics */}
         <div className="grid gap-4 md:grid-cols-4">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-1 pt-4">
-            <CardTitle className="text-sm font-medium">Active Onboardings</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between !p-4 !pb-2">
+            <CardTitle className="text-sm font-display !font-normal">Active Onboardings</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent className="pt-2 pb-4">
+          <CardContent className="!p-4 !pt-0">
             <div className="text-2xl font-bold">{activeSessions.length}</div>
             <p className="text-xs text-muted-foreground">In progress</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-1 pt-4">
-            <CardTitle className="text-sm font-medium">Completed</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between !p-4 !pb-2">
+            <CardTitle className="text-sm font-display !font-normal">Completed</CardTitle>
             <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent className="pt-2 pb-4">
+          <CardContent className="!p-4 !pt-0">
             <div className="text-2xl font-bold">{completedSessions.length}</div>
             <p className="text-xs text-muted-foreground">This quarter</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-1 pt-4">
-            <CardTitle className="text-sm font-medium">Overdue Tasks</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between !p-4 !pb-2">
+            <CardTitle className="text-sm font-display !font-normal">Overdue Tasks</CardTitle>
             <AlertTriangle className="h-4 w-4 text-destructive" />
           </CardHeader>
-          <CardContent className="pt-2 pb-4">
+          <CardContent className="!p-4 !pt-0">
             <div className="text-2xl font-bold text-destructive">{overdueTasks.length}</div>
             <p className="text-xs text-muted-foreground">Requires attention</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-1 pt-4">
-            <CardTitle className="text-sm font-medium">Avg. Time to Complete</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between !p-4 !pb-2">
+            <CardTitle className="text-sm font-display !font-normal">Avg. Time to Complete</CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent className="pt-2 pb-4">
+          <CardContent className="!p-4 !pt-0">
             <div className="text-2xl font-bold">12.5</div>
             <p className="text-xs text-muted-foreground">Days</p>
           </CardContent>
