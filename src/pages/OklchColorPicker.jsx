@@ -13,14 +13,27 @@ export default function OklchColorPicker() {
   const [activeTab, setActiveTab] = useState("picker");
   const [tenantId, setTenantId] = useState(null);
   const [pageData, setPageData] = useState(null);
+  const [tenantProfile, setTenantProfile] = useState(null);
   const { setCustomProperties } = useEditMode();
   
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const tenantSlug = urlParams.get("tenant");
-    if (tenantSlug) {
+    const directTenantId = urlParams.get("tenantId");
+    
+    if (directTenantId) {
+      setTenantId(directTenantId);
+      base44.entities.TenantProfile.filter({ tenant_id: directTenantId }).then(profiles => {
+        if (profiles.length > 0) setTenantProfile(profiles[0]);
+      });
+    } else if (tenantSlug) {
       base44.entities.Tenant.filter({ slug: tenantSlug }).then(tenants => {
-        if (tenants.length > 0) setTenantId(tenants[0].id);
+        if (tenants.length > 0) {
+          setTenantId(tenants[0].id);
+          base44.entities.TenantProfile.filter({ tenant_id: tenants[0].id }).then(profiles => {
+            if (profiles.length > 0) setTenantProfile(profiles[0]);
+          });
+        }
       });
     }
     base44.entities.UIPage.filter({ slug: "OklchColorPicker" })
@@ -71,6 +84,31 @@ export default function OklchColorPicker() {
             {pageData.page_description}
           </p>
         )}
+        {tenantProfile?.brand_colors && (
+          <div className="mt-4 p-4 bg-muted rounded-lg">
+            <p className="text-sm font-medium mb-2">Brand Colors Detected:</p>
+            <div className="flex gap-4 flex-wrap">
+              {tenantProfile.brand_colors.primary && (
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded border" style={{ backgroundColor: tenantProfile.brand_colors.primary }} />
+                  <span className="text-xs">Primary: {tenantProfile.brand_colors.primary}</span>
+                </div>
+              )}
+              {tenantProfile.brand_colors.secondary && (
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded border" style={{ backgroundColor: tenantProfile.brand_colors.secondary }} />
+                  <span className="text-xs">Secondary: {tenantProfile.brand_colors.secondary}</span>
+                </div>
+              )}
+              {tenantProfile.brand_colors.accent && (
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded border" style={{ backgroundColor: tenantProfile.brand_colors.accent }} />
+                  <span className="text-xs">Accent: {tenantProfile.brand_colors.accent}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
       
       <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -91,7 +129,7 @@ export default function OklchColorPicker() {
         </TabsContent>
         
         <TabsContent value="palette">
-          <OklchPaletteTool onSave={handleSave} />
+          <OklchPaletteTool onSave={handleSave} brandColors={tenantProfile?.brand_colors} />
         </TabsContent>
         
         <TabsContent value="convert">
