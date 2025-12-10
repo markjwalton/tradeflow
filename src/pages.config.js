@@ -100,6 +100,7 @@ import OnboardingSpecifications from './pages/OnboardingSpecifications';
 import OnboardingPortalPrototype from './pages/OnboardingPortalPrototype';
 import OnboardingDocuments from './pages/OnboardingDocuments';
 import OnboardingWorkflow from './pages/OnboardingWorkflow';
+import CoreLibraryManager from './pages/CoreLibraryManager';
 import __Layout from './Layout.jsx';
 
 
@@ -206,6 +207,7 @@ export const PAGES = {
     "OnboardingPortalPrototype": OnboardingPortalPrototype,
     "OnboardingDocuments": OnboardingDocuments,
     "OnboardingWorkflow": OnboardingWorkflow,
+    "CoreLibraryManager": CoreLibraryManager,
 }
 
 export const pagesConfig = {
