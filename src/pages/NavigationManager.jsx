@@ -221,7 +221,7 @@ export default function NavigationManager() {
   };
 
   return (
-    <div className="[padding:var(--spacing-6)] max-w-4xl mx-auto bg-[var(--color-background)] min-h-screen">
+    <div className="[padding:var(--spacing-6)] max-w-4xl mx-auto min-h-screen">
       {isGlobalAdmin ? (
         <>
           {/* Page Header */}
@@ -375,7 +375,7 @@ function TenantNavEditor({ tenantId, items = [], isLoading }) {
   }
 
   return (
-    <div className="border rounded-xl [padding:var(--spacing-4)] bg-[var(--color-background)]">
+    <div className="border border-border rounded-xl [padding:var(--spacing-4)] bg-card">
       <div className="flex justify-between items-center [margin-bottom:var(--spacing-4)]">
         <h3 className="font-display text-h5">Tenant Navigation Items</h3>
         <Button size="sm" className="bg-primary-500 hover:bg-primary-600 text-white" onClick={() => { setEditingItem(null); setShowForm(true); }}>
