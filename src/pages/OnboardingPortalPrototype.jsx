@@ -27,6 +27,65 @@ export default function OnboardingPortalPrototype() {
     setChatInput("");
   };
 
+  const downloadJSON = (data, filename) => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const schemas = {
+    OnboardingSession: {
+      properties: {
+        tenant_id: { type: "string", required: true },
+        status: { type: "string", enum: ["discovery", "analysis", "proposal", "review", "approved", "implementation"] },
+        conversation_history: { type: "array" },
+        high_level_summary: { type: "string" },
+        proposed_architecture: { type: "object" },
+        development_plan: { type: "string" },
+        technical_recommendations: { type: "string" }
+      }
+    },
+    BusinessProfile: {
+      properties: {
+        onboarding_session_id: { type: "string", required: true },
+        industry: { type: "string", required: true },
+        business_size: { type: "string", enum: ["solo", "small_2_10", "medium_11_100", "large_100_plus"] },
+        market_type: { type: "string", enum: ["B2B", "B2C", "B2G", "mixed"] }
+      }
+    },
+    OnboardingTask: {
+      properties: {
+        onboarding_session_id: { type: "string", required: true },
+        task_title: { type: "string", required: true },
+        status: { type: "string", enum: ["todo", "in_progress", "completed", "blocked"], default: "todo" },
+        priority: { type: "string", enum: ["low", "medium", "high", "critical"] }
+      }
+    }
+  };
+
+  const specifications = {
+    workflow: {
+      stages: ["discovery", "analysis", "proposal", "review", "approved"],
+      features: {
+        aiChat: ["Answer questions", "Store Q&A", "Auto-generate tasks"],
+        documentManagement: ["Upload files", "Track approvals", "Categorize"],
+        taskManagement: ["View tasks", "Update status", "Filter by priority"],
+        contractApproval: ["Display contracts", "Digital signature", "Track status"]
+      }
+    },
+    uxGuidelines: {
+      navigation: "Tabs with icons",
+      responsiveness: ["mobile: <640px", "tablet: 640-1024px", "desktop: >1024px"],
+      accessibility: "WCAG AA minimum"
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
       {/* Header */}
@@ -148,6 +207,38 @@ export default function OnboardingPortalPrototype() {
 
           {/* Technical Docs */}
           <TabsContent value="technical" className="space-y-4">
+            <Card className="rounded-xl border-primary/20 bg-primary/5">
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  Download Specifications
+                  <FileText className="h-5 w-5" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <p className="text-sm text-muted-foreground mb-4">
+                  Download complete JSON schemas and technical specifications for your project.
+                </p>
+                <div className="grid grid-cols-2 gap-3">
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => downloadJSON(schemas, 'onboarding-schemas.json')}
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    Data Schemas
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => downloadJSON(specifications, 'technical-specifications.json')}
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    Specifications
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
             <Card className="rounded-xl">
               <CardHeader>
                 <CardTitle>Solution Architecture</CardTitle>
