@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Database, Layout, FileCode, CheckCircle, Copy } from "lucide-react";
+import { Database, Layout, FileCode, CheckCircle, Copy, Sparkles, Loader2, Zap } from "lucide-react";
 import { toast } from "sonner";
 
 const jsonSchemas = {
@@ -367,7 +369,103 @@ const technicalRequirements = {
 };
 
 export default function OnboardingSpecifications() {
+  const queryClient = useQueryClient();
   const [copiedSchema, setCopiedSchema] = useState(null);
+  const [generatingFor, setGeneratingFor] = useState(null);
+  
+  const urlParams = new URLSearchParams(window.location.search);
+  const sessionId = urlParams.get("session");
+
+  // Fetch generated schemas for this session
+  const { data: entitySchemas = [] } = useQuery({
+    queryKey: ["entitySchemas", sessionId],
+    queryFn: () => sessionId ? base44.entities.EntitySchema.filter({ onboarding_session_id: sessionId }) : [],
+    enabled: !!sessionId
+  });
+
+  const { data: pageSchemas = [] } = useQuery({
+    queryKey: ["pageSchemas", sessionId],
+    queryFn: () => sessionId ? base44.entities.PageSchema.filter({ onboarding_session_id: sessionId }) : [],
+    enabled: !!sessionId
+  });
+
+  const { data: featureSchemas = [] } = useQuery({
+    queryKey: ["featureSchemas", sessionId],
+    queryFn: () => sessionId ? base44.entities.FeatureSchema.filter({ onboarding_session_id: sessionId }) : [],
+    enabled: !!sessionId
+  });
+
+  const { data: integrationSchemas = [] } = useQuery({
+    queryKey: ["integrationSchemas", sessionId],
+    queryFn: () => sessionId ? base44.entities.IntegrationSchema.filter({ onboarding_session_id: sessionId }) : [],
+    enabled: !!sessionId
+  });
+
+  const { data: session } = useQuery({
+    queryKey: ["onboardingSession", sessionId],
+    queryFn: () => sessionId ? base44.entities.OnboardingSession.filter({ id: sessionId }).then(r => r[0]) : null,
+    enabled: !!sessionId
+  });
+
+  // AI Generation
+  const generateSchemas = async () => {
+    if (!sessionId || !session) {
+      toast.error("No session selected");
+      return;
+    }
+
+    setGeneratingFor("all");
+    try {
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `Based on this onboarding session, generate complete system architecture:
+
+Session Summary: ${session.high_level_summary || "Not provided"}
+Business Requirements: ${session.single_source_of_truth || "Not provided"}
+
+Generate:
+1. Entity Schemas - all data models needed
+2. Page Schemas - all pages/screens needed
+3. Feature Schemas - all features and workflows
+4. Integration Schemas - external services needed
+
+Return as structured JSON.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            entities: { type: "array", items: { type: "object" } },
+            pages: { type: "array", items: { type: "object" } },
+            features: { type: "array", items: { type: "object" } },
+            integrations: { type: "array", items: { type: "object" } }
+          }
+        }
+      });
+
+      // Save generated schemas
+      for (const entity of result.entities || []) {
+        await base44.entities.EntitySchema.create({ ...entity, onboarding_session_id: sessionId });
+      }
+      for (const page of result.pages || []) {
+        await base44.entities.PageSchema.create({ ...page, onboarding_session_id: sessionId });
+      }
+      for (const feature of result.features || []) {
+        await base44.entities.FeatureSchema.create({ ...feature, onboarding_session_id: sessionId });
+      }
+      for (const integration of result.integrations || []) {
+        await base44.entities.IntegrationSchema.create({ ...integration, onboarding_session_id: sessionId });
+      }
+
+      queryClient.invalidateQueries(["entitySchemas"]);
+      queryClient.invalidateQueries(["pageSchemas"]);
+      queryClient.invalidateQueries(["featureSchemas"]);
+      queryClient.invalidateQueries(["integrationSchemas"]);
+      
+      toast.success("System architecture generated");
+    } catch (error) {
+      toast.error("Failed to generate schemas");
+      console.error(error);
+    }
+    setGeneratingFor(null);
+  };
 
   const copyToClipboard = (text, label) => {
     navigator.clipboard.writeText(JSON.stringify(text, null, 2));
@@ -378,57 +476,262 @@ export default function OnboardingSpecifications() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-3xl font-display text-primary mb-2">Onboarding Portal Specifications</h1>
-        <p className="text-muted-foreground">Complete JSON schemas, UI specifications, and technical requirements</p>
+      <div className="mb-6 flex items-start justify-between">
+        <div>
+          <h1 className="text-3xl font-display text-primary mb-2">System Architecture Specifications</h1>
+          <p className="text-muted-foreground">AI-generated schemas for entities, pages, features, and integrations</p>
+        </div>
+        {sessionId && (
+          <Button onClick={generateSchemas} disabled={generatingFor === "all"} size="lg">
+            {generatingFor === "all" ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Generating...
+              </>
+            ) : (
+              <>
+                <Sparkles className="mr-2 h-5 w-5" />
+                Generate Architecture
+              </>
+            )}
+          </Button>
+        )}
       </div>
 
-      <Tabs defaultValue="schemas" className="space-y-6">
-        <TabsList className="grid grid-cols-3 w-full max-w-md">
-          <TabsTrigger value="schemas">
+      <Tabs defaultValue="entities" className="space-y-6">
+        <TabsList className="grid grid-cols-4 w-full max-w-2xl">
+          <TabsTrigger value="entities">
             <Database className="h-4 w-4 mr-2" />
-            Data Schemas
+            Entities ({entitySchemas.length})
           </TabsTrigger>
-          <TabsTrigger value="ui">
+          <TabsTrigger value="pages">
             <Layout className="h-4 w-4 mr-2" />
-            UI Schema
+            Pages ({pageSchemas.length})
           </TabsTrigger>
-          <TabsTrigger value="requirements">
+          <TabsTrigger value="features">
+            <Zap className="h-4 w-4 mr-2" />
+            Features ({featureSchemas.length})
+          </TabsTrigger>
+          <TabsTrigger value="integrations">
             <FileCode className="h-4 w-4 mr-2" />
-            Requirements
+            Integrations ({integrationSchemas.length})
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="schemas" className="space-y-4">
-          {Object.entries(jsonSchemas).map(([entityName, schema]) => (
-            <Card key={entityName} className="rounded-xl">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center gap-2">
-                    <Database className="h-5 w-5" />
-                    {entityName}
-                  </CardTitle>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => copyToClipboard(schema, entityName)}
-                  >
-                    {copiedSchema === entityName ? (
-                      <CheckCircle className="h-4 w-4 mr-2 text-success" />
-                    ) : (
-                      <Copy className="h-4 w-4 mr-2" />
-                    )}
-                    Copy Schema
+        <TabsContent value="entities" className="space-y-4">
+          {entitySchemas.length === 0 ? (
+            <Card className="rounded-xl">
+              <CardContent className="py-12 text-center">
+                <Database className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+                <p className="text-muted-foreground mb-4">No entity schemas generated yet</p>
+                {sessionId && (
+                  <Button onClick={generateSchemas} disabled={generatingFor === "all"}>
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    Generate Architecture
                   </Button>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-xs">
-                  {JSON.stringify(schema, null, 2)}
-                </pre>
+                )}
               </CardContent>
             </Card>
-          ))}
+          ) : (
+            entitySchemas.map((entity) => (
+              <Card key={entity.id} className="rounded-xl">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2">
+                      <Database className="h-5 w-5" />
+                      {entity.entity_name}
+                    </CardTitle>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => copyToClipboard(entity, entity.entity_name)}
+                    >
+                      {copiedSchema === entity.entity_name ? (
+                        <CheckCircle className="h-4 w-4 mr-2 text-success" />
+                      ) : (
+                        <Copy className="h-4 w-4 mr-2" />
+                      )}
+                      Copy Schema
+                    </Button>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-2">{entity.description}</p>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div>
+                      <h4 className="font-medium mb-2">Fields:</h4>
+                      <div className="space-y-1">
+                        {entity.fields?.map((field, idx) => (
+                          <div key={idx} className="flex items-center gap-2 text-sm">
+                            <Badge variant="outline">{field.name}</Badge>
+                            <span className="text-muted-foreground">{field.type}</span>
+                            {field.required && <Badge className="bg-destructive/10 text-destructive">required</Badge>}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    {entity.relationships?.length > 0 && (
+                      <div>
+                        <h4 className="font-medium mb-2">Relationships:</h4>
+                        <div className="space-y-1">
+                          {entity.relationships.map((rel, idx) => (
+                            <div key={idx} className="text-sm text-muted-foreground">
+                              {rel.relationship_type} with {rel.target_entity}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          )}
+        </TabsContent>
+
+        <TabsContent value="pages" className="space-y-4">
+          {pageSchemas.length === 0 ? (
+            <Card className="rounded-xl">
+              <CardContent className="py-12 text-center">
+                <Layout className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+                <p className="text-muted-foreground">No page schemas generated yet</p>
+              </CardContent>
+            </Card>
+          ) : (
+            pageSchemas.map((page) => (
+              <Card key={page.id} className="rounded-xl">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2">
+                      <Layout className="h-5 w-5" />
+                      {page.page_name}
+                    </CardTitle>
+                    <Badge>{page.page_type}</Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-2">{page.description}</p>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {page.primary_entity && (
+                      <div className="text-sm">
+                        <span className="font-medium">Primary Entity:</span> {page.primary_entity}
+                      </div>
+                    )}
+                    {page.data_sources?.length > 0 && (
+                      <div>
+                        <h4 className="font-medium mb-2 text-sm">Data Sources:</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {page.data_sources.map((ds, idx) => (
+                            <Badge key={idx} variant="outline">{ds.entity}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          )}
+        </TabsContent>
+
+        <TabsContent value="features" className="space-y-4">
+          {featureSchemas.length === 0 ? (
+            <Card className="rounded-xl">
+              <CardContent className="py-12 text-center">
+                <Zap className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+                <p className="text-muted-foreground">No feature schemas generated yet</p>
+              </CardContent>
+            </Card>
+          ) : (
+            featureSchemas.map((feature) => (
+              <Card key={feature.id} className="rounded-xl">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2">
+                      <Zap className="h-5 w-5" />
+                      {feature.feature_name}
+                    </CardTitle>
+                    <Badge>{feature.priority || "should_have"}</Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-2">{feature.description}</p>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {feature.user_stories?.length > 0 && (
+                      <div>
+                        <h4 className="font-medium mb-2 text-sm">User Stories:</h4>
+                        <div className="space-y-2">
+                          {feature.user_stories.map((story, idx) => (
+                            <div key={idx} className="text-sm text-muted-foreground p-2 bg-muted rounded">
+                              As a <strong>{story.role}</strong>, I want <strong>{story.want}</strong> so that <strong>{story.so_that}</strong>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {feature.entities_involved?.length > 0 && (
+                      <div>
+                        <h4 className="font-medium mb-2 text-sm">Entities:</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {feature.entities_involved.map((entity, idx) => (
+                            <Badge key={idx} variant="outline">{entity}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          )}
+        </TabsContent>
+
+        <TabsContent value="integrations" className="space-y-4">
+          {integrationSchemas.length === 0 ? (
+            <Card className="rounded-xl">
+              <CardContent className="py-12 text-center">
+                <FileCode className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+                <p className="text-muted-foreground">No integration schemas generated yet</p>
+              </CardContent>
+            </Card>
+          ) : (
+            integrationSchemas.map((integration) => (
+              <Card key={integration.id} className="rounded-xl">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2">
+                      <FileCode className="h-5 w-5" />
+                      {integration.integration_name}
+                    </CardTitle>
+                    <Badge>{integration.integration_type}</Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-2">{integration.description}</p>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {integration.provider && (
+                      <div className="text-sm">
+                        <span className="font-medium">Provider:</span> {integration.provider}
+                      </div>
+                    )}
+                    {integration.endpoints?.length > 0 && (
+                      <div>
+                        <h4 className="font-medium mb-2 text-sm">Endpoints:</h4>
+                        <div className="space-y-1">
+                          {integration.endpoints.map((endpoint, idx) => (
+                            <div key={idx} className="flex items-center gap-2 text-sm">
+                              <Badge variant="outline">{endpoint.method}</Badge>
+                              <span className="text-muted-foreground">{endpoint.path}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          )}
         </TabsContent>
 
         <TabsContent value="ui" className="space-y-4">
