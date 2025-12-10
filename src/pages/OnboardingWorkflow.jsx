@@ -73,10 +73,12 @@ export default function OnboardingWorkflow() {
       });
     },
     onSuccess: (data) => {
-      toast.success("Onboarding session created");
-      // Redirect to tenant setup
-      navigate(createPageUrl("TenantSetup") + `?session=${data.id}&tenant=${data.tenant_id}`);
+      toast.success("Session created!");
+      window.location.href = createPageUrl("OnboardingWorkflow") + `?session=${data.id}`;
     },
+    onError: (error) => {
+      toast.error("Failed to create session: " + error.message);
+    }
   });
 
   const updateSessionMutation = useMutation({
@@ -444,15 +446,23 @@ export default function OnboardingWorkflow() {
                 variant="outline" 
                 size="sm" 
                 className="w-full justify-start"
-                onClick={() => createTestDataMutation.mutate()}
+                onClick={() => {
+                  console.log('Creating test data for session:', sessionId);
+                  createTestDataMutation.mutate();
+                }}
                 disabled={createTestDataMutation.isPending}
               >
                 {createTestDataMutation.isPending ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Creating...
+                  </>
                 ) : (
-                  <Sparkles className="mr-2 h-4 w-4" />
+                  <>
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    Create Test Data
+                  </>
                 )}
-                Create Test Data
               </Button>
               <Button variant="outline" size="sm" className="w-full justify-start">
                 <Plus className="mr-2 h-4 w-4" />
