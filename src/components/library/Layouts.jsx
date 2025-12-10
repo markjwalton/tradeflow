@@ -411,4 +411,5 @@ export default {
   PageHeader,
   PageFooter,
   EmptyState,
+  StandardPageLayout,
 };
