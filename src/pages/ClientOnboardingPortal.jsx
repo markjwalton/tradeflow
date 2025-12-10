@@ -91,25 +91,25 @@ export default function ClientOnboardingPortal() {
   };
 
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="flex min-h-screen bg-slate-50">
       {/* Sidebar */}
       <aside className={cn(
-        "fixed inset-y-0 left-0 z-50 w-64 transform border-r border-slate-200 bg-white transition-transform lg:relative lg:translate-x-0",
+        "fixed inset-y-0 left-0 z-50 w-72 transform bg-slate-900 transition-transform lg:relative lg:translate-x-0",
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="flex h-full flex-col">
           {/* Logo area */}
-          <div className="flex h-16 items-center justify-between border-b border-slate-200 px-6">
+          <div className="flex h-20 items-center justify-between px-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-slate-900 to-slate-700">
-                <span className="text-sm font-bold text-white">TF</span>
+              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-white/10">
+                <span className="text-base font-bold text-white">TF</span>
               </div>
               <div>
-                <div className="text-sm font-semibold text-slate-900">Trade-Flow</div>
-                <div className="text-xs text-slate-500">Onboarding</div>
+                <div className="text-base font-semibold text-white">Trade-Flow</div>
+                <div className="text-xs text-slate-400">Onboarding Portal</div>
               </div>
             </div>
-            <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setSidebarOpen(false)}>
+            <Button variant="ghost" size="icon" className="lg:hidden text-white" onClick={() => setSidebarOpen(false)}>
               <X className="h-5 w-5" />
             </Button>
           </div>
@@ -132,10 +132,10 @@ export default function ClientOnboardingPortal() {
                       setSidebarOpen(false);
                     }}
                     className={cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                      "flex items-center gap-3 rounded-md px-4 py-3 text-sm font-medium transition-all",
                       active
-                        ? "bg-slate-100 text-slate-900"
-                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                        ? "bg-white/10 text-white"
+                        : "text-slate-400 hover:bg-white/5 hover:text-white"
                     )}
                   >
                     <Icon className="h-5 w-5" />
@@ -147,10 +147,10 @@ export default function ClientOnboardingPortal() {
           </ScrollArea>
 
           {/* Footer help */}
-          <div className="border-t border-slate-200 p-4">
-            <div className="rounded-lg bg-slate-50 p-3">
-              <p className="text-xs font-medium text-slate-900">Need help?</p>
-              <p className="mt-1 text-xs text-slate-600">Contact your account manager</p>
+          <div className="border-t border-slate-800 p-6">
+            <div className="rounded-md bg-slate-800 p-4">
+              <p className="text-xs font-semibold text-white">Need assistance?</p>
+              <p className="mt-2 text-xs text-slate-400">Reach out to your dedicated account manager for support.</p>
             </div>
           </div>
         </div>
@@ -159,16 +159,16 @@ export default function ClientOnboardingPortal() {
       {/* Overlay for mobile */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 z-40 bg-slate-900/50 lg:hidden" 
+          className="fixed inset-0 z-40 bg-slate-900/80 lg:hidden" 
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Main content */}
-      <div className="flex min-h-screen flex-1 flex-col">
+      <div className="flex min-h-screen flex-1 flex-col bg-white">
         {/* Header */}
-        <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/80 backdrop-blur-sm">
-          <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+        <header className="sticky top-0 z-30 border-b border-slate-200 bg-white">
+          <div className="flex h-16 items-center justify-between px-6 lg:px-10">
             <div className="flex items-center gap-4">
               <Button 
                 variant="ghost" 
@@ -179,54 +179,40 @@ export default function ClientOnboardingPortal() {
                 <Menu className="h-5 w-5" />
               </Button>
               <div>
-                <div className="flex items-center gap-2">
-                  <h1 className="text-lg font-semibold text-slate-900">{session.tenant_id}</h1>
-                  <Badge className="bg-slate-100 text-slate-700 hover:bg-slate-100">
+                <h1 className="text-base font-semibold text-slate-900">{session.tenant_id}</h1>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <Badge variant="outline" className="text-xs border-slate-300">
                     {statusLabel[session.status] || session.status}
                   </Badge>
+                  <span className="text-xs text-slate-500">
+                    {Math.round(progress)}% complete
+                  </span>
                 </div>
-                <p className="text-xs text-slate-500">
-                  Welcome back, {currentUser?.full_name || "Guest"}
-                </p>
               </div>
             </div>
             
-            <div className="flex items-center gap-4">
-              <div className="hidden items-center gap-2 sm:flex">
-                <span className="text-xs text-slate-500">Progress:</span>
-                <span className="text-xs font-medium text-slate-900">{Math.round(progress)}%</span>
+            <div className="flex items-center gap-3">
+              <div className="hidden sm:block text-xs text-slate-600">
+                {currentUser?.full_name || "Guest"}
               </div>
             </div>
           </div>
 
           {/* Progress bar */}
-          <div className="px-4 pb-3 sm:px-6 lg:px-8">
-            <Progress value={progress} className="h-1" />
+          <div className="h-1 bg-slate-100">
+            <div 
+              className="h-full bg-slate-900 transition-all" 
+              style={{ width: `${progress}%` }}
+            />
           </div>
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto bg-slate-50">
-          <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <main className="flex-1 overflow-y-auto">
+          <div className="mx-auto max-w-6xl px-6 py-10 lg:px-10">
             {renderContent()}
           </div>
         </main>
-
-        {/* Footer */}
-        <footer className="border-t border-slate-200 bg-white">
-          <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-2 text-xs text-slate-500">
-              <span className="font-medium text-slate-700">Current Stage:</span>
-              <span className="uppercase tracking-wide">{session.status}</span>
-            </div>
-            <div className="flex items-center gap-3 text-xs text-slate-500">
-              <span>Questions about next steps?</span>
-              <Button size="sm" variant="outline">
-                Contact Support
-              </Button>
-            </div>
-          </div>
-        </footer>
       </div>
     </div>
   );
