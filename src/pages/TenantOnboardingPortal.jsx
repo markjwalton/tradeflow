@@ -18,6 +18,8 @@ import ContractApprovalFlow from "@/components/onboarding/portal/ContractApprova
 import TechnicalDocs from "@/components/onboarding/portal/TechnicalDocs";
 
 export default function TenantOnboardingPortal() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const sessionId = urlParams.get("session");
   const { tenantId } = useTenant();
   const [currentUser, setCurrentUser] = useState(null);
 
@@ -25,13 +27,20 @@ export default function TenantOnboardingPortal() {
     base44.auth.me().then(setCurrentUser).catch(() => {});
   }, []);
 
-  const { data: sessions = [], isLoading } = useQuery({
+  const { data: sessions = [], isLoading: sessionsLoading } = useQuery({
     queryKey: ["onboardingSessions", tenantId],
     queryFn: () => base44.entities.OnboardingSession.filter({ tenant_id: tenantId }),
-    enabled: !!tenantId,
+    enabled: !!tenantId && !sessionId,
   });
 
-  const activeSession = sessions.find(s => s.status !== "implementation") || sessions[0];
+  const { data: directSession, isLoading: directLoading } = useQuery({
+    queryKey: ["onboardingSession", sessionId],
+    queryFn: () => base44.entities.OnboardingSession.filter({ id: sessionId }).then(r => r[0]),
+    enabled: !!sessionId,
+  });
+
+  const isLoading = sessionId ? directLoading : sessionsLoading;
+  const activeSession = sessionId ? directSession : (sessions.find(s => s.status !== "implementation") || sessions[0]);
 
   if (isLoading) {
     return (
