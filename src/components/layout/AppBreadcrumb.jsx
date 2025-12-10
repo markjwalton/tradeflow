@@ -14,7 +14,7 @@ export function AppBreadcrumb({ organizedNavigation = [] }) {
 
   const crumbs = trail.map((item, index) => {
     const isLast = index === trail.length - 1;
-    const label = item.breadcrumb_label || item.name;
+    const label = item.breadcrumb_label || item.name || 'Unnamed';
     const hasPage = !!item.page_url;
     const clickable = hasPage && (item.is_clickable === undefined || item.is_clickable);
 

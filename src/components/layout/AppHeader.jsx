@@ -86,11 +86,11 @@ function PageSearchBar({ navItems = [] }) {
     items.forEach(item => {
       if (item.item_type === "folder") {
         if (item.children) {
-          pages = pages.concat(getAllPages(item.children, item.name));
+          pages = pages.concat(getAllPages(item.children, item.name || 'Unnamed'));
         }
       } else {
         pages.push({
-          name: item.name,
+          name: item.name || 'Unnamed',
           slug: item.page_url?.split("?")[0] || "",
           category: category || "Pages",
           icon: item.icon
