@@ -12,6 +12,7 @@ import { Switch } from "@/components/ui/switch";
 import { Trash2, Star, Copy, Check, Search, Plus, X, Upload, Sparkles, ChevronDown, ChevronUp, Settings } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 export function ColorLibrary({ tenantId }) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -385,7 +386,8 @@ export function ColorLibrary({ tenantId }) {
                     {palette.colors?.map((color, i) => (
                       <div key={i} className="space-y-1">
                         <div 
-                          className={cn("h-16 rounded border", `bg-oklch-${palette.category}-${(i + 1) * 100}`)}
+                          className="h-16 rounded border"
+                          style={{ backgroundColor: color.hex }}
                         />
                         <div className="text-xs text-center text-muted-foreground">
                           {color.name}
