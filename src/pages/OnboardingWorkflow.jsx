@@ -9,8 +9,9 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Save, Plus, Calendar, Mic, FileText, CheckSquare, 
-  MessageSquare, Users, Clock, ArrowRight, Settings
+  MessageSquare, Users, Clock, ArrowRight, Settings, Sparkles, Loader2, Database
 } from "lucide-react";
+import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
 import CreateTaskDialog from "@/components/onboarding/CreateTaskDialog";
 import MeetingRecorder from "@/components/onboarding/MeetingRecorder";
@@ -85,6 +86,126 @@ export default function OnboardingWorkflow() {
     }
   };
 
+  const generateArchitectureMutation = useMutation({
+    mutationFn: async () => {
+      return await base44.functions.invoke('generateArchitecture', { sessionId });
+    },
+    onSuccess: (response) => {
+      const counts = response.data.counts;
+      toast.success(`Generated ${counts.entities} entities, ${counts.pages} pages, ${counts.features} features, ${counts.integrations} integrations`);
+      queryClient.invalidateQueries(["entitySchemas", sessionId]);
+      queryClient.invalidateQueries(["pageSchemas", sessionId]);
+      queryClient.invalidateQueries(["featureSchemas", sessionId]);
+      queryClient.invalidateQueries(["integrationSchemas", sessionId]);
+    },
+    onError: (error) => {
+      toast.error("Architecture generation failed: " + error.message);
+    }
+  });
+
+  const createTestDataMutation = useMutation({
+    mutationFn: async () => {
+      // Create test tenant profile
+      await base44.entities.TenantProfile.create({
+        tenant_id: session.tenant_id,
+        company_name: "Artisan Crafts Ltd",
+        website: "https://artisancrafts.example.com",
+        email: "contact@artisancrafts.com",
+        phone: "+44 20 1234 5678",
+        address: {
+          line1: "123 Maker Street",
+          city: "London",
+          postcode: "E1 6AN",
+          country: "United Kingdom"
+        },
+        business_summary: "A boutique e-commerce platform selling handmade artisan crafts from local creators",
+        app_goals: ["Streamline order processing", "Improve inventory tracking", "Enhance customer experience"],
+        kpis: [
+          { name: "Order fulfillment time", target: "24h", metric: "hours" },
+          { name: "Customer satisfaction", target: "4.5/5", metric: "rating" },
+          { name: "Inventory accuracy", target: "98%", metric: "percentage" }
+        ]
+      });
+
+      // Create business profile
+      await base44.entities.BusinessProfile.create({
+        onboarding_session_id: sessionId,
+        industry: "Retail & E-commerce",
+        business_size: "small_2_10",
+        market_type: "B2C",
+        primary_problem: "Manual order processing causing delays and inventory discrepancies",
+        current_tools: ["Excel spreadsheets", "Email", "WhatsApp"],
+        growth_goals: "Double sales within 12 months while maintaining quality"
+      });
+
+      // Create operational processes
+      await base44.entities.OperationalProcess.bulkCreate([
+        {
+          onboarding_session_id: sessionId,
+          process_name: "Order Management",
+          process_type: "sales_crm",
+          priority: 1,
+          current_workflow: "Customer emails order, manually entered into spreadsheet, payment confirmed via bank transfer, order fulfillment tracked on paper",
+          pain_points: ["Lost orders", "Double-entry errors", "No real-time tracking", "Manual inventory updates"],
+          desired_outcomes: ["Automated order capture", "Real-time inventory sync", "Customer order tracking portal"],
+          monthly_volume: 150,
+          automation_opportunities: "Online order form, automated inventory updates, customer notifications"
+        },
+        {
+          onboarding_session_id: sessionId,
+          process_name: "Inventory Management",
+          process_type: "inventory_supply_chain",
+          priority: 2,
+          current_workflow: "Stock tracked in Excel, manually updated after sales, physical counts weekly",
+          pain_points: ["Out-of-stock surprises", "Over-ordering", "No low-stock alerts"],
+          desired_outcomes: ["Real-time stock visibility", "Automated reorder alerts", "Supplier integration"],
+          monthly_volume: 300,
+          automation_opportunities: "Barcode scanning, automatic stock adjustments, reorder notifications"
+        }
+      ]);
+
+      // Create requirements
+      await base44.entities.Requirement.bulkCreate([
+        {
+          onboarding_session_id: sessionId,
+          requirement_type: "functional",
+          title: "Product Catalog Management",
+          description: "Admin interface to add, edit, and manage product listings with images and pricing",
+          priority: "must_have",
+          user_story: "As a shop owner, I want to easily manage my product catalog so that I can keep listings up-to-date"
+        },
+        {
+          onboarding_session_id: sessionId,
+          requirement_type: "functional",
+          title: "Online Order Processing",
+          description: "Customer-facing order form with payment integration",
+          priority: "must_have",
+          user_story: "As a customer, I want to place orders online so that I can shop conveniently"
+        },
+        {
+          onboarding_session_id: sessionId,
+          requirement_type: "integration",
+          title: "Payment Gateway",
+          description: "Integration with Stripe for secure payment processing",
+          priority: "must_have",
+          user_story: "As a shop owner, I want secure payment processing so that I can receive payments safely"
+        }
+      ]);
+
+      return { success: true };
+    },
+    onSuccess: () => {
+      toast.success("Test data created successfully");
+      queryClient.invalidateQueries(["tenantProfile"]);
+      queryClient.invalidateQueries(["businessProfile"]);
+      queryClient.invalidateQueries(["processes"]);
+      queryClient.invalidateQueries(["requirements"]);
+    },
+    onError: (error) => {
+      toast.error("Failed to create test data: " + error.message);
+    }
+  });
+
   if (!sessionId) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5">
@@ -138,19 +259,43 @@ export default function OnboardingWorkflow() {
             </span>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <Button variant="outline" size="sm" asChild>
             <a href={createPageUrl("TenantSetup") + `?session=${sessionId}&tenant=${session.tenant_id}`}>
               <Settings className="mr-2 h-4 w-4" />
               Edit Profile
             </a>
           </Button>
-          <Button variant="outline" onClick={handleAdvanceStage}>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => generateArchitectureMutation.mutate()}
+            disabled={generateArchitectureMutation.isPending}
+          >
+            {generateArchitectureMutation.isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Generating...
+              </>
+            ) : (
+              <>
+                <Sparkles className="mr-2 h-4 w-4" />
+                Generate Architecture
+              </>
+            )}
+          </Button>
+          <Button variant="outline" size="sm" asChild>
+            <a href={createPageUrl("OnboardingSpecifications") + `?session=${sessionId}`}>
+              <Database className="mr-2 h-4 w-4" />
+              View Specs
+            </a>
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleAdvanceStage}>
             Advance Stage
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
-          <Button asChild>
-            <a href={`/TenantOnboardingPortal?session=${sessionId}`} target="_blank" rel="noopener noreferrer">
+          <Button size="sm" asChild>
+            <a href={createPageUrl("TenantOnboardingPortal") + `?session=${sessionId}`} target="_blank" rel="noopener noreferrer">
               <Users className="mr-2 h-4 w-4" />
               Tenant Portal
             </a>
@@ -266,6 +411,20 @@ export default function OnboardingWorkflow() {
               <CardTitle className="text-sm">Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full justify-start"
+                onClick={() => createTestDataMutation.mutate()}
+                disabled={createTestDataMutation.isPending}
+              >
+                {createTestDataMutation.isPending ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Sparkles className="mr-2 h-4 w-4" />
+                )}
+                Create Test Data
+              </Button>
               <Button variant="outline" size="sm" className="w-full justify-start">
                 <Plus className="mr-2 h-4 w-4" />
                 Add Reminder
