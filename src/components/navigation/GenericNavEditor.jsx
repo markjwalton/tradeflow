@@ -490,7 +490,7 @@ export default function GenericNavEditor({
                               <div className="flex items-center [gap:var(--spacing-2)] flex-1">
                                 {renderIcon(item.icon, "h-4 w-4")}
                                 <span className={`text-[var(--color-midnight)] ${!item.parent_id && item.hasChildren ? "text-body-base font-medium" : "text-body-base"}`}>
-                                  {item.name}
+                                  {item.name || 'Unnamed'}
                                 </span>
                                 {item.item_type === "folder" && (
                                   <Badge className="text-caption bg-[var(--color-secondary)]/20 text-[var(--color-secondary-dark)]">Folder</Badge>
@@ -701,17 +701,17 @@ export default function GenericNavEditor({
                           const parent = items.find(i => i._id === parentId);
                           if (!parent) return "";
                           const grandPath = getParentPath(parent.parent_id);
-                          return grandPath ? `${grandPath} > ${parent.name}` : parent.name;
+                          return grandPath ? `${grandPath} > ${parent.name || 'Unnamed'}` : (parent.name || 'Unnamed');
                         };
                         const parentPath = getParentPath(item.parent_id);
-                        
+
                         return (
-                          <div 
-                            key={item._id} 
-                            className={`flex items-center gap-3 p-2 rounded-lg hover:bg-[var(--color-background)] transition-all text-sm ${!item.is_visible ? "opacity-50" : ""}`}
-                          >
-                            {renderIcon(item.icon, "h-3 w-3 text-[var(--color-charcoal)]")}
-                            <span className="text-body-base text-[var(--color-midnight)]">{item.name}</span>
+                        <div 
+                          key={item._id} 
+                          className={`flex items-center gap-3 p-2 rounded-lg hover:bg-[var(--color-background)] transition-all text-sm ${!item.is_visible ? "opacity-50" : ""}`}
+                        >
+                          {renderIcon(item.icon, "h-3 w-3 text-[var(--color-charcoal)]")}
+                          <span className="text-body-base text-[var(--color-midnight)]">{item.name || 'Unnamed'}</span>
                             {parentPath && (
                               <span className="text-caption text-[var(--color-charcoal)]">in {parentPath}</span>
                             )}
