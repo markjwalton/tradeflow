@@ -8,8 +8,60 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { 
   FileText, Upload, MessageSquare, CheckSquare, FileSignature, 
-  Send, Sparkles, Download, Star, CheckCircle, Clock, AlertCircle
+  Send, Sparkles, Download, Star, CheckCircle, Clock, AlertCircle, FileJson
 } from "lucide-react";
+import { toast } from "sonner";
+
+// JSON Schemas
+const jsonSchemas = {
+  OnboardingSession: {
+    properties: {
+      tenant_id: { type: "string", required: true },
+      status: { type: "string", enum: ["discovery", "analysis", "proposal", "review", "approved", "implementation"], default: "discovery" },
+      conversation_history: { type: "array", items: { type: "object" } },
+      high_level_summary: { type: "string" },
+      proposed_architecture: { type: "object" },
+      development_plan: { type: "string" },
+      technical_recommendations: { type: "string" }
+    }
+  },
+  BusinessProfile: {
+    properties: {
+      onboarding_session_id: { type: "string", required: true },
+      industry: { type: "string", required: true },
+      business_size: { type: "string", enum: ["solo", "small_2_10", "medium_11_100", "large_100_plus"] },
+      market_type: { type: "string", enum: ["B2B", "B2C", "B2G", "mixed"] }
+    }
+  },
+  OnboardingTask: {
+    properties: {
+      onboarding_session_id: { type: "string", required: true },
+      task_title: { type: "string", required: true },
+      status: { type: "string", enum: ["todo", "in_progress", "completed", "blocked"], default: "todo" },
+      priority: { type: "string", enum: ["low", "medium", "high", "critical"] }
+    }
+  },
+  ContractApproval: {
+    properties: {
+      onboarding_session_id: { type: "string", required: true },
+      contract_type: { type: "string", enum: ["master_agreement", "sla", "dr_policy", "support_terms", "privacy_policy"], required: true },
+      status: { type: "string", enum: ["draft", "pending_review", "approved", "rejected"], default: "draft" }
+    }
+  }
+};
+
+const technicalSpecs = {
+  workflow: {
+    stages: ["discovery", "analysis", "proposal", "review", "approved"],
+    features: ["AI chat", "Document management", "Task tracking", "Contract approval"],
+    integrations: ["Core.InvokeLLM", "Core.UploadFile", "Core.SendEmail"]
+  },
+  uxGuidelines: {
+    navigation: "Tabs with icons",
+    visualization: "Progress bars and status badges",
+    responsiveness: ["mobile: <640px", "tablet: 640-1024px", "desktop: >1024px"]
+  }
+};
 
 export default function OnboardingPortalPrototype() {
   const [chatInput, setChatInput] = useState("");
@@ -37,53 +89,7 @@ export default function OnboardingPortalPrototype() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  };
-
-  const schemas = {
-    OnboardingSession: {
-      properties: {
-        tenant_id: { type: "string", required: true },
-        status: { type: "string", enum: ["discovery", "analysis", "proposal", "review", "approved", "implementation"] },
-        conversation_history: { type: "array" },
-        high_level_summary: { type: "string" },
-        proposed_architecture: { type: "object" },
-        development_plan: { type: "string" },
-        technical_recommendations: { type: "string" }
-      }
-    },
-    BusinessProfile: {
-      properties: {
-        onboarding_session_id: { type: "string", required: true },
-        industry: { type: "string", required: true },
-        business_size: { type: "string", enum: ["solo", "small_2_10", "medium_11_100", "large_100_plus"] },
-        market_type: { type: "string", enum: ["B2B", "B2C", "B2G", "mixed"] }
-      }
-    },
-    OnboardingTask: {
-      properties: {
-        onboarding_session_id: { type: "string", required: true },
-        task_title: { type: "string", required: true },
-        status: { type: "string", enum: ["todo", "in_progress", "completed", "blocked"], default: "todo" },
-        priority: { type: "string", enum: ["low", "medium", "high", "critical"] }
-      }
-    }
-  };
-
-  const specifications = {
-    workflow: {
-      stages: ["discovery", "analysis", "proposal", "review", "approved"],
-      features: {
-        aiChat: ["Answer questions", "Store Q&A", "Auto-generate tasks"],
-        documentManagement: ["Upload files", "Track approvals", "Categorize"],
-        taskManagement: ["View tasks", "Update status", "Filter by priority"],
-        contractApproval: ["Display contracts", "Digital signature", "Track status"]
-      }
-    },
-    uxGuidelines: {
-      navigation: "Tabs with icons",
-      responsiveness: ["mobile: <640px", "tablet: 640-1024px", "desktop: >1024px"],
-      accessibility: "WCAG AA minimum"
-    }
+    toast.success(`Downloaded ${filename}`);
   };
 
   return (
@@ -210,32 +216,27 @@ export default function OnboardingPortalPrototype() {
             <Card className="rounded-xl border-primary/20 bg-primary/5">
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
-                  Download Specifications
-                  <FileText className="h-5 w-5" />
+                  Developer Resources
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" onClick={() => downloadJSON(jsonSchemas, 'onboarding-schemas.json')}>
+                      <FileJson className="h-4 w-4 mr-2" />
+                      Schemas
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => downloadJSON(technicalSpecs, 'technical-specs.json')}>
+                      <FileJson className="h-4 w-4 mr-2" />
+                      Specs
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => downloadJSON({ schemas: jsonSchemas, specs: technicalSpecs }, 'complete-documentation.json')}>
+                      <Download className="h-4 w-4 mr-2" />
+                      All
+                    </Button>
+                  </div>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <p className="text-sm text-muted-foreground mb-4">
-                  Download complete JSON schemas and technical specifications for your project.
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Download complete JSON schemas and technical specifications for implementation.
                 </p>
-                <div className="grid grid-cols-2 gap-3">
-                  <Button 
-                    variant="outline" 
-                    className="w-full"
-                    onClick={() => downloadJSON(schemas, 'onboarding-schemas.json')}
-                  >
-                    <Download className="h-4 w-4 mr-2" />
-                    Data Schemas
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="w-full"
-                    onClick={() => downloadJSON(specifications, 'technical-specifications.json')}
-                  >
-                    <Download className="h-4 w-4 mr-2" />
-                    Specifications
-                  </Button>
-                </div>
               </CardContent>
             </Card>
 
@@ -262,6 +263,25 @@ export default function OnboardingPortalPrototype() {
                     </div>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+
+            <Card className="rounded-xl">
+              <CardHeader>
+                <CardTitle>Available JSON Schemas</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {Object.keys(jsonSchemas).map(schema => (
+                  <div key={schema} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <FileJson className="h-4 w-4 text-primary" />
+                      <span className="font-semibold">{schema}</span>
+                    </div>
+                    <Button variant="ghost" size="sm" onClick={() => downloadJSON(jsonSchemas[schema], `${schema}.json`)}>
+                      <Download className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
               </CardContent>
             </Card>
           </TabsContent>
