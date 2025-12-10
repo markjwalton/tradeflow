@@ -5,11 +5,13 @@ export function AppContent({ children, navItems = [] }) {
   const location = useLocation();
 
   return (
-    <main className="flex-1 overflow-y-auto">
-      <div className="px-4 pt-4 pb-2 md:px-8">
-        <AppBreadcrumb organizedNavigation={navItems} />
+    <main className="flex-1 overflow-y-auto bg-background">
+      <div className="sticky top-0 z-20 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-b border-border">
+        <div className="px-4 py-3 md:px-6">
+          <AppBreadcrumb organizedNavigation={navItems} />
+        </div>
       </div>
-      <div className="px-4 py-6 md:px-8 md:py-8">
+      <div className="px-4 py-6 md:px-6 md:py-8">
         {children}
       </div>
     </main>
