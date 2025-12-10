@@ -191,18 +191,18 @@ export default function OnboardingWorkflow() {
       {/* Fixed Header */}
       <div className="sticky top-0 z-10 bg-white border-b border-slate-200">
         <div className="px-6 py-4">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-[var(--spacing-4)]">
             <div className="flex items-center gap-4">
               <div className="h-10 w-10 rounded-lg bg-slate-900 flex items-center justify-center">
                 <Users className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-semibold text-slate-900">
+                <h1 className="text-h1 text-[var(--color-midnight)] mb-[var(--spacing-2)]">
                   {session?.tenant_id || "Unnamed Tenant"}
                 </h1>
-                <div className="flex items-center gap-3 mt-1">
+                <div className="flex items-center gap-3">
                   <Badge variant="outline" className="text-xs">{session?.status}</Badge>
-                  <span className="text-xs text-slate-500">
+                  <span className="text-caption text-[var(--color-charcoal)]">
                     Started {new Date(session?.created_date).toLocaleDateString()}
                   </span>
                 </div>
