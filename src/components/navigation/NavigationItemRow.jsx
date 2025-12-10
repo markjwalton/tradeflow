@@ -96,7 +96,7 @@ export default function NavigationItemRow({
                   className="gap-2"
                 >
                   <CornerDownRight className="h-4 w-4" />
-                  {parent.depth > 0 ? '└─ ' : ''}{parent.name}
+                  {parent.depth > 0 ? '└─ ' : ''}{parent.name || 'Unnamed'}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
