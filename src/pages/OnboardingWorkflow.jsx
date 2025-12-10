@@ -209,6 +209,12 @@ export default function OnboardingWorkflow() {
                 </div>
               </div>
               <div className="flex gap-2 flex-wrap">
+          <Button size="sm" asChild>
+            <a href={createPageUrl("ClientOnboardingPortal") + `?session=${sessionId}`} target="_blank" rel="noopener noreferrer">
+              <Users className="mr-2 h-4 w-4" />
+              Tenant Portal
+            </a>
+          </Button>
           <Button variant="outline" size="sm" asChild>
             <a href={createPageUrl("TenantSetup") + `?session=${sessionId}&tenant=${session.tenant_id}`}>
               <Settings className="mr-2 h-4 w-4" />
@@ -249,12 +255,6 @@ export default function OnboardingWorkflow() {
           <Button variant="outline" size="sm" onClick={handleAdvanceStage}>
             Advance Stage
             <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-          <Button size="sm" asChild>
-            <a href={createPageUrl("ClientOnboardingPortal") + `?session=${sessionId}`} target="_blank" rel="noopener noreferrer">
-              <Users className="mr-2 h-4 w-4" />
-              Tenant Portal
-            </a>
           </Button>
         </div>
             </div>
