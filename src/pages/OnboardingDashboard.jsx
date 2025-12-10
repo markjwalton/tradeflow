@@ -79,7 +79,7 @@ export default function OnboardingDashboard() {
         <div className="space-y-6">
 
         {/* Key Metrics */}
-        <div className="grid gap-4 md:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-4" style={{ marginBottom: '1rem' }}>
         <div className="bg-white rounded-xl border shadow-sm" style={{ padding: '1rem 1rem 1rem 1rem' }}>
           <div className="flex flex-row items-center justify-between mb-2">
             <h3 className="text-sm" style={{ fontFamily: 'degular-display, sans-serif', fontWeight: 400 }}>Active Onboardings</h3>
