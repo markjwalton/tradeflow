@@ -298,7 +298,7 @@ export default function NavigationItemForm({
                   .filter(p => p.id !== item?.id)
                   .map((p) => (
                     <SelectItem key={p.id} value={p.id}>
-                      {p.depth > 0 ? "└─ " : ""}{p.name}
+                      {p.depth > 0 ? "└─ " : ""}{p.name || 'Unnamed'}
                     </SelectItem>
                   ))}
               </SelectContent>

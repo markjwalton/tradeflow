@@ -525,7 +525,7 @@ export default function GenericNavEditor({
                                         className="gap-2"
                                       >
                                         <Folder className="h-4 w-4" />
-                                        {parent.name}
+                                        {parent.name || 'Unnamed'}
                                       </DropdownMenuItem>
                                     ))}
                                     {/* Pages as parents */}
@@ -546,7 +546,7 @@ export default function GenericNavEditor({
                                             className="gap-2"
                                           >
                                             <File className="h-4 w-4" />
-                                            {parent.name}
+                                            {parent.name || 'Unnamed'}
                                           </DropdownMenuItem>
                                         ))}
                                       </>
@@ -799,7 +799,7 @@ export default function GenericNavEditor({
                     <SelectItem key={parent._id} value={parent._id}>
                       <div className="flex items-center gap-2">
                         {isFolder(parent) ? <Folder className="h-3 w-3" /> : <File className="h-3 w-3" />}
-                        {parent.name}
+                        {parent.name || 'Unnamed'}
                       </div>
                     </SelectItem>
                   ))}
