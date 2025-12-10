@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { base44 } from "@/api/base44Client";
 import { Copy, Check, Sparkles, Upload, Save, X, Loader2, RefreshCw } from "lucide-react";
 
-export function OklchPaletteTool({ onSave, brandColors: initialBrandColors }) {
+export default function OklchPaletteTool({ onSave, brandColors: initialBrandColors }) {
   const [baseColor, setBaseColor] = useState({ l: 0.6, c: 0.15, h: 180 });
   const [paletteType, setPaletteType] = useState("monochromatic");
   const [colorCount, setColorCount] = useState(5);
