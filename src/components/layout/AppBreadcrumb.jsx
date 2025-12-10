@@ -29,7 +29,7 @@ export function AppBreadcrumb({ organizedNavigation = [] }) {
   return (
     <nav
       aria-label="Breadcrumb"
-      className="flex items-center text-xs text-muted-foreground mb-6"
+      className="flex items-center text-sm text-muted-foreground"
     >
       <Link
         to={createPageUrl("Dashboard")}

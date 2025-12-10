@@ -141,7 +141,7 @@ export function AppSidebar({ navItems = [] }) {
         className={cn(
           "flex items-center [border-radius:var(--radius-lg)] transition-colors group",
           showLabels 
-            ? (isChild ? "[gap:var(--spacing-2)] [padding-left:var(--spacing-2)] [padding-right:var(--spacing-2)] [padding-top:var(--spacing-2)] [padding-bottom:var(--spacing-2)]" : "[gap:var(--spacing-3)] [padding-left:var(--spacing-3)] [padding-right:var(--spacing-3)] [padding-top:var(--spacing-2)] [padding-bottom:var(--spacing-2)]") 
+            ? (isChild ? "[gap:var(--spacing-2)] [padding:var(--spacing-2)]" : "[gap:var(--spacing-3)] [padding:var(--spacing-2)]") 
             : "justify-center [padding:var(--spacing-3)]",
           isActive
             ? "bg-sidebar-primary"
@@ -152,7 +152,7 @@ export function AppSidebar({ navItems = [] }) {
           className="flex-shrink-0 transition-colors"
           size={iconSize}
           strokeWidth={iconStrokeWidth}
-          style={{ color: isActive ? 'var(--sidebar-primary-foreground)' : 'var(--primary-600)' }}
+          style={{ color: isActive ? 'var(--sidebar-primary-foreground)' : 'var(--primary-500)' }}
         />
         {showLabels && <span className={cn("truncate", isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground/70", isTopLevel && "font-medium")}>{item.name}</span>}
       </Link>
