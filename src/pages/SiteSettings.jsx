@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Save, X, Sparkles, Loader2, Image as ImageIcon } from "lucide-react";
+import { Save, X, Sparkles, Loader2, Image as ImageIcon, Moon } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
@@ -96,6 +96,7 @@ export default function SiteSettings() {
     contentAlignment: "center",
     backgroundImage: null,
     backgroundSeason: "spring",
+    darkMode: false,
   });
   const [originalSettings, setOriginalSettings] = useState(null);
   const [hasChanges, setHasChanges] = useState(false);
@@ -124,6 +125,7 @@ export default function SiteSettings() {
           contentAlignment: "center",
           backgroundImage: null,
           backgroundSeason: "spring",
+          darkMode: false,
         };
         const loadedSettings = user?.site_settings || defaultSettings;
         setSettings(loadedSettings);
@@ -713,6 +715,30 @@ export default function SiteSettings() {
               <p className="text-xs text-muted-foreground mt-2">
                 Content will be constrained to {settings.maxWidth}px and aligned {settings.contentAlignment}
               </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Dark Mode</CardTitle>
+            <CardDescription>Toggle dark theme for the entire application</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div className="flex items-center gap-3">
+                <Moon className="h-5 w-5 text-primary" />
+                <div>
+                  <div className="font-semibold">Dark Mode</div>
+                  <div className="text-sm text-muted-foreground">Switch to dark theme</div>
+                </div>
+              </div>
+              <Button
+                variant={settings.darkMode ? "default" : "outline"}
+                onClick={() => setSettings({ ...settings, darkMode: !settings.darkMode })}
+              >
+                {settings.darkMode ? "Enabled" : "Disabled"}
+              </Button>
             </div>
           </CardContent>
         </Card>
