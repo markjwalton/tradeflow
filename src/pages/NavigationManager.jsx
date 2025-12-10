@@ -216,8 +216,8 @@ export default function NavigationManager() {
   const getTabStyle = (tab) => {
     const isActive = activeTab === tab;
     return isActive 
-      ? { backgroundColor: `var(--${siteSettings.selectedButtonColor || "primary"})`, borderRadius: 'var(--radius-xl)' } 
-      : { borderRadius: 'var(--radius-xl)' };
+      ? { backgroundColor: `var(--${siteSettings.selectedButtonColor || "primary"})`, borderRadius: '0.75rem' } 
+      : { borderRadius: '0.75rem' };
   };
 
   return (
