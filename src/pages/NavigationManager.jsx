@@ -204,7 +204,7 @@ export default function NavigationManager() {
   }, []);
 
   // Tab button style helper - compact for smaller window
-  const tabStyle = (tab) => `font-body text-sm px-3 py-1.5 [border-radius:var(--radius-lg)] [transition:var(--duration-200)] ${
+  const tabStyle = (tab) => `font-body text-sm px-3 py-1.5 rounded-xl [transition:var(--duration-200)] ${
     activeTab === tab 
       ? `bg-[var(--${siteSettings.selectedButtonColor || "primary"})] text-white` 
       : `bg-[var(--color-background)] text-[var(--color-foreground)] hover:bg-[var(--${siteSettings.ghostButtonHoverColor || "muted"})] border border-[var(--color-border)]`
@@ -365,7 +365,7 @@ function TenantNavEditor({ tenantId, items = [], isLoading }) {
   }
 
   return (
-    <div className="border [border-radius:var(--radius-lg)] [padding:var(--spacing-4)] bg-[var(--color-background)]">
+    <div className="border rounded-xl [padding:var(--spacing-4)] bg-[var(--color-background)]">
       <div className="flex justify-between items-center [margin-bottom:var(--spacing-4)]">
         <h3 className="font-display text-h5">Tenant Navigation Items</h3>
         <Button size="sm" className="bg-primary-500 hover:bg-primary-600 text-white" onClick={() => { setEditingItem(null); setShowForm(true); }}>
@@ -380,7 +380,7 @@ function TenantNavEditor({ tenantId, items = [], isLoading }) {
       ) : (
         <div className="[&>*+*]:mt-[var(--spacing-2)]">
           {items.map((item) => (
-            <div key={item.id} className="flex items-center [gap:var(--spacing-3)] [padding:var(--spacing-3)] border [border-radius:var(--radius-lg)] bg-[var(--color-muted)]">
+            <div key={item.id} className="flex items-center [gap:var(--spacing-3)] [padding:var(--spacing-3)] border rounded-xl bg-[var(--color-muted)]">
               <span className="font-body flex-1 text-[var(--color-foreground)]">{item.name}</span>
               <span className="font-body text-caption text-[var(--color-muted-foreground)]">{item.page_url}</span>
               <Button variant="ghost" size="sm" onClick={() => { setEditingItem(item); setShowForm(true); }}>
