@@ -80,49 +80,49 @@ export default function OnboardingDashboard() {
 
         {/* Key Metrics */}
         <div className="grid gap-4 md:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between" style={{ padding: '1rem', paddingBottom: '0.5rem' }}>
-            <CardTitle className="text-sm" style={{ fontFamily: 'var(--font-family-display)', fontWeight: 400 }}>Active Onboardings</CardTitle>
+        <div className="bg-white rounded-xl border shadow-sm" style={{ padding: '1rem 1rem 1rem 1rem' }}>
+          <div className="flex flex-row items-center justify-between mb-2">
+            <h3 className="text-sm" style={{ fontFamily: 'degular-display, sans-serif', fontWeight: 400 }}>Active Onboardings</h3>
             <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent style={{ padding: '1rem', paddingTop: '0' }}>
+          </div>
+          <div>
             <div className="text-2xl font-bold">{activeSessions.length}</div>
             <p className="text-xs text-muted-foreground">In progress</p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between" style={{ padding: '1rem', paddingBottom: '0.5rem' }}>
-            <CardTitle className="text-sm" style={{ fontFamily: 'var(--font-family-display)', fontWeight: 400 }}>Completed</CardTitle>
+        <div className="bg-white rounded-xl border shadow-sm" style={{ padding: '1rem 1rem 1rem 1rem' }}>
+          <div className="flex flex-row items-center justify-between mb-2">
+            <h3 className="text-sm" style={{ fontFamily: 'degular-display, sans-serif', fontWeight: 400 }}>Completed</h3>
             <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent style={{ padding: '1rem', paddingTop: '0' }}>
+          </div>
+          <div>
             <div className="text-2xl font-bold">{completedSessions.length}</div>
             <p className="text-xs text-muted-foreground">This quarter</p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between" style={{ padding: '1rem', paddingBottom: '0.5rem' }}>
-            <CardTitle className="text-sm" style={{ fontFamily: 'var(--font-family-display)', fontWeight: 400 }}>Overdue Tasks</CardTitle>
+        <div className="bg-white rounded-xl border shadow-sm" style={{ padding: '1rem 1rem 1rem 1rem' }}>
+          <div className="flex flex-row items-center justify-between mb-2">
+            <h3 className="text-sm" style={{ fontFamily: 'degular-display, sans-serif', fontWeight: 400 }}>Overdue Tasks</h3>
             <AlertTriangle className="h-4 w-4 text-destructive" />
-          </CardHeader>
-          <CardContent style={{ padding: '1rem', paddingTop: '0' }}>
+          </div>
+          <div>
             <div className="text-2xl font-bold text-destructive">{overdueTasks.length}</div>
             <p className="text-xs text-muted-foreground">Requires attention</p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between" style={{ padding: '1rem', paddingBottom: '0.5rem' }}>
-            <CardTitle className="text-sm" style={{ fontFamily: 'var(--font-family-display)', fontWeight: 400 }}>Avg. Time to Complete</CardTitle>
+        <div className="bg-white rounded-xl border shadow-sm" style={{ padding: '1rem 1rem 1rem 1rem' }}>
+          <div className="flex flex-row items-center justify-between mb-2">
+            <h3 className="text-sm" style={{ fontFamily: 'degular-display, sans-serif', fontWeight: 400 }}>Avg. Time to Complete</h3>
             <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent style={{ padding: '1rem', paddingTop: '0' }}>
+          </div>
+          <div>
             <div className="text-2xl font-bold">12.5</div>
             <p className="text-xs text-muted-foreground">Days</p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
         <Tabs value={selectedView} onValueChange={setSelectedView}>
