@@ -81,44 +81,44 @@ export default function OnboardingDashboard() {
         {/* Key Metrics */}
         <div className="grid gap-4 md:grid-cols-4">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between !p-4 !pb-2">
-            <CardTitle className="text-sm font-display !font-normal">Active Onboardings</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between" style={{ padding: '1rem', paddingBottom: '0.5rem' }}>
+            <CardTitle className="text-sm" style={{ fontFamily: 'var(--font-family-display)', fontWeight: 400 }}>Active Onboardings</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent className="!p-4 !pt-0">
+          <CardContent style={{ padding: '1rem', paddingTop: '0' }}>
             <div className="text-2xl font-bold">{activeSessions.length}</div>
             <p className="text-xs text-muted-foreground">In progress</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between !p-4 !pb-2">
-            <CardTitle className="text-sm font-display !font-normal">Completed</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between" style={{ padding: '1rem', paddingBottom: '0.5rem' }}>
+            <CardTitle className="text-sm" style={{ fontFamily: 'var(--font-family-display)', fontWeight: 400 }}>Completed</CardTitle>
             <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent className="!p-4 !pt-0">
+          <CardContent style={{ padding: '1rem', paddingTop: '0' }}>
             <div className="text-2xl font-bold">{completedSessions.length}</div>
             <p className="text-xs text-muted-foreground">This quarter</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between !p-4 !pb-2">
-            <CardTitle className="text-sm font-display !font-normal">Overdue Tasks</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between" style={{ padding: '1rem', paddingBottom: '0.5rem' }}>
+            <CardTitle className="text-sm" style={{ fontFamily: 'var(--font-family-display)', fontWeight: 400 }}>Overdue Tasks</CardTitle>
             <AlertTriangle className="h-4 w-4 text-destructive" />
           </CardHeader>
-          <CardContent className="!p-4 !pt-0">
+          <CardContent style={{ padding: '1rem', paddingTop: '0' }}>
             <div className="text-2xl font-bold text-destructive">{overdueTasks.length}</div>
             <p className="text-xs text-muted-foreground">Requires attention</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between !p-4 !pb-2">
-            <CardTitle className="text-sm font-display !font-normal">Avg. Time to Complete</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between" style={{ padding: '1rem', paddingBottom: '0.5rem' }}>
+            <CardTitle className="text-sm" style={{ fontFamily: 'var(--font-family-display)', fontWeight: 400 }}>Avg. Time to Complete</CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent className="!p-4 !pt-0">
+          <CardContent style={{ padding: '1rem', paddingTop: '0' }}>
             <div className="text-2xl font-bold">12.5</div>
             <p className="text-xs text-muted-foreground">Days</p>
           </CardContent>
