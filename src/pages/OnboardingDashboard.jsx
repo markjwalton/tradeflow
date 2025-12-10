@@ -142,7 +142,7 @@ export default function OnboardingDashboard() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="all" className="space-y-4">
+        <TabsContent value="all" className="space-y-4 mt-2">
           {/* Active Sessions */}
           <Card>
             <CardHeader>
