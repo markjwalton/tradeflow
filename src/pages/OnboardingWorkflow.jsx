@@ -230,6 +230,12 @@ export default function OnboardingWorkflow() {
               View Specs
             </a>
           </Button>
+          <Button variant="outline" size="sm" asChild>
+            <a href={createPageUrl("OklchColorPicker") + `?session=${sessionId}&tenant=${session.tenant_id}`}>
+              <Sparkles className="mr-2 h-4 w-4" />
+              Generate Theme
+            </a>
+          </Button>
           <Button variant="outline" size="sm" onClick={handleAdvanceStage}>
             Advance Stage
             <ArrowRight className="ml-2 h-4 w-4" />
