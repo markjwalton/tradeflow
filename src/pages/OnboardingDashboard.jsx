@@ -12,6 +12,8 @@ import { createPageUrl } from "@/utils";
 
 import SessionStepper from "@/components/onboarding/SessionStepper";
 import AnalysisView from "@/components/onboarding/AnalysisView";
+import DataExtractionView from "@/components/onboarding/DataExtractionView";
+import FeedbackPanel from "@/components/onboarding/FeedbackPanel";
 
 export default function OnboardingDashboard() {
   const { tenantId } = useTenant();
@@ -179,6 +181,14 @@ Cover: data security, performance optimization, scalability considerations, and 
             <FileText className="h-4 w-4" />
             Analysis & Proposal
           </TabsTrigger>
+          <TabsTrigger value="data" className="gap-2">
+            <FileText className="h-4 w-4" />
+            Structured Data
+          </TabsTrigger>
+          <TabsTrigger value="feedback" className="gap-2">
+            <MessageSquare className="h-4 w-4" />
+            Feedback
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="conversation">
@@ -240,6 +250,17 @@ Cover: data security, performance optimization, scalability considerations, and 
               </Button>
             </div>
           )}
+        </TabsContent>
+
+        <TabsContent value="data">
+          <DataExtractionView sessionId={activeSession.id} />
+        </TabsContent>
+
+        <TabsContent value="feedback">
+          <FeedbackPanel
+            sessionId={activeSession.id}
+            currentFeedback={activeSession.feedback_notes}
+          />
         </TabsContent>
       </Tabs>
     </div>
