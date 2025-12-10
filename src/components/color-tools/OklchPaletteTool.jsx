@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { base44 } from "@/api/base44Client";
 import { Copy, Check, Sparkles, Upload, Save, X, Loader2, RefreshCw } from "lucide-react";
 
-export function OklchPaletteTool({ onSave }) {
+export function OklchPaletteTool({ onSave, brandColors: initialBrandColors }) {
   const [baseColor, setBaseColor] = useState({ l: 0.6, c: 0.15, h: 180 });
   const [paletteType, setPaletteType] = useState("monochromatic");
   const [colorCount, setColorCount] = useState(5);
@@ -23,6 +23,68 @@ export function OklchPaletteTool({ onSave }) {
   const [brandColors, setBrandColors] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(null);
+  const [showLibrary, setShowLibrary] = useState(!initialBrandColors);
+  
+  // Auto-generate from brand colors on mount
+  React.useEffect(() => {
+    if (initialBrandColors) {
+      const colorsString = [
+        initialBrandColors.primary,
+        initialBrandColors.secondary,
+        initialBrandColors.accent
+      ].filter(Boolean).join(", ");
+      
+      if (colorsString) {
+        setBrandColors(colorsString);
+        // Trigger auto-generation
+        setTimeout(() => {
+          generateFromBrandColorsAuto(colorsString);
+        }, 500);
+      }
+    }
+  }, [initialBrandColors]);
+  
+  const generateFromBrandColorsAuto = async (colorsStr) => {
+    setIsGenerating(true);
+    try {
+      const prompt = `Create a harmonious color palette of ${colorCount} colors based on these brand colors: ${colorsStr}. Return JSON with: name, description, colors array (each with name, lightness 0-1, chroma 0-0.4, hue 0-360).`;
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            description: { type: "string" },
+            colors: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  lightness: { type: "number" },
+                  chroma: { type: "number" },
+                  hue: { type: "number" }
+                }
+              }
+            }
+          }
+        }
+      });
+      if (result.colors) {
+        setPaletteName(result.name || "Brand Palette");
+        setPaletteDescription(result.description || "");
+        setColors(result.colors.map(c => ({
+          l: c.lightness,
+          c: c.chroma,
+          h: c.hue,
+          name: c.name
+        })));
+      }
+    } catch (e) {
+      console.error("AI brand palette failed:", e);
+    }
+    setIsGenerating(false);
+  };
   
   const oklchToRgb = (l, c, h) => {
     const a = c * Math.cos((h * Math.PI) / 180);
@@ -315,6 +377,37 @@ export function OklchPaletteTool({ onSave }) {
   
   return (
     <div className="space-y-6">
+      {!initialBrandColors && (
+        <Card className="rounded-xl bg-muted/50">
+          <CardContent className="pt-6">
+            <div className="text-center space-y-3">
+              <p className="text-sm text-muted-foreground">
+                No brand colors found. You can generate a palette using AI or select from the library.
+              </p>
+              <Button 
+                variant="outline" 
+                onClick={() => setShowLibrary(!showLibrary)}
+              >
+                {showLibrary ? "Hide" : "Browse"} Color Library
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+      
+      {showLibrary && !initialBrandColors && (
+        <Card className="rounded-xl">
+          <CardHeader>
+            <CardTitle>Select from Library</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              Switch to the "Library" tab to browse and select existing color palettes.
+            </p>
+          </CardContent>
+        </Card>
+      )}
+      
       <Card className="rounded-xl">
         <CardHeader>
           <CardTitle>AI Palette Generation</CardTitle>
