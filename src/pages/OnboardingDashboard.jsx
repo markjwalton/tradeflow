@@ -229,8 +229,6 @@ export default function OnboardingDashboard() {
           <OnboardingMetrics sessions={sessions} />
         </TabsContent>
       </Tabs>
-        </div>
-      </ScrollArea>
     </div>
   );
 }
