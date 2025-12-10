@@ -225,8 +225,8 @@ export default function NavigationManager() {
       {isGlobalAdmin ? (
         <>
           {/* Page Header */}
-          <div className="bg-white [margin-bottom:var(--spacing-6)] -mx-6 px-6 py-6">
-            <h1 className="text-3xl font-display text-[var(--color-text-primary)] [margin-bottom:var(--spacing-2)]">
+          <div className="bg-white [margin-bottom:var(--spacing-6)] -mx-6 px-6 py-4">
+            <h1 className={`text-3xl font-display text-[var(--color-text-primary)] ${pageData?.page_description ? '[margin-bottom:var(--spacing-2)]' : ''}`}>
               Navigation Manager
             </h1>
             {pageData?.page_description && (
