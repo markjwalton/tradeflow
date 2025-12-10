@@ -423,7 +423,7 @@ export default function GenericNavEditor({
                 onClick={syncUnallocatedPages}
                 disabled={isSyncing}
                 title="Scan config and refresh unallocated pages"
-                className="h-8 px-2 text-xs"
+                className="h-8 px-2 text-xs rounded-xl"
               >
                 {isSyncing ? (
                   <Loader2 className="h-3 w-3 mr-1 animate-spin" />
@@ -436,7 +436,7 @@ export default function GenericNavEditor({
           </div>
           <Button 
             size="sm"
-            className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white h-8 px-2 text-xs"
+            className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white h-8 px-2 text-xs rounded-xl"
             onClick={() => { 
               setEditingItem(null); 
               setFormData({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null, item_type: "page", default_collapsed: false }); 
