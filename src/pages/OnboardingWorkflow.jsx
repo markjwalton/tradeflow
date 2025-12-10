@@ -106,7 +106,7 @@ export default function OnboardingWorkflow() {
   const createTestDataMutation = useMutation({
     mutationFn: async () => {
       // Create test tenant profile
-      await base44.entities.TenantProfile.create({
+      const profile = await base44.asServiceRole.entities.TenantProfile.create({
         tenant_id: session.tenant_id,
         company_name: "Artisan Crafts Ltd",
         website: "https://artisancrafts.example.com",
@@ -128,7 +128,7 @@ export default function OnboardingWorkflow() {
       });
 
       // Create business profile
-      await base44.entities.BusinessProfile.create({
+      const business = await base44.asServiceRole.entities.BusinessProfile.create({
         onboarding_session_id: sessionId,
         industry: "Retail & E-commerce",
         business_size: "small_2_10",
@@ -139,7 +139,7 @@ export default function OnboardingWorkflow() {
       });
 
       // Create operational processes
-      await base44.entities.OperationalProcess.bulkCreate([
+      const processes = await base44.asServiceRole.entities.OperationalProcess.bulkCreate([
         {
           onboarding_session_id: sessionId,
           process_name: "Order Management",
@@ -165,7 +165,7 @@ export default function OnboardingWorkflow() {
       ]);
 
       // Create requirements
-      await base44.entities.Requirement.bulkCreate([
+      const requirements = await base44.asServiceRole.entities.Requirement.bulkCreate([
         {
           onboarding_session_id: sessionId,
           requirement_type: "functional",
@@ -192,17 +192,22 @@ export default function OnboardingWorkflow() {
         }
       ]);
 
-      return { success: true };
+      return { 
+        profile, 
+        business, 
+        processes: processes.length, 
+        requirements: requirements.length 
+      };
     },
-    onSuccess: () => {
-      toast.success("Test data created successfully");
+    onSuccess: (data) => {
+      toast.success(`✅ Created: Tenant Profile + Business Profile + ${data.processes} Processes + ${data.requirements} Requirements`);
       queryClient.invalidateQueries(["tenantProfile"]);
       queryClient.invalidateQueries(["businessProfile"]);
       queryClient.invalidateQueries(["processes"]);
       queryClient.invalidateQueries(["requirements"]);
     },
     onError: (error) => {
-      toast.error("Failed to create test data: " + error.message);
+      toast.error("Failed: " + error.message);
     }
   });
 
