@@ -53,25 +53,19 @@ export default function OnboardingDashboard() {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-slate-50">
-      {/* Header */}
-      <div className="sticky top-0 z-10 bg-white border-b border-slate-200 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-semibold text-slate-900">Onboarding Dashboard</h1>
-            <p className="text-sm text-slate-600 mt-1">Manage and monitor all tenant onboarding processes</p>
-          </div>
-          <Link to={createPageUrl("OnboardingWorkflow")}>
-            <Button className="gap-2">
-              <Plus className="h-4 w-4" />
-              New Onboarding
-            </Button>
-          </Link>
-        </div>
+    <div className="pb-[var(--spacing-6)] max-w-4xl mx-auto min-h-screen">
+      {/* Page Title */}
+      <div className="flex items-center justify-between mb-[var(--spacing-6)]">
+        <h1 className="text-h1">Onboarding Dashboard</h1>
+        <Link to={createPageUrl("OnboardingWorkflow")}>
+          <Button>
+            <Plus className="h-4 w-4 mr-2" />
+            New Onboarding
+          </Button>
+        </Link>
       </div>
 
-      <ScrollArea className="flex-1">
-        <div className="p-6 space-y-6">
+      <div className="space-y-6">
 
         {/* Key Metrics */}
         <div className="grid gap-4 md:grid-cols-4">
