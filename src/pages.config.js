@@ -102,6 +102,7 @@ import OnboardingDocuments from './pages/OnboardingDocuments';
 import OnboardingWorkflow from './pages/OnboardingWorkflow';
 import CoreLibraryManager from './pages/CoreLibraryManager';
 import TenantSetup from './pages/TenantSetup';
+import ClientOnboardingPortal from './pages/ClientOnboardingPortal';
 import __Layout from './Layout.jsx';
 
 
@@ -210,6 +211,7 @@ export const PAGES = {
     "OnboardingWorkflow": OnboardingWorkflow,
     "CoreLibraryManager": CoreLibraryManager,
     "TenantSetup": TenantSetup,
+    "ClientOnboardingPortal": ClientOnboardingPortal,
 }
 
 export const pagesConfig = {
