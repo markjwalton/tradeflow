@@ -254,8 +254,8 @@ export default function OnboardingWorkflow() {
 
       {/* Scrollable Content */}
       <ScrollArea className="flex-1">
-        <div className="p-6">
-          <div className="max-w-7xl mx-auto grid gap-6 lg:grid-cols-[2fr_1fr]">
+        <div className="pb-[var(--spacing-6)] max-w-4xl mx-auto min-h-screen">
+          <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
         <div className="space-y-6">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="grid grid-cols-4 w-full bg-slate-100">
