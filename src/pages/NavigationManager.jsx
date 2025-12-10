@@ -221,7 +221,7 @@ export default function NavigationManager() {
   };
 
   return (
-    <div className="[padding:var(--spacing-6)] max-w-4xl mx-auto min-h-screen">
+    <div className="pb-[var(--spacing-6)] max-w-4xl mx-auto min-h-screen">
       {isGlobalAdmin ? (
         <>
           {/* Page Header */}
