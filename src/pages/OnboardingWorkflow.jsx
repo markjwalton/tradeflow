@@ -40,6 +40,30 @@ export default function OnboardingWorkflow() {
     enabled: !!sessionId,
   });
 
+  const { data: tenantProfile } = useQuery({
+    queryKey: ["tenantProfile", session?.tenant_id],
+    queryFn: () => base44.entities.TenantProfile.filter({ tenant_id: session.tenant_id }).then(r => r[0]),
+    enabled: !!session?.tenant_id,
+  });
+
+  const { data: businessProfile } = useQuery({
+    queryKey: ["businessProfile", sessionId],
+    queryFn: () => base44.entities.BusinessProfile.filter({ onboarding_session_id: sessionId }).then(r => r[0]),
+    enabled: !!sessionId,
+  });
+
+  const { data: processes = [] } = useQuery({
+    queryKey: ["processes", sessionId],
+    queryFn: () => base44.entities.OperationalProcess.filter({ onboarding_session_id: sessionId }),
+    enabled: !!sessionId,
+  });
+
+  const { data: requirements = [] } = useQuery({
+    queryKey: ["requirements", sessionId],
+    queryFn: () => base44.entities.Requirement.filter({ onboarding_session_id: sessionId }),
+    enabled: !!sessionId,
+  });
+
   const createSessionMutation = useMutation({
     mutationFn: async (tenantId) => {
       return await base44.entities.OnboardingSession.create({
@@ -463,6 +487,34 @@ export default function OnboardingWorkflow() {
                 <span className="font-medium">
                   {Math.floor((new Date() - new Date(session?.created_date)) / (1000 * 60 * 60 * 24))}
                 </span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm">Test Data Status</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Tenant Profile</span>
+                <Badge variant={tenantProfile ? "default" : "outline"}>
+                  {tenantProfile ? "✓" : "—"}
+                </Badge>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Business Profile</span>
+                <Badge variant={businessProfile ? "default" : "outline"}>
+                  {businessProfile ? "✓" : "—"}
+                </Badge>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Processes</span>
+                <span className="font-medium">{processes.length}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Requirements</span>
+                <span className="font-medium">{requirements.length}</span>
               </div>
             </CardContent>
           </Card>
