@@ -251,7 +251,7 @@ export default function OnboardingWorkflow() {
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
           <Button size="sm" asChild>
-            <a href={createPageUrl("TenantOnboardingPortal") + `?session=${sessionId}`} target="_blank" rel="noopener noreferrer">
+            <a href={createPageUrl("ClientOnboardingPortal") + `?session=${sessionId}`} target="_blank" rel="noopener noreferrer">
               <Users className="mr-2 h-4 w-4" />
               Tenant Portal
             </a>

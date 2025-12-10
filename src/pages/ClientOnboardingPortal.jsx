@@ -50,19 +50,23 @@ export default function ClientOnboardingPortal() {
     );
   }
 
-  const basePath = "/client-portal";
+  // Determine which tab to show based on URL hash
+  const hash = location.hash.replace('#', '') || 'overview';
+  
+  const renderPage = () => {
+    switch(hash) {
+      case 'documents': return <ClientDocumentsPage sessionId={session.id} currentUser={currentUser} />;
+      case 'tech-docs': return <ClientTechDocsPage sessionId={session.id} />;
+      case 'ai-assistant': return <ClientAiAssistantPage sessionId={session.id} />;
+      case 'tasks': return <ClientTasksPage sessionId={session.id} currentUser={currentUser} />;
+      case 'contracts': return <ClientContractsPage sessionId={session.id} currentUser={currentUser} />;
+      default: return <ClientOverviewPage session={session} />;
+    }
+  };
 
   return (
-    <ClientAppShell session={session} currentUser={currentUser} currentPath={location.pathname}>
-      <Routes>
-        <Route path="/" element={<Navigate to={`${basePath}/overview?session=${sessionId}`} replace />} />
-        <Route path="/overview" element={<ClientOverviewPage session={session} />} />
-        <Route path="/documents" element={<ClientDocumentsPage sessionId={session.id} currentUser={currentUser} />} />
-        <Route path="/tech-docs" element={<ClientTechDocsPage sessionId={session.id} />} />
-        <Route path="/ai-assistant" element={<ClientAiAssistantPage sessionId={session.id} />} />
-        <Route path="/tasks" element={<ClientTasksPage sessionId={session.id} currentUser={currentUser} />} />
-        <Route path="/contracts" element={<ClientContractsPage sessionId={session.id} currentUser={currentUser} />} />
-      </Routes>
+    <ClientAppShell session={session} currentUser={currentUser} currentPath={hash}>
+      {renderPage()}
     </ClientAppShell>
   );
 }

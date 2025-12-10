@@ -5,6 +5,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 export function ClientSidebar({ currentPath, sessionId }) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const currentSession = sessionId || urlParams.get("session");
+  
   return (
     <aside className="hidden w-64 border-r border-slate-800 bg-slate-950/90 p-4 md:flex md:flex-col">
       <div className="mb-6 flex items-center gap-2">
@@ -19,13 +22,13 @@ export function ClientSidebar({ currentPath, sessionId }) {
         <nav className="space-y-1">
           {clientNav.map((item) => {
             const Icon = item.icon;
-            const active = currentPath.startsWith(item.path);
-            const href = `${item.path}?session=${sessionId}`;
+            const active = currentPath === item.key;
+            const href = `?session=${currentSession}#${item.key}`;
 
             return (
-              <Link
+              <a
                 key={item.key}
-                to={href}
+                href={href}
                 className={cn(
                   "flex items-center gap-2 rounded-md px-2 py-2 text-sm transition",
                   active
@@ -35,7 +38,7 @@ export function ClientSidebar({ currentPath, sessionId }) {
               >
                 <Icon className="h-4 w-4" />
                 <span>{item.label}</span>
-              </Link>
+              </a>
             );
           })}
         </nav>
