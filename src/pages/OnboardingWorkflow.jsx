@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Plus, Calendar, FileText, CheckSquare, 
   MessageSquare, Users, ArrowRight, Settings, Sparkles, Loader2, Database, ExternalLink
@@ -444,6 +445,7 @@ export default function OnboardingWorkflow() {
               </div>
             </CardContent>
           </Card>
+        </div>
           </div>
         </div>
       </ScrollArea>
