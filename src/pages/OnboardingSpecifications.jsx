@@ -718,30 +718,40 @@ IMPORTANT: Base everything on the provided context. Generate realistic, practica
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <div className="mb-6 flex items-start justify-between">
-        <div>
-          <h1 className="text-3xl font-display text-primary mb-2">System Architecture Specifications</h1>
-          <p className="text-muted-foreground">AI-generated schemas for entities, pages, features, and integrations</p>
-        </div>
-        {sessionId && (
-          <Button onClick={generateSchemas} disabled={generatingFor === "all"} size="lg">
-            {generatingFor === "all" ? (
-              <>
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Generating...
-              </>
-            ) : (
-              <>
-                <Sparkles className="mr-2 h-5 w-5" />
-                Generate Architecture
-              </>
-            )}
-          </Button>
-        )}
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5 p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <Card className="rounded-xl border-primary/20 bg-gradient-to-br from-primary/10 to-secondary/10">
+          <CardContent className="pt-6">
+            <div className="flex items-start justify-between">
+              <div className="flex items-start gap-4">
+                <div className="h-12 w-12 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
+                  <Database className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-display font-bold text-primary mb-2">System Architecture Specifications</h1>
+                  <p className="text-muted-foreground">AI-generated schemas for entities, pages, features, and integrations</p>
+                </div>
+              </div>
+              {sessionId && (
+                <Button onClick={generateSchemas} disabled={generatingFor === "all"} size="lg">
+                  {generatingFor === "all" ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="mr-2 h-5 w-5" />
+                      Generate Architecture
+                    </>
+                  )}
+                </Button>
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
-      <Tabs defaultValue="entities" className="space-y-6">
+        <Tabs defaultValue="entities" className="space-y-6">
         <TabsList className="grid grid-cols-4 w-full max-w-2xl">
           <TabsTrigger value="entities">
             <Database className="h-4 w-4 mr-2" />

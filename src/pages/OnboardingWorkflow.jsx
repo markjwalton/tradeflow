@@ -185,21 +185,29 @@ export default function OnboardingWorkflow() {
   }
 
   return (
-    <div className="space-y-6 p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-display font-bold">
-            Onboarding: {session?.tenant_id || "Unnamed"}
-          </h1>
-          <div className="flex items-center gap-3 mt-2">
-            <Badge variant="outline">{session?.status}</Badge>
-            <span className="text-sm text-muted-foreground">
-              Started {new Date(session?.created_date).toLocaleDateString()}
-            </span>
-          </div>
-        </div>
-        <div className="flex gap-2 flex-wrap">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5 p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <Card className="rounded-xl border-primary/20 bg-gradient-to-br from-primary/10 to-secondary/10">
+          <CardContent className="pt-6">
+            <div className="flex items-start justify-between">
+              <div className="flex items-start gap-4">
+                <div className="h-12 w-12 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
+                  <Users className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-display font-bold text-primary mb-2">
+                    Onboarding: {session?.tenant_id || "Unnamed"}
+                  </h1>
+                  <div className="flex items-center gap-3">
+                    <Badge variant="outline">{session?.status}</Badge>
+                    <span className="text-sm text-muted-foreground">
+                      Started {new Date(session?.created_date).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-2 flex-wrap">
           <Button variant="outline" size="sm" asChild>
             <a href={createPageUrl("TenantSetup") + `?session=${sessionId}&tenant=${session.tenant_id}`}>
               <Settings className="mr-2 h-4 w-4" />
@@ -247,13 +255,15 @@ export default function OnboardingWorkflow() {
             </a>
           </Button>
         </div>
-      </div>
+            </div>
+          </CardContent>
+        </Card>
 
-      {/* Progress Bar */}
-      <WorkflowProgress status={session?.status} />
+        {/* Progress Bar */}
+        <WorkflowProgress status={session?.status} />
 
-      {/* Main Content */}
-      <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
+        {/* Main Content */}
+        <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
         <div className="space-y-6">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="grid grid-cols-4 w-full">
@@ -443,6 +453,7 @@ export default function OnboardingWorkflow() {
               </div>
             </CardContent>
           </Card>
+        </div>
         </div>
       </div>
     </div>
