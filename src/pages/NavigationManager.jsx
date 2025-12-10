@@ -206,7 +206,7 @@ export default function NavigationManager() {
   // Tab button style helper - compact for smaller window
   const getTabClassName = (tab) => {
     const isActive = activeTab === tab;
-    return `font-body text-sm px-3 py-1.5 [border-radius:var(--radius-xl)] transition-colors ${
+    return `font-body text-sm px-3 py-1.5 transition-colors ${
       isActive 
         ? "text-white border-0" 
         : "bg-card text-foreground hover:bg-muted border border-border"
@@ -215,7 +215,9 @@ export default function NavigationManager() {
 
   const getTabStyle = (tab) => {
     const isActive = activeTab === tab;
-    return isActive ? { backgroundColor: `var(--${siteSettings.selectedButtonColor || "primary"})` } : {};
+    return isActive 
+      ? { backgroundColor: `var(--${siteSettings.selectedButtonColor || "primary"})`, borderRadius: 'var(--radius-xl)' } 
+      : { borderRadius: 'var(--radius-xl)' };
   };
 
   return (
