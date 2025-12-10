@@ -72,6 +72,12 @@ export default function Layout({ children, currentPageName }) {
 
     const handleSiteSettingsChange = (event) => {
       setSiteSettings(event.detail);
+      // Apply dark mode
+      if (event.detail?.darkMode) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
     };
 
     loadBubblePreference();
@@ -82,6 +88,12 @@ export default function Layout({ children, currentPageName }) {
         const user = await base44.auth.me();
         if (user?.site_settings) {
           setSiteSettings(user.site_settings);
+          // Apply dark mode on load
+          if (user.site_settings?.darkMode) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
         }
       } catch (e) {
         // User not logged in
