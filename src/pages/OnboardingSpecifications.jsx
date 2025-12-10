@@ -1123,6 +1123,7 @@ IMPORTANT: Base everything on the provided context. Generate realistic, practica
           </Card>
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   );
 }
