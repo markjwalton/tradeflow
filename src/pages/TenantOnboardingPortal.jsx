@@ -133,7 +133,7 @@ export default function TenantOnboardingPortal() {
           </TabsContent>
 
           <TabsContent value="technical">
-            <TechnicalDocs session={activeSession} />
+            <TechnicalDocs sessionId={activeSession.id} />
           </TabsContent>
 
           <TabsContent value="chat">
