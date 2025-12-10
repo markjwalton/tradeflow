@@ -738,6 +738,7 @@
     backdrop-filter: blur(8px);
     background: var(--background);
     border-bottom: 1px solid var(--border);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   }
 
   /* Header height consistency */

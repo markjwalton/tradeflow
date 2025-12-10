@@ -18,7 +18,7 @@ export function PageContainer({ children, className, maxWidth = "full", padding 
 
   return (
     <div className={cn(
-      "w-full",
+      "w-full rounded-xl",
       paddingClasses[padding],
       maxWidthClasses[maxWidth],
       className
@@ -50,7 +50,7 @@ export function PageHeader({ title, description, actions, className }) {
 
 export function PageSection({ title, description, children, className, headerActions }) {
   return (
-    <section className={cn("space-y-4", className)}>
+    <section className={cn("space-y-4 rounded-lg", className)}>
       {(title || headerActions) && (
         <div className="flex items-center justify-between gap-4">
           <div className="space-y-1">
