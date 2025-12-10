@@ -29,7 +29,7 @@ export default function OnboardingDashboard() {
     queryFn: () => base44.entities.OnboardingTask.list("-created_date"),
   });
 
-  const activesessions = sessions.filter(s => !["approved", "implementation"].includes(s.status));
+  const activeSessions = sessions.filter(s => !["approved", "implementation"].includes(s.status));
   const completedSessions = sessions.filter(s => s.status === "approved");
   const overdueTasks = tasks.filter(t => t.status !== "completed" && t.due_date && new Date(t.due_date) < new Date());
 
@@ -138,7 +138,7 @@ export default function OnboardingDashboard() {
               <CardTitle>Active Onboarding Sessions</CardTitle>
             </CardHeader>
             <CardContent>
-              {activeSession.length === 0 ? (
+              {activeSessions.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground">
                   <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
                   <p>No active onboarding sessions</p>
@@ -148,7 +148,7 @@ export default function OnboardingDashboard() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {activeSession.map((session) => (
+                  {activeSessions.map((session) => (
                     <div key={session.id} className="border rounded-lg p-4 hover:bg-accent/50 transition-colors">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
