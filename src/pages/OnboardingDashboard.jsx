@@ -79,46 +79,46 @@ export default function OnboardingDashboard() {
         <div className="space-y-6">
 
         {/* Key Metrics */}
-        <div className="grid gap-4 md:grid-cols-4 [margin-bottom:var(--spacing-4)]">
+        <div className="grid gap-4 md:grid-cols-4 mb-6">
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between [padding:var(--spacing-4)] [padding-bottom:var(--spacing-2)]">
-              <CardTitle className="text-sm">Active Onboardings</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle>Active Onboardings</CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="[padding:var(--spacing-4)] [padding-top:0]">
+            <CardContent>
               <div className="text-2xl font-bold">{activeSessions.length}</div>
               <p className="text-xs text-muted-foreground">In progress</p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between [padding:var(--spacing-4)] [padding-bottom:var(--spacing-2)]">
-              <CardTitle className="text-sm">Completed</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle>Completed</CardTitle>
               <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="[padding:var(--spacing-4)] [padding-top:0]">
+            <CardContent>
               <div className="text-2xl font-bold">{completedSessions.length}</div>
               <p className="text-xs text-muted-foreground">This quarter</p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between [padding:var(--spacing-4)] [padding-bottom:var(--spacing-2)]">
-              <CardTitle className="text-sm">Overdue Tasks</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle>Overdue Tasks</CardTitle>
               <AlertTriangle className="h-4 w-4 text-destructive" />
             </CardHeader>
-            <CardContent className="[padding:var(--spacing-4)] [padding-top:0]">
+            <CardContent>
               <div className="text-2xl font-bold text-destructive">{overdueTasks.length}</div>
               <p className="text-xs text-muted-foreground">Requires attention</p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between [padding:var(--spacing-4)] [padding-bottom:var(--spacing-2)]">
-              <CardTitle className="text-sm">Avg. Time to Complete</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle>Avg. Time to Complete</CardTitle>
               <Clock className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="[padding:var(--spacing-4)] [padding-top:0]">
+            <CardContent>
               <div className="text-2xl font-bold">12.5</div>
               <p className="text-xs text-muted-foreground">Days</p>
             </CardContent>
@@ -164,7 +164,7 @@ export default function OnboardingDashboard() {
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
-                            <h3 className="font-display font-semibold text-lg">
+                            <h3 className="font-semibold">
                               {session.tenant_id ? `Tenant: ${session.tenant_id}` : "Unnamed Session"}
                             </h3>
                             <Badge className={getStatusColor(session.status)}>
