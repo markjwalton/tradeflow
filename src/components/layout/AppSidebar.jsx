@@ -116,7 +116,7 @@ export function AppSidebar({ navItems = [] }) {
               isExpanded ? <ChevronDown className="h-4 w-4 text-sidebar-foreground/50" /> : <ChevronRight className="h-4 w-4 text-sidebar-foreground/50" />
             )}
             <FolderIcon size={iconSize} strokeWidth={iconStrokeWidth} style={{ color: 'var(--secondary-400)' }} />
-            <span className={cn("flex-1 text-left", !item.parent_id && "font-medium")}>{item.name}</span>
+            <span className={cn("flex-1 text-left", !item.parent_id && "font-medium")}>{item.name || 'Unnamed'}</span>
           </button>
           {isExpanded && hasChildren && (
             <div className="[padding-bottom:var(--spacing-2)] [gap:var(--spacing-1)] [padding-left:var(--spacing-3)] flex flex-col">
@@ -154,7 +154,7 @@ export function AppSidebar({ navItems = [] }) {
           strokeWidth={iconStrokeWidth}
           style={{ color: isActive ? 'var(--sidebar-primary-foreground)' : 'var(--primary-500)' }}
         />
-        {showLabels && <span className={cn("truncate", isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground/70", isTopLevel && "font-medium")}>{item.name}</span>}
+        {showLabels && <span className={cn("truncate", isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground/70", isTopLevel && "font-medium")}>{item.name || 'Unnamed'}</span>}
       </Link>
     );
     
