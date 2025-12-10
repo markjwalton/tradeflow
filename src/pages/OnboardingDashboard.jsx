@@ -239,7 +239,7 @@ export default function OnboardingDashboard() {
         <TabsContent value="metrics">
           <OnboardingMetrics sessions={sessions} />
         </TabsContent>
-      </Tabs>
+        </Tabs>
         </div>
       </div>
     </div>
