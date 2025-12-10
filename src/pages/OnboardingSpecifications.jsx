@@ -499,11 +499,13 @@ Generate a complete system architecture including:
    - feature_name: string
    - description: string
    - user_stories: array of {role, want, so_that}
-   - workflow: array of {step, action, trigger, result}
+   - workflow: array of {step: NUMBER (1,2,3...), action: string, trigger: string, result: string}
    - entities_involved: array of entity names
    - pages_involved: array of page names
    - business_rules: array of rule strings
    - priority: "must_have" | "should_have" | "nice_to_have"
+   
+   IMPORTANT: step must be a NUMBER (1, 2, 3, etc.), not a string!
 
 4. INTEGRATION SCHEMAS: Define external services needed. For each integration:
    - integration_name: string
