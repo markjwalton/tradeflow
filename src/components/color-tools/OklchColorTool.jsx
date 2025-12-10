@@ -62,7 +62,7 @@ export function OklchColorTool({ onSave }) {
   
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="rounded-xl">
         <CardHeader>
           <CardTitle>OKLCH Color Creator</CardTitle>
         </CardHeader>
@@ -71,7 +71,7 @@ export function OklchColorTool({ onSave }) {
           <div className="space-y-2">
             <Label>Preview</Label>
             <div 
-              className="w-full h-32 rounded-lg border-2 shadow-md transition-colors"
+              className="w-full h-32 rounded-xl border-2 shadow-md transition-colors"
               style={{ backgroundColor: hex }}
             />
           </div>
@@ -148,7 +148,7 @@ export function OklchColorTool({ onSave }) {
       </Card>
       
       {/* Output Formats */}
-      <Card>
+      <Card className="rounded-xl">
         <CardHeader>
           <CardTitle>Output Formats</CardTitle>
         </CardHeader>
@@ -216,7 +216,7 @@ export function OklchColorTool({ onSave }) {
       </Card>
       
       {/* Presets */}
-      <Card>
+      <Card className="rounded-xl">
         <CardHeader>
           <CardTitle>Quick Presets</CardTitle>
         </CardHeader>
