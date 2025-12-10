@@ -96,6 +96,7 @@ import OklchColorPicker from './pages/OklchColorPicker';
 import AIOnboarding from './pages/AIOnboarding';
 import OnboardingDashboard from './pages/OnboardingDashboard';
 import TenantOnboardingPortal from './pages/TenantOnboardingPortal';
+import OnboardingSpecifications from './pages/OnboardingSpecifications';
 import __Layout from './Layout.jsx';
 
 
@@ -198,6 +199,7 @@ export const PAGES = {
     "AIOnboarding": AIOnboarding,
     "OnboardingDashboard": OnboardingDashboard,
     "TenantOnboardingPortal": TenantOnboardingPortal,
+    "OnboardingSpecifications": OnboardingSpecifications,
 }
 
 export const pagesConfig = {
