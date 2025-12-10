@@ -95,6 +95,7 @@ import CompactButtonShowcase from './pages/CompactButtonShowcase';
 import OklchColorPicker from './pages/OklchColorPicker';
 import AIOnboarding from './pages/AIOnboarding';
 import OnboardingDashboard from './pages/OnboardingDashboard';
+import TenantOnboardingPortal from './pages/TenantOnboardingPortal';
 import __Layout from './Layout.jsx';
 
 
@@ -196,6 +197,7 @@ export const PAGES = {
     "OklchColorPicker": OklchColorPicker,
     "AIOnboarding": AIOnboarding,
     "OnboardingDashboard": OnboardingDashboard,
+    "TenantOnboardingPortal": TenantOnboardingPortal,
 }
 
 export const pagesConfig = {
