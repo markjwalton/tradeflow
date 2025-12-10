@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Plus, Users, TrendingUp, AlertTriangle, Clock, CheckCircle2, 
-  FileText, MessageSquare, Target, Calendar, Sparkles
+  Calendar, Sparkles
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -52,20 +53,25 @@ export default function OnboardingDashboard() {
   };
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="h-screen flex flex-col bg-slate-50">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-display font-bold">Onboarding Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Manage and monitor all tenant onboarding processes</p>
+      <div className="sticky top-0 z-10 bg-white border-b border-slate-200 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-semibold text-slate-900">Onboarding Dashboard</h1>
+            <p className="text-sm text-slate-600 mt-1">Manage and monitor all tenant onboarding processes</p>
+          </div>
+          <Link to={createPageUrl("OnboardingWorkflow")}>
+            <Button className="gap-2">
+              <Plus className="h-4 w-4" />
+              New Onboarding
+            </Button>
+          </Link>
         </div>
-        <Link to={createPageUrl("OnboardingWorkflow")}>
-          <Button size="lg" className="gap-2">
-            <Plus className="h-5 w-5" />
-            New Tenant Onboarding
-          </Button>
-        </Link>
       </div>
+
+      <ScrollArea className="flex-1">
+        <div className="p-6 space-y-6">
 
         {/* Key Metrics */}
         <div className="grid gap-4 md:grid-cols-4">
@@ -229,6 +235,8 @@ export default function OnboardingDashboard() {
           <OnboardingMetrics sessions={sessions} />
         </TabsContent>
       </Tabs>
+        </div>
+      </ScrollArea>
     </div>
   );
 }

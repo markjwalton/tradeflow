@@ -186,106 +186,95 @@ export default function OnboardingWorkflow() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <Card className="rounded-xl border-primary/20 bg-gradient-to-br from-primary/10 to-secondary/10">
-          <CardContent className="pt-6">
-            <div className="flex items-start justify-between">
-              <div className="flex items-start gap-4">
-                <div className="h-12 w-12 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
-                  <Users className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-3xl font-display font-bold text-primary mb-2">
-                    Onboarding: {session?.tenant_id || "Unnamed"}
-                  </h1>
-                  <div className="flex items-center gap-3">
-                    <Badge variant="outline">{session?.status}</Badge>
-                    <span className="text-sm text-muted-foreground">
-                      Started {new Date(session?.created_date).toLocaleDateString()}
-                    </span>
-                  </div>
+    <div className="h-screen flex flex-col bg-slate-50">
+      {/* Fixed Header */}
+      <div className="sticky top-0 z-10 bg-white border-b border-slate-200">
+        <div className="px-6 py-4">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-4">
+              <div className="h-10 w-10 rounded-lg bg-slate-900 flex items-center justify-center">
+                <Users className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-semibold text-slate-900">
+                  {session?.tenant_id || "Unnamed Tenant"}
+                </h1>
+                <div className="flex items-center gap-3 mt-1">
+                  <Badge variant="outline" className="text-xs">{session?.status}</Badge>
+                  <span className="text-xs text-slate-500">
+                    Started {new Date(session?.created_date).toLocaleDateString()}
+                  </span>
                 </div>
               </div>
-              <div className="flex gap-2 flex-wrap">
-          <Button size="sm" asChild>
-            <a href={createPageUrl("ClientOnboardingPortal") + `?session=${sessionId}`} target="_blank" rel="noopener noreferrer">
-              <Users className="mr-2 h-4 w-4" />
-              Tenant Portal
-            </a>
-          </Button>
-          <Button variant="outline" size="sm" asChild>
-            <a href={createPageUrl("TenantSetup") + `?session=${sessionId}&tenant=${session.tenant_id}`}>
-              <Settings className="mr-2 h-4 w-4" />
-              Edit Profile
-            </a>
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => generateArchitectureMutation.mutate()}
-            disabled={generateArchitectureMutation.isPending}
-          >
-            {generateArchitectureMutation.isPending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Generating...
-              </>
-            ) : (
-              <>
-                <Sparkles className="mr-2 h-4 w-4" />
-                Generate Architecture
-              </>
-            )}
-          </Button>
-          <BuildApplicationButton sessionId={sessionId} />
-          <Button variant="outline" size="sm" asChild>
-            <a href={createPageUrl("OnboardingSpecifications") + `?session=${sessionId}`}>
-              <Database className="mr-2 h-4 w-4" />
-              View Specs
-            </a>
-          </Button>
-          <Button variant="outline" size="sm" asChild>
-            <a href={createPageUrl("OklchColorPicker") + `?session=${sessionId}&tenant=${session.tenant_id}`}>
-              <Sparkles className="mr-2 h-4 w-4" />
-              Generate Theme
-            </a>
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleAdvanceStage}>
-            Advance Stage
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
             </div>
-          </CardContent>
-        </Card>
+              <div className="flex items-center gap-2">
+                <Button size="sm" variant="outline" asChild>
+                  <a href={createPageUrl("ClientOnboardingPortal") + `?session=${sessionId}`} target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="mr-2 h-3 w-3" />
+                    Portal
+                  </a>
+                </Button>
+                <Button size="sm" variant="outline" asChild>
+                  <a href={createPageUrl("TenantSetup") + `?session=${sessionId}&tenant=${session.tenant_id}`}>
+                    <Settings className="mr-2 h-3 w-3" />
+                    Profile
+                  </a>
+                </Button>
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={() => generateArchitectureMutation.mutate()}
+                  disabled={generateArchitectureMutation.isPending}
+                >
+                  {generateArchitectureMutation.isPending ? (
+                    <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                  ) : (
+                    <Sparkles className="mr-2 h-3 w-3" />
+                  )}
+                  Generate
+                </Button>
+                <BuildApplicationButton sessionId={sessionId} />
+                <Button size="sm" variant="outline" asChild>
+                  <a href={createPageUrl("OnboardingSpecifications") + `?session=${sessionId}`}>
+                    <Database className="mr-2 h-3 w-3" />
+                    Specs
+                  </a>
+                </Button>
+                <Button size="sm" onClick={handleAdvanceStage}>
+                  Next Stage
+                  <ArrowRight className="ml-2 h-3 w-3" />
+                </Button>
+              </div>
+              </div>
 
-        {/* Progress Bar */}
-        <WorkflowProgress status={session?.status} />
+              <WorkflowProgress status={session?.status} />
+              </div>
+              </div>
 
-        {/* Main Content */}
-        <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
+      {/* Scrollable Content */}
+      <ScrollArea className="flex-1">
+        <div className="p-6">
+          <div className="max-w-7xl mx-auto grid gap-6 lg:grid-cols-[2fr_1fr]">
         <div className="space-y-6">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-4 w-full">
-              <TabsTrigger value="overview">
-                <FileText className="h-4 w-4 mr-2" />
-                Overview
-              </TabsTrigger>
-              <TabsTrigger value="tasks">
-                <CheckSquare className="h-4 w-4 mr-2" />
-                Tasks
-              </TabsTrigger>
-              <TabsTrigger value="meetings">
-                <Calendar className="h-4 w-4 mr-2" />
-                Meetings
-              </TabsTrigger>
-              <TabsTrigger value="notes">
-                <MessageSquare className="h-4 w-4 mr-2" />
-                Notes
-              </TabsTrigger>
-            </TabsList>
+            <TabsList className="grid grid-cols-4 w-full bg-slate-100">
+                  <TabsTrigger value="overview" className="data-[state=active]:bg-white">
+                    <FileText className="h-4 w-4 mr-2" />
+                    <span className="hidden sm:inline">Overview</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="tasks" className="data-[state=active]:bg-white">
+                    <CheckSquare className="h-4 w-4 mr-2" />
+                    <span className="hidden sm:inline">Tasks</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="meetings" className="data-[state=active]:bg-white">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    <span className="hidden sm:inline">Meetings</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="notes" className="data-[state=active]:bg-white">
+                    <MessageSquare className="h-4 w-4 mr-2" />
+                    <span className="hidden sm:inline">Notes</span>
+                  </TabsTrigger>
+                </TabsList>
 
             <TabsContent value="overview" className="space-y-4">
               <Card>

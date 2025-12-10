@@ -7,10 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
-  Building2, Mail, Phone, MapPin, Users, Palette, Type, 
-  Target, TrendingUp, Key, Sparkles, Save, CheckCircle2, Upload
+  Building2, MapPin, Users, Palette, Type, 
+  Target, TrendingUp, Key, Sparkles, Save, CheckCircle2
 } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -112,43 +113,45 @@ Generate a 2-3 paragraph professional business summary.`;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5 p-6">
-      <div className="max-w-5xl mx-auto space-y-6">
-        <Card className="rounded-xl border-primary/20 bg-gradient-to-br from-primary/10 to-secondary/10">
-          <CardContent className="pt-6">
-            <div className="flex items-start gap-4">
-              <div className="h-12 w-12 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
-                <Building2 className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-display font-bold text-primary mb-2">Tenant Setup</h1>
-                <p className="text-muted-foreground">Complete your company profile, branding, and integration setup</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+    <div className="h-screen flex flex-col bg-slate-50">
+      {/* Header */}
+      <div className="sticky top-0 z-10 bg-white border-b border-slate-200 px-6 py-4">
+        <div className="flex items-center gap-4">
+          <div className="h-10 w-10 rounded-lg bg-slate-900 flex items-center justify-center">
+            <Building2 className="h-5 w-5 text-white" />
+          </div>
+          <div>
+            <h1 className="text-xl font-semibold text-slate-900">Tenant Setup</h1>
+            <p className="text-sm text-slate-600">Complete company profile, branding, and integration setup</p>
+          </div>
+        </div>
+      </div>
+
+      <ScrollArea className="flex-1">
+        <div className="p-6">
+          <div className="max-w-5xl mx-auto space-y-6">
 
         <Tabs defaultValue="company" className="space-y-6">
-          <TabsList className="grid grid-cols-5 w-full">
-            <TabsTrigger value="company">
+          <TabsList className="grid grid-cols-5 w-full bg-slate-100">
+            <TabsTrigger value="company" className="data-[state=active]:bg-white">
               <Building2 className="h-4 w-4 mr-2" />
-              Company
+              <span className="hidden sm:inline">Company</span>
             </TabsTrigger>
-            <TabsTrigger value="branding">
+            <TabsTrigger value="branding" className="data-[state=active]:bg-white">
               <Palette className="h-4 w-4 mr-2" />
-              Branding
+              <span className="hidden sm:inline">Branding</span>
             </TabsTrigger>
-            <TabsTrigger value="business">
+            <TabsTrigger value="business" className="data-[state=active]:bg-white">
               <Target className="h-4 w-4 mr-2" />
-              Business
+              <span className="hidden sm:inline">Business</span>
             </TabsTrigger>
-            <TabsTrigger value="advisors">
+            <TabsTrigger value="advisors" className="data-[state=active]:bg-white">
               <Users className="h-4 w-4 mr-2" />
-              Advisors
+              <span className="hidden sm:inline">Advisors</span>
             </TabsTrigger>
-            <TabsTrigger value="integrations">
+            <TabsTrigger value="integrations" className="data-[state=active]:bg-white">
               <Key className="h-4 w-4 mr-2" />
-              Integrations
+              <span className="hidden sm:inline">Integrations</span>
             </TabsTrigger>
           </TabsList>
 
@@ -596,8 +599,10 @@ Generate a 2-3 paragraph professional business summary.`;
               </div>
             </div>
           </CardContent>
-        </Card>
-      </div>
+          </Card>
+          </div>
+        </div>
+      </ScrollArea>
     </div>
   );
 }
