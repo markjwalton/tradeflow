@@ -1,266 +1,232 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageSquare, FileText, Send, Loader2 } from "lucide-react";
-import { useTenant } from "@/Layout";
-import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { 
+  Plus, Users, TrendingUp, AlertTriangle, Clock, CheckCircle2, 
+  FileText, MessageSquare, Target, Calendar, Sparkles
+} from "lucide-react";
+import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-
-import SessionStepper from "@/components/onboarding/SessionStepper";
-import AnalysisView from "@/components/onboarding/AnalysisView";
-import DataExtractionView from "@/components/onboarding/DataExtractionView";
-import FeedbackPanel from "@/components/onboarding/FeedbackPanel";
+import AIInsightsPanel from "@/components/onboarding/AIInsightsPanel";
+import OnboardingMetrics from "@/components/onboarding/OnboardingMetrics";
+import RiskAlerts from "@/components/onboarding/RiskAlerts";
 
 export default function OnboardingDashboard() {
-  const { tenantId } = useTenant();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedView, setSelectedView] = useState("all");
 
-  // Fetch sessions
-  const { data: sessions = [], isLoading } = useQuery({
-    queryKey: ["onboardingSessions", tenantId],
-    queryFn: () => base44.entities.OnboardingSession.filter({ tenant_id: tenantId }),
-    enabled: !!tenantId,
+  const { data: sessions = [] } = useQuery({
+    queryKey: ["onboardingSessions"],
+    queryFn: () => base44.entities.OnboardingSession.list("-updated_date"),
   });
 
-  const activeSession = sessions.find(s => s.status !== "approved" && s.status !== "implementation") || sessions[0];
+  const { data: tasks = [] } = useQuery({
+    queryKey: ["onboardingTasks"],
+    queryFn: () => base44.entities.OnboardingTask.list("-created_date"),
+  });
 
-  // Generate AI Analysis
-  const generateAnalysis = async () => {
-    if (!activeSession) return;
-    
-    setIsGenerating(true);
-    try {
-      // Extract conversation context
-      const conversationContext = activeSession.conversation_history
-        ?.map(m => `${m.role}: ${m.content}`)
-        .join('\n\n') || '';
+  const activesessions = sessions.filter(s => !["approved", "implementation"].includes(s.status));
+  const completedSessions = sessions.filter(s => s.status === "approved");
+  const overdueTasks = tasks.filter(t => t.status !== "completed" && t.due_date && new Date(t.due_date) < new Date());
 
-      // Generate high-level summary
-      const summaryPrompt = `Based on this onboarding conversation, create a concise high-level summary of the business, their key challenges, and what they want to achieve:
-
-${conversationContext}
-
-Provide a 2-3 paragraph executive summary.`;
-
-      const summary = await base44.integrations.Core.InvokeLLM({
-        prompt: summaryPrompt,
-      });
-
-      // Generate solution architecture
-      const architecturePrompt = `Based on this business analysis, propose a solution architecture:
-
-${conversationContext}
-
-Provide a JSON structure with:
-- entities: array of entity names needed (e.g., ["Customer", "Project", "Invoice"])
-- pages: array of page names (e.g., ["Dashboard", "CustomerManagement", "ProjectTracking"])
-- integrations: array of integrations needed (e.g., ["QuickBooks", "Email", "SMS"])
-- workflows: brief description of key workflows`;
-
-      const architecture = await base44.integrations.Core.InvokeLLM({
-        prompt: architecturePrompt,
-        response_json_schema: {
-          type: "object",
-          properties: {
-            entities: { type: "array", items: { type: "string" } },
-            pages: { type: "array", items: { type: "string" } },
-            integrations: { type: "array", items: { type: "string" } },
-            workflows: { type: "string" }
-          }
-        }
-      });
-
-      // Generate development plan
-      const planPrompt = `Based on the solution architecture, create a phased development plan:
-
-Architecture:
-${JSON.stringify(architecture, null, 2)}
-
-Provide a detailed development plan with phases, tasks, and estimated timelines.`;
-
-      const plan = await base44.integrations.Core.InvokeLLM({
-        prompt: planPrompt,
-      });
-
-      // Generate technical recommendations
-      const techPrompt = `Based on the business requirements and proposed solution, provide technical and security recommendations:
-
-${conversationContext}
-
-Architecture:
-${JSON.stringify(architecture, null, 2)}
-
-Cover: data security, performance optimization, scalability considerations, and best practices.`;
-
-      const recommendations = await base44.integrations.Core.InvokeLLM({
-        prompt: techPrompt,
-      });
-
-      // Update session with analysis
-      await base44.entities.OnboardingSession.update(activeSession.id, {
-        high_level_summary: summary,
-        proposed_architecture: architecture,
-        development_plan: plan,
-        technical_recommendations: recommendations,
-        status: "proposal"
-      });
-
-      queryClient.invalidateQueries({ queryKey: ["onboardingSessions"] });
-      toast.success("Analysis generated successfully");
-    } catch (error) {
-      toast.error("Failed to generate analysis");
-      console.error(error);
-    } finally {
-      setIsGenerating(false);
-    }
+  const getStatusColor = (status) => {
+    const colors = {
+      discovery: "bg-blue-500",
+      analysis: "bg-purple-500",
+      proposal: "bg-yellow-500",
+      review: "bg-orange-500",
+      approved: "bg-green-500",
+      implementation: "bg-teal-500"
+    };
+    return colors[status] || "bg-gray-500";
   };
 
-  // Approve and move to implementation
-  const approveMutation = useMutation({
-    mutationFn: async () => {
-      await base44.entities.OnboardingSession.update(activeSession.id, {
-        status: "approved"
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["onboardingSessions"] });
-      toast.success("Onboarding approved! Ready for implementation.");
-    }
-  });
+  const getProgressPercentage = (status) => {
+    const stages = ["discovery", "analysis", "proposal", "review", "approved", "implementation"];
+    const index = stages.indexOf(status);
+    return ((index + 1) / stages.length) * 100;
+  };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+  return (
+    <div className="space-y-6 p-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-display font-bold">Onboarding Dashboard</h1>
+          <p className="text-muted-foreground mt-1">Manage and monitor all tenant onboarding processes</p>
+        </div>
+        <Link to={createPageUrl("OnboardingWorkflow")}>
+          <Button size="lg" className="gap-2">
+            <Plus className="h-5 w-5" />
+            New Tenant Onboarding
+          </Button>
+        </Link>
       </div>
-    );
-  }
 
-  if (!activeSession) {
-    return (
-      <div className="p-6 max-w-4xl mx-auto">
-        <Card className="rounded-xl">
-          <CardHeader>
-            <CardTitle>No Active Onboarding Session</CardTitle>
+      {/* Key Metrics */}
+      <div className="grid gap-4 md:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Active Onboardings</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground mb-4">
-              Start a new onboarding session to design your application.
-            </p>
-            <Button onClick={() => navigate(createPageUrl("AIOnboarding"))}>
-              Start Onboarding
-            </Button>
+            <div className="text-2xl font-bold">{activeSessions.length}</div>
+            <p className="text-xs text-muted-foreground">In progress</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Completed</CardTitle>
+            <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{completedSessions.length}</div>
+            <p className="text-xs text-muted-foreground">This quarter</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Overdue Tasks</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-destructive" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-destructive">{overdueTasks.length}</div>
+            <p className="text-xs text-muted-foreground">Requires attention</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Avg. Time to Complete</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">12.5</div>
+            <p className="text-xs text-muted-foreground">Days</p>
           </CardContent>
         </Card>
       </div>
-    );
-  }
 
-  return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-3xl font-display text-primary mb-2">Onboarding Dashboard</h1>
-        <p className="text-muted-foreground">Review and manage your application design</p>
-      </div>
-
-      <SessionStepper currentStatus={activeSession.status} />
-
-      <Tabs defaultValue="analysis" className="space-y-4">
+      <Tabs value={selectedView} onValueChange={setSelectedView}>
         <TabsList>
-          <TabsTrigger value="conversation" className="gap-2">
-            <MessageSquare className="h-4 w-4" />
-            Conversation
+          <TabsTrigger value="all">All Onboardings</TabsTrigger>
+          <TabsTrigger value="insights">
+            <Sparkles className="h-4 w-4 mr-2" />
+            AI Insights
           </TabsTrigger>
-          <TabsTrigger value="analysis" className="gap-2">
-            <FileText className="h-4 w-4" />
-            Analysis & Proposal
+          <TabsTrigger value="risks">
+            <AlertTriangle className="h-4 w-4 mr-2" />
+            Risks & Issues
           </TabsTrigger>
-          <TabsTrigger value="data" className="gap-2">
-            <FileText className="h-4 w-4" />
-            Structured Data
-          </TabsTrigger>
-          <TabsTrigger value="feedback" className="gap-2">
-            <MessageSquare className="h-4 w-4" />
-            Feedback
+          <TabsTrigger value="metrics">
+            <TrendingUp className="h-4 w-4 mr-2" />
+            Performance
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="conversation">
-          <Card className="rounded-xl">
+        <TabsContent value="all" className="space-y-4">
+          {/* Active Sessions */}
+          <Card>
             <CardHeader>
-              <CardTitle>Conversation History</CardTitle>
+              <CardTitle>Active Onboarding Sessions</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3 max-h-[600px] overflow-y-auto">
-                {activeSession.conversation_history?.map((msg, idx) => (
-                  <div
-                    key={idx}
-                    className={`p-3 rounded-lg ${
-                      msg.role === "user" ? "bg-primary/10 ml-12" : "bg-muted mr-12"
-                    }`}
-                  >
-                    <div className="text-xs text-muted-foreground mb-1 capitalize">
-                      {msg.role}
+              {activeSession.length === 0 ? (
+                <div className="text-center py-12 text-muted-foreground">
+                  <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>No active onboarding sessions</p>
+                  <Link to={createPageUrl("OnboardingWorkflow")}>
+                    <Button className="mt-4" variant="outline">Start New Onboarding</Button>
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {activeSession.map((session) => (
+                    <div key={session.id} className="border rounded-lg p-4 hover:bg-accent/50 transition-colors">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <h3 className="font-semibold text-lg">
+                              {session.tenant_id ? `Tenant: ${session.tenant_id}` : "Unnamed Session"}
+                            </h3>
+                            <Badge className={getStatusColor(session.status)}>
+                              {session.status}
+                            </Badge>
+                          </div>
+                          {session.high_level_summary && (
+                            <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                              {session.high_level_summary}
+                            </p>
+                          )}
+                          <div className="flex items-center gap-6 text-sm">
+                            <div className="flex items-center gap-2">
+                              <Calendar className="h-4 w-4 text-muted-foreground" />
+                              <span>Updated {new Date(session.updated_date).toLocaleDateString()}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Progress value={getProgressPercentage(session.status)} className="w-32" />
+                              <span>{Math.round(getProgressPercentage(session.status))}%</span>
+                            </div>
+                          </div>
+                        </div>
+                        <Link to={createPageUrl("OnboardingWorkflow") + `?session=${session.id}`}>
+                          <Button variant="outline" size="sm">
+                            Manage
+                          </Button>
+                        </Link>
+                      </div>
                     </div>
-                    <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4">
-                <Button
-                  variant="outline"
-                  onClick={() => navigate(createPageUrl("AIOnboarding"))}
-                >
-                  Continue Conversation
-                </Button>
-              </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
-        </TabsContent>
 
-        <TabsContent value="analysis">
-          <AnalysisView
-            session={activeSession}
-            onGenerateAnalysis={generateAnalysis}
-            isGenerating={isGenerating}
-          />
-
-          {activeSession.status === "proposal" && (
-            <div className="mt-6 flex justify-end gap-3">
-              <Button variant="outline" onClick={() => navigate(createPageUrl("AIOnboarding"))}>
-                Request Changes
-              </Button>
-              <Button
-                onClick={() => approveMutation.mutate()}
-                disabled={approveMutation.isPending}
-                className="bg-success hover:bg-success/90"
-              >
-                {approveMutation.isPending ? (
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                ) : (
-                  <Send className="h-4 w-4 mr-2" />
-                )}
-                Approve & Begin Implementation
-              </Button>
-            </div>
+          {/* Overdue Tasks */}
+          {overdueTasks.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-destructive flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5" />
+                  Overdue Tasks
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {overdueTasks.slice(0, 5).map((task) => (
+                    <div key={task.id} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div>
+                        <p className="font-medium">{task.task_title}</p>
+                        <p className="text-sm text-muted-foreground">
+                          Due: {new Date(task.due_date).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <Badge variant="destructive">{task.priority || "medium"}</Badge>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           )}
         </TabsContent>
 
-        <TabsContent value="data">
-          <DataExtractionView sessionId={activeSession.id} />
+        <TabsContent value="insights">
+          <AIInsightsPanel sessions={sessions} tasks={tasks} />
         </TabsContent>
 
-        <TabsContent value="feedback">
-          <FeedbackPanel
-            sessionId={activeSession.id}
-            currentFeedback={activeSession.feedback_notes}
-          />
+        <TabsContent value="risks">
+          <RiskAlerts sessions={sessions} tasks={tasks} />
+        </TabsContent>
+
+        <TabsContent value="metrics">
+          <OnboardingMetrics sessions={sessions} />
         </TabsContent>
       </Tabs>
     </div>
