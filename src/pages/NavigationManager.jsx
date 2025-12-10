@@ -237,7 +237,7 @@ export default function NavigationManager() {
           </div>
 
           {/* Background Container for Tabs and Content */}
-          <div className="bg-[var(--color-background)] -mx-6 px-6 py-6 min-h-screen">
+          <div className="bg-[var(--color-background)] rounded-xl -mx-6 px-6 py-6 min-h-screen">
             {/* Tab Navigation */}
             <div className="flex gap-2 [margin-bottom:var(--spacing-4)]">
               <button className={getTabClassName("admin")} style={getTabStyle("admin")} onClick={() => setActiveTab("admin")}>
