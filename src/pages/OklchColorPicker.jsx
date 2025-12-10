@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { useEditMode } from "@/components/page-builder/EditModeContext";
 
 export default function OklchColorPicker() {
-  const [activeTab, setActiveTab] = useState("picker");
+  const [activeTab, setActiveTab] = useState("palettes");
   const [tenantId, setTenantId] = useState(null);
   const [pageData, setPageData] = useState(null);
   const [tenantProfile, setTenantProfile] = useState(null);
