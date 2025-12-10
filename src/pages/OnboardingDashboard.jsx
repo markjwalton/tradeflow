@@ -125,7 +125,7 @@ export default function OnboardingDashboard() {
         </Card>
       </div>
 
-      <Tabs value={selectedView} onValueChange={setSelectedView}>
+        <Tabs value={selectedView} onValueChange={setSelectedView}>
         <TabsList>
           <TabsTrigger value="all">All Onboardings</TabsTrigger>
           <TabsTrigger value="insights">
