@@ -204,16 +204,18 @@ export default function NavigationManager() {
   }, []);
 
   // Tab button style helper - compact for smaller window
-  const tabStyle = (tab) => {
+  const getTabClassName = (tab) => {
     const isActive = activeTab === tab;
-    return {
-      className: `font-body text-sm px-3 py-1.5 rounded-xl transition-colors ${
-        isActive 
-          ? "text-white border-0" 
-          : "bg-card text-foreground hover:bg-muted border border-border"
-      }`,
-      style: isActive ? { backgroundColor: `var(--${siteSettings.selectedButtonColor || "primary"})` } : {}
-    };
+    return `font-body text-sm px-3 py-1.5 rounded-xl transition-colors ${
+      isActive 
+        ? "text-white border-0" 
+        : "bg-card text-foreground hover:bg-muted border border-border"
+    }`;
+  };
+
+  const getTabStyle = (tab) => {
+    const isActive = activeTab === tab;
+    return isActive ? { backgroundColor: `var(--${siteSettings.selectedButtonColor || "primary"})` } : {};
   };
 
   return (
@@ -234,15 +236,15 @@ export default function NavigationManager() {
 
           {/* Tab Navigation */}
           <div className="flex gap-2 [margin-bottom:var(--spacing-4)]">
-            <button {...tabStyle("admin")} onClick={() => setActiveTab("admin")}>
+            <button className={getTabClassName("admin")} style={getTabStyle("admin")} onClick={() => setActiveTab("admin")}>
               <Cog className="h-3.5 w-3.5 mr-1.5 inline" />
               Admin
             </button>
-            <button {...tabStyle("app")} onClick={() => setActiveTab("app")}>
+            <button className={getTabClassName("app")} style={getTabStyle("app")} onClick={() => setActiveTab("app")}>
               <FileCode className="h-3.5 w-3.5 mr-1.5 inline" />
               App Pages
             </button>
-            <button {...tabStyle("tenant")} onClick={() => setActiveTab("tenant")}>
+            <button className={getTabClassName("tenant")} style={getTabStyle("tenant")} onClick={() => setActiveTab("tenant")}>
               <Users className="h-3.5 w-3.5 mr-1.5 inline" />
               Tenant
             </button>
