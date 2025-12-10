@@ -143,9 +143,11 @@ export default function OnboardingWorkflow() {
             Advance Stage
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
-          <Button>
-            <Save className="mr-2 h-4 w-4" />
-            Save Progress
+          <Button asChild>
+            <a href={`/TenantOnboardingPortal?session=${sessionId}`} target="_blank" rel="noopener noreferrer">
+              <Users className="mr-2 h-4 w-4" />
+              Tenant Portal
+            </a>
           </Button>
         </div>
       </div>
