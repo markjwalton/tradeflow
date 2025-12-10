@@ -533,11 +533,31 @@ IMPORTANT: Base everything on the provided context. Generate realistic, practica
                   description: { type: "string" },
                   fields: { 
                     type: "array",
-                    items: { type: "object" }
+                    items: { 
+                      type: "object",
+                      properties: {
+                        name: { type: "string" },
+                        type: { type: "string" },
+                        required: { type: "boolean" },
+                        description: { type: "string" },
+                        enum: { 
+                          type: "array", 
+                          items: { type: "string" }
+                        },
+                        default: { type: "string" }
+                      }
+                    }
                   },
                   relationships: { 
                     type: "array",
-                    items: { type: "object" }
+                    items: { 
+                      type: "object",
+                      properties: {
+                        target_entity: { type: "string" },
+                        relationship_type: { type: "string" },
+                        foreign_key: { type: "string" }
+                      }
+                    }
                   },
                   priority: { type: "number" }
                 }
@@ -554,11 +574,25 @@ IMPORTANT: Base everything on the provided context. Generate realistic, practica
                   primary_entity: { type: "string" },
                   data_sources: { 
                     type: "array",
-                    items: { type: "object" }
+                    items: { 
+                      type: "object",
+                      properties: {
+                        entity: { type: "string" },
+                        filters: { type: "object" },
+                        sort: { type: "string" }
+                      }
+                    }
                   },
                   actions: { 
                     type: "array",
-                    items: { type: "object" }
+                    items: { 
+                      type: "object",
+                      properties: {
+                        name: { type: "string" },
+                        type: { type: "string" },
+                        target: { type: "string" }
+                      }
+                    }
                   },
                   priority: { type: "number" }
                 }
@@ -573,11 +607,26 @@ IMPORTANT: Base everything on the provided context. Generate realistic, practica
                   description: { type: "string" },
                   user_stories: { 
                     type: "array",
-                    items: { type: "object" }
+                    items: { 
+                      type: "object",
+                      properties: {
+                        role: { type: "string" },
+                        want: { type: "string" },
+                        so_that: { type: "string" }
+                      }
+                    }
                   },
                   workflow: { 
                     type: "array",
-                    items: { type: "object" }
+                    items: { 
+                      type: "object",
+                      properties: {
+                        step: { type: "number" },
+                        action: { type: "string" },
+                        trigger: { type: "string" },
+                        result: { type: "string" }
+                      }
+                    }
                   },
                   entities_involved: { 
                     type: "array",
@@ -606,9 +655,26 @@ IMPORTANT: Base everything on the provided context. Generate realistic, practica
                   provider: { type: "string" },
                   endpoints: { 
                     type: "array",
-                    items: { type: "object" }
+                    items: { 
+                      type: "object",
+                      properties: {
+                        name: { type: "string" },
+                        method: { type: "string" },
+                        path: { type: "string" },
+                        purpose: { type: "string" }
+                      }
+                    }
                   },
-                  authentication: { type: "object" },
+                  authentication: { 
+                    type: "object",
+                    properties: {
+                      type: { type: "string" },
+                      credentials_needed: { 
+                        type: "array",
+                        items: { type: "string" }
+                      }
+                    }
+                  },
                   priority: { type: "number" }
                 }
               }
