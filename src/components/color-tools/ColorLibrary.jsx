@@ -385,8 +385,7 @@ export function ColorLibrary({ tenantId }) {
                     {palette.colors?.map((color, i) => (
                       <div key={i} className="space-y-1">
                         <div 
-                          className="h-16 rounded border"
-                          style={{ backgroundColor: color.hex }}
+                          className={cn("h-16 rounded border", `bg-oklch-${palette.category}-${(i + 1) * 100}`)}
                         />
                         <div className="text-xs text-center text-muted-foreground">
                           {color.name}

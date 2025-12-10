@@ -34,6 +34,7 @@ export default function Layout({ children, currentPageName }) {
   const [navItems, setNavItems] = useState([]);
   const [editorPanelOpen, setEditorPanelOpen] = useState(false);
   const [showEditorBubble, setShowEditorBubble] = useState(true);
+  const [siteSettings, setSiteSettings] = useState(null);
   
   const urlParams = new URLSearchParams(window.location.search);
   const tenantSlug = urlParams.get("tenant");
@@ -69,8 +70,27 @@ export default function Layout({ children, currentPageName }) {
       setShowEditorBubble(event.detail.showEditorBubble ?? true);
     };
 
+    const handleSiteSettingsChange = (event) => {
+      setSiteSettings(event.detail);
+    };
+
     loadBubblePreference();
+
+    // Load site settings
+    const loadSiteSettings = async () => {
+      try {
+        const user = await base44.auth.me();
+        if (user?.site_settings) {
+          setSiteSettings(user.site_settings);
+        }
+      } catch (e) {
+        // User not logged in
+      }
+    };
+    loadSiteSettings();
+
     window.addEventListener('ui-preferences-changed', handlePreferencesChange);
+    window.addEventListener('site-settings-changed', handleSiteSettingsChange);
 
     const checkAccess = async () => {
       try {
@@ -252,11 +272,12 @@ export default function Layout({ children, currentPageName }) {
 
     checkAccess();
     
-    // Cleanup event listener
+    // Cleanup event listeners
     return () => {
       window.removeEventListener('ui-preferences-changed', handlePreferencesChange);
+      window.removeEventListener('site-settings-changed', handleSiteSettingsChange);
     };
-  }, [currentPageName]);
+    }, [currentPageName]);
 
   // Pages without layout wrapper (TenantAccess, Setup render without chrome)
   if (currentPageName === "TenantAccess" || currentPageName === "Setup") {
@@ -321,6 +342,10 @@ export default function Layout({ children, currentPageName }) {
     isTenantAdmin,
   };
 
+  const maxWidth = siteSettings?.maxWidth || "1400";
+  const contentAlignment = siteSettings?.contentAlignment || "center";
+  const backgroundImage = siteSettings?.backgroundImage;
+
   return (
     <TenantContext.Provider value={tenantContextValue}>
       <link rel="stylesheet" href="https://use.typekit.net/iwm1gcu.css" />
@@ -334,10 +359,39 @@ export default function Layout({ children, currentPageName }) {
               // Track view mode for layout adjustment
             }}
           />
-          <div data-editor-layout style={{ marginTop: editorPanelOpen ? '120px' : '0', transition: 'margin-top 300ms ease-in-out' }}>
-            <AppShell user={currentUser} tenant={currentTenant} navItems={navItems}>
-              <LiveEditWrapper>{children}</LiveEditWrapper>
-            </AppShell>
+          <div 
+            data-editor-layout 
+            style={{ 
+              marginTop: editorPanelOpen ? '120px' : '0', 
+              transition: 'margin-top 300ms ease-in-out',
+              position: 'relative',
+            }}
+          >
+            {backgroundImage && (
+              <div 
+                className="fixed inset-0 z-0 pointer-events-none"
+                style={{
+                  backgroundImage: `url(${backgroundImage})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
+                  opacity: 0.15,
+                }}
+              />
+            )}
+            <div 
+              className="relative z-10"
+              style={{
+                maxWidth: `${maxWidth}px`,
+                marginLeft: contentAlignment === 'center' ? 'auto' : '0',
+                marginRight: contentAlignment === 'center' ? 'auto' : '0',
+                marginRight: contentAlignment === 'right' ? '0' : (contentAlignment === 'center' ? 'auto' : '0'),
+              }}
+            >
+              <AppShell user={currentUser} tenant={currentTenant} navItems={navItems}>
+                <LiveEditWrapper>{children}</LiveEditWrapper>
+              </AppShell>
+            </div>
           </div>
           <PageSettingsPanel currentPageName={currentPageName} />
           <GlobalAIAssistant />

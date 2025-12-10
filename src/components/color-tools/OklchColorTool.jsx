@@ -71,7 +71,7 @@ export function OklchColorTool({ onSave }) {
           <div className="space-y-2">
             <Label>Preview</Label>
             <div 
-              className="w-full h-32 rounded-lg border-2 border-border shadow-md transition-colors"
+              className="w-full h-32 rounded-lg border-2 shadow-md transition-colors"
               style={{ backgroundColor: hex }}
             />
           </div>
@@ -227,7 +227,7 @@ export function OklchColorTool({ onSave }) {
               className="h-auto flex flex-col gap-1 p-3"
               onClick={() => { setLightness(0.95); setChroma(0.02); setHue(0); }}
             >
-              <div className="w-full h-8 rounded bg-[oklch(0.95_0.02_0)]" />
+              <div className="w-full h-8 rounded bg-oklch-background-50" />
               <span className="text-xs">Near White</span>
             </Button>
             <Button 
@@ -235,7 +235,7 @@ export function OklchColorTool({ onSave }) {
               className="h-auto flex flex-col gap-1 p-3"
               onClick={() => { setLightness(0.2); setChroma(0.02); setHue(0); }}
             >
-              <div className="w-full h-8 rounded bg-[oklch(0.2_0.02_0)]" />
+              <div className="w-full h-8 rounded bg-oklch-midnight-900" />
               <span className="text-xs">Near Black</span>
             </Button>
             <Button 
@@ -243,7 +243,7 @@ export function OklchColorTool({ onSave }) {
               className="h-auto flex flex-col gap-1 p-3"
               onClick={() => { setLightness(0.646); setChroma(0.222); setHue(41.116); }}
             >
-              <div className="w-full h-8 rounded bg-[oklch(0.646_0.222_41.116)]" />
+              <div className="w-full h-8 rounded bg-oklch-primary-500" />
               <span className="text-xs">Chart 1</span>
             </Button>
             <Button 
@@ -251,7 +251,7 @@ export function OklchColorTool({ onSave }) {
               className="h-auto flex flex-col gap-1 p-3"
               onClick={() => { setLightness(0.6); setChroma(0.118); setHue(184.704); }}
             >
-              <div className="w-full h-8 rounded bg-[oklch(0.6_0.118_184.704)]" />
+              <div className="w-full h-8 rounded bg-oklch-accent-400" />
               <span className="text-xs">Chart 2</span>
             </Button>
           </div>

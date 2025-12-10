@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Save, X } from "lucide-react";
+import { Save, X, Sparkles, Loader2, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
@@ -92,9 +92,14 @@ export default function SiteSettings() {
     selectedButtonColor: "primary",
     iconOnlyParentHoverColor: "primary-100",
     iconOnlyPageHoverColor: "muted",
+    maxWidth: "1400",
+    contentAlignment: "center",
+    backgroundImage: null,
+    backgroundSeason: "spring",
   });
   const [originalSettings, setOriginalSettings] = useState(null);
   const [hasChanges, setHasChanges] = useState(false);
+  const [generatingBackground, setGeneratingBackground] = useState(false);
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -115,6 +120,10 @@ export default function SiteSettings() {
           selectedButtonColor: "primary",
           iconOnlyParentHoverColor: "primary-100",
           iconOnlyPageHoverColor: "muted",
+          maxWidth: "1400",
+          contentAlignment: "center",
+          backgroundImage: null,
+          backgroundSeason: "spring",
         };
         const loadedSettings = user?.site_settings || defaultSettings;
         setSettings(loadedSettings);
@@ -157,6 +166,28 @@ export default function SiteSettings() {
       console.error("Failed to save site settings:", e);
       toast.error("Failed to save settings");
     }
+  };
+
+  const generateBackground = async () => {
+    setGeneratingBackground(true);
+    try {
+      const seasonPrompts = {
+        spring: "Subtle spring landscape with soft pastel colors, cherry blossoms, gentle hills, misty morning atmosphere, very muted and calming, minimal contrast",
+        summer: "Soft summer meadow with golden sunlight, wildflowers in distance, hazy horizon, warm gentle tones, very subtle and peaceful",
+        autumn: "Muted autumn forest with warm earth tones, falling leaves, soft fog, gentle orange and brown hues, calming and serene",
+        winter: "Gentle winter landscape with soft snow, minimal details, pale blue and white tones, misty mountains in distance, very subtle and peaceful"
+      };
+      
+      const prompt = `${seasonPrompts[settings.backgroundSeason]}. Ultra-wide panoramic format. Extremely subtle, low contrast, perfect for a website background that won't distract from content. Soft focus, dreamy atmosphere.`;
+      
+      const result = await base44.integrations.Core.GenerateImage({ prompt });
+      setSettings({ ...settings, backgroundImage: result.url });
+      toast.success("Background generated");
+    } catch (e) {
+      console.error("Failed to generate background:", e);
+      toast.error("Failed to generate background");
+    }
+    setGeneratingBackground(false);
   };
 
   return (
@@ -623,6 +654,135 @@ export default function SiteSettings() {
                 </Select>
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Layout & Width</CardTitle>
+            <CardDescription>Control the maximum width and alignment of content</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="max-width">Maximum Content Width (px)</Label>
+              <Input
+                id="max-width"
+                type="number"
+                min="1000"
+                max="2400"
+                step="100"
+                value={settings.maxWidth}
+                onChange={(e) => setSettings({ ...settings, maxWidth: e.target.value })}
+              />
+              <p className="text-xs text-muted-foreground">
+                Recommended: 1400px (balanced), 1600px (wide), 1200px (narrow)
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="alignment">Content Alignment</Label>
+              <Select
+                value={settings.contentAlignment}
+                onValueChange={(value) => setSettings({ ...settings, contentAlignment: value })}
+              >
+                <SelectTrigger id="alignment">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="center">Center</SelectItem>
+                  <SelectItem value="right">Right</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="mt-4 rounded-lg border p-4 bg-muted/30">
+              <div className="text-xs font-medium mb-2">Preview</div>
+              <div className="relative h-20 bg-background rounded border overflow-hidden">
+                <div 
+                  className="absolute top-0 bottom-0 bg-primary/10 border-x border-primary/30"
+                  style={{
+                    width: `${Math.min(100, (parseInt(settings.maxWidth) / 2400) * 100)}%`,
+                    left: settings.contentAlignment === 'center' ? '50%' : 'auto',
+                    right: settings.contentAlignment === 'right' ? '0' : 'auto',
+                    transform: settings.contentAlignment === 'center' ? 'translateX(-50%)' : 'none'
+                  }}
+                >
+                  <div className="text-xs text-center mt-2 text-primary">Content Area</div>
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Content will be constrained to {settings.maxWidth}px and aligned {settings.contentAlignment}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Background Image</CardTitle>
+            <CardDescription>Generate AI-powered seasonal landscape backgrounds</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="season">Season</Label>
+              <Select
+                value={settings.backgroundSeason}
+                onValueChange={(value) => setSettings({ ...settings, backgroundSeason: value })}
+              >
+                <SelectTrigger id="season">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="spring">Spring</SelectItem>
+                  <SelectItem value="summer">Summer</SelectItem>
+                  <SelectItem value="autumn">Autumn</SelectItem>
+                  <SelectItem value="winter">Winter</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <Button 
+              onClick={generateBackground} 
+              disabled={generatingBackground}
+              variant="outline"
+              className="w-full"
+            >
+              {generatingBackground ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Generate {settings.backgroundSeason.charAt(0).toUpperCase() + settings.backgroundSeason.slice(1)} Background
+                </>
+              )}
+            </Button>
+
+            {settings.backgroundImage && (
+              <div className="space-y-2">
+                <Label>Current Background</Label>
+                <div className="relative rounded-lg overflow-hidden border h-32">
+                  <img 
+                    src={settings.backgroundImage} 
+                    alt="Background preview"
+                    className="w-full h-full object-cover opacity-40"
+                  />
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    className="absolute top-2 right-2"
+                    onClick={() => setSettings({ ...settings, backgroundImage: null })}
+                  >
+                    Remove
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Background will be displayed at low opacity behind content
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
 
