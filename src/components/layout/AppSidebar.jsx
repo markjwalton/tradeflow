@@ -88,7 +88,7 @@ export function AppSidebar({ navItems = [] }) {
                 {folderButton}
               </TooltipTrigger>
               <TooltipContent side="right" className="text-base [padding:var(--spacing-3)]">
-                {item.tooltip_text || item.name}
+                {item.tooltip_text || item.name || 'Unnamed'}
               </TooltipContent>
             </Tooltip>
             {isExpanded && hasChildren && (
@@ -165,7 +165,7 @@ export function AppSidebar({ navItems = [] }) {
             {linkContent}
           </TooltipTrigger>
           <TooltipContent side="right" className="text-base [padding:var(--spacing-3)]">
-            {item.tooltip_text || item.name}
+            {item.tooltip_text || item.name || 'Unnamed'}
           </TooltipContent>
           </Tooltip>
           );
