@@ -302,6 +302,46 @@ export function PageHeader({
   );
 }
 
+// Standard Page Layout Pattern
+// Use this as the standard for all main content pages
+export function StandardPageLayout({ 
+  title, 
+  subtitle, 
+  actions,
+  children,
+  className, 
+  ...props 
+}) {
+  return (
+    <div className="pb-[var(--spacing-6)] max-w-4xl mx-auto min-h-screen" {...props}>
+      {/* Page Header */}
+      <div className="bg-white [margin-bottom:var(--spacing-6)] -mx-6 px-6 pt-2 pb-2">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className={cn(
+              "text-3xl font-display text-[var(--color-text-primary)]",
+              subtitle && "[margin-bottom:var(--spacing-2)]"
+            )}>
+              {title}
+            </h1>
+            {subtitle && (
+              <p className="text-[var(--color-text-muted)]">
+                {subtitle}
+              </p>
+            )}
+          </div>
+          {actions && <div>{actions}</div>}
+        </div>
+      </div>
+
+      {/* Background Container */}
+      <div className={cn("bg-[var(--color-background)] rounded-xl -mx-6 px-6 py-6 min-h-screen", className)}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
 // Page Footer
 export function PageFooter({ 
   children, 
