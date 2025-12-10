@@ -4,65 +4,72 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { FileSignature, CheckCircle, Loader2 } from "lucide-react";
+import { FileText, CheckCircle, PartyPopper } from "lucide-react";
 import { toast } from "sonner";
+
+const CONTRACT_TYPES = [
+  { key: "master_agreement", label: "Master Service Agreement", required: true },
+  { key: "sla", label: "Service Level Agreement", required: true },
+  { key: "dr_policy", label: "Disaster Recovery Policy", required: true },
+  { key: "support_terms", label: "Support Terms", required: true },
+  { key: "privacy_policy", label: "Privacy Policy", required: true },
+  { key: "data_processing", label: "Data Processing Agreement", required: false }
+];
 
 export default function ContractApprovalFlow({ sessionId, currentUser }) {
   const queryClient = useQueryClient();
-  const [signatures, setSignatures] = useState({});
+  const [selectedContract, setSelectedContract] = useState(null);
+  const [signature, setSignature] = useState("");
+  const [confirmChecked, setConfirmChecked] = useState(false);
 
-  const { data: approvals = [] } = useQuery({
+  const { data: contracts = [] } = useQuery({
     queryKey: ["contractApprovals", sessionId],
     queryFn: () => base44.entities.ContractApproval.filter({ onboarding_session_id: sessionId }),
   });
 
-  const contractTypes = [
-    { key: "master_agreement", label: "Master Service Agreement", required: true },
-    { key: "sla", label: "Service Level Agreement", required: true },
-    { key: "dr_policy", label: "Disaster Recovery Policy", required: true },
-    { key: "support_terms", label: "Support Terms", required: true },
-    { key: "privacy_policy", label: "Privacy Policy", required: true },
-    { key: "data_processing", label: "Data Processing Agreement", required: false },
-  ];
-
   const approveMutation = useMutation({
-    mutationFn: async (contractType) => {
-      const existing = approvals.find(a => a.contract_type === contractType);
-      
+    mutationFn: async ({ contractType }) => {
+      const existing = contracts.find(c => c.contract_type === contractType);
       if (existing) {
-        await base44.entities.ContractApproval.update(existing.id, {
+        return await base44.entities.ContractApproval.update(existing.id, {
           status: "approved",
           approved_by: currentUser.email,
           approved_date: new Date().toISOString(),
-          signature: signatures[contractType] || currentUser.full_name
+          signature
         });
       } else {
-        await base44.entities.ContractApproval.create({
+        return await base44.entities.ContractApproval.create({
           onboarding_session_id: sessionId,
           contract_type: contractType,
-          contract_content: `Standard ${contractType.replace('_', ' ')} agreement`,
           status: "approved",
           approved_by: currentUser.email,
           approved_date: new Date().toISOString(),
-          signature: signatures[contractType] || currentUser.full_name
+          signature
         });
       }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["contractApprovals"] });
       toast.success("Contract approved");
+      setSelectedContract(null);
+      setSignature("");
+      setConfirmChecked(false);
     }
   });
 
-  const isApproved = (contractType) => {
-    return approvals.some(a => a.contract_type === contractType && a.status === "approved");
+  const getContractStatus = (contractType) => {
+    const contract = contracts.find(c => c.contract_type === contractType);
+    return contract?.status || "pending_review";
   };
 
-  const allRequiredApproved = contractTypes
-    .filter(c => c.required)
-    .every(c => isApproved(c.key));
+  const requiredContracts = CONTRACT_TYPES.filter(c => c.required);
+  const approvedRequired = requiredContracts.filter(c => 
+    getContractStatus(c.key) === "approved"
+  ).length;
+  const allRequiredApproved = approvedRequired === requiredContracts.length;
 
   return (
     <div className="space-y-6">
@@ -70,98 +77,110 @@ export default function ContractApprovalFlow({ sessionId, currentUser }) {
         <CardContent className="pt-6 pb-6">
           <div className="flex items-start gap-4">
             <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-              <FileSignature className="h-5 w-5 text-primary" />
+              <FileText className="h-5 w-5 text-primary" />
             </div>
             <div className="flex-1">
               <h3 className="text-lg font-display text-primary mb-1">Contract Approvals</h3>
-              <p className="text-sm text-muted-foreground">Review and sign agreements to complete your onboarding</p>
+              <p className="text-sm text-muted-foreground">
+                Review and approve required agreements ({approvedRequired}/{requiredContracts.length} completed)
+              </p>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <div className="space-y-4">
-        {contractTypes.map(contract => {
-          const approved = isApproved(contract.key);
-          
+      {allRequiredApproved && (
+        <Card className="rounded-xl bg-success/5 border-success/20">
+          <CardContent className="pt-6 pb-6">
+            <div className="flex items-center gap-3 text-success">
+              <PartyPopper className="h-6 w-6" />
+              <div>
+                <h3 className="font-semibold">All Required Contracts Approved!</h3>
+                <p className="text-sm text-muted-foreground">Your application is ready for implementation</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <div className="grid gap-4">
+        {CONTRACT_TYPES.map(contract => {
+          const status = getContractStatus(contract.key);
+          const isApproved = status === "approved";
+          const isSelected = selectedContract === contract.key;
+
           return (
-            <Card key={contract.key} className="rounded-xl">
+            <Card key={contract.key} className={`rounded-xl ${isApproved ? "border-success/30" : ""}`}>
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <CardTitle className="text-lg">{contract.label}</CardTitle>
+                    <CardTitle className="text-base">{contract.label}</CardTitle>
                     {contract.required && <Badge variant="outline">Required</Badge>}
                   </div>
-                  {approved && <CheckCircle className="h-5 w-5 text-success" />}
+                  {isApproved ? (
+                    <Badge className="bg-success">
+                      <CheckCircle className="h-3 w-3 mr-1" />
+                      Approved
+                    </Badge>
+                  ) : (
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => setSelectedContract(isSelected ? null : contract.key)}
+                    >
+                      {isSelected ? "Cancel" : "Review & Sign"}
+                    </Button>
+                  )}
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="p-4 bg-muted rounded-lg text-sm">
-                  <p className="text-muted-foreground">
-                    [Contract content would be displayed here - full legal text]
-                  </p>
-                </div>
-                
-                {!approved && (
+              {isSelected && !isApproved && (
+                <CardContent className="space-y-4 border-t pt-4">
+                  <div className="p-4 bg-muted rounded-lg max-h-64 overflow-y-auto">
+                    <h4 className="font-semibold mb-2">{contract.label}</h4>
+                    <p className="text-sm text-muted-foreground">
+                      [Contract content would be displayed here. This is a placeholder for the actual legal agreement.]
+                    </p>
+                  </div>
+
                   <div className="space-y-3">
-                    <div>
-                      <label className="text-sm font-medium">Digital Signature</label>
-                      <Input
-                        value={signatures[contract.key] || ""}
-                        onChange={(e) => setSignatures({ ...signatures, [contract.key]: e.target.value })}
-                        placeholder="Type your full name to sign"
+                    <div className="flex items-start gap-2">
+                      <Checkbox 
+                        checked={confirmChecked}
+                        onCheckedChange={setConfirmChecked}
+                        id={`confirm-${contract.key}`}
                       />
-                    </div>
-                    
-                    <div className="flex items-center space-x-2">
-                      <Checkbox id={`agree-${contract.key}`} />
-                      <label htmlFor={`agree-${contract.key}`} className="text-sm">
+                      <label 
+                        htmlFor={`confirm-${contract.key}`}
+                        className="text-sm cursor-pointer"
+                      >
                         I have read and agree to the terms of this agreement
                       </label>
                     </div>
-                    
+
+                    <div>
+                      <label className="text-sm font-medium">Digital Signature</label>
+                      <Input
+                        value={signature}
+                        onChange={(e) => setSignature(e.target.value)}
+                        placeholder="Type your full name to sign"
+                        className="mt-1"
+                      />
+                    </div>
+
                     <Button
-                      onClick={() => approveMutation.mutate(contract.key)}
-                      disabled={!signatures[contract.key] || approveMutation.isPending}
+                      onClick={() => approveMutation.mutate({ contractType: contract.key })}
+                      disabled={!confirmChecked || !signature.trim() || approveMutation.isPending}
                       className="w-full"
                     >
-                      {approveMutation.isPending ? (
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      ) : (
-                        <FileSignature className="h-4 w-4 mr-2" />
-                      )}
-                      Sign & Approve
+                      Approve and Sign
                     </Button>
                   </div>
-                )}
-                
-                {approved && (
-                  <div className="p-3 bg-success/10 border border-success/20 rounded-lg">
-                    <div className="flex items-center gap-2 text-success text-sm">
-                      <CheckCircle className="h-4 w-4" />
-                      <span>
-                        Approved by {approvals.find(a => a.contract_type === contract.key)?.approved_by}
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
+                </CardContent>
+              )}
             </Card>
           );
         })}
       </div>
-
-      {allRequiredApproved && (
-        <Card className="rounded-xl border-success/20 bg-success/5">
-          <CardContent className="p-6 text-center">
-            <CheckCircle className="h-12 w-12 text-success mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-2">All Required Contracts Approved!</h3>
-            <p className="text-muted-foreground">
-              Your onboarding is complete and ready for deployment.
-            </p>
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
 }

@@ -18,6 +18,7 @@ import MeetingRecorder from "@/components/onboarding/MeetingRecorder";
 import DiaryNotes from "@/components/onboarding/DiaryNotes";
 import MeetingScheduler from "@/components/onboarding/MeetingScheduler";
 import WorkflowProgress from "@/components/onboarding/WorkflowProgress";
+import BuildApplicationButton from "@/components/onboarding/BuildApplicationButton";
 
 export default function OnboardingWorkflow() {
   const queryClient = useQueryClient();
@@ -232,6 +233,7 @@ export default function OnboardingWorkflow() {
               </>
             )}
           </Button>
+          <BuildApplicationButton sessionId={sessionId} />
           <Button variant="outline" size="sm" asChild>
             <a href={createPageUrl("OnboardingSpecifications") + `?session=${sessionId}`}>
               <Database className="mr-2 h-4 w-4" />
