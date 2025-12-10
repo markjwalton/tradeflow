@@ -291,8 +291,8 @@ export default function Layout({ children, currentPageName }) {
     };
     }, [currentPageName]);
 
-  // Pages without layout wrapper (TenantAccess, Setup render without chrome)
-  if (currentPageName === "TenantAccess" || currentPageName === "Setup") {
+  // Pages without layout wrapper (TenantAccess, Setup, ClientOnboardingPortal render without chrome)
+  if (currentPageName === "TenantAccess" || currentPageName === "Setup" || currentPageName === "ClientOnboardingPortal") {
     return <>{children}</>;
   }
 
