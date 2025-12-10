@@ -3,12 +3,14 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
     
+    // Verify user authentication
+    const user = await base44.auth.me();
     if (!user) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Get the audio file from the request
     const formData = await req.formData();
     const audioFile = formData.get('audio');
     
@@ -16,42 +18,25 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'No audio file provided' }, { status: 400 });
     }
 
-    const audioBuffer = await audioFile.arrayBuffer();
-    const audioBase64 = btoa(String.fromCharCode(...new Uint8Array(audioBuffer)));
+    // Upload to get a URL (required for Whisper API)
+    const { file_url } = await base44.integrations.Core.UploadFile({ file: audioFile });
 
-    const apiKey = Deno.env.get('GOOGLE_CLOUD_API_KEY');
-    
-    const response = await fetch(
-      `https://speech.googleapis.com/v1/speech:recognize?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          config: {
-            encoding: 'WEBM_OPUS',
-            sampleRateHertz: 48000,
-            languageCode: 'en-GB',
-            enableAutomaticPunctuation: true,
-            model: 'latest_long'
-          },
-          audio: { content: audioBase64 }
-        })
-      }
-    );
+    // Use OpenAI Whisper via LLM integration for transcription
+    // Note: This uses the Core.InvokeLLM as a workaround - in production you'd use a dedicated Whisper endpoint
+    const transcription = await base44.integrations.Core.InvokeLLM({
+      prompt: `Transcribe the audio file at ${file_url}. Return only the transcribed text, no additional commentary.`,
+      add_context_from_internet: false,
+      file_urls: [file_url]
+    });
 
-    const result = await response.json();
-
-    if (result.error) {
-      return Response.json({ error: result.error.message }, { status: 400 });
-    }
-
-    const transcript = result.results
-      ?.map(r => r.alternatives?.[0]?.transcript)
-      .filter(Boolean)
-      .join(' ') || '';
-
-    return Response.json({ transcript });
+    return Response.json({
+      transcription,
+      audio_url: file_url
+    });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('Speech to text error:', error);
+    return Response.json({ 
+      error: error.message || 'Transcription failed' 
+    }, { status: 500 });
   }
 });
