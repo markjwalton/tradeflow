@@ -5,7 +5,10 @@ import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Copy, Check, Plus, Trash2, Save } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { base44 } from "@/api/base44Client";
+import { Copy, Check, Plus, Trash2, Save, Sparkles, Upload, X, Loader2 } from "lucide-react";
 
 export function OklchGradientTool({ onSave }) {
   const [gradientType, setGradientType] = useState("linear");
@@ -16,6 +19,12 @@ export function OklchGradientTool({ onSave }) {
   ]);
   const [copied, setCopied] = useState(false);
   const [paletteName, setPaletteName] = useState("");
+  const [paletteDescription, setPaletteDescription] = useState("");
+  const [paletteTags, setPaletteTags] = useState([]);
+  const [tagInput, setTagInput] = useState("");
+  const [aiPrompt, setAiPrompt] = useState("");
+  const [brandColors, setBrandColors] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
   
   const oklchToRgb = (l, c, h) => {
     const a = c * Math.cos((h * Math.PI) / 180);
@@ -84,11 +93,169 @@ export function OklchGradientTool({ onSave }) {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  const generateFromPrompt = async () => {
+    if (!aiPrompt.trim()) return;
+    setIsGenerating(true);
+    try {
+      const prompt = `Create a gradient based on: "${aiPrompt}". Generate ${stops.length} color stops in OKLCH format. Return JSON with: name, description, type (linear/radial/conic), angle, stops array (each with position 0-100, lightness 0-1, chroma 0-0.4, hue 0-360).`;
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            description: { type: "string" },
+            type: { type: "string" },
+            angle: { type: "number" },
+            stops: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  position: { type: "number" },
+                  lightness: { type: "number" },
+                  chroma: { type: "number" },
+                  hue: { type: "number" }
+                }
+              }
+            }
+          }
+        }
+      });
+      if (result.stops) {
+        setPaletteName(result.name || aiPrompt);
+        setPaletteDescription(result.description || "");
+        setGradientType(result.type || "linear");
+        setAngle(result.angle || 90);
+        setStops(result.stops.map(s => ({ position: s.position, l: s.lightness, c: s.chroma, h: s.hue })));
+      }
+    } catch (e) {
+      console.error("AI gradient generation failed:", e);
+    }
+    setIsGenerating(false);
+  };
+
+  const generateFromBrandColors = async () => {
+    if (!brandColors.trim()) return;
+    setIsGenerating(true);
+    try {
+      const prompt = `Create a harmonious gradient of ${stops.length} color stops based on these brand colors: ${brandColors}. Return JSON with: name, description, type (linear/radial/conic), angle, stops array (each with position 0-100, lightness 0-1, chroma 0-0.4, hue 0-360).`;
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            description: { type: "string" },
+            type: { type: "string" },
+            angle: { type: "number" },
+            stops: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  position: { type: "number" },
+                  lightness: { type: "number" },
+                  chroma: { type: "number" },
+                  hue: { type: "number" }
+                }
+              }
+            }
+          }
+        }
+      });
+      if (result.stops) {
+        setPaletteName(result.name || "Brand Gradient");
+        setPaletteDescription(result.description || "");
+        setGradientType(result.type || "linear");
+        setAngle(result.angle || 90);
+        setStops(result.stops.map(s => ({ position: s.position, l: s.lightness, c: s.chroma, h: s.hue })));
+      }
+    } catch (e) {
+      console.error("AI brand gradient failed:", e);
+    }
+    setIsGenerating(false);
+  };
+
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setIsGenerating(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const prompt = `Analyze this image and create a gradient with ${stops.length} color stops. Return JSON with: name, description, type (linear/radial/conic), angle, stops array (each with position 0-100, lightness 0-1, chroma 0-0.4, hue 0-360).`;
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        file_urls: [file_url],
+        response_json_schema: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            description: { type: "string" },
+            type: { type: "string" },
+            angle: { type: "number" },
+            stops: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  position: { type: "number" },
+                  lightness: { type: "number" },
+                  chroma: { type: "number" },
+                  hue: { type: "number" }
+                }
+              }
+            }
+          }
+        }
+      });
+      if (result.stops) {
+        setPaletteName(result.name || "Photo Gradient");
+        setPaletteDescription(result.description || "");
+        setGradientType(result.type || "linear");
+        setAngle(result.angle || 90);
+        setStops(result.stops.map(s => ({ position: s.position, l: s.lightness, c: s.chroma, h: s.hue })));
+      }
+    } catch (e) {
+      console.error("Photo analysis failed:", e);
+    }
+    setIsGenerating(false);
+  };
+
+  const generateAITags = async () => {
+    setIsGenerating(true);
+    try {
+      const prompt = `Generate 3-5 relevant tags for a gradient with these properties: ${paletteName || gradientType}. Consider mood, style, use case. Return a JSON array of lowercase tags.`;
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: { type: "object", properties: { tags: { type: "array", items: { type: "string" } } } }
+      });
+      if (result.tags) {
+        setPaletteTags(result.tags);
+      }
+    } catch (e) {
+      console.error("AI tag generation failed:", e);
+    }
+    setIsGenerating(false);
+  };
+
+  const addTag = () => {
+    if (tagInput.trim() && !paletteTags.includes(tagInput.trim())) {
+      setPaletteTags([...paletteTags, tagInput.trim()]);
+      setTagInput("");
+    }
+  };
+
+  const removeTag = (tag) => {
+    setPaletteTags(paletteTags.filter(t => t !== tag));
+  };
   
   const handleSave = () => {
     if (onSave && paletteName) {
       const gradientData = {
         name: paletteName,
+        description: paletteDescription,
         category: "gradient",
         gradient: {
           type: gradientType,
@@ -99,15 +266,71 @@ export function OklchGradientTool({ onSave }) {
           name: `Stop ${i + 1}`,
           oklch: `oklch(${stop.l.toFixed(3)} ${stop.c.toFixed(3)} ${stop.h.toFixed(1)})`,
           hex: oklchToRgb(stop.l, stop.c, stop.h)
-        }))
+        })),
+        tags: paletteTags
       };
       onSave(gradientData);
       setPaletteName("");
+      setPaletteDescription("");
+      setPaletteTags([]);
     }
   };
   
   return (
     <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>AI Gradient Generation</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label>Generate from Prompt</Label>
+            <div className="flex gap-2">
+              <Textarea
+                value={aiPrompt}
+                onChange={(e) => setAiPrompt(e.target.value)}
+                placeholder="e.g., Sunset over ocean, Northern lights, Warm autumn colors..."
+                rows={2}
+                className="flex-1"
+              />
+              <Button onClick={generateFromPrompt} disabled={isGenerating || !aiPrompt.trim()}>
+                {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+              </Button>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Generate from Brand Colors</Label>
+            <div className="flex gap-2">
+              <Input
+                value={brandColors}
+                onChange={(e) => setBrandColors(e.target.value)}
+                placeholder="e.g., #FF5733, #3498DB, sage green..."
+              />
+              <Button onClick={generateFromBrandColors} disabled={isGenerating || !brandColors.trim()}>
+                {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+              </Button>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Upload Photo for Gradient</Label>
+            <div className="flex gap-2">
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoUpload}
+                disabled={isGenerating}
+                className="flex-1"
+              />
+              <Button disabled={isGenerating}>
+                {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle>Gradient Preview</CardTitle>
@@ -246,17 +469,54 @@ export function OklchGradientTool({ onSave }) {
       
       {onSave && (
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
             <CardTitle>Save to Library</CardTitle>
+            <Button size="sm" variant="outline" onClick={generateAITags} disabled={isGenerating}>
+              <Sparkles className="h-4 w-4 mr-1" />AI Tags
+            </Button>
           </CardHeader>
-          <CardContent className="flex gap-2">
-            <Input 
-              placeholder="Gradient name..." 
-              value={paletteName}
-              onChange={(e) => setPaletteName(e.target.value)}
-            />
-            <Button onClick={handleSave} disabled={!paletteName}>
-              <Save className="h-4 w-4 mr-2" /> Save
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label>Gradient Name</Label>
+              <Input 
+                placeholder="e.g., Sunset Gradient" 
+                value={paletteName}
+                onChange={(e) => setPaletteName(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Description</Label>
+              <Input
+                value={paletteDescription}
+                onChange={(e) => setPaletteDescription(e.target.value)}
+                placeholder="e.g., Warm transition from orange to purple"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Tags</Label>
+              <div className="flex gap-2">
+                <Input
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && addTag()}
+                  placeholder="Add tag..."
+                />
+                <Button onClick={addTag} size="sm">Add</Button>
+              </div>
+              <div className="flex flex-wrap gap-1 mt-2">
+                {paletteTags.map(tag => (
+                  <Badge key={tag} variant="secondary" className="gap-1">
+                    {tag}
+                    <X className="h-3 w-3 cursor-pointer" onClick={() => removeTag(tag)} />
+                  </Badge>
+                ))}
+              </div>
+            </div>
+
+            <Button onClick={handleSave} disabled={!paletteName} className="w-full">
+              <Save className="h-4 w-4 mr-2" /> Save to Library
             </Button>
           </CardContent>
         </Card>
