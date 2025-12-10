@@ -197,12 +197,12 @@ export default function OnboardingWorkflow() {
                 <Users className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h1 className="text-h1 text-[var(--color-midnight)] mb-[var(--spacing-2)]">
+                <h1 className="text-h1 mb-[var(--spacing-2)]">
                   {session?.tenant_id || "Unnamed Tenant"}
                 </h1>
                 <div className="flex items-center gap-3">
-                  <Badge variant="outline" className="text-xs">{session?.status}</Badge>
-                  <span className="text-caption text-[var(--color-charcoal)]">
+                  <Badge variant="outline">{session?.status}</Badge>
+                  <span className="text-caption">
                     Started {new Date(session?.created_date).toLocaleDateString()}
                   </span>
                 </div>
