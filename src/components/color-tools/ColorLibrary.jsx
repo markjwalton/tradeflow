@@ -147,7 +147,7 @@ export function ColorLibrary({ tenantId }) {
   
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="rounded-xl">
         <CardHeader className="flex flex-row items-center justify-between space-y-0">
           <CardTitle>Color Library</CardTitle>
           <div className="flex items-center gap-4">
@@ -313,7 +313,7 @@ export function ColorLibrary({ tenantId }) {
       </Card>
       
       {filteredPalettes.length === 0 ? (
-        <Card>
+        <Card className="rounded-xl">
           <CardContent className="py-8 text-center text-muted-foreground">
             No palettes saved yet. Create and save palettes from the tools above.
           </CardContent>
@@ -322,7 +322,7 @@ export function ColorLibrary({ tenantId }) {
         <>
           <div className="grid gap-4">
             {paginatedPalettes.map((palette) => (
-            <Card key={palette.id}>
+            <Card key={palette.id} className="rounded-xl">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
                 <div className="space-y-1">
                   <CardTitle className="text-base">{palette.name}</CardTitle>

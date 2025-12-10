@@ -102,7 +102,7 @@ export function OklchBulkConverter() {
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="rounded-xl">
         <CardHeader>
           <CardTitle>Bulk Color Converter</CardTitle>
         </CardHeader>

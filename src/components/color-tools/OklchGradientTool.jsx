@@ -278,7 +278,7 @@ export function OklchGradientTool({ onSave }) {
   
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="rounded-xl">
         <CardHeader>
           <CardTitle>AI Gradient Generation</CardTitle>
         </CardHeader>
@@ -331,7 +331,7 @@ export function OklchGradientTool({ onSave }) {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="rounded-xl">
         <CardHeader>
           <CardTitle>Gradient Preview</CardTitle>
         </CardHeader>

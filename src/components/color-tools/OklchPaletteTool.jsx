@@ -315,7 +315,7 @@ export function OklchPaletteTool({ onSave }) {
   
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="rounded-xl">
         <CardHeader>
           <CardTitle>AI Palette Generation</CardTitle>
         </CardHeader>
@@ -452,7 +452,7 @@ export function OklchPaletteTool({ onSave }) {
       </Card>
       
       {colors.length > 0 && (
-        <Card>
+        <Card className="rounded-xl">
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
             <CardTitle>Generated Palette</CardTitle>
             <div className="flex gap-2">

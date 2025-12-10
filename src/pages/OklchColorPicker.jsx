@@ -74,7 +74,7 @@ export default function OklchColorPicker() {
       </div>
       
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-5 rounded-xl">
           <TabsTrigger value="picker">Color Picker</TabsTrigger>
           <TabsTrigger value="gradient">Gradients</TabsTrigger>
           <TabsTrigger value="palette">Palettes</TabsTrigger>
