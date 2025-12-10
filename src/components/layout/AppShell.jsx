@@ -43,9 +43,9 @@ export function AppShell({ children, user, tenant, navItems = [] }) {
     <div className="min-h-screen flex flex-col bg-[var(--color-background)]">
       <AppHeader user={user} navItems={organizedNavItems} />
 
-      <div className="flex flex-1">
+      <div className="flex flex-1 gap-4 p-4">
         <AppSidebar navItems={organizedNavItems} />
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col overflow-hidden rounded-xl">
           <AppContent navItems={organizedNavItems}>{children}</AppContent>
         </div>
       </div>
