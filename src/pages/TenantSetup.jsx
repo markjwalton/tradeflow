@@ -52,11 +52,22 @@ export default function TenantSetup() {
   const { data: existingProfile } = useQuery({
     queryKey: ["tenantProfile", tenantId],
     queryFn: () => base44.entities.TenantProfile.filter({ tenant_id: tenantId }).then(r => r[0]),
-    enabled: !!tenantId,
-    onSuccess: (data) => {
-      if (data) setProfile(data);
-    }
+    enabled: !!tenantId
   });
+
+  useEffect(() => {
+    if (existingProfile) {
+      setProfile({
+        ...profile,
+        ...existingProfile,
+        brand_colors: existingProfile.brand_colors || profile.brand_colors,
+        brand_fonts: existingProfile.brand_fonts || profile.brand_fonts,
+        address: existingProfile.address || profile.address,
+        app_goals: existingProfile.app_goals || profile.app_goals,
+        kpis: existingProfile.kpis || profile.kpis
+      });
+    }
+  }, [existingProfile]);
 
   const saveProfileMutation = useMutation({
     mutationFn: async (data) => {
