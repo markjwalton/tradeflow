@@ -94,6 +94,7 @@ import SiteSettings from './pages/SiteSettings';
 import CompactButtonShowcase from './pages/CompactButtonShowcase';
 import OklchColorPicker from './pages/OklchColorPicker';
 import AIOnboarding from './pages/AIOnboarding';
+import OnboardingDashboard from './pages/OnboardingDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -194,6 +195,7 @@ export const PAGES = {
     "CompactButtonShowcase": CompactButtonShowcase,
     "OklchColorPicker": OklchColorPicker,
     "AIOnboarding": AIOnboarding,
+    "OnboardingDashboard": OnboardingDashboard,
 }
 
 export const pagesConfig = {
