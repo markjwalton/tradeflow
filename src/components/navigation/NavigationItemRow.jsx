@@ -54,7 +54,7 @@ export default function NavigationItemRow({
         ) : item.item_type === "folder" ? (
           <Folder className="h-4 w-4 text-secondary-500" />
         ) : null}
-        <span className="text-title">{item.name}</span>
+        <span className="text-title">{item.name || 'Unnamed'}</span>
         {item.item_type === "folder" && (
           <Badge variant="outline" className="text-xs text-secondary-600 border-secondary-300 bg-secondary-50">Folder</Badge>
         )}

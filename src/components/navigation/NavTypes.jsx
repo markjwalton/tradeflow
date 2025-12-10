@@ -63,6 +63,7 @@ export const generateNavId = () => {
  * Normalizes spaces and special chars to single underscores
  */
 export const generateFolderId = (name) => {
+  if (!name) return `folder_unnamed_${Date.now()}`;
   return `folder_${name.toLowerCase().replace(/[\s-]+/g, '_').replace(/[^a-z0-9_]/g, '')}`;
 };
 
@@ -151,7 +152,7 @@ export const getFolderParents = (itemId, allItems) => {
         item._id !== itemId && 
         !descendants.has(item._id)
     )
-    .sort((a, b) => a.name.localeCompare(b.name));
+    .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
 };
 
 /**
