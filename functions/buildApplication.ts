@@ -1,6 +1,8 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
 Deno.serve(async (req) => {
+  const startTime = Date.now();
+  
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
@@ -14,6 +16,20 @@ Deno.serve(async (req) => {
     if (!sessionId) {
       return Response.json({ error: 'sessionId is required' }, { status: 400 });
     }
+
+    // Generate build number
+    const existingBuilds = await base44.asServiceRole.entities.AppBuildVersion.filter({
+      onboarding_session_id: sessionId
+    });
+    const buildNumber = `build-${String(existingBuilds.length + 1).padStart(3, '0')}`;
+
+    // Create build record
+    const buildRecord = await base44.asServiceRole.entities.AppBuildVersion.create({
+      onboarding_session_id: sessionId,
+      build_number: buildNumber,
+      build_options: { buildEntities, buildPages, buildFeatures, buildIntegrations },
+      status: "building"
+    });
 
     const results = {
       entities: [],
@@ -254,9 +270,21 @@ Generate a complete Deno.serve function that:
       }
     }
 
+    // Update build record
+    const duration = Date.now() - startTime;
+    const finalStatus = results.errors.length === 0 ? "success" : 
+                       (results.entities.length + results.pages.length > 0 ? "partial" : "failed");
+
+    await base44.asServiceRole.entities.AppBuildVersion.update(buildRecord.id, {
+      build_results: results,
+      status: finalStatus,
+      build_duration_ms: duration
+    });
+
     return Response.json({
       success: true,
       message: 'Application build completed',
+      buildNumber,
       results,
       summary: {
         entities: results.entities.length,
@@ -269,6 +297,24 @@ Generate a complete Deno.serve function that:
 
   } catch (error) {
     console.error('Build error:', error);
+    
+    // Try to update build record if it exists
+    try {
+      const base44 = createClientFromRequest(req);
+      const existingBuilds = await base44.asServiceRole.entities.AppBuildVersion.filter({
+        onboarding_session_id: sessionId,
+        status: "building"
+      });
+      if (existingBuilds.length > 0) {
+        await base44.asServiceRole.entities.AppBuildVersion.update(existingBuilds[0].id, {
+          status: "failed",
+          build_results: { error: error.message }
+        });
+      }
+    } catch (e) {
+      // Ignore
+    }
+    
     return Response.json({ 
       error: 'Failed to build application',
       details: error.message 

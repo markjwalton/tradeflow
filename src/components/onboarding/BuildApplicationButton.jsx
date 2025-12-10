@@ -20,21 +20,27 @@ export default function BuildApplicationButton({ sessionId }) {
 
   const buildMutation = useMutation({
     mutationFn: async () => {
-      const response = await base44.functions.invoke('buildApplication', {
-        sessionId,
-        ...options
-      });
-      return response.data;
+      try {
+        const response = await base44.functions.invoke('buildApplication', {
+          sessionId,
+          ...options
+        });
+        return response.data;
+      } catch (error) {
+        console.error("Build error:", error);
+        throw new Error(error?.response?.data?.details || error?.message || "Build failed");
+      }
     },
     onSuccess: (data) => {
       setBuildResult(data);
       if (data.success) {
-        toast.success(`Built ${data.summary.entities} entities, ${data.summary.pages} pages`);
+        toast.success(`Build ${data.buildNumber}: ${data.summary.entities} entities, ${data.summary.pages} pages`);
       }
     },
     onError: (error) => {
-      toast.error("Build failed: " + error.message);
-      setBuildResult({ success: false, error: error.message });
+      const errorMsg = error.message || "Unknown error";
+      toast.error("Build failed: " + errorMsg);
+      setBuildResult({ success: false, error: errorMsg });
     }
   });
 
@@ -115,6 +121,9 @@ export default function BuildApplicationButton({ sessionId }) {
                 )}
                 <div className="flex-1 space-y-2">
                   <p className="font-medium">{buildResult.message}</p>
+                  {buildResult.buildNumber && (
+                    <p className="text-sm font-medium mb-2">Build: {buildResult.buildNumber}</p>
+                  )}
                   {buildResult.summary && (
                     <div className="text-sm space-y-1">
                       <p>✓ Entities: {buildResult.summary.entities}</p>
@@ -125,6 +134,9 @@ export default function BuildApplicationButton({ sessionId }) {
                         <p className="text-destructive">⚠ Errors: {buildResult.summary.errors}</p>
                       )}
                     </div>
+                  )}
+                  {buildResult.error && !buildResult.summary && (
+                    <p className="text-sm text-destructive">{buildResult.error}</p>
                   )}
                   {buildResult.results?.errors && buildResult.results.errors.length > 0 && (
                     <div className="text-xs space-y-1 mt-2">
