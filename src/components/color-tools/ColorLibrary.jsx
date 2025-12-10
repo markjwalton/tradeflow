@@ -9,7 +9,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Trash2, Star, Copy, Check, Search, Plus, X, Upload, Sparkles } from "lucide-react";
+import { Trash2, Star, Copy, Check, Search, Plus, X, Upload, Sparkles, ChevronDown, ChevronUp, Settings } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 export function ColorLibrary({ tenantId }) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -19,6 +21,10 @@ export function ColorLibrary({ tenantId }) {
   const [newPalette, setNewPalette] = useState({ name: "", description: "", colorCount: 5, colors: [], tags: [] });
   const [tagInput, setTagInput] = useState("");
   const [cssInput, setCssInput] = useState("");
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [showTagCloud, setShowTagCloud] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const queryClient = useQueryClient();
   
   const { data: palettes = [], isLoading } = useQuery({
@@ -113,10 +119,27 @@ export function ColorLibrary({ tenantId }) {
     });
   };
   
-  const filteredPalettes = palettes.filter(p => 
-    p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    p.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+  const allTags = [...new Set(palettes.flatMap(p => p.tags || []))].sort();
+  
+  const filteredPalettes = palettes.filter(p => {
+    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesTags = selectedTags.length === 0 || selectedTags.some(tag => p.tags?.includes(tag));
+    return matchesSearch && matchesTags;
+  });
+
+  const totalPages = Math.ceil(filteredPalettes.length / itemsPerPage);
+  const paginatedPalettes = filteredPalettes.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
   );
+
+  const toggleTag = (tag) => {
+    setSelectedTags(prev => 
+      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+    );
+    setCurrentPage(1);
+  };
   
   if (isLoading) {
     return <div className="text-center py-8">Loading library...</div>;
@@ -228,7 +251,7 @@ export function ColorLibrary({ tenantId }) {
             </Dialog>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <div className="flex gap-2">
             <Search className="h-4 w-4 text-muted-foreground mt-3" />
             <Input 
@@ -236,7 +259,56 @@ export function ColorLibrary({ tenantId }) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Settings className="h-4 w-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-60">
+                <div className="space-y-2">
+                  <Label>Items per page</Label>
+                  <Input 
+                    type="number" 
+                    value={itemsPerPage}
+                    onChange={(e) => {
+                      setItemsPerPage(Math.max(5, parseInt(e.target.value) || 10));
+                      setCurrentPage(1);
+                    }}
+                    min={5}
+                    max={50}
+                  />
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
+
+          <Collapsible open={showTagCloud} onOpenChange={setShowTagCloud}>
+            <CollapsibleTrigger asChild>
+              <Button variant="outline" className="w-full justify-between">
+                <span>Filter by Tags {selectedTags.length > 0 && `(${selectedTags.length})`}</span>
+                {showTagCloud ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="mt-2">
+              <div className="flex flex-wrap gap-2 p-3 border rounded-lg bg-muted/30">
+                {allTags.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">No tags available</p>
+                ) : (
+                  allTags.map(tag => (
+                    <Badge
+                      key={tag}
+                      variant={selectedTags.includes(tag) ? "default" : "outline"}
+                      className="cursor-pointer"
+                      onClick={() => toggleTag(tag)}
+                    >
+                      {tag}
+                    </Badge>
+                  ))
+                )}
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
         </CardContent>
       </Card>
       
@@ -247,8 +319,9 @@ export function ColorLibrary({ tenantId }) {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4">
-          {filteredPalettes.map((palette) => (
+        <>
+          <div className="grid gap-4">
+            {paginatedPalettes.map((palette) => (
             <Card key={palette.id}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
                 <div className="space-y-1">
@@ -340,8 +413,33 @@ export function ColorLibrary({ tenantId }) {
                 )}
               </CardContent>
             </Card>
-          ))}
-        </div>
+            ))}
+          </div>
+
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 mt-6">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </Button>
+              <span className="text-sm text-muted-foreground">
+                Page {currentPage} of {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
