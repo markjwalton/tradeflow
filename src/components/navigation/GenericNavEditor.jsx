@@ -419,33 +419,34 @@ export default function GenericNavEditor({
           <div className="flex [gap:var(--spacing-2)]">
             {syncUnallocatedPages && (
               <Button 
-                variant="outline" 
+                variant="ghost" 
                 size="sm"
                 onClick={syncUnallocatedPages}
                 disabled={isSyncing}
                 title="Scan config and refresh unallocated pages"
-                className="h-8 px-2 text-xs rounded-xl"
+                className="text-sm hover:bg-green-50 hover:text-green-700"
               >
                 {isSyncing ? (
-                  <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                  <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
                 ) : (
-                  <Sparkles className="h-3 w-3 mr-1" />
+                  <Sparkles className="h-3.5 w-3.5 mr-1.5" />
                 )}
-                Sync
+                Sync Pages
               </Button>
             )}
           </div>
           <Button 
             size="sm"
-            className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white h-8 px-2 text-xs rounded-xl"
+            variant="ghost"
+            className="text-sm hover:bg-green-50 hover:text-green-700"
             onClick={() => { 
               setEditingItem(null); 
               setFormData({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null, item_type: "page", default_collapsed: false }); 
               setShowDialog(true); 
             }}
           >
-            <Plus className="h-3 w-3 mr-1" />
-            Add
+            <Plus className="h-3.5 w-3.5 mr-1.5" />
+            Add Navigation
           </Button>
         </div>
 
