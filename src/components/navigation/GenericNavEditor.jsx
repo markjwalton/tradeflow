@@ -407,7 +407,7 @@ export default function GenericNavEditor({
 
   return (
     <>
-    <Card>
+    <Card className="rounded-xl">
       {title && (
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>{title}</CardTitle>
