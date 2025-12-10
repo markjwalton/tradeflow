@@ -79,51 +79,51 @@ export default function OnboardingDashboard() {
         <div className="space-y-6">
 
         {/* Key Metrics */}
-        <div className="grid gap-4 md:grid-cols-4" style={{ marginBottom: '1rem' }}>
-        <div className="bg-white rounded-xl border shadow-sm" style={{ padding: '1rem 1rem 1rem 1rem' }}>
-          <div className="flex flex-row items-center justify-between mb-2">
-            <h3 className="text-sm" style={{ fontFamily: 'degular-display, sans-serif', fontWeight: 400 }}>Active Onboardings</h3>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </div>
-          <div>
-            <div className="text-2xl font-bold">{activeSessions.length}</div>
-            <p className="text-xs text-muted-foreground">In progress</p>
-          </div>
-        </div>
+        <div className="grid gap-4 md:grid-cols-4 [margin-bottom:var(--spacing-4)]">
+          <Card className="[padding:var(--spacing-4)]">
+            <div className="flex flex-row items-center justify-between [margin-bottom:var(--spacing-2)]">
+              <h3 className="text-sm font-display">Active Onboardings</h3>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold">{activeSessions.length}</div>
+              <p className="text-xs text-muted-foreground">In progress</p>
+            </div>
+          </Card>
 
-        <div className="bg-white rounded-xl border shadow-sm" style={{ padding: '1rem 1rem 1rem 1rem' }}>
-          <div className="flex flex-row items-center justify-between mb-2">
-            <h3 className="text-sm" style={{ fontFamily: 'degular-display, sans-serif', fontWeight: 400 }}>Completed</h3>
-            <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
-          </div>
-          <div>
-            <div className="text-2xl font-bold">{completedSessions.length}</div>
-            <p className="text-xs text-muted-foreground">This quarter</p>
-          </div>
-        </div>
+          <Card className="[padding:var(--spacing-4)]">
+            <div className="flex flex-row items-center justify-between [margin-bottom:var(--spacing-2)]">
+              <h3 className="text-sm font-display">Completed</h3>
+              <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold">{completedSessions.length}</div>
+              <p className="text-xs text-muted-foreground">This quarter</p>
+            </div>
+          </Card>
 
-        <div className="bg-white rounded-xl border shadow-sm" style={{ padding: '1rem 1rem 1rem 1rem' }}>
-          <div className="flex flex-row items-center justify-between mb-2">
-            <h3 className="text-sm" style={{ fontFamily: 'degular-display, sans-serif', fontWeight: 400 }}>Overdue Tasks</h3>
-            <AlertTriangle className="h-4 w-4 text-destructive" />
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-destructive">{overdueTasks.length}</div>
-            <p className="text-xs text-muted-foreground">Requires attention</p>
-          </div>
-        </div>
+          <Card className="[padding:var(--spacing-4)]">
+            <div className="flex flex-row items-center justify-between [margin-bottom:var(--spacing-2)]">
+              <h3 className="text-sm font-display">Overdue Tasks</h3>
+              <AlertTriangle className="h-4 w-4 text-destructive" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-destructive">{overdueTasks.length}</div>
+              <p className="text-xs text-muted-foreground">Requires attention</p>
+            </div>
+          </Card>
 
-        <div className="bg-white rounded-xl border shadow-sm" style={{ padding: '1rem 1rem 1rem 1rem' }}>
-          <div className="flex flex-row items-center justify-between mb-2">
-            <h3 className="text-sm" style={{ fontFamily: 'degular-display, sans-serif', fontWeight: 400 }}>Avg. Time to Complete</h3>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </div>
-          <div>
-            <div className="text-2xl font-bold">12.5</div>
-            <p className="text-xs text-muted-foreground">Days</p>
-          </div>
+          <Card className="[padding:var(--spacing-4)]">
+            <div className="flex flex-row items-center justify-between [margin-bottom:var(--spacing-2)]">
+              <h3 className="text-sm font-display">Avg. Time to Complete</h3>
+              <Clock className="h-4 w-4 text-muted-foreground" />
+            </div>
+            <div>
+              <div className="text-2xl font-bold">12.5</div>
+              <p className="text-xs text-muted-foreground">Days</p>
+            </div>
+          </Card>
         </div>
-      </div>
 
         <Tabs value={selectedView} onValueChange={setSelectedView}>
         <TabsList>
