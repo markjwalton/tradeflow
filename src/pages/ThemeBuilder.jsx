@@ -10,10 +10,13 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Sparkles, Save, Palette, Type, Code, Play, Trash2 } from "lucide-react";
+import { Sparkles, Save, Palette, Type, Code, Play, Trash2, Eye } from "lucide-react";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 
 export default function ThemeBuilder() {
+  const navigate = useNavigate();
   const [theme, setTheme] = useState({
     name: "",
     description: "",
@@ -192,9 +195,14 @@ Return JSON with: name, description, suggested_palette_name, custom_css (CSS cod
 
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-3xl font-display">Theme Builder</h1>
-        <p className="text-muted-foreground mt-1">Create and manage complete design themes</p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-display">Theme Builder</h1>
+          <p className="text-muted-foreground mt-1">Create and manage complete design themes</p>
+        </div>
+        <Button variant="outline" onClick={() => navigate(createPageUrl("ThemePreview"))}>
+          <Eye className="h-4 w-4 mr-2" />Preview Theme
+        </Button>
       </div>
 
       <Tabs defaultValue="build" className="w-full">
