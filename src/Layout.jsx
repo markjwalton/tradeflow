@@ -15,6 +15,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { SidebarProvider } from "@/components/layout/SidebarContext";
 import { EditModeProvider } from "@/components/page-builder/EditModeContext";
 import { PageSettingsPanel } from "@/components/page-builder/PageSettingsPanel";
+import { PageUIPanel } from "@/components/design-assistant/PageUIPanel";
 import { LiveEditWrapper } from "@/components/page-builder/LiveEditWrapper";
 import { TopEditorPanel } from "@/components/page-builder/TopEditorPanel";
 import { Palette } from "lucide-react";
