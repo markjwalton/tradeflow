@@ -142,8 +142,16 @@ export function PageSettingsPanel({ currentPageName }) {
     mutationFn: ({ id, data }) => base44.entities.UIPage.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["uiPages"] });
-      toast.success("Page saved");
+      toast.success("Page settings saved successfully");
+      setOriginalNavigationMode(navigationMode);
+      setOriginalShowBreadcrumb(showBreadcrumb);
+      setHasUnsavedChanges(false);
+      setIsOpen(false);
     },
+    onError: (error) => {
+      toast.error("Failed to save: " + error.message);
+      console.error("Save error:", error);
+    }
   });
 
   const handleSave = async () => {
@@ -161,6 +169,7 @@ export function PageSettingsPanel({ currentPageName }) {
             page_name: currentPageName,
             category: "custom",
           });
+          toast.success("Created new page record");
         }
       }
 
@@ -187,10 +196,6 @@ export function PageSettingsPanel({ currentPageName }) {
         data: updateData,
       });
       
-      setOriginalNavigationMode(navigationMode);
-      setOriginalShowBreadcrumb(showBreadcrumb);
-      setHasUnsavedChanges(false);
-      setIsOpen(false);
       window.dispatchEvent(new CustomEvent('page-settings-saved', { detail: { navigationMode, showBreadcrumb } }));
     } catch (e) {
       console.error("Save failed:", e);
@@ -443,10 +448,10 @@ export function PageSettingsPanel({ currentPageName }) {
             <Button 
               onClick={handleSave} 
               className="flex-1" 
-              disabled={!hasUnsavedChanges && !currentPageContent}
+              disabled={(!hasUnsavedChanges && !currentPageContent) || updateMutation.isPending}
             >
               <Save className="h-4 w-4 mr-2" />
-              Save
+              {updateMutation.isPending ? "Saving..." : "Save"}
             </Button>
           </div>
         </SheetFooter>
