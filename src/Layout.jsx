@@ -319,6 +319,7 @@ export default function Layout({ children, currentPageName }) {
             <LiveEditWrapper>{children}</LiveEditWrapper>
           </div>
           <PageSettingsPanel currentPageName={currentPageName} />
+          <PageUIPanel currentPageName={currentPageName} />
           <GlobalAIAssistant />
         </EditModeProvider>
       </TenantContext.Provider>
