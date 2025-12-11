@@ -87,7 +87,7 @@ export default function NavigationManager() {
         "ERDEditor", "SystemSpecification", "PromptSettings", "DashboardManager",
         "PlaygroundEntity", "PlaygroundPage", "PlaygroundFeature", "StandaloneAPIStrategy",
         "StandaloneInstanceManager", "ProjectDetails", "TailwindKnowledgeManager",
-        "ComponentShowcase", "PackageDetail"
+        "ComponentShowcase", "PackageDetail", "DesignPatternAudit"
       ];
       
       const configs = await base44.entities.NavigationConfig.filter({ config_type: configType });
