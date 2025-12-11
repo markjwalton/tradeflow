@@ -104,9 +104,10 @@ export function PageSettingsPanel({ currentPageName }) {
   useEffect(() => {
     setHasUnsavedChanges(
       navigationMode !== originalNavigationMode || 
-      showBreadcrumb !== originalShowBreadcrumb
+      showBreadcrumb !== originalShowBreadcrumb ||
+      pageDescriptionEditable !== (currentPageData?.page_description || "")
     );
-  }, [navigationMode, showBreadcrumb, originalNavigationMode, originalShowBreadcrumb]);
+  }, [navigationMode, showBreadcrumb, originalNavigationMode, originalShowBreadcrumb, pageDescriptionEditable, currentPageData]);
 
   const handleCancel = () => {
     setNavigationMode(originalNavigationMode);
@@ -146,41 +147,54 @@ export function PageSettingsPanel({ currentPageName }) {
   });
 
   const handleSave = async () => {
-    if (!currentPageData) {
-      toast.error("No page data found");
-      return;
-    }
-
-    const updateData = {
-      ...currentPageData,
-      navigation_mode: navigationMode,
-      show_breadcrumb: showBreadcrumb,
-      page_description: pageDescriptionEditable,
-    };
-
-    if (currentPageContent) {
-      const newVersion = {
-        version_number: (currentPageData.current_version_number || 0) + 1,
-        saved_date: new Date().toISOString(),
-        content_jsx: currentPageContent,
-        change_summary: `Live edit ${new Date().toLocaleString()}`,
-      };
-      updateData.current_content_jsx = currentPageContent;
-      updateData.versions = [...(currentPageData.versions || []), newVersion];
-      updateData.current_version_number = newVersion.version_number;
-    }
-
     try {
+      // If no currentPageData, fetch or create it
+      let pageData = currentPageData;
+      if (!pageData) {
+        const pages = await base44.entities.UIPage.filter({ slug: currentPageName });
+        if (pages.length > 0) {
+          pageData = pages[0];
+        } else {
+          // Create new page record
+          pageData = await base44.entities.UIPage.create({
+            slug: currentPageName,
+            page_name: currentPageName,
+            category: "custom",
+          });
+        }
+      }
+
+      const updateData = {
+        navigation_mode: navigationMode,
+        show_breadcrumb: showBreadcrumb,
+        page_description: pageDescriptionEditable,
+      };
+
+      if (currentPageContent) {
+        const newVersion = {
+          version_number: (pageData.current_version_number || 0) + 1,
+          saved_date: new Date().toISOString(),
+          content_jsx: currentPageContent,
+          change_summary: `Live edit ${new Date().toLocaleString()}`,
+        };
+        updateData.current_content_jsx = currentPageContent;
+        updateData.versions = [...(pageData.versions || []), newVersion];
+        updateData.current_version_number = newVersion.version_number;
+      }
+
       await updateMutation.mutateAsync({
-        id: currentPageData.id,
+        id: pageData.id,
         data: updateData,
       });
+      
       setOriginalNavigationMode(navigationMode);
       setOriginalShowBreadcrumb(showBreadcrumb);
       setHasUnsavedChanges(false);
+      setIsOpen(false);
       window.dispatchEvent(new CustomEvent('page-settings-saved', { detail: { navigationMode, showBreadcrumb } }));
     } catch (e) {
       console.error("Save failed:", e);
+      toast.error("Failed to save: " + e.message);
     }
   };
 
@@ -426,9 +440,13 @@ export function PageSettingsPanel({ currentPageName }) {
             <Button onClick={handleCancel} variant="outline" className="flex-1">
               Cancel
             </Button>
-            <Button onClick={handleSave} className="flex-1" disabled={!hasUnsavedChanges && !currentPageContent}>
+            <Button 
+              onClick={handleSave} 
+              className="flex-1" 
+              disabled={!hasUnsavedChanges && !currentPageContent}
+            >
               <Save className="h-4 w-4 mr-2" />
-              Save Changes
+              Save
             </Button>
           </div>
         </SheetFooter>
