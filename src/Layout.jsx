@@ -356,9 +356,9 @@ export default function Layout({ children, currentPageName }) {
     isTenantAdmin,
   };
 
-  const maxWidth = siteSettings?.maxWidth || "1400";
-  const contentAlignment = siteSettings?.contentAlignment || "center";
-  const backgroundImage = siteSettings?.backgroundImage;
+  const maxWidth = (siteSettings?.maxWidth && String(siteSettings.maxWidth)) || "1400";
+  const contentAlignment = (siteSettings?.contentAlignment && String(siteSettings.contentAlignment)) || "center";
+  const backgroundImage = siteSettings?.backgroundImage && String(siteSettings.backgroundImage);
 
   return (
     <TenantContext.Provider value={tenantContextValue}>
