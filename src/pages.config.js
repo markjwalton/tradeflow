@@ -104,6 +104,7 @@ import CoreLibraryManager from './pages/CoreLibraryManager';
 import TenantSetup from './pages/TenantSetup';
 import ClientOnboardingPortal from './pages/ClientOnboardingPortal';
 import DesignPatternAudit from './pages/DesignPatternAudit';
+import FontManager from './pages/FontManager';
 import __Layout from './Layout.jsx';
 
 
@@ -214,6 +215,7 @@ export const PAGES = {
     "TenantSetup": TenantSetup,
     "ClientOnboardingPortal": ClientOnboardingPortal,
     "DesignPatternAudit": DesignPatternAudit,
+    "FontManager": FontManager,
 }
 
 export const pagesConfig = {

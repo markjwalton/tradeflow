@@ -74,6 +74,49 @@ export default function Layout({ children, currentPageName }) {
           }
           styleEl.textContent = user.active_theme.css_variables;
         }
+        
+        // Apply theme fonts if they exist
+        if (user?.theme_fonts) {
+          const { heading, body } = user.theme_fonts;
+          
+          // Load font stylesheets
+          if (heading?.url && heading.source === 'google') {
+            const linkId = 'theme-heading-font';
+            if (!document.getElementById(linkId)) {
+              const link = document.createElement('link');
+              link.id = linkId;
+              link.rel = 'stylesheet';
+              link.href = heading.url;
+              document.head.appendChild(link);
+            }
+          }
+          
+          if (body?.url && body.source === 'google') {
+            const linkId = 'theme-body-font';
+            if (!document.getElementById(linkId)) {
+              const link = document.createElement('link');
+              link.id = linkId;
+              link.rel = 'stylesheet';
+              link.href = body.url;
+              document.head.appendChild(link);
+            }
+          }
+          
+          // Apply font families via CSS
+          const fontStyleId = 'theme-fonts-css';
+          let fontStyleEl = document.getElementById(fontStyleId);
+          if (!fontStyleEl) {
+            fontStyleEl = document.createElement('style');
+            fontStyleEl.id = fontStyleId;
+            document.head.appendChild(fontStyleEl);
+          }
+          fontStyleEl.textContent = `
+            :root {
+              --font-family-display: ${heading?.font_family || 'inherit'};
+              --font-family-body: ${body?.font_family || 'inherit'};
+            }
+          `;
+        }
       } catch (e) {
         // User not logged in or error
       }
