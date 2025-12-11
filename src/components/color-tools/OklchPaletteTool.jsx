@@ -402,6 +402,10 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
 
   const generateShades = (baseHex, colorType) => {
     const base = hexToOklch(baseHex);
+    return generateShadesFromOklch(base, colorType);
+  };
+
+  const generateShadesFromOklch = (base, colorType) => {
     const shades = [
       { shade: "100", l: Math.min(0.95, base.l + 0.3), c: base.c * 0.3 },
       { shade: "300", l: Math.min(0.8, base.l + 0.15), c: base.c * 0.6 },
@@ -423,19 +427,24 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
   const generateBrandPalette = () => {
     const palette = [];
     
+    // Parse colors - handle both hex and OKLCH inputs
+    const parsedPrimary = parseColorInput(primaryColor) || hexToOklch(primaryColor);
+    const parsedSecondary = parseColorInput(secondaryColor) || hexToOklch(secondaryColor);
+    const parsedAccent = parseColorInput(accentColor) || hexToOklch(accentColor);
+    
     // Generate shades for primary, secondary, accent
-    palette.push(...generateShades(primaryColor, "primary"));
-    palette.push(...generateShades(secondaryColor, "secondary"));
-    palette.push(...generateShades(accentColor, "accent"));
+    palette.push(...generateShadesFromOklch(parsedPrimary, "primary"));
+    palette.push(...generateShadesFromOklch(parsedSecondary, "secondary"));
+    palette.push(...generateShadesFromOklch(parsedAccent, "accent"));
     
     // Add custom colors
     customColors.forEach(cc => {
-      const oklch = hexToOklch(cc.hex);
+      const parsed = parseColorInput(cc.hex) || hexToOklch(cc.hex);
       palette.push({
         name: cc.name,
-        l: oklch.l,
-        c: oklch.c,
-        h: oklch.h,
+        l: parsed.l,
+        c: parsed.c,
+        h: parsed.h,
         color_type: "custom",
         shade: null
       });
@@ -543,7 +552,7 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
                 <Input
                   value={primaryColor}
                   onChange={(e) => setPrimaryColor(e.target.value)}
-                  placeholder="#4a5d4e"
+                  placeholder="#4a5d4e or oklch(0.4 0.08 150)"
                   className="flex-1"
                 />
               </div>
@@ -560,7 +569,7 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
                 <Input
                   value={secondaryColor}
                   onChange={(e) => setSecondaryColor(e.target.value)}
-                  placeholder="#d4a574"
+                  placeholder="#d4a574 or oklch(0.72 0.09 70)"
                   className="flex-1"
                 />
               </div>
@@ -577,7 +586,7 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
                 <Input
                   value={accentColor}
                   onChange={(e) => setAccentColor(e.target.value)}
-                  placeholder="#d9b4a7"
+                  placeholder="#d9b4a7 or oklch(0.78 0.05 35)"
                   className="flex-1"
                 />
               </div>
@@ -594,10 +603,10 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
                 className="flex-1"
               />
               <Input
-                type="color"
+                placeholder="#hex or oklch(...)"
                 value={customColorHex}
                 onChange={(e) => setCustomColorHex(e.target.value)}
-                className="w-16 h-10 p-1"
+                className="flex-1"
               />
               <Button onClick={addCustomColor} size="sm">Add</Button>
             </div>
@@ -818,8 +827,9 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
                     </Button>
                   </div>
                 </div>
-                <div className="text-xs text-muted-foreground font-mono">
-                  {oklchToRgb(color.l, color.c, color.h)}
+                <div className="text-xs text-muted-foreground font-mono space-y-1">
+                  <div>HEX: {oklchToRgb(color.l, color.c, color.h)}</div>
+                  <div>OKLCH: oklch({color.l.toFixed(3)} {color.c.toFixed(3)} {color.h.toFixed(1)})</div>
                 </div>
               </div>
             ))}
