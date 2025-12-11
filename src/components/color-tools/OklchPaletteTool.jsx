@@ -400,6 +400,19 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
     return { l, c, h: (h + 360) % 360 };
   };
 
+  const parseColorInput = (input) => {
+    const trimmed = input.trim();
+    if (trimmed.startsWith('#')) {
+      return hexToOklch(trimmed);
+    } else if (trimmed.startsWith('oklch')) {
+      const match = trimmed.match(/oklch\(([\d.]+)\s+([\d.]+)\s+([\d.]+)\)/);
+      if (match) {
+        return { l: parseFloat(match[1]), c: parseFloat(match[2]), h: parseFloat(match[3]) };
+      }
+    }
+    return null;
+  };
+
   const generateShades = (baseHex, colorType) => {
     const base = hexToOklch(baseHex);
     return generateShadesFromOklch(base, colorType);
