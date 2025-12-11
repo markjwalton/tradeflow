@@ -371,18 +371,6 @@ export function ColorLibrary({ tenantId }) {
             {paginatedPalettes.map((palette) => (
             <Card key={palette.id} className={`rounded-xl ${selectedPalettes.includes(palette.id) ? 'ring-2 ring-primary' : ''}`}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-                <input
-                  type="checkbox"
-                  checked={selectedPalettes.includes(palette.id)}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setSelectedPalettes([...selectedPalettes, palette.id]);
-                    } else {
-                      setSelectedPalettes(selectedPalettes.filter(id => id !== palette.id));
-                    }
-                  }}
-                  className="mr-3 h-4 w-4 rounded border-gray-300"
-                />
                 <div className="space-y-1">
                   <CardTitle className="text-base">{palette.name}</CardTitle>
                   {palette.description && (
@@ -398,7 +386,20 @@ export function ColorLibrary({ tenantId }) {
                     ))}
                   </div>
                 </div>
-                <div className="flex gap-1">
+                <div className="flex gap-1 items-center">
+                  <input
+                    type="checkbox"
+                    checked={selectedPalettes.includes(palette.id)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedPalettes([...selectedPalettes, palette.id]);
+                      } else {
+                        setSelectedPalettes(selectedPalettes.filter(id => id !== palette.id));
+                      }
+                    }}
+                    className="h-4 w-4 rounded border-gray-300"
+                    title="Select for grouping"
+                  />
                   <Button
                     size="sm"
                     variant="ghost"
