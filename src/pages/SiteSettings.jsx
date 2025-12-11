@@ -781,7 +781,7 @@ export default function SiteSettings() {
               ) : (
                 <>
                   <Sparkles className="h-4 w-4 mr-2" />
-                  Generate {settings.backgroundSeason.charAt(0).toUpperCase() + settings.backgroundSeason.slice(1)} Background
+                  Generate {settings.backgroundSeason ? (settings.backgroundSeason.charAt(0).toUpperCase() + settings.backgroundSeason.slice(1)) : 'Spring'} Background
                 </>
               )}
             </Button>
