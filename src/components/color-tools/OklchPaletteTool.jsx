@@ -169,9 +169,7 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
     setColors(palette);
   };
   
-  React.useEffect(() => {
-    generatePalette();
-  }, [baseColor, paletteType, colorCount]);
+  // Don't auto-generate on mount, only when user clicks generate
   
   const copyColor = (color, format) => {
     let text = "";
@@ -730,9 +728,16 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
             </div>
           </div>
           
-          <Button onClick={generatePalette} variant="outline" className="w-full">
-            <RefreshCw className="h-4 w-4 mr-2" /> Regenerate
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={generatePalette} variant="outline" className="flex-1">
+              <RefreshCw className="h-4 w-4 mr-2" /> Generate
+            </Button>
+            {colors.length > 0 && (
+              <Button onClick={() => setColors([])} variant="ghost" className="flex-1">
+                Clear
+              </Button>
+            )}
+          </div>
         </CardContent>
       </Card>
       
