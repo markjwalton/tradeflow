@@ -105,6 +105,7 @@ import TenantSetup from './pages/TenantSetup';
 import ClientOnboardingPortal from './pages/ClientOnboardingPortal';
 import DesignPatternAudit from './pages/DesignPatternAudit';
 import FontManager from './pages/FontManager';
+import ThemeBuilder from './pages/ThemeBuilder';
 import __Layout from './Layout.jsx';
 
 
@@ -216,6 +217,7 @@ export const PAGES = {
     "ClientOnboardingPortal": ClientOnboardingPortal,
     "DesignPatternAudit": DesignPatternAudit,
     "FontManager": FontManager,
+    "ThemeBuilder": ThemeBuilder,
 }
 
 export const pagesConfig = {
