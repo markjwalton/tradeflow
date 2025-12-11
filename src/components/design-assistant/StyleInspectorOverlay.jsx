@@ -36,28 +36,28 @@ export default function StyleInspectorOverlay({ onElementSelect }) {
         // Extract detailed element information
         const computedStyles = window.getComputedStyle(element);
         const elementData = {
-          tagName: element.tagName.toLowerCase(),
+          tagName: element.tagName ? element.tagName.toLowerCase() : 'unknown',
           id: element.id || null,
-          classes: Array.from(element.classList),
+          classes: element.classList ? Array.from(element.classList).filter(Boolean) : [],
           inlineStyles: element.getAttribute('style') || null,
           computedStyles: {
-            display: computedStyles.display,
-            padding: computedStyles.padding,
-            margin: computedStyles.margin,
-            fontSize: computedStyles.fontSize,
-            fontFamily: computedStyles.fontFamily,
-            color: computedStyles.color,
-            backgroundColor: computedStyles.backgroundColor,
-            border: computedStyles.border,
-            borderRadius: computedStyles.borderRadius,
-            width: computedStyles.width,
-            height: computedStyles.height,
+            display: computedStyles.display || '',
+            padding: computedStyles.padding || '',
+            margin: computedStyles.margin || '',
+            fontSize: computedStyles.fontSize || '',
+            fontFamily: computedStyles.fontFamily || '',
+            color: computedStyles.color || '',
+            backgroundColor: computedStyles.backgroundColor || '',
+            border: computedStyles.border || '',
+            borderRadius: computedStyles.borderRadius || '',
+            width: computedStyles.width || '',
+            height: computedStyles.height || '',
           },
           parentElement: element.parentElement ? {
-            tagName: element.parentElement.tagName.toLowerCase(),
-            classes: Array.from(element.parentElement.classList),
+            tagName: element.parentElement.tagName ? element.parentElement.tagName.toLowerCase() : 'unknown',
+            classes: element.parentElement.classList ? Array.from(element.parentElement.classList).filter(Boolean) : [],
           } : null,
-          textContent: element.textContent?.substring(0, 100),
+          textContent: element.textContent ? element.textContent.substring(0, 100) : '',
         };
         
         onElementSelect(elementData, element);
@@ -112,9 +112,9 @@ export default function StyleInspectorOverlay({ onElementSelect }) {
             whiteSpace: 'nowrap',
           }}
         >
-          {hoveredElement.tagName.toLowerCase()}
+          {hoveredElement.tagName ? hoveredElement.tagName.toLowerCase() : 'element'}
           {hoveredElement.id && `#${hoveredElement.id}`}
-          {hoveredElement.classList.length > 0 && `.${Array.from(hoveredElement.classList).join('.')}`}
+          {hoveredElement.classList && hoveredElement.classList.length > 0 && `.${Array.from(hoveredElement.classList).filter(Boolean).join('.')}`}
         </div>
       )}
     </>
