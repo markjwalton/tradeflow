@@ -179,6 +179,13 @@ export default function SiteSettings() {
         document.documentElement.style.setProperty('--color-editor-background', `var(--color-${settings.editorBackground})`);
       }
 
+      // Apply dark mode immediately
+      if (savedSettings.darkMode) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+
       window.dispatchEvent(new CustomEvent('site-settings-changed', { detail: savedSettings }));
       toast.success("Site settings saved successfully");
     } catch (e) {
