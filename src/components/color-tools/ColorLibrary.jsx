@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Trash2, Star, Copy, Check, Search, Plus, X, Upload, Sparkles, ChevronDown, ChevronUp, Settings, Moon, Palette, Layers } from "lucide-react";
+import { Trash2, Star, Copy, Check, Search, Plus, X, Upload, Sparkles, ChevronDown, ChevronUp, Settings, Moon, Palette, Layers, Eye, EyeOff } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
@@ -29,6 +29,7 @@ export function ColorLibrary({ tenantId }) {
   const [selectedPalettes, setSelectedPalettes] = useState([]);
   const [groupDialogOpen, setGroupDialogOpen] = useState(false);
   const [groupName, setGroupName] = useState("");
+  const [expandedDarkMode, setExpandedDarkMode] = useState({});
   const queryClient = useQueryClient();
   
   const { data: palettes = [], isLoading } = useQuery({
@@ -167,8 +168,13 @@ export function ColorLibrary({ tenantId }) {
     const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesTags = selectedTags.length === 0 || selectedTags.some(tag => p.tags?.includes(tag));
-    return matchesSearch && matchesTags;
+    const isNotDarkModeChild = !p.is_dark_mode_alternative;
+    return matchesSearch && matchesTags && isNotDarkModeChild;
   });
+
+  const getDarkModeVersion = (paletteId) => {
+    return palettes.find(p => p.parent_palette_id === paletteId && p.is_dark_mode_alternative);
+  };
 
   const totalPages = Math.ceil(filteredPalettes.length / itemsPerPage);
   const paginatedPalettes = filteredPalettes.slice(
@@ -368,8 +374,13 @@ export function ColorLibrary({ tenantId }) {
       ) : (
         <>
           <div className="grid gap-4">
-            {paginatedPalettes.map((palette) => (
-            <Card key={palette.id} className={`rounded-xl ${selectedPalettes.includes(palette.id) ? 'ring-2 ring-primary' : ''}`}>
+            {paginatedPalettes.map((palette) => {
+              const darkModeVersion = getDarkModeVersion(palette.id);
+              const showDarkMode = expandedDarkMode[palette.id];
+
+              return (
+            <div key={palette.id} className="space-y-2">
+            <Card className={`rounded-xl ${selectedPalettes.includes(palette.id) ? 'ring-2 ring-primary' : ''}`}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
                 <div className="space-y-1">
                   <CardTitle className="text-base">{palette.name}</CardTitle>
@@ -409,7 +420,16 @@ export function ColorLibrary({ tenantId }) {
                   >
                     <Palette className="h-4 w-4" />
                   </Button>
-                  {!palette.is_dark_mode_alternative && (
+                  {darkModeVersion ? (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setExpandedDarkMode({ ...expandedDarkMode, [palette.id]: !showDarkMode })}
+                      title="Toggle Dark Mode Version"
+                    >
+                      {showDarkMode ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </Button>
+                  ) : !palette.is_dark_mode_alternative && (
                     <Button
                       size="sm"
                       variant="ghost"
@@ -501,9 +521,104 @@ export function ColorLibrary({ tenantId }) {
                   </div>
                 )}
               </CardContent>
-            </Card>
-            ))}
-          </div>
+              </Card>
+
+              {showDarkMode && darkModeVersion && (
+              <Card className="rounded-xl ml-8 border-l-4 border-midnight-700">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                  <div className="space-y-1">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <Moon className="h-4 w-4" />
+                      {darkModeVersion.name}
+                    </CardTitle>
+                    {darkModeVersion.description && (
+                      <p className="text-sm text-muted-foreground">{darkModeVersion.description}</p>
+                    )}
+                    <div className="flex gap-1 mt-2">
+                      <Badge variant="default" className="bg-midnight-700">Dark Mode</Badge>
+                      {darkModeVersion.tags?.map(tag => (
+                        <Badge key={tag} variant="secondary">{tag}</Badge>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex gap-1 items-center">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => applyThemeMutation.mutate(darkModeVersion.id)}
+                      disabled={applyThemeMutation.isPending}
+                      title="Set as Active Theme"
+                    >
+                      <Palette className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => toggleFavoriteMutation.mutate({ 
+                        id: darkModeVersion.id, 
+                        isFavorite: darkModeVersion.is_favorite 
+                      })}
+                    >
+                      <Star 
+                        className={`h-4 w-4 ${darkModeVersion.is_favorite ? "fill-yellow-400 text-yellow-400" : ""}`} 
+                      />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => copyColors(darkModeVersion)}
+                    >
+                      {copied === darkModeVersion.id ? 
+                        <Check className="h-4 w-4" /> : 
+                        <Copy className="h-4 w-4" />
+                      }
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => deleteMutation.mutate(darkModeVersion.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-5 gap-2">
+                    {darkModeVersion.colors?.map((color, i) => (
+                      <div key={i} className="space-y-1">
+                        <div 
+                          className="h-16 rounded border"
+                          style={{ backgroundColor: color.hex }}
+                        />
+                        <div className="text-xs text-center text-muted-foreground">
+                          {color.name}
+                        </div>
+                        <div className="flex items-center justify-center gap-1">
+                          <div className="text-xs text-center font-mono">
+                            {showHex ? color.hex : color.oklch}
+                          </div>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-5 w-5 p-0"
+                            onClick={() => copyColorRef(color)}
+                          >
+                            {copied === color.hex ? 
+                              <Check className="h-3 w-3" /> : 
+                              <Copy className="h-3 w-3" />
+                            }
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+              )}
+              </div>
+              );
+              })}
+              </div>
 
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-2 mt-6">
