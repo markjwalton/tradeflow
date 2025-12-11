@@ -318,7 +318,7 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
     setIsGenerating(true);
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file: uploadedFile });
-      const prompt = `Analyze this image and extract a harmonious color palette of ${colorCount} colors. Return JSON with: name, description, colors array (each with name, lightness 0-1, chroma 0-0.4, hue 0-360).`;
+      const prompt = `${aiPrompt}\n\nAnalyze this image and extract a harmonious color palette of ${colorCount} colors based on the description above. Return JSON with: name, description, colors array (each with name, lightness 0-1, chroma 0-0.4, hue 0-360).`;
       const result = await base44.integrations.Core.InvokeLLM({
         prompt,
         file_urls: [file_url],
