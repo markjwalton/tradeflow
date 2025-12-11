@@ -62,6 +62,18 @@ export default function Layout({ children, currentPageName }) {
             liveEditMode: false
           }
         });
+        
+        // Apply active theme CSS if it exists
+        if (user?.active_theme?.css_variables) {
+          const styleId = 'active-theme-css';
+          let styleEl = document.getElementById(styleId);
+          if (!styleEl) {
+            styleEl = document.createElement('style');
+            styleEl.id = styleId;
+            document.head.appendChild(styleEl);
+          }
+          styleEl.textContent = user.active_theme.css_variables;
+        }
       } catch (e) {
         // User not logged in or error
       }

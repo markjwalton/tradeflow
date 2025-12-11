@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Trash2, Star, Copy, Check, Search, Plus, X, Upload, Sparkles, ChevronDown, ChevronUp, Settings, Moon } from "lucide-react";
+import { Trash2, Star, Copy, Check, Search, Plus, X, Upload, Sparkles, ChevronDown, ChevronUp, Settings, Moon, Palette } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
@@ -53,6 +53,16 @@ export function ColorLibrary({ tenantId }) {
     mutationFn: (paletteId) => base44.functions.invoke('generateDarkModePalette', { paletteId }),
     onSuccess: () => {
       queryClient.invalidateQueries(["colorPalettes"]);
+    }
+  });
+
+  const applyThemeMutation = useMutation({
+    mutationFn: (paletteId) => base44.functions.invoke('applyTheme', { paletteId }),
+    onSuccess: (result) => {
+      if (result.data?.success) {
+        // Reload the page to apply the new theme
+        window.location.reload();
+      }
     }
   });
   
@@ -348,6 +358,15 @@ export function ColorLibrary({ tenantId }) {
                   </div>
                 </div>
                 <div className="flex gap-1">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => applyThemeMutation.mutate(palette.id)}
+                    disabled={applyThemeMutation.isPending}
+                    title="Set as Active Theme"
+                  >
+                    <Palette className="h-4 w-4" />
+                  </Button>
                   {!palette.is_dark_mode_alternative && (
                     <Button
                       size="sm"
