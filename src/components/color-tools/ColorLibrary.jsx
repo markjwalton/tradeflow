@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Trash2, Star, Copy, Check, Search, Plus, X, Upload, Sparkles, ChevronDown, ChevronUp, Settings, Moon, Palette } from "lucide-react";
+import { Trash2, Star, Copy, Check, Search, Plus, X, Upload, Sparkles, ChevronDown, ChevronUp, Settings, Moon, Palette, Layers } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
@@ -26,6 +26,9 @@ export function ColorLibrary({ tenantId }) {
   const [showTagCloud, setShowTagCloud] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedPalettes, setSelectedPalettes] = useState([]);
+  const [groupDialogOpen, setGroupDialogOpen] = useState(false);
+  const [groupName, setGroupName] = useState("");
   const queryClient = useQueryClient();
   
   const { data: palettes = [], isLoading } = useQuery({
@@ -63,6 +66,27 @@ export function ColorLibrary({ tenantId }) {
         // Reload the page to apply the new theme
         window.location.reload();
       }
+    }
+  });
+
+  const groupPalettesMutation = useMutation({
+    mutationFn: async ({ paletteIds, groupName }) => {
+      const groupId = `group_${Date.now()}`;
+      await Promise.all(
+        paletteIds.map(id => 
+          base44.entities.ColorPalette.update(id, { 
+            palette_group_id: groupId,
+            tags: palettes.find(p => p.id === id)?.tags?.concat([groupName]) || [groupName]
+          })
+        )
+      );
+      return groupId;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["colorPalettes"]);
+      setSelectedPalettes([]);
+      setGroupDialogOpen(false);
+      setGroupName("");
     }
   });
   
@@ -168,12 +192,17 @@ export function ColorLibrary({ tenantId }) {
       <Card className="rounded-xl">
         <CardHeader className="flex flex-row items-center justify-between space-y-0">
           <CardTitle>Color Library</CardTitle>
-          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
               <Label htmlFor="format-toggle" className="text-sm">Hex</Label>
               <Switch id="format-toggle" checked={!showHex} onCheckedChange={(checked) => setShowHex(!checked)} />
               <Label htmlFor="format-toggle" className="text-sm">OKLCH</Label>
             </div>
+            {selectedPalettes.length > 0 && (
+              <Button size="sm" variant="outline" onClick={() => setGroupDialogOpen(true)}>
+                <Layers className="h-4 w-4 mr-1" />Group ({selectedPalettes.length})
+              </Button>
+            )}
             <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
               <DialogTrigger asChild>
                 <Button size="sm"><Plus className="h-4 w-4 mr-1" />Add to Library</Button>
@@ -340,8 +369,20 @@ export function ColorLibrary({ tenantId }) {
         <>
           <div className="grid gap-4">
             {paginatedPalettes.map((palette) => (
-            <Card key={palette.id} className="rounded-xl">
+            <Card key={palette.id} className={`rounded-xl ${selectedPalettes.includes(palette.id) ? 'ring-2 ring-primary' : ''}`}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                <input
+                  type="checkbox"
+                  checked={selectedPalettes.includes(palette.id)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSelectedPalettes([...selectedPalettes, palette.id]);
+                    } else {
+                      setSelectedPalettes(selectedPalettes.filter(id => id !== palette.id));
+                    }
+                  }}
+                  className="mr-3 h-4 w-4 rounded border-gray-300"
+                />
                 <div className="space-y-1">
                   <CardTitle className="text-base">{palette.name}</CardTitle>
                   {palette.description && (
@@ -488,6 +529,36 @@ export function ColorLibrary({ tenantId }) {
           )}
         </>
       )}
-    </div>
-  );
-}
+
+      <Dialog open={groupDialogOpen} onOpenChange={setGroupDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create Palette Group</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Group Name</Label>
+              <Input
+                value={groupName}
+                onChange={(e) => setGroupName(e.target.value)}
+                placeholder="e.g., Sunset Collection, Brand Variants..."
+              />
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {selectedPalettes.length} palettes will be grouped together
+            </p>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setGroupDialogOpen(false)}>Cancel</Button>
+              <Button 
+                onClick={() => groupPalettesMutation.mutate({ paletteIds: selectedPalettes, groupName })}
+                disabled={!groupName.trim() || groupPalettesMutation.isPending}
+              >
+                Create Group
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+      </div>
+      );
+      }
