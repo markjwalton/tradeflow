@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Trash2, Star, Copy, Check, Search, Plus, X, Upload, Sparkles, ChevronDown, ChevronUp, Settings } from "lucide-react";
+import { Trash2, Star, Copy, Check, Search, Plus, X, Upload, Sparkles, ChevronDown, ChevronUp, Settings, Moon } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
@@ -47,6 +47,13 @@ export function ColorLibrary({ tenantId }) {
     mutationFn: ({ id, isFavorite }) => 
       base44.entities.ColorPalette.update(id, { is_favorite: !isFavorite }),
     onSuccess: () => queryClient.invalidateQueries(["colorPalettes"])
+  });
+
+  const generateDarkModeMutation = useMutation({
+    mutationFn: (paletteId) => base44.functions.invoke('generateDarkModePalette', { paletteId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["colorPalettes"]);
+    }
   });
   
   const copyColors = (palette) => {
@@ -332,12 +339,32 @@ export function ColorLibrary({ tenantId }) {
                   )}
                   <div className="flex gap-1 mt-2">
                     <Badge variant="outline">{palette.category}</Badge>
+                    {palette.is_dark_mode_alternative && (
+                      <Badge variant="default" className="bg-midnight-700">Dark Mode</Badge>
+                    )}
                     {palette.tags?.map(tag => (
                       <Badge key={tag} variant="secondary">{tag}</Badge>
                     ))}
                   </div>
                 </div>
                 <div className="flex gap-1">
+                  {!palette.is_dark_mode_alternative && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={async () => {
+                        const result = await generateDarkModeMutation.mutateAsync(palette.id);
+                        if (result.data?.success) {
+                          setCopied(`dark-${palette.id}`);
+                          setTimeout(() => setCopied(null), 2000);
+                        }
+                      }}
+                      disabled={generateDarkModeMutation.isPending}
+                      title="Generate AI Dark Mode"
+                    >
+                      <Moon className="h-4 w-4" />
+                    </Button>
+                  )}
                   <Button
                     size="sm"
                     variant="ghost"
