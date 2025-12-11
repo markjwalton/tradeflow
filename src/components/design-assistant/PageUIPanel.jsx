@@ -44,7 +44,7 @@ export function PageUIPanel({ currentPageName }) {
   };
 
   const analyzeStyleSource = () => {
-    if (!selectedElement) return [];
+    if (!selectedElement || !selectedElement.classes) return [];
     
     const sources = [];
     
@@ -52,16 +52,16 @@ export function PageUIPanel({ currentPageName }) {
       sources.push({ type: "inline", description: "Inline styles directly on element" });
     }
     
-    const themeClasses = selectedElement.classes.filter(cls => 
-      cls.startsWith('text-') || cls.startsWith('bg-') || cls.startsWith('border-') || 
-      cls.includes('primary') || cls.includes('secondary') || cls.includes('accent')
+    const themeClasses = (selectedElement.classes || []).filter(cls => 
+      cls && (cls.startsWith('text-') || cls.startsWith('bg-') || cls.startsWith('border-') || 
+      cls.includes('primary') || cls.includes('secondary') || cls.includes('accent'))
     );
     if (themeClasses.length > 0) {
       sources.push({ type: "theme", description: `Theme tokens: ${themeClasses.join(', ')}` });
     }
     
-    const customClasses = selectedElement.classes.filter(cls => 
-      !themeClasses.includes(cls) && !cls.startsWith('flex') && !cls.startsWith('grid')
+    const customClasses = (selectedElement.classes || []).filter(cls => 
+      cls && !themeClasses.includes(cls) && !cls.startsWith('flex') && !cls.startsWith('grid')
     );
     if (customClasses.length > 0) {
       sources.push({ type: "custom", description: `Custom classes: ${customClasses.join(', ')}` });
@@ -167,17 +167,17 @@ Format as JSON:
   };
 
   const handleSaveAsPattern = async () => {
-    if (!aiResponse || !selectedElement) return;
+    if (!aiResponse || !selectedElement || !userRequest) return;
     
     try {
       await base44.entities.DesignPattern.create({
-        pattern_name: userRequest.substring(0, 50),
+        pattern_name: (userRequest || "Unnamed pattern").substring(0, 50),
         category: "other",
-        description: aiResponse.understanding,
-        element_type: selectedElement.tagName,
-        before_styles: { classes: selectedElement.classes, inline: selectedElement.inlineStyles },
-        after_styles: { changes: aiResponse.changes_needed },
-        change_notes: aiResponse.assessment,
+        description: aiResponse.understanding || "",
+        element_type: selectedElement.tagName || "unknown",
+        before_styles: { classes: selectedElement.classes || [], inline: selectedElement.inlineStyles || null },
+        after_styles: { changes: aiResponse.changes_needed || "" },
+        change_notes: aiResponse.assessment || "",
         is_validated: false,
       });
       
@@ -213,7 +213,7 @@ Format as JSON:
               Page UI Assistant
             </SheetTitle>
             <p className="text-sm text-muted-foreground">
-              {selectedElement ? `Selected: ${selectedElement.tagName}` : "Hover and click to select an element"}
+              {selectedElement?.tagName ? `Selected: ${selectedElement.tagName}` : "Hover and click to select an element"}
             </p>
           </SheetHeader>
 
@@ -228,13 +228,13 @@ Format as JSON:
                     </CollapsibleTrigger>
                     <CollapsibleContent>
                       <div className="px-4 pb-4 space-y-2 border-t pt-4 text-xs font-mono">
-                        <p><strong>Tag:</strong> {selectedElement.tagName}</p>
-                        {selectedElement.id && <p><strong>ID:</strong> {selectedElement.id}</p>}
-                        <p><strong>Classes:</strong> {selectedElement.classes.join(', ') || 'none'}</p>
-                        {selectedElement.inlineStyles && (
+                        <p><strong>Tag:</strong> {selectedElement?.tagName || 'unknown'}</p>
+                        {selectedElement?.id && <p><strong>ID:</strong> {selectedElement.id}</p>}
+                        <p><strong>Classes:</strong> {(selectedElement?.classes || []).join(', ') || 'none'}</p>
+                        {selectedElement?.inlineStyles && (
                           <p><strong>Inline:</strong> {selectedElement.inlineStyles}</p>
                         )}
-                        {selectedElement.parentElement && (
+                        {selectedElement?.parentElement && (
                           <p><strong>Parent:</strong> {selectedElement.parentElement.tagName}</p>
                         )}
                       </div>
@@ -260,7 +260,7 @@ Format as JSON:
                         <div className="pt-2 border-t">
                           <p className="text-xs font-medium mb-2">Computed Styles:</p>
                           <div className="space-y-1 text-xs font-mono">
-                            {Object.entries(selectedElement.computedStyles).map(([key, value]) => (
+                            {selectedElement?.computedStyles && Object.entries(selectedElement.computedStyles).map(([key, value]) => (
                               <p key={key}><span className="text-muted-foreground">{key}:</span> {value}</p>
                             ))}
                           </div>
