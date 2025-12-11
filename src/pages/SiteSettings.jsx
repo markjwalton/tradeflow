@@ -153,20 +153,37 @@ export default function SiteSettings() {
 
   const handleSave = async () => {
     try {
+      const user = await base44.auth.me();
       await base44.auth.updateMe({
-        site_settings: settings,
+        site_settings: {
+          ...settings,
+          maxWidth: String(settings.maxWidth || "1400"),
+          contentAlignment: String(settings.contentAlignment || "center"),
+          backgroundImage: settings.backgroundImage ? String(settings.backgroundImage) : null,
+        },
       });
-      setOriginalSettings(settings);
+      
+      const savedSettings = {
+        ...settings,
+        maxWidth: String(settings.maxWidth || "1400"),
+        contentAlignment: String(settings.contentAlignment || "center"),
+        backgroundImage: settings.backgroundImage ? String(settings.backgroundImage) : null,
+      };
+      
+      setSettings(savedSettings);
+      setOriginalSettings(savedSettings);
       setHasChanges(false);
 
       // Update CSS variable for editor background
-      document.documentElement.style.setProperty('--color-editor-background', `var(--color-${settings.editorBackground})`);
+      if (settings.editorBackground) {
+        document.documentElement.style.setProperty('--color-editor-background', `var(--color-${settings.editorBackground})`);
+      }
 
-      window.dispatchEvent(new CustomEvent('site-settings-changed', { detail: settings }));
-      toast.success("Site settings saved");
+      window.dispatchEvent(new CustomEvent('site-settings-changed', { detail: savedSettings }));
+      toast.success("Site settings saved successfully");
     } catch (e) {
       console.error("Failed to save site settings:", e);
-      toast.error("Failed to save settings");
+      toast.error(`Failed to save settings: ${e.message}`);
     }
   };
 
@@ -812,12 +829,17 @@ export default function SiteSettings() {
           </CardContent>
         </Card>
 
-        <div className="flex justify-end gap-3">
+        <div className="flex justify-end gap-3 sticky bottom-4 bg-background/95 backdrop-blur-sm p-4 rounded-lg border shadow-lg">
           <Button onClick={handleCancel} variant="outline" size="lg">
             <X className="h-4 w-4 mr-2" />
             Cancel
           </Button>
-          <Button onClick={handleSave} size="lg" disabled={!hasChanges}>
+          <Button 
+            onClick={handleSave} 
+            size="lg" 
+            disabled={!hasChanges}
+            className={hasChanges ? "bg-primary" : ""}
+          >
             <Save className="h-4 w-4 mr-2" />
             Save Settings
           </Button>
