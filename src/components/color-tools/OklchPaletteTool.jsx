@@ -630,37 +630,33 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label>Generate from Prompt</Label>
-            <div className="flex gap-2">
-              <Textarea
-                value={aiPrompt}
-                onChange={(e) => setAiPrompt(e.target.value)}
-                placeholder="e.g., Modern tech startup, Ocean sunset, Vintage coffee shop..."
-                rows={2}
-                className="flex-1"
-              />
-              <Button onClick={generateFromPrompt} disabled={isGenerating || !aiPrompt.trim()}>
-                {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-              </Button>
-            </div>
+            <Label>Upload Photo (Optional)</Label>
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoUpload}
+              disabled={isGenerating}
+            />
+            {uploadedFile && (
+              <p className="text-xs text-muted-foreground">Photo uploaded: {uploadedFile.name}</p>
+            )}
           </div>
 
           <div className="space-y-2">
-            <Label>Upload Photo for Palette</Label>
-            <div className="flex gap-2">
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={handlePhotoUpload}
-                disabled={isGenerating}
-                className="flex-1"
-              />
-              {uploadedFile && (
-                <Button onClick={analyzePhoto} disabled={isGenerating}>
-                  {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-                </Button>
-              )}
-            </div>
+            <Label>Describe Your Palette</Label>
+            <Textarea
+              value={aiPrompt}
+              onChange={(e) => setAiPrompt(e.target.value)}
+              placeholder={uploadedFile 
+                ? "Describe the elements to take inspiration from in the photo (e.g., the warm tones in the sunset, the blue-green ocean water, the golden sand...)" 
+                : "Describe your desired palette (e.g., modern tech startup, warm autumn, ocean sunset...)"}
+              disabled={isGenerating}
+              rows={3}
+            />
+            <Button onClick={uploadedFile ? analyzePhoto : generateFromPrompt} disabled={isGenerating || !aiPrompt.trim()} className="w-full">
+              {isGenerating ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Sparkles className="h-4 w-4 mr-2" />}
+              Generate Palette
+            </Button>
           </div>
         </CardContent>
       </Card>
