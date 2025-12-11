@@ -94,13 +94,13 @@ DESIGN SYSTEM CONTEXT:
 - Always prefer design system tokens over arbitrary values
 
 SELECTED ELEMENT:
-Tag: ${selectedElement.tagName}
-Classes: ${selectedElement.classes.join(', ')}
-Inline Styles: ${selectedElement.inlineStyles || "none"}
-Parent: ${selectedElement.parentElement?.tagName} with classes: ${selectedElement.parentElement?.classes.join(', ')}
+Tag: ${selectedElement?.tagName || 'unknown'}
+Classes: ${(selectedElement?.classes || []).join(', ') || 'none'}
+Inline Styles: ${selectedElement?.inlineStyles || "none"}
+Parent: ${selectedElement?.parentElement?.tagName || 'none'} with classes: ${(selectedElement?.parentElement?.classes || []).join(', ') || 'none'}
 
 COMPUTED STYLES:
-${Object.entries(selectedElement.computedStyles).map(([k, v]) => `${k}: ${v}`).join('\n')}
+${selectedElement?.computedStyles ? Object.entries(selectedElement.computedStyles).map(([k, v]) => `${k}: ${v || ''}`).join('\n') : 'none'}
 
 USER'S REQUEST:
 "${userRequest}"
