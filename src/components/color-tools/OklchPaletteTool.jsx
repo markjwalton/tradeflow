@@ -11,7 +11,8 @@ import { base44 } from "@/api/base44Client";
 import { Copy, Check, Sparkles, Upload, Save, X, Loader2, RefreshCw } from "lucide-react";
 
 export default function OklchPaletteTool({ onSave, brandColors: initialBrandColors }) {
-  const [baseColor, setBaseColor] = useState({ l: 0.6, c: 0.15, h: 180 });
+  const [baseColor, setBaseColor] = useState({ l: 0, c: 0, h: 0 });
+  const [startingColorInput, setStartingColorInput] = useState("");
   const [paletteType, setPaletteType] = useState("monochromatic");
   const [colorCount, setColorCount] = useState(5);
   const [colors, setColors] = useState([]);
@@ -303,12 +304,20 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
     setIsGenerating(false);
   };
 
-  const handlePhotoUpload = async (e) => {
+  const [uploadedFile, setUploadedFile] = useState(null);
+
+  const handlePhotoUpload = (e) => {
     const file = e.target.files[0];
-    if (!file) return;
+    if (file) {
+      setUploadedFile(file);
+    }
+  };
+
+  const analyzePhoto = async () => {
+    if (!uploadedFile) return;
     setIsGenerating(true);
     try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const { file_url } = await base44.integrations.Core.UploadFile({ file: uploadedFile });
       const prompt = `Analyze this image and extract a harmonious color palette of ${colorCount} colors. Return JSON with: name, description, colors array (each with name, lightness 0-1, chroma 0-0.4, hue 0-360).`;
       const result = await base44.integrations.Core.InvokeLLM({
         prompt,
@@ -347,6 +356,23 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
       console.error("Photo analysis failed:", e);
     }
     setIsGenerating(false);
+  };
+
+  const applyStartingColor = () => {
+    const input = startingColorInput.trim();
+    if (!input) return;
+    
+    if (input.startsWith('#')) {
+      // Parse hex
+      const oklch = hexToOklch(input);
+      setBaseColor(oklch);
+    } else if (input.startsWith('oklch')) {
+      // Parse oklch string
+      const match = input.match(/oklch\(([\d.]+)\s+([\d.]+)\s+([\d.]+)\)/);
+      if (match) {
+        setBaseColor({ l: parseFloat(match[1]), c: parseFloat(match[2]), h: parseFloat(match[3]) });
+      }
+    }
   };
 
   const addTag = () => {
@@ -620,27 +646,21 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
           </div>
 
           <div className="space-y-2">
-            <Label>Generate from Brand Colors</Label>
+            <Label>Upload Photo for Palette</Label>
             <div className="flex gap-2">
               <Input
-                value={brandColors}
-                onChange={(e) => setBrandColors(e.target.value)}
-                placeholder="e.g., #FF5733, #3498DB, sage green..."
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoUpload}
+                disabled={isGenerating}
+                className="flex-1"
               />
-              <Button onClick={generateFromBrandColors} disabled={isGenerating || !brandColors.trim()}>
-                {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-              </Button>
+              {uploadedFile && (
+                <Button onClick={analyzePhoto} disabled={isGenerating}>
+                  {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                </Button>
+              )}
             </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Upload Photo for Palette</Label>
-            <Input
-              type="file"
-              accept="image/*"
-              onChange={handlePhotoUpload}
-              disabled={isGenerating}
-            />
           </div>
         </CardContent>
       </Card>
@@ -650,6 +670,18 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
           <CardTitle>Manual Palette Generator</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label>Starting Color (Optional)</Label>
+            <div className="flex gap-2">
+              <Input
+                value={startingColorInput}
+                onChange={(e) => setStartingColorInput(e.target.value)}
+                placeholder="e.g., #4a5d4e or oklch(0.6 0.15 180)"
+              />
+              <Button onClick={applyStartingColor} size="sm">Apply</Button>
+            </div>
+          </div>
+          
           <div 
             className="w-full h-24 rounded-lg border-2 border-border"
             style={{ backgroundColor: oklchToRgb(baseColor.l, baseColor.c, baseColor.h) }}
