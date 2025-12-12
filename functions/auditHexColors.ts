@@ -15,50 +15,41 @@ Deno.serve(async (req) => {
     if (mode === 'list') {
       const allFiles = [];
       
-      // Recursively get all files from a directory
-      const getAllFilesRecursive = async (path, prefix = '') => {
+      // Scan file system directly
+      const scanDirectory = async (dir, prefix = '') => {
         try {
-          const response = await base44.asServiceRole.functions.invoke('readFileContent', { 
-            file_path: path 
-          });
-          
-          if (response.data?.files) {
-            for (const file of response.data.files) {
-              const fullPath = prefix ? `${prefix}/${file}` : file;
-              
-              // If it's a directory, recurse into it
-              if (!file.includes('.')) {
-                await getAllFilesRecursive(`${path}/${file}`, fullPath);
-              } else {
-                allFiles.push(fullPath);
-              }
-            }
-          }
-          
-          if (response.data?.directories) {
-            for (const dir of response.data.directories) {
-              const fullPath = prefix ? `${prefix}/${dir}` : dir;
-              await getAllFilesRecursive(`${path}/${dir}`, fullPath);
+          for await (const entry of Deno.readDir(dir)) {
+            const fullPath = prefix ? `${prefix}/${entry.name}` : entry.name;
+            
+            if (entry.isDirectory) {
+              await scanDirectory(`${dir}/${entry.name}`, fullPath);
+            } else if (entry.isFile && (entry.name.endsWith('.js') || entry.name.endsWith('.jsx') || entry.name.endsWith('.css'))) {
+              allFiles.push(fullPath);
             }
           }
         } catch (e) {
-          console.log(`Could not list ${path}:`, e.message);
+          console.log(`Could not scan ${dir}:`, e.message);
         }
       };
       
-      await getAllFilesRecursive('pages', 'pages');
-      await getAllFilesRecursive('components', 'components');
+      await scanDirectory('/src/pages', 'pages');
+      await scanDirectory('/src/components', 'components');
       
-      allFiles.push('Layout.js', 'globals.css');
-
-      const filesToAudit = allFiles.filter(f => 
-        f.endsWith('.js') || f.endsWith('.jsx') || f.endsWith('.css')
-      );
+      // Add root files
+      try {
+        for await (const entry of Deno.readDir('/src')) {
+          if (entry.isFile && (entry.name === 'Layout.js' || entry.name === 'globals.css')) {
+            allFiles.push(entry.name);
+          }
+        }
+      } catch (e) {
+        console.log('Could not scan root:', e.message);
+      }
 
       return Response.json({ 
         success: true,
-        files: filesToAudit,
-        total: filesToAudit.length
+        files: allFiles,
+        total: allFiles.length
       });
     }
 
