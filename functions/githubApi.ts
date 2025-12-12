@@ -216,6 +216,10 @@ Deno.serve(async (req) => {
 
       case 'scan_colors':
         // Scan repository for color occurrences
+        if (!colors || !Array.isArray(colors)) {
+          return Response.json({ error: 'colors array required' }, { status: 400 });
+        }
+        
         const counts = {};
         const fileDetails = [];
         
@@ -229,7 +233,20 @@ Deno.serve(async (req) => {
           `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/trees/main?recursive=1`,
           { headers }
         );
+        
+        if (!treeResponse.ok) {
+          return Response.json({ 
+            error: `Failed to fetch tree: ${treeResponse.status}` 
+          }, { status: 500 });
+        }
+        
         const treeData = await treeResponse.json();
+        
+        if (!treeData.tree) {
+          return Response.json({ 
+            error: 'Invalid tree response' 
+          }, { status: 500 });
+        }
         
         // Filter to src files only (js, jsx, css)
         const srcFiles = treeData.tree.filter(item => 
@@ -245,6 +262,9 @@ Deno.serve(async (req) => {
               `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${file.path}`,
               { headers }
             );
+            
+            if (!fileResponse.ok) continue;
+            
             const fileData = await fileResponse.json();
             const content = atob(fileData.content);
             let fileTotal = 0;
