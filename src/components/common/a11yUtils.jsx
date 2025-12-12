@@ -1,51 +1,15 @@
 /**
- * Accessibility utility functions
+ * Accessibility utilities for improved user experience
  */
 
 /**
- * Generate accessible labels for form fields
+ * Announce messages to screen readers
  */
-export function getFieldLabel(fieldName, isRequired = false) {
-  const label = fieldName
-    .replace(/([A-Z])/g, ' $1')
-    .replace(/_/g, ' ')
-    .trim()
-    .replace(/\b\w/g, l => l.toUpperCase());
-  
-  return isRequired ? `${label} (required)` : label;
-}
-
-/**
- * Get ARIA live region attributes based on urgency
- */
-export function getLiveRegionProps(urgency = 'polite') {
-  return {
-    'aria-live': urgency,
-    'aria-atomic': 'true',
-  };
-}
-
-/**
- * Generate skip link for keyboard navigation
- */
-export function SkipLink({ href = '#main-content', children = 'Skip to main content' }) {
-  return (
-    <a
-      href={href}
-      className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg"
-    >
-      {children}
-    </a>
-  );
-}
-
-/**
- * Announce message to screen readers
- */
-export function announceToScreenReader(message, urgency = 'polite') {
+export function announceToScreenReader(message, priority = 'polite') {
   const announcement = document.createElement('div');
   announcement.setAttribute('role', 'status');
-  announcement.setAttribute('aria-live', urgency);
+  announcement.setAttribute('aria-live', priority);
+  announcement.setAttribute('aria-atomic', 'true');
   announcement.className = 'sr-only';
   announcement.textContent = message;
   
@@ -57,41 +21,72 @@ export function announceToScreenReader(message, urgency = 'polite') {
 }
 
 /**
- * Get accessible button props
+ * Focus trap for modal dialogs
  */
-export function getButtonProps(label, disabled = false, pressed = undefined) {
-  const props = {
-    'aria-label': label,
-    'aria-disabled': disabled,
+export function createFocusTrap(element) {
+  const focusableElements = element.querySelectorAll(
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+  );
+  
+  const firstElement = focusableElements[0];
+  const lastElement = focusableElements[focusableElements.length - 1];
+  
+  const handleKeyDown = (e) => {
+    if (e.key !== 'Tab') return;
+    
+    if (e.shiftKey) {
+      if (document.activeElement === firstElement) {
+        e.preventDefault();
+        lastElement.focus();
+      }
+    } else {
+      if (document.activeElement === lastElement) {
+        e.preventDefault();
+        firstElement.focus();
+      }
+    }
   };
   
-  if (pressed !== undefined) {
-    props['aria-pressed'] = pressed;
-  }
+  element.addEventListener('keydown', handleKeyDown);
   
-  return props;
+  return () => {
+    element.removeEventListener('keydown', handleKeyDown);
+  };
 }
 
 /**
- * Get accessible dialog props
+ * Skip to content link functionality
  */
-export function getDialogProps(labelId, descriptionId) {
-  return {
-    role: 'dialog',
-    'aria-modal': 'true',
-    'aria-labelledby': labelId,
-    'aria-describedby': descriptionId,
-  };
+export function handleSkipToContent(contentId = 'main-content') {
+  const content = document.getElementById(contentId);
+  if (content) {
+    content.setAttribute('tabindex', '-1');
+    content.focus();
+    content.addEventListener('blur', () => {
+      content.removeAttribute('tabindex');
+    }, { once: true });
+  }
 }
 
 /**
  * Check if element is visible to screen readers
  */
-export function isVisibleToScreenReaders(element) {
+export function isAccessible(element) {
+  if (!element) return false;
+  
+  const style = window.getComputedStyle(element);
   return (
-    element.offsetWidth > 0 &&
-    element.offsetHeight > 0 &&
-    window.getComputedStyle(element).visibility !== 'hidden' &&
+    style.display !== 'none' &&
+    style.visibility !== 'hidden' &&
+    style.opacity !== '0' &&
     !element.hasAttribute('aria-hidden')
   );
+}
+
+/**
+ * Generate unique IDs for form labels
+ */
+let idCounter = 0;
+export function generateId(prefix = 'id') {
+  return `${prefix}-${++idCounter}`;
 }

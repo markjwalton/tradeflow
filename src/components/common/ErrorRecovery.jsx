@@ -1,84 +1,131 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { AlertCircle, RefreshCw, Home } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { RefreshCw, WifiOff, ShieldAlert, ServerCrash, AlertCircle } from 'lucide-react';
+import { ErrorTypes } from './useErrorHandler';
+
+const errorIcons = {
+  [ErrorTypes.NETWORK]: WifiOff,
+  [ErrorTypes.PERMISSION]: ShieldAlert,
+  [ErrorTypes.SERVER]: ServerCrash,
+  [ErrorTypes.UNKNOWN]: AlertCircle,
+};
+
+const errorTitles = {
+  [ErrorTypes.NETWORK]: 'Connection Problem',
+  [ErrorTypes.VALIDATION]: 'Validation Error',
+  [ErrorTypes.PERMISSION]: 'Access Denied',
+  [ErrorTypes.NOT_FOUND]: 'Not Found',
+  [ErrorTypes.SERVER]: 'Server Error',
+  [ErrorTypes.UNKNOWN]: 'Error Occurred',
+};
 
 export function ErrorRecovery({ 
   error, 
-  resetError, 
-  severity = 'error',
-  showHomeButton = false 
+  errorType = ErrorTypes.UNKNOWN,
+  onRetry,
+  onDismiss,
+  retryCount = 0,
+  maxRetries = 3,
 }) {
-  const navigate = useNavigate();
-  
-  const errorMessages = {
-    network: 'Unable to connect. Please check your internet connection.',
-    auth: 'Authentication required. Please log in again.',
-    permission: 'You do not have permission to access this resource.',
-    notFound: 'The requested resource was not found.',
-    server: 'A server error occurred. Please try again later.',
-    default: 'An unexpected error occurred.'
-  };
+  const [isRetrying, setIsRetrying] = useState(false);
+  const Icon = errorIcons[errorType] || AlertCircle;
+  const title = errorTitles[errorType];
+  const canRetry = onRetry && retryCount < maxRetries;
 
-  const getErrorMessage = () => {
-    if (error?.message?.includes('NetworkError') || error?.message?.includes('Failed to fetch')) {
-      return errorMessages.network;
+  const handleRetry = async () => {
+    setIsRetrying(true);
+    try {
+      await onRetry();
+      onDismiss?.();
+    } catch (err) {
+      console.error('Retry failed:', err);
+    } finally {
+      setIsRetrying(false);
     }
-    if (error?.message?.includes('401') || error?.message?.includes('Unauthorized')) {
-      return errorMessages.auth;
-    }
-    if (error?.message?.includes('403') || error?.message?.includes('Forbidden')) {
-      return errorMessages.permission;
-    }
-    if (error?.message?.includes('404') || error?.message?.includes('Not Found')) {
-      return errorMessages.notFound;
-    }
-    if (error?.message?.includes('500') || error?.message?.includes('Internal Server')) {
-      return errorMessages.server;
-    }
-    return error?.message || errorMessages.default;
   };
 
   return (
-    <div className="min-h-[400px] flex items-center justify-center p-6">
-      <Card className="max-w-md w-full">
-        <CardContent className="pt-6">
-          <div className="flex flex-col items-center text-center space-y-4">
-            <div className="w-12 h-12 rounded-full bg-destructive-50 flex items-center justify-center">
-              <AlertCircle className="h-6 w-6 text-destructive-700" />
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-semibold text-foreground mb-2">
-                Something went wrong
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {getErrorMessage()}
-              </p>
-            </div>
+    <Alert variant="destructive" className="mb-4">
+      <Icon className="h-4 w-4" />
+      <AlertTitle>{title}</AlertTitle>
+      <AlertDescription className="mt-2 space-y-3">
+        <p className="text-sm">{error?.message || 'An unexpected error occurred.'}</p>
+        
+        <div className="flex gap-2">
+          {canRetry && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleRetry}
+              disabled={isRetrying}
+            >
+              {isRetrying ? (
+                <>
+                  <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
+                  Retrying...
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="h-3 w-3 mr-1" />
+                  Retry ({maxRetries - retryCount} left)
+                </>
+              )}
+            </Button>
+          )}
+          
+          {onDismiss && (
+            <Button size="sm" variant="ghost" onClick={onDismiss}>
+              Dismiss
+            </Button>
+          )}
+        </div>
 
-            <div className="flex gap-3 pt-2">
-              {resetError && (
-                <Button onClick={resetError} variant="default">
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Try Again
-                </Button>
-              )}
-              {showHomeButton && (
-                <Button 
-                  onClick={() => navigate(createPageUrl('Dashboard'))} 
-                  variant="outline"
-                >
-                  <Home className="w-4 h-4 mr-2" />
-                  Go Home
-                </Button>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+        {retryCount > 0 && (
+          <p className="text-xs text-muted-foreground">
+            Retry attempt {retryCount} of {maxRetries}
+          </p>
+        )}
+      </AlertDescription>
+    </Alert>
   );
+}
+
+/**
+ * Higher-order component for error recovery
+ */
+export function withErrorRecovery(Component, options = {}) {
+  return function ErrorRecoveryWrapper(props) {
+    const [error, setError] = useState(null);
+    const [retryCount, setRetryCount] = useState(0);
+
+    const handleError = (err) => {
+      setError(err);
+    };
+
+    const handleRetry = async () => {
+      setRetryCount(prev => prev + 1);
+      setError(null);
+      // Component will re-render and retry
+    };
+
+    const handleDismiss = () => {
+      setError(null);
+      setRetryCount(0);
+    };
+
+    if (error) {
+      return (
+        <ErrorRecovery
+          error={error}
+          onRetry={options.onRetry || handleRetry}
+          onDismiss={handleDismiss}
+          retryCount={retryCount}
+          maxRetries={options.maxRetries || 3}
+        />
+      );
+    }
+
+    return <Component {...props} onError={handleError} />;
+  };
 }
