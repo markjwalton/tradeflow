@@ -194,8 +194,8 @@ export function ColorLibrary({ tenantId }) {
     const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesTags = selectedTags.length === 0 || selectedTags.some(tag => p.tags?.includes(tag));
-    const isNotDarkModeChild = !p.is_dark_mode_alternative;
-    return matchesSearch && matchesTags && isNotDarkModeChild;
+    const isNotChild = !p.is_dark_mode_alternative && !p.is_alpha_variant && (p.category !== 'gradient' || !p.parent_palette_id);
+    return matchesSearch && matchesTags && isNotChild;
   });
 
   const getDarkModeVersion = (paletteId) => {
@@ -647,12 +647,11 @@ export function ColorLibrary({ tenantId }) {
                   <div className="grid grid-cols-5 gap-2">
                     {alphaVariant.colors?.map((color, i) => (
                       <div key={i} className="space-y-1">
-                        <div className="h-16 rounded border relative overflow-hidden">
-                          <div 
-                            className="absolute inset-0"
-                            style={{ backgroundColor: color.hex, opacity: color.alpha || 1 }}
-                          />
-                          <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,#ccc_0,#ccc_10px,#fff_10px,#fff_20px)] -z-10" />
+                        <div className="h-16 rounded border relative overflow-hidden bg-[repeating-linear-gradient(45deg,#e5e7eb_0,#e5e7eb_8px,#f9fafb_8px,#f9fafb_16px)]">
+                         <div 
+                           className="absolute inset-0"
+                           style={{ backgroundColor: color.hex, opacity: color.alpha || 1 }}
+                         />
                         </div>
                         <div className="text-xs text-center text-muted-foreground">
                           {color.name}
