@@ -288,6 +288,9 @@ export default function ColorMigrationDashboard() {
               <Button variant="outline" size="sm" onClick={handleReset}>
                 Reset Progress
               </Button>
+              <Button variant="outline" size="sm" onClick={handleClearMigrationData}>
+                Clear Task Data
+              </Button>
             </div>
           </div>
           <p className="text-muted-foreground">
