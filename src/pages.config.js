@@ -107,6 +107,7 @@ import DesignPatternAudit from './pages/DesignPatternAudit';
 import FontManager from './pages/FontManager';
 import ThemeBuilder from './pages/ThemeBuilder';
 import ThemePreview from './pages/ThemePreview';
+import GitHubIntegration from './pages/GitHubIntegration';
 import __Layout from './Layout.jsx';
 
 
@@ -220,6 +221,7 @@ export const PAGES = {
     "FontManager": FontManager,
     "ThemeBuilder": ThemeBuilder,
     "ThemePreview": ThemePreview,
+    "GitHubIntegration": GitHubIntegration,
 }
 
 export const pagesConfig = {
