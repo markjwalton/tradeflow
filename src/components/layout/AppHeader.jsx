@@ -32,7 +32,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-export function AppHeader({ user, navItems = [] }) {
+export function AppHeader({ user, navItems = [], onMobileMenuClick }) {
   const { cycleMode } = useAppSidebar();
 
   return (
@@ -46,11 +46,22 @@ export function AppHeader({ user, navItems = [] }) {
       "
     >
       <div className="flex items-center justify-between px-4 py-2 md:px-6">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Mobile menu button */}
           <Button
             variant="ghost"
             size="icon"
-            className="mr-1"
+            className="lg:hidden"
+            onClick={onMobileMenuClick}
+          >
+            <Menu className="w-5 h-5" />
+          </Button>
+
+          {/* Desktop sidebar toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hidden lg:flex"
             onClick={cycleMode}
           >
             <Menu className="w-5 h-5" />
@@ -60,13 +71,12 @@ export function AppHeader({ user, navItems = [] }) {
             <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/c94580ddf_sturij-logo.png"
               alt="Sturij"
-              className="w-auto"
-              style={{ height: '51px' }}
+              className="w-auto h-[35px] sm:h-[45px] md:h-[51px]"
             />
           </Link>
         </div>
 
-        <div className="flex items-center gap-2 ml-auto">
+        <div className="flex items-center gap-1 sm:gap-2 ml-auto">
           <PageSearchBar navItems={navItems} />
           <ProfileMenu user={user} />
         </div>
@@ -124,13 +134,13 @@ function PageSearchBar({ navItems = [] }) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between text-muted-foreground"
+          className="w-[40px] sm:w-[180px] md:w-[200px] justify-between text-muted-foreground"
         >
-          <Search className="mr-2 h-4 w-4" />
-          <span className="text-xs">Search pages...</span>
+          <Search className="h-4 w-4 sm:mr-2" />
+          <span className="text-xs hidden sm:inline">Search pages...</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[400px] p-0" align="end">
+      <PopoverContent className="w-[calc(100vw-2rem)] sm:w-[400px] p-0" align="end">
         <Command>
           <CommandInput 
             placeholder="Search pages..." 
@@ -214,13 +224,13 @@ function ProfileMenu({ user }) {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="flex items-center gap-2 px-2 py-1 h-9"
+          className="flex items-center gap-2 px-1 sm:px-2 py-1 h-9"
         >
           <Avatar className="h-7 w-7">
             <AvatarImage alt={user.full_name || user.email} />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
-          <div className="hidden sm:flex flex-col items-start">
+          <div className="hidden md:flex flex-col items-start">
             <span className="text-xs font-medium leading-tight">
               {user.full_name || user.email}
             </span>
@@ -228,10 +238,10 @@ function ProfileMenu({ user }) {
               {user.email}
             </span>
           </div>
-          <ChevronDown className="w-3 h-3 ml-1 hidden sm:inline" />
+          <ChevronDown className="w-3 h-3 ml-1 hidden md:inline" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-72">
+      <DropdownMenuContent align="end" className="w-[calc(100vw-2rem)] sm:w-72">
         <DropdownMenuLabel>{user.full_name || user.email}</DropdownMenuLabel>
         <DropdownMenuItem disabled className="text-[11px]">
           {user.email}

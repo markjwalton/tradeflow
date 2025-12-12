@@ -2,8 +2,11 @@ import { AppHeader } from "./AppHeader";
 import { AppSidebar } from "./AppSidebar";
 import { AppFooter } from "./AppFooter";
 import { AppContent } from "./AppContent";
+import { MobileNav } from "./MobileNav";
+import { useState } from "react";
 
 export function AppShell({ children, user, tenant, navItems = [] }) {
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   // Organize flat navItems into hierarchical structure
   const organizeNavigation = (items) => {
     const itemMap = {};
@@ -41,9 +44,19 @@ export function AppShell({ children, user, tenant, navItems = [] }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-[var(--color-background)]">
-      <AppHeader user={user} navItems={organizedNavItems} />
+      <AppHeader 
+        user={user} 
+        navItems={organizedNavItems}
+        onMobileMenuClick={() => setMobileNavOpen(true)}
+      />
 
-      <div className="flex flex-1 gap-4 p-4">
+      <MobileNav 
+        isOpen={mobileNavOpen}
+        onClose={() => setMobileNavOpen(false)}
+        navItems={organizedNavItems}
+      />
+
+      <div className="flex flex-1 gap-4 p-2 sm:p-4">
         <AppSidebar navItems={organizedNavItems} />
         <div className="flex-1 flex flex-col overflow-hidden rounded-xl">
           <AppContent navItems={organizedNavItems}>{children}</AppContent>
