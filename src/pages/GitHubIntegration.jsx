@@ -9,7 +9,7 @@ import { Loader2, File, GitBranch, AlertCircle, FileText } from "lucide-react";
 
 export default function GitHubIntegration() {
   const [loading, setLoading] = useState(false);
-  const [filePath, setFilePath] = useState("README.md");
+  const [filePath, setFilePath] = useState("");
   const [fileContent, setFileContent] = useState(null);
   const [files, setFiles] = useState([]);
   const [issues, setIssues] = useState([]);
