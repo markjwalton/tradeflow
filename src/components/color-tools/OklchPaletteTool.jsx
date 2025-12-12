@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
@@ -8,10 +8,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { base44 } from "@/api/base44Client";
-import { Copy, Check, Sparkles, Upload, Save, X, Loader2, RefreshCw } from "lucide-react";
+import { Copy, Check, Sparkles, Save, X, Loader2, RefreshCw } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 
-export default function OklchPaletteTool({ onSave, brandColors: initialBrandColors }) {
+const OklchPaletteTool = ({ onSave, brandColors: initialBrandColors }) => {
   const [baseColor, setBaseColor] = useState({ l: 0, c: 0, h: 0 });
   const [startingColorInput, setStartingColorInput] = useState("");
   const [paletteType, setPaletteType] = useState("monochromatic");

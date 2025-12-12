@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -74,7 +74,7 @@ function convertColorToOklch(color) {
   return null;
 }
 
-export function OklchBulkConverter() {
+const OklchBulkConverter = () => {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [copied, setCopied] = useState(false);
@@ -182,4 +182,6 @@ export function OklchBulkConverter() {
       </Card>
     </div>
   );
-}
+};
+
+export default memo(OklchBulkConverter);
