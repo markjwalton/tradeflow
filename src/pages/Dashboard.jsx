@@ -1,21 +1,40 @@
-import React, { useState, lazy, Suspense, memo } from "react";
+import React, { useState, lazy, Suspense, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Settings, LayoutGrid, RefreshCw, Loader2 } from "lucide-react";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
+import DashboardWidgetCard from "@/components/dashboard/DashboardWidgetCard";
 import useDashboardSettings from "@/components/dashboard/useDashboardSettings";
 
-const Card = lazy(() => import("@/components/ui/card").then(m => ({ default: m.Card })));
-const CardContent = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardContent })));
-const DashboardWidgetCard = lazy(() => import("@/components/dashboard/DashboardWidgetCard"));
+// Lazy load heavy components
 const WidgetConfigEditor = lazy(() => import("@/components/dashboard/WidgetConfigEditor"));
 const DashboardSettings = lazy(() => import("@/components/dashboard/DashboardSettings"));
 const TechNewsWidget = lazy(() => import("@/components/dashboard/TechNewsWidget"));
 
-const Dashboard = () => {
+export default function Dashboard() {
+  const queryClient = useQueryClient();
   const [configWidget, setConfigWidget] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
+
+  // Prefetch common data on idle
+  useEffect(() => {
+    const prefetchTimer = setTimeout(() => {
+      queryClient.prefetchQuery({
+        queryKey: ['entityTemplates'],
+        queryFn: () => base44.entities.EntityTemplate.list(),
+        staleTime: 60000,
+      });
+      queryClient.prefetchQuery({
+        queryKey: ['pageTemplates'],
+        queryFn: () => base44.entities.PageTemplate.list(),
+        staleTime: 60000,
+      });
+    }, 2000);
+
+    return () => clearTimeout(prefetchTimer);
+  }, [queryClient]);
 
   // Fetch published widgets
   const { data: widgets = [], isLoading, refetch } = useQuery({
@@ -67,7 +86,7 @@ const Dashboard = () => {
     );
   }
 
-  const renderWidgetCard = React.useCallback((widget, index, isDraggable) => (
+  const renderWidgetCard = (widget, index, isDraggable) => (
     <DashboardWidgetCard
       key={widget.id}
       widget={widget}
@@ -76,11 +95,10 @@ const Dashboard = () => {
       dataContext={dataContext}
       onConfigClick={setConfigWidget}
     />
-  ), [dataContext]);
+  );
 
   return (
-    <Suspense fallback={<div className="flex justify-center items-center min-h-screen"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
-      <div className={`p-6 bg-background min-h-screen ${settings.compactMode ? "space-y-4" : ""}`}>
+    <div className={`p-6 bg-background min-h-screen ${settings.compactMode ? "space-y-4" : ""}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -181,9 +199,6 @@ const Dashboard = () => {
           onVisibleWidgetsChange={setVisibleWidgetIds}
         />
       </Suspense>
-      </div>
-    </Suspense>
+    </div>
   );
-};
-
-export default memo(Dashboard);
+}
