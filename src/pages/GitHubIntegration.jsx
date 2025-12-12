@@ -24,15 +24,8 @@ export default function GitHubIntegration() {
       const result = await base44.functions.invoke('githubApi', {
         action: 'get_repo'
       });
-      console.log("Full result:", result);
-      console.log("result.data:", result.data);
-      console.log("result.data.repo:", result.data?.repo);
-      
       if (result?.data?.repo) {
         setRepo(result.data.repo);
-      } else {
-        console.error("No repo data found in result");
-        setError("No repository data received");
       }
     } catch (e) {
       console.error("GitHub API error:", e);
@@ -51,72 +44,77 @@ export default function GitHubIntegration() {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await base44.functions.invoke('githubApi', {
+      const result = await base44.functions.invoke('githubApi', {
         action: 'get_file',
         path: filePath
       });
-      setFileContent(data);
+      setFileContent(result.data);
     } catch (e) {
       setError(e.message);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleListFiles = async () => {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await base44.functions.invoke('githubApi', {
+      const result = await base44.functions.invoke('githubApi', {
         action: 'list_files',
         path: filePath || ''
       });
-      setFiles(data.files || []);
+      setFiles(result.data?.files || []);
     } catch (e) {
       setError(e.message);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleGetIssues = async () => {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await base44.functions.invoke('githubApi', {
+      const result = await base44.functions.invoke('githubApi', {
         action: 'get_issues'
       });
-      setIssues(data.issues || []);
+      setIssues(result.data?.issues || []);
     } catch (e) {
       setError(e.message);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleGetCommits = async () => {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await base44.functions.invoke('githubApi', {
+      const result = await base44.functions.invoke('githubApi', {
         action: 'get_commits'
       });
-      setCommits(data.commits || []);
+      setCommits(result.data?.commits || []);
     } catch (e) {
       setError(e.message);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleGetReadme = async () => {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await base44.functions.invoke('githubApi', {
+      const result = await base44.functions.invoke('githubApi', {
         action: 'get_readme'
       });
-      setFileContent({ content: data.content, path: data.name });
+      setFileContent({ content: result.data?.content, path: result.data?.name });
     } catch (e) {
       setError(e.message);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
