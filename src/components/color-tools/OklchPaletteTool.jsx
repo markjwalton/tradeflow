@@ -26,24 +26,22 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
   const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(null);
   // Brand color generator state
-  const [primaryColor, setPrimaryColor] = useState("#4a5d4e");
-  const [secondaryColor, setSecondaryColor] = useState("#d4a574");
-  const [accentColor, setAccentColor] = useState("#d9b4a7");
+  const [primaryColor, setPrimaryColor] = useState("oklch(0.398 0.037 159.8)");
+  const [secondaryColor, setSecondaryColor] = useState("oklch(0.728 0.074 70.3)");
+  const [accentColor, setAccentColor] = useState("oklch(0.785 0.044 35.6)");
 
-  // Load colors from CSS variables after component mounts
+  // Load colors from CSS variables after component mounts - now OKLCH-first
   useEffect(() => {
     const loadThemeColors = () => {
       const primary = getComputedStyle(document.documentElement).getPropertyValue('--primary-500').trim();
       const secondary = getComputedStyle(document.documentElement).getPropertyValue('--secondary-400').trim();
       const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent-300').trim();
       
-      // Convert CSS variable values to the selected format
+      // Colors are now in OKLCH format, parse and display accordingly
       if (primary) {
         const parsed = parseColorInput(primary);
         if (parsed) {
           setPrimaryColor(formatColorForDisplay(parsed, primaryFormat));
-        } else if (primary.startsWith('#')) {
-          setPrimaryColor(primary);
         }
       }
       
@@ -51,8 +49,6 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
         const parsed = parseColorInput(secondary);
         if (parsed) {
           setSecondaryColor(formatColorForDisplay(parsed, secondaryFormat));
-        } else if (secondary.startsWith('#')) {
-          setSecondaryColor(secondary);
         }
       }
       
@@ -60,29 +56,23 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
         const parsed = parseColorInput(accent);
         if (parsed) {
           setAccentColor(formatColorForDisplay(parsed, accentFormat));
-        } else if (accent.startsWith('#')) {
-          setAccentColor(accent);
         }
       }
     };
 
-    // Load immediately
     loadThemeColors();
-    
-    // Also load after a brief delay to catch dynamically applied themes
     const timer = setTimeout(loadThemeColors, 300);
-    
     return () => clearTimeout(timer);
   }, []);
   const [customColors, setCustomColors] = useState([]);
   const [customColorName, setCustomColorName] = useState("");
-  const [customColorHex, setCustomColorHex] = useState("#000000");
+  const [customColorHex, setCustomColorHex] = useState("oklch(0.0 0.0 0)");
   
-  // Format selectors and alpha support
-  const [primaryFormat, setPrimaryFormat] = useState("hex");
-  const [secondaryFormat, setSecondaryFormat] = useState("hex");
-  const [accentFormat, setAccentFormat] = useState("hex");
-  const [manualInputFormat, setManualInputFormat] = useState("hex");
+  // Format selectors and alpha support - default to OKLCH
+  const [primaryFormat, setPrimaryFormat] = useState("oklch");
+  const [secondaryFormat, setSecondaryFormat] = useState("oklch");
+  const [accentFormat, setAccentFormat] = useState("oklch");
+  const [manualInputFormat, setManualInputFormat] = useState("oklch");
   const [alphaEnabled, setAlphaEnabled] = useState(false);
   const [alphaPercentage, setAlphaPercentage] = useState(50);
   
@@ -570,7 +560,7 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
           oklch: color.alpha 
             ? `oklch(${color.l.toFixed(3)} ${color.c.toFixed(3)} ${color.h.toFixed(1)} / ${color.alpha})`
             : `oklch(${color.l.toFixed(3)} ${color.c.toFixed(3)} ${color.h.toFixed(1)})`,
-          hex: oklchToRgb(color.l, color.c, color.h),
+          hex: oklchToRgb(color.l, color.c, color.h), // HEX kept for display/compatibility only
           color_type: color.color_type || null,
           shade: color.shade || null,
           alpha: color.alpha || null

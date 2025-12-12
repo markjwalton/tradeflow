@@ -10,11 +10,25 @@ import { Separator } from "@/components/ui/separator";
 import { CheckCircle2, AlertCircle, Info, Palette } from "lucide-react";
 
 export default function ThemePreview() {
+  const [colorValues, setColorValues] = React.useState({});
+
+  React.useEffect(() => {
+    // Load current OKLCH color values from CSS
+    const computedStyle = getComputedStyle(document.documentElement);
+    setColorValues({
+      primary: computedStyle.getPropertyValue('--primary-500').trim(),
+      secondary: computedStyle.getPropertyValue('--secondary-400').trim(),
+      accent: computedStyle.getPropertyValue('--accent-300').trim(),
+      muted: computedStyle.getPropertyValue('--muted').trim(),
+      destructive: computedStyle.getPropertyValue('--destructive').trim(),
+    });
+  }, []);
+
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-8">
       <div className="text-center space-y-2">
         <h1 className="text-4xl font-display">Theme Preview</h1>
-        <p className="text-muted-foreground">See your active theme in action</p>
+        <p className="text-muted-foreground">See your active OKLCH-based theme in action</p>
       </div>
 
       <Card>
@@ -101,30 +115,35 @@ export default function ThemePreview() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Color Palette</CardTitle>
-          <CardDescription>Active theme colors</CardDescription>
+          <CardTitle>Color Palette (OKLCH)</CardTitle>
+          <CardDescription>Active theme colors in OKLCH format</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-5 gap-4">
             <div className="space-y-2">
               <div className="h-20 rounded-lg border bg-primary" />
               <p className="text-xs font-mono">Primary</p>
+              <p className="text-xs text-muted-foreground font-mono">{colorValues.primary}</p>
             </div>
             <div className="space-y-2">
               <div className="h-20 rounded-lg border bg-secondary" />
               <p className="text-xs font-mono">Secondary</p>
+              <p className="text-xs text-muted-foreground font-mono">{colorValues.secondary}</p>
             </div>
             <div className="space-y-2">
               <div className="h-20 rounded-lg border bg-accent" />
               <p className="text-xs font-mono">Accent</p>
+              <p className="text-xs text-muted-foreground font-mono">{colorValues.accent}</p>
             </div>
             <div className="space-y-2">
               <div className="h-20 rounded-lg border bg-muted" />
               <p className="text-xs font-mono">Muted</p>
+              <p className="text-xs text-muted-foreground font-mono">{colorValues.muted}</p>
             </div>
             <div className="space-y-2">
               <div className="h-20 rounded-lg border bg-destructive" />
               <p className="text-xs font-mono">Destructive</p>
+              <p className="text-xs text-muted-foreground font-mono">{colorValues.destructive}</p>
             </div>
           </div>
         </CardContent>
