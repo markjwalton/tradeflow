@@ -93,6 +93,34 @@ Deno.serve(async (req) => {
         }
         break;
 
+      case 'get_repo':
+        // Get repository information
+        url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`;
+        response = await fetch(url, { headers });
+        if (response.ok) {
+          const data = await response.json();
+          return Response.json({ 
+            repo: {
+              name: data.name,
+              full_name: data.full_name,
+              description: data.description,
+              html_url: data.html_url,
+              stargazers_count: data.stargazers_count,
+              watchers_count: data.watchers_count,
+              forks_count: data.forks_count,
+              open_issues_count: data.open_issues_count,
+              language: data.language,
+              created_at: data.created_at,
+              updated_at: data.updated_at,
+              owner: {
+                login: data.owner.login,
+                avatar_url: data.owner.avatar_url
+              }
+            }
+          });
+        }
+        break;
+
       default:
         return Response.json({ error: 'Invalid action' }, { status: 400 });
     }
