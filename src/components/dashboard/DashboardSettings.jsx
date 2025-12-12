@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -24,7 +24,7 @@ const widgetTypeIcons = {
   table: Table
 };
 
-export default function DashboardSettings({
+const DashboardSettings = ({
   isOpen,
   onClose,
   settings,
@@ -178,4 +178,6 @@ export default function DashboardSettings({
       </SheetContent>
     </Sheet>
   );
-}
+};
+
+export default memo(DashboardSettings);

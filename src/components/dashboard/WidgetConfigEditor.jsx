@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -107,7 +107,7 @@ const widgetConfigSchemas = {
   }
 };
 
-export default function WidgetConfigEditor({ widget, isOpen, onClose, onSave }) {
+const WidgetConfigEditor = ({ widget, isOpen, onClose, onSave }) => {
   const [config, setConfig] = useState({});
   const [activeSection, setActiveSection] = useState("display");
 
@@ -245,4 +245,6 @@ export default function WidgetConfigEditor({ widget, isOpen, onClose, onSave }) 
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+export default memo(WidgetConfigEditor);

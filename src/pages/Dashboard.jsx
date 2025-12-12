@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Settings, LayoutGrid, RefreshCw } from "lucide-react";
+import { Settings, LayoutGrid, RefreshCw, Loader2 } from "lucide-react";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
-import WidgetConfigEditor from "@/components/dashboard/WidgetConfigEditor";
-import DashboardSettings from "@/components/dashboard/DashboardSettings";
 import DashboardWidgetCard from "@/components/dashboard/DashboardWidgetCard";
 import useDashboardSettings from "@/components/dashboard/useDashboardSettings";
-import TechNewsWidget from "@/components/dashboard/TechNewsWidget";
+
+// Lazy load heavy components
+const WidgetConfigEditor = lazy(() => import("@/components/dashboard/WidgetConfigEditor"));
+const DashboardSettings = lazy(() => import("@/components/dashboard/DashboardSettings"));
+const TechNewsWidget = lazy(() => import("@/components/dashboard/TechNewsWidget"));
 
 export default function Dashboard() {
   const [configWidget, setConfigWidget] = useState(null);
@@ -144,28 +146,40 @@ export default function Dashboard() {
       )}
 
       {/* Widget Config Editor */}
-      <WidgetConfigEditor
-        widget={configWidget}
-        isOpen={!!configWidget}
-        onClose={() => setConfigWidget(null)}
-        onSave={() => setConfigWidget(null)}
-      />
+      <Suspense fallback={null}>
+        <WidgetConfigEditor
+          widget={configWidget}
+          isOpen={!!configWidget}
+          onClose={() => setConfigWidget(null)}
+          onSave={() => setConfigWidget(null)}
+        />
+      </Suspense>
 
       {/* Tech News Widget - Always visible */}
-      <div className="mt-6">
-        <TechNewsWidget />
-      </div>
+      <Suspense fallback={
+        <Card className="mt-6">
+          <CardContent className="py-8 flex items-center justify-center">
+            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          </CardContent>
+        </Card>
+      }>
+        <div className="mt-6">
+          <TechNewsWidget />
+        </div>
+      </Suspense>
 
       {/* Dashboard Settings */}
-      <DashboardSettings
-        isOpen={showSettings}
-        onClose={() => setShowSettings(false)}
-        settings={settings}
-        onSettingsChange={setSettings}
-        allWidgets={widgets}
-        visibleWidgetIds={visibleWidgetIds || []}
-        onVisibleWidgetsChange={setVisibleWidgetIds}
-      />
+      <Suspense fallback={null}>
+        <DashboardSettings
+          isOpen={showSettings}
+          onClose={() => setShowSettings(false)}
+          settings={settings}
+          onSettingsChange={setSettings}
+          allWidgets={widgets}
+          visibleWidgetIds={visibleWidgetIds || []}
+          onVisibleWidgetsChange={setVisibleWidgetIds}
+        />
+      </Suspense>
     </div>
   );
 }

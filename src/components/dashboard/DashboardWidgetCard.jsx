@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Settings, GripVertical } from "lucide-react";
 import { Draggable } from "@hello-pangea/dnd";
 import WidgetRenderer from "./WidgetRenderer";
@@ -63,7 +63,17 @@ export default function DashboardWidgetCard({
         )}
       </Draggable>
     );
-  }
+    };
+
+    // Memoize to prevent unnecessary re-renders
+    export default memo(DashboardWidgetCard, (prevProps, nextProps) => {
+    return (
+      prevProps.widget.id === nextProps.widget.id &&
+      prevProps.index === nextProps.index &&
+      prevProps.isDraggable === nextProps.isDraggable &&
+      JSON.stringify(prevProps.dataContext) === JSON.stringify(nextProps.dataContext)
+    );
+    });
 
   return <div>{content}</div>;
 }
