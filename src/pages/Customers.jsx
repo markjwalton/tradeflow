@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select";
 import { Plus, Search, Pencil, Trash2, Mail, Phone, Building2 } from "lucide-react";
 import { toast } from "sonner";
+import { PullToRefresh } from "@/components/common/PullToRefresh";
 
 const statusColors = {
   lead: "bg-warning/10 text-warning",
@@ -215,10 +216,10 @@ export default function Customers() {
                   )}
                 </div>
                 <div className="flex gap-1 flex-shrink-0">
-                  <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9" onClick={() => handleEdit(customer)}>
+                  <Button variant="ghost" size="icon" className="touch-target-sm" onClick={() => handleEdit(customer)}>
                     <Pencil className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9 text-destructive" onClick={() => deleteMutation.mutate(customer.id)}>
+                  <Button variant="ghost" size="icon" className="touch-target-sm text-destructive" onClick={() => deleteMutation.mutate(customer.id)}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
