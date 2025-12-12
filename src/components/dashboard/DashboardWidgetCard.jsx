@@ -16,13 +16,13 @@ export function resolveTemplateValue(value, dataContext) {
 /**
  * Individual widget card with optional drag handle and config button
  */
-export default function DashboardWidgetCard({ 
+const DashboardWidgetCard = ({ 
   widget, 
   index, 
   isDraggable = false, 
   dataContext = {},
   onConfigClick 
-}) {
+}) => {
   // Resolve any template values in the widget config
   const resolvedWidget = {
     ...widget,
@@ -63,17 +63,17 @@ export default function DashboardWidgetCard({
         )}
       </Draggable>
     );
-    };
-
-    // Memoize to prevent unnecessary re-renders
-    export default memo(DashboardWidgetCard, (prevProps, nextProps) => {
-    return (
-      prevProps.widget.id === nextProps.widget.id &&
-      prevProps.index === nextProps.index &&
-      prevProps.isDraggable === nextProps.isDraggable &&
-      JSON.stringify(prevProps.dataContext) === JSON.stringify(nextProps.dataContext)
-    );
-    });
+  }
 
   return <div>{content}</div>;
-}
+};
+
+// Memoize to prevent unnecessary re-renders
+export default memo(DashboardWidgetCard, (prevProps, nextProps) => {
+  return (
+    prevProps.widget.id === nextProps.widget.id &&
+    prevProps.index === nextProps.index &&
+    prevProps.isDraggable === nextProps.isDraggable &&
+    JSON.stringify(prevProps.dataContext) === JSON.stringify(nextProps.dataContext)
+  );
+});
