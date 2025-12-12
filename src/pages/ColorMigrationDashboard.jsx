@@ -54,10 +54,7 @@ const getAffectedFiles = () => {
 
 export default function ColorMigrationDashboard() {
   const [selectedColor, setSelectedColor] = useState(ALL_COLORS[0]);
-  const [migratedColors, setMigratedColors] = useState(() => {
-    const saved = localStorage.getItem('migratedColors');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [migratedColors, setMigratedColors] = useState([]);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [migrating, setMigrating] = useState(false);
   const [migrationResults, setMigrationResults] = useState(null);
@@ -88,7 +85,6 @@ export default function ColorMigrationDashboard() {
       if (response.data?.success) {
         const updated = [...migratedColors, colorHex];
         setMigratedColors(updated);
-        localStorage.setItem('migratedColors', JSON.stringify(updated));
         setMigrationResults(response.data);
         // Refresh counts after migration
         await handleScanFiles();
@@ -122,7 +118,6 @@ export default function ColorMigrationDashboard() {
       
       const allColors = ALL_COLORS.map(c => c.hex);
       setMigratedColors(allColors);
-      localStorage.setItem('migratedColors', JSON.stringify(allColors));
       alert(`All colors migrated! ${totalChanges} total changes across ${affectedFiles.length} files.`);
       await handleScanFiles();
     } catch (error) {
@@ -137,7 +132,6 @@ export default function ColorMigrationDashboard() {
     if (confirm('Reset all migration progress? This will NOT undo file changes.')) {
       setMigratedColors([]);
       setMigrationResults(null);
-      localStorage.removeItem('migratedColors');
     }
   };
 
