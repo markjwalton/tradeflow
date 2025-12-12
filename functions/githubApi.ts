@@ -216,7 +216,6 @@ Deno.serve(async (req) => {
 
       case 'scan_colors':
         // Scan repository for color occurrences
-        const { colors } = await req.json();
         const counts = {};
         const fileDetails = [];
         
