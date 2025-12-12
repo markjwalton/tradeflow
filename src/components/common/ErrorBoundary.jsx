@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, RefreshCw } from 'lucide-react';
+import { captureError } from './sentryConfig';
 
 export class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -15,20 +16,7 @@ export class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     console.error('ErrorBoundary caught:', error, errorInfo);
-    
-    // Send to Sentry for tracking (when Sentry is configured)
-    try {
-      if (window.Sentry) {
-        window.Sentry.captureException(error, {
-          extra: {
-            componentStack: errorInfo.componentStack,
-            errorBoundary: true,
-          },
-        });
-      }
-    } catch (e) {
-      // Sentry not available, fail silently
-    }
+    captureError(error, { errorInfo });
   }
 
   render() {
