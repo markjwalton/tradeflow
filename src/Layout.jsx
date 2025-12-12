@@ -1,10 +1,12 @@
 import React, { useEffect, useState, createContext, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { cssVariables } from "@/components/library/designTokens";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { prefetchOnIdle, prefetchDashboardQueries, prefetchLibraryQueries } from "@/components/common/queryPrefetch";
 
 // Tenant Context
 export const TenantContext = createContext(null);
@@ -24,6 +26,7 @@ import { WebVitals } from "@/components/common/WebVitals";
 
 export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   
   const [checkingAccess, setCheckingAccess] = useState(true);
   const [hasAccess, setHasAccess] = useState(false);
@@ -139,6 +142,16 @@ export default function Layout({ children, currentPageName }) {
     };
 
     loadBubblePreference();
+
+    // Prefetch common queries on idle
+    if (queryClient) {
+      prefetchOnIdle(queryClient, prefetchDashboardQueries);
+
+      // Prefetch library data after a delay
+      setTimeout(() => {
+        prefetchOnIdle(queryClient, prefetchLibraryQueries);
+      }, 3000);
+    }
 
     // Load site settings
     const loadSiteSettings = async () => {
