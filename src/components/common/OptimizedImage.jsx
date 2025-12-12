@@ -1,75 +1,88 @@
 import React, { useState } from 'react';
-import { LazyImage } from './LazyImage';
+import { cn } from '@/lib/utils';
 
-// Convert image URL to WebP format
-const toWebP = (src) => {
-  if (!src || src.startsWith('data:') || src.includes('.svg')) return src;
-  
-  const ext = src.split('.').pop()?.toLowerCase();
-  if (['jpg', 'jpeg', 'png'].includes(ext)) {
-    return src.replace(new RegExp(`\\.${ext}$`), '.webp');
-  }
-  
-  return src;
-};
-
-// Helper to generate srcset for responsive images
-const generateSrcSet = (src, widths = [320, 640, 960, 1280, 1920]) => {
-  if (!src || src.startsWith('data:')) return '';
-  
-  const ext = src.split('.').pop()?.toLowerCase();
-  const baseSrc = src.replace(`.${ext}`, '');
-  
-  // If using a CDN or image service, generate multiple sizes
-  // For now, just return the original
-  return widths.map(w => `${src} ${w}w`).join(', ');
-};
-
+/**
+ * Optimized image component with lazy loading, blur placeholder, and error handling
+ */
 export function OptimizedImage({
   src,
   alt,
-  width,
-  height,
-  sizes = '100vw',
+  className,
+  aspectRatio = '16/9',
   priority = false,
-  useWebP = true,
+  onLoad,
+  onError,
   ...props
 }) {
-  const [imgError, setImgError] = useState(false);
-  
-  // Determine final src (WebP or fallback)
-  const finalSrc = useWebP && !imgError ? toWebP(src) : src;
-  
-  const handleError = () => {
-    if (useWebP && !imgError) {
-      setImgError(true);
-    }
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+
+  const handleLoad = (e) => {
+    setIsLoading(false);
+    onLoad?.(e);
   };
 
-  // For priority images (above fold), skip lazy loading
-  if (priority) {
+  const handleError = (e) => {
+    setIsLoading(false);
+    setHasError(true);
+    onError?.(e);
+  };
+
+  if (hasError) {
     return (
-      <img
-        src={finalSrc}
-        alt={alt}
-        width={width}
-        height={height}
-        loading="eager"
-        fetchpriority="high"
-        onError={handleError}
-        {...props}
-      />
+      <div
+        className={cn(
+          'flex items-center justify-center bg-muted text-muted-foreground',
+          className
+        )}
+        style={{ aspectRatio }}
+      >
+        <span className="text-sm">Failed to load image</span>
+      </div>
     );
   }
 
-  // For regular images, use lazy loading
   return (
-    <LazyImage
-      src={finalSrc}
+    <div className={cn('relative overflow-hidden', className)} style={{ aspectRatio }}>
+      {isLoading && (
+        <div className="absolute inset-0 bg-muted animate-pulse" />
+      )}
+      <img
+        src={src}
+        alt={alt}
+        loading={priority ? 'eager' : 'lazy'}
+        onLoad={handleLoad}
+        onError={handleError}
+        className={cn(
+          'w-full h-full object-cover transition-opacity duration-300',
+          isLoading ? 'opacity-0' : 'opacity-100'
+        )}
+        {...props}
+      />
+    </div>
+  );
+}
+
+/**
+ * Responsive image with srcset support
+ */
+export function ResponsiveImage({
+  src,
+  srcSet,
+  sizes,
+  alt,
+  className,
+  aspectRatio,
+  ...props
+}) {
+  return (
+    <OptimizedImage
+      src={src}
+      srcSet={srcSet}
+      sizes={sizes}
       alt={alt}
-      width={width}
-      height={height}
-      onError={handleError}
+      className={className}
+      aspectRatio={aspectRatio}
       {...props}
     />
   );

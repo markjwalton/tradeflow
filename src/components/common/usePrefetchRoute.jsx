@@ -1,93 +1,72 @@
+import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 
-// Common query prefetch helpers
-export function usePrefetchRoute() {
+/**
+ * Prefetch entity data for a route
+ * @param {string} entityName - Entity to prefetch
+ * @param {object} options - Prefetch options
+ */
+export function usePrefetchEntity(entityName, options = {}) {
   const queryClient = useQueryClient();
 
-  const prefetchProjects = () => {
+  const prefetch = () => {
     queryClient.prefetchQuery({
-      queryKey: ['projects'],
-      queryFn: () => base44.entities.Project.list(),
-      staleTime: 30000,
+      queryKey: [entityName],
+      queryFn: () => base44.entities[entityName]?.list() || Promise.resolve([]),
+      staleTime: options.staleTime || 5 * 60 * 1000, // 5 minutes
     });
   };
 
-  const prefetchTasks = () => {
-    queryClient.prefetchQuery({
-      queryKey: ['tasks'],
-      queryFn: () => base44.entities.Task.list(),
-      staleTime: 30000,
-    });
-  };
+  return prefetch;
+}
 
-  const prefetchCustomers = () => {
-    queryClient.prefetchQuery({
-      queryKey: ['customers'],
-      queryFn: () => base44.entities.Customer.list(),
-      staleTime: 30000,
-    });
-  };
+/**
+ * Hook to prefetch route data on hover/intent
+ * @param {string[]} entities - Array of entity names to prefetch
+ * @param {object} options - Prefetch options
+ */
+export function usePrefetchRoute(entities = [], options = {}) {
+  const queryClient = useQueryClient();
 
-  const prefetchTeam = () => {
-    queryClient.prefetchQuery({
-      queryKey: ['team'],
-      queryFn: () => base44.entities.TeamMember.list(),
-      staleTime: 30000,
-    });
-  };
-
-  const prefetchMindMaps = () => {
-    queryClient.prefetchQuery({
-      queryKey: ['mindmaps'],
-      queryFn: () => base44.entities.MindMap.list(),
-      staleTime: 30000,
-    });
-  };
-
-  const prefetchLibrary = (libraryType) => {
-    const entityMap = {
-      'EntityLibrary': 'EntityTemplate',
-      'PageLibrary': 'PageTemplate',
-      'FeatureLibrary': 'FeatureTemplate',
-      'TemplateLibrary': 'NodeTemplate',
-      'BusinessTemplates': 'BusinessTemplate',
-    };
-    
-    const entityName = entityMap[libraryType];
-    if (entityName) {
+  const prefetch = () => {
+    entities.forEach(entityName => {
       queryClient.prefetchQuery({
-        queryKey: [libraryType],
-        queryFn: () => base44.entities[entityName].list(),
-        staleTime: 30000,
+        queryKey: [entityName],
+        queryFn: () => base44.entities[entityName]?.list() || Promise.resolve([]),
+        staleTime: options.staleTime || 5 * 60 * 1000,
+      });
+    });
+  };
+
+  // Auto-prefetch on mount if enabled
+  useEffect(() => {
+    if (options.prefetchOnMount) {
+      prefetch();
+    }
+  }, []);
+
+  return prefetch;
+}
+
+/**
+ * Helper to add prefetch to Link components
+ * Usage: <Link onMouseEnter={prefetchRoute(['Project', 'Task'])}>
+ */
+export function prefetchRoute(entities) {
+  return () => {
+    if (typeof window !== 'undefined' && window.requestIdleCallback) {
+      window.requestIdleCallback(() => {
+        const queryClient = window.__REACT_QUERY_CLIENT__;
+        if (!queryClient) return;
+
+        entities.forEach(entityName => {
+          queryClient.prefetchQuery({
+            queryKey: [entityName],
+            queryFn: () => base44.entities[entityName]?.list() || Promise.resolve([]),
+          });
+        });
       });
     }
-  };
-
-  const prefetchRoadmap = () => {
-    queryClient.prefetchQuery({
-      queryKey: ['roadmap'],
-      queryFn: () => base44.entities.RoadmapItem.list(),
-      staleTime: 30000,
-    });
-  };
-
-  const prefetchEstimates = () => {
-    queryClient.prefetchQuery({
-      queryKey: ['estimates'],
-      queryFn: () => base44.entities.Estimate.list(),
-      staleTime: 30000,
-    });
-  };
-
-  return {
-    prefetchProjects,
-    prefetchTasks,
-    prefetchCustomers,
-    prefetchTeam,
-    prefetchMindMaps,
-    prefetchLibrary,
-    prefetchRoadmap,
-    prefetchEstimates,
   };
 }

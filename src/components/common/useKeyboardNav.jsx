@@ -1,139 +1,95 @@
 import { useEffect, useCallback } from 'react';
 
 /**
- * Keyboard navigation patterns
+ * Hook for keyboard navigation in lists and menus
+ * @param {Array} items - Array of items to navigate
+ * @param {Function} onSelect - Callback when item is selected
+ * @param {Object} options - Configuration options
  */
-export const KeyboardPatterns = {
-  LIST_VERTICAL: 'list-vertical',
-  LIST_HORIZONTAL: 'list-horizontal',
-  GRID: 'grid',
-  MENU: 'menu',
-};
-
-/**
- * Hook for keyboard navigation
- */
-export function useKeyboardNav(options = {}) {
+export function useKeyboardNav(items, onSelect, options = {}) {
   const {
-    pattern = KeyboardPatterns.LIST_VERTICAL,
-    onSelect,
-    onEscape,
-    containerRef,
-    itemSelector = '[role="option"], [role="menuitem"], button, a',
+    loop = true,
+    activeIndex = 0,
+    onIndexChange,
+    enabled = true,
   } = options;
 
-  const navigate = useCallback((direction) => {
-    if (!containerRef?.current) return;
-    
-    const items = Array.from(
-      containerRef.current.querySelectorAll(itemSelector)
-    ).filter(item => !item.disabled && item.offsetParent !== null);
-    
-    const currentIndex = items.findIndex(item => item === document.activeElement);
-    let nextIndex = -1;
-
-    switch (pattern) {
-      case KeyboardPatterns.LIST_VERTICAL:
-        if (direction === 'down') {
-          nextIndex = currentIndex + 1;
-        } else if (direction === 'up') {
-          nextIndex = currentIndex - 1;
-        }
-        break;
-        
-      case KeyboardPatterns.LIST_HORIZONTAL:
-        if (direction === 'right') {
-          nextIndex = currentIndex + 1;
-        } else if (direction === 'left') {
-          nextIndex = currentIndex - 1;
-        }
-        break;
-        
-      case KeyboardPatterns.MENU:
-        if (direction === 'down') {
-          nextIndex = currentIndex + 1;
-        } else if (direction === 'up') {
-          nextIndex = currentIndex - 1;
-        } else if (direction === 'home') {
-          nextIndex = 0;
-        } else if (direction === 'end') {
-          nextIndex = items.length - 1;
-        }
-        break;
-    }
-
-    if (nextIndex >= 0 && nextIndex < items.length) {
-      items[nextIndex].focus();
-      return items[nextIndex];
-    } else if (nextIndex >= items.length) {
-      items[0].focus();
-      return items[0];
-    } else if (nextIndex < 0) {
-      items[items.length - 1].focus();
-      return items[items.length - 1];
-    }
-  }, [containerRef, itemSelector, pattern]);
-
   const handleKeyDown = useCallback((e) => {
+    if (!enabled || items.length === 0) return;
+
+    let newIndex = activeIndex;
+
     switch (e.key) {
       case 'ArrowDown':
+      case 'Down':
         e.preventDefault();
-        navigate('down');
+        newIndex = activeIndex + 1;
+        if (newIndex >= items.length) {
+          newIndex = loop ? 0 : items.length - 1;
+        }
         break;
+
       case 'ArrowUp':
+      case 'Up':
         e.preventDefault();
-        navigate('up');
+        newIndex = activeIndex - 1;
+        if (newIndex < 0) {
+          newIndex = loop ? items.length - 1 : 0;
+        }
         break;
-      case 'ArrowRight':
-        e.preventDefault();
-        navigate('right');
-        break;
-      case 'ArrowLeft':
-        e.preventDefault();
-        navigate('left');
-        break;
+
       case 'Home':
         e.preventDefault();
-        navigate('home');
+        newIndex = 0;
         break;
+
       case 'End':
         e.preventDefault();
-        navigate('end');
+        newIndex = items.length - 1;
         break;
+
       case 'Enter':
       case ' ':
         e.preventDefault();
-        if (onSelect && document.activeElement) {
-          onSelect(document.activeElement);
+        if (items[activeIndex]) {
+          onSelect?.(items[activeIndex], activeIndex);
         }
-        break;
+        return;
+
       case 'Escape':
         e.preventDefault();
-        if (onEscape) {
-          onEscape();
-        }
-        break;
+        options.onEscape?.();
+        return;
+
+      default:
+        return;
     }
-  }, [navigate, onSelect, onEscape]);
+
+    if (newIndex !== activeIndex) {
+      onIndexChange?.(newIndex);
+    }
+  }, [items, activeIndex, enabled, loop, onSelect, onIndexChange]);
 
   useEffect(() => {
-    const container = containerRef?.current;
-    if (!container) return;
+    if (enabled) {
+      document.addEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [enabled, handleKeyDown]);
 
-    container.addEventListener('keydown', handleKeyDown);
-    return () => {
-      container.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [containerRef, handleKeyDown]);
-
-  return { navigate };
+  return {
+    activeIndex,
+    handleKeyDown,
+  };
 }
 
 /**
- * Hook for escape key handler
+ * Hook for escape key handling
  */
-export function useEscapeKey(callback) {
+export function useEscapeKey(callback, enabled = true) {
   useEffect(() => {
+    if (!enabled) return;
+
     const handleEscape = (e) => {
       if (e.key === 'Escape') {
         callback();
@@ -142,5 +98,5 @@ export function useEscapeKey(callback) {
 
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
-  }, [callback]);
+  }, [callback, enabled]);
 }
