@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
@@ -262,4 +262,4 @@ const OklchColorTool = ({ onSave }) => {
 };
 
 export { OklchColorTool };
-export default memo(OklchColorTool);
+export default OklchColorTool;

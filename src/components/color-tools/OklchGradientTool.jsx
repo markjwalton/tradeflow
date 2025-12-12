@@ -1,4 +1,4 @@
-import React, { useState, memo, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
@@ -526,4 +526,4 @@ const OklchGradientTool = ({ onSave }) => {
 };
 
 export { OklchGradientTool };
-export default memo(OklchGradientTool);
+export default OklchGradientTool;
