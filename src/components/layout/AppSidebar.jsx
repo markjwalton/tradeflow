@@ -6,13 +6,31 @@ import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { createPageUrl } from "@/utils";
 import { getIconByName } from "@/components/navigation/NavIconMap";
+import { usePrefetchRoute } from "@/components/common/usePrefetchRoute";
 
 export function AppSidebar({ navItems = [] }) {
   const { mode, isHidden } = useAppSidebar();
   const location = useLocation();
   const [expandedFolders, setExpandedFolders] = useState(new Set());
+  const { prefetchProjects, prefetchTasks, prefetchCustomers, prefetchTeam, prefetchMindMaps } = usePrefetchRoute();
   
   const isIconsOnly = mode === "icons";
+
+  // Map page names to prefetch functions
+  const prefetchMap = {
+    'Projects': prefetchProjects,
+    'Tasks': prefetchTasks,
+    'Customers': prefetchCustomers,
+    'Team': prefetchTeam,
+    'MindMapEditor': prefetchMindMaps,
+  };
+
+  const handleMouseEnter = (pageName) => {
+    const prefetchFn = prefetchMap[pageName];
+    if (prefetchFn) {
+      prefetchFn();
+    }
+  };
 
   const widthClass =
     mode === "expanded" ? "w-64" : mode === "icons" ? "w-16" : "w-0";
@@ -138,6 +156,7 @@ export function AppSidebar({ navItems = [] }) {
       <Link
         key={item.id}
         to={fullPageUrl}
+        onMouseEnter={() => handleMouseEnter(pageName)}
         className={cn(
           "flex items-center [border-radius:var(--radius-lg)] transition-colors group",
           showLabels 
