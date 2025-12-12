@@ -1,8 +1,8 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
 const GITHUB_TOKEN = Deno.env.get("GITHUB_TOKEN");
-const REPO_OWNER = "base44dev";
-const REPO_NAME = "tradeai360";
+const REPO_OWNER = "Contextual";
+const REPO_NAME = "Sturij";
 
 Deno.serve(async (req) => {
   try {
