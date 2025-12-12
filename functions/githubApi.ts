@@ -13,7 +13,8 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { action, path, issue_number, page = 1, per_page = 30 } = await req.json();
+    const body = await req.json();
+    const { action, path, issue_number, page = 1, per_page = 30, colors } = body;
 
     const headers = {
       'Authorization': `Bearer ${GITHUB_TOKEN}`,
