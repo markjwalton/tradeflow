@@ -112,6 +112,7 @@ import ColorMigrationDashboard from './pages/ColorMigrationDashboard';
 import DevTools from './pages/DevTools';
 import UXShowcase from './pages/UXShowcase';
 import SystemHealth from './pages/SystemHealth';
+import DeveloperDocs from './pages/DeveloperDocs';
 import __Layout from './Layout.jsx';
 
 
@@ -230,6 +231,7 @@ export const PAGES = {
     "DevTools": DevTools,
     "UXShowcase": UXShowcase,
     "SystemHealth": SystemHealth,
+    "DeveloperDocs": DeveloperDocs,
 }
 
 export const pagesConfig = {
