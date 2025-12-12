@@ -24,8 +24,8 @@ export default function GitHubIntegration() {
       const result = await base44.functions.invoke('githubApi', {
         action: 'get_repo'
       });
-      if (result?.data) {
-        setRepo(result.data);
+      if (result?.data?.repo) {
+        setRepo(result.data.repo);
       }
     } catch (e) {
       console.error("GitHub API error:", e);
