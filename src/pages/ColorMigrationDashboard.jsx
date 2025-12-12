@@ -86,9 +86,39 @@ export default function ColorMigrationDashboard() {
       const tasks = await base44.entities.ColorMigrationTask.filter({
         source_file: `Support Files/phase-2/artifacts/${selectedMappingFile}`
       });
-      setCompletedTasks(tasks);
+      // Filter out duplicates and tasks with 0 changes
+      const uniqueTasks = {};
+      tasks.forEach(task => {
+        if (task.total_changes > 0) {
+          if (!uniqueTasks[task.color_hex] || 
+              new Date(task.completed_date) > new Date(uniqueTasks[task.color_hex].completed_date)) {
+            uniqueTasks[task.color_hex] = task;
+          }
+        }
+      });
+      setCompletedTasks(Object.values(uniqueTasks));
     } catch (error) {
       console.error('Error loading tasks:', error);
+    }
+  };
+
+  const handleClearMigrationData = async () => {
+    if (!confirm('Clear all migration task data? This will not undo file changes.')) return;
+    
+    try {
+      const tasks = await base44.entities.ColorMigrationTask.filter({
+        source_file: `Support Files/phase-2/artifacts/${selectedMappingFile}`
+      });
+      
+      for (const task of tasks) {
+        await base44.entities.ColorMigrationTask.delete(task.id);
+      }
+      
+      setCompletedTasks([]);
+      alert('Migration data cleared');
+    } catch (error) {
+      console.error('Error clearing data:', error);
+      alert('Failed to clear data: ' + error.message);
     }
   };
 
