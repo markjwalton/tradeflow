@@ -9,47 +9,48 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { batch = 0, batchSize = 20 } = await req.json();
+    const { mode = 'list', files = [] } = await req.json();
 
-    // Get all pages and components
-    const allFiles = [];
-    
-    // Get all pages
-    try {
-      const pagesResponse = await base44.asServiceRole.functions.invoke('readFileContent', { 
-        file_path: 'pages' 
-      });
-      if (pagesResponse.data?.files) {
-        allFiles.push(...pagesResponse.data.files.map(f => `pages/${f}`));
+    // LIST MODE: Get all files
+    if (mode === 'list') {
+      const allFiles = [];
+      
+      try {
+        const pagesResponse = await base44.asServiceRole.functions.invoke('readFileContent', { 
+          file_path: 'pages' 
+        });
+        if (pagesResponse.data?.files) {
+          allFiles.push(...pagesResponse.data.files.map(f => `pages/${f}`));
+        }
+      } catch (e) {
+        console.log('Could not list pages:', e.message);
       }
-    } catch (e) {
-      console.log('Could not list pages:', e.message);
+
+      try {
+        const componentsResponse = await base44.asServiceRole.functions.invoke('readFileContent', { 
+          file_path: 'components' 
+        });
+        if (componentsResponse.data?.files) {
+          allFiles.push(...componentsResponse.data.files.map(f => `components/${f}`));
+        }
+      } catch (e) {
+        console.log('Could not list components:', e.message);
+      }
+
+      allFiles.push('Layout.js', 'globals.css');
+
+      const filesToAudit = allFiles.filter(f => 
+        f.endsWith('.js') || f.endsWith('.jsx') || f.endsWith('.css')
+      );
+
+      return Response.json({ 
+        success: true,
+        files: filesToAudit
+      });
     }
 
-    // Get all components
-    try {
-      const componentsResponse = await base44.asServiceRole.functions.invoke('readFileContent', { 
-        file_path: 'components' 
-      });
-      if (componentsResponse.data?.files) {
-        allFiles.push(...componentsResponse.data.files.map(f => `components/${f}`));
-      }
-    } catch (e) {
-      console.log('Could not list components:', e.message);
-    }
-
-    // Add critical files
-    allFiles.push('Layout.js', 'globals.css');
-
-    // Filter to only JS/JSX/CSS files
-    const filesToAudit = allFiles.filter(f => 
-      f.endsWith('.js') || f.endsWith('.jsx') || f.endsWith('.css')
-    );
-
-    const totalFiles = filesToAudit.length;
-    const startIdx = batch * batchSize;
-    const endIdx = Math.min(startIdx + batchSize, totalFiles);
-    const batchFiles = filesToAudit.slice(startIdx, endIdx);
+    // SCAN MODE: Scan specific files
+    const batchFiles = files;
 
     const results = [];
     const hexPattern = /#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g;
@@ -101,16 +102,7 @@ Deno.serve(async (req) => {
 
     return Response.json({ 
       success: true,
-      results,
-      batch,
-      totalFiles,
-      processedFiles: endIdx,
-      hasMore: endIdx < totalFiles,
-      summary: {
-        total_files: results.length,
-        files_with_hex: results.filter(r => r.hex_count > 0).length,
-        total_hex_references: results.reduce((sum, r) => sum + r.hex_count, 0)
-      }
+      results
     });
 
   } catch (error) {
