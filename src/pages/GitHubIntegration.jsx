@@ -24,8 +24,15 @@ export default function GitHubIntegration() {
       const result = await base44.functions.invoke('githubApi', {
         action: 'get_repo'
       });
+      console.log("Full result:", result);
+      console.log("result.data:", result.data);
+      console.log("result.data.repo:", result.data?.repo);
+      
       if (result?.data?.repo) {
         setRepo(result.data.repo);
+      } else {
+        console.error("No repo data found in result");
+        setError("No repository data received");
       }
     } catch (e) {
       console.error("GitHub API error:", e);
