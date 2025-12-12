@@ -24,10 +24,16 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
   const [brandColors, setBrandColors] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(null);
-  // Brand color generator state
-  const [primaryColor, setPrimaryColor] = useState("#4a5d4e");
-  const [secondaryColor, setSecondaryColor] = useState("#d4a574");
-  const [accentColor, setAccentColor] = useState("#d9b4a7");
+  // Brand color generator state - initialize from actual theme
+  const [primaryColor, setPrimaryColor] = useState(() => {
+    return getComputedStyle(document.documentElement).getPropertyValue('--primary-500').trim() || "#4a5d4e";
+  });
+  const [secondaryColor, setSecondaryColor] = useState(() => {
+    return getComputedStyle(document.documentElement).getPropertyValue('--secondary-400').trim() || "#d4a574";
+  });
+  const [accentColor, setAccentColor] = useState(() => {
+    return getComputedStyle(document.documentElement).getPropertyValue('--accent-300').trim() || "#d9b4a7";
+  });
   const [customColors, setCustomColors] = useState([]);
   const [customColorName, setCustomColorName] = useState("");
   const [customColorHex, setCustomColorHex] = useState("#000000");
