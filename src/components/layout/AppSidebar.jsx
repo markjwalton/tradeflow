@@ -12,7 +12,15 @@ export function AppSidebar({ navItems = [] }) {
   const { mode, isHidden } = useAppSidebar();
   const location = useLocation();
   const [expandedFolders, setExpandedFolders] = useState(new Set());
-  const { prefetchProjects, prefetchTasks, prefetchCustomers, prefetchTeam, prefetchMindMaps } = usePrefetchRoute();
+  const { 
+    prefetchProjects, 
+    prefetchTasks, 
+    prefetchCustomers, 
+    prefetchTeam, 
+    prefetchMindMaps,
+    prefetchLibrary,
+    prefetchRoadmap 
+  } = usePrefetchRoute();
   
   const isIconsOnly = mode === "icons";
 
@@ -23,12 +31,19 @@ export function AppSidebar({ navItems = [] }) {
     'Customers': prefetchCustomers,
     'Team': prefetchTeam,
     'MindMapEditor': prefetchMindMaps,
+    'EntityLibrary': () => prefetchLibrary('EntityLibrary'),
+    'PageLibrary': () => prefetchLibrary('PageLibrary'),
+    'FeatureLibrary': () => prefetchLibrary('FeatureLibrary'),
+    'TemplateLibrary': () => prefetchLibrary('TemplateLibrary'),
+    'BusinessTemplates': () => prefetchLibrary('BusinessTemplates'),
+    'RoadmapManager': prefetchRoadmap,
   };
 
   const handleMouseEnter = (pageName) => {
     const prefetchFn = prefetchMap[pageName];
     if (prefetchFn) {
-      prefetchFn();
+      // Debounce prefetching to avoid excessive calls
+      setTimeout(() => prefetchFn(), 100);
     }
   };
 
