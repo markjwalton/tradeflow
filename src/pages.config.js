@@ -111,6 +111,7 @@ import GitHubIntegration from './pages/GitHubIntegration';
 import ColorMigrationDashboard from './pages/ColorMigrationDashboard';
 import DevTools from './pages/DevTools';
 import UXShowcase from './pages/UXShowcase';
+import SystemHealth from './pages/SystemHealth';
 import __Layout from './Layout.jsx';
 
 
@@ -228,6 +229,7 @@ export const PAGES = {
     "ColorMigrationDashboard": ColorMigrationDashboard,
     "DevTools": DevTools,
     "UXShowcase": UXShowcase,
+    "SystemHealth": SystemHealth,
 }
 
 export const pagesConfig = {
