@@ -198,41 +198,15 @@ export default function ColorMigrationDashboard() {
   const handleScanFiles = async () => {
     setScanning(true);
     try {
-      const counts = {};
-      const details = [];
-      
-      for (const color of colors) {
-        counts[color.literal] = 0;
-      }
+      const response = await base44.functions.invoke('githubApi', {
+        action: 'scan_colors',
+        colors: colors.map(c => c.literal)
+      });
 
-      for (const filePath of affectedFiles) {
-        try {
-          const response = await base44.functions.invoke('readFileContent', {
-            file_path: filePath
-          });
-          
-          if (response.data?.content) {
-            const content = response.data.content;
-            let fileTotal = 0;
-            
-            for (const color of colors) {
-              const regex = new RegExp(color.literal.replace('#', '#?'), 'gi');
-              const matches = content.match(regex) || [];
-              counts[color.literal] += matches.length;
-              fileTotal += matches.length;
-            }
-            
-            if (fileTotal > 0) {
-              details.push({ path: filePath, changes: fileTotal });
-            }
-          }
-        } catch (error) {
-          console.error(`Error reading ${filePath}:`, error);
-        }
+      if (response.data?.counts) {
+        setActualCounts(response.data.counts);
+        setFileDetails(response.data.fileDetails || []);
       }
-      
-      setActualCounts(counts);
-      setFileDetails(details.filter(f => f.changes > 0));
     } catch (error) {
       console.error('Scan error:', error);
       alert('Failed to scan files: ' + error.message);
