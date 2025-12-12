@@ -37,9 +37,33 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
       const secondary = getComputedStyle(document.documentElement).getPropertyValue('--secondary-400').trim();
       const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent-300').trim();
       
-      if (primary) setPrimaryColor(primary);
-      if (secondary) setSecondaryColor(secondary);
-      if (accent) setAccentColor(accent);
+      // Convert CSS variable values to the selected format
+      if (primary) {
+        const parsed = parseColorInput(primary);
+        if (parsed) {
+          setPrimaryColor(formatColorForDisplay(parsed, primaryFormat));
+        } else if (primary.startsWith('#')) {
+          setPrimaryColor(primary);
+        }
+      }
+      
+      if (secondary) {
+        const parsed = parseColorInput(secondary);
+        if (parsed) {
+          setSecondaryColor(formatColorForDisplay(parsed, secondaryFormat));
+        } else if (secondary.startsWith('#')) {
+          setSecondaryColor(secondary);
+        }
+      }
+      
+      if (accent) {
+        const parsed = parseColorInput(accent);
+        if (parsed) {
+          setAccentColor(formatColorForDisplay(parsed, accentFormat));
+        } else if (accent.startsWith('#')) {
+          setAccentColor(accent);
+        }
+      }
     };
 
     // Load immediately
@@ -609,7 +633,10 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
               <div className="flex gap-2">
                 <Input
                   type="color"
-                  value={primaryColor.startsWith('#') ? primaryColor : oklchToRgb(...(parseColorInput(primaryColor) || { l: 0.5, c: 0.1, h: 150 }))}
+                  value={(() => {
+                    const parsed = parseColorInput(primaryColor);
+                    return parsed ? oklchToRgb(parsed.l, parsed.c, parsed.h) : (primaryColor.startsWith('#') ? primaryColor : '#4a5d4e');
+                  })()}
                   onChange={(e) => {
                     const oklch = hexToOklch(e.target.value);
                     setPrimaryColor(formatColorForDisplay(oklch, primaryFormat));
@@ -635,7 +662,10 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
               <div className="flex gap-2">
                 <Input
                   type="color"
-                  value={secondaryColor.startsWith('#') ? secondaryColor : oklchToRgb(...(parseColorInput(secondaryColor) || { l: 0.7, c: 0.09, h: 70 }))}
+                  value={(() => {
+                    const parsed = parseColorInput(secondaryColor);
+                    return parsed ? oklchToRgb(parsed.l, parsed.c, parsed.h) : (secondaryColor.startsWith('#') ? secondaryColor : '#d4a574');
+                  })()}
                   onChange={(e) => {
                     const oklch = hexToOklch(e.target.value);
                     setSecondaryColor(formatColorForDisplay(oklch, secondaryFormat));
@@ -661,7 +691,10 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
               <div className="flex gap-2">
                 <Input
                   type="color"
-                  value={accentColor.startsWith('#') ? accentColor : oklchToRgb(...(parseColorInput(accentColor) || { l: 0.78, c: 0.05, h: 35 }))}
+                  value={(() => {
+                    const parsed = parseColorInput(accentColor);
+                    return parsed ? oklchToRgb(parsed.l, parsed.c, parsed.h) : (accentColor.startsWith('#') ? accentColor : '#d9b4a7');
+                  })()}
                   onChange={(e) => {
                     const oklch = hexToOklch(e.target.value);
                     setAccentColor(formatColorForDisplay(oklch, accentFormat));
