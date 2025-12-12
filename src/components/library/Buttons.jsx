@@ -213,7 +213,7 @@ export function IconButton({
       className={cn(
         "inline-flex items-center justify-center",
         "rounded-lg transition-all duration-200",
-        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4A5D4E]/50",
+        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50",
         "disabled:opacity-50 disabled:cursor-not-allowed",
         sizeClasses[size],
         variants[variant],
@@ -346,7 +346,7 @@ export function FloatingButton({
         "hover:bg-primary-dark active:bg-primary-darker",
         "shadow-lg hover:shadow-xl",
         "transition-all duration-200",
-        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4A5D4E]/50",
+        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50",
         "disabled:opacity-50 disabled:cursor-not-allowed",
         positions[position],
         className
