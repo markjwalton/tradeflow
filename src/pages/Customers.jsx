@@ -35,6 +35,7 @@ const statusColors = {
 export default function Customers() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 300);
   const [filterStatus, setFilterStatus] = useState("all");
   const [showForm, setShowForm] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState(null);
@@ -137,9 +138,9 @@ export default function Customers() {
 
   const filteredCustomers = customers.filter((c) => {
     const matchesSearch = 
-      c.name?.toLowerCase().includes(search.toLowerCase()) ||
-      c.company?.toLowerCase().includes(search.toLowerCase()) ||
-      c.email?.toLowerCase().includes(search.toLowerCase());
+      c.name?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+      c.company?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+      c.email?.toLowerCase().includes(debouncedSearch.toLowerCase());
     const matchesStatus = filterStatus === "all" || c.status === filterStatus;
     return matchesSearch && matchesStatus;
   });

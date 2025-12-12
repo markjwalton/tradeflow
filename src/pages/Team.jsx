@@ -35,6 +35,7 @@ const availabilityColors = {
 export default function Team() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 300);
   const [filterAvailability, setFilterAvailability] = useState("all");
   const [showForm, setShowForm] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
@@ -134,8 +135,8 @@ export default function Team() {
 
   const filteredMembers = teamMembers.filter((m) => {
     const matchesSearch = 
-      m.name?.toLowerCase().includes(search.toLowerCase()) ||
-      m.role?.toLowerCase().includes(search.toLowerCase());
+      m.name?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+      m.role?.toLowerCase().includes(debouncedSearch.toLowerCase());
     const matchesAvailability = filterAvailability === "all" || m.availability === filterAvailability;
     return matchesSearch && matchesAvailability;
   });

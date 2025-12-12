@@ -46,6 +46,7 @@ const priorityColors = {
 export default function Projects() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 300);
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterCustomer, setFilterCustomer] = useState("all");
   const [showForm, setShowForm] = useState(false);
@@ -140,7 +141,7 @@ export default function Projects() {
   };
 
   const filteredProjects = projects.filter((p) => {
-    const matchesSearch = p.name?.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch = p.name?.toLowerCase().includes(debouncedSearch.toLowerCase());
     const matchesStatus = filterStatus === "all" || p.status === filterStatus;
     const matchesCustomer = filterCustomer === "all" || p.customer_id === filterCustomer;
     return matchesSearch && matchesStatus && matchesCustomer;
