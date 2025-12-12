@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { QueryErrorBoundary } from "@/components/common/QueryErrorBoundary";
-import { QueryErrorState } from "@/components/common/QueryErrorState";
-import { SkeletonCardGrid } from "@/components/common/SkeletonCard";
+import { PageLoader, CardGridLoader, ButtonLoader } from "@/components/common/LoadingStates";
+import { ErrorRecovery } from "@/components/common/ErrorRecovery";
+import { useMutationError } from "@/components/common/MutationErrorToast";
 import { Pagination } from "@/components/ui/Pagination";
 import { useDebounce } from "@/components/common/useDebounce";
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Search, Pencil, Trash2, Loader2, Eye } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Eye } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -65,7 +65,7 @@ export default function Projects() {
     spend: 0,
   });
 
-  const { data: projects = [], isLoading } = useQuery({
+  const { data: projects = [], isLoading, error, refetch } = useQuery({
     queryKey: ["projects"],
     queryFn: () => base44.entities.Project.list(),
   });
@@ -81,7 +81,7 @@ export default function Projects() {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       setShowForm(false);
       resetForm();
-      toast.success("Project created");
+      toast.success("Project created successfully");
     },
   });
 
@@ -92,7 +92,7 @@ export default function Projects() {
       setShowForm(false);
       setEditingProject(null);
       resetForm();
-      toast.success("Project updated");
+      toast.success("Project updated successfully");
     },
   });
 
@@ -100,9 +100,13 @@ export default function Projects() {
     mutationFn: (id) => base44.entities.Project.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
-      toast.success("Project deleted");
+      toast.success("Project deleted successfully");
     },
   });
+
+  useMutationError(createMutation, { customMessage: "Failed to create project" });
+  useMutationError(updateMutation, { customMessage: "Failed to update project" });
+  useMutationError(deleteMutation, { customMessage: "Failed to delete project" });
 
   const resetForm = () => {
     setFormData({
@@ -161,11 +165,11 @@ export default function Projects() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64 bg-background">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
+    return <PageLoader message="Loading projects..." />;
+  }
+
+  if (error) {
+    return <ErrorRecovery error={error} onRetry={refetch} />;
   }
 
   return (
@@ -346,7 +350,7 @@ export default function Projects() {
               <Input value={formData.project_type} onChange={(e) => setFormData({ ...formData, project_type: e.target.value })} placeholder="e.g., Kitchen, Bathroom, Extension" />
             </div>
             <Button className="w-full" onClick={handleSubmit} disabled={createMutation.isPending || updateMutation.isPending}>
-              {(createMutation.isPending || updateMutation.isPending) && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              {(createMutation.isPending || updateMutation.isPending) && <ButtonLoader />}
               {editingProject ? "Update Project" : "Create Project"}
             </Button>
           </div>
