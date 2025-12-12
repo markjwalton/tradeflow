@@ -156,21 +156,19 @@ export function PageSettingsPanel({ currentPageName }) {
 
   const handleSave = async () => {
     try {
-      // If no currentPageData, fetch or create it
-      let pageData = currentPageData;
-      if (!pageData) {
-        const pages = await base44.entities.UIPage.filter({ slug: currentPageName });
-        if (pages.length > 0) {
-          pageData = pages[0];
-        } else {
-          // Create new page record
-          pageData = await base44.entities.UIPage.create({
-            slug: currentPageName,
-            page_name: currentPageName,
-            category: "custom",
-          });
-          toast.success("Created new page record");
-        }
+      // Always fetch current page data
+      const pages = await base44.entities.UIPage.filter({ slug: currentPageName });
+      let pageData;
+      
+      if (pages.length > 0) {
+        pageData = pages[0];
+      } else {
+        // Create new page record
+        pageData = await base44.entities.UIPage.create({
+          slug: currentPageName,
+          page_name: currentPageName,
+          category: "custom",
+        });
       }
 
       const updateData = {
@@ -314,20 +312,6 @@ export function PageSettingsPanel({ currentPageName }) {
                               </option>
                             ))}
                           </select>
-                        )}
-                        {prop.type === "button" && (
-                          <Button
-                            onClick={prop.onClick}
-                            disabled={prop.disabled}
-                            variant={prop.variant || "default"}
-                            size="sm"
-                            className="w-full"
-                          >
-                            {prop.buttonLabel || "Click"}
-                          </Button>
-                        )}
-                        {prop.type === "divider" && (
-                          <div className="border-t my-2" />
                         )}
                       </div>
                     ))}
