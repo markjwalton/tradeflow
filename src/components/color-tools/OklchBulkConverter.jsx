@@ -117,7 +117,7 @@ export function OklchBulkConverter() {
               <Textarea 
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Paste your CSS, config, or any text with color values...&#10;&#10;Example:&#10;--primary: #4a5d4e;&#10;--secondary: rgb(212, 165, 116);&#10;background-color: #f5f3ef;"
+                placeholder="Paste your CSS, config, or any text with color values...&#10;&#10;Example:&#10;--primary: var(--color-primary);&#10;--secondary: rgb(212, 165, 116);&#10;background-color: var(--color-background);"
                 className="font-mono text-sm min-h-[300px]"
               />
             </div>
@@ -164,7 +164,7 @@ export function OklchBulkConverter() {
           <div className="grid md:grid-cols-3 gap-4 text-sm">
             <div>
               <div className="font-medium mb-2">Hex Colors</div>
-              <code className="text-xs bg-muted p-1 rounded">#4a5d4e</code><br/>
+              <code className="text-xs bg-muted p-1 rounded">var(--color-primary)</code><br/>
               <code className="text-xs bg-muted p-1 rounded">#fff</code>
             </div>
             <div>
@@ -174,7 +174,7 @@ export function OklchBulkConverter() {
             </div>
             <div>
               <div className="font-medium mb-2">In Context</div>
-              <code className="text-xs bg-muted p-1 rounded">--color: #4a5d4e;</code><br/>
+              <code className="text-xs bg-muted p-1 rounded">--color: var(--color-primary);</code><br/>
               <code className="text-xs bg-muted p-1 rounded">background: rgb(255,255,255);</code>
             </div>
           </div>
