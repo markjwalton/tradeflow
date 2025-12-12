@@ -326,7 +326,7 @@ export default function Team() {
               )}
             </div>
             <Button className="w-full" onClick={handleSubmit} disabled={!formData.name || createMutation.isPending || updateMutation.isPending}>
-              {(createMutation.isPending || updateMutation.isPending) && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              {(createMutation.isPending || updateMutation.isPending) && <ButtonLoader />}
               {editingMember ? "Update Member" : "Add Member"}
             </Button>
           </div>
