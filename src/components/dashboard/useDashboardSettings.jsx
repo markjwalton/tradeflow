@@ -16,7 +16,7 @@ export default function useDashboardSettings(widgets = []) {
 
   // Initialize visible widgets when data loads - include any new widgets
   useEffect(() => {
-    if (widgets.length === 0) return;
+    if (widgets.length === 0 || visibleWidgetIds !== null) return;
     
     const savedIds = localStorage.getItem(`${SETTINGS_KEY}_visible`);
     if (savedIds) {
@@ -25,13 +25,13 @@ export default function useDashboardSettings(widgets = []) {
       const newWidgetIds = allWidgetIds.filter(id => !parsed.includes(id));
       if (newWidgetIds.length > 0) {
         setVisibleWidgetIds([...parsed, ...newWidgetIds]);
-      } else if (visibleWidgetIds === null) {
+      } else {
         setVisibleWidgetIds(parsed);
       }
     } else {
       setVisibleWidgetIds(widgets.map(w => w.id));
     }
-  }, [widgets]);
+  }, [widgets, visibleWidgetIds]);
 
   // Initialize order
   useEffect(() => {
