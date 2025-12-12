@@ -19,6 +19,71 @@ export default function ThemePreview() {
 
       <Card>
         <CardHeader>
+          <CardTitle>Gradients</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <div className="h-24 rounded-lg bg-gradient-primary" />
+              <p className="text-xs text-center text-muted-foreground">Primary Gradient</p>
+            </div>
+            <div className="space-y-2">
+              <div className="h-24 rounded-lg bg-gradient-secondary" />
+              <p className="text-xs text-center text-muted-foreground">Secondary Gradient</p>
+            </div>
+            <div className="space-y-2">
+              <div className="h-24 rounded-lg bg-gradient-accent" />
+              <p className="text-xs text-center text-muted-foreground">Accent Gradient</p>
+            </div>
+            <div className="space-y-2">
+              <div className="h-24 rounded-lg bg-gradient-sunset" />
+              <p className="text-xs text-center text-muted-foreground">Sunset</p>
+            </div>
+            <div className="space-y-2">
+              <div className="h-24 rounded-lg bg-gradient-ocean" />
+              <p className="text-xs text-center text-muted-foreground">Ocean</p>
+            </div>
+            <div className="space-y-2">
+              <div className="h-24 rounded-lg bg-gradient-forest" />
+              <p className="text-xs text-center text-muted-foreground">Forest</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Alpha Transparency</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <div className="h-24 rounded-lg relative overflow-hidden border">
+                <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,#ccc_0,#ccc_10px,#fff_10px,#fff_20px)]" />
+                <div className="absolute inset-0 bg-primary-alpha" />
+              </div>
+              <p className="text-xs text-center text-muted-foreground">Primary Alpha</p>
+            </div>
+            <div className="space-y-2">
+              <div className="h-24 rounded-lg relative overflow-hidden border">
+                <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,#ccc_0,#ccc_10px,#fff_10px,#fff_20px)]" />
+                <div className="absolute inset-0 bg-secondary-alpha" />
+              </div>
+              <p className="text-xs text-center text-muted-foreground">Secondary Alpha</p>
+            </div>
+            <div className="space-y-2">
+              <div className="h-24 rounded-lg relative overflow-hidden border">
+                <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,#ccc_0,#ccc_10px,#fff_10px,#fff_20px)]" />
+                <div className="absolute inset-0 bg-accent-alpha" />
+              </div>
+              <p className="text-xs text-center text-muted-foreground">Accent Alpha</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
           <CardTitle>Typography</CardTitle>
           <CardDescription>Heading and body font styles</CardDescription>
         </CardHeader>
