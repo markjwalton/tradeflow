@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { QueryErrorBoundary } from "@/components/common/QueryErrorBoundary";
 import { QueryErrorState } from "@/components/common/QueryErrorState";
 import { SkeletonCardGrid } from "@/components/common/SkeletonCard";
+import { Pagination } from "@/components/ui/Pagination";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
