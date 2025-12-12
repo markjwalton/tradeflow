@@ -115,9 +115,43 @@ export default function GitHubIntegration() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground">
-              Repository: <span className="font-mono text-foreground">base44dev/tradeai360</span>
-            </p>
+            {repo ? (
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <img src={repo.owner.avatar_url} alt={repo.owner.login} className="w-12 h-12 rounded-full" />
+                  <div className="flex-1">
+                    <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="font-mono text-lg font-semibold text-primary hover:underline">
+                      {repo.full_name}
+                    </a>
+                    {repo.description && (
+                      <p className="text-muted-foreground mt-1">{repo.description}</p>
+                    )}
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-4 text-sm">
+                  <div className="flex items-center gap-1">
+                    <Badge variant="secondary">⭐ {repo.stargazers_count}</Badge>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Badge variant="secondary">🍴 {repo.forks_count}</Badge>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Badge variant="secondary">👁️ {repo.watchers_count}</Badge>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Badge variant="secondary">🐛 {repo.open_issues_count} issues</Badge>
+                  </div>
+                  {repo.language && (
+                    <Badge variant="outline">{repo.language}</Badge>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <p className="text-muted-foreground">Loading repository...</p>
+              </div>
+            )}
           </CardContent>
         </Card>
 
