@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -182,4 +182,4 @@ const DashboardSettings = ({
   );
 };
 
-export default memo(DashboardSettings);
+export default React.memo(DashboardSettings);

@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import {
 import TestDataCoverageWidget from "./TestDataCoverageWidget";
 
 // Stat Card Widget
-const StatCard = memo(({ config }) => {
+const StatCard = React.memo(({ config }) => {
   const { title, value, change, changeType, icon, color = "primary" } = config || {};
   const TrendIcon = changeType === "up" ? TrendingUp : changeType === "down" ? TrendingDown : Minus;
   const trendColor = changeType === "up" ? "text-[var(--color-success)]" : changeType === "down" ? "text-[var(--color-destructive-600)]" : "text-[var(--color-charcoal-500)]";
@@ -46,7 +46,7 @@ const StatCard = memo(({ config }) => {
 });
 
 // Info Card Widget
-const InfoCard = memo(({ config }) => {
+const InfoCard = React.memo(({ config }) => {
   const { title, content, variant = "default" } = config || {};
   
   const variantClasses = {
@@ -73,7 +73,7 @@ const InfoCard = memo(({ config }) => {
 });
 
 // Quick Action Widget
-const QuickActionCard = memo(({ config }) => {
+const QuickActionCard = React.memo(({ config }) => {
   const { title, description, actions = [] } = config || {};
 
   return (
@@ -102,7 +102,7 @@ const QuickActionCard = memo(({ config }) => {
 });
 
 // AI Insight Widget
-const AIInsightCard = memo(({ config }) => {
+const AIInsightCard = React.memo(({ config }) => {
   const { title, insight, confidence, source, generatedAt } = config || {};
 
   return (
@@ -130,7 +130,7 @@ const AIInsightCard = memo(({ config }) => {
 });
 
 // Chart Placeholder Widget
-const ChartCard = memo(({ config }) => {
+const ChartCard = React.memo(({ config }) => {
   const { title, chartType = "bar", data } = config || {};
   const ChartIcon = chartType === "pie" ? PieChart : chartType === "line" ? LineChart : BarChart3;
 
@@ -152,7 +152,7 @@ const ChartCard = memo(({ config }) => {
 });
 
 // Table Widget
-const TableCard = memo(({ config }) => {
+const TableCard = React.memo(({ config }) => {
   const { title, columns = [], rows = [] } = config || {};
 
   return (
@@ -222,7 +222,7 @@ const WidgetRenderer = ({ widget, customConfig }) => {
   }
 };
 
-export default memo(WidgetRenderer, (prevProps, nextProps) => {
+export default React.memo(WidgetRenderer, (prevProps, nextProps) => {
   return (
     prevProps.widget.id === nextProps.widget.id &&
     JSON.stringify(prevProps.widget.config) === JSON.stringify(nextProps.widget.config) &&
