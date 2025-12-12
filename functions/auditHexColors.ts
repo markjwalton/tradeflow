@@ -9,36 +9,52 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // List of files to audit
-    const filesToAudit = [
-      'pages/Home.js',
-      'pages/Projects.js',
-      'pages/Tasks.js',
-      'pages/ProjectDetail.js',
-      'pages/ThemeBuilder.js',
-      'pages/FontManager.js',
-      'pages/ThemePreview.js',
-      'pages/ColorLibrary.js',
-      'pages/DesignTokenEditor.js',
-      'components/color-tools/OklchPaletteTool.js',
-      'components/color-tools/OklchGradientTool.js',
-      'components/color-tools/OklchColorTool.js',
-      'components/color-tools/ColorLibrary.js',
-      'components/ui/card.jsx',
-      'components/layout/AppShell.js',
-      'components/layout/AppSidebar.js',
-      'components/layout/AppHeader.js',
-      'components/page-builder/TopEditorPanel.js',
-      'components/page-builder/PageSettingsPanel.js',
-      'components/design-assistant/PageUIPanel.js',
-      'Layout.js',
-      'globals.css'
-    ];
+    const { batch = 0, batchSize = 20 } = await req.json();
+
+    // Get all pages and components
+    const allFiles = [];
+    
+    // Get all pages
+    try {
+      const pagesResponse = await base44.asServiceRole.functions.invoke('readFileContent', { 
+        file_path: 'pages' 
+      });
+      if (pagesResponse.data?.files) {
+        allFiles.push(...pagesResponse.data.files.map(f => `pages/${f}`));
+      }
+    } catch (e) {
+      console.log('Could not list pages:', e.message);
+    }
+
+    // Get all components
+    try {
+      const componentsResponse = await base44.asServiceRole.functions.invoke('readFileContent', { 
+        file_path: 'components' 
+      });
+      if (componentsResponse.data?.files) {
+        allFiles.push(...componentsResponse.data.files.map(f => `components/${f}`));
+      }
+    } catch (e) {
+      console.log('Could not list components:', e.message);
+    }
+
+    // Add critical files
+    allFiles.push('Layout.js', 'globals.css');
+
+    // Filter to only JS/JSX/CSS files
+    const filesToAudit = allFiles.filter(f => 
+      f.endsWith('.js') || f.endsWith('.jsx') || f.endsWith('.css')
+    );
+
+    const totalFiles = filesToAudit.length;
+    const startIdx = batch * batchSize;
+    const endIdx = Math.min(startIdx + batchSize, totalFiles);
+    const batchFiles = filesToAudit.slice(startIdx, endIdx);
 
     const results = [];
     const hexPattern = /#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g;
 
-    for (const filePath of filesToAudit) {
+    for (const filePath of batchFiles) {
       try {
         const response = await base44.asServiceRole.functions.invoke('readFileContent', { 
           file_path: filePath 
@@ -86,6 +102,10 @@ Deno.serve(async (req) => {
     return Response.json({ 
       success: true,
       results,
+      batch,
+      totalFiles,
+      processedFiles: endIdx,
+      hasMore: endIdx < totalFiles,
       summary: {
         total_files: results.length,
         files_with_hex: results.filter(r => r.hex_count > 0).length,

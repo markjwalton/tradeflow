@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { AlertCircle, CheckCircle2, Search, Code } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { AlertCircle, CheckCircle2, Search, Code, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
 export default function ColorAudit() {
@@ -11,16 +12,42 @@ export default function ColorAudit() {
   const [scanning, setScanning] = useState(false);
   const [currentBatch, setCurrentBatch] = useState(0);
   const [searchFilter, setSearchFilter] = useState("");
+  const [progress, setProgress] = useState(0);
+  const [totalFiles, setTotalFiles] = useState(0);
+  const [processedFiles, setProcessedFiles] = useState(0);
   const batchSize = 10;
 
   const scanFiles = async () => {
     setScanning(true);
+    setAuditResults([]);
+    setProgress(0);
+    setTotalFiles(0);
+    setProcessedFiles(0);
+    
+    let batch = 0;
+    let hasMore = true;
+    let allResults = [];
+    
     try {
-      const response = await base44.functions.invoke('auditHexColors', {});
-      setAuditResults(response.data.results || []);
+      while (hasMore) {
+        const response = await base44.functions.invoke('auditHexColors', { batch, batchSize: 20 });
+        
+        if (response.data.results) {
+          allResults = [...allResults, ...response.data.results];
+          setAuditResults(allResults);
+        }
+        
+        setTotalFiles(response.data.totalFiles || 0);
+        setProcessedFiles(response.data.processedFiles || 0);
+        setProgress(response.data.totalFiles > 0 ? (response.data.processedFiles / response.data.totalFiles) * 100 : 0);
+        
+        hasMore = response.data.hasMore;
+        batch++;
+      }
     } catch (e) {
       console.error("Scan failed:", e);
     }
+    
     setScanning(false);
   };
 
@@ -48,10 +75,26 @@ export default function ColorAudit() {
       </div>
 
       <Card>
-        <CardContent className="pt-6">
+        <CardContent className="pt-6 space-y-4">
           <Button onClick={scanFiles} disabled={scanning} className="w-full">
-            {scanning ? "Scanning..." : "Start Audit Scan"}
+            {scanning ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Scanning {processedFiles} / {totalFiles} files...
+              </>
+            ) : (
+              "Start Audit Scan"
+            )}
           </Button>
+          
+          {scanning && (
+            <div className="space-y-2">
+              <Progress value={progress} className="h-2" />
+              <p className="text-xs text-center text-muted-foreground">
+                {Math.round(progress)}% complete
+              </p>
+            </div>
+          )}
         </CardContent>
       </Card>
 
