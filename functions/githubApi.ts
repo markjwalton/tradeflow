@@ -216,78 +216,87 @@ Deno.serve(async (req) => {
 
       case 'scan_colors':
         // Scan repository for color occurrences
-        if (!colors || !Array.isArray(colors)) {
-          return Response.json({ error: 'colors array required' }, { status: 400 });
-        }
-        
-        const counts = {};
-        const fileDetails = [];
-        
-        // Initialize counts
-        for (const color of colors) {
-          counts[color] = 0;
-        }
-        
-        // Get repository tree
-        const treeResponse = await fetch(
-          `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/trees/main?recursive=1`,
-          { headers }
-        );
-        
-        if (!treeResponse.ok) {
-          return Response.json({ 
-            error: `Failed to fetch tree: ${treeResponse.status}` 
-          }, { status: 500 });
-        }
-        
-        const treeData = await treeResponse.json();
-        
-        if (!treeData.tree) {
-          return Response.json({ 
-            error: 'Invalid tree response' 
-          }, { status: 500 });
-        }
-        
-        // Filter to src files only (js, jsx, css)
-        const srcFiles = treeData.tree.filter(item => 
-          item.type === 'blob' && 
-          item.path.startsWith('src/') &&
-          /\.(js|jsx|css)$/.test(item.path)
-        );
-        
-        // Scan each file
-        for (const file of srcFiles) {
-          try {
-            const fileResponse = await fetch(
-              `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${file.path}`,
-              { headers }
-            );
-            
-            if (!fileResponse.ok) continue;
-            
-            const fileData = await fileResponse.json();
-            const content = atob(fileData.content);
-            let fileTotal = 0;
-            
-            for (const color of colors) {
-              const regex = new RegExp(color.replace('#', '#?'), 'gi');
-              const matches = content.match(regex) || [];
-              counts[color] += matches.length;
-              fileTotal += matches.length;
-            }
-            
-            if (fileTotal > 0) {
-              fileDetails.push({ 
-                path: file.path.replace('src/', ''), 
-                changes: fileTotal 
-              });
-            }
-          } catch (error) {
-            console.error(`Error scanning ${file.path}:`, error);
+        try {
+          if (!colors || !Array.isArray(colors)) {
+            return Response.json({ error: 'colors array required' }, { status: 400 });
           }
+          
+          const counts = {};
+          const fileDetails = [];
+          
+          // Initialize counts
+          for (const color of colors) {
+            counts[color] = 0;
+          }
+          
+          // Get repository tree
+          const treeResponse = await fetch(
+            `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/trees/main?recursive=1`,
+            { headers }
+          );
+          
+          if (!treeResponse.ok) {
+            const errorText = await treeResponse.text();
+            return Response.json({ 
+              error: `Failed to fetch tree: ${treeResponse.status} - ${errorText}` 
+            }, { status: 500 });
+          }
+          
+          const treeData = await treeResponse.json();
+          
+          if (!treeData.tree) {
+            return Response.json({ 
+              error: 'Invalid tree response',
+              data: treeData 
+            }, { status: 500 });
+          }
+          
+          // Filter to src files only (js, jsx, css)
+          const srcFiles = treeData.tree.filter(item => 
+            item.type === 'blob' && 
+            item.path.startsWith('src/') &&
+            /\.(js|jsx|css)$/.test(item.path)
+          );
+          
+          // Scan first 50 files to avoid timeout
+          for (const file of srcFiles.slice(0, 50)) {
+            try {
+              const fileResponse = await fetch(
+                `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${file.path}`,
+                { headers }
+              );
+              
+              if (!fileResponse.ok) continue;
+              
+              const fileData = await fileResponse.json();
+              const content = atob(fileData.content);
+              let fileTotal = 0;
+              
+              for (const color of colors) {
+                const regex = new RegExp(color.replace('#', '#?').replace(/[()]/g, '\\$&'), 'gi');
+                const matches = content.match(regex) || [];
+                counts[color] += matches.length;
+                fileTotal += matches.length;
+              }
+              
+              if (fileTotal > 0) {
+                fileDetails.push({ 
+                  path: file.path.replace('src/', ''), 
+                  changes: fileTotal 
+                });
+              }
+            } catch (error) {
+              console.error(`Error scanning ${file.path}:`, error);
+            }
+          }
+          
+          return Response.json({ counts, fileDetails });
+        } catch (error) {
+          return Response.json({ 
+            error: `Scan failed: ${error.message}`,
+            stack: error.stack 
+          }, { status: 500 });
         }
-        
-        return Response.json({ counts, fileDetails });
 
       default:
         return Response.json({ error: 'Invalid action' }, { status: 400 });
