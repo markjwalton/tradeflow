@@ -31,9 +31,9 @@ export function PrimaryButton({
       className={cn(
         buttonBase,
         sizes[size],
-        "bg-[#4A5D4E] text-white",
-        "hover:bg-[#3a4a3e] active:bg-[#334137]",
-        "focus:ring-[#4A5D4E]/50",
+        "bg-primary text-white",
+        "hover:bg-primary-dark active:bg-primary-darker",
+        "focus:ring-primary/50",
         "shadow-sm hover:shadow-md",
         className
       )}
@@ -58,9 +58,9 @@ export function SecondaryButton({
       className={cn(
         buttonBase,
         sizes[size],
-        "bg-[#D4A574] text-white",
-        "hover:bg-[#c08d54] active:bg-[#a87840]",
-        "focus:ring-[#D4A574]/50",
+        "bg-secondary text-white",
+        "hover:bg-secondary-dark active:bg-secondary-darker",
+        "focus:ring-secondary/50",
         "shadow-sm hover:shadow-md",
         className
       )}
@@ -82,9 +82,9 @@ export function OutlineButton({
   ...props 
 }) {
   const variants = {
-    primary: "border-[#4A5D4E] text-[#4A5D4E] hover:bg-[#4A5D4E]/10 focus:ring-[#4A5D4E]/50",
-    secondary: "border-[#D4A574] text-[#D4A574] hover:bg-[#D4A574]/10 focus:ring-[#D4A574]/50",
-    charcoal: "border-[#3b3b3b] text-[#3b3b3b] hover:bg-[#3b3b3b]/10 focus:ring-[#3b3b3b]/50",
+    primary: "border-primary text-primary hover:bg-primary/10 focus:ring-primary/50",
+    secondary: "border-secondary text-secondary hover:bg-secondary/10 focus:ring-secondary/50",
+    charcoal: "border-charcoal text-charcoal hover:bg-charcoal/10 focus:ring-charcoal/50",
   };
 
   return (
@@ -117,9 +117,9 @@ export function DestructiveButton({
       className={cn(
         buttonBase,
         sizes[size],
-        "bg-[#8b5b5b] text-white",
-        "hover:bg-[#7a4f4f] active:bg-[#6e4747]",
-        "focus:ring-[#8b5b5b]/50",
+        "bg-destructive text-white",
+        "hover:bg-destructive-dark active:bg-destructive-darker",
+        "focus:ring-destructive/50",
         className
       )}
       disabled={disabled}
@@ -143,9 +143,9 @@ export function GhostButton({
       className={cn(
         buttonBase,
         sizes[size],
-        "bg-transparent text-[#3b3b3b]",
-        "hover:bg-[#eceae5] active:bg-[#e0ddd7]",
-        "focus:ring-[#3b3b3b]/30",
+        "bg-transparent text-charcoal",
+        "hover:bg-background-muted active:bg-background-subtle",
+        "focus:ring-charcoal/30",
         className
       )}
       disabled={disabled}
@@ -168,7 +168,7 @@ export function LinkButton({
     <button
       className={cn(
         "inline-flex items-center gap-1",
-        "text-[#4A5D4E] hover:text-[#3a4a3e]",
+        "text-primary hover:text-primary-dark",
         "underline underline-offset-2",
         "transition-colors duration-200",
         "disabled:opacity-50 disabled:cursor-not-allowed",
@@ -202,10 +202,10 @@ export function IconButton({
   };
 
   const variants = {
-    ghost: "bg-transparent text-[#3b3b3b] hover:bg-[#eceae5]",
-    primary: "bg-[#4A5D4E] text-white hover:bg-[#3a4a3e]",
-    secondary: "bg-[#D4A574] text-white hover:bg-[#c08d54]",
-    outline: "bg-transparent border border-[#3b3b3b]/20 text-[#3b3b3b] hover:bg-[#eceae5]",
+    ghost: "bg-transparent text-charcoal hover:bg-background-muted",
+    primary: "bg-primary text-white hover:bg-primary-dark",
+    secondary: "bg-secondary text-white hover:bg-secondary-dark",
+    outline: "bg-transparent border border-charcoal/20 text-charcoal hover:bg-background-muted",
   };
 
   return (
@@ -239,8 +239,8 @@ export function LoadingButton({
   ...props 
 }) {
   const variants = {
-    primary: "bg-[#4A5D4E] text-white hover:bg-[#3a4a3e] focus:ring-[#4A5D4E]/50",
-    secondary: "bg-[#D4A574] text-white hover:bg-[#c08d54] focus:ring-[#D4A574]/50",
+    primary: "bg-primary text-white hover:bg-primary-dark focus:ring-primary/50",
+    secondary: "bg-secondary text-white hover:bg-secondary-dark focus:ring-secondary/50",
   };
 
   return (
@@ -295,8 +295,8 @@ export function SplitButton({
         className={cn(
           buttonBase,
           sizes[size],
-          "bg-[#4A5D4E] text-white",
-          "hover:bg-[#3a4a3e]",
+          "bg-primary text-white",
+          "hover:bg-primary-dark",
           "rounded-none rounded-l-lg",
           "border-r border-white/20"
         )}
@@ -307,8 +307,8 @@ export function SplitButton({
       </button>
       <button
         className={cn(
-          "px-2 bg-[#4A5D4E] text-white",
-          "hover:bg-[#3a4a3e]",
+          "px-2 bg-primary text-white",
+          "hover:bg-primary-dark",
           "rounded-none rounded-r-lg",
           "disabled:opacity-50 disabled:cursor-not-allowed"
         )}
@@ -342,8 +342,8 @@ export function FloatingButton({
     <button
       className={cn(
         "p-4 rounded-full",
-        "bg-[#4A5D4E] text-white",
-        "hover:bg-[#3a4a3e] active:bg-[#334137]",
+        "bg-primary text-white",
+        "hover:bg-primary-dark active:bg-primary-darker",
         "shadow-lg hover:shadow-xl",
         "transition-all duration-200",
         "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4A5D4E]/50",

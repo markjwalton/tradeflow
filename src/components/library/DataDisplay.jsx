@@ -21,8 +21,8 @@ export function DataList({
     >
       {items.map((item, i) => (
         <div key={i} className="flex flex-col">
-          <dt className="text-sm text-[#6d6d6d] mb-1">{item.label}</dt>
-          <dd className="text-[#1b2a35] font-medium">{item.value}</dd>
+          <dt className="text-sm text-charcoal-light mb-1">{item.label}</dt>
+          <dd className="text-midnight font-medium">{item.value}</dd>
         </div>
       ))}
     </dl>
@@ -45,8 +45,8 @@ export function KeyValue({
       )} 
       {...props}
     >
-      <span className="text-sm text-[#6d6d6d]">{label}:</span>
-      <span className="text-[#1b2a35] font-medium">{value}</span>
+      <span className="text-sm text-charcoal-light">{label}:</span>
+      <span className="text-midnight font-medium">{value}</span>
     </div>
   );
 }
@@ -61,18 +61,18 @@ export function StatusBadge({
 }) {
   const variants = {
     default: {
-      success: "bg-[#5a7a5e]/10 text-[#5a7a5e] border-[#5a7a5e]/20",
-      warning: "bg-[#c4a35a]/10 text-[#c4a35a] border-[#c4a35a]/20",
-      error: "bg-[#8b5b5b]/10 text-[#8b5b5b] border-[#8b5b5b]/20",
-      info: "bg-[#5a7a8b]/10 text-[#5a7a8b] border-[#5a7a8b]/20",
-      neutral: "bg-[#eceae5] text-[#6d6d6d] border-[#d1d1d1]",
+      success: "bg-success/10 text-success border-success/20",
+      warning: "bg-warning/10 text-warning border-warning/20",
+      error: "bg-destructive/10 text-destructive border-destructive/20",
+      info: "bg-info/10 text-info border-info/20",
+      neutral: "bg-background-muted text-charcoal-light border-border",
     },
     solid: {
-      success: "bg-[#5a7a5e] text-white",
-      warning: "bg-[#c4a35a] text-white",
-      error: "bg-[#8b5b5b] text-white",
-      info: "bg-[#5a7a8b] text-white",
-      neutral: "bg-[#6d6d6d] text-white",
+      success: "bg-success text-white",
+      warning: "bg-warning text-white",
+      error: "bg-destructive text-white",
+      info: "bg-info text-white",
+      neutral: "bg-charcoal-light text-white",
     },
   };
 
@@ -107,10 +107,10 @@ export function UserAvatar({
   };
 
   const statusColors = {
-    online: "bg-[#5a7a5e]",
-    offline: "bg-[#6d6d6d]",
-    busy: "bg-[#8b5b5b]",
-    away: "bg-[#c4a35a]",
+    online: "bg-success",
+    offline: "bg-charcoal-light",
+    busy: "bg-destructive",
+    away: "bg-warning",
   };
 
   const initials = name
@@ -130,7 +130,7 @@ export function UserAvatar({
         />
       ) : (
         <div className={cn(
-          "rounded-full bg-[#d9b4a7] text-white flex items-center justify-center font-medium",
+          "rounded-full bg-accent text-white flex items-center justify-center font-medium",
           sizes[size]
         )}>
           {initials}
@@ -166,22 +166,22 @@ export function ProgressBar({
   };
 
   const colors = {
-    primary: "bg-[#4A5D4E]",
-    secondary: "bg-[#D4A574]",
-    success: "bg-[#5a7a5e]",
-    warning: "bg-[#c4a35a]",
-    error: "bg-[#8b5b5b]",
+    primary: "bg-primary",
+    secondary: "bg-secondary",
+    success: "bg-success",
+    warning: "bg-warning",
+    error: "bg-destructive",
   };
 
   return (
     <div className={className} {...props}>
       {(label || showValue) && (
         <div className="flex justify-between mb-1.5 text-sm">
-          {label && <span className="text-[#6d6d6d]">{label}</span>}
-          {showValue && <span className="text-[#1b2a35] font-medium">{Math.round(percentage)}%</span>}
+          {label && <span className="text-charcoal-light">{label}</span>}
+          {showValue && <span className="text-midnight font-medium">{Math.round(percentage)}%</span>}
         </div>
       )}
-      <div className={cn("w-full bg-[#eceae5] rounded-full overflow-hidden", sizes[size])}>
+      <div className={cn("w-full bg-background-muted rounded-full overflow-hidden", sizes[size])}>
         <div 
           className={cn("h-full rounded-full transition-all duration-300", colors[color])}
           style={{ width: `${percentage}%` }}
@@ -204,12 +204,12 @@ export function SimpleTable({
     <div className={cn("overflow-x-auto", className)} {...props}>
       <table className="w-full">
         <thead>
-          <tr className="border-b border-[#eceae5]">
+          <tr className="border-b border-background-muted">
             {columns.map((col, i) => (
               <th 
                 key={i}
                 className={cn(
-                  "px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[#6d6d6d]",
+                  "px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-charcoal-light",
                   col.align === "right" && "text-right",
                   col.align === "center" && "text-center"
                 )}
@@ -224,16 +224,16 @@ export function SimpleTable({
             <tr 
               key={rowIndex}
               className={cn(
-                "border-b border-[#eceae5] last:border-0",
-                striped && rowIndex % 2 === 1 && "bg-[#faf9f7]",
-                hoverable && "hover:bg-[#f5f3ef] transition-colors"
+                "border-b border-background-muted last:border-0",
+                striped && rowIndex % 2 === 1 && "bg-background-subtle",
+                hoverable && "hover:bg-background transition-colors"
               )}
             >
               {columns.map((col, colIndex) => (
                 <td 
                   key={colIndex}
                   className={cn(
-                    "px-4 py-3 text-sm text-[#3b3b3b]",
+                    "px-4 py-3 text-sm text-charcoal",
                     col.align === "right" && "text-right",
                     col.align === "center" && "text-center"
                   )}
@@ -269,7 +269,7 @@ export function TagList({
         <span 
           key={i}
           className={cn(
-            "inline-flex items-center rounded-full bg-[#eceae5] text-[#3b3b3b]",
+            "inline-flex items-center rounded-full bg-background-muted text-charcoal",
             sizes[size]
           )}
         >
@@ -277,7 +277,7 @@ export function TagList({
           {onRemove && (
             <button 
               onClick={() => onRemove(tag)}
-              className="ml-1.5 hover:text-[#8b5b5b]"
+              className="ml-1.5 hover:text-destructive"
             >
               ×
             </button>
@@ -301,18 +301,18 @@ export function TimelineItem({
   return (
     <div className={cn("flex gap-4", className)} {...props}>
       <div className="flex flex-col items-center">
-        <div className="w-10 h-10 rounded-full bg-[#4A5D4E]/10 text-[#4A5D4E] flex items-center justify-center">
-          {icon || <span className="w-3 h-3 rounded-full bg-[#4A5D4E]" />}
+        <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+          {icon || <span className="w-3 h-3 rounded-full bg-primary" />}
         </div>
-        {!isLast && <div className="w-0.5 flex-1 bg-[#eceae5] mt-2" />}
+        {!isLast && <div className="w-0.5 flex-1 bg-background-muted mt-2" />}
       </div>
       <div className={cn("flex-1 pb-8", isLast && "pb-0")}>
         <div className="flex items-start justify-between mb-1">
-          <h4 className="font-medium text-[#1b2a35]">{title}</h4>
-          {date && <span className="text-xs text-[#6d6d6d]">{date}</span>}
+          <h4 className="font-medium text-midnight">{title}</h4>
+          {date && <span className="text-xs text-charcoal-light">{date}</span>}
         </div>
         {description && (
-          <p className="text-sm text-[#6d6d6d]" style={{ fontFamily: 'var(--font-body)' }}>
+          <p className="text-sm text-charcoal-light" style={{ fontFamily: 'var(--font-body)' }}>
             {description}
           </p>
         )}
@@ -341,22 +341,22 @@ export function Metric({
 
   return (
     <div className={className} {...props}>
-      {label && <p className="text-sm text-[#6d6d6d] mb-1">{label}</p>}
+      {label && <p className="text-sm text-charcoal-light mb-1">{label}</p>}
       <div className="flex items-baseline gap-1">
-        {prefix && <span className="text-[#6d6d6d]">{prefix}</span>}
+        {prefix && <span className="text-charcoal-light">{prefix}</span>}
         <span 
-          className={cn("font-light text-[#1b2a35]", sizes[size])}
+          className={cn("font-light text-midnight", sizes[size])}
           style={{ fontFamily: 'var(--font-heading)' }}
         >
           {value}
         </span>
-        {suffix && <span className="text-[#6d6d6d]">{suffix}</span>}
+        {suffix && <span className="text-charcoal-light">{suffix}</span>}
       </div>
       {trend && (
         <div className={cn(
           "flex items-center gap-1 mt-1 text-sm",
-          trend === "up" && "text-[#5a7a5e]",
-          trend === "down" && "text-[#8b5b5b]"
+          trend === "up" && "text-success",
+          trend === "down" && "text-destructive"
         )}>
           <span>{trend === "up" ? "↑" : "↓"}</span>
           <span>{trendValue}</span>
