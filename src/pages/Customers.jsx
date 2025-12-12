@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { QueryErrorState } from "@/components/common/QueryErrorState";
-import { SkeletonCardGrid } from "@/components/common/SkeletonCard";
+import { PageLoader, ButtonLoader } from "@/components/common/LoadingStates";
+import { ErrorRecovery } from "@/components/common/ErrorRecovery";
+import { useMutationError } from "@/components/common/MutationErrorToast";
 import { Pagination } from "@/components/ui/Pagination";
 import { useDebounce } from "@/components/common/useDebounce";
 import { Button } from "@/components/ui/button";
@@ -23,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Search, Pencil, Trash2, Loader2, Mail, Phone, Building2 } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Mail, Phone, Building2 } from "lucide-react";
 import { toast } from "sonner";
 
 const statusColors = {
@@ -54,7 +55,7 @@ export default function Customers() {
   });
   const [tagInput, setTagInput] = useState("");
 
-  const { data: customers = [], isLoading } = useQuery({
+  const { data: customers = [], isLoading, error, refetch } = useQuery({
     queryKey: ["customers"],
     queryFn: () => base44.entities.Customer.list(),
   });
@@ -65,7 +66,7 @@ export default function Customers() {
       queryClient.invalidateQueries({ queryKey: ["customers"] });
       setShowForm(false);
       resetForm();
-      toast.success("Customer created");
+      toast.success("Customer created successfully");
     },
   });
 
@@ -76,7 +77,7 @@ export default function Customers() {
       setShowForm(false);
       setEditingCustomer(null);
       resetForm();
-      toast.success("Customer updated");
+      toast.success("Customer updated successfully");
     },
   });
 
@@ -84,9 +85,13 @@ export default function Customers() {
     mutationFn: (id) => base44.entities.Customer.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["customers"] });
-      toast.success("Customer deleted");
+      toast.success("Customer deleted successfully");
     },
   });
+
+  useMutationError(createMutation, { customMessage: "Failed to create customer" });
+  useMutationError(updateMutation, { customMessage: "Failed to update customer" });
+  useMutationError(deleteMutation, { customMessage: "Failed to delete customer" });
 
   const resetForm = () => {
     setFormData({
@@ -154,11 +159,11 @@ export default function Customers() {
   );
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64 bg-background">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
+    return <PageLoader message="Loading customers..." />;
+  }
+
+  if (error) {
+    return <ErrorRecovery error={error} onRetry={refetch} />;
   }
 
   return (
@@ -342,7 +347,7 @@ export default function Customers() {
               <Textarea value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} rows={3} />
             </div>
             <Button className="w-full" onClick={handleSubmit} disabled={!formData.name || createMutation.isPending || updateMutation.isPending}>
-              {(createMutation.isPending || updateMutation.isPending) && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              {(createMutation.isPending || updateMutation.isPending) && <ButtonLoader />}
               {editingCustomer ? "Update Customer" : "Create Customer"}
             </Button>
           </div>

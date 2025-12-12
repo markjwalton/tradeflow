@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { QueryErrorState } from "@/components/common/QueryErrorState";
-import { SkeletonList } from "@/components/common/SkeletonList";
+import { PageLoader, ButtonLoader } from "@/components/common/LoadingStates";
+import { ErrorRecovery } from "@/components/common/ErrorRecovery";
+import { useMutationError } from "@/components/common/MutationErrorToast";
 import { Pagination } from "@/components/ui/Pagination";
 import { useDebounce } from "@/components/common/useDebounce";
 import { Button } from "@/components/ui/button";
@@ -23,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Search, Pencil, Trash2, Loader2, Calendar } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Calendar } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 
@@ -63,7 +64,7 @@ export default function Tasks() {
     start_date: "",
   });
 
-  const { data: tasks = [], isLoading } = useQuery({
+  const { data: tasks = [], isLoading, error, refetch } = useQuery({
     queryKey: ["tasks"],
     queryFn: () => base44.entities.Task.list(),
   });
@@ -84,7 +85,7 @@ export default function Tasks() {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       setShowForm(false);
       resetForm();
-      toast.success("Task created");
+      toast.success("Task created successfully");
     },
   });
 
@@ -95,7 +96,7 @@ export default function Tasks() {
       setShowForm(false);
       setEditingTask(null);
       resetForm();
-      toast.success("Task updated");
+      toast.success("Task updated successfully");
     },
   });
 
@@ -103,9 +104,13 @@ export default function Tasks() {
     mutationFn: (id) => base44.entities.Task.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      toast.success("Task deleted");
+      toast.success("Task deleted successfully");
     },
   });
+
+  useMutationError(createMutation, { customMessage: "Failed to create task" });
+  useMutationError(updateMutation, { customMessage: "Failed to update task" });
+  useMutationError(deleteMutation, { customMessage: "Failed to delete task" });
 
   const resetForm = () => {
     setFormData({
@@ -171,11 +176,11 @@ export default function Tasks() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64 bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-charcoal-700" />
-      </div>
-    );
+    return <PageLoader message="Loading tasks..." />;
+  }
+
+  if (error) {
+    return <ErrorRecovery error={error} onRetry={refetch} />;
   }
 
   return (
@@ -359,7 +364,7 @@ export default function Tasks() {
               </div>
             </div>
             <Button className="w-full" onClick={handleSubmit} disabled={createMutation.isPending || updateMutation.isPending}>
-              {(createMutation.isPending || updateMutation.isPending) && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              {(createMutation.isPending || updateMutation.isPending) && <ButtonLoader />}
               {editingTask ? "Update Task" : "Create Task"}
             </Button>
           </div>
