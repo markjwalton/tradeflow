@@ -364,47 +364,49 @@ export default function ColorMigrationDashboard() {
                 </div>
               ) : colors.length === 0 ? (
                 <p className="text-center text-muted-foreground p-8">No colors with token mappings found</p>
-              ) : colors.map((color) => {
-                const currentCount = displayCounts[color.literal] || 0;
-                const isMigrated = actualCounts ? currentCount === 0 : migratedColors.includes(color.literal);
-                const isSelected = selectedColor?.literal === color.literal;
-                const colorName = getColorNameFromToken(color.recommended_token);
-                return (
-                  <button
-                    key={color.literal}
-                    onClick={() => setSelectedColor(color)}
-                    className={`w-full p-4 rounded-lg border-2 text-left transition-all ${
-                      isSelected
-                        ? "border-primary bg-primary/5"
-                        : "border-border hover:border-primary/50"
-                    } ${isMigrated ? "opacity-60" : ""}`}
-                  >
-                    <div className="flex items-center gap-3 mb-2">
-                      <div
-                        className="w-10 h-10 rounded-full border-2"
-                        style={{ backgroundColor: color.literal }}
-                      />
-                      <div className="flex-1">
-                        <p className="font-medium">{colorName}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {color.literal}
-                        </p>
+              ) : (
+                colors.map((color) => {
+                  const currentCount = displayCounts[color.literal] || 0;
+                  const isMigrated = actualCounts ? currentCount === 0 : migratedColors.includes(color.literal);
+                  const isSelected = selectedColor?.literal === color.literal;
+                  const colorName = getColorNameFromToken(color.recommended_token);
+                  return (
+                    <button
+                      key={color.literal}
+                      onClick={() => setSelectedColor(color)}
+                      className={`w-full p-4 rounded-lg border-2 text-left transition-all ${
+                        isSelected
+                          ? "border-primary bg-primary/5"
+                          : "border-border hover:border-primary/50"
+                      } ${isMigrated ? "opacity-60" : ""}`}
+                    >
+                      <div className="flex items-center gap-3 mb-2">
+                        <div
+                          className="w-10 h-10 rounded-full border-2"
+                          style={{ backgroundColor: color.literal }}
+                        />
+                        <div className="flex-1">
+                          <p className="font-medium">{colorName}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {color.literal}
+                          </p>
+                        </div>
+                        {isMigrated && (
+                          <CheckCircle2 className="h-5 w-5 text-green-600" />
+                        )}
                       </div>
-                      {isMigrated && (
-                        <CheckCircle2 className="h-5 w-5 text-green-600" />
-                      )}
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <Badge variant="outline">
-                        {actualCounts ? `${currentCount} remaining` : `${color.count} uses`}
-                      </Badge>
-                      <code className="text-xs bg-muted px-2 py-1 rounded text-[10px]">
-                        {color.recommended_token}
-                      </code>
-                    </div>
-                  </button>
-                );
-                }))}
+                      <div className="flex items-center justify-between">
+                        <Badge variant="outline">
+                          {actualCounts ? `${currentCount} remaining` : `${color.count} uses`}
+                        </Badge>
+                        <code className="text-xs bg-muted px-2 py-1 rounded text-[10px]">
+                          {color.recommended_token}
+                        </code>
+                      </div>
+                    </button>
+                  );
+                })
+              )}
             </CardContent>
           </Card>
 
