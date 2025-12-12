@@ -1,15 +1,15 @@
-import React from "react";
+import React, { memo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { 
-  TrendingUp, TrendingDown, Minus, ExternalLink, BarChart3, 
+  TrendingUp, TrendingDown, Minus, BarChart3, 
   PieChart, LineChart, Table, Sparkles, Info, ArrowRight
 } from "lucide-react";
 import TestDataCoverageWidget from "./TestDataCoverageWidget";
 
 // Stat Card Widget
-function StatCard({ config }) {
+const StatCard = memo(({ config }) => {
   const { title, value, change, changeType, icon, color = "primary" } = config || {};
   const TrendIcon = changeType === "up" ? TrendingUp : changeType === "down" ? TrendingDown : Minus;
   const trendColor = changeType === "up" ? "text-[var(--color-success)]" : changeType === "down" ? "text-[var(--color-destructive-600)]" : "text-[var(--color-charcoal-500)]";
@@ -43,10 +43,10 @@ function StatCard({ config }) {
       </CardContent>
     </Card>
   );
-}
+});
 
 // Info Card Widget
-function InfoCard({ config }) {
+const InfoCard = memo(({ config }) => {
   const { title, content, variant = "default" } = config || {};
   
   const variantClasses = {
@@ -70,10 +70,10 @@ function InfoCard({ config }) {
       </CardContent>
     </Card>
   );
-}
+});
 
 // Quick Action Widget
-function QuickActionCard({ config }) {
+const QuickActionCard = memo(({ config }) => {
   const { title, description, actions = [] } = config || {};
 
   return (
@@ -99,10 +99,10 @@ function QuickActionCard({ config }) {
       </CardContent>
     </Card>
   );
-}
+});
 
 // AI Insight Widget
-function AIInsightCard({ config }) {
+const AIInsightCard = memo(({ config }) => {
   const { title, insight, confidence, source, generatedAt } = config || {};
 
   return (
@@ -127,10 +127,10 @@ function AIInsightCard({ config }) {
       </CardContent>
     </Card>
   );
-}
+});
 
 // Chart Placeholder Widget
-function ChartCard({ config }) {
+const ChartCard = memo(({ config }) => {
   const { title, chartType = "bar", data } = config || {};
   const ChartIcon = chartType === "pie" ? PieChart : chartType === "line" ? LineChart : BarChart3;
 
@@ -149,10 +149,10 @@ function ChartCard({ config }) {
       </CardContent>
     </Card>
   );
-}
+});
 
 // Table Widget
-function TableCard({ config }) {
+const TableCard = memo(({ config }) => {
   const { title, columns = [], rows = [] } = config || {};
 
   return (
@@ -187,10 +187,10 @@ function TableCard({ config }) {
       </CardContent>
     </Card>
   );
-}
+});
 
 // Main Widget Renderer
-export default function WidgetRenderer({ widget, customConfig }) {
+const WidgetRenderer = ({ widget, customConfig }) => {
   const config = { ...widget.config, ...customConfig };
   
   // Special handling for test data coverage widget
@@ -220,4 +220,12 @@ export default function WidgetRenderer({ widget, customConfig }) {
         </Card>
       );
   }
-}
+};
+
+export default memo(WidgetRenderer, (prevProps, nextProps) => {
+  return (
+    prevProps.widget.id === nextProps.widget.id &&
+    JSON.stringify(prevProps.widget.config) === JSON.stringify(nextProps.widget.config) &&
+    JSON.stringify(prevProps.customConfig) === JSON.stringify(nextProps.customConfig)
+  );
+});
