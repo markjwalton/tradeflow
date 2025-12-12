@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { base44 } from "@/api/base44Client";
 import { Copy, Check, Plus, Trash2, Save, Sparkles, Upload, X, Loader2 } from "lucide-react";
 
-export function OklchGradientTool({ onSave }) {
+const OklchGradientTool = ({ onSave }) => {
   const [gradientType, setGradientType] = useState("linear");
   const [angle, setAngle] = useState(90);
   const [stops, setStops] = useState([
@@ -523,4 +523,7 @@ export function OklchGradientTool({ onSave }) {
       )}
     </div>
   );
-}
+};
+
+export { OklchGradientTool };
+export default memo(OklchGradientTool);

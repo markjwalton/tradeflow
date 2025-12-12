@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
@@ -43,7 +43,7 @@ function rgbToHex(r, g, b) {
   return "#" + [r, g, b].map(x => x.toString(16).padStart(2, "0")).join("");
 }
 
-export function OklchColorTool({ onSave }) {
+const OklchColorTool = ({ onSave }) => {
   const [lightness, setLightness] = useState(0.7);
   const [chroma, setChroma] = useState(0.15);
   const [hue, setHue] = useState(180);
@@ -259,4 +259,7 @@ export function OklchColorTool({ onSave }) {
       </Card>
     </div>
   );
-}
+};
+
+export { OklchColorTool };
+export default memo(OklchColorTool);

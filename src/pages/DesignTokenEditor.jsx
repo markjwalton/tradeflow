@@ -1,13 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Save, RotateCcw, Eye, Code, Palette } from "lucide-react";
+import { Save, RotateCcw, Eye, Code, Palette, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
+
+const Card = lazy(() => import("@/components/ui/card").then(m => ({ default: m.Card })));
+const CardContent = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardContent })));
+const CardDescription = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardDescription })));
+const CardHeader = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardHeader })));
+const CardTitle = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardTitle })));
+const Tabs = lazy(() => import("@/components/ui/tabs").then(m => ({ default: m.Tabs })));
+const TabsContent = lazy(() => import("@/components/ui/tabs").then(m => ({ default: m.TabsContent })));
+const TabsList = lazy(() => import("@/components/ui/tabs").then(m => ({ default: m.TabsList })));
+const TabsTrigger = lazy(() => import("@/components/ui/tabs").then(m => ({ default: m.TabsTrigger })));
 
 // Color conversion utilities
 const oklchToRgb = (l, c, h) => {
@@ -272,8 +279,9 @@ export default function DesignTokenEditor() {
   const hasChanges = JSON.stringify(tokens) !== JSON.stringify(originalTokens);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <Suspense fallback={<div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Design Token Editor</h1>
           <p className="text-muted-foreground">
@@ -376,7 +384,8 @@ export default function DesignTokenEditor() {
           </div>
         </CardContent>
       </Card>
-    </div>
+      </div>
+    </Suspense>
   );
 }
 
