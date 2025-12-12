@@ -10,6 +10,7 @@ const Card = React.forwardRef(({ className, ...props }, ref) => (
       "rounded-xl border bg-card text-card-foreground shadow-sm",
       className
     )}
+    style={{ borderColor: "#e5e7eb" }}
     {...props}
   />
 ))
