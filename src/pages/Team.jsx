@@ -163,17 +163,17 @@ export default function Team() {
   }
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light font-display text-foreground">Team</h1>
-        <Button onClick={() => { resetForm(); setEditingMember(null); setShowForm(true); }}>
+    <div className="p-3 sm:p-4 md:p-6 bg-background min-h-screen">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-light font-display text-foreground">Team</h1>
+        <Button onClick={() => { resetForm(); setEditingMember(null); setShowForm(true); }} className="w-full sm:w-auto">
           <Plus className="h-4 w-4 mr-2" />
           Add Team Member
         </Button>
       </div>
 
-      <div className="flex gap-4 mb-6">
-        <div className="relative flex-1 max-w-sm">
+      <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-6">
+        <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search team members..."
@@ -183,7 +183,7 @@ export default function Team() {
           />
         </div>
         <Select value={filterAvailability} onValueChange={setFilterAvailability}>
-          <SelectTrigger className="w-40">
+          <SelectTrigger className="w-full sm:w-40">
             <SelectValue placeholder="Availability" />
           </SelectTrigger>
           <SelectContent>
@@ -196,7 +196,7 @@ export default function Team() {
         </Select>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         {paginatedMembers.map((member) => {
           const holidaysRemaining = (member.annual_holiday_days || 25) - (member.holidays_used || 0);
           return (
@@ -262,7 +262,7 @@ export default function Team() {
       )}
 
       <Dialog open={showForm} onOpenChange={setShowForm}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingMember ? "Edit Team Member" : "Add Team Member"}</DialogTitle>
           </DialogHeader>

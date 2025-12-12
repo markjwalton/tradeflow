@@ -98,28 +98,33 @@ export default function Calendar() {
 
       days.push(
         <div
-          key={currentDay.toString()}
-          className={`min-h-24 border border-border p-1 cursor-pointer transition-colors
-            ${!isCurrentMonth ? "bg-muted text-muted-foreground" : "bg-card"}
-            ${isToday ? "bg-primary/10" : ""}
-            ${isSelected ? "ring-2 ring-primary" : ""}
-            hover:bg-muted/50`}
-          onClick={() => setSelectedDate(currentDay)}
+        key={currentDay.toString()}
+        className={`min-h-16 sm:min-h-24 border border-border p-0.5 sm:p-1 cursor-pointer transition-colors
+          ${!isCurrentMonth ? "bg-muted text-muted-foreground" : "bg-card"}
+          ${isToday ? "bg-primary/10" : ""}
+          ${isSelected ? "ring-2 ring-primary" : ""}
+          hover:bg-muted/50`}
+        onClick={() => setSelectedDate(currentDay)}
         >
-          <div className={`text-sm font-medium mb-1 ${isToday ? "text-primary" : ""}`}>
-            {format(currentDay, "d")}
-          </div>
-          <div className="space-y-1">
-            {dayTasks.slice(0, 3).map((task) => (
-              <div key={task.id} className="text-xs truncate px-1 py-0.5 rounded border-l-2 border-primary/30 bg-card">
+        <div className={`text-xs sm:text-sm font-medium mb-1 ${isToday ? "text-primary" : ""}`}>
+          {format(currentDay, "d")}
+        </div>
+          <div className="space-y-0.5 sm:space-y-1">
+            {dayTasks.slice(0, 2).map((task) => (
+              <div key={task.id} className="text-[10px] sm:text-xs truncate px-0.5 sm:px-1 py-0.5 rounded border-l-2 border-primary/30 bg-card hidden sm:block">
                 <span className={`inline-block w-1.5 h-1.5 rounded-full mr-1 ${statusColors[task.status]}`} />
                 {task.name}
               </div>
             ))}
-            {dayTasks.length > 3 && <div className="text-xs text-muted-foreground">+{dayTasks.length - 3} more</div>}
+            {dayTasks.length > 0 && (
+              <div className="sm:hidden flex items-center justify-center">
+                <span className={`w-1.5 h-1.5 rounded-full ${statusColors[dayTasks[0].status]}`} />
+              </div>
+            )}
+            {dayTasks.length > 2 && <div className="text-[10px] sm:text-xs text-muted-foreground hidden sm:block">+{dayTasks.length - 2}</div>}
             {dayAbsences.map((absence) => (
-              <div key={absence.id} className="text-xs truncate px-1 py-0.5 rounded bg-accent/10 text-accent">
-                {getTeamMemberName(absence.team_member_id)} - {absence.absence_type}
+              <div key={absence.id} className="text-[10px] sm:text-xs truncate px-0.5 sm:px-1 py-0.5 rounded bg-accent/10 text-accent hidden sm:block">
+                {getTeamMemberName(absence.team_member_id)}
               </div>
             ))}
           </div>
@@ -143,11 +148,11 @@ export default function Calendar() {
   }
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light font-display text-foreground">Calendar</h1>
+    <div className="p-3 sm:p-4 md:p-6 bg-background min-h-screen">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-light font-display text-foreground">Calendar</h1>
         <Select value={filterProject} onValueChange={setFilterProject}>
-          <SelectTrigger className="w-48"><SelectValue placeholder="Filter by project" /></SelectTrigger>
+          <SelectTrigger className="w-full sm:w-48"><SelectValue placeholder="Filter by project" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Projects</SelectItem>
             {projects.map((p) => (<SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>))}
@@ -155,7 +160,7 @@ export default function Calendar() {
         </Select>
       </div>
 
-      <div className="flex gap-6">
+      <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
         <div className="flex-1">
           <Card className="bg-card">
             <CardHeader className="pb-2">
@@ -183,10 +188,10 @@ export default function Calendar() {
           </div>
         </div>
 
-        <div className="w-80">
+        <div className="w-full lg:w-80">
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg text-foreground">{selectedDate ? format(selectedDate, "EEEE, MMMM d") : "Select a date"}</CardTitle>
+              <CardTitle className="text-base sm:text-lg text-foreground">{selectedDate ? format(selectedDate, "EEEE, MMMM d") : "Select a date"}</CardTitle>
             </CardHeader>
             <CardContent>
               {selectedDate ? (

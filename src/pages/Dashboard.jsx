@@ -98,20 +98,21 @@ export default function Dashboard() {
   );
 
   return (
-    <div className={`p-6 bg-background min-h-screen ${settings.compactMode ? "space-y-4" : ""}`}>
+    <div className={`p-3 sm:p-4 md:p-6 bg-background min-h-screen ${settings.compactMode ? "space-y-4" : ""}`}>
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-h1">Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Welcome back! Here's what's happening.</p>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6 sm:mb-8">
+        <div className="flex-1 min-w-0">
+          <h1 className="text-xl sm:text-h1">Dashboard</h1>
+          <p className="text-muted-foreground mt-1 text-sm sm:text-base">Welcome back! Here's what's happening.</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2">
+        <div className="flex gap-2 w-full sm:w-auto">
+          <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2 flex-1 sm:flex-none">
             <RefreshCw className="h-4 w-4" />
-            Refresh
+            <span className="sm:inline hidden">Refresh</span>
           </Button>
-          <Button variant="outline" size="sm" onClick={() => setShowSettings(true)} className="gap-2">
+          <Button variant="outline" size="sm" onClick={() => setShowSettings(true)} className="gap-2 flex-1 sm:flex-none">
             <Settings className="h-4 w-4" />
+            <span className="sm:inline hidden">Settings</span>
           </Button>
         </div>
       </div>
@@ -133,7 +134,7 @@ export default function Dashboard() {
               <div 
                 {...provided.droppableProps} 
                 ref={provided.innerRef}
-                className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 ${settings.compactMode ? "[gap:var(--spacing-3)]" : "[gap:var(--spacing-4)]"}`}
+                className={`grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 ${settings.compactMode ? "gap-2 sm:[gap:var(--spacing-3)]" : "gap-3 sm:[gap:var(--spacing-4)]"}`}
               >
                 {displayWidgets.map((widget, index) => renderWidgetCard(widget, index, true))}
                 {provided.placeholder}
@@ -144,13 +145,13 @@ export default function Dashboard() {
       ) : (
         <div className={`space-y-${settings.compactMode ? "4" : "8"}`}>
           {statWidgets.length > 0 && (
-            <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 ${settings.compactMode ? "[gap:var(--spacing-3)]" : "[gap:var(--spacing-4)]"}`}>
+            <div className={`grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 ${settings.compactMode ? "gap-2 sm:[gap:var(--spacing-3)]" : "gap-3 sm:[gap:var(--spacing-4)]"}`}>
               {statWidgets.map((widget, index) => renderWidgetCard(widget, index, false))}
             </div>
           )}
 
           {otherWidgets.length > 0 && (
-            <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${settings.compactMode ? "[gap:var(--spacing-4)]" : "[gap:var(--spacing-6)]"}`}>
+            <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ${settings.compactMode ? "gap-3 sm:[gap:var(--spacing-4)]" : "gap-4 sm:[gap:var(--spacing-6)]"}`}>
               {otherWidgets.map((widget, index) => {
                 const colSpan = widget.default_col_span >= 2 ? "md:col-span-2" : "";
                 return (
