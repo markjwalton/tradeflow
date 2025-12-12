@@ -26,7 +26,7 @@ import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import RoadmapItemCard from "@/components/roadmap/RoadmapItemCard";
 import RoadmapSettingsDialog, { defaultSettings } from "@/components/roadmap/RoadmapSettingsDialog";
-import Pagination from "@/components/ui/Pagination";
+import { Pagination } from "@/components/ui/Pagination";
 
 const defaultCategories = [
   { value: "idea", label: "Idea" },
