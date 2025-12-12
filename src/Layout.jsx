@@ -7,6 +7,7 @@ import { cssVariables } from "@/components/library/designTokens";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { prefetchOnIdle, prefetchDashboardQueries, prefetchLibraryQueries } from "@/components/common/queryPrefetch";
+import { initSentry, setUserContext } from "@/components/monitoring/sentryConfig";
 
 // Tenant Context
 export const TenantContext = createContext(null);
@@ -53,10 +54,17 @@ export default function Layout({ children, currentPageName }) {
   const isTenantPage = false;
 
   useEffect(() => {
+    // Initialize Sentry on first load
+    initSentry();
+    
     // Load editor bubble preference and reset live edit mode on page load
     const loadBubblePreference = async () => {
       try {
         const user = await base44.auth.me();
+        
+        // Set user context for Sentry
+        setUserContext(user);
+        
         if (user?.ui_preferences?.showEditorBubble !== undefined) {
           setShowEditorBubble(user.ui_preferences.showEditorBubble);
         }

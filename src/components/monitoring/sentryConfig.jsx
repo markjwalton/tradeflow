@@ -1,139 +1,118 @@
 import * as Sentry from "@sentry/react";
 
 /**
- * Sentry Configuration for Error Tracking
- * 
- * To enable Sentry:
- * 1. Set VITE_SENTRY_DSN environment variable
- * 2. Set VITE_SENTRY_ENVIRONMENT (production, staging, development)
- * 3. Optionally set VITE_APP_VERSION for release tracking
+ * Initialize Sentry for error tracking
+ * Call this once at app startup (e.g., in main entry point or Layout)
  */
-
 export function initSentry() {
-  const dsn = import.meta.env.VITE_SENTRY_DSN;
+  // Only initialize in production or when explicitly enabled
+  const isProduction = import.meta.env.PROD;
+  const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
   
-  // Don't initialize if DSN is not set
-  if (!dsn) {
-    console.log('Sentry DSN not configured - error tracking disabled');
+  if (!sentryDsn) {
+    console.warn('Sentry DSN not configured. Error tracking disabled.');
     return;
   }
 
   Sentry.init({
-    dsn,
-    environment: import.meta.env.VITE_SENTRY_ENVIRONMENT || 'development',
-    release: import.meta.env.VITE_APP_VERSION || 'unknown',
-    
-    // Performance Monitoring
+    dsn: sentryDsn,
     integrations: [
-      Sentry.browserTracingIntegration(),
-      Sentry.replayIntegration({
+      new Sentry.BrowserTracing({
+        // Set sampling rate for performance monitoring
+        tracePropagationTargets: ["localhost", /^\//],
+      }),
+      new Sentry.Replay({
+        // Session replay for debugging
         maskAllText: true,
         blockAllMedia: true,
       }),
     ],
     
-    // Set tracesSampleRate to 1.0 to capture 100% of transactions
-    // In production, reduce this value
-    tracesSampleRate: import.meta.env.PROD ? 0.1 : 1.0,
+    // Performance Monitoring
+    tracesSampleRate: isProduction ? 0.1 : 1.0, // Capture 10% of transactions in prod
     
-    // Capture Replay for 10% of all sessions,
-    // plus 100% of sessions with an error
-    replaysSessionSampleRate: 0.1,
-    replaysOnErrorSampleRate: 1.0,
+    // Session Replay
+    replaysSessionSampleRate: 0.1, // 10% of sessions
+    replaysOnErrorSampleRate: 1.0, // 100% of sessions with errors
     
-    // Ignore specific errors
-    ignoreErrors: [
-      // Browser extensions
-      'ResizeObserver loop',
-      'Non-Error promise rejection captured',
-      // Network errors
-      'NetworkError',
-      'Failed to fetch',
-      // React Router navigation
-      'Navigation cancelled',
-    ],
+    // Environment
+    environment: isProduction ? 'production' : 'development',
     
-    // Filter sensitive data
+    // Release tracking
+    release: import.meta.env.VITE_APP_VERSION,
+    
+    // Filter out certain errors
     beforeSend(event, hint) {
-      // Don't send events in development
-      if (import.meta.env.DEV) {
-        console.log('Sentry event (not sent in dev):', event);
+      // Filter out cancelled requests
+      if (hint?.originalException?.name === 'AbortError') {
         return null;
       }
       
-      // Filter out sensitive information
-      if (event.request) {
-        delete event.request.cookies;
-        delete event.request.headers?.Authorization;
+      // Filter out network errors in development
+      if (!isProduction && hint?.originalException?.message?.includes('Failed to fetch')) {
+        return null;
       }
       
       return event;
     },
     
-    // Tag all events with environment info
-    initialScope: {
-      tags: {
-        app: 'base44-app',
-      },
-    },
+    // Ignore certain errors
+    ignoreErrors: [
+      // Browser extensions
+      'top.GLOBALS',
+      // Network errors
+      'NetworkError',
+      'Failed to fetch',
+      // React dev warnings
+      'Warning: ',
+    ],
   });
-  
-  console.log('Sentry initialized for environment:', import.meta.env.VITE_SENTRY_ENVIRONMENT);
 }
 
 /**
- * Manually capture an exception
+ * Manually capture an error
  */
-export function captureException(error, context = {}) {
-  if (import.meta.env.DEV) {
-    console.error('Error captured:', error, context);
-    return;
-  }
-  
+export function captureError(error, context = {}) {
   Sentry.captureException(error, {
     extra: context,
   });
 }
 
 /**
- * Manually capture a message
- */
-export function captureMessage(message, level = 'info', context = {}) {
-  if (import.meta.env.DEV) {
-    console.log(`[${level}] ${message}`, context);
-    return;
-  }
-  
-  Sentry.captureMessage(message, {
-    level,
-    extra: context,
-  });
-}
-
-/**
- * Set user context
+ * Set user context for error tracking
  */
 export function setUserContext(user) {
-  if (!user) {
+  if (user) {
+    Sentry.setUser({
+      id: user.id,
+      email: user.email,
+      username: user.full_name,
+    });
+  } else {
     Sentry.setUser(null);
-    return;
   }
-  
-  Sentry.setUser({
-    id: user.id,
-    email: user.email,
-    username: user.full_name,
-  });
 }
 
 /**
  * Add breadcrumb for debugging
  */
-export function addBreadcrumb(message, category, data = {}) {
+export function addBreadcrumb(message, category = 'custom', level = 'info', data = {}) {
   Sentry.addBreadcrumb({
     message,
     category,
+    level,
     data,
-    level: 'info',
   });
+}
+
+/**
+ * Wrap async operations with error tracking
+ */
+export async function withErrorTracking(operation, operationName = 'operation') {
+  try {
+    return await operation();
+  } catch (error) {
+    captureError(error, { operationName });
+    throw error;
+  }
 }
