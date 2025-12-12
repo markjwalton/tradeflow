@@ -9,6 +9,90 @@ import { Save, RotateCcw, Eye, Code, Palette } from "lucide-react";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 
+// Color conversion utilities
+const oklchToRgb = (l, c, h) => {
+  const a = c * Math.cos((h * Math.PI) / 180);
+  const b = c * Math.sin((h * Math.PI) / 180);
+  
+  const l_ = l + 0.3963377774 * a + 0.2158037573 * b;
+  const m_ = l - 0.1055613458 * a - 0.0638541728 * b;
+  const s_ = l - 0.0894841775 * a - 1.2914855480 * b;
+  
+  const l3 = l_ * l_ * l_;
+  const m3 = m_ * m_ * m_;
+  const s3 = s_ * s_ * s_;
+  
+  let r = +4.0767416621 * l3 - 3.3077115913 * m3 + 0.2309699292 * s3;
+  let g = -1.2684380046 * l3 + 2.6097574011 * m3 - 0.3413193965 * s3;
+  let bl = -0.0041960863 * l3 - 0.7034186147 * m3 + 1.7076147010 * s3;
+  
+  r = r > 0.0031308 ? 1.055 * Math.pow(r, 1 / 2.4) - 0.055 : 12.92 * r;
+  g = g > 0.0031308 ? 1.055 * Math.pow(g, 1 / 2.4) - 0.055 : 12.92 * g;
+  bl = bl > 0.0031308 ? 1.055 * Math.pow(bl, 1 / 2.4) - 0.055 : 12.92 * bl;
+  
+  r = Math.max(0, Math.min(255, Math.round(r * 255)));
+  g = Math.max(0, Math.min(255, Math.round(g * 255)));
+  bl = Math.max(0, Math.min(255, Math.round(bl * 255)));
+  
+  return "#" + [r, g, bl].map(x => x.toString(16).padStart(2, "0")).join("");
+};
+
+const parseColorToHex = (value) => {
+  if (!value) return '#000000';
+  
+  const trimmed = value.trim();
+  
+  // Already hex
+  if (trimmed.startsWith('#')) {
+    return trimmed;
+  }
+  
+  // OKLCH format: oklch(0.5 0.1 150) or oklch(50% 0.1 150)
+  const oklchMatch = trimmed.match(/oklch\(([\d.]+%?)\s+([\d.]+)\s+([\d.]+)\s*(?:\/\s*[\d.]+)?\)/);
+  if (oklchMatch) {
+    let l = parseFloat(oklchMatch[1]);
+    if (oklchMatch[1].includes('%')) l = l / 100;
+    const c = parseFloat(oklchMatch[2]);
+    const h = parseFloat(oklchMatch[3]);
+    return oklchToRgb(l, c, h);
+  }
+  
+  // RGB format
+  const rgbMatch = trimmed.match(/rgb\((\d+),?\s*(\d+),?\s*(\d+)\)/);
+  if (rgbMatch) {
+    const r = parseInt(rgbMatch[1]).toString(16).padStart(2, '0');
+    const g = parseInt(rgbMatch[2]).toString(16).padStart(2, '0');
+    const b = parseInt(rgbMatch[3]).toString(16).padStart(2, '0');
+    return `#${r}${g}${b}`;
+  }
+  
+  // HSL format
+  const hslMatch = trimmed.match(/hsl\((\d+),?\s*(\d+)%?,?\s*(\d+)%?\)/);
+  if (hslMatch) {
+    const h = parseInt(hslMatch[1]) / 360;
+    const s = parseInt(hslMatch[2]) / 100;
+    const l = parseInt(hslMatch[3]) / 100;
+    
+    const hue2rgb = (p, q, t) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+    
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    const r = Math.round(hue2rgb(p, q, h + 1/3) * 255).toString(16).padStart(2, '0');
+    const g = Math.round(hue2rgb(p, q, h) * 255).toString(16).padStart(2, '0');
+    const b = Math.round(hue2rgb(p, q, h - 1/3) * 255).toString(16).padStart(2, '0');
+    return `#${r}${g}${b}`;
+  }
+  
+  return '#000000';
+};
+
 const TOKEN_CATEGORIES = {
   colors: {
     label: "Colors",
@@ -237,6 +321,8 @@ export default function DesignTokenEditor() {
 }
 
 function TokenEditor({ token, value, onChange }) {
+  const hexValue = token.type === 'color' ? parseColorToHex(value) : null;
+  
   return (
     <div className="space-y-2">
       <Label>{token.label}</Label>
@@ -250,7 +336,7 @@ function TokenEditor({ token, value, onChange }) {
         {token.type === 'color' && (
           <input
             type="color"
-            value={value.startsWith('#') ? value : '#000000'}
+            value={hexValue}
             onChange={(e) => onChange(e.target.value)}
             className="w-12 h-10 rounded border cursor-pointer"
           />
