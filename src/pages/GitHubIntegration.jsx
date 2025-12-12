@@ -120,7 +120,7 @@ export default function GitHubIntegration() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {repo ? (
+            {repo && repo.owner ? (
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
                   <img src={repo.owner.avatar_url} alt={repo.owner.login} className="w-12 h-12 rounded-full" />
