@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Plus, Search, Pencil, Trash2, Loader2, Copy, FileText } from "lucide-react";
 import { toast } from "sonner";
+import { PullToRefresh } from "@/components/common/PullToRefresh";
 import { PageLoader, ButtonLoader, CardGridLoader } from "@/components/common/LoadingStates";
 import { QueryErrorState } from "@/components/common/QueryErrorState";
 import { useMutationError } from "@/components/common/MutationErrorToast";
@@ -207,6 +208,7 @@ export default function Estimates() {
   }
 
   return (
+    <PullToRefresh onRefresh={refetch} enabled={true}>
     <div className="p-3 sm:p-4 md:p-6 bg-background min-h-screen">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
         <h1 className="text-xl sm:text-2xl font-light font-display text-foreground">Estimates</h1>
@@ -245,12 +247,12 @@ export default function Estimates() {
                   {estimate.project_id && <p className="text-sm text-muted-foreground mt-1">Project: {getProjectName(estimate.project_id)}</p>}
                 </div>
                 <div className="flex gap-1">
-                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleDuplicate(estimate)}><Copy className="h-4 w-4" /></Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(estimate)}><Pencil className="h-4 w-4" /></Button>
+                  <Button variant="ghost" size="icon" className="touch-target-sm" onClick={() => handleDuplicate(estimate)}><Copy className="h-4 w-4" /></Button>
+                  <Button variant="ghost" size="icon" className="touch-target-sm" onClick={() => handleEdit(estimate)}><Pencil className="h-4 w-4" /></Button>
                   <Button 
                     variant="ghost" 
                     size="icon" 
-                    className="h-8 w-8 text-destructive" 
+                    className="touch-target-sm text-destructive" 
                     onClick={() => deleteMutation.mutate(estimate.id)}
                     disabled={deleteMutation.isPending}
                   >
@@ -352,5 +354,6 @@ export default function Estimates() {
         </DialogContent>
       </Dialog>
     </div>
+    </PullToRefresh>
   );
 }

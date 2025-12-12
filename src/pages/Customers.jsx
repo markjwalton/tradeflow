@@ -167,6 +167,7 @@ export default function Customers() {
   }
 
   return (
+    <PullToRefresh onRefresh={refetch} enabled={true}>
     <div className="p-3 sm:p-4 md:p-6 bg-background min-h-screen">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
         <h1 className="text-xl sm:text-2xl font-light font-display text-foreground">Customers</h1>
@@ -354,5 +355,6 @@ export default function Customers() {
         </DialogContent>
       </Dialog>
     </div>
+    </PullToRefresh>
   );
 }
