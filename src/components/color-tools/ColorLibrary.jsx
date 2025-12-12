@@ -30,6 +30,15 @@ export function ColorLibrary({ tenantId }) {
   const [groupDialogOpen, setGroupDialogOpen] = useState(false);
   const [groupName, setGroupName] = useState("");
   const [expandedDarkMode, setExpandedDarkMode] = useState({});
+  const [expandedAlpha, setExpandedAlpha] = useState({});
+  const [expandedGradients, setExpandedGradients] = useState({});
+  const [alphaDialogOpen, setAlphaDialogOpen] = useState(false);
+  const [gradientDialogOpen, setGradientDialogOpen] = useState(false);
+  const [currentPaletteForAlpha, setCurrentPaletteForAlpha] = useState(null);
+  const [currentPaletteForGradient, setCurrentPaletteForGradient] = useState(null);
+  const [alphaPercentage, setAlphaPercentage] = useState(50);
+  const [gradientType, setGradientType] = useState('linear');
+  const [gradientAngle, setGradientAngle] = useState(90);
   const queryClient = useQueryClient();
   
   const { data: palettes = [], isLoading } = useQuery({
@@ -55,6 +64,21 @@ export function ColorLibrary({ tenantId }) {
 
   const generateDarkModeMutation = useMutation({
     mutationFn: (paletteId) => base44.functions.invoke('generateDarkModePalette', { paletteId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["colorPalettes"]);
+    }
+  });
+
+  const generateAlphaMutation = useMutation({
+    mutationFn: ({ paletteId, alphaPercentage }) => base44.functions.invoke('generateAlphaPalette', { paletteId, alphaPercentage }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["colorPalettes"]);
+    }
+  });
+
+  const generateGradientMutation = useMutation({
+    mutationFn: ({ paletteId, gradientType, angle, selectedColors }) => 
+      base44.functions.invoke('generateGradientFromPalette', { paletteId, gradientType, angle, selectedColors }),
     onSuccess: () => {
       queryClient.invalidateQueries(["colorPalettes"]);
     }
@@ -174,6 +198,14 @@ export function ColorLibrary({ tenantId }) {
 
   const getDarkModeVersion = (paletteId) => {
     return palettes.find(p => p.parent_palette_id === paletteId && p.is_dark_mode_alternative);
+  };
+
+  const getAlphaVariants = (paletteId) => {
+    return palettes.filter(p => p.parent_palette_id === paletteId && p.is_alpha_variant);
+  };
+
+  const getGradientVariants = (paletteId) => {
+    return palettes.filter(p => p.parent_palette_id === paletteId && p.category === 'gradient');
   };
 
   const totalPages = Math.ceil(filteredPalettes.length / itemsPerPage);
@@ -376,7 +408,11 @@ export function ColorLibrary({ tenantId }) {
           <div className="grid gap-4">
             {paginatedPalettes.map((palette) => {
               const darkModeVersion = getDarkModeVersion(palette.id);
+              const alphaVariants = getAlphaVariants(palette.id);
+              const gradientVariants = getGradientVariants(palette.id);
               const showDarkMode = expandedDarkMode[palette.id];
+              const showAlpha = expandedAlpha[palette.id];
+              const showGradients = expandedGradients[palette.id];
 
               return (
             <div key={palette.id} className="space-y-2">
@@ -444,6 +480,50 @@ export function ColorLibrary({ tenantId }) {
                       title="Generate AI Dark Mode"
                     >
                       <Moon className="h-4 w-4" />
+                    </Button>
+                  )}
+                  {alphaVariants.length > 0 ? (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setExpandedAlpha({ ...expandedAlpha, [palette.id]: !showAlpha })}
+                      title="Toggle Alpha Variants"
+                    >
+                      {showAlpha ? <EyeOff className="h-4 w-4" /> : <Droplet className="h-4 w-4" />}
+                    </Button>
+                  ) : !palette.is_alpha_variant && palette.category !== 'gradient' && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => {
+                        setCurrentPaletteForAlpha(palette);
+                        setAlphaDialogOpen(true);
+                      }}
+                      title="Generate Alpha Variants"
+                    >
+                      <Droplet className="h-4 w-4" />
+                    </Button>
+                  )}
+                  {gradientVariants.length > 0 ? (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setExpandedGradients({ ...expandedGradients, [palette.id]: !showGradients })}
+                      title="Toggle Gradient Variants"
+                    >
+                      {showGradients ? <EyeOff className="h-4 w-4" /> : <Zap className="h-4 w-4" />}
+                    </Button>
+                  ) : palette.category === 'palette' && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => {
+                        setCurrentPaletteForGradient(palette);
+                        setGradientDialogOpen(true);
+                      }}
+                      title="Create Gradient"
+                    >
+                      <Zap className="h-4 w-4" />
                     </Button>
                   )}
                   <Button
@@ -522,6 +602,143 @@ export function ColorLibrary({ tenantId }) {
                 )}
               </CardContent>
               </Card>
+
+              {showAlpha && alphaVariants.map((alphaVariant) => (
+              <Card key={alphaVariant.id} className="rounded-xl ml-8 border-l-4 border-accent-400">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                  <div className="space-y-1">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <Droplet className="h-4 w-4" />
+                      {alphaVariant.name}
+                    </CardTitle>
+                    {alphaVariant.description && (
+                      <p className="text-sm text-muted-foreground">{alphaVariant.description}</p>
+                    )}
+                    <div className="flex gap-1 mt-2">
+                      <Badge variant="default" className="bg-accent-500">Alpha {alphaVariant.alpha_percentage}%</Badge>
+                      {alphaVariant.tags?.map(tag => (
+                        <Badge key={tag} variant="secondary">{tag}</Badge>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex gap-1 items-center">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => copyColors(alphaVariant)}
+                    >
+                      {copied === alphaVariant.id ? 
+                        <Check className="h-4 w-4" /> : 
+                        <Copy className="h-4 w-4" />
+                      }
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => deleteMutation.mutate(alphaVariant.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-5 gap-2">
+                    {alphaVariant.colors?.map((color, i) => (
+                      <div key={i} className="space-y-1">
+                        <div className="h-16 rounded border relative overflow-hidden">
+                          <div 
+                            className="absolute inset-0"
+                            style={{ backgroundColor: color.hex, opacity: color.alpha || 1 }}
+                          />
+                          <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,#ccc_0,#ccc_10px,#fff_10px,#fff_20px)] -z-10" />
+                        </div>
+                        <div className="text-xs text-center text-muted-foreground">
+                          {color.name}
+                        </div>
+                        <div className="flex items-center justify-center gap-1">
+                          <div className="text-xs text-center font-mono">
+                            {showHex ? color.hex : color.oklch}
+                          </div>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-5 w-5 p-0"
+                            onClick={() => copyColorRef(color)}
+                          >
+                            {copied === color.hex ? 
+                              <Check className="h-3 w-3" /> : 
+                              <Copy className="h-3 w-3" />
+                            }
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+              ))}
+
+              {showGradients && gradientVariants.map((gradientVariant) => (
+              <Card key={gradientVariant.id} className="rounded-xl ml-8 border-l-4 border-secondary-400">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                  <div className="space-y-1">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <Zap className="h-4 w-4" />
+                      {gradientVariant.name}
+                    </CardTitle>
+                    {gradientVariant.description && (
+                      <p className="text-sm text-muted-foreground">{gradientVariant.description}</p>
+                    )}
+                    <div className="flex gap-1 mt-2">
+                      <Badge variant="default" className="bg-secondary-500">{gradientVariant.gradient?.type || 'linear'}</Badge>
+                      {gradientVariant.tags?.map(tag => (
+                        <Badge key={tag} variant="secondary">{tag}</Badge>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex gap-1 items-center">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => {
+                        const css = gradientVariant.gradient?.type === 'linear' 
+                          ? `linear-gradient(${gradientVariant.gradient?.angle || 90}deg, ${gradientVariant.colors.map(c => c.hex).join(', ')})`
+                          : gradientVariant.gradient?.type === 'radial'
+                          ? `radial-gradient(circle, ${gradientVariant.colors.map(c => c.hex).join(', ')})`
+                          : `conic-gradient(from ${gradientVariant.gradient?.angle || 0}deg, ${gradientVariant.colors.map(c => c.hex).join(', ')})`;
+                        navigator.clipboard.writeText(css);
+                        setCopied(gradientVariant.id);
+                        setTimeout(() => setCopied(null), 2000);
+                      }}
+                    >
+                      {copied === gradientVariant.id ? 
+                        <Check className="h-4 w-4" /> : 
+                        <Copy className="h-4 w-4" />
+                      }
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => deleteMutation.mutate(gradientVariant.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div 
+                    className="w-full h-24 rounded-lg border"
+                    style={{
+                      background: gradientVariant.gradient?.type === 'linear' 
+                        ? `linear-gradient(${gradientVariant.gradient?.angle || 90}deg, ${gradientVariant.colors.map(c => c.hex).join(', ')})`
+                        : gradientVariant.gradient?.type === 'radial'
+                        ? `radial-gradient(circle, ${gradientVariant.colors.map(c => c.hex).join(', ')})`
+                        : `conic-gradient(from ${gradientVariant.gradient?.angle || 0}deg, ${gradientVariant.colors.map(c => c.hex).join(', ')})`
+                    }}
+                  />
+                </CardContent>
+              </Card>
+              ))}
 
               {showDarkMode && darkModeVersion && (
               <Card className="rounded-xl ml-8 border-l-4 border-midnight-700">
@@ -670,6 +887,108 @@ export function ColorLibrary({ tenantId }) {
                 disabled={!groupName.trim() || groupPalettesMutation.isPending}
               >
                 Create Group
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={alphaDialogOpen} onOpenChange={setAlphaDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Generate Alpha Variant</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Create transparency variants perfect for overlays and backgrounds.
+            </p>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <Label>Alpha Percentage</Label>
+                <span className="text-sm text-muted-foreground">{alphaPercentage}%</span>
+              </div>
+              <Slider
+                value={[alphaPercentage]}
+                onValueChange={([val]) => setAlphaPercentage(val)}
+                min={10}
+                max={90}
+                step={5}
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setAlphaDialogOpen(false)}>Cancel</Button>
+              <Button 
+                onClick={async () => {
+                  if (currentPaletteForAlpha) {
+                    await generateAlphaMutation.mutateAsync({ 
+                      paletteId: currentPaletteForAlpha.id, 
+                      alphaPercentage 
+                    });
+                    setAlphaDialogOpen(false);
+                  }
+                }}
+                disabled={generateAlphaMutation.isPending}
+              >
+                Generate Alpha Variant
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={gradientDialogOpen} onOpenChange={setGradientDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create Gradient from Palette</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Generate a gradient using colors from this palette.
+            </p>
+            <div className="space-y-2">
+              <Label>Gradient Type</Label>
+              <Select value={gradientType} onValueChange={setGradientType}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="linear">Linear</SelectItem>
+                  <SelectItem value="radial">Radial</SelectItem>
+                  <SelectItem value="conic">Conic</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            {gradientType !== 'radial' && (
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <Label>Angle</Label>
+                  <span className="text-sm text-muted-foreground">{gradientAngle}°</span>
+                </div>
+                <Slider
+                  value={[gradientAngle]}
+                  onValueChange={([val]) => setGradientAngle(val)}
+                  min={0}
+                  max={360}
+                  step={15}
+                />
+              </div>
+            )}
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setGradientDialogOpen(false)}>Cancel</Button>
+              <Button 
+                onClick={async () => {
+                  if (currentPaletteForGradient) {
+                    await generateGradientMutation.mutateAsync({ 
+                      paletteId: currentPaletteForGradient.id, 
+                      gradientType,
+                      angle: gradientAngle
+                    });
+                    setGradientDialogOpen(false);
+                  }
+                }}
+                disabled={generateGradientMutation.isPending}
+              >
+                Create Gradient
               </Button>
             </div>
           </div>
