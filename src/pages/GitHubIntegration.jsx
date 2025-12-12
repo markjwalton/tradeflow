@@ -14,7 +14,23 @@ export default function GitHubIntegration() {
   const [files, setFiles] = useState([]);
   const [issues, setIssues] = useState([]);
   const [commits, setCommits] = useState([]);
+  const [repo, setRepo] = useState(null);
   const [error, setError] = useState(null);
+
+  // Load repository info on mount
+  React.useEffect(() => {
+    const loadRepo = async () => {
+      try {
+        const { data } = await base44.functions.invoke('githubApi', {
+          action: 'get_repo'
+        });
+        setRepo(data.repo);
+      } catch (e) {
+        console.error("Failed to load repo:", e);
+      }
+    };
+    loadRepo();
+  }, []);
 
   const handleGetFile = async () => {
     setLoading(true);
