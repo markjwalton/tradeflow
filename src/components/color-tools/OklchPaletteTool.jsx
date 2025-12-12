@@ -26,9 +26,9 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
   const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(null);
   // Brand color generator state
-  const [primaryColor, setPrimaryColor] = useState("oklch(0.398 0.037 159.8)");
-  const [secondaryColor, setSecondaryColor] = useState("oklch(0.728 0.074 70.3)");
-  const [accentColor, setAccentColor] = useState("oklch(0.785 0.044 35.6)");
+  const [primaryColor, setPrimaryColor] = useState("var(--color-primary)");
+  const [secondaryColor, setSecondaryColor] = useState("var(--color-secondary)");
+  const [accentColor, setAccentColor] = useState("var(--color-accent)");
 
   // Load colors from CSS variables after component mounts - now OKLCH-first
   useEffect(() => {
@@ -625,7 +625,7 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
                   type="color"
                   value={(() => {
                     const parsed = parseColorInput(primaryColor);
-                    return parsed ? oklchToRgb(parsed.l, parsed.c, parsed.h) : (primaryColor.startsWith('#') ? primaryColor : '#4a5d4e');
+                    return parsed ? oklchToRgb(parsed.l, parsed.c, parsed.h) : (primaryColor.startsWith('#') ? primaryColor : 'var(--color-primary)');
                   })()}
                   onChange={(e) => {
                     const oklch = hexToOklch(e.target.value);
@@ -637,7 +637,7 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
                   <Input
                     value={primaryColor}
                     onChange={(e) => setPrimaryColor(e.target.value)}
-                    placeholder={primaryFormat === 'hex' ? '#4a5d4e' : primaryFormat === 'rgb' ? 'rgb(74, 93, 78)' : primaryFormat === 'hsl' ? 'hsl(135, 15%, 33%)' : 'oklch(0.5 0.1 150)'}
+                    placeholder={primaryFormat === 'hex' ? 'var(--color-primary)' : primaryFormat === 'rgb' ? 'rgb(74, 93, 78)' : primaryFormat === 'hsl' ? 'hsl(135, 15%, 33%)' : 'oklch(0.5 0.1 150)'}
                   />
                   {primaryFormat !== 'oklch' && parseColorInput(primaryColor) && (
                     <p className="text-xs text-muted-foreground font-mono">
@@ -654,7 +654,7 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
                   type="color"
                   value={(() => {
                     const parsed = parseColorInput(secondaryColor);
-                    return parsed ? oklchToRgb(parsed.l, parsed.c, parsed.h) : (secondaryColor.startsWith('#') ? secondaryColor : '#d4a574');
+                    return parsed ? oklchToRgb(parsed.l, parsed.c, parsed.h) : (secondaryColor.startsWith('#') ? secondaryColor : 'var(--color-secondary)');
                   })()}
                   onChange={(e) => {
                     const oklch = hexToOklch(e.target.value);
@@ -666,7 +666,7 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
                   <Input
                     value={secondaryColor}
                     onChange={(e) => setSecondaryColor(e.target.value)}
-                    placeholder={secondaryFormat === 'hex' ? '#d4a574' : secondaryFormat === 'rgb' ? 'rgb(212, 165, 116)' : secondaryFormat === 'hsl' ? 'hsl(31, 52%, 64%)' : 'oklch(0.7 0.09 70)'}
+                    placeholder={secondaryFormat === 'hex' ? 'var(--color-secondary)' : secondaryFormat === 'rgb' ? 'rgb(212, 165, 116)' : secondaryFormat === 'hsl' ? 'hsl(31, 52%, 64%)' : 'oklch(0.7 0.09 70)'}
                   />
                   {secondaryFormat !== 'oklch' && parseColorInput(secondaryColor) && (
                     <p className="text-xs text-muted-foreground font-mono">
@@ -683,7 +683,7 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
                   type="color"
                   value={(() => {
                     const parsed = parseColorInput(accentColor);
-                    return parsed ? oklchToRgb(parsed.l, parsed.c, parsed.h) : (accentColor.startsWith('#') ? accentColor : '#d9b4a7');
+                    return parsed ? oklchToRgb(parsed.l, parsed.c, parsed.h) : (accentColor.startsWith('#') ? accentColor : 'var(--color-accent)');
                   })()}
                   onChange={(e) => {
                     const oklch = hexToOklch(e.target.value);
@@ -695,7 +695,7 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
                   <Input
                     value={accentColor}
                     onChange={(e) => setAccentColor(e.target.value)}
-                    placeholder={accentFormat === 'hex' ? '#d9b4a7' : accentFormat === 'rgb' ? 'rgb(217, 180, 167)' : accentFormat === 'hsl' ? 'hsl(16, 37%, 75%)' : 'oklch(0.78 0.05 35)'}
+                    placeholder={accentFormat === 'hex' ? 'var(--color-accent)' : accentFormat === 'rgb' ? 'rgb(217, 180, 167)' : accentFormat === 'hsl' ? 'hsl(16, 37%, 75%)' : 'oklch(0.78 0.05 35)'}
                   />
                   {accentFormat !== 'oklch' && parseColorInput(accentColor) && (
                     <p className="text-xs text-muted-foreground font-mono">
@@ -717,7 +717,7 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
                 className="flex-1"
               />
               <Input
-                placeholder="hex, rgb, hsl, or oklch"
+                placeholder="var(--color-*) or hex/rgb/hsl/oklch"
                 value={customColorHex}
                 onChange={(e) => setCustomColorHex(e.target.value)}
                 className="flex-1"
@@ -844,7 +844,7 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
                 value={startingColorInput}
                 onChange={(e) => setStartingColorInput(e.target.value)}
                 placeholder={
-                  manualInputFormat === 'hex' ? '#4a5d4e' : 
+                  manualInputFormat === 'hex' ? 'var(--color-primary)' : 
                   manualInputFormat === 'rgb' ? 'rgb(74, 93, 78)' : 
                   manualInputFormat === 'hsl' ? 'hsl(135, 15%, 33%)' : 
                   'oklch(0.5 0.1 150)'
