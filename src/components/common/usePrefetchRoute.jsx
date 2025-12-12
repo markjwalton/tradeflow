@@ -23,30 +23,35 @@ export function usePrefetchEntity(entityName, options = {}) {
 
 /**
  * Hook to prefetch route data on hover/intent
- * @param {string[]} entities - Array of entity names to prefetch
- * @param {object} options - Prefetch options
+ * Returns specific prefetch functions for common routes
  */
-export function usePrefetchRoute(entities = [], options = {}) {
+export function usePrefetchRoute() {
   const queryClient = useQueryClient();
 
-  const prefetch = () => {
+  const createPrefetch = (entities) => () => {
     entities.forEach(entityName => {
       queryClient.prefetchQuery({
         queryKey: [entityName],
         queryFn: () => base44.entities[entityName]?.list() || Promise.resolve([]),
-        staleTime: options.staleTime || 5 * 60 * 1000,
+        staleTime: 5 * 60 * 1000, // 5 minutes
       });
     });
   };
 
-  // Auto-prefetch on mount if enabled
-  useEffect(() => {
-    if (options.prefetchOnMount) {
-      prefetch();
-    }
-  }, []);
-
-  return prefetch;
+  return {
+    prefetchProjects: createPrefetch(['Project', 'Customer', 'TeamMember']),
+    prefetchTasks: createPrefetch(['Task', 'Project']),
+    prefetchCustomers: createPrefetch(['Customer', 'Project']),
+    prefetchTeam: createPrefetch(['TeamMember', 'Absence']),
+    prefetchMindMaps: createPrefetch(['MindMap', 'MindMapNode']),
+    prefetchRoadmap: createPrefetch(['RoadmapItem', 'DevelopmentSprint']),
+    prefetchLibrary: (type) => createPrefetch([
+      type === 'EntityLibrary' ? 'EntityTemplate' : 
+      type === 'PageLibrary' ? 'PageTemplate' : 
+      type === 'FeatureLibrary' ? 'FeatureTemplate' : 
+      'BusinessTemplate'
+    ])(),
+  };
 }
 
 /**
