@@ -63,69 +63,6 @@ export default function NavigationManager() {
     }
   };
 
-  // Save current navigation config
-  const handleSaveConfig = async () => {
-    try {
-      const configs = await base44.entities.NavigationConfig.filter({ config_type: activeTab === "admin" ? "admin_console" : activeTab === "app" ? "app_pages_source" : `tenant_nav_${selectedTenantId}` });
-      if (configs.length === 0) {
-        toast.error("No configuration to save");
-        return;
-      }
-      
-      const config = configs[0];
-      const user = await base44.auth.me();
-      await base44.auth.updateMe({
-        ui_preferences: {
-          ...(user.ui_preferences || {}),
-          saved_nav_config: {
-            type: activeTab === "admin" ? "admin_console" : activeTab === "app" ? "app_pages_source" : "tenant",
-            tenantId: activeTab === "tenant" ? selectedTenantId : null,
-            items: config.items,
-            source_slugs: config.source_slugs,
-            saved_at: new Date().toISOString()
-          }
-        }
-      });
-      toast.success("Navigation configuration saved");
-    } catch (e) {
-      toast.error("Failed to save: " + e.message);
-    }
-  };
-
-  // Restore saved navigation config
-  const handleRestoreConfig = async () => {
-    try {
-      const user = await base44.auth.me();
-      const savedConfig = user?.ui_preferences?.saved_nav_config;
-      
-      if (!savedConfig) {
-        toast.error("No saved configuration found");
-        return;
-      }
-      
-      const configType = activeTab === "admin" ? "admin_console" : activeTab === "app" ? "app_pages_source" : `tenant_nav_${selectedTenantId}`;
-      const configs = await base44.entities.NavigationConfig.filter({ config_type: configType });
-      
-      if (configs.length === 0) {
-        await base44.entities.NavigationConfig.create({
-          config_type: configType,
-          items: savedConfig.items,
-          source_slugs: savedConfig.source_slugs || []
-        });
-      } else {
-        await base44.entities.NavigationConfig.update(configs[0].id, {
-          items: savedConfig.items,
-          source_slugs: savedConfig.source_slugs || []
-        });
-      }
-      
-      queryClient.invalidateQueries({ queryKey: ["navConfig"] });
-      toast.success("Configuration restored successfully");
-    } catch (e) {
-      toast.error("Failed to restore: " + e.message);
-    }
-  };
-
   // Sync unallocated pages mutation - manually adds known showcase pages to source_slugs
   const syncUnallocatedPages = useMutation({
     mutationFn: async (configType) => {
@@ -190,9 +127,106 @@ export default function NavigationManager() {
     }
   });
 
+  // Save current navigation config
+  const saveNavConfig = useMutation({
+    mutationFn: async () => {
+      const configs = await base44.entities.NavigationConfig.filter({});
+      const savedData = {
+        timestamp: new Date().toISOString(),
+        configs: configs.map(c => ({
+          config_type: c.config_type,
+          items: c.items,
+          source_slugs: c.source_slugs,
+          public_pages: c.public_pages,
+          standalone_pages: c.standalone_pages,
+          fullscreen_pages: c.fullscreen_pages
+        }))
+      };
+      await base44.auth.updateMe({
+        saved_nav_config: savedData
+      });
+      return savedData;
+    },
+    onSuccess: (data) => {
+      toast.success(`Navigation config saved (${new Date(data.timestamp).toLocaleString()})`);
+      base44.auth.me().then(setCurrentUser);
+    },
+    onError: (error) => {
+      toast.error("Failed to save config: " + error.message);
+    }
+  });
+
+  // Restore saved navigation config
+  const restoreNavConfig = useMutation({
+    mutationFn: async () => {
+      const user = await base44.auth.me();
+      const savedData = user.saved_nav_config;
+      if (!savedData) {
+        throw new Error("No saved config found");
+      }
+
+      // Restore each config
+      for (const savedConfig of savedData.configs) {
+        const existing = await base44.entities.NavigationConfig.filter({
+          config_type: savedConfig.config_type
+        });
+        
+        if (existing.length > 0) {
+          await base44.entities.NavigationConfig.update(existing[0].id, {
+            items: savedConfig.items,
+            source_slugs: savedConfig.source_slugs,
+            public_pages: savedConfig.public_pages,
+            standalone_pages: savedConfig.standalone_pages,
+            fullscreen_pages: savedConfig.fullscreen_pages
+          });
+        } else {
+          await base44.entities.NavigationConfig.create(savedConfig);
+        }
+      }
+      
+      return savedData;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["navConfig"] });
+      toast.success(`Config restored from ${new Date(data.timestamp).toLocaleString()}`);
+    },
+    onError: (error) => {
+      toast.error("Failed to restore: " + error.message);
+    }
+  });
+
   // Set custom properties for the side panel
   useEffect(() => {
+    const savedTimestamp = currentUser?.saved_nav_config?.timestamp;
+    
     setCustomProperties([
+      {
+        key: "saveConfig",
+        label: "Save Navigation Config",
+        type: "button",
+        buttonLabel: saveNavConfig.isPending ? "Saving..." : "Save Current Config",
+        description: savedTimestamp 
+          ? `Last saved: ${new Date(savedTimestamp).toLocaleString()}`
+          : "Save the current navigation configuration",
+        onClick: () => saveNavConfig.mutate(),
+        disabled: saveNavConfig.isPending
+      },
+      {
+        key: "restoreConfig",
+        label: "Restore Navigation Config",
+        type: "button",
+        buttonLabel: restoreNavConfig.isPending ? "Restoring..." : "Restore Saved Config",
+        description: savedTimestamp
+          ? "Restore navigation from saved backup"
+          : "No saved config available",
+        onClick: () => restoreNavConfig.mutate(),
+        disabled: !savedTimestamp || restoreNavConfig.isPending,
+        variant: "outline"
+      },
+      {
+        key: "divider1",
+        type: "divider"
+      },
       {
         key: "defaultTab",
         label: "Default Tab",
@@ -213,27 +247,11 @@ export default function NavigationManager() {
         value: pageSettings.defaultCollapsed || false,
         description: "All folders start collapsed on page load",
         onChange: (value) => handleSaveSettings("defaultCollapsed", value)
-      },
-      {
-        key: "saveConfig",
-        label: "Save Current Config",
-        type: "button",
-        buttonLabel: "Save Configuration",
-        description: "Save current navigation config (overwrites previous save)",
-        onClick: handleSaveConfig
-      },
-      {
-        key: "restoreConfig",
-        label: "Restore Saved Config",
-        type: "button",
-        buttonLabel: "Restore Configuration",
-        description: "Restore previously saved navigation config",
-        onClick: handleRestoreConfig
       }
     ]);
 
     return () => setCustomProperties([]);
-  }, [pageSettings, setCustomProperties, activeTab, selectedTenantId]);
+  }, [pageSettings, setCustomProperties, currentUser, saveNavConfig.isPending, restoreNavConfig.isPending]);
 
   // Fetch tenants for selector
   const { data: tenants = [] } = useQuery({
