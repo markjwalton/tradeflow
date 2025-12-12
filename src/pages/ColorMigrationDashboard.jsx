@@ -499,7 +499,20 @@ export default function ColorMigrationDashboard() {
                 <Alert className="bg-green-50 border-green-200">
                   <CheckCircle2 className="h-4 w-4 text-green-600" />
                   <AlertDescription className="text-green-800">
-                    Successfully migrated {migrationResults.totalChanges} instances across {migrationResults.results.length} files!
+                    <div className="space-y-2">
+                      <p>Successfully migrated {migrationResults.totalChanges} instances across {migrationResults.results.length} files!</p>
+                      {migrationResults.prUrl && (
+                        <a 
+                          href={migrationResults.prUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-sm underline"
+                        >
+                          <ArrowRight className="h-3 w-3" />
+                          Create Pull Request on GitHub
+                        </a>
+                      )}
+                    </div>
                   </AlertDescription>
                 </Alert>
               )}
