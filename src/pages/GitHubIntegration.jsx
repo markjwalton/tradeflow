@@ -32,7 +32,7 @@ export default function GitHubIntegration() {
   };
 
   // Load repository info on mount
-  React.useEffect(() => {
+  useEffect(() => {
     handleGetRepo();
   }, []);
 
