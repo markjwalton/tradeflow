@@ -1,5 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { LazyImage } from './LazyImage';
+
+// Convert image URL to WebP format
+const toWebP = (src) => {
+  if (!src || src.startsWith('data:') || src.includes('.svg')) return src;
+  
+  const ext = src.split('.').pop()?.toLowerCase();
+  if (['jpg', 'jpeg', 'png'].includes(ext)) {
+    return src.replace(new RegExp(`\\.${ext}$`), '.webp');
+  }
+  
+  return src;
+};
 
 // Helper to generate srcset for responsive images
 const generateSrcSet = (src, widths = [320, 640, 960, 1280, 1920]) => {
@@ -20,18 +32,31 @@ export function OptimizedImage({
   height,
   sizes = '100vw',
   priority = false,
+  useWebP = true,
   ...props
 }) {
+  const [imgError, setImgError] = useState(false);
+  
+  // Determine final src (WebP or fallback)
+  const finalSrc = useWebP && !imgError ? toWebP(src) : src;
+  
+  const handleError = () => {
+    if (useWebP && !imgError) {
+      setImgError(true);
+    }
+  };
+
   // For priority images (above fold), skip lazy loading
   if (priority) {
     return (
       <img
-        src={src}
+        src={finalSrc}
         alt={alt}
         width={width}
         height={height}
         loading="eager"
         fetchpriority="high"
+        onError={handleError}
         {...props}
       />
     );
@@ -40,10 +65,11 @@ export function OptimizedImage({
   // For regular images, use lazy loading
   return (
     <LazyImage
-      src={src}
+      src={finalSrc}
       alt={alt}
       width={width}
       height={height}
+      onError={handleError}
       {...props}
     />
   );
