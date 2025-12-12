@@ -7,7 +7,6 @@ import { cssVariables } from "@/components/library/designTokens";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { prefetchOnIdle, prefetchDashboardQueries, prefetchLibraryQueries } from "@/components/common/queryPrefetch";
-import { initSentry, setUserContext } from "@/components/monitoring/sentryConfig";
 
 // Tenant Context
 export const TenantContext = createContext(null);
@@ -24,6 +23,12 @@ import { TopEditorPanel } from "@/components/page-builder/TopEditorPanel";
 import { Palette } from "lucide-react";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { WebVitals } from "@/components/common/WebVitals";
+import { initializeSentry, setUserContext } from "@/components/common/sentryConfig";
+
+// Initialize Sentry once
+if (typeof window !== 'undefined') {
+  initializeSentry();
+}
 
 export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
@@ -54,17 +59,10 @@ export default function Layout({ children, currentPageName }) {
   const isTenantPage = false;
 
   useEffect(() => {
-    // Initialize Sentry on first load
-    initSentry();
-    
     // Load editor bubble preference and reset live edit mode on page load
     const loadBubblePreference = async () => {
       try {
         const user = await base44.auth.me();
-        
-        // Set user context for Sentry
-        setUserContext(user);
-        
         if (user?.ui_preferences?.showEditorBubble !== undefined) {
           setShowEditorBubble(user.ui_preferences.showEditorBubble);
         }
@@ -238,6 +236,13 @@ export default function Layout({ children, currentPageName }) {
         }
         setCurrentUser(user);
         setIsGlobalAdmin(user.is_global_admin === true);
+        
+        // Set Sentry user context
+        try {
+          setUserContext(user);
+        } catch (e) {
+          console.error('Failed to set Sentry context:', e);
+        }
         
         const configStandalonePages = loadedNavConfig?.standalone_pages || [];
         const isAdminPage = loadedNavItems.some(item => item.slug === currentPageName) || configStandalonePages.includes(currentPageName);
