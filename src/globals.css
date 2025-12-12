@@ -165,6 +165,7 @@
   --primary-700: #334036;
   --primary-800: #2a342c;
   --primary-900: #232b25;
+  --primary-alpha: oklch(from var(--primary-500) l c h / 0.5);
 
   /* Secondary Color Scale (Warm Beige) */
   --secondary-50: #faf8f4;
@@ -177,6 +178,7 @@
   --secondary-700: #98683f;
   --secondary-800: #7c5539;
   --secondary-900: #654731;
+  --secondary-alpha: oklch(from var(--secondary-400) l c h / 0.5);
 
   /* Accent Color Scale (Dusty Rose) */
   --accent-50: #faf7f6;
@@ -189,6 +191,7 @@
   --accent-700: #93614f;
   --accent-800: #785043;
   --accent-900: #63433a;
+  --accent-alpha: oklch(from var(--accent-300) l c h / 0.5);
 
   /* Background Color Scale (Warm Off-White) */
   --background-50: #fdfcfa;
@@ -1234,6 +1237,26 @@
   }
   .bg-accent-900 {
     background-color: var(--accent-900);
+  }
+
+  /* Alpha/Transparency Utilities */
+  .bg-primary-alpha {
+    background-color: var(--primary-alpha);
+  }
+  .bg-secondary-alpha {
+    background-color: var(--secondary-alpha);
+  }
+  .bg-accent-alpha {
+    background-color: var(--accent-alpha);
+  }
+  .text-primary-alpha {
+    color: var(--primary-alpha);
+  }
+  .text-secondary-alpha {
+    color: var(--secondary-alpha);
+  }
+  .text-accent-alpha {
+    color: var(--accent-alpha);
   }
 
   .bg-charcoal-50 {

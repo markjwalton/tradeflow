@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { base44 } from "@/api/base44Client";
 import { Copy, Check, Sparkles, Upload, Save, X, Loader2, RefreshCw } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 
 export default function OklchPaletteTool({ onSave, brandColors: initialBrandColors }) {
   const [baseColor, setBaseColor] = useState({ l: 0, c: 0, h: 0 });
@@ -37,6 +38,13 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
   const [customColors, setCustomColors] = useState([]);
   const [customColorName, setCustomColorName] = useState("");
   const [customColorHex, setCustomColorHex] = useState("#000000");
+  
+  // Format selectors and alpha support
+  const [primaryFormat, setPrimaryFormat] = useState("hex");
+  const [secondaryFormat, setSecondaryFormat] = useState("hex");
+  const [accentFormat, setAccentFormat] = useState("hex");
+  const [alphaEnabled, setAlphaEnabled] = useState(false);
+  const [alphaPercentage, setAlphaPercentage] = useState(50);
   
   const oklchToRgb = (l, c, h) => {
     const a = c * Math.cos((h * Math.PI) / 180);
@@ -330,18 +338,35 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
     setPaletteTags(paletteTags.filter(t => t !== tag));
   };
   
-  const hexToOklch = (hex) => {
-    // Simple conversion - parse hex to RGB then to OKLCH
-    const r = parseInt(hex.slice(1, 3), 16) / 255;
-    const g = parseInt(hex.slice(3, 5), 16) / 255;
-    const b = parseInt(hex.slice(5, 7), 16) / 255;
-    
-    // Approximate OKLCH values (simplified)
+  const rgbToOklch = (r, g, b) => {
+    r /= 255; g /= 255; b /= 255;
     const l = 0.2126 * r + 0.7152 * g + 0.0722 * b;
     const c = Math.sqrt(Math.pow(r - l, 2) + Math.pow(g - l, 2) + Math.pow(b - l, 2)) * 0.4;
     const h = Math.atan2(b - l, r - l) * 180 / Math.PI;
-    
     return { l, c, h: (h + 360) % 360 };
+  };
+
+  const hslToOklch = (h, s, l) => {
+    // Convert HSL to RGB first
+    s /= 100; l /= 100;
+    const c = (1 - Math.abs(2 * l - 1)) * s;
+    const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+    const m = l - c / 2;
+    let r = 0, g = 0, b = 0;
+    if (h < 60) { r = c; g = x; }
+    else if (h < 120) { r = x; g = c; }
+    else if (h < 180) { g = c; b = x; }
+    else if (h < 240) { g = x; b = c; }
+    else if (h < 300) { r = x; b = c; }
+    else { r = c; b = x; }
+    return rgbToOklch((r + m) * 255, (g + m) * 255, (b + m) * 255);
+  };
+
+  const hexToOklch = (hex) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return rgbToOklch(r, g, b);
   };
 
   const parseColorInput = (input) => {
@@ -353,8 +378,49 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
       if (match) {
         return { l: parseFloat(match[1]), c: parseFloat(match[2]), h: parseFloat(match[3]) };
       }
+    } else if (trimmed.startsWith('rgb')) {
+      const match = trimmed.match(/rgb\((\d+),?\s*(\d+),?\s*(\d+)\)/);
+      if (match) {
+        return rgbToOklch(parseInt(match[1]), parseInt(match[2]), parseInt(match[3]));
+      }
+    } else if (trimmed.startsWith('hsl')) {
+      const match = trimmed.match(/hsl\((\d+),?\s*(\d+)%?,?\s*(\d+)%?\)/);
+      if (match) {
+        return hslToOklch(parseInt(match[1]), parseInt(match[2]), parseInt(match[3]));
+      }
     }
     return null;
+  };
+
+  const formatColorForDisplay = (oklch, format) => {
+    if (format === "oklch") {
+      return `oklch(${oklch.l.toFixed(3)} ${oklch.c.toFixed(3)} ${oklch.h.toFixed(1)})`;
+    } else if (format === "hex") {
+      return oklchToRgb(oklch.l, oklch.c, oklch.h);
+    } else if (format === "rgb") {
+      const hex = oklchToRgb(oklch.l, oklch.c, oklch.h);
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return `rgb(${r}, ${g}, ${b})`;
+    } else if (format === "hsl") {
+      const hex = oklchToRgb(oklch.l, oklch.c, oklch.h);
+      const r = parseInt(hex.slice(1, 3), 16) / 255;
+      const g = parseInt(hex.slice(3, 5), 16) / 255;
+      const b = parseInt(hex.slice(5, 7), 16) / 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      let h, s, l = (max + min) / 2;
+      if (max === min) { h = s = 0; }
+      else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+        else if (max === g) h = ((b - r) / d + 2) / 6;
+        else h = ((r - g) / d + 4) / 6;
+      }
+      return `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
+    }
+    return oklchToRgb(oklch.l, oklch.c, oklch.h);
   };
 
   const generateShades = (baseHex, colorType) => {
@@ -384,7 +450,7 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
   const generateBrandPalette = () => {
     const palette = [];
     
-    // Parse colors - handle both hex and OKLCH inputs
+    // Parse colors - handle multiple formats
     const parsedPrimary = parseColorInput(primaryColor) || hexToOklch(primaryColor);
     const parsedSecondary = parseColorInput(secondaryColor) || hexToOklch(secondaryColor);
     const parsedAccent = parseColorInput(accentColor) || hexToOklch(accentColor);
@@ -393,6 +459,38 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
     palette.push(...generateShadesFromOklch(parsedPrimary, "primary"));
     palette.push(...generateShadesFromOklch(parsedSecondary, "secondary"));
     palette.push(...generateShadesFromOklch(parsedAccent, "accent"));
+    
+    // Add alpha variants if enabled
+    if (alphaEnabled) {
+      const alpha = alphaPercentage / 100;
+      palette.push({
+        name: `primary-alpha-${alphaPercentage}`,
+        l: parsedPrimary.l,
+        c: parsedPrimary.c,
+        h: parsedPrimary.h,
+        alpha,
+        color_type: "primary",
+        shade: "alpha"
+      });
+      palette.push({
+        name: `secondary-alpha-${alphaPercentage}`,
+        l: parsedSecondary.l,
+        c: parsedSecondary.c,
+        h: parsedSecondary.h,
+        alpha,
+        color_type: "secondary",
+        shade: "alpha"
+      });
+      palette.push({
+        name: `accent-alpha-${alphaPercentage}`,
+        l: parsedAccent.l,
+        c: parsedAccent.c,
+        h: parsedAccent.h,
+        alpha,
+        color_type: "accent",
+        shade: "alpha"
+      });
+    }
     
     // Add custom colors
     customColors.forEach(cc => {
@@ -409,7 +507,7 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
     
     setColors(palette);
     setPaletteName("Brand Color System");
-    setPaletteDescription("Generated brand color palette with shades");
+    setPaletteDescription("Generated brand color palette with shades" + (alphaEnabled ? ` and ${alphaPercentage}% alpha variants` : ""));
     setPaletteTags(["brand", "system"]);
   };
 
@@ -436,10 +534,13 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
         category: isBrandPalette ? "group" : "palette",
         colors: colors.map(color => ({
           name: color.name,
-          oklch: `oklch(${color.l.toFixed(3)} ${color.c.toFixed(3)} ${color.h.toFixed(1)})`,
+          oklch: color.alpha 
+            ? `oklch(${color.l.toFixed(3)} ${color.c.toFixed(3)} ${color.h.toFixed(1)} / ${color.alpha})`
+            : `oklch(${color.l.toFixed(3)} ${color.c.toFixed(3)} ${color.h.toFixed(1)})`,
           hex: oklchToRgb(color.l, color.c, color.h),
           color_type: color.color_type || null,
-          shade: color.shade || null
+          shade: color.shade || null,
+          alpha: color.alpha || null
         })),
         tags: paletteTags.length > 0 ? paletteTags : [paletteType]
       };
@@ -471,16 +572,22 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
               <div className="flex gap-2">
                 <Input
                   type="color"
-                  value={primaryColor}
+                  value={primaryColor.startsWith('#') ? primaryColor : oklchToRgb(...(parseColorInput(primaryColor) || { l: 0.5, c: 0.1, h: 150 }))}
                   onChange={(e) => setPrimaryColor(e.target.value)}
                   className="w-16 h-10 p-1"
                 />
-                <Input
-                  value={primaryColor}
-                  onChange={(e) => setPrimaryColor(e.target.value)}
-                  placeholder="#4a5d4e or oklch(0.4 0.08 150)"
-                  className="flex-1"
-                />
+                <div className="flex-1 space-y-1">
+                  <Input
+                    value={primaryColor}
+                    onChange={(e) => setPrimaryColor(e.target.value)}
+                    placeholder="hex, rgb, hsl, or oklch"
+                  />
+                  {parseColorInput(primaryColor) && (
+                    <p className="text-xs text-muted-foreground font-mono">
+                      → {formatColorForDisplay(parseColorInput(primaryColor), "oklch")}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
             <div className="space-y-2">
@@ -488,16 +595,22 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
               <div className="flex gap-2">
                 <Input
                   type="color"
-                  value={secondaryColor}
+                  value={secondaryColor.startsWith('#') ? secondaryColor : oklchToRgb(...(parseColorInput(secondaryColor) || { l: 0.7, c: 0.09, h: 70 }))}
                   onChange={(e) => setSecondaryColor(e.target.value)}
                   className="w-16 h-10 p-1"
                 />
-                <Input
-                  value={secondaryColor}
-                  onChange={(e) => setSecondaryColor(e.target.value)}
-                  placeholder="#d4a574 or oklch(0.72 0.09 70)"
-                  className="flex-1"
-                />
+                <div className="flex-1 space-y-1">
+                  <Input
+                    value={secondaryColor}
+                    onChange={(e) => setSecondaryColor(e.target.value)}
+                    placeholder="hex, rgb, hsl, or oklch"
+                  />
+                  {parseColorInput(secondaryColor) && (
+                    <p className="text-xs text-muted-foreground font-mono">
+                      → {formatColorForDisplay(parseColorInput(secondaryColor), "oklch")}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
             <div className="space-y-2">
@@ -505,16 +618,22 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
               <div className="flex gap-2">
                 <Input
                   type="color"
-                  value={accentColor}
+                  value={accentColor.startsWith('#') ? accentColor : oklchToRgb(...(parseColorInput(accentColor) || { l: 0.78, c: 0.05, h: 35 }))}
                   onChange={(e) => setAccentColor(e.target.value)}
                   className="w-16 h-10 p-1"
                 />
-                <Input
-                  value={accentColor}
-                  onChange={(e) => setAccentColor(e.target.value)}
-                  placeholder="#d9b4a7 or oklch(0.78 0.05 35)"
-                  className="flex-1"
-                />
+                <div className="flex-1 space-y-1">
+                  <Input
+                    value={accentColor}
+                    onChange={(e) => setAccentColor(e.target.value)}
+                    placeholder="hex, rgb, hsl, or oklch"
+                  />
+                  {parseColorInput(accentColor) && (
+                    <p className="text-xs text-muted-foreground font-mono">
+                      → {formatColorForDisplay(parseColorInput(accentColor), "oklch")}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -529,7 +648,7 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
                 className="flex-1"
               />
               <Input
-                placeholder="#hex or oklch(...)"
+                placeholder="hex, rgb, hsl, or oklch"
                 value={customColorHex}
                 onChange={(e) => setCustomColorHex(e.target.value)}
                 className="flex-1"
@@ -549,8 +668,33 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
             )}
           </div>
 
+          <div className="space-y-2 border-t pt-4">
+            <div className="flex items-center justify-between">
+              <Label>Alpha/Transparency Variants</Label>
+              <Switch checked={alphaEnabled} onCheckedChange={setAlphaEnabled} />
+            </div>
+            {alphaEnabled && (
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <Label className="text-xs">Alpha Percentage</Label>
+                  <span className="text-xs text-muted-foreground">{alphaPercentage}%</span>
+                </div>
+                <Slider
+                  value={[alphaPercentage]}
+                  onValueChange={([val]) => setAlphaPercentage(val)}
+                  min={10}
+                  max={90}
+                  step={5}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Generates alpha variants for overlays on photos/backgrounds
+                </p>
+              </div>
+            )}
+          </div>
+
           <Button onClick={generateBrandPalette} className="w-full">
-            <Sparkles className="h-4 w-4 mr-2" /> Generate Brand Palette (15 colors + custom)
+            <Sparkles className="h-4 w-4 mr-2" /> Generate Brand Palette ({alphaEnabled ? '18' : '15'} colors + custom)
           </Button>
           
           <p className="text-xs text-muted-foreground">
@@ -722,9 +866,19 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
               <div key={index} className="space-y-2">
                 <div className="flex items-center gap-2">
                   <div 
-                    className="h-12 flex-1 rounded border"
-                    style={{ backgroundColor: oklchToRgb(color.l, color.c, color.h) }}
-                  />
+                    className="h-12 flex-1 rounded border relative overflow-hidden"
+                  >
+                    <div 
+                      className="absolute inset-0"
+                      style={{ 
+                        backgroundColor: oklchToRgb(color.l, color.c, color.h),
+                        opacity: color.alpha || 1
+                      }}
+                    />
+                    {color.alpha && (
+                      <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,#ccc_0,#ccc_10px,#fff_10px,#fff_20px)] -z-10" />
+                    )}
+                  </div>
                   <Input
                     value={color.name}
                     onChange={(e) => {
@@ -755,7 +909,8 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
                 </div>
                 <div className="text-xs text-muted-foreground font-mono space-y-1">
                   <div>HEX: {oklchToRgb(color.l, color.c, color.h)}</div>
-                  <div>OKLCH: oklch({color.l.toFixed(3)} {color.c.toFixed(3)} {color.h.toFixed(1)})</div>
+                  <div>OKLCH: oklch({color.l.toFixed(3)} {color.c.toFixed(3)} {color.h.toFixed(1)}{color.alpha ? ` / ${color.alpha}` : ''})</div>
+                  {color.alpha && <div className="text-primary">Alpha: {Math.round(color.alpha * 100)}%</div>}
                 </div>
               </div>
             ))}
