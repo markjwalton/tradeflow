@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { QueryErrorState } from "@/components/common/QueryErrorState";
-import { SkeletonTable } from "@/components/common/SkeletonTable";
+import { PageLoader, ButtonLoader } from "@/components/common/LoadingStates";
+import { ErrorRecovery } from "@/components/common/ErrorRecovery";
+import { useMutationError } from "@/components/common/MutationErrorToast";
 import { Pagination } from "@/components/ui/Pagination";
 import { useDebounce } from "@/components/common/useDebounce";
 import { Button } from "@/components/ui/button";
@@ -22,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Search, Pencil, Trash2, Loader2, Mail, Phone, Calendar } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Mail, Phone, Calendar } from "lucide-react";
 import { toast } from "sonner";
 
 const availabilityColors = {
@@ -64,7 +65,7 @@ export default function Team() {
       queryClient.invalidateQueries({ queryKey: ["teamMembers"] });
       setShowForm(false);
       resetForm();
-      toast.success("Team member added");
+      toast.success("Team member added successfully");
     },
   });
 
@@ -75,7 +76,7 @@ export default function Team() {
       setShowForm(false);
       setEditingMember(null);
       resetForm();
-      toast.success("Team member updated");
+      toast.success("Team member updated successfully");
     },
   });
 
@@ -83,9 +84,13 @@ export default function Team() {
     mutationFn: (id) => base44.entities.TeamMember.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["teamMembers"] });
-      toast.success("Team member removed");
+      toast.success("Team member removed successfully");
     },
   });
+
+  useMutationError(createMutation, { customMessage: "Failed to add team member" });
+  useMutationError(updateMutation, { customMessage: "Failed to update team member" });
+  useMutationError(deleteMutation, { customMessage: "Failed to remove team member" });
 
   const resetForm = () => {
     setFormData({
@@ -150,11 +155,11 @@ export default function Team() {
   );
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64 bg-background">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
+    return <PageLoader message="Loading team members..." />;
+  }
+
+  if (error) {
+    return <ErrorRecovery error={error} onRetry={refetch} />;
   }
 
   return (
