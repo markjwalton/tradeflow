@@ -46,6 +46,8 @@ export default function Tasks() {
   const debouncedSearch = useDebounce(search, 300);
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterProject, setFilterProject] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 15;
   const [showForm, setShowForm] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [formData, setFormData] = useState({
@@ -152,6 +154,12 @@ export default function Tasks() {
     return matchesSearch && matchesStatus && matchesProject;
   });
 
+  const totalPages = Math.ceil(filteredTasks.length / itemsPerPage);
+  const paginatedTasks = filteredTasks.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   const getProjectName = (projectId) => {
     const project = projects.find((p) => p.id === projectId);
     return project?.name || "Unassigned";
@@ -216,7 +224,7 @@ export default function Tasks() {
       </div>
 
       <div className="space-y-3">
-        {filteredTasks.map((task) => (
+        {paginatedTasks.map((task) => (
           <Card key={task.id} className="hover:shadow-md transition-shadow border-background-muted bg-card">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
@@ -254,6 +262,16 @@ export default function Tasks() {
       {filteredTasks.length === 0 && (
         <div className="text-center py-12 text-charcoal-700">
           No tasks found. Create your first task to get started.
+        </div>
+      )}
+
+      {totalPages > 1 && (
+        <div className="mt-6">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
       )}
 

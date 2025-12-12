@@ -49,6 +49,8 @@ export default function Projects() {
   const debouncedSearch = useDebounce(search, 300);
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterCustomer, setFilterCustomer] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
   const [showForm, setShowForm] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
   const [formData, setFormData] = useState({
@@ -147,6 +149,12 @@ export default function Projects() {
     return matchesSearch && matchesStatus && matchesCustomer;
   });
 
+  const totalPages = Math.ceil(filteredProjects.length / itemsPerPage);
+  const paginatedProjects = filteredProjects.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   const getCustomerName = (customerId) => {
     const customer = customers.find((c) => c.id === customerId);
     return customer?.name || "Unknown";
@@ -207,7 +215,7 @@ export default function Projects() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredProjects.map((project) => {
+        {paginatedProjects.map((project) => {
           const budgetProgress = project.budget > 0 ? (project.spend / project.budget) * 100 : 0;
           return (
             <Card key={project.id} className="hover:shadow-md transition-shadow bg-card">
@@ -251,6 +259,16 @@ export default function Projects() {
       {filteredProjects.length === 0 && (
         <div className="text-center py-12 text-muted-foreground">
           No projects found. Create your first project to get started.
+        </div>
+      )}
+
+      {totalPages > 1 && (
+        <div className="mt-6">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
       )}
 

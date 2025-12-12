@@ -37,6 +37,8 @@ export default function Customers() {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 300);
   const [filterStatus, setFilterStatus] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
   const [showForm, setShowForm] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState(null);
   const [formData, setFormData] = useState({
@@ -145,6 +147,12 @@ export default function Customers() {
     return matchesSearch && matchesStatus;
   });
 
+  const totalPages = Math.ceil(filteredCustomers.length / itemsPerPage);
+  const paginatedCustomers = filteredCustomers.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64 bg-background">
@@ -187,7 +195,7 @@ export default function Customers() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredCustomers.map((customer) => (
+        {paginatedCustomers.map((customer) => (
           <Card key={customer.id} className="hover:shadow-md transition-shadow bg-card">
             <CardHeader className="pb-2">
               <div className="flex items-start justify-between">
@@ -239,6 +247,16 @@ export default function Customers() {
       {filteredCustomers.length === 0 && (
         <div className="text-center py-12 text-muted-foreground">
           No customers found. Add your first customer to get started.
+        </div>
+      )}
+
+      {totalPages > 1 && (
+        <div className="mt-6">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
       )}
 

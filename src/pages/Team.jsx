@@ -37,6 +37,8 @@ export default function Team() {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 300);
   const [filterAvailability, setFilterAvailability] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
   const [showForm, setShowForm] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
   const [formData, setFormData] = useState({
@@ -141,6 +143,12 @@ export default function Team() {
     return matchesSearch && matchesAvailability;
   });
 
+  const totalPages = Math.ceil(filteredMembers.length / itemsPerPage);
+  const paginatedMembers = filteredMembers.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64 bg-background">
@@ -184,7 +192,7 @@ export default function Team() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredMembers.map((member) => {
+        {paginatedMembers.map((member) => {
           const holidaysRemaining = (member.annual_holiday_days || 25) - (member.holidays_used || 0);
           return (
             <Card key={member.id} className="hover:shadow-md transition-shadow bg-card">
@@ -235,6 +243,16 @@ export default function Team() {
       {filteredMembers.length === 0 && (
         <div className="text-center py-12 text-muted-foreground">
           No team members found. Add your first team member to get started.
+        </div>
+      )}
+
+      {totalPages > 1 && (
+        <div className="mt-6">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
       )}
 
