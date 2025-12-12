@@ -1,21 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense, memo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Sparkles, Save, Palette, Type, Code, Play, Trash2, Eye } from "lucide-react";
+import { Sparkles, Save, Eye, Trash2, Play, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
-export default function ThemeBuilder() {
+const Card = lazy(() => import("@/components/ui/card").then(m => ({ default: m.Card })));
+const CardContent = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardContent })));
+const CardHeader = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardHeader })));
+const CardTitle = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardTitle })));
+const Textarea = lazy(() => import("@/components/ui/textarea").then(m => ({ default: m.Textarea })));
+const Badge = lazy(() => import("@/components/ui/badge").then(m => ({ default: m.Badge })));
+const Select = lazy(() => import("@/components/ui/select").then(m => ({ default: m.Select })));
+const SelectContent = lazy(() => import("@/components/ui/select").then(m => ({ default: m.SelectContent })));
+const SelectItem = lazy(() => import("@/components/ui/select").then(m => ({ default: m.SelectItem })));
+const SelectTrigger = lazy(() => import("@/components/ui/select").then(m => ({ default: m.SelectTrigger })));
+const SelectValue = lazy(() => import("@/components/ui/select").then(m => ({ default: m.SelectValue })));
+const Tabs = lazy(() => import("@/components/ui/tabs").then(m => ({ default: m.Tabs })));
+const TabsList = lazy(() => import("@/components/ui/tabs").then(m => ({ default: m.TabsList })));
+const TabsTrigger = lazy(() => import("@/components/ui/tabs").then(m => ({ default: m.TabsTrigger })));
+const TabsContent = lazy(() => import("@/components/ui/tabs").then(m => ({ default: m.TabsContent })));
+
+const ThemeBuilder = () => {
   const navigate = useNavigate();
   const [theme, setTheme] = useState({
     name: "",
@@ -194,7 +204,8 @@ Return JSON with: name, description, suggested_palette_name, custom_css (CSS cod
   };
 
   return (
-    <div className="p-6 max-w-6xl mx-auto space-y-6">
+    <Suspense fallback={<div className="flex justify-center items-center min-h-screen"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
+      <div className="p-6 max-w-6xl mx-auto space-y-6">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-display">Theme Builder</h1>
@@ -372,6 +383,9 @@ Return JSON with: name, description, suggested_palette_name, custom_css (CSS cod
           )}
         </TabsContent>
       </Tabs>
-    </div>
+      </div>
+    </Suspense>
   );
-}
+};
+
+export default memo(ThemeBuilder);

@@ -1,18 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense, memo, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Trash2, Star, Plus, Type, Search } from "lucide-react";
+import { Trash2, Star, Plus, Search, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
-export default function FontManager() {
+const Card = lazy(() => import("@/components/ui/card").then(m => ({ default: m.Card })));
+const CardContent = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardContent })));
+const CardHeader = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardHeader })));
+const CardTitle = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardTitle })));
+const Badge = lazy(() => import("@/components/ui/badge").then(m => ({ default: m.Badge })));
+const Dialog = lazy(() => import("@/components/ui/dialog").then(m => ({ default: m.Dialog })));
+const DialogContent = lazy(() => import("@/components/ui/dialog").then(m => ({ default: m.DialogContent })));
+const DialogHeader = lazy(() => import("@/components/ui/dialog").then(m => ({ default: m.DialogHeader })));
+const DialogTitle = lazy(() => import("@/components/ui/dialog").then(m => ({ default: m.DialogTitle })));
+const DialogTrigger = lazy(() => import("@/components/ui/dialog").then(m => ({ default: m.DialogTrigger })));
+const Select = lazy(() => import("@/components/ui/select").then(m => ({ default: m.Select })));
+const SelectContent = lazy(() => import("@/components/ui/select").then(m => ({ default: m.SelectContent })));
+const SelectItem = lazy(() => import("@/components/ui/select").then(m => ({ default: m.SelectItem })));
+const SelectTrigger = lazy(() => import("@/components/ui/select").then(m => ({ default: m.SelectTrigger })));
+const SelectValue = lazy(() => import("@/components/ui/select").then(m => ({ default: m.SelectValue })));
+
+const FontManager = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -110,13 +121,16 @@ export default function FontManager() {
     });
   };
 
-  const filteredFonts = fonts.filter(f => {
-    const matchesSearch = f.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      f.font_family.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || f.category === selectedCategory;
-    const matchesSource = selectedSource === "all" || f.source === selectedSource;
-    return matchesSearch && matchesCategory && matchesSource;
-  });
+  const filteredFonts = React.useMemo(() => 
+    fonts.filter(f => {
+      const matchesSearch = f.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        f.font_family.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = selectedCategory === "all" || f.category === selectedCategory;
+      const matchesSource = selectedSource === "all" || f.source === selectedSource;
+      return matchesSearch && matchesCategory && matchesSource;
+    }),
+    [fonts, searchQuery, selectedCategory, selectedSource]
+  );
 
   const [headingFont, setHeadingFont] = useState("");
   const [bodyFont, setBodyFont] = useState("");
@@ -139,7 +153,8 @@ export default function FontManager() {
   }
 
   return (
-    <div className="p-6 max-w-6xl mx-auto space-y-6">
+    <Suspense fallback={<div className="flex justify-center items-center min-h-screen"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
+      <div className="p-6 max-w-6xl mx-auto space-y-6">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-display">Font Manager</h1>
@@ -356,6 +371,9 @@ export default function FontManager() {
           </Card>
         ))}
       </div>
-    </div>
+      </div>
+    </Suspense>
   );
-}
+};
+
+export default memo(FontManager);

@@ -1,15 +1,23 @@
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import React, { lazy, Suspense, memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Separator } from "@/components/ui/separator";
-import { CheckCircle2, AlertCircle, Info, Palette } from "lucide-react";
+import { CheckCircle2, AlertCircle, Info, Loader2 } from "lucide-react";
 
-export default function ThemePreview() {
+const Card = lazy(() => import("@/components/ui/card").then(m => ({ default: m.Card })));
+const CardContent = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardContent })));
+const CardHeader = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardHeader })));
+const CardTitle = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardTitle })));
+const CardDescription = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardDescription })));
+const Badge = lazy(() => import("@/components/ui/badge").then(m => ({ default: m.Badge })));
+const Tabs = lazy(() => import("@/components/ui/tabs").then(m => ({ default: m.Tabs })));
+const TabsList = lazy(() => import("@/components/ui/tabs").then(m => ({ default: m.TabsList })));
+const TabsTrigger = lazy(() => import("@/components/ui/tabs").then(m => ({ default: m.TabsTrigger })));
+const TabsContent = lazy(() => import("@/components/ui/tabs").then(m => ({ default: m.TabsContent })));
+const Alert = lazy(() => import("@/components/ui/alert").then(m => ({ default: m.Alert })));
+const AlertDescription = lazy(() => import("@/components/ui/alert").then(m => ({ default: m.AlertDescription })));
+
+const ThemePreview = () => {
   const [colorValues, setColorValues] = React.useState({});
 
   React.useEffect(() => {
@@ -25,7 +33,8 @@ export default function ThemePreview() {
   }, []);
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-8">
+    <Suspense fallback={<div className="flex justify-center items-center min-h-screen"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
+      <div className="p-6 max-w-7xl mx-auto space-y-8">
       <div className="text-center space-y-2">
         <h1 className="text-4xl font-display">Theme Preview</h1>
         <p className="text-muted-foreground">See your active OKLCH-based theme in action</p>
@@ -266,6 +275,9 @@ export default function ThemePreview() {
           </Tabs>
         </CardContent>
       </Card>
-    </div>
+      </div>
+    </Suspense>
   );
-}
+};
+
+export default memo(ThemePreview);
