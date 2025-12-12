@@ -345,16 +345,17 @@ export default function ColorMigrationDashboard() {
                     </div>
                   );
                 })}
-            </div>
-          </CardContent>
-        </Card>
+                </div>
+                )}
+                </CardContent>
+                </Card>
 
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Color List */}
           <Card className="lg:col-span-1">
             <CardHeader>
-              <CardTitle>Colors to Migrate ({ALL_COLORS.length})</CardTitle>
+              <CardTitle>Colors to Migrate ({colors.length})</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 max-h-[600px] overflow-y-auto">
               {loadingMapping ? (
