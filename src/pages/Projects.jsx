@@ -173,17 +173,17 @@ export default function Projects() {
   }
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light font-display text-foreground">Projects</h1>
-        <Button onClick={() => { resetForm(); setEditingProject(null); setShowForm(true); }}>
+    <div className="p-3 sm:p-4 md:p-6 bg-background min-h-screen">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-light font-display text-foreground">Projects</h1>
+        <Button onClick={() => { resetForm(); setEditingProject(null); setShowForm(true); }} className="w-full sm:w-auto">
           <Plus className="h-4 w-4 mr-2" />
-          New Project
+          <span className="sm:inline">New Project</span>
         </Button>
       </div>
 
-      <div className="flex gap-4 mb-6">
-        <div className="relative flex-1 max-w-sm">
+      <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-6">
+        <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search projects..."
@@ -193,7 +193,7 @@ export default function Projects() {
           />
         </div>
         <Select value={filterStatus} onValueChange={setFilterStatus}>
-          <SelectTrigger className="w-40">
+          <SelectTrigger className="w-full sm:w-40">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -206,7 +206,7 @@ export default function Projects() {
           </SelectContent>
         </Select>
         <Select value={filterCustomer} onValueChange={setFilterCustomer}>
-          <SelectTrigger className="w-48">
+          <SelectTrigger className="w-full sm:w-48">
             <SelectValue placeholder="Customer" />
           </SelectTrigger>
           <SelectContent>
@@ -218,30 +218,30 @@ export default function Projects() {
         </Select>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         {paginatedProjects.map((project) => {
           const budgetProgress = project.budget > 0 ? (project.spend / project.budget) * 100 : 0;
           return (
             <Card key={project.id} className="hover:shadow-md transition-shadow bg-card">
-              <CardHeader className="pb-2">
-                <div className="flex items-start justify-between">
-                  <CardTitle className="text-lg text-foreground">{project.name}</CardTitle>
-                  <div className="flex gap-1">
-                    <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+              <CardHeader className="pb-2 p-4 sm:p-6">
+                <div className="flex items-start justify-between gap-2">
+                  <CardTitle className="text-base sm:text-lg text-foreground flex-1 min-w-0">{project.name}</CardTitle>
+                  <div className="flex gap-1 flex-shrink-0">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9" asChild>
                       <Link to={createPageUrl("ProjectDetail") + `?id=${project.id}`}>
                         <Eye className="h-4 w-4" />
                       </Link>
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(project)}>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9" onClick={() => handleEdit(project)}>
                       <Pencil className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => deleteMutation.mutate(project.id)}>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9 text-destructive" onClick={() => deleteMutation.mutate(project.id)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="space-y-3 p-4 sm:p-6 pt-0">
                 <div className="flex gap-2">
                   <Badge className={statusColors[project.status]}>{project.status}</Badge>
                   <Badge className={priorityColors[project.priority]}>{project.priority}</Badge>
@@ -277,7 +277,7 @@ export default function Projects() {
       )}
 
       <Dialog open={showForm} onOpenChange={setShowForm}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingProject ? "Edit Project" : "New Project"}</DialogTitle>
           </DialogHeader>

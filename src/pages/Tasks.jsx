@@ -184,17 +184,17 @@ export default function Tasks() {
   }
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light font-display text-midnight-900">Tasks</h1>
-        <Button onClick={() => { resetForm(); setEditingTask(null); setShowForm(true); }}>
+    <div className="p-3 sm:p-4 md:p-6 bg-background min-h-screen">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-light font-display text-midnight-900">Tasks</h1>
+        <Button onClick={() => { resetForm(); setEditingTask(null); setShowForm(true); }} className="w-full sm:w-auto">
           <Plus className="h-4 w-4 mr-2" />
           New Task
         </Button>
       </div>
 
-      <div className="flex gap-4 mb-6">
-        <div className="relative flex-1 max-w-sm">
+      <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-6">
+        <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search tasks..."
@@ -204,7 +204,7 @@ export default function Tasks() {
           />
         </div>
         <Select value={filterStatus} onValueChange={setFilterStatus}>
-          <SelectTrigger className="w-40">
+          <SelectTrigger className="w-full sm:w-40">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -216,7 +216,7 @@ export default function Tasks() {
           </SelectContent>
         </Select>
         <Select value={filterProject} onValueChange={setFilterProject}>
-          <SelectTrigger className="w-48">
+          <SelectTrigger className="w-full sm:w-48">
             <SelectValue placeholder="Project" />
           </SelectTrigger>
           <SelectContent>
@@ -228,20 +228,20 @@ export default function Tasks() {
         </Select>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2 sm:space-y-3">
         {paginatedTasks.map((task) => (
           <Card key={task.id} className="hover:shadow-md transition-shadow border-background-muted bg-card">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h3 className="font-medium text-midnight-900">{task.title}</h3>
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    <h3 className="font-medium text-midnight-900 text-sm sm:text-base">{task.title}</h3>
                     <Badge className={statusColors[task.status]}>{task.status?.replace("_", " ")}</Badge>
                     <Badge className={priorityColors[task.priority]}>{task.priority}</Badge>
                   </div>
-                  <div className="flex items-center gap-4 text-sm text-charcoal-700">
-                    <span>Project: {getProjectName(task.project_id)}</span>
-                    <span>Assigned: {getTeamMemberName(task.assigned_to)}</span>
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-charcoal-700">
+                    <span className="truncate">Project: {getProjectName(task.project_id)}</span>
+                    <span className="truncate">Assigned: {getTeamMemberName(task.assigned_to)}</span>
                     {task.due_date && (
                       <span className="flex items-center gap-1">
                         <Calendar className="h-3 w-3" />
@@ -250,11 +250,11 @@ export default function Tasks() {
                     )}
                   </div>
                 </div>
-                <div className="flex gap-1">
-                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(task)}>
+                <div className="flex gap-1 sm:flex-col md:flex-row self-end sm:self-auto">
+                  <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => handleEdit(task)}>
                     <Pencil className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => deleteMutation.mutate(task.id)}>
+                  <Button variant="ghost" size="icon" className="h-9 w-9 text-destructive" onClick={() => deleteMutation.mutate(task.id)}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
@@ -281,7 +281,7 @@ export default function Tasks() {
       )}
 
       <Dialog open={showForm} onOpenChange={setShowForm}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingTask ? "Edit Task" : "New Task"}</DialogTitle>
           </DialogHeader>

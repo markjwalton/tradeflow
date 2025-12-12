@@ -167,17 +167,17 @@ export default function Customers() {
   }
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-light font-display text-foreground">Customers</h1>
-        <Button onClick={() => { resetForm(); setEditingCustomer(null); setShowForm(true); }}>
+    <div className="p-3 sm:p-4 md:p-6 bg-background min-h-screen">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-light font-display text-foreground">Customers</h1>
+        <Button onClick={() => { resetForm(); setEditingCustomer(null); setShowForm(true); }} className="w-full sm:w-auto">
           <Plus className="h-4 w-4 mr-2" />
           New Customer
         </Button>
       </div>
 
-      <div className="flex gap-4 mb-6">
-        <div className="relative flex-1 max-w-sm">
+      <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-6">
+        <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search customers..."
@@ -187,7 +187,7 @@ export default function Customers() {
           />
         </div>
         <Select value={filterStatus} onValueChange={setFilterStatus}>
-          <SelectTrigger className="w-40">
+          <SelectTrigger className="w-full sm:w-40">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -199,41 +199,41 @@ export default function Customers() {
         </Select>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         {paginatedCustomers.map((customer) => (
           <Card key={customer.id} className="hover:shadow-md transition-shadow bg-card">
-            <CardHeader className="pb-2">
-              <div className="flex items-start justify-between">
-                <div>
-                  <CardTitle className="text-lg text-foreground">{customer.name}</CardTitle>
+            <CardHeader className="pb-2 p-4 sm:p-6">
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex-1 min-w-0">
+                  <CardTitle className="text-base sm:text-lg text-foreground truncate">{customer.name}</CardTitle>
                   {customer.company && (
-                    <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
-                      <Building2 className="h-3 w-3" />
-                      {customer.company}
+                    <p className="text-xs sm:text-sm text-muted-foreground flex items-center gap-1 mt-1 truncate">
+                      <Building2 className="h-3 w-3 flex-shrink-0" />
+                      <span className="truncate">{customer.company}</span>
                     </p>
                   )}
                 </div>
-                <div className="flex gap-1">
-                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(customer)}>
+                <div className="flex gap-1 flex-shrink-0">
+                  <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9" onClick={() => handleEdit(customer)}>
                     <Pencil className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => deleteMutation.mutate(customer.id)}>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9 text-destructive" onClick={() => deleteMutation.mutate(customer.id)}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-2 sm:space-y-3 p-4 sm:p-6 pt-0">
               <Badge className={statusColors[customer.status]}>{customer.status}</Badge>
               {customer.email && (
-                <p className="text-sm text-muted-foreground flex items-center gap-2">
-                  <Mail className="h-3 w-3" />
-                  {customer.email}
+                <p className="text-xs sm:text-sm text-muted-foreground flex items-center gap-2 truncate">
+                  <Mail className="h-3 w-3 flex-shrink-0" />
+                  <span className="truncate">{customer.email}</span>
                 </p>
               )}
               {customer.phone && (
-                <p className="text-sm text-muted-foreground flex items-center gap-2">
-                  <Phone className="h-3 w-3" />
+                <p className="text-xs sm:text-sm text-muted-foreground flex items-center gap-2">
+                  <Phone className="h-3 w-3 flex-shrink-0" />
                   {customer.phone}
                 </p>
               )}
@@ -266,7 +266,7 @@ export default function Customers() {
       )}
 
       <Dialog open={showForm} onOpenChange={setShowForm}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingCustomer ? "Edit Customer" : "New Customer"}</DialogTitle>
           </DialogHeader>
