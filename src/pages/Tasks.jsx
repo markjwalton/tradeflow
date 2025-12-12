@@ -27,6 +27,7 @@ import {
 import { Plus, Search, Pencil, Trash2, Calendar } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { PullToRefresh } from "@/components/common/PullToRefresh";
 
 const statusColors = {
   todo: "bg-muted text-muted-foreground",
@@ -184,6 +185,7 @@ export default function Tasks() {
   }
 
   return (
+    <PullToRefresh onRefresh={refetch} enabled={true}>
     <div className="p-3 sm:p-4 md:p-6 bg-background min-h-screen">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
         <h1 className="text-xl sm:text-2xl font-light font-display text-midnight-900">Tasks</h1>
@@ -251,10 +253,10 @@ export default function Tasks() {
                   </div>
                 </div>
                 <div className="flex gap-1 sm:flex-col md:flex-row self-end sm:self-auto">
-                  <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => handleEdit(task)}>
+                  <Button variant="ghost" size="icon" className="touch-target" onClick={() => handleEdit(task)}>
                     <Pencil className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-9 w-9 text-destructive" onClick={() => deleteMutation.mutate(task.id)}>
+                  <Button variant="ghost" size="icon" className="touch-target text-destructive" onClick={() => deleteMutation.mutate(task.id)}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
@@ -371,5 +373,6 @@ export default function Tasks() {
         </DialogContent>
       </Dialog>
     </div>
+    </PullToRefresh>
   );
 }

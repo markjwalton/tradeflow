@@ -28,6 +28,7 @@ import { Plus, Search, Pencil, Trash2, Eye } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { PullToRefresh } from "@/components/common/PullToRefresh";
 
 const statusColors = {
   draft: "bg-muted text-muted-foreground",
@@ -173,6 +174,7 @@ export default function Projects() {
   }
 
   return (
+    <PullToRefresh onRefresh={refetch} enabled={true}>
     <div className="p-3 sm:p-4 md:p-6 bg-background min-h-screen">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
         <h1 className="text-xl sm:text-2xl font-light font-display text-foreground">Projects</h1>
@@ -227,15 +229,15 @@ export default function Projects() {
                 <div className="flex items-start justify-between gap-2">
                   <CardTitle className="text-base sm:text-lg text-foreground flex-1 min-w-0">{project.name}</CardTitle>
                   <div className="flex gap-1 flex-shrink-0">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9" asChild>
+                    <Button variant="ghost" size="icon" className="touch-target-sm" asChild>
                       <Link to={createPageUrl("ProjectDetail") + `?id=${project.id}`}>
                         <Eye className="h-4 w-4" />
                       </Link>
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9" onClick={() => handleEdit(project)}>
+                    <Button variant="ghost" size="icon" className="touch-target-sm" onClick={() => handleEdit(project)}>
                       <Pencil className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9 text-destructive" onClick={() => deleteMutation.mutate(project.id)}>
+                    <Button variant="ghost" size="icon" className="touch-target-sm text-destructive" onClick={() => deleteMutation.mutate(project.id)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
@@ -357,5 +359,6 @@ export default function Projects() {
         </DialogContent>
       </Dialog>
     </div>
+    </PullToRefresh>
   );
 }
