@@ -46,6 +46,7 @@ import { createPageUrl } from "@/utils";
 
 import { ChevronDown, ChevronRight, Folder, FolderOpen } from "lucide-react";
 import PerformanceAuditCard from "@/components/monitoring/PerformanceAuditCard";
+import WebVitalsCard from "@/components/monitoring/WebVitalsCard";
 
 const COLORS = ["var(--color-success)", "var(--color-warning)", "var(--color-destructive)", "var(--color-info)", "var(--color-accent)"];
 
@@ -1028,6 +1029,10 @@ Provide:
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="web-vitals" className="gap-2">
+            <Activity className="h-4 w-4" />
+            Web Vitals
+          </TabsTrigger>
           <TabsTrigger value="metrics">Metrics ({filteredMetrics.length})</TabsTrigger>
           <TabsTrigger value="issues">
             Issues ({openIssues.length})
@@ -1041,6 +1046,13 @@ Provide:
             AI Review
           </TabsTrigger>
         </TabsList>
+
+        {/* Web Vitals Tab */}
+        <TabsContent value="web-vitals" className="space-y-6">
+          <div className="grid grid-cols-1 gap-6">
+            <WebVitalsCard />
+          </div>
+        </TabsContent>
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
