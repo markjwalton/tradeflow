@@ -460,12 +460,13 @@ export default function Layout({ children, currentPageName }) {
           />
           <div 
             data-editor-layout 
+            className="px-2 sm:px-0"
             style={{ 
               marginTop: editorPanelOpen ? '120px' : '0', 
               transition: 'margin-top 300ms ease-in-out',
               position: 'relative',
             }}
-          >
+            >
             {backgroundImage && (
               <div 
                 className="fixed inset-0 z-0 pointer-events-none"
