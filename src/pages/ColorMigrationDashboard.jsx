@@ -134,14 +134,27 @@ export default function ColorMigrationDashboard() {
     }
   };
 
+  const handleReset = () => {
+    if (confirm('Reset all migration progress? This will NOT undo file changes.')) {
+      setMigratedColors([]);
+      setMigrationResults(null);
+      localStorage.removeItem('migratedColors');
+    }
+  };
+
   return (
     <div className="min-h-screen p-6 bg-background">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div>
-          <div className="flex items-center gap-3 mb-2">
-            <Palette className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold">Color Migration Dashboard</h1>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-3">
+              <Palette className="h-8 w-8 text-primary" />
+              <h1 className="text-3xl font-bold">Color Migration Dashboard</h1>
+            </div>
+            <Button variant="outline" size="sm" onClick={handleReset}>
+              Reset Progress
+            </Button>
           </div>
           <p className="text-muted-foreground">
             Migrate hardcoded colors to design tokens for better maintainability
