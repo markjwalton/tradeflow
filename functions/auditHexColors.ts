@@ -15,28 +15,40 @@ Deno.serve(async (req) => {
     if (mode === 'list') {
       const allFiles = [];
       
-      try {
-        const pagesResponse = await base44.asServiceRole.functions.invoke('readFileContent', { 
-          file_path: 'pages' 
-        });
-        if (pagesResponse.data?.files) {
-          allFiles.push(...pagesResponse.data.files.map(f => `pages/${f}`));
+      // Recursively get all files from a directory
+      const getAllFilesRecursive = async (path, prefix = '') => {
+        try {
+          const response = await base44.asServiceRole.functions.invoke('readFileContent', { 
+            file_path: path 
+          });
+          
+          if (response.data?.files) {
+            for (const file of response.data.files) {
+              const fullPath = prefix ? `${prefix}/${file}` : file;
+              
+              // If it's a directory, recurse into it
+              if (!file.includes('.')) {
+                await getAllFilesRecursive(`${path}/${file}`, fullPath);
+              } else {
+                allFiles.push(fullPath);
+              }
+            }
+          }
+          
+          if (response.data?.directories) {
+            for (const dir of response.data.directories) {
+              const fullPath = prefix ? `${prefix}/${dir}` : dir;
+              await getAllFilesRecursive(`${path}/${dir}`, fullPath);
+            }
+          }
+        } catch (e) {
+          console.log(`Could not list ${path}:`, e.message);
         }
-      } catch (e) {
-        console.log('Could not list pages:', e.message);
-      }
-
-      try {
-        const componentsResponse = await base44.asServiceRole.functions.invoke('readFileContent', { 
-          file_path: 'components' 
-        });
-        if (componentsResponse.data?.files) {
-          allFiles.push(...componentsResponse.data.files.map(f => `components/${f}`));
-        }
-      } catch (e) {
-        console.log('Could not list components:', e.message);
-      }
-
+      };
+      
+      await getAllFilesRecursive('pages', 'pages');
+      await getAllFilesRecursive('components', 'components');
+      
       allFiles.push('Layout.js', 'globals.css');
 
       const filesToAudit = allFiles.filter(f => 
@@ -45,7 +57,8 @@ Deno.serve(async (req) => {
 
       return Response.json({ 
         success: true,
-        files: filesToAudit
+        files: filesToAudit,
+        total: filesToAudit.length
       });
     }
 
