@@ -317,7 +317,14 @@ export default function UXShowcase() {
           <CardDescription>Learn more about the UX enhancement systems</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="p-4 border rounded-lg">
+              <h4 className="font-medium mb-2">UX Patterns Guide</h4>
+              <p className="text-sm text-muted-foreground mb-2">
+                Complete reference for all UX patterns and best practices.
+              </p>
+              <code className="text-xs">components/common/UX_PATTERNS_GUIDE.md</code>
+            </div>
             <div className="p-4 border rounded-lg">
               <h4 className="font-medium mb-2">Quick Start Guide</h4>
               <p className="text-sm text-muted-foreground mb-2">
