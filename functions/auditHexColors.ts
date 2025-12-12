@@ -13,38 +13,61 @@ Deno.serve(async (req) => {
 
     // LIST MODE: Get all files
     if (mode === 'list') {
-      const allFiles = [];
-      
-      // Scan file system directly
-      const scanDirectory = async (dir, prefix = '') => {
-        try {
-          for await (const entry of Deno.readDir(dir)) {
-            const fullPath = prefix ? `${prefix}/${entry.name}` : entry.name;
-            
-            if (entry.isDirectory) {
-              await scanDirectory(`${dir}/${entry.name}`, fullPath);
-            } else if (entry.isFile && (entry.name.endsWith('.js') || entry.name.endsWith('.jsx') || entry.name.endsWith('.css'))) {
-              allFiles.push(fullPath);
-            }
-          }
-        } catch (e) {
-          console.log(`Could not scan ${dir}:`, e.message);
-        }
-      };
-      
-      await scanDirectory('/src/pages', 'pages');
-      await scanDirectory('/src/components', 'components');
-      
-      // Add root files
-      try {
-        for await (const entry of Deno.readDir('/src')) {
-          if (entry.isFile && (entry.name === 'Layout.js' || entry.name === 'globals.css')) {
-            allFiles.push(entry.name);
-          }
-        }
-      } catch (e) {
-        console.log('Could not scan root:', e.message);
-      }
+      // Comprehensive list of common files to audit
+      const allFiles = [
+        'Layout.js',
+        'globals.css',
+        // Color tools
+        'components/color-tools/ColorLibrary.jsx',
+        'components/color-tools/OklchBulkConverter.jsx',
+        'components/color-tools/OklchColorTool.jsx',
+        'components/color-tools/OklchGradientTool.jsx',
+        'components/color-tools/OklchPaletteTool.jsx',
+        // Design system
+        'components/design-system/ThemeTokenEditor.jsx',
+        'components/design-assistant/PageUIPanel.jsx',
+        'components/design-assistant/StyleInspectorOverlay.jsx',
+        // Library
+        'components/library/designTokens.jsx',
+        'components/library/Layouts.jsx',
+        'components/library/Typography.jsx',
+        'components/library/Buttons.jsx',
+        'components/library/Cards.jsx',
+        'components/library/Forms.jsx',
+        'components/library/CompactButton.jsx',
+        // Page builder
+        'components/page-builder/EditModeContext.jsx',
+        'components/page-builder/PageSettingsPanel.jsx',
+        'components/page-builder/LiveEditWrapper.jsx',
+        'components/page-builder/TopEditorPanel.jsx',
+        'components/page-builder/editorTokens.jsx',
+        // Layout
+        'components/layout/AppShell.jsx',
+        'components/layout/AppHeader.jsx',
+        'components/layout/AppSidebar.jsx',
+        'components/layout/PageContainer.jsx',
+        // UI components
+        'components/ui/card.jsx',
+        'components/ui/button.jsx',
+        'components/ui/input.jsx',
+        'components/ui/badge.jsx',
+        'components/ui/alert.jsx',
+        // Pages
+        'pages/ColorAudit.jsx',
+        'pages/OklchColorPicker.jsx',
+        'pages/ThemeBuilder.jsx',
+        'pages/ThemePreview.jsx',
+        'pages/FontManager.jsx',
+        'pages/DesignTokenEditor.jsx',
+        'pages/SiteSettings.jsx',
+        'pages/NavigationManager.jsx',
+        'pages/Home.jsx',
+        'pages/Dashboard.jsx',
+        'pages/Projects.jsx',
+        'pages/Tasks.jsx',
+        'pages/Customers.jsx',
+        'pages/Team.jsx'
+      ];
 
       return Response.json({ 
         success: true,
