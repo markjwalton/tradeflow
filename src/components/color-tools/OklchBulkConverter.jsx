@@ -184,4 +184,4 @@ const OklchBulkConverter = () => {
   );
 };
 
-export default memo(OklchBulkConverter);
+export { OklchBulkConverter };

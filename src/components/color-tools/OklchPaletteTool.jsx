@@ -1073,4 +1073,6 @@ const OklchPaletteTool = ({ onSave, brandColors: initialBrandColors }) => {
       )}
     </div>
   );
-}
+};
+
+export default memo(OklchPaletteTool);
