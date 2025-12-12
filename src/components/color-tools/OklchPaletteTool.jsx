@@ -43,6 +43,7 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
   const [primaryFormat, setPrimaryFormat] = useState("hex");
   const [secondaryFormat, setSecondaryFormat] = useState("hex");
   const [accentFormat, setAccentFormat] = useState("hex");
+  const [manualInputFormat, setManualInputFormat] = useState("hex");
   const [alphaEnabled, setAlphaEnabled] = useState(false);
   const [alphaPercentage, setAlphaPercentage] = useState(50);
   
@@ -314,16 +315,9 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
     const input = startingColorInput.trim();
     if (!input) return;
     
-    if (input.startsWith('#')) {
-      // Parse hex
-      const oklch = hexToOklch(input);
-      setBaseColor(oklch);
-    } else if (input.startsWith('oklch')) {
-      // Parse oklch string
-      const match = input.match(/oklch\(([\d.]+)\s+([\d.]+)\s+([\d.]+)\)/);
-      if (match) {
-        setBaseColor({ l: parseFloat(match[1]), c: parseFloat(match[2]), h: parseFloat(match[3]) });
-      }
+    const parsed = parseColorInput(input);
+    if (parsed) {
+      setBaseColor(parsed);
     }
   };
 
@@ -566,6 +560,34 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
           <CardTitle>Brand Color System Generator</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="flex justify-end mb-3">
+            <div className="flex items-center gap-2">
+              <Label className="text-xs">Input Format:</Label>
+              <Select value={primaryFormat} onValueChange={(val) => {
+                setPrimaryFormat(val);
+                setSecondaryFormat(val);
+                setAccentFormat(val);
+                // Convert current values to new format
+                const primary = parseColorInput(primaryColor);
+                const secondary = parseColorInput(secondaryColor);
+                const accent = parseColorInput(accentColor);
+                if (primary) setPrimaryColor(formatColorForDisplay(primary, val));
+                if (secondary) setSecondaryColor(formatColorForDisplay(secondary, val));
+                if (accent) setAccentColor(formatColorForDisplay(accent, val));
+              }}>
+                <SelectTrigger className="w-24 h-8">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="hex">HEX</SelectItem>
+                  <SelectItem value="rgb">RGB</SelectItem>
+                  <SelectItem value="hsl">HSL</SelectItem>
+                  <SelectItem value="oklch">OKLCH</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label>Primary Color</Label>
@@ -573,16 +595,19 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
                 <Input
                   type="color"
                   value={primaryColor.startsWith('#') ? primaryColor : oklchToRgb(...(parseColorInput(primaryColor) || { l: 0.5, c: 0.1, h: 150 }))}
-                  onChange={(e) => setPrimaryColor(e.target.value)}
+                  onChange={(e) => {
+                    const oklch = hexToOklch(e.target.value);
+                    setPrimaryColor(formatColorForDisplay(oklch, primaryFormat));
+                  }}
                   className="w-16 h-10 p-1"
                 />
                 <div className="flex-1 space-y-1">
                   <Input
                     value={primaryColor}
                     onChange={(e) => setPrimaryColor(e.target.value)}
-                    placeholder="hex, rgb, hsl, or oklch"
+                    placeholder={primaryFormat === 'hex' ? '#4a5d4e' : primaryFormat === 'rgb' ? 'rgb(74, 93, 78)' : primaryFormat === 'hsl' ? 'hsl(135, 15%, 33%)' : 'oklch(0.5 0.1 150)'}
                   />
-                  {parseColorInput(primaryColor) && (
+                  {primaryFormat !== 'oklch' && parseColorInput(primaryColor) && (
                     <p className="text-xs text-muted-foreground font-mono">
                       → {formatColorForDisplay(parseColorInput(primaryColor), "oklch")}
                     </p>
@@ -596,16 +621,19 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
                 <Input
                   type="color"
                   value={secondaryColor.startsWith('#') ? secondaryColor : oklchToRgb(...(parseColorInput(secondaryColor) || { l: 0.7, c: 0.09, h: 70 }))}
-                  onChange={(e) => setSecondaryColor(e.target.value)}
+                  onChange={(e) => {
+                    const oklch = hexToOklch(e.target.value);
+                    setSecondaryColor(formatColorForDisplay(oklch, secondaryFormat));
+                  }}
                   className="w-16 h-10 p-1"
                 />
                 <div className="flex-1 space-y-1">
                   <Input
                     value={secondaryColor}
                     onChange={(e) => setSecondaryColor(e.target.value)}
-                    placeholder="hex, rgb, hsl, or oklch"
+                    placeholder={secondaryFormat === 'hex' ? '#d4a574' : secondaryFormat === 'rgb' ? 'rgb(212, 165, 116)' : secondaryFormat === 'hsl' ? 'hsl(31, 52%, 64%)' : 'oklch(0.7 0.09 70)'}
                   />
-                  {parseColorInput(secondaryColor) && (
+                  {secondaryFormat !== 'oklch' && parseColorInput(secondaryColor) && (
                     <p className="text-xs text-muted-foreground font-mono">
                       → {formatColorForDisplay(parseColorInput(secondaryColor), "oklch")}
                     </p>
@@ -619,16 +647,19 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
                 <Input
                   type="color"
                   value={accentColor.startsWith('#') ? accentColor : oklchToRgb(...(parseColorInput(accentColor) || { l: 0.78, c: 0.05, h: 35 }))}
-                  onChange={(e) => setAccentColor(e.target.value)}
+                  onChange={(e) => {
+                    const oklch = hexToOklch(e.target.value);
+                    setAccentColor(formatColorForDisplay(oklch, accentFormat));
+                  }}
                   className="w-16 h-10 p-1"
                 />
                 <div className="flex-1 space-y-1">
                   <Input
                     value={accentColor}
                     onChange={(e) => setAccentColor(e.target.value)}
-                    placeholder="hex, rgb, hsl, or oklch"
+                    placeholder={accentFormat === 'hex' ? '#d9b4a7' : accentFormat === 'rgb' ? 'rgb(217, 180, 167)' : accentFormat === 'hsl' ? 'hsl(16, 37%, 75%)' : 'oklch(0.78 0.05 35)'}
                   />
-                  {parseColorInput(accentColor) && (
+                  {accentFormat !== 'oklch' && parseColorInput(accentColor) && (
                     <p className="text-xs text-muted-foreground font-mono">
                       → {formatColorForDisplay(parseColorInput(accentColor), "oklch")}
                     </p>
@@ -745,16 +776,49 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
           <CardTitle>Manual Palette Generator</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="flex justify-end mb-2">
+            <div className="flex items-center gap-2">
+              <Label className="text-xs">Input Format:</Label>
+              <Select value={manualInputFormat} onValueChange={(val) => {
+                setManualInputFormat(val);
+                // Convert current base color to new format
+                if (baseColor.l || baseColor.c || baseColor.h) {
+                  setStartingColorInput(formatColorForDisplay(baseColor, val));
+                }
+              }}>
+                <SelectTrigger className="w-24 h-8">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="hex">HEX</SelectItem>
+                  <SelectItem value="rgb">RGB</SelectItem>
+                  <SelectItem value="hsl">HSL</SelectItem>
+                  <SelectItem value="oklch">OKLCH</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
           <div className="space-y-2">
             <Label>Starting Color (Optional)</Label>
             <div className="flex gap-2">
               <Input
                 value={startingColorInput}
                 onChange={(e) => setStartingColorInput(e.target.value)}
-                placeholder="e.g., #4a5d4e or oklch(0.6 0.15 180)"
+                placeholder={
+                  manualInputFormat === 'hex' ? '#4a5d4e' : 
+                  manualInputFormat === 'rgb' ? 'rgb(74, 93, 78)' : 
+                  manualInputFormat === 'hsl' ? 'hsl(135, 15%, 33%)' : 
+                  'oklch(0.5 0.1 150)'
+                }
               />
               <Button onClick={applyStartingColor} size="sm">Apply</Button>
             </div>
+            {manualInputFormat !== 'oklch' && startingColorInput && parseColorInput(startingColorInput) && (
+              <p className="text-xs text-muted-foreground font-mono">
+                → {formatColorForDisplay(parseColorInput(startingColorInput), "oklch")}
+              </p>
+            )}
           </div>
           
           <div 
