@@ -315,6 +315,20 @@ export function PageSettingsPanel({ currentPageName }) {
                             ))}
                           </select>
                         )}
+                        {prop.type === "button" && (
+                          <Button
+                            onClick={prop.onClick}
+                            disabled={prop.disabled}
+                            variant={prop.variant || "default"}
+                            size="sm"
+                            className="w-full"
+                          >
+                            {prop.buttonLabel || "Click"}
+                          </Button>
+                        )}
+                        {prop.type === "divider" && (
+                          <div className="border-t my-2" />
+                        )}
                       </div>
                     ))}
                   </div>
