@@ -24,12 +24,15 @@ export default function GitHubIntegration() {
       const result = await base44.functions.invoke('githubApi', {
         action: 'get_repo'
       });
-      setRepo(result.data);
+      if (result?.data) {
+        setRepo(result.data);
+      }
     } catch (e) {
       console.error("GitHub API error:", e);
       setError(e.message || "Failed to load repository");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   // Load repository info on mount
