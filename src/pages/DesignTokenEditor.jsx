@@ -208,36 +208,41 @@ export default function DesignTokenEditor() {
     loadCurrentTokens();
   }, []);
 
-  const loadCurrentTokens = () => {
-    const computedStyle = getComputedStyle(document.documentElement);
-    const loadedTokens = {};
-
-    Object.values(TOKEN_CATEGORIES).forEach(category => {
-      category.tokens.forEach(token => {
-        let value = computedStyle.getPropertyValue(`--${token.name}`).trim();
+  const loadCurrentTokens = async () => {
+    try {
+      const response = await base44.functions.invoke('readFileContent', {
+        filePath: 'globals.css'
+      });
+      
+      if (response.data.content) {
+        const cssContent = response.data.content;
+        const loadedTokens = {};
         
-        // If value is empty or a CSS var reference, try to get the computed value
-        if (!value || value.startsWith('var(')) {
-          // For colors, try to get the actual computed color
-          if (token.type === 'color') {
-            const tempDiv = document.createElement('div');
-            tempDiv.style.color = `var(--${token.name})`;
-            document.body.appendChild(tempDiv);
-            const computed = getComputedStyle(tempDiv).color;
-            document.body.removeChild(tempDiv);
-            
-            if (computed && computed !== 'rgba(0, 0, 0, 0)') {
-              value = computed;
-            }
-          }
+        // Parse CSS variables from :root section
+        const rootMatch = cssContent.match(/:root\s*{([^}]+)}/s);
+        if (rootMatch) {
+          const rootContent = rootMatch[1];
+          
+          Object.values(TOKEN_CATEGORIES).forEach(category => {
+            category.tokens.forEach(token => {
+              const regex = new RegExp(`--${token.name}:\\s*([^;]+);`, 'i');
+              const match = rootContent.match(regex);
+              if (match) {
+                loadedTokens[token.name] = match[1].trim();
+              } else {
+                loadedTokens[token.name] = '';
+              }
+            });
+          });
         }
         
-        loadedTokens[token.name] = value || '';
-      });
-    });
-
-    setTokens(loadedTokens);
-    setOriginalTokens(loadedTokens);
+        setTokens(loadedTokens);
+        setOriginalTokens(loadedTokens);
+      }
+    } catch (error) {
+      console.error('Error loading tokens:', error);
+      toast.error('Failed to load design tokens');
+    }
   };
 
   const updateToken = (name, value) => {
