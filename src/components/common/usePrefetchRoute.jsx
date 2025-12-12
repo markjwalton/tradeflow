@@ -45,11 +45,49 @@ export function usePrefetchRoute() {
     });
   };
 
+  const prefetchLibrary = (libraryType) => {
+    const entityMap = {
+      'EntityLibrary': 'EntityTemplate',
+      'PageLibrary': 'PageTemplate',
+      'FeatureLibrary': 'FeatureTemplate',
+      'TemplateLibrary': 'NodeTemplate',
+      'BusinessTemplates': 'BusinessTemplate',
+    };
+    
+    const entityName = entityMap[libraryType];
+    if (entityName) {
+      queryClient.prefetchQuery({
+        queryKey: [libraryType],
+        queryFn: () => base44.entities[entityName].list(),
+        staleTime: 30000,
+      });
+    }
+  };
+
+  const prefetchRoadmap = () => {
+    queryClient.prefetchQuery({
+      queryKey: ['roadmap'],
+      queryFn: () => base44.entities.RoadmapItem.list(),
+      staleTime: 30000,
+    });
+  };
+
+  const prefetchEstimates = () => {
+    queryClient.prefetchQuery({
+      queryKey: ['estimates'],
+      queryFn: () => base44.entities.Estimate.list(),
+      staleTime: 30000,
+    });
+  };
+
   return {
     prefetchProjects,
     prefetchTasks,
     prefetchCustomers,
     prefetchTeam,
     prefetchMindMaps,
+    prefetchLibrary,
+    prefetchRoadmap,
+    prefetchEstimates,
   };
 }
