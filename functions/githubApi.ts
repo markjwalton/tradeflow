@@ -13,7 +13,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { action, path, issue_number } = await req.json();
+    const { action, path, issue_number, page = 1, per_page = 30 } = await req.json();
 
     const headers = {
       'Authorization': `Bearer ${GITHUB_TOKEN}`,
@@ -25,6 +25,26 @@ Deno.serve(async (req) => {
     let response;
 
     switch (action) {
+    case 'get_cached_commits':
+      // Get commits from database
+      const cachedCommits = await base44.asServiceRole.entities.GitHubCommit.filter(
+        { repo_name: REPO_NAME },
+        '-commit_date',
+        per_page,
+        (page - 1) * per_page
+      );
+      return Response.json({ commits: cachedCommits });
+
+    case 'get_cached_issues':
+      // Get issues from database
+      const cachedIssues = await base44.asServiceRole.entities.GitHubIssue.filter(
+        { repo_name: REPO_NAME },
+        '-issue_updated_at',
+        per_page,
+        (page - 1) * per_page
+      );
+      return Response.json({ issues: cachedIssues });
+
       case 'get_file':
         // Get file contents from repository
         url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
@@ -53,12 +73,50 @@ Deno.serve(async (req) => {
         break;
 
       case 'get_issues':
-        // Get repository issues
-        url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues`;
+        // Get repository issues with pagination and caching
+        url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues?page=${page}&per_page=${per_page}&state=all`;
         response = await fetch(url, { headers });
         if (response.ok) {
           const data = await response.json();
-          return Response.json({ issues: data });
+
+          // Store in database
+          for (const issue of data) {
+            const existing = await base44.asServiceRole.entities.GitHubIssue.filter({
+              repo_name: REPO_NAME,
+              issue_number: issue.number
+            });
+
+            const issueData = {
+              repo_name: REPO_NAME,
+              issue_number: issue.number,
+              title: issue.title,
+              body: issue.body || '',
+              state: issue.state,
+              user_login: issue.user.login,
+              html_url: issue.html_url,
+              issue_created_at: issue.created_at,
+              issue_updated_at: issue.updated_at
+            };
+
+            if (existing.length > 0) {
+              await base44.asServiceRole.entities.GitHubIssue.update(existing[0].id, issueData);
+            } else {
+              await base44.asServiceRole.entities.GitHubIssue.create(issueData);
+            }
+          }
+
+          // Get pagination info from headers
+          const linkHeader = response.headers.get('Link');
+          const hasNext = linkHeader && linkHeader.includes('rel="next"');
+
+          return Response.json({ 
+            issues: data,
+            pagination: {
+              page,
+              per_page,
+              has_next: hasNext
+            }
+          });
         }
         break;
 
@@ -73,12 +131,46 @@ Deno.serve(async (req) => {
         break;
 
       case 'get_commits':
-        // Get recent commits
-        url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/commits`;
+        // Get recent commits with pagination and caching
+        url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/commits?page=${page}&per_page=${per_page}`;
         response = await fetch(url, { headers });
         if (response.ok) {
           const data = await response.json();
-          return Response.json({ commits: data });
+
+          // Store in database
+          for (const commit of data) {
+            const existing = await base44.asServiceRole.entities.GitHubCommit.filter({
+              repo_name: REPO_NAME,
+              sha: commit.sha
+            });
+
+            const commitData = {
+              repo_name: REPO_NAME,
+              sha: commit.sha,
+              message: commit.commit.message,
+              author_name: commit.commit.author.name,
+              author_email: commit.commit.author.email,
+              commit_date: commit.commit.author.date,
+              html_url: commit.html_url
+            };
+
+            if (existing.length === 0) {
+              await base44.asServiceRole.entities.GitHubCommit.create(commitData);
+            }
+          }
+
+          // Get pagination info
+          const linkHeader = response.headers.get('Link');
+          const hasNext = linkHeader && linkHeader.includes('rel="next"');
+
+          return Response.json({ 
+            commits: data,
+            pagination: {
+              page,
+              per_page,
+              has_next: hasNext
+            }
+          });
         }
         break;
 

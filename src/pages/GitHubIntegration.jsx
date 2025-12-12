@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, File, GitBranch, AlertCircle, FileText } from "lucide-react";
+import { Loader2, File, GitBranch, AlertCircle, FileText, RefreshCw, Database } from "lucide-react";
 
 export default function GitHubIntegration() {
   const [loading, setLoading] = useState(false);
@@ -16,6 +16,11 @@ export default function GitHubIntegration() {
   const [commits, setCommits] = useState([]);
   const [repo, setRepo] = useState(null);
   const [error, setError] = useState(null);
+  const [issuesPage, setIssuesPage] = useState(1);
+  const [commitsPage, setCommitsPage] = useState(1);
+  const [hasMoreIssues, setHasMoreIssues] = useState(false);
+  const [hasMoreCommits, setHasMoreCommits] = useState(false);
+  const [useCache, setUseCache] = useState(true);
 
   const handleGetRepo = async () => {
     setLoading(true);
@@ -72,14 +77,27 @@ export default function GitHubIntegration() {
     }
   };
 
-  const handleGetIssues = async () => {
+  const handleGetIssues = async (loadMore = false) => {
     setLoading(true);
     setError(null);
     try {
+      const pageToLoad = loadMore ? issuesPage + 1 : 1;
+      const action = useCache ? 'get_cached_issues' : 'get_issues';
+      
       const result = await base44.functions.invoke('githubApi', {
-        action: 'get_issues'
+        action,
+        page: pageToLoad,
+        per_page: 30
       });
-      setIssues(result.data?.issues || []);
+      
+      if (loadMore) {
+        setIssues(prev => [...prev, ...(result.data?.issues || [])]);
+      } else {
+        setIssues(result.data?.issues || []);
+      }
+      
+      setHasMoreIssues(result.data?.pagination?.has_next || false);
+      setIssuesPage(pageToLoad);
     } catch (e) {
       setError(e.message);
     } finally {
@@ -87,14 +105,27 @@ export default function GitHubIntegration() {
     }
   };
 
-  const handleGetCommits = async () => {
+  const handleGetCommits = async (loadMore = false) => {
     setLoading(true);
     setError(null);
     try {
+      const pageToLoad = loadMore ? commitsPage + 1 : 1;
+      const action = useCache ? 'get_cached_commits' : 'get_commits';
+      
       const result = await base44.functions.invoke('githubApi', {
-        action: 'get_commits'
+        action,
+        page: pageToLoad,
+        per_page: 30
       });
-      setCommits(result.data?.commits || []);
+      
+      if (loadMore) {
+        setCommits(prev => [...prev, ...(result.data?.commits || [])]);
+      } else {
+        setCommits(result.data?.commits || []);
+      }
+      
+      setHasMoreCommits(result.data?.pagination?.has_next || false);
+      setCommitsPage(pageToLoad);
     } catch (e) {
       setError(e.message);
     } finally {
@@ -267,17 +298,26 @@ export default function GitHubIntegration() {
                 <CardTitle className="text-lg">Repository Issues</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Button onClick={handleGetIssues} disabled={loading}>
-                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Load Issues"}
-                </Button>
+                <div className="flex gap-2 items-center">
+                  <Button onClick={() => handleGetIssues(false)} disabled={loading}>
+                    {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : useCache ? <Database className="h-4 w-4" /> : <RefreshCw className="h-4 w-4" />}
+                    {useCache ? "Load from Cache" : "Sync from GitHub"}
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setUseCache(!useCache)}
+                  >
+                    {useCache ? "Use Live Data" : "Use Cache"}
+                  </Button>
+                </div>
                 {issues.length > 0 ? (
                   <div className="space-y-3">
                     {issues.map((issue) => (
-                      <Card key={issue.id}>
+                      <Card key={issue.id || issue.issue_number}>
                         <CardContent className="pt-4">
                           <div className="space-y-2">
                             <div className="flex items-start justify-between gap-2">
-                              <h3 className="font-semibold">#{issue.number} {issue.title}</h3>
+                              <h3 className="font-semibold">#{issue.issue_number || issue.number} {issue.title}</h3>
                               <Badge variant={issue.state === 'open' ? 'default' : 'secondary'}>
                                 {issue.state}
                               </Badge>
@@ -286,12 +326,23 @@ export default function GitHubIntegration() {
                               {issue.body}
                             </p>
                             <p className="text-xs text-muted-foreground">
-                              By {issue.user.login} • {new Date(issue.created_at).toLocaleDateString()}
+                              By {issue.user_login || issue.user?.login} • {new Date(issue.issue_created_at || issue.created_at).toLocaleDateString()}
                             </p>
                           </div>
                         </CardContent>
                       </Card>
                     ))}
+                    {hasMoreIssues && (
+                      <Button 
+                        variant="outline" 
+                        className="w-full"
+                        onClick={() => handleGetIssues(true)}
+                        disabled={loading}
+                      >
+                        {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                        Load More
+                      </Button>
+                    )}
                   </div>
                 ) : (
                   <p className="text-muted-foreground">No issues loaded yet.</p>
@@ -306,27 +357,47 @@ export default function GitHubIntegration() {
                 <CardTitle className="text-lg">Recent Commits</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Button onClick={handleGetCommits} disabled={loading}>
-                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Load Commits"}
-                </Button>
+                <div className="flex gap-2 items-center">
+                  <Button onClick={() => handleGetCommits(false)} disabled={loading}>
+                    {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : useCache ? <Database className="h-4 w-4" /> : <RefreshCw className="h-4 w-4" />}
+                    {useCache ? "Load from Cache" : "Sync from GitHub"}
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setUseCache(!useCache)}
+                  >
+                    {useCache ? "Use Live Data" : "Use Cache"}
+                  </Button>
+                </div>
                 {commits.length > 0 ? (
                   <div className="space-y-3">
-                    {commits.slice(0, 10).map((commit) => (
+                    {commits.map((commit) => (
                       <Card key={commit.sha}>
                         <CardContent className="pt-4">
                           <div className="space-y-2">
-                            <p className="font-medium">{commit.commit.message}</p>
+                            <p className="font-medium">{commit.message || commit.commit?.message}</p>
                             <div className="flex items-center justify-between text-sm text-muted-foreground">
-                              <span>By {commit.commit.author.name}</span>
+                              <span>By {commit.author_name || commit.commit?.author?.name}</span>
                               <span className="font-mono text-xs">{commit.sha.slice(0, 7)}</span>
                             </div>
                             <p className="text-xs text-muted-foreground">
-                              {new Date(commit.commit.author.date).toLocaleString()}
+                              {new Date(commit.commit_date || commit.commit?.author?.date).toLocaleString()}
                             </p>
                           </div>
                         </CardContent>
                       </Card>
                     ))}
+                    {hasMoreCommits && (
+                      <Button 
+                        variant="outline" 
+                        className="w-full"
+                        onClick={() => handleGetCommits(true)}
+                        disabled={loading}
+                      >
+                        {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                        Load More
+                      </Button>
+                    )}
                   </div>
                 ) : (
                   <p className="text-muted-foreground">No commits loaded yet.</p>
