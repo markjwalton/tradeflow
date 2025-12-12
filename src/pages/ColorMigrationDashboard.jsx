@@ -64,7 +64,10 @@ const AFFECTED_FILES = [
 
 export default function ColorMigrationDashboard() {
   const [selectedColor, setSelectedColor] = useState(TOP_COLORS[0]);
-  const [migratedColors, setMigratedColors] = useState([]);
+  const [migratedColors, setMigratedColors] = useState(() => {
+    const saved = localStorage.getItem('migratedColors');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [isPreviewMode, setIsPreviewMode] = useState(false);
 
   const totalOccurrences = TOP_COLORS.reduce((sum, c) => sum + c.occurrences, 0);
@@ -75,11 +78,15 @@ export default function ColorMigrationDashboard() {
   const progress = (migratedOccurrences / totalOccurrences) * 100;
 
   const handleMigrateColor = (colorHex) => {
-    setMigratedColors([...migratedColors, colorHex]);
+    const updated = [...migratedColors, colorHex];
+    setMigratedColors(updated);
+    localStorage.setItem('migratedColors', JSON.stringify(updated));
   };
 
   const handleMigrateAll = () => {
-    setMigratedColors(TOP_COLORS.map(c => c.hex));
+    const allColors = TOP_COLORS.map(c => c.hex);
+    setMigratedColors(allColors);
+    localStorage.setItem('migratedColors', JSON.stringify(allColors));
   };
 
   return (
