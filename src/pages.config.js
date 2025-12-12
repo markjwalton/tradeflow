@@ -109,6 +109,7 @@ import ThemeBuilder from './pages/ThemeBuilder';
 import ThemePreview from './pages/ThemePreview';
 import GitHubIntegration from './pages/GitHubIntegration';
 import ColorMigrationDashboard from './pages/ColorMigrationDashboard';
+import DevTools from './pages/DevTools';
 import __Layout from './Layout.jsx';
 
 
@@ -224,6 +225,7 @@ export const PAGES = {
     "ThemePreview": ThemePreview,
     "GitHubIntegration": GitHubIntegration,
     "ColorMigrationDashboard": ColorMigrationDashboard,
+    "DevTools": DevTools,
 }
 
 export const pagesConfig = {
