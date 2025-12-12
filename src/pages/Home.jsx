@@ -17,7 +17,8 @@ const iconMap = {
   Folder: Folder,
 };
 
-export default function Home() {
+const Home = () => {
+  const [iconComponents, setIconComponents] = React.useState({});
   const { tenant, tenantId, tenantSlug } = useTenant() || {};
 
   // Fetch navigation items for current tenant
@@ -112,4 +113,6 @@ export default function Home() {
       </div>
     </div>
   );
-}
+};
+
+export default memo(Home);
