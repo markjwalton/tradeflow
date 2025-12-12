@@ -29,10 +29,12 @@ const DashboardSettings = ({
   onClose,
   settings,
   onSettingsChange,
-  allWidgets = [],
-  visibleWidgetIds = [],
+  allWidgets,
+  visibleWidgetIds,
   onVisibleWidgetsChange
-}) {
+}) => {
+  const widgets = allWidgets || [];
+  const visible = visibleWidgetIds || [];
   const [newsSettings, setNewsSettings] = React.useState(getTechNewsSettings());
 
   const handleToggle = (key) => {
@@ -145,9 +147,9 @@ const DashboardSettings = ({
             
             <ScrollArea className="h-[300px] border border-[var(--color-background-muted)] rounded-lg p-2">
               <div className="space-y-2">
-                {allWidgets.map(widget => {
+                {widgets.map(widget => {
                   const Icon = widgetTypeIcons[widget.widget_type] || Info;
-                  const isChecked = visibleWidgetIds.includes(widget.id);
+                  const isChecked = visible.includes(widget.id);
                   
                   return (
                     <div 
