@@ -17,19 +17,23 @@ export default function GitHubIntegration() {
   const [repo, setRepo] = useState(null);
   const [error, setError] = useState(null);
 
+  const handleGetRepo = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data } = await base44.functions.invoke('githubApi', {
+        action: 'get_repo'
+      });
+      setRepo(data.repo);
+    } catch (e) {
+      setError(e.message);
+    }
+    setLoading(false);
+  };
+
   // Load repository info on mount
   React.useEffect(() => {
-    const loadRepo = async () => {
-      try {
-        const { data } = await base44.functions.invoke('githubApi', {
-          action: 'get_repo'
-        });
-        setRepo(data.repo);
-      } catch (e) {
-        console.error("Failed to load repo:", e);
-      }
-    };
-    loadRepo();
+    handleGetRepo();
   }, []);
 
   const handleGetFile = async () => {
