@@ -57,8 +57,8 @@ const parseColorToHex = (value) => {
     return oklchToRgb(l, c, h);
   }
   
-  // RGB format
-  const rgbMatch = trimmed.match(/rgb\((\d+),?\s*(\d+),?\s*(\d+)\)/);
+  // RGB/RGBA format
+  const rgbMatch = trimmed.match(/rgba?\((\d+),?\s*(\d+),?\s*(\d+)(?:,?\s*[\d.]+)?\)/);
   if (rgbMatch) {
     const r = parseInt(rgbMatch[1]).toString(16).padStart(2, '0');
     const g = parseInt(rgbMatch[2]).toString(16).padStart(2, '0');
@@ -164,8 +164,25 @@ export default function DesignTokenEditor() {
 
     Object.values(TOKEN_CATEGORIES).forEach(category => {
       category.tokens.forEach(token => {
-        const value = computedStyle.getPropertyValue(`--${token.name}`).trim();
-        loadedTokens[token.name] = value;
+        let value = computedStyle.getPropertyValue(`--${token.name}`).trim();
+        
+        // If value is empty or a CSS var reference, try to get the computed value
+        if (!value || value.startsWith('var(')) {
+          // For colors, try to get the actual computed color
+          if (token.type === 'color') {
+            const tempDiv = document.createElement('div');
+            tempDiv.style.color = `var(--${token.name})`;
+            document.body.appendChild(tempDiv);
+            const computed = getComputedStyle(tempDiv).color;
+            document.body.removeChild(tempDiv);
+            
+            if (computed && computed !== 'rgba(0, 0, 0, 0)') {
+              value = computed;
+            }
+          }
+        }
+        
+        loadedTokens[token.name] = value || '';
       });
     });
 
