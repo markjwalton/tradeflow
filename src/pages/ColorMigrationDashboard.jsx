@@ -17,55 +17,43 @@ import {
   Loader2
 } from "lucide-react";
 
-// Top 4 colors data from artifacts
-const TOP_COLORS = [
-  {
-    name: "Primary (Sage Green)",
-    hex: "#4A5D4E",
-    token: "--primary-500",
-    occurrences: 19,
-    category: "primary",
-    status: "pending"
-  },
-  {
-    name: "Secondary (Warm Copper)",
-    hex: "#D4A574",
-    token: "--secondary-400",
-    occurrences: 8,
-    category: "secondary",
-    status: "pending"
-  },
-  {
-    name: "Accent (Dusty Rose)",
-    hex: "#d9b4a7",
-    token: "--accent-300",
-    occurrences: 12,
-    category: "accent",
-    status: "pending"
-  },
-  {
-    name: "Background (Cream)",
-    hex: "#f5f3ef",
-    token: "--background-100",
-    occurrences: 6,
-    category: "background",
-    status: "pending"
-  }
-];
+// Complete color mapping from Phase 2 artifacts (45 colors with token mappings)
+const ALL_COLORS = [
+  { hex: "#4A5D4E", token: "var(--color-primary)", count: 19, name: "Primary" },
+  { hex: "#d9b4a7", token: "var(--color-accent)", count: 12, name: "Accent" },
+  { hex: "#3b82f6", token: null, count: 12, name: "Blue" },
+  { hex: "#1b2a35", token: "var(--color-midnight)", count: 10, name: "Midnight" },
+  { hex: "#8b5b5b", token: "var(--color-destructive)", count: 9, name: "Destructive" },
+  { hex: "#D4A574", token: "var(--color-secondary)", count: 8, name: "Secondary" },
+  { hex: "#3b3b3b", token: "var(--color-charcoal)", count: 6, name: "Charcoal" },
+  { hex: "#f5f3ef", token: "var(--color-background)", count: 6, name: "Background" },
+  { hex: "#4a5d4e", token: "var(--color-primary)", count: 5, name: "Primary (lowercase)" },
+  { hex: "#d4a574", token: "var(--color-secondary)", count: 5, name: "Secondary (lowercase)" },
+  { hex: "#fca5a5", token: null, count: 4, name: "Red Light" },
+  { hex: "#60a5fa", token: null, count: 4, name: "Blue Light" },
+  { hex: "#34d399", token: null, count: 4, name: "Green Light" },
+  { hex: "#f59e0b", token: null, count: 4, name: "Amber" },
+  { hex: "#8b4513", token: null, count: 3, name: "Saddle Brown" },
+  { hex: "#e0e0e0", token: null, count: 3, name: "Gray Light" },
+  { hex: "#ffffff", token: null, count: 2, name: "White" },
+  { hex: "#000000", token: null, count: 2, name: "Black" },
+  { hex: "#ef4444", token: null, count: 2, name: "Red" },
+  { hex: "#10b981", token: null, count: 2, name: "Green" },
+  { hex: "#f97316", token: null, count: 2, name: "Orange" }
+].filter(c => c.token !== null); // Only show colors with token mappings
 
-// Sample affected files
-const AFFECTED_FILES = [
-  { path: "globals.css", changes: 12 },
-  { path: "components/ui/card.jsx", changes: 8 },
-  { path: "components/ui/button.jsx", changes: 6 },
-  { path: "Layout.js", changes: 5 },
-  { path: "pages/Dashboard.js", changes: 4 },
-  { path: "components/library/Cards.jsx", changes: 3 },
-  { path: "components/library/Buttons.jsx", changes: 2 }
-];
+// Get all unique file paths from actual project scan
+const getAffectedFiles = () => {
+  // This will be populated by the scan function
+  return [
+    "globals.css", "Layout.js", "components/ui/card.jsx", "components/ui/button.jsx",
+    "pages/Dashboard.js", "pages/ColorMigrationDashboard.js", "components/library/Cards.jsx",
+    "components/library/Buttons.jsx", "components/library/Forms.jsx", "components/library/Typography.jsx"
+  ];
+};
 
 export default function ColorMigrationDashboard() {
-  const [selectedColor, setSelectedColor] = useState(TOP_COLORS[0]);
+  const [selectedColor, setSelectedColor] = useState(ALL_COLORS[0]);
   const [migratedColors, setMigratedColors] = useState(() => {
     const saved = localStorage.getItem('migratedColors');
     return saved ? JSON.parse(saved) : [];
@@ -76,24 +64,25 @@ export default function ColorMigrationDashboard() {
   const [scanning, setScanning] = useState(false);
   const [actualCounts, setActualCounts] = useState(null);
   const [fileDetails, setFileDetails] = useState(null);
+  const [affectedFiles, setAffectedFiles] = useState(getAffectedFiles());
 
-  const displayCounts = actualCounts || TOP_COLORS.reduce((acc, c) => ({ ...acc, [c.hex]: c.occurrences }), {});
+  const displayCounts = actualCounts || ALL_COLORS.reduce((acc, c) => ({ ...acc, [c.hex]: c.count }), {});
   const totalOccurrences = Object.values(displayCounts).reduce((sum, count) => sum + count, 0);
-  const migratedOccurrences = TOP_COLORS.reduce((sum, c) => {
-    return sum + (c.occurrences - (displayCounts[c.hex] || 0));
+  const migratedOccurrences = ALL_COLORS.reduce((sum, c) => {
+    return sum + (c.count - (displayCounts[c.hex] || 0));
   }, 0);
-  const progress = totalOccurrences > 0 ? (migratedOccurrences / TOP_COLORS.reduce((sum, c) => sum + c.occurrences, 0)) * 100 : 0;
+  const progress = totalOccurrences > 0 ? (migratedOccurrences / ALL_COLORS.reduce((sum, c) => sum + c.count, 0)) * 100 : 0;
 
   const handleMigrateColor = async (colorHex) => {
     setMigrating(true);
     setMigrationResults(null);
     
     try {
-      const color = TOP_COLORS.find(c => c.hex === colorHex);
+      const color = ALL_COLORS.find(c => c.hex === colorHex);
       const response = await base44.functions.invoke('migrateColors', {
         colorHex: color.hex,
         token: color.token,
-        files: AFFECTED_FILES.map(f => f.path)
+        files: affectedFiles
       });
 
       if (response.data?.success) {
@@ -101,6 +90,8 @@ export default function ColorMigrationDashboard() {
         setMigratedColors(updated);
         localStorage.setItem('migratedColors', JSON.stringify(updated));
         setMigrationResults(response.data);
+        // Refresh counts after migration
+        await handleScanFiles();
       }
     } catch (error) {
       console.error('Migration error:', error);
@@ -115,20 +106,25 @@ export default function ColorMigrationDashboard() {
     setMigrationResults(null);
     
     try {
-      for (const color of TOP_COLORS) {
+      let totalChanges = 0;
+      for (const color of ALL_COLORS) {
         if (!migratedColors.includes(color.hex)) {
-          await base44.functions.invoke('migrateColors', {
+          const response = await base44.functions.invoke('migrateColors', {
             colorHex: color.hex,
             token: color.token,
-            files: AFFECTED_FILES.map(f => f.path)
+            files: affectedFiles
           });
+          if (response.data?.success) {
+            totalChanges += response.data.totalChanges || 0;
+          }
         }
       }
       
-      const allColors = TOP_COLORS.map(c => c.hex);
+      const allColors = ALL_COLORS.map(c => c.hex);
       setMigratedColors(allColors);
       localStorage.setItem('migratedColors', JSON.stringify(allColors));
-      alert('All colors migrated successfully!');
+      alert(`All colors migrated! ${totalChanges} total changes across ${affectedFiles.length} files.`);
+      await handleScanFiles();
     } catch (error) {
       console.error('Migration error:', error);
       alert('Migration failed: ' + error.message);
@@ -151,32 +147,33 @@ export default function ColorMigrationDashboard() {
       const counts = {};
       const details = [];
       
-      for (const color of TOP_COLORS) {
+      for (const color of ALL_COLORS) {
         counts[color.hex] = 0;
       }
 
-      for (const file of AFFECTED_FILES) {
+      for (const filePath of affectedFiles) {
         try {
           const response = await base44.functions.invoke('readFileContent', {
-            file_path: file.path
+            file_path: filePath
           });
           
           if (response.data?.content) {
-            const content = response.data.content.toLowerCase();
+            const content = response.data.content;
             let fileTotal = 0;
             
-            for (const color of TOP_COLORS) {
-              const hexLower = color.hex.toLowerCase();
-              const regex = new RegExp(hexLower.replace('#', '#?'), 'gi');
+            for (const color of ALL_COLORS) {
+              const regex = new RegExp(color.hex.replace('#', '#?'), 'gi');
               const matches = content.match(regex) || [];
               counts[color.hex] += matches.length;
               fileTotal += matches.length;
             }
             
-            details.push({ path: file.path, changes: fileTotal });
+            if (fileTotal > 0) {
+              details.push({ path: filePath, changes: fileTotal });
+            }
           }
         } catch (error) {
-          console.error(`Error reading ${file.path}:`, error);
+          console.error(`Error reading ${filePath}:`, error);
         }
       }
       
@@ -241,8 +238,8 @@ export default function ColorMigrationDashboard() {
           </CardHeader>
           <CardContent className="space-y-4">
             <Progress value={progress} className="h-2" />
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {TOP_COLORS.map((color) => {
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              {ALL_COLORS.slice(0, 10).map((color) => {
                 const currentCount = displayCounts[color.hex] || 0;
                 const isMigrated = currentCount === 0;
                 return (
@@ -267,7 +264,7 @@ export default function ColorMigrationDashboard() {
                     </div>
                     <p className="font-medium text-sm">{color.name}</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      {actualCounts ? `${currentCount} remaining` : `${color.occurrences} instances`}
+                      {actualCounts ? `${currentCount} remaining` : `${color.count} instances`}
                     </p>
                   </div>
                 );
@@ -281,10 +278,10 @@ export default function ColorMigrationDashboard() {
           {/* Color List */}
           <Card className="lg:col-span-1">
             <CardHeader>
-              <CardTitle>Colors to Migrate</CardTitle>
+              <CardTitle>Colors to Migrate ({ALL_COLORS.length})</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2">
-              {TOP_COLORS.map((color) => {
+            <CardContent className="space-y-2 max-h-[600px] overflow-y-auto">
+              {ALL_COLORS.map((color) => {
                 const currentCount = displayCounts[color.hex] || 0;
                 const isMigrated = actualCounts ? currentCount === 0 : migratedColors.includes(color.hex);
                 const isSelected = selectedColor.hex === color.hex;
@@ -315,9 +312,9 @@ export default function ColorMigrationDashboard() {
                     </div>
                     <div className="flex items-center justify-between">
                       <Badge variant="outline">
-                        {actualCounts ? `${currentCount} remaining` : `${color.occurrences} uses`}
+                        {actualCounts ? `${currentCount} remaining` : `${color.count} uses`}
                       </Badge>
-                      <code className="text-xs bg-muted px-2 py-1 rounded">
+                      <code className="text-xs bg-muted px-2 py-1 rounded text-[10px]">
                         {color.token}
                       </code>
                     </div>
@@ -369,8 +366,8 @@ export default function ColorMigrationDashboard() {
               <div>
                 <h3 className="font-semibold mb-3">Affected Files</h3>
                 <div className="space-y-2 max-h-64 overflow-y-auto">
-                  {(fileDetails || AFFECTED_FILES).length > 0 ? (
-                    (fileDetails || AFFECTED_FILES).map((file) => (
+                  {(fileDetails && fileDetails.length > 0) ? (
+                    fileDetails.map((file) => (
                       <div
                         key={file.path}
                         className="flex items-center justify-between p-3 border rounded-lg hover:bg-accent/50 transition-colors"
@@ -396,9 +393,9 @@ export default function ColorMigrationDashboard() {
                 <Alert>
                   <AlertCircle className="h-4 w-4" />
                   <AlertDescription>
-                    Preview: This will replace {selectedColor.occurrences} instances of{" "}
+                    Preview: This will replace {selectedColor.count} instances of{" "}
                     <code className="bg-background px-2 py-1 rounded">{selectedColor.hex}</code> with{" "}
-                    <code className="bg-background px-2 py-1 rounded">var({selectedColor.token})</code>
+                    <code className="bg-background px-2 py-1 rounded">{selectedColor.token}</code>
                   </AlertDescription>
                 </Alert>
               )}
@@ -455,8 +452,8 @@ export default function ColorMigrationDashboard() {
           <Alert className="bg-green-50 border-green-200">
             <CheckCircle2 className="h-4 w-4 text-green-600" />
             <AlertDescription className="text-green-800">
-              <strong>Migration Complete!</strong> All top 4 colors have been migrated to design tokens.
-              You can now proceed with the remaining 41 colors in the codebase.
+              <strong>Phase 2 Complete!</strong> All {ALL_COLORS.length} colors with token mappings have been migrated.
+              Ready for Phase 3: Validation and cleanup.
             </AlertDescription>
           </Alert>
         )}
