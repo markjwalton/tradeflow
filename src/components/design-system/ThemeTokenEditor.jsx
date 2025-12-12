@@ -30,138 +30,138 @@ const STURIJ_TOKENS = {
   colors: {
     primary: {
       label: "Primary (Forest Green)",
-      base: "#4A5D4E",
+      base: "oklch(0.398 0.037 159.8)",
       variants: {
-        "50": "#f2f5f3",
-        "100": "#e5ebe6",
-        "200": "#c9d5cc",
-        "300": "#a8bead",
-        "400": "#7a9a82",
-        "500": "#4A5D4E",
-        "600": "#3e4f42",
-        "700": "#334137",
-        "800": "#28332c",
-        "900": "#1e2621",
-        "light": "#5d7361",
-        "dark": "#3a4a3e"
+        "50": "oklch(0.972 0.011 159.8)",
+        "100": "oklch(0.945 0.022 159.8)",
+        "200": "oklch(0.890 0.033 159.8)",
+        "300": "oklch(0.791 0.044 159.8)",
+        "400": "oklch(0.668 0.048 159.8)",
+        "500": "oklch(0.398 0.037 159.8)",
+        "600": "oklch(0.333 0.031 159.8)",
+        "700": "oklch(0.279 0.026 159.8)",
+        "800": "oklch(0.237 0.022 159.8)",
+        "900": "oklch(0.204 0.019 159.8)",
+        "light": "oklch(0.668 0.048 159.8)",
+        "dark": "oklch(0.279 0.026 159.8)"
       }
     },
     secondary: {
       label: "Secondary (Warm Copper)",
-      base: "#D4A574",
+      base: "oklch(0.728 0.074 70.3)",
       variants: {
-        "50": "#faf6f2",
-        "100": "#f5ede4",
-        "200": "#ebdbc9",
-        "300": "#e0c4a8",
-        "400": "#D4A574",
-        "500": "#c89254",
-        "600": "#b67d3f",
-        "700": "#966633",
-        "800": "#78522a",
-        "900": "#624423",
-        "light": "#e0bc94",
-        "dark": "#c08d54"
+        "50": "oklch(0.980 0.010 70.3)",
+        "100": "oklch(0.960 0.020 70.3)",
+        "200": "oklch(0.906 0.040 70.3)",
+        "300": "oklch(0.835 0.060 70.3)",
+        "400": "oklch(0.728 0.074 70.3)",
+        "500": "oklch(0.676 0.085 70.3)",
+        "600": "oklch(0.610 0.090 70.3)",
+        "700": "oklch(0.516 0.076 70.3)",
+        "800": "oklch(0.437 0.064 70.3)",
+        "900": "oklch(0.374 0.054 70.3)",
+        "light": "oklch(0.835 0.060 70.3)",
+        "dark": "oklch(0.610 0.090 70.3)"
       }
     },
     accent: {
       label: "Accent (Soft Blush)",
-      base: "#d9b4a7",
+      base: "oklch(0.785 0.044 35.6)",
       variants: {
-        "50": "#fdf9f7",
-        "100": "#f9f1ed",
-        "200": "#f2e2db",
-        "300": "#e8cec4",
-        "400": "#d9b4a7",
-        "500": "#c99a8a",
-        "600": "#b5806e",
-        "700": "#966858",
-        "800": "#7a5548",
-        "900": "#64463c",
-        "light": "#e8cec4",
-        "dark": "#c99a8a"
+        "50": "oklch(0.980 0.008 35.6)",
+        "100": "oklch(0.957 0.016 35.6)",
+        "200": "oklch(0.894 0.032 35.6)",
+        "300": "oklch(0.785 0.044 35.6)",
+        "400": "oklch(0.715 0.048 35.6)",
+        "500": "oklch(0.646 0.052 35.6)",
+        "600": "oklch(0.577 0.056 35.6)",
+        "700": "oklch(0.490 0.047 35.6)",
+        "800": "oklch(0.417 0.040 35.6)",
+        "900": "oklch(0.357 0.034 35.6)",
+        "light": "oklch(0.894 0.032 35.6)",
+        "dark": "oklch(0.646 0.052 35.6)"
       }
     },
     background: {
       label: "Background",
-      base: "#f5f3ef",
+      base: "oklch(0.962 0.010 83.1)",
       variants: {
-        "paper": "#ffffff",
-        "subtle": "#faf9f7",
-        "muted": "#eceae5",
-        "50": "#faf9f7",
-        "100": "#f5f3ef",
-        "200": "#eceae5",
-        "300": "#e0ddd6",
-        "400": "#d4d0c7"
+        "paper": "oklch(1.000 0.000 0)",
+        "subtle": "oklch(0.990 0.007 83.1)",
+        "muted": "oklch(0.927 0.020 83.1)",
+        "50": "oklch(0.990 0.007 83.1)",
+        "100": "oklch(0.962 0.010 83.1)",
+        "200": "oklch(0.927 0.020 83.1)",
+        "300": "oklch(0.876 0.030 83.1)",
+        "400": "oklch(0.809 0.040 83.1)"
       }
     },
     midnight: {
       label: "Midnight (Dark Blue-Grey)",
-      base: "#1b2a35",
+      base: "oklch(0.223 0.036 235.4)",
       variants: {
-        "50": "#f4f6f7",
-        "100": "#e3e7ea",
-        "200": "#c9d1d7",
-        "300": "#a3b1bb",
-        "400": "#758997",
-        "500": "#5a6e7d",
-        "600": "#4d5d6a",
-        "700": "#434f59",
-        "800": "#3b444d",
-        "900": "#1b2a35",
-        "light": "#2a3d4a",
-        "dark": "#121c24"
+        "50": "oklch(0.970 0.007 235.4)",
+        "100": "oklch(0.929 0.014 235.4)",
+        "200": "oklch(0.859 0.026 235.4)",
+        "300": "oklch(0.749 0.032 235.4)",
+        "400": "oklch(0.619 0.038 235.4)",
+        "500": "oklch(0.513 0.040 235.4)",
+        "600": "oklch(0.451 0.041 235.4)",
+        "700": "oklch(0.387 0.040 235.4)",
+        "800": "oklch(0.341 0.038 235.4)",
+        "900": "oklch(0.223 0.036 235.4)",
+        "light": "oklch(0.341 0.038 235.4)",
+        "dark": "oklch(0.223 0.036 235.4)"
       }
     },
     charcoal: {
       label: "Charcoal",
-      base: "#3b3b3b",
+      base: "oklch(0.297 0.000 0)",
       variants: {
-        "50": "#f6f6f6",
-        "100": "#e7e7e7",
-        "200": "#d1d1d1",
-        "300": "#b0b0b0",
-        "400": "#888888",
-        "500": "#6d6d6d",
-        "600": "#5d5d5d",
-        "700": "#4f4f4f",
-        "800": "#3b3b3b",
-        "900": "#262626",
-        "light": "#555555",
-        "dark": "#2a2a2a"
+        "50": "oklch(0.975 0.000 0)",
+        "100": "oklch(0.943 0.000 0)",
+        "200": "oklch(0.878 0.000 0)",
+        "300": "oklch(0.783 0.000 0)",
+        "400": "oklch(0.667 0.000 0)",
+        "500": "oklch(0.543 0.000 0)",
+        "600": "oklch(0.439 0.000 0)",
+        "700": "oklch(0.356 0.000 0)",
+        "800": "oklch(0.297 0.000 0)",
+        "900": "oklch(0.250 0.000 0)",
+        "light": "oklch(0.439 0.000 0)",
+        "dark": "oklch(0.250 0.000 0)"
       }
     },
     destructive: {
       label: "Destructive (Muted Red)",
-      base: "#8b5b5b",
+      base: "oklch(0.482 0.071 25.7)",
       variants: {
-        "light": "#a87272",
-        "dark": "#6e4747"
+        "light": "oklch(0.580 0.064 25.7)",
+        "dark": "oklch(0.410 0.060 25.7)"
       }
     },
     success: {
       label: "Success",
-      base: "#5a7a5e",
+      base: "oklch(0.513 0.040 159.8)",
       variants: {
-        "light": "#6d8f71",
-        "dark": "#486249"
+        "light": "oklch(0.619 0.038 159.8)",
+        "dark": "oklch(0.387 0.040 159.8)"
       }
     },
     warning: {
       label: "Warning",
-      base: "#c4a35a",
+      base: "oklch(0.676 0.085 70.3)",
       variants: {
-        "light": "#d4b872",
-        "dark": "#a88c42"
+        "light": "oklch(0.728 0.074 70.3)",
+        "dark": "oklch(0.610 0.090 70.3)"
       }
     },
     info: {
       label: "Info",
-      base: "#5a7a8b",
+      base: "oklch(0.513 0.040 235.4)",
       variants: {
-        "light": "#6d8f9f",
-        "dark": "#486270"
+        "light": "oklch(0.619 0.038 235.4)",
+        "dark": "oklch(0.387 0.040 235.4)"
       }
     }
   },
@@ -228,13 +228,13 @@ const STURIJ_TOKENS = {
     full: { label: "Full (Pill)", value: "9999px" }
   },
   shadows: {
-    xs: { label: "Extra Small", value: "0 1px 2px 0 rgb(27 42 53 / 0.05)" },
-    sm: { label: "Small", value: "0 1px 3px 0 rgb(27 42 53 / 0.1), 0 1px 2px -1px rgb(27 42 53 / 0.1)" },
-    md: { label: "Medium", value: "0 4px 6px -1px rgb(27 42 53 / 0.1), 0 2px 4px -2px rgb(27 42 53 / 0.1)" },
-    lg: { label: "Large", value: "0 10px 15px -3px rgb(27 42 53 / 0.1), 0 4px 6px -4px rgb(27 42 53 / 0.1)" },
-    xl: { label: "Extra Large", value: "0 20px 25px -5px rgb(27 42 53 / 0.1), 0 8px 10px -6px rgb(27 42 53 / 0.1)" },
-    "2xl": { label: "2XL", value: "0 25px 50px -12px rgb(27 42 53 / 0.25)" },
-    inner: { label: "Inner", value: "inset 0 2px 4px 0 rgb(27 42 53 / 0.05)" }
+    xs: { label: "Extra Small", value: "0 1px 2px 0 oklch(0.223 0.036 235.4 / 0.05)" },
+    sm: { label: "Small", value: "0 1px 3px 0 oklch(0.223 0.036 235.4 / 0.1), 0 1px 2px -1px oklch(0.223 0.036 235.4 / 0.1)" },
+    md: { label: "Medium", value: "0 4px 6px -1px oklch(0.223 0.036 235.4 / 0.1), 0 2px 4px -2px oklch(0.223 0.036 235.4 / 0.1)" },
+    lg: { label: "Large", value: "0 10px 15px -3px oklch(0.223 0.036 235.4 / 0.1), 0 4px 6px -4px oklch(0.223 0.036 235.4 / 0.1)" },
+    xl: { label: "Extra Large", value: "0 20px 25px -5px oklch(0.223 0.036 235.4 / 0.1), 0 8px 10px -6px oklch(0.223 0.036 235.4 / 0.1)" },
+    "2xl": { label: "2XL", value: "0 25px 50px -12px oklch(0.223 0.036 235.4 / 0.25)" },
+    inner: { label: "Inner", value: "inset 0 2px 4px 0 oklch(0.223 0.036 235.4 / 0.05)" }
   },
   transitions: {
     fast: { label: "Fast (150ms)", value: "150ms ease" },
