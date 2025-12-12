@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { base44 } from "@/api/base44Client";
 import { 
   Palette, 
@@ -14,7 +15,8 @@ import {
   Play,
   RefreshCw,
   ArrowRight,
-  Loader2
+  Loader2,
+  FileJson
 } from "lucide-react";
 
 // Complete color mapping from Phase 2 artifacts (45 colors with token mappings)
@@ -62,6 +64,46 @@ export default function ColorMigrationDashboard() {
   const [actualCounts, setActualCounts] = useState(null);
   const [fileDetails, setFileDetails] = useState(null);
   const [affectedFiles, setAffectedFiles] = useState(getAffectedFiles());
+  const [selectedMappingFile, setSelectedMappingFile] = useState("color-to-token-mapping-updated.json");
+  const [loadingMapping, setLoadingMapping] = useState(false);
+  const [mappingData, setMappingData] = useState(null);
+  const [completedTasks, setCompletedTasks] = useState([]);
+
+  // Load mapping file on mount and when selection changes
+  useEffect(() => {
+    loadMappingFile();
+    loadCompletedTasks();
+  }, [selectedMappingFile]);
+
+  const loadMappingFile = async () => {
+    setLoadingMapping(true);
+    try {
+      const response = await base44.functions.invoke('githubApi', {
+        action: 'get_file',
+        path: `Support Files/phase-2/artifacts/${selectedMappingFile}`
+      });
+      
+      if (response.data?.content) {
+        const parsed = JSON.parse(response.data.content);
+        setMappingData(parsed);
+      }
+    } catch (error) {
+      console.error('Error loading mapping file:', error);
+    } finally {
+      setLoadingMapping(false);
+    }
+  };
+
+  const loadCompletedTasks = async () => {
+    try {
+      const tasks = await base44.entities.ColorMigrationTask.filter({
+        source_file: `Support Files/phase-2/artifacts/${selectedMappingFile}`
+      });
+      setCompletedTasks(tasks);
+    } catch (error) {
+      console.error('Error loading tasks:', error);
+    }
+  };
 
   const displayCounts = actualCounts || ALL_COLORS.reduce((acc, c) => ({ ...acc, [c.hex]: c.count }), {});
   const totalOccurrences = Object.values(displayCounts).reduce((sum, count) => sum + count, 0);
@@ -86,8 +128,22 @@ export default function ColorMigrationDashboard() {
         const updated = [...migratedColors, colorHex];
         setMigratedColors(updated);
         setMigrationResults(response.data);
-        // Refresh counts after migration
+        
+        // Save completed task to database
+        await base44.entities.ColorMigrationTask.create({
+          source_file: `Support Files/phase-2/artifacts/${selectedMappingFile}`,
+          color_hex: color.hex,
+          token: color.token,
+          count: color.count,
+          status: 'completed',
+          completed_date: new Date().toISOString(),
+          files_changed: response.data.results.length,
+          total_changes: response.data.totalChanges
+        });
+        
+        // Refresh
         await handleScanFiles();
+        await loadCompletedTasks();
       }
     } catch (error) {
       console.error('Migration error:', error);
@@ -192,6 +248,22 @@ export default function ColorMigrationDashboard() {
               <h1 className="text-3xl font-bold">Color Migration Dashboard</h1>
             </div>
             <div className="flex gap-2">
+              <Select value={selectedMappingFile} onValueChange={setSelectedMappingFile}>
+                <SelectTrigger className="w-[280px]">
+                  <div className="flex items-center gap-2">
+                    <FileJson className="h-4 w-4" />
+                    <SelectValue placeholder="Select mapping file" />
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="color-to-token-mapping-updated.json">
+                    Updated Mapping (Phase 2)
+                  </SelectItem>
+                  <SelectItem value="color-scan-updated.json">
+                    Color Scan Data
+                  </SelectItem>
+                </SelectContent>
+              </Select>
               <Button variant="outline" size="sm" onClick={handleScanFiles} disabled={scanning}>
                 {scanning ? (
                   <>
@@ -440,6 +512,47 @@ export default function ColorMigrationDashboard() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Completed Tasks Summary */}
+        {completedTasks.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Completed Migrations</CardTitle>
+              <CardDescription>
+                {completedTasks.length} color{completedTasks.length !== 1 ? 's' : ''} successfully migrated from {selectedMappingFile}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {completedTasks.map((task) => (
+                  <div
+                    key={task.id}
+                    className="flex items-center justify-between p-3 border rounded-lg bg-green-50 border-green-200"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="w-8 h-8 rounded-full border-2"
+                        style={{ backgroundColor: task.color_hex }}
+                      />
+                      <div>
+                        <p className="font-medium text-sm">{task.color_hex}</p>
+                        <p className="text-xs text-muted-foreground">{task.token}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <Badge variant="outline" className="bg-white">
+                        {task.total_changes} changes
+                      </Badge>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {new Date(task.completed_date).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Next Steps */}
         {progress === 100 && (
