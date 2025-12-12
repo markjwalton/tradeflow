@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { QueryErrorState } from "@/components/common/QueryErrorState";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -89,7 +90,7 @@ export default function RoadmapManager() {
   const [activeTab, setActiveTab] = useState("roadmap");
   const [currentPage, setCurrentPage] = useState({ roadmap: 1, development: 1, completed: 1 });
 
-  const { data: items = [], isLoading } = useQuery({
+  const { data: items = [], isLoading, error, refetch } = useQuery({
     queryKey: ["roadmapItems"],
     queryFn: () => base44.entities.RoadmapItem.list("-created_date"),
   });
@@ -353,6 +354,8 @@ export default function RoadmapManager() {
         <div className="flex justify-center py-12">
           <Loader2 className="h-8 w-8 animate-spin" />
         </div>
+      ) : error ? (
+        <QueryErrorState error={error} onRetry={refetch} />
       ) : (
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList>
