@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/select";
 import { ChevronLeft, ChevronRight, Loader2, Circle } from "lucide-react";
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, isSameMonth, isSameDay, addMonths, subMonths } from "date-fns";
+import { PageLoader } from "@/components/common/LoadingStates";
+import { QueryErrorState } from "@/components/common/QueryErrorState";
 
 const statusColors = {
   todo: "bg-muted",
@@ -26,25 +28,34 @@ export default function Calendar() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [filterProject, setFilterProject] = useState("all");
 
-  const { data: tasks = [], isLoading } = useQuery({
+  const { data: tasks = [], isLoading: tasksLoading, error: tasksError, refetch: refetchTasks } = useQuery({
     queryKey: ["tasks"],
     queryFn: () => base44.entities.Task.list(),
   });
 
-  const { data: projects = [] } = useQuery({
+  const { data: projects = [], isLoading: projectsLoading, error: projectsError, refetch: refetchProjects } = useQuery({
     queryKey: ["projects"],
     queryFn: () => base44.entities.Project.list(),
   });
 
-  const { data: absences = [] } = useQuery({
+  const { data: absences = [], isLoading: absencesLoading, error: absencesError, refetch: refetchAbsences } = useQuery({
     queryKey: ["absences"],
     queryFn: () => base44.entities.Absence.list(),
   });
 
-  const { data: teamMembers = [] } = useQuery({
+  const { data: teamMembers = [], isLoading: teamLoading, error: teamError, refetch: refetchTeam } = useQuery({
     queryKey: ["teamMembers"],
     queryFn: () => base44.entities.TeamMember.list(),
   });
+
+  const isLoading = tasksLoading || projectsLoading || absencesLoading || teamLoading;
+  const error = tasksError || projectsError || absencesError || teamError;
+  const refetch = () => {
+    refetchTasks();
+    refetchProjects();
+    refetchAbsences();
+    refetchTeam();
+  };
 
   const filteredTasks = tasks.filter((t) => filterProject === "all" || t.project_id === filterProject);
 
@@ -124,7 +135,11 @@ export default function Calendar() {
   const selectedDateAbsences = selectedDate ? getAbsencesForDate(selectedDate) : [];
 
   if (isLoading) {
-    return <div className="flex items-center justify-center h-64 bg-background"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>;
+    return <PageLoader message="Loading calendar data..." />;
+  }
+
+  if (error) {
+    return <QueryErrorState error={error} onRetry={refetch} />;
   }
 
   return (
