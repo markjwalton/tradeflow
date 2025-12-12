@@ -1,40 +1,25 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from 'sonner';
-import { getErrorMessage } from './FormValidation';
 
 /**
- * Hook for validated forms with consistent error handling
+ * Custom hook that combines react-hook-form with Zod validation
  */
-export function useValidatedForm(schema, defaultValues = {}) {
+export function useValidatedForm(schema, options = {}) {
   const form = useForm({
     resolver: zodResolver(schema),
-    defaultValues,
-    mode: 'onBlur', // Validate on blur for better UX
+    mode: options.mode || 'onBlur',
+    ...options,
   });
-
-  /**
-   * Handle form submission with error toasts
-   */
-  const handleSubmit = (onValid, onError) => {
-    return form.handleSubmit(
-      onValid,
-      (errors) => {
-        // Show first error as toast
-        const firstError = Object.values(errors)[0];
-        if (firstError) {
-          toast.error(getErrorMessage(firstError));
-        }
-        
-        if (onError) {
-          onError(errors);
-        }
-      }
-    );
-  };
 
   return {
     ...form,
-    handleSubmit,
+    // Convenience method to get error message
+    getError: (fieldName) => form.formState.errors[fieldName]?.message,
+    // Check if field has error
+    hasError: (fieldName) => !!form.formState.errors[fieldName],
+    // Check if field is dirty
+    isDirty: (fieldName) => form.formState.dirtyFields[fieldName],
+    // Check if field was touched
+    isTouched: (fieldName) => form.formState.touchedFields[fieldName],
   };
 }

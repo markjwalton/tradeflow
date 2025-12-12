@@ -4,39 +4,63 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { AlertCircle } from 'lucide-react';
 
-export function ValidatedTextarea({ 
-  label, 
-  error, 
-  required = false,
+export function ValidatedTextarea({
+  label,
+  error,
+  required,
+  helperText,
+  maxLength,
+  showCharCount,
   className,
-  ...props 
+  ...props
 }) {
   const textareaId = props.id || props.name;
   const hasError = !!error;
-  
+  const currentLength = props.value?.length || 0;
+
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn('space-y-2', className)}>
       {label && (
-        <Label htmlFor={textareaId} className={required ? "after:content-['*'] after:ml-0.5 after:text-destructive" : ""}>
-          {label}
-        </Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor={textareaId} className="flex items-center gap-1">
+            {label}
+            {required && <span className="text-destructive">*</span>}
+          </Label>
+          {showCharCount && maxLength && (
+            <span className="text-xs text-muted-foreground">
+              {currentLength}/{maxLength}
+            </span>
+          )}
+        </div>
       )}
+      
       <Textarea
         id={textareaId}
+        maxLength={maxLength}
+        className={cn(
+          hasError && 'border-destructive focus-visible:ring-destructive'
+        )}
         aria-invalid={hasError}
-        aria-describedby={hasError ? `${textareaId}-error` : undefined}
-        className={cn(hasError && "border-destructive focus-visible:ring-destructive")}
+        aria-describedby={
+          hasError ? `${textareaId}-error` : helperText ? `${textareaId}-helper` : undefined
+        }
         {...props}
       />
+      
+      {helperText && !hasError && (
+        <p id={`${textareaId}-helper`} className="text-xs text-muted-foreground">
+          {helperText}
+        </p>
+      )}
+      
       {hasError && (
-        <div 
+        <p
           id={`${textareaId}-error`}
-          className="flex items-center gap-1 text-sm text-destructive"
-          role="alert"
+          className="text-xs text-destructive flex items-center gap-1"
         >
           <AlertCircle className="h-3 w-3" />
-          <span>{error}</span>
-        </div>
+          {error}
+        </p>
       )}
     </div>
   );

@@ -1,49 +1,82 @@
 import React from 'react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { AlertCircle } from 'lucide-react';
 
-export function ValidatedSelect({ 
-  label, 
-  error, 
-  required = false,
+export function ValidatedSelect({
+  label,
+  error,
+  required,
+  helperText,
+  options = [],
+  placeholder,
   className,
-  children,
-  ...props 
+  onValueChange,
+  value,
+  ...props
 }) {
   const selectId = props.id || props.name;
   const hasError = !!error;
-  
+
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn('space-y-2', className)}>
       {label && (
-        <Label htmlFor={selectId} className={required ? "after:content-['*'] after:ml-0.5 after:text-destructive" : ""}>
+        <Label htmlFor={selectId} className="flex items-center gap-1">
           {label}
+          {required && <span className="text-destructive">*</span>}
         </Label>
       )}
-      <Select {...props}>
-        <SelectTrigger 
+      
+      <Select
+        value={value}
+        onValueChange={onValueChange}
+        {...props}
+      >
+        <SelectTrigger
           id={selectId}
+          className={cn(
+            hasError && 'border-destructive focus:ring-destructive'
+          )}
           aria-invalid={hasError}
-          aria-describedby={hasError ? `${selectId}-error` : undefined}
-          className={cn(hasError && "border-destructive focus-visible:ring-destructive")}
+          aria-describedby={
+            hasError ? `${selectId}-error` : helperText ? `${selectId}-helper` : undefined
+          }
         >
-          <SelectValue />
+          <SelectValue placeholder={placeholder || 'Select an option'} />
         </SelectTrigger>
         <SelectContent>
-          {children}
+          {options.map((option) => (
+            <SelectItem
+              key={option.value}
+              value={option.value}
+            >
+              {option.label}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
+      
+      {helperText && !hasError && (
+        <p id={`${selectId}-helper`} className="text-xs text-muted-foreground">
+          {helperText}
+        </p>
+      )}
+      
       {hasError && (
-        <div 
+        <p
           id={`${selectId}-error`}
-          className="flex items-center gap-1 text-sm text-destructive"
-          role="alert"
+          className="text-xs text-destructive flex items-center gap-1"
         >
           <AlertCircle className="h-3 w-3" />
-          <span>{error}</span>
-        </div>
+          {error}
+        </p>
       )}
     </div>
   );

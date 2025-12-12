@@ -4,39 +4,52 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { AlertCircle } from 'lucide-react';
 
-export function ValidatedInput({ 
-  label, 
-  error, 
-  required = false,
+export function ValidatedInput({
+  label,
+  error,
+  required,
+  helperText,
   className,
-  ...props 
+  ...props
 }) {
   const inputId = props.id || props.name;
   const hasError = !!error;
-  
+
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn('space-y-2', className)}>
       {label && (
-        <Label htmlFor={inputId} className={required ? "after:content-['*'] after:ml-0.5 after:text-destructive" : ""}>
+        <Label htmlFor={inputId} className="flex items-center gap-1">
           {label}
+          {required && <span className="text-destructive">*</span>}
         </Label>
       )}
+      
       <Input
         id={inputId}
+        className={cn(
+          hasError && 'border-destructive focus-visible:ring-destructive'
+        )}
         aria-invalid={hasError}
-        aria-describedby={hasError ? `${inputId}-error` : undefined}
-        className={cn(hasError && "border-destructive focus-visible:ring-destructive")}
+        aria-describedby={
+          hasError ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined
+        }
         {...props}
       />
+      
+      {helperText && !hasError && (
+        <p id={`${inputId}-helper`} className="text-xs text-muted-foreground">
+          {helperText}
+        </p>
+      )}
+      
       {hasError && (
-        <div 
+        <p
           id={`${inputId}-error`}
-          className="flex items-center gap-1 text-sm text-destructive"
-          role="alert"
+          className="text-xs text-destructive flex items-center gap-1"
         >
           <AlertCircle className="h-3 w-3" />
-          <span>{error}</span>
-        </div>
+          {error}
+        </p>
       )}
     </div>
   );
