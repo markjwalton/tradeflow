@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { base44 } from "@/api/base44Client";
 import { 
   Palette, 
   CheckCircle2, 
@@ -12,7 +13,8 @@ import {
   Eye, 
   Play,
   RefreshCw,
-  ArrowRight
+  ArrowRight,
+  Loader2
 } from "lucide-react";
 
 // Top 4 colors data from artifacts
@@ -69,6 +71,8 @@ export default function ColorMigrationDashboard() {
     return saved ? JSON.parse(saved) : [];
   });
   const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [migrating, setMigrating] = useState(false);
+  const [migrationResults, setMigrationResults] = useState(null);
 
   const totalOccurrences = TOP_COLORS.reduce((sum, c) => sum + c.occurrences, 0);
   const migratedOccurrences = migratedColors.reduce((sum, id) => {
@@ -77,16 +81,57 @@ export default function ColorMigrationDashboard() {
   }, 0);
   const progress = (migratedOccurrences / totalOccurrences) * 100;
 
-  const handleMigrateColor = (colorHex) => {
-    const updated = [...migratedColors, colorHex];
-    setMigratedColors(updated);
-    localStorage.setItem('migratedColors', JSON.stringify(updated));
+  const handleMigrateColor = async (colorHex) => {
+    setMigrating(true);
+    setMigrationResults(null);
+    
+    try {
+      const color = TOP_COLORS.find(c => c.hex === colorHex);
+      const response = await base44.functions.invoke('migrateColors', {
+        colorHex: color.hex,
+        token: color.token,
+        files: AFFECTED_FILES.map(f => f.path)
+      });
+
+      if (response.data?.success) {
+        const updated = [...migratedColors, colorHex];
+        setMigratedColors(updated);
+        localStorage.setItem('migratedColors', JSON.stringify(updated));
+        setMigrationResults(response.data);
+      }
+    } catch (error) {
+      console.error('Migration error:', error);
+      alert('Migration failed: ' + error.message);
+    } finally {
+      setMigrating(false);
+    }
   };
 
-  const handleMigrateAll = () => {
-    const allColors = TOP_COLORS.map(c => c.hex);
-    setMigratedColors(allColors);
-    localStorage.setItem('migratedColors', JSON.stringify(allColors));
+  const handleMigrateAll = async () => {
+    setMigrating(true);
+    setMigrationResults(null);
+    
+    try {
+      for (const color of TOP_COLORS) {
+        if (!migratedColors.includes(color.hex)) {
+          await base44.functions.invoke('migrateColors', {
+            colorHex: color.hex,
+            token: color.token,
+            files: AFFECTED_FILES.map(f => f.path)
+          });
+        }
+      }
+      
+      const allColors = TOP_COLORS.map(c => c.hex);
+      setMigratedColors(allColors);
+      localStorage.setItem('migratedColors', JSON.stringify(allColors));
+      alert('All colors migrated successfully!');
+    } catch (error) {
+      console.error('Migration error:', error);
+      alert('Migration failed: ' + error.message);
+    } finally {
+      setMigrating(false);
+    }
   };
 
   return (
@@ -263,14 +308,29 @@ export default function ColorMigrationDashboard() {
                 </Alert>
               )}
 
+              {/* Migration Results */}
+              {migrationResults && (
+                <Alert className="bg-green-50 border-green-200">
+                  <CheckCircle2 className="h-4 w-4 text-green-600" />
+                  <AlertDescription className="text-green-800">
+                    Successfully migrated {migrationResults.totalChanges} instances across {migrationResults.results.length} files!
+                  </AlertDescription>
+                </Alert>
+              )}
+
               {/* Migration Actions */}
               <div className="flex gap-2 pt-4 border-t">
                 <Button
                   onClick={() => handleMigrateColor(selectedColor.hex)}
-                  disabled={migratedColors.includes(selectedColor.hex)}
+                  disabled={migratedColors.includes(selectedColor.hex) || migrating}
                   className="flex-1"
                 >
-                  {migratedColors.includes(selectedColor.hex) ? (
+                  {migrating ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Migrating...
+                    </>
+                  ) : migratedColors.includes(selectedColor.hex) ? (
                     <>
                       <CheckCircle2 className="h-4 w-4 mr-2" />
                       Migrated
@@ -282,8 +342,12 @@ export default function ColorMigrationDashboard() {
                     </>
                   )}
                 </Button>
-                <Button variant="outline" onClick={handleMigrateAll}>
-                  <RefreshCw className="h-4 w-4 mr-2" />
+                <Button variant="outline" onClick={handleMigrateAll} disabled={migrating}>
+                  {migrating ? (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                  )}
                   Migrate All
                 </Button>
               </div>
