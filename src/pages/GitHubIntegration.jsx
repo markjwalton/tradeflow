@@ -21,12 +21,18 @@ export default function GitHubIntegration() {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await base44.functions.invoke('githubApi', {
+      const result = await base44.functions.invoke('githubApi', {
         action: 'get_repo'
       });
-      setRepo(data.repo);
+      console.log("GitHub API result:", result);
+      if (result?.data?.repo) {
+        setRepo(result.data.repo);
+      } else {
+        setError("No repository data received");
+      }
     } catch (e) {
-      setError(e.message);
+      console.error("GitHub API error:", e);
+      setError(e.message || "Failed to load repository");
     }
     setLoading(false);
   };
