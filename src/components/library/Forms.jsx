@@ -5,16 +5,16 @@ import { Search, Eye, EyeOff, Calendar, Check } from "lucide-react";
 // Base input styles
 const inputBase = cn(
   "w-full px-4 py-2.5 rounded-lg",
-  "bg-white border border-[#eceae5]",
-  "text-[#3b3b3b] placeholder:text-[#888888]",
+  "bg-white border border-background-muted",
+  "text-charcoal placeholder:text-muted-foreground",
   "transition-all duration-200",
-  "focus:outline-none focus:ring-2 focus:ring-[#4A5D4E]/30 focus:border-[#4A5D4E]",
-  "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-[#f5f3ef]"
+  "focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary",
+  "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-background"
 );
 
-const labelBase = "block text-sm font-medium text-[#1b2a35] mb-1.5";
-const errorBase = "text-sm text-[#8b5b5b] mt-1";
-const hintBase = "text-sm text-[#6d6d6d] mt-1";
+const labelBase = "block text-sm font-medium text-midnight mb-1.5";
+const errorBase = "text-sm text-destructive mt-1";
+const hintBase = "text-sm text-charcoal-light mt-1";
 
 // Text Field
 export function TextField({ 
@@ -34,12 +34,12 @@ export function TextField({
       {label && (
         <label className={labelBase}>
           {label}
-          {required && <span className="text-[#8b5b5b] ml-1">*</span>}
+          {required && <span className="text-destructive ml-1">*</span>}
         </label>
       )}
       <input
         type="text"
-        className={cn(inputBase, error && "border-[#8b5b5b] focus:ring-[#8b5b5b]/30")}
+        className={cn(inputBase, error && "border-destructive focus:ring-destructive/30")}
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
@@ -71,7 +71,7 @@ export function TextAreaField({
       {label && (
         <label className={labelBase}>
           {label}
-          {required && <span className="text-[#8b5b5b] ml-1">*</span>}
+          {required && <span className="text-destructive ml-1">*</span>}
         </label>
       )}
       <textarea
@@ -108,7 +108,7 @@ export function SelectField({
       {label && (
         <label className={labelBase}>
           {label}
-          {required && <span className="text-[#8b5b5b] ml-1">*</span>}
+          {required && <span className="text-destructive ml-1">*</span>}
         </label>
       )}
       <select
@@ -162,8 +162,8 @@ export function CheckboxField({
           "w-5 h-5 rounded border-2 transition-all duration-200",
           "flex items-center justify-center",
           checked 
-            ? "bg-[#4A5D4E] border-[#4A5D4E]" 
-            : "bg-white border-[#d1d1d1] hover:border-[#4A5D4E]"
+            ? "bg-primary border-primary" 
+            : "bg-white border-border hover:border-primary"
         )}>
           {checked && <Check className="h-3 w-3 text-white" />}
         </div>
@@ -210,13 +210,13 @@ export function RadioField({
                   "w-5 h-5 rounded-full border-2 transition-all duration-200",
                   "flex items-center justify-center",
                   isSelected 
-                    ? "border-[#4A5D4E]" 
-                    : "border-[#d1d1d1] hover:border-[#4A5D4E]"
+                    ? "border-primary" 
+                    : "border-border hover:border-primary"
                 )}>
-                  {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-[#4A5D4E]" />}
+                  {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
                 </div>
               </div>
-              <span className="text-sm text-[#3b3b3b]">{optionLabel}</span>
+              <span className="text-sm text-charcoal">{optionLabel}</span>
             </label>
           );
         })}
@@ -238,8 +238,8 @@ export function SwitchField({
   return (
     <label className={cn("flex items-start justify-between gap-4 cursor-pointer", disabled && "opacity-50 cursor-not-allowed", className)}>
       <div>
-        <span className="text-sm font-medium text-[#1b2a35]">{label}</span>
-        {description && <p className="text-sm text-[#6d6d6d] mt-0.5">{description}</p>}
+        <span className="text-sm font-medium text-midnight">{label}</span>
+        {description && <p className="text-sm text-charcoal-light mt-0.5">{description}</p>}
       </div>
       <div className="relative">
         <input
@@ -252,7 +252,7 @@ export function SwitchField({
         />
         <div className={cn(
           "w-11 h-6 rounded-full transition-all duration-200",
-          checked ? "bg-[#4A5D4E]" : "bg-[#d1d1d1]"
+          checked ? "bg-primary" : "bg-border"
         )}>
           <div className={cn(
             "w-5 h-5 rounded-full bg-white shadow-sm transition-all duration-200",
@@ -283,7 +283,7 @@ export function SearchField({
 
   return (
     <div className={cn("relative", className)}>
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#888888]" />
+      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
       <input
         type="search"
         className={cn(inputBase, "pl-10")}
@@ -315,12 +315,12 @@ export function EmailField({
       {label && (
         <label className={labelBase}>
           {label}
-          {required && <span className="text-[#8b5b5b] ml-1">*</span>}
+          {required && <span className="text-destructive ml-1">*</span>}
         </label>
       )}
       <input
         type="email"
-        className={cn(inputBase, error && "border-[#8b5b5b] focus:ring-[#8b5b5b]/30")}
+        className={cn(inputBase, error && "border-destructive focus:ring-destructive/30")}
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
@@ -351,7 +351,7 @@ export function PasswordField({
       {label && (
         <label className={labelBase}>
           {label}
-          {required && <span className="text-[#8b5b5b] ml-1">*</span>}
+          {required && <span className="text-destructive ml-1">*</span>}
         </label>
       )}
       <div className="relative">
@@ -366,7 +366,7 @@ export function PasswordField({
         />
         <button
           type="button"
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#888888] hover:text-[#3b3b3b]"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-charcoal"
           onClick={() => setShowPassword(!showPassword)}
         >
           {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
@@ -393,19 +393,19 @@ export function DatePickerField({
       {label && (
         <label className={labelBase}>
           {label}
-          {required && <span className="text-[#8b5b5b] ml-1">*</span>}
+          {required && <span className="text-destructive ml-1">*</span>}
         </label>
       )}
       <div className="relative">
         <input
           type="date"
-          className={cn(inputBase, error && "border-[#8b5b5b] focus:ring-[#8b5b5b]/30")}
+          className={cn(inputBase, error && "border-destructive focus:ring-destructive/30")}
           value={value}
           onChange={(e) => onChange?.(e.target.value)}
           disabled={disabled}
           {...props}
         />
-        <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#888888] pointer-events-none" />
+        <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
       </div>
       {error && <p className={errorBase}>{error}</p>}
     </div>

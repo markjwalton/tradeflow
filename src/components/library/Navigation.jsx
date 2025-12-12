@@ -23,8 +23,8 @@ export function NavItem({
         "flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200",
         "text-sm font-medium",
         active
-          ? "bg-[#4A5D4E] text-white"
-          : "text-[#3b3b3b] hover:bg-[#eceae5]",
+          ? "bg-primary text-white"
+          : "text-charcoal hover:bg-background-muted",
         className
       )}
       {...componentProps}
@@ -35,7 +35,7 @@ export function NavItem({
       {badge && (
         <span className={cn(
           "px-2 py-0.5 rounded-full text-xs",
-          active ? "bg-white/20" : "bg-[#D4A574] text-white"
+          active ? "bg-white/20" : "bg-secondary text-white"
         )}>
           {badge}
         </span>
@@ -61,8 +61,8 @@ export function NavGroup({
         <button
           className={cn(
             "w-full flex items-center justify-between px-3 py-2 mb-1",
-            "text-xs font-semibold uppercase tracking-wider text-[#6d6d6d]",
-            collapsible && "hover:text-[#3b3b3b] cursor-pointer"
+            "text-xs font-semibold uppercase tracking-wider text-charcoal-light",
+            collapsible && "hover:text-charcoal cursor-pointer"
           )}
           onClick={() => collapsible && setCollapsed(!collapsed)}
         >
@@ -100,7 +100,7 @@ export function Breadcrumb({
               {item.href && !isLast ? (
                 <Link 
                   to={item.href}
-                  className="text-sm text-[#6d6d6d] hover:text-[#4A5D4E] transition-colors"
+                  className="text-sm text-charcoal-light hover:text-primary transition-colors"
                 >
                   {item.icon || (index === 0 && <Home className="h-4 w-4" />)}
                   {item.label && <span className={item.icon ? "ml-1" : ""}>{item.label}</span>}
@@ -108,14 +108,14 @@ export function Breadcrumb({
               ) : (
                 <span className={cn(
                   "text-sm",
-                  isLast ? "text-[#1b2a35] font-medium" : "text-[#6d6d6d]"
+                  isLast ? "text-midnight font-medium" : "text-charcoal-light"
                 )}>
                   {item.icon}
                   {item.label && <span className={item.icon ? "ml-1" : ""}>{item.label}</span>}
                 </span>
               )}
               {!isLast && (
-                separator || <ChevronRight className="h-4 w-4 text-[#d1d1d1]" />
+                separator || <ChevronRight className="h-4 w-4 text-border" />
               )}
             </li>
           );
@@ -136,16 +136,16 @@ export function TabsNav({
 }) {
   const variants = {
     underline: {
-      container: "border-b border-[#eceae5]",
+      container: "border-b border-background-muted",
       tab: "px-4 py-2 -mb-px border-b-2 transition-colors",
-      active: "border-[#4A5D4E] text-[#4A5D4E]",
-      inactive: "border-transparent text-[#6d6d6d] hover:text-[#3b3b3b]",
+      active: "border-primary text-primary",
+      inactive: "border-transparent text-charcoal-light hover:text-charcoal",
     },
     pills: {
-      container: "bg-[#eceae5] p-1 rounded-lg",
+      container: "bg-background-muted p-1 rounded-lg",
       tab: "px-4 py-2 rounded-md transition-all",
-      active: "bg-white text-[#1b2a35] shadow-sm",
-      inactive: "text-[#6d6d6d] hover:text-[#3b3b3b]",
+      active: "bg-white text-midnight shadow-sm",
+      inactive: "text-charcoal-light hover:text-charcoal",
     },
   };
 
@@ -166,7 +166,7 @@ export function TabsNav({
           {tab.icon && <span className="mr-2">{tab.icon}</span>}
           {tab.label}
           {tab.count !== undefined && (
-            <span className="ml-2 px-2 py-0.5 rounded-full text-xs bg-[#eceae5]">
+            <span className="ml-2 px-2 py-0.5 rounded-full text-xs bg-background-muted">
               {tab.count}
             </span>
           )}
@@ -212,7 +212,7 @@ export function Pagination({
           disabled={currentPage === 1}
           className={cn(
             "p-2 rounded-lg transition-colors",
-            "hover:bg-[#eceae5] disabled:opacity-50 disabled:cursor-not-allowed"
+            "hover:bg-background-muted disabled:opacity-50 disabled:cursor-not-allowed"
           )}
         >
           <ChevronLeft className="h-5 w-5" />
@@ -221,7 +221,7 @@ export function Pagination({
       
       {getVisiblePages().map((page, i) => (
         page === "..." ? (
-          <span key={i} className="px-3 py-2 text-[#6d6d6d]">...</span>
+          <span key={i} className="px-3 py-2 text-charcoal-light">...</span>
         ) : (
           <button
             key={i}
@@ -229,8 +229,8 @@ export function Pagination({
             className={cn(
               "px-3 py-2 rounded-lg text-sm font-medium transition-colors",
               currentPage === page
-                ? "bg-[#4A5D4E] text-white"
-                : "hover:bg-[#eceae5] text-[#3b3b3b]"
+                ? "bg-primary text-white"
+                : "hover:bg-background-muted text-charcoal"
             )}
           >
             {page}
@@ -244,7 +244,7 @@ export function Pagination({
           disabled={currentPage === totalPages}
           className={cn(
             "p-2 rounded-lg transition-colors",
-            "hover:bg-[#eceae5] disabled:opacity-50 disabled:cursor-not-allowed"
+            "hover:bg-background-muted disabled:opacity-50 disabled:cursor-not-allowed"
           )}
         >
           <ChevronRight className="h-5 w-5" />
@@ -282,21 +282,21 @@ export function Steps({
             )}>
               <div className={cn(
                 "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium",
-                isComplete && "bg-[#4A5D4E] text-white",
-                isCurrent && "bg-[#4A5D4E] text-white ring-4 ring-[#4A5D4E]/20",
-                !isComplete && !isCurrent && "bg-[#eceae5] text-[#6d6d6d]"
+                isComplete && "bg-primary text-white",
+                isCurrent && "bg-primary text-white ring-4 ring-primary/20",
+                !isComplete && !isCurrent && "bg-background-muted text-charcoal-light"
               )}>
                 {isComplete ? "✓" : index + 1}
               </div>
               <div>
                 <p className={cn(
                   "text-sm font-medium",
-                  isCurrent ? "text-[#1b2a35]" : "text-[#6d6d6d]"
+                  isCurrent ? "text-midnight" : "text-charcoal-light"
                 )}>
                   {step.label}
                 </p>
                 {step.description && (
-                  <p className="text-xs text-[#888888]">{step.description}</p>
+                  <p className="text-xs text-muted-foreground">{step.description}</p>
                 )}
               </div>
             </div>
@@ -306,7 +306,7 @@ export function Steps({
                 orientation === "horizontal" 
                   ? "flex-1 h-0.5 mx-4" 
                   : "w-0.5 h-8 ml-4",
-                isComplete ? "bg-[#4A5D4E]" : "bg-[#eceae5]"
+                isComplete ? "bg-primary" : "bg-background-muted"
               )} />
             )}
           </React.Fragment>
@@ -327,14 +327,14 @@ export function SideNav({
   return (
     <nav 
       className={cn(
-        "flex flex-col h-full bg-white border-r border-[#eceae5]",
+        "flex flex-col h-full bg-white border-r border-background-muted",
         className
       )} 
       {...props}
     >
-      {header && <div className="p-4 border-b border-[#eceae5]">{header}</div>}
+      {header && <div className="p-4 border-b border-background-muted">{header}</div>}
       <div className="flex-1 overflow-y-auto p-3">{children}</div>
-      {footer && <div className="p-4 border-t border-[#eceae5]">{footer}</div>}
+      {footer && <div className="p-4 border-t border-background-muted">{footer}</div>}
     </nav>
   );
 }
@@ -351,7 +351,7 @@ export function TopNav({
     <header 
       className={cn(
         "flex items-center justify-between h-16 px-4 md:px-6",
-        "bg-white border-b border-[#eceae5]",
+        "bg-white border-b border-background-muted",
         className
       )} 
       {...props}
@@ -367,8 +367,8 @@ export function TopNav({
               className={cn(
                 "px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                 item.active
-                  ? "text-[#4A5D4E] bg-[#4A5D4E]/10"
-                  : "text-[#3b3b3b] hover:bg-[#eceae5]"
+                  ? "text-primary bg-primary/10"
+                  : "text-charcoal hover:bg-background-muted"
               )}
             >
               {item.label}

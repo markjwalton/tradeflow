@@ -19,7 +19,7 @@ export function SuccessAlert({
     <div 
       className={cn(
         alertBase,
-        "bg-[#5a7a5e]/10 border-[#5a7a5e]/20 text-[#5a7a5e]",
+        "bg-success/10 border-success/20 text-success",
         className
       )} 
       role="alert"
@@ -51,7 +51,7 @@ export function ErrorAlert({
     <div 
       className={cn(
         alertBase,
-        "bg-[#8b5b5b]/10 border-[#8b5b5b]/20 text-[#8b5b5b]",
+        "bg-destructive/10 border-destructive/20 text-destructive",
         className
       )} 
       role="alert"
@@ -83,7 +83,7 @@ export function WarningAlert({
     <div 
       className={cn(
         alertBase,
-        "bg-[#c4a35a]/10 border-[#c4a35a]/20 text-[#c4a35a]",
+        "bg-warning/10 border-warning/20 text-warning",
         className
       )} 
       role="alert"
@@ -115,7 +115,7 @@ export function InfoAlert({
     <div 
       className={cn(
         alertBase,
-        "bg-[#5a7a8b]/10 border-[#5a7a8b]/20 text-[#5a7a8b]",
+        "bg-info/10 border-info/20 text-info",
         className
       )} 
       role="alert"
@@ -150,10 +150,10 @@ export function LoadingSpinner({
   };
 
   const colors = {
-    primary: "text-[#4A5D4E]",
-    secondary: "text-[#D4A574]",
+    primary: "text-primary",
+    secondary: "text-secondary",
     white: "text-white",
-    muted: "text-[#6d6d6d]",
+    muted: "text-charcoal-light",
   };
 
   return (
@@ -174,7 +174,7 @@ export function LoadingState({
   const content = (
     <div className={cn("flex flex-col items-center justify-center py-12", className)} {...props}>
       <LoadingSpinner size="lg" className="mb-4" />
-      <p className="text-[#6d6d6d]">{message}</p>
+      <p className="text-charcoal-light">{message}</p>
     </div>
   );
 
@@ -196,7 +196,7 @@ export function SkeletonLoader({
   className, 
   ...props 
 }) {
-  const skeletonBase = "bg-[#eceae5] animate-pulse rounded";
+  const skeletonBase = "bg-background-muted animate-pulse rounded";
 
   if (variant === "card") {
     return (
@@ -245,23 +245,23 @@ export function ToastNotification({
   ...props 
 }) {
   const typeStyles = {
-    success: "border-l-[#5a7a5e]",
-    error: "border-l-[#8b5b5b]",
-    warning: "border-l-[#c4a35a]",
-    info: "border-l-[#5a7a8b]",
+    success: "border-l-success",
+    error: "border-l-destructive",
+    warning: "border-l-warning",
+    info: "border-l-info",
   };
 
   const icons = {
-    success: <CheckCircle className="h-5 w-5 text-[#5a7a5e]" />,
-    error: <XCircle className="h-5 w-5 text-[#8b5b5b]" />,
-    warning: <AlertTriangle className="h-5 w-5 text-[#c4a35a]" />,
-    info: <Info className="h-5 w-5 text-[#5a7a8b]" />,
+    success: <CheckCircle className="h-5 w-5 text-success" />,
+    error: <XCircle className="h-5 w-5 text-destructive" />,
+    warning: <AlertTriangle className="h-5 w-5 text-warning" />,
+    info: <Info className="h-5 w-5 text-info" />,
   };
 
   return (
     <div 
       className={cn(
-        "flex items-start gap-3 p-4 bg-white rounded-lg shadow-lg border border-[#eceae5] border-l-4",
+        "flex items-start gap-3 p-4 bg-white rounded-lg shadow-lg border border-background-muted border-l-4",
         typeStyles[type],
         className
       )} 
@@ -269,12 +269,12 @@ export function ToastNotification({
     >
       {icons[type]}
       <div className="flex-1">
-        {title && <p className="font-medium text-[#1b2a35] mb-1">{title}</p>}
-        {message && <p className="text-sm text-[#6d6d6d]">{message}</p>}
+        {title && <p className="font-medium text-midnight mb-1">{title}</p>}
+        {message && <p className="text-sm text-charcoal-light">{message}</p>}
         {action && <div className="mt-2">{action}</div>}
       </div>
       {onClose && (
-        <button onClick={onClose} className="text-[#6d6d6d] hover:text-[#3b3b3b]">
+        <button onClick={onClose} className="text-charcoal-light hover:text-charcoal">
           <X className="h-5 w-5" />
         </button>
       )}
@@ -294,36 +294,36 @@ export function UploadProgress({
   return (
     <div 
       className={cn(
-        "flex items-center gap-3 p-3 bg-[#f5f3ef] rounded-lg",
+        "flex items-center gap-3 p-3 bg-background rounded-lg",
         className
       )} 
       {...props}
     >
       <div className="p-2 bg-white rounded">
-        <Upload className="h-5 w-5 text-[#4A5D4E]" />
+        <Upload className="h-5 w-5 text-primary" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-[#1b2a35] truncate">{fileName}</p>
+        <p className="text-sm font-medium text-midnight truncate">{fileName}</p>
         <div className="flex items-center gap-2 mt-1">
-          <div className="flex-1 h-1.5 bg-[#eceae5] rounded-full overflow-hidden">
+          <div className="flex-1 h-1.5 bg-background-muted rounded-full overflow-hidden">
             <div 
               className={cn(
                 "h-full rounded-full transition-all duration-300",
-                status === "error" ? "bg-[#8b5b5b]" : "bg-[#4A5D4E]"
+                status === "error" ? "bg-destructive" : "bg-primary"
               )}
               style={{ width: `${progress}%` }}
             />
           </div>
-          <span className="text-xs text-[#6d6d6d]">{progress}%</span>
+          <span className="text-xs text-charcoal-light">{progress}%</span>
         </div>
       </div>
       {onCancel && status === "uploading" && (
-        <button onClick={onCancel} className="text-[#6d6d6d] hover:text-[#8b5b5b]">
+        <button onClick={onCancel} className="text-charcoal-light hover:text-destructive">
           <X className="h-5 w-5" />
         </button>
       )}
-      {status === "complete" && <CheckCircle className="h-5 w-5 text-[#5a7a5e]" />}
-      {status === "error" && <XCircle className="h-5 w-5 text-[#8b5b5b]" />}
+      {status === "complete" && <CheckCircle className="h-5 w-5 text-success" />}
+      {status === "error" && <XCircle className="h-5 w-5 text-destructive" />}
     </div>
   );
 }
@@ -337,11 +337,11 @@ export function StatusDot({
   ...props 
 }) {
   const colors = {
-    success: "bg-[#5a7a5e]",
-    warning: "bg-[#c4a35a]",
-    error: "bg-[#8b5b5b]",
-    info: "bg-[#5a7a8b]",
-    neutral: "bg-[#6d6d6d]",
+    success: "bg-success",
+    warning: "bg-warning",
+    error: "bg-destructive",
+    info: "bg-info",
+    neutral: "bg-charcoal-light",
   };
 
   return (
@@ -355,7 +355,7 @@ export function StatusDot({
         )}
         <span className={cn("relative inline-flex rounded-full h-2.5 w-2.5", colors[status])} />
       </span>
-      {label && <span className="text-sm text-[#3b3b3b]">{label}</span>}
+      {label && <span className="text-sm text-charcoal">{label}</span>}
     </div>
   );
 }
@@ -373,24 +373,24 @@ export function EmptyPlaceholder({
     <div 
       className={cn(
         "flex flex-col items-center justify-center py-16 px-4 text-center",
-        "border-2 border-dashed border-[#eceae5] rounded-xl",
+        "border-2 border-dashed border-background-muted rounded-xl",
         className
       )} 
       {...props}
     >
       {icon && (
-        <div className="w-16 h-16 rounded-full bg-[#f5f3ef] flex items-center justify-center mb-4 text-[#6d6d6d]">
+        <div className="w-16 h-16 rounded-full bg-background flex items-center justify-center mb-4 text-charcoal-light">
           {icon}
         </div>
       )}
       <h3 
-        className="text-lg font-medium text-[#1b2a35] mb-2"
+        className="text-lg font-medium text-midnight mb-2"
         style={{ fontFamily: 'var(--font-heading)' }}
       >
         {title}
       </h3>
       {description && (
-        <p className="text-[#6d6d6d] max-w-sm mb-4" style={{ fontFamily: 'var(--font-body)' }}>
+        <p className="text-charcoal-light max-w-sm mb-4" style={{ fontFamily: 'var(--font-body)' }}>
           {description}
         </p>
       )}

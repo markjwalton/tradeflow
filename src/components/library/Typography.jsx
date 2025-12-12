@@ -2,8 +2,8 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 // Base styles using Sturij design tokens
-const headingBase = "font-light tracking-tight text-[#1b2a35]";
-const bodyBase = "text-[#3b3b3b] leading-relaxed";
+const headingBase = "font-light tracking-tight text-midnight";
+const bodyBase = "text-charcoal leading-relaxed";
 
 // H1 - Main page titles
 export function H1({ children, className, ...props }) {
@@ -117,7 +117,7 @@ export function BodyText({ children, className, ...props }) {
 export function MutedText({ children, className, ...props }) {
   return (
     <p 
-      className={cn("text-[#6d6d6d] text-sm leading-relaxed font-body", className)} 
+      className={cn("text-charcoal-light text-sm leading-relaxed font-body", className)} 
       {...props}
     >
       {children}
@@ -129,7 +129,7 @@ export function MutedText({ children, className, ...props }) {
 export function SmallText({ children, className, ...props }) {
   return (
     <span 
-      className={cn("text-[#3b3b3b] text-xs leading-normal font-body", className)} 
+      className={cn("text-charcoal text-xs leading-normal font-body", className)} 
       {...props}
     >
       {children}
@@ -154,7 +154,7 @@ export function CodeText({ children, className, ...props }) {
   return (
     <code 
       className={cn(
-        "bg-[#eceae5] text-[#4A5D4E] px-1.5 py-0.5 rounded text-sm font-mono",
+        "bg-background-muted text-primary px-1.5 py-0.5 rounded text-sm font-mono",
         className
       )} 
       {...props}
@@ -170,7 +170,7 @@ export function LinkText({ children, href, className, ...props }) {
     <a 
       href={href}
       className={cn(
-        "text-[#4A5D4E] hover:text-[#3a4a3e] underline underline-offset-2 transition-colors duration-200 font-body",
+        "text-primary hover:text-primary-dark underline underline-offset-2 transition-colors duration-200 font-body",
         className
       )} 
       {...props}
@@ -184,7 +184,7 @@ export function LinkText({ children, href, className, ...props }) {
 export function Caption({ children, className, ...props }) {
   return (
     <figcaption 
-      className={cn("text-[#6d6d6d] text-xs italic leading-normal font-body", className)} 
+      className={cn("text-charcoal-light text-xs italic leading-normal font-body", className)} 
       {...props}
     >
       {children}
