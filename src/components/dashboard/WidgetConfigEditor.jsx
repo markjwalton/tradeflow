@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -247,4 +247,4 @@ const WidgetConfigEditor = ({ widget, isOpen, onClose, onSave }) => {
   );
 };
 
-export default memo(WidgetConfigEditor);
+export default React.memo(WidgetConfigEditor);
