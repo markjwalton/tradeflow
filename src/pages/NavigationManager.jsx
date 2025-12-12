@@ -130,6 +130,7 @@ export default function NavigationManager() {
   // Save current navigation config
   const saveNavConfig = useMutation({
     mutationFn: async () => {
+      const user = await base44.auth.me();
       const configs = await base44.entities.NavigationConfig.filter({});
       const savedData = {
         timestamp: new Date().toISOString(),
@@ -143,7 +144,10 @@ export default function NavigationManager() {
         }))
       };
       await base44.auth.updateMe({
-        saved_nav_config: savedData
+        ui_preferences: {
+          ...(user.ui_preferences || {}),
+          saved_nav_config: savedData
+        }
       });
       return savedData;
     },
@@ -160,7 +164,7 @@ export default function NavigationManager() {
   const restoreNavConfig = useMutation({
     mutationFn: async () => {
       const user = await base44.auth.me();
-      const savedData = user.saved_nav_config;
+      const savedData = user.ui_preferences?.saved_nav_config;
       if (!savedData) {
         throw new Error("No saved config found");
       }
@@ -197,7 +201,7 @@ export default function NavigationManager() {
 
   // Set custom properties for the side panel
   useEffect(() => {
-    const savedTimestamp = currentUser?.saved_nav_config?.timestamp;
+    const savedTimestamp = currentUser?.ui_preferences?.saved_nav_config?.timestamp;
     
     setCustomProperties([
       {
