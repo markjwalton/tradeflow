@@ -797,7 +797,7 @@ export default function GenericNavEditor({
                   {getFormParentOptions()
                     .sort((a, b) => a.name.localeCompare(b.name))
                     .map(parent => (
-                    <SelectItem key={parent._id} value={parent._id}>
+                    <SelectItem key={String(parent._id)} value={String(parent._id)}>
                       <div className="flex items-center gap-2">
                         {isFolder(parent) ? <Folder className="h-3 w-3" /> : <File className="h-3 w-3" />}
                         {parent.name || 'Unnamed'}
