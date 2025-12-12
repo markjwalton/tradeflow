@@ -73,13 +73,15 @@ export default function ColorMigrationDashboard() {
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [migrating, setMigrating] = useState(false);
   const [migrationResults, setMigrationResults] = useState(null);
+  const [scanning, setScanning] = useState(false);
+  const [actualCounts, setActualCounts] = useState(null);
 
-  const totalOccurrences = TOP_COLORS.reduce((sum, c) => sum + c.occurrences, 0);
-  const migratedOccurrences = migratedColors.reduce((sum, id) => {
-    const color = TOP_COLORS.find(c => c.hex === id);
-    return sum + (color?.occurrences || 0);
+  const displayCounts = actualCounts || TOP_COLORS.reduce((acc, c) => ({ ...acc, [c.hex]: c.occurrences }), {});
+  const totalOccurrences = Object.values(displayCounts).reduce((sum, count) => sum + count, 0);
+  const migratedOccurrences = TOP_COLORS.reduce((sum, c) => {
+    return sum + (c.occurrences - (displayCounts[c.hex] || 0));
   }, 0);
-  const progress = (migratedOccurrences / totalOccurrences) * 100;
+  const progress = totalOccurrences > 0 ? (migratedOccurrences / TOP_COLORS.reduce((sum, c) => sum + c.occurrences, 0)) * 100 : 0;
 
   const handleMigrateColor = async (colorHex) => {
     setMigrating(true);
@@ -142,6 +144,45 @@ export default function ColorMigrationDashboard() {
     }
   };
 
+  const handleScanFiles = async () => {
+    setScanning(true);
+    try {
+      const counts = {};
+      
+      for (const color of TOP_COLORS) {
+        counts[color.hex] = 0;
+      }
+
+      for (const file of AFFECTED_FILES) {
+        try {
+          const response = await base44.functions.invoke('readFileContent', {
+            file_path: file.path
+          });
+          
+          if (response.data?.content) {
+            const content = response.data.content.toLowerCase();
+            
+            for (const color of TOP_COLORS) {
+              const hexLower = color.hex.toLowerCase();
+              const regex = new RegExp(hexLower.replace('#', '#?'), 'gi');
+              const matches = content.match(regex) || [];
+              counts[color.hex] += matches.length;
+            }
+          }
+        } catch (error) {
+          console.error(`Error reading ${file.path}:`, error);
+        }
+      }
+      
+      setActualCounts(counts);
+    } catch (error) {
+      console.error('Scan error:', error);
+      alert('Failed to scan files: ' + error.message);
+    } finally {
+      setScanning(false);
+    }
+  };
+
   return (
     <div className="min-h-screen p-6 bg-background">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -152,9 +193,24 @@ export default function ColorMigrationDashboard() {
               <Palette className="h-8 w-8 text-primary" />
               <h1 className="text-3xl font-bold">Color Migration Dashboard</h1>
             </div>
-            <Button variant="outline" size="sm" onClick={handleReset}>
-              Reset Progress
-            </Button>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={handleScanFiles} disabled={scanning}>
+                {scanning ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Scanning...
+                  </>
+                ) : (
+                  <>
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Scan Files
+                  </>
+                )}
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleReset}>
+                Reset Progress
+              </Button>
+            </div>
           </div>
           <p className="text-muted-foreground">
             Migrate hardcoded colors to design tokens for better maintainability
@@ -166,14 +222,22 @@ export default function ColorMigrationDashboard() {
           <CardHeader>
             <CardTitle>Migration Progress</CardTitle>
             <CardDescription>
-              {migratedOccurrences} of {totalOccurrences} color instances migrated
+              {actualCounts ? (
+                <>
+                  {totalOccurrences} hardcoded color instances remaining in files
+                  {totalOccurrences === 0 && " ✓ All migrated!"}
+                </>
+              ) : (
+                `${migratedOccurrences} of ${totalOccurrences} color instances migrated (estimated)`
+              )}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <Progress value={progress} className="h-2" />
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {TOP_COLORS.map((color) => {
-                const isMigrated = migratedColors.includes(color.hex);
+                const currentCount = displayCounts[color.hex] || 0;
+                const isMigrated = currentCount === 0;
                 return (
                   <div
                     key={color.hex}
@@ -196,7 +260,7 @@ export default function ColorMigrationDashboard() {
                     </div>
                     <p className="font-medium text-sm">{color.name}</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      {color.occurrences} instances
+                      {actualCounts ? `${currentCount} remaining` : `${color.occurrences} instances`}
                     </p>
                   </div>
                 );
