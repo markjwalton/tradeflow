@@ -24,9 +24,7 @@ export default function GitHubIntegration() {
       const result = await base44.functions.invoke('githubApi', {
         action: 'get_repo'
       });
-      console.log("GitHub API full result:", result);
-      console.log("GitHub API data:", result?.data);
-      setRepo(result?.data?.repo || result?.data);
+      setRepo(result.data);
     } catch (e) {
       console.error("GitHub API error:", e);
       setError(e.message || "Failed to load repository");
