@@ -42,6 +42,8 @@ const categoryColors = {
 
 export default function PageLibrary() {
   const queryClient = useQueryClient();
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 30;
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [showBuilder, setShowBuilder] = useState(false);
@@ -118,6 +120,19 @@ export default function PageLibrary() {
   });
 
   const groupedPages = filteredPages.reduce((acc, page) => {
+    const groupKey = page.group || page.category || "Other";
+    if (!acc[groupKey]) acc[groupKey] = [];
+    acc[groupKey].push(page);
+    return acc;
+  }, {});
+
+  // Pagination
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedPages = filteredPages.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(filteredPages.length / itemsPerPage);
+
+  const paginatedGroupedPages = paginatedPages.reduce((acc, page) => {
     const groupKey = page.group || page.category || "Other";
     if (!acc[groupKey]) acc[groupKey] = [];
     acc[groupKey].push(page);
@@ -394,8 +409,37 @@ Return a JSON object with a "pages" array containing page templates.`,
           <p>No page templates found</p>
         </div>
       ) : (
-        <div className="space-y-8">
-          {Object.entries(groupedPages).map(([groupName, groupPages]) => (
+        <>
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm text-muted-foreground">
+              Showing {startIndex + 1}-{Math.min(endIndex, filteredPages.length)} of {filteredPages.length} pages
+            </p>
+            {totalPages > 1 && (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </Button>
+                <span className="text-sm">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </Button>
+              </div>
+            )}
+          </div>
+          <div className="space-y-8">
+          {Object.entries(paginatedGroupedPages).map(([groupName, groupPages]) => (
             <div key={groupName}>
               <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
                 <Badge className={categoryColors[groupName] || "bg-muted text-muted-foreground"}>{groupName}</Badge>
@@ -454,6 +498,7 @@ Return a JSON object with a "pages" array containing page templates.`,
             </div>
           ))}
         </div>
+        </>
       )}
 
       <Dialog open={showBuilder} onOpenChange={setShowBuilder}>

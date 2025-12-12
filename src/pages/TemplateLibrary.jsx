@@ -47,6 +47,8 @@ const categoryColors = {
 
 export default function TemplateLibrary() {
   const queryClient = useQueryClient();
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 30;
   const [search, setSearch] = useState("");
   const [filterCategory, setFilterCategory] = useState("all");
   const [filterArea, setFilterArea] = useState("all");
@@ -268,6 +270,19 @@ Return a JSON object with a "suggestions" array where each item has:
     return acc;
   }, {});
 
+  // Pagination
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedTemplates = filteredTemplates.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(filteredTemplates.length / itemsPerPage);
+
+  const paginatedGroupedTemplates = paginatedTemplates.reduce((acc, template) => {
+    const area = template.functional_area || "Uncategorized";
+    if (!acc[area]) acc[area] = [];
+    acc[area].push(template);
+    return acc;
+  }, {});
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64 bg-background">
@@ -343,8 +358,37 @@ Return a JSON object with a "suggestions" array where each item has:
           <p className="text-sm">Create your first template to start building your library.</p>
         </div>
       ) : (
-        <div className="space-y-8">
-          {Object.entries(groupedTemplates).sort().map(([area, areaTemplates]) => (
+        <>
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm text-muted-foreground">
+              Showing {startIndex + 1}-{Math.min(endIndex, filteredTemplates.length)} of {filteredTemplates.length} templates
+            </p>
+            {totalPages > 1 && (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </Button>
+                <span className="text-sm">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </Button>
+              </div>
+            )}
+          </div>
+          <div className="space-y-8">
+          {Object.entries(paginatedGroupedTemplates).sort().map(([area, areaTemplates]) => (
             <div key={area}>
               <h2 className="text-lg font-semibold mb-3 text-muted-foreground">{area}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -395,6 +439,7 @@ Return a JSON object with a "suggestions" array where each item has:
             </div>
           ))}
         </div>
+        </>
       )}
 
       {/* Form Dialog */}

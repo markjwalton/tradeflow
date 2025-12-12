@@ -59,6 +59,9 @@ export default function EntityLibrary() {
   const [addToProjectTargetId, setAddToProjectTargetId] = useState(null);
   const [addGroupToProject, setAddGroupToProject] = useState(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 30;
+
   const { data: entities = [], isLoading } = useQuery({
     queryKey: ["entityTemplates"],
     queryFn: () => base44.entities.EntityTemplate.list(),
@@ -128,6 +131,24 @@ export default function EntityLibrary() {
 
   const groupedEntities = filteredEntities.reduce((acc, entity) => {
     // Group by "Category / Group" for better organization
+    let groupKey;
+    if (entity.group && entity.category) {
+      groupKey = `${entity.category} / ${entity.group}`;
+    } else {
+      groupKey = entity.category || entity.group || "Other";
+    }
+    if (!acc[groupKey]) acc[groupKey] = [];
+    acc[groupKey].push(entity);
+    return acc;
+  }, {});
+
+  // Pagination
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedEntities = filteredEntities.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(filteredEntities.length / itemsPerPage);
+
+  const paginatedGroupedEntities = paginatedEntities.reduce((acc, entity) => {
     let groupKey;
     if (entity.group && entity.category) {
       groupKey = `${entity.category} / ${entity.group}`;
@@ -311,8 +332,37 @@ Return a JSON object with:
           <p className="text-sm mt-1">Create your first entity or use AI to generate one</p>
         </div>
       ) : (
-        <div className="space-y-8">
-          {Object.entries(groupedEntities).map(([groupName, groupEntities]) => (
+        <>
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm text-muted-foreground">
+              Showing {startIndex + 1}-{Math.min(endIndex, filteredEntities.length)} of {filteredEntities.length} entities
+            </p>
+            {totalPages > 1 && (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </Button>
+                <span className="text-sm">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </Button>
+              </div>
+            )}
+          </div>
+          <div className="space-y-8">
+          {Object.entries(paginatedGroupedEntities).map(([groupName, groupEntities]) => (
             <div key={groupName}>
               <div className="flex items-center gap-2 mb-3">
                 <h2 className="text-lg font-semibold flex items-center gap-2">
@@ -413,6 +463,7 @@ Return a JSON object with:
             </div>
           ))}
         </div>
+        </>
       )}
 
       {/* Entity Builder Dialog */}
