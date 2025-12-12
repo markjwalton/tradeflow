@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { OklchColorTool } from "@/components/color-tools/OklchColorTool";
-import { OklchGradientTool } from "@/components/color-tools/OklchGradientTool";
-import OklchPaletteTool from "@/components/color-tools/OklchPaletteTool";
-import { ColorLibrary } from "@/components/color-tools/ColorLibrary";
-import { OklchBulkConverter } from "@/components/color-tools/OklchBulkConverter";
+import React, { useState, useEffect, lazy, Suspense } from "react";
+import { Loader2 } from "lucide-react";
+
+const OklchColorTool = lazy(() => import("@/components/color-tools/OklchColorTool").then(m => ({ default: m.OklchColorTool })));
+const OklchGradientTool = lazy(() => import("@/components/color-tools/OklchGradientTool").then(m => ({ default: m.OklchGradientTool })));
+const OklchPaletteTool = lazy(() => import("@/components/color-tools/OklchPaletteTool"));
+const ColorLibrary = lazy(() => import("@/components/color-tools/ColorLibrary"));
+const OklchBulkConverter = lazy(() => import("@/components/color-tools/OklchBulkConverter").then(m => ({ default: m.OklchBulkConverter })));
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
@@ -121,23 +123,33 @@ export default function OklchColorPicker() {
         </TabsList>
         
         <TabsContent value="picker">
-          <OklchColorTool />
+          <Suspense fallback={<div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
+            <OklchColorTool />
+          </Suspense>
         </TabsContent>
         
         <TabsContent value="gradient">
-          <OklchGradientTool onSave={handleSave} />
+          <Suspense fallback={<div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
+            <OklchGradientTool onSave={handleSave} />
+          </Suspense>
         </TabsContent>
         
         <TabsContent value="palette">
-          <OklchPaletteTool onSave={handleSave} brandColors={tenantProfile?.brand_colors} />
+          <Suspense fallback={<div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
+            <OklchPaletteTool onSave={handleSave} brandColors={tenantProfile?.brand_colors} />
+          </Suspense>
         </TabsContent>
         
         <TabsContent value="convert">
-          <OklchBulkConverter />
+          <Suspense fallback={<div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
+            <OklchBulkConverter />
+          </Suspense>
         </TabsContent>
         
         <TabsContent value="library">
-          <ColorLibrary tenantId={tenantId} />
+          <Suspense fallback={<div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
+            <ColorLibrary tenantId={tenantId} />
+          </Suspense>
         </TabsContent>
       </Tabs>
     </div>
