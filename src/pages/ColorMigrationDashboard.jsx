@@ -75,6 +75,7 @@ export default function ColorMigrationDashboard() {
   const [migrationResults, setMigrationResults] = useState(null);
   const [scanning, setScanning] = useState(false);
   const [actualCounts, setActualCounts] = useState(null);
+  const [fileDetails, setFileDetails] = useState(null);
 
   const displayCounts = actualCounts || TOP_COLORS.reduce((acc, c) => ({ ...acc, [c.hex]: c.occurrences }), {});
   const totalOccurrences = Object.values(displayCounts).reduce((sum, count) => sum + count, 0);
@@ -148,6 +149,7 @@ export default function ColorMigrationDashboard() {
     setScanning(true);
     try {
       const counts = {};
+      const details = [];
       
       for (const color of TOP_COLORS) {
         counts[color.hex] = 0;
@@ -161,13 +163,17 @@ export default function ColorMigrationDashboard() {
           
           if (response.data?.content) {
             const content = response.data.content.toLowerCase();
+            let fileTotal = 0;
             
             for (const color of TOP_COLORS) {
               const hexLower = color.hex.toLowerCase();
               const regex = new RegExp(hexLower.replace('#', '#?'), 'gi');
               const matches = content.match(regex) || [];
               counts[color.hex] += matches.length;
+              fileTotal += matches.length;
             }
+            
+            details.push({ path: file.path, changes: fileTotal });
           }
         } catch (error) {
           console.error(`Error reading ${file.path}:`, error);
@@ -175,6 +181,7 @@ export default function ColorMigrationDashboard() {
       }
       
       setActualCounts(counts);
+      setFileDetails(details.filter(f => f.changes > 0));
     } catch (error) {
       console.error('Scan error:', error);
       alert('Failed to scan files: ' + error.message);
@@ -278,7 +285,8 @@ export default function ColorMigrationDashboard() {
             </CardHeader>
             <CardContent className="space-y-2">
               {TOP_COLORS.map((color) => {
-                const isMigrated = migratedColors.includes(color.hex);
+                const currentCount = displayCounts[color.hex] || 0;
+                const isMigrated = actualCounts ? currentCount === 0 : migratedColors.includes(color.hex);
                 const isSelected = selectedColor.hex === color.hex;
                 return (
                   <button
@@ -306,7 +314,9 @@ export default function ColorMigrationDashboard() {
                       )}
                     </div>
                     <div className="flex items-center justify-between">
-                      <Badge variant="outline">{color.occurrences} uses</Badge>
+                      <Badge variant="outline">
+                        {actualCounts ? `${currentCount} remaining` : `${color.occurrences} uses`}
+                      </Badge>
                       <code className="text-xs bg-muted px-2 py-1 rounded">
                         {color.token}
                       </code>
@@ -359,17 +369,25 @@ export default function ColorMigrationDashboard() {
               <div>
                 <h3 className="font-semibold mb-3">Affected Files</h3>
                 <div className="space-y-2 max-h-64 overflow-y-auto">
-                  {AFFECTED_FILES.map((file) => (
-                    <div
-                      key={file.path}
-                      className="flex items-center justify-between p-3 border rounded-lg hover:bg-accent/50 transition-colors"
-                    >
-                      <div>
-                        <p className="font-mono text-sm">{file.path}</p>
+                  {(fileDetails || AFFECTED_FILES).length > 0 ? (
+                    (fileDetails || AFFECTED_FILES).map((file) => (
+                      <div
+                        key={file.path}
+                        className="flex items-center justify-between p-3 border rounded-lg hover:bg-accent/50 transition-colors"
+                      >
+                        <div>
+                          <p className="font-mono text-sm">{file.path}</p>
+                        </div>
+                        <Badge variant="secondary">
+                          {file.changes} {fileDetails ? 'remaining' : 'changes'}
+                        </Badge>
                       </div>
-                      <Badge variant="secondary">{file.changes} changes</Badge>
-                    </div>
-                  ))}
+                    ))
+                  ) : (
+                    <p className="text-sm text-muted-foreground text-center py-4">
+                      No hardcoded colors found! All migrated ✓
+                    </p>
+                  )}
                 </div>
               </div>
 
