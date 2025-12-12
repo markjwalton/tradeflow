@@ -164,17 +164,17 @@ export default function ProjectDetail() {
   const taskProgress = tasks.length > 0 ? (completedTasks / tasks.length) * 100 : 0;
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="flex items-center gap-4 mb-6">
+    <div className="p-3 sm:p-4 md:p-6 bg-background min-h-screen">
+      <div className="flex items-center gap-2 sm:gap-4 mb-4 sm:mb-6">
         <Button variant="ghost" size="icon" asChild><Link to={createPageUrl("Projects")}><ArrowLeft className="h-4 w-4" /></Link></Button>
-        <div className="flex-1">
-          <h1 className="text-2xl font-light font-display text-foreground">{project.name}</h1>
-          <p className="text-muted-foreground">Customer: {getCustomerName(project.customer_id)}</p>
+        <div className="flex-1 min-w-0">
+          <h1 className="text-lg sm:text-2xl font-light font-display text-foreground truncate">{project.name}</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground truncate">Customer: {getCustomerName(project.customer_id)}</p>
         </div>
         <Badge className={statusColors[project.status]}>{project.status}</Badge>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
         <Card className="border-border bg-card">
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
@@ -210,10 +210,10 @@ export default function ProjectDetail() {
       </div>
 
       <Tabs defaultValue="tasks">
-        <TabsList>
-          <TabsTrigger value="tasks">Tasks ({tasks.length})</TabsTrigger>
-          <TabsTrigger value="contacts">Contacts ({contacts.length})</TabsTrigger>
-          <TabsTrigger value="estimates">Estimates ({estimates.length})</TabsTrigger>
+        <TabsList className="w-full sm:w-auto grid grid-cols-3 sm:inline-flex">
+          <TabsTrigger value="tasks" className="text-xs sm:text-sm">Tasks ({tasks.length})</TabsTrigger>
+          <TabsTrigger value="contacts" className="text-xs sm:text-sm">Contacts ({contacts.length})</TabsTrigger>
+          <TabsTrigger value="estimates" className="text-xs sm:text-sm">Estimates ({estimates.length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="tasks" className="mt-4">
@@ -253,10 +253,10 @@ export default function ProjectDetail() {
               <Plus className="h-4 w-4 mr-2" />Add Contact
             </Button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {contacts.map((contact) => (
               <Card key={contact.id} className="border-border bg-card">
-                <CardContent className="p-4">
+                <CardContent className="p-3 sm:p-4">
                   <div className="flex justify-between">
                     <div><p className="font-medium text-foreground">{contact.name}</p><Badge variant="outline" className="mt-1">{contact.role}</Badge></div>
                     <Button variant="ghost" size="icon" className="text-destructive" onClick={() => deleteContactMutation.mutate(contact.id)}><Trash2 className="h-4 w-4" /></Button>
@@ -272,10 +272,10 @@ export default function ProjectDetail() {
         </TabsContent>
 
         <TabsContent value="estimates" className="mt-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {estimates.map((estimate) => (
               <Card key={estimate.id} className="border-border bg-card">
-                <CardContent className="p-4">
+                <CardContent className="p-3 sm:p-4">
                   <p className="font-medium text-foreground">{estimate.title}</p>
                   <Badge className="mt-1">{estimate.status}</Badge>
                   <p className="text-lg font-bold mt-2 text-foreground">£{estimate.total?.toLocaleString()}</p>
@@ -288,7 +288,7 @@ export default function ProjectDetail() {
       </Tabs>
 
       <Dialog open={showTaskForm} onOpenChange={setShowTaskForm}>
-        <DialogContent>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader><DialogTitle>{editingTask ? "Edit Task" : "Add Task"}</DialogTitle></DialogHeader>
           <div className="space-y-4">
             <div><label className="text-sm font-medium">Title</label><Input value={taskForm.title} onChange={(e) => setTaskForm({ ...taskForm, title: e.target.value })} /></div>
@@ -322,7 +322,7 @@ export default function ProjectDetail() {
       </Dialog>
 
       <Dialog open={showContactForm} onOpenChange={setShowContactForm}>
-        <DialogContent>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader><DialogTitle>Add Contact</DialogTitle></DialogHeader>
           <div className="space-y-4">
             <div><label className="text-sm font-medium">Name</label><Input value={contactForm.name} onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })} /></div>
