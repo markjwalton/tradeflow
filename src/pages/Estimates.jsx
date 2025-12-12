@@ -21,6 +21,10 @@ import {
 } from "@/components/ui/select";
 import { Plus, Search, Pencil, Trash2, Loader2, Copy, FileText } from "lucide-react";
 import { toast } from "sonner";
+import { PageLoader, ButtonLoader, CardGridLoader } from "@/components/common/LoadingStates";
+import { QueryErrorState } from "@/components/common/QueryErrorState";
+import { useMutationError } from "@/components/common/MutationErrorToast";
+import { useDebounce } from "@/components/common/useDebounce";
 
 const statusColors = {
   draft: "bg-muted text-muted-foreground",
@@ -32,6 +36,7 @@ const statusColors = {
 export default function Estimates() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 300);
   const [filterStatus, setFilterStatus] = useState("all");
   const [showForm, setShowForm] = useState(false);
   const [editingEstimate, setEditingEstimate] = useState(null);
@@ -48,7 +53,7 @@ export default function Estimates() {
     notes: "",
   });
 
-  const { data: estimates = [], isLoading } = useQuery({
+  const { data: estimates = [], isLoading, error, refetch } = useQuery({
     queryKey: ["estimates"],
     queryFn: () => base44.entities.Estimate.list(),
   });
@@ -69,7 +74,7 @@ export default function Estimates() {
       queryClient.invalidateQueries({ queryKey: ["estimates"] });
       setShowForm(false);
       resetForm();
-      toast.success("Estimate created");
+      toast.success("Estimate created successfully");
     },
   });
 
@@ -80,7 +85,7 @@ export default function Estimates() {
       setShowForm(false);
       setEditingEstimate(null);
       resetForm();
-      toast.success("Estimate updated");
+      toast.success("Estimate updated successfully");
     },
   });
 
@@ -88,9 +93,13 @@ export default function Estimates() {
     mutationFn: (id) => base44.entities.Estimate.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["estimates"] });
-      toast.success("Estimate deleted");
+      toast.success("Estimate deleted successfully");
     },
   });
+
+  useMutationError(createMutation, { customMessage: "Failed to create estimate" });
+  useMutationError(updateMutation, { customMessage: "Failed to update estimate" });
+  useMutationError(deleteMutation, { customMessage: "Failed to delete estimate" });
 
   const resetForm = () => {
     setFormData({
@@ -182,7 +191,7 @@ export default function Estimates() {
   }, [formData.line_items, formData.vat_rate]);
 
   const filteredEstimates = estimates.filter((e) => {
-    const matchesSearch = e.title?.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch = e.title?.toLowerCase().includes(debouncedSearch.toLowerCase());
     const matchesStatus = filterStatus === "all" || e.status === filterStatus;
     return matchesSearch && matchesStatus;
   });
@@ -190,11 +199,11 @@ export default function Estimates() {
   const getProjectName = (projectId) => projects.find((p) => p.id === projectId)?.name || "";
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64 bg-background">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
+    return <PageLoader message="Loading estimates..." />;
+  }
+
+  if (error) {
+    return <QueryErrorState error={error} onRetry={refetch} />;
   }
 
   return (
@@ -238,7 +247,15 @@ export default function Estimates() {
                 <div className="flex gap-1">
                   <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleDuplicate(estimate)}><Copy className="h-4 w-4" /></Button>
                   <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(estimate)}><Pencil className="h-4 w-4" /></Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => deleteMutation.mutate(estimate.id)}><Trash2 className="h-4 w-4" /></Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-8 w-8 text-destructive" 
+                    onClick={() => deleteMutation.mutate(estimate.id)}
+                    disabled={deleteMutation.isPending}
+                  >
+                    {deleteMutation.isPending ? <ButtonLoader /> : <Trash2 className="h-4 w-4" />}
+                  </Button>
                 </div>
               </div>
             </CardHeader>
@@ -328,7 +345,7 @@ export default function Estimates() {
               <Textarea value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} rows={3} />
             </div>
             <Button className="w-full" onClick={handleSubmit} disabled={!formData.title || createMutation.isPending || updateMutation.isPending}>
-              {(createMutation.isPending || updateMutation.isPending) && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              {(createMutation.isPending || updateMutation.isPending) && <ButtonLoader />}
               {editingEstimate ? "Update Estimate" : "Create Estimate"}
             </Button>
           </div>
