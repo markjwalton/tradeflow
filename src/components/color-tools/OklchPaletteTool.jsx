@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
@@ -25,16 +25,31 @@ export default function OklchPaletteTool({ onSave, brandColors: initialBrandColo
   const [brandColors, setBrandColors] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(null);
-  // Brand color generator state - initialize from actual theme
-  const [primaryColor, setPrimaryColor] = useState(() => {
-    return getComputedStyle(document.documentElement).getPropertyValue('--primary-500').trim() || "#4a5d4e";
-  });
-  const [secondaryColor, setSecondaryColor] = useState(() => {
-    return getComputedStyle(document.documentElement).getPropertyValue('--secondary-400').trim() || "#d4a574";
-  });
-  const [accentColor, setAccentColor] = useState(() => {
-    return getComputedStyle(document.documentElement).getPropertyValue('--accent-300').trim() || "#d9b4a7";
-  });
+  // Brand color generator state
+  const [primaryColor, setPrimaryColor] = useState("#4a5d4e");
+  const [secondaryColor, setSecondaryColor] = useState("#d4a574");
+  const [accentColor, setAccentColor] = useState("#d9b4a7");
+
+  // Load colors from CSS variables after component mounts
+  useEffect(() => {
+    const loadThemeColors = () => {
+      const primary = getComputedStyle(document.documentElement).getPropertyValue('--primary-500').trim();
+      const secondary = getComputedStyle(document.documentElement).getPropertyValue('--secondary-400').trim();
+      const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent-300').trim();
+      
+      if (primary) setPrimaryColor(primary);
+      if (secondary) setSecondaryColor(secondary);
+      if (accent) setAccentColor(accent);
+    };
+
+    // Load immediately
+    loadThemeColors();
+    
+    // Also load after a brief delay to catch dynamically applied themes
+    const timer = setTimeout(loadThemeColors, 300);
+    
+    return () => clearTimeout(timer);
+  }, []);
   const [customColors, setCustomColors] = useState([]);
   const [customColorName, setCustomColorName] = useState("");
   const [customColorHex, setCustomColorHex] = useState("#000000");
