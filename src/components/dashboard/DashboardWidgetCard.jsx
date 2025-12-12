@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React from "react";
 import { Settings, GripVertical } from "lucide-react";
 import { Draggable } from "@hello-pangea/dnd";
 import WidgetRenderer from "./WidgetRenderer";
@@ -69,7 +69,7 @@ const DashboardWidgetCard = ({
 };
 
 // Memoize to prevent unnecessary re-renders
-export default memo(DashboardWidgetCard, (prevProps, nextProps) => {
+export default React.memo(DashboardWidgetCard, (prevProps, nextProps) => {
   return (
     prevProps.widget.id === nextProps.widget.id &&
     prevProps.index === nextProps.index &&
