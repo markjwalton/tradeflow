@@ -20,6 +20,7 @@ import { LiveEditWrapper } from "@/components/page-builder/LiveEditWrapper";
 import { TopEditorPanel } from "@/components/page-builder/TopEditorPanel";
 import { Palette } from "lucide-react";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
+import { WebVitals } from "@/components/common/WebVitals";
 
 export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
@@ -418,6 +419,7 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <ErrorBoundary>
+      <WebVitals />
       <TenantContext.Provider value={tenantContextValue}>
         <link rel="stylesheet" href="https://use.typekit.net/iwm1gcu.css" />
         <style dangerouslySetInnerHTML={{ __html: cssVariables }} />
