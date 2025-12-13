@@ -67,14 +67,26 @@ export default function NavigationManager() {
   const handleSaveSettings = async (key, value) => {
     const newSettings = { ...pageSettings, [key]: value };
     setPageSettings(newSettings);
-    localStorage.setItem("navManager_settings", JSON.stringify(newSettings));
-    if (key === "defaultTab") {
-      setActiveTab(value);
-    }
     
-    // When defaultCollapsed changes, update all folder items in NavigationConfig
-    if (key === "defaultCollapsed") {
-      try {
+    // Save to user profile instead of localStorage
+    try {
+      await base44.auth.updateMe({
+        ui_preferences: {
+          ...(currentUser?.ui_preferences || {}),
+          navManager_settings: newSettings
+        }
+      });
+      
+      // Update current user state
+      const updatedUser = await base44.auth.me();
+      setCurrentUser(updatedUser);
+      
+      if (key === "defaultTab") {
+        setActiveTab(value);
+      }
+      
+      // When defaultCollapsed changes, update all folder items in NavigationConfig
+      if (key === "defaultCollapsed") {
         const configs = await base44.entities.NavigationConfig.filter({ config_type: "admin_console" });
         if (configs.length > 0) {
           const config = configs[0];
@@ -89,9 +101,11 @@ export default function NavigationManager() {
           queryClient.invalidateQueries({ queryKey: ["navConfig"] });
           toast.success(value ? "All folders will start collapsed" : "All folders will start expanded");
         }
-      } catch (e) {
-        toast.error("Failed to update folders: " + e.message);
+      } else {
+        toast.success("Settings saved");
       }
+    } catch (e) {
+      toast.error("Failed to save settings: " + e.message);
     }
   };
 
