@@ -63,12 +63,34 @@ export default function NavigationManager() {
     return saved ? JSON.parse(saved) : { defaultTab: "admin", defaultCollapsed: false };
   });
 
-  const handleSaveSettings = (key, value) => {
+  const handleSaveSettings = async (key, value) => {
     const newSettings = { ...pageSettings, [key]: value };
     setPageSettings(newSettings);
     localStorage.setItem("navManager_settings", JSON.stringify(newSettings));
     if (key === "defaultTab") {
       setActiveTab(value);
+    }
+    
+    // When defaultCollapsed changes, update all folder items in NavigationConfig
+    if (key === "defaultCollapsed") {
+      try {
+        const configs = await base44.entities.NavigationConfig.filter({ config_type: "admin_console" });
+        if (configs.length > 0) {
+          const config = configs[0];
+          const updatedItems = (config.items || []).map(item => {
+            if (item.item_type === "folder") {
+              return { ...item, default_collapsed: value };
+            }
+            return item;
+          });
+          
+          await base44.entities.NavigationConfig.update(config.id, { items: updatedItems });
+          queryClient.invalidateQueries({ queryKey: ["navConfig"] });
+          toast.success(value ? "All folders will start collapsed" : "All folders will start expanded");
+        }
+      } catch (e) {
+        toast.error("Failed to update folders: " + e.message);
+      }
     }
   };
 
