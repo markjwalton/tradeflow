@@ -112,6 +112,8 @@ export function PageSettingsPanel({ currentPageName }) {
   const handleCancel = () => {
     setNavigationMode(originalNavigationMode);
     setShowBreadcrumb(originalShowBreadcrumb);
+    setPageDescriptionEditable(currentPageData?.page_description || "");
+    setHasUnsavedChanges(false);
     setIsOpen(false);
   };
 
@@ -290,28 +292,50 @@ export function PageSettingsPanel({ currentPageName }) {
                   <div className="px-4 pb-4 space-y-4 border-t pt-4">
                     {customProperties.map((prop) => (
                       <div key={prop.key} className="space-y-2">
-                        <Label className="text-sm">{prop.label}</Label>
-                        {prop.description && (
-                          <p className="text-xs text-muted-foreground">{prop.description}</p>
-                        )}
-                        {prop.type === "boolean" && (
-                          <Switch
-                            checked={prop.value}
-                            onCheckedChange={(checked) => prop.onChange(checked)}
-                          />
-                        )}
-                        {prop.type === "select" && (
-                          <select
-                            value={prop.value}
-                            onChange={(e) => prop.onChange(e.target.value)}
-                            className="w-full px-3 py-2 border rounded-md text-sm"
-                          >
-                            {prop.options.map((opt) => (
-                              <option key={opt.value} value={opt.value}>
-                                {opt.label}
-                              </option>
-                            ))}
-                          </select>
+                        {prop.type === "divider" ? (
+                          <div className="border-t my-2" />
+                        ) : prop.type === "button" ? (
+                          <div className="space-y-2">
+                            <Label className="text-sm">{prop.label}</Label>
+                            {prop.description && (
+                              <p className="text-xs text-muted-foreground">{prop.description}</p>
+                            )}
+                            <Button
+                              onClick={prop.onClick}
+                              disabled={prop.disabled}
+                              variant={prop.variant || "default"}
+                              className="w-full"
+                              size="sm"
+                            >
+                              {prop.buttonLabel || prop.label}
+                            </Button>
+                          </div>
+                        ) : (
+                          <>
+                            <Label className="text-sm">{prop.label}</Label>
+                            {prop.description && (
+                              <p className="text-xs text-muted-foreground">{prop.description}</p>
+                            )}
+                            {prop.type === "boolean" && (
+                              <Switch
+                                checked={prop.value}
+                                onCheckedChange={(checked) => prop.onChange(checked)}
+                              />
+                            )}
+                            {prop.type === "select" && (
+                              <select
+                                value={prop.value}
+                                onChange={(e) => prop.onChange(e.target.value)}
+                                className="w-full px-3 py-2 border rounded-md text-sm"
+                              >
+                                {prop.options.map((opt) => (
+                                  <option key={opt.value} value={opt.value}>
+                                    {opt.label}
+                                  </option>
+                                ))}
+                              </select>
+                            )}
+                          </>
                         )}
                       </div>
                     ))}
@@ -446,7 +470,7 @@ export function PageSettingsPanel({ currentPageName }) {
             <Button 
               onClick={handleSave} 
               className="flex-1" 
-              disabled={(!hasUnsavedChanges && !currentPageContent) || updateMutation.isPending}
+              disabled={updateMutation.isPending}
             >
               <Save className="h-4 w-4 mr-2" />
               {updateMutation.isPending ? "Saving..." : "Save"}
