@@ -138,6 +138,11 @@
   --duration-700: 700ms;
   --duration-1000: 1000ms;
 
+  /* === TABS COMPONENT TOKENS === */
+  --tabs-list-bg: oklch(0.990 0.007 83.1 / 0.5);
+  --tabs-trigger-hover-bg: var(--primary-100);
+  --tabs-trigger-hover-color: var(--primary-700);
+
   /* Transition Timing Functions */
   --ease-linear: linear;
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
