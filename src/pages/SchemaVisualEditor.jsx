@@ -491,24 +491,25 @@ export default function SchemaVisualEditor() {
         )}
       </div>
 
-      <SchemaAIPanel
-        open={showAIPanel}
-        onClose={() => setShowAIPanel(false)}
-        onSchemaGenerated={(schema) => {
-          setJsonInput(JSON.stringify(schema, null, 2));
-          parseJsonToNodes(JSON.stringify(schema, null, 2));
-          setShowAIPanel(false);
-        }}
-      />
+      <div className="relative z-[100]">
+        <SchemaAIPanel
+          open={showAIPanel}
+          onClose={() => setShowAIPanel(false)}
+          onSchemaGenerated={(schema) => {
+            setJsonInput(JSON.stringify(schema, null, 2));
+            parseJsonToNodes(JSON.stringify(schema, null, 2));
+            setShowAIPanel(false);
+          }}
+        />
 
-      <SchemaExportPanel
-        open={showExportPanel}
-        onClose={() => setShowExportPanel(false)}
-        schema={nodesToJsonSchema()}
-      />
+        <SchemaExportPanel
+          open={showExportPanel}
+          onClose={() => setShowExportPanel(false)}
+          schema={nodesToJsonSchema()}
+        />
 
-      <Sheet open={showSettingsPanel} onOpenChange={setShowSettingsPanel}>
-        <SheetContent>
+        <Sheet open={showSettingsPanel} onOpenChange={setShowSettingsPanel}>
+          <SheetContent className="z-[101]">
           <SheetHeader>
             <SheetTitle>Editor Settings</SheetTitle>
           </SheetHeader>
@@ -524,7 +525,8 @@ export default function SchemaVisualEditor() {
             </div>
           </div>
         </SheetContent>
-      </Sheet>
+        </Sheet>
+      </div>
 
       {showExitPrompt && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
