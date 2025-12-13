@@ -6,6 +6,10 @@ import { ErrorRecovery } from "@/components/common/ErrorRecovery";
 import { useMutationError } from "@/components/common/MutationErrorToast";
 import { Pagination } from "@/components/ui/Pagination";
 import { useDebounce } from "@/components/common/useDebounce";
+import { useValidatedForm } from "@/components/forms/useValidatedForm";
+import { ValidatedInput } from "@/components/forms/ValidatedInput";
+import { ValidatedTextarea } from "@/components/forms/ValidatedTextarea";
+import { customerSchema } from "@/components/forms/FormValidation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -43,18 +47,17 @@ export default function Customers() {
   const itemsPerPage = 12;
   const [showForm, setShowForm] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    company: "",
-    email: "",
-    phone: "",
-    address: "",
-    source: "",
-    status: "lead",
-    tags: [],
-    notes: "",
+  
+  const form = useValidatedForm(customerSchema, {
+    defaultValues: {
+      name: "",
+      company: "",
+      email: "",
+      phone: "",
+      address: "",
+      notes: "",
+    }
   });
-  const [tagInput, setTagInput] = useState("");
 
   const { data: customers = [], isLoading, error, refetch } = useQuery({
     queryKey: ["customers"],
@@ -66,7 +69,7 @@ export default function Customers() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["customers"] });
       setShowForm(false);
-      resetForm();
+      form.reset();
       toast.success("Customer created successfully");
     },
   });
@@ -77,7 +80,7 @@ export default function Customers() {
       queryClient.invalidateQueries({ queryKey: ["customers"] });
       setShowForm(false);
       setEditingCustomer(null);
-      resetForm();
+      form.reset();
       toast.success("Customer updated successfully");
     },
   });
@@ -94,54 +97,25 @@ export default function Customers() {
   useMutationError(updateMutation, { customMessage: "Failed to update customer" });
   useMutationError(deleteMutation, { customMessage: "Failed to delete customer" });
 
-  const resetForm = () => {
-    setFormData({
-      name: "",
-      company: "",
-      email: "",
-      phone: "",
-      address: "",
-      source: "",
-      status: "lead",
-      tags: [],
-      notes: "",
-    });
-    setTagInput("");
-  };
-
   const handleEdit = (customer) => {
     setEditingCustomer(customer);
-    setFormData({
+    form.reset({
       name: customer.name || "",
       company: customer.company || "",
       email: customer.email || "",
       phone: customer.phone || "",
       address: customer.address || "",
-      source: customer.source || "",
-      status: customer.status || "lead",
-      tags: customer.tags || [],
       notes: customer.notes || "",
     });
     setShowForm(true);
   };
 
-  const handleSubmit = () => {
+  const onSubmit = (data) => {
     if (editingCustomer) {
-      updateMutation.mutate({ id: editingCustomer.id, data: formData });
+      updateMutation.mutate({ id: editingCustomer.id, data });
     } else {
-      createMutation.mutate(formData);
+      createMutation.mutate(data);
     }
-  };
-
-  const handleAddTag = () => {
-    if (tagInput.trim() && !formData.tags.includes(tagInput.trim())) {
-      setFormData({ ...formData, tags: [...formData.tags, tagInput.trim()] });
-      setTagInput("");
-    }
-  };
-
-  const handleRemoveTag = (tag) => {
-    setFormData({ ...formData, tags: formData.tags.filter((t) => t !== tag) });
   };
 
   const filteredCustomers = customers.filter((c) => {
@@ -172,7 +146,7 @@ export default function Customers() {
     <div className="p-3 sm:p-4 md:p-6 bg-background min-h-screen">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
         <h1 className="text-xl sm:text-2xl font-light font-display text-foreground">Customers</h1>
-        <Button onClick={() => { resetForm(); setEditingCustomer(null); setShowForm(true); }} className="w-full sm:w-auto">
+        <Button onClick={() => { form.reset(); setEditingCustomer(null); setShowForm(true); }} className="w-full sm:w-auto">
           <Plus className="h-4 w-4 mr-2" />
           New Customer
         </Button>
@@ -272,87 +246,54 @@ export default function Customers() {
           <DialogHeader>
             <DialogTitle>{editingCustomer ? "Edit Customer" : "New Customer"}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium">Name *</label>
-                <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Company</label>
-                <Input value={formData.company} onChange={(e) => setFormData({ ...formData, company: e.target.value })} />
-              </div>
+              <ValidatedInput
+                label="Name"
+                required
+                error={form.getError("name")}
+                {...form.register("name")}
+              />
+              <ValidatedInput
+                label="Company"
+                error={form.getError("company")}
+                {...form.register("company")}
+              />
             </div>
+
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium">Email</label>
-                <Input type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Phone</label>
-                <Input value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
-              </div>
+              <ValidatedInput
+                label="Email"
+                type="email"
+                error={form.getError("email")}
+                {...form.register("email")}
+              />
+              <ValidatedInput
+                label="Phone"
+                type="tel"
+                error={form.getError("phone")}
+                {...form.register("phone")}
+              />
             </div>
-            <div>
-              <label className="text-sm font-medium">Address</label>
-              <Input value={formData.address} onChange={(e) => setFormData({ ...formData, address: e.target.value })} />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium">Source</label>
-                <Select value={formData.source} onValueChange={(v) => setFormData({ ...formData, source: v })}>
-                  <SelectTrigger><SelectValue placeholder="Select source..." /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="referral">Referral</SelectItem>
-                    <SelectItem value="website">Website</SelectItem>
-                    <SelectItem value="social_media">Social Media</SelectItem>
-                    <SelectItem value="cold_call">Cold Call</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <label className="text-sm font-medium">Status</label>
-                <Select value={formData.status} onValueChange={(v) => setFormData({ ...formData, status: v })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="lead">Lead</SelectItem>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="inactive">Inactive</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div>
-              <label className="text-sm font-medium">Tags</label>
-              <div className="flex gap-2">
-                <Input 
-                  value={tagInput} 
-                  onChange={(e) => setTagInput(e.target.value)} 
-                  placeholder="Add tag..."
-                  onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddTag())}
-                />
-                <Button type="button" variant="outline" onClick={handleAddTag}>Add</Button>
-              </div>
-              {formData.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-2">
-                  {formData.tags.map((tag) => (
-                    <Badge key={tag} variant="secondary" className="cursor-pointer" onClick={() => handleRemoveTag(tag)}>
-                      {tag} ×
-                    </Badge>
-                  ))}
-                </div>
-              )}
-            </div>
-            <div>
-              <label className="text-sm font-medium">Notes</label>
-              <Textarea value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} rows={3} />
-            </div>
-            <Button className="w-full" onClick={handleSubmit} disabled={!formData.name || createMutation.isPending || updateMutation.isPending}>
+
+            <ValidatedInput
+              label="Address"
+              error={form.getError("address")}
+              {...form.register("address")}
+            />
+
+            <ValidatedTextarea
+              label="Notes"
+              rows={3}
+              error={form.getError("notes")}
+              {...form.register("notes")}
+            />
+
+            <Button className="w-full" type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
               {(createMutation.isPending || updateMutation.isPending) && <ButtonLoader />}
               {editingCustomer ? "Update Customer" : "Create Customer"}
             </Button>
-          </div>
+          </form>
         </DialogContent>
       </Dialog>
     </div>
