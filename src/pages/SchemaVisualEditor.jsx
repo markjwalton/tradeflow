@@ -473,7 +473,7 @@ export default function SchemaVisualEditor() {
 
         {/* Visual Canvas */}
         {(activeView === "visual" || activeView === "split") && (
-          <div className={`${activeView === "split" ? "w-1/2" : "w-full"} bg-muted/10`}>
+          <div className={`${activeView === "split" ? "w-1/2" : "w-full"} bg-muted/10 relative`}>
             <ReactFlow
               nodes={nodes}
               edges={edges}
@@ -482,13 +482,11 @@ export default function SchemaVisualEditor() {
               onConnect={onConnect}
               nodeTypes={nodeTypes}
               fitView
+              className="bg-muted/10"
             >
               <Background />
               <Controls />
               <MiniMap />
-              <Panel position="top-left" className="bg-card border rounded-lg p-2 text-xs">
-                {nodes.length} nodes, {edges.length} connections
-              </Panel>
             </ReactFlow>
           </div>
         )}
