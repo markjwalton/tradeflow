@@ -18,7 +18,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { toast } from 'sonner';
-import { Loader2, CheckCircle2, AlertCircle, Search, Eye, Code, Edit2, FileText, ExternalLink, Check } from 'lucide-react';
+import { Loader2, CheckCircle2, AlertCircle, Search, Eye, Code, Edit2, FileText, ExternalLink, Check, RefreshCw } from 'lucide-react';
 import { z } from 'zod';
 
 // Demo schema
@@ -49,6 +49,8 @@ export default function UXShowcase() {
   const [originalElementLabels, setOriginalElementLabels] = useState({});
   const [isSaving, setIsSaving] = useState(false);
   const [showSaveCheck, setShowSaveCheck] = useState(false);
+  const [computedStyles, setComputedStyles] = useState({});
+  const [stylesFetchTime, setStylesFetchTime] = useState(null);
 
   useEffect(() => {
     const loadLabels = async () => {
@@ -127,15 +129,20 @@ export default function UXShowcase() {
     mockMutation.mutate(data);
   };
 
-  const getComponentStyles = (component, element) => {
-    const selector = element 
-      ? `[data-element="${element}"]` 
-      : `[data-component="${component}"]`;
+  const fetchComponentStyles = () => {
+    const selector = selectedElement 
+      ? `[data-element="${selectedElement}"]` 
+      : `[data-component="${selectedComponent}"]`;
     const el = document.querySelector(selector);
-    if (!el) return {};
+    
+    if (!el) {
+      setComputedStyles({});
+      toast.error('Element not found in DOM. Make sure it is visible on the page.');
+      return;
+    }
     
     const computed = window.getComputedStyle(el);
-    return {
+    const styles = {
       display: computed.display,
       flexDirection: computed.flexDirection,
       gap: computed.gap,
@@ -159,7 +166,17 @@ export default function UXShowcase() {
       position: computed.position,
       zIndex: computed.zIndex,
     };
+    
+    setComputedStyles(styles);
+    setStylesFetchTime(new Date().toLocaleTimeString());
+    toast.success('Styles fetched successfully');
   };
+
+  useEffect(() => {
+    if (selectedComponent) {
+      fetchComponentStyles();
+    }
+  }, [selectedComponent, selectedElement]);
 
   const updateComponentLabel = (id, newLabel) => {
     setComponentLabels(prev => ({ ...prev, [id]: newLabel }));
@@ -289,31 +306,54 @@ export default function UXShowcase() {
                   )}
 
                   <div className="space-y-3 pt-4 border-t">
-                    <h3 className="font-medium flex items-center gap-2">
-                      <Code className="h-4 w-4" />
-                      Computed Styles
-                    </h3>
-                    <div className="bg-muted/50 rounded-lg p-3 space-y-2 max-h-96 overflow-y-auto">
-                      {Object.entries(getComponentStyles(selectedComponent, selectedElement)).map(([key, value]) => (
-                        <div key={key} className="flex justify-between text-xs font-mono gap-2">
-                          <span className="text-muted-foreground">{key}:</span>
-                          <span className="font-medium text-right break-all">{value}</span>
-                        </div>
-                      ))}
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-medium flex items-center gap-2">
+                        <Code className="h-4 w-4" />
+                        Computed Styles
+                      </h3>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="gap-2 h-7"
+                        onClick={fetchComponentStyles}
+                      >
+                        <RefreshCw className="h-3 w-3" />
+                        Refresh
+                      </Button>
                     </div>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="w-full gap-2"
-                      onClick={() => {
-                        const styles = getComponentStyles(selectedComponent, selectedElement);
-                        navigator.clipboard.writeText(JSON.stringify(styles, null, 2));
-                        toast.success('Styles copied to clipboard');
-                      }}
-                    >
-                      <Code className="h-3 w-3" />
-                      Copy All Styles
-                    </Button>
+                    {stylesFetchTime && (
+                      <p className="text-xs text-muted-foreground">Last fetched: {stylesFetchTime}</p>
+                    )}
+                    {Object.keys(computedStyles).length === 0 ? (
+                      <div className="bg-muted/50 rounded-lg p-4 text-center">
+                        <p className="text-sm text-muted-foreground">
+                          Element not found or not visible. Make sure the tab is active and the element is rendered.
+                        </p>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="bg-muted/50 rounded-lg p-3 space-y-2 max-h-96 overflow-y-auto">
+                          {Object.entries(computedStyles).map(([key, value]) => (
+                            <div key={key} className="flex justify-between text-xs font-mono gap-2">
+                              <span className="text-muted-foreground">{key}:</span>
+                              <span className="font-medium text-right break-all">{value}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="w-full gap-2"
+                          onClick={() => {
+                            navigator.clipboard.writeText(JSON.stringify(computedStyles, null, 2));
+                            toast.success('Styles copied to clipboard');
+                          }}
+                        >
+                          <Code className="h-3 w-3" />
+                          Copy All Styles
+                        </Button>
+                      </>
+                    )}
                   </div>
                   {/* Save/Cancel Buttons */}
                   <div className="pt-4 border-t flex gap-2 mt-auto">
