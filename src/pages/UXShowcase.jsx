@@ -19,6 +19,7 @@ import ButtonShowcase from '@/components/showcase/ButtonShowcase';
 import CardShowcase from '@/components/showcase/CardShowcase';
 import TypographyShowcase from '@/components/showcase/TypographyShowcase';
 import ColorShowcase from '@/components/showcase/ColorShowcase';
+import TabsShowcase from '@/components/showcase/TabsShowcase';
 
 export default function UXShowcase() {
   const [showInspector, setShowInspector] = useState(false);
@@ -54,6 +55,7 @@ export default function UXShowcase() {
     { value: 'searchCard', label: 'Search & Debounce' },
     { value: 'buttonCard', label: 'Buttons' },
     { value: 'cardShowcase', label: 'Cards' },
+    { value: 'tabsShowcase', label: 'Tabs' },
     { value: 'typographyShowcase', label: 'Typography' },
     { value: 'colorShowcase', label: 'Colors' },
   ];
@@ -87,6 +89,9 @@ export default function UXShowcase() {
     ],
     cardShowcase: [
       { id: 'card-examples', label: 'Card Examples' },
+    ],
+    tabsShowcase: [
+      { id: 'tabs-examples', label: 'Tabs Examples' },
     ],
     typographyShowcase: [
       { id: 'typography-examples', label: 'Typography Examples' },
@@ -310,7 +315,7 @@ export default function UXShowcase() {
       </div>
 
       <Tabs defaultValue="loading" className="w-full">
-        <TabsList className="grid w-full grid-cols-5 lg:grid-cols-9">
+        <TabsList className="grid w-full grid-cols-5 lg:grid-cols-10">
           <TabsTrigger value="loading">Loading</TabsTrigger>
           <TabsTrigger value="errors">Errors</TabsTrigger>
           <TabsTrigger value="forms">Forms</TabsTrigger>
@@ -318,6 +323,7 @@ export default function UXShowcase() {
           <TabsTrigger value="search">Search</TabsTrigger>
           <TabsTrigger value="buttons">Buttons</TabsTrigger>
           <TabsTrigger value="cards">Cards</TabsTrigger>
+          <TabsTrigger value="tabs">Tabs</TabsTrigger>
           <TabsTrigger value="typography">Typography</TabsTrigger>
           <TabsTrigger value="colors">Colors</TabsTrigger>
         </TabsList>
@@ -374,6 +380,14 @@ export default function UXShowcase() {
           <Card>
             <CardContent className="pt-6">
               <CardShowcase />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="tabs" className="mt-6">
+          <Card>
+            <CardContent className="pt-6">
+              <TabsShowcase />
             </CardContent>
           </Card>
         </TabsContent>
