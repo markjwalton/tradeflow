@@ -22,15 +22,15 @@ export default function TypographyShowcase() {
         } else {
           // Default fonts from globals.css
           setCurrentFonts({
-            heading: { name: 'Degular Display', font_family: 'degular-display, sans-serif', source: 'adobe' },
-            body: { name: 'Mrs Eaves XL Serif', font_family: 'mrs-eaves-xl-serif-narrow, serif', source: 'adobe' }
+            heading: { name: 'Degular Display', font_family: '"degular-display", sans-serif', source: 'adobe' },
+            body: { name: 'Mrs Eaves XL Serif', font_family: '"mrs-eaves-xl-serif-narrow", serif', source: 'adobe' }
           });
         }
       } catch (e) {
         // Not logged in or error - show defaults
         setCurrentFonts({
-          heading: { name: 'Degular Display', font_family: 'degular-display, sans-serif', source: 'adobe' },
-          body: { name: 'Mrs Eaves XL Serif', font_family: 'mrs-eaves-xl-serif-narrow, serif', source: 'adobe' }
+          heading: { name: 'Degular Display', font_family: '"degular-display", sans-serif', source: 'adobe' },
+          body: { name: 'Mrs Eaves XL Serif', font_family: '"mrs-eaves-xl-serif-narrow", serif', source: 'adobe' }
         });
       }
     };
@@ -38,7 +38,7 @@ export default function TypographyShowcase() {
   }, []);
 
   const activeFont = currentFonts[selectedFont];
-  const fontStyle = { fontFamily: selectedFont === 'heading' ? 'var(--font-family-display)' : 'var(--font-family-body)' };
+  const fontStyle = { fontFamily: activeFont?.font_family || (selectedFont === 'heading' ? '"degular-display", sans-serif' : '"mrs-eaves-xl-serif-narrow", serif') };
 
   return (
     <div className="space-y-6" data-component="typographyShowcase">
