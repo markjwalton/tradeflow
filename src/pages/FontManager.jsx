@@ -14,6 +14,7 @@ export default function FontManager() {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingFont, setEditingFont] = useState(null);
+  const [currentFonts, setCurrentFonts] = useState({ heading: null, body: null });
   const [formData, setFormData] = useState({
     name: '',
     font_family: '',
@@ -26,7 +27,60 @@ export default function FontManager() {
 
   const { data: fonts = [], isLoading } = useQuery({
     queryKey: ['fonts'],
-    queryFn: () => base44.entities.FontFamily.list()
+    queryFn: async () => {
+      const allFonts = await base44.entities.FontFamily.list();
+      
+      // Load current fonts on first fetch
+      try {
+        const user = await base44.auth.me();
+        if (user?.theme_fonts) {
+          setCurrentFonts({
+            heading: user.theme_fonts.heading || null,
+            body: user.theme_fonts.body || null
+          });
+        } else {
+          // Set defaults from globals.css
+          setCurrentFonts({
+            heading: { name: 'Degular Display', font_family: 'degular-display, sans-serif', source: 'adobe' },
+            body: { name: 'Mrs Eaves XL Serif', font_family: 'mrs-eaves-xl-serif-narrow, serif', source: 'adobe' }
+          });
+          
+          // Auto-create default fonts if they don't exist
+          const hasDisplay = allFonts.some(f => f.name === 'Degular Display');
+          const hasBody = allFonts.some(f => f.name === 'Mrs Eaves XL Serif');
+          
+          if (!hasDisplay) {
+            await base44.entities.FontFamily.create({
+              name: 'Degular Display',
+              font_family: 'degular-display, sans-serif',
+              source: 'adobe',
+              category: 'display',
+              weights: [300, 400, 500, 600, 700, 800],
+              preview_text: 'The quick brown fox jumps over the lazy dog',
+              is_active: true
+            });
+          }
+          
+          if (!hasBody) {
+            await base44.entities.FontFamily.create({
+              name: 'Mrs Eaves XL Serif',
+              font_family: 'mrs-eaves-xl-serif-narrow, serif',
+              source: 'adobe',
+              category: 'body',
+              weights: [400, 500, 600, 700],
+              preview_text: 'The quick brown fox jumps over the lazy dog',
+              is_active: true
+            });
+          }
+          
+          return base44.entities.FontFamily.list();
+        }
+      } catch (e) {
+        console.error('Error loading current fonts:', e);
+      }
+      
+      return allFonts;
+    }
   });
 
   const createMutation = useMutation({
@@ -216,6 +270,56 @@ export default function FontManager() {
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* Fonts in Use Section */}
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Fonts in Use</CardTitle>
+          <CardDescription>Currently active fonts in the main application</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="p-4 rounded-lg border bg-card">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <div className="text-sm font-medium">Display / Headings</div>
+                  <code className="text-xs text-muted-foreground">{currentFonts.heading?.font_family || 'Not set'}</code>
+                </div>
+                <span className="text-xs text-muted-foreground capitalize">{currentFonts.heading?.source || 'default'}</span>
+              </div>
+              {currentFonts.heading && (
+                <div className="p-3 rounded bg-muted">
+                  <p style={{ fontFamily: currentFonts.heading.font_family }} className="text-2xl font-light">
+                    {currentFonts.heading.name}
+                  </p>
+                  <p style={{ fontFamily: currentFonts.heading.font_family }} className="text-base mt-2">
+                    The quick brown fox jumps over the lazy dog
+                  </p>
+                </div>
+              )}
+            </div>
+            <div className="p-4 rounded-lg border bg-card">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <div className="text-sm font-medium">Body Text</div>
+                  <code className="text-xs text-muted-foreground">{currentFonts.body?.font_family || 'Not set'}</code>
+                </div>
+                <span className="text-xs text-muted-foreground capitalize">{currentFonts.body?.source || 'default'}</span>
+              </div>
+              {currentFonts.body && (
+                <div className="p-3 rounded bg-muted">
+                  <p style={{ fontFamily: currentFonts.body.font_family }} className="text-xl">
+                    {currentFonts.body.name}
+                  </p>
+                  <p style={{ fontFamily: currentFonts.body.font_family }} className="text-base mt-2">
+                    The quick brown fox jumps over the lazy dog. Typography plays a crucial role in design.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {isLoading ? (
         <div className="text-center py-12">Loading fonts...</div>
