@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { useAppSidebar } from "./SidebarContext";
 import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, ChevronRight, Folder, FolderOpen, Home } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { createPageUrl } from "@/utils";
 import { getIconByName } from "@/components/navigation/NavIconMap";
@@ -12,6 +12,17 @@ export function AppSidebar({ navItems = [] }) {
   const { mode, isHidden } = useAppSidebar();
   const location = useLocation();
   const [expandedFolders, setExpandedFolders] = useState(new Set());
+
+  // Initialize expanded folders based on default_collapsed setting
+  useEffect(() => {
+    const initiallyExpanded = new Set();
+    navItems.forEach((item) => {
+      if (item.item_type === "folder" && !item.default_collapsed) {
+        initiallyExpanded.add(item.id);
+      }
+    });
+    setExpandedFolders(initiallyExpanded);
+  }, [navItems]);
   const { 
     prefetchProjects, 
     prefetchTasks, 
