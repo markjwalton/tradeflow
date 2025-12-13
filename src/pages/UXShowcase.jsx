@@ -129,31 +129,6 @@ export default function UXShowcase() {
     mockMutation.mutate(data);
   };
 
-  const fetchComponentStyles = () => {
-    // Ensure the correct demo is showing for loading elements
-    if (selectedElement && selectedComponent === 'loadingCard') {
-      const elementMap = {
-        'page-loader': 'page',
-        'card-grid-loader': 'cards',
-        'table-loader': 'table',
-        'list-loader': 'list',
-        'form-loader': 'form',
-        'stats-loader': 'stats',
-      };
-      const requiredDemo = elementMap[selectedElement];
-      if (requiredDemo && showLoadingDemo !== requiredDemo) {
-        setShowLoadingDemo(requiredDemo);
-        // Wait for DOM to update
-        setTimeout(() => {
-          performStyleFetch();
-        }, 100);
-        return;
-      }
-    }
-    
-    performStyleFetch();
-  };
-
   const performStyleFetch = () => {
     const selector = selectedElement 
       ? `[data-element="${selectedElement}"]` 
@@ -199,7 +174,7 @@ export default function UXShowcase() {
 
   useEffect(() => {
     if (selectedComponent) {
-      setTimeout(() => fetchComponentStyles(), 50);
+      setTimeout(() => performStyleFetch(), 50);
     }
   }, [selectedComponent, selectedElement]);
 
