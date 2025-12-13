@@ -152,13 +152,18 @@ export default function GenericNavEditor({
       const defaultCollapsed = settings ? JSON.parse(settings).defaultCollapsed : false;
 
       if (!defaultCollapsed) {
-        // Expand folders that don't have default_collapsed=true
+        // Expand all top-level folders regardless of default_collapsed setting
         const foldersToExpand = items
-          .filter(item => !item.parent_id && item.item_type === "folder" && !item.default_collapsed)
+          .filter(item => !item.parent_id && item.item_type === "folder")
           .map(item => item._id);
         setExpandedParents(new Set(foldersToExpand));
+        // Save to session
+        sessionStorage.setItem(`nav_expanded_${configType}`, JSON.stringify(foldersToExpand));
+      } else {
+        // Everything collapsed
+        setExpandedParents(new Set());
+        sessionStorage.setItem(`nav_expanded_${configType}`, JSON.stringify([]));
       }
-      // else: keep everything collapsed (empty Set)
       
       setInitialExpandDone(true);
     }
@@ -235,8 +240,8 @@ export default function GenericNavEditor({
     
     // Get siblings at this level
     const siblings = items.filter(i => (i.parent_id || null) === (draggedItem.parent_id || null));
-    const srcIdx = siblings.findIndex(s => s.slug === draggedItem.slug);
-    const dstIdx = siblings.findIndex(s => s.slug === destItem?.slug);
+    const srcIdx = siblings.findIndex(s => s._id === draggedItem._id);
+    const dstIdx = siblings.findIndex(s => s._id === destItem?._id);
     
     if (srcIdx === -1 || dstIdx === -1 || srcIdx === dstIdx) return;
     
@@ -244,9 +249,10 @@ export default function GenericNavEditor({
     const [removed] = reordered.splice(srcIdx, 1);
     reordered.splice(dstIdx, 0, removed);
     
-    // Rebuild items with new order
-    const otherItems = items.filter(i => (i.parent_id || null) !== (draggedItem.parent_id || null));
-    const updatedSiblings = reordered.map((item, idx) => ({ ...item, order: idx }));
+    // Rebuild items with new order - preserve _id on all items
+    const otherItems = items.filter(i => (i.parent_id || null) !== (draggedItem.parent_id || null))
+      .map(i => ({ ...i, _id: i._id || generateId() }));
+    const updatedSiblings = reordered.map((item, idx) => ({ ...item, _id: item._id || generateId(), order: idx }));
     
     saveMutation.mutate([...otherItems, ...updatedSiblings]);
   };
