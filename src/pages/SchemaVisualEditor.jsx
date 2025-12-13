@@ -19,6 +19,11 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
+import {
   Maximize2,
   Minimize2,
   Save,
@@ -43,7 +48,6 @@ import {
   useNodesState,
   useEdgesState,
   addEdge,
-  Panel,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
@@ -61,7 +65,7 @@ export default function SchemaVisualEditor() {
   const queryClient = useQueryClient();
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showExitPrompt, setShowExitPrompt] = useState(false);
-  const [activeView, setActiveView] = useState("split"); // split, visual, code
+  const [activeView, setActiveView] = useState("split");
   const [jsonInput, setJsonInput] = useState("");
   const [schemaName, setSchemaName] = useState("Untitled Schema");
   const [autoSaveEnabled, setAutoSaveEnabled] = useState(true);
@@ -74,11 +78,9 @@ export default function SchemaVisualEditor() {
   const autoSaveTimer = useRef(null);
   const editorRef = useRef(null);
 
-  // React Flow state
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  // Load saved state from localStorage
   useEffect(() => {
     const saved = localStorage.getItem("schemaEditor_state");
     if (saved) {
@@ -94,111 +96,89 @@ export default function SchemaVisualEditor() {
     }
   }, []);
 
-  // Auto-save to localStorage
   useEffect(() => {
     if (autoSaveEnabled) {
       if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
       autoSaveTimer.current = setTimeout(() => {
-        const state = {
-          jsonInput,
-          schemaName,
-          nodes,
-          edges,
-          timestamp: new Date().toISOString(),
-        };
+        const state = { jsonInput, schemaName, nodes, edges, timestamp: new Date().toISOString() };
         localStorage.setItem("schemaEditor_state", JSON.stringify(state));
         setHasUnsavedChanges(false);
       }, 2000);
     }
   }, [jsonInput, schemaName, nodes, edges, autoSaveEnabled]);
 
-  // Mark as changed when editing
   useEffect(() => {
     setHasUnsavedChanges(true);
   }, [jsonInput, nodes, edges]);
 
-  // Handle fullscreen toggle
   const toggleFullscreen = useCallback(() => {
     if (!isFullscreen) {
       if (editorRef.current?.requestFullscreen) {
         editorRef.current.requestFullscreen();
-      } else if (editorRef.current?.webkitRequestFullscreen) {
-        editorRef.current.webkitRequestFullscreen();
-      } else if (editorRef.current?.msRequestFullscreen) {
-        editorRef.current.msRequestFullscreen();
       }
     } else {
       if (document.exitFullscreen) {
         document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      } else if (document.msExitFullscreen) {
-        document.msExitFullscreen();
       }
     }
   }, [isFullscreen]);
 
-  // Listen for fullscreen changes
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
     };
-
     document.addEventListener("fullscreenchange", handleFullscreenChange);
-    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
-    document.addEventListener("msfullscreenchange", handleFullscreenChange);
-
-    return () => {
-      document.removeEventListener("fullscreenchange", handleFullscreenChange);
-      document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
-      document.removeEventListener("msfullscreenchange", handleFullscreenChange);
-    };
+    return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
   }, []);
 
-  // Parse JSON to visual nodes
   const parseJsonToNodes = useCallback((json) => {
     try {
       const schema = JSON.parse(json);
       const newNodes = [];
       const newEdges = [];
 
-      // Create main schema node
-      const schemaNode = {
+      newNodes.push({
         id: "schema-root",
         type: "schema",
-        position: { x: 400, y: 50 },
+        position: { x: 100, y: 200 },
         data: {
           label: schema.name || schemaName,
           type: schema.type || "object",
           schema: schema,
+          properties: schema.properties,
+          color: "bg-primary/10",
+          borderColor: "border-primary",
         },
-      };
-      newNodes.push(schemaNode);
+      });
 
-      // Create property nodes
       if (schema.properties) {
         const properties = Object.entries(schema.properties);
+        const columns = Math.ceil(Math.sqrt(properties.length));
+        
         properties.forEach(([key, value], index) => {
-          const propertyNode = {
+          const col = index % columns;
+          const row = Math.floor(index / columns);
+          
+          newNodes.push({
             id: `property-${key}`,
             type: "property",
-            position: { x: 200 + (index % 3) * 300, y: 250 + Math.floor(index / 3) * 150 },
+            position: { x: 450 + col * 320, y: 50 + row * 200 },
             data: {
               label: key,
               propertyType: value.type || "string",
               required: schema.required?.includes(key) || false,
               description: value.description || "",
               enum: value.enum || null,
+              default: value.default,
             },
-          };
-          newNodes.push(propertyNode);
+          });
 
-          // Create edge from schema to property
           newEdges.push({
             id: `edge-${key}`,
             source: "schema-root",
             target: `property-${key}`,
-            animated: true,
+            animated: false,
+            style: { stroke: 'var(--border)', strokeWidth: 2 },
           });
         });
       }
@@ -211,7 +191,6 @@ export default function SchemaVisualEditor() {
     }
   }, [schemaName, setNodes, setEdges]);
 
-  // Convert nodes back to JSON schema
   const nodesToJsonSchema = useCallback(() => {
     const schemaNode = nodes.find((n) => n.type === "schema");
     if (!schemaNode) return null;
@@ -223,9 +202,7 @@ export default function SchemaVisualEditor() {
       .filter((n) => n.type === "property")
       .forEach((node) => {
         const { label, propertyType, required: isRequired, description, enum: enumValues } = node.data;
-        properties[label] = {
-          type: propertyType,
-        };
+        properties[label] = { type: propertyType };
         if (description) properties[label].description = description;
         if (enumValues) properties[label].enum = enumValues;
         if (isRequired) required.push(label);
@@ -241,7 +218,6 @@ export default function SchemaVisualEditor() {
 
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
 
-  // Save to entity library
   const saveToLibrary = useMutation({
     mutationFn: async () => {
       const schema = nodesToJsonSchema();
@@ -269,7 +245,6 @@ export default function SchemaVisualEditor() {
     },
   });
 
-  // Load from file
   const handleLoadFile = () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -289,7 +264,6 @@ export default function SchemaVisualEditor() {
     input.click();
   };
 
-  // Export to file
   const handleExportFile = () => {
     const schema = nodesToJsonSchema();
     if (!schema) {
@@ -306,7 +280,6 @@ export default function SchemaVisualEditor() {
     URL.revokeObjectURL(url);
   };
 
-  // Exit fullscreen with confirmation
   const handleExitFullscreen = () => {
     if (hasUnsavedChanges) {
       setShowExitPrompt(true);
@@ -325,16 +298,11 @@ export default function SchemaVisualEditor() {
       ref={editorRef}
       className={`flex flex-col ${isFullscreen ? "h-screen bg-background" : "h-[calc(100vh-2rem)]"}`}
     >
-      {/* Top Navigation Bar */}
+      {/* Top Bar */}
       <div className="flex items-center justify-between px-4 py-3 border-b bg-card">
         <div className="flex items-center gap-4">
           {isFullscreen && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleExitFullscreen}
-              className="gap-2"
-            >
+            <Button variant="ghost" size="sm" onClick={handleExitFullscreen} className="gap-2">
               <Home className="h-4 w-4" />
               Exit to App
             </Button>
@@ -360,7 +328,6 @@ export default function SchemaVisualEditor() {
         </div>
 
         <div className="flex items-center gap-2">
-          {/* View Toggle */}
           <div className="flex border rounded-lg overflow-hidden">
             <Button
               variant={activeView === "code" ? "default" : "ghost"}
@@ -406,51 +373,81 @@ export default function SchemaVisualEditor() {
             disabled={saveToLibrary.isPending}
           >
             <Save className="h-3.5 w-3.5" />
-            Save to Library
+            Save
           </Button>
 
           <div className="w-px h-6 bg-border" />
 
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowAIPanel(true)}
-            className="gap-2 h-8"
-          >
+          <Button variant="ghost" size="sm" onClick={() => setShowAIPanel(true)} className="gap-2 h-8">
             <Sparkles className="h-3.5 w-3.5" />
-            AI Assistant
+            AI
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowSettingsPanel(true)}
-            className="gap-2 h-8"
-          >
+          <Button variant="ghost" size="sm" onClick={() => setShowSettingsPanel(true)} className="gap-2 h-8">
             <Settings className="h-3.5 w-3.5" />
           </Button>
 
           <div className="w-px h-6 bg-border" />
 
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleFullscreen}
-            className="gap-2 h-8"
-          >
-            {isFullscreen ? (
-              <Minimize2 className="h-3.5 w-3.5" />
-            ) : (
-              <Maximize2 className="h-3.5 w-3.5" />
-            )}
+          <Button variant="ghost" size="sm" onClick={toggleFullscreen} className="gap-2 h-8">
+            {isFullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
           </Button>
         </div>
       </div>
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Code Editor */}
-        {(activeView === "code" || activeView === "split") && (
-          <div className={`${activeView === "split" ? "w-1/2" : "w-full"} flex flex-col border-r`}>
+      {/* Main Content */}
+      <div className="flex-1 overflow-hidden">
+        {activeView === "split" ? (
+          <ResizablePanelGroup direction="horizontal" className="h-full">
+            <ResizablePanel defaultSize={50} minSize={30}>
+              <div className="h-full flex flex-col border-r">
+                <div className="flex items-center justify-between px-4 py-2 border-b bg-muted/30">
+                  <span className="text-sm font-medium">JSON Schema</span>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => parseJsonToNodes(jsonInput)}
+                    className="h-7 text-xs"
+                  >
+                    Visualize
+                  </Button>
+                </div>
+                <Textarea
+                  value={jsonInput}
+                  onChange={(e) => setJsonInput(e.target.value)}
+                  className="flex-1 font-mono text-sm resize-none border-0 rounded-none focus-visible:ring-0"
+                  placeholder='{\n  "name": "User",\n  "type": "object",\n  "properties": {\n    "name": { "type": "string" },\n    "email": { "type": "string" }\n  }\n}'
+                />
+              </div>
+            </ResizablePanel>
+
+            <ResizableHandle withHandle />
+
+            <ResizablePanel defaultSize={50} minSize={30}>
+              <div className="h-full bg-muted/5">
+                <ReactFlow
+                  nodes={nodes}
+                  edges={edges}
+                  onNodesChange={onNodesChange}
+                  onEdgesChange={onEdgesChange}
+                  onConnect={onConnect}
+                  nodeTypes={nodeTypes}
+                  fitView
+                >
+                  <Background gap={16} size={1} />
+                  <Controls />
+                  <MiniMap 
+                    nodeColor={(node) => {
+                      if (node.type === 'schema') return 'var(--primary)';
+                      return 'var(--muted-foreground)';
+                    }}
+                    maskColor="rgba(0, 0, 0, 0.05)"
+                  />
+                </ReactFlow>
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        ) : activeView === "code" ? (
+          <div className="h-full flex flex-col">
             <div className="flex items-center justify-between px-4 py-2 border-b bg-muted/30">
               <span className="text-sm font-medium">JSON Schema</span>
               <Button
@@ -469,11 +466,8 @@ export default function SchemaVisualEditor() {
               placeholder='{\n  "name": "User",\n  "type": "object",\n  "properties": {\n    "name": { "type": "string" },\n    "email": { "type": "string" }\n  }\n}'
             />
           </div>
-        )}
-
-        {/* Visual Canvas */}
-        {(activeView === "visual" || activeView === "split") && (
-          <div className={`${activeView === "split" ? "w-1/2" : "w-full"} bg-muted/10 relative`}>
+        ) : (
+          <div className="h-full bg-muted/5">
             <ReactFlow
               nodes={nodes}
               edges={edges}
@@ -482,17 +476,21 @@ export default function SchemaVisualEditor() {
               onConnect={onConnect}
               nodeTypes={nodeTypes}
               fitView
-              className="bg-muted/10"
             >
-              <Background />
+              <Background gap={16} size={1} />
               <Controls />
-              <MiniMap />
+              <MiniMap 
+                nodeColor={(node) => {
+                  if (node.type === 'schema') return 'var(--primary)';
+                  return 'var(--muted-foreground)';
+                }}
+                maskColor="rgba(0, 0, 0, 0.05)"
+              />
             </ReactFlow>
           </div>
         )}
       </div>
 
-      {/* AI Panel */}
       <SchemaAIPanel
         open={showAIPanel}
         onClose={() => setShowAIPanel(false)}
@@ -503,14 +501,12 @@ export default function SchemaVisualEditor() {
         }}
       />
 
-      {/* Export Panel */}
       <SchemaExportPanel
         open={showExportPanel}
         onClose={() => setShowExportPanel(false)}
         schema={nodesToJsonSchema()}
       />
 
-      {/* Settings Panel */}
       <Sheet open={showSettingsPanel} onOpenChange={setShowSettingsPanel}>
         <SheetContent>
           <SheetHeader>
@@ -530,7 +526,6 @@ export default function SchemaVisualEditor() {
         </SheetContent>
       </Sheet>
 
-      {/* Exit Confirmation */}
       {showExitPrompt && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-card p-6 rounded-lg shadow-xl max-w-md">
