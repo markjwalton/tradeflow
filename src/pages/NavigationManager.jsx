@@ -331,7 +331,7 @@ export default function NavigationManager() {
 
           {/* Tab Navigation */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="[margin-top:var(--spacing-4)]">
-            <TabsList className="bg-background-200">
+            <TabsList>
               <TabsTrigger value="admin">
                 <Cog className="h-4 w-4 mr-2" />
                 Admin
