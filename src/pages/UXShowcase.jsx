@@ -637,78 +637,46 @@ export default function UXShowcase() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <a 
-              href="https://github.com/base44/docs/blob/main/components/common/UX_PATTERNS_GUIDE.md" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="p-4 border rounded-lg hover:border-primary transition-colors group"
-            >
+            <div className="p-4 border rounded-lg bg-card">
               <div className="flex items-start justify-between mb-2">
-                <h4 className="font-medium group-hover:text-primary transition-colors">UX Patterns Guide</h4>
-                <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                <h4 className="font-medium">UX Patterns Guide</h4>
+                <FileText className="h-4 w-4 text-muted-foreground" />
               </div>
               <p className="text-sm text-muted-foreground mb-3">
                 Complete reference for all UX patterns and best practices.
               </p>
-              <div className="flex items-center gap-2">
-                <FileText className="h-3 w-3 text-muted-foreground" />
-                <code className="text-xs text-muted-foreground">UX_PATTERNS_GUIDE.md</code>
-              </div>
-            </a>
-            <a 
-              href="https://github.com/base44/docs/blob/main/components/common/QUICK_START.md" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="p-4 border rounded-lg hover:border-primary transition-colors group"
-            >
+              <code className="text-xs text-muted-foreground">components/common/UX_PATTERNS_GUIDE</code>
+            </div>
+            <div className="p-4 border rounded-lg bg-card">
               <div className="flex items-start justify-between mb-2">
-                <h4 className="font-medium group-hover:text-primary transition-colors">Quick Start Guide</h4>
-                <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                <h4 className="font-medium">Quick Start Guide</h4>
+                <FileText className="h-4 w-4 text-muted-foreground" />
               </div>
               <p className="text-sm text-muted-foreground mb-3">
                 Get started in 5 minutes with all UX systems.
               </p>
-              <div className="flex items-center gap-2">
-                <FileText className="h-3 w-3 text-muted-foreground" />
-                <code className="text-xs text-muted-foreground">QUICK_START.md</code>
-              </div>
-            </a>
-            <a 
-              href="https://github.com/base44/docs/blob/main/components/common/UX_INTEGRATION_GUIDE.md" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="p-4 border rounded-lg hover:border-primary transition-colors group"
-            >
+              <code className="text-xs text-muted-foreground">components/common/QUICK_START</code>
+            </div>
+            <div className="p-4 border rounded-lg bg-card">
               <div className="flex items-start justify-between mb-2">
-                <h4 className="font-medium group-hover:text-primary transition-colors">Integration Guide</h4>
-                <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                <h4 className="font-medium">Integration Guide</h4>
+                <FileText className="h-4 w-4 text-muted-foreground" />
               </div>
               <p className="text-sm text-muted-foreground mb-3">
                 Complete guide to integrating all systems.
               </p>
-              <div className="flex items-center gap-2">
-                <FileText className="h-3 w-3 text-muted-foreground" />
-                <code className="text-xs text-muted-foreground">UX_INTEGRATION_GUIDE.md</code>
-              </div>
-            </a>
-            <a 
-              href="https://github.com/base44/docs/blob/main/components/common/IMPLEMENTATION_CHECKLIST.md" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="p-4 border rounded-lg hover:border-primary transition-colors group"
-            >
+              <code className="text-xs text-muted-foreground">components/common/UX_INTEGRATION_GUIDE</code>
+            </div>
+            <div className="p-4 border rounded-lg bg-card">
               <div className="flex items-start justify-between mb-2">
-                <h4 className="font-medium group-hover:text-primary transition-colors">Implementation Checklist</h4>
-                <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                <h4 className="font-medium">Implementation Checklist</h4>
+                <FileText className="h-4 w-4 text-muted-foreground" />
               </div>
               <p className="text-sm text-muted-foreground mb-3">
                 Ensure nothing is missed when building features.
               </p>
-              <div className="flex items-center gap-2">
-                <FileText className="h-3 w-3 text-muted-foreground" />
-                <code className="text-xs text-muted-foreground">IMPLEMENTATION_CHECKLIST.md</code>
-              </div>
-            </a>
+              <code className="text-xs text-muted-foreground">components/common/IMPLEMENTATION_CHECKLIST</code>
+            </div>
           </div>
         </CardContent>
       </Card>
