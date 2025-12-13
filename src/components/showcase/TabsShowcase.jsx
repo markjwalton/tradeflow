@@ -137,17 +137,106 @@ export default function TabsShowcase() {
 
       {/* Design Tokens */}
       <div className="space-y-3">
-        <h4 className="text-sm font-medium">Hover Behavior</h4>
+        <h4 className="text-sm font-medium">Styling Details</h4>
         <div className="p-4 border rounded-lg bg-muted/20 space-y-2">
+          <p className="text-sm">
+            <strong>TabsList background:</strong> White 50% transparency (bg-white/50) - works on any background color
+          </p>
           <p className="text-sm">
             <strong>Active state:</strong> White background with shadow
           </p>
           <p className="text-sm">
-            <strong>Inactive hover:</strong> Light green background (primary-50) with green text (primary-700)
+            <strong>Inactive hover:</strong> Light green background (primary-100) with green text (primary-700)
           </p>
           <p className="text-sm">
             <strong>Transition:</strong> Smooth transition on all properties
           </p>
+        </div>
+      </div>
+
+      {/* Background Independence Examples */}
+      <div className="space-y-3">
+        <h4 className="text-sm font-medium">Background Independence</h4>
+        <p className="text-xs text-muted-foreground">
+          Tabs work on any background color thanks to the white 50% transparent background
+        </p>
+        
+        {/* Primary Background */}
+        <div className="p-6 rounded-lg" style={{ backgroundColor: 'var(--primary-500)' }}>
+          <Tabs defaultValue="tab1" className="w-full">
+            <TabsList>
+              <TabsTrigger value="tab1">Tab One</TabsTrigger>
+              <TabsTrigger value="tab2">Tab Two</TabsTrigger>
+              <TabsTrigger value="tab3">Tab Three</TabsTrigger>
+            </TabsList>
+            <TabsContent value="tab1" className="mt-4">
+              <div className="p-4 bg-white rounded-lg">
+                <p className="text-sm">Tabs on primary background</p>
+              </div>
+            </TabsContent>
+            <TabsContent value="tab2" className="mt-4">
+              <div className="p-4 bg-white rounded-lg">
+                <p className="text-sm">Content Two</p>
+              </div>
+            </TabsContent>
+            <TabsContent value="tab3" className="mt-4">
+              <div className="p-4 bg-white rounded-lg">
+                <p className="text-sm">Content Three</p>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        {/* Secondary Background */}
+        <div className="p-6 rounded-lg" style={{ backgroundColor: 'var(--secondary-400)' }}>
+          <Tabs defaultValue="tab1" className="w-full">
+            <TabsList>
+              <TabsTrigger value="tab1">Tab One</TabsTrigger>
+              <TabsTrigger value="tab2">Tab Two</TabsTrigger>
+              <TabsTrigger value="tab3">Tab Three</TabsTrigger>
+            </TabsList>
+            <TabsContent value="tab1" className="mt-4">
+              <div className="p-4 bg-white rounded-lg">
+                <p className="text-sm">Tabs on secondary background</p>
+              </div>
+            </TabsContent>
+            <TabsContent value="tab2" className="mt-4">
+              <div className="p-4 bg-white rounded-lg">
+                <p className="text-sm">Content Two</p>
+              </div>
+            </TabsContent>
+            <TabsContent value="tab3" className="mt-4">
+              <div className="p-4 bg-white rounded-lg">
+                <p className="text-sm">Content Three</p>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        {/* Accent Background */}
+        <div className="p-6 rounded-lg" style={{ backgroundColor: 'var(--accent-300)' }}>
+          <Tabs defaultValue="tab1" className="w-full">
+            <TabsList>
+              <TabsTrigger value="tab1">Tab One</TabsTrigger>
+              <TabsTrigger value="tab2">Tab Two</TabsTrigger>
+              <TabsTrigger value="tab3">Tab Three</TabsTrigger>
+            </TabsList>
+            <TabsContent value="tab1" className="mt-4">
+              <div className="p-4 bg-white rounded-lg">
+                <p className="text-sm">Tabs on accent background</p>
+              </div>
+            </TabsContent>
+            <TabsContent value="tab2" className="mt-4">
+              <div className="p-4 bg-white rounded-lg">
+                <p className="text-sm">Content Two</p>
+              </div>
+            </TabsContent>
+            <TabsContent value="tab3" className="mt-4">
+              <div className="p-4 bg-white rounded-lg">
+                <p className="text-sm">Content Three</p>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>
