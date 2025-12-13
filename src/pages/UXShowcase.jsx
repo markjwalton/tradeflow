@@ -36,13 +36,17 @@ export default function UXShowcase() {
   const [showStylesPanel, setShowStylesPanel] = useState(false);
   const [selectedComponent, setSelectedComponent] = useState(null);
   const [selectedElement, setSelectedElement] = useState(null);
-  const [componentLabels, setComponentLabels] = useState({
-    loadingCard: 'Loading States Demo',
-    errorCard: 'Error Handling Demo',
-    formCard: 'Form Validation Demo',
-    mutationCard: 'Mutation Demo',
-    searchCard: 'Search & Debounce Demo',
+  const [componentLabels, setComponentLabels] = useState(() => {
+    const saved = localStorage.getItem('ux_showcase_labels');
+    return saved ? JSON.parse(saved) : {
+      loadingCard: 'Loading States Demo',
+      errorCard: 'Error Handling Demo',
+      formCard: 'Form Validation Demo',
+      mutationCard: 'Mutation Demo',
+      searchCard: 'Search & Debounce Demo',
+    };
   });
+  const [originalLabels, setOriginalLabels] = useState(componentLabels);
 
   const componentElements = {
     loadingCard: [
@@ -142,6 +146,17 @@ export default function UXShowcase() {
     setComponentLabels(prev => ({ ...prev, [id]: newLabel }));
   };
 
+  const handleSaveChanges = () => {
+    localStorage.setItem('ux_showcase_labels', JSON.stringify(componentLabels));
+    setOriginalLabels(componentLabels);
+    toast.success('Component labels saved');
+  };
+
+  const handleCancelChanges = () => {
+    setComponentLabels(originalLabels);
+    toast.info('Changes discarded');
+  };
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-start justify-between">
@@ -158,11 +173,11 @@ export default function UXShowcase() {
               View Component Styles
             </Button>
           </SheetTrigger>
-          <SheetContent className="overflow-y-auto">
+          <SheetContent className="overflow-y-auto flex flex-col">
             <SheetHeader>
               <SheetTitle>Component Styles Inspector</SheetTitle>
             </SheetHeader>
-            <div className="space-y-4 mt-6">
+            <div className="space-y-4 mt-6 flex-1 overflow-y-auto pb-20">
               <div className="space-y-2">
                 <Label>Select Component</Label>
                 <select
@@ -243,6 +258,23 @@ export default function UXShowcase() {
                   </div>
                 </>
               )}
+            </div>
+
+            {/* Save/Cancel Buttons */}
+            <div className="absolute bottom-0 left-0 right-0 p-4 bg-background border-t flex gap-2">
+              <Button 
+                onClick={handleSaveChanges}
+                className="flex-1"
+              >
+                Save Changes
+              </Button>
+              <Button 
+                onClick={handleCancelChanges}
+                variant="outline"
+                className="flex-1"
+              >
+                Cancel
+              </Button>
             </div>
           </SheetContent>
         </Sheet>
