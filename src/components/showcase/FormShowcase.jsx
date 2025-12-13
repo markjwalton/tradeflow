@@ -1,7 +1,9 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useValidatedForm } from '@/components/forms/useValidatedForm';
-import { ValidatedInput, ValidatedTextarea, ValidatedSelect } from '@/components/forms';
+import { ValidatedInput } from '@/components/forms/ValidatedInput';
+import { ValidatedTextarea } from '@/components/forms/ValidatedTextarea';
+import { ValidatedSelect } from '@/components/forms/ValidatedSelect';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
