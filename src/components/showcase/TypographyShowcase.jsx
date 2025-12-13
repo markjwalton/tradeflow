@@ -24,32 +24,32 @@ export default function TypographyShowcase() {
           <div className="space-y-4">
             <div className="flex items-baseline gap-4 border-b pb-3">
               <div className="w-20 text-xs text-muted-foreground">H1</div>
-              <h1 className="flex-1">The quick brown fox jumps over the lazy dog</h1>
+              <h1 className="flex-1 !text-2xl font-display font-light">The quick brown fox jumps over the lazy dog</h1>
               <code className="text-xs text-muted-foreground whitespace-nowrap">1.5rem</code>
             </div>
             <div className="flex items-baseline gap-4 border-b pb-3">
               <div className="w-20 text-xs text-muted-foreground">H2</div>
-              <h2 className="flex-1">The quick brown fox jumps over the lazy dog</h2>
+              <h2 className="flex-1 !text-xl font-display font-light">The quick brown fox jumps over the lazy dog</h2>
               <code className="text-xs text-muted-foreground whitespace-nowrap">1.25rem</code>
             </div>
             <div className="flex items-baseline gap-4 border-b pb-3">
               <div className="w-20 text-xs text-muted-foreground">H3</div>
-              <h3 className="flex-1">The quick brown fox jumps over the lazy dog</h3>
+              <h3 className="flex-1 !text-lg font-display font-normal">The quick brown fox jumps over the lazy dog</h3>
               <code className="text-xs text-muted-foreground whitespace-nowrap">1.125rem</code>
             </div>
             <div className="flex items-baseline gap-4 border-b pb-3">
               <div className="w-20 text-xs text-muted-foreground">H4</div>
-              <h4 className="flex-1">The quick brown fox jumps over the lazy dog</h4>
+              <h4 className="flex-1 !text-base font-display font-normal">The quick brown fox jumps over the lazy dog</h4>
               <code className="text-xs text-muted-foreground whitespace-nowrap">1rem</code>
             </div>
             <div className="flex items-baseline gap-4 border-b pb-3">
               <div className="w-20 text-xs text-muted-foreground">H5</div>
-              <h5 className="flex-1">The quick brown fox jumps over the lazy dog</h5>
+              <h5 className="flex-1 !text-sm font-display font-normal">The quick brown fox jumps over the lazy dog</h5>
               <code className="text-xs text-muted-foreground whitespace-nowrap">0.875rem</code>
             </div>
             <div className="flex items-baseline gap-4">
               <div className="w-20 text-xs text-muted-foreground">H6</div>
-              <h6 className="flex-1">THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG</h6>
+              <h6 className="flex-1 !text-xs font-display font-normal uppercase">THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG</h6>
               <code className="text-xs text-muted-foreground whitespace-nowrap">0.75rem</code>
             </div>
           </div>
