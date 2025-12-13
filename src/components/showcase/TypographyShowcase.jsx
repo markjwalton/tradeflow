@@ -24,32 +24,32 @@ export default function TypographyShowcase() {
           <div className="space-y-4">
             <div className="flex items-baseline gap-4 border-b pb-3">
               <div className="w-20 text-xs text-muted-foreground">H1</div>
-              <h1 className="font-display flex-1">The quick brown fox jumps over the lazy dog</h1>
-              <code className="text-xs text-muted-foreground">2.25rem</code>
-            </div>
-            <div className="flex items-baseline gap-4 border-b pb-3">
-              <div className="w-20 text-xs text-muted-foreground">H2</div>
-              <h2 className="font-display flex-1">The quick brown fox jumps over the lazy dog</h2>
-              <code className="text-xs text-muted-foreground">1.875rem</code>
-            </div>
-            <div className="flex items-baseline gap-4 border-b pb-3">
-              <div className="w-20 text-xs text-muted-foreground">H3</div>
-              <h3 className="font-display flex-1">The quick brown fox jumps over the lazy dog</h3>
+              <h1>The quick brown fox jumps over the lazy dog</h1>
               <code className="text-xs text-muted-foreground">1.5rem</code>
             </div>
             <div className="flex items-baseline gap-4 border-b pb-3">
-              <div className="w-20 text-xs text-muted-foreground">H4</div>
-              <h4 className="font-display flex-1">The quick brown fox jumps over the lazy dog</h4>
+              <div className="w-20 text-xs text-muted-foreground">H2</div>
+              <h2>The quick brown fox jumps over the lazy dog</h2>
               <code className="text-xs text-muted-foreground">1.25rem</code>
             </div>
             <div className="flex items-baseline gap-4 border-b pb-3">
-              <div className="w-20 text-xs text-muted-foreground">H5</div>
-              <h5 className="font-display flex-1">The quick brown fox jumps over the lazy dog</h5>
+              <div className="w-20 text-xs text-muted-foreground">H3</div>
+              <h3>The quick brown fox jumps over the lazy dog</h3>
               <code className="text-xs text-muted-foreground">1.125rem</code>
+            </div>
+            <div className="flex items-baseline gap-4 border-b pb-3">
+              <div className="w-20 text-xs text-muted-foreground">H4</div>
+              <h4>The quick brown fox jumps over the lazy dog</h4>
+              <code className="text-xs text-muted-foreground">1rem</code>
+            </div>
+            <div className="flex items-baseline gap-4 border-b pb-3">
+              <div className="w-20 text-xs text-muted-foreground">H5</div>
+              <h5>The quick brown fox jumps over the lazy dog</h5>
+              <code className="text-xs text-muted-foreground">0.875rem</code>
             </div>
             <div className="flex items-baseline gap-4">
               <div className="w-20 text-xs text-muted-foreground">H6</div>
-              <h6 className="font-display flex-1">THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG</h6>
+              <h6>THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG</h6>
               <code className="text-xs text-muted-foreground">0.75rem</code>
             </div>
           </div>
