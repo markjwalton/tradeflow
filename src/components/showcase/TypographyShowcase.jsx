@@ -1,83 +1,171 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function TypographyShowcase() {
   return (
-    <div className="space-y-8" data-component="typographyShowcase">
+    <div className="space-y-6" data-component="typographyShowcase">
       <div>
-        <h3 className="text-lg font-display mb-2">Typography</h3>
+        <h3 className="text-lg font-display mb-2">Typography System</h3>
         <p className="text-sm text-muted-foreground">
-          Typography system using Degular Display and Mrs Eaves XL Serif
+          Degular Display (Headings) • Mrs Eaves XL Serif (Body)
         </p>
       </div>
 
-      <div className="space-y-6" data-element="typography-examples">
-        <div>
-          <h4 className="text-sm font-medium text-muted-foreground mb-3">Headings</h4>
-          <div className="space-y-3">
-            <h1 className="font-display">Heading 1 - Display Font</h1>
-            <h2 className="font-display">Heading 2 - Display Font</h2>
-            <h3 className="font-display">Heading 3 - Display Font</h3>
-            <h4 className="font-display">Heading 4 - Display Font</h4>
-            <h5 className="font-display">Heading 5 - Display Font</h5>
-            <h6 className="font-display">Heading 6 - Display Font</h6>
-          </div>
-        </div>
+      <Tabs defaultValue="headings" className="w-full">
+        <TabsList>
+          <TabsTrigger value="headings">Headings</TabsTrigger>
+          <TabsTrigger value="weights">Weights</TabsTrigger>
+          <TabsTrigger value="body">Body Text</TabsTrigger>
+          <TabsTrigger value="colors">Text Colors</TabsTrigger>
+          <TabsTrigger value="code">Code & Mono</TabsTrigger>
+        </TabsList>
 
-        <div className="pt-4 border-t">
-          <h4 className="text-sm font-medium text-muted-foreground mb-3">Body Text</h4>
-          <div className="space-y-3">
-            <p className="text-lg">
-              Large body text - This is a paragraph using the body font (Mrs Eaves XL Serif).
-            </p>
-            <p>
-              Regular body text - This is a paragraph using the body font (Mrs Eaves XL Serif).
-              It's designed for excellent readability at various sizes.
-            </p>
-            <p className="text-sm">
-              Small body text - This is a smaller paragraph using the body font.
-            </p>
-            <p className="text-xs">
-              Extra small text - Used for captions and fine print.
-            </p>
+        <TabsContent value="headings" className="mt-6 space-y-6" data-element="typography-examples">
+          <div className="space-y-4">
+            <div className="flex items-baseline gap-4 border-b pb-3">
+              <div className="w-20 text-xs text-muted-foreground">H1</div>
+              <h1 className="font-display flex-1">The quick brown fox jumps over the lazy dog</h1>
+              <code className="text-xs text-muted-foreground">2.25rem</code>
+            </div>
+            <div className="flex items-baseline gap-4 border-b pb-3">
+              <div className="w-20 text-xs text-muted-foreground">H2</div>
+              <h2 className="font-display flex-1">The quick brown fox jumps over the lazy dog</h2>
+              <code className="text-xs text-muted-foreground">1.875rem</code>
+            </div>
+            <div className="flex items-baseline gap-4 border-b pb-3">
+              <div className="w-20 text-xs text-muted-foreground">H3</div>
+              <h3 className="font-display flex-1">The quick brown fox jumps over the lazy dog</h3>
+              <code className="text-xs text-muted-foreground">1.5rem</code>
+            </div>
+            <div className="flex items-baseline gap-4 border-b pb-3">
+              <div className="w-20 text-xs text-muted-foreground">H4</div>
+              <h4 className="font-display flex-1">The quick brown fox jumps over the lazy dog</h4>
+              <code className="text-xs text-muted-foreground">1.25rem</code>
+            </div>
+            <div className="flex items-baseline gap-4 border-b pb-3">
+              <div className="w-20 text-xs text-muted-foreground">H5</div>
+              <h5 className="font-display flex-1">The quick brown fox jumps over the lazy dog</h5>
+              <code className="text-xs text-muted-foreground">1.125rem</code>
+            </div>
+            <div className="flex items-baseline gap-4">
+              <div className="w-20 text-xs text-muted-foreground">H6</div>
+              <h6 className="font-display flex-1">THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG</h6>
+              <code className="text-xs text-muted-foreground">0.75rem</code>
+            </div>
           </div>
-        </div>
+        </TabsContent>
 
-        <div className="pt-4 border-t">
-          <h4 className="text-sm font-medium text-muted-foreground mb-3">Text Colors</h4>
-          <div className="space-y-2">
-            <p className="text-[var(--text-primary)]">Primary text color</p>
-            <p className="text-[var(--text-secondary)]">Secondary text color</p>
-            <p className="text-[var(--text-body)]">Body text color</p>
-            <p className="text-[var(--text-muted)]">Muted text color</p>
-            <p className="text-[var(--text-subtle)]">Subtle text color</p>
-            <p className="text-[var(--text-accent)]">Accent text color</p>
+        <TabsContent value="weights" className="mt-6">
+          <div className="space-y-4">
+            <div className="flex items-center gap-4 border-b pb-3">
+              <div className="w-32 text-xs text-muted-foreground">Light (300)</div>
+              <p className="font-light font-display flex-1 text-xl">The quick brown fox jumps over the lazy dog</p>
+            </div>
+            <div className="flex items-center gap-4 border-b pb-3">
+              <div className="w-32 text-xs text-muted-foreground">Normal (400)</div>
+              <p className="font-normal font-display flex-1 text-xl">The quick brown fox jumps over the lazy dog</p>
+            </div>
+            <div className="flex items-center gap-4 border-b pb-3">
+              <div className="w-32 text-xs text-muted-foreground">Medium (500)</div>
+              <p className="font-medium font-display flex-1 text-xl">The quick brown fox jumps over the lazy dog</p>
+            </div>
+            <div className="flex items-center gap-4 border-b pb-3">
+              <div className="w-32 text-xs text-muted-foreground">Semibold (600)</div>
+              <p className="font-semibold font-display flex-1 text-xl">The quick brown fox jumps over the lazy dog</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="w-32 text-xs text-muted-foreground">Bold (700)</div>
+              <p className="font-bold font-display flex-1 text-xl">The quick brown fox jumps over the lazy dog</p>
+            </div>
           </div>
-        </div>
+        </TabsContent>
 
-        <div className="pt-4 border-t">
-          <h4 className="text-sm font-medium text-muted-foreground mb-3">Code & Mono</h4>
-          <div className="space-y-2">
-            <code className="px-2 py-1 bg-muted rounded text-sm font-mono">
-              inline code
-            </code>
-            <pre className="p-4 bg-muted rounded text-sm font-mono overflow-x-auto">
+        <TabsContent value="body" className="mt-6">
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <div className="flex items-center gap-4">
+                <div className="w-32 text-xs text-muted-foreground">Large (1.125rem)</div>
+                <p className="text-lg flex-1">
+                  The quick brown fox jumps over the lazy dog. This is body text in Mrs Eaves XL Serif, designed for excellent readability.
+                </p>
+              </div>
+            </div>
+            <div className="space-y-3 pt-4 border-t">
+              <div className="flex items-center gap-4">
+                <div className="w-32 text-xs text-muted-foreground">Base (1rem)</div>
+                <p className="flex-1">
+                  The quick brown fox jumps over the lazy dog. This is body text in Mrs Eaves XL Serif, designed for excellent readability.
+                </p>
+              </div>
+            </div>
+            <div className="space-y-3 pt-4 border-t">
+              <div className="flex items-center gap-4">
+                <div className="w-32 text-xs text-muted-foreground">Small (0.875rem)</div>
+                <p className="text-sm flex-1">
+                  The quick brown fox jumps over the lazy dog. This is body text in Mrs Eaves XL Serif, designed for excellent readability.
+                </p>
+              </div>
+            </div>
+            <div className="space-y-3 pt-4 border-t">
+              <div className="flex items-center gap-4">
+                <div className="w-32 text-xs text-muted-foreground">Extra Small (0.75rem)</div>
+                <p className="text-xs flex-1">
+                  The quick brown fox jumps over the lazy dog. Used for captions and fine print.
+                </p>
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="colors" className="mt-6">
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="p-4 rounded-lg bg-background border">
+              <p className="text-[var(--text-primary)] mb-1">Primary text color</p>
+              <code className="text-xs text-muted-foreground">var(--text-primary)</code>
+            </div>
+            <div className="p-4 rounded-lg bg-background border">
+              <p className="text-[var(--text-secondary)] mb-1">Secondary text color</p>
+              <code className="text-xs text-muted-foreground">var(--text-secondary)</code>
+            </div>
+            <div className="p-4 rounded-lg bg-background border">
+              <p className="text-[var(--text-body)] mb-1">Body text color</p>
+              <code className="text-xs text-muted-foreground">var(--text-body)</code>
+            </div>
+            <div className="p-4 rounded-lg bg-background border">
+              <p className="text-[var(--text-muted)] mb-1">Muted text color</p>
+              <code className="text-xs text-muted-foreground">var(--text-muted)</code>
+            </div>
+            <div className="p-4 rounded-lg bg-background border">
+              <p className="text-[var(--text-subtle)] mb-1">Subtle text color</p>
+              <code className="text-xs text-muted-foreground">var(--text-subtle)</code>
+            </div>
+            <div className="p-4 rounded-lg bg-background border">
+              <p className="text-[var(--text-accent)] mb-1">Accent text color</p>
+              <code className="text-xs text-muted-foreground">var(--text-accent)</code>
+            </div>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="code" className="mt-6">
+          <div className="space-y-4">
+            <div>
+              <p className="text-sm text-muted-foreground mb-2">Inline code:</p>
+              <code className="px-2 py-1 bg-muted rounded text-sm font-mono">
+                const example = "inline code";
+              </code>
+            </div>
+            <div className="pt-4 border-t">
+              <p className="text-sm text-muted-foreground mb-2">Code block:</p>
+              <pre className="p-4 bg-muted rounded text-sm font-mono overflow-x-auto">
 {`function example() {
-  return "Code block example";
+  const message = "Code block example";
+  return message;
 }`}
-            </pre>
+              </pre>
+            </div>
           </div>
-        </div>
-
-        <div className="pt-4 border-t">
-          <h4 className="text-sm font-medium text-muted-foreground mb-3">Font Weights</h4>
-          <div className="space-y-2">
-            <p className="font-light">Light weight (300)</p>
-            <p className="font-normal">Normal weight (400)</p>
-            <p className="font-medium">Medium weight (500)</p>
-            <p className="font-semibold">Semibold weight (600)</p>
-            <p className="font-bold">Bold weight (700)</p>
-          </div>
-        </div>
+        </TabsContent>
+      </Tabs>
       </div>
     </div>
   );
