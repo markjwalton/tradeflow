@@ -113,6 +113,7 @@ import DevTools from './pages/DevTools';
 import UXShowcase from './pages/UXShowcase';
 import SystemHealth from './pages/SystemHealth';
 import DeveloperDocs from './pages/DeveloperDocs';
+import SchemaVisualEditor from './pages/SchemaVisualEditor';
 import __Layout from './Layout.jsx';
 
 
@@ -232,6 +233,7 @@ export const PAGES = {
     "UXShowcase": UXShowcase,
     "SystemHealth": SystemHealth,
     "DeveloperDocs": DeveloperDocs,
+    "SchemaVisualEditor": SchemaVisualEditor,
 }
 
 export const pagesConfig = {
