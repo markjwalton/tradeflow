@@ -8,6 +8,7 @@ import { createPageUrl } from '@/utils';
 
 export default function TypographyShowcase() {
   const [currentFonts, setCurrentFonts] = useState({ heading: null, body: null });
+  const [selectedFont, setSelectedFont] = useState('heading');
   
   useEffect(() => {
     const loadCurrentFonts = async () => {
@@ -36,14 +37,14 @@ export default function TypographyShowcase() {
     loadCurrentFonts();
   }, []);
 
+  const activeFont = currentFonts[selectedFont];
+  const fontStyle = { fontFamily: selectedFont === 'heading' ? 'var(--font-family-display)' : 'var(--font-family-body)' };
+
   return (
     <div className="space-y-6" data-component="typographyShowcase">
       <div className="flex items-start justify-between">
         <div>
           <h3 className="text-lg font-display mb-2">Typography System</h3>
-          <p className="text-sm text-muted-foreground">
-            {currentFonts.heading?.name || 'Degular Display'} (Headings) • {currentFonts.body?.name || 'Mrs Eaves XL Serif'} (Body)
-          </p>
         </div>
         <Link to={createPageUrl('FontManager')}>
           <Button variant="outline" size="sm">
@@ -53,7 +54,29 @@ export default function TypographyShowcase() {
         </Link>
       </div>
 
-      <Tabs defaultValue="headings" className="w-full">
+      <Tabs value={selectedFont} onValueChange={setSelectedFont} className="w-full">
+        <TabsList>
+          <TabsTrigger value="heading">
+            Heading Font: {currentFonts.heading?.name || 'Degular Display'}
+          </TabsTrigger>
+          <TabsTrigger value="body">
+            Body Font: {currentFonts.body?.name || 'Mrs Eaves XL Serif'}
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="heading" className="mt-6">
+          <FontDisplayTabs fontStyle={fontStyle} activeFont={activeFont} fontType="heading" />
+        </TabsContent>
+        <TabsContent value="body" className="mt-6">
+          <FontDisplayTabs fontStyle={fontStyle} activeFont={activeFont} fontType="body" />
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
+
+function FontDisplayTabs({ fontStyle, activeFont, fontType }) {
+  return (
+    <Tabs defaultValue="headings" className="w-full">
         <TabsList className="flex flex-wrap h-auto">
           <TabsTrigger value="headings">Headings</TabsTrigger>
           <TabsTrigger value="weights">Weights</TabsTrigger>
@@ -69,37 +92,37 @@ export default function TypographyShowcase() {
           <div className="space-y-4">
             <div className="flex items-baseline gap-4 border-b pb-3">
               <div className="w-24 text-xs text-muted-foreground">Page Title</div>
-              <h1 className="flex-1 !text-3xl font-display font-light">The quick brown fox jumps over the lazy dog</h1>
+              <h1 className="flex-1 !text-3xl font-light" style={fontStyle}>The quick brown fox jumps over the lazy dog</h1>
               <code className="text-xs text-muted-foreground whitespace-nowrap">text-3xl</code>
             </div>
             <div className="flex items-baseline gap-4 border-b pb-3">
               <div className="w-24 text-xs text-muted-foreground">H1</div>
-              <h1 className="flex-1 !text-2xl font-display font-light">The quick brown fox jumps over the lazy dog</h1>
+              <h1 className="flex-1 !text-2xl font-light" style={fontStyle}>The quick brown fox jumps over the lazy dog</h1>
               <code className="text-xs text-muted-foreground whitespace-nowrap">text-2xl</code>
             </div>
             <div className="flex items-baseline gap-4 border-b pb-3">
               <div className="w-24 text-xs text-muted-foreground">H2</div>
-              <h2 className="flex-1 !text-xl font-display font-light">The quick brown fox jumps over the lazy dog</h2>
+              <h2 className="flex-1 !text-xl font-light" style={fontStyle}>The quick brown fox jumps over the lazy dog</h2>
               <code className="text-xs text-muted-foreground whitespace-nowrap">text-xl</code>
             </div>
             <div className="flex items-baseline gap-4 border-b pb-3">
               <div className="w-24 text-xs text-muted-foreground">H3</div>
-              <h3 className="flex-1 !text-lg font-display font-normal">The quick brown fox jumps over the lazy dog</h3>
+              <h3 className="flex-1 !text-lg font-normal" style={fontStyle}>The quick brown fox jumps over the lazy dog</h3>
               <code className="text-xs text-muted-foreground whitespace-nowrap">text-lg</code>
             </div>
             <div className="flex items-baseline gap-4 border-b pb-3">
               <div className="w-24 text-xs text-muted-foreground">H4</div>
-              <h4 className="flex-1 !text-base font-display font-normal">The quick brown fox jumps over the lazy dog</h4>
+              <h4 className="flex-1 !text-base font-normal" style={fontStyle}>The quick brown fox jumps over the lazy dog</h4>
               <code className="text-xs text-muted-foreground whitespace-nowrap">text-base</code>
             </div>
             <div className="flex items-baseline gap-4 border-b pb-3">
               <div className="w-24 text-xs text-muted-foreground">H5</div>
-              <h5 className="flex-1 !text-sm font-display font-normal">The quick brown fox jumps over the lazy dog</h5>
+              <h5 className="flex-1 !text-sm font-normal" style={fontStyle}>The quick brown fox jumps over the lazy dog</h5>
               <code className="text-xs text-muted-foreground whitespace-nowrap">text-sm</code>
             </div>
             <div className="flex items-baseline gap-4">
               <div className="w-24 text-xs text-muted-foreground">H6</div>
-              <h6 className="flex-1 !text-xs font-display font-normal uppercase">THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG</h6>
+              <h6 className="flex-1 !text-xs font-normal uppercase" style={fontStyle}>THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG</h6>
               <code className="text-xs text-muted-foreground whitespace-nowrap">text-xs</code>
             </div>
           </div>
@@ -109,23 +132,23 @@ export default function TypographyShowcase() {
           <div className="space-y-4">
             <div className="flex items-center gap-4 border-b pb-3">
               <div className="w-32 text-xs text-muted-foreground">Light (300)</div>
-              <p className="font-light font-display flex-1 text-xl">The quick brown fox jumps over the lazy dog</p>
+              <p className="font-light flex-1 text-xl" style={fontStyle}>The quick brown fox jumps over the lazy dog</p>
             </div>
             <div className="flex items-center gap-4 border-b pb-3">
               <div className="w-32 text-xs text-muted-foreground">Normal (400)</div>
-              <p className="font-normal font-display flex-1 text-xl">The quick brown fox jumps over the lazy dog</p>
+              <p className="font-normal flex-1 text-xl" style={fontStyle}>The quick brown fox jumps over the lazy dog</p>
             </div>
             <div className="flex items-center gap-4 border-b pb-3">
               <div className="w-32 text-xs text-muted-foreground">Medium (500)</div>
-              <p className="font-medium font-display flex-1 text-xl">The quick brown fox jumps over the lazy dog</p>
+              <p className="font-medium flex-1 text-xl" style={fontStyle}>The quick brown fox jumps over the lazy dog</p>
             </div>
             <div className="flex items-center gap-4 border-b pb-3">
               <div className="w-32 text-xs text-muted-foreground">Semibold (600)</div>
-              <p className="font-semibold font-display flex-1 text-xl">The quick brown fox jumps over the lazy dog</p>
+              <p className="font-semibold flex-1 text-xl" style={fontStyle}>The quick brown fox jumps over the lazy dog</p>
             </div>
             <div className="flex items-center gap-4">
               <div className="w-32 text-xs text-muted-foreground">Bold (700)</div>
-              <p className="font-bold font-display flex-1 text-xl">The quick brown fox jumps over the lazy dog</p>
+              <p className="font-bold flex-1 text-xl" style={fontStyle}>The quick brown fox jumps over the lazy dog</p>
             </div>
           </div>
         </TabsContent>
@@ -148,7 +171,7 @@ export default function TypographyShowcase() {
                 <div className="w-24">
                   <code className="text-xs text-muted-foreground">{token}</code>
                 </div>
-                <p className={`flex-1 ${token}`}>
+                <p className={`flex-1 ${token}`} style={fontStyle}>
                   The quick brown fox jumps over the lazy dog
                 </p>
                 <div className="text-right">
@@ -165,31 +188,31 @@ export default function TypographyShowcase() {
             <div className="space-y-3">
               <div className="flex items-center gap-4">
                 <div className="w-32 text-xs text-muted-foreground">Large (text-lg)</div>
-                <p className="text-lg flex-1">
-                  The quick brown fox jumps over the lazy dog. This is body text in Mrs Eaves XL Serif, designed for excellent readability.
+                <p className="text-lg flex-1" style={fontStyle}>
+                  The quick brown fox jumps over the lazy dog. This is body text designed for excellent readability.
                 </p>
               </div>
             </div>
             <div className="space-y-3 pt-4 border-t">
               <div className="flex items-center gap-4">
                 <div className="w-32 text-xs text-muted-foreground">Base (text-base)</div>
-                <p className="flex-1">
-                  The quick brown fox jumps over the lazy dog. This is body text in Mrs Eaves XL Serif, designed for excellent readability.
+                <p className="flex-1" style={fontStyle}>
+                  The quick brown fox jumps over the lazy dog. This is body text designed for excellent readability.
                 </p>
               </div>
             </div>
             <div className="space-y-3 pt-4 border-t">
               <div className="flex items-center gap-4">
                 <div className="w-32 text-xs text-muted-foreground">Small (text-sm)</div>
-                <p className="text-sm flex-1">
-                  The quick brown fox jumps over the lazy dog. This is body text in Mrs Eaves XL Serif, designed for excellent readability.
+                <p className="text-sm flex-1" style={fontStyle}>
+                  The quick brown fox jumps over the lazy dog. This is body text designed for excellent readability.
                 </p>
               </div>
             </div>
             <div className="space-y-3 pt-4 border-t">
               <div className="flex items-center gap-4">
                 <div className="w-32 text-xs text-muted-foreground">Extra Small (text-xs)</div>
-                <p className="text-xs flex-1">
+                <p className="text-xs flex-1" style={fontStyle}>
                   The quick brown fox jumps over the lazy dog. Used for captions and fine print.
                 </p>
               </div>
@@ -203,82 +226,57 @@ export default function TypographyShowcase() {
             <div className="space-y-4">
               <div className="p-4 rounded-lg border bg-card">
                 <div className="text-xs text-muted-foreground mb-2">.text-display</div>
-                <p className="text-display">The quick brown fox jumps over the lazy dog</p>
+                <p className="text-display" style={fontStyle}>The quick brown fox jumps over the lazy dog</p>
               </div>
               <div className="p-4 rounded-lg border bg-card">
                 <div className="text-xs text-muted-foreground mb-2">.text-headline</div>
-                <p className="text-headline">The quick brown fox jumps over the lazy dog</p>
+                <p className="text-headline" style={fontStyle}>The quick brown fox jumps over the lazy dog</p>
               </div>
               <div className="p-4 rounded-lg border bg-card">
                 <div className="text-xs text-muted-foreground mb-2">.text-title</div>
-                <p className="text-title">The quick brown fox jumps over the lazy dog</p>
+                <p className="text-title" style={fontStyle}>The quick brown fox jumps over the lazy dog</p>
               </div>
               <div className="p-4 rounded-lg border bg-card">
                 <div className="text-xs text-muted-foreground mb-2">.text-subtitle</div>
-                <p className="text-subtitle">The quick brown fox jumps over the lazy dog</p>
+                <p className="text-subtitle" style={fontStyle}>The quick brown fox jumps over the lazy dog</p>
               </div>
               <div className="p-4 rounded-lg border bg-card">
                 <div className="text-xs text-muted-foreground mb-2">.text-body</div>
-                <p className="text-body">The quick brown fox jumps over the lazy dog. This is a longer paragraph to demonstrate how body text flows and wraps naturally with proper line height and spacing for optimal readability.</p>
+                <p className="text-body" style={fontStyle}>The quick brown fox jumps over the lazy dog. This is a longer paragraph to demonstrate how body text flows and wraps naturally with proper line height and spacing for optimal readability.</p>
               </div>
               <div className="p-4 rounded-lg border bg-card">
                 <div className="text-xs text-muted-foreground mb-2">.text-caption</div>
-                <p className="text-caption">The quick brown fox jumps over the lazy dog</p>
+                <p className="text-caption" style={fontStyle}>The quick brown fox jumps over the lazy dog</p>
               </div>
               <div className="p-4 rounded-lg border bg-card">
                 <div className="text-xs text-muted-foreground mb-2">.text-overline</div>
-                <p className="text-overline">The quick brown fox jumps over the lazy dog</p>
+                <p className="text-overline" style={fontStyle}>The quick brown fox jumps over the lazy dog</p>
               </div>
               <div className="p-4 rounded-lg border bg-card">
                 <div className="text-xs text-muted-foreground mb-2">.brand</div>
-                <p className="brand">Sturij</p>
+                <p className="brand" style={fontStyle}>Sturij</p>
               </div>
             </div>
           </div>
         </TabsContent>
 
         <TabsContent value="fonts" className="mt-6">
-          <div className="space-y-6">
-            <div>
-              <h4 className="text-sm font-medium mb-4">Heading Font Preview</h4>
-              <div className="p-6 rounded-lg border bg-card">
-                <div className="mb-4 flex items-center justify-between">
-                  <div>
-                    <div className="font-medium">{currentFonts.heading?.name || 'Degular Display'}</div>
-                    <code className="text-xs text-muted-foreground">{currentFonts.heading?.font_family || 'degular-display, sans-serif'}</code>
-                  </div>
-                  <div className="text-xs text-muted-foreground capitalize">{currentFonts.heading?.source || 'adobe'}</div>
-                </div>
-                <div className="space-y-3" style={{ fontFamily: 'var(--font-family-display)' }}>
-                  <p className="text-4xl font-light">The quick brown fox</p>
-                  <p className="text-2xl font-normal">The quick brown fox jumps</p>
-                  <p className="text-xl font-medium">The quick brown fox jumps over</p>
-                  <p className="text-lg font-semibold">The quick brown fox jumps over the lazy dog</p>
-                </div>
+          <div className="p-6 rounded-lg border bg-card">
+            <div className="mb-4 flex items-center justify-between">
+              <div>
+                <div className="font-medium">{activeFont?.name || 'Default Font'}</div>
+                <code className="text-xs text-muted-foreground">{activeFont?.font_family || 'system-ui'}</code>
               </div>
+              <div className="text-xs text-muted-foreground capitalize">{activeFont?.source || 'system'}</div>
             </div>
-            <div>
-              <h4 className="text-sm font-medium mb-4">Body Font Preview</h4>
-              <div className="p-6 rounded-lg border bg-card">
-                <div className="mb-4 flex items-center justify-between">
-                  <div>
-                    <div className="font-medium">{currentFonts.body?.name || 'Mrs Eaves XL Serif'}</div>
-                    <code className="text-xs text-muted-foreground">{currentFonts.body?.font_family || 'mrs-eaves-xl-serif-narrow, serif'}</code>
-                  </div>
-                  <div className="text-xs text-muted-foreground capitalize">{currentFonts.body?.source || 'adobe'}</div>
-                </div>
-                <div className="space-y-4" style={{ fontFamily: 'var(--font-family-body)' }}>
-                  <p className="text-lg">
-                    The quick brown fox jumps over the lazy dog. This font is designed for body text, providing excellent readability across various sizes.
-                  </p>
-                  <p className="text-base">
-                    Typography plays a crucial role in design. The right font choice enhances user experience and conveys the right tone and personality for your brand.
-                  </p>
-                  <p className="text-sm">
-                    Smaller sizes maintain clarity and legibility while preserving the character and elegance of the typeface across different contexts and use cases.
-                  </p>
-                </div>
-              </div>
+            <div className="space-y-3" style={fontStyle}>
+              <p className="text-4xl font-light">The quick brown fox</p>
+              <p className="text-2xl font-normal">The quick brown fox jumps</p>
+              <p className="text-xl font-medium">The quick brown fox jumps over</p>
+              <p className="text-lg font-semibold">The quick brown fox jumps over the lazy dog</p>
+              <p className="text-base">
+                Typography plays a crucial role in design. The right font choice enhances user experience and conveys the right tone and personality for your brand.
+              </p>
             </div>
           </div>
         </TabsContent>
