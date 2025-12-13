@@ -16,6 +16,8 @@ import { toast } from "sonner";
 import GenericNavEditor from "@/components/navigation/GenericNavEditor";
 import TenantSelector from "@/components/navigation/TenantSelector";
 import { useEditMode } from "@/components/page-builder/EditModeContext";
+import { useBreadcrumb } from "@/components/layout/AppContent";
+import { AppBreadcrumb } from "@/components/layout/AppBreadcrumb";
 
 // Slugs are now loaded from NavigationConfig.source_slugs - no hardcoded lists
 
@@ -28,6 +30,7 @@ export default function NavigationManager() {
   const [pageData, setPageData] = useState(null);
   const queryClient = useQueryClient();
   const { setCustomProperties } = useEditMode();
+  const breadcrumbContext = useBreadcrumb();
   
   const [selectedTenantId, setSelectedTenantId] = useState(
     tenantContext?.tenantId || "__global__"
@@ -329,6 +332,11 @@ export default function NavigationManager() {
         <>
           {/* Page Header */}
           <div className="bg-white [margin-bottom:var(--spacing-6)] px-6 py-4 rounded-xl">
+            {pageData?.show_breadcrumb && breadcrumbContext && (
+              <div className="mb-4">
+                <AppBreadcrumb organizedNavigation={breadcrumbContext.navItems} />
+              </div>
+            )}
             <h1 className={`text-3xl font-display text-[var(--color-text-primary)] ${pageData?.page_description ? '[margin-bottom:var(--spacing-2)]' : ''}`}>
               Navigation Manager
             </h1>
