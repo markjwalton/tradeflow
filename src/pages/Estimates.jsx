@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useValidatedForm } from "@/components/forms/useValidatedForm";
+import { ValidatedInput } from "@/components/forms/ValidatedInput";
+import { ValidatedTextarea } from "@/components/forms/ValidatedTextarea";
+import { ValidationSchemas } from "@/components/forms/FormValidation";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -34,6 +39,11 @@ const statusColors = {
   rejected: "bg-destructive-50 text-destructive",
 };
 
+const estimateSchema = z.object({
+  title: ValidationSchemas.required,
+  notes: ValidationSchemas.optionalString,
+});
+
 export default function Estimates() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
@@ -41,8 +51,15 @@ export default function Estimates() {
   const [filterStatus, setFilterStatus] = useState("all");
   const [showForm, setShowForm] = useState(false);
   const [editingEstimate, setEditingEstimate] = useState(null);
+  
+  const form = useValidatedForm(estimateSchema, {
+    defaultValues: {
+      title: "",
+      notes: "",
+    }
+  });
+  
   const [formData, setFormData] = useState({
-    title: "",
     project_id: "",
     customer_id: "",
     line_items: [{ description: "", quantity: 1, unit: "unit", unit_cost: 0, subtotal: 0 }],
@@ -51,7 +68,6 @@ export default function Estimates() {
     vat_amount: 0,
     total: 0,
     status: "draft",
-    notes: "",
   });
 
   const { data: estimates = [], isLoading, error, refetch } = useQuery({
@@ -75,6 +91,7 @@ export default function Estimates() {
       queryClient.invalidateQueries({ queryKey: ["estimates"] });
       setShowForm(false);
       resetForm();
+      form.reset();
       toast.success("Estimate created successfully");
     },
   });
@@ -86,6 +103,7 @@ export default function Estimates() {
       setShowForm(false);
       setEditingEstimate(null);
       resetForm();
+      form.reset();
       toast.success("Estimate updated successfully");
     },
   });
@@ -103,8 +121,8 @@ export default function Estimates() {
   useMutationError(deleteMutation, { customMessage: "Failed to delete estimate" });
 
   const resetForm = () => {
+    form.reset();
     setFormData({
-      title: "",
       project_id: "",
       customer_id: "",
       line_items: [{ description: "", quantity: 1, unit: "unit", unit_cost: 0, subtotal: 0 }],
@@ -113,14 +131,16 @@ export default function Estimates() {
       vat_amount: 0,
       total: 0,
       status: "draft",
-      notes: "",
     });
   };
 
   const handleEdit = (estimate) => {
     setEditingEstimate(estimate);
-    setFormData({
+    form.reset({
       title: estimate.title || "",
+      notes: estimate.notes || "",
+    });
+    setFormData({
       project_id: estimate.project_id || "",
       customer_id: estimate.customer_id || "",
       line_items: estimate.line_items?.length > 0 ? estimate.line_items : [{ description: "", quantity: 1, unit: "unit", unit_cost: 0, subtotal: 0 }],
@@ -129,15 +149,17 @@ export default function Estimates() {
       vat_amount: estimate.vat_amount || 0,
       total: estimate.total || 0,
       status: estimate.status || "draft",
-      notes: estimate.notes || "",
     });
     setShowForm(true);
   };
 
   const handleDuplicate = (estimate) => {
     setEditingEstimate(null);
-    setFormData({
+    form.reset({
       title: `${estimate.title} (Copy)`,
+      notes: estimate.notes || "",
+    });
+    setFormData({
       project_id: estimate.project_id || "",
       customer_id: estimate.customer_id || "",
       line_items: estimate.line_items?.length > 0 ? [...estimate.line_items] : [{ description: "", quantity: 1, unit: "unit", unit_cost: 0, subtotal: 0 }],
@@ -146,16 +168,16 @@ export default function Estimates() {
       vat_amount: estimate.vat_amount || 0,
       total: estimate.total || 0,
       status: "draft",
-      notes: estimate.notes || "",
     });
     setShowForm(true);
   };
 
-  const handleSubmit = () => {
+  const onSubmit = (validatedData) => {
+    const data = { ...validatedData, ...formData };
     if (editingEstimate) {
-      updateMutation.mutate({ id: editingEstimate.id, data: formData });
+      updateMutation.mutate({ id: editingEstimate.id, data });
     } else {
-      createMutation.mutate(formData);
+      createMutation.mutate(data);
     }
   };
 
@@ -282,11 +304,13 @@ export default function Estimates() {
           <DialogHeader>
             <DialogTitle>{editingEstimate ? "Edit Estimate" : "New Estimate"}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">Title *</label>
-              <Input value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
-            </div>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <ValidatedInput
+              label="Title"
+              required
+              error={form.getError("title")}
+              {...form.register("title")}
+            />
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-medium">Project</label>
@@ -342,15 +366,17 @@ export default function Estimates() {
                 </SelectContent>
               </Select>
             </div>
-            <div>
-              <label className="text-sm font-medium">Notes</label>
-              <Textarea value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} rows={3} />
-            </div>
-            <Button className="w-full" onClick={handleSubmit} disabled={!formData.title || createMutation.isPending || updateMutation.isPending}>
+            <ValidatedTextarea
+              label="Notes"
+              rows={3}
+              error={form.getError("notes")}
+              {...form.register("notes")}
+            />
+            <Button className="w-full" type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
               {(createMutation.isPending || updateMutation.isPending) && <ButtonLoader />}
               {editingEstimate ? "Update Estimate" : "Create Estimate"}
             </Button>
-          </div>
+          </form>
         </DialogContent>
       </Dialog>
     </div>
