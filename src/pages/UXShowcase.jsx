@@ -17,7 +17,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { toast } from 'sonner';
-import { Loader2, CheckCircle2, AlertCircle, Search, Eye, Code, Edit2, FileText, ExternalLink } from 'lucide-react';
+import { Loader2, CheckCircle2, AlertCircle, Search, Eye, Code, Edit2, FileText, ExternalLink, Check } from 'lucide-react';
 import { z } from 'zod';
 
 // Demo schema
@@ -36,17 +36,35 @@ export default function UXShowcase() {
   const [showStylesPanel, setShowStylesPanel] = useState(false);
   const [selectedComponent, setSelectedComponent] = useState(null);
   const [selectedElement, setSelectedElement] = useState(null);
-  const [componentLabels, setComponentLabels] = useState(() => {
-    const saved = localStorage.getItem('ux_showcase_labels');
-    return saved ? JSON.parse(saved) : {
-      loadingCard: 'Loading States Demo',
-      errorCard: 'Error Handling Demo',
-      formCard: 'Form Validation Demo',
-      mutationCard: 'Mutation Demo',
-      searchCard: 'Search & Debounce Demo',
-    };
+  const [componentLabels, setComponentLabels] = useState({
+    loadingCard: 'Loading States Demo',
+    errorCard: 'Error Handling Demo',
+    formCard: 'Form Validation Demo',
+    mutationCard: 'Mutation Demo',
+    searchCard: 'Search & Debounce Demo',
   });
+  const [elementLabels, setElementLabels] = useState({});
   const [originalLabels, setOriginalLabels] = useState(componentLabels);
+  const [originalElementLabels, setOriginalElementLabels] = useState({});
+  const [isSaving, setIsSaving] = useState(false);
+  const [showSaveCheck, setShowSaveCheck] = useState(false);
+
+  useEffect(() => {
+    const loadLabels = async () => {
+      try {
+        const user = await base44.auth.me();
+        if (user?.ux_showcase_labels) {
+          setComponentLabels(user.ux_showcase_labels.components || componentLabels);
+          setOriginalLabels(user.ux_showcase_labels.components || componentLabels);
+          setElementLabels(user.ux_showcase_labels.elements || {});
+          setOriginalElementLabels(user.ux_showcase_labels.elements || {});
+        }
+      } catch (e) {
+        // User not logged in
+      }
+    };
+    loadLabels();
+  }, []);
 
   const componentElements = {
     loadingCard: [
@@ -146,15 +164,44 @@ export default function UXShowcase() {
     setComponentLabels(prev => ({ ...prev, [id]: newLabel }));
   };
 
-  const handleSaveChanges = () => {
-    localStorage.setItem('ux_showcase_labels', JSON.stringify(componentLabels));
-    setOriginalLabels(componentLabels);
-    toast.success('Component labels saved');
+  const updateElementLabel = (id, newLabel) => {
+    setElementLabels(prev => ({ ...prev, [id]: newLabel }));
+  };
+
+  const handleSaveChanges = async () => {
+    setIsSaving(true);
+    try {
+      const user = await base44.auth.me();
+      await base44.auth.updateMe({
+        ux_showcase_labels: {
+          components: componentLabels,
+          elements: elementLabels,
+        }
+      });
+      setOriginalLabels(componentLabels);
+      setOriginalElementLabels(elementLabels);
+      setShowSaveCheck(true);
+      toast.success('Component labels saved');
+      setTimeout(() => setShowSaveCheck(false), 2000);
+    } catch (e) {
+      toast.error('Failed to save labels');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleCancelChanges = () => {
     setComponentLabels(originalLabels);
+    setElementLabels(originalElementLabels);
     toast.info('Changes discarded');
+  };
+
+  const getDisplayName = () => {
+    if (!selectedComponent) return '';
+    const componentName = componentLabels[selectedComponent];
+    if (!selectedElement) return componentName;
+    const elementName = elementLabels[selectedElement] || componentElements[selectedComponent]?.find(e => e.id === selectedElement)?.label;
+    return `${componentName} > ${elementName}`;
   };
 
   return (
@@ -177,7 +224,7 @@ export default function UXShowcase() {
             <SheetHeader>
               <SheetTitle>Component Styles Inspector</SheetTitle>
             </SheetHeader>
-            <div className="space-y-4 mt-6 flex-1 overflow-y-auto pb-20">
+            <div className="space-y-4 mt-6 flex-1 overflow-y-auto">
               <div className="space-y-2">
                 <Label>Select Component</Label>
                 <select
@@ -214,25 +261,36 @@ export default function UXShowcase() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Component Label</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        value={componentLabels[selectedComponent]}
-                        onChange={(e) => updateComponentLabel(selectedComponent, e.target.value)}
-                      />
-                      <Button size="icon" variant="ghost">
-                        <Edit2 className="h-4 w-4" />
-                      </Button>
+                    <Label>Full Component Name</Label>
+                    <div className="p-2 bg-muted rounded-md text-sm font-medium">
+                      {getDisplayName()}
                     </div>
                   </div>
+
+                  <div className="space-y-2">
+                    <Label>Component Label</Label>
+                    <Input
+                      value={componentLabels[selectedComponent]}
+                      onChange={(e) => updateComponentLabel(selectedComponent, e.target.value)}
+                      placeholder="Component name..."
+                    />
+                  </div>
+
+                  {selectedElement && (
+                    <div className="space-y-2">
+                      <Label>Element Label</Label>
+                      <Input
+                        value={elementLabels[selectedElement] || componentElements[selectedComponent]?.find(e => e.id === selectedElement)?.label || ''}
+                        onChange={(e) => updateElementLabel(selectedElement, e.target.value)}
+                        placeholder="Element name..."
+                      />
+                    </div>
+                  )}
 
                   <div className="space-y-3 pt-4 border-t">
                     <h3 className="font-medium flex items-center gap-2">
                       <Code className="h-4 w-4" />
                       Computed Styles
-                      {selectedElement && (
-                        <Badge variant="secondary" className="text-xs">{componentElements[selectedComponent]?.find(e => e.id === selectedElement)?.label}</Badge>
-                      )}
                     </h3>
                     <div className="bg-muted/50 rounded-lg p-3 space-y-2 max-h-96 overflow-y-auto">
                       {Object.entries(getComponentStyles(selectedComponent, selectedElement)).map(([key, value]) => (
@@ -256,25 +314,38 @@ export default function UXShowcase() {
                       Copy All Styles
                     </Button>
                   </div>
+                  {/* Save/Cancel Buttons */}
+                  <div className="pt-4 border-t flex gap-2 mt-auto">
+                    <Button 
+                      onClick={handleSaveChanges}
+                      className="flex-1 gap-2"
+                      disabled={isSaving}
+                    >
+                      {showSaveCheck ? (
+                        <>
+                          <Check className="h-4 w-4" />
+                          Saved
+                        </>
+                      ) : isSaving ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Saving...
+                        </>
+                      ) : (
+                        'Save Changes'
+                      )}
+                    </Button>
+                    <Button 
+                      onClick={handleCancelChanges}
+                      variant="outline"
+                      className="flex-1"
+                      disabled={isSaving}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
                 </>
               )}
-            </div>
-
-            {/* Save/Cancel Buttons */}
-            <div className="absolute bottom-0 left-0 right-0 p-4 bg-background border-t flex gap-2">
-              <Button 
-                onClick={handleSaveChanges}
-                className="flex-1"
-              >
-                Save Changes
-              </Button>
-              <Button 
-                onClick={handleCancelChanges}
-                variant="outline"
-                className="flex-1"
-              >
-                Cancel
-              </Button>
             </div>
           </SheetContent>
         </Sheet>
