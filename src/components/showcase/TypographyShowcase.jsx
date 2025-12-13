@@ -330,6 +330,5 @@ function FontDisplayTabs({ fontStyle, activeFont, fontType }) {
           </div>
         </TabsContent>
       </Tabs>
-    </div>
   );
 }
