@@ -6,6 +6,9 @@ import { ErrorRecovery } from "@/components/common/ErrorRecovery";
 import { useMutationError } from "@/components/common/MutationErrorToast";
 import { Pagination } from "@/components/ui/Pagination";
 import { useDebounce } from "@/components/common/useDebounce";
+import { useValidatedForm } from "@/components/forms/useValidatedForm";
+import { ValidatedInput } from "@/components/forms/ValidatedInput";
+import { projectSchema } from "@/components/forms/FormValidation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -54,16 +57,19 @@ export default function Projects() {
   const itemsPerPage = 12;
   const [showForm, setShowForm] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    customer_id: "",
-    budget: 0,
-    status: "draft",
-    priority: "medium",
-    project_type: "",
-    start_date: "",
-    end_date: "",
-    spend: 0,
+  
+  const form = useValidatedForm(projectSchema, {
+    defaultValues: {
+      name: "",
+      customerId: "",
+      budget: undefined,
+      status: "Planning",
+      projectType: "",
+      startDate: "",
+      estimatedEndDate: "",
+      location: "",
+      description: "",
+    }
   });
 
   const { data: projects = [], isLoading, error, refetch } = useQuery({
@@ -81,7 +87,7 @@ export default function Projects() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       setShowForm(false);
-      resetForm();
+      form.reset();
       toast.success("Project created successfully");
     },
   });
@@ -92,7 +98,7 @@ export default function Projects() {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       setShowForm(false);
       setEditingProject(null);
-      resetForm();
+      form.reset();
       toast.success("Project updated successfully");
     },
   });
@@ -109,41 +115,27 @@ export default function Projects() {
   useMutationError(updateMutation, { customMessage: "Failed to update project" });
   useMutationError(deleteMutation, { customMessage: "Failed to delete project" });
 
-  const resetForm = () => {
-    setFormData({
-      name: "",
-      customer_id: "",
-      budget: 0,
-      status: "draft",
-      priority: "medium",
-      project_type: "",
-      start_date: "",
-      end_date: "",
-      spend: 0,
-    });
-  };
-
   const handleEdit = (project) => {
     setEditingProject(project);
-    setFormData({
+    form.reset({
       name: project.name || "",
-      customer_id: project.customer_id || "",
-      budget: project.budget || 0,
-      status: project.status || "draft",
-      priority: project.priority || "medium",
-      project_type: project.project_type || "",
-      start_date: project.start_date || "",
-      end_date: project.end_date || "",
-      spend: project.spend || 0,
+      customerId: project.customerId || "",
+      budget: project.budget || undefined,
+      status: project.status || "Planning",
+      projectType: project.projectType || "",
+      startDate: project.startDate || "",
+      estimatedEndDate: project.estimatedEndDate || "",
+      location: project.location || "",
+      description: project.description || "",
     });
     setShowForm(true);
   };
 
-  const handleSubmit = () => {
+  const onSubmit = (data) => {
     if (editingProject) {
-      updateMutation.mutate({ id: editingProject.id, data: formData });
+      updateMutation.mutate({ id: editingProject.id, data });
     } else {
-      createMutation.mutate(formData);
+      createMutation.mutate(data);
     }
   };
 
@@ -178,7 +170,7 @@ export default function Projects() {
     <div className="p-3 sm:p-4 md:p-6 bg-background min-h-screen">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
         <h1 className="text-xl sm:text-2xl font-light font-display text-foreground">Projects</h1>
-        <Button onClick={() => { resetForm(); setEditingProject(null); setShowForm(true); }} className="w-full sm:w-auto">
+        <Button onClick={() => { form.reset(); setEditingProject(null); setShowForm(true); }} className="w-full sm:w-auto">
           <Plus className="h-4 w-4 mr-2" />
           <span className="sm:inline">New Project</span>
         </Button>
@@ -283,14 +275,22 @@ export default function Projects() {
           <DialogHeader>
             <DialogTitle>{editingProject ? "Edit Project" : "New Project"}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <ValidatedInput
+              label="Project Name"
+              required
+              error={form.getError("name")}
+              {...form.register("name")}
+            />
+            
             <div>
-              <label className="text-sm font-medium">Name</label>
-              <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+              <label className="text-sm font-medium">Description</label>
+              <Input {...form.register("description")} />
             </div>
+
             <div>
               <label className="text-sm font-medium">Customer</label>
-              <Select value={formData.customer_id} onValueChange={(v) => setFormData({ ...formData, customer_id: v })}>
+              <Select {...form.register("customerId")}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select customer..." />
                 </SelectTrigger>
@@ -301,61 +301,68 @@ export default function Projects() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium">Budget (£)</label>
-                <Input type="number" value={formData.budget} onChange={(e) => setFormData({ ...formData, budget: parseFloat(e.target.value) || 0 })} />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Spend (£)</label>
-                <Input type="number" value={formData.spend} onChange={(e) => setFormData({ ...formData, spend: parseFloat(e.target.value) || 0 })} />
-              </div>
+
+            <ValidatedInput
+              label="Budget (£)"
+              type="number"
+              error={form.getError("budget")}
+              {...form.register("budget")}
+            />
+
+            <div>
+              <label className="text-sm font-medium">Status</label>
+              <Select {...form.register("status")}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Planning">Planning</SelectItem>
+                  <SelectItem value="Active">Active</SelectItem>
+                  <SelectItem value="On Hold">On Hold</SelectItem>
+                  <SelectItem value="Completed">Completed</SelectItem>
+                  <SelectItem value="Archived">Archived</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium">Status</label>
-                <Select value={formData.status} onValueChange={(v) => setFormData({ ...formData, status: v })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="on_hold">On Hold</SelectItem>
-                    <SelectItem value="completed">Completed</SelectItem>
-                    <SelectItem value="cancelled">Cancelled</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <label className="text-sm font-medium">Priority</label>
-                <Select value={formData.priority} onValueChange={(v) => setFormData({ ...formData, priority: v })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="low">Low</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium">Start Date</label>
-                <Input type="date" value={formData.start_date} onChange={(e) => setFormData({ ...formData, start_date: e.target.value })} />
-              </div>
-              <div>
-                <label className="text-sm font-medium">End Date</label>
-                <Input type="date" value={formData.end_date} onChange={(e) => setFormData({ ...formData, end_date: e.target.value })} />
-              </div>
-            </div>
+
             <div>
               <label className="text-sm font-medium">Project Type</label>
-              <Input value={formData.project_type} onChange={(e) => setFormData({ ...formData, project_type: e.target.value })} placeholder="e.g., Kitchen, Bathroom, Extension" />
+              <Select {...form.register("projectType")}>
+                <SelectTrigger><SelectValue placeholder="Select type..." /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="New Build">New Build</SelectItem>
+                  <SelectItem value="Extension">Extension</SelectItem>
+                  <SelectItem value="Renovation">Renovation</SelectItem>
+                  <SelectItem value="Conservation">Conservation</SelectItem>
+                  <SelectItem value="Commercial">Commercial</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            <Button className="w-full" onClick={handleSubmit} disabled={createMutation.isPending || updateMutation.isPending}>
+
+            <div className="grid grid-cols-2 gap-4">
+              <ValidatedInput
+                label="Start Date"
+                type="date"
+                error={form.getError("startDate")}
+                {...form.register("startDate")}
+              />
+              <ValidatedInput
+                label="End Date"
+                type="date"
+                error={form.getError("estimatedEndDate")}
+                {...form.register("estimatedEndDate")}
+              />
+            </div>
+
+            <ValidatedInput
+              label="Location"
+              error={form.getError("location")}
+              {...form.register("location")}
+            />
+
+            <Button className="w-full" type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
               {(createMutation.isPending || updateMutation.isPending) && <ButtonLoader />}
               {editingProject ? "Update Project" : "Create Project"}
             </Button>
-          </div>
+          </form>
         </DialogContent>
       </Dialog>
     </div>
