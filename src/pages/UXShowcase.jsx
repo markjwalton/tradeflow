@@ -130,6 +130,31 @@ export default function UXShowcase() {
   };
 
   const fetchComponentStyles = () => {
+    // Ensure the correct demo is showing for loading elements
+    if (selectedElement && selectedComponent === 'loadingCard') {
+      const elementMap = {
+        'page-loader': 'page',
+        'card-grid-loader': 'cards',
+        'table-loader': 'table',
+        'list-loader': 'list',
+        'form-loader': 'form',
+        'stats-loader': 'stats',
+      };
+      const requiredDemo = elementMap[selectedElement];
+      if (requiredDemo && showLoadingDemo !== requiredDemo) {
+        setShowLoadingDemo(requiredDemo);
+        // Wait for DOM to update
+        setTimeout(() => {
+          performStyleFetch();
+        }, 100);
+        return;
+      }
+    }
+    
+    performStyleFetch();
+  };
+
+  const performStyleFetch = () => {
     const selector = selectedElement 
       ? `[data-element="${selectedElement}"]` 
       : `[data-component="${selectedComponent}"]`;
@@ -137,7 +162,8 @@ export default function UXShowcase() {
     
     if (!el) {
       setComputedStyles({});
-      toast.error('Element not found in DOM. Make sure it is visible on the page.');
+      const elementName = selectedElement || selectedComponent;
+      toast.error(`Element "${elementName}" not found. Switch to the correct tab first.`);
       return;
     }
     
@@ -169,12 +195,11 @@ export default function UXShowcase() {
     
     setComputedStyles(styles);
     setStylesFetchTime(new Date().toLocaleTimeString());
-    toast.success('Styles fetched successfully');
   };
 
   useEffect(() => {
     if (selectedComponent) {
-      fetchComponentStyles();
+      setTimeout(() => fetchComponentStyles(), 50);
     }
   }, [selectedComponent, selectedElement]);
 
