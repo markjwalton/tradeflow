@@ -10,6 +10,7 @@ import {
   SheetTitle,
   SheetFooter,
 } from "@/components/ui/sheet";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileCode, Loader2, Cog, Users } from "lucide-react";
 import { toast } from "sonner";
 
@@ -305,31 +306,7 @@ export default function NavigationManager() {
     enabled: activeTab === "tenant" && selectedTenantId !== "__global__",
   });
 
-  // Get site settings for button styling
-  const [siteSettings, setSiteSettings] = useState({});
-  
-  useEffect(() => {
-    base44.auth.me()
-      .then(user => setSiteSettings(user?.site_settings || {}))
-      .catch(() => {});
-  }, []);
 
-  // Tab styling - matches Onboarding Dashboard
-  const getTabClassName = (tab) => {
-    const isActive = activeTab === tab;
-    return `font-body text-sm px-5 py-3 transition-all ${
-      isActive 
-        ? "bg-white shadow-md text-midnight-900 rounded-lg" 
-        : "text-charcoal-600 hover:bg-green-50 hover:text-green-700 rounded-lg"
-    }`;
-  };
-
-  const getTabStyle = (tab) => {
-    const isActive = activeTab === tab;
-    return isActive 
-      ? { backgroundColor: 'var(--secondary-500)', color: 'white' } 
-      : {};
-  };
 
   return (
     <div className="max-w-4xl mx-auto min-h-screen -mt-6">
@@ -353,90 +330,89 @@ export default function NavigationManager() {
           </div>
 
           {/* Tab Navigation */}
-          <div className="flex gap-3 [margin-bottom:var(--spacing-4)] bg-background-200 rounded-lg p-1">
-              <button className={getTabClassName("admin")} style={getTabStyle("admin")} onClick={() => setActiveTab("admin")}>
-                <Cog className="h-4 w-4 mr-2 inline" />
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="[margin-top:var(--spacing-4)]">
+            <TabsList className="bg-background-200">
+              <TabsTrigger value="admin">
+                <Cog className="h-4 w-4 mr-2" />
                 Admin
-              </button>
-              <button className={getTabClassName("app")} style={getTabStyle("app")} onClick={() => setActiveTab("app")}>
-                <FileCode className="h-4 w-4 mr-2 inline" />
+              </TabsTrigger>
+              <TabsTrigger value="app">
+                <FileCode className="h-4 w-4 mr-2" />
                 App Pages
-              </button>
-              <button className={getTabClassName("tenant")} style={getTabStyle("tenant")} onClick={() => setActiveTab("tenant")}>
-                <Users className="h-4 w-4 mr-2 inline" />
+              </TabsTrigger>
+              <TabsTrigger value="tenant">
+                <Users className="h-4 w-4 mr-2" />
                 Tenant
-              </button>
-          </div>
+              </TabsTrigger>
+            </TabsList>
 
-          {/* Tab Content */}
-          <div className="[margin-top:var(--spacing-4)]">
-            {activeTab === "admin" && (
+            <TabsContent value="admin" className="[margin-top:var(--spacing-4)]">
               <GenericNavEditor
                 title=""
                 configType="admin_console"
                 syncUnallocatedPages={() => syncUnallocatedPages.mutate("admin_console")}
                 isSyncing={syncUnallocatedPages.isPending}
               />
-            )}
+            </TabsContent>
 
-            {activeTab === "app" && (
+            <TabsContent value="app" className="[margin-top:var(--spacing-4)]">
               <GenericNavEditor
                 title=""
                 configType="app_pages_source"
                 syncUnallocatedPages={() => syncUnallocatedPages.mutate("app_pages_source")}
                 isSyncing={syncUnallocatedPages.isPending}
               />
-            )}
+            </TabsContent>
 
-            {activeTab === "tenant" && (
-            <div className="[&>*+*]:mt-[var(--spacing-4)]">
-              <TenantSelector
-                tenants={tenants}
-                selectedTenantId={selectedTenantId}
-                onSelectTenant={setSelectedTenantId}
-                showGlobal={false}
-              />
-
-              {selectedTenantId === "__global__" ? (
-                <div className="font-body text-center [padding-block:var(--spacing-12)] text-[var(--color-muted-foreground)]">
-                  Select a tenant to manage their navigation
-                </div>
-              ) : (
-                <GenericNavEditor
-                  title={`Tenant Navigation: ${tenants.find(t => t.id === selectedTenantId)?.name || 'Unknown'}`}
-                  configType={`tenant_nav_${selectedTenantId}`}
-                  syncUnallocatedPages={() => syncUnallocatedPages.mutate(`tenant_nav_${selectedTenantId}`)}
-                  isSyncing={syncUnallocatedPages.isPending}
-                  showCopyButton={true}
-                  copyButtonLabel="Copy from App Pages Template"
-                  onCopyFromTemplate={async () => {
-                    try {
-                      const appConfigs = await base44.entities.NavigationConfig.filter({ config_type: "app_pages_source" });
-                      const appItems = appConfigs[0]?.items || [];
-                      if (appItems.length === 0) {
-                        toast.error("No App Pages template to copy from");
-                        return;
-                      }
-                      const tenantConfigs = await base44.entities.NavigationConfig.filter({ config_type: `tenant_nav_${selectedTenantId}` });
-                      if (tenantConfigs[0]) {
-                        await base44.entities.NavigationConfig.update(tenantConfigs[0].id, { items: appItems });
-                      } else {
-                        await base44.entities.NavigationConfig.create({
-                          config_type: `tenant_nav_${selectedTenantId}`,
-                          items: appItems
-                        });
-                      }
-                      queryClient.invalidateQueries({ queryKey: ["navConfig", `tenant_nav_${selectedTenantId}`] });
-                      toast.success("Copied from App Pages template");
-                    } catch (e) {
-                      toast.error("Failed to copy: " + e.message);
-                    }
-                  }}
+            <TabsContent value="tenant" className="[margin-top:var(--spacing-4)]">
+              <div className="[&>*+*]:mt-[var(--spacing-4)]">
+                <TenantSelector
+                  tenants={tenants}
+                  selectedTenantId={selectedTenantId}
+                  onSelectTenant={setSelectedTenantId}
+                  showGlobal={false}
                 />
-              )}
-            </div>
-            )}
-          </div>
+
+                {selectedTenantId === "__global__" ? (
+                  <div className="font-body text-center [padding-block:var(--spacing-12)] text-[var(--color-muted-foreground)]">
+                    Select a tenant to manage their navigation
+                  </div>
+                ) : (
+                  <GenericNavEditor
+                    title={`Tenant Navigation: ${tenants.find(t => t.id === selectedTenantId)?.name || 'Unknown'}`}
+                    configType={`tenant_nav_${selectedTenantId}`}
+                    syncUnallocatedPages={() => syncUnallocatedPages.mutate(`tenant_nav_${selectedTenantId}`)}
+                    isSyncing={syncUnallocatedPages.isPending}
+                    showCopyButton={true}
+                    copyButtonLabel="Copy from App Pages Template"
+                    onCopyFromTemplate={async () => {
+                      try {
+                        const appConfigs = await base44.entities.NavigationConfig.filter({ config_type: "app_pages_source" });
+                        const appItems = appConfigs[0]?.items || [];
+                        if (appItems.length === 0) {
+                          toast.error("No App Pages template to copy from");
+                          return;
+                        }
+                        const tenantConfigs = await base44.entities.NavigationConfig.filter({ config_type: `tenant_nav_${selectedTenantId}` });
+                        if (tenantConfigs[0]) {
+                          await base44.entities.NavigationConfig.update(tenantConfigs[0].id, { items: appItems });
+                        } else {
+                          await base44.entities.NavigationConfig.create({
+                            config_type: `tenant_nav_${selectedTenantId}`,
+                            items: appItems
+                          });
+                        }
+                        queryClient.invalidateQueries({ queryKey: ["navConfig", `tenant_nav_${selectedTenantId}`] });
+                        toast.success("Copied from App Pages template");
+                      } catch (e) {
+                        toast.error("Failed to copy: " + e.message);
+                      }
+                    }}
+                  />
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
         </>
       ) : (
         <TenantNavEditor 
