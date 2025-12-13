@@ -35,6 +35,7 @@ export default function UXShowcase() {
   const debouncedSearch = useDebounce(search, 500);
   const [showStylesPanel, setShowStylesPanel] = useState(false);
   const [selectedComponent, setSelectedComponent] = useState(null);
+  const [selectedElement, setSelectedElement] = useState(null);
   const [componentLabels, setComponentLabels] = useState({
     loadingCard: 'Loading States Demo',
     errorCard: 'Error Handling Demo',
@@ -42,6 +43,37 @@ export default function UXShowcase() {
     mutationCard: 'Mutation Demo',
     searchCard: 'Search & Debounce Demo',
   });
+
+  const componentElements = {
+    loadingCard: [
+      { id: 'page-loader', label: 'Page Loader' },
+      { id: 'card-grid-loader', label: 'Card Grid Loader' },
+      { id: 'table-loader', label: 'Table Loader' },
+      { id: 'list-loader', label: 'List Loader' },
+      { id: 'form-loader', label: 'Form Loader' },
+      { id: 'stats-loader', label: 'Stats Loader' },
+      { id: 'inline-loader', label: 'Inline Loader' },
+      { id: 'button-loader', label: 'Button Loader' },
+    ],
+    errorCard: [
+      { id: 'error-recovery', label: 'Error Recovery Component' },
+      { id: 'toast-buttons', label: 'Toast Notification Buttons' },
+    ],
+    formCard: [
+      { id: 'validated-input', label: 'Validated Input' },
+      { id: 'validated-textarea', label: 'Validated Textarea' },
+      { id: 'validated-select', label: 'Validated Select' },
+      { id: 'form-buttons', label: 'Form Buttons' },
+    ],
+    mutationCard: [
+      { id: 'mutation-button', label: 'Mutation Button' },
+      { id: 'success-alert', label: 'Success Alert' },
+    ],
+    searchCard: [
+      { id: 'search-input', label: 'Search Input' },
+      { id: 'search-results', label: 'Search Results' },
+    ],
+  };
 
   // Form validation demo
   const form = useValidatedForm(demoSchema);
@@ -72,12 +104,14 @@ export default function UXShowcase() {
     mockMutation.mutate(data);
   };
 
-  const getComponentStyles = (component) => {
-    if (!component) return {};
-    const element = document.querySelector(`[data-component="${component}"]`);
-    if (!element) return {};
+  const getComponentStyles = (component, element) => {
+    const selector = element 
+      ? `[data-element="${element}"]` 
+      : `[data-component="${component}"]`;
+    const el = document.querySelector(selector);
+    if (!el) return {};
     
-    const computed = window.getComputedStyle(element);
+    const computed = window.getComputedStyle(el);
     return {
       display: computed.display,
       flexDirection: computed.flexDirection,
@@ -96,8 +130,11 @@ export default function UXShowcase() {
       width: computed.width,
       height: computed.height,
       maxWidth: computed.maxWidth,
+      minHeight: computed.minHeight,
       alignItems: computed.alignItems,
       justifyContent: computed.justifyContent,
+      position: computed.position,
+      zIndex: computed.zIndex,
     };
   };
 
@@ -131,7 +168,10 @@ export default function UXShowcase() {
                 <select
                   className="w-full p-2 border rounded-md"
                   value={selectedComponent || ''}
-                  onChange={(e) => setSelectedComponent(e.target.value)}
+                  onChange={(e) => {
+                    setSelectedComponent(e.target.value);
+                    setSelectedElement(null);
+                  }}
                 >
                   <option value="">Choose a component...</option>
                   <option value="loadingCard">Loading States</option>
@@ -144,6 +184,20 @@ export default function UXShowcase() {
 
               {selectedComponent && (
                 <>
+                  <div className="space-y-2">
+                    <Label>Select Element</Label>
+                    <select
+                      className="w-full p-2 border rounded-md"
+                      value={selectedElement || ''}
+                      onChange={(e) => setSelectedElement(e.target.value)}
+                    >
+                      <option value="">Component Container</option>
+                      {componentElements[selectedComponent]?.map((el) => (
+                        <option key={el.id} value={el.id}>{el.label}</option>
+                      ))}
+                    </select>
+                  </div>
+
                   <div className="space-y-2">
                     <Label>Component Label</Label>
                     <div className="flex gap-2">
@@ -161,12 +215,15 @@ export default function UXShowcase() {
                     <h3 className="font-medium flex items-center gap-2">
                       <Code className="h-4 w-4" />
                       Computed Styles
+                      {selectedElement && (
+                        <Badge variant="secondary" className="text-xs">{componentElements[selectedComponent]?.find(e => e.id === selectedElement)?.label}</Badge>
+                      )}
                     </h3>
-                    <div className="bg-muted/50 rounded-lg p-3 space-y-2">
-                      {Object.entries(getComponentStyles(selectedComponent)).map(([key, value]) => (
-                        <div key={key} className="flex justify-between text-xs font-mono">
+                    <div className="bg-muted/50 rounded-lg p-3 space-y-2 max-h-96 overflow-y-auto">
+                      {Object.entries(getComponentStyles(selectedComponent, selectedElement)).map(([key, value]) => (
+                        <div key={key} className="flex justify-between text-xs font-mono gap-2">
                           <span className="text-muted-foreground">{key}:</span>
-                          <span className="font-medium">{value}</span>
+                          <span className="font-medium text-right break-all">{value}</span>
                         </div>
                       ))}
                     </div>
@@ -175,7 +232,7 @@ export default function UXShowcase() {
                       size="sm" 
                       className="w-full gap-2"
                       onClick={() => {
-                        const styles = getComponentStyles(selectedComponent);
+                        const styles = getComponentStyles(selectedComponent, selectedElement);
                         navigator.clipboard.writeText(JSON.stringify(styles, null, 2));
                         toast.success('Styles copied to clipboard');
                       }}
@@ -225,19 +282,19 @@ export default function UXShowcase() {
               </div>
 
               <div className="border rounded-lg p-4 min-h-[200px]">
-                {showLoadingDemo === 'page' && <PageLoader message="Loading page data..." />}
-                {showLoadingDemo === 'cards' && <CardGridLoader count={3} columns={3} />}
-                {showLoadingDemo === 'table' && <TableLoader rows={4} columns={4} />}
-                {showLoadingDemo === 'list' && <ListLoader rows={4} />}
-                {showLoadingDemo === 'form' && <FormLoader fields={4} />}
-                {showLoadingDemo === 'stats' && <StatsLoader count={4} />}
+                {showLoadingDemo === 'page' && <div data-element="page-loader"><PageLoader message="Loading page data..." /></div>}
+                {showLoadingDemo === 'cards' && <div data-element="card-grid-loader"><CardGridLoader count={3} columns={3} /></div>}
+                {showLoadingDemo === 'table' && <div data-element="table-loader"><TableLoader rows={4} columns={4} /></div>}
+                {showLoadingDemo === 'list' && <div data-element="list-loader"><ListLoader rows={4} /></div>}
+                {showLoadingDemo === 'form' && <div data-element="form-loader"><FormLoader fields={4} /></div>}
+                {showLoadingDemo === 'stats' && <div data-element="stats-loader"><StatsLoader count={4} /></div>}
               </div>
 
               <div className="space-y-2">
                 <h4 className="font-medium">Inline & Button Loaders</h4>
                 <div className="flex gap-4 items-center">
-                  <InlineLoader message="Processing..." />
-                  <Button disabled>
+                  <div data-element="inline-loader"><InlineLoader message="Processing..." /></div>
+                  <Button disabled data-element="button-loader">
                     <ButtonLoader />
                     Loading...
                   </Button>
@@ -265,7 +322,7 @@ export default function UXShowcase() {
               </Button>
 
               {showErrorDemo && (
-                <div className="border rounded-lg">
+                <div className="border rounded-lg" data-element="error-recovery">
                   <ErrorRecovery
                     error={new Error('This is a demo error message')}
                     onRetry={() => {
@@ -279,7 +336,7 @@ export default function UXShowcase() {
 
               <div className="space-y-2">
                 <h4 className="font-medium">Toast Notifications</h4>
-                <div className="flex gap-2">
+                <div className="flex gap-2" data-element="toast-buttons">
                   <Button variant="outline" onClick={() => toast.success('Success message')}>
                     <CheckCircle2 className="h-4 w-4 mr-2" />
                     Success
@@ -314,51 +371,61 @@ export default function UXShowcase() {
             </CardHeader>
             <CardContent>
               <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4">
-                <ValidatedInput
-                  label="Name"
-                  required
-                  error={form.getError('name')}
-                  helperText="Enter your full name"
-                  {...form.register('name')}
-                />
+                <div data-element="validated-input">
+                  <ValidatedInput
+                    label="Name"
+                    required
+                    error={form.getError('name')}
+                    helperText="Enter your full name"
+                    {...form.register('name')}
+                  />
+                </div>
 
-                <ValidatedInput
-                  label="Email"
-                  type="email"
-                  required
-                  error={form.getError('email')}
-                  helperText="We'll never share your email"
-                  {...form.register('email')}
-                />
+                <div data-element="validated-input">
+                  <ValidatedInput
+                    label="Email"
+                    type="email"
+                    required
+                    error={form.getError('email')}
+                    helperText="We'll never share your email"
+                    {...form.register('email')}
+                  />
+                </div>
 
-                <ValidatedInput
-                  label="Phone"
-                  error={form.getError('phone')}
-                  helperText="UK format: 07XXX XXXXXX"
-                  {...form.register('phone')}
-                />
+                <div data-element="validated-input">
+                  <ValidatedInput
+                    label="Phone"
+                    error={form.getError('phone')}
+                    helperText="UK format: 07XXX XXXXXX"
+                    {...form.register('phone')}
+                  />
+                </div>
 
-                <ValidatedTextarea
-                  label="Message"
-                  required
-                  error={form.getError('message')}
-                  maxLength={200}
-                  showCharCount
-                  {...form.register('message')}
-                />
+                <div data-element="validated-textarea">
+                  <ValidatedTextarea
+                    label="Message"
+                    required
+                    error={form.getError('message')}
+                    maxLength={200}
+                    showCharCount
+                    {...form.register('message')}
+                  />
+                </div>
 
-                <ValidatedSelect
-                  label="Category"
-                  error={form.getError('category')}
-                  options={[
-                    { value: 'general', label: 'General Inquiry' },
-                    { value: 'support', label: 'Support Request' },
-                    { value: 'feedback', label: 'Feedback' },
-                  ]}
-                  {...form.register('category')}
-                />
+                <div data-element="validated-select">
+                  <ValidatedSelect
+                    label="Category"
+                    error={form.getError('category')}
+                    options={[
+                      { value: 'general', label: 'General Inquiry' },
+                      { value: 'support', label: 'Support Request' },
+                      { value: 'feedback', label: 'Feedback' },
+                    ]}
+                    {...form.register('category')}
+                  />
+                </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2" data-element="form-buttons">
                   <Button type="submit" disabled={mockMutation.isPending}>
                     {mockMutation.isPending && <ButtonLoader />}
                     Submit Form
@@ -392,6 +459,7 @@ export default function UXShowcase() {
                 <Button 
                   onClick={() => mockMutation.mutate({ test: 'data' })}
                   disabled={mockMutation.isPending}
+                  data-element="mutation-button"
                 >
                   {mockMutation.isPending && <ButtonLoader />}
                   Try Random Mutation
@@ -399,7 +467,7 @@ export default function UXShowcase() {
               </div>
 
               {mockMutation.isSuccess && (
-                <div className="p-4 bg-success-50 border border-success rounded-lg">
+                <div className="p-4 bg-success-50 border border-success rounded-lg" data-element="success-alert">
                   <p className="text-sm text-success">✓ Mutation succeeded!</p>
                 </div>
               )}
@@ -420,7 +488,7 @@ export default function UXShowcase() {
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="relative">
+              <div className="relative" data-element="search-input">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Type to search..."
@@ -437,7 +505,7 @@ export default function UXShowcase() {
                 </div>
 
                 {search && (
-                  <div className="p-4 border rounded-lg">
+                  <div className="p-4 border rounded-lg" data-element="search-results">
                     {mockQuery.isLoading && <InlineLoader message="Searching..." />}
                     {mockQuery.data && (
                       <div className="space-y-2">
