@@ -956,6 +956,12 @@
 }
 
 @layer utilities {
+  /* Tabs Hover States */
+  [data-radix-collection-item][data-state="inactive"]:hover {
+    background-color: var(--tabs-trigger-hover-bg) !important;
+    color: var(--tabs-trigger-hover-color) !important;
+  }
+
   /* Brand Typography */
   .brand {
     font-family: "degular-display", sans-serif !important;
