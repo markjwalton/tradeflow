@@ -13,8 +13,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { toast } from 'sonner';
-import { Loader2, CheckCircle2, AlertCircle, Search } from 'lucide-react';
+import { Loader2, CheckCircle2, AlertCircle, Search, Eye, Code, Edit2, FileText, ExternalLink } from 'lucide-react';
 import { z } from 'zod';
 
 // Demo schema
@@ -30,6 +33,15 @@ export default function UXShowcase() {
   const [showErrorDemo, setShowErrorDemo] = useState(false);
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
+  const [showStylesPanel, setShowStylesPanel] = useState(false);
+  const [selectedComponent, setSelectedComponent] = useState(null);
+  const [componentLabels, setComponentLabels] = useState({
+    loadingCard: 'Loading States Demo',
+    errorCard: 'Error Handling Demo',
+    formCard: 'Form Validation Demo',
+    mutationCard: 'Mutation Demo',
+    searchCard: 'Search & Debounce Demo',
+  });
 
   // Form validation demo
   const form = useValidatedForm(demoSchema);
@@ -60,13 +72,123 @@ export default function UXShowcase() {
     mockMutation.mutate(data);
   };
 
+  const getComponentStyles = (component) => {
+    if (!component) return {};
+    const element = document.querySelector(`[data-component="${component}"]`);
+    if (!element) return {};
+    
+    const computed = window.getComputedStyle(element);
+    return {
+      display: computed.display,
+      flexDirection: computed.flexDirection,
+      gap: computed.gap,
+      padding: computed.padding,
+      margin: computed.margin,
+      backgroundColor: computed.backgroundColor,
+      borderRadius: computed.borderRadius,
+      border: computed.border,
+      boxShadow: computed.boxShadow,
+      color: computed.color,
+      fontSize: computed.fontSize,
+      fontWeight: computed.fontWeight,
+      fontFamily: computed.fontFamily,
+      lineHeight: computed.lineHeight,
+      width: computed.width,
+      height: computed.height,
+      maxWidth: computed.maxWidth,
+      alignItems: computed.alignItems,
+      justifyContent: computed.justifyContent,
+    };
+  };
+
+  const updateComponentLabel = (id, newLabel) => {
+    setComponentLabels(prev => ({ ...prev, [id]: newLabel }));
+  };
+
   return (
     <div className="p-6 space-y-6">
-      <div>
-        <h1 className="text-3xl font-light font-display mb-2">UX Enhancement Showcase</h1>
-        <p className="text-muted-foreground">
-          Demonstration of all UX systems: loading states, error handling, form validation, and more.
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-3xl font-light font-display mb-2">UX Enhancement Showcase</h1>
+          <p className="text-muted-foreground">
+            Demonstration of all UX systems: loading states, error handling, form validation, and more.
+          </p>
+        </div>
+        <Sheet open={showStylesPanel} onOpenChange={setShowStylesPanel}>
+          <SheetTrigger asChild>
+            <Button variant="outline" className="gap-2">
+              <Eye className="h-4 w-4" />
+              View Component Styles
+            </Button>
+          </SheetTrigger>
+          <SheetContent className="overflow-y-auto">
+            <SheetHeader>
+              <SheetTitle>Component Styles Inspector</SheetTitle>
+            </SheetHeader>
+            <div className="space-y-4 mt-6">
+              <div className="space-y-2">
+                <Label>Select Component</Label>
+                <select
+                  className="w-full p-2 border rounded-md"
+                  value={selectedComponent || ''}
+                  onChange={(e) => setSelectedComponent(e.target.value)}
+                >
+                  <option value="">Choose a component...</option>
+                  <option value="loadingCard">Loading States</option>
+                  <option value="errorCard">Error Handling</option>
+                  <option value="formCard">Form Validation</option>
+                  <option value="mutationCard">Mutations</option>
+                  <option value="searchCard">Search & Debounce</option>
+                </select>
+              </div>
+
+              {selectedComponent && (
+                <>
+                  <div className="space-y-2">
+                    <Label>Component Label</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        value={componentLabels[selectedComponent]}
+                        onChange={(e) => updateComponentLabel(selectedComponent, e.target.value)}
+                      />
+                      <Button size="icon" variant="ghost">
+                        <Edit2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 pt-4 border-t">
+                    <h3 className="font-medium flex items-center gap-2">
+                      <Code className="h-4 w-4" />
+                      Computed Styles
+                    </h3>
+                    <div className="bg-muted/50 rounded-lg p-3 space-y-2">
+                      {Object.entries(getComponentStyles(selectedComponent)).map(([key, value]) => (
+                        <div key={key} className="flex justify-between text-xs font-mono">
+                          <span className="text-muted-foreground">{key}:</span>
+                          <span className="font-medium">{value}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full gap-2"
+                      onClick={() => {
+                        const styles = getComponentStyles(selectedComponent);
+                        navigator.clipboard.writeText(JSON.stringify(styles, null, 2));
+                        toast.success('Styles copied to clipboard');
+                      }}
+                    >
+                      <Code className="h-3 w-3" />
+                      Copy All Styles
+                    </Button>
+                  </div>
+                </>
+              )}
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
 
       <Tabs defaultValue="loading" className="w-full">
@@ -80,10 +202,15 @@ export default function UXShowcase() {
 
         {/* Loading States */}
         <TabsContent value="loading" className="space-y-4">
-          <Card>
+          <Card data-component="loadingCard">
             <CardHeader>
-              <CardTitle>Loading State Variants</CardTitle>
-              <CardDescription>Different loading indicators for various use cases</CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Loading State Variants</CardTitle>
+                  <CardDescription>Different loading indicators for various use cases</CardDescription>
+                </div>
+                <Badge variant="outline">{componentLabels.loadingCard}</Badge>
+              </div>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
@@ -122,10 +249,15 @@ export default function UXShowcase() {
 
         {/* Error Handling */}
         <TabsContent value="errors" className="space-y-4">
-          <Card>
+          <Card data-component="errorCard">
             <CardHeader>
-              <CardTitle>Error Recovery System</CardTitle>
-              <CardDescription>User-friendly error handling with retry functionality</CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Error Recovery System</CardTitle>
+                  <CardDescription>User-friendly error handling with retry functionality</CardDescription>
+                </div>
+                <Badge variant="outline">{componentLabels.errorCard}</Badge>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <Button onClick={() => setShowErrorDemo(!showErrorDemo)}>
@@ -170,10 +302,15 @@ export default function UXShowcase() {
 
         {/* Form Validation */}
         <TabsContent value="forms" className="space-y-4">
-          <Card>
+          <Card data-component="formCard">
             <CardHeader>
-              <CardTitle>Form Validation with Zod</CardTitle>
-              <CardDescription>Real-time validation with user-friendly error messages</CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Form Validation with Zod</CardTitle>
+                  <CardDescription>Real-time validation with user-friendly error messages</CardDescription>
+                </div>
+                <Badge variant="outline">{componentLabels.formCard}</Badge>
+              </div>
             </CardHeader>
             <CardContent>
               <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4">
@@ -237,10 +374,15 @@ export default function UXShowcase() {
 
         {/* Mutations */}
         <TabsContent value="mutations" className="space-y-4">
-          <Card>
+          <Card data-component="mutationCard">
             <CardHeader>
-              <CardTitle>Mutation Error Handling</CardTitle>
-              <CardDescription>Automatic toast notifications for mutation errors</CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Mutation Error Handling</CardTitle>
+                  <CardDescription>Automatic toast notifications for mutation errors</CardDescription>
+                </div>
+                <Badge variant="outline">{componentLabels.mutationCard}</Badge>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -267,10 +409,15 @@ export default function UXShowcase() {
 
         {/* Search & Debounce */}
         <TabsContent value="search" className="space-y-4">
-          <Card>
+          <Card data-component="searchCard">
             <CardHeader>
-              <CardTitle>Search with Debouncing</CardTitle>
-              <CardDescription>Optimized search with 500ms debounce delay</CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Search with Debouncing</CardTitle>
+                  <CardDescription>Optimized search with 500ms debounce delay</CardDescription>
+                </div>
+                <Badge variant="outline">{componentLabels.searchCard}</Badge>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="relative">
@@ -318,34 +465,78 @@ export default function UXShowcase() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="p-4 border rounded-lg">
-              <h4 className="font-medium mb-2">UX Patterns Guide</h4>
-              <p className="text-sm text-muted-foreground mb-2">
+            <a 
+              href="https://github.com/base44/docs/blob/main/components/common/UX_PATTERNS_GUIDE.md" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="p-4 border rounded-lg hover:border-primary transition-colors group"
+            >
+              <div className="flex items-start justify-between mb-2">
+                <h4 className="font-medium group-hover:text-primary transition-colors">UX Patterns Guide</h4>
+                <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+              </div>
+              <p className="text-sm text-muted-foreground mb-3">
                 Complete reference for all UX patterns and best practices.
               </p>
-              <code className="text-xs">components/common/UX_PATTERNS_GUIDE.md</code>
-            </div>
-            <div className="p-4 border rounded-lg">
-              <h4 className="font-medium mb-2">Quick Start Guide</h4>
-              <p className="text-sm text-muted-foreground mb-2">
+              <div className="flex items-center gap-2">
+                <FileText className="h-3 w-3 text-muted-foreground" />
+                <code className="text-xs text-muted-foreground">UX_PATTERNS_GUIDE.md</code>
+              </div>
+            </a>
+            <a 
+              href="https://github.com/base44/docs/blob/main/components/common/QUICK_START.md" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="p-4 border rounded-lg hover:border-primary transition-colors group"
+            >
+              <div className="flex items-start justify-between mb-2">
+                <h4 className="font-medium group-hover:text-primary transition-colors">Quick Start Guide</h4>
+                <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+              </div>
+              <p className="text-sm text-muted-foreground mb-3">
                 Get started in 5 minutes with all UX systems.
               </p>
-              <code className="text-xs">components/common/QUICK_START.md</code>
-            </div>
-            <div className="p-4 border rounded-lg">
-              <h4 className="font-medium mb-2">Integration Guide</h4>
-              <p className="text-sm text-muted-foreground mb-2">
+              <div className="flex items-center gap-2">
+                <FileText className="h-3 w-3 text-muted-foreground" />
+                <code className="text-xs text-muted-foreground">QUICK_START.md</code>
+              </div>
+            </a>
+            <a 
+              href="https://github.com/base44/docs/blob/main/components/common/UX_INTEGRATION_GUIDE.md" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="p-4 border rounded-lg hover:border-primary transition-colors group"
+            >
+              <div className="flex items-start justify-between mb-2">
+                <h4 className="font-medium group-hover:text-primary transition-colors">Integration Guide</h4>
+                <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+              </div>
+              <p className="text-sm text-muted-foreground mb-3">
                 Complete guide to integrating all systems.
               </p>
-              <code className="text-xs">components/common/UX_INTEGRATION_GUIDE.md</code>
-            </div>
-            <div className="p-4 border rounded-lg">
-              <h4 className="font-medium mb-2">Implementation Checklist</h4>
-              <p className="text-sm text-muted-foreground mb-2">
+              <div className="flex items-center gap-2">
+                <FileText className="h-3 w-3 text-muted-foreground" />
+                <code className="text-xs text-muted-foreground">UX_INTEGRATION_GUIDE.md</code>
+              </div>
+            </a>
+            <a 
+              href="https://github.com/base44/docs/blob/main/components/common/IMPLEMENTATION_CHECKLIST.md" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="p-4 border rounded-lg hover:border-primary transition-colors group"
+            >
+              <div className="flex items-start justify-between mb-2">
+                <h4 className="font-medium group-hover:text-primary transition-colors">Implementation Checklist</h4>
+                <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+              </div>
+              <p className="text-sm text-muted-foreground mb-3">
                 Ensure nothing is missed when building features.
               </p>
-              <code className="text-xs">components/common/IMPLEMENTATION_CHECKLIST.md</code>
-            </div>
+              <div className="flex items-center gap-2">
+                <FileText className="h-3 w-3 text-muted-foreground" />
+                <code className="text-xs text-muted-foreground">IMPLEMENTATION_CHECKLIST.md</code>
+              </div>
+            </a>
           </div>
         </CardContent>
       </Card>
