@@ -6,6 +6,10 @@ import { ErrorRecovery } from "@/components/common/ErrorRecovery";
 import { useMutationError } from "@/components/common/MutationErrorToast";
 import { Pagination } from "@/components/ui/Pagination";
 import { useDebounce } from "@/components/common/useDebounce";
+import { useValidatedForm } from "@/components/forms/useValidatedForm";
+import { ValidatedInput } from "@/components/forms/ValidatedInput";
+import { ValidatedTextarea } from "@/components/forms/ValidatedTextarea";
+import { taskSchema } from "@/components/forms/FormValidation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -52,17 +56,19 @@ export default function Tasks() {
   const itemsPerPage = 15;
   const [showForm, setShowForm] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
-  const [formData, setFormData] = useState({
-    project_id: "",
-    title: "",
-    description: "",
-    assigned_to: "",
-    status: "todo",
-    priority: "medium",
-    due_date: "",
-    estimated_hours: 0,
-    actual_hours: 0,
-    start_date: "",
+  
+  const form = useValidatedForm(taskSchema, {
+    defaultValues: {
+      projectId: "",
+      name: "",
+      description: "",
+      assignedTo: "",
+      status: "To Do",
+      priority: "Medium",
+      dueDate: "",
+      estimatedHours: undefined,
+      startDate: "",
+    }
   });
 
   const { data: tasks = [], isLoading, error, refetch } = useQuery({
@@ -85,7 +91,7 @@ export default function Tasks() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       setShowForm(false);
-      resetForm();
+      form.reset();
       toast.success("Task created successfully");
     },
   });
@@ -96,7 +102,7 @@ export default function Tasks() {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       setShowForm(false);
       setEditingTask(null);
-      resetForm();
+      form.reset();
       toast.success("Task updated successfully");
     },
   });
@@ -113,43 +119,27 @@ export default function Tasks() {
   useMutationError(updateMutation, { customMessage: "Failed to update task" });
   useMutationError(deleteMutation, { customMessage: "Failed to delete task" });
 
-  const resetForm = () => {
-    setFormData({
-      project_id: "",
-      title: "",
-      description: "",
-      assigned_to: "",
-      status: "todo",
-      priority: "medium",
-      due_date: "",
-      estimated_hours: 0,
-      actual_hours: 0,
-      start_date: "",
-    });
-  };
-
   const handleEdit = (task) => {
     setEditingTask(task);
-    setFormData({
-      project_id: task.project_id || "",
-      title: task.title || "",
+    form.reset({
+      projectId: task.projectId || "",
+      name: task.name || "",
       description: task.description || "",
-      assigned_to: task.assigned_to || "",
-      status: task.status || "todo",
-      priority: task.priority || "medium",
-      due_date: task.due_date || "",
-      estimated_hours: task.estimated_hours || 0,
-      actual_hours: task.actual_hours || 0,
-      start_date: task.start_date || "",
+      assignedTo: task.assignedTo || "",
+      status: task.status || "To Do",
+      priority: task.priority || "Medium",
+      dueDate: task.dueDate || "",
+      estimatedHours: task.estimatedHours || undefined,
+      startDate: task.startDate || "",
     });
     setShowForm(true);
   };
 
-  const handleSubmit = () => {
+  const onSubmit = (data) => {
     if (editingTask) {
-      updateMutation.mutate({ id: editingTask.id, data: formData });
+      updateMutation.mutate({ id: editingTask.id, data });
     } else {
-      createMutation.mutate(formData);
+      createMutation.mutate(data);
     }
   };
 
@@ -189,7 +179,7 @@ export default function Tasks() {
     <div className="p-3 sm:p-4 md:p-6 bg-background min-h-screen">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
         <h1 className="text-xl sm:text-2xl font-light font-display text-midnight-900">Tasks</h1>
-        <Button onClick={() => { resetForm(); setEditingTask(null); setShowForm(true); }} className="w-full sm:w-auto">
+        <Button onClick={() => { form.reset(); setEditingTask(null); setShowForm(true); }} className="w-full sm:w-auto">
           <Plus className="h-4 w-4 mr-2" />
           New Task
         </Button>
@@ -287,19 +277,25 @@ export default function Tasks() {
           <DialogHeader>
             <DialogTitle>{editingTask ? "Edit Task" : "New Task"}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">Title</label>
-              <Input value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Description</label>
-              <Textarea value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} rows={3} />
-            </div>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <ValidatedInput
+              label="Task Name"
+              required
+              error={form.getError("name")}
+              {...form.register("name")}
+            />
+            
+            <ValidatedTextarea
+              label="Description"
+              rows={3}
+              error={form.getError("description")}
+              {...form.register("description")}
+            />
+
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium">Project</label>
-                <Select value={formData.project_id} onValueChange={(v) => setFormData({ ...formData, project_id: v })}>
+                <label className="text-sm font-medium">Project <span className="text-destructive">*</span></label>
+                <Select {...form.register("projectId")}>
                   <SelectTrigger><SelectValue placeholder="Select project..." /></SelectTrigger>
                   <SelectContent>
                     {projects.map((p) => (
@@ -307,10 +303,13 @@ export default function Tasks() {
                     ))}
                   </SelectContent>
                 </Select>
+                {form.getError("projectId") && (
+                  <p className="text-sm text-destructive mt-1">{form.getError("projectId")}</p>
+                )}
               </div>
               <div>
                 <label className="text-sm font-medium">Assigned To</label>
-                <Select value={formData.assigned_to} onValueChange={(v) => setFormData({ ...formData, assigned_to: v })}>
+                <Select {...form.register("assignedTo")}>
                   <SelectTrigger><SelectValue placeholder="Select member..." /></SelectTrigger>
                   <SelectContent>
                     {teamMembers.map((m) => (
@@ -320,56 +319,62 @@ export default function Tasks() {
                 </Select>
               </div>
             </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-medium">Status</label>
-                <Select value={formData.status} onValueChange={(v) => setFormData({ ...formData, status: v })}>
+                <Select {...form.register("status")}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="todo">To Do</SelectItem>
-                    <SelectItem value="in_progress">In Progress</SelectItem>
-                    <SelectItem value="review">Review</SelectItem>
-                    <SelectItem value="completed">Completed</SelectItem>
+                    <SelectItem value="To Do">To Do</SelectItem>
+                    <SelectItem value="In Progress">In Progress</SelectItem>
+                    <SelectItem value="Blocked">Blocked</SelectItem>
+                    <SelectItem value="Completed">Completed</SelectItem>
+                    <SelectItem value="Snagging">Snagging</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
                 <label className="text-sm font-medium">Priority</label>
-                <Select value={formData.priority} onValueChange={(v) => setFormData({ ...formData, priority: v })}>
+                <Select {...form.register("priority")}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="low">Low</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="Low">Low</SelectItem>
+                    <SelectItem value="Medium">Medium</SelectItem>
+                    <SelectItem value="High">High</SelectItem>
+                    <SelectItem value="Critical">Critical</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
+
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium">Start Date</label>
-                <Input type="date" value={formData.start_date} onChange={(e) => setFormData({ ...formData, start_date: e.target.value })} />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Due Date</label>
-                <Input type="date" value={formData.due_date} onChange={(e) => setFormData({ ...formData, due_date: e.target.value })} />
-              </div>
+              <ValidatedInput
+                label="Start Date"
+                type="date"
+                error={form.getError("startDate")}
+                {...form.register("startDate")}
+              />
+              <ValidatedInput
+                label="Due Date"
+                type="date"
+                error={form.getError("dueDate")}
+                {...form.register("dueDate")}
+              />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium">Estimated Hours</label>
-                <Input type="number" value={formData.estimated_hours} onChange={(e) => setFormData({ ...formData, estimated_hours: parseFloat(e.target.value) || 0 })} />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Actual Hours</label>
-                <Input type="number" value={formData.actual_hours} onChange={(e) => setFormData({ ...formData, actual_hours: parseFloat(e.target.value) || 0 })} />
-              </div>
-            </div>
-            <Button className="w-full" onClick={handleSubmit} disabled={createMutation.isPending || updateMutation.isPending}>
+
+            <ValidatedInput
+              label="Estimated Hours"
+              type="number"
+              error={form.getError("estimatedHours")}
+              {...form.register("estimatedHours")}
+            />
+
+            <Button className="w-full" type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
               {(createMutation.isPending || updateMutation.isPending) && <ButtonLoader />}
               {editingTask ? "Update Task" : "Create Task"}
             </Button>
-          </div>
+          </form>
         </DialogContent>
       </Dialog>
     </div>
