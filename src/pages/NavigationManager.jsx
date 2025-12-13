@@ -52,16 +52,17 @@ export default function NavigationManager() {
   const isGlobalAdmin = currentUser?.is_global_admin === true;
   const isTenantAdminOnly = tenantContext?.isTenantAdmin && !isGlobalAdmin;
   
-  const [activeTab, setActiveTab] = useState(() => {
-    const saved = localStorage.getItem("navManager_settings");
-    const settings = saved ? JSON.parse(saved) : {};
-    return settings.defaultTab || "admin";
-  });
+  const [activeTab, setActiveTab] = useState("admin");
+  const [pageSettings, setPageSettings] = useState({ defaultTab: "admin", defaultCollapsed: false });
   
-  const [pageSettings, setPageSettings] = useState(() => {
-    const saved = localStorage.getItem("navManager_settings");
-    return saved ? JSON.parse(saved) : { defaultTab: "admin", defaultCollapsed: false };
-  });
+  // Load settings from user profile
+  useEffect(() => {
+    if (currentUser?.ui_preferences?.navManager_settings) {
+      const settings = currentUser.ui_preferences.navManager_settings;
+      setPageSettings(settings);
+      setActiveTab(settings.defaultTab || "admin");
+    }
+  }, [currentUser]);
 
   const handleSaveSettings = async (key, value) => {
     const newSettings = { ...pageSettings, [key]: value };
