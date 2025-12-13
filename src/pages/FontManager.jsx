@@ -1,379 +1,297 @@
-import React, { useState, lazy, Suspense, memo, useCallback } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Trash2, Star, Plus, Search, Loader2 } from "lucide-react";
-import { toast } from "sonner";
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
+import { Plus, Trash2, ExternalLink, Check } from 'lucide-react';
+import { toast } from 'sonner';
 
-const Card = lazy(() => import("@/components/ui/card").then(m => ({ default: m.Card })));
-const CardContent = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardContent })));
-const CardHeader = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardHeader })));
-const CardTitle = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardTitle })));
-const Badge = lazy(() => import("@/components/ui/badge").then(m => ({ default: m.Badge })));
-const Dialog = lazy(() => import("@/components/ui/dialog").then(m => ({ default: m.Dialog })));
-const DialogContent = lazy(() => import("@/components/ui/dialog").then(m => ({ default: m.DialogContent })));
-const DialogHeader = lazy(() => import("@/components/ui/dialog").then(m => ({ default: m.DialogHeader })));
-const DialogTitle = lazy(() => import("@/components/ui/dialog").then(m => ({ default: m.DialogTitle })));
-const DialogTrigger = lazy(() => import("@/components/ui/dialog").then(m => ({ default: m.DialogTrigger })));
-const Select = lazy(() => import("@/components/ui/select").then(m => ({ default: m.Select })));
-const SelectContent = lazy(() => import("@/components/ui/select").then(m => ({ default: m.SelectContent })));
-const SelectItem = lazy(() => import("@/components/ui/select").then(m => ({ default: m.SelectItem })));
-const SelectTrigger = lazy(() => import("@/components/ui/select").then(m => ({ default: m.SelectTrigger })));
-const SelectValue = lazy(() => import("@/components/ui/select").then(m => ({ default: m.SelectValue })));
-
-const FontManager = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [addDialogOpen, setAddDialogOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedSource, setSelectedSource] = useState("all");
-  const [newFont, setNewFont] = useState({
-    name: "",
-    font_family: "",
-    source: "google",
-    category: "sans-serif",
-    google_font_url: "",
-    adobe_font_id: "",
-    variants: []
-  });
+export default function FontManager() {
   const queryClient = useQueryClient();
-  
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingFont, setEditingFont] = useState(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    font_family: '',
+    source: 'google',
+    url: '',
+    category: 'display',
+    weights: [400],
+    preview_text: 'The quick brown fox jumps over the lazy dog'
+  });
+
   const { data: fonts = [], isLoading } = useQuery({
-    queryKey: ["fonts"],
-    queryFn: async () => {
-      const results = await base44.entities.FontLibrary.filter({});
-      return results;
+    queryKey: ['fonts'],
+    queryFn: () => base44.entities.FontFamily.list()
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (data) => base44.entities.FontFamily.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['fonts']);
+      setDialogOpen(false);
+      resetForm();
+      toast.success('Font added successfully');
+    }
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.FontFamily.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['fonts']);
+      setDialogOpen(false);
+      resetForm();
+      toast.success('Font updated successfully');
     }
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.FontLibrary.delete(id),
+    mutationFn: (id) => base44.entities.FontFamily.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries(["fonts"]);
-      toast.success("Font deleted");
+      queryClient.invalidateQueries(['fonts']);
+      toast.success('Font deleted successfully');
     }
   });
 
-  const toggleFavoriteMutation = useMutation({
-    mutationFn: ({ id, isFavorite }) => 
-      base44.entities.FontLibrary.update(id, { is_favorite: !isFavorite }),
-    onSuccess: () => queryClient.invalidateQueries(["fonts"])
-  });
+  const resetForm = () => {
+    setFormData({
+      name: '',
+      font_family: '',
+      source: 'google',
+      url: '',
+      category: 'display',
+      weights: [400],
+      preview_text: 'The quick brown fox jumps over the lazy dog'
+    });
+    setEditingFont(null);
+  };
 
-  const saveMutation = useMutation({
-    mutationFn: (data) => base44.entities.FontLibrary.create(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["fonts"]);
-      setAddDialogOpen(false);
-      setNewFont({
-        name: "",
-        font_family: "",
-        source: "google",
-        category: "sans-serif",
-        google_font_url: "",
-        adobe_font_id: "",
-        variants: []
-      });
-      toast.success("Font added to library");
+  const handleEdit = (font) => {
+    setEditingFont(font);
+    setFormData({
+      name: font.name,
+      font_family: font.font_family,
+      source: font.source,
+      url: font.url || '',
+      category: font.category,
+      weights: font.weights || [400],
+      preview_text: font.preview_text || 'The quick brown fox jumps over the lazy dog'
+    });
+    setDialogOpen(true);
+  };
+
+  const handleSubmit = () => {
+    if (editingFont) {
+      updateMutation.mutate({ id: editingFont.id, data: formData });
+    } else {
+      createMutation.mutate(formData);
     }
-  });
+  };
 
-  const setThemeFontsMutation = useMutation({
-    mutationFn: async ({ headingFontId, bodyFontId }) => {
+  const handleActivate = async (font) => {
+    try {
       const user = await base44.auth.me();
-      const headingFont = fonts.find(f => f.id === headingFontId);
-      const bodyFont = fonts.find(f => f.id === bodyFontId);
-      
       await base44.auth.updateMe({
         theme_fonts: {
-          heading: {
-            id: headingFontId,
-            name: headingFont?.name,
-            font_family: headingFont?.font_family,
-            source: headingFont?.source,
-            url: headingFont?.google_font_url || headingFont?.adobe_font_id
-          },
-          body: {
-            id: bodyFontId,
-            name: bodyFont?.name,
-            font_family: bodyFont?.font_family,
-            source: bodyFont?.source,
-            url: bodyFont?.google_font_url || bodyFont?.adobe_font_id
+          ...(user.theme_fonts || {}),
+          [font.category]: {
+            name: font.name,
+            font_family: font.font_family,
+            source: font.source,
+            url: font.url
           }
         }
       });
-    },
-    onSuccess: () => {
-      toast.success("Theme fonts updated");
+      toast.success(`${font.name} activated for ${font.category} text`);
       window.location.reload();
+    } catch (e) {
+      toast.error('Failed to activate font');
     }
-  });
-
-  const handleSave = () => {
-    if (!newFont.name || !newFont.font_family) {
-      toast.error("Name and font family are required");
-      return;
-    }
-    saveMutation.mutate({
-      ...newFont,
-      tenant_id: "__global__"
-    });
   };
 
-  const filteredFonts = React.useMemo(() => 
-    fonts.filter(f => {
-      const matchesSearch = f.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        f.font_family.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = selectedCategory === "all" || f.category === selectedCategory;
-      const matchesSource = selectedSource === "all" || f.source === selectedSource;
-      return matchesSearch && matchesCategory && matchesSource;
-    }),
-    [fonts, searchQuery, selectedCategory, selectedSource]
-  );
-
-  const [headingFont, setHeadingFont] = useState("");
-  const [bodyFont, setBodyFont] = useState("");
-
-  React.useEffect(() => {
-    const loadThemeFonts = async () => {
-      try {
-        const user = await base44.auth.me();
-        if (user?.theme_fonts) {
-          setHeadingFont(user.theme_fonts.heading?.id || "");
-          setBodyFont(user.theme_fonts.body?.id || "");
-        }
-      } catch (e) {}
-    };
-    loadThemeFonts();
-  }, []);
-
-  if (isLoading) {
-    return <div className="text-center py-8">Loading fonts...</div>;
-  }
-
   return (
-    <Suspense fallback={<div className="flex justify-center items-center min-h-screen"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
-      <div className="p-6 max-w-6xl mx-auto space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="container mx-auto py-8">
+      <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-display">Font Manager</h1>
-          <p className="text-muted-foreground mt-1">Manage fonts for your design system</p>
+          <h1 className="text-3xl font-light font-display mb-2">Font Library</h1>
+          <p className="text-muted-foreground">Manage your typography font families</p>
         </div>
-        <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
+        <Dialog open={dialogOpen} onOpenChange={(open) => {
+          setDialogOpen(open);
+          if (!open) resetForm();
+        }}>
           <DialogTrigger asChild>
-            <Button><Plus className="h-4 w-4 mr-2" />Add Font</Button>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Font
+            </Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Add Font to Library</DialogTitle>
+              <DialogTitle>{editingFont ? 'Edit Font' : 'Add New Font'}</DialogTitle>
+              <DialogDescription>
+                Add a new font family to your typography library
+              </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
-              <div className="space-y-2">
-                <Label>Font Name</Label>
-                <Input
-                  value={newFont.name}
-                  onChange={(e) => setNewFont({ ...newFont, name: e.target.value })}
-                  placeholder="e.g., Roboto, Inter, Playfair Display"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Font Family (CSS)</Label>
-                <Input
-                  value={newFont.font_family}
-                  onChange={(e) => setNewFont({ ...newFont, font_family: e.target.value })}
-                  placeholder="e.g., 'Roboto', sans-serif"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Font Name</Label>
+                  <Input
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    placeholder="e.g., Roboto"
+                  />
+                </div>
+                <div>
+                  <Label>CSS Font Family</Label>
+                  <Input
+                    value={formData.font_family}
+                    onChange={(e) => setFormData({ ...formData, font_family: e.target.value })}
+                    placeholder="e.g., 'Roboto', sans-serif"
+                  />
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
+                <div>
                   <Label>Source</Label>
-                  <Select value={newFont.source} onValueChange={(val) => setNewFont({ ...newFont, source: val })}>
+                  <Select value={formData.source} onValueChange={(val) => setFormData({ ...formData, source: val })}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="google">Google Fonts</SelectItem>
                       <SelectItem value="adobe">Adobe Fonts</SelectItem>
-                      <SelectItem value="web-standard">Web Standard</SelectItem>
+                      <SelectItem value="system">System Font</SelectItem>
                       <SelectItem value="custom">Custom</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
+                <div>
                   <Label>Category</Label>
-                  <Select value={newFont.category} onValueChange={(val) => setNewFont({ ...newFont, category: val })}>
+                  <Select value={formData.category} onValueChange={(val) => setFormData({ ...formData, category: val })}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="serif">Serif</SelectItem>
-                      <SelectItem value="sans-serif">Sans Serif</SelectItem>
-                      <SelectItem value="monospace">Monospace</SelectItem>
-                      <SelectItem value="display">Display</SelectItem>
-                      <SelectItem value="handwriting">Handwriting</SelectItem>
+                      <SelectItem value="display">Display / Headings</SelectItem>
+                      <SelectItem value="body">Body Text</SelectItem>
+                      <SelectItem value="mono">Monospace / Code</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
-              {newFont.source === "google" && (
-                <div className="space-y-2">
-                  <Label>Google Font URL</Label>
-                  <Input
-                    value={newFont.google_font_url}
-                    onChange={(e) => setNewFont({ ...newFont, google_font_url: e.target.value })}
-                    placeholder="https://fonts.googleapis.com/css2?family=..."
-                  />
-                </div>
-              )}
-              {newFont.source === "adobe" && (
-                <div className="space-y-2">
-                  <Label>Adobe Font ID</Label>
-                  <Input
-                    value={newFont.adobe_font_id}
-                    onChange={(e) => setNewFont({ ...newFont, adobe_font_id: e.target.value })}
-                    placeholder="abc1234"
-                  />
-                </div>
-              )}
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setAddDialogOpen(false)}>Cancel</Button>
-                <Button onClick={handleSave}>Save Font</Button>
+              <div>
+                <Label>Font URL (optional)</Label>
+                <Input
+                  value={formData.url}
+                  onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+                  placeholder="https://fonts.googleapis.com/css2?family=..."
+                />
+              </div>
+              <div>
+                <Label>Preview Text</Label>
+                <Input
+                  value={formData.preview_text}
+                  onChange={(e) => setFormData({ ...formData, preview_text: e.target.value })}
+                />
+              </div>
+              <div className="p-4 border rounded-lg bg-muted">
+                <p className="text-xs text-muted-foreground mb-2">Preview:</p>
+                <p style={{ fontFamily: formData.font_family }} className="text-xl">
+                  {formData.preview_text}
+                </p>
               </div>
             </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
+              <Button onClick={handleSubmit}>
+                {editingFont ? 'Update' : 'Add'} Font
+              </Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Theme Fonts</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Heading Font</Label>
-              <Select value={headingFont} onValueChange={setHeadingFont}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select heading font" />
-                </SelectTrigger>
-                <SelectContent>
-                  {fonts.map(f => (
-                    <SelectItem key={f.id} value={f.id}>{f.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label>Body Font</Label>
-              <Select value={bodyFont} onValueChange={setBodyFont}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select body font" />
-                </SelectTrigger>
-                <SelectContent>
-                  {fonts.map(f => (
-                    <SelectItem key={f.id} value={f.id}>{f.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <Button 
-            onClick={() => setThemeFontsMutation.mutate({ headingFontId: headingFont, bodyFontId: bodyFont })}
-            disabled={!headingFont || !bodyFont || setThemeFontsMutation.isPending}
-            className="w-full"
-          >
-            Apply Theme Fonts
-          </Button>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardContent className="pt-6 space-y-4">
-          <div className="flex gap-2">
-            <Search className="h-4 w-4 text-muted-foreground mt-3" />
-            <Input
-              placeholder="Search fonts..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <div className="flex gap-2">
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-40">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="serif">Serif</SelectItem>
-                <SelectItem value="sans-serif">Sans Serif</SelectItem>
-                <SelectItem value="monospace">Monospace</SelectItem>
-                <SelectItem value="display">Display</SelectItem>
-                <SelectItem value="handwriting">Handwriting</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={selectedSource} onValueChange={setSelectedSource}>
-              <SelectTrigger className="w-40">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Sources</SelectItem>
-                <SelectItem value="google">Google</SelectItem>
-                <SelectItem value="adobe">Adobe</SelectItem>
-                <SelectItem value="web-standard">Web Standard</SelectItem>
-                <SelectItem value="custom">Custom</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className="grid gap-4">
-        {filteredFonts.map((font) => (
-          <Card key={font.id}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0">
-              <div>
-                <CardTitle className="text-lg">{font.name}</CardTitle>
-                <p className="text-sm text-muted-foreground">{font.font_family}</p>
-                <div className="flex gap-1 mt-2">
-                  <Badge variant="outline">{font.category}</Badge>
-                  <Badge variant="secondary">{font.source}</Badge>
+      {isLoading ? (
+        <div className="text-center py-12">Loading fonts...</div>
+      ) : fonts.length === 0 ? (
+        <Card>
+          <CardContent className="py-12 text-center">
+            <p className="text-muted-foreground mb-4">No fonts added yet</p>
+            <Button onClick={() => setDialogOpen(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Your First Font
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {fonts.map((font) => (
+            <Card key={font.id}>
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <CardTitle className="text-base">{font.name}</CardTitle>
+                    <CardDescription className="capitalize">{font.category}</CardDescription>
+                  </div>
+                  <div className="flex gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleActivate(font)}
+                      title="Activate this font"
+                    >
+                      <Check className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleEdit(font)}
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        if (confirm('Delete this font?')) {
+                          deleteMutation.mutate(font.id);
+                        }
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
-              </div>
-              <div className="flex gap-1">
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => toggleFavoriteMutation.mutate({ 
-                    id: font.id, 
-                    isFavorite: font.is_favorite 
-                  })}
-                >
-                  <Star className={`h-4 w-4 ${font.is_favorite ? "fill-yellow-400 text-yellow-400" : ""}`} />
-                </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => deleteMutation.mutate(font.id)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div 
-                className="text-2xl p-4 bg-muted/30 rounded-lg"
-                style={{ fontFamily: font.font_family }}
-              >
-                {font.preview_text || "The quick brown fox jumps over the lazy dog"}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-      </div>
-    </Suspense>
+              </CardHeader>
+              <CardContent>
+                <code className="text-xs text-muted-foreground block mb-3">{font.font_family}</code>
+                <div className="p-3 rounded bg-muted">
+                  <p style={{ fontFamily: font.font_family }} className="text-lg">
+                    {font.preview_text}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 mt-3 text-xs text-muted-foreground">
+                  <span className="capitalize">{font.source}</span>
+                  {font.url && (
+                    <>
+                      <span>•</span>
+                      <a href={font.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                        View Source
+                      </a>
+                    </>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
   );
-};
-
-export default memo(FontManager);
+}
