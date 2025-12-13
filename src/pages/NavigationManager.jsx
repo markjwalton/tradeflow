@@ -332,13 +332,13 @@ export default function NavigationManager() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto min-h-screen">
+    <div className="max-w-4xl mx-auto min-h-screen -mt-6">
       {isGlobalAdmin ? (
         <>
           {/* Page Header */}
-          <div className="bg-white [margin-bottom:var(--spacing-6)] px-6 py-4 rounded-xl">
+          <div className="bg-white border [margin-bottom:var(--spacing-6)] px-6 py-4 rounded-xl">
             {breadcrumbContext?.navItems && (
-              <div className="mb-4 pb-4 border-b border-border">
+              <div className={pageData?.page_description ? 'mb-4' : 'mb-3'}>
                 <AppBreadcrumb organizedNavigation={breadcrumbContext.navItems} />
               </div>
             )}
