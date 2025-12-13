@@ -39,7 +39,12 @@ export default function NavigationManager() {
   useEffect(() => {
     base44.auth.me().then(setCurrentUser).catch(() => {});
     base44.entities.UIPage.filter({ slug: "NavigationManager" })
-      .then(pages => pages.length > 0 && setPageData(pages[0]))
+      .then(pages => {
+        if (pages.length > 0) {
+          setPageData(pages[0]);
+          console.log('Page data loaded:', pages[0]);
+        }
+      })
       .catch(() => {});
   }, []);
   
@@ -332,8 +337,8 @@ export default function NavigationManager() {
         <>
           {/* Page Header */}
           <div className="bg-white [margin-bottom:var(--spacing-6)] px-6 py-4 rounded-xl">
-            {pageData?.show_breadcrumb && breadcrumbContext && (
-              <div className="mb-4">
+            {breadcrumbContext?.navItems && (
+              <div className="mb-4 pb-4 border-b border-border">
                 <AppBreadcrumb organizedNavigation={breadcrumbContext.navItems} />
               </div>
             )}
