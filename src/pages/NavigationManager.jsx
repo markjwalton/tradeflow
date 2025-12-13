@@ -339,10 +339,8 @@ export default function NavigationManager() {
             )}
           </div>
 
-          {/* Background Container for Tabs and Content */}
-          <div className="bg-[var(--color-background)] rounded-xl -mx-6 px-6 py-6 min-h-screen">
-            {/* Tab Navigation */}
-            <div className="flex gap-3 [margin-bottom:var(--spacing-4)] bg-background-200 rounded-lg p-1">
+          {/* Tab Navigation */}
+          <div className="flex gap-3 [margin-bottom:var(--spacing-4)] bg-background-200 rounded-lg p-1">
               <button className={getTabClassName("admin")} style={getTabStyle("admin")} onClick={() => setActiveTab("admin")}>
                 <Cog className="h-4 w-4 mr-2 inline" />
                 Admin
@@ -355,10 +353,10 @@ export default function NavigationManager() {
                 <Users className="h-4 w-4 mr-2 inline" />
                 Tenant
               </button>
-            </div>
+          </div>
 
-            {/* Tab Content */}
-            <div className="[margin-top:var(--spacing-4)]">
+          {/* Tab Content */}
+          <div className="[margin-top:var(--spacing-4)]">
             {activeTab === "admin" && (
               <GenericNavEditor
                 title=""
@@ -425,7 +423,6 @@ export default function NavigationManager() {
               )}
             </div>
             )}
-            </div>
           </div>
         </>
       ) : (
