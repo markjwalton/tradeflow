@@ -35,7 +35,8 @@ import {
   Check,
 } from "lucide-react";
 import { toast } from "sonner";
-import ReactFlow, {
+import {
+  ReactFlow,
   Background,
   Controls,
   MiniMap,
@@ -43,8 +44,8 @@ import ReactFlow, {
   useEdgesState,
   addEdge,
   Panel,
-} from "reactflow";
-import "reactflow/dist/style.css";
+} from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
 
 import SchemaNode from "@/components/schema-editor/SchemaNode";
 import PropertyNode from "@/components/schema-editor/PropertyNode";
