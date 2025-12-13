@@ -16,7 +16,7 @@ export default function TabsShowcase() {
       </div>
 
       {/* Basic Tabs Example */}
-      <div className="space-y-3">
+      <div className="space-y-3" data-element="Tabs Examples">
         <h4 className="text-sm font-medium">Basic Tabs</h4>
         <Tabs defaultValue="overview" className="w-full">
           <TabsList>
@@ -61,7 +61,7 @@ export default function TabsShowcase() {
       </div>
 
       {/* Tabs with Icons */}
-      <div className="space-y-3">
+      <div className="space-y-3" data-element="Tabs with Icons">
         <h4 className="text-sm font-medium">Tabs with Icons</h4>
         <Tabs defaultValue="account" onValueChange={setSelectedTab}>
           <TabsList>
@@ -109,7 +109,7 @@ export default function TabsShowcase() {
       </div>
 
       {/* Full Width Grid Tabs */}
-      <div className="space-y-3">
+      <div className="space-y-3" data-element="Full Width Grid Tabs">
         <h4 className="text-sm font-medium">Full Width Grid Tabs</h4>
         <Tabs defaultValue="tab1" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
@@ -155,7 +155,7 @@ export default function TabsShowcase() {
       </div>
 
       {/* Background Independence Examples */}
-      <div className="space-y-3">
+      <div className="space-y-3" data-element="Background Independence">
         <h4 className="text-sm font-medium">Background Independence</h4>
         <p className="text-xs text-muted-foreground">
           Tabs work on any background color thanks to the white 50% transparent background
