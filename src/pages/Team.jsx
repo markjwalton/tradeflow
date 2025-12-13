@@ -6,6 +6,9 @@ import { ErrorRecovery } from "@/components/common/ErrorRecovery";
 import { useMutationError } from "@/components/common/MutationErrorToast";
 import { Pagination } from "@/components/ui/Pagination";
 import { useDebounce } from "@/components/common/useDebounce";
+import { useValidatedForm } from "@/components/forms/useValidatedForm";
+import { ValidatedInput } from "@/components/forms/ValidatedInput";
+import { teamMemberSchema } from "@/components/forms/FormValidation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -42,17 +45,17 @@ export default function Team() {
   const itemsPerPage = 12;
   const [showForm, setShowForm] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    role: "",
-    skills: [],
-    availability: "available",
-    annual_holiday_days: 25,
-    holidays_used: 0,
+  
+  const form = useValidatedForm(teamMemberSchema, {
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      role: "",
+      skills: [],
+      availability: "available",
+    }
   });
-  const [skillInput, setSkillInput] = useState("");
 
   const { data: teamMembers = [], isLoading, error, refetch } = useQuery({
     queryKey: ["teamMembers"],
@@ -64,7 +67,7 @@ export default function Team() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["teamMembers"] });
       setShowForm(false);
-      resetForm();
+      form.reset();
       toast.success("Team member added successfully");
     },
   });
@@ -75,7 +78,7 @@ export default function Team() {
       queryClient.invalidateQueries({ queryKey: ["teamMembers"] });
       setShowForm(false);
       setEditingMember(null);
-      resetForm();
+      form.reset();
       toast.success("Team member updated successfully");
     },
   });
@@ -92,52 +95,25 @@ export default function Team() {
   useMutationError(updateMutation, { customMessage: "Failed to update team member" });
   useMutationError(deleteMutation, { customMessage: "Failed to remove team member" });
 
-  const resetForm = () => {
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      role: "",
-      skills: [],
-      availability: "available",
-      annual_holiday_days: 25,
-      holidays_used: 0,
-    });
-    setSkillInput("");
-  };
-
   const handleEdit = (member) => {
     setEditingMember(member);
-    setFormData({
+    form.reset({
       name: member.name || "",
       email: member.email || "",
       phone: member.phone || "",
       role: member.role || "",
       skills: member.skills || [],
       availability: member.availability || "available",
-      annual_holiday_days: member.annual_holiday_days || 25,
-      holidays_used: member.holidays_used || 0,
     });
     setShowForm(true);
   };
 
-  const handleSubmit = () => {
+  const onSubmit = (data) => {
     if (editingMember) {
-      updateMutation.mutate({ id: editingMember.id, data: formData });
+      updateMutation.mutate({ id: editingMember.id, data });
     } else {
-      createMutation.mutate(formData);
+      createMutation.mutate(data);
     }
-  };
-
-  const handleAddSkill = () => {
-    if (skillInput.trim() && !formData.skills.includes(skillInput.trim())) {
-      setFormData({ ...formData, skills: [...formData.skills, skillInput.trim()] });
-      setSkillInput("");
-    }
-  };
-
-  const handleRemoveSkill = (skill) => {
-    setFormData({ ...formData, skills: formData.skills.filter((s) => s !== skill) });
   };
 
   const filteredMembers = teamMembers.filter((m) => {
@@ -166,7 +142,7 @@ export default function Team() {
     <div className="p-3 sm:p-4 md:p-6 bg-background min-h-screen">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
         <h1 className="text-xl sm:text-2xl font-light font-display text-foreground">Team</h1>
-        <Button onClick={() => { resetForm(); setEditingMember(null); setShowForm(true); }} className="w-full sm:w-auto">
+        <Button onClick={() => { form.reset(); setEditingMember(null); setShowForm(true); }} className="w-full sm:w-auto">
           <Plus className="h-4 w-4 mr-2" />
           Add Team Member
         </Button>
@@ -266,29 +242,41 @@ export default function Team() {
           <DialogHeader>
             <DialogTitle>{editingMember ? "Edit Team Member" : "Add Team Member"}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">Name *</label>
-              <Input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-            </div>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <ValidatedInput
+              label="Name"
+              required
+              error={form.getError("name")}
+              {...form.register("name")}
+            />
+
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium">Email</label>
-                <Input type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Phone</label>
-                <Input value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
-              </div>
+              <ValidatedInput
+                label="Email"
+                type="email"
+                required
+                error={form.getError("email")}
+                {...form.register("email")}
+              />
+              <ValidatedInput
+                label="Phone"
+                type="tel"
+                error={form.getError("phone")}
+                {...form.register("phone")}
+              />
             </div>
+
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium">Role</label>
-                <Input value={formData.role} onChange={(e) => setFormData({ ...formData, role: e.target.value })} placeholder="e.g., Designer, Carpenter" />
-              </div>
+              <ValidatedInput
+                label="Role"
+                required
+                placeholder="e.g., Designer, Carpenter"
+                error={form.getError("role")}
+                {...form.register("role")}
+              />
               <div>
                 <label className="text-sm font-medium">Availability</label>
-                <Select value={formData.availability} onValueChange={(v) => setFormData({ ...formData, availability: v })}>
+                <Select {...form.register("availability")}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="available">Available</SelectItem>
@@ -299,42 +287,12 @@ export default function Team() {
                 </Select>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium">Annual Holiday Days</label>
-                <Input type="number" value={formData.annual_holiday_days} onChange={(e) => setFormData({ ...formData, annual_holiday_days: parseInt(e.target.value) || 25 })} />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Holidays Used</label>
-                <Input type="number" value={formData.holidays_used} onChange={(e) => setFormData({ ...formData, holidays_used: parseInt(e.target.value) || 0 })} />
-              </div>
-            </div>
-            <div>
-              <label className="text-sm font-medium">Skills</label>
-              <div className="flex gap-2">
-                <Input 
-                  value={skillInput} 
-                  onChange={(e) => setSkillInput(e.target.value)} 
-                  placeholder="Add skill..."
-                  onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddSkill())}
-                />
-                <Button type="button" variant="outline" onClick={handleAddSkill}>Add</Button>
-              </div>
-              {formData.skills.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-2">
-                  {formData.skills.map((skill) => (
-                    <Badge key={skill} variant="secondary" className="cursor-pointer" onClick={() => handleRemoveSkill(skill)}>
-                      {skill} ×
-                    </Badge>
-                  ))}
-                </div>
-              )}
-            </div>
-            <Button className="w-full" onClick={handleSubmit} disabled={!formData.name || createMutation.isPending || updateMutation.isPending}>
+
+            <Button className="w-full" type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
               {(createMutation.isPending || updateMutation.isPending) && <ButtonLoader />}
               {editingMember ? "Update Member" : "Add Member"}
             </Button>
-          </div>
+          </form>
         </DialogContent>
       </Dialog>
     </div>
