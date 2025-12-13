@@ -166,7 +166,6 @@ export default function TypographyShowcase() {
           </div>
         </TabsContent>
       </Tabs>
-      </div>
     </div>
   );
 }
