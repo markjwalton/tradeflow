@@ -306,21 +306,14 @@ export default function NavigationManager() {
       .catch(() => {});
   }, []);
 
-  // Tab button style helper - compact for smaller window
+  // Tab styling - matches Onboarding Dashboard
   const getTabClassName = (tab) => {
     const isActive = activeTab === tab;
-    return `font-body text-sm px-3 py-1.5 rounded-xl transition-colors ${
+    return `font-body text-sm px-4 py-2.5 rounded-xl transition-all ${
       isActive 
-        ? "text-white border-0" 
-        : "bg-card text-foreground hover:bg-muted border border-border"
+        ? "bg-accent text-accent-foreground shadow-sm" 
+        : "bg-white text-foreground hover:bg-green-50 hover:text-green-700"
     }`;
-  };
-
-  const getTabStyle = (tab) => {
-    const isActive = activeTab === tab;
-    return isActive 
-      ? { backgroundColor: `var(--color-primary)` } 
-      : {};
   };
 
   return (
@@ -343,16 +336,16 @@ export default function NavigationManager() {
           <div className="bg-[var(--color-background)] rounded-xl -mx-6 px-6 py-6 min-h-screen">
             {/* Tab Navigation */}
             <div className="flex gap-2 [margin-bottom:var(--spacing-4)]">
-              <button className={getTabClassName("admin")} style={getTabStyle("admin")} onClick={() => setActiveTab("admin")}>
-                <Cog className="h-3.5 w-3.5 mr-1.5 inline" />
+              <button className={getTabClassName("admin")} onClick={() => setActiveTab("admin")}>
+                <Cog className="h-4 w-4 mr-2 inline" />
                 Admin
               </button>
-              <button className={getTabClassName("app")} style={getTabStyle("app")} onClick={() => setActiveTab("app")}>
-                <FileCode className="h-3.5 w-3.5 mr-1.5 inline" />
+              <button className={getTabClassName("app")} onClick={() => setActiveTab("app")}>
+                <FileCode className="h-4 w-4 mr-2 inline" />
                 App Pages
               </button>
-              <button className={getTabClassName("tenant")} style={getTabStyle("tenant")} onClick={() => setActiveTab("tenant")}>
-                <Users className="h-3.5 w-3.5 mr-1.5 inline" />
+              <button className={getTabClassName("tenant")} onClick={() => setActiveTab("tenant")}>
+                <Users className="h-4 w-4 mr-2 inline" />
                 Tenant
               </button>
             </div>
