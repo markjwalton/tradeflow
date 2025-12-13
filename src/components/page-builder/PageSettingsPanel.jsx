@@ -164,37 +164,47 @@ export function PageSettingsPanel({ currentPageName }) {
       
       if (pages.length > 0) {
         pageData = pages[0];
+        
+        // Update existing page
+        const updateData = {
+          navigation_mode: navigationMode,
+          show_breadcrumb: showBreadcrumb,
+          page_description: pageDescriptionEditable,
+        };
+
+        if (currentPageContent) {
+          const newVersion = {
+            version_number: (pageData.current_version_number || 0) + 1,
+            saved_date: new Date().toISOString(),
+            content_jsx: currentPageContent,
+            change_summary: `Live edit ${new Date().toLocaleString()}`,
+          };
+          updateData.current_content_jsx = currentPageContent;
+          updateData.versions = [...(pageData.versions || []), newVersion];
+          updateData.current_version_number = newVersion.version_number;
+        }
+
+        await updateMutation.mutateAsync({
+          id: pageData.id,
+          data: updateData,
+        });
       } else {
-        // Create new page record
-        pageData = await base44.entities.UIPage.create({
+        // Create new page record with required field
+        await base44.entities.UIPage.create({
           slug: currentPageName,
           page_name: currentPageName,
-          category: "custom",
+          category: "Custom",
+          current_content_jsx: currentPageContent || "// Page content placeholder",
+          navigation_mode: navigationMode,
+          show_breadcrumb: showBreadcrumb,
+          page_description: pageDescriptionEditable,
         });
+        toast.success("Page settings saved successfully");
+        setOriginalNavigationMode(navigationMode);
+        setOriginalShowBreadcrumb(showBreadcrumb);
+        setHasUnsavedChanges(false);
+        setIsOpen(false);
       }
-
-      const updateData = {
-        navigation_mode: navigationMode,
-        show_breadcrumb: showBreadcrumb,
-        page_description: pageDescriptionEditable,
-      };
-
-      if (currentPageContent) {
-        const newVersion = {
-          version_number: (pageData.current_version_number || 0) + 1,
-          saved_date: new Date().toISOString(),
-          content_jsx: currentPageContent,
-          change_summary: `Live edit ${new Date().toLocaleString()}`,
-        };
-        updateData.current_content_jsx = currentPageContent;
-        updateData.versions = [...(pageData.versions || []), newVersion];
-        updateData.current_version_number = newVersion.version_number;
-      }
-
-      await updateMutation.mutateAsync({
-        id: pageData.id,
-        data: updateData,
-      });
       
       window.dispatchEvent(new CustomEvent('page-settings-saved', { detail: { navigationMode, showBreadcrumb } }));
     } catch (e) {
