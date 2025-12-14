@@ -76,10 +76,6 @@ export function AppHeader({ user, navItems = [], onMobileMenuClick, currentPageN
           </Link>
         </div>
 
-        <div className="hidden sm:flex flex-1 justify-center max-w-2xl mx-4">
-          <AppBreadcrumb organizedNavigation={navItems} currentPageName={currentPageName} />
-        </div>
-
         <div className="flex items-center gap-1 sm:gap-2 ml-auto">
           <PageSearchBar navItems={navItems} />
           <ProfileMenu user={user} />
