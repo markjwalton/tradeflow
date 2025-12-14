@@ -46,6 +46,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
+import { PageHeader } from "@/components/sturij";
 import AppShellPreview from "@/components/page-builder/AppShellPreview";
 import { InteractiveSelector } from "@/components/page-builder/InteractiveSelector";
 import { ComponentPalette } from "@/components/page-builder/ComponentPalette";
@@ -482,12 +483,11 @@ export default function PageBuilder() {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-heading text-[var(--color-midnight)]">Page Design Builder</h1>
-          <p className="text-muted-foreground">Create and manage UI page designs with version control</p>
-        </div>
+    <div className="max-w-7xl mx-auto -mt-6">
+      <PageHeader 
+        title="Page Design Builder"
+        description="Create and manage UI page designs with version control"
+      >
         <div className="flex gap-2">
           <ComponentPalette onInsertComponent={handleInsertComponent} />
           <Button onClick={() => openEditor()} className="bg-primary-500 hover:bg-primary-600 text-white">
@@ -495,7 +495,7 @@ export default function PageBuilder() {
             New Page
           </Button>
         </div>
-      </div>
+      </PageHeader>
 
       {/* Pages Grid */}
       {isLoading ? (

@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTenant } from "@/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Home as HomeIcon, FileText, Settings, Users, BarChart3, Folder, ChevronRight } from "lucide-react";
+import { PageHeader } from "@/components/sturij";
 
 // Icon mapping
 const iconMap = {
@@ -41,12 +42,12 @@ const Home = () => {
   const getChildren = (parentId) => navItems.filter(i => i.parent_id === parentId).sort((a, b) => (a.order || 0) - (b.order || 0));
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-light font-display mb-2 text-foreground">
-          Welcome to {tenant?.name || "Your Portal"}
-        </h1>
-        <p className="text-muted-foreground mb-8">Select a section to get started</p>
+    <div className="min-h-screen bg-background">
+      <div className="max-w-4xl mx-auto -mt-6">
+        <PageHeader 
+          title={`Welcome to ${tenant?.name || "Your Portal"}`}
+          description="Select a section to get started"
+        />
         
         {navItems.length === 0 ? (
           <Card className="border-border">
