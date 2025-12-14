@@ -17,45 +17,54 @@ export function AppSidebar({ navItems = [] }) {
   const buildHierarchy = (items) => {
     if (!items || items.length === 0) return [];
     
+    // CRITICAL: Normalize all IDs - database uses 'id', code uses '_id'
+    const normalizedItems = items.map(item => {
+      const itemId = item.id || item._id;
+      return {
+        ...item,
+        id: itemId,
+        _id: itemId,  // Ensure both exist
+        parent_id: item.parent_id || null,
+        children: []
+      };
+    });
+    
+    // Create a lookup map using the normalized ID
     const itemsMap = new Map();
+    normalizedItems.forEach((item) => {
+      itemsMap.set(item.id, item);
+    });
+    
+    // Build parent-child relationships
     const rootItems = [];
-
-    // First pass: create a map of all items by their id with children array
-    items.forEach((item) => {
-      if (item.id) {
-        itemsMap.set(item.id, { ...item, children: [] });
-      }
-    });
-
-    // Second pass: build hierarchy by connecting parents and children
-    items.forEach((item) => {
-      if (!item.id) return;
-      
-      const currentItem = itemsMap.get(item.id);
-      if (!currentItem) return;
-      
+    normalizedItems.forEach((item) => {
       if (item.parent_id && itemsMap.has(item.parent_id)) {
-        // Has a parent - add to parent's children
+        // Has a valid parent - add to parent's children
         const parent = itemsMap.get(item.parent_id);
-        parent.children.push(currentItem);
+        parent.children.push(item);
       } else {
-        // No parent or parent not found - add to root
-        rootItems.push(currentItem);
+        // No parent or invalid parent - add to root
+        rootItems.push(item);
       }
     });
-
-    // Sort children arrays recursively
-    const sortChildren = (item) => {
-      if (item.children && item.children.length > 0) {
-        item.children.sort((a, b) => (a.order || 0) - (b.order || 0));
-        item.children.forEach(sortChildren);
-      }
+    
+    // Recursive sort function
+    const sortItems = (items) => {
+      items.sort((a, b) => (a.order || 0) - (b.order || 0));
+      items.forEach(item => {
+        if (item.children && item.children.length > 0) {
+          sortItems(item.children);
+        }
+      });
     };
-
-    // Sort root items and their children
-    rootItems.sort((a, b) => (a.order || 0) - (b.order || 0));
-    rootItems.forEach(sortChildren);
-
+    sortItems(rootItems);
+    
+    // Debug log to verify hierarchy
+    console.log('Root items with children:', rootItems.map(r => ({
+      name: r.name,
+      children: r.children.length
+    })));
+    
     return rootItems;
   };
 
