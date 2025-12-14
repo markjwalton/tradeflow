@@ -47,6 +47,7 @@ export default function Layout({ children, currentPageName }) {
   const [navItems, setNavItems] = useState([]);
   const [editorPanelOpen, setEditorPanelOpen] = useState(false);
   const [showEditorBubble, setShowEditorBubble] = useState(true);
+  const [showGitBubble, setShowGitBubble] = useState(true);
   const [siteSettings, setSiteSettings] = useState(null);
   const [isSyncing, setIsSyncing] = useState(false);
   const [isRebuilding, setIsRebuilding] = useState(false);
@@ -69,6 +70,9 @@ export default function Layout({ children, currentPageName }) {
         const user = await base44.auth.me();
         if (user?.ui_preferences?.showEditorBubble !== undefined) {
           setShowEditorBubble(user.ui_preferences.showEditorBubble);
+        }
+        if (user?.ui_preferences?.showGitBubble !== undefined) {
+          setShowGitBubble(user.ui_preferences.showGitBubble);
         }
         // Always turn off live edit mode on page load
         await base44.auth.updateMe({
@@ -138,7 +142,12 @@ export default function Layout({ children, currentPageName }) {
     };
 
     const handlePreferencesChange = (event) => {
-      setShowEditorBubble(event.detail.showEditorBubble ?? true);
+      if (event.detail.showEditorBubble !== undefined) {
+        setShowEditorBubble(event.detail.showEditorBubble);
+      }
+      if (event.detail.showGitBubble !== undefined) {
+        setShowGitBubble(event.detail.showGitBubble);
+      }
     };
 
     const handleSiteSettingsChange = (event) => {
@@ -543,7 +552,7 @@ export default function Layout({ children, currentPageName }) {
           )}
 
           {/* Git Sync bubble button */}
-          {showEditorBubble && (
+          {showGitBubble && (
             <Button
               onClick={async () => {
                 setIsSyncing(true);
@@ -585,7 +594,7 @@ export default function Layout({ children, currentPageName }) {
           )}
 
           {/* Rebuild & Deploy button */}
-          {showEditorBubble && (
+          {showGitBubble && (
             <Button
               onClick={async () => {
                 setIsRebuilding(true);
