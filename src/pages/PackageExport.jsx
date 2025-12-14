@@ -284,8 +284,8 @@ export default function PackageExport() {
           </TabsTrigger>
         </TabsList>
 
-        <Card className="border-border p-6">
-          <div className="space-y-6">
+        <TabsContent value="css" className="mt-4">
+          <div className="space-y-4">
             {/* Options Sidebar */}
             <Card className="border-border">
               <CardHeader>
@@ -352,7 +352,211 @@ export default function PackageExport() {
               </CardContent>
             </Card>
           </div>
-        </Card>
+        </TabsContent>
+
+        <TabsContent value="tailwind" className="mt-4">
+          <div className="space-y-4">
+            <Card className="border-border">
+              <CardHeader>
+                <CardTitle className="text-midnight-900 flex items-center gap-2">
+                  <Settings className="h-4 w-4" />
+                  Export Options
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm">Include Comments</Label>
+                  <Switch
+                    checked={exportOptions.includeComments}
+                    onCheckedChange={(v) => setExportOptions({ ...exportOptions, includeComments: v })}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm">Include Defaults</Label>
+                  <Switch
+                    checked={exportOptions.includeDefaults}
+                    onCheckedChange={(v) => setExportOptions({ ...exportOptions, includeDefaults: v })}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm">Minify Output</Label>
+                  <Switch
+                    checked={exportOptions.minify}
+                    onCheckedChange={(v) => setExportOptions({ ...exportOptions, minify: v })}
+                  />
+                </div>
+
+                <div className="pt-4 border-t border-border">
+                  <Label className="text-sm font-medium">Token Summary</Label>
+                  <div className="mt-2 space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Colors</span>
+                      <Badge variant="outline">{Object.keys(pkg?.design_tokens?.colors || {}).length}</Badge>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Typography</span>
+                      <Badge variant="outline">{Object.keys(pkg?.design_tokens?.typography || {}).length}</Badge>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Spacing</span>
+                      <Badge variant="outline">{Object.keys(pkg?.design_tokens?.spacing || {}).length}</Badge>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Effects</span>
+                      <Badge variant="outline">{Object.keys(pkg?.design_tokens?.effects || {}).length}</Badge>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-border">
+              <CardContent className="p-0">
+                <ScrollArea className="h-[500px]">
+                  <pre className="p-4 text-sm font-mono text-midnight-900 whitespace-pre-wrap">
+                    {getExportContent()}
+                  </pre>
+                </ScrollArea>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="json" className="mt-4">
+          <div className="space-y-4">
+            <Card className="border-border">
+              <CardHeader>
+                <CardTitle className="text-midnight-900 flex items-center gap-2">
+                  <Settings className="h-4 w-4" />
+                  Export Options
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm">Include Comments</Label>
+                  <Switch
+                    checked={exportOptions.includeComments}
+                    onCheckedChange={(v) => setExportOptions({ ...exportOptions, includeComments: v })}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm">Include Defaults</Label>
+                  <Switch
+                    checked={exportOptions.includeDefaults}
+                    onCheckedChange={(v) => setExportOptions({ ...exportOptions, includeDefaults: v })}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm">Minify Output</Label>
+                  <Switch
+                    checked={exportOptions.minify}
+                    onCheckedChange={(v) => setExportOptions({ ...exportOptions, minify: v })}
+                  />
+                </div>
+
+                <div className="pt-4 border-t border-border">
+                  <Label className="text-sm font-medium">Token Summary</Label>
+                  <div className="mt-2 space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Colors</span>
+                      <Badge variant="outline">{Object.keys(pkg?.design_tokens?.colors || {}).length}</Badge>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Typography</span>
+                      <Badge variant="outline">{Object.keys(pkg?.design_tokens?.typography || {}).length}</Badge>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Spacing</span>
+                      <Badge variant="outline">{Object.keys(pkg?.design_tokens?.spacing || {}).length}</Badge>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Effects</span>
+                      <Badge variant="outline">{Object.keys(pkg?.design_tokens?.effects || {}).length}</Badge>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-border">
+              <CardContent className="p-0">
+                <ScrollArea className="h-[500px]">
+                  <pre className="p-4 text-sm font-mono text-midnight-900 whitespace-pre-wrap">
+                    {getExportContent()}
+                  </pre>
+                </ScrollArea>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="scss" className="mt-4">
+          <div className="space-y-4">
+            <Card className="border-border">
+              <CardHeader>
+                <CardTitle className="text-midnight-900 flex items-center gap-2">
+                  <Settings className="h-4 w-4" />
+                  Export Options
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm">Include Comments</Label>
+                  <Switch
+                    checked={exportOptions.includeComments}
+                    onCheckedChange={(v) => setExportOptions({ ...exportOptions, includeComments: v })}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm">Include Defaults</Label>
+                  <Switch
+                    checked={exportOptions.includeDefaults}
+                    onCheckedChange={(v) => setExportOptions({ ...exportOptions, includeDefaults: v })}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm">Minify Output</Label>
+                  <Switch
+                    checked={exportOptions.minify}
+                    onCheckedChange={(v) => setExportOptions({ ...exportOptions, minify: v })}
+                  />
+                </div>
+
+                <div className="pt-4 border-t border-border">
+                  <Label className="text-sm font-medium">Token Summary</Label>
+                  <div className="mt-2 space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Colors</span>
+                      <Badge variant="outline">{Object.keys(pkg?.design_tokens?.colors || {}).length}</Badge>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Typography</span>
+                      <Badge variant="outline">{Object.keys(pkg?.design_tokens?.typography || {}).length}</Badge>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Spacing</span>
+                      <Badge variant="outline">{Object.keys(pkg?.design_tokens?.spacing || {}).length}</Badge>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Effects</span>
+                      <Badge variant="outline">{Object.keys(pkg?.design_tokens?.effects || {}).length}</Badge>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-border">
+              <CardContent className="p-0">
+                <ScrollArea className="h-[500px]">
+                  <pre className="p-4 text-sm font-mono text-midnight-900 whitespace-pre-wrap">
+                    {getExportContent()}
+                  </pre>
+                </ScrollArea>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
       </Tabs>
     </div>
   );
