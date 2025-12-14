@@ -269,7 +269,7 @@ For each recommendation, provide:
       />
       
       <Card className="border-border mb-4">
-        <CardContent className="p-1">
+        <CardContent className="px-2 py-1">
           <div className="flex gap-2">
             <Button 
               variant="ghost"
