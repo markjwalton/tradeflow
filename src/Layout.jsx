@@ -563,24 +563,18 @@ export default function Layout({ children, currentPageName }) {
                     action: 'pull_pages'
                   });
 
-                  // Push current page changes
-                  const pages = await base44.entities.UIPage.list();
-                  let pushCount = 0;
-                  for (const page of pages) {
-                    if (page.current_content_jsx) {
-                      await base44.functions.invoke('githubApi', {
-                        action: 'push_changes',
-                        file_path: `src/pages/${page.page_name}.jsx`,
-                        content: page.current_content_jsx,
-                        message: `Update ${page.page_name} from Base44`
-                      });
-                      pushCount++;
-                    }
-                  }
+                  const updatedFiles = pullResult.data?.updated || [];
+                  const filesMsg = updatedFiles.length > 0 
+                    ? `\nUpdated: ${updatedFiles.join(', ')}` 
+                    : '';
 
-                  toast.success(`Synced: ${pullResult.data.count || 0} pulled, ${pushCount} pushed`, { id: loadingToast });
+                  toast.success(`Synced: ${pullResult.data?.count || 0} pages pulled${filesMsg}`, { 
+                    id: loadingToast,
+                    duration: 5000 
+                  });
                 } catch (e) {
-                  toast.error('Sync failed: ' + e.message, { id: loadingToast });
+                  console.error('Sync error:', e);
+                  toast.error('Sync failed: ' + (e.response?.data?.error || e.message), { id: loadingToast });
                 } finally {
                   setIsSyncing(false);
                 }

@@ -21,6 +21,7 @@ export default function GitHubIntegration() {
   const [hasMoreIssues, setHasMoreIssues] = useState(false);
   const [hasMoreCommits, setHasMoreCommits] = useState(false);
   const [useCache, setUseCache] = useState(true);
+  const [syncResult, setSyncResult] = useState(null);
 
   const handleGetRepo = async () => {
     setLoading(true);
@@ -151,13 +152,22 @@ export default function GitHubIntegration() {
   const handleSync = async () => {
     setLoading(true);
     setError(null);
+    setSyncResult(null);
     try {
-      // Pull latest commits
-      await handleGetCommits(false);
-      // Could add push functionality here if needed
+      // Pull pages from GitHub
+      const pullResult = await base44.functions.invoke('githubApi', {
+        action: 'pull_pages'
+      });
+      
+      setSyncResult({
+        updated: pullResult.data?.updated || [],
+        count: pullResult.data?.count || 0,
+        errors: pullResult.data?.errors || []
+      });
+      
       setError(null);
     } catch (e) {
-      setError(e.message);
+      setError(e.response?.data?.error || e.message);
     } finally {
       setLoading(false);
     }
@@ -239,6 +249,48 @@ export default function GitHubIntegration() {
                 <AlertCircle className="h-5 w-5" />
                 <span>{error}</span>
               </div>
+            </CardContent>
+          </Card>
+        )}
+        
+        {syncResult && (
+          <Card className="border-primary">
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <RefreshCw className="h-5 w-5 text-primary" />
+                Sync Results
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Badge variant="secondary" className="text-lg px-3 py-1">
+                  {syncResult.count} pages synced
+                </Badge>
+              </div>
+              
+              {syncResult.updated.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">Updated Pages:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {syncResult.updated.map((page) => (
+                      <Badge key={page} variant="outline">
+                        {page}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {syncResult.errors && syncResult.errors.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-destructive">Errors:</p>
+                  <div className="space-y-1">
+                    {syncResult.errors.map((error, idx) => (
+                      <p key={idx} className="text-xs text-muted-foreground">{error}</p>
+                    ))}
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         )}
