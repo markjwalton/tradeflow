@@ -26,7 +26,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Search, Pencil, Trash2, Mail, Phone, Calendar } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Mail, Phone, Calendar, ChevronDown, ChevronRight, Users } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/sturij";
 
@@ -46,6 +47,7 @@ export default function Team() {
   const itemsPerPage = 12;
   const [showForm, setShowForm] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
+  const [expandedGroups, setExpandedGroups] = useState({});
   
   const form = useValidatedForm(teamMemberSchema, {
     defaultValues: {
@@ -131,6 +133,14 @@ export default function Team() {
     currentPage * itemsPerPage
   );
 
+  // Group members by availability
+  const groupedMembers = paginatedMembers.reduce((acc, member) => {
+    const groupKey = member.availability || "available";
+    if (!acc[groupKey]) acc[groupKey] = [];
+    acc[groupKey].push(member);
+    return acc;
+  }, {});
+
   if (isLoading) {
     return <PageLoader message="Loading team members..." />;
   }
@@ -161,9 +171,8 @@ export default function Team() {
         </CardContent>
       </Card>
 
-      <Card className="border-border">
-        <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-6">
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -187,70 +196,118 @@ export default function Team() {
         </Select>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-        {paginatedMembers.map((member) => {
-          const holidaysRemaining = (member.annual_holiday_days || 25) - (member.holidays_used || 0);
-          return (
-            <Card key={member.id} className="hover:shadow-md transition-shadow bg-card">
-              <CardHeader className="pb-2">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <CardTitle className="text-lg text-foreground">{member.name}</CardTitle>
-                    {member.role && <p className="text-sm text-muted-foreground mt-1">{member.role}</p>}
-                  </div>
-                  <div className="flex gap-1">
-                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(member)}>
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => deleteMutation.mutate(member.id)}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Badge className={availabilityColors[member.availability]}>{member.availability?.replace("_", " ")}</Badge>
-                {member.email && (
-                  <p className="text-sm text-muted-foreground flex items-center gap-2">
-                    <Mail className="h-3 w-3" />{member.email}
-                  </p>
-                )}
-                {member.phone && (
-                  <p className="text-sm text-muted-foreground flex items-center gap-2">
-                    <Phone className="h-3 w-3" />{member.phone}
-                  </p>
-                )}
-                <p className="text-sm text-muted-foreground flex items-center gap-2">
-                  <Calendar className="h-3 w-3" />{holidaysRemaining} days remaining
-                </p>
-                {member.skills?.length > 0 && (
-                  <div className="flex flex-wrap gap-1">
-                    {member.skills.map((skill) => (
-                      <Badge key={skill} variant="secondary" className="text-xs">{skill}</Badge>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+      <Card className="border-border">
+        <CardContent className="p-4">
+          <div className="space-y-4">
+            {Object.entries(groupedMembers).map(([groupName, groupMembers]) => {
+              const isExpanded = expandedGroups[groupName] === true;
+              const displayName = groupName.replace("_", " ");
+              return (
+                <Collapsible
+                  key={groupName}
+                  open={isExpanded}
+                  onOpenChange={() => setExpandedGroups(prev => ({ ...prev, [groupName]: !isExpanded }))}
+                >
+                  <Card className="border-border">
+                    <CollapsibleTrigger className="w-full">
+                      <CardHeader className="py-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                            <h3 className="font-medium capitalize">{displayName}</h3>
+                          </div>
+                        </div>
+                      </CardHeader>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <CardContent className="pt-0 space-y-2">
+                        {groupMembers.map((member) => {
+                          const holidaysRemaining = (member.annual_holiday_days || 25) - (member.holidays_used || 0);
+                          return (
+                            <Card key={member.id} className="border-border hover:shadow-sm transition-shadow">
+                              <CardContent className="p-4">
+                                <div className="flex items-center gap-4">
+                                  <Users className="h-5 w-5 text-info flex-shrink-0" />
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2 mb-1">
+                                      <h3 className="font-medium text-base">{member.name}</h3>
+                                      <Badge className={availabilityColors[member.availability]}>
+                                        {member.availability?.replace("_", " ")}
+                                      </Badge>
+                                    </div>
+                                    {member.role && (
+                                      <p className="text-sm text-muted-foreground mb-2">{member.role}</p>
+                                    )}
+                                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                                      {member.email && (
+                                        <span className="flex items-center gap-1">
+                                          <Mail className="h-3 w-3" />{member.email}
+                                        </span>
+                                      )}
+                                      {member.phone && (
+                                        <span className="flex items-center gap-1">
+                                          <Phone className="h-3 w-3" />{member.phone}
+                                        </span>
+                                      )}
+                                      <span className="flex items-center gap-1">
+                                        <Calendar className="h-3 w-3" />{holidaysRemaining} days
+                                      </span>
+                                    </div>
+                                    {member.skills?.length > 0 && (
+                                      <div className="flex flex-wrap gap-1 mt-2">
+                                        {member.skills.slice(0, 3).map((skill) => (
+                                          <Badge key={skill} variant="secondary" className="text-xs">{skill}</Badge>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                  <div className="flex gap-1 flex-shrink-0">
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => handleEdit(member)}
+                                      title="Edit"
+                                    >
+                                      <Pencil className="h-3 w-3" />
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      className="text-destructive hover:text-destructive"
+                                      onClick={() => deleteMutation.mutate(member.id)}
+                                      title="Delete"
+                                    >
+                                      <Trash2 className="h-3 w-3" />
+                                    </Button>
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          );
+                        })}
+                      </CardContent>
+                    </CollapsibleContent>
+                  </Card>
+                </Collapsible>
+              );
+            })}
+          </div>
 
-      {filteredMembers.length === 0 && (
-        <div className="text-center py-12 text-muted-foreground">
-          No team members found. Add your first team member to get started.
-        </div>
-      )}
+          {filteredMembers.length === 0 && (
+            <div className="text-center py-12 text-muted-foreground">
+              No team members found. Add your first team member to get started.
+            </div>
+          )}
 
-      {totalPages > 1 && (
-        <div className="mt-6">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </div>
-      )}
+          {totalPages > 1 && (
+            <div className="mt-6">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            </div>
+          )}
         </CardContent>
       </Card>
 
