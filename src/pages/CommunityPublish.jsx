@@ -28,6 +28,7 @@ import {
   ChevronDown, ChevronRight, Folder, FolderOpen
 } from "lucide-react";
 import { toast } from "sonner";
+import { PageHeader } from "@/components/sturij";
 
 const itemTypeIcons = {
   entity: Database,
@@ -363,14 +364,11 @@ export default function CommunityPublish() {
   }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto bg-[var(--color-background)] min-h-screen">
-      <div className="mb-6">
-        <h1 className="text-2xl font-light flex items-center gap-2 text-foreground font-heading">
-          <Upload className="h-6 w-6" />
-          Publish to Community
-        </h1>
-        <p className="text-muted-foreground">Share templates with all tenants</p>
-      </div>
+    <div className="max-w-4xl mx-auto -mt-6 bg-[var(--color-background)] min-h-screen">
+      <PageHeader 
+        title="Publish to Community"
+        description="Share templates with all tenants"
+      />
 
       <Card className="mb-6 bg-blue-50 border-blue-200">
         <CardContent className="p-4">

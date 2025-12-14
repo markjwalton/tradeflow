@@ -31,6 +31,7 @@ import {
   Edit, Trash2, AlertTriangle, Copy, Check
 } from "lucide-react";
 import { toast } from "sonner";
+import { PageHeader } from "@/components/sturij";
 
 const categories = [
   { value: "security", label: "Security", icon: Shield, color: "bg-destructive-50 text-destructive" },
@@ -212,15 +213,11 @@ export default function RuleBook() {
   const getEnforcementInfo = (enf) => enforcements.find(e => e.value === enf) || enforcements[1];
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
-            <BookOpen className="h-6 w-6 text-primary" />
-            Development Rule Book
-          </h1>
-          <p className="text-muted-foreground">Maintain rules for AI-assisted development</p>
-        </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Development Rule Book"
+        description="Maintain rules for AI-assisted development"
+      >
         <div className="flex gap-2">
           {copiedRules.length > 0 && (
             <Button variant="outline" onClick={copySelectedRules}>
@@ -233,7 +230,7 @@ export default function RuleBook() {
             Add Rule
           </Button>
         </div>
-      </div>
+      </PageHeader>
 
       {/* Filters */}
       <div className="flex gap-4 mb-6 flex-wrap">

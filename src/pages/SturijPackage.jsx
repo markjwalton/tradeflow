@@ -8,6 +8,7 @@ import {
   Sparkles, CheckCircle2, Copy, Eye, Layers, Zap
 } from "lucide-react";
 import { toast } from "sonner";
+import { PageHeader } from "@/components/sturij";
 
 export default function SturijPackage() {
   const [copiedSection, setCopiedSection] = useState(null);
@@ -298,24 +299,13 @@ When updating existing code:
 - [ ] Verify dialog titles use text-[var(--color-midnight)]`;
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 border border-primary/20">
-              <Package className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-heading text-foreground">
-                Sturij Design System Package
-              </h1>
-              <p className="text-muted-foreground">
-                Complete UI theme package for Base44 applications
-              </p>
-            </div>
-          </div>
-          <div className="flex gap-2 mt-4">
+    <div className="bg-background min-h-screen">
+      <div className="max-w-6xl mx-auto -mt-6">
+        <PageHeader 
+          title="Sturij Design System Package"
+          description="Complete UI theme package for Base44 applications"
+        >
+          <div className="flex gap-2">
             <Badge className="bg-success-50 text-success">
               <CheckCircle2 className="h-3 w-3 mr-1" />
               Production Ready
@@ -327,7 +317,7 @@ When updating existing code:
               Base44 Compatible
             </Badge>
           </div>
-        </div>
+        </PageHeader>
 
         <Tabs defaultValue="overview" className="space-y-6">
           <TabsList>
