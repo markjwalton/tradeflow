@@ -650,8 +650,52 @@ Return a JSON object with: name, description, category (one of: ${featureCategor
     <div className="max-w-7xl mx-auto -mt-6 min-h-screen">
       <PageHeader 
         title={currentProject ? `Library: ${currentProject.name}` : "Template Library"}
-        description="Production-ready templates for entities, pages, and features"
-      />
+        description={
+          activeSection === "core" ? "Production-ready templates for entities, pages, and features" :
+          activeSection === "community" ? "Community-shared templates and components" :
+          activeSection === "forms" ? "Form and checklist templates" :
+          activeSection === "business" ? "Business-specific templates" :
+          "Workflow and automation templates"
+        }
+      >
+        <Select value={activeSection} onValueChange={(v) => { setActiveSection(v); setActiveTab(v === "forms" ? "forms" : "entities"); }}>
+          <SelectTrigger className="w-48">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="core">
+              <div className="flex items-center gap-2">
+                <Database className="h-4 w-4" />
+                Core Library
+              </div>
+            </SelectItem>
+            <SelectItem value="community">
+              <div className="flex items-center gap-2">
+                <Users className="h-4 w-4" />
+                Community
+              </div>
+            </SelectItem>
+            <SelectItem value="forms">
+              <div className="flex items-center gap-2">
+                <FileInput className="h-4 w-4" />
+                Forms & Checklists
+              </div>
+            </SelectItem>
+            <SelectItem value="business">
+              <div className="flex items-center gap-2">
+                <Briefcase className="h-4 w-4" />
+                Business Templates
+              </div>
+            </SelectItem>
+            <SelectItem value="workflows">
+              <div className="flex items-center gap-2">
+                <GitBranch className="h-4 w-4" />
+                Workflows
+              </div>
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </PageHeader>
 
       <Card className="border-border mb-4">
         <CardContent className="px-2 py-1">
