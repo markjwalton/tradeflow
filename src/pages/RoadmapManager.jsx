@@ -358,126 +358,136 @@ export default function RoadmapManager() {
         </Select>
       </div>
 
-      {isLoading ? (
-        <div className="flex justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin" />
-        </div>
-      ) : error ? (
-        <QueryErrorState error={error} onRetry={refetch} />
-      ) : (
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList>
-            {visibleTabs.includes("roadmap") && (
-              <TabsTrigger value="roadmap">
-                Roadmap ({roadmapItems.length})
-              </TabsTrigger>
-            )}
-            {visibleTabs.includes("development") && (
-              <TabsTrigger value="development">
-                Development ({developmentItems.length})
-              </TabsTrigger>
-            )}
-            {visibleTabs.includes("completed") && (
-              <TabsTrigger value="completed">
-                Completed ({completedItems.length})
-              </TabsTrigger>
-            )}
-          </TabsList>
+      <Card className="border-border">
+        <CardContent className="p-4">
+          {isLoading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          ) : error ? (
+            <QueryErrorState error={error} onRetry={refetch} />
+          ) : (
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList>
+                {visibleTabs.includes("roadmap") && (
+                  <TabsTrigger value="roadmap">
+                    Roadmap ({roadmapItems.length})
+                  </TabsTrigger>
+                )}
+                {visibleTabs.includes("development") && (
+                  <TabsTrigger value="development">
+                    Development ({developmentItems.length})
+                  </TabsTrigger>
+                )}
+                {visibleTabs.includes("completed") && (
+                  <TabsTrigger value="completed">
+                    Completed ({completedItems.length})
+                  </TabsTrigger>
+                )}
+              </TabsList>
 
-          <TabsContent value="roadmap" className="mt-6">
-            {roadmapItems.length === 0 ? (
-              <div className="text-center py-12 text-muted-foreground">
-                <Lightbulb className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>No items in roadmap. Add your first idea!</p>
-              </div>
-            ) : (
-              <>
-                <ItemList items={paginateItems(roadmapItems, "roadmap")} />
-                <Pagination
-                  currentPage={currentPage.roadmap}
-                  totalItems={roadmapItems.length}
-                  itemsPerPage={pageSize}
-                  onPageChange={(p) => setCurrentPage({ ...currentPage, roadmap: p })}
-                  onItemsPerPageChange={setPageSize}
-                  pageSizeOptions={pageSizeOptions}
-                />
-              </>
-            )}
-          </TabsContent>
+              <TabsContent value="roadmap" className="mt-6">
+                {roadmapItems.length === 0 ? (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <Lightbulb className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>No items in roadmap. Add your first idea!</p>
+                  </div>
+                ) : (
+                  <>
+                    <ItemList items={paginateItems(roadmapItems, "roadmap")} />
+                    <div className="mt-6">
+                      <Pagination
+                        currentPage={currentPage.roadmap}
+                        totalItems={roadmapItems.length}
+                        itemsPerPage={pageSize}
+                        onPageChange={(p) => setCurrentPage({ ...currentPage, roadmap: p })}
+                        onItemsPerPageChange={setPageSize}
+                        pageSizeOptions={pageSizeOptions}
+                      />
+                    </div>
+                  </>
+                )}
+              </TabsContent>
 
-          <TabsContent value="development" className="mt-6">
-            {developmentItems.length === 0 ? (
-              <div className="text-center py-12 text-muted-foreground">
-                <Code className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>No items in development. Set items to "Planned" to move them here.</p>
-              </div>
-            ) : (
-              <>
-                <div className="space-y-6">
-                  {developmentStatuses.map(status => {
-                    const statusItems = developmentItems.filter(i => i.status === status);
-                    if (statusItems.length === 0) return null;
-                    const statusLabel = statuses.find(s => s.value === status)?.label || status;
-                    return (
-                      <div key={status}>
-                        <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                          {statusLabel}
-                          <Badge variant="secondary">{statusItems.length}</Badge>
-                        </h3>
-                        <ItemList items={statusItems} showDevPrompt />
-                      </div>
-                    );
-                  })}
-                </div>
-                <Pagination
-                  currentPage={currentPage.development}
-                  totalItems={developmentItems.length}
-                  itemsPerPage={pageSize}
-                  onPageChange={(p) => setCurrentPage({ ...currentPage, development: p })}
-                  onItemsPerPageChange={setPageSize}
-                  pageSizeOptions={pageSizeOptions}
-                />
-              </>
-            )}
-          </TabsContent>
+              <TabsContent value="development" className="mt-6">
+                {developmentItems.length === 0 ? (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <Code className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>No items in development. Set items to "Planned" to move them here.</p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="space-y-6">
+                      {developmentStatuses.map(status => {
+                        const statusItems = developmentItems.filter(i => i.status === status);
+                        if (statusItems.length === 0) return null;
+                        const statusLabel = statuses.find(s => s.value === status)?.label || status;
+                        return (
+                          <div key={status}>
+                            <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                              {statusLabel}
+                              <Badge variant="secondary">{statusItems.length}</Badge>
+                            </h3>
+                            <ItemList items={statusItems} showDevPrompt />
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div className="mt-6">
+                      <Pagination
+                        currentPage={currentPage.development}
+                        totalItems={developmentItems.length}
+                        itemsPerPage={pageSize}
+                        onPageChange={(p) => setCurrentPage({ ...currentPage, development: p })}
+                        onItemsPerPageChange={setPageSize}
+                        pageSizeOptions={pageSizeOptions}
+                      />
+                    </div>
+                  </>
+                )}
+              </TabsContent>
 
-          <TabsContent value="completed" className="mt-6">
-            {completedItems.length === 0 ? (
-              <div className="text-center py-12 text-muted-foreground">
-                <Code className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>No completed items yet.</p>
-              </div>
-            ) : (
-              <>
-                <div className="space-y-6">
-                  {completedStatuses.map(status => {
-                    const statusItems = completedItems.filter(i => i.status === status);
-                    if (statusItems.length === 0) return null;
-                    const statusLabel = statuses.find(s => s.value === status)?.label || status;
-                    return (
-                      <div key={status}>
-                        <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                          {statusLabel}
-                          <Badge variant="secondary">{statusItems.length}</Badge>
-                        </h3>
-                        <ItemList items={statusItems} />
-                      </div>
-                    );
-                  })}
-                </div>
-                <Pagination
-                  currentPage={currentPage.completed}
-                  totalItems={completedItems.length}
-                  itemsPerPage={pageSize}
-                  onPageChange={(p) => setCurrentPage({ ...currentPage, completed: p })}
-                  onItemsPerPageChange={setPageSize}
-                  pageSizeOptions={pageSizeOptions}
-                />
-              </>
-            )}
-          </TabsContent>
-        </Tabs>
-      )}
+              <TabsContent value="completed" className="mt-6">
+                {completedItems.length === 0 ? (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <Code className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>No completed items yet.</p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="space-y-6">
+                      {completedStatuses.map(status => {
+                        const statusItems = completedItems.filter(i => i.status === status);
+                        if (statusItems.length === 0) return null;
+                        const statusLabel = statuses.find(s => s.value === status)?.label || status;
+                        return (
+                          <div key={status}>
+                            <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                              {statusLabel}
+                              <Badge variant="secondary">{statusItems.length}</Badge>
+                            </h3>
+                            <ItemList items={statusItems} />
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div className="mt-6">
+                      <Pagination
+                        currentPage={currentPage.completed}
+                        totalItems={completedItems.length}
+                        itemsPerPage={pageSize}
+                        onPageChange={(p) => setCurrentPage({ ...currentPage, completed: p })}
+                        onItemsPerPageChange={setPageSize}
+                        pageSizeOptions={pageSizeOptions}
+                      />
+                    </div>
+                  </>
+                )}
+              </TabsContent>
+            </Tabs>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Add/Edit Dialog */}
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
