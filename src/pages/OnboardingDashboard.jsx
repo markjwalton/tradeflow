@@ -16,6 +16,7 @@ import { createPageUrl } from "@/utils";
 import AIInsightsPanel from "@/components/onboarding/AIInsightsPanel";
 import OnboardingMetrics from "@/components/onboarding/OnboardingMetrics";
 import RiskAlerts from "@/components/onboarding/RiskAlerts";
+import { PageHeader } from "@/components/sturij";
 
 export default function OnboardingDashboard() {
   const [selectedView, setSelectedView] = useState("all");
@@ -53,30 +54,20 @@ export default function OnboardingDashboard() {
   };
 
   return (
-    <div className="pb-[var(--spacing-6)] max-w-4xl mx-auto min-h-screen">
-      {/* Page Header */}
-      <div className="bg-white [margin-bottom:var(--spacing-6)] -mx-6 px-6 pt-2 pb-2">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-display text-[var(--color-text-primary)] [margin-bottom:var(--spacing-2)]">
-              Onboarding Dashboard
-            </h1>
-            <p className="text-[var(--color-text-muted)]">
-              Manage and monitor all tenant onboarding processes
-            </p>
-          </div>
-          <Link to={createPageUrl("OnboardingWorkflow")}>
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              New Onboarding
-            </Button>
-          </Link>
-        </div>
-      </div>
+    <div className="max-w-4xl mx-auto -mt-6 min-h-screen">
+      <PageHeader 
+        title="Onboarding Dashboard"
+        description="Manage and monitor all tenant onboarding processes"
+      >
+        <Link to={createPageUrl("OnboardingWorkflow")}>
+          <Button>
+            <Plus className="h-4 w-4 mr-2" />
+            New Onboarding
+          </Button>
+        </Link>
+      </PageHeader>
 
-      {/* Background Container */}
-      <div className="bg-[var(--color-background)] rounded-xl -mx-6 px-6 py-6 min-h-screen">
-        <div className="space-y-6">
+      <div className="space-y-6">
 
         {/* Key Metrics */}
         <div className="grid gap-4 md:grid-cols-4 mb-6">
@@ -240,8 +231,6 @@ export default function OnboardingDashboard() {
           <OnboardingMetrics sessions={sessions} />
         </TabsContent>
         </Tabs>
-        </div>
-      </div>
     </div>
   );
 }

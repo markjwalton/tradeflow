@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, Trash2, Copy, X } from "lucide-react";
 import { toast } from "sonner";
+import { PageHeader } from "@/components/sturij";
 
 export default function JSONSchemaBuilder() {
   const [schemaName, setSchemaName] = useState("");
@@ -59,11 +60,11 @@ export default function JSONSchemaBuilder() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2">JSON Schema Builder</h1>
-        <p className="text-muted-foreground">Create JSON schemas for entities and data structures</p>
-      </div>
+    <div className="max-w-6xl mx-auto -mt-6">
+      <PageHeader 
+        title="JSON Schema Builder"
+        description="Create JSON schemas for entities and data structures"
+      />
 
       <Card className="p-6 mb-6">
         <Label>Schema Name</Label>

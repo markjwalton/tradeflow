@@ -10,6 +10,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 import { useEditMode } from "@/components/page-builder/EditModeContext";
+import { PageHeader } from "@/components/sturij";
 
 export default function OklchColorPicker() {
   const [activeTab, setActiveTab] = useState("palette");
@@ -76,16 +77,12 @@ export default function OklchColorPicker() {
   };
   
   return (
-    <div className="[padding:var(--spacing-6)] max-w-4xl mx-auto bg-[var(--color-background)] min-h-screen">
-      <div className="[margin-bottom:var(--spacing-6)]">
-        <h1 className="text-3xl font-display text-[var(--color-text-primary)] [margin-bottom:var(--spacing-2)]">
-          OKLCH Color Tools
-        </h1>
-        {pageData?.page_description && (
-          <p className="text-[var(--color-text-muted)]">
-            {pageData.page_description}
-          </p>
-        )}
+    <div className="max-w-4xl mx-auto -mt-6 bg-[var(--color-background)] min-h-screen">
+      <PageHeader 
+        title="OKLCH Color Tools"
+        description={pageData?.page_description || "Advanced color manipulation and palette generation"}
+      />
+      <div className="mb-6">
         {tenantProfile?.brand_colors && (
           <div className="mt-4 p-4 bg-muted rounded-lg">
             <p className="text-sm font-medium mb-2">Brand Colors Detected:</p>

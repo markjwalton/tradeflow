@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Mic, Send, Loader2, Sparkles, User, Bot } from "lucide-react";
 import { toast } from "sonner";
 import { useTenant } from "@/Layout";
+import { PageHeader } from "@/components/sturij";
 
 export default function AIOnboarding() {
   const { tenantId } = useTenant();
@@ -149,14 +150,11 @@ Respond naturally and ask ONE focused follow-up question at a time. Keep respons
   const currentSession = sessions.find(s => s.id === currentSessionId);
 
   return (
-    <div className="p-6 max-w-4xl mx-auto min-h-screen">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-display text-primary mb-2">AI App Coach</h1>
-        <p className="text-muted-foreground">
-          Let's design the perfect application for your business together
-        </p>
-      </div>
+    <div className="max-w-4xl mx-auto -mt-6 min-h-screen">
+      <PageHeader 
+        title="AI App Coach"
+        description="Let's design the perfect application for your business together"
+      />
 
       {/* Status Badge */}
       {currentSession && (
