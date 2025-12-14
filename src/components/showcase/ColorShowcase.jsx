@@ -123,19 +123,19 @@ export default function ColorShowcase() {
             <div>
               <h4 className="text-sm font-medium mb-4">Status Colors</h4>
               <div className="grid gap-3 md:grid-cols-2">
-                <ColorSwatch label="Success" variable="--success" hex="Primary 600" />
-                <ColorSwatch label="Warning" variable="--warning" hex="Secondary 500" />
-                <ColorSwatch label="Destructive" variable="--destructive" hex="oklch(0.482 0.071 25.7)" />
-                <ColorSwatch label="Info" variable="--info" hex="Midnight 600" />
+                <ColorSwatch label="Success" variable="--success" hex="Primary 600" rgb="#10b981" />
+                <ColorSwatch label="Warning" variable="--warning" hex="Secondary 500" rgb="#f59e0b" />
+                <ColorSwatch label="Destructive" variable="--destructive" hex="oklch(0.482 0.071 25.7)" rgb="#dc2626" />
+                <ColorSwatch label="Info" variable="--info" hex="Midnight 600" rgb="#3b82f6" />
               </div>
             </div>
             <div className="pt-4 border-t">
               <h4 className="text-sm font-medium mb-4">Surface Colors</h4>
               <div className="grid gap-3 md:grid-cols-2">
-                <ColorSwatch label="Background" variable="--background" hex="Background 100" />
-                <ColorSwatch label="Card" variable="--card" hex="#ffffff" />
-                <ColorSwatch label="Muted" variable="--muted" hex="Background 200" />
-                <ColorSwatch label="Popover" variable="--popover" hex="#ffffff" />
+                <ColorSwatch label="Background" variable="--background" hex="Background 100" rgb="#e9efeb" />
+                <ColorSwatch label="Card" variable="--card" hex="#ffffff" rgb="#ffffff" />
+                <ColorSwatch label="Muted" variable="--muted" hex="Background 200" rgb="#d3ded7" />
+                <ColorSwatch label="Popover" variable="--popover" hex="#ffffff" rgb="#ffffff" />
               </div>
             </div>
           </div>
