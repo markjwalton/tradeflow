@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -17,7 +18,7 @@ import {
 import { 
   Play, Search, Database, Layout, Zap, CheckCircle2, XCircle, 
   Circle, Loader2, RefreshCw, Eye, Lightbulb, ArrowRight, Edit,
-  FlaskConical, Beaker, Trash2, AlertTriangle
+  FlaskConical, Beaker, Trash2, AlertTriangle, Plus
 } from "lucide-react";
 import {
   AlertDialog,
@@ -285,74 +286,85 @@ export default function PlaygroundSummary() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+    <div className="max-w-7xl mx-auto -mt-6 min-h-screen">
       <PageHeader 
         title="Development Playground"
         description="Test, modify, and validate templates before deployment"
-      >
-        <div className="flex gap-2">
-          <Link to={createPageUrl("LivePreview")}>
-            <Button variant="outline">
-              <Eye className="h-4 w-4 mr-2" />
-              View Live Pages
-            </Button>
-          </Link>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="outline" className="text-destructive border-destructive-200 hover:bg-destructive-50" disabled={isClearing || playgroundItems.length === 0}>
-                {isClearing ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    {clearProgress.total > 0 ? `${clearProgress.current}/${clearProgress.total}` : "Clearing..."}
-                  </>
-                ) : (
-                  <>
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Clear All
-                  </>
-                )}
+      />
+
+      <Card className="border-border mb-4">
+        <CardContent className="px-2 py-1">
+          <div className="flex gap-2">
+            <Link to={createPageUrl("ConceptWorkbench")}>
+              <Button 
+                variant="ghost"
+                className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                New Concept
               </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle className="flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 text-destructive" />
-                  Clear Playground Data?
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  This will delete all {playgroundItems.length} playground items and their test data. 
-                  Library templates will not be affected. You can re-sync from library afterwards.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={clearPlaygroundData} className="bg-destructive hover:bg-destructive/90 text-destructive-foreground">
-                  Clear All Data
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-          <Button variant="outline" onClick={syncLibraryToPlayground} disabled={isSyncing || allLoading}>
-            {isSyncing ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                {syncProgress.total > 0 ? `${syncProgress.current}/${syncProgress.total}` : "Syncing..."}
-              </>
-            ) : (
-              <>
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Sync Library
-              </>
-            )}
-          </Button>
-          <Link to={createPageUrl("ConceptWorkbench")}>
-            <Button className="bg-warning hover:bg-warning/90 text-warning-foreground">
-              <Lightbulb className="h-4 w-4 mr-2" />
-              New Concept
+            </Link>
+            <Button 
+              variant="ghost" 
+              onClick={syncLibraryToPlayground} 
+              disabled={isSyncing || allLoading}
+            >
+              {isSyncing ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  {syncProgress.total > 0 ? `${syncProgress.current}/${syncProgress.total}` : "Syncing..."}
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Sync Library
+                </>
+              )}
             </Button>
-          </Link>
-        </div>
-      </PageHeader>
+            <Link to={createPageUrl("LivePreview")}>
+              <Button variant="ghost">
+                <Eye className="h-4 w-4 mr-2" />
+                View Live Pages
+              </Button>
+            </Link>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="ghost" className="text-destructive hover:bg-destructive-50" disabled={isClearing || playgroundItems.length === 0}>
+                  {isClearing ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      {clearProgress.total > 0 ? `${clearProgress.current}/${clearProgress.total}` : "Clearing..."}
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Clear All
+                    </>
+                  )}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="flex items-center gap-2">
+                    <AlertTriangle className="h-5 w-5 text-destructive" />
+                    Clear Playground Data?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will delete all {playgroundItems.length} playground items and their test data. 
+                    Library templates will not be affected. You can re-sync from library afterwards.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={clearPlaygroundData} className="bg-destructive hover:bg-destructive/90 text-destructive-foreground">
+                    Clear All Data
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Progress Banner */}
       {(isSyncing || isClearing) && (syncProgress.total > 0 || clearProgress.total > 0) && (
@@ -398,6 +410,8 @@ export default function PlaygroundSummary() {
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
+          <Card className="border-border">
+            <CardContent className="p-4 space-y-6">
           {/* Stats Cards */}
           <div className="grid grid-cols-4 gap-4">
             <Card>
@@ -534,6 +548,8 @@ export default function PlaygroundSummary() {
               </div>
             </CardContent>
           </Card>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Playground Tab */}
@@ -574,51 +590,55 @@ export default function PlaygroundSummary() {
           </div>
 
           {/* Items Grid */}
-          {allLoading ? (
-            <div className="flex justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin" />
-            </div>
-          ) : filteredItems.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">
-              <FlaskConical className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>No items match your filters</p>
-              <Button variant="outline" className="mt-4" onClick={syncLibraryToPlayground}>
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Sync from Library
-              </Button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredItems.map(item => (
-                <Card key={item.id} className="hover:shadow-md transition-shadow">
-                  <CardHeader className="pb-2">
-                    <div className="flex items-start justify-between">
-                      <CardTitle className="text-base flex items-center gap-2">
-                        {typeIcons[item.source_type]}
-                        {item.source_name}
-                      </CardTitle>
-                      <div className="flex items-center gap-1">
-                        <Badge className={itemStatusColors[item.status]}>{item.status}</Badge>
-                        {statusIcons[item.test_status]}
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
-                      <span>v{item.current_version || 1}</span>
-                      {item.group && <Badge variant="outline">{item.group}</Badge>}
-                    </div>
-                    <Link to={getDetailUrl(item)}>
-                      <Button size="sm" variant="outline" className="w-full">
-                        <Eye className="h-3 w-3 mr-2" />
-                        Open
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
+          <Card className="border-border">
+            <CardContent className="p-4">
+              {allLoading ? (
+                <div className="flex justify-center py-12">
+                  <Loader2 className="h-8 w-8 animate-spin" />
+                </div>
+              ) : filteredItems.length === 0 ? (
+                <div className="text-center py-12 text-muted-foreground">
+                  <FlaskConical className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>No items match your filters</p>
+                  <Button variant="outline" className="mt-4" onClick={syncLibraryToPlayground}>
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Sync from Library
+                  </Button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filteredItems.map(item => (
+                    <Card key={item.id} className="hover:shadow-md transition-shadow">
+                      <CardHeader className="pb-2">
+                        <div className="flex items-start justify-between">
+                          <CardTitle className="text-base flex items-center gap-2">
+                            {typeIcons[item.source_type]}
+                            {item.source_name}
+                          </CardTitle>
+                          <div className="flex items-center gap-1">
+                            <Badge className={itemStatusColors[item.status]}>{item.status}</Badge>
+                            {statusIcons[item.test_status]}
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
+                          <span>v{item.current_version || 1}</span>
+                          {item.group && <Badge variant="outline">{item.group}</Badge>}
+                        </div>
+                        <Link to={getDetailUrl(item)}>
+                          <Button size="sm" variant="outline" className="w-full">
+                            <Eye className="h-3 w-3 mr-2" />
+                            Open
+                          </Button>
+                        </Link>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Concepts Tab */}
@@ -633,45 +653,49 @@ export default function PlaygroundSummary() {
             </Link>
           </div>
 
-          {conceptItems.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">
-              <Lightbulb className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>No concepts yet</p>
-              <p className="text-sm mt-1">Create a new entity, page, or feature concept</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {conceptItems.map(concept => (
-                <Card key={concept.id} className="hover:shadow-md transition-shadow border-warning/20">
-                  <CardHeader className="pb-2">
-                    <div className="flex items-start justify-between">
-                      <CardTitle className="text-base flex items-center gap-2">
-                        {typeIcons[concept.item_type]}
-                        {concept.name}
-                      </CardTitle>
-                      <Badge variant="outline">{concept.status}</Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground">{concept.description}</p>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="flex items-center gap-2 mb-3">
-                      {statusIcons[concept.test_status]}
-                      <span className="text-xs text-muted-foreground">
-                        {concept.test_status === "passed" ? "Tests passed" : 
-                         concept.test_status === "failed" ? "Tests failed" : "Not tested"}
-                      </span>
-                    </div>
-                    <Link to={createPageUrl("ConceptWorkbench") + `?id=${concept.id}`}>
-                      <Button size="sm" variant="outline" className="w-full">
-                        <Edit className="h-3 w-3 mr-2" />
-                        Edit Concept
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
+          <Card className="border-border">
+            <CardContent className="p-4">
+              {conceptItems.length === 0 ? (
+                <div className="text-center py-12 text-muted-foreground">
+                  <Lightbulb className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>No concepts yet</p>
+                  <p className="text-sm mt-1">Create a new entity, page, or feature concept</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {conceptItems.map(concept => (
+                    <Card key={concept.id} className="hover:shadow-md transition-shadow border-warning/20">
+                      <CardHeader className="pb-2">
+                        <div className="flex items-start justify-between">
+                          <CardTitle className="text-base flex items-center gap-2">
+                            {typeIcons[concept.item_type]}
+                            {concept.name}
+                          </CardTitle>
+                          <Badge variant="outline">{concept.status}</Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground">{concept.description}</p>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <div className="flex items-center gap-2 mb-3">
+                          {statusIcons[concept.test_status]}
+                          <span className="text-xs text-muted-foreground">
+                            {concept.test_status === "passed" ? "Tests passed" : 
+                             concept.test_status === "failed" ? "Tests failed" : "Not tested"}
+                          </span>
+                        </div>
+                        <Link to={createPageUrl("ConceptWorkbench") + `?id=${concept.id}`}>
+                          <Button size="sm" variant="outline" className="w-full">
+                            <Edit className="h-3 w-3 mr-2" />
+                            Edit Concept
+                          </Button>
+                        </Link>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
