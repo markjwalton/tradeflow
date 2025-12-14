@@ -92,7 +92,8 @@ export const isPage = (item) => {
  * Check if an item has children
  */
 export const hasChildren = (item, allItems) => {
-  return allItems.some((i) => i.parent_id === item._id);
+  const itemId = item.id || item._id;
+  return allItems.some((i) => i.parent_id === itemId);
 };
 
 /**
@@ -119,8 +120,9 @@ export const getTopLevelItems = (allItems) => {
 export const getDescendants = (itemId, allItems, result = new Set()) => {
   const children = getChildren(itemId, allItems);
   children.forEach((child) => {
-    result.add(child._id);
-    getDescendants(child._id, allItems, result);
+    const childId = child.id || child._id;
+    result.add(childId);
+    getDescendants(childId, allItems, result);
   });
   return result;
 };
@@ -132,10 +134,12 @@ export const getDescendants = (itemId, allItems, result = new Set()) => {
 export const getValidParents = (itemId, allItems) => {
   const descendants = itemId ? getDescendants(itemId, allItems) : new Set();
   return allItems.filter(
-    (item) => 
-      item._id && 
-      item._id !== itemId && 
-      !descendants.has(item._id)
+    (item) => {
+      const iid = item.id || item._id;
+      return iid && 
+        iid !== itemId && 
+        !descendants.has(iid);
+    }
   );
 };
 
@@ -146,11 +150,13 @@ export const getFolderParents = (itemId, allItems) => {
   const descendants = itemId ? getDescendants(itemId, allItems) : new Set();
   return allItems
     .filter(
-      (item) => 
-        isFolder(item) && 
-        item._id && 
-        item._id !== itemId && 
-        !descendants.has(item._id)
+      (item) => {
+        const iid = item.id || item._id;
+        return isFolder(item) && 
+          iid && 
+          iid !== itemId && 
+          !descendants.has(iid);
+      }
     )
     .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
 };
@@ -166,8 +172,9 @@ export const buildFlatNavList = (allItems, expandedIds = new Set(), maxDepth = 3
     
     const children = getChildren(parentId, allItems);
     children.forEach((item) => {
+      const itemId = item.id || item._id;
       const itemHasChildren = hasChildren(item, allItems);
-      const isExpanded = expandedIds.has(item._id);
+      const isExpanded = expandedIds.has(itemId);
       
       result.push({
         ...item,
@@ -177,7 +184,7 @@ export const buildFlatNavList = (allItems, expandedIds = new Set(), maxDepth = 3
       });
       
       if (itemHasChildren && isExpanded) {
-        addItems(item._id, depth + 1);
+        addItems(itemId, depth + 1);
       }
     });
   };
