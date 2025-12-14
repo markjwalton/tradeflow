@@ -43,6 +43,7 @@ import {
 } from "recharts";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { PageHeader } from "@/components/sturij";
 
 export default function StandaloneInstanceManager() {
   const queryClient = useQueryClient();
@@ -219,28 +220,27 @@ export default function StandaloneInstanceManager() {
   };
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-foreground font-heading">
-            <Server className="h-6 w-6 text-primary" />
-            Standalone Instance Manager
-          </h1>
-          <p className="text-muted-foreground">Manage API connections to standalone Base44 tenant instances</p>
-        </div>
-        <div className="flex gap-2">
-          <Link to={createPageUrl("StandaloneAPIStrategy")}>
-            <Button variant="outline" className="gap-2">
-              <Eye className="h-4 w-4" />
-              View Strategy
+    <div className="bg-background min-h-screen">
+      <div className="max-w-7xl mx-auto -mt-6">
+        <PageHeader 
+          title="Standalone Instance Manager"
+          description="Manage API connections to standalone Base44 tenant instances"
+        >
+          <div className="flex gap-2">
+            <Link to={createPageUrl("StandaloneAPIStrategy")}>
+              <Button variant="outline" className="gap-2">
+                <Eye className="h-4 w-4" />
+                View Strategy
+              </Button>
+            </Link>
+            <Button onClick={() => { setShowWizard(true); setWizardStep(1); }} className="gap-2">
+              <Plus className="h-4 w-4" />
+              Add Instance
             </Button>
-          </Link>
-          <Button onClick={() => { setShowWizard(true); setWizardStep(1); }} className="gap-2">
-            <Plus className="h-4 w-4" />
-            Add Instance
-          </Button>
-        </div>
+          </div>
+        </PageHeader>
       </div>
+      <div className="max-w-7xl mx-auto">
 
       {/* Stats Cards */}
       <div className="grid grid-cols-5 gap-4 mb-6">
@@ -730,6 +730,7 @@ export default function StandaloneInstanceManager() {
           </div>
         </DialogContent>
       </Dialog>
+      </div>
     </div>
   );
 }

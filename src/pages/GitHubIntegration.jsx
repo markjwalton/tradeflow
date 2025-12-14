@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, File, GitBranch, AlertCircle, FileText, RefreshCw, Database } from "lucide-react";
+import { PageHeader } from "@/components/sturij";
 
 export default function GitHubIntegration() {
   const [loading, setLoading] = useState(false);
@@ -149,13 +150,17 @@ export default function GitHubIntegration() {
   };
 
   return (
-    <div className="min-h-screen p-6 bg-background">
-      <div className="max-w-6xl mx-auto space-y-6">
+    <div className="min-h-screen bg-background">
+      <div className="max-w-6xl mx-auto -mt-6 space-y-6">
+        <PageHeader 
+          title="GitHub Integration Demo"
+          description="Browse repository files, commits, and issues"
+        />
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <GitBranch className="h-6 w-6" />
-              GitHub Integration Demo
+              Repository Overview
             </CardTitle>
           </CardHeader>
           <CardContent>

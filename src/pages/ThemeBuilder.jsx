@@ -8,6 +8,7 @@ import { Sparkles, Save, Eye, Trash2, Play, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { PageHeader } from "@/components/sturij";
 
 const Card = lazy(() => import("@/components/ui/card").then(m => ({ default: m.Card })));
 const CardContent = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardContent })));
@@ -205,16 +206,15 @@ Return JSON with: name, description, suggested_palette_name, custom_css (CSS cod
 
   return (
     <Suspense fallback={<div className="flex justify-center items-center min-h-screen"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
-      <div className="p-6 max-w-6xl mx-auto space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-display">Theme Builder</h1>
-          <p className="text-muted-foreground mt-1">Create and manage complete design themes</p>
-        </div>
+      <div className="max-w-6xl mx-auto -mt-6 space-y-6">
+      <PageHeader 
+        title="Theme Builder"
+        description="Create and manage complete design themes"
+      >
         <Button variant="outline" onClick={() => navigate(createPageUrl("ThemePreview"))}>
           <Eye className="h-4 w-4 mr-2" />Preview Theme
         </Button>
-      </div>
+      </PageHeader>
 
       <Tabs defaultValue="build" className="w-full">
         <TabsList>

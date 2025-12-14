@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Loader2, Sparkles, Check, X, Edit, BookOpen, AlertTriangle, CheckCircle, Info, Eye, MessageCircle, Send } from "lucide-react";
 import { toast } from "sonner";
+import { PageHeader } from "@/components/sturij";
 import {
   Popover,
   PopoverContent,
@@ -364,29 +365,26 @@ Provide a clear, concise explanation that helps them understand this pattern and
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto grid grid-cols-[1fr_300px] gap-6">
-      <div className="col-span-2 flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-light font-display text-foreground">
-            Interactive Violation Report
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            AI extracts patterns, you confirm or refine them for learning
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={() => window.location.href = '/learned-patterns'}
-          >
-            <BookOpen className="h-4 w-4 mr-2" />
-            View Learned Patterns ({learnedPatterns.length})
-          </Button>
-          <Button onClick={handleAnalyze} disabled={analyzing}>
-            {analyzing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
-            {analyzing ? "Analyzing..." : "Extract Patterns"}
-          </Button>
-        </div>
+    <div className="max-w-7xl mx-auto -mt-6 grid grid-cols-[1fr_300px] gap-6">
+      <div className="col-span-2">
+        <PageHeader 
+          title="Interactive Violation Report"
+          description="AI extracts patterns, you confirm or refine them for learning"
+        >
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={() => window.location.href = '/learned-patterns'}
+            >
+              <BookOpen className="h-4 w-4 mr-2" />
+              View Learned Patterns ({learnedPatterns.length})
+            </Button>
+            <Button onClick={handleAnalyze} disabled={analyzing}>
+              {analyzing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
+              {analyzing ? "Analyzing..." : "Extract Patterns"}
+            </Button>
+          </div>
+        </PageHeader>
       </div>
 
       {/* Main Content */}
