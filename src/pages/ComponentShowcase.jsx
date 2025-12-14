@@ -35,8 +35,8 @@ import { SuccessAlert, ErrorAlert, WarningAlert, InfoAlert, LoadingSpinner, Skel
 
 // Tab definitions - each tab shows specific categories
 const tabs = [
-  { id: "all", label: "All Components", icon: BookOpen, categories: ["typography", "buttons", "cards", "forms", "layouts", "navigation", "dataDisplay", "feedback"] },
-  { id: "tokens", label: "Design Tokens", icon: Sparkles, categories: [] },
+  { id: "all", label: "All Components", icon: BookOpen, categories: ["patterns", "typography", "buttons", "cards", "forms", "layouts", "navigation", "dataDisplay", "feedback"] },
+  { id: "patterns", label: "Page Patterns", icon: Layout, categories: ["patterns"] },
   { id: "typography", label: "Typography", icon: Type, categories: ["typography"] },
   { id: "buttons", label: "Buttons", icon: MousePointer, categories: ["buttons"] },
   { id: "cards", label: "Cards", icon: Square, categories: ["cards"] },
@@ -49,14 +49,15 @@ const tabs = [
 
 // Component categories for navigation
 const categories = [
-  { id: "typography", label: "Typography", icon: Type, count: 13, color: "bg-primary" },
-  { id: "buttons", label: "Buttons", icon: MousePointer, count: 11, color: "bg-secondary" },
-  { id: "cards", label: "Cards", icon: Square, count: 8, color: "bg-accent" },
-  { id: "forms", label: "Forms", icon: FormInput, count: 10, color: "bg-midnight-900" },
-  { id: "layouts", label: "Layouts", icon: Layout, count: 12, color: "bg-primary" },
-  { id: "navigation", label: "Navigation", icon: NavIcon, count: 8, color: "bg-secondary" },
-  { id: "dataDisplay", label: "Data Display", icon: BarChart3, count: 9, color: "bg-accent" },
-  { id: "feedback", label: "Feedback", icon: Bell, count: 11, color: "bg-midnight-900" },
+  { id: "patterns", label: "Page Patterns", icon: Layout, count: 5, color: "bg-primary" },
+  { id: "typography", label: "Typography", icon: Type, count: 13, color: "bg-secondary" },
+  { id: "buttons", label: "Buttons", icon: MousePointer, count: 11, color: "bg-accent" },
+  { id: "cards", label: "Cards", icon: Square, count: 8, color: "bg-midnight-900" },
+  { id: "forms", label: "Forms", icon: FormInput, count: 10, color: "bg-primary" },
+  { id: "layouts", label: "Layouts", icon: Layout, count: 12, color: "bg-secondary" },
+  { id: "navigation", label: "Navigation", icon: NavIcon, count: 8, color: "bg-accent" },
+  { id: "dataDisplay", label: "Data Display", icon: BarChart3, count: 9, color: "bg-midnight-900" },
+  { id: "feedback", label: "Feedback", icon: Bell, count: 11, color: "bg-primary" },
 ];
 
 // Section wrapper component - Matching Figma style
@@ -170,6 +171,177 @@ export default function ComponentShowcase() {
         </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Page Patterns Section */}
+        {visibleCategories.includes("patterns") && (
+          <ShowcaseSection
+            id="patterns"
+            title="Page Patterns"
+            count={5}
+            description="Common full-page layout patterns for different use cases"
+          >
+            <ComponentDemo title="Dashboard Layout">
+              <div className="space-y-4">
+                <div className="bg-card rounded-xl border border-border p-4">
+                  <H4 className="mb-4">Dashboard Overview</H4>
+                  <Grid columns={4} gap="md">
+                    <StatsCard label="Total Users" value="2,543" change={12.5} icon={<Users className="h-5 w-5" />} />
+                    <StatsCard label="Revenue" value="$45,231" change={8.3} icon={<BarChart3 className="h-5 w-5" />} />
+                    <StatsCard label="Orders" value="1,234" change={-3.2} icon={<Package className="h-5 w-5" />} />
+                    <StatsCard label="Growth" value="23.5%" change={5.1} icon={<Zap className="h-5 w-5" />} />
+                  </Grid>
+                  <div className="mt-6">
+                    <H5 className="mb-3">Recent Activity</H5>
+                    <SimpleTable
+                      columns={[
+                        { header: "Name", accessor: "name" },
+                        { header: "Status", accessor: "status", render: (row) => <StatusBadge status={row.statusType} label={row.status} /> },
+                        { header: "Date", accessor: "date" },
+                      ]}
+                      data={[
+                        { name: "New Order #1234", status: "Complete", statusType: "success", date: "Dec 14, 2024" },
+                        { name: "User Registration", status: "Pending", statusType: "warning", date: "Dec 14, 2024" },
+                      ]}
+                    />
+                  </div>
+                </div>
+              </div>
+            </ComponentDemo>
+
+            <ComponentDemo title="List Page with Filters">
+              <div className="bg-card rounded-xl border border-border p-4">
+                <div className="flex items-center justify-between mb-4">
+                  <H4>Projects</H4>
+                  <PrimaryButton size="sm"><Plus className="h-4 w-4 mr-2" />New Project</PrimaryButton>
+                </div>
+                <div className="mb-4 flex gap-2">
+                  <SearchField placeholder="Search projects..." value={searchValue} onChange={setSearchValue} />
+                  <SelectField options={["All Status", "Active", "Completed"]} value={selectValue} onChange={setSelectValue} />
+                </div>
+                <Stack spacing="sm">
+                  <BasicCard title="Project Alpha" description="Main product development">
+                    <Row spacing="md" wrap>
+                      <StatusBadge status="success" label="Active" />
+                      <MutedText>Due: Dec 20, 2024</MutedText>
+                    </Row>
+                  </BasicCard>
+                  <BasicCard title="Project Beta" description="Marketing campaign">
+                    <Row spacing="md" wrap>
+                      <StatusBadge status="warning" label="In Progress" />
+                      <MutedText>Due: Dec 25, 2024</MutedText>
+                    </Row>
+                  </BasicCard>
+                </Stack>
+              </div>
+            </ComponentDemo>
+
+            <ComponentDemo title="Detail Page">
+              <div className="bg-card rounded-xl border border-border p-6">
+                <div className="flex items-start justify-between mb-6">
+                  <div>
+                    <H3>Product Name</H3>
+                    <MutedText>SKU: PRD-12345</MutedText>
+                  </div>
+                  <Row spacing="sm">
+                    <OutlineButton size="sm"><Edit className="h-4 w-4 mr-2" />Edit</OutlineButton>
+                    <DestructiveButton size="sm"><Trash2 className="h-4 w-4 mr-2" />Delete</DestructiveButton>
+                  </Row>
+                </div>
+                <TwoColumn
+                  ratio="2:1"
+                  gap="lg"
+                  left={
+                    <Stack spacing="lg">
+                      <div>
+                        <H5 className="mb-3">Description</H5>
+                        <BodyText>This is a detailed description of the product with all relevant information.</BodyText>
+                      </div>
+                      <div>
+                        <H5 className="mb-3">Specifications</H5>
+                        <DataList
+                          items={[
+                            { label: "Category", value: "Electronics" },
+                            { label: "Brand", value: "Premium Co." },
+                            { label: "Weight", value: "2.5 kg" },
+                          ]}
+                        />
+                      </div>
+                    </Stack>
+                  }
+                  right={
+                    <div className="bg-muted rounded-lg p-4">
+                      <H5 className="mb-3">Quick Info</H5>
+                      <Stack spacing="sm">
+                        <KeyValue label="Price" value="$299" inline />
+                        <KeyValue label="Stock" value="45 units" inline />
+                        <KeyValue label="Status" value={<StatusBadge status="success" label="Available" />} inline />
+                      </Stack>
+                    </div>
+                  }
+                />
+              </div>
+            </ComponentDemo>
+
+            <ComponentDemo title="Form Page">
+              <div className="bg-card rounded-xl border border-border p-6 max-w-2xl">
+                <H4 className="mb-6">Create New Item</H4>
+                <Stack spacing="lg">
+                  <Grid columns={2} gap="lg">
+                    <TextField label="Item Name" placeholder="Enter name..." required />
+                    <SelectField label="Category" options={["Design", "Development", "Marketing"]} />
+                  </Grid>
+                  <TextAreaField label="Description" placeholder="Enter description..." rows={4} />
+                  <Grid columns={2} gap="lg">
+                    <DatePickerField label="Start Date" />
+                    <DatePickerField label="End Date" />
+                  </Grid>
+                  <SwitchField label="Make this item public" description="Visible to all users" checked={switchValue} onChange={setSwitchValue} />
+                  <Row spacing="md" className="justify-end">
+                    <OutlineButton>Cancel</OutlineButton>
+                    <PrimaryButton>Create Item</PrimaryButton>
+                  </Row>
+                </Stack>
+              </div>
+            </ComponentDemo>
+
+            <ComponentDemo title="Settings Page">
+              <div className="bg-card rounded-xl border border-border overflow-hidden">
+                <div className="border-b border-border">
+                  <TabsNav
+                    tabs={[
+                      { value: "tab1", label: "General" },
+                      { value: "tab2", label: "Security" },
+                      { value: "tab3", label: "Notifications" },
+                    ]}
+                    activeTab={activeTab}
+                    onChange={setActiveTab}
+                  />
+                </div>
+                <div className="p-6">
+                  <Stack spacing="lg">
+                    <div>
+                      <H5 className="mb-4">Profile Settings</H5>
+                      <Grid columns={2} gap="lg">
+                        <TextField label="Full Name" value="John Doe" />
+                        <EmailField label="Email Address" value="john@example.com" />
+                      </Grid>
+                    </div>
+                    <div className="pt-4 border-t border-border">
+                      <H5 className="mb-4">Preferences</H5>
+                      <Stack spacing="md">
+                        <SwitchField label="Email notifications" description="Receive email updates" checked={true} onChange={() => {}} />
+                        <SwitchField label="Dark mode" description="Use dark theme" checked={false} onChange={() => {}} />
+                      </Stack>
+                    </div>
+                    <div className="flex justify-end pt-4 border-t border-border">
+                      <PrimaryButton>Save Changes</PrimaryButton>
+                    </div>
+                  </Stack>
+                </div>
+              </div>
+            </ComponentDemo>
+          </ShowcaseSection>
+        )}
+
         {/* Typography Section */}
         {visibleCategories.includes("typography") && (
           <ShowcaseSection
