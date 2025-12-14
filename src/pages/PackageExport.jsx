@@ -241,7 +241,7 @@ export default function PackageExport() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto min-h-screen p-6">
+    <div className="max-w-7xl mx-auto min-h-screen -mt-6">
       <PageHeader 
         title="Export Package"
         description={pkg ? `${pkg.package_name} v${pkg.version}` : "Loading..."}
@@ -285,9 +285,9 @@ export default function PackageExport() {
         </TabsList>
 
         <Card className="border-border p-6">
-          <div className="flex flex-col md:flex-row gap-6">
+          <div className="space-y-6">
             {/* Options Sidebar */}
-            <Card className="border-border md:w-1/4">
+            <Card className="border-border">
               <CardHeader>
                 <CardTitle className="text-midnight-900 flex items-center gap-2">
                   <Settings className="h-4 w-4" />
@@ -342,7 +342,7 @@ export default function PackageExport() {
             </Card>
 
             {/* Export Preview */}
-            <Card className="border-border md:w-3/4">
+            <Card className="border-border">
               <CardContent className="p-0">
                 <ScrollArea className="h-[500px]">
                   <pre className="p-4 text-sm font-mono text-midnight-900 whitespace-pre-wrap">
