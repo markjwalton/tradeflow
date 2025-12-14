@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -343,7 +343,7 @@ export default function FontManager() {
                   <div className="flex items-center justify-between">
                     <div className="text-left">
                       <CardTitle>Fonts in Use</CardTitle>
-                      <CardDescription>Currently active fonts in the main application</CardDescription>
+                      <p className="text-sm text-muted-foreground">Currently active fonts in the main application</p>
                     </div>
                     <ChevronDown className={`h-5 w-5 transition-transform ${fontsInUseOpen ? 'rotate-180' : ''}`} />
                   </div>
@@ -428,7 +428,7 @@ export default function FontManager() {
                         <ChevronDown className={`h-4 w-4 transition-transform ${openFontIds.includes(font.id) ? 'rotate-180' : ''}`} />
                         <div className="text-left">
                           <CardTitle className="text-base" style={{ fontFamily: font.font_family }}>{font.name}</CardTitle>
-                          <CardDescription className="capitalize">{font.category}</CardDescription>
+                          <p className="text-sm text-muted-foreground capitalize">{font.category}</p>
                         </div>
                       </div>
                       <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
