@@ -260,7 +260,7 @@ export default function DeveloperDocs() {
           ))}
         </TabsList>
 
-        <TabsContent value={selectedCategory} className="space-y-6">
+        <TabsContent value={selectedCategory} className="mt-6 space-y-4">
           {/* Search */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -272,13 +272,16 @@ export default function DeveloperDocs() {
             />
           </div>
 
+          {/* Results */}
           {filteredGuides.length === 0 ? (
-            <Card className="p-12 text-center">
-              <p className="text-muted-foreground">No guides found matching your search.</p>
+            <Card>
+              <CardContent className="py-12 text-center">
+                <p className="text-muted-foreground">No guides found matching your search.</p>
+              </CardContent>
             </Card>
           ) : selectedCategory === 'all' ? (
             // Show collapsible categories when viewing all
-            <div className="space-y-4">
+            <div className="space-y-3">
               {Object.entries(guidesByCategory).map(([category, categoryGuides]) => (
                 <Collapsible
                   key={category}
@@ -314,30 +317,28 @@ export default function DeveloperDocs() {
                                 handleGuideClick(guide.file);
                               }}
                             >
-                              <CardHeader className="pb-3">
+                              <CardContent className="p-4">
                                 <div className="flex items-start gap-3">
                                   <div className="p-2 rounded-lg bg-primary/10">
                                     <Icon className="h-5 w-5 text-primary" />
                                   </div>
                                   <div className="flex-1">
-                                    <CardTitle className="text-base mb-1">{guide.title}</CardTitle>
-                                    <CardDescription className="text-sm">
+                                    <h3 className="font-medium mb-1">{guide.title}</h3>
+                                    <p className="text-sm text-muted-foreground mb-2">
                                       {guide.description}
-                                    </CardDescription>
+                                    </p>
+                                    <div className="flex flex-wrap gap-1">
+                                      {guide.tags.map(tag => (
+                                        <Badge 
+                                          key={tag} 
+                                          variant="secondary"
+                                          className="text-xs"
+                                        >
+                                          {tag}
+                                        </Badge>
+                                      ))}
+                                    </div>
                                   </div>
-                                </div>
-                              </CardHeader>
-                              <CardContent className="pt-0">
-                                <div className="flex flex-wrap gap-1">
-                                  {guide.tags.map(tag => (
-                                    <Badge 
-                                      key={tag} 
-                                      variant="secondary"
-                                      className="text-xs"
-                                    >
-                                      {tag}
-                                    </Badge>
-                                  ))}
                                 </div>
                               </CardContent>
                             </Card>
@@ -360,30 +361,28 @@ export default function DeveloperDocs() {
                     className="cursor-pointer hover:shadow-md transition-shadow"
                     onClick={() => handleGuideClick(guide.file)}
                   >
-                    <CardHeader className="pb-3">
+                    <CardContent className="p-4">
                       <div className="flex items-start gap-3">
                         <div className="p-2 rounded-lg bg-primary/10">
                           <Icon className="h-5 w-5 text-primary" />
                         </div>
                         <div className="flex-1">
-                          <CardTitle className="text-base mb-1">{guide.title}</CardTitle>
-                          <CardDescription className="text-sm">
+                          <h3 className="font-medium mb-1">{guide.title}</h3>
+                          <p className="text-sm text-muted-foreground mb-2">
                             {guide.description}
-                          </CardDescription>
+                          </p>
+                          <div className="flex flex-wrap gap-1">
+                            {guide.tags.map(tag => (
+                              <Badge 
+                                key={tag} 
+                                variant="secondary"
+                                className="text-xs"
+                              >
+                                {tag}
+                              </Badge>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                      <div className="flex flex-wrap gap-1">
-                        {guide.tags.map(tag => (
-                          <Badge 
-                            key={tag} 
-                            variant="secondary"
-                            className="text-xs"
-                          >
-                            {tag}
-                          </Badge>
-                        ))}
                       </div>
                     </CardContent>
                   </Card>
