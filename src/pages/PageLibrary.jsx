@@ -20,7 +20,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Search, Layout, Sparkles, Trash2, Edit, Copy, Loader2, BookmarkPlus, Folder, Database, Check, Eye } from "lucide-react";
+import { Plus, Search, Layout, Sparkles, Trash2, Edit, Copy, Loader2, BookmarkPlus, Folder, Database, Check, Eye, ChevronDown, ChevronRight } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import PageBuilder from "@/components/library/PageBuilder";
@@ -60,6 +61,7 @@ export default function PageLibrary() {
   const [bulkGeneratedPages, setBulkGeneratedPages] = useState([]);
   const [selectedBulkPages, setSelectedBulkPages] = useState([]);
   const [previewPage, setPreviewPage] = useState(null);
+  const [expandedGroups, setExpandedGroups] = useState({});
 
   const { data: pages = [], isLoading } = useQuery({
     queryKey: ["pageTemplates"],
@@ -373,9 +375,8 @@ Return a JSON object with a "pages" array containing page templates.`,
         </CardContent>
       </Card>
 
-      <Card className="border-border">
-        <CardContent className="p-4">
-          <div className="flex gap-4 mb-6">
+      {/* Filters */}
+      <div className="flex gap-4 mb-6">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -410,18 +411,19 @@ Return a JSON object with a "pages" array containing page templates.`,
         </Select>
       </div>
 
-      {isLoading ? (
+      <Card className="border-border">
+        <CardContent className="p-4">
+          {isLoading ? (
         <div className="flex items-center justify-center py-12">
           <Loader2 className="h-8 w-8 animate-spin" />
         </div>
-      ) : filteredPages.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground">
-          <Layout className="h-12 w-12 mx-auto mb-4 opacity-50" />
-          <p>No page templates found</p>
-        </div>
-      ) : (
-        <>
-          <div className="flex items-center justify-between mb-4">
+          ) : filteredPages.length === 0 ? (
+            <div className="text-center py-12 text-muted-foreground">
+              <Layout className="h-12 w-12 mx-auto mb-4 opacity-50" />
+              <p>No page templates found</p>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between mb-4">
             <p className="text-sm text-muted-foreground">
               Showing {startIndex + 1}-{Math.min(endIndex, filteredPages.length)} of {filteredPages.length} pages
             </p>
@@ -448,71 +450,120 @@ Return a JSON object with a "pages" array containing page templates.`,
                 </Button>
               </div>
             )}
-          </div>
-          <div className="space-y-8">
-          {Object.entries(paginatedGroupedPages).map(([groupName, groupPages]) => (
-            <div key={groupName}>
-              <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                <Badge className={categoryColors[groupName] || "bg-muted text-muted-foreground"}>{groupName}</Badge>
-                <span className="text-muted-foreground text-sm font-normal">({groupPages.length})</span>
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {groupPages.map((page) => (
-                  <Card key={page.id} className="hover:shadow-md transition-shadow">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-base flex items-center gap-2">
-                        <Layout className="h-4 w-4 text-info" />
-                        {page.name}
-                        {page.is_custom && (
-                          <Badge variant="outline" className="text-xs">Custom</Badge>
-                        )}
-                      </CardTitle>
-                      <p className="text-sm text-muted-foreground mt-1">{page.description}</p>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                      <div className="flex flex-wrap gap-1 mb-3">
-                        {page.entities_used?.map((entity) => (
-                          <Badge key={entity} variant="outline" className="text-xs">{entity}</Badge>
-                        ))}
-                      </div>
-                      <div className="text-xs text-muted-foreground mb-3">
-                        {page.components?.length || 0} components · {page.actions?.length || 0} actions
-                      </div>
-                      <div className="flex gap-1">
-                        <Button size="sm" variant="ghost" onClick={() => setPreviewPage(page)} title="Preview">
-                          <Eye className="h-3 w-3" />
-                        </Button>
-                        <Button size="sm" variant="ghost" onClick={() => { setEditingPage(page); setShowBuilder(true); }} title="Edit">
-                          <Edit className="h-3 w-3" />
-                        </Button>
-                        <Button size="sm" variant="ghost" onClick={() => handleDuplicate(page)} title="Duplicate">
-                          <Copy className="h-3 w-3" />
-                        </Button>
-                        {!page.custom_project_id && projects.length > 0 && (
-                          <Button size="sm" variant="ghost" onClick={() => setAddToProjectItem(page)} title="Add to Project" className="text-primary">
-                            <Folder className="h-3 w-3" />
-                          </Button>
-                        )}
-                        {page.is_custom && (
-                          <Button size="sm" variant="ghost" onClick={() => handleSaveToLibrary(page)} title="Save to default library">
-                            <BookmarkPlus className="h-3 w-3" />
-                          </Button>
-                        )}
-                        <Button size="sm" variant="ghost" className="text-destructive" onClick={() => deleteMutation.mutate(page.id)} title="Delete">
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
             </div>
-          ))}
-        </div>
-        </>
-      )}
-        </CardContent>
-      </Card>
+            <div className="space-y-4">
+            {Object.entries(paginatedGroupedPages).map(([groupName, groupPages]) => {
+              const isExpanded = expandedGroups[groupName] === true;
+              return (
+                <Collapsible
+                  key={groupName}
+                  open={isExpanded}
+                  onOpenChange={() => setExpandedGroups(prev => ({ ...prev, [groupName]: !isExpanded }))}
+                >
+                  <Card className="border-border">
+                    <CollapsibleTrigger className="w-full">
+                      <CardHeader className="py-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                            <h3 className="font-medium">{groupName}</h3>
+                          </div>
+                        </div>
+                      </CardHeader>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <CardContent className="pt-0 space-y-2">
+                        {groupPages.map((page) => (
+                          <Card key={page.id} className="border-border hover:shadow-sm transition-shadow">
+                            <CardContent className="p-4">
+                              <div className="flex items-center gap-4">
+                                <Layout className="h-5 w-5 text-info flex-shrink-0" />
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <h3 className="font-medium text-base">{page.name}</h3>
+                                    {page.is_custom && (
+                                      <Badge variant="outline" className="text-xs">Custom</Badge>
+                                    )}
+                                  </div>
+                                  <p className="text-sm text-muted-foreground line-clamp-1">{page.description}</p>
+                                  <div className="flex items-center gap-3 mt-2">
+                                    <div className="flex flex-wrap gap-1">
+                                      {page.entities_used?.slice(0, 3).map((entity) => (
+                                        <Badge key={entity} variant="outline" className="text-xs">{entity}</Badge>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="flex gap-1 flex-shrink-0">
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => setPreviewPage(page)}
+                                    title="Preview"
+                                  >
+                                    <Eye className="h-3 w-3" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => { setEditingPage(page); setShowBuilder(true); }}
+                                    title="Edit"
+                                  >
+                                    <Edit className="h-3 w-3" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => handleDuplicate(page)}
+                                    title="Duplicate"
+                                  >
+                                    <Copy className="h-3 w-3" />
+                                  </Button>
+                                  {!page.custom_project_id && projects.length > 0 && (
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => setAddToProjectItem(page)}
+                                      title="Add to Project"
+                                      className="text-primary"
+                                    >
+                                      <Folder className="h-3 w-3" />
+                                    </Button>
+                                  )}
+                                  {page.is_custom && (
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => handleSaveToLibrary(page)}
+                                      title="Save to default library"
+                                    >
+                                      <BookmarkPlus className="h-3 w-3" />
+                                    </Button>
+                                  )}
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="text-destructive hover:text-destructive"
+                                    onClick={() => deleteMutation.mutate(page.id)}
+                                    title="Delete"
+                                  >
+                                    <Trash2 className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </CardContent>
+                    </CollapsibleContent>
+                  </Card>
+                </Collapsible>
+              );
+            })}
+            </div>
+            )}
+            </CardContent>
+            </Card>
 
       <Dialog open={showBuilder} onOpenChange={setShowBuilder}>
         <DialogContent className="max-w-4xl h-[90vh] overflow-hidden flex flex-col">
