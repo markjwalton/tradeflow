@@ -221,20 +221,45 @@ export default function Library() {
     },
   });
 
-  // Get current data based on active tab
+  // Get current data based on active section and tab
   const getCurrentData = () => {
+    if (activeSection === "community") return communityItems;
+    if (activeSection === "forms") {
+      if (activeTab === "forms") return formTemplates;
+      return checklistTemplates;
+    }
+    if (activeSection === "business") return businessTemplates;
+    if (activeSection === "workflows") return workflows;
+    
+    // Core library
     if (activeTab === "entities") return entities;
     if (activeTab === "pages") return pages;
     return features;
   };
 
   const getCurrentCategories = () => {
+    if (activeSection === "community") {
+      if (activeTab === "entities") return entityCategories;
+      if (activeTab === "pages") return pageCategories;
+      return featureCategories;
+    }
+    if (activeSection === "forms") {
+      if (activeTab === "forms") return formCategories;
+      return checklistCategories;
+    }
+    if (activeSection === "business") return businessCategories;
+    if (activeSection === "workflows") return workflowCategories;
+    
     if (activeTab === "entities") return entityCategories;
     if (activeTab === "pages") return pageCategories;
     return featureCategories;
   };
 
-  const isLoading = loadingEntities || loadingPages || loadingFeatures;
+  const isLoading = activeSection === "community" ? loadingCommunity :
+                    activeSection === "forms" ? (loadingForms || loadingChecklists) :
+                    activeSection === "business" ? loadingBusiness :
+                    activeSection === "workflows" ? loadingWorkflows :
+                    (loadingEntities || loadingPages || loadingFeatures);
   const currentData = getCurrentData();
   const availableGroups = [...new Set(currentData.filter(i => i.group).map(i => i.group))].sort();
 
