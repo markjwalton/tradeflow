@@ -251,6 +251,28 @@ export default function NavigationManager() {
     
     setCustomProperties([
       {
+        key: "page_description",
+        label: "Page Description",
+        type: "text",
+        value: pageData?.description || "",
+        description: "Description shown below the page title",
+        onChange: async (value) => {
+          if (pageData?.id) {
+            try {
+              await base44.entities.UIPage.update(pageData.id, { description: value });
+              setPageData({ ...pageData, description: value });
+              toast.success("Description updated");
+            } catch (e) {
+              toast.error("Failed to update description");
+            }
+          }
+        }
+      },
+      {
+        key: "divider0",
+        type: "divider"
+      },
+      {
         key: "saveConfig",
         label: "Save Navigation Config",
         type: "button",
@@ -301,7 +323,7 @@ export default function NavigationManager() {
     ]);
 
     return () => setCustomProperties([]);
-  }, [pageSettings, setCustomProperties, currentUser, saveNavConfig.isPending, restoreNavConfig.isPending]);
+  }, [pageSettings, setCustomProperties, currentUser, saveNavConfig.isPending, restoreNavConfig.isPending, pageData]);
 
   // Fetch tenants for selector
   const { data: tenants = [] } = useQuery({

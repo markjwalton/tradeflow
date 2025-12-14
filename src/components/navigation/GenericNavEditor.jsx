@@ -132,25 +132,9 @@ export default function GenericNavEditor({
     }
   }, [rawItems, config?.id, items]);
   
-  // Initial expand logic - check settings and respect default_collapsed
+  // Initial expand logic - always check user settings on mount
   React.useEffect(() => {
     if (!initialExpandDone && items.length > 0) {
-      // Check if session state already exists
-      const sessionState = sessionStorage.getItem(`nav_expanded_${configType}`);
-      if (sessionState) {
-        // Use session state
-        try {
-          const stored = JSON.parse(sessionState);
-          setExpandedParents(new Set(stored));
-        } catch (e) {
-          // Invalid session state, clear it
-          sessionStorage.removeItem(`nav_expanded_${configType}`);
-        }
-        setInitialExpandDone(true);
-        return;
-      }
-
-      // No session state - check user settings
       base44.auth.me()
         .then(user => {
           const defaultCollapsed = user?.ui_preferences?.navManager_settings?.defaultCollapsed || false;
