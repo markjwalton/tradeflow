@@ -290,15 +290,15 @@ For each recommendation, provide:
         </div>
       </PageHeader>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-0">
-        <TabsList className="mb-4">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="[margin-top:var(--spacing-4)]">
+        <TabsList>
           <TabsTrigger value="packages">
             <Package className="h-4 w-4 mr-2" />
-            Packages ({packages.length})
+            Packages
           </TabsTrigger>
           <TabsTrigger value="components">
             <FileCode className="h-4 w-4 mr-2" />
-            Components ({components.length})
+            Components
           </TabsTrigger>
           <TabsTrigger value="recommendations">
             <Sparkles className="h-4 w-4 mr-2" />
@@ -311,12 +311,12 @@ For each recommendation, provide:
           </TabsTrigger>
           <TabsTrigger value="customers">
             <Users className="h-4 w-4 mr-2" />
-            Customers ({customerPackages.length})
+            Customers
           </TabsTrigger>
         </TabsList>
 
         {/* Packages Tab */}
-        <TabsContent value="packages" className="mt-4">
+        <TabsContent value="packages" className="[margin-top:var(--spacing-4)]">
           <Card className="border-border">
             <CardContent className="p-6">
               <div className="space-y-4">
@@ -489,7 +489,7 @@ For each recommendation, provide:
         </TabsContent>
 
         {/* Components Tab */}
-        <TabsContent value="components" className="mt-4">
+        <TabsContent value="components" className="[margin-top:var(--spacing-4)]">
           <Card className="border-border">
             <CardContent className="p-6">
               <div className="space-y-4">
@@ -548,7 +548,7 @@ For each recommendation, provide:
         </TabsContent>
 
         {/* Recommendations Tab */}
-        <TabsContent value="recommendations" className="mt-4">
+        <TabsContent value="recommendations" className="[margin-top:var(--spacing-4)]">
           <Card className="border-border">
             <CardContent className="p-6">
               <div className="space-y-4">
@@ -707,7 +707,7 @@ For each recommendation, provide:
         </TabsContent>
 
         {/* Customers Tab */}
-        <TabsContent value="customers" className="mt-4">
+        <TabsContent value="customers" className="[margin-top:var(--spacing-4)]">
           <Card className="border-border">
             <CardContent className="p-6">
               <div className="space-y-4">
