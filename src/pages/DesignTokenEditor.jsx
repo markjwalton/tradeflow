@@ -417,14 +417,14 @@ export default function DesignTokenEditor() {
 }
 
 const DESIGN_TOKEN_COLORS = [
-  { value: 'var(--primary-500)', label: 'Primary', cssVar: '--primary-500' },
-  { value: 'var(--secondary-400)', label: 'Secondary', cssVar: '--secondary-400' },
-  { value: 'var(--accent-300)', label: 'Accent', cssVar: '--accent-300' },
-  { value: 'var(--foreground)', label: 'Foreground', cssVar: '--foreground' },
-  { value: 'var(--muted-foreground)', label: 'Muted', cssVar: '--muted-foreground' },
-  { value: 'var(--destructive)', label: 'Destructive', cssVar: '--destructive' },
-  { value: 'var(--charcoal-900)', label: 'Charcoal', cssVar: '--charcoal-900' },
-  { value: 'var(--midnight-900)', label: 'Midnight', cssVar: '--midnight-900' },
+  { value: 'var(--primary-500)', label: 'Primary', cssVar: '--primary-500', rgb: '#3d5d45' },
+  { value: 'var(--secondary-400)', label: 'Secondary', cssVar: '--secondary-400', rgb: '#bda176' },
+  { value: 'var(--accent-300)', label: 'Accent', cssVar: '--accent-300', rgb: '#c9aca9' },
+  { value: 'var(--foreground)', label: 'Foreground', cssVar: '--foreground', rgb: '#0f1621' },
+  { value: 'var(--muted-foreground)', label: 'Muted', cssVar: '--muted-foreground', rgb: '#6b7280' },
+  { value: 'var(--destructive)', label: 'Destructive', cssVar: '--destructive', rgb: '#a84032' },
+  { value: 'var(--charcoal-900)', label: 'Charcoal', cssVar: '--charcoal-900', rgb: '#1a1a1a' },
+  { value: 'var(--midnight-900)', label: 'Midnight', cssVar: '--midnight-900', rgb: '#0f1621' },
 ];
 
 function TokenEditor({ token, value, onChange }) {
@@ -463,7 +463,7 @@ function TokenEditor({ token, value, onChange }) {
               key={color.value}
               onClick={() => onChange(color.value)}
               className="w-7 h-7 rounded border-2 hover:scale-110 transition-transform relative"
-              style={{ backgroundColor: `var(${color.cssVar})` }}
+              style={{ backgroundColor: color.rgb || `var(${color.cssVar})` }}
               title={color.label}
             >
               {value === color.value && (
