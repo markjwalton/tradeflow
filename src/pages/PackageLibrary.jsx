@@ -245,17 +245,16 @@ export default function PackageLibrary() {
         title="Package Library"
         description="Reusable architecture components for building Base44 applications"
       />
-        
-        <PackageCard pkg={multiTenantPackage} />
-        
-        {/* Placeholder for future packages */}
-        <Card className="border-dashed border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
-          <CardContent className="py-12 text-center text-[var(--color-charcoal)]">
-            <Package className="h-12 w-12 mx-auto mb-3 opacity-50" />
-            <p>More architecture packages coming soon...</p>
-          </CardContent>
-        </Card>
-      </div>
+      
+      <PackageCard pkg={multiTenantPackage} />
+      
+      {/* Placeholder for future packages */}
+      <Card className="border-dashed border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+        <CardContent className="py-12 text-center text-[var(--color-charcoal)]">
+          <Package className="h-12 w-12 mx-auto mb-3 opacity-50" />
+          <p>More architecture packages coming soon...</p>
+        </CardContent>
+      </Card>
     </div>
   );
 }
