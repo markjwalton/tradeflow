@@ -15,6 +15,7 @@ import { ChevronLeft, ChevronRight, Loader2, Circle } from "lucide-react";
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, isSameMonth, isSameDay, addMonths, subMonths } from "date-fns";
 import { PageLoader } from "@/components/common/LoadingStates";
 import { QueryErrorState } from "@/components/common/QueryErrorState";
+import { PageHeader } from "@/components/sturij";
 
 const statusColors = {
   todo: "bg-muted",
@@ -148,9 +149,11 @@ export default function Calendar() {
   }
 
   return (
-    <div className="p-3 sm:p-4 md:p-6 bg-background min-h-screen">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-light font-display text-foreground">Calendar</h1>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Calendar"
+        description="View tasks and team availability"
+      >
         <Select value={filterProject} onValueChange={setFilterProject}>
           <SelectTrigger className="w-full sm:w-48"><SelectValue placeholder="Filter by project" /></SelectTrigger>
           <SelectContent>
@@ -158,7 +161,7 @@ export default function Calendar() {
             {projects.map((p) => (<SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>))}
           </SelectContent>
         </Select>
-      </div>
+      </PageHeader>
 
       <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
         <div className="flex-1">

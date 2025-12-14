@@ -22,6 +22,7 @@ import { Plus, Edit2, Trash2, Building2, Search, Database, Layout, Zap, GitBranc
 import CustomProjectSelector from "@/components/library/CustomProjectSelector";
 import { toast } from "sonner";
 import BusinessTemplateBuilder from "@/components/templates/BusinessTemplateBuilder";
+import { PageHeader } from "@/components/sturij";
 
 const categories = [
   "Professional Services",
@@ -150,23 +151,11 @@ export default function BusinessTemplates() {
   }
 
   return (
-    <div className="p-6 max-w-6xl mx-auto bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
-            <Building2 className="h-6 w-6" />
-            Business Templates
-            {currentProject && (
-              <Badge className="bg-primary/10 text-primary">
-                <Folder className="h-3 w-3 mr-1" />
-                {currentProject.name}
-              </Badge>
-            )}
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Pre-defined templates with entities, pages, and features
-          </p>
-        </div>
+    <div className="max-w-6xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title={currentProject ? `Business Templates: ${currentProject.name}` : "Business Templates"}
+        description="Pre-defined templates with entities, pages, and features"
+      >
         <div className="flex gap-2">
           <CustomProjectSelector
             selectedProjectId={selectedProjectId}
@@ -177,7 +166,7 @@ export default function BusinessTemplates() {
             New Template
           </Button>
         </div>
-      </div>
+      </PageHeader>
 
       {/* Filters */}
       <div className="flex gap-3 mb-6">

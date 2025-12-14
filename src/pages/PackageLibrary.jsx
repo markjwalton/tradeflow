@@ -18,6 +18,7 @@ import {
   Layout as LayoutIcon
 } from "lucide-react";
 import { toast } from "sonner";
+import { PageHeader } from "@/components/sturij";
 
 const multiTenantPackage = {
   name: "Multi-Tenant Architecture",
@@ -239,17 +240,11 @@ function PackageCard({ pkg }) {
 
 export default function PackageLibrary() {
   return (
-    <div className="min-h-screen bg-[var(--color-background)] p-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-light font-display flex items-center gap-3 text-[var(--color-midnight)]">
-            <Package className="h-8 w-8" />
-            Package Library
-          </h1>
-          <p className="text-[var(--color-charcoal)] mt-2">
-            Reusable architecture components for building Base44 applications
-          </p>
-        </div>
+    <div className="max-w-4xl mx-auto -mt-6 min-h-screen bg-[var(--color-background)]">
+      <PageHeader 
+        title="Package Library"
+        description="Reusable architecture components for building Base44 applications"
+      />
         
         <PackageCard pkg={multiTenantPackage} />
         
