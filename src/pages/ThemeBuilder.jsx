@@ -4,7 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Sparkles, Save, Eye, Trash2, Play, Loader2 } from "lucide-react";
+import { Sparkles, Save, Eye, Trash2, Play, Loader2, Info, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -15,6 +15,8 @@ const CardContent = lazy(() => import("@/components/ui/card").then(m => ({ defau
 const CardHeader = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardHeader })));
 const CardTitle = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardTitle })));
 const CardDescription = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardDescription })));
+const Alert = lazy(() => import("@/components/ui/alert").then(m => ({ default: m.Alert })));
+const AlertDescription = lazy(() => import("@/components/ui/alert").then(m => ({ default: m.AlertDescription })));
 const Textarea = lazy(() => import("@/components/ui/textarea").then(m => ({ default: m.Textarea })));
 const Badge = lazy(() => import("@/components/ui/badge").then(m => ({ default: m.Badge })));
 const Select = lazy(() => import("@/components/ui/select").then(m => ({ default: m.Select })));
