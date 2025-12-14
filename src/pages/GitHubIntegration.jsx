@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, File, GitBranch, AlertCircle, FileText, RefreshCw, Database } from "lucide-react";
+import { Loader2, File, GitBranch, AlertCircle, FileText, RefreshCw, Database, Search, ChevronDown, ChevronRight } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { PageHeader } from "@/components/sturij";
 
 export default function GitHubIntegration() {
@@ -22,6 +23,10 @@ export default function GitHubIntegration() {
   const [hasMoreIssues, setHasMoreIssues] = useState(false);
   const [hasMoreCommits, setHasMoreCommits] = useState(false);
   const [useCache, setUseCache] = useState(true);
+  const [searchIssues, setSearchIssues] = useState("");
+  const [searchCommits, setSearchCommits] = useState("");
+  const [collapsedIssues, setCollapsedIssues] = useState({});
+  const [collapsedCommits, setCollapsedCommits] = useState({});
 
   const handleGetRepo = async () => {
     setLoading(true);
@@ -298,120 +303,268 @@ export default function GitHubIntegration() {
           </TabsContent>
 
           <TabsContent value="issues" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Repository Issues</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            {/* Action Bar */}
+            <Card className="border-border">
+              <CardContent className="flex items-center justify-between p-4">
                 <div className="flex gap-2 items-center">
                   <Button onClick={() => handleGetIssues(false)} disabled={loading}>
                     {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : useCache ? <Database className="h-4 w-4" /> : <RefreshCw className="h-4 w-4" />}
                     {useCache ? "Load from Cache" : "Sync from GitHub"}
                   </Button>
                   <Button 
-                    variant="outline" 
+                    variant="ghost" 
+                    className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
                     onClick={() => setUseCache(!useCache)}
                   >
                     {useCache ? "Use Live Data" : "Use Cache"}
                   </Button>
                 </div>
-                {issues.length > 0 ? (
-                  <div className="space-y-3">
-                    {issues.map((issue) => (
-                      <Card key={issue.id || issue.issue_number}>
-                        <CardContent className="pt-4">
-                          <div className="space-y-2">
-                            <div className="flex items-start justify-between gap-2">
-                              <h3 className="font-semibold">#{issue.issue_number || issue.number} {issue.title}</h3>
-                              <Badge variant={issue.state === 'open' ? 'default' : 'secondary'}>
-                                {issue.state}
-                              </Badge>
-                            </div>
-                            <p className="text-sm text-muted-foreground line-clamp-2">
-                              {issue.body}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              By {issue.user_login || issue.user?.login} • {new Date(issue.issue_created_at || issue.created_at).toLocaleDateString()}
-                            </p>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                    {hasMoreIssues && (
-                      <Button 
-                        variant="outline" 
-                        className="w-full"
-                        onClick={() => handleGetIssues(true)}
-                        disabled={loading}
-                      >
-                        {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                        Load More
-                      </Button>
-                    )}
-                  </div>
-                ) : (
-                  <p className="text-muted-foreground">No issues loaded yet.</p>
-                )}
               </CardContent>
             </Card>
+
+            {/* Search */}
+            <div className="relative max-w-sm">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search issues..."
+                value={searchIssues}
+                onChange={(e) => setSearchIssues(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+
+            {issues.length > 0 ? (
+              <IssuesList 
+                issues={issues.filter(i => 
+                  !searchIssues || 
+                  i.title?.toLowerCase().includes(searchIssues.toLowerCase()) ||
+                  i.body?.toLowerCase().includes(searchIssues.toLowerCase())
+                )}
+                collapsedState={collapsedIssues}
+                setCollapsedState={setCollapsedIssues}
+              />
+            ) : (
+              <Card className="border-border">
+                <CardContent className="py-12 text-center text-muted-foreground">
+                  No issues loaded yet.
+                </CardContent>
+              </Card>
+            )}
+            
+            {hasMoreIssues && (
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => handleGetIssues(true)}
+                disabled={loading}
+              >
+                {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                Load More
+              </Button>
+            )}
           </TabsContent>
 
           <TabsContent value="commits" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Recent Commits</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            {/* Action Bar */}
+            <Card className="border-border">
+              <CardContent className="flex items-center justify-between p-4">
                 <div className="flex gap-2 items-center">
                   <Button onClick={() => handleGetCommits(false)} disabled={loading}>
                     {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : useCache ? <Database className="h-4 w-4" /> : <RefreshCw className="h-4 w-4" />}
                     {useCache ? "Load from Cache" : "Sync from GitHub"}
                   </Button>
                   <Button 
-                    variant="outline" 
+                    variant="ghost"
+                    className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
                     onClick={() => setUseCache(!useCache)}
                   >
                     {useCache ? "Use Live Data" : "Use Cache"}
                   </Button>
                 </div>
-                {commits.length > 0 ? (
-                  <div className="space-y-3">
-                    {commits.map((commit) => (
-                      <Card key={commit.sha}>
-                        <CardContent className="pt-4">
-                          <div className="space-y-2">
-                            <p className="font-medium">{commit.message || commit.commit?.message}</p>
-                            <div className="flex items-center justify-between text-sm text-muted-foreground">
-                              <span>By {commit.author_name || commit.commit?.author?.name}</span>
-                              <span className="font-mono text-xs">{commit.sha.slice(0, 7)}</span>
-                            </div>
-                            <p className="text-xs text-muted-foreground">
-                              {new Date(commit.commit_date || commit.commit?.author?.date).toLocaleString()}
-                            </p>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                    {hasMoreCommits && (
-                      <Button 
-                        variant="outline" 
-                        className="w-full"
-                        onClick={() => handleGetCommits(true)}
-                        disabled={loading}
-                      >
-                        {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                        Load More
-                      </Button>
-                    )}
-                  </div>
-                ) : (
-                  <p className="text-muted-foreground">No commits loaded yet.</p>
-                )}
               </CardContent>
             </Card>
+
+            {/* Search */}
+            <div className="relative max-w-sm">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search commits..."
+                value={searchCommits}
+                onChange={(e) => setSearchCommits(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+
+            {commits.length > 0 ? (
+              <CommitsList 
+                commits={commits.filter(c => 
+                  !searchCommits || 
+                  (c.message || c.commit?.message)?.toLowerCase().includes(searchCommits.toLowerCase()) ||
+                  (c.author_name || c.commit?.author?.name)?.toLowerCase().includes(searchCommits.toLowerCase())
+                )}
+                collapsedState={collapsedCommits}
+                setCollapsedState={setCollapsedCommits}
+              />
+            ) : (
+              <Card className="border-border">
+                <CardContent className="py-12 text-center text-muted-foreground">
+                  No commits loaded yet.
+                </CardContent>
+              </Card>
+            )}
+            
+            {hasMoreCommits && (
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => handleGetCommits(true)}
+                disabled={loading}
+              >
+                {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                Load More
+              </Button>
+            )}
           </TabsContent>
         </Tabs>
       </div>
+    </div>
+  );
+}
+
+// Issues List Component with Collapsible States
+function IssuesList({ issues, collapsedState, setCollapsedState }) {
+  const issuesByState = issues.reduce((acc, issue) => {
+    const state = issue.state || 'open';
+    if (!acc[state]) acc[state] = [];
+    acc[state].push(issue);
+    return acc;
+  }, {});
+
+  const states = Object.keys(issuesByState).sort();
+
+  const toggleState = (state) => {
+    setCollapsedState(prev => ({
+      ...prev,
+      [state]: !prev[state]
+    }));
+  };
+
+  return (
+    <div className="space-y-4">
+      {states.map(state => {
+        const stateIssues = issuesByState[state];
+        const isOpen = collapsedState[state] === true;
+
+        return (
+          <Card key={state} className="border-border">
+            <Collapsible open={isOpen} onOpenChange={() => toggleState(state)}>
+              <CollapsibleTrigger asChild>
+                <CardHeader className="cursor-pointer hover:bg-accent/50 transition-colors p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      {isOpen ? (
+                        <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                      ) : (
+                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                      )}
+                      <CardTitle className="text-lg capitalize">{state}</CardTitle>
+                    </div>
+                  </div>
+                </CardHeader>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <CardContent className="space-y-3 pt-0 p-4">
+                  {stateIssues.map(issue => (
+                    <div key={issue.id || issue.issue_number} className="bg-card border border-border rounded-lg hover:shadow-md transition-shadow p-4">
+                      <div className="space-y-2">
+                        <div className="flex items-start justify-between gap-2">
+                          <h3 className="text-h3">#{issue.issue_number || issue.number} {issue.title}</h3>
+                          <Badge variant={issue.state === 'open' ? 'default' : 'secondary'}>
+                            {issue.state}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground line-clamp-2">
+                          {issue.body}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          By {issue.user_login || issue.user?.login} • {new Date(issue.issue_created_at || issue.created_at).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </CollapsibleContent>
+            </Collapsible>
+          </Card>
+        );
+      })}
+    </div>
+  );
+}
+
+// Commits List Component with Collapsible by Date
+function CommitsList({ commits, collapsedState, setCollapsedState }) {
+  const commitsByDate = commits.reduce((acc, commit) => {
+    const date = new Date(commit.commit_date || commit.commit?.author?.date).toLocaleDateString();
+    if (!acc[date]) acc[date] = [];
+    acc[date].push(commit);
+    return acc;
+  }, {});
+
+  const dates = Object.keys(commitsByDate).sort((a, b) => new Date(b) - new Date(a));
+
+  const toggleDate = (date) => {
+    setCollapsedState(prev => ({
+      ...prev,
+      [date]: !prev[date]
+    }));
+  };
+
+  return (
+    <div className="space-y-4">
+      {dates.map(date => {
+        const dateCommits = commitsByDate[date];
+        const isOpen = collapsedState[date] === true;
+
+        return (
+          <Card key={date} className="border-border">
+            <Collapsible open={isOpen} onOpenChange={() => toggleDate(date)}>
+              <CollapsibleTrigger asChild>
+                <CardHeader className="cursor-pointer hover:bg-accent/50 transition-colors p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      {isOpen ? (
+                        <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                      ) : (
+                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                      )}
+                      <CardTitle className="text-lg">{date}</CardTitle>
+                    </div>
+                  </div>
+                </CardHeader>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <CardContent className="space-y-3 pt-0 p-4">
+                  {dateCommits.map(commit => (
+                    <div key={commit.sha} className="bg-card border border-border rounded-lg hover:shadow-md transition-shadow p-4">
+                      <div className="space-y-2">
+                        <p className="font-medium">{commit.message || commit.commit?.message}</p>
+                        <div className="flex items-center justify-between text-sm text-muted-foreground">
+                          <span>By {commit.author_name || commit.commit?.author?.name}</span>
+                          <span className="font-mono text-xs">{commit.sha.slice(0, 7)}</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          {new Date(commit.commit_date || commit.commit?.author?.date).toLocaleTimeString()}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </CollapsibleContent>
+            </Collapsible>
+          </Card>
+        );
+      })}
     </div>
   );
 }
