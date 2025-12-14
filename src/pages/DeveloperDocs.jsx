@@ -239,87 +239,86 @@ export default function DeveloperDocs() {
         />
       </div>
 
-        {/* Categories */}
-        <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="mb-8">
-          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-7 h-auto">
-            {categories.map(cat => (
-              <TabsTrigger 
-                key={cat.value} 
-                value={cat.value}
-                className="flex flex-col gap-1 py-3"
+      {/* Categories */}
+      <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="mb-8">
+        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-7 h-auto">
+          {categories.map(cat => (
+            <TabsTrigger 
+              key={cat.value} 
+              value={cat.value}
+              className="flex flex-col gap-1 py-3"
+            >
+              <span className="font-semibold">{cat.label}</span>
+              <Badge variant="secondary" className="text-xs">
+                {cat.count}
+              </Badge>
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
+
+      {/* Results Count */}
+      <div className="mb-4">
+        <p className="text-sm text-muted-foreground">
+          {filteredGuides.length} guide{filteredGuides.length !== 1 ? 's' : ''} found
+        </p>
+      </div>
+
+      {/* Guides Grid */}
+      {filteredGuides.length === 0 ? (
+        <Card className="p-12 text-center">
+          <p className="text-muted-foreground">No guides found matching your search.</p>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredGuides.map((guide) => {
+            const Icon = guide.icon;
+            return (
+              <Card 
+                key={guide.file}
+                className="cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02]"
+                onClick={() => handleGuideClick(guide.file)}
               >
-                <span className="font-semibold">{cat.label}</span>
-                <Badge variant="secondary" className="text-xs">
-                  {cat.count}
-                </Badge>
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
-
-        {/* Results Count */}
-        <div className="mb-4">
-          <p className="text-sm text-muted-foreground">
-            {filteredGuides.length} guide{filteredGuides.length !== 1 ? 's' : ''} found
-          </p>
-        </div>
-
-        {/* Guides Grid */}
-        {filteredGuides.length === 0 ? (
-          <Card className="p-12 text-center">
-            <p className="text-muted-foreground">No guides found matching your search.</p>
-          </Card>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredGuides.map((guide) => {
-              const Icon = guide.icon;
-              return (
-                <Card 
-                  key={guide.file}
-                  className="cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02]"
-                  onClick={() => handleGuideClick(guide.file)}
-                >
-                  <CardHeader>
-                    <div className="flex items-start gap-3">
-                      <div className="p-2 rounded-lg bg-primary/10">
-                        <Icon className="h-6 w-6 text-primary" />
-                      </div>
-                      <div className="flex-1">
-                        <CardTitle className="text-xl mb-2">{guide.title}</CardTitle>
-                        <Badge variant="outline" className="mb-3">
-                          {guide.category}
-                        </Badge>
-                      </div>
+                <CardHeader>
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 rounded-lg bg-primary/10">
+                      <Icon className="h-6 w-6 text-primary" />
                     </div>
-                    <CardDescription className="text-base">
-                      {guide.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-2">
-                      {guide.tags.map(tag => (
-                        <Badge 
-                          key={tag} 
-                          variant="secondary"
-                          className="text-xs"
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
+                    <div className="flex-1">
+                      <CardTitle className="text-xl mb-2">{guide.title}</CardTitle>
+                      <Badge variant="outline" className="mb-3">
+                        {guide.category}
+                      </Badge>
                     </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        )}
-
-        {/* Footer */}
-        <div className="mt-12 p-6 bg-muted/50 rounded-lg text-center">
-          <p className="text-sm text-muted-foreground">
-            💡 <strong>Tip:</strong> Click any guide to open it in a new tab. Use the search to find specific topics quickly.
-          </p>
+                  </div>
+                  <CardDescription className="text-base">
+                    {guide.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {guide.tags.map(tag => (
+                      <Badge 
+                        key={tag} 
+                        variant="secondary"
+                        className="text-xs"
+                      >
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
+      )}
+
+      {/* Footer */}
+      <div className="mt-12 p-6 bg-muted/50 rounded-lg text-center">
+        <p className="text-sm text-muted-foreground">
+          💡 <strong>Tip:</strong> Click any guide to open it in a new tab. Use the search to find specific topics quickly.
+        </p>
       </div>
     </div>
   );
