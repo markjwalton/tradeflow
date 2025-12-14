@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import { Loader2, AlertTriangle, CheckCircle2, ChevronDown, ChevronRight, FileCode, Sparkles, Copy, Check, Save, History, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { PageHeader } from "@/components/sturij";
 
 export default function CSSAudit() {
   const [analyzing, setAnalyzing] = useState(false);
@@ -560,18 +561,14 @@ export default function CSSAudit() {
   const needsWorkCount = filteredFiles.length - verifiedCount;
 
   return (
-    <div className="p-6 max-w-7xl mx-auto bg-background min-h-screen">
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
       <div className="mb-6 space-y-4">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-light font-display text-foreground">
-              File-by-File CSS Audit
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              Select a file, load it, then scan for violations
-            </p>
-          </div>
-          <div className="flex gap-2">
+          <PageHeader 
+            title="File-by-File CSS Audit"
+            description="Select a file, load it, then scan for violations"
+          >
+            <div className="flex gap-2">
             <Badge variant="outline" className="gap-2">
               <CheckCircle2 className="h-3 w-3 text-success" />
               {verifiedCount} Verified
@@ -581,6 +578,7 @@ export default function CSSAudit() {
               {needsWorkCount} Need Work
             </Badge>
           </div>
+          </PageHeader>
         </div>
 
         <Card>

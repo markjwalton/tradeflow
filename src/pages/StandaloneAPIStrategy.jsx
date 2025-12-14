@@ -8,6 +8,7 @@ import {
   Bell, Clock, BarChart3, Sparkles, Link2, Upload, Settings,
   Users, Lock, RefreshCw, Package, Flag, Info
 } from "lucide-react";
+import { PageHeader } from "@/components/sturij";
 
 // Shared Functions categorization
 const SHARED_FUNCTIONS = {
@@ -52,16 +53,11 @@ export default function StandaloneAPIStrategy() {
   const [activeTab, setActiveTab] = useState("overview");
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
-      <div className="mb-6">
-        <h1 className="text-2xl font-light flex items-center gap-2 text-foreground font-heading">
-          <Globe className="h-6 w-6 text-primary" />
-          Multi-Tenant Standalone API Strategy
-        </h1>
-        <p className="text-muted-foreground">
-          Architecture for sharing functionality between main app and standalone Base44 instances
-        </p>
-      </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-[var(--color-background)] min-h-screen">
+      <PageHeader 
+        title="Multi-Tenant Standalone API Strategy"
+        description="Architecture for sharing functionality between main app and standalone Base44 instances"
+      />
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="mb-6">

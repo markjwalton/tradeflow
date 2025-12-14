@@ -30,6 +30,7 @@ import {
   Component, Box, Palette, Database, Newspaper
 } from "lucide-react";
 import { toast } from "sonner";
+import { PageHeader } from "@/components/sturij";
 
 // Import reference components
 import ShadcnReference from "@/components/knowledge/ShadcnReference";
@@ -534,19 +535,11 @@ Create a development prompt that:
   );
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
-            <BookOpen className="h-6 w-6 text-primary" />
-            Knowledge Manager
-          </h1>
-          <p className="text-muted-foreground">
-            Track updates across Tailwind, React, and shadcn/ui with RuleBook integration
-          </p>
-        </div>
-      </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Knowledge Manager"
+        description="Track updates across Tailwind, React, and shadcn/ui with RuleBook integration"
+      />
 
       {/* Technology Selector */}
       <div className="flex gap-2 mb-6">

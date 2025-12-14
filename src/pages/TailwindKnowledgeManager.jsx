@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { PageHeader } from "@/components/sturij";
 
 const TAILWIND_DOCS_CATEGORIES = [
   { id: "core_concepts", name: "Core Concepts", topics: ["Utility-First", "Hover/Focus States", "Responsive Design", "Dark Mode", "Theme Variables", "Colors", "Custom Styles"] },
@@ -493,18 +494,11 @@ Analyze and provide 3-5 specific recommendations to:
   }, {});
 
   return (
-    <div className="p-6 bg-[var(--color-background)] min-h-screen">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-heading text-foreground flex items-center gap-2">
-            <BookOpen className="h-6 w-6 text-primary" />
-            Tailwind Knowledge Manager
-          </h1>
-          <p className="text-muted-foreground">
-            Keep your UI library current with Tailwind CSS updates
-          </p>
-        </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-[var(--color-background)] min-h-screen">
+      <PageHeader 
+        title="Tailwind Knowledge Manager"
+        description="Keep your UI library current with Tailwind CSS updates"
+      >
         <div className="flex gap-2">
           <Button variant="outline" onClick={handleCheckNewReleases} disabled={syncing}>
             {syncing ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <RefreshCw className="h-4 w-4 mr-2" />}
@@ -519,7 +513,7 @@ Analyze and provide 3-5 specific recommendations to:
             Sync Documentation
           </Button>
         </div>
-      </div>
+      </PageHeader>
 
       {/* Progress Bar */}
       {syncProgress.total > 0 && (
