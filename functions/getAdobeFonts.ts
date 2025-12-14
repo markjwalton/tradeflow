@@ -24,20 +24,24 @@ Deno.serve(async (req) => {
       `https://typekit.com/api/v1/json/kits/${projectId}`,
       {
         headers: {
-          'Authorization': `Bearer ${apiToken}`
+          'X-Typekit-Token': apiToken
         }
       }
     );
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Adobe API Error:', errorText);
       return Response.json({ 
         error: 'Failed to fetch Adobe Fonts',
         status: response.status,
-        statusText: response.statusText
-      }, { status: response.status });
+        statusText: response.statusText,
+        details: errorText
+      }, { status: 500 });
     }
 
     const data = await response.json();
+    console.log('Adobe API Response:', data);
     
     // Transform Adobe Fonts data to our FontFamily format
     const fonts = data.kit.families.map(family => ({
