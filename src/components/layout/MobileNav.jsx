@@ -9,7 +9,53 @@ export function MobileNav({ isOpen, onClose, navItems = [] }) {
   const location = useLocation();
   const [expandedFolders, setExpandedFolders] = useState(new Set());
 
-  const toggleFolder = (folderId) => {
+  // Build hierarchical structure from flat navItems
+  const buildHierarchy = (items) => {
+    if (!items || items.length === 0) return [];
+    
+    const normalizedItems = items.map(item => {
+      const itemId = item.id || item._id;
+      return {
+        ...item,
+        id: itemId,
+        _id: itemId,
+        parent_id: item.parent_id || null,
+        children: []
+      };
+    });
+    
+    const itemsMap = new Map();
+    normalizedItems.forEach((item) => {
+      itemsMap.set(item.id, item);
+    });
+    
+    const rootItems = [];
+    normalizedItems.forEach((item) => {
+      if (item.parent_id && itemsMap.has(item.parent_id)) {
+        const parent = itemsMap.get(item.parent_id);
+        parent.children.push(item);
+      } else {
+        rootItems.push(item);
+      }
+    });
+    
+    rootItems.sort((a, b) => (a.order || 0) - (b.order || 0));
+    rootItems.forEach(item => {
+      if (item.children && item.children.length > 0) {
+        item.children.sort((a, b) => (a.order || 0) - (b.order || 0));
+      }
+    });
+    
+    return rootItems;
+  };
+
+  const hierarchicalNavItems = buildHierarchy(navItems);
+
+  const toggleFolder = (folderId, event) => {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
     setExpandedFolders((prev) => {
       const next = new Set(prev);
       if (next.has(folderId)) next.delete(folderId);
@@ -45,7 +91,7 @@ export function MobileNav({ isOpen, onClose, navItems = [] }) {
       return (
         <div key={item.id}>
           <button
-            onClick={() => toggleFolder(item.id)}
+            onClick={(e) => toggleFolder(item.id, e)}
             className={cn(
               "w-full flex items-center gap-3 px-4 py-3 transition-colors hover:bg-muted",
               isChild && "pl-8"
@@ -124,7 +170,7 @@ export function MobileNav({ isOpen, onClose, navItems = [] }) {
 
         {/* Nav Items */}
         <nav className="py-2">
-          {navItems.map((item) => renderNavItem(item, false))}
+          {hierarchicalNavItems.map((item) => renderNavItem(item, false))}
         </nav>
       </div>
     </>
