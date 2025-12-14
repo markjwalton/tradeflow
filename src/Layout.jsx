@@ -194,10 +194,8 @@ export default function Layout({ children, currentPageName }) {
             // Use items from NavigationConfig - convert to format with proper IDs
             if (loadedNavConfig.items?.length > 0) {
               loadedNavItems = loadedNavConfig.items.map((item, idx) => {
-                // Generate ID: for folders use generated ID, for pages use slug
-                const itemId = item.item_type === 'folder' 
-                  ? `folder_${item.name.toLowerCase().replace(/[^a-z0-9]+/g, '_')}`
-                  : item.slug || `page_${idx}`;
+                // Use slug as ID for consistency (both folders and pages)
+                const itemId = item.slug || `item_${idx}`;
                 
                 return {
                   id: itemId,
@@ -208,6 +206,7 @@ export default function Layout({ children, currentPageName }) {
                   order: item.order,
                   is_visible: item.is_visible,
                   parent_id: item.parent_id,
+                  default_collapsed: item.default_collapsed,
                 };
               });
               setNavItems(loadedNavItems);
