@@ -10,6 +10,7 @@ import {
   RefreshCw, TrendingUp, Server, Database, Loader2
 } from "lucide-react";
 import { getWebVitalsMetrics } from "@/components/common/WebVitals";
+import { PageHeader } from "@/components/sturij";
 
 export default function SystemHealth() {
   const [webVitals, setWebVitals] = useState({});
@@ -119,17 +120,16 @@ export default function SystemHealth() {
   })();
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-3xl font-light font-display text-foreground">System Health</h1>
-          <p className="text-muted-foreground">Monitor application performance, stability, and security</p>
-        </div>
+    <div className="max-w-7xl mx-auto -mt-6">
+      <PageHeader 
+        title="System Health"
+        description="Monitor application performance, stability, and security"
+      >
         <Button variant="outline" onClick={() => window.location.reload()}>
           <RefreshCw className="h-4 w-4 mr-2" />
           Refresh
         </Button>
-      </div>
+      </PageHeader>
 
       {/* Overall Health Score */}
       <Card className="mb-6 bg-gradient-to-br from-primary-50 to-accent-50 border-primary/20">

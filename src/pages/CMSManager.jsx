@@ -22,6 +22,7 @@ import CMSNavigationEditor from "@/components/cms/CMSNavigationEditor";
 import CMSAssetManager from "@/components/cms/CMSAssetManager";
 import CMSTemplateManager from "@/components/cms/CMSTemplateManager";
 import CMSTenantSelector from "@/components/cms/CMSTenantSelector";
+import { PageHeader } from "@/components/sturij";
 
 export default function CMSManager() {
   const { tenantId: contextTenantId, isGlobalAdmin } = useTenant() || {};
@@ -167,19 +168,18 @@ export default function CMSManager() {
   };
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-light text-foreground font-heading">CMS</h1>
-          <p className="text-muted-foreground">Manage content for external websites</p>
-        </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="CMS"
+        description="Manage content for external websites"
+      >
         {isGlobalAdmin && (
           <CMSTenantSelector 
             value={selectedTenantId} 
             onChange={setSelectedTenantId} 
           />
         )}
-      </div>
+      </PageHeader>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="mb-6">

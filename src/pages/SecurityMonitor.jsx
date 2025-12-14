@@ -45,6 +45,7 @@ import {
   LineChart, Line, PieChart, Pie, Cell, AreaChart, Area
 } from "recharts";
 import AuditLogCard from "@/components/monitoring/AuditLogCard";
+import { PageHeader } from "@/components/sturij";
 
 const COLORS = ["#22c55e", "#f59e0b", "#ef4444", "#3b82f6", "#8b5cf6"];
 
@@ -418,15 +419,11 @@ Provide:
   const latestAudit = securityAudits[0];
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-foreground font-heading">
-            <Shield className="h-6 w-6 text-success" />
-            Security Monitor
-          </h1>
-          <p className="text-muted-foreground">Monitor security events, policies, and compliance</p>
-        </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Security Monitor"
+        description="Monitor security events, policies, and compliance"
+      >
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setShowPolicyEditor(true)}>
             <Plus className="h-4 w-4 mr-2" />
@@ -437,7 +434,7 @@ Provide:
             AI Security Audit
           </Button>
         </div>
-      </div>
+      </PageHeader>
 
       {/* View Mode Toggle */}
       <div className="flex items-center gap-4 mb-6">

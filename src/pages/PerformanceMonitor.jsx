@@ -43,6 +43,7 @@ import {
 } from "recharts";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { PageHeader } from "@/components/sturij";
 
 import { ChevronDown, ChevronRight, Folder, FolderOpen } from "lucide-react";
 import PerformanceAuditCard from "@/components/monitoring/PerformanceAuditCard";
@@ -938,15 +939,11 @@ Provide:
   }, [filteredMetrics]);
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-foreground font-heading">
-            <Activity className="h-6 w-6 text-primary" />
-            Performance Monitor
-          </h1>
-          <p className="text-muted-foreground">Track page sizes, load times, and identify refactoring needs</p>
-        </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Performance Monitor"
+        description="Track page sizes, load times, and identify refactoring needs"
+      >
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setShowThresholdEditor(true)}>
             <Settings className="h-4 w-4 mr-2" />
@@ -957,7 +954,7 @@ Provide:
             Run Scan
           </Button>
         </div>
-      </div>
+      </PageHeader>
 
       {/* Scan Progress Indicator */}
       {scanProgress.total > 0 && (
