@@ -176,8 +176,10 @@ export default function BusinessTemplates() {
         </CardContent>
       </Card>
 
-      {/* Filters */}
-      <div className="flex gap-3 mb-6">
+      <Card className="border-border">
+        <CardContent className="p-4">
+          {/* Filters */}
+          <div className="flex gap-3 mb-6">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -304,7 +306,9 @@ export default function BusinessTemplates() {
             </Button>
           </div>
         )}
-      </div>
+        </div>
+        </CardContent>
+      </Card>
 
       {/* Builder Dialog */}
       <Dialog open={showBuilder} onOpenChange={(open) => !open && resetForm()}>

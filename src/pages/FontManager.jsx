@@ -288,8 +288,10 @@ export default function FontManager() {
         </CardContent>
       </Card>
 
-      {/* Fonts in Use Section */}
-      <Card className="mb-6 border-border">
+      <Card className="border-border">
+        <CardContent className="p-4">
+          {/* Fonts in Use Section */}
+          <Card className="mb-6 border-border">
         <CardHeader>
           <CardTitle>Fonts in Use</CardTitle>
           <CardDescription>Currently active fonts in the main application</CardDescription>
@@ -413,6 +415,8 @@ export default function FontManager() {
           ))}
         </div>
       )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

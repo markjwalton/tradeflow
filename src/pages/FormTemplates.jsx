@@ -116,7 +116,9 @@ export default function FormTemplates() {
         </CardContent>
       </Card>
 
-      <div className="flex gap-4 mb-6">
+      <Card className="border-border">
+        <CardContent className="p-4">
+          <div className="flex gap-4 mb-6">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -237,6 +239,8 @@ export default function FormTemplates() {
           ))}
         </div>
       )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

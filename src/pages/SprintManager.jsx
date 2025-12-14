@@ -142,11 +142,13 @@ export default function SprintManager() {
         </CardContent>
       </Card>
 
-      {isLoading ? (
-        <div className="flex justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin" />
-        </div>
-      ) : (
+      <Card className="border-border">
+        <CardContent className="p-4">
+          {isLoading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          ) : (
         <div className="space-y-8">
           {/* Active Sprints */}
           {activeSprints.length > 0 && (
@@ -226,8 +228,10 @@ export default function SprintManager() {
               <p>No sprints yet. Create your first sprint!</p>
             </div>
           )}
-        </div>
-      )}
+          </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Create/Edit Dialog */}
       <Dialog open={showDialog} onOpenChange={setShowDialog}>

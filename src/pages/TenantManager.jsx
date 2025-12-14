@@ -131,6 +131,8 @@ export default function TenantManager() {
       </Card>
       
       <Card className="border-border">
+        <CardContent className="p-4">
+          <Card className="border-border">
         <CardContent>
           {isLoading ? (
             <div className="text-center py-8 text-muted-foreground">Loading...</div>
@@ -189,6 +191,8 @@ export default function TenantManager() {
               ))}
             </div>
           )}
+          </CardContent>
+        </Card>
         </CardContent>
       </Card>
 

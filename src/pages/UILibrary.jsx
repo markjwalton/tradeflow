@@ -89,7 +89,9 @@ export default function UILibrary() {
         description="Browse and explore reusable UI components built with design tokens"
       />
 
-      <div className="space-y-4">
+      <Card className="border-border">
+        <CardContent className="p-4">
+          <div className="space-y-4">
         {sections.map((section) => {
           const Component = section.component;
           const isOpen = openSections.includes(section.id);
@@ -124,7 +126,9 @@ export default function UILibrary() {
             </Collapsible>
           );
         })}
-      </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

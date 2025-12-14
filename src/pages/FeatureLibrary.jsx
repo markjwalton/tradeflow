@@ -384,7 +384,9 @@ Return a JSON object with a "features" array containing feature templates.`,
         </CardContent>
       </Card>
 
-      <div className="flex gap-4 mb-6">
+      <Card className="border-border">
+        <CardContent className="p-4">
+          <div className="flex gap-4 mb-6">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -525,6 +527,8 @@ Return a JSON object with a "features" array containing feature templates.`,
         </div>
         </>
       )}
+        </CardContent>
+      </Card>
 
       <Dialog open={showBuilder} onOpenChange={setShowBuilder}>
         <DialogContent className="max-w-4xl h-[90vh] overflow-hidden flex flex-col">

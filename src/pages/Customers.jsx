@@ -145,6 +145,19 @@ export default function Customers() {
     return acc;
   }, {});
 
+  // Initialize collapsed state
+  React.useEffect(() => {
+    const initial = {};
+    Object.keys(groupedCustomers).forEach(status => {
+      if (expandedStatuses[status] === undefined) {
+        initial[status] = false;
+      }
+    });
+    if (Object.keys(initial).length > 0) {
+      setExpandedStatuses(prev => ({ ...prev, ...initial }));
+    }
+  }, [JSON.stringify(Object.keys(groupedCustomers))]);
+
   if (isLoading) {
     return <PageLoader message="Loading customers..." />;
   }
@@ -176,7 +189,9 @@ export default function Customers() {
         </CardContent>
       </Card>
 
-      <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-6">
+      <Card className="border-border">
+        <CardContent className="p-4">
+          <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -292,7 +307,7 @@ export default function Customers() {
         </Card>
       )}
 
-      {totalPages > 1 && (
+          {totalPages > 1 && (
         <div className="mt-6">
           <Pagination
             currentPage={currentPage}
@@ -301,6 +316,8 @@ export default function Customers() {
           />
         </div>
       )}
+        </CardContent>
+      </Card>
 
       <Dialog open={showForm} onOpenChange={setShowForm}>
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">

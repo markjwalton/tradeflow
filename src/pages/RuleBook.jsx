@@ -244,8 +244,10 @@ export default function RuleBook() {
         </CardContent>
       </Card>
 
-      {/* Filters */}
-      <div className="flex gap-4 mb-6 flex-wrap">
+      <Card className="border-border">
+        <CardContent className="p-4">
+          {/* Filters */}
+          <div className="flex gap-4 mb-6 flex-wrap">
         <Input
           placeholder="Search rules..."
           value={searchQuery}
@@ -378,11 +380,13 @@ export default function RuleBook() {
                 </Card>
               </Collapsible>
             );
-          })}
-        </div>
-      )}
+            })}
+            </div>
+            )}
+            </CardContent>
+            </Card>
 
-      {/* Add/Edit Dialog */}
+            {/* Add/Edit Dialog */}
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
