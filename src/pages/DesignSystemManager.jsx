@@ -618,24 +618,24 @@ For each recommendation, provide:
                       )}
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center justify-between">
                         <span className="text-muted-foreground font-medium">Current:</span>
-                        <span className="ml-2 text-foreground">{rec.current_version}</span>
+                        <span className="text-foreground">{rec.current_version}</span>
                       </div>
-                      <div>
+                      <div className="flex items-center justify-between">
                         <span className="text-muted-foreground font-medium">Recommended:</span>
-                        <span className="ml-2 text-foreground">{rec.recommended_version}</span>
+                        <span className="text-foreground">{rec.recommended_version}</span>
                       </div>
-                      <div>
+                      <div className="flex items-center justify-between">
                         <span className="text-muted-foreground font-medium">Effort:</span>
-                        <Badge className="ml-2 bg-muted text-muted-foreground">
+                        <Badge className="bg-muted text-muted-foreground">
                           {rec.effort}
                         </Badge>
                       </div>
-                      <div>
+                      <div className="flex items-center justify-between">
                         <span className="text-muted-foreground font-medium">Impact:</span>
-                        <Badge className={`ml-2 ${impactColors[rec.impact]}`}>
+                        <Badge className={impactColors[rec.impact]}>
                           {rec.impact}
                         </Badge>
                       </div>
