@@ -38,8 +38,9 @@ export default function PlaygroundItem() {
   const { data: item, isLoading } = useQuery({
     queryKey: ["playgroundItem", itemId],
     queryFn: async () => {
+      if (!itemId) return null;
       const items = await base44.entities.PlaygroundItem.filter({ id: itemId });
-      return items[0];
+      return items[0] || null;
     },
     enabled: !!itemId
   });
