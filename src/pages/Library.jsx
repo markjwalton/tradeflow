@@ -729,7 +729,13 @@ Return a JSON object with: name, description, category (one of: ${featureCategor
               onClick={() => { setSelectedItem(null); setShowBuilder(true); }}
             >
               <Plus className="h-4 w-4 mr-2" />
-              New {activeTab === "entities" ? "Entity" : activeTab === "pages" ? "Page" : "Feature"}
+              New {
+                activeSection === "core" ? (activeTab === "entities" ? "Entity" : activeTab === "pages" ? "Page" : "Feature") :
+                activeSection === "forms" ? (activeTab === "forms" ? "Form" : "Checklist") :
+                activeSection === "business" ? "Template" :
+                activeSection === "workflows" ? "Workflow" :
+                "Item"
+              }
             </Button>
           </div>
         </CardContent>
