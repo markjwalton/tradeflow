@@ -479,7 +479,12 @@ export default function GenericNavEditor({
                 <Droppable droppableId="nav-list">
                   {(provided) => (
                     <div {...provided.droppableProps} ref={provided.innerRef} className="[&>*+*]:mt-[var(--spacing-1)] [margin-bottom:var(--spacing-6)]">
-                      {flatList.map((item, index) => (
+                      {flatList.map((item, index) => {
+                        // Check if this item has children
+                        const hasChildren = items.filter(i => i.parent_id === item.id).length > 0;
+                        const isExpanded = expandedParents.has(item.id);
+
+                        return (
                         <Draggable key={item.id} draggableId={item.id} index={index}>
                           {(provided) => (
                             <div
@@ -494,10 +499,10 @@ export default function GenericNavEditor({
                               <div {...provided.dragHandleProps} className="cursor-grab text-[var(--color-charcoal)]/50 hover:text-[var(--color-charcoal)]">
                                 <GripVertical className="h-4 w-4" />
                               </div>
-                              
-                              {item.hasChildren ? (
+
+                              {hasChildren ? (
                                 <button onClick={() => toggleParent(item.id)} className="p-0.5">
-                                  {expandedParents.has(item.id) ? 
+                                  {isExpanded ? 
                                     <ChevronDown className="h-4 w-4 text-[var(--color-charcoal)]" /> : 
                                     <ChevronRight className="h-4 w-4 text-[var(--color-charcoal)]" />
                                   }
@@ -593,9 +598,10 @@ export default function GenericNavEditor({
                                 className={item.is_visible !== false ? "data-[state=checked]:bg-[var(--color-success)]" : "data-[state=unchecked]:bg-[var(--color-destructive)]"}
                               />
                             </div>
-                          )}
-                        </Draggable>
-                      ))}
+                            )}
+                            </Draggable>
+                            );
+                            })}
                       {provided.placeholder}
                     </div>
                   )}
