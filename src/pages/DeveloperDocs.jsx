@@ -195,13 +195,13 @@ const guides = [
 ];
 
 const categories = [
-  { value: 'all', label: 'All Guides', count: guides.length },
-  { value: 'Core', label: 'Core Development', count: guides.filter(g => g.category === 'Core').length },
-  { value: 'UI', label: 'UI & Styling', count: guides.filter(g => g.category === 'UI').length },
-  { value: 'Quality', label: 'Quality & Testing', count: guides.filter(g => g.category === 'Quality').length },
-  { value: 'Security', label: 'Security', count: guides.filter(g => g.category === 'Security').length },
-  { value: 'Performance', label: 'Performance', count: guides.filter(g => g.category === 'Performance').length },
-  { value: 'DevOps', label: 'DevOps & Deployment', count: guides.filter(g => g.category === 'DevOps').length },
+  { value: 'all', label: 'All' },
+  { value: 'Core', label: 'Core' },
+  { value: 'UI', label: 'UI' },
+  { value: 'Quality', label: 'Quality' },
+  { value: 'Security', label: 'Security' },
+  { value: 'Performance', label: 'Performance' },
+  { value: 'DevOps', label: 'DevOps' },
 ];
 
 export default function DeveloperDocs() {
