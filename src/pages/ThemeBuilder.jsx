@@ -14,6 +14,7 @@ const Card = lazy(() => import("@/components/ui/card").then(m => ({ default: m.C
 const CardContent = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardContent })));
 const CardHeader = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardHeader })));
 const CardTitle = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardTitle })));
+const CardDescription = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardDescription })));
 const Textarea = lazy(() => import("@/components/ui/textarea").then(m => ({ default: m.Textarea })));
 const Badge = lazy(() => import("@/components/ui/badge").then(m => ({ default: m.Badge })));
 const Select = lazy(() => import("@/components/ui/select").then(m => ({ default: m.Select })));
