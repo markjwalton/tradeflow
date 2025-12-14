@@ -13,7 +13,8 @@ import { taskSchema } from "@/components/forms/FormValidation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -28,7 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Search, Pencil, Trash2, Calendar } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Calendar, ChevronDown, ChevronRight, CheckSquare } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { PullToRefresh } from "@/components/common/PullToRefresh";
@@ -57,6 +58,7 @@ export default function Tasks() {
   const itemsPerPage = 15;
   const [showForm, setShowForm] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
+  const [expandedStatuses, setExpandedStatuses] = useState({});
   
   const form = useValidatedForm(taskSchema, {
     defaultValues: {
@@ -157,6 +159,27 @@ export default function Tasks() {
     currentPage * itemsPerPage
   );
 
+  // Group tasks by status
+  const groupedTasks = paginatedTasks.reduce((acc, task) => {
+    const status = task.status || "todo";
+    if (!acc[status]) acc[status] = [];
+    acc[status].push(task);
+    return acc;
+  }, {});
+
+  // Initialize collapsed state
+  React.useEffect(() => {
+    const initial = {};
+    Object.keys(groupedTasks).forEach(status => {
+      if (expandedStatuses[status] === undefined) {
+        initial[status] = true;
+      }
+    });
+    if (Object.keys(initial).length > 0) {
+      setExpandedStatuses(prev => ({ ...prev, ...initial }));
+    }
+  }, [JSON.stringify(Object.keys(groupedTasks))]);
+
   const getProjectName = (projectId) => {
     const project = projects.find((p) => p.id === projectId);
     return project?.name || "Unassigned";
@@ -225,44 +248,70 @@ export default function Tasks() {
 
       <Card className="border-border">
         <CardContent className="p-4">
-          <div className="space-y-2 sm:space-y-3">
-            {paginatedTasks.map((task) => (
-              <Card key={task.id} className="hover:shadow-md transition-shadow border-background-muted bg-card">
-                <CardContent className="p-3 sm:p-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <h3 className="font-medium text-midnight-900 text-sm sm:text-base">{task.title}</h3>
-                        <Badge className={statusColors[task.status]}>{task.status?.replace("_", " ")}</Badge>
-                        <Badge className={priorityColors[task.priority]}>{task.priority}</Badge>
-                      </div>
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-charcoal-700">
-                        <span className="truncate">Project: {getProjectName(task.project_id)}</span>
-                        <span className="truncate">Assigned: {getTeamMemberName(task.assigned_to)}</span>
-                        {task.due_date && (
-                          <span className="flex items-center gap-1">
-                            <Calendar className="h-3 w-3" />
-                            {format(new Date(task.due_date), "MMM d, yyyy")}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex gap-1 sm:flex-col md:flex-row self-end sm:self-auto">
-                      <Button variant="ghost" size="icon" className="touch-target" onClick={() => handleEdit(task)}>
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="touch-target text-destructive" onClick={() => deleteMutation.mutate(task.id)}>
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="space-y-4">
+            {Object.entries(groupedTasks).map(([status, statusTasks]) => {
+              const isExpanded = expandedStatuses[status] !== false;
+              return (
+                <Collapsible
+                  key={status}
+                  open={isExpanded}
+                  onOpenChange={() => setExpandedStatuses(prev => ({ ...prev, [status]: !isExpanded }))}
+                >
+                  <Card className="border-border">
+                    <CollapsibleTrigger className="w-full">
+                      <CardHeader className="py-3">
+                        <div className="flex items-center gap-2">
+                          {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                          <Badge className={statusColors[status]}>{status?.replace("_", " ")}</Badge>
+                          <span className="text-muted-foreground text-sm font-normal">({statusTasks.length})</span>
+                        </div>
+                      </CardHeader>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <CardContent className="pt-0 space-y-2">
+                        {statusTasks.map((task) => (
+                          <Card key={task.id} className="border-border hover:shadow-sm transition-shadow">
+                            <CardContent className="p-4">
+                              <div className="flex items-center gap-4">
+                                <CheckSquare className="h-5 w-5 text-primary flex-shrink-0" />
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <h3 className="font-medium text-base">{task.name}</h3>
+                                    <Badge className={priorityColors[task.priority]}>{task.priority}</Badge>
+                                  </div>
+                                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
+                                    <span className="truncate">Project: {getProjectName(task.projectId)}</span>
+                                    <span className="truncate">Assigned: {getTeamMemberName(task.assignedTo)}</span>
+                                    {task.dueDate && (
+                                      <span className="flex items-center gap-1">
+                                        <Calendar className="h-3 w-3" />
+                                        {format(new Date(task.dueDate), "MMM d, yyyy")}
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+                                <div className="flex gap-1 flex-shrink-0">
+                                  <Button variant="ghost" size="icon" className="touch-target-sm" onClick={() => handleEdit(task)}>
+                                    <Pencil className="h-4 w-4" />
+                                  </Button>
+                                  <Button variant="ghost" size="icon" className="touch-target-sm text-destructive" onClick={() => deleteMutation.mutate(task.id)}>
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </CardContent>
+                    </CollapsibleContent>
+                  </Card>
+                </Collapsible>
+              );
+            })}
           </div>
 
           {filteredTasks.length === 0 && (
-            <div className="text-center py-12 text-charcoal-700">
+            <div className="text-center py-12 text-muted-foreground">
               No tasks found. Create your first task to get started.
             </div>
           )}
