@@ -161,7 +161,7 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
                         <div className="flex-1">
                           <div className="flex items-start justify-between mb-2">
                             <div className="flex-1">
-                              <h3 className="text-base font-semibold">{app.name}</h3>
+                              <h3 className="text-h3">{app.name}</h3>
                               {app.description && (
                                 <p className="text-sm text-muted-foreground mt-1 line-clamp-1">
                                   {app.description}
