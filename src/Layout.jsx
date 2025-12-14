@@ -534,15 +534,14 @@ export default function Layout({ children, currentPageName }) {
                 setIsSyncing(true);
                 const loadingToast = toast.loading('Syncing with GitHub...');
                 try {
-                  // Pull latest commits
-                  await base44.functions.invoke('githubApi', {
-                    action: 'get_commits',
-                    page: 1,
-                    per_page: 10
+                  // Pull pages from GitHub
+                  const pullResult = await base44.functions.invoke('githubApi', {
+                    action: 'pull_pages'
                   });
 
-                  // Push current page changes if any
+                  // Push current page changes
                   const pages = await base44.entities.UIPage.list();
+                  let pushCount = 0;
                   for (const page of pages) {
                     if (page.current_content_jsx) {
                       await base44.functions.invoke('githubApi', {
@@ -551,10 +550,11 @@ export default function Layout({ children, currentPageName }) {
                         content: page.current_content_jsx,
                         message: `Update ${page.page_name} from Base44`
                       });
+                      pushCount++;
                     }
                   }
 
-                  toast.success('Synced with GitHub (pull + push)', { id: loadingToast });
+                  toast.success(`Synced: ${pullResult.data.count || 0} pulled, ${pushCount} pushed`, { id: loadingToast });
                 } catch (e) {
                   toast.error('Sync failed: ' + e.message, { id: loadingToast });
                 } finally {

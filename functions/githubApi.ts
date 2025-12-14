@@ -214,6 +214,61 @@ Deno.serve(async (req) => {
         }
         break;
 
+      case 'pull_pages':
+        // Pull pages from GitHub and update UIPage entities
+        try {
+          // Get list of pages from src/pages directory
+          const pagesUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/src/pages`;
+          const pagesResponse = await fetch(pagesUrl, { headers });
+          
+          if (!pagesResponse.ok) {
+            return Response.json({ error: 'Failed to fetch pages directory' }, { status: pagesResponse.status });
+          }
+          
+          const files = await pagesResponse.json();
+          const updatedPages = [];
+          
+          // Filter to .jsx/.js files
+          const pageFiles = files.filter(f => f.type === 'file' && /\.(jsx|js)$/.test(f.name));
+          
+          for (const file of pageFiles) {
+            const pageName = file.name.replace(/\.(jsx|js)$/, '');
+            
+            // Get file content
+            const fileResponse = await fetch(file.url, { headers });
+            if (!fileResponse.ok) continue;
+            
+            const fileData = await fileResponse.json();
+            const content = atob(fileData.content);
+            
+            // Find or create UIPage
+            const existingPages = await base44.asServiceRole.entities.UIPage.filter({ page_name: pageName });
+            
+            if (existingPages.length > 0) {
+              await base44.asServiceRole.entities.UIPage.update(existingPages[0].id, {
+                current_content_jsx: content
+              });
+              updatedPages.push(pageName);
+            } else {
+              await base44.asServiceRole.entities.UIPage.create({
+                page_name: pageName,
+                current_content_jsx: content,
+                description: `Pulled from GitHub`
+              });
+              updatedPages.push(pageName);
+            }
+          }
+          
+          return Response.json({ 
+            success: true, 
+            updated: updatedPages,
+            count: updatedPages.length
+          });
+        } catch (error) {
+          return Response.json({ error: `Pull failed: ${error.message}` }, { status: 500 });
+        }
+        break;
+
       case 'push_changes':
         // Push Base44 changes to GitHub
         try {
