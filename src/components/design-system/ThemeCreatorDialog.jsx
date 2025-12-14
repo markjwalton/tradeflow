@@ -24,7 +24,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { 
   Loader2, Building2, Users, Mail, Package, 
-  GitBranch, Palette, Check, AlertCircle
+  GitBranch, Palette, Check, AlertCircle, Sparkles
 } from "lucide-react";
 import { toast } from "sonner";
 import ThemeTokenEditor, { STURIJ_TOKENS } from "./ThemeTokenEditor";
@@ -36,6 +36,8 @@ export default function ThemeCreatorDialog({
 }) {
   const queryClient = useQueryClient();
   const [step, setStep] = useState(1);
+  const [aiPrompt, setAiPrompt] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
   const [formData, setFormData] = useState({
     // Package info
     package_name: "",
@@ -159,6 +161,54 @@ export default function ThemeCreatorDialog({
     toast.success("Token customizations saved");
   };
 
+  const generateThemeFromAI = async () => {
+    if (!aiPrompt.trim()) return;
+    setIsGenerating(true);
+    try {
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `Create a custom design theme based on: "${aiPrompt}".
+        
+Generate a complete theme package with:
+1. Package name and description
+2. Customer company name (if mentioned)
+3. Suggested color customizations (primary, secondary, accent)
+4. Font suggestions (heading and body)
+
+Return JSON with: package_name, description, customer_company, design_tokens (with colors object containing primary, secondary, accent in OKLCH format)`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            package_name: { type: "string" },
+            description: { type: "string" },
+            customer_company: { type: "string" },
+            design_tokens: { 
+              type: "object",
+              properties: {
+                colors: { type: "object" }
+              }
+            }
+          }
+        }
+      });
+
+      setFormData(prev => ({
+        ...prev,
+        package_name: result.package_name || aiPrompt,
+        package_code: generatePackageCode(result.package_name || aiPrompt),
+        description: result.description || "",
+        customer_company: result.customer_company || "",
+        design_tokens: result.design_tokens || prev.design_tokens
+      }));
+
+      toast.success("AI theme generated - review and customize");
+      setStep(2);
+    } catch (e) {
+      toast.error("Failed to generate theme");
+      console.error(e);
+    }
+    setIsGenerating(false);
+  };
+
   const generatePackageCode = (name) => {
     return name.toLowerCase()
       .replace(/[^a-z0-9\s-]/g, '')
@@ -206,6 +256,44 @@ export default function ThemeCreatorDialog({
         {/* Step 1: Package Configuration */}
         {step === 1 && (
           <div className="space-y-4">
+            {/* AI Theme Generator */}
+            <Card className="border-2 border-[var(--color-primary)]/20">
+              <CardContent className="pt-4 space-y-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="h-5 w-5 text-[var(--color-secondary)]" />
+                  <h4 className="font-heading font-medium text-[var(--color-midnight)]">
+                    AI Theme Generator
+                  </h4>
+                </div>
+                <div className="space-y-2">
+                  <Label>Describe your theme</Label>
+                  <Textarea
+                    value={aiPrompt}
+                    onChange={(e) => setAiPrompt(e.target.value)}
+                    placeholder="e.g., Modern tech startup for Acme Corp with bold blue colors and clean typography"
+                    rows={3}
+                  />
+                </div>
+                <Button 
+                  onClick={generateThemeFromAI} 
+                  disabled={isGenerating || !aiPrompt.trim()} 
+                  className="w-full bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-dark)] text-white"
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-4 w-4 mr-2" />
+                      Generate Theme with AI
+                    </>
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
+
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Package Name *</Label>

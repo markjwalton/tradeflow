@@ -42,7 +42,6 @@ import SturijPackage from './pages/SturijPackage';
 import DesignSystemManager from './pages/DesignSystemManager';
 import StandaloneAPIStrategy from './pages/StandaloneAPIStrategy';
 import StandaloneInstanceManager from './pages/StandaloneInstanceManager';
-import DesignTokens from './pages/DesignTokens';
 import TypographyShowcase from './pages/TypographyShowcase';
 import ButtonsShowcase from './pages/ButtonsShowcase';
 import CardsShowcase from './pages/CardsShowcase';
@@ -145,7 +144,6 @@ export const PAGES = {
     "DesignSystemManager": DesignSystemManager,
     "StandaloneAPIStrategy": StandaloneAPIStrategy,
     "StandaloneInstanceManager": StandaloneInstanceManager,
-    "DesignTokens": DesignTokens,
     "TypographyShowcase": TypographyShowcase,
     "ButtonsShowcase": ButtonsShowcase,
     "CardsShowcase": CardsShowcase,
