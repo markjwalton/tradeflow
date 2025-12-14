@@ -287,33 +287,32 @@ Return JSON with entity names as keys and arrays of records as values.`,
   }
 
   return (
-    <div className="max-w-7xl mx-auto -mt-6 space-y-6 bg-background min-h-screen">
-      <Card className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-midnight)] text-white border-0">
-        <CardContent className="py-6">
-          <div className="flex items-start justify-between">
-            <div className="flex items-start gap-4">
-              <div className="p-3 bg-white/20 rounded-xl">
-                <FlaskConical className="h-8 w-8" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold font-display">Test Data Manager</h1>
-                <p className="text-white/80 mt-1">Manage test data for pages and features</p>
-                <div className="flex gap-3 mt-4">
-                  <Badge className="bg-white/20">{stats.total} Items</Badge>
-                  <Badge className="bg-success-50 text-success">{stats.verified} Verified</Badge>
-                  <Badge className="bg-warning/10 text-warning">{stats.pending} Pending</Badge>
-                  <Badge className="bg-destructive-50 text-destructive">{stats.noData} No Data</Badge>
-                </div>
-              </div>
+    <div className="max-w-7xl mx-auto -mt-6 min-h-screen">
+      <PageHeader 
+        title="Test Data Manager"
+        description="Manage test data for pages and features"
+      />
+
+      <Card className="border-border mb-4">
+        <CardContent className="px-2 py-1">
+          <div className="flex justify-between items-center">
+            <div className="flex gap-3">
+              <Badge variant="outline">{stats.total} Items</Badge>
+              <Badge className="bg-success-50 text-success">{stats.verified} Verified</Badge>
+              <Badge variant="outline" className="text-warning">{stats.pending} Pending</Badge>
+              <Badge className="bg-destructive-50 text-destructive">{stats.noData} No Data</Badge>
             </div>
             <div className="flex gap-2">
-              <Button variant="secondary" size="icon" onClick={refreshData}>
-                <RefreshCw className="h-4 w-4" />
+              <Button variant="ghost" size="sm" onClick={refreshData}>
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Refresh
               </Button>
               <Button 
-              onClick={bulkVerify}
-              disabled={isOperating || stats.pending === 0}
-              className="bg-white text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10"
+                onClick={bulkVerify}
+                disabled={isOperating || stats.pending === 0}
+                variant="ghost"
+                size="sm"
+                className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
               >
                 <CheckCircle2 className="h-4 w-4 mr-2" />
                 Verify All ({stats.pending})
@@ -363,31 +362,35 @@ Return JSON with entity names as keys and arrays of records as values.`,
       )}
 
       {/* Filters */}
-      <div className="flex gap-2">
-        {[
-          { key: "all", label: "All", count: stats.total },
-          { key: "noData", label: "No Data", count: stats.noData, color: "text-destructive" },
-          { key: "pending", label: "Pending", count: stats.pending, color: "text-warning" },
-          { key: "verified", label: "Verified", count: stats.verified, color: "text-success" },
-        ].map(f => (
-          <Button
-            key={f.key}
-            variant={filter === f.key ? "default" : "outline"}
-            size="sm"
-            onClick={() => setFilter(f.key)}
-            className={filter !== f.key ? f.color : ""}
-          >
-            {f.label} ({f.count})
-          </Button>
-        ))}
-      </div>
+      <Card className="border-border mb-4">
+        <CardContent className="px-2 py-1">
+          <div className="flex gap-2">
+            {[
+              { key: "all", label: "All", count: stats.total },
+              { key: "noData", label: "No Data", count: stats.noData, color: "text-destructive" },
+              { key: "pending", label: "Pending", count: stats.pending, color: "text-warning" },
+              { key: "verified", label: "Verified", count: stats.verified, color: "text-success" },
+            ].map(f => (
+              <Button
+                key={f.key}
+                variant={filter === f.key ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setFilter(f.key)}
+                className={filter !== f.key ? f.color : ""}
+              >
+                {f.label} ({f.count})
+              </Button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Items Table */}
-      <Card>
+      <Card className="border-border">
         <CardHeader className="pb-2">
-          <CardTitle className="text-lg">
+          <h2 className="text-h2">
             {filter === "all" ? "All Items" : `${filter.charAt(0).toUpperCase() + filter.slice(1)} Items`}
-          </CardTitle>
+          </h2>
         </CardHeader>
         <CardContent>
           {filteredItems.length === 0 ? (
