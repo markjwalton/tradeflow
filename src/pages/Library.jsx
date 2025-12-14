@@ -737,18 +737,62 @@ Return a JSON object with: name, description, category (one of: ${featureCategor
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="entities">
-            <Database className="h-4 w-4 mr-2" />
-            Entities ({entities.filter(e => selectedProjectId ? e.custom_project_id === selectedProjectId : !e.custom_project_id).length})
-          </TabsTrigger>
-          <TabsTrigger value="pages">
-            <Layout className="h-4 w-4 mr-2" />
-            Pages ({pages.filter(p => selectedProjectId ? p.custom_project_id === selectedProjectId : !p.custom_project_id).length})
-          </TabsTrigger>
-          <TabsTrigger value="features">
-            <Zap className="h-4 w-4 mr-2" />
-            Features ({features.filter(f => selectedProjectId ? f.custom_project_id === selectedProjectId : !f.custom_project_id).length})
-          </TabsTrigger>
+          {activeSection === "core" && (
+            <>
+              <TabsTrigger value="entities">
+                <Database className="h-4 w-4 mr-2" />
+                Entities ({entities.filter(e => selectedProjectId ? e.custom_project_id === selectedProjectId : !e.custom_project_id).length})
+              </TabsTrigger>
+              <TabsTrigger value="pages">
+                <Layout className="h-4 w-4 mr-2" />
+                Pages ({pages.filter(p => selectedProjectId ? p.custom_project_id === selectedProjectId : !p.custom_project_id).length})
+              </TabsTrigger>
+              <TabsTrigger value="features">
+                <Zap className="h-4 w-4 mr-2" />
+                Features ({features.filter(f => selectedProjectId ? f.custom_project_id === selectedProjectId : !f.custom_project_id).length})
+              </TabsTrigger>
+            </>
+          )}
+          {activeSection === "community" && (
+            <>
+              <TabsTrigger value="entities">
+                <Database className="h-4 w-4 mr-2" />
+                Entities ({communityItems.filter(i => i.item_type === "entity").length})
+              </TabsTrigger>
+              <TabsTrigger value="pages">
+                <Layout className="h-4 w-4 mr-2" />
+                Pages ({communityItems.filter(i => i.item_type === "page").length})
+              </TabsTrigger>
+              <TabsTrigger value="features">
+                <Zap className="h-4 w-4 mr-2" />
+                Features ({communityItems.filter(i => i.item_type === "feature").length})
+              </TabsTrigger>
+            </>
+          )}
+          {activeSection === "forms" && (
+            <>
+              <TabsTrigger value="forms">
+                <FileInput className="h-4 w-4 mr-2" />
+                Forms ({formTemplates.length})
+              </TabsTrigger>
+              <TabsTrigger value="checklists">
+                <ListChecks className="h-4 w-4 mr-2" />
+                Checklists ({checklistTemplates.length})
+              </TabsTrigger>
+            </>
+          )}
+          {activeSection === "business" && (
+            <TabsTrigger value="business">
+              <Briefcase className="h-4 w-4 mr-2" />
+              Templates ({businessTemplates.length})
+            </TabsTrigger>
+          )}
+          {activeSection === "workflows" && (
+            <TabsTrigger value="workflows">
+              <GitBranch className="h-4 w-4 mr-2" />
+              Workflows ({workflows.length})
+            </TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value={activeTab} className="mt-6 space-y-4">
