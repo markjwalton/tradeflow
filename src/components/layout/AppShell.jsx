@@ -7,46 +7,15 @@ import { useState } from "react";
 
 export function AppShell({ children, user, tenant, navItems = [], currentPageName }) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  // Organize flat navItems into hierarchical structure
-  const organizeNavigation = (items) => {
-    const itemMap = {};
-    const roots = [];
 
-    // First pass: create map of all items
-    items.forEach((item) => {
-      itemMap[item.id] = { ...item, children: [] };
-    });
-
-    // Second pass: build hierarchy
-    items.forEach((item) => {
-      if (item.parent_id && itemMap[item.parent_id]) {
-        itemMap[item.parent_id].children.push(itemMap[item.id]);
-      } else {
-        roots.push(itemMap[item.id]);
-      }
-    });
-
-    // Sort by order
-    const sortByOrder = (arr) => {
-      arr.sort((a, b) => (a.order || 0) - (b.order || 0));
-      arr.forEach((item) => {
-        if (item.children?.length > 0) {
-          sortByOrder(item.children);
-        }
-      });
-      return arr;
-    };
-
-    return sortByOrder(roots);
-  };
-
-  const organizedNavItems = organizeNavigation(navItems);
-
+  // AppSidebar builds its own hierarchy from flat items
+  // Just pass the flat array directly
+  
   return (
     <div className="min-h-screen flex flex-col bg-[var(--color-background)]">
       <AppHeader 
         user={user} 
-        navItems={organizedNavItems}
+        navItems={navItems}
         onMobileMenuClick={() => setMobileNavOpen(true)}
         currentPageName={currentPageName}
       />
@@ -54,13 +23,13 @@ export function AppShell({ children, user, tenant, navItems = [], currentPageNam
       <MobileNav 
         isOpen={mobileNavOpen}
         onClose={() => setMobileNavOpen(false)}
-        navItems={organizedNavItems}
+        navItems={navItems}
       />
 
       <div className="flex flex-1 gap-4 p-2 sm:p-4">
-        <AppSidebar navItems={organizedNavItems} />
+        <AppSidebar navItems={navItems} />
         <div className="flex-1 flex flex-col overflow-hidden rounded-xl">
-          <AppContent navItems={organizedNavItems} currentPageName={currentPageName}>{children}</AppContent>
+          <AppContent navItems={navItems} currentPageName={currentPageName}>{children}</AppContent>
         </div>
       </div>
 
