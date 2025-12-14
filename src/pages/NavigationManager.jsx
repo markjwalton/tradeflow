@@ -39,7 +39,7 @@ export default function NavigationManager() {
   
   useEffect(() => {
     base44.auth.me().then(setCurrentUser).catch(() => {});
-    base44.entities.UIPage.filter({ slug: "NavigationManager" })
+    base44.entities.UIPage.filter({ page_name: "Navigation Manager" })
       .then(pages => {
         if (pages.length > 0) {
           setPageData(pages[0]);
