@@ -18,7 +18,8 @@ export default function FontManager() {
   const [editingFont, setEditingFont] = useState(null);
   const [currentFonts, setCurrentFonts] = useState({ heading: null, body: null });
   const [isImporting, setIsImporting] = useState(false);
-  const [fontsInUseOpen, setFontsInUseOpen] = useState(false);
+  const [fontsInUseOpen, setFontsInUseOpen] = useState(true);
+  const [openFontIds, setOpenFontIds] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
     font_family: '',
@@ -410,63 +411,80 @@ export default function FontManager() {
       ) : (
         <div className="space-y-4">
           {fonts.map((font) => (
-            <Card key={font.id} className="border-border">
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <CardTitle className="text-base" style={{ fontFamily: font.font_family }}>{font.name}</CardTitle>
-                    <CardDescription className="capitalize">{font.category}</CardDescription>
-                  </div>
-                  <div className="flex gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleActivate(font)}
-                      title="Activate this font"
-                    >
-                      <Check className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleEdit(font)}
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => {
-                        if (confirm('Delete this font?')) {
-                          deleteMutation.mutate(font.id);
-                        }
-                      }}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <code className="text-xs text-muted-foreground block mb-3">{font.font_family}</code>
-                <div className="p-3 rounded bg-muted">
-                  <p style={{ fontFamily: font.font_family }} className="text-lg">
-                    {font.preview_text}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2 mt-3 text-xs text-muted-foreground">
-                  <span className="capitalize">{font.source}</span>
-                  {font.url && (
-                    <>
-                      <span>•</span>
-                      <a href={font.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                        View Source
-                      </a>
-                    </>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+            <Collapsible 
+              key={font.id} 
+              open={openFontIds.includes(font.id)}
+              onOpenChange={(open) => {
+                setOpenFontIds(prev => 
+                  open ? [...prev, font.id] : prev.filter(id => id !== font.id)
+                );
+              }}
+            >
+              <Card className="border-border">
+                <CollapsibleTrigger className="w-full">
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-3">
+                        <ChevronDown className={`h-4 w-4 transition-transform ${openFontIds.includes(font.id) ? 'rotate-180' : ''}`} />
+                        <div className="text-left">
+                          <CardTitle className="text-base" style={{ fontFamily: font.font_family }}>{font.name}</CardTitle>
+                          <CardDescription className="capitalize">{font.category}</CardDescription>
+                        </div>
+                      </div>
+                      <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleActivate(font)}
+                          title="Activate this font"
+                        >
+                          <Check className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleEdit(font)}
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => {
+                            if (confirm('Delete this font?')) {
+                              deleteMutation.mutate(font.id);
+                            }
+                          }}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardHeader>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <CardContent>
+                    <code className="text-xs text-muted-foreground block mb-3">{font.font_family}</code>
+                    <div className="p-3 rounded bg-muted">
+                      <p style={{ fontFamily: font.font_family }} className="text-lg">
+                        {font.preview_text}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 mt-3 text-xs text-muted-foreground">
+                      <span className="capitalize">{font.source}</span>
+                      {font.url && (
+                        <>
+                          <span>•</span>
+                          <a href={font.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                            View Source
+                          </a>
+                        </>
+                      )}
+                    </div>
+                  </CardContent>
+                </CollapsibleContent>
+              </Card>
+            </Collapsible>
           ))}
         </div>
       )}
