@@ -22,6 +22,11 @@ import TypographyShowcase from '@/components/showcase/TypographyShowcase';
 import ColorShowcase from '@/components/showcase/ColorShowcase';
 import TabsShowcase from '@/components/showcase/TabsShowcase';
 import IconShowcase from '@/components/showcase/IconShowcase';
+import NavigationShowcase from '@/components/showcase/NavigationShowcase';
+import DataDisplayShowcase from '@/components/showcase/DataDisplayShowcase';
+import LayoutShowcase from '@/components/showcase/LayoutShowcase';
+import FeedbackShowcase from '@/components/showcase/FeedbackShowcase';
+import ModalShowcase from '@/components/showcase/ModalShowcase';
 
 export default function UXShowcase() {
   const [showInspector, setShowInspector] = useState(false);
@@ -61,6 +66,11 @@ export default function UXShowcase() {
     { value: 'typographyShowcase', label: 'Typography' },
     { value: 'colorShowcase', label: 'Colors' },
     { value: 'iconShowcase', label: 'Icons' },
+    { value: 'navigationShowcase', label: 'Navigation' },
+    { value: 'dataDisplayShowcase', label: 'Data Display' },
+    { value: 'layoutShowcase', label: 'Layouts' },
+    { value: 'feedbackShowcase', label: 'Feedback' },
+    { value: 'modalShowcase', label: 'Modals' },
   ];
 
   const componentElements = {
@@ -319,7 +329,7 @@ export default function UXShowcase() {
       </PageHeader>
 
       <Tabs defaultValue="loading" className="w-full">
-        <TabsList className="grid w-full grid-cols-5 lg:grid-cols-11">
+        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
           <TabsTrigger value="loading">Loading</TabsTrigger>
           <TabsTrigger value="errors">Errors</TabsTrigger>
           <TabsTrigger value="forms">Forms</TabsTrigger>
@@ -331,6 +341,11 @@ export default function UXShowcase() {
           <TabsTrigger value="typography">Typography</TabsTrigger>
           <TabsTrigger value="colors">Colors</TabsTrigger>
           <TabsTrigger value="icons">Icons</TabsTrigger>
+          <TabsTrigger value="navigation">Navigation</TabsTrigger>
+          <TabsTrigger value="data">Data</TabsTrigger>
+          <TabsTrigger value="layouts">Layouts</TabsTrigger>
+          <TabsTrigger value="feedback">Feedback</TabsTrigger>
+          <TabsTrigger value="modals">Modals</TabsTrigger>
         </TabsList>
 
         <TabsContent value="loading" className="mt-6">
@@ -417,6 +432,46 @@ export default function UXShowcase() {
           <Card>
             <CardContent className="pt-6">
               <IconShowcase />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="navigation" className="mt-6">
+          <Card>
+            <CardContent className="pt-6">
+              <NavigationShowcase />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="data" className="mt-6">
+          <Card>
+            <CardContent className="pt-6">
+              <DataDisplayShowcase />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="layouts" className="mt-6">
+          <Card>
+            <CardContent className="pt-6">
+              <LayoutShowcase />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="feedback" className="mt-6">
+          <Card>
+            <CardContent className="pt-6">
+              <FeedbackShowcase />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="modals" className="mt-6">
+          <Card>
+            <CardContent className="pt-6">
+              <ModalShowcase />
             </CardContent>
           </Card>
         </TabsContent>
