@@ -108,6 +108,7 @@ import SystemHealth from './pages/SystemHealth';
 import DeveloperDocs from './pages/DeveloperDocs';
 import SchemaVisualEditor from './pages/SchemaVisualEditor';
 import Library from './pages/Library';
+import LibraryItemBuilder from './pages/LibraryItemBuilder';
 import __Layout from './Layout.jsx';
 
 
@@ -222,6 +223,7 @@ export const PAGES = {
     "DeveloperDocs": DeveloperDocs,
     "SchemaVisualEditor": SchemaVisualEditor,
     "Library": Library,
+    "LibraryItemBuilder": LibraryItemBuilder,
 }
 
 export const pagesConfig = {

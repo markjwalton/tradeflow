@@ -3,6 +3,8 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { useNavigate } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -53,6 +55,7 @@ const complexityColors = {
 };
 
 export default function Library() {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("entities");
   const [activeSection, setActiveSection] = useState("core"); // core, community, forms, business, workflows
@@ -730,9 +733,8 @@ Return a JSON object with: name, description, category (one of: ${featureCategor
               className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
               onClick={() => {
                 if (activeSection === "core") {
-                  if (activeTab === "entities") navigate(createPageUrl("Library") + "?mode=new&type=entity");
-                  else if (activeTab === "pages") navigate(createPageUrl("Library") + "?mode=new&type=page");
-                  else navigate(createPageUrl("Library") + "?mode=new&type=feature");
+                  const type = activeTab === "entities" ? "entity" : activeTab === "pages" ? "page" : "feature";
+                  navigate(createPageUrl("LibraryItemBuilder") + `?type=${type}` + (selectedProjectId ? `&project=${selectedProjectId}` : ""));
                 } else if (activeSection === "forms") {
                   if (activeTab === "forms") navigate(createPageUrl("FormBuilder"));
                   else navigate(createPageUrl("ChecklistBuilder"));
@@ -962,7 +964,11 @@ Return a JSON object with: name, description, category (one of: ${featureCategor
                                           <Button
                                             size="sm"
                                             variant="ghost"
-                                            onClick={(e) => { e.stopPropagation(); setSelectedItem(item); setShowBuilder(true); }}
+                                            onClick={(e) => { 
+                                              e.stopPropagation(); 
+                                              const type = activeTab === "entities" ? "entity" : activeTab === "pages" ? "page" : "feature";
+                                              navigate(createPageUrl("LibraryItemBuilder") + `?type=${type}&id=${item.id}` + (selectedProjectId ? `&project=${selectedProjectId}` : ""));
+                                            }}
                                             title="Edit"
                                           >
                                             <Edit className="h-3 w-3" />
