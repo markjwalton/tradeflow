@@ -530,20 +530,35 @@ export default function Layout({ children, currentPageName }) {
           {showEditorBubble && (
             <Button
               onClick={async () => {
-                const loadingToast = toast.loading('Syncing from GitHub...');
+                const loadingToast = toast.loading('Syncing with GitHub...');
                 try {
+                  // Pull latest commits
                   await base44.functions.invoke('githubApi', {
                     action: 'get_commits',
                     page: 1,
                     per_page: 10
                   });
-                  toast.success('Synced from GitHub', { id: loadingToast });
+
+                  // Push current page changes if any
+                  const pages = await base44.entities.UIPage.list();
+                  for (const page of pages) {
+                    if (page.current_content_jsx) {
+                      await base44.functions.invoke('githubApi', {
+                        action: 'push_changes',
+                        file_path: `src/pages/${page.page_name}.jsx`,
+                        content: page.current_content_jsx,
+                        message: `Update ${page.page_name} from Base44`
+                      });
+                    }
+                  }
+
+                  toast.success('Synced with GitHub (pull + push)', { id: loadingToast });
                 } catch (e) {
                   toast.error('Sync failed: ' + e.message, { id: loadingToast });
                 }
               }}
               className="fixed bottom-6 left-24 h-14 w-14 rounded-full shadow-2xl bg-primary text-white hover:bg-primary/90 border-2 border-white z-[60]"
-              title="Sync from GitHub"
+              title="Sync with GitHub (Pull + Push)"
             >
               <GitBranch className="h-6 w-6" />
             </Button>

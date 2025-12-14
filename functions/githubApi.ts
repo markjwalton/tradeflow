@@ -214,6 +214,54 @@ Deno.serve(async (req) => {
         }
         break;
 
+      case 'push_changes':
+        // Push Base44 changes to GitHub
+        try {
+          const { file_path, content, message } = body;
+          
+          // Get current file SHA (needed for updates)
+          const getFileUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${file_path}`;
+          const getFileResponse = await fetch(getFileUrl, { headers });
+          let sha = null;
+          
+          if (getFileResponse.ok) {
+            const fileData = await getFileResponse.json();
+            sha = fileData.sha;
+          }
+          
+          // Create or update file
+          const updateUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${file_path}`;
+          const updatePayload = {
+            message: message || `Update ${file_path} from Base44`,
+            content: btoa(content), // Base64 encode
+            ...(sha && { sha })
+          };
+          
+          const updateResponse = await fetch(updateUrl, {
+            method: 'PUT',
+            headers: {
+              ...headers,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatePayload)
+          });
+          
+          if (updateResponse.ok) {
+            const result = await updateResponse.json();
+            return Response.json({ 
+              success: true, 
+              commit: result.commit,
+              message: 'Changes pushed to GitHub'
+            });
+          } else {
+            const error = await updateResponse.text();
+            return Response.json({ error: `Failed to push: ${error}` }, { status: updateResponse.status });
+          }
+        } catch (error) {
+          return Response.json({ error: `Push failed: ${error.message}` }, { status: 500 });
+        }
+        break;
+
       case 'scan_colors':
         // Scan repository for color occurrences
         try {
