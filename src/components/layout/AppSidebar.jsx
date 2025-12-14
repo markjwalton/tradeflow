@@ -142,7 +142,11 @@ export function AppSidebar({ navItems = [] }) {
 
   const showLabels = mode === "expanded";
 
-  const toggleFolder = (folderId) => {
+  const toggleFolder = (folderId, event) => {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
     setExpandedFolders((prev) => {
       const next = new Set(prev);
       if (next.has(folderId)) next.delete(folderId);
@@ -188,7 +192,7 @@ export function AppSidebar({ navItems = [] }) {
       if (isIconsOnly) {
         const folderButton = (
           <button
-            onClick={() => toggleFolder(item.id)}
+            onClick={(e) => toggleFolder(item.id, e)}
             className={cn(
               "w-full flex items-center justify-center transition-colors group",
               "[padding:var(--spacing-3)] [border-radius:var(--radius-lg)]",
@@ -227,7 +231,7 @@ export function AppSidebar({ navItems = [] }) {
       return (
         <div key={item.id} className={isExpanded && showLabels ? "bg-sidebar-accent [border-radius:var(--radius-lg)] [margin-bottom:var(--spacing-1)]" : ""}>
           <button
-            onClick={() => toggleFolder(item.id)}
+            onClick={(e) => toggleFolder(item.id, e)}
             className={cn(
               "w-full flex items-center transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground",
               "[gap:var(--spacing-3)] [padding-left:var(--spacing-3)] [padding-right:var(--spacing-3)] [padding-top:var(--spacing-2)] [padding-bottom:var(--spacing-2)] [border-radius:var(--radius-lg)]",
