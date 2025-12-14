@@ -189,9 +189,8 @@ export default function Customers() {
         </CardContent>
       </Card>
 
-      <Card className="border-border">
-        <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-6">
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -214,7 +213,9 @@ export default function Customers() {
         </Select>
       </div>
 
-      <div className="space-y-4">
+      <Card className="border-border">
+        <CardContent className="p-4">
+          <div className="space-y-4">
         {Object.entries(groupedCustomers).map(([status, statusCustomers]) => {
           const isExpanded = expandedStatuses[status] !== false;
           return (
@@ -297,25 +298,23 @@ export default function Customers() {
             </Collapsible>
           );
         })}
-      </div>
+          </div>
 
-      {filteredCustomers.length === 0 && (
-        <Card className="border-border">
-          <CardContent className="text-center py-12 text-muted-foreground">
-            No customers found. Add your first customer to get started.
-          </CardContent>
-        </Card>
-      )}
+          {filteredCustomers.length === 0 && (
+            <div className="text-center py-12 text-muted-foreground">
+              No customers found. Add your first customer to get started.
+            </div>
+          )}
 
           {totalPages > 1 && (
-        <div className="mt-6">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </div>
-      )}
+            <div className="mt-6">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            </div>
+          )}
         </CardContent>
       </Card>
 
