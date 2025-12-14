@@ -558,7 +558,6 @@ export default function Layout({ children, currentPageName }) {
                 setIsSyncing(true);
                 const loadingToast = toast.loading('Syncing with GitHub...');
                 try {
-                  // Pull pages from GitHub
                   const pullResult = await base44.functions.invoke('githubApi', {
                     action: 'pull_pages'
                   });
@@ -581,7 +580,7 @@ export default function Layout({ children, currentPageName }) {
               }}
               disabled={isSyncing}
               className="fixed bottom-6 left-24 h-14 w-14 rounded-full shadow-2xl bg-primary text-white hover:bg-primary/90 border-2 border-white z-[60] disabled:opacity-50"
-              title={`Sync with GitHub (Pull + Push)${lastRebuild ? '\nLast rebuild: ' + new Date(lastRebuild).toLocaleString() : ''}`}
+              title="Sync with GitHub"
             >
               {isSyncing ? <Loader2 className="h-6 w-6 animate-spin" /> : <GitBranch className="h-6 w-6" />}
             </Button>

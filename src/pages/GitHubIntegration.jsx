@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, File, GitBranch, AlertCircle, FileText, RefreshCw, Database } from "lucide-react";
+import { Loader2, File, GitBranch, AlertCircle, FileText, RefreshCw, Database, Sparkles } from "lucide-react";
 
 export default function GitHubIntegration() {
   const [loading, setLoading] = useState(false);
@@ -22,6 +22,8 @@ export default function GitHubIntegration() {
   const [hasMoreCommits, setHasMoreCommits] = useState(false);
   const [useCache, setUseCache] = useState(true);
   const [syncResult, setSyncResult] = useState(null);
+  const [isRebuilding, setIsRebuilding] = useState(false);
+  const [lastRebuild, setLastRebuild] = useState(null);
 
   const handleGetRepo = async () => {
     setLoading(true);
@@ -44,6 +46,18 @@ export default function GitHubIntegration() {
   // Load repository info on mount
   useEffect(() => {
     handleGetRepo();
+    // Load last rebuild timestamp
+    const loadRebuildTimestamp = async () => {
+      try {
+        const user = await base44.auth.me();
+        if (user?.ui_preferences?.lastRebuildTimestamp) {
+          setLastRebuild(user.ui_preferences.lastRebuildTimestamp);
+        }
+      } catch (e) {
+        // Ignore
+      }
+    };
+    loadRebuildTimestamp();
   }, []);
 
   const handleGetFile = async () => {
@@ -167,9 +181,34 @@ export default function GitHubIntegration() {
       
       setError(null);
     } catch (e) {
+      console.error('Sync error:', e);
       setError(e.response?.data?.error || e.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRebuild = async () => {
+    setIsRebuilding(true);
+    try {
+      const timestamp = new Date().toISOString();
+      const user = await base44.auth.me();
+      await base44.auth.updateMe({
+        ui_preferences: {
+          ...(user.ui_preferences || {}),
+          lastRebuildTimestamp: timestamp,
+          rebuildTrigger: Math.random()
+        }
+      });
+      setLastRebuild(timestamp);
+      
+      // Reload after 2 seconds
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } catch (e) {
+      setError('Rebuild failed: ' + e.message);
+      setIsRebuilding(false);
     }
   };
 
@@ -295,10 +334,19 @@ export default function GitHubIntegration() {
           </Card>
         )}
 
-        <div className="flex justify-end mb-4">
+        <div className="flex justify-end gap-2 mb-4">
           <Button onClick={handleSync} disabled={loading} className="gap-2">
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
             Sync from GitHub
+          </Button>
+          <Button 
+            onClick={handleRebuild} 
+            disabled={isRebuilding}
+            className="gap-2 bg-green-600 hover:bg-green-700"
+            title={lastRebuild ? `Last rebuild: ${new Date(lastRebuild).toLocaleString()}` : 'Trigger rebuild'}
+          >
+            {isRebuilding ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+            Rebuild & Deploy
           </Button>
         </div>
 
