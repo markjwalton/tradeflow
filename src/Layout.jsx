@@ -254,7 +254,7 @@ export default function Layout({ children, currentPageName }) {
         }
         
         const configStandalonePages = loadedNavConfig?.standalone_pages || [];
-        const isAdminPage = loadedNavItems.some(item => item.slug === currentPageName) || configStandalonePages.includes(currentPageName);
+        const isAdminPage = loadedNavItems.some(item => item.page_url === currentPageName) || configStandalonePages.includes(currentPageName);
         
         // Global admin pages: for is_global_admin OR tenant admins (with tenant context)
         if (isAdminPage) {
