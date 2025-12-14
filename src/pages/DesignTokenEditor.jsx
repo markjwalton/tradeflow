@@ -539,22 +539,12 @@ function TokenEditor({ token, value, onChange }) {
         </Select>
       )}
       
-      <div className="flex gap-2">
-        <Input
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={token.type === 'color' ? `oklch(0.5 0.1 150)` : token.default || ''}
-          className="flex-1 font-mono text-sm"
-        />
-        {token.type === 'color' && (
-          <input
-            type="color"
-            value={hexValue}
-            onChange={(e) => handleColorPickerChange(e.target.value)}
-            className="w-12 h-10 rounded border cursor-pointer"
-          />
-        )}
-      </div>
+      <Input
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={token.type === 'color' ? `oklch(0.5 0.1 150)` : token.default || ''}
+        className="w-full font-mono text-sm"
+      />
       {token.type === 'color' && (
         <div className="flex gap-1.5 flex-wrap">
           {DESIGN_TOKEN_COLORS.map((color) => (
