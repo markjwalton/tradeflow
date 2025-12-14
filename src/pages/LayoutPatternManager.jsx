@@ -26,6 +26,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { toast } from "sonner";
 import { createPageUrl } from "@/utils";
 import { useNavigate } from "react-router-dom";
+import { PageHeader } from "@/components/sturij";
 
 export default function LayoutPatternManager() {
   const navigate = useNavigate();
@@ -206,20 +207,16 @@ export default function LayoutPatternManager() {
   };
 
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <div className="flex items-center gap-3 mb-2">
-          <Layout className="h-6 w-6 text-primary" />
-          <h1 className="text-2xl font-light font-display text-foreground">Layout Pattern Manager</h1>
-          <Badge variant="outline" className="gap-1">
-            <Sparkles className="h-3 w-3" />
-            AI-Ready Patterns
-          </Badge>
-        </div>
-        <p className="text-muted-foreground">
-          Manage reusable layout patterns for dynamic page generation
-        </p>
-      </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Layout Pattern Manager"
+        description="Manage reusable layout patterns for dynamic page generation"
+      >
+        <Badge variant="outline" className="gap-1">
+          <Sparkles className="h-3 w-3" />
+          AI-Ready Patterns
+        </Badge>
+      </PageHeader>
 
       {/* Filters */}
       <div className="flex gap-4 mb-6">

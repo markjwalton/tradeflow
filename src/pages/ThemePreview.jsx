@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CheckCircle2, AlertCircle, Info, Loader2 } from "lucide-react";
+import { PageHeader } from "@/components/sturij";
 
 const Card = lazy(() => import("@/components/ui/card").then(m => ({ default: m.Card })));
 const CardContent = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardContent })));
@@ -34,11 +35,11 @@ const ThemePreview = () => {
 
   return (
     <Suspense fallback={<div className="flex justify-center items-center min-h-screen"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
-      <div className="p-6 max-w-7xl mx-auto space-y-8">
-      <div className="text-center space-y-2">
-        <h1 className="text-4xl font-display">Theme Preview</h1>
-        <p className="text-muted-foreground">See your active OKLCH-based theme in action</p>
-      </div>
+      <div className="max-w-7xl mx-auto -mt-6 space-y-8">
+      <PageHeader 
+        title="Theme Preview"
+        description="See your active OKLCH-based theme in action"
+      />
 
       <Card>
         <CardHeader>

@@ -17,6 +17,7 @@ import {
   ArrowRight,
   Plus
 } from "lucide-react";
+import { PageHeader } from "@/components/sturij";
 
 export default function ComponentPatterns() {
   // Analytics cards pattern from Figma
@@ -64,13 +65,11 @@ export default function ComponentPatterns() {
   ];
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-display">Component Patterns</h1>
-        <p className="text-body-color mt-2">
-          Real-world patterns and layouts extracted from the design system
-        </p>
-      </div>
+    <div className="max-w-7xl mx-auto -mt-6 space-y-8">
+      <PageHeader 
+        title="Component Patterns"
+        description="Real-world patterns and layouts extracted from the design system"
+      />
 
       {/* Dashboard Header Pattern */}
       <Card>

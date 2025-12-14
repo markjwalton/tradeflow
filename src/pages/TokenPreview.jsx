@@ -14,6 +14,7 @@ import {
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { STURIJ_TOKENS } from "@/components/design-system/ThemeTokenEditor";
+import { PageHeader } from "@/components/sturij";
 
 export default function TokenPreview() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -65,31 +66,17 @@ export default function TokenPreview() {
   const background = mergedTokens.colors.background || "#f5f3ef";
 
   return (
-    <div className="p-6 min-h-screen" style={{ backgroundColor: background, ...tokenStyles }}>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-4">
-          <Link to={createPageUrl("PackageDetail") + `?id=${packageId}`}>
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          </Link>
-          <div>
-            <h1 className="text-2xl font-heading flex items-center gap-2" style={{ color: midnight }}>
-              <Eye className="h-6 w-6" style={{ color: primary }} />
-              Token Preview
-            </h1>
-            <p style={{ color: charcoal }}>
-              {pkg?.package_name} v{pkg?.version}
-            </p>
-          </div>
-        </div>
+    <div className="max-w-7xl mx-auto -mt-6 min-h-screen" style={{ backgroundColor: background, ...tokenStyles }}>
+      <PageHeader 
+        title="Token Preview"
+        description={pkg ? `${pkg.package_name} v${pkg.version}` : "Preview design tokens"}
+      >
         <Link to={createPageUrl("PackageExport") + `?id=${packageId}`}>
           <Button style={{ backgroundColor: primary, color: "white" }}>
             Export Package
           </Button>
         </Link>
-      </div>
+      </PageHeader>
 
       {/* Color Swatches */}
       <Card className="mb-6 border" style={{ borderColor: `${charcoal}20` }}>

@@ -193,19 +193,16 @@ export default function LayoutBuilder() {
   };
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="mb-6">
-        <div className="flex items-center gap-3 mb-2">
-          <h1 className="text-2xl font-light font-display text-foreground">Layout Builder</h1>
-          <Badge variant="outline" className="gap-1">
-            <Sparkles className="h-3 w-3" />
-            Testing Tool
-          </Badge>
-        </div>
-        <p className="text-muted-foreground">
-          Test and validate layout configurations with live preview
-        </p>
-      </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Layout Builder"
+        description="Test and validate layout configurations with live preview"
+      >
+        <Badge variant="outline" className="gap-1">
+          <Sparkles className="h-3 w-3" />
+          Testing Tool
+        </Badge>
+      </PageHeader>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Input Panel */}
