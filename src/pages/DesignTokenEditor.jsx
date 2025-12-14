@@ -2,7 +2,7 @@ import React, { useState, useEffect, lazy, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Save, RotateCcw, Eye, Code, Palette, Loader2 } from "lucide-react";
+import { Save, RotateCcw, Eye, Code, Palette, Loader2, Shapes } from "lucide-react";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 
@@ -195,6 +195,21 @@ const TOKEN_CATEGORIES = {
       { name: "shadow-md", label: "Medium Shadow", type: "shadow" },
       { name: "shadow-lg", label: "Large Shadow", type: "shadow" },
     ]
+  },
+  icons: {
+    label: "Icons",
+    icon: Shapes,
+    tokens: [
+      { name: "icon-size-sm", label: "Small Icon", type: "size", default: "16px" },
+      { name: "icon-size-md", label: "Medium Icon", type: "size", default: "20px" },
+      { name: "icon-size-lg", label: "Large Icon", type: "size", default: "24px" },
+      { name: "icon-size-xl", label: "Extra Large Icon", type: "size", default: "32px" },
+      { name: "icon-stroke-thin", label: "Thin Stroke", type: "number", default: "1" },
+      { name: "icon-stroke-normal", label: "Normal Stroke", type: "number", default: "2" },
+      { name: "icon-stroke-bold", label: "Bold Stroke", type: "number", default: "2.5" },
+      { name: "icon-color-primary", label: "Primary Icon Color", type: "color" },
+      { name: "icon-color-muted", label: "Muted Icon Color", type: "color" },
+    ]
   }
 };
 
@@ -386,6 +401,13 @@ export default function DesignTokenEditor() {
             <div className="w-16 h-16 rounded bg-secondary" />
             <div className="w-16 h-16 rounded bg-accent" />
             <div className="w-16 h-16 rounded bg-muted" />
+          </div>
+
+          <div className="flex gap-4 items-center pt-4 border-t">
+            <Eye className="text-primary" style={{ width: 'var(--icon-size-sm, 16px)', strokeWidth: 'var(--icon-stroke-thin, 1)' }} />
+            <Eye className="text-primary" style={{ width: 'var(--icon-size-md, 20px)', strokeWidth: 'var(--icon-stroke-normal, 2)' }} />
+            <Eye className="text-primary" style={{ width: 'var(--icon-size-lg, 24px)', strokeWidth: 'var(--icon-stroke-bold, 2.5)' }} />
+            <Eye className="text-primary" style={{ width: 'var(--icon-size-xl, 32px)', strokeWidth: 'var(--icon-stroke-bold, 2.5)' }} />
           </div>
         </CardContent>
       </Card>

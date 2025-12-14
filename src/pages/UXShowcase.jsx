@@ -20,6 +20,7 @@ import CardShowcase from '@/components/showcase/CardShowcase';
 import TypographyShowcase from '@/components/showcase/TypographyShowcase';
 import ColorShowcase from '@/components/showcase/ColorShowcase';
 import TabsShowcase from '@/components/showcase/TabsShowcase';
+import IconShowcase from '@/components/showcase/IconShowcase';
 
 export default function UXShowcase() {
   const [showInspector, setShowInspector] = useState(false);
@@ -58,6 +59,7 @@ export default function UXShowcase() {
     { value: 'tabsShowcase', label: 'Tabs' },
     { value: 'typographyShowcase', label: 'Typography' },
     { value: 'colorShowcase', label: 'Colors' },
+    { value: 'iconShowcase', label: 'Icons' },
   ];
 
   const componentElements = {
@@ -98,6 +100,10 @@ export default function UXShowcase() {
     ],
     colorShowcase: [
       { id: 'color-palettes', label: 'Color Palettes' },
+    ],
+    iconShowcase: [
+      { id: 'icon-controls', label: 'Icon Controls' },
+      { id: 'icon-grid', label: 'Icon Grid' },
     ],
   };
 
@@ -315,7 +321,7 @@ export default function UXShowcase() {
       </div>
 
       <Tabs defaultValue="loading" className="w-full">
-        <TabsList className="grid w-full grid-cols-5 lg:grid-cols-10">
+        <TabsList className="grid w-full grid-cols-5 lg:grid-cols-11">
           <TabsTrigger value="loading">Loading</TabsTrigger>
           <TabsTrigger value="errors">Errors</TabsTrigger>
           <TabsTrigger value="forms">Forms</TabsTrigger>
@@ -326,6 +332,7 @@ export default function UXShowcase() {
           <TabsTrigger value="tabs">Tabs</TabsTrigger>
           <TabsTrigger value="typography">Typography</TabsTrigger>
           <TabsTrigger value="colors">Colors</TabsTrigger>
+          <TabsTrigger value="icons">Icons</TabsTrigger>
         </TabsList>
 
         <TabsContent value="loading" className="mt-6">
@@ -404,6 +411,14 @@ export default function UXShowcase() {
           <Card>
             <CardContent className="pt-6">
               <ColorShowcase />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="icons" className="mt-6">
+          <Card>
+            <CardContent className="pt-6">
+              <IconShowcase />
             </CardContent>
           </Card>
         </TabsContent>
