@@ -177,10 +177,10 @@ export default function GenericNavEditor({
 
   const saveMutation = useMutation({
         mutationFn: async (newItems) => {
-          // Ensure all items have _id before saving
+          // Ensure all items have id before saving
           const itemsWithIds = newItems.map(item => ({
             ...item,
-            _id: item._id || generateId()
+            id: item.id || item._id || generateId()
           }));
           if (config) {
             return base44.entities.NavigationConfig.update(config.id, { items: itemsWithIds });

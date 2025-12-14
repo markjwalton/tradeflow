@@ -196,15 +196,15 @@ export default function Layout({ children, currentPageName }) {
               loadedNavItems = loadedNavConfig.items
                 .filter(item => item.is_visible !== false) // Only include visible items
                 .map((item, idx) => {
-                  // Use _id if it exists, otherwise generate ID
-                  let itemId;
-                  if (item._id) {
-                    itemId = item._id;
-                  } else if (item.item_type === 'folder' && !item.slug) {
-                    // Generate folder ID from name if no slug and no _id
-                    itemId = 'folder_' + item.name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
-                  } else {
-                    itemId = item.slug || `item_${idx}`;
+                  // Use id field from schema
+                  let itemId = item.id || item._id;
+                  if (!itemId) {
+                    if (item.item_type === 'folder' && !item.slug) {
+                      // Generate folder ID from name if no id
+                      itemId = 'folder_' + item.name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+                    } else {
+                      itemId = item.slug || `item_${idx}`;
+                    }
                   }
 
                   return {
