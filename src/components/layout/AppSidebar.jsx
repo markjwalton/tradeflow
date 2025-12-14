@@ -15,31 +15,37 @@ export function AppSidebar({ navItems = [] }) {
 
   // Build hierarchical structure from flat navItems
   const buildHierarchy = (items) => {
+    if (!items || items.length === 0) return [];
+    
     const itemsMap = new Map();
     const rootItems = [];
 
-    // First pass: create a map of all items by their _id
+    // First pass: create a map of all items by their _id with children array
     items.forEach((item) => {
-      itemsMap.set(item._id, { ...item, children: [] });
+      if (item._id) {
+        itemsMap.set(item._id, { ...item, children: [] });
+      }
     });
 
-    // Second pass: build hierarchy
+    // Second pass: build hierarchy by connecting parents and children
     items.forEach((item) => {
+      if (!item._id) return;
+      
       const currentItem = itemsMap.get(item._id);
-      if (item.parent_id) {
+      if (!currentItem) return;
+      
+      if (item.parent_id && itemsMap.has(item.parent_id)) {
+        // Has a parent - add to parent's children
         const parent = itemsMap.get(item.parent_id);
-        if (parent) {
-          parent.children.push(currentItem);
-        } else {
-          // Parent not found, treat as root
-          rootItems.push(currentItem);
-        }
+        parent.children.push(currentItem);
       } else {
+        // No parent or parent not found - add to root
         rootItems.push(currentItem);
       }
     });
 
-    return rootItems;
+    // Sort root items by order
+    return rootItems.sort((a, b) => (a.order || 0) - (b.order || 0));
   };
 
   const hierarchicalNavItems = buildHierarchy(navItems);
