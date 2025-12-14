@@ -13,6 +13,7 @@ import {
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { PageHeader } from "@/components/sturij";
 
 // Helper: safely get nested or flat property (single source of truth)
 // Data from API comes with properties inside 'data' object
@@ -286,8 +287,7 @@ Return JSON with entity names as keys and arrays of records as values.`,
   }
 
   return (
-    <div className="p-6 space-y-6 bg-background min-h-screen">
-      {/* Header */}
+    <div className="max-w-7xl mx-auto -mt-6 space-y-6 bg-background min-h-screen">
       <Card className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-midnight)] text-white border-0">
         <CardContent className="py-6">
           <div className="flex items-start justify-between">

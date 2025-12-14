@@ -69,6 +69,7 @@ const commonProviders = [
 
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { PageHeader } from "@/components/sturij";
 
 // Known Base44 secrets that map to API providers
 const BASE44_SECRET_MAPPINGS = [
@@ -341,16 +342,11 @@ export default function APIManager() {
   }).slice(0, 100);
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-foreground font-heading">
-            <Key className="h-6 w-6 text-primary" />
-            API Manager
-          </h1>
-          <p className="text-muted-foreground">Manage API keys, monitor usage, and view analytics</p>
-        </div>
-      </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="API Manager"
+        description="Manage API keys, monitor usage, and view analytics"
+      />
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>

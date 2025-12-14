@@ -31,6 +31,7 @@ import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import ThemeCreatorDialog from "@/components/design-system/ThemeCreatorDialog";
+import { PageHeader } from "@/components/sturij";
 
 export default function DesignSystemManager() {
   const queryClient = useQueryClient();
@@ -255,17 +256,11 @@ For each recommendation, provide:
   };
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
-            <Package className="h-6 w-6 text-primary" />
-            Design System Manager
-          </h1>
-          <p className="text-muted-foreground">
-            Version control, package distribution, and AI-assisted updates
-          </p>
-        </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Design System Manager"
+        description="Version control, package distribution, and AI-assisted updates"
+      >
         <div className="flex gap-2">
           <Button 
             variant="outline" 
@@ -293,7 +288,7 @@ For each recommendation, provide:
             Create Custom Theme
           </Button>
         </div>
-      </div>
+      </PageHeader>
 
       {/* Alert for pending recommendations */}
       {pendingRecs.length > 0 && (

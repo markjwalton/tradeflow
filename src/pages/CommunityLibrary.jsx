@@ -26,6 +26,7 @@ import {
   Globe, Users, Loader2, Eye, Plus
 } from "lucide-react";
 import { toast } from "sonner";
+import { PageHeader } from "@/components/sturij";
 
 const itemTypeIcons = {
   entity: Database,
@@ -227,22 +228,18 @@ export default function CommunityLibrary() {
   }
 
   return (
-    <div className="p-6 max-w-6xl mx-auto bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-light flex items-center gap-2 text-foreground font-heading">
-            <Package className="h-6 w-6" />
-            Community Library
-          </h1>
-          <p className="text-muted-foreground">Browse and import shared templates</p>
-        </div>
+    <div className="max-w-6xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Community Library"
+        description="Browse and import shared templates"
+      >
         {itemsWithUpdates.length > 0 && (
           <Badge className="bg-warning/10 text-warning text-sm py-1 px-3">
             <ArrowUp className="h-4 w-4 mr-1" />
             {itemsWithUpdates.length} Updates Available
           </Badge>
         )}
-      </div>
+      </PageHeader>
 
       {/* Filters */}
       <div className="flex gap-4 mb-6">
