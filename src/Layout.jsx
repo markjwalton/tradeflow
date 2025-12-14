@@ -55,7 +55,7 @@ export default function Layout({ children, currentPageName }) {
   const standalonePages = navConfig?.standalone_pages || [];
   const fullscreenPages = navConfig?.fullscreen_pages || [];
   
-  const isGlobalAdminPage = navItems.some(item => item.slug === currentPageName) || standalonePages.includes(currentPageName);
+  const isGlobalAdminPage = navItems.some(item => item.page_url === currentPageName) || standalonePages.includes(currentPageName);
   const isTenantPage = false;
 
   useEffect(() => {
