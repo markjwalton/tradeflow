@@ -193,22 +193,24 @@ export default function Layout({ children, currentPageName }) {
             
             // Use items from NavigationConfig - convert to format with proper IDs
             if (loadedNavConfig.items?.length > 0) {
-              loadedNavItems = loadedNavConfig.items.map((item, idx) => {
-                // Use slug as ID for consistency (both folders and pages)
-                const itemId = item.slug || `item_${idx}`;
-                
-                return {
-                  id: itemId,
-                  name: item.name,
-                  item_type: item.item_type,
-                  page_url: item.slug,
-                  icon: item.icon,
-                  order: item.order,
-                  is_visible: item.is_visible,
-                  parent_id: item.parent_id,
-                  default_collapsed: item.default_collapsed,
-                };
-              });
+              loadedNavItems = loadedNavConfig.items
+                .filter(item => item.is_visible !== false) // Only include visible items
+                .map((item, idx) => {
+                  // Use slug as ID for consistency (both folders and pages)
+                  const itemId = item.slug || `item_${idx}`;
+
+                  return {
+                    id: itemId,
+                    name: item.name,
+                    item_type: item.item_type,
+                    page_url: item.slug,
+                    icon: item.icon,
+                    order: item.order,
+                    is_visible: item.is_visible,
+                    parent_id: item.parent_id,
+                    default_collapsed: item.default_collapsed,
+                  };
+                });
               setNavItems(loadedNavItems);
             }
           }
