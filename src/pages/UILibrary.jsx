@@ -1,6 +1,6 @@
 import React from "react";
-import ComponentShowcase from "../pages/ComponentShowcase";
+import DesignSystemManager from "../pages/DesignSystemManager";
 
 export default function UILibrary() {
-  return <ComponentShowcase />;
+  return <DesignSystemManager />;
 }
