@@ -416,6 +416,17 @@ export default function DesignTokenEditor() {
   );
 }
 
+const DESIGN_TOKEN_COLORS = [
+  { value: 'var(--primary-500)', label: 'Primary', cssVar: '--primary-500' },
+  { value: 'var(--secondary-400)', label: 'Secondary', cssVar: '--secondary-400' },
+  { value: 'var(--accent-300)', label: 'Accent', cssVar: '--accent-300' },
+  { value: 'var(--foreground)', label: 'Foreground', cssVar: '--foreground' },
+  { value: 'var(--muted-foreground)', label: 'Muted', cssVar: '--muted-foreground' },
+  { value: 'var(--destructive)', label: 'Destructive', cssVar: '--destructive' },
+  { value: 'var(--charcoal-900)', label: 'Charcoal', cssVar: '--charcoal-900' },
+  { value: 'var(--midnight-900)', label: 'Midnight', cssVar: '--midnight-900' },
+];
+
 function TokenEditor({ token, value, onChange }) {
   const hexValue = token.type === 'color' ? parseColorToHex(value) : null;
   
@@ -433,7 +444,7 @@ function TokenEditor({ token, value, onChange }) {
         <Input
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          placeholder={`oklch(0.5 0.1 150)`}
+          placeholder={token.type === 'color' ? `oklch(0.5 0.1 150)` : token.default || ''}
           className="flex-1 font-mono text-sm"
         />
         {token.type === 'color' && (
@@ -445,6 +456,25 @@ function TokenEditor({ token, value, onChange }) {
           />
         )}
       </div>
+      {token.type === 'color' && (
+        <div className="flex gap-1.5 flex-wrap">
+          {DESIGN_TOKEN_COLORS.map((color) => (
+            <button
+              key={color.value}
+              onClick={() => onChange(color.value)}
+              className="w-7 h-7 rounded border-2 hover:scale-110 transition-transform relative"
+              style={{ backgroundColor: `var(${color.cssVar})` }}
+              title={color.label}
+            >
+              {value === color.value && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-2 h-2 bg-white rounded-full border border-black" />
+                </div>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
       <div className="flex items-center justify-between">
         <p className="text-xs text-muted-foreground font-mono">--{token.name}</p>
         {token.type === 'color' && hexValue && (
