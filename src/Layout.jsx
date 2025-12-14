@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { cssVariables } from "@/components/library/designTokens";
-import { Loader2 } from "lucide-react";
+import { Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { prefetchOnIdle, prefetchDashboardQueries, prefetchLibraryQueries } from "@/components/common/queryPrefetch";
 
