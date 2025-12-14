@@ -7,12 +7,20 @@ export function findBreadcrumbTrail(items, currentSlug) {
     }
 
     if (item.children && item.children.length > 0) {
-      const child = item.children.find((c) => {
-        const childSlug = c.page_url?.split("?")[0] || c.slug;
-        return childSlug === currentSlug;
-      });
-      if (child) {
-        return [item, child];
+      // Recursively search through children
+      for (const child of item.children) {
+        const childSlug = child.page_url?.split("?")[0] || child.slug;
+        if (childSlug === currentSlug) {
+          return [item, child];
+        }
+        
+        // Check nested children (for deeper hierarchies)
+        if (child.children && child.children.length > 0) {
+          const deeperTrail = findBreadcrumbTrail([child], currentSlug);
+          if (deeperTrail.length > 0) {
+            return [item, ...deeperTrail];
+          }
+        }
       }
     }
   }
