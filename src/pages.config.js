@@ -11,11 +11,7 @@ import Team from './pages/Team';
 import Estimates from './pages/Estimates';
 import Calendar from './pages/Calendar';
 import ProjectDetail from './pages/ProjectDetail';
-import BusinessTemplates from './pages/BusinessTemplates';
 import GeneratedApps from './pages/GeneratedApps';
-import WorkflowDesigner from './pages/WorkflowDesigner';
-import FormBuilder from './pages/FormBuilder';
-import ChecklistBuilder from './pages/ChecklistBuilder';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import AppointmentHub from './pages/AppointmentHub';
 import AppointmentConfirm from './pages/AppointmentConfirm';
@@ -121,11 +117,7 @@ export const PAGES = {
     "Estimates": Estimates,
     "Calendar": Calendar,
     "ProjectDetail": ProjectDetail,
-    "BusinessTemplates": BusinessTemplates,
     "GeneratedApps": GeneratedApps,
-    "WorkflowDesigner": WorkflowDesigner,
-    "FormBuilder": FormBuilder,
-    "ChecklistBuilder": ChecklistBuilder,
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
     "AppointmentHub": AppointmentHub,
     "AppointmentConfirm": AppointmentConfirm,
