@@ -218,7 +218,7 @@ export default function SiteSettings() {
   };
 
   return (
-    <div className="container mx-auto pb-8 px-4 max-w-4xl">
+    <div className="container mx-auto pb-8 px-4 max-w-4xl -mt-6">
       <PageHeader 
         title="Site Settings"
         description="Configure global appearance settings for the application"
