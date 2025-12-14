@@ -17,6 +17,7 @@ import {
   Filter,
   ChevronRight
 } from "lucide-react";
+import { PageHeader } from "@/components/sturij";
 
 export default function Components() {
   const componentCategories = [
@@ -62,13 +63,11 @@ export default function Components() {
   ];
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-display">Components</h1>
-        <p className="text-body-color mt-2">
-          Ready-to-use component patterns with code examples
-        </p>
-      </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen space-y-6">
+      <PageHeader 
+        title="Components"
+        description="Ready-to-use component patterns with code examples"
+      />
 
       <div className="flex items-center gap-4">
         <div className="relative flex-1 max-w-md">
