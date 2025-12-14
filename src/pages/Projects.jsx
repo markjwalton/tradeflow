@@ -27,7 +27,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Search, Pencil, Trash2, Eye } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Eye, ChevronDown, ChevronRight, FolderOpen } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -58,6 +59,7 @@ export default function Projects() {
   const itemsPerPage = 12;
   const [showForm, setShowForm] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
+  const [expandedGroups, setExpandedGroups] = useState({});
   
   const form = useValidatedForm(projectSchema, {
     defaultValues: {
@@ -153,6 +155,14 @@ export default function Projects() {
     currentPage * itemsPerPage
   );
 
+  // Group projects by status
+  const groupedProjects = paginatedProjects.reduce((acc, project) => {
+    const groupKey = project.status || "Unknown";
+    if (!acc[groupKey]) acc[groupKey] = [];
+    acc[groupKey].push(project);
+    return acc;
+  }, {});
+
   const getCustomerName = (customerId) => {
     const customer = customers.find((c) => c.id === customerId);
     return customer?.name || "Unknown";
@@ -189,9 +199,8 @@ export default function Projects() {
         </CardContent>
       </Card>
 
-      <Card className="border-border">
-        <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-6">
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -227,63 +236,115 @@ export default function Projects() {
         </Select>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-        {paginatedProjects.map((project) => {
-          const budgetProgress = project.budget > 0 ? (project.spend / project.budget) * 100 : 0;
-          return (
-            <Card key={project.id} className="hover:shadow-md transition-shadow bg-card">
-              <CardHeader className="pb-2 p-4 sm:p-6">
-                <div className="flex items-start justify-between gap-2">
-                  <CardTitle className="text-base sm:text-lg text-foreground flex-1 min-w-0">{project.name}</CardTitle>
-                  <div className="flex gap-1 flex-shrink-0">
-                    <Button variant="ghost" size="icon" className="touch-target-sm" asChild>
-                      <Link to={createPageUrl("ProjectDetail") + `?id=${project.id}`}>
-                        <Eye className="h-4 w-4" />
-                      </Link>
-                    </Button>
-                    <Button variant="ghost" size="icon" className="touch-target-sm" onClick={() => handleEdit(project)}>
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon" className="touch-target-sm text-destructive" onClick={() => deleteMutation.mutate(project.id)}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-3 p-4 sm:p-6 pt-0">
-                <div className="flex gap-2">
-                  <Badge className={statusColors[project.status]}>{project.status}</Badge>
-                  <Badge className={priorityColors[project.priority]}>{project.priority}</Badge>
-                </div>
-                <p className="text-sm text-muted-foreground">Customer: {getCustomerName(project.customer_id)}</p>
-                <div className="space-y-1">
-                  <div className="flex justify-between text-sm">
-                    <span>Budget</span>
-                    <span>£{project.spend?.toLocaleString()} / £{project.budget?.toLocaleString()}</span>
-                  </div>
-                  <Progress value={Math.min(budgetProgress, 100)} className="h-2" />
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+      <Card className="border-border">
+        <CardContent className="p-4">
+          <div className="space-y-4">
+            {Object.entries(groupedProjects).map(([groupName, groupProjects]) => {
+              const isExpanded = expandedGroups[groupName] === true;
+              return (
+                <Collapsible
+                  key={groupName}
+                  open={isExpanded}
+                  onOpenChange={() => setExpandedGroups(prev => ({ ...prev, [groupName]: !isExpanded }))}
+                >
+                  <Card className="border-border">
+                    <CollapsibleTrigger className="w-full">
+                      <CardHeader className="py-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                            <h3 className="font-medium">{groupName}</h3>
+                          </div>
+                        </div>
+                      </CardHeader>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <CardContent className="pt-0 space-y-2">
+                        {groupProjects.map((project) => {
+                          const budgetProgress = project.budget > 0 ? (project.spend / project.budget) * 100 : 0;
+                          return (
+                            <Card key={project.id} className="border-border hover:shadow-sm transition-shadow">
+                              <CardContent className="p-4">
+                                <div className="flex items-center gap-4">
+                                  <FolderOpen className="h-5 w-5 text-info flex-shrink-0" />
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2 mb-1">
+                                      <h3 className="font-medium text-base">{project.name}</h3>
+                                      <Badge className={statusColors[project.status]}>{project.status}</Badge>
+                                      {project.priority && (
+                                        <Badge className={priorityColors[project.priority]}>{project.priority}</Badge>
+                                      )}
+                                    </div>
+                                    <p className="text-sm text-muted-foreground line-clamp-1">
+                                      Customer: {getCustomerName(project.customer_id)}
+                                    </p>
+                                    <div className="flex items-center gap-3 mt-2">
+                                      <div className="flex-1 max-w-xs">
+                                        <div className="flex justify-between text-xs mb-1">
+                                          <span>Budget</span>
+                                          <span>£{project.spend?.toLocaleString()} / £{project.budget?.toLocaleString()}</span>
+                                        </div>
+                                        <Progress value={Math.min(budgetProgress, 100)} className="h-1.5" />
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="flex gap-1 flex-shrink-0">
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      asChild
+                                      title="View Details"
+                                    >
+                                      <Link to={createPageUrl("ProjectDetail") + `?id=${project.id}`}>
+                                        <Eye className="h-3 w-3" />
+                                      </Link>
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => handleEdit(project)}
+                                      title="Edit"
+                                    >
+                                      <Pencil className="h-3 w-3" />
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="text-destructive hover:text-destructive"
+                                      onClick={() => deleteMutation.mutate(project.id)}
+                                      title="Delete"
+                                    >
+                                      <Trash2 className="h-3 w-3" />
+                                    </Button>
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          );
+                        })}
+                      </CardContent>
+                    </CollapsibleContent>
+                  </Card>
+                </Collapsible>
+              );
+            })}
+          </div>
 
-      {filteredProjects.length === 0 && (
-        <div className="text-center py-12 text-muted-foreground">
-          No projects found. Create your first project to get started.
-        </div>
-      )}
+          {filteredProjects.length === 0 && (
+            <div className="text-center py-12 text-muted-foreground">
+              No projects found. Create your first project to get started.
+            </div>
+          )}
 
-      {totalPages > 1 && (
-        <div className="mt-6">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </div>
-      )}
+          {totalPages > 1 && (
+            <div className="mt-6">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            </div>
+          )}
         </CardContent>
       </Card>
 
