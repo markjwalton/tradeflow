@@ -153,7 +153,7 @@ export default function SprintManager() {
           {/* Active Sprints */}
           {activeSprints.length > 0 && (
             <div>
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-foreground">
+              <h2 className="text-h2 mb-4 flex items-center gap-2">
                 <Play className="h-5 w-5 text-success" />
                 Active Sprints
               </h2>
@@ -177,7 +177,7 @@ export default function SprintManager() {
           {/* Planning Sprints */}
           {planningSprints.length > 0 && (
             <div>
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <h2 className="text-h2 mb-4 flex items-center gap-2">
                 <Calendar className="h-5 w-5 text-info" />
                 Planning
               </h2>
@@ -201,7 +201,7 @@ export default function SprintManager() {
           {/* Completed Sprints */}
           {completedSprints.length > 0 && (
             <div>
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <h2 className="text-h2 mb-4 flex items-center gap-2">
                 <CheckCircle className="h-5 w-5 text-muted-foreground" />
                 Completed
               </h2>
