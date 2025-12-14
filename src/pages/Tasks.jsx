@@ -223,57 +223,61 @@ export default function Tasks() {
         </Select>
       </div>
 
-      <div className="space-y-2 sm:space-y-3">
-        {paginatedTasks.map((task) => (
-          <Card key={task.id} className="hover:shadow-md transition-shadow border-background-muted bg-card">
-            <CardContent className="p-3 sm:p-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex-1 min-w-0">
-                  <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <h3 className="font-medium text-midnight-900 text-sm sm:text-base">{task.title}</h3>
-                    <Badge className={statusColors[task.status]}>{task.status?.replace("_", " ")}</Badge>
-                    <Badge className={priorityColors[task.priority]}>{task.priority}</Badge>
+      <Card className="border-border">
+        <CardContent className="p-4">
+          <div className="space-y-2 sm:space-y-3">
+            {paginatedTasks.map((task) => (
+              <Card key={task.id} className="hover:shadow-md transition-shadow border-background-muted bg-card">
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
+                        <h3 className="font-medium text-midnight-900 text-sm sm:text-base">{task.title}</h3>
+                        <Badge className={statusColors[task.status]}>{task.status?.replace("_", " ")}</Badge>
+                        <Badge className={priorityColors[task.priority]}>{task.priority}</Badge>
+                      </div>
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-charcoal-700">
+                        <span className="truncate">Project: {getProjectName(task.project_id)}</span>
+                        <span className="truncate">Assigned: {getTeamMemberName(task.assigned_to)}</span>
+                        {task.due_date && (
+                          <span className="flex items-center gap-1">
+                            <Calendar className="h-3 w-3" />
+                            {format(new Date(task.due_date), "MMM d, yyyy")}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex gap-1 sm:flex-col md:flex-row self-end sm:self-auto">
+                      <Button variant="ghost" size="icon" className="touch-target" onClick={() => handleEdit(task)}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="touch-target text-destructive" onClick={() => deleteMutation.mutate(task.id)}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-charcoal-700">
-                    <span className="truncate">Project: {getProjectName(task.project_id)}</span>
-                    <span className="truncate">Assigned: {getTeamMemberName(task.assigned_to)}</span>
-                    {task.due_date && (
-                      <span className="flex items-center gap-1">
-                        <Calendar className="h-3 w-3" />
-                        {format(new Date(task.due_date), "MMM d, yyyy")}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="flex gap-1 sm:flex-col md:flex-row self-end sm:self-auto">
-                  <Button variant="ghost" size="icon" className="touch-target" onClick={() => handleEdit(task)}>
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="touch-target text-destructive" onClick={() => deleteMutation.mutate(task.id)}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
 
-      {filteredTasks.length === 0 && (
-        <div className="text-center py-12 text-charcoal-700">
-          No tasks found. Create your first task to get started.
-        </div>
-      )}
+          {filteredTasks.length === 0 && (
+            <div className="text-center py-12 text-charcoal-700">
+              No tasks found. Create your first task to get started.
+            </div>
+          )}
 
-      {totalPages > 1 && (
-        <div className="mt-6">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </div>
-      )}
+          {totalPages > 1 && (
+            <div className="mt-6">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       <Dialog open={showForm} onOpenChange={setShowForm}>
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">

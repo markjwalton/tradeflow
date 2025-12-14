@@ -260,47 +260,56 @@ export default function Estimates() {
         </Select>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-        {filteredEstimates.map((estimate) => (
-          <Card key={estimate.id} className="hover:shadow-md transition-shadow bg-card">
-            <CardHeader className="pb-2">
-              <div className="flex items-start justify-between">
-                <div>
-                  <CardTitle className="text-lg flex items-center gap-2 text-foreground">
-                    <FileText className="h-4 w-4" />{estimate.title}
-                  </CardTitle>
-                  {estimate.project_id && <p className="text-sm text-muted-foreground mt-1">Project: {getProjectName(estimate.project_id)}</p>}
-                </div>
-                <div className="flex gap-1">
-                  <Button variant="ghost" size="icon" className="touch-target-sm" onClick={() => handleDuplicate(estimate)}><Copy className="h-4 w-4" /></Button>
-                  <Button variant="ghost" size="icon" className="touch-target-sm" onClick={() => handleEdit(estimate)}><Pencil className="h-4 w-4" /></Button>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="touch-target-sm text-destructive" 
-                    onClick={() => deleteMutation.mutate(estimate.id)}
-                    disabled={deleteMutation.isPending}
-                  >
-                    {deleteMutation.isPending ? <ButtonLoader /> : <Trash2 className="h-4 w-4" />}
-                  </Button>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <Badge className={statusColors[estimate.status]}>{estimate.status}</Badge>
-              <div className="space-y-1 text-sm">
-                <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span>£{estimate.subtotal?.toLocaleString()}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">VAT ({estimate.vat_rate}%)</span><span>£{estimate.vat_amount?.toLocaleString()}</span></div>
-                <div className="flex justify-between font-semibold border-t pt-1"><span>Total</span><span>£{estimate.total?.toLocaleString()}</span></div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <Card className="border-border">
+        <CardContent className="p-4">
+          <div className="space-y-2">
+            {filteredEstimates.map((estimate) => (
+              <Card key={estimate.id} className="border-border hover:shadow-sm transition-shadow">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-4">
+                    <FileText className="h-5 w-5 text-primary flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-medium text-base">{estimate.title}</h3>
+                        <Badge className={statusColors[estimate.status]}>{estimate.status}</Badge>
+                      </div>
+                      {estimate.project_id && (
+                        <p className="text-sm text-muted-foreground mb-2">Project: {getProjectName(estimate.project_id)}</p>
+                      )}
+                      <div className="flex items-center gap-4 text-sm">
+                        <span>Subtotal: <span className="font-medium">£{estimate.subtotal?.toLocaleString()}</span></span>
+                        <span>VAT ({estimate.vat_rate}%): <span className="font-medium">£{estimate.vat_amount?.toLocaleString()}</span></span>
+                        <span className="text-base font-semibold">Total: £{estimate.total?.toLocaleString()}</span>
+                      </div>
+                    </div>
+                    <div className="flex gap-1 flex-shrink-0">
+                      <Button variant="ghost" size="icon" className="touch-target-sm" onClick={() => handleDuplicate(estimate)}>
+                        <Copy className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="touch-target-sm" onClick={() => handleEdit(estimate)}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="touch-target-sm text-destructive" 
+                        onClick={() => deleteMutation.mutate(estimate.id)}
+                        disabled={deleteMutation.isPending}
+                      >
+                        {deleteMutation.isPending ? <ButtonLoader /> : <Trash2 className="h-4 w-4" />}
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
 
-      {filteredEstimates.length === 0 && (
-        <div className="text-center py-12 text-muted-foreground">No estimates found. Create your first estimate to get started.</div>
-      )}
+          {filteredEstimates.length === 0 && (
+            <div className="text-center py-12 text-muted-foreground">No estimates found. Create your first estimate to get started.</div>
+          )}
+        </CardContent>
+      </Card>
 
       <Dialog open={showForm} onOpenChange={setShowForm}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
