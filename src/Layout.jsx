@@ -24,6 +24,7 @@ import { Palette, GitBranch } from "lucide-react";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { WebVitals } from "@/components/common/WebVitals";
 import { initializeSentry, setUserContext } from "@/components/common/sentryConfig";
+import { toast } from "sonner";
 
 // Initialize Sentry once
 if (typeof window !== 'undefined') {
@@ -529,19 +530,16 @@ export default function Layout({ children, currentPageName }) {
           {showEditorBubble && (
             <Button
               onClick={async () => {
+                const loadingToast = toast.loading('Syncing from GitHub...');
                 try {
                   await base44.functions.invoke('githubApi', {
                     action: 'get_commits',
                     page: 1,
                     per_page: 10
                   });
-                  window.dispatchEvent(new CustomEvent('show-toast', { 
-                    detail: { message: 'Synced from GitHub', type: 'success' } 
-                  }));
+                  toast.success('Synced from GitHub', { id: loadingToast });
                 } catch (e) {
-                  window.dispatchEvent(new CustomEvent('show-toast', { 
-                    detail: { message: 'Sync failed: ' + e.message, type: 'error' } 
-                  }));
+                  toast.error('Sync failed: ' + e.message, { id: loadingToast });
                 }
               }}
               className="fixed bottom-6 left-24 h-14 w-14 rounded-full shadow-2xl bg-primary text-white hover:bg-primary/90 border-2 border-white z-[60]"
