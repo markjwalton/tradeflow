@@ -120,14 +120,14 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
   }
 
   return (
-    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+    <div className="max-w-7xl mx-auto -mt-6 min-h-screen">
       <PageHeader 
         title="Generated Apps"
         description="App specifications generated from mind maps"
       />
 
       {/* Search */}
-      <Card className="border-border mb-6">
+      <Card className="border-border mb-4">
         <CardContent className="px-2 py-1">
           <div className="relative max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
