@@ -216,7 +216,7 @@ Return as JSON with a "suggestions" array of strings.`,
   }[item.test_status];
 
   return (
-    <div className="p-6 max-w-5xl mx-auto bg-background min-h-screen">
+    <div className="max-w-5xl mx-auto -mt-6 bg-background min-h-screen">
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
         <Button variant="ghost" size="icon" onClick={() => navigate(createPageUrl("PlaygroundSummary"))}>

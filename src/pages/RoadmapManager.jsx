@@ -290,7 +290,7 @@ export default function RoadmapManager() {
   );
 
   return (
-    <div className="p-6 bg-background min-h-screen">
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">

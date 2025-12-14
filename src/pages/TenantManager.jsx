@@ -108,7 +108,7 @@ export default function TenantManager() {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto bg-background min-h-screen">
+    <div className="max-w-4xl mx-auto -mt-6 bg-background min-h-screen">
       <Card className="bg-card">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-foreground">Tenant Manager</CardTitle>
