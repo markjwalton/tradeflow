@@ -18,7 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Edit2, Trash2, Building2, Search, Database, Layout, Zap, GitBranch, Loader2, Star, Folder } from "lucide-react";
+import { Plus, Edit2, Trash2, Building2, Search, Database, Layout, Zap, GitBranch, Loader2, Star, Folder, ChevronDown, ChevronRight } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import CustomProjectSelector from "@/components/library/CustomProjectSelector";
 import { toast } from "sonner";
 import BusinessTemplateBuilder from "@/components/templates/BusinessTemplateBuilder";
@@ -57,6 +58,7 @@ export default function BusinessTemplates() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState("all");
   const [selectedProjectId, setSelectedProjectId] = useState(null);
+  const [expandedGroups, setExpandedGroups] = useState({});
 
   const { data: projects = [] } = useQuery({
     queryKey: ["customProjects"],
@@ -140,6 +142,14 @@ export default function BusinessTemplates() {
     }
   });
 
+  // Group templates by category
+  const groupedTemplates = filteredTemplates.reduce((acc, template) => {
+    const groupKey = template.category || "Other";
+    if (!acc[groupKey]) acc[groupKey] = [];
+    acc[groupKey].push(template);
+    return acc;
+  }, {});
+
   const currentProject = projects.find(p => p.id === selectedProjectId);
 
   if (isLoading) {
@@ -176,10 +186,8 @@ export default function BusinessTemplates() {
         </CardContent>
       </Card>
 
-      <Card className="border-border">
-        <CardContent className="p-4">
-          {/* Filters */}
-          <div className="flex gap-3 mb-6">
+      {/* Filters */}
+      <div className="flex gap-3 mb-6">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -202,111 +210,116 @@ export default function BusinessTemplates() {
         </Select>
       </div>
 
-      {/* Template Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredTemplates.map((template) => (
-          <Card key={template.id} className="hover:shadow-md transition-shadow">
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    {template.is_starred && <Star className="h-4 w-4 fill-warning text-warning" />}
-                    {template.name}
-                  </CardTitle>
-                  {template.category && (
-                    <Badge className={`mt-1 ${categoryColors[template.category]}`}>
-                      {template.category}
-                    </Badge>
-                  )}
-                </div>
-                <div className="flex gap-1">
-                  <Button 
-                    size="icon" 
-                    variant="ghost" 
-                    onClick={() => toggleStar(template)}
-                    title={template.is_starred ? "Remove from featured" : "Add to featured"}
-                  >
-                    <Star className={`h-4 w-4 ${template.is_starred ? "fill-warning text-warning" : ""}`} />
-                  </Button>
-                  <Button size="icon" variant="ghost" onClick={() => handleEdit(template)}>
-                    <Edit2 className="h-4 w-4" />
-                  </Button>
-                  <Button 
-                    size="icon" 
-                    variant="ghost" 
-                    className="text-destructive hover:text-destructive"
-                    onClick={() => deleteMutation.mutate(template.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              {template.summary ? (
-                <p className="text-sm text-muted-foreground mb-3 line-clamp-3">
-                  {template.summary}
-                </p>
-              ) : template.description && (
-                <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-                  {template.description}
-                </p>
-              )}
-              
-              {/* Stats */}
-              <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
-                <span className="flex items-center gap-1">
-                  <Database className="h-3 w-3" />
-                  {template.entities?.length || 0} entities
-                </span>
-                <span className="flex items-center gap-1">
-                  <Layout className="h-3 w-3" />
-                  {template.pages?.length || 0} pages
-                </span>
-                <span className="flex items-center gap-1">
-                  <Zap className="h-3 w-3" />
-                  {template.features?.length || 0} features
-                </span>
-              </div>
-              
-              {/* Relationships & Workflows */}
-              {(template.entity_relationships?.length > 0 || template.workflows?.length > 0) && (
-                <div className="flex items-center gap-2 text-xs text-accent mb-3">
-                  <GitBranch className="h-3 w-3" />
-                  <span className="text-accent">
-                    {template.entity_relationships?.length || 0} relationships, {template.workflows?.length || 0} workflows
-                  </span>
-                </div>
-              )}
-              
-              {template.tags?.length > 0 && (
-                <div className="flex flex-wrap gap-1">
-                  {template.tags.slice(0, 3).map(tag => (
-                    <Badge key={tag} variant="outline" className="text-xs">
-                      {tag}
-                    </Badge>
-                  ))}
-                  {template.tags.length > 3 && (
-                    <Badge variant="outline" className="text-xs">
-                      +{template.tags.length - 3}
-                    </Badge>
-                  )}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
+      <Card className="border-border">
+        <CardContent className="p-4">
+          <div className="space-y-4">
+            {Object.entries(groupedTemplates).map(([groupName, groupTemplates]) => {
+              const isExpanded = expandedGroups[groupName] === true;
+              return (
+                <Collapsible
+                  key={groupName}
+                  open={isExpanded}
+                  onOpenChange={() => setExpandedGroups(prev => ({ ...prev, [groupName]: !isExpanded }))}
+                >
+                  <Card className="border-border">
+                    <CollapsibleTrigger className="w-full">
+                      <CardHeader className="py-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                            <h3 className="font-medium">{groupName}</h3>
+                          </div>
+                        </div>
+                      </CardHeader>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <CardContent className="pt-0 space-y-2">
+                        {groupTemplates.map((template) => (
+                          <Card key={template.id} className="border-border hover:shadow-sm transition-shadow">
+                            <CardContent className="p-4">
+                              <div className="flex items-center gap-4">
+                                <Building2 className="h-5 w-5 text-info flex-shrink-0" />
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    {template.is_starred && <Star className="h-4 w-4 fill-warning text-warning flex-shrink-0" />}
+                                    <h3 className="font-medium text-base">{template.name}</h3>
+                                    <Badge className={categoryColors[template.category || "Other"]}>
+                                      {template.category || "Other"}
+                                    </Badge>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground line-clamp-1 mb-2">
+                                    {template.summary || template.description}
+                                  </p>
+                                  <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                                    <span className="flex items-center gap-1">
+                                      <Database className="h-3 w-3" />
+                                      {template.entities?.length || 0} entities
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                      <Layout className="h-3 w-3" />
+                                      {template.pages?.length || 0} pages
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                      <Zap className="h-3 w-3" />
+                                      {template.features?.length || 0} features
+                                    </span>
+                                  </div>
+                                  {template.tags?.length > 0 && (
+                                    <div className="flex flex-wrap gap-1 mt-2">
+                                      {template.tags.slice(0, 3).map(tag => (
+                                        <Badge key={tag} variant="outline" className="text-xs">{tag}</Badge>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="flex gap-1 flex-shrink-0">
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => toggleStar(template)}
+                                    title={template.is_starred ? "Remove from featured" : "Add to featured"}
+                                  >
+                                    <Star className={`h-3 w-3 ${template.is_starred ? "fill-warning text-warning" : ""}`} />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => handleEdit(template)}
+                                    title="Edit"
+                                  >
+                                    <Edit2 className="h-3 w-3" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="text-destructive hover:text-destructive"
+                                    onClick={() => deleteMutation.mutate(template.id)}
+                                    title="Delete"
+                                  >
+                                    <Trash2 className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </CardContent>
+                    </CollapsibleContent>
+                  </Card>
+                </Collapsible>
+              );
+            })}
 
-        {filteredTemplates.length === 0 && (
-          <div className="col-span-full text-center py-12 text-muted-foreground">
-            <Building2 className="h-12 w-12 mx-auto mb-3 opacity-30" />
-            <p>No templates found</p>
-            <Button variant="link" onClick={() => setShowBuilder(true)}>
-              Create your first template
-            </Button>
+            {filteredTemplates.length === 0 && (
+              <div className="text-center py-12 text-muted-foreground">
+                <Building2 className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                <p>No templates found</p>
+                <Button variant="link" onClick={() => setShowBuilder(true)}>
+                  Create your first template
+                </Button>
+              </div>
+            )}
           </div>
-        )}
-        </div>
         </CardContent>
       </Card>
 
