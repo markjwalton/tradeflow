@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import moment from "moment";
+import { PageHeader } from "@/components/sturij";
 
 export default function SprintManager() {
   const queryClient = useQueryClient();
@@ -120,20 +121,16 @@ export default function SprintManager() {
   const completedSprints = sprints.filter(s => s.status === "completed");
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
-            <Play className="h-6 w-6 text-success" />
-            Sprint Manager
-          </h1>
-          <p className="text-muted-foreground">Manage development sprints and track progress</p>
-        </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Sprint Manager"
+        description="Manage development sprints and track progress"
+      >
         <Button onClick={() => openDialog()}>
           <Plus className="h-4 w-4 mr-2" />
           New Sprint
         </Button>
-      </div>
+      </PageHeader>
 
       {isLoading ? (
         <div className="flex justify-center py-12">

@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import moment from "moment";
+import { PageHeader } from "@/components/sturij";
 
 const entryTypes = [
   { value: "brainstorming", label: "Brainstorming", icon: Brain, color: "bg-accent-100 text-accent" },
@@ -443,19 +444,15 @@ Return as JSON:
   const currentPrompt = devPrompt || item?.development_prompt || "";
 
   return (
-    <div className="p-6 max-w-5xl mx-auto bg-background min-h-screen">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-4 mb-6">
-        <div className="flex items-center gap-4">
+    <div className="max-w-5xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title={item?.title}
+        description={item?.description}
+      >
+        <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <div>
-            <h1 className="text-2xl font-light font-display text-foreground">{item?.title}</h1>
-            <p className="text-muted-foreground">{item?.description}</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
           <Select value={item?.status || "backlog"} onValueChange={handleStatusChange}>
             <SelectTrigger className="w-40">
               <SelectValue />
@@ -467,7 +464,7 @@ Return as JSON:
             </SelectContent>
           </Select>
         </div>
-      </div>
+      </PageHeader>
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">

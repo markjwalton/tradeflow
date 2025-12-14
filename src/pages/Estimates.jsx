@@ -27,6 +27,7 @@ import {
 import { Plus, Search, Pencil, Trash2, Loader2, Copy, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { PullToRefresh } from "@/components/common/PullToRefresh";
+import { PageHeader } from "@/components/sturij";
 import { PageLoader, ButtonLoader, CardGridLoader } from "@/components/common/LoadingStates";
 import { QueryErrorState } from "@/components/common/QueryErrorState";
 import { useMutationError } from "@/components/common/MutationErrorToast";
@@ -231,14 +232,16 @@ export default function Estimates() {
 
   return (
     <PullToRefresh onRefresh={refetch} enabled={true}>
-    <div className="p-3 sm:p-4 md:p-6 bg-background min-h-screen">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-light font-display text-foreground">Estimates</h1>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Estimates"
+        description="Create and manage project estimates"
+      >
         <Button onClick={() => { resetForm(); setEditingEstimate(null); setShowForm(true); }} className="w-full sm:w-auto">
           <Plus className="h-4 w-4 mr-2" />
           New Estimate
         </Button>
-      </div>
+      </PageHeader>
 
       <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-6">
         <div className="relative flex-1">

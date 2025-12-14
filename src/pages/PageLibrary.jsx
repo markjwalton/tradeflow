@@ -26,6 +26,7 @@ import { toast } from "sonner";
 import PageBuilder from "@/components/library/PageBuilder";
 import CustomProjectSelector from "@/components/library/CustomProjectSelector";
 import PagePreview from "@/components/library/PagePreview";
+import { PageHeader } from "@/components/sturij";
 
 const categories = ["Dashboard", "List", "Detail", "Form", "Report", "Settings", "Custom", "Other"];
 
@@ -330,20 +331,11 @@ Return a JSON object with a "pages" array containing page templates.`,
   };
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
-            Page Library
-            {currentProject && (
-              <Badge className="bg-primary/10 text-primary">
-                <Folder className="h-3 w-3 mr-1" />
-                {currentProject.name}
-              </Badge>
-            )}
-          </h1>
-          <p className="text-muted-foreground">Reusable page templates for applications</p>
-        </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title={currentProject ? `Page Library: ${currentProject.name}` : "Page Library"}
+        description="Reusable page templates for applications"
+      >
         <div className="flex gap-2">
           <CustomProjectSelector
             selectedProjectId={selectedProjectId}
@@ -362,7 +354,7 @@ Return a JSON object with a "pages" array containing page templates.`,
             New Page
           </Button>
         </div>
-      </div>
+      </PageHeader>
 
       <div className="flex gap-4 mb-6">
         <div className="relative flex-1 max-w-md">
