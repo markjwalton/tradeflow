@@ -32,7 +32,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-export function AppHeader({ user, navItems = [], onMobileMenuClick }) {
+export function AppHeader({ user, navItems = [], onMobileMenuClick, currentPageName }) {
   const { cycleMode } = useAppSidebar();
 
   return (
@@ -74,6 +74,10 @@ export function AppHeader({ user, navItems = [], onMobileMenuClick }) {
               className="w-auto h-[35px] sm:h-[45px] md:h-[51px]"
             />
           </Link>
+        </div>
+
+        <div className="hidden sm:flex flex-1 justify-center max-w-2xl mx-4">
+          <AppBreadcrumb organizedNavigation={navItems} currentPageName={currentPageName} />
         </div>
 
         <div className="flex items-center gap-1 sm:gap-2 ml-auto">

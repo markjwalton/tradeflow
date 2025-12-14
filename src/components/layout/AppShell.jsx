@@ -5,7 +5,7 @@ import { AppContent } from "./AppContent";
 import { MobileNav } from "./MobileNav";
 import { useState } from "react";
 
-export function AppShell({ children, user, tenant, navItems = [] }) {
+export function AppShell({ children, user, tenant, navItems = [], currentPageName }) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   // Organize flat navItems into hierarchical structure
   const organizeNavigation = (items) => {
@@ -48,6 +48,7 @@ export function AppShell({ children, user, tenant, navItems = [] }) {
         user={user} 
         navItems={organizedNavItems}
         onMobileMenuClick={() => setMobileNavOpen(true)}
+        currentPageName={currentPageName}
       />
 
       <MobileNav 

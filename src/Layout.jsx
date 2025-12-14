@@ -488,7 +488,7 @@ export default function Layout({ children, currentPageName }) {
                 marginRight: contentAlignment === 'right' ? '0' : (contentAlignment === 'center' ? 'auto' : '0'),
               }}
             >
-              <AppShell user={currentUser} tenant={currentTenant} navItems={navItems}>
+              <AppShell user={currentUser} tenant={currentTenant} navItems={navItems} currentPageName={currentPageName}>
                 <LiveEditWrapper>{children}</LiveEditWrapper>
               </AppShell>
             </div>

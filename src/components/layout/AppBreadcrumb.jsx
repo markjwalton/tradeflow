@@ -4,13 +4,8 @@ import { createPageUrl } from "@/utils";
 import { cn } from "@/lib/utils";
 import { findBreadcrumbTrail } from "./findBreadcrumbTrail";
 
-export function AppBreadcrumb({ organizedNavigation = [] }) {
-  const location = useLocation();
-
-  const segments = location.pathname.split("/").filter(Boolean);
-  const currentSlug = segments[segments.length - 1] || "";
-
-  const trail = findBreadcrumbTrail(organizedNavigation, currentSlug);
+export function AppBreadcrumb({ organizedNavigation = [], currentPageName }) {
+  const trail = findBreadcrumbTrail(organizedNavigation, currentPageName);
 
   const crumbs = trail.map((item, index) => {
     const isLast = index === trail.length - 1;
