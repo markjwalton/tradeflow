@@ -478,6 +478,7 @@ For each recommendation, provide:
                     </CardContent>
                   </Card>
                 ))}
+                </div>
               </>
             )}
           </div>
