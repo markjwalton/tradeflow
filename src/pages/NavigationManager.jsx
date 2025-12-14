@@ -43,7 +43,6 @@ export default function NavigationManager() {
       .then(pages => {
         if (pages.length > 0) {
           setPageData(pages[0]);
-          console.log('Page data loaded:', pages[0]);
         }
       })
       .catch(() => {});
@@ -254,13 +253,13 @@ export default function NavigationManager() {
         key: "page_description",
         label: "Page Description",
         type: "text",
-        value: pageData?.description || "",
+        value: pageData?.data?.description || "",
         description: "Description shown below the page title",
         onChange: async (value) => {
           if (pageData?.id) {
             try {
               await base44.entities.UIPage.update(pageData.id, { description: value });
-              setPageData({ ...pageData, description: value });
+              setPageData({ ...pageData, data: { ...pageData.data, description: value } });
               toast.success("Description updated");
             } catch (e) {
               toast.error("Failed to update description");
@@ -381,9 +380,9 @@ export default function NavigationManager() {
             <h1 className={`text-3xl font-display text-[var(--color-text-primary)] ${pageData?.description ? '[margin-bottom:var(--spacing-2)]' : ''}`}>
               Navigation Manager
             </h1>
-            {pageData?.description && (
+            {pageData?.data?.description && (
               <p className="text-muted-foreground">
-                {pageData.description}
+                {pageData.data.description}
               </p>
             )}
           </div>
