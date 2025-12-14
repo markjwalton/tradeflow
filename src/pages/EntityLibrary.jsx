@@ -386,8 +386,7 @@ Return a JSON object with:
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-                          <Badge className={categoryColors[groupName] || "bg-muted text-muted-foreground"}>{groupName}</Badge>
-                          <span className="text-muted-foreground text-sm font-normal">({groupEntities.length})</span>
+                          <h3 className="font-medium">{groupName}</h3>
                         </div>
                         {!selectedProjectId && projects.length > 0 && availableGroups.includes(groupName) && (
                           <Button
@@ -422,10 +421,6 @@ Return a JSON object with:
                                 </div>
                                 <p className="text-sm text-muted-foreground line-clamp-1">{entity.description}</p>
                                 <div className="flex items-center gap-3 mt-2">
-                                  <span className="text-xs text-muted-foreground">
-                                    {Object.keys(entity.schema?.properties || {}).length} fields
-                                    {entity.relationships?.length > 0 && ` · ${entity.relationships.length} relationships`}
-                                  </span>
                                   <div className="flex flex-wrap gap-1">
                                     {entity.tags?.slice(0, 3).map((tag) => (
                                       <Badge key={tag} variant="outline" className="text-xs">{tag}</Badge>
