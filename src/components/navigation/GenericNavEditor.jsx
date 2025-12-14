@@ -148,24 +148,35 @@ export default function GenericNavEditor({
       }
 
       // No session state - check user settings
-      const user = await base44.auth.me().catch(() => null);
-      const defaultCollapsed = user?.ui_preferences?.navManager_settings?.defaultCollapsed || false;
+      base44.auth.me()
+        .then(user => {
+          const defaultCollapsed = user?.ui_preferences?.navManager_settings?.defaultCollapsed || false;
 
-      if (!defaultCollapsed) {
-        // Expand all top-level folders regardless of default_collapsed setting
-        const foldersToExpand = items
-          .filter(item => !item.parent_id && item.item_type === "folder")
-          .map(item => item._id);
-        setExpandedParents(new Set(foldersToExpand));
-        // Save to session
-        sessionStorage.setItem(`nav_expanded_${configType}`, JSON.stringify(foldersToExpand));
-      } else {
-        // Everything collapsed
-        setExpandedParents(new Set());
-        sessionStorage.setItem(`nav_expanded_${configType}`, JSON.stringify([]));
-      }
-      
-      setInitialExpandDone(true);
+          if (!defaultCollapsed) {
+            // Expand all top-level folders regardless of default_collapsed setting
+            const foldersToExpand = items
+              .filter(item => !item.parent_id && item.item_type === "folder")
+              .map(item => item._id);
+            setExpandedParents(new Set(foldersToExpand));
+            // Save to session
+            sessionStorage.setItem(`nav_expanded_${configType}`, JSON.stringify(foldersToExpand));
+          } else {
+            // Everything collapsed
+            setExpandedParents(new Set());
+            sessionStorage.setItem(`nav_expanded_${configType}`, JSON.stringify([]));
+          }
+          
+          setInitialExpandDone(true);
+        })
+        .catch(() => {
+          // Fallback if user not available - expand all
+          const foldersToExpand = items
+            .filter(item => !item.parent_id && item.item_type === "folder")
+            .map(item => item._id);
+          setExpandedParents(new Set(foldersToExpand));
+          sessionStorage.setItem(`nav_expanded_${configType}`, JSON.stringify(foldersToExpand));
+          setInitialExpandDone(true);
+        });
     }
   }, [items, initialExpandDone, configType]);
 
