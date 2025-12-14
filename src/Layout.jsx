@@ -196,7 +196,7 @@ export default function Layout({ children, currentPageName }) {
               loadedNavItems = loadedNavConfig.items
                 .filter(item => item.is_visible !== false) // Only include visible items
                 .map((item) => ({
-                  _id: item._id,
+                  id: item.id,
                   name: item.name,
                   item_type: item.item_type,
                   page_url: item.slug,
