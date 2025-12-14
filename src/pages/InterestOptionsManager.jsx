@@ -23,6 +23,7 @@ import {
 import { Plus, Trash2, Loader2, GripVertical, Edit, Settings } from "lucide-react";
 import { toast } from "sonner";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { PageHeader } from "@/components/sturij";
 
 export default function InterestOptionsManager() {
   const queryClient = useQueryClient();
@@ -116,22 +117,20 @@ export default function InterestOptionsManager() {
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto bg-background min-h-screen">
+    <div className="max-w-4xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Interest Options"
+        description="Manage the dropdown options shown on the enquiry form"
+      >
+        <Button onClick={() => { setEditingOption(null); setForm({ label: "", value: "", order: 0, isActive: true }); setShowDialog(true); }}>
+          <Plus className="h-4 w-4 mr-2" />
+          Add Option
+        </Button>
+      </PageHeader>
+
       <Card className="border-border bg-card">
         <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle className="flex items-center gap-2 text-foreground">
-              <Settings className="h-5 w-5" />
-              Interest Options
-            </CardTitle>
-            <p className="text-sm text-muted-foreground mt-1">
-              Manage the dropdown options shown on the enquiry form
-            </p>
-          </div>
-          <Button onClick={() => { setEditingOption(null); setForm({ label: "", value: "", order: 0, isActive: true }); setShowDialog(true); }}>
-            <Plus className="h-4 w-4 mr-2" />
-            Add Option
-          </Button>
+          <CardTitle className="text-lg text-foreground">Available Options</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
