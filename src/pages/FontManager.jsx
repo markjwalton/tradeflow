@@ -169,7 +169,7 @@ export default function FontManager() {
   };
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="max-w-7xl mx-auto -mt-6 pb-8">
       <div className="flex items-center justify-between mb-6">
         <PageHeader 
           title="Font Library"

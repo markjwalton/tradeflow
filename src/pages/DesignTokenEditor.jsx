@@ -302,7 +302,7 @@ export default function DesignTokenEditor() {
 
   return (
     <Suspense fallback={<div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
-      <div className="space-y-6">
+      <div className="max-w-4xl mx-auto -mt-6 space-y-6">
         <div className="flex items-center justify-between">
         <PageHeader 
           title="Design Token Editor"

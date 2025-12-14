@@ -99,7 +99,7 @@ export default function Dashboard() {
   );
 
   return (
-    <div className={`p-3 sm:p-4 md:p-6 bg-background min-h-screen ${settings.compactMode ? "space-y-4" : ""}`}>
+    <div className={`max-w-7xl mx-auto -mt-6 bg-background min-h-screen ${settings.compactMode ? "space-y-4" : ""}`}>
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6 sm:mb-8">
         <PageHeader 
