@@ -1,12 +1,23 @@
 // Auto-generated pages configuration
 // This file is used by the navigation system to track available pages
 
-export const pagesConfig = Object.freeze({
-  pages: Object.freeze([]),
-  routes: Object.freeze({}),
-  metadata: Object.freeze({}),
-  navigationItems: Object.freeze([]),
-  pageComponents: Object.freeze({})
+// Initialize with safe defaults to prevent null/undefined errors
+const safeConfig = {
+  pages: [],
+  routes: {},
+  metadata: {},
+  navigationItems: [],
+  pageComponents: {},
+  pageMap: new Map(),
+  routeMap: new Map()
+};
+
+// Ensure all nested objects exist
+Object.keys(safeConfig).forEach(key => {
+  if (safeConfig[key] === null || safeConfig[key] === undefined) {
+    safeConfig[key] = Array.isArray(safeConfig[key]) ? [] : {};
+  }
 });
 
+export const pagesConfig = safeConfig;
 export default pagesConfig;
