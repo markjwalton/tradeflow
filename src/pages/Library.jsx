@@ -53,6 +53,7 @@ const complexityColors = {
 export default function Library() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("entities");
+  const [activeSection, setActiveSection] = useState("core"); // core, community, forms, business, workflows
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedGroup, setSelectedGroup] = useState("all");
