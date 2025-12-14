@@ -88,11 +88,7 @@ export default function GenericNavEditor({
     item_type: "page", 
     default_collapsed: false 
   });
-  const [expandedParents, setExpandedParents] = useState(() => {
-    // Load from sessionStorage
-    const stored = sessionStorage.getItem(`nav_expanded_${configType}`);
-    return stored ? new Set(JSON.parse(stored)) : new Set();
-  });
+  const [expandedParents, setExpandedParents] = useState(new Set());
   const [unallocatedExpanded, setUnallocatedExpanded] = useState(false);
   const [allPagesExpanded, setAllPagesExpanded] = useState(false);
   const [initialExpandDone, setInitialExpandDone] = useState(false);
@@ -143,6 +139,13 @@ export default function GenericNavEditor({
       const sessionState = sessionStorage.getItem(`nav_expanded_${configType}`);
       if (sessionState) {
         // Use session state
+        try {
+          const stored = JSON.parse(sessionState);
+          setExpandedParents(new Set(stored));
+        } catch (e) {
+          // Invalid session state, clear it
+          sessionStorage.removeItem(`nav_expanded_${configType}`);
+        }
         setInitialExpandDone(true);
         return;
       }
@@ -153,12 +156,11 @@ export default function GenericNavEditor({
           const defaultCollapsed = user?.ui_preferences?.navManager_settings?.defaultCollapsed || false;
 
           if (!defaultCollapsed) {
-            // Expand all top-level folders regardless of default_collapsed setting
+            // Expand all top-level folders
             const foldersToExpand = items
               .filter(item => !item.parent_id && item.item_type === "folder")
               .map(item => item._id);
             setExpandedParents(new Set(foldersToExpand));
-            // Save to session
             sessionStorage.setItem(`nav_expanded_${configType}`, JSON.stringify(foldersToExpand));
           } else {
             // Everything collapsed

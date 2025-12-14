@@ -356,12 +356,12 @@ export default function NavigationManager() {
                 <AppBreadcrumb organizedNavigation={breadcrumbContext.navItems} currentPageName={breadcrumbContext.currentPageName} />
               </div>
             )}
-            <h1 className={`text-3xl font-display text-[var(--color-text-primary)] ${pageData?.page_description ? '[margin-bottom:var(--spacing-2)]' : ''}`}>
+            <h1 className={`text-3xl font-display text-[var(--color-text-primary)] ${pageData?.description ? '[margin-bottom:var(--spacing-2)]' : ''}`}>
               Navigation Manager
             </h1>
-            {pageData?.page_description && (
+            {pageData?.description && (
               <p className="text-[var(--color-text-muted)]">
-                {pageData.page_description}
+                {pageData.description}
               </p>
             )}
           </div>
