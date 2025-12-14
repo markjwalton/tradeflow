@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { Upload, FileText, Loader2 } from "lucide-react";
+import { PageHeader } from "@/components/sturij";
 
 const DOCUMENT_TYPES = [
   { value: "contract", label: "Contract" },
@@ -177,13 +178,11 @@ export default function OnboardingDocuments() {
   const uploading = uploadFileMutation.isPending || createDocumentMutation.isPending;
 
   return (
-    <div className="space-y-8 p-6">
-      <section>
-        <h1 className="text-2xl font-semibold text-foreground">Documents</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Upload and manage contracts, SLAs, technical specs, policies, and other onboarding documents.
-        </p>
-      </section>
+    <div className="max-w-7xl mx-auto -mt-6 space-y-8">
+      <PageHeader 
+        title="Documents"
+        description="Upload and manage contracts, SLAs, technical specs, policies, and other onboarding documents"
+      />
 
       <section className="grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
         <form

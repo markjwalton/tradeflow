@@ -36,6 +36,7 @@ import {
   ArrowRight
 } from "lucide-react";
 import { toast } from "sonner";
+import { PageHeader } from "@/components/sturij";
 
 export default function CoreLibraryManager() {
   const queryClient = useQueryClient();
@@ -262,17 +263,16 @@ export default function CoreLibraryManager() {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <div className="mb-6 flex items-start justify-between">
-        <div>
-          <h1 className="text-3xl font-display text-primary mb-2">Core Library Manager</h1>
-          <p className="text-muted-foreground">Manage and distribute reusable components, entities, pages, and features</p>
-        </div>
+    <div className="max-w-7xl mx-auto -mt-6">
+      <PageHeader 
+        title="Core Library Manager"
+        description="Manage and distribute reusable components, entities, pages, and features"
+      >
         <Button onClick={() => openSheet(activeTab.slice(0, -1))}>
           <Plus className="mr-2 h-4 w-4" />
           Add New
         </Button>
-      </div>
+      </PageHeader>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="grid grid-cols-4 w-full max-w-2xl">

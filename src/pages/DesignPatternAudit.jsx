@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { PageHeader } from "@/components/sturij";
 
 export default function DesignPatternAudit() {
   const [selectedPattern, setSelectedPattern] = useState(null);
@@ -60,13 +61,11 @@ export default function DesignPatternAudit() {
   };
 
   return (
-    <div className="pb-6 max-w-6xl mx-auto">
-      <div className="bg-white mb-6 -mx-6 px-6 pt-2 pb-2">
-        <h1 className="text-3xl font-display text-primary mb-2">Design Pattern Audit</h1>
-        <p className="text-muted-foreground">
-          Review and manage design patterns learned by the AI assistant
-        </p>
-      </div>
+    <div className="max-w-6xl mx-auto -mt-6">
+      <PageHeader 
+        title="Design Pattern Audit"
+        description="Review and manage design patterns learned by the AI assistant"
+      />
 
       <Tabs defaultValue="patterns" className="space-y-6">
         <TabsList>
