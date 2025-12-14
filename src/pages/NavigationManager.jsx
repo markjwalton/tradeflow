@@ -351,11 +351,6 @@ export default function NavigationManager() {
         <>
           {/* Page Header */}
           <div className="bg-white border [margin-bottom:var(--spacing-6)] px-6 py-4 rounded-xl">
-            {breadcrumbContext?.navItems && (
-              <div className={pageData?.page_description ? 'mb-4' : 'mb-3'}>
-                <AppBreadcrumb organizedNavigation={breadcrumbContext.navItems} currentPageName={breadcrumbContext.currentPageName} />
-              </div>
-            )}
             <h1 className={`text-3xl font-display text-[var(--color-text-primary)] ${pageData?.page_description ? '[margin-bottom:var(--spacing-2)]' : ''}`}>
               Navigation Manager
             </h1>
