@@ -39,6 +39,10 @@ import { PageHeader } from "@/components/sturij";
 const entityCategories = ["Core", "CRM", "Finance", "Operations", "HR", "Inventory", "Communication", "Custom", "Other"];
 const pageCategories = ["Dashboard", "List", "Detail", "Form", "Report", "Settings", "Custom", "Other"];
 const featureCategories = ["Communication", "Automation", "Integration", "Reporting", "Security", "Workflow", "UI/UX", "Custom", "Other"];
+const formCategories = ["Contact", "Survey", "Registration", "Feedback", "Application", "Custom", "Other"];
+const checklistCategories = ["Onboarding", "Quality", "Compliance", "Process", "Project", "Custom", "Other"];
+const businessCategories = ["Construction", "Consulting", "Healthcare", "Retail", "Manufacturing", "Custom", "Other"];
+const workflowCategories = ["Approval", "Notification", "Automation", "Integration", "Process", "Custom", "Other"];
 
 const complexityColors = {
   simple: "bg-success-50 text-success",
