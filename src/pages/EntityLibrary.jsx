@@ -21,8 +21,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Search, Database, Sparkles, Trash2, Edit, Copy, Loader2, Star, BookmarkPlus, Folder, Layout, Zap, Check, FolderPlus } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Plus, Search, Database, Sparkles, Trash2, Edit, Copy, Loader2, Star, BookmarkPlus, Folder, Layout, Zap, Check, FolderPlus, ChevronDown, ChevronRight } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import EntityBuilder from "@/components/library/EntityBuilder";
 import CustomProjectSelector from "@/components/library/CustomProjectSelector";
@@ -59,6 +61,7 @@ export default function EntityLibrary() {
   const [addToProjectSelectedFeatures, setAddToProjectSelectedFeatures] = useState([]);
   const [addToProjectTargetId, setAddToProjectTargetId] = useState(null);
   const [addGroupToProject, setAddGroupToProject] = useState(null);
+  const [expandedGroups, setExpandedGroups] = useState({});
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 30;
@@ -330,11 +333,13 @@ Return a JSON object with:
           <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       ) : filteredEntities.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground">
-          <Database className="h-12 w-12 mx-auto mb-4 opacity-50" />
-          <p>No entity templates found</p>
-          <p className="text-sm mt-1">Create your first entity or use AI to generate one</p>
-        </div>
+        <Card className="border-border">
+          <CardContent className="text-center py-12 text-muted-foreground">
+            <Database className="h-12 w-12 mx-auto mb-4 opacity-50" />
+            <p>No entity templates found</p>
+            <p className="text-sm mt-1">Create your first entity or use AI to generate one</p>
+          </CardContent>
+        </Card>
       ) : (
         <>
           <div className="flex items-center justify-between mb-4">
@@ -365,107 +370,126 @@ Return a JSON object with:
               </div>
             )}
           </div>
-          <div className="space-y-8">
-          {Object.entries(paginatedGroupedEntities).map(([groupName, groupEntities]) => (
-            <div key={groupName}>
-              <div className="flex items-center gap-2 mb-3">
-                <h2 className="text-lg font-semibold flex items-center gap-2">
-                  <Badge className={categoryColors[groupName] || "bg-muted text-muted-foreground"}>{groupName}</Badge>
-                  <span className="text-muted-foreground text-sm font-normal">({groupEntities.length})</span>
-                </h2>
-                {!selectedProjectId && projects.length > 0 && availableGroups.includes(groupName) && (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="h-7 text-xs gap-1"
-                    onClick={() => setAddGroupToProject(groupName)}
-                  >
-                    <FolderPlus className="h-3 w-3" />
-                    Add Group
-                  </Button>
-                )}
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {groupEntities.map((entity) => (
-                  <Card key={entity.id} className="hover:shadow-md transition-shadow">
-                    <CardHeader className="pb-2">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <CardTitle className="text-base flex items-center gap-2">
-                            <Database className="h-4 w-4 text-accent" />
-                            {entity.name}
-                            {entity.is_custom && (
-                              <Badge variant="outline" className="text-xs">Custom</Badge>
-                            )}
-                          </CardTitle>
-                          <p className="text-sm text-muted-foreground mt-1">{entity.description}</p>
+          <div className="space-y-4">
+          {Object.entries(paginatedGroupedEntities).map(([groupName, groupEntities]) => {
+            const isExpanded = expandedGroups[groupName] !== false;
+            return (
+              <Collapsible
+                key={groupName}
+                open={isExpanded}
+                onOpenChange={() => setExpandedGroups(prev => ({ ...prev, [groupName]: !isExpanded }))}
+              >
+                <Card className="border-border">
+                  <CollapsibleTrigger className="w-full">
+                    <CardHeader className="py-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                          <Badge className={categoryColors[groupName] || "bg-muted text-muted-foreground"}>{groupName}</Badge>
+                          <span className="text-muted-foreground text-sm font-normal">({groupEntities.length})</span>
                         </div>
+                        {!selectedProjectId && projects.length > 0 && availableGroups.includes(groupName) && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-7 text-xs gap-1 hover:bg-[#e9efeb] hover:text-[#273e2d]"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setAddGroupToProject(groupName);
+                            }}
+                          >
+                            <FolderPlus className="h-3 w-3" />
+                            Add Group
+                          </Button>
+                        )}
                       </div>
                     </CardHeader>
-                    <CardContent className="pt-0">
-                      <div className="flex flex-wrap gap-1 mb-3">
-                        {entity.tags?.map((tag) => (
-                          <Badge key={tag} variant="outline" className="text-xs">{tag}</Badge>
-                        ))}
-                      </div>
-                      <div className="text-xs text-muted-foreground mb-3">
-                        {Object.keys(entity.schema?.properties || {}).length} fields
-                        {entity.relationships?.length > 0 && ` · ${entity.relationships.length} relationships`}
-                      </div>
-                      <div className="flex gap-1">
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => { setEditingEntity(entity); setShowBuilder(true); }}
-                          title="Edit"
-                        >
-                          <Edit className="h-3 w-3" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => handleDuplicate(entity)}
-                          title="Duplicate"
-                        >
-                          <Copy className="h-3 w-3" />
-                        </Button>
-                        {!entity.custom_project_id && projects.length > 0 && (
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => setAddToProjectEntity(entity)}
-                            title="Add to Project"
-                            className="text-primary"
-                          >
-                            <Folder className="h-3 w-3" />
-                          </Button>
-                        )}
-                        {entity.is_custom && (
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => handleSaveToLibrary(entity)}
-                            title="Save to default library"
-                          >
-                            <BookmarkPlus className="h-3 w-3" />
-                          </Button>
-                        )}
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="text-destructive hover:text-destructive"
-                          onClick={() => deleteMutation.mutate(entity.id)}
-                          title="Delete"
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </div>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <CardContent className="pt-0 space-y-2">
+                      {groupEntities.map((entity) => (
+                        <Card key={entity.id} className="border-border hover:shadow-sm transition-shadow">
+                          <CardContent className="p-4">
+                            <div className="flex items-center gap-4">
+                              <Database className="h-5 w-5 text-accent flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <h3 className="font-medium text-base">{entity.name}</h3>
+                                  {entity.is_custom && (
+                                    <Badge variant="outline" className="text-xs">Custom</Badge>
+                                  )}
+                                </div>
+                                <p className="text-sm text-muted-foreground line-clamp-1">{entity.description}</p>
+                                <div className="flex items-center gap-3 mt-2">
+                                  <span className="text-xs text-muted-foreground">
+                                    {Object.keys(entity.schema?.properties || {}).length} fields
+                                    {entity.relationships?.length > 0 && ` · ${entity.relationships.length} relationships`}
+                                  </span>
+                                  <div className="flex flex-wrap gap-1">
+                                    {entity.tags?.slice(0, 3).map((tag) => (
+                                      <Badge key={tag} variant="outline" className="text-xs">{tag}</Badge>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="flex gap-1 flex-shrink-0">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => { setEditingEntity(entity); setShowBuilder(true); }}
+                                  title="Edit"
+                                >
+                                  <Edit className="h-3 w-3" />
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => handleDuplicate(entity)}
+                                  title="Duplicate"
+                                >
+                                  <Copy className="h-3 w-3" />
+                                </Button>
+                                {!entity.custom_project_id && projects.length > 0 && (
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => setAddToProjectEntity(entity)}
+                                    title="Add to Project"
+                                    className="text-primary"
+                                  >
+                                    <Folder className="h-3 w-3" />
+                                  </Button>
+                                )}
+                                {entity.is_custom && (
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => handleSaveToLibrary(entity)}
+                                    title="Save to default library"
+                                  >
+                                    <BookmarkPlus className="h-3 w-3" />
+                                  </Button>
+                                )}
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="text-destructive hover:text-destructive"
+                                  onClick={() => deleteMutation.mutate(entity.id)}
+                                  title="Delete"
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
                     </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          ))}
+                  </CollapsibleContent>
+                </Card>
+              </Collapsible>
+            );
+          })}
         </div>
         </>
       )}
