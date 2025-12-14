@@ -24,7 +24,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { 
   Plus, Search, Database, Layout, Zap, Sparkles, Trash2, Edit, Copy, 
   Loader2, BookmarkPlus, Folder, Check, Eye, ChevronDown, ChevronRight, 
-  ArrowLeft, FolderPlus 
+  ArrowLeft, FolderPlus, Users, FileInput, ListChecks, Briefcase, GitBranch
 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
