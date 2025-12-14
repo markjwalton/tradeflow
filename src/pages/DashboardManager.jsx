@@ -21,8 +21,10 @@ import {
 } from "@/components/ui/dialog";
 import {
   LayoutDashboard, Settings, Sparkles, Plus, Eye, Edit, Save, 
-  PanelLeftClose, PanelLeft, Loader2, Grid3X3, Columns, Package
+  PanelLeftClose, PanelLeft, Loader2, Grid3X3, Columns, Package,
+  ChevronDown, ChevronRight, Search
 } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { toast } from "sonner";
 
 import DashboardGrid from "@/components/dashboard/DashboardGrid";
@@ -297,11 +299,17 @@ export default function DashboardManager() {
 
 // Widget Library Manager Component
 function WidgetLibraryManager({ widgets }) {
-  const [expandedCategories, setExpandedCategories] = useState(new Set());
+  const [collapsedCategories, setCollapsedCategories] = useState({});
+  const [search, setSearch] = useState("");
   
   const publishedWidgets = widgets.filter(w => w.status === "published");
+  const filteredWidgets = publishedWidgets.filter(w => 
+    !search || 
+    w.name?.toLowerCase().includes(search.toLowerCase()) ||
+    w.description?.toLowerCase().includes(search.toLowerCase())
+  );
   
-  const grouped = publishedWidgets.reduce((acc, w) => {
+  const grouped = filteredWidgets.reduce((acc, w) => {
     const cat = w.category || "Uncategorized";
     if (!acc[cat]) acc[cat] = [];
     acc[cat].push(w);
@@ -311,19 +319,23 @@ function WidgetLibraryManager({ widgets }) {
   const categories = Object.keys(grouped).sort();
 
   const toggleCategory = (cat) => {
-    setExpandedCategories(prev => {
-      const next = new Set(prev);
-      if (next.has(cat)) next.delete(cat);
-      else next.add(cat);
-      return next;
-    });
+    setCollapsedCategories(prev => ({
+      ...prev,
+      [cat]: !prev[cat]
+    }));
   };
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-h4">Published Widget Library</h2>
-        <Badge variant="secondary">{publishedWidgets.length} widgets</Badge>
+      {/* Search */}
+      <div className="relative max-w-sm">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          placeholder="Search widgets..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="pl-10"
+        />
       </div>
 
       {publishedWidgets.length === 0 ? (
@@ -335,53 +347,63 @@ function WidgetLibraryManager({ widgets }) {
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-4">
           {categories.map(category => {
             const catWidgets = grouped[category];
-            const isExpanded = expandedCategories.has(category);
+            const isOpen = !collapsedCategories[category];
 
             return (
-              <div key={category} className={isExpanded ? "bg-white rounded-lg border" : ""}>
-                <button
-                  onClick={() => toggleCategory(category)}
-                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted rounded-lg"
-                >
-                  {isExpanded ? (
-                    <Columns className="h-4 w-4 text-warning" />
-                  ) : (
-                    <Columns className="h-4 w-4 text-muted-foreground" />
-                  )}
-                  <span className="font-medium flex-1 text-left">{category}</span>
-                  <Badge variant="secondary">{catWidgets.length}</Badge>
-                </button>
-
-                {isExpanded && (
-                  <div className="px-4 pb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {catWidgets.map(widget => (
-                      <Card key={widget.id}>
-                        <CardContent className="p-4">
-                          <div className="flex items-start justify-between">
-                            <div>
-                              <h4 className="font-medium">{widget.name}</h4>
-                              <p className="text-sm text-muted-foreground">{widget.description}</p>
+              <Card key={category} className="border-border">
+                <Collapsible open={isOpen} onOpenChange={() => toggleCategory(category)}>
+                  <CollapsibleTrigger asChild>
+                    <CardHeader className="cursor-pointer hover:bg-accent/50 transition-colors p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          {isOpen ? (
+                            <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                          ) : (
+                            <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                          )}
+                          <CardTitle className="text-lg">{category}</CardTitle>
+                          <Badge variant="outline">{catWidgets.length}</Badge>
+                        </div>
+                      </div>
+                    </CardHeader>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <CardContent className="space-y-3 pt-0 p-4">
+                      {catWidgets.map(widget => (
+                        <Card key={widget.id} className="hover:shadow-md transition-shadow">
+                          <CardContent className="p-4">
+                            <div className="flex items-center gap-4">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <h3 className="text-h3">{widget.name}</h3>
+                                  <Badge variant="outline">v{widget.version || 1}</Badge>
+                                </div>
+                                {widget.description && (
+                                  <p className="text-sm text-muted-foreground line-clamp-1 mb-2">
+                                    {widget.description}
+                                  </p>
+                                )}
+                                <div className="flex items-center gap-2">
+                                  <Badge variant="secondary">{widget.widget_type}</Badge>
+                                  {widget.ai_generated && (
+                                    <Badge className="bg-accent-100 text-accent">
+                                      <Sparkles className="h-3 w-3 mr-1" />
+                                      AI
+                                    </Badge>
+                                  )}
+                                </div>
+                              </div>
                             </div>
-                            <Badge variant="outline">v{widget.version || 1}</Badge>
-                          </div>
-                          <div className="flex gap-2 mt-3">
-                            <Badge variant="secondary">{widget.widget_type}</Badge>
-                            {widget.ai_generated && (
-                              <Badge className="bg-accent-100 text-accent">
-                                <Sparkles className="h-3 w-3 mr-1" />
-                                AI
-                              </Badge>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                )}
-              </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </CardContent>
+                  </CollapsibleContent>
+                </Collapsible>
+              </Card>
             );
           })}
         </div>
