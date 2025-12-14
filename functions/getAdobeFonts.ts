@@ -21,10 +21,10 @@ Deno.serve(async (req) => {
 
     // Fetch Adobe Fonts project details
     const response = await fetch(
-      `https://typekit.com/api/v1/json/kits/${projectId}/published`,
+      `https://typekit.com/api/v1/json/kits/${projectId}`,
       {
         headers: {
-          'X-Typekit-Token': apiToken
+          'Authorization': `Bearer ${apiToken}`
         }
       }
     );
