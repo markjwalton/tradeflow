@@ -361,38 +361,25 @@ Return JSON with entity names as keys and arrays of records as values.`,
         </Card>
       )}
 
-      {/* Filters */}
-      <Card className="border-border mb-4">
-        <CardContent className="px-2 py-1">
-          <div className="flex gap-2">
-            {[
-              { key: "all", label: "All", count: stats.total },
-              { key: "noData", label: "No Data", count: stats.noData, color: "text-destructive" },
-              { key: "pending", label: "Pending", count: stats.pending, color: "text-warning" },
-              { key: "verified", label: "Verified", count: stats.verified, color: "text-success" },
-            ].map(f => (
-              <Button
-                key={f.key}
-                variant={filter === f.key ? "default" : "ghost"}
-                size="sm"
-                onClick={() => setFilter(f.key)}
-                className={filter !== f.key ? f.color : ""}
-              >
-                {f.label} ({f.count})
-              </Button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      {/* Tabs */}
+      <Tabs value={filter} onValueChange={setFilter} className="mb-4">
+        <TabsList>
+          <TabsTrigger value="all">All ({stats.total})</TabsTrigger>
+          <TabsTrigger value="noData" className="text-destructive data-[state=active]:text-foreground">
+            No Data ({stats.noData})
+          </TabsTrigger>
+          <TabsTrigger value="pending" className="text-warning data-[state=active]:text-foreground">
+            Pending ({stats.pending})
+          </TabsTrigger>
+          <TabsTrigger value="verified" className="text-success data-[state=active]:text-foreground">
+            Verified ({stats.verified})
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
 
       {/* Items Table */}
       <Card className="border-border">
-        <CardHeader className="pb-2">
-          <h2 className="text-h2">
-            {filter === "all" ? "All Items" : `${filter.charAt(0).toUpperCase() + filter.slice(1)} Items`}
-          </h2>
-        </CardHeader>
-        <CardContent>
+        <CardContent className="p-4">
           {filteredItems.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
               <CheckCircle2 className="h-10 w-10 mx-auto mb-2 text-success" />
