@@ -31,7 +31,10 @@ import {
   FileText,
   CheckCircle,
   XCircle,
+  ChevronDown,
+  ChevronRight,
 } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/sturij";
 
@@ -49,6 +52,7 @@ export default function FormTemplates() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
+  const [collapsedCategories, setCollapsedCategories] = useState({});
 
   const { data: forms = [], isLoading } = useQuery({
     queryKey: ["formTemplates"],
@@ -93,6 +97,22 @@ export default function FormTemplates() {
     return matchesSearch && matchesCategory;
   });
 
+  const formsByCategory = filteredForms.reduce((acc, form) => {
+    const category = form.category || "custom";
+    if (!acc[category]) acc[category] = [];
+    acc[category].push(form);
+    return acc;
+  }, {});
+
+  const categories = Object.keys(formsByCategory).sort();
+
+  const toggleCategory = (category) => {
+    setCollapsedCategories(prev => ({
+      ...prev,
+      [category]: !prev[category]
+    }));
+  };
+
   return (
     <div className="max-w-7xl mx-auto -mt-6 min-h-screen">
       <PageHeader 
@@ -100,25 +120,23 @@ export default function FormTemplates() {
         description="Create and manage reusable form templates"
       />
 
+      {/* ActionBar Card */}
       <Card className="border-border mb-4">
-        <CardContent className="px-2 py-1">
-          <div className="flex gap-2">
-            <Link to={createPageUrl("FormBuilder")}>
-              <Button 
-                variant="ghost"
-                className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Create Form
-              </Button>
-            </Link>
+        <CardContent className="flex items-center justify-between p-4">
+          <div className="text-sm text-muted-foreground">
+            {filteredForms.length} form{filteredForms.length !== 1 ? 's' : ''}
           </div>
+          <Link to={createPageUrl("FormBuilder")}>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Create Form
+            </Button>
+          </Link>
         </CardContent>
       </Card>
 
-      <Card className="border-border">
-        <CardContent className="p-4">
-          <div className="flex gap-4 mb-6">
+      {/* Search & Filters */}
+      <div className="flex gap-4 mb-4">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
@@ -150,97 +168,117 @@ export default function FormTemplates() {
           <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       ) : filteredForms.length === 0 ? (
-        <div className="text-center py-12">
-          <FileText className="h-12 w-12 mx-auto opacity-30 mb-4 text-muted-foreground" />
-          <h3 className="text-lg font-medium text-foreground">No forms found</h3>
-          <p className="text-muted-foreground mb-4">
-            {search || categoryFilter !== "all"
-              ? "Try adjusting your filters"
-              : "Create your first form template"}
-          </p>
-          {!search && categoryFilter === "all" && (
-            <Link to={createPageUrl("FormBuilder")}>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Create Form
-              </Button>
-            </Link>
-          )}
-        </div>
+        <Card className="border-border">
+          <CardContent className="text-center py-12">
+            <FileText className="h-12 w-12 mx-auto opacity-30 mb-4 text-muted-foreground" />
+            <h3 className="text-lg font-medium text-foreground">No forms found</h3>
+            <p className="text-muted-foreground mb-4">
+              {search || categoryFilter !== "all"
+                ? "Try adjusting your filters"
+                : "Create your first form template"}
+            </p>
+            {!search && categoryFilter === "all" && (
+              <Link to={createPageUrl("FormBuilder")}>
+                <Button>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create Form
+                </Button>
+              </Link>
+            )}
+          </CardContent>
+        </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredForms.map((form) => (
-            <Card key={form.id} className="hover:shadow-md transition-shadow">
-              <CardHeader className="pb-2">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      {form.name}
-                      {form.isActive !== false ? (
-                        <CheckCircle className="h-4 w-4 text-success" />
-                      ) : (
-                        <XCircle className="h-4 w-4 text-muted-foreground" />
-                      )}
-                    </CardTitle>
-                    <p className="text-sm text-muted-foreground mt-1">{form.code}</p>
-                  </div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <Link to={`${createPageUrl("FormBuilder")}?id=${form.id}`}>
-                        <DropdownMenuItem>
-                          <Edit className="h-4 w-4 mr-2" />
-                          Edit
-                        </DropdownMenuItem>
-                      </Link>
-                      <DropdownMenuItem onClick={() => duplicateMutation.mutate(form)}>
-                        <Copy className="h-4 w-4 mr-2" />
-                        Duplicate
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="text-destructive"
-                        onClick={() => deleteMutation.mutate(form.id)}
-                      >
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </CardHeader>
-              <CardContent>
-                {form.description && (
-                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-                    {form.description}
-                  </p>
-                )}
-                <div className="flex flex-wrap gap-2">
-                  {form.category && (
-                    <Badge className={categoryColors[form.category]}>
-                      {form.category}
-                    </Badge>
-                  )}
-                  <Badge variant="outline">{form.fields?.length || 0} fields</Badge>
-                </div>
-                <div className="mt-4 pt-3 border-t flex justify-end">
-                  <Link to={`${createPageUrl("FormBuilder")}?id=${form.id}`}>
-                    <Button variant="outline" size="sm">
-                      <Edit className="h-3 w-3 mr-1" />
-                      Edit
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="space-y-4">
+          {categories.map((category) => {
+            const categoryForms = formsByCategory[category];
+            const isOpen = !collapsedCategories[category];
+            
+            return (
+              <Card key={category} className="border-border">
+                <Collapsible open={isOpen} onOpenChange={() => toggleCategory(category)}>
+                  <CollapsibleTrigger asChild>
+                    <CardHeader className="cursor-pointer hover:bg-accent/50 transition-colors p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          {isOpen ? (
+                            <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                          ) : (
+                            <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                          )}
+                          <CardTitle className="text-lg capitalize">
+                            {category.replace(/_/g, " ")}
+                          </CardTitle>
+                          <Badge variant="outline">{categoryForms.length}</Badge>
+                        </div>
+                      </div>
+                    </CardHeader>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <CardContent className="space-y-3 pt-0 p-4">
+                      {categoryForms.map((form) => (
+                        <Card key={form.id} className="hover:shadow-md transition-shadow">
+                          <CardContent className="p-4">
+                            <div className="flex items-center gap-4">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <h3 className="text-h3">{form.name}</h3>
+                                  {form.isActive !== false ? (
+                                    <CheckCircle className="h-4 w-4 text-success" />
+                                  ) : (
+                                    <XCircle className="h-4 w-4 text-muted-foreground" />
+                                  )}
+                                </div>
+                                <p className="text-sm text-muted-foreground mb-2">{form.code}</p>
+                                {form.description && (
+                                  <p className="text-sm text-muted-foreground line-clamp-1 mb-2">
+                                    {form.description}
+                                  </p>
+                                )}
+                                <div className="flex items-center gap-2">
+                                  <Badge variant="outline">{form.fields?.length || 0} fields</Badge>
+                                </div>
+                              </div>
+
+                              <div className="flex gap-2">
+                                <Link to={`${createPageUrl("FormBuilder")}?id=${form.id}`}>
+                                  <Button variant="outline" size="sm">
+                                    <Edit className="h-4 w-4 mr-1" />
+                                    Edit
+                                  </Button>
+                                </Link>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                                      <MoreVertical className="h-4 w-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuItem onClick={() => duplicateMutation.mutate(form)}>
+                                      <Copy className="h-4 w-4 mr-2" />
+                                      Duplicate
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      className="text-destructive"
+                                      onClick={() => deleteMutation.mutate(form.id)}
+                                    >
+                                      <Trash2 className="h-4 w-4 mr-2" />
+                                      Delete
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </CardContent>
+                  </CollapsibleContent>
+                </Collapsible>
+              </Card>
+            );
+          })}
         </div>
       )}
-        </CardContent>
-      </Card>
     </div>
   );
 }
