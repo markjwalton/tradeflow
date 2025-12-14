@@ -127,21 +127,17 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
       />
 
       {/* Search */}
-      <Card className="border-border mb-4">
-        <CardContent className="px-2 py-1">
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search generated apps..."
-              className="pl-10 border-0 bg-transparent focus-visible:ring-0"
-            />
-          </div>
-        </CardContent>
-      </Card>
+      <div className="relative mb-4 max-w-md">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search generated apps..."
+          className="pl-10"
+        />
+      </div>
 
-      {/* Apps Grid */}
+      {/* Apps List */}
       <Card className="border-border">
         <CardContent className="p-4">
           {filteredApps.length === 0 ? (
@@ -151,110 +147,100 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
               <p className="text-sm">Generate an app from a mind map to see it here.</p>
             </div>
           ) : (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {filteredApps.map((app) => {
-            const spec = app.specification || {};
-            const entityCount = spec.entities?.length || 0;
-            const pageCount = spec.pages?.length || 0;
-            const featureCount = spec.features?.length || 0;
-            
-            return (
-              <Card key={app.id} className="hover:shadow-md transition-shadow">
-                <CardHeader className="pb-2">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <CardTitle className="text-lg">{app.name}</CardTitle>
-                      {app.description && (
-                        <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                          {app.description}
-                        </p>
-                      )}
-                    </div>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => openDetail(app)}>
-                          <Eye className="h-4 w-4 mr-2" />
-                          View Details
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => copyFullSpec(app)}>
-                          <Copy className="h-4 w-4 mr-2" />
-                          Copy JSON
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => copyForChat(app)}>
-                          <Copy className="h-4 w-4 mr-2" />
-                          Copy for Chat
-                        </DropdownMenuItem>
-                        <DropdownMenuItem 
-                          onClick={() => deleteMutation.mutate(app.id)}
-                          className="text-destructive"
-                        >
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center gap-2 mb-3">
-                    <Badge className={statusColors[app.status || "draft"]}>
-                      {app.status || "draft"}
-                    </Badge>
-                    {app.mind_map_name && (
-                      <Badge variant="outline" className="gap-1">
-                        <GitBranch className="h-3 w-3" />
-                        {app.mind_map_name}
-                      </Badge>
-                    )}
-                  </div>
-                  
-                  <div className="flex gap-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Database className="h-4 w-4" />
-                      {entityCount} entities
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Layout className="h-4 w-4" />
-                      {pageCount} pages
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Zap className="h-4 w-4" />
-                      {featureCount} features
-                    </div>
-                  </div>
-                  
-                  <div className="text-xs text-muted-foreground mt-3">
-                    Created {format(new Date(app.created_date), "MMM d, yyyy")}
-                  </div>
+            <div className="space-y-3">
+              {filteredApps.map((app) => {
+                const spec = app.specification || {};
+                const entityCount = spec.entities?.length || 0;
+                const pageCount = spec.pages?.length || 0;
+                const featureCount = spec.features?.length || 0;
 
-                  <div className="flex gap-2 mt-4">
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      className="flex-1"
-                      onClick={() => openDetail(app)}
-                    >
-                      <Eye className="h-4 w-4 mr-1" />
-                      View
-                    </Button>
-                    <Button 
-                      size="sm" 
-                      className="flex-1 bg-success hover:bg-success/90 text-success-foreground"
-                      onClick={() => copyForChat(app)}
-                    >
-                      <Copy className="h-4 w-4 mr-1" />
-                      Copy for Chat
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+                return (
+                  <Card key={app.id} className="hover:shadow-md transition-shadow">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-start justify-between mb-2">
+                            <div className="flex-1">
+                              <h3 className="text-base font-semibold">{app.name}</h3>
+                              {app.description && (
+                                <p className="text-sm text-muted-foreground mt-1 line-clamp-1">
+                                  {app.description}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-3 text-sm">
+                            <Badge className={statusColors[app.status || "draft"]}>
+                              {app.status || "draft"}
+                            </Badge>
+                            {app.mind_map_name && (
+                              <Badge variant="outline" className="gap-1">
+                                <GitBranch className="h-3 w-3" />
+                                {app.mind_map_name}
+                              </Badge>
+                            )}
+                            <div className="flex items-center gap-1 text-muted-foreground">
+                              <Database className="h-4 w-4" />
+                              {entityCount}
+                            </div>
+                            <div className="flex items-center gap-1 text-muted-foreground">
+                              <Layout className="h-4 w-4" />
+                              {pageCount}
+                            </div>
+                            <div className="flex items-center gap-1 text-muted-foreground">
+                              <Zap className="h-4 w-4" />
+                              {featureCount}
+                            </div>
+                            <span className="text-xs text-muted-foreground ml-auto">
+                              {format(new Date(app.created_date), "MMM d, yyyy")}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="flex gap-2">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => openDetail(app)}
+                          >
+                            <Eye className="h-4 w-4 mr-1" />
+                            View
+                          </Button>
+                          <Button 
+                            size="sm"
+                            className="bg-success hover:bg-success/90 text-success-foreground"
+                            onClick={() => copyForChat(app)}
+                          >
+                            <Copy className="h-4 w-4 mr-1" />
+                            Copy for Chat
+                          </Button>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <MoreVertical className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => copyFullSpec(app)}>
+                                <Copy className="h-4 w-4 mr-2" />
+                                Copy JSON
+                              </DropdownMenuItem>
+                              <DropdownMenuItem 
+                                onClick={() => deleteMutation.mutate(app.id)}
+                                className="text-destructive"
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           )}
         </CardContent>
