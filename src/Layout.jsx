@@ -48,6 +48,7 @@ export default function Layout({ children, currentPageName }) {
   const [editorPanelOpen, setEditorPanelOpen] = useState(false);
   const [showEditorBubble, setShowEditorBubble] = useState(true);
   const [siteSettings, setSiteSettings] = useState(null);
+  const [isSyncing, setIsSyncing] = useState(false);
   
   const urlParams = new URLSearchParams(window.location.search);
   const tenantSlug = urlParams.get("tenant");
