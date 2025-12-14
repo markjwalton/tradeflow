@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Eye, Code, Check, RefreshCw, FileText, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import PageHeader from '@/components/sturij/PageHeader';
 
 // Showcase Components
 import LoadingShowcase from '@/components/showcase/LoadingShowcase';
@@ -179,14 +180,11 @@ export default function UXShowcase() {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-3xl font-light font-display mb-2">Design System Library</h1>
-          <p className="text-muted-foreground">
-            Comprehensive showcase of reusable UI components, design tokens, and UX patterns
-          </p>
-        </div>
+    <div className="max-w-4xl mx-auto min-h-screen -mt-6 space-y-6">
+      <PageHeader 
+        title="Design System Library"
+        description="Comprehensive showcase of reusable UI components, design tokens, and UX patterns"
+      >
         <Sheet open={showInspector} onOpenChange={setShowInspector}>
           <SheetTrigger asChild>
             <Button variant="outline" className="gap-2">
@@ -318,7 +316,7 @@ export default function UXShowcase() {
             </div>
           </SheetContent>
         </Sheet>
-      </div>
+      </PageHeader>
 
       <Tabs defaultValue="loading" className="w-full">
         <TabsList className="grid w-full grid-cols-5 lg:grid-cols-11">

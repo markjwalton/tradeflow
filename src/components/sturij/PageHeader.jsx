@@ -1,54 +1,37 @@
-/**
- * Sturij PageHeader - Consistent page header component
- * Based on Sturij Design System patterns
- */
+import React from 'react';
+import { AppBreadcrumb } from '@/components/layout/AppBreadcrumb';
+import { useBreadcrumb } from '@/components/layout/AppContent';
 
-import React from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+export default function PageHeader({ title, description, children }) {
+  const breadcrumbContext = useBreadcrumb();
 
-export function PageHeader({
-  icon,
-  title,
-  description,
-  badge,
-  badgeVariant = "secondary",
-  actions,
-  className = ""
-}) {
   return (
-    <div className={`flex items-start justify-between gap-4 ${className}`}>
-      <div className="flex items-start gap-4">
-        {icon && (
-          <div className="p-3 bg-primary-50 border border-primary-100 rounded-xl text-primary-600">
-            {icon}
-          </div>
-        )}
-        <div className="space-y-1">
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-light tracking-tight text-midnight-900 font-display">
-              {title}
-            </h1>
-            {badge && (
-              <Badge variant={badgeVariant} className="text-xs">
-                {badge}
-              </Badge>
-            )}
-          </div>
+    <div className="bg-white border [margin-bottom:var(--spacing-6)] px-6 py-4 rounded-xl">
+      {breadcrumbContext?.navItems && (
+        <div className="mb-3">
+          <AppBreadcrumb 
+            organizedNavigation={breadcrumbContext.navItems} 
+            currentPageName={breadcrumbContext.currentPageName} 
+          />
+        </div>
+      )}
+      <div className="flex items-start justify-between">
+        <div className="flex-1">
+          <h1 className={`text-3xl font-display text-[var(--color-text-primary)] ${description ? '[margin-bottom:var(--spacing-2)]' : ''}`}>
+            {title}
+          </h1>
           {description && (
-            <p className="text-charcoal-500 text-sm max-w-2xl">
+            <p className="text-muted-foreground">
               {description}
             </p>
           )}
         </div>
+        {children && (
+          <div className="ml-4">
+            {children}
+          </div>
+        )}
       </div>
-      {actions && (
-        <div className="flex items-center gap-2 flex-shrink-0">
-          {actions}
-        </div>
-      )}
     </div>
   );
 }
-
-export default PageHeader;
