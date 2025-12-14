@@ -1,6 +1,6 @@
 import React from "react";
-import ComponentShowcase from "../pages/ComponentShowcase";
+import UXShowcase from "../pages/UXShowcase";
 
 export default function UILibrary() {
-  return <ComponentShowcase />;
+  return <UXShowcase />;
 }
