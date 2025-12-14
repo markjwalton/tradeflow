@@ -7,30 +7,18 @@ export function SidebarProvider({ children }) {
   const [mode, setMode] = useState("expanded");
 
   useEffect(() => {
-    const loadPageNavigationMode = async () => {
+    const loadInitialNavigationMode = async () => {
       try {
-        const pageName = window.location.pathname.split('/').pop() || 'Dashboard';
-        const pages = await base44.entities.UIPage.filter({ slug: pageName });
-        
-        if (pages.length > 0 && pages[0].navigation_mode) {
-          setMode(pages[0].navigation_mode);
-        } else {
-          // Fallback to site-wide default if page has no specific setting
-          const user = await base44.auth.me();
-          if (user?.site_settings?.defaultNavigationMode) {
-            setMode(user.site_settings.defaultNavigationMode);
-          }
+        const user = await base44.auth.me();
+        if (user?.site_settings?.defaultNavigationMode) {
+          setMode(user.site_settings.defaultNavigationMode);
         }
       } catch (e) {
         console.error("Failed to load navigation mode:", e);
       }
     };
 
-    loadPageNavigationMode();
-
-    const handlePageChange = () => {
-      loadPageNavigationMode();
-    };
+    loadInitialNavigationMode();
 
     const handlePageSettingsSaved = (event) => {
       if (event.detail?.navigationMode) {
@@ -38,11 +26,9 @@ export function SidebarProvider({ children }) {
       }
     };
 
-    window.addEventListener('popstate', handlePageChange);
     window.addEventListener('page-settings-saved', handlePageSettingsSaved);
     
     return () => {
-      window.removeEventListener('popstate', handlePageChange);
       window.removeEventListener('page-settings-saved', handlePageSettingsSaved);
     };
   }, []);
