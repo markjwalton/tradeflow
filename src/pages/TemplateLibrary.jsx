@@ -293,17 +293,11 @@ Return a JSON object with a "suggestions" array where each item has:
   }
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
-            <Library className="h-6 w-6" />
-            Node Template Library
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Create and manage reusable node templates with functional specifications
-          </p>
-        </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Node Template Library"
+        description="Create and manage reusable node templates with functional specifications"
+      >
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setShowAreaManager(true)}>
             <Settings className="h-4 w-4 mr-2" />
@@ -314,7 +308,7 @@ Return a JSON object with a "suggestions" array where each item has:
             New Template
           </Button>
         </div>
-      </div>
+      </PageHeader>
 
       {/* Filters */}
       <div className="flex gap-4 mb-6">

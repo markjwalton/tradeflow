@@ -33,6 +33,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { toast } from "sonner";
+import { PageHeader } from "@/components/sturij";
 
 const categoryColors = {
   survey: "bg-info-50 text-info",
@@ -93,19 +94,18 @@ export default function FormTemplates() {
   });
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-light font-display text-foreground">Form Templates</h1>
-          <p className="text-muted-foreground">Create and manage reusable form templates</p>
-        </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Form Templates"
+        description="Create and manage reusable form templates"
+      >
         <Link to={createPageUrl("FormBuilder")}>
           <Button>
             <Plus className="h-4 w-4 mr-2" />
             Create Form
           </Button>
         </Link>
-      </div>
+      </PageHeader>
 
       <div className="flex gap-4 mb-6">
         <div className="relative flex-1 max-w-sm">
