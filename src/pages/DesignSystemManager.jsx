@@ -260,35 +260,36 @@ For each recommendation, provide:
       <PageHeader 
         title="Design System Manager"
         description="Version control, package distribution, and AI-assisted updates"
-      >
-        <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            onClick={analyzePackageUpdates}
-            disabled={isAnalyzing}
-          >
-            {isAnalyzing ? (
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-            ) : (
-              <Sparkles className="h-4 w-4 mr-2" />
-            )}
-            AI Analyze Updates
-          </Button>
-          <Button 
-            variant="outline"
-            onClick={() => setShowCreateDialog(true)}
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Core Package
-          </Button>
-          <Button 
-            onClick={() => setShowThemeCreator(true)}
-          >
-            <Palette className="h-4 w-4 mr-2" />
-            Create Custom Theme
-          </Button>
-        </div>
-      </PageHeader>
+      />
+      
+      <div className="flex justify-end gap-2 mb-4">
+        <Button 
+          variant="ghost" 
+          onClick={analyzePackageUpdates}
+          disabled={isAnalyzing}
+        >
+          {isAnalyzing ? (
+            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+          ) : (
+            <Sparkles className="h-4 w-4 mr-2" />
+          )}
+          AI Analyze Updates
+        </Button>
+        <Button 
+          variant="ghost"
+          onClick={() => setShowCreateDialog(true)}
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Core Package
+        </Button>
+        <Button 
+          variant="ghost"
+          onClick={() => setShowThemeCreator(true)}
+        >
+          <Palette className="h-4 w-4 mr-2" />
+          Create Custom Theme
+        </Button>
+      </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="[margin-top:var(--spacing-4)]">
         <TabsList>
@@ -303,11 +304,6 @@ For each recommendation, provide:
           <TabsTrigger value="recommendations">
             <Sparkles className="h-4 w-4 mr-2" />
             AI Recommendations
-            {pendingRecs.length > 0 && (
-              <Badge className="ml-2 bg-warning text-white">
-                {pendingRecs.length}
-              </Badge>
-            )}
           </TabsTrigger>
           <TabsTrigger value="customers">
             <Users className="h-4 w-4 mr-2" />
