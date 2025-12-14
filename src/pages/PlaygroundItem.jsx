@@ -259,10 +259,32 @@ Provide 3-5 specific suggestions to improve this entity.`;
     }
   };
 
-  if (isLoading || !item) {
+  if (!itemId) {
+    return (
+      <div className="flex flex-col justify-center items-center h-64 bg-background">
+        <p className="text-muted-foreground">No item ID provided</p>
+        <Button className="mt-4" onClick={() => navigate(createPageUrl("PlaygroundSummary"))}>
+          Back to Playground
+        </Button>
+      </div>
+    );
+  }
+
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64 bg-background">
         <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!item) {
+    return (
+      <div className="flex flex-col justify-center items-center h-64 bg-background">
+        <p className="text-muted-foreground">Item not found</p>
+        <Button className="mt-4" onClick={() => navigate(createPageUrl("PlaygroundSummary"))}>
+          Back to Playground
+        </Button>
       </div>
     );
   }
