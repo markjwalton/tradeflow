@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Eye, Code, Check, RefreshCw, FileText, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { PageHeader } from '@/components/sturij/PageHeader';
@@ -54,23 +55,56 @@ export default function UXShowcase() {
     loadLabels();
   }, []);
 
+  const categories = [
+    {
+      id: 'foundations',
+      label: 'Design Foundations',
+      components: ['typographyShowcase', 'colorShowcase', 'iconShowcase']
+    },
+    {
+      id: 'components',
+      label: 'Components',
+      components: ['buttonCard', 'cardShowcase', 'formCard', 'tabsShowcase', 'modalShowcase']
+    },
+    {
+      id: 'navigation',
+      label: 'Navigation',
+      components: ['navigationShowcase', 'searchCard']
+    },
+    {
+      id: 'layout',
+      label: 'Layout & Patterns',
+      components: ['layoutShowcase']
+    },
+    {
+      id: 'data',
+      label: 'Data & Content',
+      components: ['dataDisplayShowcase']
+    },
+    {
+      id: 'feedback',
+      label: 'Feedback & States',
+      components: ['loadingCard', 'errorCard', 'feedbackShowcase', 'mutationCard']
+    }
+  ];
+
   const componentOptions = [
-    { value: 'loadingCard', label: 'Loading States' },
-    { value: 'errorCard', label: 'Error Handling' },
-    { value: 'formCard', label: 'Form Validation' },
-    { value: 'mutationCard', label: 'Mutations' },
-    { value: 'searchCard', label: 'Search & Debounce' },
-    { value: 'buttonCard', label: 'Buttons' },
-    { value: 'cardShowcase', label: 'Cards' },
-    { value: 'tabsShowcase', label: 'Tabs' },
-    { value: 'typographyShowcase', label: 'Typography' },
-    { value: 'colorShowcase', label: 'Colors' },
-    { value: 'iconShowcase', label: 'Icons' },
-    { value: 'navigationShowcase', label: 'Navigation' },
-    { value: 'dataDisplayShowcase', label: 'Data Display' },
-    { value: 'layoutShowcase', label: 'Layouts' },
-    { value: 'feedbackShowcase', label: 'Feedback' },
-    { value: 'modalShowcase', label: 'Modals' },
+    { value: 'typographyShowcase', label: 'Typography', category: 'foundations' },
+    { value: 'colorShowcase', label: 'Colors', category: 'foundations' },
+    { value: 'iconShowcase', label: 'Icons', category: 'foundations' },
+    { value: 'buttonCard', label: 'Buttons', category: 'components' },
+    { value: 'cardShowcase', label: 'Cards', category: 'components' },
+    { value: 'formCard', label: 'Forms', category: 'components' },
+    { value: 'tabsShowcase', label: 'Tabs', category: 'components' },
+    { value: 'modalShowcase', label: 'Modals', category: 'components' },
+    { value: 'navigationShowcase', label: 'Navigation', category: 'navigation' },
+    { value: 'searchCard', label: 'Search', category: 'navigation' },
+    { value: 'layoutShowcase', label: 'Layouts', category: 'layout' },
+    { value: 'dataDisplayShowcase', label: 'Data Display', category: 'data' },
+    { value: 'loadingCard', label: 'Loading', category: 'feedback' },
+    { value: 'errorCard', label: 'Errors', category: 'feedback' },
+    { value: 'feedbackShowcase', label: 'Notifications', category: 'feedback' },
+    { value: 'mutationCard', label: 'Mutations', category: 'feedback' },
   ];
 
   const componentElements = {
@@ -328,154 +362,179 @@ export default function UXShowcase() {
         </Sheet>
       </PageHeader>
 
-      <Tabs defaultValue="loading" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
-          <TabsTrigger value="loading">Loading</TabsTrigger>
-          <TabsTrigger value="errors">Errors</TabsTrigger>
-          <TabsTrigger value="forms">Forms</TabsTrigger>
-          <TabsTrigger value="mutations">Mutations</TabsTrigger>
-          <TabsTrigger value="search">Search</TabsTrigger>
-          <TabsTrigger value="buttons">Buttons</TabsTrigger>
-          <TabsTrigger value="cards">Cards</TabsTrigger>
-          <TabsTrigger value="tabs">Tabs</TabsTrigger>
-          <TabsTrigger value="typography">Typography</TabsTrigger>
-          <TabsTrigger value="colors">Colors</TabsTrigger>
-          <TabsTrigger value="icons">Icons</TabsTrigger>
-          <TabsTrigger value="navigation">Navigation</TabsTrigger>
-          <TabsTrigger value="data">Data</TabsTrigger>
-          <TabsTrigger value="layouts">Layouts</TabsTrigger>
-          <TabsTrigger value="feedback">Feedback</TabsTrigger>
-          <TabsTrigger value="modals">Modals</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="loading" className="mt-6">
+      <Accordion type="multiple" defaultValue={['foundations', 'components']} className="w-full space-y-4">
+        {/* Design Foundations */}
+        <AccordionItem value="foundations">
           <Card>
-            <CardContent className="pt-6">
-              <LoadingShowcase />
-            </CardContent>
+            <AccordionTrigger className="px-6 py-4 hover:no-underline">
+              <div className="flex items-center justify-between w-full">
+                <div>
+                  <h2 className="text-lg font-semibold text-left">Design Foundations</h2>
+                  <p className="text-sm text-muted-foreground text-left">Typography, colors, icons, and brand elements</p>
+                </div>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="px-6 pb-6 space-y-8">
+                <div data-category="typography">
+                  <h3 className="text-base font-medium mb-4 text-primary">Typography</h3>
+                  <TypographyShowcase />
+                </div>
+                <div className="border-t pt-8" data-category="colors">
+                  <h3 className="text-base font-medium mb-4 text-primary">Colors</h3>
+                  <ColorShowcase />
+                </div>
+                <div className="border-t pt-8" data-category="icons">
+                  <h3 className="text-base font-medium mb-4 text-primary">Icons</h3>
+                  <IconShowcase />
+                </div>
+              </div>
+            </AccordionContent>
           </Card>
-        </TabsContent>
+        </AccordionItem>
 
-        <TabsContent value="errors" className="mt-6">
+        {/* Components */}
+        <AccordionItem value="components">
           <Card>
-            <CardContent className="pt-6">
-              <ErrorShowcase />
-            </CardContent>
+            <AccordionTrigger className="px-6 py-4 hover:no-underline">
+              <div className="flex items-center justify-between w-full">
+                <div>
+                  <h2 className="text-lg font-semibold text-left">Components</h2>
+                  <p className="text-sm text-muted-foreground text-left">Buttons, cards, forms, tabs, and modals</p>
+                </div>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="px-6 pb-6 space-y-8">
+                <div data-category="buttons">
+                  <h3 className="text-base font-medium mb-4 text-primary">Buttons</h3>
+                  <ButtonShowcase />
+                </div>
+                <div className="border-t pt-8" data-category="cards">
+                  <h3 className="text-base font-medium mb-4 text-primary">Cards</h3>
+                  <CardShowcase />
+                </div>
+                <div className="border-t pt-8" data-category="forms">
+                  <h3 className="text-base font-medium mb-4 text-primary">Forms</h3>
+                  <FormShowcase />
+                </div>
+                <div className="border-t pt-8" data-category="tabs">
+                  <h3 className="text-base font-medium mb-4 text-primary">Tabs</h3>
+                  <TabsShowcase />
+                </div>
+                <div className="border-t pt-8" data-category="modals">
+                  <h3 className="text-base font-medium mb-4 text-primary">Modals</h3>
+                  <ModalShowcase />
+                </div>
+              </div>
+            </AccordionContent>
           </Card>
-        </TabsContent>
+        </AccordionItem>
 
-        <TabsContent value="forms" className="mt-6">
+        {/* Navigation */}
+        <AccordionItem value="navigation">
           <Card>
-            <CardContent className="pt-6">
-              <FormShowcase />
-            </CardContent>
+            <AccordionTrigger className="px-6 py-4 hover:no-underline">
+              <div className="flex items-center justify-between w-full">
+                <div>
+                  <h2 className="text-lg font-semibold text-left">Navigation</h2>
+                  <p className="text-sm text-muted-foreground text-left">Navigation patterns, breadcrumbs, search, and menus</p>
+                </div>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="px-6 pb-6 space-y-8">
+                <div data-category="navigation">
+                  <h3 className="text-base font-medium mb-4 text-primary">Navigation Patterns</h3>
+                  <NavigationShowcase />
+                </div>
+                <div className="border-t pt-8" data-category="search">
+                  <h3 className="text-base font-medium mb-4 text-primary">Search</h3>
+                  <SearchShowcase />
+                </div>
+              </div>
+            </AccordionContent>
           </Card>
-        </TabsContent>
+        </AccordionItem>
 
-        <TabsContent value="mutations" className="mt-6">
+        {/* Layout & Patterns */}
+        <AccordionItem value="layout">
           <Card>
-            <CardContent className="pt-6">
-              <MutationShowcase />
-            </CardContent>
+            <AccordionTrigger className="px-6 py-4 hover:no-underline">
+              <div className="flex items-center justify-between w-full">
+                <div>
+                  <h2 className="text-lg font-semibold text-left">Layout & Patterns</h2>
+                  <p className="text-sm text-muted-foreground text-left">Grid systems, containers, and layout patterns</p>
+                </div>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="px-6 pb-6">
+                <div data-category="layouts">
+                  <h3 className="text-base font-medium mb-4 text-primary">Layout Patterns</h3>
+                  <LayoutShowcase />
+                </div>
+              </div>
+            </AccordionContent>
           </Card>
-        </TabsContent>
+        </AccordionItem>
 
-        <TabsContent value="search" className="mt-6">
+        {/* Data & Content */}
+        <AccordionItem value="data">
           <Card>
-            <CardContent className="pt-6">
-              <SearchShowcase />
-            </CardContent>
+            <AccordionTrigger className="px-6 py-4 hover:no-underline">
+              <div className="flex items-center justify-between w-full">
+                <div>
+                  <h2 className="text-lg font-semibold text-left">Data & Content</h2>
+                  <p className="text-sm text-muted-foreground text-left">Tables, stats, lists, and data visualization</p>
+                </div>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="px-6 pb-6">
+                <div data-category="data-display">
+                  <h3 className="text-base font-medium mb-4 text-primary">Data Display</h3>
+                  <DataDisplayShowcase />
+                </div>
+              </div>
+            </AccordionContent>
           </Card>
-        </TabsContent>
+        </AccordionItem>
 
-        <TabsContent value="buttons" className="mt-6">
+        {/* Feedback & States */}
+        <AccordionItem value="feedback">
           <Card>
-            <CardContent className="pt-6">
-              <ButtonShowcase />
-            </CardContent>
+            <AccordionTrigger className="px-6 py-4 hover:no-underline">
+              <div className="flex items-center justify-between w-full">
+                <div>
+                  <h2 className="text-lg font-semibold text-left">Feedback & States</h2>
+                  <p className="text-sm text-muted-foreground text-left">Loading states, errors, notifications, and mutations</p>
+                </div>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="px-6 pb-6 space-y-8">
+                <div data-category="loading">
+                  <h3 className="text-base font-medium mb-4 text-primary">Loading States</h3>
+                  <LoadingShowcase />
+                </div>
+                <div className="border-t pt-8" data-category="errors">
+                  <h3 className="text-base font-medium mb-4 text-primary">Error Handling</h3>
+                  <ErrorShowcase />
+                </div>
+                <div className="border-t pt-8" data-category="notifications">
+                  <h3 className="text-base font-medium mb-4 text-primary">Notifications & Feedback</h3>
+                  <FeedbackShowcase />
+                </div>
+                <div className="border-t pt-8" data-category="mutations">
+                  <h3 className="text-base font-medium mb-4 text-primary">Mutations</h3>
+                  <MutationShowcase />
+                </div>
+              </div>
+            </AccordionContent>
           </Card>
-        </TabsContent>
-
-        <TabsContent value="cards" className="mt-6">
-          <Card>
-            <CardContent className="pt-6">
-              <CardShowcase />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="tabs" className="mt-6">
-          <Card>
-            <CardContent className="pt-6">
-              <TabsShowcase />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="typography" className="mt-6">
-          <Card>
-            <CardContent className="pt-6">
-              <TypographyShowcase />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="colors" className="mt-6">
-          <Card>
-            <CardContent className="pt-6">
-              <ColorShowcase />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="icons" className="mt-6">
-          <Card>
-            <CardContent className="pt-6">
-              <IconShowcase />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="navigation" className="mt-6">
-          <Card>
-            <CardContent className="pt-6">
-              <NavigationShowcase />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="data" className="mt-6">
-          <Card>
-            <CardContent className="pt-6">
-              <DataDisplayShowcase />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="layouts" className="mt-6">
-          <Card>
-            <CardContent className="pt-6">
-              <LayoutShowcase />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="feedback" className="mt-6">
-          <Card>
-            <CardContent className="pt-6">
-              <FeedbackShowcase />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="modals" className="mt-6">
-          <Card>
-            <CardContent className="pt-6">
-              <ModalShowcase />
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+        </AccordionItem>
+      </Accordion>
 
       {/* Documentation */}
       <Card>
