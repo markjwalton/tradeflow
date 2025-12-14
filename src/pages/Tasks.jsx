@@ -200,17 +200,28 @@ export default function Tasks() {
 
   return (
     <PullToRefresh onRefresh={refetch} enabled={true}>
-    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+    <div className="max-w-7xl mx-auto -mt-6 min-h-screen">
       <PageHeader 
         title="Tasks"
         description="Track and manage project tasks"
-      >
-        <Button onClick={() => { form.reset(); setEditingTask(null); setShowForm(true); }} className="w-full sm:w-auto">
-          <Plus className="h-4 w-4 mr-2" />
-          New Task
-        </Button>
-      </PageHeader>
+      />
 
+      <Card className="border-border mb-4">
+        <CardContent className="px-2 py-1">
+          <div className="flex gap-2">
+            <Button 
+              variant="ghost"
+              className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
+              onClick={() => { form.reset(); setEditingTask(null); setShowForm(true); }}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              New Task
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
