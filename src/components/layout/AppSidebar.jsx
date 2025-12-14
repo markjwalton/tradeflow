@@ -252,8 +252,8 @@ export function AppSidebar({ navItems = [] }) {
 
   // In icons-only mode, only show top-level items
   const itemsToRender = isIconsOnly 
-    ? navItems.filter(item => !item.parent_id)
-    : navItems;
+    ? hierarchicalNavItems.filter(item => !item.parent_id)
+    : hierarchicalNavItems;
 
   return (
     <aside
