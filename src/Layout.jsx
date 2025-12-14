@@ -196,8 +196,14 @@ export default function Layout({ children, currentPageName }) {
               loadedNavItems = loadedNavConfig.items
                 .filter(item => item.is_visible !== false) // Only include visible items
                 .map((item, idx) => {
-                  // Use slug as ID for consistency (both folders and pages)
-                  const itemId = item.slug || `item_${idx}`;
+                  // For folders, create ID from name if slug is missing
+                  let itemId;
+                  if (item.item_type === 'folder' && !item.slug) {
+                    // Generate folder ID from name if no slug
+                    itemId = 'folder_' + item.name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+                  } else {
+                    itemId = item.slug || `item_${idx}`;
+                  }
 
                   return {
                     id: itemId,
