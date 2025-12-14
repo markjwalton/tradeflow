@@ -95,40 +95,53 @@ export default function ChecklistTemplates() {
       <PageHeader 
         title="Checklist Templates"
         description="Create and manage reusable checklists"
-      >
-        <Link to={createPageUrl("ChecklistBuilder")}>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Create Checklist
-          </Button>
-        </Link>
-      </PageHeader>
+      />
 
-      <div className="flex gap-4 mb-6">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search checklists..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="All Categories" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            <SelectItem value="quality">Quality</SelectItem>
-            <SelectItem value="safety">Safety</SelectItem>
-            <SelectItem value="compliance">Compliance</SelectItem>
-            <SelectItem value="preparation">Preparation</SelectItem>
-            <SelectItem value="verification">Verification</SelectItem>
-            <SelectItem value="custom">Custom</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      {/* ActionBar Card */}
+      <Card className="border-border mb-4">
+        <CardContent className="flex items-center justify-between p-4">
+          <div className="text-sm text-muted-foreground">
+            {filteredChecklists.length} checklist{filteredChecklists.length !== 1 ? 's' : ''}
+          </div>
+          <Link to={createPageUrl("ChecklistBuilder")}>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Create Checklist
+            </Button>
+          </Link>
+        </CardContent>
+      </Card>
+
+      {/* Filters Card */}
+      <Card className="border-border mb-4">
+        <CardContent className="p-4">
+          <div className="flex gap-4">
+            <div className="relative flex-1 max-w-sm">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search checklists..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="All Categories" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="quality">Quality</SelectItem>
+                <SelectItem value="safety">Safety</SelectItem>
+                <SelectItem value="compliance">Compliance</SelectItem>
+                <SelectItem value="preparation">Preparation</SelectItem>
+                <SelectItem value="verification">Verification</SelectItem>
+                <SelectItem value="custom">Custom</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
 
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
