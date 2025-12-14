@@ -219,6 +219,10 @@ Deno.serve(async (req) => {
         try {
           const { file_path, content, message } = body;
           
+          if (!file_path || !content) {
+            return Response.json({ error: 'file_path and content required' }, { status: 400 });
+          }
+          
           // Get current file SHA (needed for updates)
           const getFileUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${file_path}`;
           const getFileResponse = await fetch(getFileUrl, { headers });
@@ -229,11 +233,16 @@ Deno.serve(async (req) => {
             sha = fileData.sha;
           }
           
+          // Base64 encode using TextEncoder (Deno-compatible)
+          const encoder = new TextEncoder();
+          const data = encoder.encode(content);
+          const base64 = btoa(String.fromCharCode(...data));
+          
           // Create or update file
           const updateUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${file_path}`;
           const updatePayload = {
             message: message || `Update ${file_path} from Base44`,
-            content: btoa(content), // Base64 encode
+            content: base64,
             ...(sha && { sha })
           };
           
