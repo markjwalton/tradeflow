@@ -46,6 +46,14 @@ export function AppSidebar({ navItems = [] }) {
   };
 
   const hierarchicalNavItems = buildHierarchy(navItems);
+  
+  // Debug logging
+  useEffect(() => {
+    if (navItems.length > 0) {
+      console.log('AppSidebar navItems:', navItems.slice(0, 5));
+      console.log('Hierarchical:', hierarchicalNavItems.slice(0, 3));
+    }
+  }, [navItems, hierarchicalNavItems]);
 
   // Initialize expanded folders based on default_collapsed setting
   useEffect(() => {
