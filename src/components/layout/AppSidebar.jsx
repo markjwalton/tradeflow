@@ -47,18 +47,8 @@ export function AppSidebar({ navItems = [] }) {
   // Debug logging
   useEffect(() => {
     if (navItems.length > 0) {
-      const folders = navItems.filter(i => i.item_type === 'folder');
-      const pages = navItems.filter(i => i.item_type === 'page');
-      
-      console.log('=== FOLDER ANALYSIS ===');
-      folders.forEach(f => {
-        console.log(`Folder ID: "${f.id}", page_url: "${f.page_url}"`);
-      });
-      
-      console.log('=== PAGE ANALYSIS ===');
-      pages.forEach(p => {
-        console.log(`Page ID: "${p.id}", page_url: "${p.page_url}", parent_id: "${p.parent_id}"`);
-      });
+      console.log('=== HIERARCHY DEBUG ===');
+      console.log('Hierarchical items:', hierarchicalNavItems);
     }
   }, [navItems, hierarchicalNavItems]);
 
