@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Eye, Code, Check, RefreshCw, FileText, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
-import PageHeader from '@/components/sturij/PageHeader';
+import { PageHeader } from '@/components/sturij/PageHeader';
 
 // Showcase Components
 import LoadingShowcase from '@/components/showcase/LoadingShowcase';
