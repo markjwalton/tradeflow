@@ -39,9 +39,6 @@ import RoadmapJournal from './pages/RoadmapJournal';
 import SprintManager from './pages/SprintManager';
 import RuleBook from './pages/RuleBook';
 import PlaygroundSummary from './pages/PlaygroundSummary';
-import PlaygroundEntity from './pages/PlaygroundEntity';
-import PlaygroundPage from './pages/PlaygroundPage';
-import PlaygroundFeature from './pages/PlaygroundFeature';
 import ConceptWorkbench from './pages/ConceptWorkbench';
 import LivePreview from './pages/LivePreview';
 import TestDataManager from './pages/TestDataManager';
@@ -113,7 +110,6 @@ import UXShowcase from './pages/UXShowcase';
 import SystemHealth from './pages/SystemHealth';
 import DeveloperDocs from './pages/DeveloperDocs';
 import SchemaVisualEditor from './pages/SchemaVisualEditor';
-import PlaygroundItem from './pages/PlaygroundItem';
 import __Layout from './Layout.jsx';
 
 
@@ -159,9 +155,6 @@ export const PAGES = {
     "SprintManager": SprintManager,
     "RuleBook": RuleBook,
     "PlaygroundSummary": PlaygroundSummary,
-    "PlaygroundEntity": PlaygroundEntity,
-    "PlaygroundPage": PlaygroundPage,
-    "PlaygroundFeature": PlaygroundFeature,
     "ConceptWorkbench": ConceptWorkbench,
     "LivePreview": LivePreview,
     "TestDataManager": TestDataManager,
@@ -233,7 +226,6 @@ export const PAGES = {
     "SystemHealth": SystemHealth,
     "DeveloperDocs": DeveloperDocs,
     "SchemaVisualEditor": SchemaVisualEditor,
-    "PlaygroundItem": PlaygroundItem,
 }
 
 export const pagesConfig = {

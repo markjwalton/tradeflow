@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,7 +18,7 @@ import {
 import { 
   Play, Search, Database, Layout, Zap, CheckCircle2, XCircle, 
   Circle, Loader2, RefreshCw, Eye, Lightbulb, ArrowRight, Edit,
-  FlaskConical, Beaker, Trash2, AlertTriangle, Plus
+  FlaskConical, Beaker, Trash2, AlertTriangle, Plus, ArrowLeft, ArrowUpCircle, Sparkles, X
 } from "lucide-react";
 import {
   AlertDialog,
@@ -35,6 +35,11 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/sturij";
+import PagePreview from "@/components/library/PagePreview";
+import PlaygroundEditor from "@/components/playground/PlaygroundEditor";
+import VersionHistory from "@/components/playground/VersionHistory";
+import PlaygroundJournalPanel from "@/components/playground/PlaygroundJournalPanel";
+import PromoteToLibraryDialog from "@/components/playground/PromoteToLibraryDialog";
 
 const statusIcons = {
   passed: <CheckCircle2 className="h-4 w-4 text-success" />,
@@ -57,6 +62,12 @@ const itemStatusColors = {
   promoted: "bg-accent-100 text-accent",
 };
 
+const complexityColors = {
+  simple: "bg-success-50 text-success",
+  medium: "bg-warning/10 text-warning",
+  complex: "bg-destructive-50 text-destructive",
+};
+
 export default function PlaygroundSummary() {
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
@@ -67,6 +78,13 @@ export default function PlaygroundSummary() {
   const [isClearing, setIsClearing] = useState(false);
   const [syncProgress, setSyncProgress] = useState({ current: 0, total: 0 });
   const [clearProgress, setClearProgress] = useState({ current: 0, total: 0 });
+  
+  // Detail view state
+  const [selectedItemId, setSelectedItemId] = useState(null);
+  const [isRunningTests, setIsRunningTests] = useState(false);
+  const [isGeneratingAI, setIsGeneratingAI] = useState(false);
+  const [showEditor, setShowEditor] = useState(false);
+  const [showPromote, setShowPromote] = useState(false);
 
   const { data: playgroundItems = [], isLoading } = useQuery({
     queryKey: ["playgroundItems"],
@@ -76,6 +94,29 @@ export default function PlaygroundSummary() {
   const { data: conceptItems = [] } = useQuery({
     queryKey: ["conceptItems"],
     queryFn: () => base44.entities.ConceptItem.list("-created_date"),
+  });
+
+  // Selected item detail queries
+  const { data: selectedItem } = useQuery({
+    queryKey: ["playgroundItem", selectedItemId],
+    queryFn: async () => {
+      if (!selectedItemId) return null;
+      const items = await base44.entities.PlaygroundItem.filter({ id: selectedItemId });
+      return items[0] || null;
+    },
+    enabled: !!selectedItemId
+  });
+
+  const { data: journalEntries = [] } = useQuery({
+    queryKey: ["playgroundJournal", selectedItemId],
+    queryFn: () => base44.entities.PlaygroundJournal.filter({ playground_item_id: selectedItemId }, "-created_date"),
+    enabled: !!selectedItemId
+  });
+
+  const { data: testDataSets = [] } = useQuery({
+    queryKey: ["testData", selectedItemId],
+    queryFn: () => base44.entities.TestData.filter({ playground_item_id: selectedItemId }),
+    enabled: !!selectedItemId
   });
 
   const { data: entityTemplates = [], isLoading: loadingEntities } = useQuery({
@@ -94,6 +135,24 @@ export default function PlaygroundSummary() {
   });
 
   const allLoading = isLoading || loadingEntities || loadingPages || loadingFeatures;
+
+  // Find template for selected item
+  const selectedTemplate = selectedItem?.source_type === "page" 
+    ? pageTemplates.find(t => t.id === selectedItem?.source_id)
+    : selectedItem?.source_type === "feature"
+    ? featureTemplates.find(t => t.id === selectedItem?.source_id)
+    : selectedItem?.source_type === "entity"
+    ? entityTemplates.find(t => t.id === selectedItem?.source_id)
+    : null;
+
+  const updateItemMutation = useMutation({
+    mutationFn: (data) => base44.entities.PlaygroundItem.update(selectedItemId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["playgroundItem", selectedItemId] });
+      queryClient.invalidateQueries({ queryKey: ["playgroundItems"] });
+      toast.success("Updated");
+    },
+  });
 
   // Helper: delay between API calls to avoid rate limits
   const delay = (ms) => new Promise(r => setTimeout(r, ms));
@@ -278,12 +337,414 @@ export default function PlaygroundSummary() {
     testsFailed: playgroundItems.filter(i => i.test_status === "failed").length,
   };
 
-  const getDetailUrl = (item) => {
-    if (item.source_type === "entity") return createPageUrl("PlaygroundEntity") + `?id=${item.id}`;
-    if (item.source_type === "page") return createPageUrl("PlaygroundPage") + `?id=${item.id}`;
-    if (item.source_type === "feature") return createPageUrl("PlaygroundFeature") + `?id=${item.id}`;
-    return "#";
+  // Detail view handlers
+  const handleSaveVersion = (newData, changeSummary) => {
+    const currentVersion = selectedItem.current_version || 1;
+    const newVersion = currentVersion + 1;
+    const versions = selectedItem.versions || [];
+    
+    if (!versions.find(v => v.version === currentVersion)) {
+      versions.push({
+        version: currentVersion,
+        data: selectedItem.working_data || selectedTemplate,
+        saved_date: new Date().toISOString(),
+        change_summary: "Initial version"
+      });
+    }
+    
+    versions.push({
+      version: newVersion,
+      data: newData,
+      saved_date: new Date().toISOString(),
+      change_summary: changeSummary
+    });
+
+    updateItemMutation.mutate({
+      working_data: newData,
+      current_version: newVersion,
+      versions: versions,
+      test_status: "pending"
+    });
+    
+    base44.entities.PlaygroundJournal.create({
+      playground_item_id: selectedItemId,
+      content: changeSummary,
+      entry_type: "version_note",
+      version_reference: newVersion,
+      entry_date: new Date().toISOString()
+    });
+    
+    setShowEditor(false);
+    toast.success(`Saved as version ${newVersion}`);
   };
+
+  const handleRevert = (version) => {
+    const versionData = selectedItem.versions?.find(v => v.version === version);
+    if (!versionData) return;
+    
+    updateItemMutation.mutate({
+      working_data: versionData.data,
+      current_version: version,
+      test_status: "pending"
+    });
+    toast.success(`Reverted to version ${version}`);
+  };
+
+  const runTests = async () => {
+    if (!selectedTemplate) return;
+    setIsRunningTests(true);
+
+    const tests = selectedItem.test_definition?.tests || [];
+    const passed = [];
+    const failed = [];
+    const errors = [];
+
+    for (const test of tests) {
+      try {
+        let result = false;
+        
+        if (selectedItem.source_type === "page") {
+          const { name, category, components, entities_used } = selectedTemplate;
+          if (test.check.includes("name")) result = name !== undefined;
+          else if (test.check.includes("category")) result = category !== undefined;
+          else if (test.check.includes("components")) result = Array.isArray(components);
+          else if (test.check.includes("entities_used")) result = Array.isArray(entities_used);
+          else if (test.check.includes("test_data")) result = testDataSets.length > 0;
+          else result = true;
+        } else if (selectedItem.source_type === "feature") {
+          const { name, description, complexity, user_stories } = selectedTemplate;
+          if (test.check.includes("name")) result = name !== undefined;
+          else if (test.check.includes("description")) result = description && description.length > 10;
+          else if (test.check.includes("complexity")) result = complexity !== undefined;
+          else if (test.check.includes("user_stories")) result = Array.isArray(user_stories) && user_stories.length > 0;
+          else if (test.check.includes("test_data")) result = testDataSets.length > 0;
+          else result = true;
+        } else if (selectedItem.source_type === "entity") {
+          const { name, schema } = selectedTemplate;
+          if (test.check.includes("name")) result = name !== undefined;
+          else if (test.check.includes("schema")) result = schema && schema.properties;
+          else if (test.check.includes("test_data")) result = testDataSets.length > 0;
+          else result = true;
+        }
+
+        if (result) passed.push(test.name);
+        else failed.push(test.name);
+      } catch (e) {
+        errors.push(`${test.name}: ${e.message}`);
+      }
+    }
+
+    const status = errors.length > 0 || failed.length > 0 ? "failed" : "passed";
+    
+    updateItemMutation.mutate({
+      test_status: status,
+      test_results: { passed, failed, errors },
+      last_test_date: new Date().toISOString()
+    });
+    
+    setIsRunningTests(false);
+  };
+
+  const generateAISuggestions = async () => {
+    if (!selectedTemplate || isGeneratingAI) return;
+    setIsGeneratingAI(true);
+
+    try {
+      let prompt = "";
+      
+      if (selectedItem.source_type === "page") {
+        prompt = `Analyze this page template and suggest improvements:
+
+Page Name: ${selectedTemplate.name}
+Description: ${selectedTemplate.description || "None"}
+Category: ${selectedTemplate.category}
+Layout: ${selectedTemplate.layout}
+Components: ${JSON.stringify(selectedTemplate.components || [], null, 2)}
+
+Provide 3-5 specific suggestions to improve this page.`;
+      } else if (selectedItem.source_type === "feature") {
+        prompt = `Analyze this feature template and suggest improvements:
+
+Feature Name: ${selectedTemplate.name}
+Description: ${selectedTemplate.description || "None"}
+Complexity: ${selectedTemplate.complexity}
+Entities Used: ${JSON.stringify(selectedTemplate.entities_used || [], null, 2)}
+
+Provide 5-7 specific suggestions to improve this feature.`;
+      } else if (selectedItem.source_type === "entity") {
+        prompt = `Analyze this entity schema and suggest improvements:
+
+Entity Name: ${selectedTemplate.name}
+Description: ${selectedTemplate.description || "None"}
+Schema: ${JSON.stringify(selectedTemplate.schema || {}, null, 2)}
+
+Provide 3-5 specific suggestions to improve this entity.`;
+      }
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: prompt + "\n\nReturn as JSON with a 'suggestions' array of strings.",
+        response_json_schema: {
+          type: "object",
+          properties: {
+            suggestions: { type: "array", items: { type: "string" } }
+          }
+        }
+      });
+
+      updateItemMutation.mutate({ ai_suggestions: result.suggestions || [] });
+      toast.success("AI suggestions generated");
+    } catch (error) {
+      if (error.message?.includes("Rate limit")) {
+        toast.error("Please wait a moment before trying again");
+      } else {
+        toast.error("Failed to generate suggestions");
+      }
+    } finally {
+      setIsGeneratingAI(false);
+    }
+  };
+
+  // If item selected, show detail view
+  if (selectedItemId && selectedItem) {
+    const statusIcon = {
+      passed: <CheckCircle2 className="h-5 w-5 text-success" />,
+      failed: <XCircle className="h-5 w-5 text-destructive" />,
+      pending: <Circle className="h-5 w-5 text-muted-foreground" />,
+    }[selectedItem.test_status];
+
+    const typeIcon = {
+      page: <Layout className="h-6 w-6 text-info" />,
+      feature: <Zap className="h-6 w-6 text-warning" />,
+      entity: <Database className="h-6 w-6 text-accent" />,
+    }[selectedItem.source_type];
+
+    const typeLabel = {
+      page: "Page",
+      feature: "Feature", 
+      entity: "Entity"
+    }[selectedItem.source_type];
+
+    return (
+      <div className="max-w-5xl mx-auto -mt-6 bg-background min-h-screen">
+        <PageHeader 
+          title={selectedItem.source_name}
+          description={`${typeLabel} Playground`}
+        >
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" onClick={() => setSelectedItemId(null)}>
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            {typeIcon}
+            <Badge variant="outline">v{selectedItem.current_version || 1}</Badge>
+            {statusIcon}
+            <Badge className={
+              selectedItem.test_status === "passed" ? "bg-success-50 text-success" :
+              selectedItem.test_status === "failed" ? "bg-destructive-50 text-destructive" :
+              "bg-muted text-muted-foreground"
+            }>
+              {selectedItem.test_status}
+            </Badge>
+          </div>
+        </PageHeader>
+
+        {/* Action Buttons */}
+        <div className="flex gap-2 mb-6">
+          <Button onClick={() => setShowEditor(true)}>
+            <Edit className="h-4 w-4 mr-2" />
+            Edit
+          </Button>
+          <Button variant="outline" onClick={runTests} disabled={isRunningTests}>
+            {isRunningTests ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Play className="h-4 w-4 mr-2" />}
+            Run Tests
+          </Button>
+          <Button 
+            variant="outline" 
+            className="text-success border-success/30 hover:bg-success-50"
+            onClick={() => setShowPromote(true)}
+            disabled={selectedItem.test_status !== "passed"}
+          >
+            <ArrowUpCircle className="h-4 w-4 mr-2" />
+            Promote to Library
+          </Button>
+        </div>
+
+        {/* Preview/Summary Section */}
+        {selectedTemplate && selectedItem.source_type === "page" && (
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Eye className="h-5 w-5" />
+                Page Preview
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <PagePreview page={selectedTemplate} />
+            </CardContent>
+          </Card>
+        )}
+
+        {selectedTemplate && selectedItem.source_type === "feature" && (
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                Feature Summary
+                <Badge className={complexityColors[selectedTemplate.complexity || "medium"]}>
+                  {selectedTemplate.complexity || "medium"} complexity
+                </Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground mb-4">{selectedTemplate.description}</p>
+              <div className="grid grid-cols-2 gap-4">
+                {selectedTemplate.entities_used?.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium text-muted-foreground mb-2">Entities Used</h4>
+                    <div className="flex flex-wrap gap-1">
+                      {selectedTemplate.entities_used.map(e => (
+                        <Badge key={e} variant="outline">{e}</Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {selectedTemplate && selectedItem.source_type === "entity" && (
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="text-lg">Entity Schema</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground mb-4">{selectedTemplate.description}</p>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <h4 className="text-sm font-medium text-muted-foreground mb-2">Fields</h4>
+                  <div className="space-y-1">
+                    {Object.keys(selectedTemplate.schema?.properties || {}).map(field => (
+                      <Badge key={field} variant="outline">{field}</Badge>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        <div className="grid grid-cols-3 gap-6">
+          <Card className="col-span-2">
+            <CardHeader>
+              <CardTitle className="text-lg">Details</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {selectedTemplate ? (
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="text-sm font-medium text-muted-foreground mb-1">Description</h4>
+                    <p className="text-sm">{selectedTemplate.description || "No description"}</p>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-muted-foreground">Template not found</p>
+              )}
+            </CardContent>
+          </Card>
+
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Unit Tests</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {selectedItem.test_definition?.tests?.map((test, i) => {
+                    const isPassed = selectedItem.test_results?.passed?.includes(test.name);
+                    const isFailed = selectedItem.test_results?.failed?.includes(test.name);
+                    return (
+                      <div 
+                        key={i} 
+                        className={`flex items-center justify-between p-2 rounded ${
+                          isPassed ? "bg-success-50" : isFailed ? "bg-destructive-50" : "bg-muted"
+                        }`}
+                      >
+                        <span className="text-sm">{test.name}</span>
+                        {isPassed && <CheckCircle2 className="h-4 w-4 text-success" />}
+                        {isFailed && <XCircle className="h-4 w-4 text-destructive" />}
+                        {!isPassed && !isFailed && <Circle className="h-4 w-4 text-muted-foreground" />}
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+
+            <VersionHistory 
+              versions={selectedItem.versions || []}
+              currentVersion={selectedItem.current_version || 1}
+              onRevert={handleRevert}
+            />
+          </div>
+        </div>
+
+        <div className="mt-6">
+          <PlaygroundJournalPanel 
+            playgroundItemId={selectedItemId} 
+            currentVersion={selectedItem.current_version || 1}
+          />
+        </div>
+
+        <Card className="mt-6">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-accent" />
+              AI Suggestions
+            </CardTitle>
+            <Button onClick={generateAISuggestions} disabled={isGeneratingAI} variant="outline">
+              {isGeneratingAI ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
+              Generate Suggestions
+            </Button>
+          </CardHeader>
+          <CardContent>
+            {selectedItem.ai_suggestions?.length > 0 ? (
+              <ul className="space-y-2">
+                {selectedItem.ai_suggestions.map((suggestion, i) => (
+                  <li key={i} className="flex items-start gap-2 p-3 bg-accent-100 rounded-lg">
+                    <span className="text-accent font-bold">{i + 1}.</span>
+                    <span className="text-sm">{suggestion}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-muted-foreground text-center py-4">No suggestions yet</p>
+            )}
+          </CardContent>
+        </Card>
+
+        {showEditor && (
+          <PlaygroundEditor
+            item={selectedItem}
+            template={selectedTemplate}
+            workingData={selectedItem.working_data}
+            onSave={handleSaveVersion}
+            onClose={() => setShowEditor(false)}
+            type={selectedItem.source_type}
+          />
+        )}
+
+        {showPromote && (
+          <PromoteToLibraryDialog
+            item={selectedItem}
+            template={selectedTemplate}
+            workingData={selectedItem.working_data}
+            journalEntries={journalEntries}
+            onClose={() => setShowPromote(false)}
+            type={selectedItem.source_type}
+          />
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto -mt-6 min-h-screen">
@@ -456,18 +917,16 @@ export default function PlaygroundSummary() {
                 ) : (
                   <div className="space-y-2">
                     {activeItems.slice(0, 5).map(item => (
-                      <Link key={item.id} to={getDetailUrl(item)}>
-                        <div className="flex items-center justify-between p-2 rounded hover:bg-muted">
-                          <div className="flex items-center gap-2">
-                            {typeIcons[item.source_type]}
-                            <span className="font-medium">{item.source_name}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Badge className={itemStatusColors[item.status]}>{item.status}</Badge>
-                            {statusIcons[item.test_status]}
-                          </div>
+                      <div key={item.id} onClick={() => setSelectedItemId(item.id)} className="flex items-center justify-between p-2 rounded hover:bg-muted cursor-pointer">
+                        <div className="flex items-center gap-2">
+                          {typeIcons[item.source_type]}
+                          <span className="font-medium">{item.source_name}</span>
                         </div>
-                      </Link>
+                        <div className="flex items-center gap-2">
+                          <Badge className={itemStatusColors[item.status]}>{item.status}</Badge>
+                          {statusIcons[item.test_status]}
+                        </div>
+                      </div>
                     ))}
                     {activeItems.length > 5 && (
                       <p className="text-sm text-muted-foreground text-center">+{activeItems.length - 5} more</p>
@@ -608,7 +1067,7 @@ export default function PlaygroundSummary() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filteredItems.map(item => (
-                    <Card key={item.id} className="hover:shadow-md transition-shadow">
+                    <Card key={item.id} className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setSelectedItemId(item.id)}>
                       <CardHeader className="pb-2">
                         <div className="flex items-start justify-between">
                           <CardTitle className="text-base flex items-center gap-2">
@@ -626,12 +1085,10 @@ export default function PlaygroundSummary() {
                           <span>v{item.current_version || 1}</span>
                           {item.group && <Badge variant="outline">{item.group}</Badge>}
                         </div>
-                        <Link to={getDetailUrl(item)}>
-                          <Button size="sm" variant="outline" className="w-full">
-                            <Eye className="h-3 w-3 mr-2" />
-                            Open
-                          </Button>
-                        </Link>
+                        <Button size="sm" variant="outline" className="w-full">
+                          <Eye className="h-3 w-3 mr-2" />
+                          Open
+                        </Button>
                       </CardContent>
                     </Card>
                   ))}
@@ -664,33 +1121,33 @@ export default function PlaygroundSummary() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {conceptItems.map(concept => (
-                    <Card key={concept.id} className="hover:shadow-md transition-shadow border-warning/20">
-                      <CardHeader className="pb-2">
-                        <div className="flex items-start justify-between">
-                          <CardTitle className="text-base flex items-center gap-2">
-                            {typeIcons[concept.item_type]}
-                            {concept.name}
-                          </CardTitle>
-                          <Badge variant="outline">{concept.status}</Badge>
-                        </div>
-                        <p className="text-sm text-muted-foreground">{concept.description}</p>
-                      </CardHeader>
-                      <CardContent className="pt-0">
-                        <div className="flex items-center gap-2 mb-3">
-                          {statusIcons[concept.test_status]}
-                          <span className="text-xs text-muted-foreground">
-                            {concept.test_status === "passed" ? "Tests passed" : 
-                             concept.test_status === "failed" ? "Tests failed" : "Not tested"}
-                          </span>
-                        </div>
-                        <Link to={createPageUrl("ConceptWorkbench") + `?id=${concept.id}`}>
+                    <Link key={concept.id} to={createPageUrl("ConceptWorkbench") + `?id=${concept.id}`}>
+                      <Card className="hover:shadow-md transition-shadow border-warning/20">
+                        <CardHeader className="pb-2">
+                          <div className="flex items-start justify-between">
+                            <CardTitle className="text-base flex items-center gap-2">
+                              {typeIcons[concept.item_type]}
+                              {concept.name}
+                            </CardTitle>
+                            <Badge variant="outline">{concept.status}</Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground">{concept.description}</p>
+                        </CardHeader>
+                        <CardContent className="pt-0">
+                          <div className="flex items-center gap-2 mb-3">
+                            {statusIcons[concept.test_status]}
+                            <span className="text-xs text-muted-foreground">
+                              {concept.test_status === "passed" ? "Tests passed" : 
+                               concept.test_status === "failed" ? "Tests failed" : "Not tested"}
+                            </span>
+                          </div>
                           <Button size="sm" variant="outline" className="w-full">
                             <Edit className="h-3 w-3 mr-2" />
                             Edit Concept
                           </Button>
-                        </Link>
-                      </CardContent>
-                    </Card>
+                        </CardContent>
+                      </Card>
+                    </Link>
                   ))}
                 </div>
               )}
