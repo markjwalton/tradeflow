@@ -93,6 +93,36 @@ export default function Library() {
     queryFn: () => base44.entities.FeatureTemplate.list(),
   });
 
+  const { data: communityItems = [], isLoading: loadingCommunity } = useQuery({
+    queryKey: ["communityLibraryItems"],
+    queryFn: () => base44.entities.CommunityLibraryItem.list(),
+    enabled: activeSection === "community"
+  });
+
+  const { data: formTemplates = [], isLoading: loadingForms } = useQuery({
+    queryKey: ["formTemplates"],
+    queryFn: () => base44.entities.FormTemplate.list(),
+    enabled: activeSection === "forms"
+  });
+
+  const { data: checklistTemplates = [], isLoading: loadingChecklists } = useQuery({
+    queryKey: ["checklistTemplates"],
+    queryFn: () => base44.entities.ChecklistTemplate.list(),
+    enabled: activeSection === "forms"
+  });
+
+  const { data: businessTemplates = [], isLoading: loadingBusiness } = useQuery({
+    queryKey: ["businessTemplates"],
+    queryFn: () => base44.entities.BusinessTemplate.list(),
+    enabled: activeSection === "business"
+  });
+
+  const { data: workflows = [], isLoading: loadingWorkflows } = useQuery({
+    queryKey: ["workflows"],
+    queryFn: () => base44.entities.Workflow.list(),
+    enabled: activeSection === "workflows"
+  });
+
   const { data: projects = [] } = useQuery({
     queryKey: ["customProjects"],
     queryFn: () => base44.entities.CustomProject.list(),
