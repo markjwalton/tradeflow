@@ -242,7 +242,7 @@ export default function DeveloperDocs() {
   }, {});
 
   return (
-    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+    <div className="max-w-7xl mx-auto -mt-6">
       <PageHeader 
         title="Developer Documentation"
         description="Comprehensive guides for building with Base44"
