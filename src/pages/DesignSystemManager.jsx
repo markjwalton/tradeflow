@@ -256,7 +256,7 @@ For each recommendation, provide:
   };
 
   return (
-    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+    <div className="max-w-4xl mx-auto min-h-screen -mt-6">
       <PageHeader 
         title="Design System Manager"
         description="Version control, package distribution, and AI-assisted updates"
@@ -290,32 +290,6 @@ For each recommendation, provide:
         </div>
       </PageHeader>
 
-      {/* Alert for pending recommendations */}
-      {pendingRecs.length > 0 && (
-        <Card className="mb-6 border-warning/30 bg-warning/5">
-          <CardContent className="py-4">
-            <div className="flex items-center gap-3">
-              <AlertCircle className="h-5 w-5 text-warning" />
-              <div className="flex-1">
-                <p className="font-medium text-foreground">
-                  {pendingRecs.length} update recommendations pending review
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  AI has identified improvements for your design system
-                </p>
-              </div>
-              <Button 
-                size="sm" 
-                variant="outline"
-                onClick={() => setActiveTab("recommendations")}
-              >
-                Review Now
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-0">
         <TabsList className="mb-4">
           <TabsTrigger value="packages">
@@ -343,9 +317,33 @@ For each recommendation, provide:
 
         {/* Packages Tab */}
         <TabsContent value="packages" className="mt-4">
-          {/* Core Packages */}
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold">
+            {pendingRecs.length > 0 && (
+              <Card className="border-warning/30 bg-warning/5">
+                <CardContent className="py-4">
+                  <div className="flex items-center gap-3">
+                    <AlertCircle className="h-5 w-5 text-warning" />
+                    <div className="flex-1">
+                      <p className="font-medium text-foreground">
+                        {pendingRecs.length} update recommendations pending review
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        AI has identified improvements for your design system
+                      </p>
+                    </div>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => setActiveTab("recommendations")}
+                    >
+                      Review Now
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            <h2 className="text-h3">
               Core Packages
             </h2>
             <div className="space-y-4">
@@ -409,14 +407,13 @@ For each recommendation, provide:
                 </Card>
               )}
             </div>
-          </div>
 
-          {/* Customer Theme Packages */}
-          {customerPackages.length > 0 && (
-            <div className="space-y-4">
-              <h2 className="text-h4">
-                Customer Theme Packages
-              </h2>
+            {/* Customer Theme Packages */}
+            {customerPackages.length > 0 && (
+              <>
+                <h2 className="text-h3">
+                  Customer Theme Packages
+                </h2>
               <div className="space-y-4">
                 {customerPackages.map(pkg => (
                   <Card key={pkg.id} className="border-border">
@@ -481,26 +478,27 @@ For each recommendation, provide:
                     </CardContent>
                   </Card>
                 ))}
-              </div>
-            </div>
-          )}
+              </>
+            )}
+          </div>
         </TabsContent>
 
         {/* Components Tab */}
         <TabsContent value="components" className="mt-4">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-h4">
-              Component Library
-            </h2>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-h3">
+                Component Library
+              </h2>
             <Link to={createPageUrl("ComponentShowcase")}>
               <Button variant="outline">
                 <Eye className="h-4 w-4 mr-2" />
                 View Showcase
               </Button>
             </Link>
-          </div>
+            </div>
 
-          {components.length === 0 ? (
+            {components.length === 0 ? (
             <Card className="border-border">
               <CardContent className="py-12 text-center">
                 <FileCode className="h-12 w-12 mx-auto mb-4 opacity-50" />
@@ -541,10 +539,11 @@ For each recommendation, provide:
 
         {/* Recommendations Tab */}
         <TabsContent value="recommendations" className="mt-4">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-h4">
-              AI Update Recommendations
-            </h2>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-h3">
+                AI Update Recommendations
+              </h2>
             <Button 
               onClick={analyzePackageUpdates}
               disabled={isAnalyzing}
@@ -556,9 +555,9 @@ For each recommendation, provide:
               )}
               Run Analysis
             </Button>
-          </div>
+            </div>
 
-          {recommendations.length === 0 ? (
+            {recommendations.length === 0 ? (
             <Card className="border-border">
               <CardContent className="py-12 text-center">
                 <Sparkles className="h-12 w-12 mx-auto mb-4 opacity-50" />
