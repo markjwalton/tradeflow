@@ -4,8 +4,42 @@ import { createPageUrl } from "@/utils";
 import { cn } from "@/lib/utils";
 import { findBreadcrumbTrail } from "./findBreadcrumbTrail";
 
-export function AppBreadcrumb({ organizedNavigation = [], currentPageName }) {
-  const trail = findBreadcrumbTrail(organizedNavigation, currentPageName);
+export function AppBreadcrumb({ navItems = [], organizedNavigation = [], currentPageName }) {
+  // Build hierarchy if we received flat navItems instead of organized structure
+  const buildHierarchy = (items) => {
+    if (!items || items.length === 0) return [];
+    
+    const normalizedItems = items.map(item => {
+      const itemId = item.id || item._id;
+      return {
+        ...item,
+        id: itemId,
+        _id: itemId,
+        parent_id: item.parent_id || null,
+        children: []
+      };
+    });
+    
+    const itemsMap = new Map();
+    normalizedItems.forEach((item) => {
+      itemsMap.set(item.id, item);
+    });
+    
+    const rootItems = [];
+    normalizedItems.forEach((item) => {
+      if (item.parent_id && itemsMap.has(item.parent_id)) {
+        const parent = itemsMap.get(item.parent_id);
+        parent.children.push(item);
+      } else {
+        rootItems.push(item);
+      }
+    });
+    
+    return rootItems;
+  };
+
+  const hierarchicalItems = organizedNavigation.length > 0 ? organizedNavigation : buildHierarchy(navItems);
+  const trail = findBreadcrumbTrail(hierarchicalItems, currentPageName);
 
   const crumbs = trail.map((item, index) => {
     const isLast = index === trail.length - 1;
