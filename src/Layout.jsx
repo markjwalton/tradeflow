@@ -206,6 +206,13 @@ export default function Layout({ children, currentPageName }) {
                   parent_id: item.parent_id,
                   default_collapsed: item.default_collapsed,
                 }));
+
+              // Debug what we're passing to AppSidebar
+              console.log('=== Layout.jsx navItems Debug ===');
+              console.log('Total items after filter/map:', loadedNavItems.length);
+              console.log('Items with parent_id:', loadedNavItems.filter(i => i.parent_id).length);
+              console.log('First 5 items:', loadedNavItems.slice(0, 5));
+
               setNavItems(loadedNavItems);
             }
           }
