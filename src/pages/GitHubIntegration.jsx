@@ -148,6 +148,21 @@ export default function GitHubIntegration() {
     }
   };
 
+  const handleSync = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      // Pull latest commits
+      await handleGetCommits(false);
+      // Could add push functionality here if needed
+      setError(null);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen p-6 bg-background">
       <div className="max-w-6xl mx-auto space-y-6">
@@ -209,6 +224,13 @@ export default function GitHubIntegration() {
             </CardContent>
           </Card>
         )}
+
+        <div className="flex justify-end mb-4">
+          <Button onClick={handleSync} disabled={loading} className="gap-2">
+            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+            Sync from GitHub
+          </Button>
+        </div>
 
         <Tabs defaultValue="files" className="w-full">
           <TabsList className="grid w-full grid-cols-4">

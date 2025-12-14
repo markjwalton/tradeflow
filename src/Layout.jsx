@@ -20,7 +20,7 @@ import { PageSettingsPanel } from "@/components/page-builder/PageSettingsPanel";
 import { PageUIPanel } from "@/components/design-assistant/PageUIPanel";
 import { LiveEditWrapper } from "@/components/page-builder/LiveEditWrapper";
 import { TopEditorPanel } from "@/components/page-builder/TopEditorPanel";
-import { Palette } from "lucide-react";
+import { Palette, GitBranch } from "lucide-react";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { WebVitals } from "@/components/common/WebVitals";
 import { initializeSentry, setUserContext } from "@/components/common/sentryConfig";
@@ -522,6 +522,32 @@ export default function Layout({ children, currentPageName }) {
               title="Toggle Editor Panel"
             >
               {editorPanelOpen ? "✕" : <Palette className="h-6 w-6" />}
+            </Button>
+          )}
+
+          {/* Git Sync bubble button */}
+          {showEditorBubble && (
+            <Button
+              onClick={async () => {
+                try {
+                  await base44.functions.invoke('githubApi', {
+                    action: 'get_commits',
+                    page: 1,
+                    per_page: 10
+                  });
+                  window.dispatchEvent(new CustomEvent('show-toast', { 
+                    detail: { message: 'Synced from GitHub', type: 'success' } 
+                  }));
+                } catch (e) {
+                  window.dispatchEvent(new CustomEvent('show-toast', { 
+                    detail: { message: 'Sync failed: ' + e.message, type: 'error' } 
+                  }));
+                }
+              }}
+              className="fixed bottom-6 left-24 h-14 w-14 rounded-full shadow-2xl bg-primary text-white hover:bg-primary/90 border-2 border-white z-[60]"
+              title="Sync from GitHub"
+            >
+              <GitBranch className="h-6 w-6" />
             </Button>
           )}
         </SidebarProvider>
