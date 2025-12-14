@@ -3,10 +3,10 @@
 
 const pagesConfig = {
   pages: [],
-  routes: [],
-  metadata: [],
+  routes: {},
+  metadata: {},
   navigationItems: [],
-  pageComponents: []
+  pageComponents: {}
 };
 
 export { pagesConfig };
