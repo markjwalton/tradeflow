@@ -84,31 +84,22 @@ export default function IconShowcase() {
             </div>
             <div className="space-y-2">
               <Label>Color</Label>
-              <div className="flex gap-2">
-                <Select value={iconColor} onValueChange={setIconColor}>
-                  <SelectTrigger className="flex-1">
-                    <SelectValue placeholder="Select color..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {DESIGN_TOKEN_COLORS.map((color) => (
-                      <SelectItem key={color.value} value={color.value}>
-                        <div className="flex items-center gap-2">
-                          <div 
-                            className="w-4 h-4 rounded border" 
-                            style={{ backgroundColor: color.hex }}
-                          />
-                          {color.label}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Input
-                  value={iconColor}
-                  onChange={(e) => setIconColor(e.target.value)}
-                  placeholder="Custom..."
-                  className="font-mono w-32"
-                />
+              <Input
+                value={iconColor}
+                onChange={(e) => setIconColor(e.target.value)}
+                placeholder="Color value..."
+                className="font-mono"
+              />
+              <div className="flex gap-2 flex-wrap">
+                {DESIGN_TOKEN_COLORS.map((color) => (
+                  <button
+                    key={color.value}
+                    onClick={() => setIconColor(color.value)}
+                    className="w-8 h-8 rounded border-2 hover:scale-110 transition-transform"
+                    style={{ backgroundColor: color.hex }}
+                    title={color.label}
+                  />
+                ))}
               </div>
             </div>
           </div>
