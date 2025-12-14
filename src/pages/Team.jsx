@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/select";
 import { Plus, Search, Pencil, Trash2, Mail, Phone, Calendar } from "lucide-react";
 import { toast } from "sonner";
+import { PageHeader } from "@/components/sturij";
 
 const availabilityColors = {
   available: "bg-success-50 text-success",
@@ -139,14 +140,16 @@ export default function Team() {
   }
 
   return (
-    <div className="p-3 sm:p-4 md:p-6 bg-background min-h-screen">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-light font-display text-foreground">Team</h1>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Team"
+        description="Manage team members and availability"
+      >
         <Button onClick={() => { form.reset(); setEditingMember(null); setShowForm(true); }} className="w-full sm:w-auto">
           <Plus className="h-4 w-4 mr-2" />
           Add Team Member
         </Button>
-      </div>
+      </PageHeader>
 
       <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-6">
         <div className="relative flex-1">

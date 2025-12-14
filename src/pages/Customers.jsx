@@ -31,6 +31,7 @@ import {
 import { Plus, Search, Pencil, Trash2, Mail, Phone, Building2 } from "lucide-react";
 import { toast } from "sonner";
 import { PullToRefresh } from "@/components/common/PullToRefresh";
+import { PageHeader } from "@/components/sturij";
 
 const statusColors = {
   lead: "bg-warning/10 text-warning",
@@ -143,14 +144,16 @@ export default function Customers() {
 
   return (
     <PullToRefresh onRefresh={refetch} enabled={true}>
-    <div className="p-3 sm:p-4 md:p-6 bg-background min-h-screen">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-light font-display text-foreground">Customers</h1>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Customers"
+        description="Manage your customer database"
+      >
         <Button onClick={() => { form.reset(); setEditingCustomer(null); setShowForm(true); }} className="w-full sm:w-auto">
           <Plus className="h-4 w-4 mr-2" />
           New Customer
         </Button>
-      </div>
+      </PageHeader>
 
       <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-6">
         <div className="relative flex-1">

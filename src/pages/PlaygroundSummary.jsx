@@ -33,6 +33,7 @@ import {
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
+import { PageHeader } from "@/components/sturij";
 
 const statusIcons = {
   passed: <CheckCircle2 className="h-4 w-4 text-success" />,
@@ -284,15 +285,11 @@ export default function PlaygroundSummary() {
   };
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
-            <FlaskConical className="h-6 w-6 text-primary" />
-            Development Playground
-          </h1>
-          <p className="text-muted-foreground">Test, modify, and validate templates before deployment</p>
-        </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Development Playground"
+        description="Test, modify, and validate templates before deployment"
+      >
         <div className="flex gap-2">
           <Link to={createPageUrl("LivePreview")}>
             <Button variant="outline">
@@ -355,7 +352,7 @@ export default function PlaygroundSummary() {
             </Button>
           </Link>
         </div>
-      </div>
+      </PageHeader>
 
       {/* Progress Banner */}
       {(isSyncing || isClearing) && (syncProgress.total > 0 || clearProgress.total > 0) && (

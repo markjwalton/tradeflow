@@ -26,6 +26,7 @@ import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { format } from "date-fns";
+import { PageHeader } from "@/components/sturij";
 
 const statusColors = {
   draft: "bg-muted text-muted-foreground",
@@ -164,15 +165,16 @@ export default function ProjectDetail() {
   const taskProgress = tasks.length > 0 ? (completedTasks / tasks.length) * 100 : 0;
 
   return (
-    <div className="p-3 sm:p-4 md:p-6 bg-background min-h-screen">
-      <div className="flex items-center gap-2 sm:gap-4 mb-4 sm:mb-6">
-        <Button variant="ghost" size="icon" asChild><Link to={createPageUrl("Projects")}><ArrowLeft className="h-4 w-4" /></Link></Button>
-        <div className="flex-1 min-w-0">
-          <h1 className="text-lg sm:text-2xl font-light font-display text-foreground truncate">{project.name}</h1>
-          <p className="text-xs sm:text-sm text-muted-foreground truncate">Customer: {getCustomerName(project.customer_id)}</p>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title={project.name}
+        description={`Customer: ${getCustomerName(project.customer_id)}`}
+      >
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" asChild><Link to={createPageUrl("Projects")}><ArrowLeft className="h-4 w-4" /></Link></Button>
+          <Badge className={statusColors[project.status]}>{project.status}</Badge>
         </div>
-        <Badge className={statusColors[project.status]}>{project.status}</Badge>
-      </div>
+      </PageHeader>
 
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
         <Card className="border-border bg-card">
