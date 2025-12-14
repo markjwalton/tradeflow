@@ -508,9 +508,9 @@ For each recommendation, provide:
                 </p>
               </CardContent>
             </Card>
-          ) : (
-            <div className="space-y-3">
-              {components.map(comp => (
+            ) : (
+              <div className="space-y-3">
+                {components.map(comp => (
                 <Card key={comp.id} className="border-border">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-base text-foreground">
@@ -533,8 +533,9 @@ For each recommendation, provide:
                   </CardContent>
                 </Card>
               ))}
-            </div>
-          )}
+              </div>
+            )}
+          </div>
         </TabsContent>
 
         {/* Recommendations Tab */}
@@ -567,9 +568,9 @@ For each recommendation, provide:
                 </p>
               </CardContent>
             </Card>
-          ) : (
-            <div className="space-y-3">
-              {recommendations.map(rec => (
+            ) : (
+              <div className="space-y-3">
+                {recommendations.map(rec => (
                 <Card 
                   key={rec.id}
                   className={rec.status === "accepted" ? "opacity-60 border-border" : "border-border"}
@@ -687,8 +688,9 @@ For each recommendation, provide:
                   </CardContent>
                 </Card>
               ))}
-            </div>
-          )}
+              </div>
+            )}
+          </div>
         </TabsContent>
 
         {/* Customers Tab */}
