@@ -734,12 +734,12 @@ Return a JSON object with: name, description, category (one of: ${featureCategor
                   const type = activeTab === "entities" ? "entity" : activeTab === "pages" ? "page" : "feature";
                   navigate(createPageUrl("LibraryItemBuilder") + `?type=${type}` + (selectedProjectId ? `&project=${selectedProjectId}` : ""));
                 } else if (activeSection === "forms") {
-                  if (activeTab === "forms") navigate(createPageUrl("FormBuilder"));
-                  else navigate(createPageUrl("ChecklistBuilder"));
+                  const type = activeTab === "forms" ? "form" : "checklist";
+                  navigate(createPageUrl("LibraryItemBuilder") + `?type=${type}`);
                 } else if (activeSection === "business") {
-                  navigate(createPageUrl("BusinessTemplates") + "?mode=new");
+                  navigate(createPageUrl("LibraryItemBuilder") + "?type=business");
                 } else if (activeSection === "workflows") {
-                  navigate(createPageUrl("WorkflowDesigner"));
+                  navigate(createPageUrl("LibraryItemBuilder") + "?type=workflow");
                 }
               }}
             >
