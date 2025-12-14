@@ -25,6 +25,7 @@ import { format } from "date-fns";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import ThemeTokenEditor from "@/components/design-system/ThemeTokenEditor";
+import { PageHeader } from "@/components/sturij";
 
 export default function PackageDetail() {
   const navigate = useNavigate();
@@ -147,30 +148,18 @@ export default function PackageDetail() {
   };
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-4">
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title={pkg.package_name}
+        description={<code className="text-sm">{pkg.package_code}</code>}
+      >
+        <div className="flex gap-2">
           <Link to={createPageUrl("DesignSystemManager")}>
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="h-4 w-4" />
+            <Button variant="outline">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back
             </Button>
           </Link>
-          <div>
-            <div className="flex items-center gap-2">
-              <Package className="h-6 w-6 text-primary" />
-              <h1 className="text-2xl font-heading text-foreground">
-                {pkg.package_name}
-              </h1>
-              <Badge className={statusColors[pkg.status]}>{pkg.status}</Badge>
-              <Badge variant="outline">v{pkg.version}</Badge>
-            </div>
-            <p className="text-muted-foreground mt-1">
-              <code className="text-sm">{pkg.package_code}</code>
-            </p>
-          </div>
-        </div>
-        <div className="flex gap-2">
           {pkg.status === "draft" && (
             <Button 
               onClick={handlePublish}
@@ -193,10 +182,10 @@ export default function PackageDetail() {
             </Button>
           </Link>
         </div>
-      </div>
+      </PageHeader>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-0">
+        <TabsList className="mb-4">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="tokens">Design Tokens</TabsTrigger>
           <TabsTrigger value="versions">Version History</TabsTrigger>
@@ -204,8 +193,8 @@ export default function PackageDetail() {
         </TabsList>
 
         {/* Overview Tab */}
-        <TabsContent value="overview" className="space-y-4">
-          <div className="grid md:grid-cols-2 gap-4">
+        <TabsContent value="overview" className="mt-4">
+          <div className="space-y-4">
             {/* Package Info */}
             <Card className="border-border">
               <CardHeader>
@@ -267,10 +256,9 @@ export default function PackageDetail() {
               </CardContent>
             </Card>
 
-            {/* Parent Package / Customer Info */}
-            <div className="space-y-4">
-              {parentPkg && (
-                <Card className="border-border">
+            {/* Parent Package */}
+            {parentPkg && (
+              <Card className="border-border">
                   <CardHeader>
                     <CardTitle className="text-foreground flex items-center gap-2">
                       <GitBranch className="h-4 w-4" />
@@ -292,11 +280,11 @@ export default function PackageDetail() {
                       </div>
                     )}
                   </CardContent>
-                </Card>
-              )}
+              </Card>
+            )}
 
-              {pkg.package_type === "customer_theme" && (
-                <Card className="border-border">
+            {pkg.package_type === "customer_theme" && (
+              <Card className="border-border">
                   <CardHeader>
                     <CardTitle className="text-foreground flex items-center gap-2">
                       <Building2 className="h-4 w-4" />
@@ -317,11 +305,11 @@ export default function PackageDetail() {
                       <p className="text-foreground">{pkg.customer_email || "Not set"}</p>
                     </div>
                   </CardContent>
-                </Card>
-              )}
+              </Card>
+            )}
 
-              {/* Token Summary */}
-              <Card className="border-border">
+            {/* Token Summary */}
+            <Card className="border-border">
                 <CardHeader>
                   <CardTitle className="text-midnight-900">Token Summary</CardTitle>
                 </CardHeader>
@@ -356,9 +344,8 @@ export default function PackageDetail() {
                       <p className="text-xs text-muted-foreground">Effects</p>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
+              </CardContent>
+            </Card>
           </div>
         </TabsContent>
 

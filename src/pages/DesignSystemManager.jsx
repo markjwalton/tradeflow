@@ -316,8 +316,8 @@ For each recommendation, provide:
         </Card>
       )}
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-0">
+        <TabsList className="mb-4">
           <TabsTrigger value="packages">
             <Package className="h-4 w-4 mr-2" />
             Packages ({packages.length})
@@ -342,15 +342,15 @@ For each recommendation, provide:
         </TabsList>
 
         {/* Packages Tab */}
-        <TabsContent value="packages" className="space-y-4">
+        <TabsContent value="packages" className="mt-4">
           {/* Core Packages */}
-          <div>
-            <h2 className="text-lg font-semibold mb-3">
+          <div className="space-y-4">
+            <h2 className="text-lg font-semibold">
               Core Packages
             </h2>
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="space-y-4">
               {corePackages.map(pkg => (
-                <Card key={pkg.id}>
+                <Card key={pkg.id} className="border-border">
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div>
@@ -395,7 +395,7 @@ For each recommendation, provide:
                 </Card>
               ))}
               {corePackages.length === 0 && (
-                <Card className="border-dashed md:col-span-2">
+                <Card className="border-dashed border-border">
                   <CardContent className="py-12 text-center">
                     <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p className="text-muted-foreground">No core packages yet</p>
@@ -413,13 +413,13 @@ For each recommendation, provide:
 
           {/* Customer Theme Packages */}
           {customerPackages.length > 0 && (
-            <div>
-              <h2 className="text-h4 mb-3">
+            <div className="space-y-4">
+              <h2 className="text-h4">
                 Customer Theme Packages
               </h2>
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-4">
                 {customerPackages.map(pkg => (
-                  <Card key={pkg.id}>
+                  <Card key={pkg.id} className="border-border">
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div>
@@ -487,7 +487,7 @@ For each recommendation, provide:
         </TabsContent>
 
         {/* Components Tab */}
-        <TabsContent value="components" className="space-y-4">
+        <TabsContent value="components" className="mt-4">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-h4">
               Component Library
@@ -501,7 +501,7 @@ For each recommendation, provide:
           </div>
 
           {components.length === 0 ? (
-            <Card>
+            <Card className="border-border">
               <CardContent className="py-12 text-center">
                 <FileCode className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p className="text-muted-foreground">No component specifications yet</p>
@@ -511,9 +511,9 @@ For each recommendation, provide:
               </CardContent>
             </Card>
           ) : (
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="space-y-3">
               {components.map(comp => (
-                <Card key={comp.id}>
+                <Card key={comp.id} className="border-border">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-base text-foreground">
                       {comp.component_name}
@@ -540,7 +540,7 @@ For each recommendation, provide:
         </TabsContent>
 
         {/* Recommendations Tab */}
-        <TabsContent value="recommendations" className="space-y-4">
+        <TabsContent value="recommendations" className="mt-4">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-h4">
               AI Update Recommendations
@@ -559,7 +559,7 @@ For each recommendation, provide:
           </div>
 
           {recommendations.length === 0 ? (
-            <Card>
+            <Card className="border-border">
               <CardContent className="py-12 text-center">
                 <Sparkles className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p className="text-muted-foreground">No recommendations yet</p>
@@ -573,7 +573,7 @@ For each recommendation, provide:
               {recommendations.map(rec => (
                 <Card 
                   key={rec.id}
-                  className={rec.status === "accepted" ? "opacity-60" : ""}
+                  className={rec.status === "accepted" ? "opacity-60 border-border" : "border-border"}
                 >
                   <CardHeader>
                     <div className="flex items-start justify-between">
@@ -693,10 +693,10 @@ For each recommendation, provide:
         </TabsContent>
 
         {/* Customers Tab */}
-        <TabsContent value="customers" className="space-y-4">
-          <div className="grid md:grid-cols-2 gap-4">
+        <TabsContent value="customers" className="mt-4">
+          <div className="space-y-4">
             {customerPackages.map(pkg => (
-              <Card key={pkg.id}>
+              <Card key={pkg.id} className="border-border">
                 <CardHeader>
                   <CardTitle className="text-foreground">
                     {pkg.customer_company || pkg.customer_name}
@@ -739,7 +739,7 @@ For each recommendation, provide:
               </Card>
             ))}
             {customerPackages.length === 0 && (
-              <Card className="border-dashed md:col-span-2">
+              <Card className="border-dashed border-border">
                 <CardContent className="py-12 text-center">
                   <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
                   <p className="text-muted-foreground">No customer packages yet</p>

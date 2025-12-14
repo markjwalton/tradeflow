@@ -170,11 +170,10 @@ export default function FontManager() {
 
   return (
     <div className="max-w-7xl mx-auto -mt-6 pb-8">
-      <div className="flex items-center justify-between mb-6">
-        <PageHeader 
-          title="Font Library"
-          description="Manage your typography font families"
-        />
+      <PageHeader 
+        title="Font Library"
+        description="Manage your typography font families"
+      >
         <Dialog open={dialogOpen} onOpenChange={(open) => {
           setDialogOpen(open);
           if (!open) resetForm();
@@ -270,16 +269,16 @@ export default function FontManager() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      </div>
+      </PageHeader>
 
       {/* Fonts in Use Section */}
-      <Card className="mb-6">
+      <Card className="mb-6 border-border">
         <CardHeader>
           <CardTitle>Fonts in Use</CardTitle>
           <CardDescription>Currently active fonts in the main application</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="space-y-4">
             <div className="p-4 rounded-lg border bg-card">
               <div className="flex items-center justify-between mb-3">
                 <div>
@@ -325,7 +324,7 @@ export default function FontManager() {
       {isLoading ? (
         <div className="text-center py-12">Loading fonts...</div>
       ) : fonts.length === 0 ? (
-        <Card>
+        <Card className="border-border">
           <CardContent className="py-12 text-center">
             <p className="text-muted-foreground mb-4">No fonts added yet</p>
             <Button onClick={() => setDialogOpen(true)}>
@@ -335,9 +334,9 @@ export default function FontManager() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="space-y-4">
           {fonts.map((font) => (
-            <Card key={font.id}>
+            <Card key={font.id} className="border-border">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div>
