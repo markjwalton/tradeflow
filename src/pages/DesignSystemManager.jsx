@@ -29,7 +29,8 @@ import {
   Package, Plus, Sparkles, Loader2, GitBranch, Users, 
   CheckCircle2, AlertCircle, RefreshCw, Download, Upload,
   Eye, Edit, Copy, Trash2, Building2, Mail, Clock, Zap,
-  FileCode, Palette, Database, TrendingUp, Shield, ChevronDown
+  FileCode, Palette, Database, TrendingUp, Shield, ChevronDown,
+  Layout, Type, Pipette, ArrowRight, LayoutGrid, Boxes
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -40,7 +41,7 @@ import { PageHeader } from "@/components/sturij";
 
 export default function DesignSystemManager() {
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState("packages");
+  const [activeTab, setActiveTab] = useState("overview");
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showThemeCreator, setShowThemeCreator] = useState(false);
   const [editingPackage, setEditingPackage] = useState(null);
@@ -306,6 +307,10 @@ For each recommendation, provide:
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="[margin-top:var(--spacing-4)]">
         <TabsList>
+          <TabsTrigger value="overview">
+            <TrendingUp className="h-4 w-4 mr-2" />
+            Overview
+          </TabsTrigger>
           <TabsTrigger value="packages">
             <Package className="h-4 w-4 mr-2" />
             Packages
@@ -323,6 +328,174 @@ For each recommendation, provide:
             Customers
           </TabsTrigger>
         </TabsList>
+
+        {/* Overview Tab */}
+        <TabsContent value="overview" className="[margin-top:var(--spacing-4)]">
+          <div className="space-y-6">
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Card className="border-border">
+                <CardContent className="pt-6">
+                  <div className="text-center">
+                    <Package className="h-8 w-8 mx-auto mb-2 text-primary" />
+                    <div className="text-2xl font-bold text-foreground">{packages.length}</div>
+                    <p className="text-sm text-muted-foreground">Total Packages</p>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="border-border">
+                <CardContent className="pt-6">
+                  <div className="text-center">
+                    <Building2 className="h-8 w-8 mx-auto mb-2 text-secondary" />
+                    <div className="text-2xl font-bold text-foreground">{customerPackages.length}</div>
+                    <p className="text-sm text-muted-foreground">Customer Themes</p>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="border-border">
+                <CardContent className="pt-6">
+                  <div className="text-center">
+                    <FileCode className="h-8 w-8 mx-auto mb-2 text-accent" />
+                    <div className="text-2xl font-bold text-foreground">{components.length}</div>
+                    <p className="text-sm text-muted-foreground">Components</p>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="border-border">
+                <CardContent className="pt-6">
+                  <div className="text-center">
+                    <Sparkles className="h-8 w-8 mx-auto mb-2 text-warning" />
+                    <div className="text-2xl font-bold text-foreground">{pendingRecs.length}</div>
+                    <p className="text-sm text-muted-foreground">AI Recommendations</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Quick Access Cards */}
+            <div>
+              <h2 className="text-h3 mb-4">Design System Tools</h2>
+              <div className="grid md:grid-cols-3 gap-4">
+                <Link to={createPageUrl("ThemeBuilder")}>
+                  <Card className="border-border hover:shadow-md transition-shadow cursor-pointer h-full">
+                    <CardContent className="pt-6">
+                      <Palette className="h-10 w-10 text-primary mb-3" />
+                      <h3 className="font-heading font-medium text-foreground mb-2">Theme Builder</h3>
+                      <p className="text-sm text-muted-foreground mb-3">Create complete design themes with colors and fonts</p>
+                      <div className="flex items-center text-primary text-sm font-medium">
+                        View Tool <ArrowRight className="h-4 w-4 ml-1" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+
+                <Link to={createPageUrl("FontManager")}>
+                  <Card className="border-border hover:shadow-md transition-shadow cursor-pointer h-full">
+                    <CardContent className="pt-6">
+                      <Type className="h-10 w-10 text-secondary mb-3" />
+                      <h3 className="font-heading font-medium text-foreground mb-2">Font Manager</h3>
+                      <p className="text-sm text-muted-foreground mb-3">Manage typography and font families</p>
+                      <div className="flex items-center text-primary text-sm font-medium">
+                        View Tool <ArrowRight className="h-4 w-4 ml-1" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+
+                <Link to={createPageUrl("OklchColorPicker")}>
+                  <Card className="border-border hover:shadow-md transition-shadow cursor-pointer h-full">
+                    <CardContent className="pt-6">
+                      <Pipette className="h-10 w-10 text-accent mb-3" />
+                      <h3 className="font-heading font-medium text-foreground mb-2">Color Tools</h3>
+                      <p className="text-sm text-muted-foreground mb-3">OKLCH color picker, palettes, and gradients</p>
+                      <div className="flex items-center text-primary text-sm font-medium">
+                        View Tool <ArrowRight className="h-4 w-4 ml-1" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+
+                <Link to={createPageUrl("LayoutPatternManager")}>
+                  <Card className="border-border hover:shadow-md transition-shadow cursor-pointer h-full">
+                    <CardContent className="pt-6">
+                      <LayoutGrid className="h-10 w-10 text-info mb-3" />
+                      <h3 className="font-heading font-medium text-foreground mb-2">Layout Patterns</h3>
+                      <p className="text-sm text-muted-foreground mb-3">Manage reusable layout templates</p>
+                      <div className="flex items-center text-primary text-sm font-medium">
+                        View Tool <ArrowRight className="h-4 w-4 ml-1" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+
+                <Link to={createPageUrl("UILibrary")}>
+                  <Card className="border-border hover:shadow-md transition-shadow cursor-pointer h-full">
+                    <CardContent className="pt-6">
+                      <Boxes className="h-10 w-10 text-success mb-3" />
+                      <h3 className="font-heading font-medium text-foreground mb-2">UI Library</h3>
+                      <p className="text-sm text-muted-foreground mb-3">Browse all UI components and showcases</p>
+                      <div className="flex items-center text-primary text-sm font-medium">
+                        View Tool <ArrowRight className="h-4 w-4 ml-1" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+
+                <Link to={createPageUrl("BrandIdentity")}>
+                  <Card className="border-border hover:shadow-md transition-shadow cursor-pointer h-full">
+                    <CardContent className="pt-6">
+                      <Shield className="h-10 w-10 text-primary mb-3" />
+                      <h3 className="font-heading font-medium text-foreground mb-2">Brand Identity</h3>
+                      <p className="text-sm text-muted-foreground mb-3">View brand guidelines and design principles</p>
+                      <div className="flex items-center text-primary text-sm font-medium">
+                        View Docs <ArrowRight className="h-4 w-4 ml-1" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              </div>
+            </div>
+
+            {/* AI Recommendations Preview */}
+            {pendingRecs.length > 0 && (
+              <Card className="border-warning/30 bg-warning/5">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="h-5 w-5 text-warning" />
+                      <CardTitle className="text-foreground">Pending AI Recommendations</CardTitle>
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setActiveTab("recommendations")}
+                    >
+                      View All ({pendingRecs.length})
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {pendingRecs.slice(0, 3).map(rec => (
+                      <div key={rec.id} className="flex items-center justify-between p-3 bg-background rounded-lg">
+                        <div className="flex-1">
+                          <p className="font-medium text-foreground text-sm">{rec.title}</p>
+                          <p className="text-xs text-muted-foreground line-clamp-1">{rec.description}</p>
+                        </div>
+                        <Badge className={impactColors[rec.impact]}>
+                          {rec.impact}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </TabsContent>
 
         {/* Packages Tab */}
         <TabsContent value="packages" className="[margin-top:var(--spacing-4)]">
