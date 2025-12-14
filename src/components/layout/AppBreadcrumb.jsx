@@ -46,10 +46,13 @@ export function AppBreadcrumb({ navItems = [], organizedNavigation = [], current
     const label = item.breadcrumb_label || item.name || 'Unnamed';
     const hasPage = !!item.page_url;
     const clickable = hasPage && (item.is_clickable === undefined || item.is_clickable);
+    
+    // Extract slug from page_url to use with createPageUrl
+    const slug = item.page_url?.split("?")[0] || item.slug;
 
     return {
       label,
-      href: clickable && !isLast ? item.page_url : undefined,
+      href: clickable && !isLast ? createPageUrl(slug) : undefined,
       isCurrent: isLast,
       isClickableParent: clickable && !isLast,
     };
