@@ -20,11 +20,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { 
   Package, Plus, Sparkles, Loader2, GitBranch, Users, 
   CheckCircle2, AlertCircle, RefreshCw, Download, Upload,
   Eye, Edit, Copy, Trash2, Building2, Mail, Clock, Zap,
-  FileCode, Palette, Database, TrendingUp, Shield
+  FileCode, Palette, Database, TrendingUp, Shield, ChevronDown
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -40,6 +45,7 @@ export default function DesignSystemManager() {
   const [showThemeCreator, setShowThemeCreator] = useState(false);
   const [editingPackage, setEditingPackage] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [expandedRecs, setExpandedRecs] = useState({});
   const [formData, setFormData] = useState({
     package_name: "",
     package_code: "",
@@ -263,7 +269,7 @@ For each recommendation, provide:
       />
       
       <Card className="border-border mb-4">
-        <CardContent className="p-3">
+        <CardContent className="p-2">
           <div className="flex gap-2">
             <Button 
               variant="ghost"
@@ -585,17 +591,24 @@ For each recommendation, provide:
             ) : (
               <div className="space-y-3">
                 {recommendations.map(rec => (
-                <Card 
+                <Collapsible
                   key={rec.id}
+                  open={expandedRecs[rec.id]}
+                  onOpenChange={(open) => setExpandedRecs({ ...expandedRecs, [rec.id]: open })}
+                >
+                <Card 
                   className={rec.status === "accepted" ? "opacity-60 border-border" : "border-border"}
                 >
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <CardTitle className="text-base text-foreground">
-                            {rec.title}
-                          </CardTitle>
+                          <CollapsibleTrigger className="flex items-center gap-2 hover:opacity-70">
+                            <ChevronDown className={`h-4 w-4 transition-transform ${expandedRecs[rec.id] ? 'rotate-180' : ''}`} />
+                            <CardTitle className="text-base text-foreground">
+                              {rec.title}
+                            </CardTitle>
+                          </CollapsibleTrigger>
                           <Badge className={impactColors[rec.impact]}>
                             {rec.impact}
                           </Badge>
@@ -619,6 +632,7 @@ For each recommendation, provide:
                       </Badge>
                     </div>
                   </CardHeader>
+                  <CollapsibleContent>
                   <CardContent className="space-y-4">
                     <div>
                       <p className="text-sm text-muted-foreground mb-2">
@@ -700,7 +714,9 @@ For each recommendation, provide:
                       </div>
                     )}
                   </CardContent>
+                  </CollapsibleContent>
                 </Card>
+                </Collapsible>
               ))}
               </div>
             )}
