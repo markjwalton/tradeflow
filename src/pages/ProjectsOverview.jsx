@@ -26,6 +26,7 @@ import {
   Filter
 } from "lucide-react";
 import { format } from "date-fns";
+import { PageHeader } from "@/components/sturij";
 
 export default function ProjectsOverview() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -103,20 +104,18 @@ export default function ProjectsOverview() {
   };
 
   return (
-    <div className="p-6 lg:p-8">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-foreground">Projects</h1>
-          <p className="text-muted-foreground mt-1">Manage all your construction projects</p>
-        </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Projects"
+        description="Manage all your construction projects"
+      >
         <Link to={createPageUrl("ProjectForm")}>
           <Button>
             <Plus className="h-4 w-4 mr-2" />
             New Project
           </Button>
         </Link>
-      </div>
+      </PageHeader>
 
       {/* Filters */}
       <Card className="mb-6">

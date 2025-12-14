@@ -45,6 +45,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { format, addDays } from "date-fns";
+import { PageHeader } from "@/components/sturij";
 
 const statusColors = {
   pending_confirmation: "bg-warning/10 text-warning-foreground",
@@ -196,13 +197,11 @@ export default function AppointmentManager() {
   ).sort((a, b) => a.appointmentDate.localeCompare(b.appointmentDate));
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-light font-display text-foreground">Appointment Manager</h1>
-          <p className="text-muted-foreground">Manage appointment slots and bookings</p>
-        </div>
-      </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Appointment Manager"
+        description="Manage appointment slots and bookings"
+      />
 
       <Tabs defaultValue="diary" className="space-y-4">
         <TabsList>
