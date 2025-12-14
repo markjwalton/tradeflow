@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Save, RotateCcw, Eye, Code, Palette, Loader2, Shapes } from "lucide-react";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
+import { PageHeader } from "@/components/sturij";
 
 const Card = lazy(() => import("@/components/ui/card").then(m => ({ default: m.Card })));
 const CardContent = lazy(() => import("@/components/ui/card").then(m => ({ default: m.CardContent })));
@@ -303,12 +304,10 @@ export default function DesignTokenEditor() {
     <Suspense fallback={<div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Design Token Editor</h1>
-          <p className="text-muted-foreground">
-            Modify design tokens and save changes to globals.css
-          </p>
-        </div>
+        <PageHeader 
+          title="Design Token Editor"
+          description="Modify design tokens and save changes to globals.css"
+        />
         <div className="flex gap-2">
           <Button
             variant="outline"

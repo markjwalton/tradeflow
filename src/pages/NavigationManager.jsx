@@ -17,8 +17,7 @@ import { toast } from "sonner";
 import GenericNavEditor from "@/components/navigation/GenericNavEditor";
 import TenantSelector from "@/components/navigation/TenantSelector";
 import { useEditMode } from "@/components/page-builder/EditModeContext";
-import { useBreadcrumb } from "@/components/layout/AppContent";
-import { AppBreadcrumb } from "@/components/layout/AppBreadcrumb";
+import { PageHeader } from "@/components/sturij";
 
 // Slugs are now loaded from NavigationConfig.source_slugs - no hardcoded lists
 
@@ -31,7 +30,6 @@ export default function NavigationManager() {
   const [pageData, setPageData] = useState(null);
   const queryClient = useQueryClient();
   const { setCustomProperties } = useEditMode();
-  const breadcrumbContext = useBreadcrumb();
   
   const [selectedTenantId, setSelectedTenantId] = useState(
     tenantContext?.tenantId || "__global__"
@@ -370,22 +368,10 @@ export default function NavigationManager() {
     <div className="max-w-4xl mx-auto min-h-screen -mt-6">
       {isGlobalAdmin ? (
         <>
-          {/* Page Header */}
-          <div className="bg-white border [margin-bottom:var(--spacing-6)] px-6 py-4 rounded-xl">
-            {breadcrumbContext?.navItems && (
-              <div className="mb-3">
-                <AppBreadcrumb organizedNavigation={breadcrumbContext.navItems} currentPageName={breadcrumbContext.currentPageName} />
-              </div>
-            )}
-            <h1 className={`text-3xl font-display text-[var(--color-text-primary)] ${pageData?.description ? '[margin-bottom:var(--spacing-2)]' : ''}`}>
-              Navigation Manager
-            </h1>
-            {pageData?.data?.description && (
-              <p className="text-muted-foreground">
-                {pageData.data.description}
-              </p>
-            )}
-          </div>
+          <PageHeader 
+            title="Navigation Manager" 
+            description={pageData?.data?.description || "Configure navigation menus and structure"}
+          />
 
           {/* Tab Navigation */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="[margin-top:var(--spacing-4)]">

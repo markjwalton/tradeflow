@@ -7,6 +7,7 @@ import { Settings, LayoutGrid, RefreshCw, Loader2 } from "lucide-react";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import DashboardWidgetCard from "@/components/dashboard/DashboardWidgetCard";
 import useDashboardSettings from "@/components/dashboard/useDashboardSettings";
+import { PageHeader } from "@/components/sturij";
 
 // Lazy load heavy components
 const WidgetConfigEditor = lazy(() => import("@/components/dashboard/WidgetConfigEditor"));
@@ -101,11 +102,11 @@ export default function Dashboard() {
     <div className={`p-3 sm:p-4 md:p-6 bg-background min-h-screen ${settings.compactMode ? "space-y-4" : ""}`}>
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6 sm:mb-8">
-        <div className="flex-1 min-w-0">
-          <h1 className="text-xl sm:text-h1">Dashboard</h1>
-          <p className="text-muted-foreground mt-1 text-sm sm:text-base">Welcome back! Here's what's happening.</p>
-        </div>
-        <div className="flex gap-2 w-full sm:w-auto">
+        <PageHeader 
+          title="Dashboard"
+          description="Welcome back! Here's what's happening."
+        />
+        <div className="flex gap-2 w-full sm:w-auto ml-auto">
           <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2 flex-1 sm:flex-none">
             <RefreshCw className="h-4 w-4" />
             <span className="sm:inline hidden">Refresh</span>

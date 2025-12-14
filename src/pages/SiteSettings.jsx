@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Save, X, Sparkles, Loader2, Image as ImageIcon, Moon } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { PageHeader } from "@/components/sturij";
 
 const overlayColorOptions = [
   { value: "none", label: "None" },
@@ -218,10 +219,10 @@ export default function SiteSettings() {
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-4xl">
-      <div className="mb-6">
-        <h1 className="text-3xl font-display text-midnight-900 mb-2">Site Settings</h1>
-        <p className="text-muted-foreground">Configure global appearance settings for the application</p>
-      </div>
+      <PageHeader 
+        title="Site Settings"
+        description="Configure global appearance settings for the application"
+      />
 
       <div className="space-y-6">
         <Card>

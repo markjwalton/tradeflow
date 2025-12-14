@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Plus, Trash2, ExternalLink, Check } from 'lucide-react';
 import { toast } from 'sonner';
+import { PageHeader } from '@/components/sturij';
 
 export default function FontManager() {
   const queryClient = useQueryClient();
@@ -170,10 +171,10 @@ export default function FontManager() {
   return (
     <div className="container mx-auto py-8">
       <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-3xl font-light font-display mb-2">Font Library</h1>
-          <p className="text-muted-foreground">Manage your typography font families</p>
-        </div>
+        <PageHeader 
+          title="Font Library"
+          description="Manage your typography font families"
+        />
         <Dialog open={dialogOpen} onOpenChange={(open) => {
           setDialogOpen(open);
           if (!open) resetForm();
