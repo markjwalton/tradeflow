@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Copy, Trash2, Plus, GripVertical, ChevronRight, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { PageHeader } from "@/components/sturij";
 
 // Control palette items
 const LAYOUT_CONTROLS = [
@@ -207,10 +208,12 @@ export default function FormSchemaBuilder() {
   };
 
   return (
-    <div className="h-screen flex flex-col">
-      <div className="border-b p-4">
-        <h1 className="text-2xl font-bold">Form Schema Builder</h1>
-        <p className="text-sm text-muted-foreground">Drag and drop form controls to build your schema</p>
+    <div className="h-screen flex flex-col bg-background">
+      <div className="px-6 pt-0 -mt-6">
+        <PageHeader 
+          title="Form Schema Builder"
+          description="Drag and drop form controls to build your schema"
+        />
       </div>
 
       <div className="flex-1 flex overflow-hidden">

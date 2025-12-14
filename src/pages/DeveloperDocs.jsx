@@ -17,6 +17,7 @@ import {
   Zap,
   Search
 } from 'lucide-react';
+import { PageHeader } from '@/components/sturij';
 
 const guides = [
   // Core Development
@@ -221,31 +222,22 @@ export default function DeveloperDocs() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <BookOpen className="h-10 w-10 text-primary" />
-            <div>
-              <h1 className="text-4xl font-bold">Developer Documentation</h1>
-              <p className="text-muted-foreground mt-1">
-                Comprehensive guides for building with Base44
-              </p>
-            </div>
-          </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Developer Documentation"
+        description="Comprehensive guides for building with Base44"
+      />
 
-          {/* Search */}
-          <div className="relative mt-6">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input
-              placeholder="Search guides, topics, or tags..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-12 text-lg"
-            />
-          </div>
-        </div>
+      {/* Search */}
+      <div className="relative mb-6">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+        <Input
+          placeholder="Search guides, topics, or tags..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10 h-12 text-lg"
+        />
+      </div>
 
         {/* Categories */}
         <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="mb-8">

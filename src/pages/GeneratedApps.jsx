@@ -35,6 +35,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { PageHeader } from "@/components/sturij";
 
 const statusColors = {
   draft: "bg-warning/10 text-warning",
@@ -119,13 +120,11 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
   }
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-light font-display text-foreground">Generated Apps</h1>
-          <p className="text-muted-foreground">App specifications generated from mind maps</p>
-        </div>
-      </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Generated Apps"
+        description="App specifications generated from mind maps"
+      />
 
       {/* Search */}
       <div className="relative mb-6 max-w-md">
