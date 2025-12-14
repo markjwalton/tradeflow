@@ -3,6 +3,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { 
   BookOpen, 
   Code2, 
@@ -15,7 +16,9 @@ import {
   FileCode,
   Accessibility,
   Zap,
-  Search
+  Search,
+  ChevronDown,
+  ChevronRight
 } from 'lucide-react';
 import { PageHeader } from '@/components/sturij';
 
@@ -204,6 +207,7 @@ const categories = [
 export default function DeveloperDocs() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [expandedCategories, setExpandedCategories] = useState(new Set(['Core', 'UI']));
 
   const filteredGuides = guides.filter(guide => {
     const matchesSearch = 
@@ -221,6 +225,22 @@ export default function DeveloperDocs() {
     window.open(path, '_blank');
   };
 
+  const toggleCategory = (category) => {
+    setExpandedCategories(prev => {
+      const next = new Set(prev);
+      if (next.has(category)) next.delete(category);
+      else next.add(category);
+      return next;
+    });
+  };
+
+  // Group guides by category
+  const guidesByCategory = filteredGuides.reduce((acc, guide) => {
+    if (!acc[guide.category]) acc[guide.category] = [];
+    acc[guide.category].push(guide);
+    return acc;
+  }, {});
+
   return (
     <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
       <PageHeader 
@@ -228,98 +248,151 @@ export default function DeveloperDocs() {
         description="Comprehensive guides for building with Base44"
       />
 
-      {/* Search */}
-      <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-        <Input
-          placeholder="Search guides, topics, or tags..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10 h-12 text-lg"
-        />
-      </div>
-
-      {/* Categories */}
-      <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="mb-8">
-        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-7 h-auto">
+      <Tabs value={selectedCategory} onValueChange={setSelectedCategory}>
+        <TabsList>
           {categories.map(cat => (
-            <TabsTrigger 
-              key={cat.value} 
-              value={cat.value}
-              className="flex flex-col gap-1 py-3"
-            >
-              <span className="font-semibold">{cat.label}</span>
-              <Badge variant="secondary" className="text-xs">
+            <TabsTrigger key={cat.value} value={cat.value}>
+              {cat.label}
+              <Badge variant="secondary" className="ml-2">
                 {cat.count}
               </Badge>
             </TabsTrigger>
           ))}
         </TabsList>
+
+        <TabsContent value={selectedCategory} className="space-y-6">
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search guides, topics, or tags..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+
+          {filteredGuides.length === 0 ? (
+            <Card className="p-12 text-center">
+              <p className="text-muted-foreground">No guides found matching your search.</p>
+            </Card>
+          ) : selectedCategory === 'all' ? (
+            // Show collapsible categories when viewing all
+            <div className="space-y-4">
+              {Object.entries(guidesByCategory).map(([category, categoryGuides]) => (
+                <Collapsible
+                  key={category}
+                  open={expandedCategories.has(category)}
+                  onOpenChange={() => toggleCategory(category)}
+                >
+                  <Card>
+                    <CollapsibleTrigger className="w-full">
+                      <CardHeader className="hover:bg-muted/50 transition-colors cursor-pointer">
+                        <div className="flex items-center justify-between">
+                          <CardTitle className="text-lg flex items-center gap-2">
+                            {expandedCategories.has(category) ? (
+                              <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                            ) : (
+                              <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                            )}
+                            {category}
+                          </CardTitle>
+                          <Badge>{categoryGuides.length} guides</Badge>
+                        </div>
+                      </CardHeader>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <CardContent className="space-y-2 pt-0">
+                        {categoryGuides.map((guide) => {
+                          const Icon = guide.icon;
+                          return (
+                            <Card 
+                              key={guide.file}
+                              className="cursor-pointer hover:shadow-md transition-shadow"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleGuideClick(guide.file);
+                              }}
+                            >
+                              <CardHeader className="pb-3">
+                                <div className="flex items-start gap-3">
+                                  <div className="p-2 rounded-lg bg-primary/10">
+                                    <Icon className="h-5 w-5 text-primary" />
+                                  </div>
+                                  <div className="flex-1">
+                                    <CardTitle className="text-base mb-1">{guide.title}</CardTitle>
+                                    <CardDescription className="text-sm">
+                                      {guide.description}
+                                    </CardDescription>
+                                  </div>
+                                </div>
+                              </CardHeader>
+                              <CardContent className="pt-0">
+                                <div className="flex flex-wrap gap-1">
+                                  {guide.tags.map(tag => (
+                                    <Badge 
+                                      key={tag} 
+                                      variant="secondary"
+                                      className="text-xs"
+                                    >
+                                      {tag}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </CardContent>
+                            </Card>
+                          );
+                        })}
+                      </CardContent>
+                    </CollapsibleContent>
+                  </Card>
+                </Collapsible>
+              ))}
+            </div>
+          ) : (
+            // Show full-width cards when filtering by category
+            <div className="space-y-2">
+              {filteredGuides.map((guide) => {
+                const Icon = guide.icon;
+                return (
+                  <Card 
+                    key={guide.file}
+                    className="cursor-pointer hover:shadow-md transition-shadow"
+                    onClick={() => handleGuideClick(guide.file)}
+                  >
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start gap-3">
+                        <div className="p-2 rounded-lg bg-primary/10">
+                          <Icon className="h-5 w-5 text-primary" />
+                        </div>
+                        <div className="flex-1">
+                          <CardTitle className="text-base mb-1">{guide.title}</CardTitle>
+                          <CardDescription className="text-sm">
+                            {guide.description}
+                          </CardDescription>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <div className="flex flex-wrap gap-1">
+                        {guide.tags.map(tag => (
+                          <Badge 
+                            key={tag} 
+                            variant="secondary"
+                            className="text-xs"
+                          >
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
+        </TabsContent>
       </Tabs>
-
-      {/* Results Count */}
-      <div className="mb-4">
-        <p className="text-sm text-muted-foreground">
-          {filteredGuides.length} guide{filteredGuides.length !== 1 ? 's' : ''} found
-        </p>
-      </div>
-
-      {/* Guides Grid */}
-      {filteredGuides.length === 0 ? (
-        <Card className="p-12 text-center">
-          <p className="text-muted-foreground">No guides found matching your search.</p>
-        </Card>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredGuides.map((guide) => {
-            const Icon = guide.icon;
-            return (
-              <Card 
-                key={guide.file}
-                className="cursor-pointer transition-all hover:shadow-lg hover:scale-[1.02]"
-                onClick={() => handleGuideClick(guide.file)}
-              >
-                <CardHeader>
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-primary/10">
-                      <Icon className="h-6 w-6 text-primary" />
-                    </div>
-                    <div className="flex-1">
-                      <CardTitle className="text-xl mb-2">{guide.title}</CardTitle>
-                      <Badge variant="outline" className="mb-3">
-                        {guide.category}
-                      </Badge>
-                    </div>
-                  </div>
-                  <CardDescription className="text-base">
-                    {guide.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {guide.tags.map(tag => (
-                      <Badge 
-                        key={tag} 
-                        variant="secondary"
-                        className="text-xs"
-                      >
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Footer */}
-      <div className="mt-12 p-6 bg-muted/50 rounded-lg text-center">
-        <p className="text-sm text-muted-foreground">
-          💡 <strong>Tip:</strong> Click any guide to open it in a new tab. Use the search to find specific topics quickly.
-        </p>
-      </div>
     </div>
   );
 }
