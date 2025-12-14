@@ -253,9 +253,6 @@ export default function DeveloperDocs() {
           {categories.map(cat => (
             <TabsTrigger key={cat.value} value={cat.value}>
               {cat.label}
-              <Badge variant="secondary" className="ml-2">
-                {cat.count}
-              </Badge>
             </TabsTrigger>
           ))}
         </TabsList>
