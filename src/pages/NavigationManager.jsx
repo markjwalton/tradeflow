@@ -382,7 +382,7 @@ export default function NavigationManager() {
               Navigation Manager
             </h1>
             {pageData?.description && (
-              <p className="text-[var(--color-text-muted)]">
+              <p className="text-muted-foreground">
                 {pageData.description}
               </p>
             )}
