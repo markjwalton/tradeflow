@@ -170,10 +170,28 @@ export default function GitHubIntegration() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <GitBranch className="h-6 w-6" />
-              GitHub Integration Demo
+              GitHub Configuration
             </CardTitle>
           </CardHeader>
           <CardContent>
+            <div className="mb-6 p-4 bg-muted rounded-lg space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Repository:</span>
+                <code className="text-sm">base44dev/tradeai360</code>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Branch:</span>
+                <code className="text-sm">main</code>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Sync Direction:</span>
+                <Badge variant="secondary">Pull & Push</Badge>
+              </div>
+              <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded text-sm">
+                <p className="font-medium text-yellow-900 mb-1">⚠️ Important Note:</p>
+                <p className="text-yellow-800">After syncing from GitHub, you must trigger a rebuild using the green rebuild button to see changes in the running app.</p>
+              </div>
+            </div>
             {repo && repo.owner ? (
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
