@@ -10,7 +10,7 @@ export function PageHeader({ title, description, children }) {
       {breadcrumbContext?.navItems && (
         <div className="mb-3">
           <AppBreadcrumb 
-            organizedNavigation={breadcrumbContext.navItems} 
+            navItems={breadcrumbContext.navItems} 
             currentPageName={breadcrumbContext.currentPageName} 
           />
         </div>
