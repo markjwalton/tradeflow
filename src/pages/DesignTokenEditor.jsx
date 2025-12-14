@@ -2,6 +2,7 @@ import React, { useState, useEffect, lazy, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Save, RotateCcw, Eye, Code, Palette, Loader2, Shapes } from "lucide-react";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
@@ -427,8 +428,81 @@ const DESIGN_TOKEN_COLORS = [
   { value: 'var(--midnight-900)', label: 'Midnight', cssVar: '--midnight-900', rgb: '#0f1621' },
 ];
 
+// CSS Variable options by type
+const TOKEN_OPTIONS = {
+  color: [
+    { label: 'Primary Colors', options: [
+      'var(--primary-50)', 'var(--primary-100)', 'var(--primary-200)', 'var(--primary-300)', 
+      'var(--primary-400)', 'var(--primary-500)', 'var(--primary-600)', 'var(--primary-700)', 
+      'var(--primary-800)', 'var(--primary-900)'
+    ]},
+    { label: 'Secondary Colors', options: [
+      'var(--secondary-50)', 'var(--secondary-100)', 'var(--secondary-200)', 'var(--secondary-300)', 
+      'var(--secondary-400)', 'var(--secondary-500)', 'var(--secondary-600)', 'var(--secondary-700)', 
+      'var(--secondary-800)', 'var(--secondary-900)'
+    ]},
+    { label: 'Accent Colors', options: [
+      'var(--accent-50)', 'var(--accent-100)', 'var(--accent-200)', 'var(--accent-300)', 
+      'var(--accent-400)', 'var(--accent-500)', 'var(--accent-600)', 'var(--accent-700)', 
+      'var(--accent-800)', 'var(--accent-900)'
+    ]},
+    { label: 'Midnight Colors', options: [
+      'var(--midnight-50)', 'var(--midnight-100)', 'var(--midnight-200)', 'var(--midnight-300)', 
+      'var(--midnight-400)', 'var(--midnight-500)', 'var(--midnight-600)', 'var(--midnight-700)', 
+      'var(--midnight-800)', 'var(--midnight-900)'
+    ]},
+    { label: 'Charcoal Colors', options: [
+      'var(--charcoal-50)', 'var(--charcoal-100)', 'var(--charcoal-200)', 'var(--charcoal-300)', 
+      'var(--charcoal-400)', 'var(--charcoal-500)', 'var(--charcoal-600)', 'var(--charcoal-700)', 
+      'var(--charcoal-800)', 'var(--charcoal-900)'
+    ]},
+    { label: 'Semantic Colors', options: [
+      'var(--background)', 'var(--foreground)', 'var(--card)', 'var(--popover)', 'var(--primary)', 
+      'var(--secondary)', 'var(--muted)', 'var(--accent)', 'var(--destructive)', 'var(--border)', 
+      'var(--input)', 'var(--ring)'
+    ]}
+  ],
+  font: [
+    { label: 'Font Families', options: [
+      'var(--font-family-display)', 'var(--font-family-body)', 'var(--font-family-mono)'
+    ]}
+  ],
+  size: [
+    { label: 'Spacing', options: [
+      'var(--spacing-1)', 'var(--spacing-2)', 'var(--spacing-3)', 'var(--spacing-4)', 
+      'var(--spacing-5)', 'var(--spacing-6)', 'var(--spacing-8)', 'var(--spacing-10)', 
+      'var(--spacing-12)', 'var(--spacing-16)', 'var(--spacing-20)', 'var(--spacing-24)'
+    ]},
+    { label: 'Font Sizes', options: [
+      'var(--font-size-xs)', 'var(--font-size-sm)', 'var(--font-size-base)', 'var(--font-size-lg)', 
+      'var(--font-size-xl)', 'var(--font-size-2xl)', 'var(--font-size-3xl)', 'var(--font-size-4xl)'
+    ]},
+    { label: 'Border Radius', options: [
+      'var(--radius-none)', 'var(--radius-xs)', 'var(--radius-sm)', 'var(--radius-md)', 
+      'var(--radius-lg)', 'var(--radius-xl)', 'var(--radius-2xl)', 'var(--radius-full)'
+    ]}
+  ],
+  shadow: [
+    { label: 'Shadows', options: [
+      'var(--shadow-xs)', 'var(--shadow-sm)', 'var(--shadow-md)', 'var(--shadow-lg)', 
+      'var(--shadow-xl)', 'var(--shadow-2xl)', 'var(--shadow-inner)', 'var(--shadow-none)'
+    ]}
+  ],
+  number: [
+    { label: 'Line Heights', options: [
+      'var(--leading-none)', 'var(--leading-tight)', 'var(--leading-snug)', 'var(--leading-normal)', 
+      'var(--leading-relaxed)', 'var(--leading-loose)'
+    ]},
+    { label: 'Font Weights', options: [
+      'var(--font-weight-light)', 'var(--font-weight-normal)', 'var(--font-weight-medium)', 
+      'var(--font-weight-semibold)', 'var(--font-weight-bold)'
+    ]}
+  ]
+};
+
 function TokenEditor({ token, value, onChange }) {
   const hexValue = token.type === 'color' ? parseColorToHex(value) : null;
+  const tokenTypeOptions = TOKEN_OPTIONS[token.type] || [];
   
   const handleColorPickerChange = (hexColor) => {
     // Convert HEX to OKLCH when user picks a color
@@ -440,6 +514,31 @@ function TokenEditor({ token, value, onChange }) {
   return (
     <div className="space-y-2">
       <Label>{token.label}</Label>
+      
+      {tokenTypeOptions.length > 0 && (
+        <Select value={value} onValueChange={onChange}>
+          <SelectTrigger className="w-full font-mono text-sm">
+            <SelectValue placeholder={`Select a ${token.type}...`} />
+          </SelectTrigger>
+          <SelectContent>
+            {tokenTypeOptions.map((group, idx) => (
+              <div key={idx}>
+                {group.label && (
+                  <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
+                    {group.label}
+                  </div>
+                )}
+                {group.options.map((option) => (
+                  <SelectItem key={option} value={option} className="font-mono text-sm">
+                    {option}
+                  </SelectItem>
+                ))}
+              </div>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
+      
       <div className="flex gap-2">
         <Input
           value={value}
