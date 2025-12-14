@@ -44,8 +44,19 @@ export function AppSidebar({ navItems = [] }) {
       }
     });
 
-    // Sort root items by order
-    return rootItems.sort((a, b) => (a.order || 0) - (b.order || 0));
+    // Sort children arrays recursively
+    const sortChildren = (item) => {
+      if (item.children && item.children.length > 0) {
+        item.children.sort((a, b) => (a.order || 0) - (b.order || 0));
+        item.children.forEach(sortChildren);
+      }
+    };
+
+    // Sort root items and their children
+    rootItems.sort((a, b) => (a.order || 0) - (b.order || 0));
+    rootItems.forEach(sortChildren);
+
+    return rootItems;
   };
 
   const hierarchicalNavItems = buildHierarchy(navItems);
