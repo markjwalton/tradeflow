@@ -423,35 +423,36 @@ Return a JSON object with a "pages" array containing page templates.`,
               <p>No page templates found</p>
             </div>
           ) : (
-            <div className="flex items-center justify-between mb-4">
-            <p className="text-sm text-muted-foreground">
-              Showing {startIndex + 1}-{Math.min(endIndex, filteredPages.length)} of {filteredPages.length} pages
-            </p>
-            {totalPages > 1 && (
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                >
-                  Previous
-                </Button>
-                <span className="text-sm">
-                  Page {currentPage} of {totalPages}
-                </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
-                >
-                  Next
-                </Button>
-              </div>
-            )}
-            </div>
-            <div className="space-y-4">
+           <>
+             <div className="flex items-center justify-between mb-4">
+               <p className="text-sm text-muted-foreground">
+                 Showing {startIndex + 1}-{Math.min(endIndex, filteredPages.length)} of {filteredPages.length} pages
+               </p>
+               {totalPages > 1 && (
+                 <div className="flex items-center gap-2">
+                   <Button
+                     variant="outline"
+                     size="sm"
+                     onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                     disabled={currentPage === 1}
+                   >
+                     Previous
+                   </Button>
+                   <span className="text-sm">
+                     Page {currentPage} of {totalPages}
+                   </span>
+                   <Button
+                     variant="outline"
+                     size="sm"
+                     onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                     disabled={currentPage === totalPages}
+                   >
+                     Next
+                   </Button>
+                 </div>
+               )}
+             </div>
+             <div className="space-y-4">
             {Object.entries(paginatedGroupedPages).map(([groupName, groupPages]) => {
               const isExpanded = expandedGroups[groupName] === true;
               return (
@@ -560,10 +561,11 @@ Return a JSON object with a "pages" array containing page templates.`,
                 </Collapsible>
               );
             })}
-            </div>
-            )}
-            </CardContent>
-            </Card>
+              </div>
+            </>
+          )}
+        </CardContent>
+      </Card>
 
       <Dialog open={showBuilder} onOpenChange={setShowBuilder}>
         <DialogContent className="max-w-4xl h-[90vh] overflow-hidden flex flex-col">
