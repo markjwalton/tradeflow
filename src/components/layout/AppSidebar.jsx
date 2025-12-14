@@ -18,17 +18,14 @@ export function AppSidebar({ navItems = [] }) {
     const itemsMap = new Map();
     const rootItems = [];
 
-    // First pass: create a map of all items by their slug (which is used as ID)
+    // First pass: create a map of all items by their ID
     items.forEach((item) => {
-      // Use page_url as the lookup key since that's what parent_id references
-      const key = item.page_url || item.id;
-      itemsMap.set(key, { ...item, children: [] });
+      itemsMap.set(item.id, { ...item, children: [] });
     });
 
     // Second pass: build hierarchy
     items.forEach((item) => {
-      const key = item.page_url || item.id;
-      const currentItem = itemsMap.get(key);
+      const currentItem = itemsMap.get(item.id);
       if (item.parent_id) {
         const parent = itemsMap.get(item.parent_id);
         if (parent) {
