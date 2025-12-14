@@ -262,34 +262,41 @@ For each recommendation, provide:
         description="Version control, package distribution, and AI-assisted updates"
       />
       
-      <div className="flex justify-end gap-2 mb-4">
-        <Button 
-          variant="ghost" 
-          onClick={analyzePackageUpdates}
-          disabled={isAnalyzing}
-        >
-          {isAnalyzing ? (
-            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-          ) : (
-            <Sparkles className="h-4 w-4 mr-2" />
-          )}
-          AI Analyze Updates
-        </Button>
-        <Button 
-          variant="ghost"
-          onClick={() => setShowCreateDialog(true)}
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Core Package
-        </Button>
-        <Button 
-          variant="ghost"
-          onClick={() => setShowThemeCreator(true)}
-        >
-          <Palette className="h-4 w-4 mr-2" />
-          Create Custom Theme
-        </Button>
-      </div>
+      <Card className="border-border mb-4">
+        <CardContent className="p-3">
+          <div className="flex gap-2">
+            <Button 
+              variant="ghost"
+              className="hover:bg-primary-100 hover:text-primary-700"
+              onClick={analyzePackageUpdates}
+              disabled={isAnalyzing}
+            >
+              {isAnalyzing ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Sparkles className="h-4 w-4 mr-2" />
+              )}
+              AI Analyze Updates
+            </Button>
+            <Button 
+              variant="ghost"
+              className="hover:bg-primary-100 hover:text-primary-700"
+              onClick={() => setShowCreateDialog(true)}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Core Package
+            </Button>
+            <Button 
+              variant="ghost"
+              className="hover:bg-primary-100 hover:text-primary-700"
+              onClick={() => setShowThemeCreator(true)}
+            >
+              <Palette className="h-4 w-4 mr-2" />
+              Create Custom Theme
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="[margin-top:var(--spacing-4)]">
         <TabsList>
