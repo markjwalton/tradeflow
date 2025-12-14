@@ -262,7 +262,7 @@ export default function RoadmapManager() {
   };
 
   const ItemList = ({ items: listItems, showDevPrompt = false }) => (
-    <div className="space-y-3">
+    <div className="space-y-2">
       {listItems.map(item => (
         <div key={item.id} className="flex gap-2">
           <div className="flex-1">
@@ -328,12 +328,14 @@ export default function RoadmapManager() {
 
       {/* Filters */}
       <div className="flex gap-4 mb-6 flex-wrap">
-        <Input
-          placeholder="Search..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-64"
-        />
+        <div className="relative flex-1">
+          <Input
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full"
+          />
+        </div>
         <Select value={filterCategory} onValueChange={setFilterCategory}>
           <SelectTrigger className="w-40">
             <SelectValue placeholder="Category" />
