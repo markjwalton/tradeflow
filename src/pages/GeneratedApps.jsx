@@ -127,25 +127,31 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
       />
 
       {/* Search */}
-      <div className="relative mb-6 max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search generated apps..."
-          className="pl-10"
-        />
-      </div>
+      <Card className="border-border mb-6">
+        <CardContent className="px-2 py-1">
+          <div className="relative max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search generated apps..."
+              className="pl-10 border-0 bg-transparent focus-visible:ring-0"
+            />
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Apps Grid */}
-      {filteredApps.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground">
-          <Package className="h-12 w-12 mx-auto mb-4 opacity-30" />
-          <p>No generated apps yet.</p>
-          <p className="text-sm">Generate an app from a mind map to see it here.</p>
-        </div>
-      ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <Card className="border-border">
+        <CardContent className="p-4">
+          {filteredApps.length === 0 ? (
+            <div className="text-center py-12 text-muted-foreground">
+              <Package className="h-12 w-12 mx-auto mb-4 opacity-30" />
+              <p>No generated apps yet.</p>
+              <p className="text-sm">Generate an app from a mind map to see it here.</p>
+            </div>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filteredApps.map((app) => {
             const spec = app.specification || {};
             const entityCount = spec.entities?.length || 0;
@@ -249,8 +255,10 @@ ${features.map(f => `- **${f.name}**: ${f.description}`).join("\n")}
               </Card>
             );
           })}
-        </div>
-      )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Detail Dialog */}
       <GeneratedAppDetailDialog
