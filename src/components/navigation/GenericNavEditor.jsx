@@ -121,16 +121,13 @@ export default function GenericNavEditor({
     return (config?.source_slugs || []).sort();
   }, [config?.source_slugs]);
   
-  // Use shared utility to ensure all items have stable IDs
-  const items = React.useMemo(() => ensureItemIds(rawItems), [rawItems]);
-  
-  // Auto-save items with generated IDs so they persist
-  React.useEffect(() => {
-    const itemsNeedIds = rawItems.some(item => !item._id);
-    if (itemsNeedIds && config && items.length > 0) {
-      base44.entities.NavigationConfig.update(config.id, { items });
-    }
-  }, [rawItems, config?.id, items]);
+  // Normalize IDs: database uses 'id', ensure all items have it
+  const items = React.useMemo(() => {
+    return rawItems.map(item => ({
+      ...item,
+      id: item.id || item._id || generateId()
+    }));
+  }, [rawItems]);
   
   // Initial expand logic - always check user settings on mount
   React.useEffect(() => {
@@ -143,7 +140,7 @@ export default function GenericNavEditor({
             // Expand all top-level folders
             const foldersToExpand = items
               .filter(item => !item.parent_id && item.item_type === "folder")
-              .map(item => item._id);
+              .map(item => item.id);
             setExpandedParents(new Set(foldersToExpand));
             sessionStorage.setItem(`nav_expanded_${configType}`, JSON.stringify(foldersToExpand));
           } else {
@@ -158,7 +155,7 @@ export default function GenericNavEditor({
           // Fallback if user not available - expand all
           const foldersToExpand = items
             .filter(item => !item.parent_id && item.item_type === "folder")
-            .map(item => item._id);
+            .map(item => item.id);
           setExpandedParents(new Set(foldersToExpand));
           sessionStorage.setItem(`nav_expanded_${configType}`, JSON.stringify(foldersToExpand));
           setInitialExpandDone(true);
@@ -180,7 +177,7 @@ export default function GenericNavEditor({
           // Ensure all items have id before saving
           const itemsWithIds = newItems.map(item => ({
             ...item,
-            id: item.id || item._id || generateId()
+            id: item.id || generateId()
           }));
           if (config) {
             return base44.entities.NavigationConfig.update(config.id, { items: itemsWithIds });
@@ -203,7 +200,7 @@ export default function GenericNavEditor({
     if (globalConfigs.length > 0 && globalConfigs[0].items?.length > 0) {
       const copiedItems = globalConfigs[0].items.map(item => ({
         ...item,
-        _id: generateId() // Generate new IDs for the copy
+        id: generateId() // Generate new IDs for the copy
       }));
       saveMutation.mutate(copiedItems);
       toast.success("Copied from global template");
@@ -212,9 +209,9 @@ export default function GenericNavEditor({
     }
   };
 
-  // Find item by unique _id
-  const findItemById = (id) => items.find(i => i._id === id);
-  const findItemIndexById = (id) => items.findIndex(i => i._id === id);
+  // Find item by unique id
+  const findItemById = (id) => items.find(i => i.id === id);
+  const findItemIndexById = (id) => items.findIndex(i => i.id === id);
 
   const handleDragEnd = (result) => {
     if (!result.destination) return;
@@ -237,8 +234,8 @@ export default function GenericNavEditor({
     
     // Get siblings at this level
     const siblings = items.filter(i => (i.parent_id || null) === (draggedItem.parent_id || null));
-    const srcIdx = siblings.findIndex(s => s._id === draggedItem._id);
-    const dstIdx = siblings.findIndex(s => s._id === destItem?._id);
+    const srcIdx = siblings.findIndex(s => s.id === draggedItem.id);
+    const dstIdx = siblings.findIndex(s => s.id === destItem?.id);
     
     if (srcIdx === -1 || dstIdx === -1 || srcIdx === dstIdx) return;
     
@@ -246,10 +243,10 @@ export default function GenericNavEditor({
     const [removed] = reordered.splice(srcIdx, 1);
     reordered.splice(dstIdx, 0, removed);
     
-    // Rebuild items with new order - preserve _id on all items
+    // Rebuild items with new order - preserve id on all items
     const otherItems = items.filter(i => (i.parent_id || null) !== (draggedItem.parent_id || null))
-      .map(i => ({ ...i, _id: i._id || generateId() }));
-    const updatedSiblings = reordered.map((item, idx) => ({ ...item, _id: item._id || generateId(), order: idx }));
+      .map(i => ({ ...i, id: i.id || generateId() }));
+    const updatedSiblings = reordered.map((item, idx) => ({ ...item, id: item.id || generateId(), order: idx }));
     
     saveMutation.mutate([...otherItems, ...updatedSiblings]);
   };
@@ -280,16 +277,16 @@ export default function GenericNavEditor({
 
     let newItems;
     if (editingItem !== null) {
-      // Update by _id
+      // Update by id
       newItems = items.map((item) => {
-        if (item._id === editingItem) {
-          return { ...itemToSave, _id: item._id, order: item.order ?? items.length };
+        if (item.id === editingItem) {
+          return { ...itemToSave, id: item.id, order: item.order ?? items.length };
         }
         return item;
       });
     } else {
-      // Create new with unique _id
-      newItems = [...items, { ...itemToSave, _id: generateId(), order: items.length }];
+      // Create new with unique id
+      newItems = [...items, { ...itemToSave, id: generateId(), order: items.length }];
     }
 
     saveMutation.mutate(newItems);
@@ -303,16 +300,16 @@ export default function GenericNavEditor({
   };
 
   const handleEdit = (item) => {
-    // Use _id for editing reference
-    setEditingItem(item._id);
+    // Use id for editing reference
+    setEditingItem(item.id);
     setFormData({ ...item });
     setShowDialog(true);
   };
 
   const handleDelete = (item) => {
-    // Remove by _id and remove children by parent_id
+    // Remove by id and remove children by parent_id
     const newItems = items.filter(i => 
-      i._id !== item._id && i.parent_id !== item._id
+      i.id !== item.id && i.parent_id !== item.id
     );
     saveMutation.mutate(newItems);
   };
@@ -320,7 +317,7 @@ export default function GenericNavEditor({
   const handleDuplicate = (item) => {
     const duplicate = { 
       ...item, 
-      _id: generateId(),
+      id: generateId(),
       name: `${item.name} (Copy)`,
       parent_id: null,
       order: items.length
@@ -331,7 +328,7 @@ export default function GenericNavEditor({
 
   const handleToggleVisibility = (item) => {
     const newItems = items.map((i) => {
-      if (i._id === item._id) {
+      if (i.id === item.id) {
         return { ...i, is_visible: !i.is_visible };
       }
       return i;
@@ -340,10 +337,10 @@ export default function GenericNavEditor({
   };
 
   const handleMoveToParent = (item, newParentId) => {
-    // Update by _id, set new parent_id - preserve ALL existing fields including _id
+    // Update by id, set new parent_id - preserve ALL existing fields including id
     const newItems = items.map((i) => ({
       ...i,
-      parent_id: i._id === item._id ? (newParentId || null) : i.parent_id
+      parent_id: i.id === item.id ? (newParentId || null) : i.parent_id
     }));
     saveMutation.mutate(newItems);
     // Auto-expand the new parent to show the moved item
@@ -361,7 +358,7 @@ export default function GenericNavEditor({
         const name = slug.replace(/([A-Z])/g, ' $1').trim();
         const newId = generateId();
         const newItem = {
-          _id: newId,
+          id: newId,
           name,
           slug,
           icon: "File",
@@ -370,8 +367,8 @@ export default function GenericNavEditor({
           item_type: "page",
           order: items.length
         };
-        // Ensure all existing items keep their _id
-        const existingItems = items.map(i => ({ ...i, _id: i._id || generateId() }));
+        // Ensure all existing items keep their id
+        const existingItems = items.map(i => ({ ...i, id: i.id || generateId() }));
         saveMutation.mutate([...existingItems, newItem]);
         toast.success(`${name} added`);
       };
@@ -379,12 +376,12 @@ export default function GenericNavEditor({
   const handleUnallocate = (item) => {
     // Remove only this item, move its children to top level (set parent_id to null)
     const newItems = items
-      .filter(i => i._id !== item._id)
+      .filter(i => i.id !== item.id)
       .map(i => ({
         ...i,
-        _id: i._id || generateId(),
+        id: i.id || generateId(),
         // If this child's parent was the removed item, move to top level
-        parent_id: i.parent_id === item._id ? null : i.parent_id
+        parent_id: i.parent_id === item.id ? null : i.parent_id
       }));
     saveMutation.mutate(newItems);
     toast.success(`${item.name} removed from navigation`);
@@ -465,7 +462,7 @@ export default function GenericNavEditor({
                   {(provided) => (
                     <div {...provided.droppableProps} ref={provided.innerRef} className="[&>*+*]:mt-[var(--spacing-1)] [margin-bottom:var(--spacing-6)]">
                       {flatList.map((item, index) => (
-                        <Draggable key={item._id} draggableId={item._id} index={index}>
+                        <Draggable key={item.id} draggableId={item.id} index={index}>
                           {(provided) => (
                             <div
                               ref={provided.innerRef}
@@ -481,8 +478,8 @@ export default function GenericNavEditor({
                               </div>
                               
                               {item.hasChildren ? (
-                                <button onClick={() => toggleParent(item._id)} className="p-0.5">
-                                  {expandedParents.has(item._id) ? 
+                                <button onClick={() => toggleParent(item.id)} className="p-0.5">
+                                  {expandedParents.has(item.id) ? 
                                     <ChevronDown className="h-4 w-4 text-[var(--color-charcoal)]" /> : 
                                     <ChevronRight className="h-4 w-4 text-[var(--color-charcoal)]" />
                                   }
@@ -520,12 +517,12 @@ export default function GenericNavEditor({
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
                                     {/* Folders */}
-                                    {getMoveParentOptions(item._id)
-                                      .filter(p => p._id !== item.parent_id)
+                                    {getMoveParentOptions(item.id)
+                                      .filter(p => p.id !== item.parent_id)
                                       .map(parent => (
                                       <DropdownMenuItem 
-                                        key={parent._id}
-                                        onClick={() => handleMoveToParent(item, parent._id)}
+                                        key={parent.id}
+                                        onClick={() => handleMoveToParent(item, parent.id)}
                                         className="gap-2"
                                       >
                                         <Folder className="h-4 w-4" />
@@ -533,20 +530,20 @@ export default function GenericNavEditor({
                                       </DropdownMenuItem>
                                     ))}
                                     {/* Pages as parents */}
-                                    {getParentOptions(item._id)
-                                      .filter(p => p._id !== item.parent_id && p.item_type !== "folder")
+                                    {getParentOptions(item.id)
+                                      .filter(p => p.id !== item.parent_id && p.item_type !== "folder")
                                       .sort((a, b) => a.name.localeCompare(b.name))
                                       .length > 0 && (
                                       <>
                                         <DropdownMenuSeparator />
                                         <div className="px-2 py-1.5 text-caption text-[var(--color-charcoal)]">Pages</div>
-                                        {getParentOptions(item._id)
-                                          .filter(p => p._id !== item.parent_id && p.item_type !== "folder")
+                                        {getParentOptions(item.id)
+                                          .filter(p => p.id !== item.parent_id && p.item_type !== "folder")
                                           .sort((a, b) => a.name.localeCompare(b.name))
                                           .map(parent => (
                                           <DropdownMenuItem 
-                                            key={parent._id}
-                                            onClick={() => handleMoveToParent(item, parent._id)}
+                                            key={parent.id}
+                                            onClick={() => handleMoveToParent(item, parent.id)}
                                             className="gap-2"
                                           >
                                             <File className="h-4 w-4" />
@@ -658,7 +655,7 @@ export default function GenericNavEditor({
                             onClick={() => {
                               const name = slug.replace(/([A-Z])/g, ' $1').trim();
                               setEditingItem(null);
-                              setFormData({ name, slug, icon: "File", is_visible: true, parent_id: null, item_type: "page", default_collapsed: false, _id: generateId() });
+                              setFormData({ name, slug, icon: "File", is_visible: true, parent_id: null, item_type: "page", default_collapsed: false });
                               setShowDialog(true);
                             }}
                             title="Edit & allocate"
@@ -702,7 +699,7 @@ export default function GenericNavEditor({
                         // Find parent chain for context
                         const getParentPath = (parentId) => {
                           if (!parentId) return "";
-                          const parent = items.find(i => i._id === parentId);
+                          const parent = items.find(i => i.id === parentId);
                           if (!parent) return "";
                           const grandPath = getParentPath(parent.parent_id);
                           return grandPath ? `${grandPath} > ${parent.name || 'Unnamed'}` : (parent.name || 'Unnamed');
@@ -711,7 +708,7 @@ export default function GenericNavEditor({
 
                         return (
                         <div 
-                          key={item._id} 
+                          key={item.id} 
                           className={`flex items-center gap-3 p-2 rounded-lg hover:bg-[var(--color-background)] transition-all text-sm ${!item.is_visible ? "opacity-50" : ""}`}
                         >
                           {renderIcon(item.icon, "h-3 w-3 text-[var(--color-charcoal)]")}
@@ -800,7 +797,7 @@ export default function GenericNavEditor({
                   {getFormParentOptions()
                     .sort((a, b) => a.name.localeCompare(b.name))
                     .map(parent => (
-                    <SelectItem key={String(parent._id)} value={String(parent._id)}>
+                    <SelectItem key={String(parent.id)} value={String(parent.id)}>
                       <div className="flex items-center gap-2">
                         {isFolder(parent) ? <Folder className="h-3 w-3" /> : <File className="h-3 w-3" />}
                         {parent.name || 'Unnamed'}
