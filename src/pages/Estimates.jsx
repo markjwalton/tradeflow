@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -24,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Search, Pencil, Trash2, Loader2, Copy, FileText } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Loader2, Copy, FileText, ChevronDown, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { PullToRefresh } from "@/components/common/PullToRefresh";
 import { PageHeader } from "@/components/sturij";
@@ -52,6 +53,7 @@ export default function Estimates() {
   const [filterStatus, setFilterStatus] = useState("all");
   const [showForm, setShowForm] = useState(false);
   const [editingEstimate, setEditingEstimate] = useState(null);
+  const [expandedStatuses, setExpandedStatuses] = useState({});
   
   const form = useValidatedForm(estimateSchema, {
     defaultValues: {
@@ -220,6 +222,27 @@ export default function Estimates() {
     return matchesSearch && matchesStatus;
   });
 
+  // Group estimates by status
+  const groupedEstimates = filteredEstimates.reduce((acc, estimate) => {
+    const status = estimate.status || "draft";
+    if (!acc[status]) acc[status] = [];
+    acc[status].push(estimate);
+    return acc;
+  }, {});
+
+  // Initialize collapsed state
+  React.useEffect(() => {
+    const initial = {};
+    Object.keys(groupedEstimates).forEach(status => {
+      if (expandedStatuses[status] === undefined) {
+        initial[status] = true;
+      }
+    });
+    if (Object.keys(initial).length > 0) {
+      setExpandedStatuses(prev => ({ ...prev, ...initial }));
+    }
+  }, [JSON.stringify(Object.keys(groupedEstimates))]);
+
   const getProjectName = (projectId) => projects.find((p) => p.id === projectId)?.name || "";
 
   if (isLoading) {
@@ -232,17 +255,28 @@ export default function Estimates() {
 
   return (
     <PullToRefresh onRefresh={refetch} enabled={true}>
-    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+    <div className="max-w-7xl mx-auto -mt-6 min-h-screen">
       <PageHeader 
         title="Estimates"
         description="Create and manage project estimates"
-      >
-        <Button onClick={() => { resetForm(); setEditingEstimate(null); setShowForm(true); }} className="w-full sm:w-auto">
-          <Plus className="h-4 w-4 mr-2" />
-          New Estimate
-        </Button>
-      </PageHeader>
+      />
 
+      <Card className="border-border mb-4">
+        <CardContent className="px-2 py-1">
+          <div className="flex gap-2">
+            <Button 
+              variant="ghost"
+              className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
+              onClick={() => { resetForm(); setEditingEstimate(null); setShowForm(true); }}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              New Estimate
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -262,47 +296,72 @@ export default function Estimates() {
 
       <Card className="border-border">
         <CardContent className="p-4">
-          <div className="space-y-2">
-            {filteredEstimates.map((estimate) => (
-              <Card key={estimate.id} className="border-border hover:shadow-sm transition-shadow">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-4">
-                    <FileText className="h-5 w-5 text-primary flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-medium text-base">{estimate.title}</h3>
-                        <Badge className={statusColors[estimate.status]}>{estimate.status}</Badge>
-                      </div>
-                      {estimate.project_id && (
-                        <p className="text-sm text-muted-foreground mb-2">Project: {getProjectName(estimate.project_id)}</p>
-                      )}
-                      <div className="flex items-center gap-4 text-sm">
-                        <span>Subtotal: <span className="font-medium">£{estimate.subtotal?.toLocaleString()}</span></span>
-                        <span>VAT ({estimate.vat_rate}%): <span className="font-medium">£{estimate.vat_amount?.toLocaleString()}</span></span>
-                        <span className="text-base font-semibold">Total: £{estimate.total?.toLocaleString()}</span>
-                      </div>
-                    </div>
-                    <div className="flex gap-1 flex-shrink-0">
-                      <Button variant="ghost" size="icon" className="touch-target-sm" onClick={() => handleDuplicate(estimate)}>
-                        <Copy className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="touch-target-sm" onClick={() => handleEdit(estimate)}>
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        className="touch-target-sm text-destructive" 
-                        onClick={() => deleteMutation.mutate(estimate.id)}
-                        disabled={deleteMutation.isPending}
-                      >
-                        {deleteMutation.isPending ? <ButtonLoader /> : <Trash2 className="h-4 w-4" />}
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="space-y-4">
+            {Object.entries(groupedEstimates).map(([status, statusEstimates]) => {
+              const isExpanded = expandedStatuses[status] !== false;
+              return (
+                <Collapsible
+                  key={status}
+                  open={isExpanded}
+                  onOpenChange={() => setExpandedStatuses(prev => ({ ...prev, [status]: !isExpanded }))}
+                >
+                  <Card className="border-border">
+                    <CollapsibleTrigger className="w-full">
+                      <CardHeader className="py-3">
+                        <div className="flex items-center gap-2">
+                          {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                          <Badge className={statusColors[status]}>{status}</Badge>
+                          <span className="text-muted-foreground text-sm font-normal">({statusEstimates.length})</span>
+                        </div>
+                      </CardHeader>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <CardContent className="pt-0 space-y-2">
+                        {statusEstimates.map((estimate) => (
+                          <Card key={estimate.id} className="border-border hover:shadow-sm transition-shadow">
+                            <CardContent className="p-4">
+                              <div className="flex items-center gap-4">
+                                <FileText className="h-5 w-5 text-primary flex-shrink-0" />
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <h3 className="font-medium text-base">{estimate.title}</h3>
+                                  </div>
+                                  {estimate.project_id && (
+                                    <p className="text-sm text-muted-foreground mb-2">Project: {getProjectName(estimate.project_id)}</p>
+                                  )}
+                                  <div className="flex items-center gap-4 text-sm">
+                                    <span>Subtotal: <span className="font-medium">£{estimate.subtotal?.toLocaleString()}</span></span>
+                                    <span>VAT ({estimate.vat_rate}%): <span className="font-medium">£{estimate.vat_amount?.toLocaleString()}</span></span>
+                                    <span className="text-base font-semibold">Total: £{estimate.total?.toLocaleString()}</span>
+                                  </div>
+                                </div>
+                                <div className="flex gap-1 flex-shrink-0">
+                                  <Button variant="ghost" size="icon" className="touch-target-sm" onClick={() => handleDuplicate(estimate)}>
+                                    <Copy className="h-4 w-4" />
+                                  </Button>
+                                  <Button variant="ghost" size="icon" className="touch-target-sm" onClick={() => handleEdit(estimate)}>
+                                    <Pencil className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="icon" 
+                                    className="touch-target-sm text-destructive" 
+                                    onClick={() => deleteMutation.mutate(estimate.id)}
+                                    disabled={deleteMutation.isPending}
+                                  >
+                                    {deleteMutation.isPending ? <ButtonLoader /> : <Trash2 className="h-4 w-4" />}
+                                  </Button>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </CardContent>
+                    </CollapsibleContent>
+                  </Card>
+                </Collapsible>
+              );
+            })}
           </div>
 
           {filteredEstimates.length === 0 && (
