@@ -2,7 +2,6 @@ import Home from './pages/Home';
 import TenantManager from './pages/TenantManager';
 import TenantAccess from './pages/TenantAccess';
 import Setup from './pages/Setup';
-import MindMapEditor from './pages/MindMapEditor';
 import PackageLibrary from './pages/PackageLibrary';
 import Projects from './pages/Projects';
 import Tasks from './pages/Tasks';
@@ -18,7 +17,6 @@ import AppointmentConfirm from './pages/AppointmentConfirm';
 import AppointmentManager from './pages/AppointmentManager';
 import InterestOptionsManager from './pages/InterestOptionsManager';
 import SystemSpecification from './pages/SystemSpecification';
-import ERDEditor from './pages/ERDEditor';
 import ProjectDetails from './pages/ProjectDetails';
 import ProjectForm from './pages/ProjectForm';
 import ProjectsOverview from './pages/ProjectsOverview';
@@ -28,7 +26,6 @@ import RoadmapJournal from './pages/RoadmapJournal';
 import SprintManager from './pages/SprintManager';
 import RuleBook from './pages/RuleBook';
 import PlaygroundSummary from './pages/PlaygroundSummary';
-import ConceptWorkbench from './pages/ConceptWorkbench';
 import LivePreview from './pages/LivePreview';
 import TestDataManager from './pages/TestDataManager';
 import CMSManager from './pages/CMSManager';
@@ -108,7 +105,6 @@ export const PAGES = {
     "TenantManager": TenantManager,
     "TenantAccess": TenantAccess,
     "Setup": Setup,
-    "MindMapEditor": MindMapEditor,
     "PackageLibrary": PackageLibrary,
     "Projects": Projects,
     "Tasks": Tasks,
@@ -124,7 +120,6 @@ export const PAGES = {
     "AppointmentManager": AppointmentManager,
     "InterestOptionsManager": InterestOptionsManager,
     "SystemSpecification": SystemSpecification,
-    "ERDEditor": ERDEditor,
     "ProjectDetails": ProjectDetails,
     "ProjectForm": ProjectForm,
     "ProjectsOverview": ProjectsOverview,
@@ -134,7 +129,6 @@ export const PAGES = {
     "SprintManager": SprintManager,
     "RuleBook": RuleBook,
     "PlaygroundSummary": PlaygroundSummary,
-    "ConceptWorkbench": ConceptWorkbench,
     "LivePreview": LivePreview,
     "TestDataManager": TestDataManager,
     "CMSManager": CMSManager,
