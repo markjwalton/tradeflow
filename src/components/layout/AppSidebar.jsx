@@ -50,10 +50,12 @@ export function AppSidebar({ navItems = [] }) {
   // Debug logging
   useEffect(() => {
     if (navItems.length > 0) {
+      const sampleFolder = hierarchicalNavItems.find(i => i.item_type === 'folder');
       console.log('Total navItems:', navItems.length);
-      console.log('Folders:', navItems.filter(i => i.item_type === 'folder').map(i => i.id));
-      console.log('Pages:', navItems.filter(i => i.item_type === 'page').map(i => ({ id: i.id, parent: i.parent_id })));
-      console.log('Sample folder with children:', hierarchicalNavItems.find(i => i.item_type === 'folder'));
+      console.log('All navItems:', navItems);
+      console.log('Sample folder:', sampleFolder);
+      console.log('Sample folder children:', sampleFolder?.children);
+      console.log('Sample folder children length:', sampleFolder?.children?.length);
     }
   }, [navItems, hierarchicalNavItems]);
 
