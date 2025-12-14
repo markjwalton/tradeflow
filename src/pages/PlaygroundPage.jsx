@@ -16,6 +16,7 @@ import PlaygroundEditor from "@/components/playground/PlaygroundEditor";
 import VersionHistory from "@/components/playground/VersionHistory";
 import PlaygroundJournalPanel from "@/components/playground/PlaygroundJournalPanel";
 import PromoteToLibraryDialog from "@/components/playground/PromoteToLibraryDialog";
+import { PageHeader } from "@/components/sturij";
 
 export default function PlaygroundPage() {
   const navigate = useNavigate();
@@ -217,19 +218,14 @@ Return as JSON with a "suggestions" array of strings.`,
 
   return (
     <div className="max-w-5xl mx-auto -mt-6 bg-background min-h-screen">
-      {/* Header */}
-      <div className="flex items-center gap-4 mb-6">
-        <Button variant="ghost" size="icon" onClick={() => navigate(createPageUrl("PlaygroundSummary"))}>
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
-        <div className="flex-1">
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
-            <Layout className="h-6 w-6 text-info" />
-            {item.source_name}
-          </h1>
-          <p className="text-muted-foreground">Page Playground</p>
-        </div>
+      <PageHeader 
+        title={item.source_name}
+        description="Page Playground"
+      >
         <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={() => navigate(createPageUrl("PlaygroundSummary"))}>
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
           <Badge variant="outline">v{item.current_version || 1}</Badge>
           {statusIcon}
           <Badge className={
@@ -240,7 +236,7 @@ Return as JSON with a "suggestions" array of strings.`,
             {item.test_status}
           </Badge>
         </div>
-      </div>
+      </PageHeader>
 
       {/* Action Buttons */}
       <div className="flex gap-2 mb-6">

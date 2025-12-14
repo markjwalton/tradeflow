@@ -11,6 +11,7 @@ import TenantForm from "@/components/tenants/TenantForm";
 import TenantRoleManager from "@/components/tenants/TenantRoleManager";
 import TenantUserManager from "@/components/tenants/TenantUserManager";
 import TenantAccessRequests from "@/components/tenants/TenantAccessRequests";
+import { PageHeader } from "@/components/sturij";
 
 export default function TenantManager() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -109,14 +110,17 @@ export default function TenantManager() {
 
   return (
     <div className="max-w-4xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Tenant Manager"
+        description="Manage tenants, roles, and access permissions"
+      >
+        <Button onClick={() => { setEditingTenant(null); setIsFormOpen(true); }}>
+          <Plus className="h-4 w-4 mr-2" />
+          Add Tenant
+        </Button>
+      </PageHeader>
+      
       <Card className="bg-card">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-foreground">Tenant Manager</CardTitle>
-          <Button onClick={() => { setEditingTenant(null); setIsFormOpen(true); }}>
-            <Plus className="h-4 w-4 mr-2" />
-            Add Tenant
-          </Button>
-        </CardHeader>
         <CardContent>
           {isLoading ? (
             <div className="text-center py-8 text-muted-foreground">Loading...</div>

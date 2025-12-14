@@ -27,6 +27,7 @@ import { createPageUrl } from "@/utils";
 import RoadmapItemCard from "@/components/roadmap/RoadmapItemCard";
 import RoadmapSettingsDialog, { defaultSettings } from "@/components/roadmap/RoadmapSettingsDialog";
 import { Pagination } from "@/components/ui/Pagination";
+import { PageHeader } from "@/components/sturij";
 
 const defaultCategories = [
   { value: "idea", label: "Idea" },
@@ -291,14 +292,10 @@ export default function RoadmapManager() {
 
   return (
     <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-light font-display flex items-center gap-2 text-foreground">
-            <Lightbulb className="h-6 w-6 text-secondary" />
-            Roadmap Manager
-          </h1>
-          <p className="text-muted-foreground">Track ideas, requirements, and development tasks</p>
-        </div>
+      <PageHeader 
+        title="Roadmap Manager"
+        description="Track ideas, requirements, and development tasks"
+      >
         <div className="flex gap-2">
           <Button variant="outline" size="icon" onClick={() => setShowSettings(true)}>
             <Settings className="h-4 w-4" />
@@ -308,7 +305,7 @@ export default function RoadmapManager() {
             Add Item
           </Button>
         </div>
-      </div>
+      </PageHeader>
 
       {/* Focused Item Banner */}
       {focusedItem && (

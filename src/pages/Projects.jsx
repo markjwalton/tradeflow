@@ -32,6 +32,7 @@ import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { PullToRefresh } from "@/components/common/PullToRefresh";
+import { PageHeader } from "@/components/sturij";
 
 const statusColors = {
   draft: "bg-muted text-muted-foreground",
@@ -168,13 +169,15 @@ export default function Projects() {
   return (
     <PullToRefresh onRefresh={refetch} enabled={true}>
     <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-light font-display text-foreground">Projects</h1>
+      <PageHeader 
+        title="Projects"
+        description="Manage your construction projects"
+      >
         <Button onClick={() => { form.reset(); setEditingProject(null); setShowForm(true); }} className="w-full sm:w-auto">
           <Plus className="h-4 w-4 mr-2" />
           <span className="sm:inline">New Project</span>
         </Button>
-      </div>
+      </PageHeader>
 
       <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-6">
         <div className="relative flex-1">
