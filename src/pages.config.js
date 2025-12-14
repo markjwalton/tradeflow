@@ -11,15 +11,11 @@ import Team from './pages/Team';
 import Estimates from './pages/Estimates';
 import Calendar from './pages/Calendar';
 import ProjectDetail from './pages/ProjectDetail';
-import TemplateLibrary from './pages/TemplateLibrary';
 import BusinessTemplates from './pages/BusinessTemplates';
 import GeneratedApps from './pages/GeneratedApps';
 import WorkflowDesigner from './pages/WorkflowDesigner';
-import WorkflowLibrary from './pages/WorkflowLibrary';
 import FormBuilder from './pages/FormBuilder';
-import FormTemplates from './pages/FormTemplates';
 import ChecklistBuilder from './pages/ChecklistBuilder';
-import ChecklistTemplates from './pages/ChecklistTemplates';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import AppointmentHub from './pages/AppointmentHub';
 import AppointmentConfirm from './pages/AppointmentConfirm';
@@ -45,7 +41,6 @@ import PerformanceMonitor from './pages/PerformanceMonitor';
 import SecurityMonitor from './pages/SecurityMonitor';
 import LookupTestForms from './pages/LookupTestForms';
 import NavigationManager from './pages/NavigationManager';
-import CommunityLibrary from './pages/CommunityLibrary';
 import CommunityPublish from './pages/CommunityPublish';
 import DashboardManager from './pages/DashboardManager';
 import Dashboard from './pages/Dashboard';
@@ -126,15 +121,11 @@ export const PAGES = {
     "Estimates": Estimates,
     "Calendar": Calendar,
     "ProjectDetail": ProjectDetail,
-    "TemplateLibrary": TemplateLibrary,
     "BusinessTemplates": BusinessTemplates,
     "GeneratedApps": GeneratedApps,
     "WorkflowDesigner": WorkflowDesigner,
-    "WorkflowLibrary": WorkflowLibrary,
     "FormBuilder": FormBuilder,
-    "FormTemplates": FormTemplates,
     "ChecklistBuilder": ChecklistBuilder,
-    "ChecklistTemplates": ChecklistTemplates,
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
     "AppointmentHub": AppointmentHub,
     "AppointmentConfirm": AppointmentConfirm,
@@ -160,7 +151,6 @@ export const PAGES = {
     "SecurityMonitor": SecurityMonitor,
     "LookupTestForms": LookupTestForms,
     "NavigationManager": NavigationManager,
-    "CommunityLibrary": CommunityLibrary,
     "CommunityPublish": CommunityPublish,
     "DashboardManager": DashboardManager,
     "Dashboard": Dashboard,
