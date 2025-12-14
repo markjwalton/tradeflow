@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, File, GitBranch, AlertCircle, FileText, RefreshCw, Database, Sparkles } from "lucide-react";
+import { Loader2, File, GitBranch, AlertCircle, FileText, RefreshCw, Database } from "lucide-react";
 
 export default function GitHubIntegration() {
   const [loading, setLoading] = useState(false);
@@ -21,9 +21,6 @@ export default function GitHubIntegration() {
   const [hasMoreIssues, setHasMoreIssues] = useState(false);
   const [hasMoreCommits, setHasMoreCommits] = useState(false);
   const [useCache, setUseCache] = useState(true);
-  const [syncResult, setSyncResult] = useState(null);
-  const [isRebuilding, setIsRebuilding] = useState(false);
-  const [lastRebuild, setLastRebuild] = useState(null);
 
   const handleGetRepo = async () => {
     setLoading(true);
@@ -46,18 +43,6 @@ export default function GitHubIntegration() {
   // Load repository info on mount
   useEffect(() => {
     handleGetRepo();
-    // Load last rebuild timestamp
-    const loadRebuildTimestamp = async () => {
-      try {
-        const user = await base44.auth.me();
-        if (user?.ui_preferences?.lastRebuildTimestamp) {
-          setLastRebuild(user.ui_preferences.lastRebuildTimestamp);
-        }
-      } catch (e) {
-        // Ignore
-      }
-    };
-    loadRebuildTimestamp();
   }, []);
 
   const handleGetFile = async () => {
@@ -163,55 +148,6 @@ export default function GitHubIntegration() {
     }
   };
 
-  const handleSync = async () => {
-    setLoading(true);
-    setError(null);
-    setSyncResult(null);
-    try {
-      // Pull pages from GitHub
-      const pullResult = await base44.functions.invoke('githubApi', {
-        action: 'pull_pages'
-      });
-      
-      setSyncResult({
-        updated: pullResult.data?.updated || [],
-        count: pullResult.data?.count || 0,
-        errors: pullResult.data?.errors || []
-      });
-      
-      setError(null);
-    } catch (e) {
-      console.error('Sync error:', e);
-      setError(e.response?.data?.error || e.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRebuild = async () => {
-    setIsRebuilding(true);
-    try {
-      const timestamp = new Date().toISOString();
-      const user = await base44.auth.me();
-      await base44.auth.updateMe({
-        ui_preferences: {
-          ...(user.ui_preferences || {}),
-          lastRebuildTimestamp: timestamp,
-          rebuildTrigger: Math.random()
-        }
-      });
-      setLastRebuild(timestamp);
-      
-      // Reload after 2 seconds
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    } catch (e) {
-      setError('Rebuild failed: ' + e.message);
-      setIsRebuilding(false);
-    }
-  };
-
   return (
     <div className="min-h-screen p-6 bg-background">
       <div className="max-w-6xl mx-auto space-y-6">
@@ -219,28 +155,10 @@ export default function GitHubIntegration() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <GitBranch className="h-6 w-6" />
-              GitHub Configuration
+              GitHub Integration Demo
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="mb-6 p-4 bg-muted rounded-lg space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Repository:</span>
-                <code className="text-sm">base44dev/tradeai360</code>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Branch:</span>
-                <code className="text-sm">main</code>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Sync Direction:</span>
-                <Badge variant="secondary">Pull & Push</Badge>
-              </div>
-              <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded text-sm">
-                <p className="font-medium text-yellow-900 mb-1">⚠️ Important Note:</p>
-                <p className="text-yellow-800">After syncing from GitHub, you must trigger a rebuild using the green rebuild button to see changes in the running app.</p>
-              </div>
-            </div>
             {repo && repo.owner ? (
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
@@ -291,64 +209,6 @@ export default function GitHubIntegration() {
             </CardContent>
           </Card>
         )}
-        
-        {syncResult && (
-          <Card className="border-primary">
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
-                <RefreshCw className="h-5 w-5 text-primary" />
-                Sync Results
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="text-lg px-3 py-1">
-                  {syncResult.count} pages synced
-                </Badge>
-              </div>
-              
-              {syncResult.updated.length > 0 && (
-                <div className="space-y-2">
-                  <p className="text-sm font-medium">Updated Pages:</p>
-                  <div className="flex flex-wrap gap-2">
-                    {syncResult.updated.map((page) => (
-                      <Badge key={page} variant="outline">
-                        {page}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-              
-              {syncResult.errors && syncResult.errors.length > 0 && (
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-destructive">Errors:</p>
-                  <div className="space-y-1">
-                    {syncResult.errors.map((error, idx) => (
-                      <p key={idx} className="text-xs text-muted-foreground">{error}</p>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
-
-        <div className="flex justify-end gap-2 mb-4">
-          <Button onClick={handleSync} disabled={loading} className="gap-2">
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
-            Sync from GitHub
-          </Button>
-          <Button 
-            onClick={handleRebuild} 
-            disabled={isRebuilding}
-            className="gap-2 bg-green-600 hover:bg-green-700"
-            title={lastRebuild ? `Last rebuild: ${new Date(lastRebuild).toLocaleString()}` : 'Trigger rebuild'}
-          >
-            {isRebuilding ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-            Rebuild & Deploy
-          </Button>
-        </div>
 
         <Tabs defaultValue="files" className="w-full">
           <TabsList className="grid w-full grid-cols-4">

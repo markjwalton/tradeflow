@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { cssVariables } from "@/components/library/designTokens";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { prefetchOnIdle, prefetchDashboardQueries, prefetchLibraryQueries } from "@/components/common/queryPrefetch";
 
@@ -20,11 +20,10 @@ import { PageSettingsPanel } from "@/components/page-builder/PageSettingsPanel";
 import { PageUIPanel } from "@/components/design-assistant/PageUIPanel";
 import { LiveEditWrapper } from "@/components/page-builder/LiveEditWrapper";
 import { TopEditorPanel } from "@/components/page-builder/TopEditorPanel";
-import { Palette, GitBranch } from "lucide-react";
+import { Palette } from "lucide-react";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { WebVitals } from "@/components/common/WebVitals";
 import { initializeSentry, setUserContext } from "@/components/common/sentryConfig";
-import { toast } from "sonner";
 
 // Initialize Sentry once
 if (typeof window !== 'undefined') {
@@ -47,11 +46,7 @@ export default function Layout({ children, currentPageName }) {
   const [navItems, setNavItems] = useState([]);
   const [editorPanelOpen, setEditorPanelOpen] = useState(false);
   const [showEditorBubble, setShowEditorBubble] = useState(true);
-  const [showGitBubble, setShowGitBubble] = useState(true);
   const [siteSettings, setSiteSettings] = useState(null);
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [isRebuilding, setIsRebuilding] = useState(false);
-  const [lastRebuild, setLastRebuild] = useState(null);
   
   const urlParams = new URLSearchParams(window.location.search);
   const tenantSlug = urlParams.get("tenant");
@@ -70,9 +65,6 @@ export default function Layout({ children, currentPageName }) {
         const user = await base44.auth.me();
         if (user?.ui_preferences?.showEditorBubble !== undefined) {
           setShowEditorBubble(user.ui_preferences.showEditorBubble);
-        }
-        if (user?.ui_preferences?.showGitBubble !== undefined) {
-          setShowGitBubble(user.ui_preferences.showGitBubble);
         }
         // Always turn off live edit mode on page load
         await base44.auth.updateMe({
@@ -142,12 +134,7 @@ export default function Layout({ children, currentPageName }) {
     };
 
     const handlePreferencesChange = (event) => {
-      if (event.detail.showEditorBubble !== undefined) {
-        setShowEditorBubble(event.detail.showEditorBubble);
-      }
-      if (event.detail.showGitBubble !== undefined) {
-        setShowGitBubble(event.detail.showGitBubble);
-      }
+      setShowEditorBubble(event.detail.showEditorBubble ?? true);
     };
 
     const handleSiteSettingsChange = (event) => {
@@ -161,19 +148,6 @@ export default function Layout({ children, currentPageName }) {
     };
 
     loadBubblePreference();
-
-    // Load last rebuild timestamp
-    const loadRebuildTimestamp = async () => {
-      try {
-        const user = await base44.auth.me();
-        if (user?.ui_preferences?.lastRebuildTimestamp) {
-          setLastRebuild(user.ui_preferences.lastRebuildTimestamp);
-        }
-      } catch (e) {
-        // Ignore
-      }
-    };
-    loadRebuildTimestamp();
 
     // Prefetch common queries on idle
     if (queryClient) {
@@ -548,79 +522,6 @@ export default function Layout({ children, currentPageName }) {
               title="Toggle Editor Panel"
             >
               {editorPanelOpen ? "✕" : <Palette className="h-6 w-6" />}
-            </Button>
-          )}
-
-          {/* Git Sync bubble button */}
-          {showGitBubble && (
-            <Button
-              onClick={async () => {
-                setIsSyncing(true);
-                const loadingToast = toast.loading('Syncing with GitHub...');
-                try {
-                  const pullResult = await base44.functions.invoke('githubApi', {
-                    action: 'pull_pages'
-                  });
-
-                  const updatedFiles = pullResult.data?.updated || [];
-                  const filesMsg = updatedFiles.length > 0 
-                    ? `\nUpdated: ${updatedFiles.join(', ')}` 
-                    : '';
-
-                  toast.success(`Synced: ${pullResult.data?.count || 0} pages pulled${filesMsg}`, { 
-                    id: loadingToast,
-                    duration: 5000 
-                  });
-                } catch (e) {
-                  console.error('Sync error:', e);
-                  toast.error('Sync failed: ' + (e.response?.data?.error || e.message), { id: loadingToast });
-                } finally {
-                  setIsSyncing(false);
-                }
-              }}
-              disabled={isSyncing}
-              className="fixed bottom-6 left-24 h-14 w-14 rounded-full shadow-2xl bg-primary text-white hover:bg-primary/90 border-2 border-white z-[60] disabled:opacity-50"
-              title="Sync with GitHub"
-            >
-              {isSyncing ? <Loader2 className="h-6 w-6 animate-spin" /> : <GitBranch className="h-6 w-6" />}
-            </Button>
-          )}
-
-          {/* Rebuild & Deploy button */}
-          {showGitBubble && (
-            <Button
-              onClick={async () => {
-                setIsRebuilding(true);
-                const loadingToast = toast.loading('Triggering rebuild...');
-                try {
-                  // Update timestamp to trigger a rebuild
-                  const timestamp = new Date().toISOString();
-                  const user = await base44.auth.me();
-                  await base44.auth.updateMe({
-                    ui_preferences: {
-                      ...(user.ui_preferences || {}),
-                      lastRebuildTimestamp: timestamp,
-                      rebuildTrigger: Math.random() // Force change
-                    }
-                  });
-                  setLastRebuild(timestamp);
-                  toast.success(`Rebuild triggered at ${new Date(timestamp).toLocaleTimeString()}`, { id: loadingToast });
-
-                  // Reload after 2 seconds to see changes
-                  setTimeout(() => {
-                    window.location.reload();
-                  }, 2000);
-                } catch (e) {
-                  toast.error('Rebuild failed: ' + e.message, { id: loadingToast });
-                } finally {
-                  setIsRebuilding(false);
-                }
-              }}
-              disabled={isRebuilding}
-              className="fixed bottom-6 left-[184px] h-14 w-14 rounded-full shadow-2xl bg-green-600 text-white hover:bg-green-700 border-2 border-white z-[60] disabled:opacity-50"
-              title={`Rebuild & Deploy${lastRebuild ? '\nLast rebuild: ' + new Date(lastRebuild).toLocaleString() : ''}`}
-            >
-              {isRebuilding ? <Loader2 className="h-6 w-6 animate-spin" /> : <Sparkles className="h-6 w-6" />}
             </Button>
           )}
         </SidebarProvider>

@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Save, X, Sparkles, Loader2, Image as ImageIcon, Moon, GitBranch } from "lucide-react";
+import { Save, X, Sparkles, Loader2, Image as ImageIcon, Moon } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
@@ -101,21 +101,11 @@ export default function SiteSettings() {
   const [originalSettings, setOriginalSettings] = useState(null);
   const [hasChanges, setHasChanges] = useState(false);
   const [generatingBackground, setGeneratingBackground] = useState(false);
-  const [uiPreferences, setUiPreferences] = useState({ showEditorBubble: true, showGitBubble: true });
 
   useEffect(() => {
     const loadSettings = async () => {
       try {
         const user = await base44.auth.me();
-        
-        // Load UI preferences
-        if (user?.ui_preferences) {
-          setUiPreferences({
-            showEditorBubble: user.ui_preferences.showEditorBubble ?? true,
-            showGitBubble: user.ui_preferences.showGitBubble ?? true
-          });
-        }
-        
         const defaultSettings = {
           backgroundColor: "background-50",
           navbarBackground: "sidebar",
@@ -749,74 +739,6 @@ export default function SiteSettings() {
               <p className="text-xs text-muted-foreground mt-2">
                 Content will be constrained to {settings.maxWidth}px and aligned {settings.contentAlignment}
               </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Developer Tools</CardTitle>
-            <CardDescription>Control editor and Git integration visibility</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between p-4 border rounded-lg">
-              <div className="flex items-center gap-3">
-                <Sparkles className="h-5 w-5 text-primary" />
-                <div>
-                  <div className="font-semibold">Show Editor Bubble</div>
-                  <div className="text-sm text-muted-foreground">Show/hide the live page editor button</div>
-                </div>
-              </div>
-              <Button
-                variant={uiPreferences.showEditorBubble ? "default" : "outline"}
-                onClick={async () => {
-                  const newValue = !uiPreferences.showEditorBubble;
-                  setUiPreferences({ ...uiPreferences, showEditorBubble: newValue });
-                  const user = await base44.auth.me();
-                  await base44.auth.updateMe({
-                    ui_preferences: {
-                      ...(user.ui_preferences || {}),
-                      showEditorBubble: newValue
-                    }
-                  });
-                  window.dispatchEvent(new CustomEvent('ui-preferences-changed', { 
-                    detail: { showEditorBubble: newValue } 
-                  }));
-                  toast.success("Editor bubble visibility updated");
-                }}
-              >
-                {uiPreferences.showEditorBubble ? "Visible" : "Hidden"}
-              </Button>
-            </div>
-            
-            <div className="flex items-center justify-between p-4 border rounded-lg">
-              <div className="flex items-center gap-3">
-                <GitBranch className="h-5 w-5 text-primary" />
-                <div>
-                  <div className="font-semibold">Show Git Bubbles</div>
-                  <div className="text-sm text-muted-foreground">Show/hide Git sync and rebuild buttons</div>
-                </div>
-              </div>
-              <Button
-                variant={uiPreferences.showGitBubble ? "default" : "outline"}
-                onClick={async () => {
-                  const newValue = !uiPreferences.showGitBubble;
-                  setUiPreferences({ ...uiPreferences, showGitBubble: newValue });
-                  const user = await base44.auth.me();
-                  await base44.auth.updateMe({
-                    ui_preferences: {
-                      ...(user.ui_preferences || {}),
-                      showGitBubble: newValue
-                    }
-                  });
-                  window.dispatchEvent(new CustomEvent('ui-preferences-changed', { 
-                    detail: { showGitBubble: newValue } 
-                  }));
-                  toast.success("Git bubbles visibility updated");
-                }}
-              >
-                {uiPreferences.showGitBubble ? "Visible" : "Hidden"}
-              </Button>
             </div>
           </CardContent>
         </Card>

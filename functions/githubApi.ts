@@ -1,8 +1,8 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
 const GITHUB_TOKEN = Deno.env.get("GITHUB_TOKEN");
-const REPO_OWNER = "base44dev";
-const REPO_NAME = "tradeai360";
+const REPO_OWNER = "Contextual";
+const REPO_NAME = "Sturij";
 
 Deno.serve(async (req) => {
   try {
@@ -211,142 +211,6 @@ Deno.serve(async (req) => {
               }
             }
           });
-        }
-        break;
-
-      case 'pull_pages':
-        // Pull pages from GitHub and update UIPage entities
-        try {
-          // Get list of pages from src/pages directory
-          const pagesUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/src/pages`;
-          const pagesResponse = await fetch(pagesUrl, { headers });
-
-          if (!pagesResponse.ok) {
-            const errorText = await pagesResponse.text();
-            return Response.json({ 
-              error: `Failed to fetch pages directory: ${pagesResponse.status} - ${errorText}`,
-              url: pagesUrl 
-            }, { status: pagesResponse.status });
-          }
-
-          const files = await pagesResponse.json();
-
-          if (!Array.isArray(files)) {
-            return Response.json({ 
-              error: 'Unexpected response format from GitHub',
-              response: files 
-            }, { status: 500 });
-          }
-
-          const updatedPages = [];
-          const errors = [];
-
-          // Filter to .jsx/.js files
-          const pageFiles = files.filter(f => f.type === 'file' && /\.(jsx|js)$/.test(f.name));
-
-          for (const file of pageFiles) {
-            try {
-              const pageName = file.name.replace(/\.(jsx|js)$/, '');
-
-              // Get file content
-              const fileResponse = await fetch(file.url, { headers });
-              if (!fileResponse.ok) {
-                errors.push(`Failed to fetch ${file.name}: ${fileResponse.status}`);
-                continue;
-              }
-
-              const fileData = await fileResponse.json();
-              const content = atob(fileData.content);
-
-              // Find or create UIPage
-              const existingPages = await base44.asServiceRole.entities.UIPage.filter({ page_name: pageName });
-
-              if (existingPages.length > 0) {
-                await base44.asServiceRole.entities.UIPage.update(existingPages[0].id, {
-                  current_content_jsx: content
-                });
-                updatedPages.push(pageName);
-              } else {
-                await base44.asServiceRole.entities.UIPage.create({
-                  page_name: pageName,
-                  current_content_jsx: content,
-                  description: `Pulled from GitHub`
-                });
-                updatedPages.push(pageName);
-              }
-            } catch (fileError) {
-              errors.push(`Error processing ${file.name}: ${fileError.message}`);
-            }
-          }
-
-          return Response.json({ 
-            success: true, 
-            updated: updatedPages,
-            count: updatedPages.length,
-            errors: errors.length > 0 ? errors : undefined
-          });
-        } catch (error) {
-          return Response.json({ 
-            error: `Pull failed: ${error.message}`,
-            stack: error.stack 
-          }, { status: 500 });
-        }
-        break;
-
-      case 'push_changes':
-        // Push Base44 changes to GitHub
-        try {
-          const { file_path, content, message } = body;
-          
-          if (!file_path || !content) {
-            return Response.json({ error: 'file_path and content required' }, { status: 400 });
-          }
-          
-          // Get current file SHA (needed for updates)
-          const getFileUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${file_path}`;
-          const getFileResponse = await fetch(getFileUrl, { headers });
-          let sha = null;
-          
-          if (getFileResponse.ok) {
-            const fileData = await getFileResponse.json();
-            sha = fileData.sha;
-          }
-          
-          // Base64 encode using TextEncoder (Deno-compatible)
-          const encoder = new TextEncoder();
-          const data = encoder.encode(content);
-          const base64 = btoa(String.fromCharCode(...data));
-          
-          // Create or update file
-          const updateUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${file_path}`;
-          const updatePayload = {
-            message: message || `Update ${file_path} from Base44`,
-            content: base64,
-            ...(sha && { sha })
-          };
-          
-          const updateResponse = await fetch(updateUrl, {
-            method: 'PUT',
-            headers: {
-              ...headers,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updatePayload)
-          });
-          
-          if (updateResponse.ok) {
-            const result = await updateResponse.json();
-            return Response.json({ 
-              success: true, 
-              commit: result.commit,
-              message: 'Changes pushed to GitHub'
-            });
-          } else {
-            const error = await updateResponse.text();
-            return Response.json({ error: `Failed to push: ${error}` }, { status: updateResponse.status });
-          }
-        } catch (error) {
-          return Response.json({ error: `Push failed: ${error.message}` }, { status: 500 });
         }
         break;
 
