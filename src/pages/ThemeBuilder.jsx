@@ -210,16 +210,13 @@ Return JSON with: name, description, suggested_palette_name, custom_css (CSS cod
       <PageHeader 
         title="Theme Builder"
         description="Create and manage complete design themes"
-      >
-        <Button variant="outline" onClick={() => navigate(createPageUrl("ThemePreview"))}>
-          <Eye className="h-4 w-4 mr-2" />Preview Theme
-        </Button>
-      </PageHeader>
+      />
 
       <Tabs defaultValue="build" className="w-full">
         <TabsList>
           <TabsTrigger value="build">Build Theme</TabsTrigger>
           <TabsTrigger value="library">Theme Library</TabsTrigger>
+          <TabsTrigger value="preview">Preview</TabsTrigger>
         </TabsList>
 
         <TabsContent value="build" className="space-y-6 mt-6">
@@ -381,6 +378,93 @@ Return JSON with: name, description, suggested_palette_name, custom_css (CSS cod
               </Card>
             ))
           )}
+        </TabsContent>
+
+        <TabsContent value="preview" className="space-y-6 mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Gradients</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <div className="h-24 rounded-lg bg-gradient-primary" />
+                  <p className="text-xs text-center text-muted-foreground">Primary Gradient</p>
+                </div>
+                <div className="space-y-2">
+                  <div className="h-24 rounded-lg bg-gradient-secondary" />
+                  <p className="text-xs text-center text-muted-foreground">Secondary Gradient</p>
+                </div>
+                <div className="space-y-2">
+                  <div className="h-24 rounded-lg bg-gradient-accent" />
+                  <p className="text-xs text-center text-muted-foreground">Accent Gradient</p>
+                </div>
+                <div className="space-y-2">
+                  <div className="h-24 rounded-lg bg-gradient-sunset" />
+                  <p className="text-xs text-center text-muted-foreground">Sunset</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Typography</CardTitle>
+              <CardDescription>Heading and body font styles</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <h1 className="text-4xl font-display mb-2">Display Heading</h1>
+                <h2 className="text-3xl font-display mb-2">Headline</h2>
+                <h3 className="text-2xl font-display mb-2">Title</h3>
+                <p className="text-base font-body">Body text: The quick brown fox jumps over the lazy dog.</p>
+                <p className="text-sm text-muted-foreground mt-2">Caption text in muted color</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Buttons</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex flex-wrap gap-2">
+                <Button>Primary</Button>
+                <Button variant="secondary">Secondary</Button>
+                <Button variant="outline">Outline</Button>
+                <Button variant="ghost">Ghost</Button>
+                <Button variant="destructive">Destructive</Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Form Elements</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>Input Field</Label>
+                <Input placeholder="Enter some text..." />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Alerts</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Alert>
+                <Info className="h-4 w-4" />
+                <AlertDescription>This is an informational alert message.</AlertDescription>
+              </Alert>
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>This is a destructive alert message.</AlertDescription>
+              </Alert>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
       </div>

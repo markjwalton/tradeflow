@@ -113,6 +113,7 @@ import UXShowcase from './pages/UXShowcase';
 import SystemHealth from './pages/SystemHealth';
 import DeveloperDocs from './pages/DeveloperDocs';
 import SchemaVisualEditor from './pages/SchemaVisualEditor';
+import PlaygroundItem from './pages/PlaygroundItem';
 import __Layout from './Layout.jsx';
 
 
@@ -232,6 +233,7 @@ export const PAGES = {
     "SystemHealth": SystemHealth,
     "DeveloperDocs": DeveloperDocs,
     "SchemaVisualEditor": SchemaVisualEditor,
+    "PlaygroundItem": PlaygroundItem,
 }
 
 export const pagesConfig = {
