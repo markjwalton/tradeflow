@@ -116,6 +116,24 @@ export default function GenericNavEditor({
   const config = navConfigs[0];
   const rawItems = config?.items || [];
   
+  // Debug RAW items from database
+  console.log('=== GenericNavEditor Debug ===');
+  console.log('Config type:', effectiveConfigType);
+  console.log('RAW items from DB:', rawItems.length);
+  console.log('First 10 raw items:', rawItems.slice(0, 10).map(i => ({
+    id: i.id,
+    _id: i._id,
+    name: i.name,
+    parent_id: i.parent_id,
+    item_type: i.item_type
+  })));
+  console.log('Items with parent_id:', rawItems.filter(i => i.parent_id).map(i => ({
+    id: i.id,
+    _id: i._id,
+    name: i.name,
+    parent_id: i.parent_id
+  })));
+  
   // Get slugs from config's source_slugs (no hardcoded fallback)
   const effectiveSlugs = React.useMemo(() => {
     return (config?.source_slugs || []).sort();
