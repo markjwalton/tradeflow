@@ -14,9 +14,6 @@ import ProjectDetail from './pages/ProjectDetail';
 import TemplateLibrary from './pages/TemplateLibrary';
 import BusinessTemplates from './pages/BusinessTemplates';
 import GeneratedApps from './pages/GeneratedApps';
-import EntityLibrary from './pages/EntityLibrary';
-import PageLibrary from './pages/PageLibrary';
-import FeatureLibrary from './pages/FeatureLibrary';
 import WorkflowDesigner from './pages/WorkflowDesigner';
 import WorkflowLibrary from './pages/WorkflowLibrary';
 import FormBuilder from './pages/FormBuilder';
@@ -110,6 +107,7 @@ import UXShowcase from './pages/UXShowcase';
 import SystemHealth from './pages/SystemHealth';
 import DeveloperDocs from './pages/DeveloperDocs';
 import SchemaVisualEditor from './pages/SchemaVisualEditor';
+import Library from './pages/Library';
 import __Layout from './Layout.jsx';
 
 
@@ -130,9 +128,6 @@ export const PAGES = {
     "TemplateLibrary": TemplateLibrary,
     "BusinessTemplates": BusinessTemplates,
     "GeneratedApps": GeneratedApps,
-    "EntityLibrary": EntityLibrary,
-    "PageLibrary": PageLibrary,
-    "FeatureLibrary": FeatureLibrary,
     "WorkflowDesigner": WorkflowDesigner,
     "WorkflowLibrary": WorkflowLibrary,
     "FormBuilder": FormBuilder,
@@ -226,6 +221,7 @@ export const PAGES = {
     "SystemHealth": SystemHealth,
     "DeveloperDocs": DeveloperDocs,
     "SchemaVisualEditor": SchemaVisualEditor,
+    "Library": Library,
 }
 
 export const pagesConfig = {
