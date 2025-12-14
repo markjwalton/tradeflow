@@ -1,23 +1,29 @@
 // Auto-generated pages configuration
 // This file is used by the navigation system to track available pages
 
-// Initialize with safe defaults to prevent null/undefined errors
-const safeConfig = {
+// Safe default configuration with all required properties
+const defaultConfig = {
   pages: [],
   routes: {},
   metadata: {},
   navigationItems: [],
-  pageComponents: {},
-  pageMap: new Map(),
-  routeMap: new Map()
+  pageComponents: {}
 };
 
-// Ensure all nested objects exist
-Object.keys(safeConfig).forEach(key => {
-  if (safeConfig[key] === null || safeConfig[key] === undefined) {
-    safeConfig[key] = Array.isArray(safeConfig[key]) ? [] : {};
+// Create a proxy to catch any property access and return safe defaults
+export const pagesConfig = new Proxy(defaultConfig, {
+  get(target, prop) {
+    if (prop in target) {
+      const value = target[prop];
+      // Return safe defaults for null/undefined values
+      if (value === null || value === undefined) {
+        return Array.isArray(target[prop]) ? [] : {};
+      }
+      return value;
+    }
+    // Return safe default for unknown properties
+    return typeof prop === 'string' && prop.endsWith('s') ? [] : {};
   }
 });
 
-export const pagesConfig = safeConfig;
 export default pagesConfig;
