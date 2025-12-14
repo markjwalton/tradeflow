@@ -241,7 +241,7 @@ export default function PackageExport() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+    <div className="max-w-7xl mx-auto min-h-screen p-6">
       <PageHeader 
         title="Export Package"
         description={pkg ? `${pkg.package_name} v${pkg.version}` : "Loading..."}
@@ -264,9 +264,9 @@ export default function PackageExport() {
         </div>
       </PageHeader>
 
-      <div className="grid md:grid-cols-4 gap-6">
+      <div className="flex flex-col md:flex-row gap-6">
         {/* Options Sidebar */}
-        <Card className="border-border">
+        <Card className="border-border md:w-1/4">
           <CardHeader>
             <CardTitle className="text-midnight-900 flex items-center gap-2">
               <Settings className="h-4 w-4" />
@@ -321,9 +321,9 @@ export default function PackageExport() {
         </Card>
 
         {/* Export Preview */}
-        <div className="md:col-span-3">
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList>
+        <div className="md:w-3/4">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-0">
+            <TabsList className="mb-4">
               <TabsTrigger value="css" className="gap-1">
                 <FileCode className="h-4 w-4" />
                 CSS Variables
@@ -342,7 +342,7 @@ export default function PackageExport() {
               </TabsTrigger>
             </TabsList>
 
-            <Card className="mt-4 border-border">
+            <Card className="border-border">
               <CardContent className="p-0">
                 <ScrollArea className="h-[500px]">
                   <pre className="p-4 text-sm font-mono text-midnight-900 whitespace-pre-wrap">
