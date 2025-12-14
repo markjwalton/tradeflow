@@ -20,18 +20,18 @@ export function AppSidebar({ navItems = [] }) {
     const itemsMap = new Map();
     const rootItems = [];
 
-    // First pass: create a map of all items by their _id with children array
+    // First pass: create a map of all items by their id with children array
     items.forEach((item) => {
-      if (item._id) {
-        itemsMap.set(item._id, { ...item, children: [] });
+      if (item.id) {
+        itemsMap.set(item.id, { ...item, children: [] });
       }
     });
 
     // Second pass: build hierarchy by connecting parents and children
     items.forEach((item) => {
-      if (!item._id) return;
+      if (!item.id) return;
       
-      const currentItem = itemsMap.get(item._id);
+      const currentItem = itemsMap.get(item.id);
       if (!currentItem) return;
       
       if (item.parent_id && itemsMap.has(item.parent_id)) {
@@ -63,7 +63,7 @@ export function AppSidebar({ navItems = [] }) {
     const initiallyExpanded = new Set();
     navItems.forEach((item) => {
       if (item.item_type === "folder" && item.default_collapsed === false) {
-        initiallyExpanded.add(item._id);
+        initiallyExpanded.add(item.id);
       }
     });
     setExpandedFolders(initiallyExpanded);
@@ -135,7 +135,7 @@ export function AppSidebar({ navItems = [] }) {
   const renderNavItem = (item, isChild = false, isTopLevel = false) => {
     const isFolder = item.item_type === "folder";
     const Icon = getIcon(item.icon);
-    const isExpanded = expandedFolders.has(item._id);
+    const isExpanded = expandedFolders.has(item.id);
     const iconSize = item.icon_size || 20;
     const iconStrokeWidth = item.icon_stroke_width || 2;
 
@@ -154,7 +154,7 @@ export function AppSidebar({ navItems = [] }) {
       if (isIconsOnly) {
         const folderButton = (
           <button
-            onClick={() => toggleFolder(item._id)}
+            onClick={() => toggleFolder(item.id)}
             className={cn(
               "w-full flex items-center justify-center transition-colors group",
               "[padding:var(--spacing-3)] [border-radius:var(--radius-lg)]",
@@ -171,7 +171,7 @@ export function AppSidebar({ navItems = [] }) {
         );
         
         return (
-          <div key={item._id}>
+          <div key={item.id}>
             <Tooltip>
               <TooltipTrigger asChild>
                 {folderButton}
@@ -191,9 +191,9 @@ export function AppSidebar({ navItems = [] }) {
       
       // Expanded mode - folders are expandable
       return (
-        <div key={item._id} className={isExpanded && showLabels ? "bg-sidebar-accent [border-radius:var(--radius-lg)] [margin-bottom:var(--spacing-1)]" : ""}>
+        <div key={item.id} className={isExpanded && showLabels ? "bg-sidebar-accent [border-radius:var(--radius-lg)] [margin-bottom:var(--spacing-1)]" : ""}>
           <button
-            onClick={() => toggleFolder(item._id)}
+            onClick={() => toggleFolder(item.id)}
             className={cn(
               "w-full flex items-center transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground",
               "[gap:var(--spacing-3)] [padding-left:var(--spacing-3)] [padding-right:var(--spacing-3)] [padding-top:var(--spacing-2)] [padding-bottom:var(--spacing-2)] [border-radius:var(--radius-lg)]",
@@ -225,7 +225,7 @@ export function AppSidebar({ navItems = [] }) {
 
     const linkContent = (
       <Link
-        key={item._id}
+        key={item.id}
         to={fullPageUrl}
         onMouseEnter={() => handleMouseEnter(pageName)}
         className={cn(
@@ -250,7 +250,7 @@ export function AppSidebar({ navItems = [] }) {
     
     if (!showLabels) {
       return (
-        <Tooltip key={item._id}>
+        <Tooltip key={item.id}>
           <TooltipTrigger asChild>
             {linkContent}
           </TooltipTrigger>
