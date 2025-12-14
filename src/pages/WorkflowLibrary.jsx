@@ -34,6 +34,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { toast } from "sonner";
+import { PageHeader } from "@/components/sturij";
 
 const categoryColors = {
   sales: "bg-success-50 text-success",
@@ -106,22 +107,18 @@ export default function WorkflowLibrary() {
   });
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-light font-display text-foreground">Workflow Library</h1>
-          <p className="text-muted-foreground">
-            Manage and create workflow templates for your business processes
-          </p>
-        </div>
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Workflow Library"
+        description="Manage and create workflow templates for your business processes"
+      >
         <Link to={createPageUrl("WorkflowDesigner")}>
           <Button>
             <Plus className="h-4 w-4 mr-2" />
             Create Workflow
           </Button>
         </Link>
-      </div>
+      </PageHeader>
 
       {/* Filters */}
       <div className="flex gap-4 mb-6">

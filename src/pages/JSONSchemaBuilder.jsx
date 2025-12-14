@@ -198,7 +198,7 @@ function AddFieldDialog({ onAdd, onClose }) {
   };
 
   return (
-    <div>
+    <>
       <DialogHeader>
         <DialogTitle>Add New Field</DialogTitle>
         <p className="text-sm text-muted-foreground">Create a new field for your JSON schema</p>
@@ -364,6 +364,6 @@ function AddFieldDialog({ onAdd, onClose }) {
         <Button variant="outline" onClick={onClose}>Cancel</Button>
         <Button onClick={handleSubmit}>Add Field</Button>
       </div>
-    </div>
+    </>
   );
 }

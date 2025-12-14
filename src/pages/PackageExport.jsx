@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { STURIJ_TOKENS } from "@/components/design-system/ThemeTokenEditor";
+import { PageHeader } from "@/components/sturij";
 
 export default function PackageExport() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -240,26 +241,18 @@ export default function PackageExport() {
   }
 
   return (
-    <div className="p-6 bg-background min-h-screen">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-4">
+    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+      <PageHeader 
+        title="Export Package"
+        description={pkg ? `${pkg.package_name} v${pkg.version}` : "Loading..."}
+      >
+        <div className="flex gap-2">
           <Link to={createPageUrl("PackageDetail") + `?id=${packageId}`}>
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="h-4 w-4" />
+            <Button variant="outline">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back
             </Button>
           </Link>
-          <div>
-            <h1 className="text-2xl font-heading text-midnight-900 flex items-center gap-2">
-              <Download className="h-6 w-6 text-primary" />
-              Export Package
-            </h1>
-            <p className="text-muted-foreground">
-              {pkg?.package_name} v{pkg?.version}
-            </p>
-          </div>
-        </div>
-        <div className="flex gap-2">
           <Button variant="outline" onClick={copyToClipboard}>
             <Copy className="h-4 w-4 mr-2" />
             Copy
@@ -269,7 +262,7 @@ export default function PackageExport() {
             Download
           </Button>
         </div>
-      </div>
+      </PageHeader>
 
       <div className="grid md:grid-cols-4 gap-6">
         {/* Options Sidebar */}
