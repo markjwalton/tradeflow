@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
-import { Plus, Trash2, ExternalLink, Check } from 'lucide-react';
+import { Plus, Trash2, ExternalLink, Check, Cloud, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { PageHeader } from '@/components/sturij';
 
@@ -16,6 +16,7 @@ export default function FontManager() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingFont, setEditingFont] = useState(null);
   const [currentFonts, setCurrentFonts] = useState({ heading: null, body: null });
+  const [isImporting, setIsImporting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     font_family: '',
@@ -168,6 +169,34 @@ export default function FontManager() {
     }
   };
 
+  const handleImportAdobeFonts = async () => {
+    setIsImporting(true);
+    try {
+      const { data } = await base44.functions.invoke('getAdobeFonts');
+      
+      if (data.error) {
+        toast.error(data.error);
+        return;
+      }
+
+      let imported = 0;
+      for (const font of data.fonts) {
+        const existing = fonts.find(f => f.name === font.name && f.source === 'adobe');
+        if (!existing) {
+          await base44.entities.FontFamily.create(font);
+          imported++;
+        }
+      }
+
+      queryClient.invalidateQueries(['fonts']);
+      toast.success(`Imported ${imported} fonts from Adobe Fonts`);
+    } catch (error) {
+      toast.error("Failed to import Adobe Fonts");
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto -mt-6 pb-8">
       <PageHeader 
@@ -276,6 +305,19 @@ export default function FontManager() {
       <Card className="border-border mb-4">
         <CardContent className="px-2 py-1">
           <div className="flex gap-2">
+            <Button 
+              variant="ghost"
+              className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
+              onClick={handleImportAdobeFonts}
+              disabled={isImporting}
+            >
+              {isImporting ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Cloud className="h-4 w-4 mr-2" />
+              )}
+              Import from Adobe
+            </Button>
             <Button 
               variant="ghost"
               className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
