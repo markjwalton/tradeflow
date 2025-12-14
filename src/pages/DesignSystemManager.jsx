@@ -269,11 +269,11 @@ For each recommendation, provide:
       />
       
       <Card className="border-border mb-4">
-        <CardContent className="p-2">
+        <CardContent className="p-1">
           <div className="flex gap-2">
             <Button 
               variant="ghost"
-              className="hover:bg-primary-100 hover:text-primary-700"
+              className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
               onClick={analyzePackageUpdates}
               disabled={isAnalyzing}
             >
@@ -286,7 +286,7 @@ For each recommendation, provide:
             </Button>
             <Button 
               variant="ghost"
-              className="hover:bg-primary-100 hover:text-primary-700"
+              className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
               onClick={() => setShowCreateDialog(true)}
             >
               <Plus className="h-4 w-4 mr-2" />
@@ -294,7 +294,7 @@ For each recommendation, provide:
             </Button>
             <Button 
               variant="ghost"
-              className="hover:bg-primary-100 hover:text-primary-700"
+              className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
               onClick={() => setShowThemeCreator(true)}
             >
               <Palette className="h-4 w-4 mr-2" />
