@@ -5,8 +5,22 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search } from 'lucide-react';
 import { getIconOptions, ICON_GROUPS } from '@/components/navigation/NavIconMap';
+
+const DESIGN_TOKEN_COLORS = [
+  { value: 'var(--primary-500)', label: 'Primary', hex: '#4a7c59' },
+  { value: 'var(--secondary-400)', label: 'Secondary', hex: '#c4a57b' },
+  { value: 'var(--accent-300)', label: 'Accent', hex: '#d4a5a5' },
+  { value: 'var(--foreground)', label: 'Foreground', hex: '#2c3e50' },
+  { value: 'var(--muted-foreground)', label: 'Muted', hex: '#6b7280' },
+  { value: 'var(--destructive)', label: 'Destructive', hex: '#8b4545' },
+  { value: 'var(--charcoal-900)', label: 'Charcoal', hex: '#404040' },
+  { value: 'var(--midnight-900)', label: 'Midnight', hex: '#2c3e50' },
+  { value: '#000000', label: 'Black', hex: '#000000' },
+  { value: '#ffffff', label: 'White', hex: '#ffffff' },
+];
 
 export default function IconShowcase() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -71,17 +85,29 @@ export default function IconShowcase() {
             <div className="space-y-2">
               <Label>Color</Label>
               <div className="flex gap-2">
-                <input
-                  type="color"
-                  value={iconColor}
-                  onChange={(e) => setIconColor(e.target.value)}
-                  className="w-12 h-10 rounded border cursor-pointer"
-                />
+                <Select value={iconColor} onValueChange={setIconColor}>
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder="Select color..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {DESIGN_TOKEN_COLORS.map((color) => (
+                      <SelectItem key={color.value} value={color.value}>
+                        <div className="flex items-center gap-2">
+                          <div 
+                            className="w-4 h-4 rounded border" 
+                            style={{ backgroundColor: color.hex }}
+                          />
+                          {color.label}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <Input
                   value={iconColor}
                   onChange={(e) => setIconColor(e.target.value)}
-                  placeholder="#000000"
-                  className="font-mono"
+                  placeholder="Custom..."
+                  className="font-mono w-32"
                 />
               </div>
             </div>
