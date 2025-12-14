@@ -7,7 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
-import { Plus, Trash2, ExternalLink, Check, Cloud, Loader2 } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Plus, Trash2, ExternalLink, Check, Cloud, Loader2, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 import { PageHeader } from '@/components/sturij';
 
@@ -17,6 +18,7 @@ export default function FontManager() {
   const [editingFont, setEditingFont] = useState(null);
   const [currentFonts, setCurrentFonts] = useState({ heading: null, body: null });
   const [isImporting, setIsImporting] = useState(false);
+  const [fontsInUseOpen, setFontsInUseOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     font_family: '',
@@ -333,54 +335,65 @@ export default function FontManager() {
       <Card className="border-border">
         <CardContent className="p-4">
           {/* Fonts in Use Section */}
-          <Card className="mb-6 border-border">
-        <CardHeader>
-          <CardTitle>Fonts in Use</CardTitle>
-          <CardDescription>Currently active fonts in the main application</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="p-4 rounded-lg border bg-card">
-              <div className="flex items-center justify-between mb-3">
-                <div>
-                  <div className="text-sm font-medium">Display / Headings</div>
-                  <code className="text-xs text-muted-foreground">{currentFonts.heading?.font_family || 'Not set'}</code>
-                </div>
-                <span className="text-xs text-muted-foreground capitalize">{currentFonts.heading?.source || 'default'}</span>
-              </div>
-              {currentFonts.heading && (
-                <div className="p-3 rounded bg-muted">
-                  <p style={{ fontFamily: currentFonts.heading.font_family }} className="text-2xl font-light">
-                    {currentFonts.heading.name}
-                  </p>
-                  <p style={{ fontFamily: currentFonts.heading.font_family }} className="text-base mt-2">
-                    The quick brown fox jumps over the lazy dog
-                  </p>
-                </div>
-              )}
-            </div>
-            <div className="p-4 rounded-lg border bg-card">
-              <div className="flex items-center justify-between mb-3">
-                <div>
-                  <div className="text-sm font-medium">Body Text</div>
-                  <code className="text-xs text-muted-foreground">{currentFonts.body?.font_family || 'Not set'}</code>
-                </div>
-                <span className="text-xs text-muted-foreground capitalize">{currentFonts.body?.source || 'default'}</span>
-              </div>
-              {currentFonts.body && (
-                <div className="p-3 rounded bg-muted">
-                  <p style={{ fontFamily: currentFonts.body.font_family }} className="text-xl">
-                    {currentFonts.body.name}
-                  </p>
-                  <p style={{ fontFamily: currentFonts.body.font_family }} className="text-base mt-2">
-                    The quick brown fox jumps over the lazy dog. Typography plays a crucial role in design.
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          <Collapsible open={fontsInUseOpen} onOpenChange={setFontsInUseOpen} className="mb-6">
+            <Card className="border-border">
+              <CollapsibleTrigger className="w-full">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="text-left">
+                      <CardTitle>Fonts in Use</CardTitle>
+                      <CardDescription>Currently active fonts in the main application</CardDescription>
+                    </div>
+                    <ChevronDown className={`h-5 w-5 transition-transform ${fontsInUseOpen ? 'rotate-180' : ''}`} />
+                  </div>
+                </CardHeader>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="p-4 rounded-lg border bg-card">
+                      <div className="flex items-center justify-between mb-3">
+                        <div>
+                          <div className="text-sm font-medium">Display / Headings</div>
+                          <code className="text-xs text-muted-foreground">{currentFonts.heading?.font_family || 'Not set'}</code>
+                        </div>
+                        <span className="text-xs text-muted-foreground capitalize">{currentFonts.heading?.source || 'default'}</span>
+                      </div>
+                      {currentFonts.heading && (
+                        <div className="p-3 rounded bg-muted">
+                          <p style={{ fontFamily: currentFonts.heading.font_family }} className="text-2xl font-light">
+                            {currentFonts.heading.name}
+                          </p>
+                          <p style={{ fontFamily: currentFonts.heading.font_family }} className="text-base mt-2">
+                            The quick brown fox jumps over the lazy dog
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-4 rounded-lg border bg-card">
+                      <div className="flex items-center justify-between mb-3">
+                        <div>
+                          <div className="text-sm font-medium">Body Text</div>
+                          <code className="text-xs text-muted-foreground">{currentFonts.body?.font_family || 'Not set'}</code>
+                        </div>
+                        <span className="text-xs text-muted-foreground capitalize">{currentFonts.body?.source || 'default'}</span>
+                      </div>
+                      {currentFonts.body && (
+                        <div className="p-3 rounded bg-muted">
+                          <p style={{ fontFamily: currentFonts.body.font_family }} className="text-xl">
+                            {currentFonts.body.name}
+                          </p>
+                          <p style={{ fontFamily: currentFonts.body.font_family }} className="text-base mt-2">
+                            The quick brown fox jumps over the lazy dog. Typography plays a crucial role in design.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </CollapsibleContent>
+            </Card>
+          </Collapsible>
 
       {isLoading ? (
         <div className="text-center py-12">Loading fonts...</div>
@@ -401,7 +414,7 @@ export default function FontManager() {
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div>
-                    <CardTitle className="text-base">{font.name}</CardTitle>
+                    <CardTitle className="text-base" style={{ fontFamily: font.font_family }}>{font.name}</CardTitle>
                     <CardDescription className="capitalize">{font.category}</CardDescription>
                   </div>
                   <div className="flex gap-1">
