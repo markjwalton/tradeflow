@@ -83,7 +83,7 @@ export default function UILibrary() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto -mt-6 space-y-6">
+    <div className="max-w-7xl mx-auto -mt-6 min-h-screen">
       <PageHeader 
         title="UI Library"
         description="Browse and explore reusable UI components built with design tokens"
@@ -100,7 +100,7 @@ export default function UILibrary() {
               open={isOpen}
               onOpenChange={() => toggleSection(section.id)}
             >
-              <Card className="overflow-hidden">
+              <Card className="border-border overflow-hidden">
                 <CollapsibleTrigger className="w-full">
                   <CardHeader className="flex flex-row items-center justify-between cursor-pointer hover:bg-muted/50 transition-colors">
                     <div className="flex-1 text-left">

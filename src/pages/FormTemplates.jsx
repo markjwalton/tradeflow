@@ -94,18 +94,27 @@ export default function FormTemplates() {
   });
 
   return (
-    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+    <div className="max-w-7xl mx-auto -mt-6 min-h-screen">
       <PageHeader 
         title="Form Templates"
         description="Create and manage reusable form templates"
-      >
-        <Link to={createPageUrl("FormBuilder")}>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Create Form
-          </Button>
-        </Link>
-      </PageHeader>
+      />
+
+      <Card className="border-border mb-4">
+        <CardContent className="px-2 py-1">
+          <div className="flex gap-2">
+            <Link to={createPageUrl("FormBuilder")}>
+              <Button 
+                variant="ghost"
+                className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Create Form
+              </Button>
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="flex gap-4 mb-6">
         <div className="relative flex-1 max-w-sm">

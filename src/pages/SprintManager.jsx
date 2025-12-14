@@ -121,16 +121,26 @@ export default function SprintManager() {
   const completedSprints = sprints.filter(s => s.status === "completed");
 
   return (
-    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+    <div className="max-w-7xl mx-auto -mt-6 min-h-screen">
       <PageHeader 
         title="Sprint Manager"
         description="Manage development sprints and track progress"
-      >
-        <Button onClick={() => openDialog()}>
-          <Plus className="h-4 w-4 mr-2" />
-          New Sprint
-        </Button>
-      </PageHeader>
+      />
+
+      <Card className="border-border mb-4">
+        <CardContent className="px-2 py-1">
+          <div className="flex gap-2">
+            <Button 
+              variant="ghost"
+              className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
+              onClick={() => openDialog()}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              New Sprint
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {isLoading ? (
         <div className="flex justify-center py-12">
@@ -288,7 +298,7 @@ function SprintCard({ sprint, items, onEdit, onDelete, onStatusChange, onCopy, o
     .join("\n\n---\n\n");
 
   return (
-    <Card>
+    <Card className="border-border">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

@@ -151,22 +151,30 @@ export default function BusinessTemplates() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto -mt-6 bg-background min-h-screen">
+    <div className="max-w-7xl mx-auto -mt-6 min-h-screen">
       <PageHeader 
         title={currentProject ? `Business Templates: ${currentProject.name}` : "Business Templates"}
         description="Pre-defined templates with entities, pages, and features"
-      >
-        <div className="flex gap-2">
-          <CustomProjectSelector
-            selectedProjectId={selectedProjectId}
-            onSelectProject={setSelectedProjectId}
-          />
-          <Button onClick={() => setShowBuilder(true)}>
-            <Plus className="h-4 w-4 mr-2" />
-            New Template
-          </Button>
-        </div>
-      </PageHeader>
+      />
+
+      <Card className="border-border mb-4">
+        <CardContent className="px-2 py-1">
+          <div className="flex gap-2">
+            <CustomProjectSelector
+              selectedProjectId={selectedProjectId}
+              onSelectProject={setSelectedProjectId}
+            />
+            <Button 
+              variant="ghost"
+              className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
+              onClick={() => setShowBuilder(true)}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              New Template
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Filters */}
       <div className="flex gap-3 mb-6">

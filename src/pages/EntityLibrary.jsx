@@ -255,26 +255,38 @@ Return a JSON object with:
   const currentProject = projects.find(p => p.id === selectedProjectId);
 
   return (
-    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+    <div className="max-w-7xl mx-auto -mt-6 min-h-screen">
       <PageHeader 
         title={currentProject ? `Entity Library: ${currentProject.name}` : "Entity Library"}
         description="Reusable entity templates for business applications"
-      >
-        <div className="flex gap-2">
-          <CustomProjectSelector
-            selectedProjectId={selectedProjectId}
-            onSelectProject={setSelectedProjectId}
-          />
-          <Button variant="outline" onClick={() => setShowAIDialog(true)}>
-            <Sparkles className="h-4 w-4 mr-2" />
-            AI Generate
-          </Button>
-          <Button onClick={() => { setEditingEntity(null); setShowBuilder(true); }}>
-            <Plus className="h-4 w-4 mr-2" />
-            New Entity
-          </Button>
-        </div>
-      </PageHeader>
+      />
+
+      <Card className="border-border mb-4">
+        <CardContent className="px-2 py-1">
+          <div className="flex gap-2">
+            <CustomProjectSelector
+              selectedProjectId={selectedProjectId}
+              onSelectProject={setSelectedProjectId}
+            />
+            <Button 
+              variant="ghost"
+              className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
+              onClick={() => setShowAIDialog(true)}
+            >
+              <Sparkles className="h-4 w-4 mr-2" />
+              AI Generate
+            </Button>
+            <Button 
+              variant="ghost"
+              className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
+              onClick={() => { setEditingEntity(null); setShowBuilder(true); }}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              New Entity
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Filters */}
       <div className="flex gap-4 mb-6">

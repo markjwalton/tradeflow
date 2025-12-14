@@ -173,16 +173,19 @@ export default function FontManager() {
       <PageHeader 
         title="Font Library"
         description="Manage your typography font families"
-      >
-        <Dialog open={dialogOpen} onOpenChange={(open) => {
+      />
+      
+      <Dialog open={dialogOpen} onOpenChange={(open) => {
           setDialogOpen(open);
           if (!open) resetForm();
         }}>
           <DialogTrigger asChild>
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Add Font
-            </Button>
+            <div style={{ display: 'none' }}>
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                Add Font
+              </Button>
+            </div>
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
@@ -269,7 +272,21 @@ export default function FontManager() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      </PageHeader>
+
+      <Card className="border-border mb-4">
+        <CardContent className="px-2 py-1">
+          <div className="flex gap-2">
+            <Button 
+              variant="ghost"
+              className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
+              onClick={() => setDialogOpen(true)}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Font
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Fonts in Use Section */}
       <Card className="mb-6 border-border">

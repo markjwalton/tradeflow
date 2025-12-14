@@ -140,16 +140,26 @@ export default function Team() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+    <div className="max-w-7xl mx-auto -mt-6 min-h-screen">
       <PageHeader 
         title="Team"
         description="Manage team members and availability"
-      >
-        <Button onClick={() => { form.reset(); setEditingMember(null); setShowForm(true); }} className="w-full sm:w-auto">
-          <Plus className="h-4 w-4 mr-2" />
-          Add Team Member
-        </Button>
-      </PageHeader>
+      />
+
+      <Card className="border-border mb-4">
+        <CardContent className="px-2 py-1">
+          <div className="flex gap-2">
+            <Button 
+              variant="ghost"
+              className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
+              onClick={() => { form.reset(); setEditingMember(null); setShowForm(true); }}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Team Member
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-6">
         <div className="relative flex-1">

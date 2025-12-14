@@ -107,18 +107,27 @@ export default function WorkflowLibrary() {
   });
 
   return (
-    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+    <div className="max-w-7xl mx-auto -mt-6 min-h-screen">
       <PageHeader 
         title="Workflow Library"
         description="Manage and create workflow templates for your business processes"
-      >
-        <Link to={createPageUrl("WorkflowDesigner")}>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Create Workflow
-          </Button>
-        </Link>
-      </PageHeader>
+      />
+
+      <Card className="border-border mb-4">
+        <CardContent className="px-2 py-1">
+          <div className="flex gap-2">
+            <Link to={createPageUrl("WorkflowDesigner")}>
+              <Button 
+                variant="ghost"
+                className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Create Workflow
+              </Button>
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Filters */}
       <div className="flex gap-4 mb-6">

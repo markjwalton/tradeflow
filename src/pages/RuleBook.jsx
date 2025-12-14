@@ -213,24 +213,36 @@ export default function RuleBook() {
   const getEnforcementInfo = (enf) => enforcements.find(e => e.value === enf) || enforcements[1];
 
   return (
-    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+    <div className="max-w-7xl mx-auto -mt-6 min-h-screen">
       <PageHeader 
         title="Development Rule Book"
         description="Maintain rules for AI-assisted development"
-      >
-        <div className="flex gap-2">
-          {copiedRules.length > 0 && (
-            <Button variant="outline" onClick={copySelectedRules}>
-              <Copy className="h-4 w-4 mr-2" />
-              Copy {copiedRules.length} Rules
+      />
+
+      <Card className="border-border mb-4">
+        <CardContent className="px-2 py-1">
+          <div className="flex gap-2">
+            {copiedRules.length > 0 && (
+              <Button 
+                variant="ghost"
+                className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
+                onClick={copySelectedRules}
+              >
+                <Copy className="h-4 w-4 mr-2" />
+                Copy {copiedRules.length} Rules
+              </Button>
+            )}
+            <Button 
+              variant="ghost"
+              className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
+              onClick={() => handleOpenDialog()}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Rule
             </Button>
-          )}
-          <Button onClick={() => handleOpenDialog()}>
-            <Plus className="h-4 w-4 mr-2" />
-            Add Rule
-          </Button>
-        </div>
-      </PageHeader>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Filters */}
       <div className="flex gap-4 mb-6 flex-wrap">
@@ -279,7 +291,7 @@ export default function RuleBook() {
 
             return (
               <Collapsible key={category.value} open={isExpanded} onOpenChange={() => toggleCategory(category.value)}>
-                <Card>
+                <Card className="border-border">
                   <CollapsibleTrigger className="w-full">
                     <CardHeader className="py-3">
                       <div className="flex items-center justify-between">

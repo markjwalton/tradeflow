@@ -342,30 +342,47 @@ Return a JSON object with a "features" array containing feature templates.`,
   };
 
   return (
-    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+    <div className="max-w-7xl mx-auto -mt-6 min-h-screen">
       <PageHeader 
         title={currentProject ? `Feature Library: ${currentProject.name}` : "Feature Library"}
         description="Reusable feature templates for applications"
-      >
-        <div className="flex gap-2">
-          <CustomProjectSelector
-            selectedProjectId={selectedProjectId}
-            onSelectProject={setSelectedProjectId}
-          />
-          <Button variant="outline" onClick={() => setShowBulkAIDialog(true)} disabled={projectEntities.length === 0}>
-            <Database className="h-4 w-4 mr-2" />
-            AI from Entities ({projectEntities.length})
-          </Button>
-          <Button variant="outline" onClick={() => setShowAIDialog(true)}>
-            <Sparkles className="h-4 w-4 mr-2" />
-            AI Generate
-          </Button>
-          <Button onClick={() => { setEditingFeature(null); setShowBuilder(true); }}>
-            <Plus className="h-4 w-4 mr-2" />
-            New Feature
-          </Button>
-        </div>
-      </PageHeader>
+      />
+
+      <Card className="border-border mb-4">
+        <CardContent className="px-2 py-1">
+          <div className="flex gap-2">
+            <CustomProjectSelector
+              selectedProjectId={selectedProjectId}
+              onSelectProject={setSelectedProjectId}
+            />
+            <Button 
+              variant="ghost"
+              className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
+              onClick={() => setShowBulkAIDialog(true)} 
+              disabled={projectEntities.length === 0}
+            >
+              <Database className="h-4 w-4 mr-2" />
+              AI from Entities ({projectEntities.length})
+            </Button>
+            <Button 
+              variant="ghost"
+              className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
+              onClick={() => setShowAIDialog(true)}
+            >
+              <Sparkles className="h-4 w-4 mr-2" />
+              AI Generate
+            </Button>
+            <Button 
+              variant="ghost"
+              className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
+              onClick={() => { setEditingFeature(null); setShowBuilder(true); }}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              New Feature
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="flex gap-4 mb-6">
         <div className="relative flex-1 max-w-md">

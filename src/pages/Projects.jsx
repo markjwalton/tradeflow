@@ -168,16 +168,26 @@ export default function Projects() {
 
   return (
     <PullToRefresh onRefresh={refetch} enabled={true}>
-    <div className="max-w-7xl mx-auto -mt-6 bg-background min-h-screen">
+    <div className="max-w-7xl mx-auto -mt-6 min-h-screen">
       <PageHeader 
         title="Projects"
         description="Manage your construction projects"
-      >
-        <Button onClick={() => { form.reset(); setEditingProject(null); setShowForm(true); }} className="w-full sm:w-auto">
-          <Plus className="h-4 w-4 mr-2" />
-          <span className="sm:inline">New Project</span>
-        </Button>
-      </PageHeader>
+      />
+
+      <Card className="border-border mb-4">
+        <CardContent className="px-2 py-1">
+          <div className="flex gap-2">
+            <Button 
+              variant="ghost"
+              className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
+              onClick={() => { form.reset(); setEditingProject(null); setShowForm(true); }}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              New Project
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="flex flex-col sm:flex-row gap-3 mb-4 sm:mb-6">
         <div className="relative flex-1">

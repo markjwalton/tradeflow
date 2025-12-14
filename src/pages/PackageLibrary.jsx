@@ -87,16 +87,16 @@ function FileItem({ name, file, description, onCopy }) {
   };
   
   return (
-    <div className="flex items-center justify-between p-3 bg-[var(--color-background)] rounded-lg hover:bg-[var(--color-background-muted)] transition-colors">
-      <div className="flex items-center gap-3">
-        <Icon className="h-4 w-4 text-[var(--color-charcoal)]" />
-        <div>
-          <p className="font-medium text-sm text-[var(--color-midnight)]">{name}</p>
-          <p className="text-xs text-[var(--color-charcoal)]">{file}</p>
-        </div>
+    <div className="flex items-center justify-between p-3 bg-background rounded-lg hover:bg-muted transition-colors">
+    <div className="flex items-center gap-3">
+      <Icon className="h-4 w-4 text-charcoal-600" />
+      <div>
+        <p className="font-medium text-sm text-midnight-900">{name}</p>
+        <p className="text-xs text-charcoal-600">{file}</p>
       </div>
-      <div className="flex items-center gap-2">
-        <span className="text-xs text-[var(--color-charcoal)] hidden md:block">{description}</span>
+    </div>
+    <div className="flex items-center gap-2">
+      <span className="text-xs text-charcoal-600 hidden md:block">{description}</span>
         <Button 
           variant="ghost" 
           size="sm" 
@@ -132,15 +132,15 @@ function PackageCard({ pkg }) {
   };
 
   return (
-    <Card className="mb-6 border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+    <Card className="mb-6 border-border">
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[var(--color-background)] rounded-lg">
-              <Icon className="h-6 w-6 text-[var(--color-midnight)]" />
-            </div>
-            <div>
-              <CardTitle className="flex items-center gap-2 text-[var(--color-midnight)]">
+          <div className="p-2 bg-background rounded-lg">
+            <Icon className="h-6 w-6 text-midnight-900" />
+          </div>
+          <div>
+            <CardTitle className="flex items-center gap-2 text-midnight-900">
                 {pkg.name}
                 <Badge variant="secondary">v{pkg.version}</Badge>
               </CardTitle>
@@ -240,7 +240,7 @@ function PackageCard({ pkg }) {
 
 export default function PackageLibrary() {
   return (
-    <div className="max-w-4xl mx-auto -mt-6 min-h-screen bg-[var(--color-background)]">
+    <div className="max-w-7xl mx-auto -mt-6 min-h-screen">
       <PageHeader 
         title="Package Library"
         description="Reusable architecture components for building Base44 applications"
@@ -249,7 +249,7 @@ export default function PackageLibrary() {
       <PackageCard pkg={multiTenantPackage} />
       
       {/* Placeholder for future packages */}
-      <Card className="border-dashed border-[var(--color-background-muted)] bg-[var(--color-background-paper)]">
+      <Card className="border-dashed border-border">
         <CardContent className="py-12 text-center text-[var(--color-charcoal)]">
           <Package className="h-12 w-12 mx-auto mb-3 opacity-50" />
           <p>More architecture packages coming soon...</p>

@@ -109,18 +109,28 @@ export default function TenantManager() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto -mt-6 bg-background min-h-screen">
+    <div className="max-w-7xl mx-auto -mt-6 min-h-screen">
       <PageHeader 
         title="Tenant Manager"
         description="Manage tenants, roles, and access permissions"
-      >
-        <Button onClick={() => { setEditingTenant(null); setIsFormOpen(true); }}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Tenant
-        </Button>
-      </PageHeader>
+      />
+
+      <Card className="border-border mb-4">
+        <CardContent className="px-2 py-1">
+          <div className="flex gap-2">
+            <Button 
+              variant="ghost"
+              className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
+              onClick={() => { setEditingTenant(null); setIsFormOpen(true); }}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Tenant
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
       
-      <Card className="bg-card">
+      <Card className="border-border">
         <CardContent>
           {isLoading ? (
             <div className="text-center py-8 text-muted-foreground">Loading...</div>
