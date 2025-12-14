@@ -74,11 +74,6 @@ export function AppHeader({ user, navItems = [], onMobileMenuClick, currentPageN
               className="w-auto h-[35px] sm:h-[45px] md:h-[51px]"
             />
           </Link>
-          
-          {/* Breadcrumb navigation */}
-          <div className="hidden md:block ml-4">
-            <AppBreadcrumb navItems={navItems} currentPageName={currentPageName} />
-          </div>
         </div>
 
         <div className="flex items-center gap-1 sm:gap-2 ml-auto">
