@@ -17,7 +17,7 @@ export function AppSidebar({ navItems = [] }) {
   useEffect(() => {
     const initiallyExpanded = new Set();
     navItems.forEach((item) => {
-      if (item.item_type === "folder" && !item.default_collapsed) {
+      if (item.item_type === "folder" && item.default_collapsed === false) {
         initiallyExpanded.add(item.id);
       }
     });
