@@ -317,7 +317,9 @@ For each recommendation, provide:
 
         {/* Packages Tab */}
         <TabsContent value="packages" className="mt-4">
-          <div className="space-y-4">
+          <Card className="border-border">
+            <CardContent className="p-6">
+              <div className="space-y-4">
             {pendingRecs.length > 0 && (
               <Card className="border-warning/30 bg-warning/5">
                 <CardContent className="py-4">
@@ -481,12 +483,16 @@ For each recommendation, provide:
                 </div>
               </>
             )}
-          </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Components Tab */}
         <TabsContent value="components" className="mt-4">
-          <div className="space-y-4">
+          <Card className="border-border">
+            <CardContent className="p-6">
+              <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-h3">
                 Component Library
@@ -536,12 +542,16 @@ For each recommendation, provide:
               ))}
               </div>
             )}
-          </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Recommendations Tab */}
         <TabsContent value="recommendations" className="mt-4">
-          <div className="space-y-4">
+          <Card className="border-border">
+            <CardContent className="p-6">
+              <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-h3">
                 AI Update Recommendations
@@ -691,12 +701,16 @@ For each recommendation, provide:
               ))}
               </div>
             )}
-          </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Customers Tab */}
         <TabsContent value="customers" className="mt-4">
-          <div className="space-y-4">
+          <Card className="border-border">
+            <CardContent className="p-6">
+              <div className="space-y-4">
             {customerPackages.map(pkg => (
               <Card key={pkg.id} className="border-border">
                 <CardHeader>
@@ -748,7 +762,9 @@ For each recommendation, provide:
                 </CardContent>
               </Card>
             )}
-          </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
 
