@@ -726,7 +726,20 @@ Return a JSON object with: name, description, category (one of: ${featureCategor
             <Button 
               variant="ghost"
               className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
-              onClick={() => { setSelectedItem(null); setShowBuilder(true); }}
+              onClick={() => {
+                if (activeSection === "core") {
+                  if (activeTab === "entities") navigate(createPageUrl("Library") + "?mode=new&type=entity");
+                  else if (activeTab === "pages") navigate(createPageUrl("Library") + "?mode=new&type=page");
+                  else navigate(createPageUrl("Library") + "?mode=new&type=feature");
+                } else if (activeSection === "forms") {
+                  if (activeTab === "forms") navigate(createPageUrl("FormBuilder"));
+                  else navigate(createPageUrl("ChecklistBuilder"));
+                } else if (activeSection === "business") {
+                  navigate(createPageUrl("BusinessTemplates") + "?mode=new");
+                } else if (activeSection === "workflows") {
+                  navigate(createPageUrl("WorkflowDesigner"));
+                }
+              }}
             >
               <Plus className="h-4 w-4 mr-2" />
               New {
