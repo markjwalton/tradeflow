@@ -147,9 +147,9 @@ export default function GenericNavEditor({
         return;
       }
 
-      // No session state - check settings
-      const settings = localStorage.getItem("navManager_settings");
-      const defaultCollapsed = settings ? JSON.parse(settings).defaultCollapsed : false;
+      // No session state - check user settings
+      const user = await base44.auth.me().catch(() => null);
+      const defaultCollapsed = user?.ui_preferences?.navManager_settings?.defaultCollapsed || false;
 
       if (!defaultCollapsed) {
         // Expand all top-level folders regardless of default_collapsed setting
