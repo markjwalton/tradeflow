@@ -14,6 +14,7 @@ import NavigationShowcase from "../pages/NavigationShowcase";
 import DataDisplayShowcase from "../pages/DataDisplayShowcase";
 import FeedbackShowcase from "../pages/FeedbackShowcase";
 import CompactButtonShowcase from "../pages/CompactButtonShowcase";
+import { PageHeader } from "@/components/sturij";
 
 export default function UILibrary() {
   const [openSections, setOpenSections] = useState(["typography"]);
@@ -82,13 +83,11 @@ export default function UILibrary() {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-display">UI Library</h1>
-        <p className="text-body-color mt-2">
-          Browse and explore reusable UI components built with design tokens
-        </p>
-      </div>
+    <div className="max-w-7xl mx-auto -mt-6 space-y-6">
+      <PageHeader 
+        title="UI Library"
+        description="Browse and explore reusable UI components built with design tokens"
+      />
 
       <div className="space-y-4">
         {sections.map((section) => {

@@ -16,6 +16,7 @@ import { Loader2, BookOpen, Trash2, Search, Filter, AlertTriangle, CheckCircle, 
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { PageHeader } from "@/components/sturij";
 
 export default function LearnedPatterns() {
   const navigate = useNavigate();
@@ -88,27 +89,21 @@ export default function LearnedPatterns() {
   }
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate(createPageUrl("ViolationReport"))}
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Report
-            </Button>
-          </div>
-          <h1 className="text-2xl font-light font-display text-foreground">
-            Learned CSS Patterns
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Patterns you've confirmed to train the AI's understanding
-          </p>
-        </div>
+    <div className="max-w-7xl mx-auto -mt-6">
+      <div className="flex items-center gap-3 mb-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate(createPageUrl("ViolationReport"))}
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Report
+        </Button>
       </div>
+      <PageHeader 
+        title="Learned CSS Patterns"
+        description="Patterns you've confirmed to train the AI's understanding"
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">

@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Copy, Check } from "lucide-react";
 import { toast } from "sonner";
+import { PageHeader } from "@/components/sturij";
 
 export default function BrandIdentity() {
   const [copiedValue, setCopiedValue] = React.useState(null);
@@ -139,13 +140,11 @@ export default function BrandIdentity() {
   );
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-display">Brand Identity</h1>
-        <p className="text-body-color mt-2">
-          Complete design system tokens, colors, typography, and visual guidelines
-        </p>
-      </div>
+    <div className="max-w-7xl mx-auto -mt-6 space-y-8">
+      <PageHeader 
+        title="Brand Identity"
+        description="Complete design system tokens, colors, typography, and visual guidelines"
+      />
 
       {/* Brand Colors */}
       <Card>
