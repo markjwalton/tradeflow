@@ -358,35 +358,35 @@ export default function RoadmapManager() {
         </Select>
       </div>
 
-      <Card className="border-border">
-        <CardContent className="p-4">
-          {isLoading ? (
-            <div className="flex justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin" />
-            </div>
-          ) : error ? (
-            <QueryErrorState error={error} onRetry={refetch} />
-          ) : (
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList>
-                {visibleTabs.includes("roadmap") && (
-                  <TabsTrigger value="roadmap">
-                    Roadmap ({roadmapItems.length})
-                  </TabsTrigger>
-                )}
-                {visibleTabs.includes("development") && (
-                  <TabsTrigger value="development">
-                    Development ({developmentItems.length})
-                  </TabsTrigger>
-                )}
-                {visibleTabs.includes("completed") && (
-                  <TabsTrigger value="completed">
-                    Completed ({completedItems.length})
-                  </TabsTrigger>
-                )}
-              </TabsList>
+      {isLoading ? (
+        <div className="flex justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
+      ) : error ? (
+        <QueryErrorState error={error} onRetry={refetch} />
+      ) : (
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList>
+            {visibleTabs.includes("roadmap") && (
+              <TabsTrigger value="roadmap">
+                Roadmap ({roadmapItems.length})
+              </TabsTrigger>
+            )}
+            {visibleTabs.includes("development") && (
+              <TabsTrigger value="development">
+                Development ({developmentItems.length})
+              </TabsTrigger>
+            )}
+            {visibleTabs.includes("completed") && (
+              <TabsTrigger value="completed">
+                Completed ({completedItems.length})
+              </TabsTrigger>
+            )}
+          </TabsList>
 
-              <TabsContent value="roadmap" className="mt-6">
+          <TabsContent value="roadmap" className="mt-6">
+            <Card className="border-border">
+              <CardContent className="p-4">
                 {roadmapItems.length === 0 ? (
                   <div className="text-center py-12 text-muted-foreground">
                     <Lightbulb className="h-12 w-12 mx-auto mb-4 opacity-50" />
@@ -407,9 +407,13 @@ export default function RoadmapManager() {
                     </div>
                   </>
                 )}
+                  </CardContent>
+                </Card>
               </TabsContent>
 
               <TabsContent value="development" className="mt-6">
+                <Card className="border-border">
+                  <CardContent className="p-4">
                 {developmentItems.length === 0 ? (
                   <div className="text-center py-12 text-muted-foreground">
                     <Code className="h-12 w-12 mx-auto mb-4 opacity-50" />
@@ -445,9 +449,13 @@ export default function RoadmapManager() {
                     </div>
                   </>
                 )}
+                  </CardContent>
+                </Card>
               </TabsContent>
 
               <TabsContent value="completed" className="mt-6">
+                <Card className="border-border">
+                  <CardContent className="p-4">
                 {completedItems.length === 0 ? (
                   <div className="text-center py-12 text-muted-foreground">
                     <Code className="h-12 w-12 mx-auto mb-4 opacity-50" />
@@ -483,11 +491,11 @@ export default function RoadmapManager() {
                     </div>
                   </>
                 )}
+                  </CardContent>
+                </Card>
               </TabsContent>
             </Tabs>
           )}
-        </CardContent>
-      </Card>
 
       {/* Add/Edit Dialog */}
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
