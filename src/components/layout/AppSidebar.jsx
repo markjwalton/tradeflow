@@ -13,6 +13,37 @@ export function AppSidebar({ navItems = [] }) {
   const location = useLocation();
   const [expandedFolders, setExpandedFolders] = useState(new Set());
 
+  // Build hierarchical structure from flat navItems
+  const buildHierarchy = (items) => {
+    const itemsMap = new Map();
+    const rootItems = [];
+
+    // First pass: create a map of all items
+    items.forEach((item) => {
+      itemsMap.set(item.id, { ...item, children: [] });
+    });
+
+    // Second pass: build hierarchy
+    items.forEach((item) => {
+      const currentItem = itemsMap.get(item.id);
+      if (item.parent_id) {
+        const parent = itemsMap.get(item.parent_id);
+        if (parent) {
+          parent.children.push(currentItem);
+        } else {
+          // Parent not found, treat as root
+          rootItems.push(currentItem);
+        }
+      } else {
+        rootItems.push(currentItem);
+      }
+    });
+
+    return rootItems;
+  };
+
+  const hierarchicalNavItems = buildHierarchy(navItems);
+
   // Initialize expanded folders based on default_collapsed setting
   useEffect(() => {
     const initiallyExpanded = new Set();
