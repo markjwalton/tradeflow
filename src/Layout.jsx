@@ -531,6 +531,7 @@ export default function Layout({ children, currentPageName }) {
           {showEditorBubble && (
             <Button
               onClick={async () => {
+                setIsSyncing(true);
                 const loadingToast = toast.loading('Syncing with GitHub...');
                 try {
                   // Pull latest commits
@@ -556,12 +557,15 @@ export default function Layout({ children, currentPageName }) {
                   toast.success('Synced with GitHub (pull + push)', { id: loadingToast });
                 } catch (e) {
                   toast.error('Sync failed: ' + e.message, { id: loadingToast });
+                } finally {
+                  setIsSyncing(false);
                 }
               }}
-              className="fixed bottom-6 left-24 h-14 w-14 rounded-full shadow-2xl bg-primary text-white hover:bg-primary/90 border-2 border-white z-[60]"
+              disabled={isSyncing}
+              className="fixed bottom-6 left-24 h-14 w-14 rounded-full shadow-2xl bg-primary text-white hover:bg-primary/90 border-2 border-white z-[60] disabled:opacity-50"
               title="Sync with GitHub (Pull + Push)"
             >
-              <GitBranch className="h-6 w-6" />
+              {isSyncing ? <Loader2 className="h-6 w-6 animate-spin" /> : <GitBranch className="h-6 w-6" />}
             </Button>
           )}
         </SidebarProvider>
