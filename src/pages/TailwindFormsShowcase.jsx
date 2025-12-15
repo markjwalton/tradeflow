@@ -13,6 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import {
   Select,
   SelectContent,
@@ -20,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Image, UserCircle, ChevronDown, Mail, HelpCircle, AlertCircle, Check, ChevronsUpDown } from 'lucide-react';
+import { Image, UserCircle, ChevronDown, Mail, HelpCircle, AlertCircle, Check, ChevronsUpDown, Paperclip, Smile, Tag, Calendar, Code, Link, AtSign } from 'lucide-react';
 
 export default function TailwindFormsShowcase() {
   return (
@@ -37,6 +38,7 @@ export default function TailwindFormsShowcase() {
       <InputVariationsSection />
       <SelectVariationsSection />
       <SignInFormsSection />
+      <TextareaVariationsSection />
 
       <TokenReference />
     </div>
@@ -1535,6 +1537,279 @@ function SignInFormsSection() {
           <li>• Stacked inputs with <code className="bg-background px-1 py-0.5 rounded">-space-y-px</code> for connected borders</li>
           <li>• Card style with shadow and social login buttons</li>
           <li>• Split layout: form on left, image on right (lg:flex-none lg:px-20)</li>
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+function TextareaVariationsSection() {
+  const [mood, setMood] = React.useState('happy');
+  const [assignee, setAssignee] = React.useState('unassigned');
+  const [label, setLabel] = React.useState('unlabelled');
+  const [dueDate, setDueDate] = React.useState('none');
+
+  const moods = [
+    { value: 'excited', label: 'Excited', icon: '🔥', color: 'bg-destructive-500' },
+    { value: 'happy', label: 'Happy', icon: '😊', color: 'bg-primary-500' },
+    { value: 'sad', label: 'Sad', icon: '😢', color: 'bg-secondary-500' },
+  ];
+
+  const assignees = [
+    { value: 'unassigned', label: 'Unassigned' },
+    { value: 'wade', label: 'Wade Cooper', avatar: 'https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?w=256&h=256&fit=crop' },
+    { value: 'arlene', label: 'Arlene Mccoy', avatar: 'https://images.unsplash.com/photo-1550525811-e5869dd03032?w=256&h=256&fit=crop' },
+  ];
+
+  const currentMood = moods.find(m => m.value === mood);
+  const currentAssignee = assignees.find(a => a.value === assignee);
+
+  return (
+    <section className="space-y-8">
+      <div>
+        <h2 className="text-xl font-display mb-2">Textarea & Comment Forms</h2>
+        <p className="text-sm text-muted-foreground">Rich text areas with toolbars and metadata</p>
+      </div>
+
+      <div className="space-y-8">
+        {/* Simple Textarea */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Simple Textarea</h3>
+          <div>
+            <Label htmlFor="comment-simple">Add your comment</Label>
+            <div className="mt-2">
+              <Textarea id="comment-simple" rows={4} placeholder="Write your comment..." />
+            </div>
+          </div>
+        </div>
+
+        {/* Comment with Avatar and Toolbar */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Comment with Avatar and Toolbar</h3>
+          <div className="flex items-start gap-4">
+            <Avatar>
+              <AvatarImage src="https://images.unsplash.com/photo-1550525811-e5869dd03032?w=256&h=256&fit=crop" />
+              <AvatarFallback>AM</AvatarFallback>
+            </Avatar>
+            <div className="flex-1">
+              <form className="relative">
+                <div className="rounded-lg border border-input bg-background focus-within:ring-2 focus-within:ring-ring">
+                  <Label htmlFor="comment-toolbar" className="sr-only">Add your comment</Label>
+                  <Textarea 
+                    id="comment-toolbar" 
+                    rows={3} 
+                    placeholder="Add your comment..." 
+                    className="resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                  />
+                  <div aria-hidden="true" className="py-2">
+                    <div className="h-9" />
+                  </div>
+                </div>
+                <div className="absolute inset-x-0 bottom-0 flex justify-between py-2 px-3">
+                  <div className="flex items-center gap-2">
+                    <Button type="button" variant="ghost" size="icon" className="h-10 w-10">
+                      <Paperclip className="h-5 w-5" />
+                      <span className="sr-only">Attach file</span>
+                    </Button>
+                    <Select value={mood} onValueChange={setMood}>
+                      <SelectTrigger className="w-auto border-0 gap-2">
+                        <SelectValue>
+                          {currentMood && (
+                            <span className={`inline-flex h-8 w-8 items-center justify-center rounded-full ${currentMood.color}`}>
+                              <span className="text-lg">{currentMood.icon}</span>
+                            </span>
+                          )}
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        {moods.map((m) => (
+                          <SelectItem key={m.value} value={m.value}>
+                            <div className="flex items-center gap-2">
+                              <span className={`inline-flex h-8 w-8 items-center justify-center rounded-full ${m.color}`}>
+                                <span className="text-lg">{m.icon}</span>
+                              </span>
+                              <span>{m.label}</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <Button type="submit">Post</Button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        {/* Underline Focus Style */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Underline Focus Style</h3>
+          <div className="flex items-start gap-4">
+            <Avatar>
+              <AvatarImage src="https://images.unsplash.com/photo-1550525811-e5869dd03032?w=256&h=256&fit=crop" />
+              <AvatarFallback>AM</AvatarFallback>
+            </Avatar>
+            <div className="flex-1">
+              <form>
+                <div className="border-b border-border pb-px focus-within:border-b-2 focus-within:border-primary focus-within:pb-0">
+                  <Label htmlFor="comment-underline" className="sr-only">Add your comment</Label>
+                  <Textarea 
+                    id="comment-underline" 
+                    rows={3} 
+                    placeholder="Add your comment..." 
+                    className="resize-none border-0 focus-visible:ring-0"
+                  />
+                </div>
+                <div className="flex justify-between pt-2">
+                  <div className="flex items-center gap-2">
+                    <Button type="button" variant="ghost" size="icon">
+                      <Paperclip className="h-5 w-5" />
+                    </Button>
+                    <Button type="button" variant="ghost" size="icon">
+                      <Smile className="h-5 w-5" />
+                    </Button>
+                  </div>
+                  <Button type="submit">Post</Button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        {/* Issue Form with Metadata */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Issue Form with Metadata</h3>
+          <form className="relative">
+            <div className="rounded-lg border border-input bg-background focus-within:ring-2 focus-within:ring-ring">
+              <Label htmlFor="title" className="sr-only">Title</Label>
+              <Input 
+                id="title" 
+                placeholder="Title" 
+                className="border-0 text-lg font-medium focus-visible:ring-0"
+              />
+              <Label htmlFor="description" className="sr-only">Description</Label>
+              <Textarea 
+                id="description" 
+                rows={2} 
+                placeholder="Write a description..." 
+                className="resize-none border-0 focus-visible:ring-0"
+              />
+              <div aria-hidden="true">
+                <div className="py-2"><div className="h-9" /></div>
+                <div className="h-px" />
+                <div className="py-2"><div className="h-9" /></div>
+              </div>
+            </div>
+            <div className="absolute inset-x-px bottom-0">
+              <div className="flex flex-wrap justify-end gap-2 px-2 py-2 sm:px-3">
+                <Select value={assignee} onValueChange={setAssignee}>
+                  <SelectTrigger className="w-auto gap-2 rounded-full bg-muted hover:bg-muted/80">
+                    <SelectValue>
+                      {currentAssignee && (
+                        <div className="flex items-center gap-2">
+                          {currentAssignee.avatar ? (
+                            <Avatar className="h-5 w-5">
+                              <AvatarImage src={currentAssignee.avatar} />
+                            </Avatar>
+                          ) : (
+                            <UserCircle className="h-5 w-5 text-muted-foreground" />
+                          )}
+                          <span className="hidden sm:inline">{currentAssignee.label}</span>
+                        </div>
+                      )}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {assignees.map((a) => (
+                      <SelectItem key={a.value} value={a.value}>
+                        <div className="flex items-center gap-2">
+                          {a.avatar ? (
+                            <Avatar className="h-5 w-5">
+                              <AvatarImage src={a.avatar} />
+                            </Avatar>
+                          ) : (
+                            <UserCircle className="h-5 w-5" />
+                          )}
+                          <span>{a.label}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button variant="secondary" size="sm" type="button" className="rounded-full gap-2">
+                  <Tag className="h-4 w-4" />
+                  <span className="hidden sm:inline">Label</span>
+                </Button>
+                <Button variant="secondary" size="sm" type="button" className="rounded-full gap-2">
+                  <Calendar className="h-4 w-4" />
+                  <span className="hidden sm:inline">Due date</span>
+                </Button>
+              </div>
+              <div className="flex items-center justify-between border-t border-border px-2 py-2 sm:px-3">
+                <Button type="button" variant="ghost" className="gap-2 text-muted-foreground">
+                  <Paperclip className="h-5 w-5" />
+                  <span className="italic text-sm">Attach a file</span>
+                </Button>
+                <Button type="submit">Create</Button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        {/* Markdown Editor with Tabs */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Markdown Editor with Preview</h3>
+          <form>
+            <Tabs defaultValue="write">
+              <div className="group flex items-center">
+                <TabsList>
+                  <TabsTrigger value="write">Write</TabsTrigger>
+                  <TabsTrigger value="preview">Preview</TabsTrigger>
+                </TabsList>
+                <div className="ml-auto hidden items-center gap-2 group-has-[[value=write][data-state=active]]:flex">
+                  <Button type="button" variant="ghost" size="icon">
+                    <Link className="h-5 w-5" />
+                    <span className="sr-only">Insert link</span>
+                  </Button>
+                  <Button type="button" variant="ghost" size="icon">
+                    <Code className="h-5 w-5" />
+                    <span className="sr-only">Insert code</span>
+                  </Button>
+                  <Button type="button" variant="ghost" size="icon">
+                    <AtSign className="h-5 w-5" />
+                    <span className="sr-only">Mention someone</span>
+                  </Button>
+                </div>
+              </div>
+              <TabsContent value="write" className="mt-2">
+                <Label htmlFor="markdown-write" className="sr-only">Comment</Label>
+                <Textarea 
+                  id="markdown-write" 
+                  rows={5} 
+                  placeholder="Add your comment..." 
+                />
+              </TabsContent>
+              <TabsContent value="preview" className="mt-2">
+                <div className="border rounded-lg p-3 min-h-[120px] text-sm text-muted-foreground">
+                  Preview content will render here.
+                </div>
+              </TabsContent>
+            </Tabs>
+            <div className="mt-2 flex justify-end">
+              <Button type="submit">Post</Button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+        <p className="font-medium">Design Token Mappings:</p>
+        <ul className="space-y-1 text-muted-foreground">
+          <li>• Comment forms with avatar and toolbar components</li>
+          <li>• Underline focus: <code className="bg-background px-1 py-0.5 rounded">border-b-2 border-primary</code></li>
+          <li>• Issue form with metadata selectors (assignee, labels, due dates)</li>
+          <li>• Markdown editor with tabs and toolbar actions</li>
         </ul>
       </div>
     </section>
