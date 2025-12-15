@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PageHeader } from '@/components/sturij/PageHeader';
-import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, ChevronDown, User, Building, Users, CreditCard, Home, Folder, Calendar as CalendarIcon, FileText, BarChart3, Check, CheckCircle2, Search, FolderPlus, Hash, Tag, Globe, Frown, AlertTriangle, LifeBuoy, PenSquare, Code, Image, Video, Table, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, ChevronDown, User, Building, Users, CreditCard, Home, Folder, Calendar as CalendarIcon, FileText, BarChart3, Check, CheckCircle2, Search, FolderPlus, Hash, Tag, Globe, Frown, AlertTriangle, LifeBuoy, PenSquare, Code, Image, Video, Table, X, MoreVertical, Heart, Plus, Link2, HelpCircle } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -8,6 +8,12 @@ import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/component
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter, SheetClose } from '@/components/ui/sheet';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
 
 const sampleItems = [
   { id: 1, title: 'First item', description: 'Sample content for demonstration' },
@@ -2011,6 +2017,364 @@ export default function TailwindListsShowcase() {
             <ul className="space-y-1 text-muted-foreground">
               <li>• Button alignment: <code className="bg-background px-1 py-0.5 rounded">sm:ml-10 sm:pl-4</code> to align with text</li>
               <li>• Creates visual hierarchy with indented action buttons</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Slide-over Panels / Drawers */}
+      <section className="space-y-8 mt-12 pt-8 border-t border-border">
+        <div>
+          <h2 className="text-xl font-display mb-2">Slide-over Panels / Drawers</h2>
+          <p className="text-sm text-muted-foreground">Side panels for detailed views and forms</p>
+        </div>
+
+        {/* Simple Narrow Panel */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Simple Narrow Panel</h3>
+          <div className="h-96 border border-border rounded-lg bg-muted/30 relative overflow-hidden">
+            <div className="absolute inset-y-0 right-0 w-96 bg-card shadow-xl border-l border-border">
+              <div className="relative flex h-full flex-col overflow-y-auto py-6">
+                <div className="px-4 sm:px-6">
+                  <div className="flex items-start justify-between">
+                    <h2 className="text-base font-semibold text-foreground">Panel title</h2>
+                    <button className="ml-3 rounded-md text-muted-foreground hover:text-foreground">
+                      <X className="h-6 w-6" />
+                    </button>
+                  </div>
+                </div>
+                <div className="relative mt-6 flex-1 px-4 sm:px-6">
+                  <p className="text-sm text-muted-foreground">Content goes here...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Uses shadcn/ui <code className="bg-background px-1 py-0.5 rounded">Sheet</code> component</li>
+              <li>• Max width: <code className="bg-background px-1 py-0.5 rounded">max-w-md</code> (28rem)</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Wide Panel */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Wide Panel (2xl)</h3>
+          <div className="h-96 border border-border rounded-lg bg-muted/30 relative overflow-hidden">
+            <div className="absolute inset-y-0 right-0 max-w-2xl w-full bg-card shadow-xl border-l border-border">
+              <div className="relative flex h-full flex-col overflow-y-auto py-6">
+                <div className="px-4 sm:px-6">
+                  <div className="flex items-start justify-between">
+                    <h2 className="text-base font-semibold text-foreground">Panel title</h2>
+                    <button className="ml-3 rounded-md text-muted-foreground hover:text-foreground">
+                      <X className="h-6 w-6" />
+                    </button>
+                  </div>
+                </div>
+                <div className="relative mt-6 flex-1 px-4 sm:px-6">
+                  <p className="text-sm text-muted-foreground">Wide panel for detailed content...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Max width: <code className="bg-background px-1 py-0.5 rounded">max-w-2xl</code> (42rem)</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* With Colored Header */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Colored Header</h3>
+          <div className="h-96 border border-border rounded-lg bg-muted/30 relative overflow-hidden">
+            <div className="absolute inset-y-0 right-0 w-96 bg-card shadow-xl">
+              <div className="relative flex h-full flex-col overflow-y-auto">
+                <div className="bg-primary px-4 py-6 sm:px-6">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-base font-semibold text-primary-foreground">Panel title</h2>
+                    <button className="ml-3 rounded-md text-primary-foreground/70 hover:text-primary-foreground">
+                      <X className="h-6 w-6" />
+                    </button>
+                  </div>
+                  <p className="mt-1 text-sm text-primary-foreground/80">Description text here</p>
+                </div>
+                <div className="relative flex-1 px-4 py-6 sm:px-6">
+                  <p className="text-sm text-muted-foreground">Content...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Header: <code className="bg-background px-1 py-0.5 rounded">bg-primary text-primary-foreground</code></li>
+              <li>• Description: <code className="bg-background px-1 py-0.5 rounded">text-primary-foreground/80</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* With Footer Actions */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Sticky Footer</h3>
+          <div className="h-96 border border-border rounded-lg bg-muted/30 relative overflow-hidden">
+            <div className="absolute inset-y-0 right-0 w-96 bg-card shadow-xl">
+              <div className="relative flex h-full flex-col divide-y divide-border">
+                <div className="flex min-h-0 flex-1 flex-col overflow-y-auto py-6">
+                  <div className="px-4 sm:px-6">
+                    <div className="flex items-start justify-between">
+                      <h2 className="text-base font-semibold text-foreground">Panel title</h2>
+                      <button className="ml-3 rounded-md text-muted-foreground hover:text-foreground">
+                        <X className="h-6 w-6" />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="relative mt-6 flex-1 px-4 sm:px-6">
+                    <p className="text-sm text-muted-foreground">Content with scrollable area...</p>
+                  </div>
+                </div>
+                <div className="flex shrink-0 justify-end px-4 py-4 gap-3">
+                  <Button variant="outline">Cancel</Button>
+                  <Button>Save</Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Layout: <code className="bg-background px-1 py-0.5 rounded">flex flex-col divide-y</code></li>
+              <li>• Footer: <code className="bg-background px-1 py-0.5 rounded">shrink-0 px-4 py-4</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Form in Panel */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Form with Gray Header</h3>
+          <div className="h-[600px] border border-border rounded-lg bg-muted/30 relative overflow-hidden">
+            <div className="absolute inset-y-0 right-0 max-w-2xl w-full bg-card shadow-xl">
+              <form className="relative flex h-full flex-col overflow-y-auto">
+                <div className="flex-1">
+                  <div className="bg-muted px-4 py-6 sm:px-6">
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-1">
+                        <h2 className="text-base font-semibold text-foreground">New project</h2>
+                        <p className="text-sm text-muted-foreground">Get started by filling in the information below.</p>
+                      </div>
+                      <button type="button" className="ml-3 rounded-md text-muted-foreground hover:text-foreground">
+                        <X className="h-6 w-6" />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-6 py-6 sm:space-y-0 sm:divide-y sm:divide-border sm:py-0">
+                    <div className="space-y-2 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
+                      <Label className="sm:mt-1.5">Project name</Label>
+                      <div className="sm:col-span-2">
+                        <Input />
+                      </div>
+                    </div>
+                    <div className="space-y-2 px-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:space-y-0 sm:px-6 sm:py-5">
+                      <Label className="sm:mt-1.5">Description</Label>
+                      <div className="sm:col-span-2">
+                        <Textarea rows={3} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="shrink-0 border-t border-border px-4 py-5 sm:px-6">
+                  <div className="flex justify-end gap-3">
+                    <Button variant="outline">Cancel</Button>
+                    <Button type="submit">Create</Button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Header: <code className="bg-background px-1 py-0.5 rounded">bg-muted</code> for subtle background</li>
+              <li>• Form grid: <code className="bg-background px-1 py-0.5 rounded">sm:grid sm:grid-cols-3</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Profile Panel */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Profile with Cover Image</h3>
+          <div className="h-[600px] border border-border rounded-lg bg-muted/30 relative overflow-hidden">
+            <div className="absolute inset-y-0 right-0 w-96 bg-card shadow-xl">
+              <div className="relative flex h-full flex-col overflow-y-auto">
+                <div className="px-4 py-6 sm:px-6">
+                  <div className="flex items-start justify-between">
+                    <h2 className="text-base font-semibold text-foreground">Profile</h2>
+                    <button className="ml-3 rounded-md text-muted-foreground hover:text-foreground">
+                      <X className="h-6 w-6" />
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <div className="pb-1 sm:pb-6">
+                    <div className="relative h-40 sm:h-56 bg-gradient-primary" />
+                    <div className="mt-6 px-4 sm:mt-8 sm:flex sm:items-end sm:px-6">
+                      <div className="sm:flex-1">
+                        <div className="flex items-center">
+                          <h3 className="text-xl font-bold text-foreground sm:text-2xl">Ashley Porter</h3>
+                          <span className="ml-2.5 inline-block h-2 w-2 shrink-0 rounded-full bg-success" />
+                        </div>
+                        <p className="text-sm text-muted-foreground">@ashleyporter</p>
+                        <div className="mt-5 flex gap-3">
+                          <Button className="flex-1">Message</Button>
+                          <Button variant="outline" className="flex-1">Call</Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="px-4 pt-5 pb-5 sm:px-6">
+                    <dl className="space-y-8 sm:space-y-6">
+                      <div>
+                        <dt className="text-sm font-medium text-muted-foreground">Bio</dt>
+                        <dd className="mt-1 text-sm text-foreground">Enim feugiat ut ipsum, neque ut.</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-muted-foreground">Location</dt>
+                        <dd className="mt-1 text-sm text-foreground">New York, NY, USA</dd>
+                      </div>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Cover: <code className="bg-background px-1 py-0.5 rounded">h-40 sm:h-56 bg-gradient-primary</code></li>
+              <li>• Online indicator: <code className="bg-background px-1 py-0.5 rounded">h-2 w-2 rounded-full bg-success</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Team List Panel */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Team List with Tabs</h3>
+          <div className="h-[600px] border border-border rounded-lg bg-muted/30 relative overflow-hidden">
+            <div className="absolute inset-y-0 right-0 w-96 bg-card shadow-xl">
+              <div className="relative flex h-full flex-col overflow-y-auto">
+                <div className="p-6">
+                  <div className="flex items-start justify-between">
+                    <h2 className="text-base font-semibold text-foreground">Team</h2>
+                    <button className="ml-3 rounded-md text-muted-foreground hover:text-foreground">
+                      <X className="h-6 w-6" />
+                    </button>
+                  </div>
+                </div>
+                <div className="border-b border-border">
+                  <div className="px-6">
+                    <nav className="-mb-px flex gap-6">
+                      <a href="#" className="border-b-2 border-primary px-1 pb-4 text-sm font-medium text-primary">All</a>
+                      <a href="#" className="border-b-2 border-transparent px-1 pb-4 text-sm font-medium text-muted-foreground hover:border-border hover:text-foreground">Online</a>
+                    </nav>
+                  </div>
+                </div>
+                <ul className="flex-1 divide-y divide-border overflow-y-auto">
+                  <li className="group relative flex items-center px-5 py-6 hover:bg-accent">
+                    <div className="flex min-w-0 flex-1 items-center">
+                      <span className="relative inline-block shrink-0">
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=256&h=256&fit=crop" />
+                          <AvatarFallback>LA</AvatarFallback>
+                        </Avatar>
+                        <span className="absolute top-0 right-0 block h-2.5 w-2.5 rounded-full bg-success ring-2 ring-card" />
+                      </span>
+                      <div className="ml-4 truncate">
+                        <p className="truncate text-sm font-medium text-foreground">Leslie Alexander</p>
+                        <p className="truncate text-sm text-muted-foreground">@lesliealexander</p>
+                      </div>
+                    </div>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="ml-2 h-8 w-8">
+                          <MoreVertical className="h-5 w-5" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem>View profile</DropdownMenuItem>
+                        <DropdownMenuItem>Send message</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Tabs: <code className="bg-background px-1 py-0.5 rounded">border-b-2 border-primary</code></li>
+              <li>• Status ring: <code className="bg-background px-1 py-0.5 rounded">ring-2 ring-card</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Image Detail Panel */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Image Detail Panel</h3>
+          <div className="h-[600px] border border-border rounded-lg bg-muted/30 relative overflow-hidden">
+            <div className="absolute inset-y-0 right-0 w-96 bg-card shadow-xl">
+              <div className="relative h-full overflow-y-auto p-8">
+                <div className="space-y-6">
+                  <div>
+                    <img src="https://images.unsplash.com/photo-1582053433976-25c00369fc93?w=512&h=360&fit=crop" className="block w-full rounded-lg object-cover aspect-[10/7]" />
+                    <div className="mt-4 flex items-start justify-between">
+                      <div>
+                        <h2 className="text-base font-semibold text-foreground">IMG_4985.HEIC</h2>
+                        <p className="text-sm font-medium text-muted-foreground">3.9 MB</p>
+                      </div>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <Heart className="h-6 w-6" />
+                      </Button>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-foreground">Information</h3>
+                    <dl className="mt-2 divide-y divide-border border-t border-b border-border">
+                      <div className="flex justify-between py-3 text-sm font-medium">
+                        <dt className="text-muted-foreground">Uploaded by</dt>
+                        <dd className="text-foreground">Marie Culver</dd>
+                      </div>
+                      <div className="flex justify-between py-3 text-sm font-medium">
+                        <dt className="text-muted-foreground">Created</dt>
+                        <dd className="text-foreground">June 8, 2020</dd>
+                      </div>
+                    </dl>
+                  </div>
+                  <div className="flex gap-3">
+                    <Button className="flex-1">Download</Button>
+                    <Button variant="outline" className="flex-1">Delete</Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Definition list: <code className="bg-background px-1 py-0.5 rounded">divide-y border-t border-b</code></li>
+              <li>• Action buttons: <code className="bg-background px-1 py-0.5 rounded">flex-1</code> for equal width</li>
             </ul>
           </div>
         </div>
