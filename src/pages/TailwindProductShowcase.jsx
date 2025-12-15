@@ -1347,6 +1347,483 @@ export default function TailwindProductShowcase() {
             </div>
           </div>
         </ShowcaseSection>
+
+        <ShowcaseSection title="Product Details - Two Column">
+          <div className="bg-gray-50 p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center">
+                <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">The Fine Details</h2>
+                <p className="mt-3 max-w-3xl mx-auto text-lg text-gray-600">
+                  Our patented padded snack sleeve construction protects your favorite treats from getting smooshed.
+                </p>
+              </div>
+              <div className="mt-16 grid grid-cols-1 gap-y-16 lg:grid-cols-2 lg:gap-x-8">
+                <div>
+                  <img
+                    src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-04-detail-product-shot-01.jpg"
+                    className="aspect-3/2 w-full rounded-lg object-cover"
+                    alt="Detail 1"
+                  />
+                  <p className="mt-8 text-base text-gray-500">
+                    The 20L model has enough space for 370 candy bars, 6 cylinders of chips, 1220 standard gumballs, 
+                    or any combination of on-the-go treats that your heart desires.
+                  </p>
+                </div>
+                <div>
+                  <img
+                    src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-04-detail-product-shot-02.jpg"
+                    className="aspect-3/2 w-full rounded-lg object-cover"
+                    alt="Detail 2"
+                  />
+                  <p className="mt-8 text-base text-gray-500">
+                    Up your snack organization game with multiple compartment options. The quick-access stash pouch 
+                    is ready for even the most unexpected snack attacks.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Product Features - Full Width Hero">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="relative">
+              <img
+                src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-02-full-width.jpg"
+                className="h-96 w-full object-cover"
+                alt="Hero"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-white" />
+            </div>
+            <div className="relative -mt-12 max-w-7xl mx-auto px-8 pb-16">
+              <div className="max-w-2xl mx-auto text-center lg:max-w-4xl">
+                <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Technical Specifications</h2>
+                <p className="mt-4 text-gray-500">
+                  Organize is a system to keep your desk tidy and photo-worthy all day long.
+                </p>
+              </div>
+              <dl className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-none mx-auto">
+                <div className="border-t border-gray-200 pt-4">
+                  <dt className="font-medium text-gray-900">Origin</dt>
+                  <dd className="mt-2 text-sm text-gray-500">Designed by Good Goods, Inc.</dd>
+                </div>
+                <div className="border-t border-gray-200 pt-4">
+                  <dt className="font-medium text-gray-900">Material</dt>
+                  <dd className="mt-2 text-sm text-gray-500">Solid walnut base with rare earth magnets</dd>
+                </div>
+                <div className="border-t border-gray-200 pt-4">
+                  <dt className="font-medium text-gray-900">Dimensions</dt>
+                  <dd className="mt-2 text-sm text-gray-500">15" x 3.75" x .75"</dd>
+                </div>
+                <div className="border-t border-gray-200 pt-4">
+                  <dt className="font-medium text-gray-900">Finish</dt>
+                  <dd className="mt-2 text-sm text-gray-500">Hand sanded and finished with natural oil</dd>
+                </div>
+                <div className="border-t border-gray-200 pt-4">
+                  <dt className="font-medium text-gray-900">Includes</dt>
+                  <dd className="mt-2 text-sm text-gray-500">Pen Tray, Phone Tray, Small Tray, Large Tray</dd>
+                </div>
+                <div className="border-t border-gray-200 pt-4">
+                  <dt className="font-medium text-gray-900">Considerations</dt>
+                  <dd className="mt-2 text-sm text-gray-500">Made from natural materials. Grain and color vary.</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Product Features - Side by Side with Grid">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+              <div>
+                <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Technical Specifications</h2>
+                <p className="mt-4 text-gray-500">
+                  The walnut wood card tray is precision milled to perfectly fit a stack of Focus cards.
+                </p>
+                <dl className="mt-16 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-10">
+                  <div className="border-t border-gray-200 pt-4">
+                    <dt className="font-medium text-gray-900">Origin</dt>
+                    <dd className="mt-2 text-sm text-gray-500">Designed by Good Goods, Inc.</dd>
+                  </div>
+                  <div className="border-t border-gray-200 pt-4">
+                    <dt className="font-medium text-gray-900">Material</dt>
+                    <dd className="mt-2 text-sm text-gray-500">Solid walnut base</dd>
+                  </div>
+                  <div className="border-t border-gray-200 pt-4">
+                    <dt className="font-medium text-gray-900">Dimensions</dt>
+                    <dd className="mt-2 text-sm text-gray-500">6.25" x 3.55" x 1.15"</dd>
+                  </div>
+                  <div className="border-t border-gray-200 pt-4">
+                    <dt className="font-medium text-gray-900">Finish</dt>
+                    <dd className="mt-2 text-sm text-gray-500">Hand sanded and finished</dd>
+                  </div>
+                </dl>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <img
+                  src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-03-detail-01.jpg"
+                  className="rounded-lg bg-gray-100"
+                  alt="Detail 1"
+                />
+                <img
+                  src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-03-detail-02.jpg"
+                  className="rounded-lg bg-gray-100"
+                  alt="Detail 2"
+                />
+                <img
+                  src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-03-detail-03.jpg"
+                  className="rounded-lg bg-gray-100"
+                  alt="Detail 3"
+                />
+                <img
+                  src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-03-detail-04.jpg"
+                  className="rounded-lg bg-gray-100"
+                  alt="Detail 4"
+                />
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Product Features - Stacked Sections">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="max-w-3xl">
+                <h2 className="font-semibold text-gray-500">Drawstring Canister</h2>
+                <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Use it your way</p>
+                <p className="mt-4 text-gray-500">
+                  The Drawstring Canister comes with multiple strap and handle options to adapt throughout your day.
+                </p>
+              </div>
+              <div className="mt-10 space-y-16 border-t border-gray-200 pt-10">
+                <div className="flex flex-col-reverse lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-8">
+                  <div className="mt-6 lg:col-span-5 lg:mt-0">
+                    <h3 className="text-lg font-medium text-gray-900">Adventure-ready</h3>
+                    <p className="mt-2 text-sm text-gray-500">
+                      The Drawstring Canister is water and tear resistant with durable canvas construction.
+                    </p>
+                  </div>
+                  <div className="lg:col-span-7">
+                    <img
+                      src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-04-detail-03.jpg"
+                      className="aspect-5/2 w-full rounded-lg object-cover"
+                      alt="Feature"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col-reverse lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-8">
+                  <div className="mt-6 lg:col-span-5 lg:mt-0">
+                    <h3 className="text-lg font-medium text-gray-900">Minimal and clean</h3>
+                    <p className="mt-2 text-sm text-gray-500">
+                      Everything you need, nothing you don't. Simple, contemporary design.
+                    </p>
+                  </div>
+                  <div className="lg:col-span-7">
+                    <img
+                      src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-04-detail-01.jpg"
+                      className="aspect-5/2 w-full rounded-lg object-cover"
+                      alt="Feature"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Product Features - Split Image Layout">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="max-w-3xl">
+                <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Protect your device</h2>
+                <p className="mt-4 text-gray-500">
+                  Keep your device safe with a fabric sleeve that matches in quality and looks.
+                </p>
+              </div>
+              <div className="mt-16 space-y-16">
+                <div className="flex flex-col-reverse lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-8">
+                  <div className="mt-6 lg:col-start-1 lg:col-span-5 lg:mt-0">
+                    <h3 className="text-lg font-medium text-gray-900">Minimal and thoughtful</h3>
+                    <p className="mt-2 text-sm text-gray-500">
+                      Our laptop sleeve is compact and precisely fits 13" devices. The zipper allows easy access.
+                    </p>
+                  </div>
+                  <div className="lg:col-start-6 lg:col-span-7">
+                    <img
+                      src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-07-detail-01.jpg"
+                      className="aspect-5/2 w-full rounded-lg object-cover"
+                      alt="Feature"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col-reverse lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-8">
+                  <div className="mt-6 lg:col-start-8 lg:col-span-5 lg:mt-0">
+                    <h3 className="text-lg font-medium text-gray-900">Refined details</h3>
+                    <p className="mt-2 text-sm text-gray-500">
+                      Durable canvas with double-stitched construction, a felt interior, and high quality zipper.
+                    </p>
+                  </div>
+                  <div className="lg:col-start-1 lg:col-span-7">
+                    <img
+                      src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-07-detail-02.jpg"
+                      className="aspect-5/2 w-full rounded-lg object-cover"
+                      alt="Feature"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Product Features - Side Image with Hero">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="relative">
+              <img
+                src="https://tailwindcss.com/plus-assets/img/ecommerce-images/confirmation-page-01-hero.jpg"
+                className="aspect-3/2 w-full object-cover sm:aspect-5/2 lg:hidden"
+                alt="Hero"
+              />
+              <div className="lg:grid lg:grid-cols-2 lg:gap-x-8 max-w-7xl mx-auto">
+                <img
+                  src="https://tailwindcss.com/plus-assets/img/ecommerce-images/confirmation-page-01-hero.jpg"
+                  className="hidden lg:block aspect-auto h-full w-full object-cover"
+                  alt="Hero"
+                />
+                <div className="px-6 py-16 lg:py-32">
+                  <h2 className="font-medium text-gray-500">Leatherbound Daily Journal</h2>
+                  <p className="mt-4 text-4xl font-bold tracking-tight text-gray-900">All in the Details</p>
+                  <p className="mt-4 text-gray-500">
+                    We've obsessed over every detail of this handcrafted journal to bring you the best materials.
+                  </p>
+                  <dl className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-10 text-sm">
+                    <div>
+                      <dt className="font-medium text-gray-900">Durable</dt>
+                      <dd className="mt-2 text-gray-500">The leather cover and steel binding stand up to daily use.</dd>
+                    </div>
+                    <div>
+                      <dt className="font-medium text-gray-900">Refillable</dt>
+                      <dd className="mt-2 text-gray-500">Buy it once and refill as often as you need.</dd>
+                    </div>
+                    <div>
+                      <dt className="font-medium text-gray-900">Thoughtfully designed</dt>
+                      <dd className="mt-2 text-gray-500">Comfortable disc binding allows quick rearrangement.</dd>
+                    </div>
+                    <div>
+                      <dt className="font-medium text-gray-900">Locally made</dt>
+                      <dd className="mt-2 text-gray-500">Responsibly and sustainably made close to you.</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Product Features - Tabbed Interface">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="max-w-3xl">
+                <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Technical Specifications</h2>
+                <p className="mt-4 text-gray-500">
+                  The Organize modular system offers endless options for arranging your favorite items.
+                </p>
+              </div>
+              <Tabs defaultValue="design" className="mt-8">
+                <TabsList className="border-b border-gray-200 bg-transparent p-0 h-auto">
+                  <TabsTrigger value="design" className="border-b-2 border-transparent data-[state=active]:border-indigo-500 data-[state=active]:text-indigo-600 text-gray-500 hover:text-gray-700 rounded-none py-4 px-1 mr-10">
+                    Design
+                  </TabsTrigger>
+                  <TabsTrigger value="material" className="border-b-2 border-transparent data-[state=active]:border-indigo-500 data-[state=active]:text-indigo-600 text-gray-500 hover:text-gray-700 rounded-none py-4 px-1 mr-10">
+                    Material
+                  </TabsTrigger>
+                  <TabsTrigger value="considerations" className="border-b-2 border-transparent data-[state=active]:border-indigo-500 data-[state=active]:text-indigo-600 text-gray-500 hover:text-gray-700 rounded-none py-4 px-1 mr-10">
+                    Considerations
+                  </TabsTrigger>
+                  <TabsTrigger value="included" className="border-b-2 border-transparent data-[state=active]:border-indigo-500 data-[state=active]:text-indigo-600 text-gray-500 hover:text-gray-700 rounded-none py-4 px-1">
+                    Included
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="design" className="pt-10">
+                  <div className="flex flex-col-reverse lg:grid lg:grid-cols-12 lg:gap-x-8">
+                    <div className="mt-6 lg:col-span-5 lg:mt-0">
+                      <h3 className="text-lg font-medium text-gray-900">Adaptive and modular</h3>
+                      <p className="mt-2 text-sm text-gray-500">
+                        The Organize base set allows you to configure and evolve your setup as your items change.
+                      </p>
+                    </div>
+                    <div className="lg:col-span-7">
+                      <img
+                        src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-06-detail-01.jpg"
+                        className="aspect-5/2 w-full rounded-lg object-cover"
+                        alt="Design"
+                      />
+                    </div>
+                  </div>
+                </TabsContent>
+                <TabsContent value="material" className="pt-10">
+                  <div className="flex flex-col-reverse lg:grid lg:grid-cols-12 lg:gap-x-8">
+                    <div className="mt-6 lg:col-span-5 lg:mt-0">
+                      <h3 className="text-lg font-medium text-gray-900">Natural wood options</h3>
+                      <p className="mt-2 text-sm text-gray-500">
+                        Options for rich walnut and bright maple base materials. Every base is hand sanded.
+                      </p>
+                    </div>
+                    <div className="lg:col-span-7">
+                      <img
+                        src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-06-detail-02.jpg"
+                        className="aspect-5/2 w-full rounded-lg object-cover"
+                        alt="Material"
+                      />
+                    </div>
+                  </div>
+                </TabsContent>
+                <TabsContent value="considerations" className="pt-10">
+                  <div className="flex flex-col-reverse lg:grid lg:grid-cols-12 lg:gap-x-8">
+                    <div className="mt-6 lg:col-span-5 lg:mt-0">
+                      <h3 className="text-lg font-medium text-gray-900">Helpful around the home</h3>
+                      <p className="mt-2 text-sm text-gray-500">
+                        Our customers use Organize throughout the house in workspace, kitchen, living room, and more.
+                      </p>
+                    </div>
+                    <div className="lg:col-span-7">
+                      <img
+                        src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-06-detail-03.jpg"
+                        className="aspect-5/2 w-full rounded-lg object-cover"
+                        alt="Usage"
+                      />
+                    </div>
+                  </div>
+                </TabsContent>
+                <TabsContent value="included" className="pt-10">
+                  <div className="flex flex-col-reverse lg:grid lg:grid-cols-12 lg:gap-x-8">
+                    <div className="mt-6 lg:col-span-5 lg:mt-0">
+                      <h3 className="text-lg font-medium text-gray-900">Everything you'll need</h3>
+                      <p className="mt-2 text-sm text-gray-500">
+                        The Organize base set includes pen, phone, small, and large trays.
+                      </p>
+                    </div>
+                    <div className="lg:col-span-7">
+                      <img
+                        src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-06-detail-04.jpg"
+                        className="aspect-5/2 w-full rounded-lg object-cover"
+                        alt="Included"
+                      />
+                    </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Product Features - Four Column Grid">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="max-w-3xl">
+                <h2 className="font-medium text-gray-500">Focus</h2>
+                <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Simple productivity</p>
+                <p className="mt-4 text-gray-500">
+                  Focus allows you to plan 10 daily tasks, while also thinking ahead about what's next.
+                </p>
+              </div>
+              <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-16">
+                <div className="flex flex-col-reverse">
+                  <div className="mt-6">
+                    <h3 className="text-sm font-medium text-gray-900">Three card types</h3>
+                    <p className="mt-2 text-sm text-gray-500">Today, Next, and Someday cards for your dreams.</p>
+                  </div>
+                  <img
+                    src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-08-detail-01.jpg"
+                    className="aspect-square w-full rounded-lg object-cover"
+                    alt="Feature"
+                  />
+                </div>
+                <div className="flex flex-col-reverse">
+                  <div className="mt-6">
+                    <h3 className="text-sm font-medium text-gray-900">The perfect mix</h3>
+                    <p className="mt-2 text-sm text-gray-500">Plenty of cards to last you a month of procrastination.</p>
+                  </div>
+                  <img
+                    src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-08-detail-02.jpg"
+                    className="aspect-square w-full rounded-lg object-cover"
+                    alt="Feature"
+                  />
+                </div>
+                <div className="flex flex-col-reverse">
+                  <div className="mt-6">
+                    <h3 className="text-sm font-medium text-gray-900">Dot grid backs</h3>
+                    <p className="mt-2 text-sm text-gray-500">Flip a card over to doodle during meetings.</p>
+                  </div>
+                  <img
+                    src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-08-detail-03.jpg"
+                    className="aspect-square w-full rounded-lg object-cover"
+                    alt="Feature"
+                  />
+                </div>
+                <div className="flex flex-col-reverse">
+                  <div className="mt-6">
+                    <h3 className="text-sm font-medium text-gray-900">Refill packs</h3>
+                    <p className="mt-2 text-sm text-gray-500">Subscribe and save on routine refill packs.</p>
+                  </div>
+                  <img
+                    src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-08-detail-04.jpg"
+                    className="aspect-square w-full rounded-lg object-cover"
+                    alt="Feature"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Product Features - Main + Detail Images">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div>
+                  <div className="border-b border-gray-200 pb-10">
+                    <h2 className="font-medium text-gray-500">Machined Kettle</h2>
+                    <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Elegant simplicity</p>
+                  </div>
+                  <dl className="mt-10 space-y-10">
+                    <div>
+                      <dt className="text-sm font-medium text-gray-900">Sleek design</dt>
+                      <dd className="mt-3 text-sm text-gray-500">Contemporary shape that stands apart from most plastic appliances.</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-900">Comfort handle</dt>
+                      <dd className="mt-3 text-sm text-gray-500">Shaped for steady pours and insulated to prevent burns.</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-900">One-button control</dt>
+                      <dd className="mt-3 text-sm text-gray-500">Digital readout for setting temperature and power.</dd>
+                    </div>
+                  </dl>
+                </div>
+                <div>
+                  <img
+                    src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-09-main-detail.jpg"
+                    className="aspect-square w-full rounded-lg object-cover"
+                    alt="Main"
+                  />
+                  <div className="mt-4 grid grid-cols-2 gap-4">
+                    <img
+                      src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-09-detail-01.jpg"
+                      className="aspect-square w-full rounded-lg object-cover"
+                      alt="Detail 1"
+                    />
+                    <img
+                      src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-feature-09-detail-02.jpg"
+                      className="aspect-square w-full rounded-lg object-cover"
+                      alt="Detail 2"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
       </div>
     </div>
   );
