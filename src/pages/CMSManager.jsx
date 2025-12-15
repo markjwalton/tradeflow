@@ -15,6 +15,7 @@ export default function CMSManager() {
   const [activeTab, setActiveTab] = useState('pages');
   const [editingContent, setEditingContent] = useState(null);
   const [contentType, setContentType] = useState(null);
+  const [selectedWebsite, setSelectedWebsite] = useState(null);
 
   const { data: websiteFolders = [] } = useQuery({
     queryKey: ['websiteFolders'],
