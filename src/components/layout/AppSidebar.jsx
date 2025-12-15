@@ -228,7 +228,7 @@ export function AppSidebar({ navItems = [] }) {
               </TooltipContent>
             </Tooltip>
             {isExpanded && hasChildren && (
-              <div className="flex flex-col [gap:var(--spacing-1)] [margin-top:var(--spacing-1)]">
+              <div className="flex flex-col [gap:var(--spacing-1)] [margin-top:var(--spacing-1)] [margin-left:var(--spacing-1)] [padding-left:var(--spacing-1)] border-l-2 border-sidebar-accent">
                 {item.children.map((child) => renderNavItem(child, true, false))}
               </div>
             )}
