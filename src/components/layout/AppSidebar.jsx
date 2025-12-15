@@ -176,7 +176,7 @@ export function AppSidebar({ navItems = [] }) {
     const isExpanded = expandedFolders.has(item.id);
     // Standardize icon sizes - larger in icons-only mode for better visibility
     const iconSize = isIconsOnly ? 24 : (item.icon_size || 20);
-    const iconStrokeWidth = isIconsOnly ? 2 : (item.icon_stroke_width || 1.5);
+    const iconStrokeWidth = isIconsOnly ? 1.5 : (item.icon_stroke_width || 1.25);
 
     // Build page URL from page_url field
     const pageUrl = item.page_url || "";
