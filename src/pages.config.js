@@ -119,6 +119,10 @@ import TailwindProductShowcase from './pages/TailwindProductShowcase';
 import RadiantHome from './pages/RadiantHome';
 import AssetManager from './pages/AssetManager';
 import WebsiteThemeManager from './pages/WebsiteThemeManager';
+import CommitHome from './pages/CommitHome';
+import CompassHome from './pages/CompassHome';
+import CompassLogin from './pages/CompassLogin';
+import CompassInterviews from './pages/CompassInterviews';
 import __Layout from './Layout.jsx';
 
 
@@ -244,6 +248,10 @@ export const PAGES = {
     "RadiantHome": RadiantHome,
     "AssetManager": AssetManager,
     "WebsiteThemeManager": WebsiteThemeManager,
+    "CommitHome": CommitHome,
+    "CompassHome": CompassHome,
+    "CompassLogin": CompassLogin,
+    "CompassInterviews": CompassInterviews,
 }
 
 export const pagesConfig = {
