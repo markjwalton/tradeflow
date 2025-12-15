@@ -228,7 +228,7 @@ export function PageSettingsPanel({ currentPageName }) {
           <Settings className="h-6 w-6 text-white" />
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-96" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
+      <SheetContent className="w-96" style={{ backgroundColor: 'var(--background-100, rgba(255, 255, 255, 0.8))' }}>
         <SheetHeader className="px-6">
           <div className="flex items-center justify-between">
             <h2 className="flex items-center gap-2" style={{ color: 'var(--accent-500, #C78E8E)' }}>
