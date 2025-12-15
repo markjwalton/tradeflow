@@ -43,8 +43,8 @@ export default function TailwindListsShowcase() {
           </div>
         </div>
 
-      {/* Bordered Container List */}
-      <section className="space-y-4">
+        {/* Bordered Container List */}
+        <div className="space-y-4 mb-8">
         <div>
           <h2 className="text-xl font-display mb-2">Bordered Container List</h2>
           <p className="text-sm text-muted-foreground">List within a bordered container</p>
@@ -69,10 +69,9 @@ export default function TailwindListsShowcase() {
             <li>• Radius: <code className="bg-background px-1 py-0.5 rounded">rounded-xl</code> (var(--radius-xl))</li>
           </ul>
         </div>
-      </section>
 
-      {/* Spaced Card Items */}
-      <section className="space-y-4">
+        {/* Spaced Card Items */}
+        <div className="space-y-4 mb-8">
         <div>
           <h2 className="text-xl font-display mb-2">Spaced Card Items</h2>
           <p className="text-sm text-muted-foreground">Individual card items with spacing, responsive radius</p>
@@ -96,10 +95,9 @@ export default function TailwindListsShowcase() {
             <li>• Spacing: <code className="bg-background px-1 py-0.5 rounded">space-y-3</code> (var(--spacing-3))</li>
           </ul>
         </div>
-      </section>
 
-      {/* Spaced Rounded Card Items */}
-      <section className="space-y-4">
+        {/* Spaced Rounded Card Items */}
+        <div className="space-y-4 mb-8">
         <div>
           <h2 className="text-xl font-display mb-2">Spaced Rounded Items</h2>
           <p className="text-sm text-muted-foreground">Fully rounded card items with consistent spacing</p>
@@ -121,10 +119,9 @@ export default function TailwindListsShowcase() {
             <li>• Padding: <code className="bg-background px-1 py-0.5 rounded">px-6 py-4</code> consistent</li>
           </ul>
         </div>
-      </section>
 
-      {/* Contained Divided List (Responsive) */}
-      <section className="space-y-4">
+        {/* Contained Divided List (Responsive) */}
+        <div className="space-y-4 mb-8">
         <div>
           <h2 className="text-xl font-display mb-2">Contained List (Responsive)</h2>
           <p className="text-sm text-muted-foreground">Full-width mobile, rounded desktop container</p>
@@ -149,10 +146,9 @@ export default function TailwindListsShowcase() {
             <li>• Padding: <code className="bg-background px-1 py-0.5 rounded">px-4 py-4 sm:px-6</code></li>
           </ul>
         </div>
-      </section>
 
-      {/* Contained Divided List (Always Rounded) */}
-      <section className="space-y-4">
+        {/* Contained Divided List (Always Rounded) */}
+        <div className="space-y-4 mb-8">
         <div>
           <h2 className="text-xl font-display mb-2">Contained List (Always Rounded)</h2>
           <p className="text-sm text-muted-foreground">Rounded container on all screen sizes</p>
@@ -176,10 +172,9 @@ export default function TailwindListsShowcase() {
             <li>• Padding: <code className="bg-background px-1 py-0.5 rounded">px-6 py-4</code> consistent</li>
           </ul>
         </div>
-      </section>
 
-      {/* Simple Divided List (No Padding) */}
-      <section className="space-y-4">
+        {/* Simple Divided List (No Padding) */}
+        <div className="space-y-4 mb-8">
         <div>
           <h2 className="text-xl font-display mb-2">Simple Divided List (Minimal)</h2>
           <p className="text-sm text-muted-foreground">Clean divided list with vertical padding only</p>
@@ -202,15 +197,9 @@ export default function TailwindListsShowcase() {
             <li>• No horizontal padding - edge to edge</li>
           </ul>
         </div>
-      </section>
+      </ShowcaseSection>
 
-      {/* Tabs Variations */}
-      <section className="space-y-8 mt-12 pt-8 border-t border-border">
-        <div>
-          <h2 className="text-xl font-display mb-2">Tabs</h2>
-          <p className="text-sm text-muted-foreground">Navigation patterns for tabbed interfaces</p>
-        </div>
-
+      <ShowcaseSection title="Tabs" defaultOpen={false}>
         {/* Underline Tabs */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Underline Style</h3>
@@ -572,15 +561,9 @@ export default function TailwindListsShowcase() {
             </ul>
           </div>
         </div>
-      </section>
+      </ShowcaseSection>
 
-      {/* Pagination Variations */}
-      <section className="space-y-8 mt-12 pt-8 border-t border-border">
-        <div>
-          <h2 className="text-xl font-display mb-2">Pagination</h2>
-          <p className="text-sm text-muted-foreground">Navigation patterns for paginated content</p>
-        </div>
-
+      <ShowcaseSection title="Pagination" defaultOpen={false}>
         {/* Numbered Pagination */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Numbered with Results Count</h3>
@@ -726,15 +709,9 @@ export default function TailwindListsShowcase() {
             </ul>
           </div>
         </div>
-      </section>
+      </ShowcaseSection>
 
-      {/* Sidebar Navigation */}
-      <section className="space-y-8 mt-12 pt-8 border-t border-border">
-        <div>
-          <h2 className="text-xl font-display mb-2">Sidebar Navigation</h2>
-          <p className="text-sm text-muted-foreground">Vertical navigation patterns for sidebars</p>
-        </div>
-
+      <ShowcaseSection title="Sidebar Navigation" defaultOpen={false}>
         {/* Simple Text Navigation */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Simple Text Links</h3>
@@ -967,15 +944,9 @@ export default function TailwindListsShowcase() {
             </ul>
           </div>
         </div>
-      </section>
+      </ShowcaseSection>
 
-      {/* Full Sidebar Layouts */}
-      <section className="space-y-8 mt-12 pt-8 border-t border-border">
-        <div>
-          <h2 className="text-xl font-display mb-2">Full Sidebar Layouts</h2>
-          <p className="text-sm text-muted-foreground">Complete sidebar navigation with logo, user profile, and sections</p>
-        </div>
-
+      <ShowcaseSection title="Full Sidebar Layouts" defaultOpen={false}>
         {/* Light Full Sidebar */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Light Theme with Logo & Profile</h3>
@@ -1213,15 +1184,9 @@ export default function TailwindListsShowcase() {
             </ul>
           </div>
         </div>
-      </section>
+      </ShowcaseSection>
 
-      {/* Step Indicators / Progress */}
-      <section className="space-y-8 mt-12 pt-8 border-t border-border">
-        <div>
-          <h2 className="text-xl font-display mb-2">Step Indicators / Progress</h2>
-          <p className="text-sm text-muted-foreground">Multi-step progress indicators for forms and processes</p>
-        </div>
-
+      <ShowcaseSection title="Step Indicators / Progress" defaultOpen={false}>
         {/* Simple Bar Steps */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Simple Bar with Labels</h3>
@@ -1552,11 +1517,6 @@ export default function TailwindListsShowcase() {
 
       {/* Command Palettes / Search Modals */}
       <section className="space-y-8 mt-12 pt-8 border-t border-border">
-        <div>
-          <h2 className="text-xl font-display mb-2">Command Palettes / Search Modals</h2>
-          <p className="text-sm text-muted-foreground">Modal search interfaces for quick navigation and actions</p>
-        </div>
-
         {/* Simple Search Modal */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Simple Search Modal</h3>
@@ -1813,15 +1773,9 @@ export default function TailwindListsShowcase() {
             </ul>
           </div>
         </div>
-      </section>
+      </ShowcaseSection>
 
-      {/* Modals / Dialogs */}
-      <section className="space-y-8 mt-12 pt-8 border-t border-border">
-        <div>
-          <h2 className="text-xl font-display mb-2">Modals / Dialogs</h2>
-          <p className="text-sm text-muted-foreground">Modal dialog patterns for confirmations and actions</p>
-        </div>
-
+      <ShowcaseSection title="Modals / Dialogs" defaultOpen={false}>
         {/* Success Modal - Single Button */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Success Modal - Centered Icon</h3>
@@ -2009,15 +1963,9 @@ export default function TailwindListsShowcase() {
             </ul>
           </div>
         </div>
-      </section>
+      </ShowcaseSection>
 
-      {/* Slide-over Panels / Drawers */}
-      <section className="space-y-8 mt-12 pt-8 border-t border-border">
-        <div>
-          <h2 className="text-xl font-display mb-2">Slide-over Panels / Drawers</h2>
-          <p className="text-sm text-muted-foreground">Side panels for detailed views and forms</p>
-        </div>
-
+      <ShowcaseSection title="Slide-over Panels / Drawers" defaultOpen={false}>
         {/* Simple Narrow Panel */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Simple Narrow Panel</h3>
@@ -2367,15 +2315,9 @@ export default function TailwindListsShowcase() {
             </ul>
           </div>
         </div>
-      </section>
+      </ShowcaseSection>
 
-      {/* Notifications / Toasts */}
-      <section className="space-y-8 mt-12 pt-8 border-t border-border">
-        <div>
-          <h2 className="text-xl font-display mb-2">Notifications / Toasts</h2>
-          <p className="text-sm text-muted-foreground">Toast notification patterns for user feedback</p>
-        </div>
-
+      <ShowcaseSection title="Notifications / Toasts" defaultOpen={false}>
         {/* Success Notification */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Success with Icon</h3>
@@ -2564,15 +2506,9 @@ export default function TailwindListsShowcase() {
             </ul>
           </div>
         </div>
-      </section>
+      </ShowcaseSection>
 
-      {/* Avatars */}
-      <section className="space-y-8 mt-12 pt-8 border-t border-border">
-        <div>
-          <h2 className="text-xl font-display mb-2">Avatars</h2>
-          <p className="text-sm text-muted-foreground">Avatar patterns with different sizes and indicators</p>
-        </div>
-
+      <ShowcaseSection title="Avatars" defaultOpen={false}>
         {/* Circular Avatars */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Circular Avatars - Size Scale</h3>
@@ -2935,15 +2871,9 @@ export default function TailwindListsShowcase() {
             </ul>
           </div>
         </div>
-      </section>
+      </ShowcaseSection>
 
-      {/* Badges */}
-      <section className="space-y-8 mt-12 pt-8 border-t border-border">
-        <div>
-          <h2 className="text-xl font-display mb-2">Badges</h2>
-          <p className="text-sm text-muted-foreground">Badge patterns with different styles and colors</p>
-        </div>
-
+      <ShowcaseSection title="Badges" defaultOpen={false}>
         {/* Flat with Border - Medium Size */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Flat with Border (px-2 py-1)</h3>
@@ -3236,15 +3166,9 @@ export default function TailwindListsShowcase() {
             </ul>
           </div>
         </div>
-      </section>
+      </ShowcaseSection>
 
-      {/* Dropdown Menus */}
-      <section className="space-y-8 mt-12 pt-8 border-t border-border">
-        <div>
-          <h2 className="text-xl font-display mb-2">Dropdown Menus</h2>
-          <p className="text-sm text-muted-foreground">Dropdown menu patterns for actions and navigation</p>
-        </div>
-
+      <ShowcaseSection title="Dropdown Menus" defaultOpen={false}>
         {/* Simple Dropdown */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Simple Dropdown</h3>
@@ -3417,15 +3341,9 @@ export default function TailwindListsShowcase() {
             </ul>
           </div>
         </div>
-      </section>
+      </ShowcaseSection>
 
-      {/* Buttons */}
-      <section className="space-y-8 mt-12 pt-8 border-t border-border">
-        <div>
-          <h2 className="text-xl font-display mb-2">Buttons</h2>
-          <p className="text-sm text-muted-foreground">Button size and style variations</p>
-        </div>
-
+      <ShowcaseSection title="Buttons" defaultOpen={false}>
         {/* Primary Sizes */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Primary - All Sizes</h3>
@@ -3606,15 +3524,9 @@ export default function TailwindListsShowcase() {
             </ul>
           </div>
         </div>
-      </section>
+      </ShowcaseSection>
 
-      {/* Button Groups */}
-      <section className="space-y-8 mt-12 pt-8 border-t border-border">
-        <div>
-          <h2 className="text-xl font-display mb-2">Button Groups</h2>
-          <p className="text-sm text-muted-foreground">Connected button groups for related actions</p>
-        </div>
-
+      <ShowcaseSection title="Button Groups" defaultOpen={false}>
         {/* Basic Button Group */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Basic Button Group</h3>
@@ -3735,15 +3647,9 @@ export default function TailwindListsShowcase() {
             </ul>
           </div>
         </div>
-      </section>
+      </ShowcaseSection>
 
-      {/* Container Widths */}
-      <section className="space-y-8 mt-12 pt-8 border-t border-border">
-        <div>
-          <h2 className="text-xl font-display mb-2">Container Widths</h2>
-          <p className="text-sm text-muted-foreground">Responsive container patterns for content layout</p>
-        </div>
-
+      <ShowcaseSection title="Container Widths" defaultOpen={false}>
         {/* Max Width - No Mobile Padding */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Max Width (No Mobile Padding)</h3>
@@ -3837,15 +3743,9 @@ export default function TailwindListsShowcase() {
             </ul>
           </div>
         </div>
-      </section>
+      </ShowcaseSection>
 
-      {/* Media Objects */}
-      <section className="space-y-8 mt-12 pt-8 border-t border-border">
-        <div>
-          <h2 className="text-xl font-display mb-2">Media Objects</h2>
-          <p className="text-sm text-muted-foreground">Image and content layout patterns</p>
-        </div>
-
+      <ShowcaseSection title="Media Objects" defaultOpen={false}>
         {/* Basic Media Object */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Basic Media Object</h3>
@@ -4079,15 +3979,9 @@ export default function TailwindListsShowcase() {
             </ul>
           </div>
         </div>
-      </section>
+      </ShowcaseSection>
 
-      {/* Dividers */}
-      <section className="space-y-8 mt-12 pt-8 border-t border-border">
-        <div>
-          <h2 className="text-xl font-display mb-2">Dividers</h2>
-          <p className="text-sm text-muted-foreground">Section separators with text, icons, and buttons</p>
-        </div>
-
+      <ShowcaseSection title="Dividers" defaultOpen={false}>
         {/* Centered Text Divider */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Centered Text Divider</h3>
@@ -4234,15 +4128,9 @@ export default function TailwindListsShowcase() {
             </ul>
           </div>
         </div>
-      </section>
+      </ShowcaseSection>
 
-      {/* Application Shells */}
-      <section className="space-y-8 mt-12 pt-8 border-t border-border">
-        <div>
-          <h2 className="text-xl font-display mb-2">Application Shells</h2>
-          <p className="text-sm text-muted-foreground">Complete page layouts with navigation and content areas</p>
-        </div>
-
+      <ShowcaseSection title="Application Shells" defaultOpen={false}>
         {/* Sidebar with Split Content */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Sidebar with Main + Activity Panel</h3>
@@ -4689,15 +4577,9 @@ export default function TailwindListsShowcase() {
             </ul>
           </div>
         </div>
-      </section>
+      </ShowcaseSection>
 
-      {/* Token Reference */}
-      <section className="space-y-4 mt-12 pt-8 border-t border-border">
-        <div>
-          <h2 className="text-xl font-display mb-2">Design System Reference</h2>
-          <p className="text-sm text-muted-foreground">Complete list of design tokens used in list components</p>
-        </div>
-
+      <ShowcaseSection title="Design System Reference" defaultOpen={false}>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <div className="rounded-lg border border-border p-4 space-y-2">
             <h3 className="text-sm font-medium">Colors</h3>
@@ -4726,7 +4608,7 @@ export default function TailwindListsShowcase() {
             </ul>
           </div>
         </div>
-      </section>
+      </ShowcaseSection>
     </div>
   );
 }
