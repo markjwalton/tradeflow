@@ -1,7 +1,7 @@
 import React from 'react';
 import { PageHeader } from '@/components/sturij/PageHeader';
 import { ShowcaseSection } from '@/components/showcase/ShowcaseSection';
-import { Star, Check, Heart, Minus, Plus, HelpCircle } from 'lucide-react';
+import { Star, Check, Heart, Minus, Plus, HelpCircle, ChevronDown, Clock, X, Search, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
@@ -704,6 +704,183 @@ export default function TailwindProductShowcase() {
                   >
                     Shop now
                   </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Shopping Cart - Two Column Layout">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Shopping Cart</h1>
+              <div className="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
+                <section className="lg:col-span-7">
+                  <ul className="divide-y divide-gray-200 border-t border-b border-gray-200">
+                    {relatedProducts.slice(0, 3).map((product, idx) => (
+                      <li key={product.id} className="flex py-6 sm:py-10">
+                        <div className="shrink-0">
+                          <img
+                            alt={product.imageAlt}
+                            src={product.imageSrc}
+                            className="size-24 rounded-md object-cover sm:size-48"
+                          />
+                        </div>
+                        <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
+                          <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
+                            <div>
+                              <div className="flex justify-between">
+                                <h3 className="text-sm">
+                                  <a href={product.href} className="font-medium text-gray-700 hover:text-gray-800">
+                                    {product.name}
+                                  </a>
+                                </h3>
+                              </div>
+                              <div className="mt-1 flex text-sm">
+                                <p className="text-gray-500">{product.color}</p>
+                                <p className="ml-4 border-l border-gray-200 pl-4 text-gray-500">Large</p>
+                              </div>
+                              <p className="mt-1 text-sm font-medium text-gray-900">{product.price}</p>
+                            </div>
+                            <div className="mt-4 sm:mt-0 sm:pr-9">
+                              <select className="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
+                                <option value={1}>1</option>
+                                <option value={2}>2</option>
+                                <option value={3}>3</option>
+                              </select>
+                              <div className="absolute top-0 right-0">
+                                <button type="button" className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500">
+                                  <X className="h-5 w-5" />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <p className="mt-4 flex space-x-2 text-sm text-gray-700">
+                            <Check className="h-5 w-5 text-green-500" />
+                            <span>In stock</span>
+                          </p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+
+                <section className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
+                  <h2 className="text-lg font-medium text-gray-900">Order summary</h2>
+                  <dl className="mt-6 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <dt className="text-sm text-gray-600">Subtotal</dt>
+                      <dd className="text-sm font-medium text-gray-900">$99.00</dd>
+                    </div>
+                    <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+                      <dt className="text-sm text-gray-600">Shipping estimate</dt>
+                      <dd className="text-sm font-medium text-gray-900">$5.00</dd>
+                    </div>
+                    <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+                      <dt className="text-sm text-gray-600">Tax estimate</dt>
+                      <dd className="text-sm font-medium text-gray-900">$8.32</dd>
+                    </div>
+                    <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+                      <dt className="text-base font-medium text-gray-900">Order total</dt>
+                      <dd className="text-base font-medium text-gray-900">$112.32</dd>
+                    </div>
+                  </dl>
+                  <div className="mt-6">
+                    <button className="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
+                      Checkout
+                    </button>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Shopping Cart - Centered Layout">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-4xl mx-auto">
+              <h1 className="text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Shopping Cart</h1>
+              <div className="mt-12">
+                <ul className="divide-y divide-gray-200 border-t border-b border-gray-200">
+                  {relatedProducts.slice(0, 3).map((product) => (
+                    <li key={product.id} className="flex py-6 sm:py-10">
+                      <div className="shrink-0">
+                        <img
+                          alt={product.imageAlt}
+                          src={product.imageSrc}
+                          className="size-24 rounded-lg object-cover sm:size-32"
+                        />
+                      </div>
+                      <div className="relative ml-4 flex flex-1 flex-col justify-between sm:ml-6">
+                        <div>
+                          <div className="flex justify-between sm:grid sm:grid-cols-2">
+                            <div className="pr-6">
+                              <h3 className="text-sm">
+                                <a href={product.href} className="font-medium text-gray-700 hover:text-gray-800">
+                                  {product.name}
+                                </a>
+                              </h3>
+                              <p className="mt-1 text-sm text-gray-500">{product.color}</p>
+                            </div>
+                            <p className="text-right text-sm font-medium text-gray-900">{product.price}</p>
+                          </div>
+                          <div className="mt-4 flex items-center">
+                            <select className="rounded-md border border-gray-300 text-left text-base font-medium text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
+                              <option value={1}>1</option>
+                              <option value={2}>2</option>
+                              <option value={3}>3</option>
+                            </select>
+                            <button type="button" className="ml-4 text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                              Remove
+                            </button>
+                          </div>
+                        </div>
+                        <p className="mt-4 flex space-x-2 text-sm text-gray-700">
+                          <Check className="h-5 w-5 text-green-500" />
+                          <span>In stock</span>
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-10 sm:ml-32 sm:pl-6">
+                  <div className="rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:p-8">
+                    <div className="flow-root">
+                      <dl className="-my-4 divide-y divide-gray-200 text-sm">
+                        <div className="flex items-center justify-between py-4">
+                          <dt className="text-gray-600">Subtotal</dt>
+                          <dd className="font-medium text-gray-900">$99.00</dd>
+                        </div>
+                        <div className="flex items-center justify-between py-4">
+                          <dt className="text-gray-600">Shipping</dt>
+                          <dd className="font-medium text-gray-900">$5.00</dd>
+                        </div>
+                        <div className="flex items-center justify-between py-4">
+                          <dt className="text-gray-600">Tax</dt>
+                          <dd className="font-medium text-gray-900">$8.32</dd>
+                        </div>
+                        <div className="flex items-center justify-between py-4">
+                          <dt className="text-base font-medium text-gray-900">Order total</dt>
+                          <dd className="text-base font-medium text-gray-900">$112.32</dd>
+                        </div>
+                      </dl>
+                    </div>
+                  </div>
+                  <div className="mt-10">
+                    <button className="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
+                      Checkout
+                    </button>
+                  </div>
+                  <div className="mt-6 text-center text-sm text-gray-500">
+                    <p>
+                      or{' '}
+                      <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+                        Continue Shopping
+                        <span aria-hidden="true"> &rarr;</span>
+                      </a>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
