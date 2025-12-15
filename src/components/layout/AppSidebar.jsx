@@ -318,7 +318,7 @@ export function AppSidebar({ navItems = [] }) {
             isHidden && "lg:w-0",
             !isHidden && widthClass
           )}
-          style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
+          style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)' }}
         >
         {mode !== "hidden" && (
           <TooltipProvider delayDuration={300}>
