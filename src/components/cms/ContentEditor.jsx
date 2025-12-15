@@ -13,6 +13,8 @@ import 'react-quill/dist/quill.snow.css';
 import { VersionHistory } from './VersionHistory';
 import { SaveAsTemplateDialog } from './SaveAsTemplateDialog';
 import { ApplyTemplateDialog } from './ApplyTemplateDialog';
+import { SEOPanel } from './SEOPanel';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const entityMap = {
   page: 'CMSPage',

@@ -5,9 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Search, Edit, Trash2, Eye, Calendar, Clock } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Eye, Calendar, Clock, Copy, CheckSquare } from 'lucide-react';
 import { format } from 'date-fns';
 import { ScheduleDialog } from './ScheduleDialog';
+import { BulkActionsBar } from './BulkActionsBar';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const entityMap = {
   page: 'CMSPage',
@@ -102,6 +104,13 @@ export function ContentList({ contentType, websiteFolderId, onEdit, onCreate }) 
                   <Edit className="h-3 w-3 mr-1" />
                   Edit
                 </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => duplicateMutation.mutate(item)}
+                >
+                  <Copy className="h-3 w-3" />
+                </Button>
                 <ScheduleDialog 
                   contentType={contentType}
                   contentId={item.id}
@@ -130,6 +139,7 @@ export function ContentList({ contentType, websiteFolderId, onEdit, onCreate }) 
                 >
                   <Trash2 className="h-3 w-3 text-destructive" />
                 </Button>
+              </div>
               </div>
             </CardContent>
           </Card>
