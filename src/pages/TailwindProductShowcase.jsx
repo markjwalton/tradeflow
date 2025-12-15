@@ -6367,6 +6367,413 @@ export default function TailwindProductShowcase() {
             </div>
           </div>
         </ShowcaseSection>
+
+        <ShowcaseSection title="Order Confirmation - With Progress Tracking">
+          <div className="bg-gray-50 rounded-lg overflow-hidden">
+            <div className="bg-gray-900 h-10 flex items-center justify-between px-8 text-sm text-white">
+              <div>CAD ▼</div>
+              <p>Get free delivery on orders over $100</p>
+              <div className="flex gap-6">
+                <a href="#">Create account</a>
+                <span>|</span>
+                <a href="#">Sign in</a>
+              </div>
+            </div>
+
+            <div className="border-b border-gray-200 bg-white">
+              <div className="max-w-7xl mx-auto px-8 h-16 flex items-center justify-between">
+                <div className="flex items-center gap-8">
+                  <div className="w-8 h-8 bg-indigo-600 rounded" />
+                  <div className="flex gap-8 text-sm font-medium text-gray-700">
+                    <a href="#">Women</a>
+                    <a href="#">Men</a>
+                    <a href="#">Company</a>
+                  </div>
+                </div>
+                <div className="flex items-center gap-8">
+                  <a href="#" className="text-gray-400"><MagnifyingGlassIcon className="h-6 w-6" /></a>
+                  <a href="#" className="text-gray-400"><UserIcon className="h-6 w-6" /></a>
+                  <a href="#" className="flex items-center gap-2">
+                    <ShoppingCartIcon className="h-6 w-6 text-gray-400" />
+                    <span className="text-sm font-medium text-gray-700">0</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div className="max-w-2xl mx-auto px-8 py-16 sm:py-24 lg:max-w-7xl">
+              <div className="space-y-2 sm:flex sm:items-baseline sm:justify-between sm:space-y-0">
+                <div className="flex sm:items-baseline sm:space-x-4">
+                  <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Order #54879</h1>
+                  <a href="#" className="hidden sm:block text-sm font-medium text-indigo-600">View invoice →</a>
+                </div>
+                <p className="text-sm text-gray-600">
+                  Order placed <time className="font-medium text-gray-900">March 22, 2021</time>
+                </p>
+              </div>
+
+              <div className="mt-8 space-y-8">
+                {[
+                  { name: 'Nomad Tumbler', price: '35.00', status: 'Preparing to ship', step: 1, date: 'March 24, 2021' },
+                  { name: 'Minimalist Wristwatch', price: '149.00', status: 'Shipped', step: 2, date: 'March 23, 2021' },
+                ].map((product, i) => (
+                  <div key={i} className="border-t border-b border-gray-200 bg-white shadow-xs sm:rounded-lg sm:border">
+                    <div className="px-6 py-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:p-8">
+                      <div className="sm:flex lg:col-span-7">
+                        <div className="w-full shrink-0 aspect-square sm:w-40 sm:h-40 rounded-lg bg-gray-200" />
+                        <div className="mt-6 sm:mt-0 sm:ml-6">
+                          <h3 className="text-base font-medium text-gray-900">{product.name}</h3>
+                          <p className="mt-2 text-sm font-medium text-gray-900">${product.price}</p>
+                          <p className="mt-3 text-sm text-gray-500">Durable and portable insulated tumbler.</p>
+                        </div>
+                      </div>
+
+                      <div className="mt-6 lg:col-span-5 lg:mt-0">
+                        <dl className="grid grid-cols-2 gap-x-6 text-sm">
+                          <div>
+                            <dt className="font-medium text-gray-900">Delivery address</dt>
+                            <dd className="mt-3 text-gray-500">
+                              <span className="block">Floyd Miles</span>
+                              <span className="block">7363 Cynthia Pass</span>
+                              <span className="block">Toronto, ON N3Y 4H8</span>
+                            </dd>
+                          </div>
+                          <div>
+                            <dt className="font-medium text-gray-900">Shipping updates</dt>
+                            <dd className="mt-3 space-y-3 text-gray-500">
+                              <p>f•••@example.com</p>
+                              <p>1•••••••••40</p>
+                              <button className="font-medium text-indigo-600">Edit</button>
+                            </dd>
+                          </div>
+                        </dl>
+                      </div>
+                    </div>
+
+                    <div className="border-t border-gray-200 px-6 py-6 lg:p-8">
+                      <p className="text-sm font-medium text-gray-900">
+                        {product.status} on <time>{product.date}</time>
+                      </p>
+                      <div className="mt-6">
+                        <div className="overflow-hidden rounded-full bg-gray-200">
+                          <div style={{ width: `${(product.step * 2 + 1) / 8 * 100}%` }} className="h-2 rounded-full bg-indigo-600" />
+                        </div>
+                        <div className="mt-6 hidden sm:grid grid-cols-4 text-sm font-medium text-gray-600">
+                          <div className="text-indigo-600">Order placed</div>
+                          <div className={`text-center ${product.step > 0 ? 'text-indigo-600' : ''}`}>Processing</div>
+                          <div className={`text-center ${product.step > 1 ? 'text-indigo-600' : ''}`}>Shipped</div>
+                          <div className={`text-right ${product.step > 2 ? 'text-indigo-600' : ''}`}>Delivered</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-24">
+                <div className="rounded-lg bg-gray-50 px-6 py-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:px-0 lg:py-8">
+                  <dl className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm lg:col-span-5 lg:pl-8">
+                    <div>
+                      <dt className="font-medium text-gray-900">Billing address</dt>
+                      <dd className="mt-3 text-gray-500">
+                        <span className="block">Floyd Miles</span>
+                        <span className="block">7363 Cynthia Pass</span>
+                        <span className="block">Toronto, ON N3Y 4H8</span>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="font-medium text-gray-900">Payment information</dt>
+                      <dd className="mt-3 flex">
+                        <div>
+                          <svg width={36} height={24} className="h-6 w-auto">
+                            <rect rx={4} fill="#224DBA" width={36} height={24} />
+                          </svg>
+                        </div>
+                        <div className="ml-4">
+                          <p className="text-gray-900">Ending with 4242</p>
+                          <p className="text-gray-600">Expires 02 / 24</p>
+                        </div>
+                      </dd>
+                    </div>
+                  </dl>
+
+                  <dl className="mt-8 divide-y divide-gray-200 text-sm lg:col-span-7 lg:mt-0 lg:pr-8">
+                    <div className="flex items-center justify-between pb-4">
+                      <dt className="text-gray-600">Subtotal</dt>
+                      <dd className="font-medium text-gray-900">$72</dd>
+                    </div>
+                    <div className="flex items-center justify-between py-4">
+                      <dt className="text-gray-600">Shipping</dt>
+                      <dd className="font-medium text-gray-900">$5</dd>
+                    </div>
+                    <div className="flex items-center justify-between py-4">
+                      <dt className="text-gray-600">Tax</dt>
+                      <dd className="font-medium text-gray-900">$6.16</dd>
+                    </div>
+                    <div className="flex items-center justify-between pt-4">
+                      <dt className="font-medium text-gray-900">Order total</dt>
+                      <dd className="font-medium text-indigo-600">$83.16</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Order Details - Grid Layout with Large Images">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="bg-gray-900 h-10 flex items-center justify-between px-8 text-sm text-white">
+              <div>CAD ▼</div>
+              <p>Get free delivery on orders over $100</p>
+              <div className="flex gap-6">
+                <a href="#">Create account</a>
+                <span>|</span>
+                <a href="#">Sign in</a>
+              </div>
+            </div>
+
+            <div className="bg-white border-b px-8 h-16 flex items-center justify-between">
+              <div className="flex items-center gap-8">
+                <div className="w-8 h-8 bg-indigo-600 rounded" />
+                <div className="flex gap-8 text-sm font-medium text-gray-700">
+                  <a href="#">Women</a>
+                  <a href="#">Men</a>
+                  <a href="#">Company</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-8">
+                <a href="#" className="text-gray-400"><MagnifyingGlassIcon className="h-6 w-6" /></a>
+                <a href="#" className="text-gray-400"><UserIcon className="h-6 w-6" /></a>
+                <a href="#" className="flex items-center gap-2">
+                  <ShoppingCartIcon className="h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-700">0</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="max-w-7xl mx-auto px-8 py-16 sm:py-24">
+              <h1 className="text-3xl font-bold text-gray-900">Order Details</h1>
+
+              <div className="mt-2 border-b border-gray-200 pb-5 text-sm sm:flex sm:justify-between">
+                <dl className="flex">
+                  <dt className="text-gray-500">Order number&nbsp;</dt>
+                  <dd className="font-medium text-gray-900">W086438695</dd>
+                  <dt><span className="mx-2 text-gray-400">·</span></dt>
+                  <dd className="font-medium text-gray-900"><time>March 22, 2021</time></dd>
+                </dl>
+                <div className="mt-4 sm:mt-0">
+                  <a href="#" className="font-medium text-indigo-600">View invoice →</a>
+                </div>
+              </div>
+
+              <div className="mt-8 space-y-24">
+                {[1, 2].map((i) => (
+                  <div key={i} className="grid grid-cols-1 sm:grid-cols-12 sm:gap-x-6 md:gap-x-8 text-sm">
+                    <div className="sm:col-span-4 md:col-span-5 md:row-span-2 md:row-end-2">
+                      <div className="aspect-square w-full rounded-lg bg-gray-200" />
+                    </div>
+                    <div className="mt-6 sm:col-span-7 sm:mt-0 md:row-end-1">
+                      <h3 className="text-lg font-medium text-gray-900">Distant Mountains Artwork Tee</h3>
+                      <p className="mt-1 font-medium text-gray-900">$36.00</p>
+                      <p className="mt-3 text-gray-500">You awake in a new, mysterious land. Mist hangs low.</p>
+                    </div>
+                    <div className="sm:col-span-12 md:col-span-7">
+                      <dl className="grid grid-cols-1 sm:grid-cols-2 gap-y-8 gap-x-6 border-b border-gray-200 py-8 sm:py-6 md:py-10">
+                        <div>
+                          <dt className="font-medium text-gray-900">Delivery address</dt>
+                          <dd className="mt-3 text-gray-500">
+                            <span className="block">Floyd Miles</span>
+                            <span className="block">7363 Cynthia Pass</span>
+                            <span className="block">Toronto, ON N3Y 4H8</span>
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="font-medium text-gray-900">Shipping updates</dt>
+                          <dd className="mt-3 space-y-3 text-gray-500">
+                            <p>f•••@example.com</p>
+                            <p>1•••••••••40</p>
+                            <button className="font-medium text-indigo-600">Edit</button>
+                          </dd>
+                        </div>
+                      </dl>
+                      <p className="mt-6 font-medium text-gray-900 md:mt-10">
+                        Processing on <time>March 24, 2021</time>
+                      </p>
+                      <div className="mt-6">
+                        <div className="overflow-hidden rounded-full bg-gray-200">
+                          <div style={{ width: '37.5%' }} className="h-2 rounded-full bg-indigo-600" />
+                        </div>
+                        <div className="mt-6 hidden sm:grid grid-cols-4 font-medium text-gray-600">
+                          <div className="text-indigo-600">Order placed</div>
+                          <div className="text-center text-indigo-600">Processing</div>
+                          <div className="text-center">Shipped</div>
+                          <div className="text-right">Delivered</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-24">
+                <div className="rounded-lg bg-gray-50 px-6 py-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:px-0 lg:py-8">
+                  <dl className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm lg:col-span-5 lg:pl-8">
+                    <div>
+                      <dt className="font-medium text-gray-900">Billing address</dt>
+                      <dd className="mt-3 text-gray-500">
+                        <span className="block">Floyd Miles</span>
+                        <span className="block">7363 Cynthia Pass</span>
+                        <span className="block">Toronto, ON N3Y 4H8</span>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="font-medium text-gray-900">Payment information</dt>
+                      <dd className="mt-3 flex">
+                        <div>
+                          <svg width={36} height={24} className="h-6 w-auto">
+                            <rect rx={4} fill="#224DBA" width={36} height={24} />
+                          </svg>
+                        </div>
+                        <div className="ml-4">
+                          <p className="text-gray-900">Ending with 4242</p>
+                          <p className="text-gray-600">Expires 02 / 24</p>
+                        </div>
+                      </dd>
+                    </div>
+                  </dl>
+
+                  <dl className="mt-8 divide-y divide-gray-200 text-sm lg:col-span-7 lg:mt-0 lg:pr-8">
+                    <div className="flex items-center justify-between pb-4">
+                      <dt className="text-gray-600">Subtotal</dt>
+                      <dd className="font-medium text-gray-900">$72</dd>
+                    </div>
+                    <div className="flex items-center justify-between py-4">
+                      <dt className="text-gray-600">Shipping</dt>
+                      <dd className="font-medium text-gray-900">$5</dd>
+                    </div>
+                    <div className="flex items-center justify-between py-4">
+                      <dt className="text-gray-600">Tax</dt>
+                      <dd className="font-medium text-gray-900">$6.16</dd>
+                    </div>
+                    <div className="flex items-center justify-between pt-4">
+                      <dt className="font-medium text-gray-900">Order total</dt>
+                      <dd className="font-medium text-indigo-600">$83.16</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Order Confirmation - Simple Centered Layout">
+          <div className="bg-white rounded-lg overflow-hidden px-8 pt-16 pb-24">
+            <div className="max-w-3xl mx-auto">
+              <div className="max-w-xl">
+                <h1 className="text-base font-medium text-indigo-600">Thank you!</h1>
+                <p className="mt-2 text-4xl font-bold">It's on the way!</p>
+                <p className="mt-2 text-base text-gray-500">Your order #14034056 has shipped and will be with you soon.</p>
+
+                <dl className="mt-12 text-sm font-medium">
+                  <dt className="text-gray-900">Tracking number</dt>
+                  <dd className="mt-2 text-indigo-600">51547878755545848512</dd>
+                </dl>
+              </div>
+
+              <div className="mt-10 border-t border-gray-200">
+                <div className="flex space-x-6 border-b border-gray-200 py-10">
+                  <div className="w-20 h-20 sm:w-40 sm:h-40 rounded-lg bg-gray-100" />
+                  <div className="flex flex-auto flex-col">
+                    <div>
+                      <h4 className="font-medium text-gray-900">Cold Brew Bottle</h4>
+                      <p className="mt-2 text-sm text-gray-600">
+                        This glass bottle comes with a mesh insert for steeping tea or cold-brewing coffee.
+                      </p>
+                    </div>
+                    <div className="mt-6 flex flex-1 items-end">
+                      <dl className="flex divide-x divide-gray-200 text-sm">
+                        <div className="flex pr-4 sm:pr-6">
+                          <dt className="font-medium text-gray-900">Quantity</dt>
+                          <dd className="ml-2 text-gray-700">1</dd>
+                        </div>
+                        <div className="flex pl-4 sm:pl-6">
+                          <dt className="font-medium text-gray-900">Price</dt>
+                          <dd className="ml-2 text-gray-700">$32.00</dd>
+                        </div>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="sm:ml-40 sm:pl-6">
+                  <dl className="grid grid-cols-2 gap-x-6 py-10 text-sm">
+                    <div>
+                      <dt className="font-medium text-gray-900">Shipping address</dt>
+                      <dd className="mt-2 text-gray-700">
+                        <address className="not-italic">
+                          <span className="block">Kristin Watson</span>
+                          <span className="block">7363 Cynthia Pass</span>
+                          <span className="block">Toronto, ON N3Y 4H8</span>
+                        </address>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="font-medium text-gray-900">Billing address</dt>
+                      <dd className="mt-2 text-gray-700">
+                        <address className="not-italic">
+                          <span className="block">Kristin Watson</span>
+                          <span className="block">7363 Cynthia Pass</span>
+                          <span className="block">Toronto, ON N3Y 4H8</span>
+                        </address>
+                      </dd>
+                    </div>
+                  </dl>
+
+                  <dl className="grid grid-cols-2 gap-x-6 border-t border-gray-200 py-10 text-sm">
+                    <div>
+                      <dt className="font-medium text-gray-900">Payment method</dt>
+                      <dd className="mt-2 text-gray-700">
+                        <p>Apple Pay</p>
+                        <p>Mastercard</p>
+                        <p>••••1545</p>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="font-medium text-gray-900">Shipping method</dt>
+                      <dd className="mt-2 text-gray-700">
+                        <p>DHL</p>
+                        <p>Takes up to 3 working days</p>
+                      </dd>
+                    </div>
+                  </dl>
+
+                  <dl className="space-y-6 border-t border-gray-200 pt-10 text-sm">
+                    <div className="flex justify-between">
+                      <dt className="font-medium text-gray-900">Subtotal</dt>
+                      <dd className="text-gray-700">$36.00</dd>
+                    </div>
+                    <div className="flex justify-between">
+                      <dt className="flex font-medium text-gray-900">
+                        Discount
+                        <span className="ml-2 rounded-full bg-gray-200 px-2 py-0.5 text-xs text-gray-600">STUDENT50</span>
+                      </dt>
+                      <dd className="text-gray-700">-$18.00 (50%)</dd>
+                    </div>
+                    <div className="flex justify-between">
+                      <dt className="font-medium text-gray-900">Shipping</dt>
+                      <dd className="text-gray-700">$5.00</dd>
+                    </div>
+                    <div className="flex justify-between">
+                      <dt className="font-medium text-gray-900">Total</dt>
+                      <dd className="text-gray-900">$23.00</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
       </div>
     </div>
   );
