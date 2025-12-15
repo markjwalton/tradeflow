@@ -235,7 +235,7 @@ export function StyleEditorPanel({ currentPageName }) {
                         <SelectTrigger className="h-9">
                           <SelectValue placeholder="Select color..." />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent style={{ zIndex: 100001 }}>
                           {styleOptions.backgroundColor.map((opt) => (
                             <SelectItem key={opt.value} value={opt.value}>
                               <div className="flex items-center gap-2">
@@ -260,7 +260,7 @@ export function StyleEditorPanel({ currentPageName }) {
                         <SelectTrigger className="h-9">
                           <SelectValue placeholder="Select color..." />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent style={{ zIndex: 100001 }}>
                           {styleOptions.color.map((opt) => (
                             <SelectItem key={opt.value} value={opt.value}>
                               <div className="flex items-center gap-2">
@@ -285,7 +285,7 @@ export function StyleEditorPanel({ currentPageName }) {
                         <SelectTrigger className="h-9">
                           <SelectValue placeholder="Select size..." />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent style={{ zIndex: 100001 }}>
                           {styleOptions.fontSize.map((opt) => (
                             <SelectItem key={opt.value} value={opt.value}>
                               {opt.label}
@@ -304,7 +304,7 @@ export function StyleEditorPanel({ currentPageName }) {
                         <SelectTrigger className="h-9">
                           <SelectValue placeholder="Select weight..." />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent style={{ zIndex: 100001 }}>
                           {styleOptions.fontWeight.map((opt) => (
                             <SelectItem key={opt.value} value={opt.value}>
                               {opt.label}
@@ -323,7 +323,7 @@ export function StyleEditorPanel({ currentPageName }) {
                         <SelectTrigger className="h-9">
                           <SelectValue placeholder="Select padding..." />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent style={{ zIndex: 100001 }}>
                           {styleOptions.padding.map((opt) => (
                             <SelectItem key={opt.value} value={opt.value}>
                               {opt.label}
@@ -342,7 +342,7 @@ export function StyleEditorPanel({ currentPageName }) {
                         <SelectTrigger className="h-9">
                           <SelectValue placeholder="Select margin..." />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent style={{ zIndex: 100001 }}>
                           {styleOptions.margin.map((opt) => (
                             <SelectItem key={opt.value} value={opt.value}>
                               {opt.label}
@@ -361,7 +361,7 @@ export function StyleEditorPanel({ currentPageName }) {
                         <SelectTrigger className="h-9">
                           <SelectValue placeholder="Select radius..." />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent style={{ zIndex: 100001 }}>
                           {styleOptions.borderRadius.map((opt) => (
                             <SelectItem key={opt.value} value={opt.value}>
                               {opt.label}
