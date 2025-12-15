@@ -100,6 +100,7 @@ import GradientTest from './pages/GradientTest';
 import NavigationManagerTest from './pages/NavigationManagerTest';
 import TailwindDrawerShowcase from './pages/TailwindDrawerShowcase';
 import TailwindBadgesShowcase from './pages/TailwindBadgesShowcase';
+import TailwindMenuShowcase from './pages/TailwindMenuShowcase';
 import __Layout from './Layout.jsx';
 
 
@@ -206,6 +207,7 @@ export const PAGES = {
     "NavigationManagerTest": NavigationManagerTest,
     "TailwindDrawerShowcase": TailwindDrawerShowcase,
     "TailwindBadgesShowcase": TailwindBadgesShowcase,
+    "TailwindMenuShowcase": TailwindMenuShowcase,
 }
 
 export const pagesConfig = {
