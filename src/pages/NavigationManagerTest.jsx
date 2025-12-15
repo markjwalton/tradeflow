@@ -154,7 +154,7 @@ export default function NavigationManagerTest() {
 
   return (
     <div className="min-h-screen bg-[var(--color-background)]">
-      <div className="max-w-[1600px] mx-auto px-6 pb-6">
+      <div className="max-w-[1600px] mx-auto px-6 pb-6 pt-6">
         <PageHeader
           title="Navigation Manager"
           description="Manage your application navigation structure"
