@@ -217,6 +217,11 @@ export function PageSettingsPanel({ currentPageName }) {
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <div 
+        className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
+        style={{ backgroundColor: 'var(--primary-alpha, oklch(0.398 0.037 159.8 / 0.5))' }}
+        data-state={isOpen ? 'open' : 'closed'}
+      />
       <SheetTrigger asChild>
         <Button
           variant="ghost"
