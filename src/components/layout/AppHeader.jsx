@@ -38,7 +38,7 @@ export function AppHeader({ user, navItems = [], onMobileMenuClick, currentPageN
   return (
     <header
       className="
-        sticky top-0 z-40
+        sticky top-0 z-[70]
         border-b
         bg-background/70
         backdrop-blur-md
@@ -67,7 +67,7 @@ export function AppHeader({ user, navItems = [], onMobileMenuClick, currentPageN
             <Menu className="w-5 h-5" />
           </Button>
 
-          <Link to={createPageUrl("Dashboard")} className="flex items-center gap-2 relative z-[60]">
+          <Link to={createPageUrl("Dashboard")} className="flex items-center gap-2 relative z-[80]">
             <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/c94580ddf_sturij-logo.png"
               alt="Sturij"
