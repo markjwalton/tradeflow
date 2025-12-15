@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Switch } from '@/components/ui/switch';
 import {
   Select,
   SelectContent,
@@ -41,6 +42,7 @@ export default function TailwindFormsShowcase() {
       <TextareaVariationsSection />
       <RadioGroupVariationsSection />
       <CheckboxVariationsSection />
+      <ToggleSwitchVariationsSection />
 
       <TokenReference />
     </div>
@@ -2342,6 +2344,156 @@ function CheckboxVariationsSection() {
           <li>• Dividers with <code className="bg-background px-1 py-0.5 rounded">divide-y divide-border</code></li>
           <li>• Label positioning: flex with gap-3 for spacing</li>
           <li>• Inline descriptions combine label + muted text</li>
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+function ToggleSwitchVariationsSection() {
+  const [enabled, setEnabled] = React.useState(false);
+  const [available, setAvailable] = React.useState(true);
+  const [annual, setAnnual] = React.useState(false);
+  const [notifications, setNotifications] = React.useState(true);
+
+  return (
+    <section className="space-y-8">
+      <div>
+        <h2 className="text-xl font-display mb-2">Toggle Switch Variations</h2>
+        <p className="text-sm text-muted-foreground">Toggle switches with different layouts and styles</p>
+      </div>
+
+      <div className="grid gap-8 lg:grid-cols-2">
+        {/* Basic Toggle */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Basic Toggle</h3>
+          <div className="flex items-center gap-3">
+            <Switch
+              id="basic-toggle"
+              checked={enabled}
+              onCheckedChange={setEnabled}
+            />
+            <Label htmlFor="basic-toggle" className="text-sm">
+              Enable notifications
+            </Label>
+          </div>
+        </div>
+
+        {/* Toggle with Icons */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">With Icons</h3>
+          <div className="flex items-center gap-3">
+            <div className="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-primary" style={{ backgroundColor: enabled ? 'var(--primary)' : 'var(--muted)' }}>
+              <span className={`relative inline-block h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${enabled ? 'translate-x-5' : 'translate-x-0.5'}`}>
+                <span className={`absolute inset-0 flex items-center justify-center transition-opacity ${enabled ? 'opacity-0' : 'opacity-100'}`}>
+                  <X className="h-3 w-3 text-muted-foreground" />
+                </span>
+                <span className={`absolute inset-0 flex items-center justify-center transition-opacity ${enabled ? 'opacity-100' : 'opacity-0'}`}>
+                  <Check className="h-3 w-3 text-primary" />
+                </span>
+              </span>
+              <input
+                type="checkbox"
+                checked={enabled}
+                onChange={(e) => setEnabled(e.target.checked)}
+                className="absolute inset-0 appearance-none cursor-pointer focus:outline-none"
+                aria-label="Toggle with icons"
+              />
+            </div>
+            <Label className="text-sm">Enable feature</Label>
+          </div>
+        </div>
+
+        {/* Toggle with Description */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4 lg:col-span-2">
+          <h3 className="text-sm font-medium">With Description</h3>
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <Label htmlFor="available-toggle" className="font-medium">
+                Available to hire
+              </Label>
+              <p className="text-sm text-muted-foreground">
+                Nulla amet tempus sit accumsan. Aliquet turpis sed sit lacinia.
+              </p>
+            </div>
+            <Switch
+              id="available-toggle"
+              checked={available}
+              onCheckedChange={setAvailable}
+            />
+          </div>
+        </div>
+
+        {/* Small Toggle with Short Label */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Small with Short Label</h3>
+          <div className="flex items-center justify-between gap-3">
+            <Switch
+              id="annual-toggle"
+              checked={annual}
+              onCheckedChange={setAnnual}
+            />
+            <div className="text-sm">
+              <Label htmlFor="annual-toggle" className="font-medium">
+                Annual billing
+              </Label>{' '}
+              <span className="text-muted-foreground">(Save 10%)</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Toggle in List */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">In List</h3>
+          <div className="divide-y divide-border">
+            <div className="flex items-center justify-between py-4">
+              <div className="flex-1">
+                <Label htmlFor="notifications-toggle" className="font-medium">
+                  Push notifications
+                </Label>
+                <p className="text-sm text-muted-foreground">
+                  Receive notifications on your device
+                </p>
+              </div>
+              <Switch
+                id="notifications-toggle"
+                checked={notifications}
+                onCheckedChange={setNotifications}
+              />
+            </div>
+            <div className="flex items-center justify-between py-4">
+              <div className="flex-1">
+                <Label htmlFor="email-toggle" className="font-medium">
+                  Email updates
+                </Label>
+                <p className="text-sm text-muted-foreground">
+                  Get updates via email
+                </p>
+              </div>
+              <Switch id="email-toggle" />
+            </div>
+            <div className="flex items-center justify-between py-4">
+              <div className="flex-1">
+                <Label htmlFor="sms-toggle" className="font-medium">
+                  SMS alerts
+                </Label>
+                <p className="text-sm text-muted-foreground">
+                  Receive text message alerts
+                </p>
+              </div>
+              <Switch id="sms-toggle" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+        <p className="font-medium">Design Token Mappings:</p>
+        <ul className="space-y-1 text-muted-foreground">
+          <li>• Switch component from Radix UI with smooth transitions</li>
+          <li>• Icons using <code className="bg-background px-1 py-0.5 rounded">opacity</code> and <code className="bg-background px-1 py-0.5 rounded">transform</code> transitions</li>
+          <li>• Flexible layouts with <code className="bg-background px-1 py-0.5 rounded">justify-between</code> for alignment</li>
+          <li>• List dividers using <code className="bg-background px-1 py-0.5 rounded">divide-y divide-border</code></li>
         </ul>
       </div>
     </section>
