@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Image, UserCircle, ChevronDown, Mail, HelpCircle, AlertCircle, Check, ChevronsUpDown, Paperclip, Smile, Tag, Calendar, Code, Link, AtSign, X } from 'lucide-react';
+import { Image, UserCircle, ChevronDown, Mail, HelpCircle, AlertCircle, Check, ChevronsUpDown, Paperclip, Smile, Tag, Calendar, Code, Link, AtSign, X, AlertTriangle, XCircle, CheckCircle, Info } from 'lucide-react';
 
 export default function TailwindFormsShowcase() {
   return (
@@ -47,6 +47,7 @@ export default function TailwindFormsShowcase() {
       <ToggleSwitchVariationsSection />
       <PaymentMethodSection />
       <ComboboxVariationsSection />
+      <AlertsSection />
 
       <TokenReference />
     </div>
@@ -2830,6 +2831,183 @@ function ComboboxVariationsSection() {
           <li>• Status indicators using <code className="bg-background px-1 py-0.5 rounded">bg-primary</code> dots</li>
           <li>• Avatar component integration for user images</li>
           <li>• Secondary text with <code className="bg-background px-1 py-0.5 rounded">text-muted-foreground</code></li>
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+function AlertsSection() {
+  const [showSuccess, setShowSuccess] = React.useState(true);
+
+  return (
+    <section className="space-y-8">
+      <div>
+        <h2 className="text-xl font-display mb-2">Alerts & Notifications</h2>
+        <p className="text-sm text-muted-foreground">Feedback messages and status alerts</p>
+      </div>
+
+      <div className="grid gap-8">
+        {/* Warning Alert */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Warning Alert</h3>
+          <div className="rounded-md bg-secondary-50 p-4">
+            <div className="flex">
+              <div className="shrink-0">
+                <AlertTriangle aria-hidden="true" className="h-5 w-5 text-secondary-600" />
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-secondary-800">Attention needed</h3>
+                <div className="mt-2 text-sm text-secondary-700">
+                  <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid pariatur, ipsum similique veniam quo
+                    totam eius aperiam dolorum.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Error Alert with List */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Error Alert with List</h3>
+          <div className="rounded-md bg-destructive-50 p-4">
+            <div className="flex">
+              <div className="shrink-0">
+                <XCircle aria-hidden="true" className="h-5 w-5 text-destructive-500" />
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-destructive-800">There were 2 errors with your submission</h3>
+                <div className="mt-2 text-sm text-destructive-700">
+                  <ul role="list" className="list-disc space-y-1 pl-5">
+                    <li>Your password must be at least 8 characters</li>
+                    <li>Your password must include at least one pro wrestling finishing move</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Success Alert with Actions */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Success Alert with Actions</h3>
+          <div className="rounded-md bg-primary-50 p-4">
+            <div className="flex">
+              <div className="shrink-0">
+                <CheckCircle aria-hidden="true" className="h-5 w-5 text-primary-600" />
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-primary-800">Order completed</h3>
+                <div className="mt-2 text-sm text-primary-700">
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid pariatur, ipsum similique veniam.</p>
+                </div>
+                <div className="mt-4">
+                  <div className="-mx-2 -my-1.5 flex">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="rounded-md bg-primary-50 px-2 py-1.5 text-sm font-medium text-primary-800 hover:bg-primary-100"
+                    >
+                      View status
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="ml-3 rounded-md bg-primary-50 px-2 py-1.5 text-sm font-medium text-primary-800 hover:bg-primary-100"
+                    >
+                      Dismiss
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Info Alert with Link */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Info Alert with Link</h3>
+          <div className="rounded-md bg-midnight-50 p-4">
+            <div className="flex">
+              <div className="shrink-0">
+                <Info aria-hidden="true" className="h-5 w-5 text-midnight-600" />
+              </div>
+              <div className="ml-3 flex-1 md:flex md:justify-between">
+                <p className="text-sm text-midnight-700">A new software update is available. See what's new in version 2.0.4.</p>
+                <p className="mt-3 text-sm md:mt-0 md:ml-6">
+                  <a href="#" className="font-medium whitespace-nowrap text-midnight-700 hover:text-midnight-600">
+                    Details
+                    <span aria-hidden="true"> →</span>
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Warning with Left Accent */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Warning with Left Accent</h3>
+          <div className="border-l-4 border-secondary-500 bg-secondary-50 p-4">
+            <div className="flex">
+              <div className="shrink-0">
+                <AlertTriangle aria-hidden="true" className="h-5 w-5 text-secondary-600" />
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-secondary-700">
+                  You have no credits left.{' '}
+                  <a href="#" className="font-medium text-secondary-700 underline hover:text-secondary-600">
+                    Upgrade your account to add more credits.
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Success with Dismiss */}
+        {showSuccess && (
+          <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+            <h3 className="text-sm font-medium">Success with Dismiss Button</h3>
+            <div className="rounded-md bg-primary-50 p-4">
+              <div className="flex">
+                <div className="shrink-0">
+                  <CheckCircle aria-hidden="true" className="h-5 w-5 text-primary-600" />
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm font-medium text-primary-800">Successfully uploaded</p>
+                </div>
+                <div className="ml-auto pl-3">
+                  <div className="-mx-1.5 -my-1.5">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setShowSuccess(false)}
+                      className="inline-flex rounded-md bg-primary-50 p-1.5 text-primary-600 hover:bg-primary-100 h-auto w-auto"
+                    >
+                      <span className="sr-only">Dismiss</span>
+                      <X aria-hidden="true" className="h-5 w-5" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+        <p className="font-medium">Design Token Mappings:</p>
+        <ul className="space-y-1 text-muted-foreground">
+          <li>• Alert backgrounds: <code className="bg-background px-1 py-0.5 rounded">bg-primary-50</code>, <code className="bg-background px-1 py-0.5 rounded">bg-destructive-50</code>, <code className="bg-background px-1 py-0.5 rounded">bg-secondary-50</code>, <code className="bg-background px-1 py-0.5 rounded">bg-midnight-50</code></li>
+          <li>• Icons from Lucide React with matching color tokens</li>
+          <li>• Left accent border with <code className="bg-background px-1 py-0.5 rounded">border-l-4 border-secondary-500</code></li>
+          <li>• Action buttons with color-matched hover states</li>
         </ul>
       </div>
     </section>
