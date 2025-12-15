@@ -12,6 +12,7 @@ import { ContentEditor } from '@/components/cms/ContentEditor';
 import { MediaManager } from '@/components/cms/MediaManager';
 import { TemplateLibrary } from '@/components/cms/TemplateLibrary';
 import { PackageManager } from '@/components/cms/PackageManager';
+import { ScheduleManager } from '@/components/cms/ScheduleManager';
 
 export default function CMSManager() {
   const [activeTab, setActiveTab] = useState('pages');
@@ -99,6 +100,7 @@ export default function CMSManager() {
           <TabsTrigger value="media">Media Library</TabsTrigger>
           <TabsTrigger value="templates">Templates</TabsTrigger>
           <TabsTrigger value="packages">Packages</TabsTrigger>
+          <TabsTrigger value="schedules">Schedules</TabsTrigger>
         </TabsList>
 
         <TabsContent value="pages">
@@ -147,6 +149,10 @@ export default function CMSManager() {
 
         <TabsContent value="packages">
           <PackageManager websiteFolderId={selectedWebsite.id} />
+        </TabsContent>
+
+        <TabsContent value="schedules">
+          <ScheduleManager />
         </TabsContent>
       </Tabs>
       )}

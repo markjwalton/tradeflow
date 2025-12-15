@@ -5,8 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Search, Edit, Trash2, Eye, Calendar } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Eye, Calendar, Clock } from 'lucide-react';
 import { format } from 'date-fns';
+import { ScheduleDialog } from './ScheduleDialog';
 
 const entityMap = {
   page: 'CMSPage',
@@ -101,6 +102,15 @@ export function ContentList({ contentType, websiteFolderId, onEdit, onCreate }) 
                   <Edit className="h-3 w-3 mr-1" />
                   Edit
                 </Button>
+                <ScheduleDialog 
+                  contentType={contentType}
+                  contentId={item.id}
+                  triggerButton={
+                    <Button variant="ghost" size="sm">
+                      <Clock className="h-3 w-3" />
+                    </Button>
+                  }
+                />
                 {item.preview_url && (
                   <Button variant="ghost" size="sm" asChild>
                     <a href={item.preview_url} target="_blank" rel="noopener noreferrer">
