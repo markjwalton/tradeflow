@@ -175,7 +175,7 @@ export function AppSidebar({ navItems = [] }) {
     const Icon = getIcon(item.icon);
     const isExpanded = expandedFolders.has(item.id);
     const iconSize = item.icon_size || 20;
-    const iconStrokeWidth = item.icon_stroke_width || 2;
+    const iconStrokeWidth = item.icon_stroke_width || 1.5;
 
     // Build page URL from page_url field
     const pageUrl = item.page_url || "";
@@ -203,7 +203,7 @@ export function AppSidebar({ navItems = [] }) {
               className="transition-colors" 
               size={iconSize}
               strokeWidth={iconStrokeWidth}
-              style={{ color: childActive ? 'var(--sidebar-primary-foreground)' : 'var(--secondary-400)' }}
+              style={{ color: childActive ? 'var(--sidebar-primary-foreground)' : 'var(--accent-500)' }}
             />
           </button>
         );
@@ -247,7 +247,7 @@ export function AppSidebar({ navItems = [] }) {
             {hasChildren && (
               isExpanded ? <ChevronDown className="h-4 w-4 text-sidebar-foreground/50" /> : <ChevronRight className="h-4 w-4 text-sidebar-foreground/50" />
             )}
-            <FolderIcon size={iconSize} strokeWidth={iconStrokeWidth} style={{ color: 'var(--secondary-400)' }} />
+            <FolderIcon size={iconSize} strokeWidth={iconStrokeWidth} style={{ color: 'var(--accent-500)' }} />
             <span className={cn("flex-1 text-left", !item.parent_id && "font-medium")}>{item.name || 'Unnamed'}</span>
           </button>
           {isExpanded && hasChildren && (
@@ -285,7 +285,7 @@ export function AppSidebar({ navItems = [] }) {
           className="flex-shrink-0 transition-colors"
           size={iconSize}
           strokeWidth={iconStrokeWidth}
-          style={{ color: isActive ? 'var(--sidebar-primary-foreground)' : 'var(--primary-500)' }}
+          style={{ color: isActive ? 'var(--sidebar-primary-foreground)' : 'var(--accent-500)' }}
         />
         {showLabels && <span className={cn("truncate", isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground/70", isTopLevel && "font-medium")}>{item.name || 'Unnamed'}</span>}
       </Link>
@@ -313,10 +313,11 @@ export function AppSidebar({ navItems = [] }) {
   return (
     <aside
           className={cn(
-            "hidden lg:flex lg:flex-col bg-card text-sidebar-foreground rounded-xl shadow-md transition-[width] duration-300 ease-in-out overflow-visible [padding-top:0] [padding-bottom:0]",
+            "hidden lg:flex lg:flex-col bg-card text-sidebar-foreground rounded-xl shadow-md transition-[width] duration-300 ease-in-out overflow-visible",
             isHidden && "lg:w-0",
             !isHidden && widthClass
           )}
+          style={{ paddingTop: 0, paddingBottom: 0 }}
         >
         {mode !== "hidden" && (
           <TooltipProvider delayDuration={300}>
