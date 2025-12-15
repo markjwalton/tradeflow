@@ -286,16 +286,22 @@ For each recommendation, provide:
     const hexFallback = selectedColor?.hex || "#f5f2ed";
     
     try {
-      const response = await base44.functions.invoke('updateFileContent', {
-        file_path: 'globals.css',
-        find: /--color-background:.*?;/,
-        replace: `--color-background: ${hexFallback};`
+      const user = await base44.auth.me();
+      await base44.auth.updateMe({
+        site_settings: {
+          ...(user.site_settings || {}),
+          backgroundColor: hexFallback
+        }
       });
       
-      toast.success("Background color updated");
+      toast.success("Background color updated - reload to see changes");
       
-      // Apply immediately without reload
-      document.documentElement.style.setProperty('--color-background', hexFallback);
+      // Apply immediately
+      document.body.style.backgroundColor = hexFallback;
+      const appShell = document.querySelector('[data-editor-layout]');
+      if (appShell) {
+        appShell.style.backgroundColor = hexFallback;
+      }
     } catch (error) {
       toast.error("Failed to update background");
     }
@@ -353,7 +359,7 @@ For each recommendation, provide:
                       <div className="flex items-center gap-2">
                         <div 
                           className="h-4 w-4 rounded border border-border" 
-                          style={{ backgroundColor: `var(${color.value})` }}
+                          style={{ backgroundColor: color.hex }}
                         />
                         {color.label}
                       </div>
