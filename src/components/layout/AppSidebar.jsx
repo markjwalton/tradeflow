@@ -323,9 +323,8 @@ export function AppSidebar({ navItems = [] }) {
         {mode !== "hidden" && (
           <TooltipProvider delayDuration={300}>
             <nav className={cn(
-              "flex-1",
-              showLabels ? "[padding:var(--spacing-4)] [gap:var(--spacing-1)]" : "[padding:var(--spacing-3)] [gap:var(--spacing-2)]",
-              "flex flex-col"
+              "flex-1 flex flex-col",
+              showLabels ? "[gap:var(--spacing-1)]" : "[gap:var(--spacing-2)]"
             )}>
               {itemsToRender.map((item) => renderNavItem(item, false, !item.parent_id))}
             </nav>
