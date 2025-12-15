@@ -1,6 +1,7 @@
 import React from 'react';
 import { PageHeader } from '@/components/sturij/PageHeader';
-import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, ChevronDown, User, Building, Users, CreditCard } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const sampleItems = [
   { id: 1, title: 'First item', description: 'Sample content for demonstration' },
@@ -199,6 +200,376 @@ export default function TailwindListsShowcase() {
             <li>• Padding: <code className="bg-background px-1 py-0.5 rounded">py-4</code> (vertical only)</li>
             <li>• No horizontal padding - edge to edge</li>
           </ul>
+        </div>
+      </section>
+
+      {/* Tabs Variations */}
+      <section className="space-y-8 mt-12 pt-8 border-t border-border">
+        <div>
+          <h2 className="text-xl font-display mb-2">Tabs</h2>
+          <p className="text-sm text-muted-foreground">Navigation patterns for tabbed interfaces</p>
+        </div>
+
+        {/* Underline Tabs */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Underline Style</h3>
+          <div>
+            <div className="grid grid-cols-1 sm:hidden">
+              <Select defaultValue="team">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="account">My Account</SelectItem>
+                  <SelectItem value="company">Company</SelectItem>
+                  <SelectItem value="team">Team Members</SelectItem>
+                  <SelectItem value="billing">Billing</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="hidden sm:block">
+              <div className="border-b border-border">
+                <nav aria-label="Tabs" className="-mb-px flex space-x-8">
+                  <a href="#" className="border-transparent text-muted-foreground hover:border-border hover:text-foreground border-b-2 px-1 py-4 text-sm font-medium whitespace-nowrap">
+                    My Account
+                  </a>
+                  <a href="#" className="border-transparent text-muted-foreground hover:border-border hover:text-foreground border-b-2 px-1 py-4 text-sm font-medium whitespace-nowrap">
+                    Company
+                  </a>
+                  <a href="#" aria-current="page" className="border-primary text-primary border-b-2 px-1 py-4 text-sm font-medium whitespace-nowrap">
+                    Team Members
+                  </a>
+                  <a href="#" className="border-transparent text-muted-foreground hover:border-border hover:text-foreground border-b-2 px-1 py-4 text-sm font-medium whitespace-nowrap">
+                    Billing
+                  </a>
+                </nav>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Active: <code className="bg-background px-1 py-0.5 rounded">border-primary text-primary</code></li>
+              <li>• Inactive: <code className="bg-background px-1 py-0.5 rounded">text-muted-foreground hover:text-foreground</code></li>
+              <li>• Border indicator: <code className="bg-background px-1 py-0.5 rounded">border-b-2</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Tabs with Icons */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Icons</h3>
+          <div>
+            <div className="grid grid-cols-1 sm:hidden">
+              <Select defaultValue="team">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="account">My Account</SelectItem>
+                  <SelectItem value="company">Company</SelectItem>
+                  <SelectItem value="team">Team Members</SelectItem>
+                  <SelectItem value="billing">Billing</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="hidden sm:block">
+              <div className="border-b border-border">
+                <nav aria-label="Tabs" className="-mb-px flex space-x-8">
+                  <a href="#" className="border-transparent text-muted-foreground hover:border-border hover:text-foreground group inline-flex items-center border-b-2 px-1 py-4 text-sm font-medium">
+                    <User aria-hidden="true" className="text-muted-foreground group-hover:text-foreground mr-2 -ml-0.5 h-5 w-5" />
+                    <span>My Account</span>
+                  </a>
+                  <a href="#" className="border-transparent text-muted-foreground hover:border-border hover:text-foreground group inline-flex items-center border-b-2 px-1 py-4 text-sm font-medium">
+                    <Building aria-hidden="true" className="text-muted-foreground group-hover:text-foreground mr-2 -ml-0.5 h-5 w-5" />
+                    <span>Company</span>
+                  </a>
+                  <a href="#" aria-current="page" className="border-primary text-primary group inline-flex items-center border-b-2 px-1 py-4 text-sm font-medium">
+                    <Users aria-hidden="true" className="text-primary mr-2 -ml-0.5 h-5 w-5" />
+                    <span>Team Members</span>
+                  </a>
+                  <a href="#" className="border-transparent text-muted-foreground hover:border-border hover:text-foreground group inline-flex items-center border-b-2 px-1 py-4 text-sm font-medium">
+                    <CreditCard aria-hidden="true" className="text-muted-foreground group-hover:text-foreground mr-2 -ml-0.5 h-5 w-5" />
+                    <span>Billing</span>
+                  </a>
+                </nav>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Icons: Lucide <code className="bg-background px-1 py-0.5 rounded">User</code>, <code className="bg-background px-1 py-0.5 rounded">Building</code>, <code className="bg-background px-1 py-0.5 rounded">Users</code>, <code className="bg-background px-1 py-0.5 rounded">CreditCard</code></li>
+              <li>• Icon colors match text state (active/hover)</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Pill Tabs - Subtle */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Pill Style (Subtle)</h3>
+          <div>
+            <div className="grid grid-cols-1 sm:hidden">
+              <Select defaultValue="team">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="account">My Account</SelectItem>
+                  <SelectItem value="company">Company</SelectItem>
+                  <SelectItem value="team">Team Members</SelectItem>
+                  <SelectItem value="billing">Billing</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="hidden sm:block">
+              <nav aria-label="Tabs" className="flex space-x-4">
+                <a href="#" className="text-muted-foreground hover:text-foreground rounded-md px-3 py-2 text-sm font-medium">
+                  My Account
+                </a>
+                <a href="#" className="text-muted-foreground hover:text-foreground rounded-md px-3 py-2 text-sm font-medium">
+                  Company
+                </a>
+                <a href="#" aria-current="page" className="bg-accent text-foreground rounded-md px-3 py-2 text-sm font-medium">
+                  Team Members
+                </a>
+                <a href="#" className="text-muted-foreground hover:text-foreground rounded-md px-3 py-2 text-sm font-medium">
+                  Billing
+                </a>
+              </nav>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Active: <code className="bg-background px-1 py-0.5 rounded">bg-accent text-foreground</code></li>
+              <li>• Rounded pills: <code className="bg-background px-1 py-0.5 rounded">rounded-md</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Pill Tabs - Medium */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Pill Style (Medium)</h3>
+          <div>
+            <div className="grid grid-cols-1 sm:hidden">
+              <Select defaultValue="team">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="account">My Account</SelectItem>
+                  <SelectItem value="company">Company</SelectItem>
+                  <SelectItem value="team">Team Members</SelectItem>
+                  <SelectItem value="billing">Billing</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="hidden sm:block">
+              <nav aria-label="Tabs" className="flex space-x-4">
+                <a href="#" className="text-muted-foreground hover:text-foreground rounded-md px-3 py-2 text-sm font-medium">
+                  My Account
+                </a>
+                <a href="#" className="text-muted-foreground hover:text-foreground rounded-md px-3 py-2 text-sm font-medium">
+                  Company
+                </a>
+                <a href="#" aria-current="page" className="bg-muted text-foreground rounded-md px-3 py-2 text-sm font-medium">
+                  Team Members
+                </a>
+                <a href="#" className="text-muted-foreground hover:text-foreground rounded-md px-3 py-2 text-sm font-medium">
+                  Billing
+                </a>
+              </nav>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Active: <code className="bg-background px-1 py-0.5 rounded">bg-muted text-foreground</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Pill Tabs - Primary */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Pill Style (Primary)</h3>
+          <div>
+            <div className="grid grid-cols-1 sm:hidden">
+              <Select defaultValue="team">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="account">My Account</SelectItem>
+                  <SelectItem value="company">Company</SelectItem>
+                  <SelectItem value="team">Team Members</SelectItem>
+                  <SelectItem value="billing">Billing</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="hidden sm:block">
+              <nav aria-label="Tabs" className="flex space-x-4">
+                <a href="#" className="text-muted-foreground hover:text-foreground rounded-md px-3 py-2 text-sm font-medium">
+                  My Account
+                </a>
+                <a href="#" className="text-muted-foreground hover:text-foreground rounded-md px-3 py-2 text-sm font-medium">
+                  Company
+                </a>
+                <a href="#" aria-current="page" className="bg-primary-100 text-primary-700 rounded-md px-3 py-2 text-sm font-medium">
+                  Team Members
+                </a>
+                <a href="#" className="text-muted-foreground hover:text-foreground rounded-md px-3 py-2 text-sm font-medium">
+                  Billing
+                </a>
+              </nav>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Active: <code className="bg-background px-1 py-0.5 rounded">bg-primary-100 text-primary-700</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Full Width Tabs */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Full Width</h3>
+          <div>
+            <div className="grid grid-cols-1 sm:hidden">
+              <Select defaultValue="team">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="account">My Account</SelectItem>
+                  <SelectItem value="company">Company</SelectItem>
+                  <SelectItem value="team">Team Members</SelectItem>
+                  <SelectItem value="billing">Billing</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="hidden sm:block">
+              <div className="border-b border-border">
+                <nav aria-label="Tabs" className="-mb-px flex">
+                  <a href="#" className="border-transparent text-muted-foreground hover:border-border hover:text-foreground w-1/4 border-b-2 px-1 py-4 text-center text-sm font-medium">
+                    My Account
+                  </a>
+                  <a href="#" className="border-transparent text-muted-foreground hover:border-border hover:text-foreground w-1/4 border-b-2 px-1 py-4 text-center text-sm font-medium">
+                    Company
+                  </a>
+                  <a href="#" aria-current="page" className="border-primary text-primary w-1/4 border-b-2 px-1 py-4 text-center text-sm font-medium">
+                    Team Members
+                  </a>
+                  <a href="#" className="border-transparent text-muted-foreground hover:border-border hover:text-foreground w-1/4 border-b-2 px-1 py-4 text-center text-sm font-medium">
+                    Billing
+                  </a>
+                </nav>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Equal width tabs: <code className="bg-background px-1 py-0.5 rounded">w-1/4</code></li>
+              <li>• Centered text: <code className="bg-background px-1 py-0.5 rounded">text-center</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Contained Tabs */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Contained with Dividers</h3>
+          <div>
+            <div className="grid grid-cols-1 sm:hidden">
+              <Select defaultValue="team">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="account">My Account</SelectItem>
+                  <SelectItem value="company">Company</SelectItem>
+                  <SelectItem value="team">Team Members</SelectItem>
+                  <SelectItem value="billing">Billing</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="hidden sm:block">
+              <nav aria-label="Tabs" className="isolate flex divide-x divide-border rounded-lg bg-card shadow-sm">
+                <a href="#" className="text-muted-foreground hover:text-foreground rounded-l-lg group relative min-w-0 flex-1 overflow-hidden px-4 py-4 text-center text-sm font-medium hover:bg-accent focus:z-10">
+                  <span>My Account</span>
+                  <span aria-hidden="true" className="bg-transparent absolute inset-x-0 bottom-0 h-0.5" />
+                </a>
+                <a href="#" className="text-muted-foreground hover:text-foreground group relative min-w-0 flex-1 overflow-hidden px-4 py-4 text-center text-sm font-medium hover:bg-accent focus:z-10">
+                  <span>Company</span>
+                  <span aria-hidden="true" className="bg-transparent absolute inset-x-0 bottom-0 h-0.5" />
+                </a>
+                <a href="#" aria-current="page" className="text-foreground group relative min-w-0 flex-1 overflow-hidden px-4 py-4 text-center text-sm font-medium hover:bg-accent focus:z-10">
+                  <span>Team Members</span>
+                  <span aria-hidden="true" className="bg-primary absolute inset-x-0 bottom-0 h-0.5" />
+                </a>
+                <a href="#" className="text-muted-foreground hover:text-foreground rounded-r-lg group relative min-w-0 flex-1 overflow-hidden px-4 py-4 text-center text-sm font-medium hover:bg-accent focus:z-10">
+                  <span>Billing</span>
+                  <span aria-hidden="true" className="bg-transparent absolute inset-x-0 bottom-0 h-0.5" />
+                </a>
+              </nav>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Container: <code className="bg-background px-1 py-0.5 rounded">bg-card shadow-sm rounded-lg</code></li>
+              <li>• Dividers: <code className="bg-background px-1 py-0.5 rounded">divide-x divide-border</code></li>
+              <li>• Active indicator: <code className="bg-background px-1 py-0.5 rounded">bg-primary</code> bottom accent</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Simple List Style */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Simple List Style</h3>
+          <div className="bg-card px-4 py-6 sm:px-6 lg:px-8 rounded-xl">
+            <div className="mx-auto max-w-7xl">
+              <div className="grid grid-cols-1 sm:hidden">
+                <Select defaultValue="team">
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="account">My Account</SelectItem>
+                    <SelectItem value="company">Company</SelectItem>
+                    <SelectItem value="team">Team Members</SelectItem>
+                    <SelectItem value="billing">Billing</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="hidden sm:block">
+                <nav className="flex border-b border-border py-4">
+                  <ul role="list" className="flex min-w-full flex-none gap-x-8 px-2 text-sm font-semibold text-muted-foreground">
+                    <li><a href="#" className="hover:text-foreground">My Account</a></li>
+                    <li><a href="#" className="hover:text-foreground">Company</a></li>
+                    <li><a href="#" className="text-primary">Team Members</a></li>
+                    <li><a href="#" className="hover:text-foreground">Billing</a></li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Minimal list style with gap spacing</li>
+              <li>• Active: <code className="bg-background px-1 py-0.5 rounded">text-primary</code></li>
+            </ul>
+          </div>
         </div>
       </section>
 
