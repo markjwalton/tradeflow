@@ -1,7 +1,7 @@
 import React from 'react';
 import { PageHeader } from '@/components/sturij/PageHeader';
 import { ShowcaseSection } from '@/components/showcase/ShowcaseSection';
-import { Star, Check, Heart, Minus, Plus, HelpCircle, ChevronDown, Clock, X, Search, ShoppingBag, ShieldCheck, CheckCircle, Menu, User } from 'lucide-react';
+import { Star, Check, Heart, Minus, Plus, HelpCircle, ChevronDown, Clock, X, Search, ShoppingBag, ShieldCheck, CheckCircle, Menu, User, Trash2, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
@@ -2255,6 +2255,416 @@ export default function TailwindProductShowcase() {
               <div className="flex flex-col items-center justify-center bg-white px-4 py-6 text-center">
                 <p className="text-sm text-gray-500">Sign up for our newsletter</p>
                 <p className="font-semibold text-gray-900">15% off your first order</p>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Checkout - Two Column Form">
+          <div className="bg-gray-50 p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <h2 className="sr-only">Checkout</h2>
+              <div className="grid lg:grid-cols-2 gap-12">
+                <div>
+                  <h2 className="text-lg font-medium text-gray-900">Contact information</h2>
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-700">Email address</label>
+                    <input type="email" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
+                  </div>
+
+                  <div className="mt-10 border-t border-gray-200 pt-10">
+                    <h2 className="text-lg font-medium text-gray-900">Shipping information</h2>
+                    <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">First name</label>
+                        <input type="text" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Last name</label>
+                        <input type="text" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                      </div>
+                      <div className="sm:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700">Address</label>
+                        <input type="text" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">City</label>
+                        <input type="text" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Postal code</label>
+                        <input type="text" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-10 border-t border-gray-200 pt-10">
+                    <h2 className="text-lg font-medium text-gray-900">Delivery method</h2>
+                    <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+                      {[
+                        { title: 'Standard', turnaround: '4–10 business days', price: '$5.00' },
+                        { title: 'Express', turnaround: '2–5 business days', price: '$16.00' },
+                      ].map((method) => (
+                        <label key={method.title} className="relative flex rounded-lg border border-gray-300 bg-white p-4 cursor-pointer hover:border-gray-400">
+                          <input type="radio" name="delivery-method" className="sr-only" />
+                          <div className="flex-1">
+                            <span className="block text-sm font-medium text-gray-900">{method.title}</span>
+                            <span className="mt-1 block text-sm text-gray-500">{method.turnaround}</span>
+                            <span className="mt-6 block text-sm font-medium text-gray-900">{method.price}</span>
+                          </div>
+                          <CheckCircle className="h-5 w-5 text-indigo-600" />
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mt-10 border-t border-gray-200 pt-10">
+                    <h2 className="text-lg font-medium text-gray-900">Payment</h2>
+                    <div className="mt-6 grid grid-cols-4 gap-x-4 gap-y-6">
+                      <div className="col-span-4">
+                        <label className="block text-sm font-medium text-gray-700">Card number</label>
+                        <input type="text" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                      </div>
+                      <div className="col-span-4">
+                        <label className="block text-sm font-medium text-gray-700">Name on card</label>
+                        <input type="text" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                      </div>
+                      <div className="col-span-3">
+                        <label className="block text-sm font-medium text-gray-700">Expiration date (MM/YY)</label>
+                        <input type="text" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">CVC</label>
+                        <input type="text" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-10 lg:mt-0">
+                  <h2 className="text-lg font-medium text-gray-900">Order summary</h2>
+                  <div className="mt-4 rounded-lg border border-gray-200 bg-white shadow-sm">
+                    <ul className="divide-y divide-gray-200">
+                      {[
+                        { title: 'Basic Tee', color: 'Black', size: 'Large', price: '$32.00' },
+                        { title: 'Basic Tee', color: 'Sienna', size: 'Large', price: '$32.00' },
+                      ].map((product, i) => (
+                        <li key={i} className="flex px-4 py-6 sm:px-6">
+                          <div className="w-20 h-20 bg-gray-200 rounded-md" />
+                          <div className="ml-6 flex flex-1 flex-col">
+                            <div className="flex">
+                              <div className="min-w-0 flex-1">
+                                <h4 className="text-sm font-medium text-gray-700">{product.title}</h4>
+                                <p className="mt-1 text-sm text-gray-500">{product.color}</p>
+                                <p className="mt-1 text-sm text-gray-500">{product.size}</p>
+                              </div>
+                              <button className="ml-4 p-2 text-gray-400 hover:text-gray-500">
+                                <Trash2 className="h-5 w-5" />
+                              </button>
+                            </div>
+                            <div className="flex items-end justify-between pt-2">
+                              <p className="text-sm font-medium text-gray-900">{product.price}</p>
+                              <select className="rounded-md border-gray-300 py-1 text-sm">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                              </select>
+                            </div>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                    <dl className="space-y-6 border-t border-gray-200 px-4 py-6 sm:px-6">
+                      <div className="flex items-center justify-between">
+                        <dt className="text-sm">Subtotal</dt>
+                        <dd className="text-sm font-medium text-gray-900">$64.00</dd>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <dt className="text-sm">Shipping</dt>
+                        <dd className="text-sm font-medium text-gray-900">$5.00</dd>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <dt className="text-sm">Taxes</dt>
+                        <dd className="text-sm font-medium text-gray-900">$5.52</dd>
+                      </div>
+                      <div className="flex items-center justify-between border-t border-gray-200 pt-6">
+                        <dt className="text-base font-medium">Total</dt>
+                        <dd className="text-base font-medium text-gray-900">$75.52</dd>
+                      </div>
+                    </dl>
+                    <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
+                      <button className="w-full rounded-md bg-indigo-600 px-4 py-3 text-base font-medium text-white hover:bg-indigo-700">
+                        Confirm order
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Checkout - Split Screen Layout">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="grid lg:grid-cols-2">
+              <div className="bg-gray-50 px-4 py-12 lg:px-8">
+                <div className="max-w-lg mx-auto">
+                  <h2 className="text-lg font-medium text-gray-900">Order summary</h2>
+                  <ul className="mt-6 divide-y divide-gray-200">
+                    {[
+                      { name: 'Micro Backpack', color: 'Moss', size: '5L', price: '$70.00' },
+                      { name: 'Small Stuff Satchel', color: 'Sand', size: '18L', price: '$180.00' },
+                    ].map((product, i) => (
+                      <li key={i} className="flex items-start space-x-4 py-6">
+                        <div className="w-20 h-20 bg-gray-200 rounded-md" />
+                        <div className="flex-auto space-y-1">
+                          <h3 className="text-sm font-medium text-gray-900">{product.name}</h3>
+                          <p className="text-sm text-gray-500">{product.color}</p>
+                          <p className="text-sm text-gray-500">{product.size}</p>
+                        </div>
+                        <p className="text-base font-medium text-gray-900">{product.price}</p>
+                      </li>
+                    ))}
+                  </ul>
+                  <dl className="mt-10 space-y-6 text-sm font-medium text-gray-900 border-t border-gray-200 pt-6">
+                    <div className="flex items-center justify-between">
+                      <dt className="text-gray-600">Subtotal</dt>
+                      <dd>$320.00</dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-gray-600">Shipping</dt>
+                      <dd>$15.00</dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-gray-600">Taxes</dt>
+                      <dd>$26.80</dd>
+                    </div>
+                    <div className="flex items-center justify-between border-t border-gray-200 pt-6">
+                      <dt className="text-base">Total</dt>
+                      <dd className="text-base">$361.80</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+
+              <div className="px-4 py-12 lg:px-8">
+                <div className="max-w-lg mx-auto">
+                  <h2 className="text-lg font-medium text-gray-900">Contact information</h2>
+                  <div className="mt-6">
+                    <label className="block text-sm font-medium text-gray-700">Email address</label>
+                    <input type="email" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                  </div>
+
+                  <div className="mt-10">
+                    <h2 className="text-lg font-medium text-gray-900">Payment details</h2>
+                    <div className="mt-6 grid grid-cols-4 gap-4">
+                      <div className="col-span-4">
+                        <label className="block text-sm font-medium text-gray-700">Name on card</label>
+                        <input type="text" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                      </div>
+                      <div className="col-span-4">
+                        <label className="block text-sm font-medium text-gray-900">Card number</label>
+                        <input type="text" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                      </div>
+                      <div className="col-span-3">
+                        <label className="block text-sm font-medium text-gray-700">Expiration date (MM/YY)</label>
+                        <input type="text" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">CVC</label>
+                        <input type="text" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-10 border-t border-gray-200 pt-6">
+                    <button className="w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">
+                      Continue
+                    </button>
+                    <p className="mt-4 text-center text-sm text-gray-500">
+                      You won't be charged until the next step.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Checkout - Single Column with Summary">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-lg mx-auto">
+              <div className="flow-root">
+                <ul className="-my-6 divide-y divide-gray-200">
+                  {[
+                    { name: "Women's Basic Tee", color: 'Gray', size: 'S', price: '$32.00' },
+                    { name: "Women's Artwork Tee", color: 'Peach', size: 'S', price: '$36.00' },
+                  ].map((product, i) => (
+                    <li key={i} className="flex space-x-6 py-6">
+                      <div className="w-24 h-24 bg-gray-200 rounded-md" />
+                      <div className="flex-auto">
+                        <div className="space-y-1 sm:flex sm:items-start sm:justify-between sm:space-x-6">
+                          <div className="flex-auto space-y-1 text-sm font-medium">
+                            <h3 className="text-gray-900">{product.name}</h3>
+                            <p className="text-gray-900">{product.price}</p>
+                            <p className="text-gray-500">{product.color}</p>
+                            <p className="text-gray-500">{product.size}</p>
+                          </div>
+                          <div className="flex space-x-4">
+                            <button className="text-sm font-medium text-indigo-600 hover:text-indigo-500">Edit</button>
+                            <div className="flex border-l border-gray-300 pl-4">
+                              <button className="text-sm font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <dl className="mt-10 space-y-6 text-sm font-medium text-gray-500">
+                <div className="flex justify-between">
+                  <dt>Subtotal</dt>
+                  <dd className="text-gray-900">$104.00</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt>Taxes</dt>
+                  <dd className="text-gray-900">$8.32</dd>
+                </div>
+                <div className="flex justify-between border-t border-gray-200 pt-6 text-gray-900">
+                  <dt className="text-base">Total</dt>
+                  <dd className="text-base">$126.32</dd>
+                </div>
+              </dl>
+
+              <div className="mt-10">
+                <h2 className="text-lg font-medium text-gray-900">Contact information</h2>
+                <div className="mt-6">
+                  <label className="block text-sm font-medium text-gray-700">Email address</label>
+                  <input type="email" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                </div>
+                <div className="mt-6 flex gap-3">
+                  <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-indigo-600" />
+                  <label className="text-sm text-gray-500">
+                    I agree to the sale of my personal information.
+                  </label>
+                </div>
+                <button className="mt-6 w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">
+                  Continue
+                </button>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Checkout - Dark Sidebar Summary">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="grid lg:grid-cols-2">
+              <div className="bg-indigo-900 text-indigo-300 py-12 px-10">
+                <div className="max-w-lg mx-auto">
+                  <h2 className="sr-only">Order summary</h2>
+                  <dl>
+                    <dt className="text-sm font-medium">Amount due</dt>
+                    <dd className="mt-1 text-3xl font-bold tracking-tight text-white">$642.60</dd>
+                  </dl>
+                  <ul className="divide-y divide-white/10 text-sm font-medium mt-8">
+                    {[
+                      { name: 'High Wall Tote', color: 'White and black', size: '15L', price: '$210.00' },
+                      { name: 'Halfsize Tote', color: 'Clay', size: '11L', price: '$330.00' },
+                    ].map((product, i) => (
+                      <li key={i} className="flex items-start space-x-4 py-6">
+                        <div className="w-20 h-20 bg-indigo-800 rounded-md" />
+                        <div className="flex-auto space-y-1">
+                          <h3 className="text-white">{product.name}</h3>
+                          <p>{product.color}</p>
+                          <p>{product.size}</p>
+                        </div>
+                        <p className="text-base font-medium text-white">{product.price}</p>
+                      </li>
+                    ))}
+                  </ul>
+                  <dl className="space-y-6 border-t border-white/10 pt-6 text-sm font-medium">
+                    <div className="flex items-center justify-between">
+                      <dt>Subtotal</dt>
+                      <dd>$570.00</dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt>Shipping</dt>
+                      <dd>$25.00</dd>
+                    </div>
+                    <div className="flex items-center justify-between border-t border-white/10 pt-6 text-white">
+                      <dt className="text-base">Total</dt>
+                      <dd className="text-base">$642.60</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+
+              <div className="px-4 py-12 lg:px-8">
+                <div className="max-w-lg mx-auto">
+                  <h3 className="text-lg font-medium text-gray-900">Contact information</h3>
+                  <div className="mt-6">
+                    <label className="block text-sm font-medium text-gray-700">Email address</label>
+                    <input type="email" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                  </div>
+
+                  <div className="mt-10">
+                    <h3 className="text-lg font-medium text-gray-900">Payment details</h3>
+                    <div className="mt-6 grid grid-cols-4 gap-4">
+                      <div className="col-span-4">
+                        <label className="block text-sm font-medium text-gray-700">Card number</label>
+                        <input type="text" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                      </div>
+                      <div className="col-span-3">
+                        <label className="block text-sm font-medium text-gray-700">Expiration date (MM/YY)</label>
+                        <input type="text" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">CVC</label>
+                        <input type="text" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-10">
+                    <h3 className="text-lg font-medium text-gray-900">Shipping address</h3>
+                    <div className="mt-6 grid grid-cols-3 gap-4">
+                      <div className="col-span-3">
+                        <label className="block text-sm font-medium text-gray-700">Address</label>
+                        <input type="text" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">City</label>
+                        <input type="text" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">State</label>
+                        <input type="text" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Postal code</label>
+                        <input type="text" className="mt-2 block w-full rounded-md border-gray-300 shadow-sm" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 flex gap-3">
+                    <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-indigo-600" />
+                    <label className="text-sm font-medium text-gray-900">
+                      Billing address is the same as shipping address
+                    </label>
+                  </div>
+
+                  <button className="mt-6 w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">
+                    Pay $642.60
+                  </button>
+
+                  <p className="mt-6 flex justify-center text-sm font-medium text-gray-500">
+                    <Lock className="mr-1.5 h-5 w-5 text-gray-400" />
+                    Payment details stored securely
+                  </p>
+                </div>
               </div>
             </div>
           </div>
