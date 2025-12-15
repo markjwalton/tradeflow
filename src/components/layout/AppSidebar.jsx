@@ -229,15 +229,20 @@ export function AppSidebar({ navItems = [] }) {
       
       // Expanded mode - folders are expandable
       return (
-        <div key={item.id} className={isExpanded && showLabels ? "[border-radius:var(--radius-lg)] [margin-bottom:var(--spacing-1)]" : ""} style={isExpanded && showLabels ? { backgroundColor: 'oklch(0.990 0.007 83.1 / 0.5)' } : {}}>
+        <div key={item.id} className={isExpanded && showLabels ? "[border-radius:var(--radius-lg)] [margin-bottom:var(--spacing-1)]" : ""} style={isExpanded && showLabels ? { backgroundColor: 'oklch(0.990 0.007 83.1 / 0.8)' } : {}}>
           <button
             onClick={(e) => toggleFolder(item.id, e)}
             className={cn(
-              "w-full flex items-center transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground",
+              "w-full flex items-center transition-colors hover:text-sidebar-foreground",
               "[gap:var(--spacing-3)] [padding-left:var(--spacing-3)] [padding-right:var(--spacing-3)] [padding-top:var(--spacing-2)] [padding-bottom:var(--spacing-2)] [border-radius:var(--radius-lg)]",
               childActive ? "text-sidebar-foreground" : "text-sidebar-foreground/70",
               isExpanded && "text-sidebar-foreground"
             )}
+            style={{
+              backgroundColor: 'transparent',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'oklch(0.990 0.007 83.1 / 0.9)'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
           >
             {hasChildren && (
               isExpanded ? <ChevronDown className="h-4 w-4 text-sidebar-foreground/50" /> : <ChevronRight className="h-4 w-4 text-sidebar-foreground/50" />
@@ -246,7 +251,7 @@ export function AppSidebar({ navItems = [] }) {
             <span className={cn("flex-1 text-left", !item.parent_id && "font-medium")}>{item.name || 'Unnamed'}</span>
           </button>
           {isExpanded && hasChildren && (
-            <div className="[padding-bottom:var(--spacing-2)] [gap:var(--spacing-1)] [padding-left:var(--spacing-3)] flex flex-col" style={{ backgroundColor: 'oklch(0.990 0.007 83.1 / 0.3)' }}>
+            <div className="[padding-bottom:var(--spacing-2)] [gap:var(--spacing-1)] [padding-left:var(--spacing-3)] flex flex-col" style={{ backgroundColor: 'oklch(0.990 0.007 83.1 / 0.7)' }}>
               {item.children.map((child) => renderNavItem(child, true, false))}
             </div>
           )}
@@ -308,7 +313,7 @@ export function AppSidebar({ navItems = [] }) {
   return (
     <aside
           className={cn(
-            "hidden lg:flex lg:flex-col bg-card text-sidebar-foreground rounded-xl shadow-md transition-[width] duration-300 ease-in-out overflow-visible",
+            "hidden lg:flex lg:flex-col bg-card text-sidebar-foreground rounded-xl shadow-md transition-[width] duration-300 ease-in-out overflow-visible [padding-top:0] [padding-bottom:0]",
             isHidden && "lg:w-0",
             !isHidden && widthClass
           )}
@@ -317,7 +322,7 @@ export function AppSidebar({ navItems = [] }) {
           <TooltipProvider delayDuration={300}>
             <nav className={cn(
               "flex-1",
-              showLabels ? "[padding-top:var(--spacing-3)] [padding-bottom:var(--spacing-3)] [gap:var(--spacing-1)]" : "[padding:var(--spacing-3)] [gap:var(--spacing-2)]",
+              showLabels ? "[padding:var(--spacing-3)] [gap:var(--spacing-1)]" : "[padding:var(--spacing-3)] [gap:var(--spacing-2)]",
               "flex flex-col"
             )}>
               {itemsToRender.map((item) => renderNavItem(item, false, !item.parent_id))}
