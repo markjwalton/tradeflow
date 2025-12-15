@@ -123,6 +123,9 @@ import CommitHome from './pages/CommitHome';
 import CompassHome from './pages/CompassHome';
 import CompassLogin from './pages/CompassLogin';
 import CompassInterviews from './pages/CompassInterviews';
+import SyntaxHome from './pages/SyntaxHome';
+import SyntaxDocs from './pages/SyntaxDocs';
+import TransmitHome from './pages/TransmitHome';
 import __Layout from './Layout.jsx';
 
 
@@ -252,6 +255,9 @@ export const PAGES = {
     "CompassHome": CompassHome,
     "CompassLogin": CompassLogin,
     "CompassInterviews": CompassInterviews,
+    "SyntaxHome": SyntaxHome,
+    "SyntaxDocs": SyntaxDocs,
+    "TransmitHome": TransmitHome,
 }
 
 export const pagesConfig = {
