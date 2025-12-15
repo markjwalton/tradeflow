@@ -457,8 +457,12 @@ export default function GenericNavEditor({
           <>
 
 
-            {/* Navigation Items */}
-            {items.length > 0 && (
+            {/* Main Navigation Items */}
+            <div className="[margin-bottom:var(--spacing-6)]">
+              <h3 className="font-display text-h5 [margin-bottom:var(--spacing-3)] text-[var(--color-midnight)]">
+                Navigation Structure
+              </h3>
+            {items.length > 0 ? (
               <DragDropContext onDragEnd={handleDragEnd}>
                 <Droppable droppableId="nav-list">
                   {(provided) => (
@@ -591,7 +595,12 @@ export default function GenericNavEditor({
                   )}
                 </Droppable>
               </DragDropContext>
+            ) : (
+              <div className="text-center py-8 text-muted-foreground border border-dashed rounded-lg">
+                No navigation items yet. Add items using the button above.
+              </div>
             )}
+            </div>
 
             {/* Unallocated Pages */}
             {unallocatedSlugs.length > 0 && (
@@ -687,174 +696,155 @@ export default function GenericNavEditor({
               </div>
             )}
 
-            {/* All Pages Reference List */}
-            {items.length > 0 && (
-              <div className="border-t [padding-top:var(--spacing-4)] [margin-top:var(--spacing-4)]">
-                <button 
-                  onClick={() => setAllPagesExpanded(!allPagesExpanded)}
-                  className="flex items-center gap-2 text-[var(--color-charcoal)] hover:text-[var(--color-midnight)] text-body-base mb-3"
-                >
-                  {allPagesExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-                  <File className="h-4 w-4" />
-                  All Pages ({items.filter(i => i.item_type !== "folder").length})
-                </button>
-                {allPagesExpanded && (
-                  <div className="[&>*+*]:mt-[var(--spacing-1)] [padding-left:var(--spacing-6)]">
-                    {items
-                      .filter(i => i.item_type !== "folder")
-                      .sort((a, b) => a.name.localeCompare(b.name))
-                      .map(item => {
-                        // Find parent chain for context
-                        const getParentPath = (parentId) => {
-                          if (!parentId) return "";
-                          const parent = items.find(i => i.id === parentId);
-                          if (!parent) return "";
-                          const grandPath = getParentPath(parent.parent_id);
-                          return grandPath ? `${grandPath} > ${parent.name || 'Unnamed'}` : (parent.name || 'Unnamed');
-                        };
-                        const parentPath = getParentPath(item.parent_id);
 
+
+            {/* Pages Management Section - Collapsible */}
+            <div className="border-t [padding-top:var(--spacing-4)] [margin-top:var(--spacing-4)]">
+              <button 
+                onClick={() => setAllPagesExpanded(!allPagesExpanded)}
+                className="flex items-center justify-between w-full [gap:var(--spacing-2)] text-[var(--color-charcoal)] hover:text-[var(--color-midnight)] [margin-bottom:var(--spacing-3)]"
+              >
+                <div className="flex items-center [gap:var(--spacing-2)]">
+                  {allPagesExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                  <h3 className="font-display text-h5 text-[var(--color-midnight)]">
+                    Pages Management
+                  </h3>
+                </div>
+                {syncUnallocatedPages && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      syncUnallocatedPages();
+                    }}
+                    disabled={isSyncing}
+                    title="Scan pages folder and refresh list"
+                    className="text-sm hover:bg-blue-50 hover:text-blue-700"
+                  >
+                    {isSyncing ? (
+                      <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                    ) : (
+                      <Sparkles className="h-3.5 w-3.5 mr-1.5" />
+                    )}
+                    Scan Pages
+                  </Button>
+                )}
+              </button>
+              
+              {allPagesExpanded && (
+                <div className="space-y-4">
+                  {/* Pages without any URL reference */}
+                  {effectiveSlugs.filter(slug => !allocatedSlugs.includes(slug) && !unallocatedSlugs.includes(slug)).length > 0 && (
+                    <div className="p-4 bg-muted/30 rounded-lg border border-border">
+                      <div className="flex items-center justify-between [margin-bottom:var(--spacing-3)]">
+                        <h4 className="font-display text-base text-[var(--color-midnight)]">
+                          Pages Not in System
+                        </h4>
+                      </div>
+                      <div className="text-xs text-muted-foreground [margin-bottom:var(--spacing-3)]">
+                        These pages exist in the pages folder but haven't been added to the navigation config yet.
+                      </div>
+                      
+                      <div className="[&>*+*]:mt-[var(--spacing-2)]">
+                        {effectiveSlugs.filter(slug => !allocatedSlugs.includes(slug) && !unallocatedSlugs.includes(slug)).map(slug => {
+                          const pageName = slug.replace(/([A-Z])/g, ' $1').trim();
+                          const suggestedUrl = slug.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+                          
+                          return (
+                            <div 
+                              key={slug}
+                              className="flex items-center justify-between [padding:var(--spacing-3)] bg-white border border-border rounded-lg"
+                            >
+                              <div>
+                                <div className="font-medium text-sm text-[var(--color-midnight)]">{pageName}</div>
+                                <div className="text-xs text-muted-foreground font-mono">/{suggestedUrl}</div>
+                              </div>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => {
+                                  setEditingItem(null);
+                                  setFormData({ 
+                                    name: pageName, 
+                                    slug: slug, 
+                                    icon: "File", 
+                                    is_visible: true, 
+                                    parent_id: null, 
+                                    item_type: "page", 
+                                    default_collapsed: false 
+                                  });
+                                  setShowDialog(true);
+                                }}
+                              >
+                                Create Page URL
+                              </Button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* All Pages Status */}
+                  <div className="p-4 bg-muted/30 rounded-lg border border-border">
+                    <h4 className="font-display text-base text-[var(--color-midnight)] [margin-bottom:var(--spacing-3)]">
+                      All Pages Status ({effectiveSlugs.length} total)
+                    </h4>
+                    <div className="[&>*+*]:mt-[var(--spacing-1)]">
+                      {effectiveSlugs.map(slug => {
+                        const navItem = items.find(i => i.slug === slug);
+                        const isUnallocated = !navItem && unallocatedSlugs.includes(slug);
+                        const pageName = slug.replace(/([A-Z])/g, ' $1').trim();
+                        const parentPath = navItem?.parent_id 
+                          ? (() => {
+                              const getPath = (parentId) => {
+                                if (!parentId) return "";
+                                const parent = items.find(i => i.id === parentId);
+                                if (!parent) return "";
+                                const grandPath = getPath(parent.parent_id);
+                                return grandPath ? `${grandPath} > ${parent.name}` : parent.name;
+                              };
+                              return getPath(navItem.parent_id);
+                            })()
+                          : "Root";
+                        
                         return (
-                        <div 
-                          key={item.id} 
-                          className={`flex items-center gap-3 p-2 rounded-lg hover:bg-[var(--color-background)] transition-all text-sm ${!item.is_visible ? "opacity-50" : ""}`}
-                        >
-                          {renderIcon(item.icon, "h-3 w-3 text-[var(--color-charcoal)]")}
-                          <span className="text-body-base text-[var(--color-midnight)]">{item.name || 'Unnamed'}</span>
-                            {parentPath && (
-                              <span className="text-caption text-[var(--color-charcoal)]">in {parentPath}</span>
-                            )}
-                            {!item.is_visible && (
-                              <Badge className="text-caption bg-[var(--color-charcoal)]/10 text-[var(--color-charcoal)]">Hidden</Badge>
-                            )}
+                          <div 
+                            key={slug}
+                            className="flex items-center justify-between [padding:var(--spacing-2)] bg-white/50 rounded"
+                          >
+                            <div className="flex items-center [gap:var(--spacing-2)] flex-1">
+                              <File className="h-3 w-3 text-muted-foreground" />
+                              <span className="text-sm text-[var(--color-midnight)]">{pageName}</span>
+                            </div>
+                            <div className="flex items-center [gap:var(--spacing-2)]">
+                              {navItem ? (
+                                <>
+                                  <Badge variant="outline" className="text-xs">
+                                    {parentPath}
+                                  </Badge>
+                                  <Badge className="text-xs bg-green-50 text-green-700 border-green-200">
+                                    Allocated
+                                  </Badge>
+                                </>
+                              ) : isUnallocated ? (
+                                <Badge variant="outline" className="text-xs text-orange-600 border-orange-300">
+                                  Unallocated
+                                </Badge>
+                              ) : (
+                                <Badge variant="outline" className="text-xs text-red-600 border-red-300">
+                                  Not in System
+                                </Badge>
+                              )}
+                            </div>
                           </div>
                         );
                       })}
+                    </div>
                   </div>
-                )}
-              </div>
-            )}
-
-            {items.length === 0 && unallocatedSlugs.length === 0 && (
-              <div className="text-center py-8 text-[var(--color-charcoal)]">
-                No pages available.
-              </div>
-            )}
-
-            {/* Pages Management Section */}
-            <div className="border-t [padding-top:var(--spacing-4)] [margin-top:var(--spacing-4)]">
-              <h3 className="font-display text-h5 [margin-bottom:var(--spacing-3)] text-[var(--color-midnight)]">
-                Pages Management
-              </h3>
-              
-              {/* Pages without URL */}
-              <div className="[margin-bottom:var(--spacing-4)] p-4 bg-muted/30 rounded-lg border border-border">
-                <div className="flex items-center justify-between [margin-bottom:var(--spacing-3)]">
-                  <h4 className="font-display text-base text-[var(--color-midnight)]">
-                    Pages Without URL Link
-                  </h4>
                 </div>
-                <div className="text-xs text-muted-foreground [margin-bottom:var(--spacing-3)]">
-                  These pages exist in the system but don't have a page_url reference in the navigation config.
-                </div>
-                
-                {effectiveSlugs.filter(slug => !items.find(i => i.slug === slug)).length > 0 ? (
-                  <div className="[&>*+*]:mt-[var(--spacing-2)]">
-                    {effectiveSlugs.filter(slug => !items.find(i => i.slug === slug)).map(slug => {
-                      const pageName = slug.replace(/([A-Z])/g, ' $1').trim();
-                      const suggestedUrl = slug.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-                      
-                      return (
-                        <div 
-                          key={slug}
-                          className="flex items-center justify-between [padding:var(--spacing-3)] bg-white border border-border rounded-lg"
-                        >
-                          <div>
-                            <div className="font-medium text-sm text-[var(--color-midnight)]">{pageName}</div>
-                            <div className="text-xs text-muted-foreground font-mono">/{suggestedUrl}</div>
-                          </div>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => {
-                              setEditingItem(null);
-                              setFormData({ 
-                                name: pageName, 
-                                slug: slug, 
-                                icon: "File", 
-                                is_visible: true, 
-                                parent_id: null, 
-                                item_type: "page", 
-                                default_collapsed: false 
-                              });
-                              setShowDialog(true);
-                            }}
-                          >
-                            Create Page URL
-                          </Button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <div className="text-center py-4 text-sm text-muted-foreground">
-                    All pages have URL links configured
-                  </div>
-                )}
-              </div>
-
-              {/* All Pages Status */}
-              <div className="p-4 bg-muted/30 rounded-lg border border-border">
-                <h4 className="font-display text-base text-[var(--color-midnight)] [margin-bottom:var(--spacing-3)]">
-                  All Pages Status
-                </h4>
-                <div className="[&>*+*]:mt-[var(--spacing-1)]">
-                  {effectiveSlugs.map(slug => {
-                    const navItem = items.find(i => i.slug === slug);
-                    const pageName = slug.replace(/([A-Z])/g, ' $1').trim();
-                    const parentPath = navItem?.parent_id 
-                      ? (() => {
-                          const getPath = (parentId) => {
-                            if (!parentId) return "";
-                            const parent = items.find(i => i.id === parentId);
-                            if (!parent) return "";
-                            const grandPath = getPath(parent.parent_id);
-                            return grandPath ? `${grandPath} > ${parent.name}` : parent.name;
-                          };
-                          return getPath(navItem.parent_id);
-                        })()
-                      : "Root";
-                    
-                    return (
-                      <div 
-                        key={slug}
-                        className="flex items-center justify-between [padding:var(--spacing-2)] bg-white/50 rounded"
-                      >
-                        <div className="flex items-center [gap:var(--spacing-2)] flex-1">
-                          <File className="h-3 w-3 text-muted-foreground" />
-                          <span className="text-sm text-[var(--color-midnight)]">{pageName}</span>
-                        </div>
-                        <div className="flex items-center [gap:var(--spacing-2)]">
-                          {navItem ? (
-                            <>
-                              <Badge variant="outline" className="text-xs">
-                                {parentPath}
-                              </Badge>
-                              <Badge className="text-xs bg-green-50 text-green-700 border-green-200">
-                                Allocated
-                              </Badge>
-                            </>
-                          ) : (
-                            <Badge variant="outline" className="text-xs text-orange-600 border-orange-300">
-                              Not in Navigation
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+              )}
             </div>
           </>
         )}
