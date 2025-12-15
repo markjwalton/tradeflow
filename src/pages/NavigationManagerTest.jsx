@@ -161,13 +161,13 @@ export default function NavigationManagerTest() {
         />
 
         <Tabs defaultValue="system" value={activeTab} onValueChange={setActiveTab} className="mt-4">
-          <TabsList>
+          <TabsList className="gap-1.5">
             <TabsTrigger value="system">System Navigation</TabsTrigger>
             <TabsTrigger value="pages">Site Pages</TabsTrigger>
             <TabsTrigger value="social">Social Links</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="system" className="mt-6">
+          <TabsContent value="system" className="mt-4">
             <Card>
               <CardContent className="p-6">
                 {/* Content cards will go here */}
@@ -175,7 +175,7 @@ export default function NavigationManagerTest() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="pages" className="mt-6">
+          <TabsContent value="pages" className="mt-4">
             <Card>
               <CardContent className="p-6">
                 {/* Content cards will go here */}
@@ -183,7 +183,7 @@ export default function NavigationManagerTest() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="social" className="mt-6">
+          <TabsContent value="social" className="mt-4">
             <Card>
               <CardContent className="p-6">
                 {/* Content cards will go here */}
