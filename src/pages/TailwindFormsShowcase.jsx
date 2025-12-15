@@ -39,6 +39,7 @@ export default function TailwindFormsShowcase() {
       <SelectVariationsSection />
       <SignInFormsSection />
       <TextareaVariationsSection />
+      <RadioGroupVariationsSection />
 
       <TokenReference />
     </div>
@@ -1810,6 +1811,332 @@ function TextareaVariationsSection() {
           <li>• Underline focus: <code className="bg-background px-1 py-0.5 rounded">border-b-2 border-primary</code></li>
           <li>• Issue form with metadata selectors (assignee, labels, due dates)</li>
           <li>• Markdown editor with tabs and toolbar actions</li>
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+function RadioGroupVariationsSection() {
+  const [notification, setNotification] = React.useState('email');
+  const [plan, setPlan] = React.useState('small');
+  const [account, setAccount] = React.useState('checking');
+  const [side, setSide] = React.useState('none');
+  const [pricing, setPricing] = React.useState('startup');
+  const [privacy, setPrivacy] = React.useState('public');
+  const [color, setColor] = React.useState('pink');
+  const [mailingList, setMailingList] = React.useState('newsletter');
+  const [memory, setMemory] = React.useState('16gb');
+  const [serverPlan, setServerPlan] = React.useState('hobby');
+
+  const notificationMethods = [
+    { value: 'email', label: 'Email' },
+    { value: 'sms', label: 'Phone (SMS)' },
+    { value: 'push', label: 'Push notification' },
+  ];
+
+  const plans = [
+    { value: 'small', label: 'Small', description: '4 GB RAM / 2 CPUS / 80 GB SSD Storage' },
+    { value: 'medium', label: 'Medium', description: '8 GB RAM / 4 CPUS / 160 GB SSD Storage' },
+    { value: 'large', label: 'Large', description: '16 GB RAM / 8 CPUS / 320 GB SSD Storage' },
+  ];
+
+  const accounts = [
+    { value: 'checking', label: 'Checking', description: 'CIBC ••••6610' },
+    { value: 'savings', label: 'Savings', description: 'Bank of America ••••0149' },
+    { value: 'mastercard', label: 'Mastercard', description: 'Capital One ••••7877' },
+  ];
+
+  const pricingPlans = [
+    { value: 'startup', label: 'Startup', priceMonthly: '$29', priceYearly: '$290', limit: 'Up to 5 active job postings' },
+    { value: 'business', label: 'Business', priceMonthly: '$99', priceYearly: '$990', limit: 'Up to 25 active job postings' },
+    { value: 'enterprise', label: 'Enterprise', priceMonthly: '$249', priceYearly: '$2490', limit: 'Unlimited active job postings' },
+  ];
+
+  const privacySettings = [
+    { value: 'public', label: 'Public access', description: 'This project would be available to anyone who has the link' },
+    { value: 'private-members', label: 'Private to project members', description: 'Only members of this project would be able to access' },
+    { value: 'private-you', label: 'Private to you', description: 'You are the only one able to access this project' },
+  ];
+
+  const colors = [
+    { value: 'pink', label: 'Pink', class: 'bg-pink-500' },
+    { value: 'purple', label: 'Purple', class: 'bg-purple-500' },
+    { value: 'blue', label: 'Blue', class: 'bg-primary-500' },
+    { value: 'green', label: 'Green', class: 'bg-primary-600' },
+    { value: 'yellow', label: 'Yellow', class: 'bg-secondary-400' },
+  ];
+
+  const mailingLists = [
+    { value: 'newsletter', label: 'Newsletter', description: 'Last message sent an hour ago', users: '621 users' },
+    { value: 'existing', label: 'Existing customers', description: 'Last message sent 2 weeks ago', users: '1200 users' },
+    { value: 'trial', label: 'Trial users', description: 'Last message sent 4 days ago', users: '2740 users' },
+  ];
+
+  const memoryOptions = [
+    { value: '4gb', label: '4 GB', disabled: false },
+    { value: '8gb', label: '8 GB', disabled: false },
+    { value: '16gb', label: '16 GB', disabled: false },
+    { value: '32gb', label: '32 GB', disabled: false },
+    { value: '64gb', label: '64 GB', disabled: false },
+    { value: '128gb', label: '128 GB', disabled: true },
+  ];
+
+  const serverPlans = [
+    { value: 'hobby', label: 'Hobby', ram: '8GB', cpus: '4 CPUs', disk: '160 GB SSD disk', price: '$40' },
+    { value: 'startup', label: 'Startup', ram: '12GB', cpus: '6 CPUs', disk: '256 GB SSD disk', price: '$80' },
+    { value: 'business', label: 'Business', ram: '16GB', cpus: '8 CPUs', disk: '512 GB SSD disk', price: '$160' },
+    { value: 'enterprise', label: 'Enterprise', ram: '32GB', cpus: '12 CPUs', disk: '1024 GB SSD disk', price: '$240' },
+  ];
+
+  return (
+    <section className="space-y-8">
+      <div>
+        <h2 className="text-xl font-display mb-2">Radio Group Variations</h2>
+        <p className="text-sm text-muted-foreground">Different radio button layouts and styles</p>
+      </div>
+
+      <div className="grid gap-8 lg:grid-cols-2">
+        {/* Stacked Vertical */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Stacked Vertical</h3>
+          <RadioGroup value={notification} onValueChange={setNotification}>
+            <Label className="text-sm font-semibold">Notifications</Label>
+            <p className="mt-1 text-sm text-muted-foreground">How do you prefer to receive notifications?</p>
+            <div className="mt-4 space-y-4">
+              {notificationMethods.map((method) => (
+                <div key={method.value} className="flex items-center gap-3">
+                  <RadioGroupItem value={method.value} id={`notif-${method.value}`} />
+                  <Label htmlFor={`notif-${method.value}`} className="text-sm">{method.label}</Label>
+                </div>
+              ))}
+            </div>
+          </RadioGroup>
+        </div>
+
+        {/* Inline Horizontal */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Inline Horizontal</h3>
+          <RadioGroup value={notification} onValueChange={setNotification}>
+            <Label className="text-sm font-semibold">Notifications</Label>
+            <p className="mt-1 text-sm text-muted-foreground">How do you prefer to receive notifications?</p>
+            <div className="mt-4 flex flex-wrap gap-6">
+              {notificationMethods.map((method) => (
+                <div key={method.value} className="flex items-center gap-3">
+                  <RadioGroupItem value={method.value} id={`inline-${method.value}`} />
+                  <Label htmlFor={`inline-${method.value}`} className="text-sm">{method.label}</Label>
+                </div>
+              ))}
+            </div>
+          </RadioGroup>
+        </div>
+
+        {/* With Descriptions */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">With Descriptions</h3>
+          <RadioGroup value={plan} onValueChange={setPlan}>
+            <div className="space-y-4">
+              {plans.map((p) => (
+                <div key={p.value} className="flex items-start gap-3">
+                  <RadioGroupItem value={p.value} id={`plan-${p.value}`} className="mt-1" />
+                  <div className="grid gap-1">
+                    <Label htmlFor={`plan-${p.value}`} className="font-medium">{p.label}</Label>
+                    <p className="text-sm text-muted-foreground">{p.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </RadioGroup>
+        </div>
+
+        {/* Label on Right */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Label on Right</h3>
+          <RadioGroup value={account} onValueChange={setAccount}>
+            <Label className="text-sm font-semibold">Transfer funds</Label>
+            <p className="mt-1 text-sm text-muted-foreground">Transfer your balance to your bank account.</p>
+            <div className="mt-4 divide-y divide-border">
+              {accounts.map((acc) => (
+                <div key={acc.value} className="flex items-start justify-between py-3">
+                  <div className="flex-1">
+                    <Label htmlFor={`acc-${acc.value}`} className="font-medium">{acc.label}</Label>
+                    <p className="text-sm text-muted-foreground">{acc.description}</p>
+                  </div>
+                  <RadioGroupItem value={acc.value} id={`acc-${acc.value}`} className="ml-3" />
+                </div>
+              ))}
+            </div>
+          </RadioGroup>
+        </div>
+
+        {/* Card Layout */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4 lg:col-span-2">
+          <h3 className="text-sm font-medium">Card Layout</h3>
+          <RadioGroup value={privacy} onValueChange={setPrivacy}>
+            <Label className="sr-only">Privacy setting</Label>
+            <div className="grid gap-3">
+              {privacySettings.map((setting) => (
+                <Label
+                  key={setting.value}
+                  htmlFor={`privacy-${setting.value}`}
+                  className="flex items-start gap-3 rounded-lg border-2 border-border p-4 cursor-pointer transition-colors hover:bg-accent data-[state=checked]:border-primary data-[state=checked]:bg-primary/5"
+                  data-state={privacy === setting.value ? 'checked' : 'unchecked'}
+                >
+                  <RadioGroupItem value={setting.value} id={`privacy-${setting.value}`} className="mt-0.5" />
+                  <div className="grid gap-1">
+                    <span className="font-medium">{setting.label}</span>
+                    <span className="text-sm text-muted-foreground">{setting.description}</span>
+                  </div>
+                </Label>
+              ))}
+            </div>
+          </RadioGroup>
+        </div>
+
+        {/* Pricing Table */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4 lg:col-span-2">
+          <h3 className="text-sm font-medium">Pricing Table</h3>
+          <RadioGroup value={pricing} onValueChange={setPricing}>
+            <Label className="sr-only">Pricing plans</Label>
+            <div className="grid gap-0 rounded-lg border border-border overflow-hidden">
+              {pricingPlans.map((p, idx) => (
+                <Label
+                  key={p.value}
+                  htmlFor={`price-${p.value}`}
+                  className="flex items-center gap-3 border-b border-border last:border-b-0 p-4 cursor-pointer transition-colors hover:bg-accent data-[state=checked]:bg-primary/5 md:grid md:grid-cols-3"
+                  data-state={pricing === p.value ? 'checked' : 'unchecked'}
+                >
+                  <span className="flex items-center gap-3">
+                    <RadioGroupItem value={p.value} id={`price-${p.value}`} />
+                    <span className="font-medium">{p.label}</span>
+                  </span>
+                  <span className="ml-9 md:ml-0 md:text-center">
+                    <span className="font-medium">{p.priceMonthly} / mo</span>{' '}
+                    <span className="text-muted-foreground">({p.priceYearly} / yr)</span>
+                  </span>
+                  <span className="ml-9 text-sm text-muted-foreground md:ml-0 md:text-right">{p.limit}</span>
+                </Label>
+              ))}
+            </div>
+          </RadioGroup>
+        </div>
+
+        {/* Color Picker */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Color Picker</h3>
+          <RadioGroup value={color} onValueChange={setColor}>
+            <Label className="text-sm font-semibold">Choose a label color</Label>
+            <div className="mt-4 flex items-center gap-3">
+              {colors.map((c) => (
+                <Label key={c.value} htmlFor={`color-${c.value}`} className="cursor-pointer">
+                  <RadioGroupItem 
+                    value={c.value} 
+                    id={`color-${c.value}`}
+                    className="sr-only"
+                  />
+                  <div className={`h-8 w-8 rounded-full ${c.class} ring-2 ring-offset-2 ${color === c.value ? 'ring-primary' : 'ring-transparent'} transition-all`} />
+                  <span className="sr-only">{c.label}</span>
+                </Label>
+              ))}
+            </div>
+          </RadioGroup>
+        </div>
+
+        {/* Cards with Icons */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4 lg:col-span-2">
+          <h3 className="text-sm font-medium">Cards with Check Icons</h3>
+          <RadioGroup value={mailingList} onValueChange={setMailingList}>
+            <Label className="text-sm font-semibold">Select a mailing list</Label>
+            <div className="mt-4 grid gap-4 sm:grid-cols-3">
+              {mailingLists.map((list) => (
+                <Label
+                  key={list.value}
+                  htmlFor={`list-${list.value}`}
+                  className="relative flex flex-col rounded-lg border-2 border-border p-4 cursor-pointer transition-colors hover:bg-accent data-[state=checked]:border-primary data-[state=checked]:bg-primary/5"
+                  data-state={mailingList === list.value ? 'checked' : 'unchecked'}
+                >
+                  <RadioGroupItem value={list.value} id={`list-${list.value}`} className="sr-only" />
+                  <div className="flex-1">
+                    <span className="font-medium block">{list.label}</span>
+                    <span className="text-sm text-muted-foreground block mt-1">{list.description}</span>
+                    <span className="font-medium block mt-4">{list.users}</span>
+                  </div>
+                  {mailingList === list.value && (
+                    <Check className="absolute top-4 right-4 h-5 w-5 text-primary" />
+                  )}
+                </Label>
+              ))}
+            </div>
+          </RadioGroup>
+        </div>
+
+        {/* Small Buttons */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Small Button Style</h3>
+          <RadioGroup value={memory} onValueChange={setMemory}>
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-semibold">RAM</Label>
+              <a href="#" className="text-sm text-primary hover:underline">
+                See performance specs
+              </a>
+            </div>
+            <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-6">
+              {memoryOptions.map((opt) => (
+                <Label
+                  key={opt.value}
+                  htmlFor={`mem-${opt.value}`}
+                  className="flex items-center justify-center rounded-md border-2 border-border p-3 cursor-pointer transition-colors hover:bg-accent data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground data-[disabled=true]:opacity-50 data-[disabled=true]:cursor-not-allowed"
+                  data-state={memory === opt.value ? 'checked' : 'unchecked'}
+                  data-disabled={opt.disabled}
+                >
+                  <RadioGroupItem value={opt.value} id={`mem-${opt.value}`} disabled={opt.disabled} className="sr-only" />
+                  <span className="text-sm font-medium uppercase">{opt.label}</span>
+                </Label>
+              ))}
+            </div>
+          </RadioGroup>
+        </div>
+
+        {/* Large Cards with Details */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4 lg:col-span-2">
+          <h3 className="text-sm font-medium">Large Cards with Details</h3>
+          <RadioGroup value={serverPlan} onValueChange={setServerPlan}>
+            <Label className="sr-only">Server size</Label>
+            <div className="space-y-4">
+              {serverPlans.map((p) => (
+                <Label
+                  key={p.value}
+                  htmlFor={`server-${p.value}`}
+                  className="flex flex-col sm:flex-row sm:justify-between sm:items-center rounded-lg border-2 border-border p-4 cursor-pointer transition-colors hover:bg-accent data-[state=checked]:border-primary data-[state=checked]:bg-primary/5"
+                  data-state={serverPlan === p.value ? 'checked' : 'unchecked'}
+                >
+                  <RadioGroupItem value={p.value} id={`server-${p.value}`} className="sr-only" />
+                  <span className="flex items-center gap-3">
+                    <span className="flex flex-col">
+                      <span className="font-medium">{p.label}</span>
+                      <span className="text-sm text-muted-foreground">
+                        {p.ram} / {p.cpus} • {p.disk}
+                      </span>
+                    </span>
+                  </span>
+                  <span className="mt-2 sm:mt-0 flex flex-col sm:text-right">
+                    <span className="font-medium">{p.price}</span>
+                    <span className="text-sm text-muted-foreground">/mo</span>
+                  </span>
+                </Label>
+              ))}
+            </div>
+          </RadioGroup>
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+        <p className="font-medium">Design Token Mappings:</p>
+        <ul className="space-y-1 text-muted-foreground">
+          <li>• RadioGroup and RadioGroupItem from Radix UI</li>
+          <li>• Card layouts with <code className="bg-background px-1 py-0.5 rounded">border-2</code> and checked states</li>
+          <li>• Color picker using ring utilities and transitions</li>
+          <li>• Responsive grids with <code className="bg-background px-1 py-0.5 rounded">sm:grid-cols-3</code></li>
         </ul>
       </div>
     </section>
