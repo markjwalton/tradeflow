@@ -521,10 +521,11 @@ export default function Layout({ children, currentPageName }) {
                   console.error("Failed to toggle live edit:", e);
                 }
               }}
-              className="fixed bottom-6 left-6 h-14 w-14 rounded-full shadow-2xl bg-secondary text-white hover:bg-secondary/90 border-2 border-white z-[60]"
+              className="fixed bottom-6 left-6 h-14 w-14 rounded-full shadow-2xl border-2 border-white z-[60]"
+              style={{ backgroundColor: 'rgba(199, 142, 142, 0.9)' }}
               title="Toggle Editor Panel"
             >
-              {editorPanelOpen ? "✕" : <Palette className="h-6 w-6" />}
+              {editorPanelOpen ? "✕" : <Palette className="h-6 w-6 text-white" />}
             </Button>
           )}
         </SidebarProvider>

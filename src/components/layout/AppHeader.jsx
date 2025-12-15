@@ -77,8 +77,7 @@ export function AppHeader({ user, navItems = [], onMobileMenuClick, currentPageN
         </div>
 
         <div className="flex items-center gap-1 sm:gap-2 ml-auto">
-          <PageSearchBar navItems={navItems} />
-          <ProfileMenu user={user} />
+          {/* Search and profile will be added as components */}
         </div>
       </div>
     </header>

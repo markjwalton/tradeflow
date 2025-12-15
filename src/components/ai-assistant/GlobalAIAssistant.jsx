@@ -80,11 +80,11 @@ export default function GlobalAIAssistant() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-2xl bg-[var(--color-accent)] hover:bg-[var(--color-accent-dark)] border-2 border-white"
-            style={{ zIndex: 1050 }}
+            className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-2xl border-2 border-white"
+            style={{ zIndex: 1050, backgroundColor: 'rgba(185, 150, 119, 0.9)' }}
             size="icon"
           >
-            <Sparkles className="h-6 w-6" />
+            <Sparkles className="h-6 w-6 text-white" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="mb-2">
