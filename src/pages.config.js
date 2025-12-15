@@ -113,6 +113,7 @@ import TailwindCalendarShowcase from './pages/TailwindCalendarShowcase';
 import TailwindPeopleListsShowcase from './pages/TailwindPeopleListsShowcase';
 import TailwindTablesShowcase from './pages/TailwindTablesShowcase';
 import TailwindFeedsShowcase from './pages/TailwindFeedsShowcase';
+import TailwindFormsShowcase from './pages/TailwindFormsShowcase';
 import __Layout from './Layout.jsx';
 
 
@@ -232,6 +233,7 @@ export const PAGES = {
     "TailwindPeopleListsShowcase": TailwindPeopleListsShowcase,
     "TailwindTablesShowcase": TailwindTablesShowcase,
     "TailwindFeedsShowcase": TailwindFeedsShowcase,
+    "TailwindFormsShowcase": TailwindFormsShowcase,
 }
 
 export const pagesConfig = {
