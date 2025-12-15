@@ -3748,6 +3748,108 @@ export default function TailwindListsShowcase() {
         </div>
       </section>
 
+      {/* Container Widths */}
+      <section className="space-y-8 mt-12 pt-8 border-t border-border">
+        <div>
+          <h2 className="text-xl font-display mb-2">Container Widths</h2>
+          <p className="text-sm text-muted-foreground">Responsive container patterns for content layout</p>
+        </div>
+
+        {/* Max Width - No Mobile Padding */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Max Width (No Mobile Padding)</h3>
+          <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div className="rounded-lg bg-muted p-6 text-center text-sm text-muted-foreground">
+              Content constrained to max-w-7xl, padding starts at sm breakpoint
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Pattern: <code className="bg-background px-1 py-0.5 rounded">mx-auto max-w-7xl sm:px-6 lg:px-8</code></li>
+              <li>• No mobile padding, adds padding at sm and increases at lg</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Max Width - With Mobile Padding */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Max Width (With Mobile Padding)</h3>
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="rounded-lg bg-muted p-6 text-center text-sm text-muted-foreground">
+              Content constrained to max-w-7xl with px-4 on mobile
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Pattern: <code className="bg-background px-1 py-0.5 rounded">mx-auto max-w-7xl px-4 sm:px-6 lg:px-8</code></li>
+              <li>• Mobile padding ensures content never touches edges</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Container Class - No Mobile Padding */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Container Class (No Mobile Padding)</h3>
+          <div className="container mx-auto sm:px-6 lg:px-8">
+            <div className="rounded-lg bg-muted p-6 text-center text-sm text-muted-foreground">
+              Uses Tailwind's container class with responsive padding
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Pattern: <code className="bg-background px-1 py-0.5 rounded">container mx-auto sm:px-6 lg:px-8</code></li>
+              <li>• Container adapts to breakpoint widths</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Container Class - With Mobile Padding */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Container Class (With Mobile Padding)</h3>
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="rounded-lg bg-muted p-6 text-center text-sm text-muted-foreground">
+              Container with px-4 on mobile for consistent spacing
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Pattern: <code className="bg-background px-1 py-0.5 rounded">container mx-auto px-4 sm:px-6 lg:px-8</code></li>
+              <li>• Most common responsive container pattern</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Nested Constrained Content */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Nested Constrained Content</h3>
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-3xl">
+              <div className="rounded-lg bg-muted p-6 text-center text-sm text-muted-foreground">
+                Outer container max-w-7xl, inner content constrained to max-w-3xl
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Outer: <code className="bg-background px-1 py-0.5 rounded">max-w-7xl px-4 sm:px-6 lg:px-8</code></li>
+              <li>• Inner: <code className="bg-background px-1 py-0.5 rounded">max-w-3xl mx-auto</code></li>
+              <li>• Common for prose/article content</li>
+              <li>• Options: max-w-xl, max-w-2xl, max-w-3xl, max-w-4xl, max-w-5xl</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {/* Token Reference */}
       <section className="space-y-4 mt-12 pt-8 border-t border-border">
         <div>
