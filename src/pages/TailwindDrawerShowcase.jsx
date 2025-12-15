@@ -26,57 +26,37 @@ function DrawerExample() {
       </Button>
 
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent 
-          side="right" 
-          className="w-screen sm:max-w-md flex flex-col divide-y divide-border"
-        >
-          <div className="flex min-h-0 flex-1 flex-col overflow-y-auto py-6">
-            <div className="px-4 sm:px-6">
-              <div className="flex items-start justify-between">
-                <SheetHeader>
-                  <SheetTitle className="text-base font-semibold">Panel title</SheetTitle>
-                </SheetHeader>
-                <SheetClose className="ml-3 flex h-7 items-center">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-6 w-6 rounded-md text-muted-foreground hover:text-foreground"
-                  >
-                    <span className="sr-only">Close panel</span>
-                    <X className="h-6 w-6" />
-                  </Button>
-                </SheetClose>
+        <SheetContent side="right" className="w-screen sm:max-w-md overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>Panel title</SheetTitle>
+          </SheetHeader>
+          
+          <div className="mt-6 space-y-4">
+            <p className="text-sm text-muted-foreground">
+              This is a drawer component converted from Tailwind UI using Radix UI primitives
+              and design tokens.
+            </p>
+            
+            <div className="space-y-3">
+              <div className="rounded-lg border border-border p-4">
+                <h3 className="text-sm font-medium mb-2">Design Tokens Used</h3>
+                <ul className="text-xs text-muted-foreground space-y-1">
+                  <li>• Background: var(--background)</li>
+                  <li>• Foreground: var(--foreground)</li>
+                  <li>• Border: var(--border)</li>
+                  <li>• Muted: var(--muted-foreground)</li>
+                </ul>
               </div>
-            </div>
-            <div className="relative mt-6 flex-1 px-4 sm:px-6">
-              <div className="space-y-4">
-                <p className="text-sm text-muted-foreground">
-                  This is a drawer component converted from Tailwind UI using Radix UI primitives
-                  and design tokens.
+              
+              <div className="rounded-lg bg-muted p-4">
+                <p className="text-xs text-muted-foreground">
+                  Content area - Add your form fields or content here
                 </p>
-                
-                <div className="space-y-3">
-                  <div className="rounded-lg border border-border p-4">
-                    <h3 className="text-sm font-medium mb-2">Design Tokens Used</h3>
-                    <ul className="text-xs text-muted-foreground space-y-1">
-                      <li>• Background: var(--background)</li>
-                      <li>• Foreground: var(--foreground)</li>
-                      <li>• Border: var(--border)</li>
-                      <li>• Muted: var(--muted-foreground)</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="rounded-lg bg-muted p-4">
-                    <p className="text-xs text-muted-foreground">
-                      Content area - Add your form fields or content here
-                    </p>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
           
-          <SheetFooter className="flex shrink-0 justify-end px-4 py-4 gap-3">
+          <SheetFooter className="mt-6 gap-3">
             <Button
               variant="outline"
               onClick={() => setOpen(false)}
