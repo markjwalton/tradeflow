@@ -116,23 +116,13 @@ export default function GenericNavEditor({
   const config = navConfigs[0];
   const rawItems = config?.items || [];
   
-  // Debug RAW items from database
+  // Debug navigation editor state
   console.log('=== GenericNavEditor Debug ===');
   console.log('Config type:', effectiveConfigType);
+  console.log('Config loaded:', !!config);
   console.log('RAW items from DB:', rawItems.length);
-  console.log('First 10 raw items:', rawItems.slice(0, 10).map(i => ({
-    id: i.id,
-    _id: i._id,
-    name: i.name,
-    parent_id: i.parent_id,
-    item_type: i.item_type
-  })));
-  console.log('Items with parent_id:', rawItems.filter(i => i.parent_id).map(i => ({
-    id: i.id,
-    _id: i._id,
-    name: i.name,
-    parent_id: i.parent_id
-  })));
+  console.log('Normalized items:', items.length);
+  console.log('Flat list length:', flatList.length);
   
   // Get slugs from config's source_slugs (no hardcoded fallback)
   const effectiveSlugs = React.useMemo(() => {
@@ -473,6 +463,20 @@ export default function GenericNavEditor({
           <div className="text-center py-8 text-[var(--color-charcoal)]">Loading...</div>
         ) : (
           <>
+            {/* Navigation Items - Show Config Summary */}
+            {config && (
+              <div className="mb-4 p-3 bg-muted/50 rounded-lg border border-border">
+                <div className="text-xs text-muted-foreground space-y-1">
+                  <div>Config Type: <span className="font-mono">{effectiveConfigType}</span></div>
+                  <div>Total Items: <span className="font-semibold">{items.length}</span></div>
+                  <div>Folders: <span className="font-semibold">{items.filter(i => i.item_type === 'folder').length}</span></div>
+                  <div>Pages: <span className="font-semibold">{items.filter(i => i.item_type !== 'folder').length}</span></div>
+                  <div>Root Level: <span className="font-semibold">{items.filter(i => !i.parent_id).length}</span></div>
+                  <div>Nested: <span className="font-semibold">{items.filter(i => i.parent_id).length}</span></div>
+                </div>
+              </div>
+            )}
+
             {/* Navigation Items */}
             {items.length > 0 && (
               <DragDropContext onDragEnd={handleDragEnd}>
