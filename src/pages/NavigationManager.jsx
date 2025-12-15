@@ -365,7 +365,7 @@ export default function NavigationManager() {
 
 
   return (
-    <div className="max-w-4xl mx-auto min-h-screen -mt-6">
+    <div className="min-h-screen -mt-6">
       {isGlobalAdmin ? (
         <>
           <PageHeader 
