@@ -44,6 +44,12 @@ const showcasePages = [
       { name: 'Badges', slug: 'TailwindBadgesShowcase', icon: Tag, description: 'Badge and label patterns' },
       { name: 'Drawers', slug: 'TailwindDrawerShowcase', icon: Layout, description: 'Slide-over panels and drawers' },
     ]
+  },
+  {
+    category: 'E-Commerce',
+    items: [
+      { name: 'Product Layouts', slug: 'TailwindProductShowcase', icon: Code, description: 'Product grids, cards, and detail pages' },
+    ]
   }
 ];
 
