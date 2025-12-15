@@ -314,7 +314,7 @@ export function AppSidebar({ navItems = [] }) {
   return (
     <aside
           className={cn(
-            "hidden lg:flex lg:flex-col text-sidebar-foreground rounded-xl shadow-md transition-[width] duration-300 ease-in-out overflow-visible p-0",
+            "hidden lg:flex lg:flex-col text-sidebar-foreground rounded-xl shadow-md transition-[width] duration-300 ease-in-out overflow-visible [padding:var(--spacing-4)]",
             isHidden && "lg:w-0",
             !isHidden && widthClass
           )}
