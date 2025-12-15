@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PageHeader } from '@/components/sturij/PageHeader';
 import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, ChevronDown, User, Building, Users, CreditCard, Home, Folder, Calendar as CalendarIcon, FileText, BarChart3 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 
 const sampleItems = [
   { id: 1, title: 'First item', description: 'Sample content for demonstration' },
@@ -969,6 +971,252 @@ export default function TailwindListsShowcase() {
         </div>
       </section>
 
+      {/* Full Sidebar Layouts */}
+      <section className="space-y-8 mt-12 pt-8 border-t border-border">
+        <div>
+          <h2 className="text-xl font-display mb-2">Full Sidebar Layouts</h2>
+          <p className="text-sm text-muted-foreground">Complete sidebar navigation with logo, user profile, and sections</p>
+        </div>
+
+        {/* Light Full Sidebar */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Light Theme with Logo & Profile</h3>
+          <div className="relative flex grow flex-col gap-y-5 overflow-y-auto border-r border-border bg-card px-6 h-[600px] rounded-xl">
+            <div className="relative flex h-16 shrink-0 items-center">
+              <div className="h-8 w-8 rounded bg-primary" />
+            </div>
+            <nav className="relative flex flex-1 flex-col">
+              <ul role="list" className="flex flex-1 flex-col gap-y-7">
+                <li>
+                  <ul role="list" className="-mx-2 space-y-1">
+                    <li>
+                      <a href="#" className="bg-accent text-primary group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                        <Home aria-hidden="true" className="text-primary h-6 w-6 shrink-0" />
+                        Dashboard
+                        <Badge variant="secondary" className="ml-auto">5</Badge>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" className="text-foreground hover:bg-accent hover:text-primary group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                        <Users aria-hidden="true" className="text-muted-foreground group-hover:text-primary h-6 w-6 shrink-0" />
+                        Team
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" className="text-foreground hover:bg-accent hover:text-primary group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                        <Folder aria-hidden="true" className="text-muted-foreground group-hover:text-primary h-6 w-6 shrink-0" />
+                        Projects
+                        <Badge variant="secondary" className="ml-auto">12</Badge>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <div className="text-xs font-semibold text-muted-foreground">Your teams</div>
+                  <ul role="list" className="-mx-2 mt-2 space-y-1">
+                    <li>
+                      <a href="#" className="text-foreground hover:bg-accent hover:text-primary group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                        <span className="border-border text-muted-foreground group-hover:border-primary group-hover:text-primary flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-background text-[0.625rem] font-medium">
+                          H
+                        </span>
+                        <span className="truncate">Heroicons</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" className="text-foreground hover:bg-accent hover:text-primary group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                        <span className="border-border text-muted-foreground group-hover:border-primary group-hover:text-primary flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-background text-[0.625rem] font-medium">
+                          T
+                        </span>
+                        <span className="truncate">Tailwind Labs</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <li className="-mx-6 mt-auto">
+                  <a href="#" className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold text-foreground hover:bg-accent">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+                      <AvatarFallback>TC</AvatarFallback>
+                    </Avatar>
+                    <span aria-hidden="true">Tom Cook</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Sidebar bg: <code className="bg-background px-1 py-0.5 rounded">bg-card border-border</code></li>
+              <li>• User profile footer: <code className="bg-background px-1 py-0.5 rounded">mt-auto</code> for bottom positioning</li>
+              <li>• Section headers: <code className="bg-background px-1 py-0.5 rounded">text-muted-foreground text-xs</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Dark Full Sidebar */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Dark Theme</h3>
+          <div className="relative flex grow flex-col gap-y-5 overflow-y-auto bg-midnight-900 px-6 h-[600px] rounded-xl">
+            <div className="relative flex h-16 shrink-0 items-center">
+              <div className="h-8 w-8 rounded bg-primary-400" />
+            </div>
+            <nav className="relative flex flex-1 flex-col">
+              <ul role="list" className="flex flex-1 flex-col gap-y-7">
+                <li>
+                  <ul role="list" className="-mx-2 space-y-1">
+                    <li>
+                      <a href="#" className="bg-white/5 text-white group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                        <Home aria-hidden="true" className="h-6 w-6 shrink-0" />
+                        Dashboard
+                        <span className="ml-auto w-9 min-w-max rounded-full bg-midnight-900 px-2.5 py-0.5 text-center text-xs font-medium whitespace-nowrap text-white ring-1 ring-inset ring-white/15">
+                          5
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" className="text-charcoal-400 hover:bg-white/5 hover:text-white group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                        <Users aria-hidden="true" className="h-6 w-6 shrink-0" />
+                        Team
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" className="text-charcoal-400 hover:bg-white/5 hover:text-white group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                        <Folder aria-hidden="true" className="h-6 w-6 shrink-0" />
+                        Projects
+                        <span className="ml-auto w-9 min-w-max rounded-full bg-midnight-900 px-2.5 py-0.5 text-center text-xs font-medium whitespace-nowrap text-white ring-1 ring-inset ring-white/15">
+                          12
+                        </span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <div className="text-xs font-semibold text-charcoal-400">Your teams</div>
+                  <ul role="list" className="-mx-2 mt-2 space-y-1">
+                    <li>
+                      <a href="#" className="text-charcoal-400 hover:bg-white/5 hover:text-white group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-[0.625rem] font-medium text-charcoal-400 group-hover:border-white/20 group-hover:text-white">
+                          H
+                        </span>
+                        <span className="truncate">Heroicons</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <li className="-mx-6 mt-auto">
+                  <a href="#" className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold text-white hover:bg-white/5">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+                      <AvatarFallback>TC</AvatarFallback>
+                    </Avatar>
+                    <span aria-hidden="true">Tom Cook</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Dark bg: <code className="bg-background px-1 py-0.5 rounded">bg-midnight-900</code></li>
+              <li>• Hover: <code className="bg-background px-1 py-0.5 rounded">hover:bg-white/5</code></li>
+              <li>• Text: <code className="bg-background px-1 py-0.5 rounded">text-white</code> or <code className="bg-background px-1 py-0.5 rounded">text-charcoal-400</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Collapsible Navigation */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Collapsible Sections</h3>
+          <CollapsibleSidebarExample />
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Uses <code className="bg-background px-1 py-0.5 rounded">Collapsible</code> component from shadcn/ui</li>
+              <li>• Chevron rotates: <code className="bg-background px-1 py-0.5 rounded">data-[state=open]:rotate-90</code></li>
+              <li>• Nested items indented with <code className="bg-background px-1 py-0.5 rounded">pl-9</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Colored Sidebar */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Colored Theme (Primary)</h3>
+          <div className="relative flex grow flex-col gap-y-5 overflow-y-auto bg-primary-600 px-6 h-[600px] rounded-xl">
+            <div className="flex h-16 shrink-0 items-center">
+              <div className="h-8 w-8 rounded bg-white" />
+            </div>
+            <nav className="flex flex-1 flex-col">
+              <ul role="list" className="flex flex-1 flex-col gap-y-7">
+                <li>
+                  <ul role="list" className="-mx-2 space-y-1">
+                    <li>
+                      <a href="#" className="bg-primary-700 text-white group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                        <Home aria-hidden="true" className="text-white h-6 w-6 shrink-0" />
+                        Dashboard
+                        <span className="ml-auto w-9 min-w-max rounded-full bg-primary-600 px-2.5 py-0.5 text-center text-xs font-medium whitespace-nowrap text-white ring-1 ring-inset ring-primary-500">
+                          5
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" className="text-primary-200 hover:bg-primary-700 hover:text-white group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                        <Users aria-hidden="true" className="text-primary-200 group-hover:text-white h-6 w-6 shrink-0" />
+                        Team
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" className="text-primary-200 hover:bg-primary-700 hover:text-white group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                        <Folder aria-hidden="true" className="text-primary-200 group-hover:text-white h-6 w-6 shrink-0" />
+                        Projects
+                        <span className="ml-auto w-9 min-w-max rounded-full bg-primary-600 px-2.5 py-0.5 text-center text-xs font-medium whitespace-nowrap text-white ring-1 ring-inset ring-primary-500">
+                          12
+                        </span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <div className="text-xs font-semibold text-primary-200">Your teams</div>
+                  <ul role="list" className="-mx-2 mt-2 space-y-1">
+                    <li>
+                      <a href="#" className="text-primary-200 hover:bg-primary-700 hover:text-white group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-primary-400 bg-primary-500 text-[0.625rem] font-medium text-white">
+                          H
+                        </span>
+                        <span className="truncate">Heroicons</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <li className="-mx-6 mt-auto">
+                  <a href="#" className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold text-white hover:bg-primary-700">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+                      <AvatarFallback>TC</AvatarFallback>
+                    </Avatar>
+                    <span aria-hidden="true">Tom Cook</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Primary bg: <code className="bg-background px-1 py-0.5 rounded">bg-primary-600</code></li>
+              <li>• Active: <code className="bg-background px-1 py-0.5 rounded">bg-primary-700 text-white</code></li>
+              <li>• Text: <code className="bg-background px-1 py-0.5 rounded">text-primary-200</code> for inactive items</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {/* Token Reference */}
       <section className="space-y-4 mt-12 pt-8 border-t border-border">
         <div>
@@ -1005,6 +1253,88 @@ export default function TailwindListsShowcase() {
           </div>
         </div>
       </section>
+    </div>
+  );
+}
+
+function CollapsibleSidebarExample() {
+  const [teamsOpen, setTeamsOpen] = useState(false);
+  const [projectsOpen, setProjectsOpen] = useState(false);
+
+  return (
+    <div className="relative flex grow flex-col gap-y-5 overflow-y-auto border-r border-border bg-card px-6 h-[600px] rounded-xl">
+      <div className="relative flex h-16 shrink-0 items-center">
+        <div className="h-8 w-8 rounded bg-primary" />
+      </div>
+      <nav className="relative flex flex-1 flex-col">
+        <ul role="list" className="flex flex-1 flex-col gap-y-7">
+          <li>
+            <ul role="list" className="-mx-2 space-y-1">
+              <li>
+                <a href="#" className="bg-accent group flex gap-x-3 rounded-md p-2 text-sm font-semibold text-foreground">
+                  <Home aria-hidden="true" className="text-muted-foreground h-6 w-6 shrink-0" />
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <Collapsible open={teamsOpen} onOpenChange={setTeamsOpen}>
+                  <CollapsibleTrigger className="hover:bg-accent group flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold text-foreground">
+                    <Users aria-hidden="true" className="text-muted-foreground h-6 w-6 shrink-0" />
+                    Teams
+                    <ChevronRight aria-hidden="true" className="ml-auto h-5 w-5 shrink-0 text-muted-foreground data-[state=open]:rotate-90 data-[state=open]:text-foreground" />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="mt-1 px-2">
+                    <ul role="list" className="space-y-1">
+                      <li>
+                        <a href="#" className="hover:bg-accent block rounded-md py-2 pr-2 pl-9 text-sm text-foreground">
+                          Engineering
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" className="hover:bg-accent block rounded-md py-2 pr-2 pl-9 text-sm text-foreground">
+                          Human Resources
+                        </a>
+                      </li>
+                    </ul>
+                  </CollapsibleContent>
+                </Collapsible>
+              </li>
+              <li>
+                <Collapsible open={projectsOpen} onOpenChange={setProjectsOpen}>
+                  <CollapsibleTrigger className="hover:bg-accent group flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold text-foreground">
+                    <Folder aria-hidden="true" className="text-muted-foreground h-6 w-6 shrink-0" />
+                    Projects
+                    <ChevronRight aria-hidden="true" className="ml-auto h-5 w-5 shrink-0 text-muted-foreground data-[state=open]:rotate-90 data-[state=open]:text-foreground" />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="mt-1 px-2">
+                    <ul role="list" className="space-y-1">
+                      <li>
+                        <a href="#" className="hover:bg-accent block rounded-md py-2 pr-2 pl-9 text-sm text-foreground">
+                          GraphQL API
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" className="hover:bg-accent block rounded-md py-2 pr-2 pl-9 text-sm text-foreground">
+                          iOS App
+                        </a>
+                      </li>
+                    </ul>
+                  </CollapsibleContent>
+                </Collapsible>
+              </li>
+            </ul>
+          </li>
+          <li className="-mx-6 mt-auto">
+            <a href="#" className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold text-foreground hover:bg-accent">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+                <AvatarFallback>TC</AvatarFallback>
+              </Avatar>
+              <span aria-hidden="true">Tom Cook</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
     </div>
   );
 }
