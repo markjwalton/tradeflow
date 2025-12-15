@@ -2577,6 +2577,377 @@ export default function TailwindListsShowcase() {
         </div>
       </section>
 
+      {/* Avatars */}
+      <section className="space-y-8 mt-12 pt-8 border-t border-border">
+        <div>
+          <h2 className="text-xl font-display mb-2">Avatars</h2>
+          <p className="text-sm text-muted-foreground">Avatar patterns with different sizes and indicators</p>
+        </div>
+
+        {/* Circular Avatars */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Circular Avatars - Size Scale</h3>
+          <div className="flex items-center gap-4">
+            <Avatar className="h-6 w-6">
+              <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+              <AvatarFallback>TC</AvatarFallback>
+            </Avatar>
+            <Avatar className="h-8 w-8">
+              <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+              <AvatarFallback>TC</AvatarFallback>
+            </Avatar>
+            <Avatar className="h-10 w-10">
+              <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+              <AvatarFallback>TC</AvatarFallback>
+            </Avatar>
+            <Avatar className="h-12 w-12">
+              <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+              <AvatarFallback>TC</AvatarFallback>
+            </Avatar>
+            <Avatar className="h-14 w-14">
+              <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+              <AvatarFallback>TC</AvatarFallback>
+            </Avatar>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Sizes: <code className="bg-background px-1 py-0.5 rounded">h-6 h-8 h-10 h-12 h-14</code></li>
+              <li>• Component: <code className="bg-background px-1 py-0.5 rounded">Avatar from shadcn/ui</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Rounded Square Avatars */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Rounded Square Avatars</h3>
+          <div className="flex items-center gap-4">
+            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" className="inline-block h-6 w-6 rounded-md" />
+            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" className="inline-block h-8 w-8 rounded-md" />
+            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" className="inline-block h-10 w-10 rounded-md" />
+            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" className="inline-block h-12 w-12 rounded-md" />
+            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" className="inline-block h-14 w-14 rounded-md" />
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Shape: <code className="bg-background px-1 py-0.5 rounded">rounded-md</code> instead of rounded-full</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Status Indicators - Top Right */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Status Indicator - Top Right</h3>
+          <div className="flex items-center gap-4">
+            <span className="relative inline-block">
+              <Avatar className="h-6 w-6">
+                <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+                <AvatarFallback>TC</AvatarFallback>
+              </Avatar>
+              <span className="absolute top-0 right-0 block h-1.5 w-1.5 rounded-full bg-muted ring-2 ring-card" />
+            </span>
+            <span className="relative inline-block">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+                <AvatarFallback>TC</AvatarFallback>
+              </Avatar>
+              <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-destructive ring-2 ring-card" />
+            </span>
+            <span className="relative inline-block">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+                <AvatarFallback>TC</AvatarFallback>
+              </Avatar>
+              <span className="absolute top-0 right-0 block h-2.5 w-2.5 rounded-full bg-success ring-2 ring-card" />
+            </span>
+            <span className="relative inline-block">
+              <Avatar className="h-12 w-12">
+                <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+                <AvatarFallback>TC</AvatarFallback>
+              </Avatar>
+              <span className="absolute top-0 right-0 block h-3 w-3 rounded-full bg-muted ring-2 ring-card" />
+            </span>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Status: <code className="bg-background px-1 py-0.5 rounded">absolute top-0 right-0</code></li>
+              <li>• Colors: <code className="bg-background px-1 py-0.5 rounded">bg-success bg-destructive bg-muted</code></li>
+              <li>• Ring: <code className="bg-background px-1 py-0.5 rounded">ring-2 ring-card</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Status Indicators - Bottom Right */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Status Indicator - Bottom Right</h3>
+          <div className="flex items-center gap-4">
+            <span className="relative inline-block">
+              <Avatar className="h-6 w-6">
+                <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+                <AvatarFallback>TC</AvatarFallback>
+              </Avatar>
+              <span className="absolute right-0 bottom-0 block h-1.5 w-1.5 rounded-full bg-muted ring-2 ring-card" />
+            </span>
+            <span className="relative inline-block">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+                <AvatarFallback>TC</AvatarFallback>
+              </Avatar>
+              <span className="absolute right-0 bottom-0 block h-2 w-2 rounded-full bg-destructive ring-2 ring-card" />
+            </span>
+            <span className="relative inline-block">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+                <AvatarFallback>TC</AvatarFallback>
+              </Avatar>
+              <span className="absolute right-0 bottom-0 block h-2.5 w-2.5 rounded-full bg-success ring-2 ring-card" />
+            </span>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Position: <code className="bg-background px-1 py-0.5 rounded">absolute right-0 bottom-0</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Rounded Square with Offset Status */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Rounded Square with Offset Status</h3>
+          <div className="flex items-center gap-4">
+            <span className="relative inline-block">
+              <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" className="inline-block h-8 w-8 rounded-md" />
+              <span className="absolute right-0 bottom-0 block translate-x-1/2 translate-y-1/2 transform rounded-full border-2 border-card">
+                <span className="block h-2 w-2 rounded-full bg-destructive" />
+              </span>
+            </span>
+            <span className="relative inline-block">
+              <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" className="inline-block h-10 w-10 rounded-md" />
+              <span className="absolute right-0 bottom-0 block translate-x-1/2 translate-y-1/2 transform rounded-full border-2 border-card">
+                <span className="block h-2.5 w-2.5 rounded-full bg-muted" />
+              </span>
+            </span>
+            <span className="relative inline-block">
+              <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" className="inline-block h-12 w-12 rounded-md" />
+              <span className="absolute right-0 bottom-0 block translate-x-1/2 translate-y-1/2 transform rounded-full border-2 border-card">
+                <span className="block h-3 w-3 rounded-full bg-success" />
+              </span>
+            </span>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Offset: <code className="bg-background px-1 py-0.5 rounded">translate-x-1/2 translate-y-1/2</code></li>
+              <li>• Border: <code className="bg-background px-1 py-0.5 rounded">border-2 border-card</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Placeholder Avatars */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Placeholder Avatars (No Image)</h3>
+          <div className="flex items-center gap-4">
+            <span className="inline-block h-6 w-6 overflow-hidden rounded-full bg-muted">
+              <User className="h-full w-full text-muted-foreground" />
+            </span>
+            <span className="inline-block h-8 w-8 overflow-hidden rounded-full bg-muted">
+              <User className="h-full w-full text-muted-foreground" />
+            </span>
+            <span className="inline-block h-10 w-10 overflow-hidden rounded-full bg-muted">
+              <User className="h-full w-full text-muted-foreground" />
+            </span>
+            <span className="inline-block h-12 w-12 overflow-hidden rounded-full bg-muted">
+              <User className="h-full w-full text-muted-foreground" />
+            </span>
+            <span className="inline-block h-14 w-14 overflow-hidden rounded-full bg-muted">
+              <User className="h-full w-full text-muted-foreground" />
+            </span>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Background: <code className="bg-background px-1 py-0.5 rounded">bg-muted</code></li>
+              <li>• Icon: <code className="bg-background px-1 py-0.5 rounded">User text-muted-foreground</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Initials Avatars */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Initials Avatars</h3>
+          <div className="flex items-center gap-4">
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-charcoal-500">
+              <span className="text-xs font-medium text-white">TW</span>
+            </span>
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-charcoal-500">
+              <span className="text-sm font-medium text-white">TW</span>
+            </span>
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-charcoal-500">
+              <span className="font-medium text-white">TW</span>
+            </span>
+            <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-charcoal-500">
+              <span className="text-lg font-medium text-white">TW</span>
+            </span>
+            <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-charcoal-500">
+              <span className="text-xl font-medium text-white">TW</span>
+            </span>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Background: <code className="bg-background px-1 py-0.5 rounded">bg-charcoal-500</code></li>
+              <li>• Text: <code className="bg-background px-1 py-0.5 rounded">text-white font-medium</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Stacked Avatars */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Stacked Avatars</h3>
+          <div className="space-y-4">
+            <div className="flex -space-x-1 overflow-hidden">
+              <Avatar className="h-6 w-6 ring-2 ring-card">
+                <AvatarImage src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?w=256&h=256&fit=crop" />
+                <AvatarFallback>U1</AvatarFallback>
+              </Avatar>
+              <Avatar className="h-6 w-6 ring-2 ring-card">
+                <AvatarImage src="https://images.unsplash.com/photo-1550525811-e5869dd03032?w=256&h=256&fit=crop" />
+                <AvatarFallback>U2</AvatarFallback>
+              </Avatar>
+              <Avatar className="h-6 w-6 ring-2 ring-card">
+                <AvatarImage src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=256&h=256&fit=crop" />
+                <AvatarFallback>U3</AvatarFallback>
+              </Avatar>
+              <Avatar className="h-6 w-6 ring-2 ring-card">
+                <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+                <AvatarFallback>U4</AvatarFallback>
+              </Avatar>
+            </div>
+            <div className="flex -space-x-2 overflow-hidden">
+              <Avatar className="h-8 w-8 ring-2 ring-card">
+                <AvatarImage src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?w=256&h=256&fit=crop" />
+                <AvatarFallback>U1</AvatarFallback>
+              </Avatar>
+              <Avatar className="h-8 w-8 ring-2 ring-card">
+                <AvatarImage src="https://images.unsplash.com/photo-1550525811-e5869dd03032?w=256&h=256&fit=crop" />
+                <AvatarFallback>U2</AvatarFallback>
+              </Avatar>
+              <Avatar className="h-8 w-8 ring-2 ring-card">
+                <AvatarImage src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=256&h=256&fit=crop" />
+                <AvatarFallback>U3</AvatarFallback>
+              </Avatar>
+              <Avatar className="h-8 w-8 ring-2 ring-card">
+                <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+                <AvatarFallback>U4</AvatarFallback>
+              </Avatar>
+            </div>
+            <div className="flex -space-x-2 overflow-hidden">
+              <Avatar className="h-10 w-10 ring-2 ring-card">
+                <AvatarImage src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?w=256&h=256&fit=crop" />
+                <AvatarFallback>U1</AvatarFallback>
+              </Avatar>
+              <Avatar className="h-10 w-10 ring-2 ring-card">
+                <AvatarImage src="https://images.unsplash.com/photo-1550525811-e5869dd03032?w=256&h=256&fit=crop" />
+                <AvatarFallback>U2</AvatarFallback>
+              </Avatar>
+              <Avatar className="h-10 w-10 ring-2 ring-card">
+                <AvatarImage src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=256&h=256&fit=crop" />
+                <AvatarFallback>U3</AvatarFallback>
+              </Avatar>
+              <Avatar className="h-10 w-10 ring-2 ring-card">
+                <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+                <AvatarFallback>U4</AvatarFallback>
+              </Avatar>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Overlap: <code className="bg-background px-1 py-0.5 rounded">-space-x-1 -space-x-2</code></li>
+              <li>• Ring: <code className="bg-background px-1 py-0.5 rounded">ring-2 ring-card</code> for separation</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Stacked with Z-index */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Stacked with Z-index</h3>
+          <div className="space-y-4">
+            <div className="isolate flex -space-x-1 overflow-hidden">
+              <Avatar className="relative z-30 h-6 w-6 ring-2 ring-card">
+                <AvatarImage src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?w=256&h=256&fit=crop" />
+              </Avatar>
+              <Avatar className="relative z-20 h-6 w-6 ring-2 ring-card">
+                <AvatarImage src="https://images.unsplash.com/photo-1550525811-e5869dd03032?w=256&h=256&fit=crop" />
+              </Avatar>
+              <Avatar className="relative z-10 h-6 w-6 ring-2 ring-card">
+                <AvatarImage src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=256&h=256&fit=crop" />
+              </Avatar>
+              <Avatar className="relative z-0 h-6 w-6 ring-2 ring-card">
+                <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+              </Avatar>
+            </div>
+            <div className="isolate flex -space-x-2 overflow-hidden">
+              <Avatar className="relative z-30 h-10 w-10 ring-2 ring-card">
+                <AvatarImage src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?w=256&h=256&fit=crop" />
+              </Avatar>
+              <Avatar className="relative z-20 h-10 w-10 ring-2 ring-card">
+                <AvatarImage src="https://images.unsplash.com/photo-1550525811-e5869dd03032?w=256&h=256&fit=crop" />
+              </Avatar>
+              <Avatar className="relative z-10 h-10 w-10 ring-2 ring-card">
+                <AvatarImage src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=256&h=256&fit=crop" />
+              </Avatar>
+              <Avatar className="relative z-0 h-10 w-10 ring-2 ring-card">
+                <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+              </Avatar>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Isolation: <code className="bg-background px-1 py-0.5 rounded">isolate</code> on container</li>
+              <li>• Stacking: <code className="bg-background px-1 py-0.5 rounded">z-30 z-20 z-10 z-0</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Avatar with Text */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Avatar with Text Link</h3>
+          <a href="#" className="group block shrink-0">
+            <div className="flex items-center">
+              <Avatar className="h-9 w-9">
+                <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop" />
+                <AvatarFallback>TC</AvatarFallback>
+              </Avatar>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-muted-foreground group-hover:text-foreground">Tom Cook</p>
+                <p className="text-xs font-medium text-muted-foreground/60 group-hover:text-muted-foreground">View profile</p>
+              </div>
+            </div>
+          </a>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Hover: <code className="bg-background px-1 py-0.5 rounded">group-hover:text-foreground</code></li>
+              <li>• Secondary text: <code className="bg-background px-1 py-0.5 rounded">text-muted-foreground/60</code></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {/* Token Reference */}
       <section className="space-y-4 mt-12 pt-8 border-t border-border">
         <div>
