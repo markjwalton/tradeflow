@@ -314,10 +314,11 @@ export function AppSidebar({ navItems = [] }) {
   return (
     <aside
           className={cn(
-            "hidden lg:flex lg:flex-col bg-card text-sidebar-foreground rounded-xl shadow-md transition-[width] duration-300 ease-in-out overflow-visible p-0",
+            "hidden lg:flex lg:flex-col text-sidebar-foreground rounded-xl shadow-md transition-[width] duration-300 ease-in-out overflow-visible p-0",
             isHidden && "lg:w-0",
             !isHidden && widthClass
           )}
+          style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}
         >
         {mode !== "hidden" && (
           <TooltipProvider delayDuration={300}>
