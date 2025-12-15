@@ -40,6 +40,7 @@ export default function TailwindFormsShowcase() {
       <SignInFormsSection />
       <TextareaVariationsSection />
       <RadioGroupVariationsSection />
+      <CheckboxVariationsSection />
 
       <TokenReference />
     </div>
@@ -2137,6 +2138,210 @@ function RadioGroupVariationsSection() {
           <li>• Card layouts with <code className="bg-background px-1 py-0.5 rounded">border-2</code> and checked states</li>
           <li>• Color picker using ring utilities and transitions</li>
           <li>• Responsive grids with <code className="bg-background px-1 py-0.5 rounded">sm:grid-cols-3</code></li>
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+function CheckboxVariationsSection() {
+  const [notifications, setNotifications] = React.useState({
+    comments: true,
+    candidates: false,
+    offers: false,
+  });
+
+  const [members, setMembers] = React.useState({
+    annette: true,
+    cody: true,
+    courtney: false,
+    kathryn: false,
+    theresa: false,
+  });
+
+  const notificationOptions = [
+    { value: 'comments', label: 'Comments', description: 'Get notified when someones posts a comment on a posting.' },
+    { value: 'candidates', label: 'Candidates', description: 'Get notified when a candidate applies for a job.' },
+    { value: 'offers', label: 'Offers', description: 'Get notified when a candidate accepts or rejects an offer.' },
+  ];
+
+  const membersList = [
+    { value: 'annette', label: 'Annette Black' },
+    { value: 'cody', label: 'Cody Fisher' },
+    { value: 'courtney', label: 'Courtney Henry' },
+    { value: 'kathryn', label: 'Kathryn Murphy' },
+    { value: 'theresa', label: 'Theresa Webb' },
+  ];
+
+  return (
+    <section className="space-y-8">
+      <div>
+        <h2 className="text-xl font-display mb-2">Checkbox Variations</h2>
+        <p className="text-sm text-muted-foreground">Different checkbox layouts and styles</p>
+      </div>
+
+      <div className="grid gap-8 lg:grid-cols-2">
+        {/* Vertical with Descriptions */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Vertical with Descriptions</h3>
+          <fieldset>
+            <legend className="sr-only">Notifications</legend>
+            <div className="space-y-5">
+              {notificationOptions.map((option) => (
+                <div key={option.value} className="flex gap-3">
+                  <div className="flex h-6 shrink-0 items-center">
+                    <Checkbox
+                      id={`notif-${option.value}`}
+                      checked={notifications[option.value]}
+                      onCheckedChange={(checked) => 
+                        setNotifications({ ...notifications, [option.value]: checked })
+                      }
+                    />
+                  </div>
+                  <div className="text-sm">
+                    <Label htmlFor={`notif-${option.value}`} className="font-medium">
+                      {option.label}
+                    </Label>
+                    <p className="text-muted-foreground">{option.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </fieldset>
+        </div>
+
+        {/* Inline Description */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Inline Description</h3>
+          <fieldset>
+            <legend className="sr-only">Notifications</legend>
+            <div className="space-y-5">
+              <div className="flex gap-3">
+                <div className="flex h-6 shrink-0 items-center">
+                  <Checkbox
+                    id="comments-inline"
+                    checked={notifications.comments}
+                    onCheckedChange={(checked) => 
+                      setNotifications({ ...notifications, comments: checked })
+                    }
+                  />
+                </div>
+                <div className="text-sm">
+                  <Label htmlFor="comments-inline" className="font-medium">
+                    New comments{' '}
+                  </Label>
+                  <span className="text-muted-foreground">
+                    so you always know what's happening.
+                  </span>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <div className="flex h-6 shrink-0 items-center">
+                  <Checkbox
+                    id="candidates-inline"
+                    checked={notifications.candidates}
+                    onCheckedChange={(checked) => 
+                      setNotifications({ ...notifications, candidates: checked })
+                    }
+                  />
+                </div>
+                <div className="text-sm">
+                  <Label htmlFor="candidates-inline" className="font-medium">
+                    New candidates{' '}
+                  </Label>
+                  <span className="text-muted-foreground">
+                    who apply for any open postings.
+                  </span>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <div className="flex h-6 shrink-0 items-center">
+                  <Checkbox
+                    id="offers-inline"
+                    checked={notifications.offers}
+                    onCheckedChange={(checked) => 
+                      setNotifications({ ...notifications, offers: checked })
+                    }
+                  />
+                </div>
+                <div className="text-sm">
+                  <Label htmlFor="offers-inline" className="font-medium">
+                    Offers{' '}
+                  </Label>
+                  <span className="text-muted-foreground">
+                    when they are accepted or rejected by candidates.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+
+        {/* Label on Right */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4 lg:col-span-2">
+          <h3 className="text-sm font-medium">Label on Right</h3>
+          <fieldset>
+            <legend className="text-base font-semibold">Members</legend>
+            <div className="mt-4 divide-y divide-border border-t border-b border-border">
+              {membersList.map((member) => (
+                <div key={member.value} className="flex gap-3 py-4">
+                  <div className="flex-1 text-sm">
+                    <Label htmlFor={`member-${member.value}`} className="font-medium">
+                      {member.label}
+                    </Label>
+                  </div>
+                  <div className="flex h-6 shrink-0 items-center">
+                    <Checkbox
+                      id={`member-${member.value}`}
+                      checked={members[member.value]}
+                      onCheckedChange={(checked) => 
+                        setMembers({ ...members, [member.value]: checked })
+                      }
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </fieldset>
+        </div>
+
+        {/* With Dividers */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4 lg:col-span-2">
+          <h3 className="text-sm font-medium">With Dividers</h3>
+          <fieldset className="border-t border-b border-border">
+            <legend className="sr-only">Notifications</legend>
+            <div className="divide-y divide-border">
+              {notificationOptions.map((option) => (
+                <div key={option.value} className="flex gap-3 py-4">
+                  <div className="flex-1 text-sm">
+                    <Label htmlFor={`div-${option.value}`} className="font-medium">
+                      {option.label}
+                    </Label>
+                    <p className="text-muted-foreground">{option.description}</p>
+                  </div>
+                  <div className="flex h-6 shrink-0 items-center">
+                    <Checkbox
+                      id={`div-${option.value}`}
+                      checked={notifications[option.value]}
+                      onCheckedChange={(checked) => 
+                        setNotifications({ ...notifications, [option.value]: checked })
+                      }
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </fieldset>
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+        <p className="font-medium">Design Token Mappings:</p>
+        <ul className="space-y-1 text-muted-foreground">
+          <li>• Checkbox component from Radix UI with accessible markup</li>
+          <li>• Dividers with <code className="bg-background px-1 py-0.5 rounded">divide-y divide-border</code></li>
+          <li>• Label positioning: flex with gap-3 for spacing</li>
+          <li>• Inline descriptions combine label + muted text</li>
         </ul>
       </div>
     </section>
