@@ -5,8 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Palette, ChevronDown, Search } from "lucide-react";
+import { Palette, ChevronDown, Search, Save, Edit2, Check } from "lucide-react";
 import { toast } from "sonner";
+import { base44 } from "@/api/base44Client";
 
 export function StyleEditorPanel({ currentPageName }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,6 +15,9 @@ export function StyleEditorPanel({ currentPageName }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [openSections, setOpenSections] = useState({});
   const [elementStyles, setElementStyles] = useState({});
+  const [friendlyNames, setFriendlyNames] = useState({});
+  const [editingName, setEditingName] = useState(null);
+  const [tempName, setTempName] = useState("");
 
   const styleOptions = {
     backgroundColor: [
@@ -96,9 +100,55 @@ export function StyleEditorPanel({ currentPageName }) {
 
   useEffect(() => {
     if (isOpen) {
+      loadSavedMappings();
       extractPageElements();
     }
   }, [isOpen]);
+
+  const loadSavedMappings = async () => {
+    try {
+      const user = await base44.auth.me();
+      if (user?.style_editor_mappings) {
+        setFriendlyNames(user.style_editor_mappings);
+      }
+    } catch (e) {
+      console.error("Failed to load mappings:", e);
+    }
+  };
+
+  const saveMappings = async () => {
+    try {
+      const user = await base44.auth.me();
+      await base44.auth.updateMe({
+        style_editor_mappings: friendlyNames
+      });
+      toast.success("Mappings saved successfully");
+    } catch (e) {
+      toast.error("Failed to save mappings");
+      console.error(e);
+    }
+  };
+
+  const generateElementKey = (element) => {
+    return `${element.tagName}::${element.classes}`;
+  };
+
+  const startEditingName = (elementId, currentKey) => {
+    setEditingName(elementId);
+    setTempName(friendlyNames[currentKey] || "");
+  };
+
+  const saveFriendlyName = (elementKey) => {
+    if (tempName.trim()) {
+      setFriendlyNames(prev => ({
+        ...prev,
+        [elementKey]: tempName.trim()
+      }));
+      toast.success("Friendly name updated");
+    }
+    setEditingName(null);
+    setTempName("");
+  };
 
   const extractPageElements = () => {
     const container = document.querySelector('[data-page-content]');
@@ -111,13 +161,16 @@ export function StyleEditorPanel({ currentPageName }) {
       const tagName = el.tagName.toLowerCase();
       const classList = Array.from(el.classList).join(' ');
       const id = el.id || `element-${idx}`;
+      const elementKey = `${tagName}::${classList}`;
       
       elements.push({
         id,
         tagName,
         classes: classList,
+        elementKey,
         element: el,
         text: el.textContent?.substring(0, 50) || '',
+        friendlyName: friendlyNames[elementKey] || null,
       });
     });
 
@@ -171,13 +224,21 @@ export function StyleEditorPanel({ currentPageName }) {
 
       <SheetContent className="w-[600px] overflow-y-auto [&_[role=dialog]]:z-[100000]" side="right">
         <SheetHeader className="px-6 pb-4 border-b">
-          <SheetTitle className="flex items-center gap-2 text-xl">
-            <Palette className="h-5 w-5" />
-            Style Editor
-          </SheetTitle>
-          <p className="text-sm text-muted-foreground">
-            Apply styles to any element on this page
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <SheetTitle className="flex items-center gap-2 text-xl">
+                <Palette className="h-5 w-5" />
+                Style Editor
+              </SheetTitle>
+              <p className="text-sm text-muted-foreground">
+                Apply styles to any element on this page
+              </p>
+            </div>
+            <Button onClick={saveMappings} size="sm" variant="outline">
+              <Save className="h-4 w-4 mr-2" />
+              Save Mappings
+            </Button>
+          </div>
         </SheetHeader>
 
         <div className="px-6 py-4 border-b">
@@ -205,18 +266,74 @@ export function StyleEditorPanel({ currentPageName }) {
               <div className="border rounded-lg overflow-hidden">
                 <CollapsibleTrigger className="w-full px-4 py-3 flex items-center justify-between hover:bg-muted/50 transition-colors">
                   <div className="flex-1 text-left">
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-sm font-medium">&lt;{element.tagName}&gt;</span>
-                      {element.classes && (
-                        <span className="text-xs text-muted-foreground">
-                          {element.classes.substring(0, 30)}
-                        </span>
-                      )}
-                    </div>
-                    {element.text && (
-                      <p className="text-xs text-muted-foreground mt-1 truncate">
-                        {element.text}
-                      </p>
+                    {editingName === element.id ? (
+                      <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                        <Input
+                          value={tempName}
+                          onChange={(e) => setTempName(e.target.value)}
+                          placeholder="Enter friendly name..."
+                          className="h-8 text-sm"
+                          autoFocus
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') saveFriendlyName(element.elementKey);
+                            if (e.key === 'Escape') setEditingName(null);
+                          }}
+                        />
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          onClick={() => saveFriendlyName(element.elementKey)}
+                          className="h-8 px-2"
+                        >
+                          <Check className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="flex items-center gap-2">
+                          {element.friendlyName ? (
+                            <>
+                              <span className="font-medium text-sm">{element.friendlyName}</span>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  startEditingName(element.id, element.elementKey);
+                                }}
+                                className="h-6 px-2"
+                              >
+                                <Edit2 className="h-3 w-3" />
+                              </Button>
+                            </>
+                          ) : (
+                            <>
+                              <span className="font-mono text-sm font-medium">&lt;{element.tagName}&gt;</span>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  startEditingName(element.id, element.elementKey);
+                                }}
+                                className="h-6 px-2"
+                              >
+                                <Edit2 className="h-3 w-3" />
+                              </Button>
+                            </>
+                          )}
+                          {element.classes && (
+                            <span className="text-xs text-muted-foreground">
+                              {element.classes.substring(0, 30)}
+                            </span>
+                          )}
+                        </div>
+                        {element.text && (
+                          <p className="text-xs text-muted-foreground mt-1 truncate">
+                            {element.text}
+                          </p>
+                        )}
+                      </>
                     )}
                   </div>
                   <ChevronDown
