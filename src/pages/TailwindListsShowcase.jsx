@@ -4543,6 +4543,163 @@ export default function TailwindListsShowcase() {
             </ul>
           </div>
         </div>
+
+        {/* Settings Page Layout */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Settings Page with Forms</h3>
+          <div className="rounded-lg border border-border overflow-hidden bg-background" style={{ height: '600px' }}>
+            <div className="flex h-full">
+              {/* Sidebar */}
+              <div className="w-56 border-r border-border bg-muted/30 flex flex-col">
+                <div className="h-16 flex items-center px-4 border-b border-border">
+                  <div className="h-8 w-8 rounded bg-primary-500" />
+                </div>
+                <nav className="flex-1 px-3 py-4 space-y-1">
+                  {['Projects', 'Deployments', 'Activity', 'Domains', 'Usage', 'Settings'].map((item, i) => (
+                    <div
+                      key={item}
+                      className={`px-3 py-2 rounded-md text-sm ${
+                        i === 5 ? 'bg-primary-100 text-primary-700 font-medium' : 'text-muted-foreground hover:bg-muted'
+                      }`}
+                    >
+                      {item}
+                    </div>
+                  ))}
+                </nav>
+              </div>
+
+              {/* Main Content */}
+              <div className="flex-1 flex flex-col overflow-hidden">
+                {/* Sticky Search Header */}
+                <div className="h-16 border-b border-border px-6 flex items-center bg-background">
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    className="flex-1 bg-transparent text-sm outline-none"
+                  />
+                </div>
+
+                {/* Secondary Navigation */}
+                <div className="border-b border-border px-6 py-4 bg-background">
+                  <div className="flex gap-6 text-sm font-medium">
+                    {['Account', 'Notifications', 'Billing', 'Teams', 'Integrations'].map((item, i) => (
+                      <a
+                        key={item}
+                        href="#"
+                        className={i === 0 ? 'text-primary-600' : 'text-muted-foreground hover:text-foreground'}
+                      >
+                        {item}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Settings Forms */}
+                <div className="flex-1 overflow-y-auto">
+                  <div className="divide-y divide-border">
+                    {/* Personal Information Section */}
+                    <div className="grid grid-cols-3 gap-8 px-6 py-8">
+                      <div>
+                        <h3 className="text-base font-semibold">Personal Information</h3>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          Use a permanent address where you can receive mail.
+                        </p>
+                      </div>
+                      <div className="col-span-2 space-y-6">
+                        <div className="flex items-center gap-4">
+                          <div className="h-16 w-16 rounded-lg bg-muted" />
+                          <div>
+                            <Button variant="outline" size="sm">Change avatar</Button>
+                            <p className="mt-1 text-xs text-muted-foreground">JPG, GIF or PNG. 1MB max.</p>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium mb-2">First name</label>
+                            <input
+                              type="text"
+                              className="w-full px-3 py-2 rounded-md border border-border text-sm"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium mb-2">Last name</label>
+                            <input
+                              type="text"
+                              className="w-full px-3 py-2 rounded-md border border-border text-sm"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium mb-2">Email address</label>
+                          <input
+                            type="email"
+                            className="w-full px-3 py-2 rounded-md border border-border text-sm"
+                          />
+                        </div>
+                        <div className="mt-6">
+                          <Button size="sm" className="bg-primary-600 text-white">Save</Button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Change Password Section */}
+                    <div className="grid grid-cols-3 gap-8 px-6 py-8">
+                      <div>
+                        <h3 className="text-base font-semibold">Change password</h3>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          Update your password associated with your account.
+                        </p>
+                      </div>
+                      <div className="col-span-2 space-y-6">
+                        <div>
+                          <label className="block text-sm font-medium mb-2">Current password</label>
+                          <input
+                            type="password"
+                            className="w-full px-3 py-2 rounded-md border border-border text-sm"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium mb-2">New password</label>
+                          <input
+                            type="password"
+                            className="w-full px-3 py-2 rounded-md border border-border text-sm"
+                          />
+                        </div>
+                        <div className="mt-6">
+                          <Button size="sm" className="bg-primary-600 text-white">Save</Button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Delete Account Section */}
+                    <div className="grid grid-cols-3 gap-8 px-6 py-8">
+                      <div>
+                        <h3 className="text-base font-semibold">Delete account</h3>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          No longer want to use our service? You can delete your account here.
+                        </p>
+                      </div>
+                      <div className="col-span-2">
+                        <Button variant="destructive" size="sm">Yes, delete my account</Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Layout: <code className="bg-background px-1 py-0.5 rounded">grid grid-cols-3 gap-8</code> for side-by-side sections</li>
+              <li>• Description Column: <code className="bg-background px-1 py-0.5 rounded">col-span-1</code> (1/3 width)</li>
+              <li>• Form Column: <code className="bg-background px-1 py-0.5 rounded">col-span-2</code> (2/3 width)</li>
+              <li>• Dividers: <code className="bg-background px-1 py-0.5 rounded">divide-y divide-border</code> between sections</li>
+              <li>• Secondary Nav: <code className="bg-background px-1 py-0.5 rounded">border-b</code> for tab-like appearance</li>
+            </ul>
+          </div>
+        </div>
       </section>
 
       {/* Token Reference */}
