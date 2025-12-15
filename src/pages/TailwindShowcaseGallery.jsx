@@ -72,9 +72,9 @@ export default function TailwindShowcaseGallery() {
                       <Icon className="h-5 w-5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-sm font-semibold text-foreground group-hover:text-primary-600 transition-colors">
+                      <h2 className="text-sm font-semibold text-foreground group-hover:text-primary-600 transition-colors">
                         {page.name}
-                      </h3>
+                      </h2>
                       <p className="mt-1 text-xs text-muted-foreground line-clamp-2">
                         {page.description}
                       </p>
