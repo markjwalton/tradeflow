@@ -229,19 +229,20 @@ export function AppSidebar({ navItems = [] }) {
       
       // Expanded mode - folders are expandable
       return (
-        <div key={item.id} className={isExpanded && showLabels ? "[border-radius:var(--radius-lg)] [margin-bottom:var(--spacing-1)]" : ""} style={isExpanded && showLabels ? { backgroundColor: 'oklch(0.990 0.007 83.1 / 0.8)' } : {}}>
+        <div key={item.id} className={isExpanded && showLabels ? "[border-radius:var(--radius-lg)] [margin-bottom:var(--spacing-1)]" : ""} style={isExpanded && showLabels ? { backgroundColor: 'oklch(0.990 0.007 83.1 / 0.8)', backgroundColor: 'rgba(252, 251, 250, 0.8)' } : {}}>
           <button
             onClick={(e) => toggleFolder(item.id, e)}
             className={cn(
               "w-full flex items-center transition-colors hover:text-sidebar-foreground",
-              "[gap:var(--spacing-3)] [padding-left:var(--spacing-3)] [padding-right:var(--spacing-3)] [padding-top:var(--spacing-2)] [padding-bottom:var(--spacing-2)] [border-radius:var(--radius-lg)]",
-              childActive ? "text-sidebar-foreground" : "text-sidebar-foreground/70",
-              isExpanded && "text-sidebar-foreground"
+              "[gap:var(--spacing-3)] [padding-left:var(--spacing-3)] [padding-right:var(--spacing-3)] [padding-top:var(--spacing-2)] [padding-bottom:var(--spacing-2)] [border-radius:var(--radius-lg)]"
             )}
             style={{
               backgroundColor: 'transparent',
             }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'oklch(0.990 0.007 83.1 / 0.9)'}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'oklch(0.990 0.007 83.1 / 0.9)';
+              e.currentTarget.style.backgroundColor = 'rgba(252, 251, 250, 0.9)';
+            }}
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
           >
             {hasChildren && (
@@ -251,7 +252,7 @@ export function AppSidebar({ navItems = [] }) {
             <span className={cn("flex-1 text-left", !item.parent_id && "font-medium")}>{item.name || 'Unnamed'}</span>
           </button>
           {isExpanded && hasChildren && (
-            <div className="[padding-bottom:var(--spacing-2)] [gap:var(--spacing-1)] [padding-left:var(--spacing-3)] flex flex-col" style={{ backgroundColor: 'oklch(0.990 0.007 83.1 / 0.7)' }}>
+            <div className="[padding-bottom:var(--spacing-2)] [gap:var(--spacing-1)] [padding-left:var(--spacing-3)] flex flex-col" style={{ backgroundColor: 'oklch(0.990 0.007 83.1 / 0.7)', backgroundColor: 'rgba(252, 251, 250, 0.7)' }}>
               {item.children.map((child) => renderNavItem(child, true, false))}
             </div>
           )}
