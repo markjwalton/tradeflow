@@ -193,7 +193,7 @@ Format as JSON:
     <>
       <StyleInspectorOverlay onElementSelect={handleElementSelect} />
       
-      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <Sheet open={isOpen} onOpenChange={setIsOpen} modal={false}>
         <SheetTrigger asChild>
           <Button
             variant="ghost"

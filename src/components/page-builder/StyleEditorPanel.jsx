@@ -156,7 +156,7 @@ export function StyleEditorPanel({ currentPageName }) {
   });
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+    <Sheet open={isOpen} onOpenChange={setIsOpen} modal={false}>
       <SheetTrigger asChild>
         <Button
           variant="ghost"

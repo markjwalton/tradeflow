@@ -217,7 +217,7 @@ export function PageSettingsPanel({ currentPageName }) {
   if (!isVisible) return null;
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+    <Sheet open={isOpen} onOpenChange={setIsOpen} modal={false}>
       <SheetTrigger asChild>
         <Button
           variant="ghost"

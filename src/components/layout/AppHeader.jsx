@@ -249,7 +249,7 @@ function ProfileMenu({ user }) {
           <ChevronDown className="w-3 h-3 ml-1 hidden md:inline" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[calc(100vw-2rem)] sm:w-72">
+      <DropdownMenuContent align="end" className="w-[calc(100vw-2rem)] sm:w-72" style={{ zIndex: 99999 }}>
         <DropdownMenuLabel>{user.full_name || user.email}</DropdownMenuLabel>
         <DropdownMenuItem disabled className="text-[11px]">
           {user.email}
