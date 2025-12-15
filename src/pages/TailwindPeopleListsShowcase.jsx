@@ -26,35 +26,27 @@ export default function TailwindPeopleListsShowcase() {
         </Link>
       </PageHeader>
 
-      {/* Simple People List */}
-      <SimplePeopleListExample />
+      <ShowcaseSection title="People Lists" defaultOpen={true}>
+        <SimplePeopleListExample />
+        <ClickableChevronExample />
+        <WithActionMenuExample />
+        <InCardContainerExample />
+        <SimpleDirectoryExample />
+      </ShowcaseSection>
 
-      {/* Clickable with Chevron */}
-      <ClickableChevronExample />
+      <ShowcaseSection title="Project & Status Lists" defaultOpen={false}>
+        <ProjectsWithStatusExample />
+      </ShowcaseSection>
 
-      {/* With Action Menu */}
-      <WithActionMenuExample />
+      <ShowcaseSection title="Activity Feeds" defaultOpen={false}>
+        <DiscussionListExample />
+        <CommentsFeedExample />
+        <ActivityFeedExample />
+      </ShowcaseSection>
 
-      {/* Projects with Status */}
-      <ProjectsWithStatusExample />
-
-      {/* In Card Container */}
-      <InCardContainerExample />
-
-      {/* Discussion List */}
-      <DiscussionListExample />
-
-      {/* Simple Directory */}
-      <SimpleDirectoryExample />
-
-      {/* Comments Feed */}
-      <CommentsFeedExample />
-
-      {/* Activity Feed */}
-      <ActivityFeedExample />
-
-      {/* Token Reference */}
-      <TokenReference />
+      <ShowcaseSection title="Design System Reference" defaultOpen={false}>
+        <TokenReference />
+      </ShowcaseSection>
     </div>
   );
 }

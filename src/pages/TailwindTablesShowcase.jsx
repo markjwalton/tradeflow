@@ -27,19 +27,29 @@ export default function TailwindTablesShowcase() {
         </Link>
       </PageHeader>
 
-      <SimpleTableExample />
-      <CardTableExample />
-      <StripedTableExample />
-      <StackedTableExample />
-      <SortableTableExample />
-      <GroupedTableExample />
-      <InvoiceTableExample />
-      <StickyHeaderTableExample />
-      <GridCardsExample />
-      <ContactCardsExample />
-      <ActionTilesExample />
+      <ShowcaseSection title="Basic Tables" defaultOpen={true}>
+        <SimpleTableExample />
+        <CardTableExample />
+        <StripedTableExample />
+      </ShowcaseSection>
 
-      <TokenReference />
+      <ShowcaseSection title="Advanced Tables" defaultOpen={false}>
+        <StackedTableExample />
+        <SortableTableExample />
+        <GroupedTableExample />
+        <InvoiceTableExample />
+        <StickyHeaderTableExample />
+      </ShowcaseSection>
+
+      <ShowcaseSection title="Grid Alternatives" defaultOpen={false}>
+        <GridCardsExample />
+        <ContactCardsExample />
+        <ActionTilesExample />
+      </ShowcaseSection>
+
+      <ShowcaseSection title="Design System Reference" defaultOpen={false}>
+        <TokenReference />
+      </ShowcaseSection>
     </div>
   );
 }
