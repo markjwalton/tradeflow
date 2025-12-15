@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PageHeader } from '@/components/sturij/PageHeader';
-import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, ChevronDown, User, Building, Users, CreditCard, Home, Folder, Calendar as CalendarIcon, FileText, BarChart3 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, ChevronDown, User, Building, Users, CreditCard, Home, Folder, Calendar as CalendarIcon, FileText, BarChart3, Check, CheckCircle2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -1212,6 +1212,341 @@ export default function TailwindListsShowcase() {
               <li>• Primary bg: <code className="bg-background px-1 py-0.5 rounded">bg-primary-600</code></li>
               <li>• Active: <code className="bg-background px-1 py-0.5 rounded">bg-primary-700 text-white</code></li>
               <li>• Text: <code className="bg-background px-1 py-0.5 rounded">text-primary-200</code> for inactive items</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Step Indicators / Progress */}
+      <section className="space-y-8 mt-12 pt-8 border-t border-border">
+        <div>
+          <h2 className="text-xl font-display mb-2">Step Indicators / Progress</h2>
+          <p className="text-sm text-muted-foreground">Multi-step progress indicators for forms and processes</p>
+        </div>
+
+        {/* Simple Bar Steps */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Simple Bar with Labels</h3>
+          <nav aria-label="Progress" className="max-w-2xl">
+            <ol role="list" className="space-y-4 md:flex md:space-y-0 md:space-x-8">
+              <li className="md:flex-1">
+                <a href="#" className="group flex flex-col border-l-4 border-primary py-2 pl-4 hover:border-primary-700 md:border-t-4 md:border-l-0 md:pt-4 md:pb-0 md:pl-0">
+                  <span className="text-sm font-medium text-primary group-hover:text-primary-700">Step 1</span>
+                  <span className="text-sm font-medium text-foreground">Job details</span>
+                </a>
+              </li>
+              <li className="md:flex-1">
+                <a href="#" aria-current="step" className="flex flex-col border-l-4 border-primary py-2 pl-4 md:border-t-4 md:border-l-0 md:pt-4 md:pb-0 md:pl-0">
+                  <span className="text-sm font-medium text-primary">Step 2</span>
+                  <span className="text-sm font-medium text-foreground">Application form</span>
+                </a>
+              </li>
+              <li className="md:flex-1">
+                <a href="#" className="group flex flex-col border-l-4 border-border py-2 pl-4 hover:border-muted-foreground md:border-t-4 md:border-l-0 md:pt-4 md:pb-0 md:pl-0">
+                  <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground">Step 3</span>
+                  <span className="text-sm font-medium text-foreground">Preview</span>
+                </a>
+              </li>
+            </ol>
+          </nav>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Complete/current: <code className="bg-background px-1 py-0.5 rounded">border-primary</code></li>
+              <li>• Upcoming: <code className="bg-background px-1 py-0.5 rounded">border-border hover:border-muted-foreground</code></li>
+              <li>• Responsive: <code className="bg-background px-1 py-0.5 rounded">border-l-4 md:border-t-4 md:border-l-0</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Panels with Arrows */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Panels with Arrows</h3>
+          <nav aria-label="Progress">
+            <ol role="list" className="divide-y divide-border rounded-md border border-border md:flex md:divide-y-0">
+              <li className="relative md:flex md:flex-1">
+                <a href="#" className="group flex w-full items-center">
+                  <span className="flex items-center px-6 py-4 text-sm font-medium">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary group-hover:bg-primary-700">
+                      <Check aria-hidden="true" className="h-6 w-6 text-white" />
+                    </span>
+                    <span className="ml-4 text-sm font-medium text-foreground">Job details</span>
+                  </span>
+                </a>
+                <div aria-hidden="true" className="absolute top-0 right-0 hidden h-full w-5 md:block">
+                  <svg fill="none" viewBox="0 0 22 80" preserveAspectRatio="none" className="h-full w-full text-border">
+                    <path d="M0 -2L20 40L0 82" stroke="currentcolor" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
+                  </svg>
+                </div>
+              </li>
+              <li className="relative md:flex md:flex-1">
+                <a href="#" aria-current="step" className="flex items-center px-6 py-4 text-sm font-medium">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-primary">
+                    <span className="text-primary">02</span>
+                  </span>
+                  <span className="ml-4 text-sm font-medium text-primary">Application form</span>
+                </a>
+                <div aria-hidden="true" className="absolute top-0 right-0 hidden h-full w-5 md:block">
+                  <svg fill="none" viewBox="0 0 22 80" preserveAspectRatio="none" className="h-full w-full text-border">
+                    <path d="M0 -2L20 40L0 82" stroke="currentcolor" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
+                  </svg>
+                </div>
+              </li>
+              <li className="relative md:flex md:flex-1">
+                <a href="#" className="group flex items-center">
+                  <span className="flex items-center px-6 py-4 text-sm font-medium">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-border group-hover:border-muted-foreground">
+                      <span className="text-muted-foreground group-hover:text-foreground">03</span>
+                    </span>
+                    <span className="ml-4 text-sm font-medium text-muted-foreground group-hover:text-foreground">Preview</span>
+                  </span>
+                </a>
+              </li>
+            </ol>
+          </nav>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Step circles: <code className="bg-background px-1 py-0.5 rounded">h-10 w-10 rounded-full</code></li>
+              <li>• SVG arrows: <code className="bg-background px-1 py-0.5 rounded">absolute right-0 h-full w-5</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Dots with Counter */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Dots with Counter</h3>
+          <nav aria-label="Progress" className="flex items-center justify-center">
+            <p className="text-sm font-medium text-foreground">Step 2 of 4</p>
+            <ol role="list" className="ml-8 flex items-center space-x-5">
+              <li>
+                <a href="#" className="block h-2.5 w-2.5 rounded-full bg-primary hover:bg-primary-700">
+                  <span className="sr-only">Step 1</span>
+                </a>
+              </li>
+              <li>
+                <a href="#" aria-current="step" className="relative flex items-center justify-center">
+                  <span aria-hidden="true" className="absolute flex h-5 w-5 p-px">
+                    <span className="h-full w-full rounded-full bg-primary-100" />
+                  </span>
+                  <span aria-hidden="true" className="relative block h-2.5 w-2.5 rounded-full bg-primary" />
+                  <span className="sr-only">Step 2</span>
+                </a>
+              </li>
+              <li>
+                <a href="#" className="block h-2.5 w-2.5 rounded-full bg-border hover:bg-muted-foreground">
+                  <span className="sr-only">Step 3</span>
+                </a>
+              </li>
+              <li>
+                <a href="#" className="block h-2.5 w-2.5 rounded-full bg-border hover:bg-muted-foreground">
+                  <span className="sr-only">Step 4</span>
+                </a>
+              </li>
+            </ol>
+          </nav>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Minimal dot style: <code className="bg-background px-1 py-0.5 rounded">h-2.5 w-2.5 rounded-full</code></li>
+              <li>• Current with pulse: <code className="bg-background px-1 py-0.5 rounded">absolute h-5 w-5 bg-primary-100</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Circles with Lines (Horizontal) */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Circles with Connecting Lines</h3>
+          <nav aria-label="Progress">
+            <ol role="list" className="flex items-center">
+              <li className="relative pr-8 sm:pr-20">
+                <div aria-hidden="true" className="absolute inset-0 flex items-center">
+                  <div className="h-0.5 w-full bg-primary" />
+                </div>
+                <a href="#" className="relative flex h-8 w-8 items-center justify-center rounded-full bg-primary hover:bg-primary-700">
+                  <Check aria-hidden="true" className="h-5 w-5 text-white" />
+                  <span className="sr-only">Step 1</span>
+                </a>
+              </li>
+              <li className="relative pr-8 sm:pr-20">
+                <div aria-hidden="true" className="absolute inset-0 flex items-center">
+                  <div className="h-0.5 w-full bg-primary" />
+                </div>
+                <a href="#" className="relative flex h-8 w-8 items-center justify-center rounded-full bg-primary hover:bg-primary-700">
+                  <Check aria-hidden="true" className="h-5 w-5 text-white" />
+                  <span className="sr-only">Step 2</span>
+                </a>
+              </li>
+              <li className="relative pr-8 sm:pr-20">
+                <div aria-hidden="true" className="absolute inset-0 flex items-center">
+                  <div className="h-0.5 w-full bg-border" />
+                </div>
+                <a href="#" aria-current="step" className="relative flex h-8 w-8 items-center justify-center rounded-full border-2 border-primary bg-background">
+                  <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-primary" />
+                  <span className="sr-only">Step 3</span>
+                </a>
+              </li>
+              <li className="relative pr-8 sm:pr-20">
+                <div aria-hidden="true" className="absolute inset-0 flex items-center">
+                  <div className="h-0.5 w-full bg-border" />
+                </div>
+                <a href="#" className="group relative flex h-8 w-8 items-center justify-center rounded-full border-2 border-border bg-background hover:border-muted-foreground">
+                  <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-transparent group-hover:bg-muted-foreground" />
+                  <span className="sr-only">Step 4</span>
+                </a>
+              </li>
+              <li className="relative">
+                <div aria-hidden="true" className="absolute inset-0 flex items-center">
+                  <div className="h-0.5 w-full bg-border" />
+                </div>
+                <a href="#" className="group relative flex h-8 w-8 items-center justify-center rounded-full border-2 border-border bg-background hover:border-muted-foreground">
+                  <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-transparent group-hover:bg-muted-foreground" />
+                  <span className="sr-only">Step 5</span>
+                </a>
+              </li>
+            </ol>
+          </nav>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Connecting lines: <code className="bg-background px-1 py-0.5 rounded">absolute inset-0 h-0.5 bg-primary</code></li>
+              <li>• Complete: <code className="bg-background px-1 py-0.5 rounded">bg-primary</code> circles with check icons</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Simple Vertical */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Simple Vertical with Check Circles</h3>
+          <div className="px-4 py-12">
+            <nav aria-label="Progress" className="flex justify-center">
+              <ol role="list" className="space-y-6">
+                <li>
+                  <a href="#" className="group">
+                    <span className="flex items-start">
+                      <span className="relative flex h-5 w-5 shrink-0 items-center justify-center">
+                        <CheckCircle2 aria-hidden="true" className="h-full w-full text-primary group-hover:text-primary-700" />
+                      </span>
+                      <span className="ml-3 text-sm font-medium text-muted-foreground group-hover:text-foreground">
+                        Create account
+                      </span>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" aria-current="step" className="flex items-start">
+                    <span aria-hidden="true" className="relative flex h-5 w-5 shrink-0 items-center justify-center">
+                      <span className="absolute h-4 w-4 rounded-full bg-primary-100" />
+                      <span className="relative block h-2 w-2 rounded-full bg-primary" />
+                    </span>
+                    <span className="ml-3 text-sm font-medium text-primary">Profile information</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="group">
+                    <div className="flex items-start">
+                      <div aria-hidden="true" className="relative flex h-5 w-5 shrink-0 items-center justify-center">
+                        <div className="h-2 w-2 rounded-full bg-border group-hover:bg-muted-foreground" />
+                      </div>
+                      <p className="ml-3 text-sm font-medium text-muted-foreground group-hover:text-foreground">Theme</p>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="group">
+                    <div className="flex items-start">
+                      <div aria-hidden="true" className="relative flex h-5 w-5 shrink-0 items-center justify-center">
+                        <div className="h-2 w-2 rounded-full bg-border group-hover:bg-muted-foreground" />
+                      </div>
+                      <p className="ml-3 text-sm font-medium text-muted-foreground group-hover:text-foreground">Preview</p>
+                    </div>
+                  </a>
+                </li>
+              </ol>
+            </nav>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• CheckCircle2 icon from Lucide for completed steps</li>
+              <li>• Pulse effect on current: <code className="bg-background px-1 py-0.5 rounded">absolute h-4 w-4 bg-primary-100</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Vertical with Descriptions */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Vertical with Descriptions</h3>
+          <nav aria-label="Progress">
+            <ol role="list" className="overflow-hidden">
+              <li className="relative pb-10">
+                <div aria-hidden="true" className="absolute top-4 left-4 mt-0.5 -ml-px h-full w-0.5 bg-primary" />
+                <a href="#" className="group relative flex items-start">
+                  <span className="flex h-9 items-center">
+                    <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full bg-primary group-hover:bg-primary-700">
+                      <Check aria-hidden="true" className="h-5 w-5 text-white" />
+                    </span>
+                  </span>
+                  <span className="ml-4 flex min-w-0 flex-col">
+                    <span className="text-sm font-medium text-foreground">Create account</span>
+                    <span className="text-sm text-muted-foreground">Vitae sed mi luctus laoreet.</span>
+                  </span>
+                </a>
+              </li>
+              <li className="relative pb-10">
+                <div aria-hidden="true" className="absolute top-4 left-4 mt-0.5 -ml-px h-full w-0.5 bg-border" />
+                <a href="#" aria-current="step" className="group relative flex items-start">
+                  <span aria-hidden="true" className="flex h-9 items-center">
+                    <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full border-2 border-primary bg-background">
+                      <span className="h-2.5 w-2.5 rounded-full bg-primary" />
+                    </span>
+                  </span>
+                  <span className="ml-4 flex min-w-0 flex-col">
+                    <span className="text-sm font-medium text-primary">Profile information</span>
+                    <span className="text-sm text-muted-foreground">Cursus semper viverra facilisis.</span>
+                  </span>
+                </a>
+              </li>
+              <li className="relative pb-10">
+                <div aria-hidden="true" className="absolute top-4 left-4 mt-0.5 -ml-px h-full w-0.5 bg-border" />
+                <a href="#" className="group relative flex items-start">
+                  <span aria-hidden="true" className="flex h-9 items-center">
+                    <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full border-2 border-border bg-background group-hover:border-muted-foreground">
+                      <span className="h-2.5 w-2.5 rounded-full bg-transparent group-hover:bg-muted-foreground" />
+                    </span>
+                  </span>
+                  <span className="ml-4 flex min-w-0 flex-col">
+                    <span className="text-sm font-medium text-muted-foreground">Business information</span>
+                    <span className="text-sm text-muted-foreground">Penatibus eu quis ante.</span>
+                  </span>
+                </a>
+              </li>
+              <li className="relative">
+                <a href="#" className="group relative flex items-start">
+                  <span aria-hidden="true" className="flex h-9 items-center">
+                    <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full border-2 border-border bg-background group-hover:border-muted-foreground">
+                      <span className="h-2.5 w-2.5 rounded-full bg-transparent group-hover:bg-muted-foreground" />
+                    </span>
+                  </span>
+                  <span className="ml-4 flex min-w-0 flex-col">
+                    <span className="text-sm font-medium text-muted-foreground">Preview</span>
+                    <span className="text-sm text-muted-foreground">Iusto et officia maiores.</span>
+                  </span>
+                </a>
+              </li>
+            </ol>
+          </nav>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Connecting lines: <code className="bg-background px-1 py-0.5 rounded">absolute w-0.5 h-full bg-primary</code></li>
+              <li>• Two-line layout with <code className="bg-background px-1 py-0.5 rounded">flex-col</code> for name and description</li>
             </ul>
           </div>
         </div>
