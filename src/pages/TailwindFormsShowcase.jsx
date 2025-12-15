@@ -36,6 +36,7 @@ export default function TailwindFormsShowcase() {
       <LabelOnLeftForm />
       <InputVariationsSection />
       <SelectVariationsSection />
+      <SignInFormsSection />
 
       <TokenReference />
     </div>
@@ -1228,6 +1229,312 @@ function SelectVariationsSection() {
           <li>• Status indicators: <code className="bg-background px-1 py-0.5 rounded">bg-primary</code> for online</li>
           <li>• Avatar component for user images</li>
           <li>• Split button uses DropdownMenu + Button combination</li>
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+function SignInFormsSection() {
+  return (
+    <section className="space-y-8">
+      <div>
+        <h2 className="text-xl font-display mb-2">Sign-In Form Layouts</h2>
+        <p className="text-sm text-muted-foreground">Various authentication form patterns</p>
+      </div>
+
+      <div className="space-y-8">
+        {/* Simple Centered Sign-In */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Simple Centered</h3>
+          <div className="flex min-h-[500px] flex-col justify-center px-6 py-12 lg:px-8 bg-background rounded-lg">
+            <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+              <div className="mx-auto h-10 w-10 rounded-lg bg-primary flex items-center justify-center">
+                <span className="text-xl font-bold text-primary-foreground">S</span>
+              </div>
+              <h2 className="mt-10 text-center text-2xl font-display">
+                Sign in to your account
+              </h2>
+            </div>
+
+            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+              <form className="space-y-6">
+                <div>
+                  <Label htmlFor="email-simple">Email address</Label>
+                  <div className="mt-2">
+                    <Input id="email-simple" name="email" type="email" required autoComplete="email" />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="password-simple">Password</Label>
+                    <div className="text-sm">
+                      <a href="#" className="font-semibold text-primary hover:text-primary/80">
+                        Forgot password?
+                      </a>
+                    </div>
+                  </div>
+                  <div className="mt-2">
+                    <Input id="password-simple" name="password" type="password" required autoComplete="current-password" />
+                  </div>
+                </div>
+
+                <div>
+                  <Button type="submit" className="w-full">
+                    Sign in
+                  </Button>
+                </div>
+              </form>
+
+              <p className="mt-10 text-center text-sm text-muted-foreground">
+                Not a member?{' '}
+                <a href="#" className="font-semibold text-primary hover:text-primary/80">
+                  Start a 14 day free trial
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Stacked Inputs */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Stacked Inputs</h3>
+          <div className="flex min-h-[500px] items-center justify-center px-4 py-12 sm:px-6 lg:px-8 bg-background rounded-lg">
+            <div className="w-full max-w-sm space-y-10">
+              <div>
+                <div className="mx-auto h-10 w-10 rounded-lg bg-primary flex items-center justify-center">
+                  <span className="text-xl font-bold text-primary-foreground">S</span>
+                </div>
+                <h2 className="mt-10 text-center text-2xl font-display">
+                  Sign in to your account
+                </h2>
+              </div>
+              <form className="space-y-6">
+                <div className="-space-y-px rounded-lg">
+                  <div className="rounded-t-lg border border-input bg-background px-3 pt-2.5 pb-1.5 focus-within:relative focus-within:z-10 focus-within:ring-2 focus-within:ring-primary">
+                    <Label htmlFor="email-stacked" className="block text-xs">
+                      Email address
+                    </Label>
+                    <input
+                      id="email-stacked"
+                      name="email"
+                      type="email"
+                      required
+                      autoComplete="email"
+                      className="block w-full border-0 p-0 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-0 sm:text-sm"
+                    />
+                  </div>
+                  <div className="rounded-b-lg border border-input bg-background px-3 pt-2.5 pb-1.5 focus-within:relative focus-within:z-10 focus-within:ring-2 focus-within:ring-primary">
+                    <Label htmlFor="password-stacked" className="block text-xs">
+                      Password
+                    </Label>
+                    <input
+                      id="password-stacked"
+                      name="password"
+                      type="password"
+                      required
+                      autoComplete="current-password"
+                      className="block w-full border-0 p-0 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-0 sm:text-sm"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Checkbox id="remember-stacked" />
+                    <Label htmlFor="remember-stacked" className="text-sm">
+                      Remember me
+                    </Label>
+                  </div>
+                  <div className="text-sm">
+                    <a href="#" className="font-semibold text-primary hover:text-primary/80">
+                      Forgot password?
+                    </a>
+                  </div>
+                </div>
+
+                <div>
+                  <Button type="submit" className="w-full">
+                    Sign in
+                  </Button>
+                </div>
+              </form>
+
+              <p className="text-center text-sm text-muted-foreground">
+                Not a member?{' '}
+                <a href="#" className="font-semibold text-primary hover:text-primary/80">
+                  Start a 14-day free trial
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Card Style with Social Login */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Card with Social Login</h3>
+          <div className="flex min-h-[500px] flex-col justify-center py-12 sm:px-6 lg:px-8 bg-muted/30 rounded-lg">
+            <div className="sm:mx-auto sm:w-full sm:max-w-md">
+              <div className="mx-auto h-10 w-10 rounded-lg bg-primary flex items-center justify-center">
+                <span className="text-xl font-bold text-primary-foreground">S</span>
+              </div>
+              <h2 className="mt-6 text-center text-2xl font-display">
+                Sign in to your account
+              </h2>
+            </div>
+
+            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
+              <div className="bg-card px-6 py-12 shadow-sm rounded-lg sm:px-12">
+                <form className="space-y-6">
+                  <div>
+                    <Label htmlFor="email-card">Email address</Label>
+                    <div className="mt-2">
+                      <Input id="email-card" name="email" type="email" required autoComplete="email" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="password-card">Password</Label>
+                    <div className="mt-2">
+                      <Input id="password-card" name="password" type="password" required autoComplete="current-password" />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Checkbox id="remember-card" />
+                      <Label htmlFor="remember-card" className="text-sm">
+                        Remember me
+                      </Label>
+                    </div>
+                    <div className="text-sm">
+                      <a href="#" className="font-semibold text-primary hover:text-primary/80">
+                        Forgot password?
+                      </a>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Button type="submit" className="w-full">
+                      Sign in
+                    </Button>
+                  </div>
+                </form>
+
+                <div>
+                  <div className="mt-10 flex items-center gap-x-6">
+                    <div className="w-full flex-1 border-t border-border" />
+                    <p className="text-sm font-medium text-nowrap">Or continue with</p>
+                    <div className="w-full flex-1 border-t border-border" />
+                  </div>
+
+                  <div className="mt-6 grid grid-cols-2 gap-4">
+                    <Button variant="outline" className="w-full">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 mr-2">
+                        <path d="M12.0003 4.75C13.7703 4.75 15.3553 5.36002 16.6053 6.54998L20.0303 3.125C17.9502 1.19 15.2353 0 12.0003 0C7.31028 0 3.25527 2.69 1.28027 6.60998L5.27028 9.70498C6.21525 6.86002 8.87028 4.75 12.0003 4.75Z" fill="#EA4335" />
+                        <path d="M23.49 12.275C23.49 11.49 23.415 10.73 23.3 10H12V14.51H18.47C18.18 15.99 17.34 17.25 16.08 18.1L19.945 21.1C22.2 19.01 23.49 15.92 23.49 12.275Z" fill="#4285F4" />
+                        <path d="M5.26498 14.2949C5.02498 13.5699 4.88501 12.7999 4.88501 11.9999C4.88501 11.1999 5.01998 10.4299 5.26498 9.7049L1.275 6.60986C0.46 8.22986 0 10.0599 0 11.9999C0 13.9399 0.46 15.7699 1.28 17.3899L5.26498 14.2949Z" fill="#FBBC05" />
+                        <path d="M12.0004 24.0001C15.2404 24.0001 17.9654 22.935 19.9454 21.095L16.0804 18.095C15.0054 18.82 13.6204 19.245 12.0004 19.245C8.8704 19.245 6.21537 17.135 5.2654 14.29L1.27539 17.385C3.25539 21.31 7.3104 24.0001 12.0004 24.0001Z" fill="#34A853" />
+                      </svg>
+                      Google
+                    </Button>
+
+                    <Button variant="outline" className="w-full">
+                      <svg fill="currentColor" viewBox="0 0 20 20" aria-hidden="true" className="h-5 w-5 mr-2 fill-[#24292F]">
+                        <path d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clipRule="evenodd" fillRule="evenodd" />
+                      </svg>
+                      GitHub
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              <p className="mt-10 text-center text-sm text-muted-foreground">
+                Not a member?{' '}
+                <a href="#" className="font-semibold text-primary hover:text-primary/80">
+                  Start a 14 day free trial
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Split Layout with Image */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Split Layout with Image</h3>
+          <p className="text-xs text-muted-foreground mb-4">Note: Image placeholder shown on right on lg+ screens</p>
+          <div className="flex min-h-[500px] rounded-lg overflow-hidden bg-background">
+            <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+              <div className="mx-auto w-full max-w-sm lg:w-96">
+                <div>
+                  <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center">
+                    <span className="text-xl font-bold text-primary-foreground">S</span>
+                  </div>
+                  <h2 className="mt-8 text-2xl font-display">Sign in to your account</h2>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Not a member?{' '}
+                    <a href="#" className="font-semibold text-primary hover:text-primary/80">
+                      Start a 14 day free trial
+                    </a>
+                  </p>
+                </div>
+
+                <div className="mt-10">
+                  <form className="space-y-6">
+                    <div>
+                      <Label htmlFor="email-split">Email address</Label>
+                      <div className="mt-2">
+                        <Input id="email-split" name="email" type="email" required autoComplete="email" />
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="password-split">Password</Label>
+                      <div className="mt-2">
+                        <Input id="password-split" name="password" type="password" required autoComplete="current-password" />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Checkbox id="remember-split" />
+                        <Label htmlFor="remember-split" className="text-sm">
+                          Remember me
+                        </Label>
+                      </div>
+                      <div className="text-sm">
+                        <a href="#" className="font-semibold text-primary hover:text-primary/80">
+                          Forgot password?
+                        </a>
+                      </div>
+                    </div>
+
+                    <div>
+                      <Button type="submit" className="w-full">
+                        Sign in
+                      </Button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div className="relative hidden w-0 flex-1 lg:block bg-muted">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Image className="h-24 w-24 text-muted-foreground/20" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+        <p className="font-medium">Design Token Mappings:</p>
+        <ul className="space-y-1 text-muted-foreground">
+          <li>• Centered layouts with max-width constraints</li>
+          <li>• Stacked inputs with <code className="bg-background px-1 py-0.5 rounded">-space-y-px</code> for connected borders</li>
+          <li>• Card style with shadow and social login buttons</li>
+          <li>• Split layout: form on left, image on right (lg:flex-none lg:px-20)</li>
         </ul>
       </div>
     </section>
