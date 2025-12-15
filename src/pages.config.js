@@ -126,6 +126,8 @@ import CompassInterviews from './pages/CompassInterviews';
 import SyntaxHome from './pages/SyntaxHome';
 import SyntaxDocs from './pages/SyntaxDocs';
 import TransmitHome from './pages/TransmitHome';
+import KeynoteHome from './pages/KeynoteHome';
+import PocketHome from './pages/PocketHome';
 import __Layout from './Layout.jsx';
 
 
@@ -258,6 +260,8 @@ export const PAGES = {
     "SyntaxHome": SyntaxHome,
     "SyntaxDocs": SyntaxDocs,
     "TransmitHome": TransmitHome,
+    "KeynoteHome": KeynoteHome,
+    "PocketHome": PocketHome,
 }
 
 export const pagesConfig = {
