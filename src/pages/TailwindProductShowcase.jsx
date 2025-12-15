@@ -5359,6 +5359,287 @@ export default function TailwindProductShowcase() {
             </div>
           </div>
         </ShowcaseSection>
+
+        <ShowcaseSection title="Shopping Cart - With Sidebar Summary & Related Products">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white">
+              Get free delivery on orders over $100
+            </div>
+
+            <div className="border-b h-16 flex items-center justify-between px-8">
+              <div className="flex items-center gap-8">
+                <div className="w-8 h-8 bg-indigo-600 rounded" />
+                <div className="flex gap-8 text-sm font-medium text-gray-700">
+                  <a href="#">Women</a>
+                  <a href="#">Men</a>
+                  <a href="#">Company</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-6">
+                <a href="#" className="text-gray-700 flex items-center gap-2">
+                  <img src="https://tailwindcss.com/plus-assets/img/flags/flag-canada.svg" className="w-5 h-auto" alt="" />
+                  <span className="text-sm font-medium">CAD</span>
+                </a>
+                <a href="#" className="text-gray-400"><MagnifyingGlassIcon className="h-6 w-6" /></a>
+                <a href="#" className="text-gray-400"><UserIcon className="h-6 w-6" /></a>
+                <a href="#" className="flex items-center gap-2">
+                  <ShoppingBagIcon className="h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-700">0</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="max-w-2xl mx-auto px-8 pt-16 pb-24 lg:max-w-7xl">
+              <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl">Shopping Cart</h1>
+
+              <div className="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
+                <div className="lg:col-span-7">
+                  <ul className="divide-y divide-gray-200 border-t border-b border-gray-200">
+                    {[
+                      { name: 'Basic Tee', color: 'Sienna', size: 'Large', price: '$32.00', inStock: true },
+                      { name: 'Basic Tee', color: 'Black', size: 'Large', price: '$32.00', inStock: false, leadTime: '3–4 weeks' },
+                      { name: 'Nomad Tumbler', color: 'White', price: '$35.00', inStock: true },
+                    ].map((product, i) => (
+                      <li key={i} className="flex py-6 sm:py-10">
+                        <div className="shrink-0">
+                          <div className="w-24 h-24 sm:w-48 sm:h-48 rounded-md bg-gray-200" />
+                        </div>
+                        <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
+                          <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
+                            <div>
+                              <div className="flex justify-between">
+                                <h3 className="text-sm">
+                                  <a href="#" className="font-medium text-gray-700">{product.name}</a>
+                                </h3>
+                              </div>
+                              <div className="mt-1 flex text-sm">
+                                <p className="text-gray-500">{product.color}</p>
+                                {product.size && (
+                                  <p className="ml-4 border-l border-gray-200 pl-4 text-gray-500">{product.size}</p>
+                                )}
+                              </div>
+                              <p className="mt-1 text-sm font-medium text-gray-900">{product.price}</p>
+                            </div>
+
+                            <div className="mt-4 sm:mt-0 sm:pr-9">
+                              <select className="max-w-16 rounded-md border border-gray-300 py-1.5 pr-8 pl-3 text-base text-gray-900">
+                                {[1, 2, 3, 4, 5, 6, 7, 8].map((qty) => (
+                                  <option key={qty} value={qty}>{qty}</option>
+                                ))}
+                              </select>
+                              <div className="absolute top-0 right-0">
+                                <button className="p-2 text-gray-400"><XMarkIcon className="h-5 w-5" /></button>
+                              </div>
+                            </div>
+                          </div>
+
+                          <p className="mt-4 flex space-x-2 text-sm text-gray-700">
+                            {product.inStock ? (
+                              <CheckIcon className="h-5 w-5 text-green-500" />
+                            ) : (
+                              <ClockIcon className="h-5 w-5 text-gray-300" />
+                            )}
+                            <span>{product.inStock ? 'In stock' : `Ships in ${product.leadTime}`}</span>
+                          </p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
+                  <h2 className="text-lg font-medium text-gray-900">Order summary</h2>
+                  <dl className="mt-6 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <dt className="text-sm text-gray-600">Subtotal</dt>
+                      <dd className="text-sm font-medium text-gray-900">$99.00</dd>
+                    </div>
+                    <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+                      <dt className="flex items-center text-sm text-gray-600">
+                        <span>Shipping estimate</span>
+                        <QuestionMarkCircleIcon className="ml-2 h-5 w-5 text-gray-400" />
+                      </dt>
+                      <dd className="text-sm font-medium text-gray-900">$5.00</dd>
+                    </div>
+                    <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+                      <dt className="flex text-sm text-gray-600">
+                        <span>Tax estimate</span>
+                        <QuestionMarkCircleIcon className="ml-2 h-5 w-5 text-gray-400" />
+                      </dt>
+                      <dd className="text-sm font-medium text-gray-900">$8.32</dd>
+                    </div>
+                    <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+                      <dt className="text-base font-medium text-gray-900">Order total</dt>
+                      <dd className="text-base font-medium text-gray-900">$112.32</dd>
+                    </div>
+                  </dl>
+                  <div className="mt-6">
+                    <button className="w-full rounded-md bg-indigo-600 px-4 py-3 text-base font-medium text-white hover:bg-indigo-700">
+                      Checkout
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-24">
+                <h2 className="text-lg font-medium text-gray-900">You may also like…</h2>
+                <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="group relative">
+                      <div className="aspect-square lg:aspect-auto lg:h-80 w-full rounded-md bg-gray-200" />
+                      <div className="mt-4 flex justify-between">
+                        <div>
+                          <h3 className="text-sm text-gray-700">Product Name</h3>
+                          <p className="mt-1 text-sm text-gray-500">Natural</p>
+                        </div>
+                        <p className="text-sm font-medium text-gray-900">$118</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Shopping Cart - Centered with Policies">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="border-b h-16 flex items-center justify-between px-8">
+              <div className="flex items-center gap-8">
+                <div className="w-8 h-8 bg-indigo-600 rounded" />
+                <div className="flex gap-8 text-sm font-medium text-gray-700">
+                  <a href="#">Women</a>
+                  <a href="#">Men</a>
+                  <a href="#">Company</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-6">
+                <a href="#" className="text-gray-700 flex items-center gap-2">
+                  <img src="https://tailwindcss.com/plus-assets/img/flags/flag-canada.svg" className="w-5 h-auto" alt="" />
+                  <span className="text-sm font-medium">CAD</span>
+                </a>
+                <a href="#" className="text-gray-400"><MagnifyingGlassIcon className="h-6 w-6" /></a>
+                <a href="#" className="text-gray-400"><UserIcon className="h-6 w-6" /></a>
+                <a href="#" className="flex items-center gap-2">
+                  <ShoppingBagIcon className="h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-700">0</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="max-w-2xl mx-auto px-8 py-16 sm:py-24">
+              <h1 className="text-center text-3xl font-bold text-gray-900 sm:text-4xl">Shopping Cart</h1>
+
+              <div className="mt-12">
+                <ul className="divide-y divide-gray-200 border-t border-b border-gray-200">
+                  {[
+                    { name: 'Artwork Tee', color: 'Mint', size: 'Medium', price: '$32.00', inStock: true },
+                    { name: 'Basic Tee', color: 'Charcoal', size: 'Large', price: '$32.00', inStock: false, leadTime: '7-8 years' },
+                    { name: 'Basic Tee', color: 'Sienna', size: 'Large', price: '$32.00', inStock: true },
+                  ].map((product, i) => (
+                    <li key={i} className="flex py-6 sm:py-10">
+                      <div className="shrink-0">
+                        <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-lg bg-gray-200" />
+                      </div>
+                      <div className="relative ml-4 flex flex-1 flex-col justify-between sm:ml-6">
+                        <div>
+                          <div className="flex justify-between sm:grid sm:grid-cols-2">
+                            <div className="pr-6">
+                              <h3 className="text-sm">
+                                <a href="#" className="font-medium text-gray-700">{product.name}</a>
+                              </h3>
+                              <p className="mt-1 text-sm text-gray-500">{product.color}</p>
+                              <p className="mt-1 text-sm text-gray-500">{product.size}</p>
+                            </div>
+                            <p className="text-right text-sm font-medium text-gray-900">{product.price}</p>
+                          </div>
+
+                          <div className="mt-4 flex items-center sm:absolute sm:top-0 sm:left-1/2 sm:mt-0 sm:block">
+                            <select className="max-w-16 rounded-md border border-gray-300 py-1.5 pr-8 pl-3 text-base sm:text-sm">
+                              {[1, 2, 3, 4, 5, 6, 7, 8].map((qty) => (
+                                <option key={qty}>{qty}</option>
+                              ))}
+                            </select>
+                            <button className="ml-4 text-sm font-medium text-indigo-600 sm:mt-3 sm:ml-0">
+                              Remove
+                            </button>
+                          </div>
+                        </div>
+
+                        <p className="mt-4 flex space-x-2 text-sm text-gray-700">
+                          {product.inStock ? (
+                            <CheckIcon className="h-5 w-5 text-green-500" />
+                          ) : (
+                            <ClockIcon className="h-5 w-5 text-gray-300" />
+                          )}
+                          <span>{product.inStock ? 'In stock' : `Ships in ${product.leadTime}`}</span>
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-10 sm:ml-32 sm:pl-6">
+                  <div className="rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:p-8">
+                    <div className="flow-root">
+                      <dl className="-my-4 divide-y divide-gray-200 text-sm">
+                        <div className="flex items-center justify-between py-4">
+                          <dt className="text-gray-600">Subtotal</dt>
+                          <dd className="font-medium text-gray-900">$99.00</dd>
+                        </div>
+                        <div className="flex items-center justify-between py-4">
+                          <dt className="text-gray-600">Shipping</dt>
+                          <dd className="font-medium text-gray-900">$5.00</dd>
+                        </div>
+                        <div className="flex items-center justify-between py-4">
+                          <dt className="text-gray-600">Tax</dt>
+                          <dd className="font-medium text-gray-900">$8.32</dd>
+                        </div>
+                        <div className="flex items-center justify-between py-4">
+                          <dt className="text-base font-medium text-gray-900">Order total</dt>
+                          <dd className="text-base font-medium text-gray-900">$112.32</dd>
+                        </div>
+                      </dl>
+                    </div>
+                  </div>
+                  <div className="mt-10">
+                    <button className="w-full rounded-md bg-indigo-600 px-4 py-3 text-base font-medium text-white hover:bg-indigo-700">
+                      Checkout
+                    </button>
+                  </div>
+                  <div className="mt-6 text-center text-sm text-gray-500">
+                    <p>or <a href="#" className="font-medium text-indigo-600">Continue Shopping →</a></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-24 border-t border-gray-200 bg-gray-50">
+              <div className="max-w-7xl mx-auto px-8 py-24 sm:py-32">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-12 lg:gap-x-8 lg:gap-y-0">
+                  {[
+                    { name: 'Free returns', desc: 'Not what you expected? Place it back in the parcel and attach the label.' },
+                    { name: 'Same day delivery', desc: 'We offer a delivery service that has never been done before.' },
+                    { name: 'All year discount', desc: 'You can use the code "ALLYEAR" at checkout and get money off.' },
+                    { name: 'For the planet', desc: "We've pledged 1% of sales to the preservation of the environment." },
+                  ].map((policy) => (
+                    <div key={policy.name} className="text-center md:flex md:items-start md:text-left lg:block lg:text-center">
+                      <div className="md:shrink-0">
+                        <div className="flow-root">
+                          <div className="mx-auto h-24 w-auto bg-gray-200 rounded" />
+                        </div>
+                      </div>
+                      <div className="mt-6 md:mt-0 md:ml-4 lg:mt-6 lg:ml-0">
+                        <h3 className="text-base font-medium text-gray-900">{policy.name}</h3>
+                        <p className="mt-3 text-sm text-gray-500">{policy.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
       </div>
     </div>
   );
