@@ -228,10 +228,10 @@ export function PageSettingsPanel({ currentPageName }) {
           <Settings className="h-6 w-6 text-white" />
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-96">
+      <SheetContent className="w-96" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
         <SheetHeader className="px-6">
           <div className="flex items-center justify-between">
-            <SheetTitle className="flex items-center gap-2">
+            <h2 className="flex items-center gap-2" style={{ color: 'var(--accent-500, #C78E8E)' }}>
               {editingTitle && isEditMode ? (
                 <Input
                   value={pageTitle}
@@ -255,7 +255,7 @@ export function PageSettingsPanel({ currentPageName }) {
                   )}
                 </>
               )}
-            </SheetTitle>
+            </h2>
           </div>
           <div className="flex items-center gap-2">
             {editingDescription && isEditMode ? (
@@ -288,7 +288,7 @@ export function PageSettingsPanel({ currentPageName }) {
 
           {customProperties.length > 0 && (
             <Collapsible open={propertiesOpen} onOpenChange={setPropertiesOpen}>
-              <div className="border rounded-lg">
+              <div className="border rounded-lg" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
                 <CollapsibleTrigger className="flex items-center justify-between w-full px-4 py-3 hover:bg-muted/50 transition-colors">
                   <div>
                     <Label className="text-sm font-medium cursor-pointer">Page Properties</Label>
@@ -357,7 +357,7 @@ export function PageSettingsPanel({ currentPageName }) {
 
           {pageTextElements.length > 0 && (
             <Collapsible open={textOverridesOpen} onOpenChange={setTextOverridesOpen}>
-              <div className="border rounded-lg">
+              <div className="border rounded-lg" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
                 <CollapsibleTrigger className="flex items-center justify-between w-full px-4 py-3 hover:bg-muted/50 transition-colors">
                   <div>
                     <Label className="text-sm font-medium cursor-pointer">Text Overrides</Label>
@@ -394,7 +394,7 @@ export function PageSettingsPanel({ currentPageName }) {
             </Collapsible>
           )}
 
-          <div className="border rounded-lg p-4 space-y-4">
+          <div className="border rounded-lg p-4 space-y-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
             <div className="space-y-2">
               <Label className="text-sm font-medium">Navigation Mode</Label>
               <p className="text-xs text-muted-foreground mb-3">Default sidebar state for this page</p>
