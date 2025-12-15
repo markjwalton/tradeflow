@@ -26,6 +26,8 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
+import { PageHeader } from '@/components/sturij/PageHeader';
+import { Card, CardContent } from '@/components/ui/card';
 
 
 
@@ -152,8 +154,43 @@ export default function NavigationManagerTest() {
 
   return (
     <div className="min-h-screen bg-[var(--color-background)]">
-      {/* Full Width Header */}
-      <div className="bg-[var(--color-background-paper)] sticky top-0 z-50 rounded-xl p-4" style={{ boxShadow: 'var(--shadow-card)' }}>
+      <div className="max-w-[1600px] mx-auto p-6">
+        <PageHeader
+          title="Navigation Manager"
+          description="Manage your application navigation structure"
+        />
+
+        <Tabs defaultValue="system" value={activeTab} onValueChange={setActiveTab} className="mt-6">
+          <TabsList>
+            <TabsTrigger value="system">System Navigation</TabsTrigger>
+            <TabsTrigger value="pages">Site Pages</TabsTrigger>
+            <TabsTrigger value="social">Social Links</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="system" className="mt-6">
+            <Card>
+              <CardContent className="p-6">
+                {/* Content cards will go here */}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="pages" className="mt-6">
+            <Card>
+              <CardContent className="p-6">
+                {/* Content cards will go here */}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="social" className="mt-6">
+            <Card>
+              <CardContent className="p-6">
+                {/* Content cards will go here */}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
