@@ -175,7 +175,7 @@ export function AppSidebar({ navItems = [] }) {
     const Icon = getIcon(item.icon);
     const isExpanded = expandedFolders.has(item.id);
     // Standardize icon sizes - larger in icons-only mode for better visibility
-    const iconSize = isIconsOnly ? 22 : (item.icon_size || 20);
+    const iconSize = isIconsOnly ? 24 : (item.icon_size || 20);
     const iconStrokeWidth = isIconsOnly ? 2 : (item.icon_stroke_width || 1.5);
 
     // Build page URL from page_url field
@@ -196,12 +196,12 @@ export function AppSidebar({ navItems = [] }) {
             onClick={(e) => toggleFolder(item.id, e)}
             className={cn(
               "w-full flex items-center justify-center transition-colors group",
-              "[padding:var(--spacing-3)] [border-radius:var(--radius-lg)]",
+              "[padding:var(--spacing-2)] [border-radius:var(--radius-lg)]",
               childActive ? "bg-sidebar-primary" : "hover:bg-sidebar-accent"
             )}
           >
             <FolderIcon 
-              className="transition-colors" 
+              className="transition-colors flex-shrink-0" 
               size={iconSize}
               strokeWidth={iconStrokeWidth}
               style={{ color: childActive ? 'var(--sidebar-primary-foreground)' : 'var(--accent-500, #b39299)' }}
@@ -277,7 +277,7 @@ export function AppSidebar({ navItems = [] }) {
           "flex items-center [border-radius:var(--radius-lg)] transition-colors group",
           showLabels 
             ? (isChild ? "[gap:var(--spacing-2)] [padding:var(--spacing-2)]" : "[gap:var(--spacing-3)] [padding:var(--spacing-2)]") 
-            : "justify-center [padding:var(--spacing-3)]",
+            : "justify-center [padding:var(--spacing-2)]",
           isActive
             ? "bg-sidebar-primary"
             : "hover:bg-sidebar-accent"
