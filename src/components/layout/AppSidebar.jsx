@@ -174,9 +174,9 @@ export function AppSidebar({ navItems = [] }) {
     const isFolder = item.item_type === "folder";
     const Icon = getIcon(item.icon);
     const isExpanded = expandedFolders.has(item.id);
-    // Standardize icon sizes for consistent appearance
-    const iconSize = isIconsOnly ? 20 : (item.icon_size || 20);
-    const iconStrokeWidth = isIconsOnly ? 1.5 : (item.icon_stroke_width || 1.5);
+    // Standardize icon sizes - larger in icons-only mode for better visibility
+    const iconSize = isIconsOnly ? 22 : (item.icon_size || 20);
+    const iconStrokeWidth = isIconsOnly ? 2 : (item.icon_stroke_width || 1.5);
 
     // Build page URL from page_url field
     const pageUrl = item.page_url || "";
