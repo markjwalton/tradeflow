@@ -20,6 +20,7 @@ const entityMap = {
 
 export function ContentList({ contentType, websiteFolderId, onEdit, onCreate }) {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedIds, setSelectedIds] = useState([]);
   const queryClient = useQueryClient();
 
   const entityName = entityMap[contentType];
@@ -35,6 +36,45 @@ export function ContentList({ contentType, websiteFolderId, onEdit, onCreate }) 
     mutationFn: (id) => base44.entities[entityName].delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cms', contentType] });
+    },
+  });
+
+  const duplicateMutation = useMutation({
+    mutationFn: async (item) => {
+      const { id, created_date, updated_date, created_by, ...rest } = item;
+      return base44.entities[entityName].create({
+        ...rest,
+        title: rest.title ? `${rest.title} (Copy)` : undefined,
+        name: rest.name ? `${rest.name} (Copy)` : undefined,
+        slug: rest.slug ? `${rest.slug}-copy` : undefined,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['cms', contentType] });
+    },
+  });
+
+  const bulkUpdateMutation = useMutation({
+    mutationFn: async ({ ids, data }) => {
+      await Promise.all(
+        ids.map((id) => base44.entities[entityName].update(id, data))
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['cms', contentType] });
+      setSelectedIds([]);
+    },
+  });
+
+  const bulkDeleteMutation = useMutation({
+    mutationFn: async (ids) => {
+      await Promise.all(
+        ids.map((id) => base44.entities[entityName].delete(id))
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['cms', contentType] });
+      setSelectedIds([]);
     },
   });
 
@@ -59,17 +99,36 @@ export function ContentList({ contentType, websiteFolderId, onEdit, onCreate }) 
             className="pl-9"
           />
         </div>
-        <Button onClick={onCreate}>
-          <Plus className="h-4 w-4 mr-2" />
-          New {contentType}
-        </Button>
+        <div className="flex gap-2">
+          {selectedIds.length > 0 && (
+            <Button variant="outline" onClick={() => setSelectedIds([])}>
+              Clear ({selectedIds.length})
+            </Button>
+          )}
+          <Button onClick={onCreate}>
+            <Plus className="h-4 w-4 mr-2" />
+            New {contentType}
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {filteredItems.map((item) => (
           <Card key={item.id} className="hover:shadow-lg transition-shadow">
             <CardHeader>
-              <div className="flex items-start justify-between">
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  checked={selectedIds.includes(item.id)}
+                  onCheckedChange={(checked) => {
+                    setSelectedIds(
+                      checked
+                        ? [...selectedIds, item.id]
+                        : selectedIds.filter((id) => id !== item.id)
+                    );
+                  }}
+                  className="mt-1"
+                />
+                <div className="flex-1 flex items-start justify-between">
                 <div className="flex-1">
                   <CardTitle className="text-lg">
                     {item.title || item.name}
@@ -83,6 +142,7 @@ export function ContentList({ contentType, websiteFolderId, onEdit, onCreate }) 
                 <Badge variant={item.is_published ? 'default' : 'secondary'}>
                   {item.is_published ? 'Published' : 'Draft'}
                 </Badge>
+                </div>
               </div>
             </CardHeader>
             <CardContent>
@@ -150,9 +210,21 @@ export function ContentList({ contentType, websiteFolderId, onEdit, onCreate }) 
         <div className="text-center py-12">
           <p className="text-muted-foreground">
             No {contentType} found. Create your first one!
-          </p>
-        </div>
-      )}
-    </div>
-  );
-}
+            </p>
+            </div>
+            )}
+
+            <BulkActionsBar
+            selectedCount={selectedIds.length}
+            onPublish={() => bulkUpdateMutation.mutate({ ids: selectedIds, data: { is_published: true } })}
+            onArchive={() => bulkUpdateMutation.mutate({ ids: selectedIds, data: { is_published: false } })}
+            onDelete={() => {
+            if (confirm(`Delete ${selectedIds.length} items?`)) {
+              bulkDeleteMutation.mutate(selectedIds);
+            }
+            }}
+            onClear={() => setSelectedIds([])}
+            />
+            </div>
+            );
+            }
