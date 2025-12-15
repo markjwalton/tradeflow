@@ -1,6 +1,6 @@
 import React from 'react';
 import { PageHeader } from '@/components/sturij/PageHeader';
-import ShowcaseSection from '@/components/showcase/ShowcaseSection';
+import { ShowcaseSection } from '@/components/showcase/ShowcaseSection';
 import { Star, Check, Heart, Minus, Plus, HelpCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
