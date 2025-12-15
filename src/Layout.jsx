@@ -197,7 +197,9 @@ export default function Layout({ children, currentPageName }) {
                 .filter(item => item.is_visible !== false) // Only include visible items
                 .map((item) => ({
                   id: item.id,
+                  _id: item.id, // For backward compatibility
                   name: item.name,
+                  slug: item.slug,
                   item_type: item.item_type,
                   page_url: item.slug,
                   icon: item.icon,
