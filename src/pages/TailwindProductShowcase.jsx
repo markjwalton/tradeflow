@@ -432,6 +432,283 @@ export default function TailwindProductShowcase() {
             </div>
           </div>
         </ShowcaseSection>
+
+        <ShowcaseSection title="Category Grid with Overlay Text">
+          <div className="bg-gray-50 p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="sm:flex sm:items-baseline sm:justify-between">
+                <h2 className="text-2xl font-bold tracking-tight text-gray-900">Shop by Category</h2>
+                <a href="#" className="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block">
+                  Browse all categories
+                  <span aria-hidden="true"> &rarr;</span>
+                </a>
+              </div>
+              <div className="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:grid-rows-2 sm:gap-x-6 lg:gap-8">
+                <div className="group relative aspect-2/1 overflow-hidden rounded-lg sm:row-span-2 sm:aspect-square">
+                  <img
+                    alt="Two models wearing women's black cotton crewneck tee."
+                    src="https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-03-featured-category.jpg"
+                    className="absolute size-full object-cover group-hover:opacity-75"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-50" />
+                  <div className="absolute inset-0 flex items-end p-6">
+                    <div>
+                      <h3 className="font-semibold text-white">
+                        <a href="#">
+                          <span className="absolute inset-0" />
+                          New Arrivals
+                        </a>
+                      </h3>
+                      <p className="mt-1 text-sm text-white">Shop now</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="group relative aspect-2/1 overflow-hidden rounded-lg sm:aspect-auto">
+                  <img
+                    alt="Accessories collection"
+                    src="https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-03-category-01.jpg"
+                    className="absolute size-full object-cover group-hover:opacity-75"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-50" />
+                  <div className="absolute inset-0 flex items-end p-6">
+                    <div>
+                      <h3 className="font-semibold text-white">
+                        <a href="#">
+                          <span className="absolute inset-0" />
+                          Accessories
+                        </a>
+                      </h3>
+                      <p className="mt-1 text-sm text-white">Shop now</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="group relative aspect-2/1 overflow-hidden rounded-lg sm:aspect-auto">
+                  <img
+                    alt="Workspace collection"
+                    src="https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-03-category-02.jpg"
+                    className="absolute size-full object-cover group-hover:opacity-75"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-50" />
+                  <div className="absolute inset-0 flex items-end p-6">
+                    <div>
+                      <h3 className="font-semibold text-white">
+                        <a href="#">
+                          <span className="absolute inset-0" />
+                          Workspace
+                        </a>
+                      </h3>
+                      <p className="mt-1 text-sm text-white">Shop now</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Simple Collections Grid">
+          <div className="bg-gray-100 p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">Collections</h2>
+              <div className="grid grid-cols-1 gap-y-12 lg:grid-cols-3 lg:gap-x-6">
+                {[
+                  {
+                    name: 'Desk and Office',
+                    description: 'Work from home accessories',
+                    imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-02-edition-01.jpg',
+                    imageAlt: 'Desk with leather desk pad and accessories.',
+                  },
+                  {
+                    name: 'Self-Improvement',
+                    description: 'Journals and note-taking',
+                    imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-02-edition-02.jpg',
+                    imageAlt: 'Wood table with journal and pen.',
+                  },
+                  {
+                    name: 'Travel',
+                    description: 'Daily commute essentials',
+                    imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-02-edition-03.jpg',
+                    imageAlt: 'Collection of travel bottles.',
+                  },
+                ].map((callout) => (
+                  <div key={callout.name} className="group relative">
+                    <img
+                      alt={callout.imageAlt}
+                      src={callout.imageSrc}
+                      className="w-full rounded-lg bg-white object-cover group-hover:opacity-75 aspect-2/1 lg:aspect-square"
+                    />
+                    <h3 className="mt-6 text-sm text-gray-500">
+                      <a href="#">
+                        <span className="absolute inset-0" />
+                        {callout.name}
+                      </a>
+                    </h3>
+                    <p className="text-base font-semibold text-gray-900">{callout.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Featured Collection with Overlay">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="relative overflow-hidden rounded-lg lg:h-96">
+                <div className="absolute inset-0">
+                  <img
+                    alt=""
+                    src="https://tailwindcss.com/plus-assets/img/ecommerce-images/category-page-01-featured-collection.jpg"
+                    className="size-full object-cover"
+                  />
+                </div>
+                <div className="relative h-96 w-full lg:hidden" />
+                <div className="relative h-32 w-full lg:hidden" />
+                <div className="absolute inset-x-0 bottom-0 rounded-br-lg rounded-bl-lg bg-black/75 p-6 backdrop-blur-sm sm:flex sm:items-center sm:justify-between lg:inset-x-auto lg:inset-y-0 lg:w-96 lg:flex-col lg:items-start lg:rounded-tl-lg lg:rounded-br-none">
+                  <div>
+                    <h2 className="text-xl font-bold text-white">Workspace Collection</h2>
+                    <p className="mt-1 text-sm text-gray-300">
+                      Upgrade your desk with objects that keep you organized.
+                    </p>
+                  </div>
+                  <a
+                    href="#"
+                    className="mt-6 flex shrink-0 items-center justify-center rounded-md border border-white/25 px-4 py-3 text-base font-medium text-white hover:bg-white/10 sm:mt-0 sm:ml-8 lg:ml-0 lg:w-full"
+                  >
+                    View the collection
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Collections with Description">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <h2 className="text-2xl font-bold tracking-tight text-gray-900">Shop by Collection</h2>
+              <p className="mt-4 text-base text-gray-500">
+                Each season, we collaborate with world-class designers to create a collection.
+              </p>
+              <div className="mt-10 grid grid-cols-1 gap-y-12 lg:grid-cols-3 lg:gap-x-8">
+                {[
+                  {
+                    name: 'Handcrafted Collection',
+                    imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-01-collection-01.jpg',
+                    imageAlt: 'Brown leather key ring.',
+                    description: 'Keep your phone, keys, and wallet together.',
+                  },
+                  {
+                    name: 'Organized Desk Collection',
+                    imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-01-collection-02.jpg',
+                    imageAlt: 'Natural leather mouse pad.',
+                    description: 'Your desk will look great.',
+                  },
+                  {
+                    name: 'Focus Collection',
+                    imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-01-collection-03.jpg',
+                    imageAlt: 'Task list card holder.',
+                    description: 'Be more productive with a single piece of paper.',
+                  },
+                ].map((category) => (
+                  <a key={category.name} href="#" className="group block">
+                    <img
+                      alt={category.imageAlt}
+                      src={category.imageSrc}
+                      className="aspect-3/2 w-full rounded-lg object-cover group-hover:opacity-75 lg:aspect-5/6"
+                    />
+                    <h3 className="mt-4 text-base font-semibold text-gray-900">{category.name}</h3>
+                    <p className="mt-2 text-sm text-gray-500">{category.description}</p>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Horizontal Scroll Categories">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="sm:flex sm:items-center sm:justify-between">
+                <h2 className="text-2xl font-bold tracking-tight text-gray-900">Shop by Category</h2>
+                <a href="#" className="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block">
+                  Browse all categories
+                  <span aria-hidden="true"> &rarr;</span>
+                </a>
+              </div>
+              <div className="mt-4 flow-root">
+                <div className="-my-2">
+                  <div className="relative box-content h-80 overflow-x-auto py-2">
+                    <div className="flex space-x-8">
+                      {[
+                        { name: 'New Arrivals', imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-01-category-01.jpg' },
+                        { name: 'Productivity', imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-01-category-02.jpg' },
+                        { name: 'Workspace', imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-01-category-04.jpg' },
+                        { name: 'Accessories', imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-01-category-05.jpg' },
+                        { name: 'Sale', imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-01-category-03.jpg' },
+                      ].map((category) => (
+                        <a
+                          key={category.name}
+                          href="#"
+                          className="relative flex h-80 w-56 flex-col overflow-hidden rounded-lg p-6 hover:opacity-75"
+                        >
+                          <span className="absolute inset-0">
+                            <img alt="" src={category.imageSrc} className="size-full object-cover" />
+                          </span>
+                          <span className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-gray-800 opacity-50" />
+                          <span className="relative mt-auto text-center text-xl font-bold text-white">
+                            {category.name}
+                          </span>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Split Screen Categories">
+          <div className="bg-gray-50 p-8 rounded-lg">
+            <div className="grid grid-cols-1 grid-rows-2 lg:grid-cols-2 lg:grid-rows-1 gap-4">
+              <div className="relative flex h-96">
+                <img
+                  alt=""
+                  src="https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-02-edition-01.jpg"
+                  className="absolute inset-0 size-full object-cover rounded-lg"
+                />
+                <div className="relative flex w-full flex-col items-start justify-end bg-black/40 p-8 rounded-lg">
+                  <h2 className="text-lg font-medium text-white/75">Self-Improvement</h2>
+                  <p className="mt-1 text-2xl font-medium text-white">Journals and note-taking</p>
+                  <a
+                    href="#"
+                    className="mt-4 rounded-md bg-white px-4 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-50"
+                  >
+                    Shop now
+                  </a>
+                </div>
+              </div>
+              <div className="relative flex h-96">
+                <img
+                  alt=""
+                  src="https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-02-edition-02.jpg"
+                  className="absolute inset-0 size-full object-cover rounded-lg"
+                />
+                <div className="relative flex w-full flex-col items-start justify-end bg-black/40 p-8 rounded-lg">
+                  <h2 className="text-lg font-medium text-white/75">Desk and Office</h2>
+                  <p className="mt-1 text-2xl font-medium text-white">Work from home accessories</p>
+                  <a
+                    href="#"
+                    className="mt-4 rounded-md bg-white px-4 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-50"
+                  >
+                    Shop now
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
       </div>
     </div>
   );
