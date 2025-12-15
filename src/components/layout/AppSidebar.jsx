@@ -203,7 +203,7 @@ export function AppSidebar({ navItems = [] }) {
               className="transition-colors" 
               size={iconSize}
               strokeWidth={iconStrokeWidth}
-              style={{ color: childActive ? 'var(--sidebar-primary-foreground)' : 'var(--accent-500)' }}
+              style={{ color: childActive ? 'var(--sidebar-primary-foreground)' : 'var(--accent-500, #b39299)' }}
             />
           </button>
         );
@@ -247,7 +247,7 @@ export function AppSidebar({ navItems = [] }) {
             {hasChildren && (
               isExpanded ? <ChevronDown className="h-4 w-4 text-sidebar-foreground/50" /> : <ChevronRight className="h-4 w-4 text-sidebar-foreground/50" />
             )}
-            <FolderIcon size={iconSize} strokeWidth={iconStrokeWidth} style={{ color: 'var(--accent-500)' }} />
+            <FolderIcon size={iconSize} strokeWidth={iconStrokeWidth} style={{ color: 'var(--accent-500, #b39299)' }} />
             <span className={cn("flex-1 text-left", !item.parent_id && "font-medium")}>{item.name || 'Unnamed'}</span>
           </button>
           {isExpanded && hasChildren && (
@@ -285,7 +285,7 @@ export function AppSidebar({ navItems = [] }) {
           className="flex-shrink-0 transition-colors"
           size={iconSize}
           strokeWidth={iconStrokeWidth}
-          style={{ color: isActive ? 'var(--sidebar-primary-foreground)' : 'var(--accent-500)' }}
+          style={{ color: isActive ? 'var(--sidebar-primary-foreground)' : 'var(--accent-500, #b39299)' }}
         />
         {showLabels && <span className={cn("truncate", isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground/70", isTopLevel && "font-medium")}>{item.name || 'Unnamed'}</span>}
       </Link>
