@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { PageHeader } from '@/components/sturij/PageHeader';
-import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, ChevronDown, User, Building, Users, CreditCard, Home, Folder, Calendar as CalendarIcon, FileText, BarChart3, Check, CheckCircle2, Search, FolderPlus, Hash, Tag, Globe, Frown, AlertTriangle, LifeBuoy, PenSquare, Code, Image, Video, Table } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, ChevronDown, User, Building, Users, CreditCard, Home, Folder, Calendar as CalendarIcon, FileText, BarChart3, Check, CheckCircle2, Search, FolderPlus, Hash, Tag, Globe, Frown, AlertTriangle, LifeBuoy, PenSquare, Code, Image, Video, Table, X } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 const sampleItems = [
   { id: 1, title: 'First item', description: 'Sample content for demonstration' },
@@ -1814,6 +1815,202 @@ export default function TailwindListsShowcase() {
             <ul className="space-y-1 text-muted-foreground">
               <li>• Footer: <code className="bg-background px-1 py-0.5 rounded">bg-muted px-4 py-2.5 text-xs</code></li>
               <li>• Kbd keys: <code className="bg-background px-1 py-0.5 rounded">h-5 w-5 rounded-sm border bg-background</code></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Modals / Dialogs */}
+      <section className="space-y-8 mt-12 pt-8 border-t border-border">
+        <div>
+          <h2 className="text-xl font-display mb-2">Modals / Dialogs</h2>
+          <p className="text-sm text-muted-foreground">Modal dialog patterns for confirmations and actions</p>
+        </div>
+
+        {/* Success Modal - Single Button */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Success Modal - Centered Icon</h3>
+          <div className="max-w-sm mx-auto transform overflow-hidden rounded-lg bg-card px-4 pt-5 pb-4 text-left shadow-xl border border-border sm:p-6">
+            <div>
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-success-50">
+                <CheckCircle2 className="h-6 w-6 text-success" />
+              </div>
+              <div className="mt-3 text-center sm:mt-5">
+                <h3 className="text-base font-semibold text-foreground">Payment successful</h3>
+                <div className="mt-2">
+                  <p className="text-sm text-muted-foreground">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-5 sm:mt-6">
+              <Button className="w-full">Go back to dashboard</Button>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Icon bg: <code className="bg-background px-1 py-0.5 rounded">bg-success-50</code></li>
+              <li>• Icon: <code className="bg-background px-1 py-0.5 rounded">text-success h-6 w-6</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Success Modal - Two Buttons */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Success Modal - Two Buttons</h3>
+          <div className="max-w-lg mx-auto transform overflow-hidden rounded-lg bg-card px-4 pt-5 pb-4 text-left shadow-xl border border-border sm:p-6">
+            <div>
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-success-50">
+                <CheckCircle2 className="h-6 w-6 text-success" />
+              </div>
+              <div className="mt-3 text-center sm:mt-5">
+                <h3 className="text-base font-semibold text-foreground">Payment successful</h3>
+                <div className="mt-2">
+                  <p className="text-sm text-muted-foreground">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eius aliquam laudantium explicabo pariatur.</p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
+              <Button className="w-full sm:col-start-2">Deactivate</Button>
+              <Button variant="outline" className="w-full mt-3 sm:col-start-1 sm:mt-0">Cancel</Button>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Button grid: <code className="bg-background px-1 py-0.5 rounded">sm:grid sm:grid-cols-2 sm:gap-3</code></li>
+              <li>• Flow: <code className="bg-background px-1 py-0.5 rounded">sm:grid-flow-row-dense</code> for reverse order</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Warning Modal - Icon Left */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Warning Modal - Icon Left Aligned</h3>
+          <div className="max-w-lg mx-auto transform overflow-hidden rounded-lg bg-card px-4 pt-5 pb-4 text-left shadow-xl border border-border sm:p-6">
+            <div className="sm:flex sm:items-start">
+              <div className="mx-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-destructive-50 sm:mx-0 sm:h-10 sm:w-10">
+                <AlertTriangle className="h-6 w-6 text-destructive" />
+              </div>
+              <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                <h3 className="text-base font-semibold text-foreground">Deactivate account</h3>
+                <div className="mt-2">
+                  <p className="text-sm text-muted-foreground">Are you sure you want to deactivate your account? All of your data will be permanently removed from our servers forever.</p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+              <Button variant="destructive" className="w-full sm:ml-3 sm:w-auto">Deactivate</Button>
+              <Button variant="outline" className="w-full mt-3 sm:mt-0 sm:w-auto">Cancel</Button>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Warning bg: <code className="bg-background px-1 py-0.5 rounded">bg-destructive-50</code></li>
+              <li>• Warning icon: <code className="bg-background px-1 py-0.5 rounded">text-destructive</code></li>
+              <li>• Layout: <code className="bg-background px-1 py-0.5 rounded">sm:flex sm:items-start</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Modal with Close Button */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Close Button</h3>
+          <div className="max-w-lg mx-auto relative transform overflow-hidden rounded-lg bg-card px-4 pt-5 pb-4 text-left shadow-xl border border-border sm:p-6">
+            <div className="absolute top-0 right-0 hidden pt-4 pr-4 sm:block">
+              <button type="button" className="rounded-md bg-card text-muted-foreground hover:text-foreground">
+                <span className="sr-only">Close</span>
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            <div className="sm:flex sm:items-start">
+              <div className="mx-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-destructive-50 sm:mx-0 sm:h-10 sm:w-10">
+                <AlertTriangle className="h-6 w-6 text-destructive" />
+              </div>
+              <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                <h3 className="text-base font-semibold text-foreground">Deactivate account</h3>
+                <div className="mt-2">
+                  <p className="text-sm text-muted-foreground">Are you sure you want to deactivate your account? All of your data will be permanently removed.</p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+              <Button variant="destructive" className="w-full sm:ml-3 sm:w-auto">Deactivate</Button>
+              <Button variant="outline" className="w-full mt-3 sm:mt-0 sm:w-auto">Cancel</Button>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Close button: <code className="bg-background px-1 py-0.5 rounded">absolute top-0 right-0 pt-4 pr-4</code></li>
+              <li>• Hidden on mobile: <code className="bg-background px-1 py-0.5 rounded">hidden sm:block</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Modal with Gray Footer */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Colored Footer</h3>
+          <div className="max-w-lg mx-auto transform overflow-hidden rounded-lg bg-card text-left shadow-xl border border-border">
+            <div className="bg-card px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+              <div className="sm:flex sm:items-start">
+                <div className="mx-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-destructive-50 sm:mx-0 sm:h-10 sm:w-10">
+                  <AlertTriangle className="h-6 w-6 text-destructive" />
+                </div>
+                <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                  <h3 className="text-base font-semibold text-foreground">Deactivate account</h3>
+                  <div className="mt-2">
+                    <p className="text-sm text-muted-foreground">Are you sure you want to deactivate your account? All of your data will be permanently removed.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="bg-muted px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+              <Button variant="destructive" className="w-full sm:ml-3 sm:w-auto">Deactivate</Button>
+              <Button variant="outline" className="w-full mt-3 sm:mt-0 sm:w-auto">Cancel</Button>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Footer bg: <code className="bg-background px-1 py-0.5 rounded">bg-muted</code></li>
+              <li>• Separate content/footer sections with different backgrounds</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Modal with Indented Buttons */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Indented Buttons</h3>
+          <div className="max-w-lg mx-auto transform overflow-hidden rounded-lg bg-card px-4 pt-5 pb-4 text-left shadow-xl border border-border sm:p-6">
+            <div className="sm:flex sm:items-start">
+              <div className="mx-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-destructive-50 sm:mx-0 sm:h-10 sm:w-10">
+                <AlertTriangle className="h-6 w-6 text-destructive" />
+              </div>
+              <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                <h3 className="text-base font-semibold text-foreground">Deactivate account</h3>
+                <div className="mt-2">
+                  <p className="text-sm text-muted-foreground">Are you sure you want to deactivate your account? All of your data will be permanently removed from our servers forever.</p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-5 sm:mt-4 sm:ml-10 sm:flex sm:pl-4">
+              <Button variant="destructive" className="w-full sm:w-auto">Deactivate</Button>
+              <Button variant="outline" className="w-full mt-3 sm:mt-0 sm:ml-3 sm:w-auto">Cancel</Button>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Button alignment: <code className="bg-background px-1 py-0.5 rounded">sm:ml-10 sm:pl-4</code> to align with text</li>
+              <li>• Creates visual hierarchy with indented action buttons</li>
             </ul>
           </div>
         </div>
