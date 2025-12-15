@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { PageHeader } from '@/components/sturij/PageHeader';
-import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, ChevronDown, User, Building, Users, CreditCard, Home, Folder, Calendar as CalendarIcon, FileText, BarChart3, Check, CheckCircle2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, ChevronDown, User, Building, Users, CreditCard, Home, Folder, Calendar as CalendarIcon, FileText, BarChart3, Check, CheckCircle2, Search, FolderPlus, Hash, Tag, Globe, Frown, AlertTriangle, LifeBuoy, PenSquare, Code, Image, Video, Table } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 
 const sampleItems = [
   { id: 1, title: 'First item', description: 'Sample content for demonstration' },
@@ -1547,6 +1549,271 @@ export default function TailwindListsShowcase() {
             <ul className="space-y-1 text-muted-foreground">
               <li>• Connecting lines: <code className="bg-background px-1 py-0.5 rounded">absolute w-0.5 h-full bg-primary</code></li>
               <li>• Two-line layout with <code className="bg-background px-1 py-0.5 rounded">flex-col</code> for name and description</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Command Palettes / Search Modals */}
+      <section className="space-y-8 mt-12 pt-8 border-t border-border">
+        <div>
+          <h2 className="text-xl font-display mb-2">Command Palettes / Search Modals</h2>
+          <p className="text-sm text-muted-foreground">Modal search interfaces for quick navigation and actions</p>
+        </div>
+
+        {/* Simple Search Modal */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Simple Search Modal</h3>
+          <div className="max-w-xl mx-auto transform divide-y divide-border overflow-hidden rounded-xl bg-card shadow-2xl border border-border">
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-muted-foreground" />
+              <Input placeholder="Search..." className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-foreground placeholder:text-muted-foreground focus-visible:ring-0" />
+            </div>
+            <div className="max-h-72 overflow-y-auto py-2 text-sm">
+              <div className="cursor-default px-4 py-2 hover:bg-primary hover:text-primary-foreground">Leslie Alexander</div>
+              <div className="cursor-default px-4 py-2 hover:bg-primary hover:text-primary-foreground">Michael Foster</div>
+              <div className="cursor-default px-4 py-2 hover:bg-primary hover:text-primary-foreground">Dries Vincent</div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Modal: <code className="bg-background px-1 py-0.5 rounded">bg-card border shadow-2xl rounded-xl</code></li>
+              <li>• Results hover: <code className="bg-background px-1 py-0.5 rounded">hover:bg-primary hover:text-primary-foreground</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Rounded Input Style */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Rounded Input with Empty State</h3>
+          <div className="max-w-xl mx-auto transform rounded-xl bg-card p-2 shadow-2xl border border-border">
+            <Input placeholder="Search..." className="w-full rounded-md bg-muted px-4 py-2.5 border-0 text-foreground placeholder:text-muted-foreground focus-visible:ring-0" />
+            <div className="px-4 py-14 text-center sm:px-14">
+              <Users className="mx-auto h-6 w-6 text-muted-foreground" />
+              <p className="mt-4 text-sm text-foreground">No people found using that search term.</p>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Rounded input: <code className="bg-background px-1 py-0.5 rounded">bg-muted rounded-md</code></li>
+              <li>• Empty state icon: <code className="bg-background px-1 py-0.5 rounded">text-muted-foreground h-6 w-6</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* With Icon Items */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Colored Icon Items</h3>
+          <div className="max-w-xl mx-auto transform divide-y divide-border overflow-hidden rounded-xl bg-card shadow-2xl border border-border">
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-muted-foreground" />
+              <Input placeholder="Search..." className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-foreground placeholder:text-muted-foreground focus-visible:ring-0" />
+            </div>
+            <div className="max-h-96 overflow-y-auto p-3">
+              <div className="group flex cursor-default rounded-xl p-3 hover:bg-accent">
+                <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-primary">
+                  <PenSquare className="h-6 w-6 text-white" />
+                </div>
+                <div className="ml-4 flex-auto">
+                  <p className="text-sm font-medium text-foreground group-hover:text-foreground">Text</p>
+                  <p className="text-sm text-muted-foreground group-hover:text-foreground">Add freeform text with basic formatting.</p>
+                </div>
+              </div>
+              <div className="group flex cursor-default rounded-xl p-3 hover:bg-accent">
+                <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-secondary">
+                  <Image className="h-6 w-6 text-white" />
+                </div>
+                <div className="ml-4 flex-auto">
+                  <p className="text-sm font-medium text-foreground group-hover:text-foreground">Image</p>
+                  <p className="text-sm text-muted-foreground group-hover:text-foreground">Embed an image from your computer.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Icon containers: <code className="bg-background px-1 py-0.5 rounded">h-10 w-10 rounded-lg bg-primary</code></li>
+              <li>• Item hover: <code className="bg-background px-1 py-0.5 rounded">hover:bg-accent rounded-xl</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Quick Actions & Shortcuts</h3>
+          <div className="max-w-2xl mx-auto transform divide-y divide-border overflow-hidden rounded-xl bg-card shadow-2xl border border-border">
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-muted-foreground" />
+              <Input placeholder="Search..." className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-foreground placeholder:text-muted-foreground focus-visible:ring-0" />
+            </div>
+            <div className="max-h-80 overflow-y-auto divide-y divide-border">
+              <div className="p-2">
+                <h2 className="mt-4 mb-2 px-3 text-xs font-semibold text-muted-foreground">Recent searches</h2>
+                <div className="text-sm">
+                  <div className="group flex cursor-default items-center rounded-md px-3 py-2 hover:bg-primary hover:text-primary-foreground">
+                    <Folder className="h-6 w-6 flex-none text-muted-foreground group-hover:text-primary-foreground" />
+                    <span className="ml-3 flex-auto truncate">Workflow Inc. / Website Redesign</span>
+                  </div>
+                </div>
+              </div>
+              <div className="p-2">
+                <h2 className="sr-only">Quick actions</h2>
+                <div className="text-sm">
+                  <div className="group flex cursor-default items-center rounded-md px-3 py-2 hover:bg-primary hover:text-primary-foreground">
+                    <FolderPlus className="h-6 w-6 flex-none text-muted-foreground group-hover:text-primary-foreground" />
+                    <span className="ml-3 flex-auto truncate">Add new folder...</span>
+                    <span className="ml-3 flex-none text-xs font-semibold text-muted-foreground group-hover:text-primary-foreground/80">
+                      <kbd className="font-sans">⌘</kbd>
+                      <kbd className="font-sans">F</kbd>
+                    </span>
+                  </div>
+                  <div className="group flex cursor-default items-center rounded-md px-3 py-2 hover:bg-primary hover:text-primary-foreground">
+                    <Hash className="h-6 w-6 flex-none text-muted-foreground group-hover:text-primary-foreground" />
+                    <span className="ml-3 flex-auto truncate">Add hashtag...</span>
+                    <span className="ml-3 flex-none text-xs font-semibold text-muted-foreground group-hover:text-primary-foreground/80">
+                      <kbd className="font-sans">⌘</kbd>
+                      <kbd className="font-sans">H</kbd>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Section headers: <code className="bg-background px-1 py-0.5 rounded">text-xs font-semibold text-muted-foreground</code></li>
+              <li>• Keyboard shortcuts: <code className="bg-background px-1 py-0.5 rounded">kbd font-sans text-xs</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Backdrop Blur */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Backdrop Blur</h3>
+          <div className="max-w-2xl mx-auto transform divide-y divide-border/50 overflow-hidden rounded-xl bg-card/80 backdrop-blur-sm shadow-2xl border border-border">
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-foreground/40" />
+              <Input placeholder="Search..." className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-foreground placeholder:text-muted-foreground focus-visible:ring-0" />
+            </div>
+            <div className="p-2">
+              <h2 className="mt-4 mb-2 px-3 text-xs font-semibold text-foreground">Recent searches</h2>
+              <div className="text-sm">
+                <div className="group flex cursor-default items-center rounded-md px-3 py-2 hover:bg-foreground/5">
+                  <Folder className="h-6 w-6 flex-none text-foreground/40 group-hover:text-foreground" />
+                  <span className="ml-3 flex-auto truncate">Workflow Inc. / Website Redesign</span>
+                  <span className="ml-3 hidden flex-none text-muted-foreground group-hover:inline">Jump to...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Backdrop: <code className="bg-background px-1 py-0.5 rounded">bg-card/80 backdrop-blur-sm</code></li>
+              <li>• Subtle hover: <code className="bg-background px-1 py-0.5 rounded">hover:bg-foreground/5</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Empty State Message */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Initial Empty State</h3>
+          <div className="max-w-xl mx-auto transform overflow-hidden rounded-xl bg-card shadow-2xl border border-border">
+            <div className="relative border-b border-border">
+              <Search className="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-muted-foreground" />
+              <Input placeholder="Search..." className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-foreground placeholder:text-muted-foreground focus-visible:ring-0" />
+            </div>
+            <div className="px-6 py-14 text-center text-sm">
+              <Globe className="mx-auto h-6 w-6 text-muted-foreground" />
+              <p className="mt-4 font-semibold text-foreground">Search for clients and projects</p>
+              <p className="mt-2 text-muted-foreground">Quickly access clients and projects by running a global search.</p>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Empty state: <code className="bg-background px-1 py-0.5 rounded">py-14 text-center</code></li>
+              <li>• Icon: <code className="bg-background px-1 py-0.5 rounded">h-6 w-6 text-muted-foreground</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Grouped Results */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Grouped Results</h3>
+          <div className="max-w-xl mx-auto transform overflow-hidden rounded-xl bg-card shadow-2xl border border-border">
+            <div className="relative border-b border-border">
+              <Search className="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-muted-foreground" />
+              <Input placeholder="Search..." className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-foreground placeholder:text-muted-foreground focus-visible:ring-0" />
+            </div>
+            <div className="max-h-80 overflow-y-auto space-y-2 pb-2">
+              <div>
+                <h2 className="bg-muted px-4 py-2.5 text-xs font-semibold text-foreground">Clients</h2>
+                <div className="mt-2 text-sm">
+                  <div className="cursor-default px-4 py-2 hover:bg-primary hover:text-primary-foreground">Workflow Inc.</div>
+                  <div className="cursor-default px-4 py-2 hover:bg-primary hover:text-primary-foreground">Acme Corp.</div>
+                </div>
+              </div>
+              <div>
+                <h2 className="bg-muted px-4 py-2.5 text-xs font-semibold text-foreground">Projects</h2>
+                <div className="mt-2 text-sm">
+                  <div className="cursor-default px-4 py-2 hover:bg-primary hover:text-primary-foreground">Website Redesign</div>
+                  <div className="cursor-default px-4 py-2 hover:bg-primary hover:text-primary-foreground">Mobile App</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Group headers: <code className="bg-background px-1 py-0.5 rounded">bg-muted text-xs font-semibold</code></li>
+              <li>• Spacing: <code className="bg-background px-1 py-0.5 rounded">space-y-2</code> between groups</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Search Modifiers */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Search Modifiers</h3>
+          <div className="max-w-xl mx-auto transform divide-y divide-border overflow-hidden rounded-xl bg-card shadow-2xl border border-border">
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-4 top-3.5 h-5 w-5 text-muted-foreground" />
+              <Input placeholder="Search..." className="h-12 w-full border-0 bg-transparent pl-11 pr-4 text-foreground placeholder:text-muted-foreground focus-visible:ring-0" />
+            </div>
+            <div className="max-h-80 overflow-y-auto space-y-4 p-4 pb-2">
+              <div>
+                <h2 className="text-xs font-semibold text-foreground">Projects</h2>
+                <div className="-mx-4 mt-2 text-sm">
+                  <div className="group flex cursor-default items-center px-4 py-2 hover:bg-primary hover:text-primary-foreground">
+                    <Folder className="h-6 w-6 flex-none text-muted-foreground group-hover:text-primary-foreground" />
+                    <span className="ml-3 flex-auto truncate">Website Redesign</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center bg-muted px-4 py-2.5 text-xs text-foreground">
+              Type <kbd className="mx-1 flex h-5 w-5 items-center justify-center rounded-sm border border-border bg-background font-semibold sm:mx-2">#</kbd> for projects,
+              <kbd className="mx-1 flex h-5 w-5 items-center justify-center rounded-sm border border-border bg-background font-semibold sm:mx-2">&gt;</kbd> for users, and
+              <kbd className="mx-1 flex h-5 w-5 items-center justify-center rounded-sm border border-border bg-background font-semibold sm:mx-2">?</kbd> for help.
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Footer: <code className="bg-background px-1 py-0.5 rounded">bg-muted px-4 py-2.5 text-xs</code></li>
+              <li>• Kbd keys: <code className="bg-background px-1 py-0.5 rounded">h-5 w-5 rounded-sm border bg-background</code></li>
             </ul>
           </div>
         </div>
