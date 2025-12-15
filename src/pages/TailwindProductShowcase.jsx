@@ -1,7 +1,7 @@
 import React from 'react';
 import { PageHeader } from '@/components/sturij/PageHeader';
 import { ShowcaseSection } from '@/components/showcase/ShowcaseSection';
-import { Star, Check, Heart, Minus, Plus, HelpCircle, ChevronDown, Clock, X, Search, ShoppingBag } from 'lucide-react';
+import { Star, Check, Heart, Minus, Plus, HelpCircle, ChevronDown, Clock, X, Search, ShoppingBag, ShieldCheck, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
@@ -1116,6 +1116,232 @@ export default function TailwindProductShowcase() {
                 </aside>
                 <div className="lg:col-span-2 xl:col-span-3">
                   <div className="text-center text-gray-500 py-12">Product Grid Goes Here</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Quick View Modal - Compact">
+          <div className="bg-gray-100 p-8 rounded-lg">
+            <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-2xl p-6 lg:p-8">
+              <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 lg:gap-8">
+                <img
+                  src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-featured-product-shot.jpg"
+                  className="aspect-2/3 w-full rounded-lg object-cover sm:col-span-4 lg:col-span-5"
+                  alt="Product"
+                />
+                <div className="sm:col-span-8 lg:col-span-7">
+                  <h2 className="text-xl font-medium text-gray-900">Women's Basic Tee</h2>
+                  <p className="mt-1 font-medium text-gray-900">$32</p>
+                  <div className="mt-4 flex items-center">
+                    <div className="flex items-center">
+                      {[0, 1, 2, 3, 4].map((i) => (
+                        <Star key={i} className={`h-5 w-5 ${i < 3 ? 'fill-yellow-400 text-yellow-400' : 'text-gray-200'}`} />
+                      ))}
+                    </div>
+                    <p className="ml-2 text-sm text-gray-700">3.9</p>
+                    <a href="#" className="ml-4 text-sm font-medium text-indigo-600 hover:text-indigo-500">512 reviews</a>
+                  </div>
+                  <div className="mt-8">
+                    <h3 className="text-sm font-medium text-gray-900">Color</h3>
+                    <div className="mt-2 flex items-center gap-3">
+                      <button className="h-8 w-8 rounded-full bg-gray-900 ring-2 ring-gray-900 ring-offset-2" />
+                      <button className="h-8 w-8 rounded-full bg-gray-400 ring-1 ring-black/10" />
+                    </div>
+                  </div>
+                  <div className="mt-8">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-medium text-gray-900">Size</h3>
+                      <a href="#" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">Size guide</a>
+                    </div>
+                    <div className="mt-2 grid grid-cols-4 gap-3">
+                      {['XXS', 'XS', 'S', 'M', 'L', 'XL'].map((size) => (
+                        <button
+                          key={size}
+                          className="border border-gray-300 rounded-md py-3 text-sm font-medium text-gray-900 hover:bg-gray-50"
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <button className="mt-8 w-full rounded-md bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700">
+                    Add to bag
+                  </button>
+                  <p className="mt-6 text-center">
+                    <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">View full details</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Quick View Modal - Large">
+          <div className="bg-gray-100 p-8 rounded-lg">
+            <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-2xl p-6 lg:p-8">
+              <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 lg:gap-8">
+                <img
+                  src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-quick-preview-02-detail.jpg"
+                  className="aspect-2/3 w-full rounded-lg object-cover sm:col-span-4 lg:col-span-5"
+                  alt="Product"
+                />
+                <div className="sm:col-span-8 lg:col-span-7">
+                  <h2 className="text-2xl font-bold text-gray-900">Basic Tee 6-Pack</h2>
+                  <p className="mt-2 text-2xl text-gray-900">$192</p>
+                  <div className="mt-6 flex items-center">
+                    <div className="flex items-center">
+                      {[0, 1, 2, 3, 4].map((i) => (
+                        <Star key={i} className={`h-5 w-5 ${i < 3 ? 'fill-gray-900 text-gray-900' : 'text-gray-200'}`} />
+                      ))}
+                    </div>
+                    <a href="#" className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">117 reviews</a>
+                  </div>
+                  <div className="mt-10">
+                    <h3 className="text-sm font-medium text-gray-900">Color</h3>
+                    <div className="mt-4 flex items-center gap-3">
+                      <button className="h-8 w-8 rounded-full bg-white ring-2 ring-gray-400 ring-offset-2" />
+                      <button className="h-8 w-8 rounded-full bg-gray-200 ring-1 ring-black/10" />
+                      <button className="h-8 w-8 rounded-full bg-gray-900 ring-1 ring-black/10" />
+                    </div>
+                  </div>
+                  <div className="mt-10">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-medium text-gray-900">Size</h3>
+                      <a href="#" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">Size guide</a>
+                    </div>
+                    <div className="mt-2 grid grid-cols-4 gap-3">
+                      {['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'].map((size) => (
+                        <button
+                          key={size}
+                          className="border border-gray-300 rounded-md py-3 text-sm font-medium text-gray-900 hover:bg-gray-50 uppercase"
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <button className="mt-6 w-full rounded-md bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700">
+                    Add to bag
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Quick View Modal - With Descriptions">
+          <div className="bg-gray-100 p-8 rounded-lg">
+            <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-2xl p-6 lg:p-8">
+              <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 lg:gap-8">
+                <div className="sm:col-span-4 lg:col-span-5">
+                  <img
+                    src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-quick-preview-03-detail.jpg"
+                    className="aspect-square w-full rounded-lg object-cover"
+                    alt="Product"
+                  />
+                  <p className="mt-6 text-center">
+                    <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">View full details</a>
+                  </p>
+                </div>
+                <div className="sm:col-span-8 lg:col-span-7">
+                  <h2 className="text-2xl font-bold text-gray-900">Everyday Ruck Snack</h2>
+                  <div className="mt-4 flex items-center">
+                    <p className="text-lg text-gray-900 sm:text-xl">$220</p>
+                    <div className="ml-4 border-l border-gray-300 pl-4">
+                      <div className="flex items-center">
+                        {[0, 1, 2, 3, 4].map((i) => (
+                          <Star key={i} className={`h-5 w-5 ${i < 3 ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-6 flex items-center">
+                    <Check className="h-5 w-5 text-green-500" />
+                    <p className="ml-2 font-medium text-gray-500">In stock and ready to ship</p>
+                  </div>
+                  <div className="mt-6">
+                    <h3 className="text-sm font-medium text-gray-700">Size</h3>
+                    <div className="mt-2 space-y-4">
+                      <label className="relative flex rounded-lg border border-gray-300 p-4 cursor-pointer hover:border-indigo-600">
+                        <input type="radio" name="size" className="sr-only" defaultChecked />
+                        <div className="flex-1">
+                          <span className="block text-base font-medium text-gray-900">18L</span>
+                          <span className="mt-1 block text-sm text-gray-500">Perfect for a reasonable amount of snacks.</span>
+                        </div>
+                        <CheckCircle className="h-5 w-5 text-indigo-600" />
+                      </label>
+                      <label className="relative flex rounded-lg border border-gray-300 p-4 cursor-pointer hover:border-indigo-600">
+                        <input type="radio" name="size" className="sr-only" />
+                        <div className="flex-1">
+                          <span className="block text-base font-medium text-gray-900">20L</span>
+                          <span className="mt-1 block text-sm text-gray-500">Enough room for a large amount of snacks.</span>
+                        </div>
+                        <CheckCircle className="h-5 w-5 text-indigo-600 invisible" />
+                      </label>
+                    </div>
+                  </div>
+                  <div className="mt-4 flex">
+                    <a href="#" className="group flex text-sm text-gray-500 hover:text-gray-700">
+                      <span>What size should I buy?</span>
+                      <HelpCircle className="ml-2 h-5 w-5 text-gray-400 group-hover:text-gray-500" />
+                    </a>
+                  </div>
+                  <button className="mt-6 w-full rounded-md bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700">
+                    Add to bag
+                  </button>
+                  <div className="mt-6 text-center">
+                    <a href="#" className="group inline-flex text-base font-medium">
+                      <ShieldCheck className="mr-2 h-6 w-6 text-gray-400 group-hover:text-gray-500" />
+                      <span className="text-gray-500 group-hover:text-gray-700">Lifetime Guarantee</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Quick View Modal - With Description Text">
+          <div className="bg-gray-100 p-8 rounded-lg">
+            <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-2xl p-6 lg:p-8">
+              <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 lg:gap-8">
+                <div className="sm:col-span-4 lg:col-span-5">
+                  <img
+                    src="https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-03-product-04.jpg"
+                    className="aspect-square w-full rounded-lg object-cover"
+                    alt="Product"
+                  />
+                </div>
+                <div className="sm:col-span-8 lg:col-span-7">
+                  <h2 className="text-2xl font-bold text-gray-900">Zip Tote Basket</h2>
+                  <p className="mt-3 text-2xl text-gray-900">$220</p>
+                  <div className="mt-3 flex items-center">
+                    {[0, 1, 2, 3, 4].map((i) => (
+                      <Star key={i} className={`h-5 w-5 ${i < 3 ? 'fill-gray-400 text-gray-400' : 'text-gray-200'}`} />
+                    ))}
+                  </div>
+                  <div className="mt-6">
+                    <p className="text-sm text-gray-700">
+                      The Zip Tote Basket is the perfect midpoint between shopping tote and comfy backpack. 
+                      With convertible straps, you can hand carry, should sling, or backpack this convenient and spacious bag.
+                    </p>
+                  </div>
+                  <div className="mt-6">
+                    <h4 className="text-sm font-medium text-gray-600">Color</h4>
+                    <div className="mt-2 flex items-center gap-3">
+                      <button className="h-8 w-8 rounded-full bg-gray-700 ring-2 ring-gray-700 ring-offset-2" />
+                      <button className="h-8 w-8 rounded-full bg-white ring-1 ring-black/10" />
+                      <button className="h-8 w-8 rounded-full bg-gray-500 ring-1 ring-black/10" />
+                    </div>
+                  </div>
+                  <button className="mt-6 w-full rounded-md bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700">
+                    Add to bag
+                  </button>
+                  <p className="mt-6 text-center">
+                    <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">View full details</a>
+                  </p>
                 </div>
               </div>
             </div>
