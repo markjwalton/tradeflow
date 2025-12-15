@@ -116,6 +116,7 @@ import TailwindFeedsShowcase from './pages/TailwindFeedsShowcase';
 import TailwindFormsShowcase from './pages/TailwindFormsShowcase';
 import TailwindShowcaseGallery from './pages/TailwindShowcaseGallery';
 import TailwindProductShowcase from './pages/TailwindProductShowcase';
+import RadiantHome from './pages/RadiantHome';
 import __Layout from './Layout.jsx';
 
 
@@ -238,6 +239,7 @@ export const PAGES = {
     "TailwindFormsShowcase": TailwindFormsShowcase,
     "TailwindShowcaseGallery": TailwindShowcaseGallery,
     "TailwindProductShowcase": TailwindProductShowcase,
+    "RadiantHome": RadiantHome,
 }
 
 export const pagesConfig = {
