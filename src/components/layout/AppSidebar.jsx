@@ -308,7 +308,7 @@ export function AppSidebar({ navItems = [] }) {
   return (
     <aside
           className={cn(
-            "hidden lg:flex lg:flex-col bg-card text-sidebar-foreground rounded-xl shadow-md transition-[width] duration-300 ease-in-out overflow-hidden",
+            "hidden lg:flex lg:flex-col bg-card text-sidebar-foreground rounded-xl shadow-md transition-[width] duration-300 ease-in-out overflow-visible [margin-left:var(--spacing-3)] [margin-right:var(--spacing-3)]",
             isHidden && "lg:w-0",
             !isHidden && widthClass
           )}
@@ -317,7 +317,7 @@ export function AppSidebar({ navItems = [] }) {
           <TooltipProvider delayDuration={300}>
             <nav className={cn(
               "flex-1",
-              showLabels ? "[padding:var(--spacing-3)] [gap:var(--spacing-1)]" : "[padding-top:var(--spacing-3)] [padding-bottom:var(--spacing-3)] [gap:var(--spacing-2)]",
+              showLabels ? "[padding:var(--spacing-3)] [gap:var(--spacing-1)]" : "[padding:var(--spacing-3)] [gap:var(--spacing-2)]",
               "flex flex-col"
             )}>
               {itemsToRender.map((item) => renderNavItem(item, false, !item.parent_id))}
