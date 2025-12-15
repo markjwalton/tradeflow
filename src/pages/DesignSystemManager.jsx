@@ -264,35 +264,38 @@ For each recommendation, provide:
   };
 
   const tokenColors = [
-    { label: "Background 50", value: "--background-50" },
-    { label: "Background 100", value: "--background-100" },
-    { label: "Background 200", value: "--background-200" },
-    { label: "Primary 50", value: "--primary-50" },
-    { label: "Primary 100", value: "--primary-100" },
-    { label: "Secondary 50", value: "--secondary-50" },
-    { label: "Secondary 100", value: "--secondary-100" },
-    { label: "Accent 50", value: "--accent-50" },
-    { label: "Accent 100", value: "--accent-100" },
-    { label: "Midnight 50", value: "--midnight-50" },
-    { label: "Midnight 100", value: "--midnight-100" },
-    { label: "Charcoal 50", value: "--charcoal-50" },
-    { label: "White", value: "--background-50" },
+    { label: "Background 50", value: "--background-50", hex: "#fdfcf9" },
+    { label: "Background 100", value: "--background-100", hex: "#f5f2ed" },
+    { label: "Background 200", value: "--background-200", hex: "#ebe5da" },
+    { label: "Primary 50", value: "--primary-50", hex: "#f6f8f7" },
+    { label: "Primary 100", value: "--primary-100", hex: "#e9efeb" },
+    { label: "Secondary 50", value: "--secondary-50", hex: "#fdfbf8" },
+    { label: "Secondary 100", value: "--secondary-100", hex: "#f8f4ee" },
+    { label: "Accent 50", value: "--accent-50", hex: "#fdfbfb" },
+    { label: "Accent 100", value: "--accent-100", hex: "#f9f4f4" },
+    { label: "Midnight 50", value: "--midnight-50", hex: "#f7f8f9" },
+    { label: "Midnight 100", value: "--midnight-100", hex: "#e8eaed" },
+    { label: "Charcoal 50", value: "--charcoal-50", hex: "#f9f9f9" },
+    { label: "White", value: "--background-50", hex: "#fdfcf9" },
   ];
 
   const handleBackgroundChange = async (colorVar) => {
     setSelectedBgColor(colorVar);
     
+    const selectedColor = tokenColors.find(c => c.value === colorVar);
+    const hexFallback = selectedColor?.hex || "#f5f2ed";
+    
     try {
       const response = await base44.functions.invoke('updateFileContent', {
         file_path: 'globals.css',
-        find: '--color-background: var(--background);',
-        replace: `--color-background: var(${colorVar});`
+        find: /--color-background:.*?;/,
+        replace: `--color-background: ${hexFallback};`
       });
       
       toast.success("Background color updated");
       
       // Apply immediately without reload
-      document.documentElement.style.setProperty('--color-background', `var(${colorVar})`);
+      document.documentElement.style.setProperty('--color-background', hexFallback);
     } catch (error) {
       toast.error("Failed to update background");
     }
