@@ -197,8 +197,14 @@ export function StyleEditorPanel({ currentPageName }) {
   };
 
   const handleElementClick = (e) => {
+    // Don't handle clicks on the style panel itself
+    if (e.target.closest('[data-style-panel]')) {
+      return;
+    }
+    
     e.preventDefault();
     e.stopPropagation();
+    e.stopImmediatePropagation();
     
     const targetElement = pageElements.find(el => el.element === e.target);
     if (targetElement) {
