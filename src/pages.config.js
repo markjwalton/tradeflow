@@ -105,6 +105,7 @@ import TailwindNavigationShowcase from './pages/TailwindNavigationShowcase';
 import TailwindCardsShowcase from './pages/TailwindCardsShowcase';
 import TailwindListsShowcase from './pages/TailwindListsShowcase';
 import TailwindAppShellsShowcase from './pages/TailwindAppShellsShowcase';
+import TailwindPageHeadersShowcase from './pages/TailwindPageHeadersShowcase';
 import __Layout from './Layout.jsx';
 
 
@@ -216,6 +217,7 @@ export const PAGES = {
     "TailwindCardsShowcase": TailwindCardsShowcase,
     "TailwindListsShowcase": TailwindListsShowcase,
     "TailwindAppShellsShowcase": TailwindAppShellsShowcase,
+    "TailwindPageHeadersShowcase": TailwindPageHeadersShowcase,
 }
 
 export const pagesConfig = {
