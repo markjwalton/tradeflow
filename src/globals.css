@@ -835,6 +835,11 @@
     font-family: var(--font-family-body);
     color: var(--text-body);
   }
+
+  /* Override sheet overlay default black background */
+  [data-radix-dialog-overlay] {
+    background-color: transparent !important;
+  }
 }
 
 @layer base {
