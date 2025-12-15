@@ -97,6 +97,7 @@ import SchemaVisualEditor from './pages/SchemaVisualEditor';
 import Library from './pages/Library';
 import LibraryItemBuilder from './pages/LibraryItemBuilder';
 import GradientTest from './pages/GradientTest';
+import NavigationManagerTest from './pages/NavigationManagerTest';
 import __Layout from './Layout.jsx';
 
 
@@ -200,6 +201,7 @@ export const PAGES = {
     "Library": Library,
     "LibraryItemBuilder": LibraryItemBuilder,
     "GradientTest": GradientTest,
+    "NavigationManagerTest": NavigationManagerTest,
 }
 
 export const pagesConfig = {
