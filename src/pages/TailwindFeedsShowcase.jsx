@@ -23,7 +23,7 @@ export default function TailwindFeedsShowcase() {
       />
 
       <SimpleTimelineExample />
-      <ActivityFeedExample />
+      <RichActivityFeedExample />
 
       <TokenReference />
     </div>
@@ -305,7 +305,7 @@ function ActivityFeedExample() {
   );
 }
 
-function ActivityFeedExample() {
+function RichActivityFeedExample() {
   const activity = [
     {
       id: 1,
