@@ -26,7 +26,7 @@ export function AppShell({ children, user, tenant, navItems = [], currentPageNam
         navItems={navItems}
       />
 
-      <div className="flex flex-1 gap-4 p-2 sm:p-4">
+      <div className="flex flex-1 gap-4 pr-2 sm:pr-4 pt-2 sm:pt-4 pb-2 sm:pb-4">
         <AppSidebar navItems={navItems} />
         <div className="flex-1 flex flex-col overflow-hidden rounded-xl">
           <AppContent navItems={navItems} currentPageName={currentPageName}>{children}</AppContent>
