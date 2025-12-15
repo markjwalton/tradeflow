@@ -229,7 +229,7 @@ export function PageSettingsPanel({ currentPageName }) {
           <Settings className="h-6 w-6 text-white" />
         </Button>
       </SheetTrigger>
-      <SheetOverlay style={{ backgroundColor: 'oklch(0.398 0.037 159.8 / 0.3)' }} />
+      <SheetOverlay className="bg-transparent" style={{ backgroundColor: 'oklch(0.398 0.037 159.8 / 0.3)' }} />
       <SheetContent className="w-96" style={{ backgroundColor: 'var(--background-100, rgba(255, 255, 255, 0.8))' }}>
         <SheetHeader className="px-6">
           <div className="flex items-center justify-between">
