@@ -3194,6 +3194,230 @@ export default function TailwindProductShowcase() {
             </div>
           </div>
         </ShowcaseSection>
+
+        <ShowcaseSection title="Order History - Card with Table">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Order history</h1>
+              <p className="mt-2 text-sm text-gray-500">
+                Check the status of recent orders, manage returns, and discover similar products.
+              </p>
+
+              <div className="mt-16 space-y-8">
+                {[
+                  { number: 'WU88191111', date: 'January 22, 2021', total: '$238.00' },
+                  { number: 'WU88191009', date: 'January 5, 2021', total: '$115.00' },
+                ].map((order) => (
+                  <div key={order.number} className="border-t border-b border-gray-200 bg-white shadow-sm sm:rounded-lg sm:border">
+                    <div className="flex items-center border-b border-gray-200 p-4 sm:grid sm:grid-cols-4 sm:gap-x-6 sm:p-6">
+                      <dl className="grid flex-1 grid-cols-2 gap-x-6 text-sm sm:col-span-3 sm:grid-cols-3">
+                        <div>
+                          <dt className="font-medium text-gray-900">Order number</dt>
+                          <dd className="mt-1 text-gray-500">{order.number}</dd>
+                        </div>
+                        <div className="hidden sm:block">
+                          <dt className="font-medium text-gray-900">Date placed</dt>
+                          <dd className="mt-1 text-gray-500">{order.date}</dd>
+                        </div>
+                        <div>
+                          <dt className="font-medium text-gray-900">Total amount</dt>
+                          <dd className="mt-1 font-medium text-gray-900">{order.total}</dd>
+                        </div>
+                      </dl>
+                      <div className="hidden lg:flex lg:items-center lg:justify-end lg:space-x-4">
+                        <button className="rounded-md border border-gray-300 bg-white px-2.5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                          View Order
+                        </button>
+                        <button className="rounded-md border border-gray-300 bg-white px-2.5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                          View Invoice
+                        </button>
+                      </div>
+                    </div>
+
+                    <table className="w-full text-gray-500">
+                      <thead className="sr-only text-left text-sm sm:not-sr-only">
+                        <tr>
+                          <th scope="col" className="py-3 pr-8 font-normal sm:w-2/5">Product</th>
+                          <th scope="col" className="hidden w-1/5 py-3 pr-8 font-normal sm:table-cell">Price</th>
+                          <th scope="col" className="hidden py-3 pr-8 font-normal sm:table-cell">Status</th>
+                          <th scope="col" className="w-0 py-3 text-right font-normal">Info</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200 border-b text-sm sm:border-t">
+                        {[
+                          { name: 'Micro Backpack', price: '$70.00', status: 'Delivered Jan 25, 2021' },
+                          { name: 'Nomad Shopping Tote', price: '$90.00', status: 'Delivered Jan 25, 2021' },
+                        ].map((product, i) => (
+                          <tr key={i}>
+                            <td className="py-6 pr-8">
+                              <div className="flex items-center">
+                                <div className="mr-6 w-16 h-16 rounded-sm bg-gray-200" />
+                                <div>
+                                  <div className="font-medium text-gray-900">{product.name}</div>
+                                  <div className="mt-1 sm:hidden">{product.price}</div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="hidden py-6 pr-8 sm:table-cell">{product.price}</td>
+                            <td className="hidden py-6 pr-8 sm:table-cell">{product.status}</td>
+                            <td className="py-6 text-right font-medium whitespace-nowrap">
+                              <a href="#" className="text-indigo-600">View</a>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Order History - List with Status Icons">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-4xl mx-auto">
+              <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Order history</h1>
+              <p className="mt-2 text-sm text-gray-500">
+                Check the status of recent orders, manage returns, and download invoices.
+              </p>
+
+              <div className="mt-16 space-y-16 sm:space-y-24">
+                {[
+                  { number: 'WU88191111', date: 'January 22, 2021', total: '$302.00' },
+                  { number: 'WU88191009', date: 'January 5, 2021', total: '$27.00' },
+                ].map((order) => (
+                  <div key={order.number}>
+                    <div className="bg-gray-50 px-4 py-6 sm:rounded-lg sm:p-6 md:flex md:items-center md:justify-between">
+                      <dl className="flex-auto divide-y divide-gray-200 text-sm text-gray-600 md:grid md:grid-cols-3 md:gap-x-6 md:divide-y-0">
+                        <div className="flex justify-between py-4 md:block md:py-0">
+                          <dt className="font-medium text-gray-900">Order number</dt>
+                          <dd className="md:mt-1">{order.number}</dd>
+                        </div>
+                        <div className="flex justify-between py-4 md:block md:py-0">
+                          <dt className="font-medium text-gray-900">Date placed</dt>
+                          <dd className="md:mt-1">{order.date}</dd>
+                        </div>
+                        <div className="flex justify-between py-4 md:block md:py-0">
+                          <dt className="font-medium text-gray-900">Total amount</dt>
+                          <dd className="font-medium text-gray-900 md:mt-1">{order.total}</dd>
+                        </div>
+                      </dl>
+                      <div className="mt-6 space-y-4 sm:flex sm:space-y-0 sm:space-x-4 md:mt-0">
+                        <button className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 md:w-auto">
+                          View Order
+                        </button>
+                        <button className="w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 md:w-auto">
+                          View Invoice
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="mt-6 flow-root px-4 sm:mt-10 sm:px-0">
+                      <div className="-my-6 divide-y divide-gray-200 sm:-my-10">
+                        {[
+                          { name: 'Nomad Tumbler', price: '$35.00', status: 'delivered', date: 'January 25, 2021' },
+                          { name: 'Leather Long Wallet', price: '$118.00', status: 'out-for-delivery' },
+                        ].map((product, i) => (
+                          <div key={i} className="flex py-6 sm:py-10">
+                            <div className="min-w-0 flex-1 lg:flex lg:flex-col">
+                              <div className="lg:flex-1">
+                                <div className="sm:flex">
+                                  <h4 className="font-medium text-gray-900">{product.name}</h4>
+                                  <p className="mt-1 font-medium text-gray-900 sm:mt-0 sm:ml-6">{product.price}</p>
+                                </div>
+                                <div className="mt-2 flex text-sm font-medium sm:mt-4">
+                                  <a href="#" className="text-indigo-600 hover:text-indigo-500">View Product</a>
+                                  <div className="ml-4 border-l border-gray-200 pl-4 sm:ml-6 sm:pl-6">
+                                    <a href="#" className="text-indigo-600 hover:text-indigo-500">Buy Again</a>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="mt-6 font-medium">
+                                {product.status === 'delivered' ? (
+                                  <div className="flex space-x-2">
+                                    <CheckCircle className="h-6 w-6 text-green-500" />
+                                    <p>Delivered on {product.date}</p>
+                                  </div>
+                                ) : (
+                                  <p>Out for delivery</p>
+                                )}
+                              </div>
+                            </div>
+                            <div className="ml-4 shrink-0 sm:order-first sm:m-0 sm:mr-6">
+                              <div className="w-20 h-20 sm:w-40 sm:h-40 rounded-lg bg-gray-200" />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Order History - Compact with Action Buttons">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-3xl mx-auto">
+              <h1 className="text-3xl font-bold tracking-tight text-gray-900">Your Orders</h1>
+              <p className="mt-2 text-sm text-gray-500">
+                Check the status of recent orders, manage returns, and discover similar products.
+              </p>
+
+              <div className="mt-12 space-y-16">
+                {[
+                  { number: '4376', status: 'Delivered on January 22, 2021' },
+                  { number: '4134', status: 'Delivered on January 5, 2021' },
+                ].map((order) => (
+                  <section key={order.number}>
+                    <div className="space-y-1 md:flex md:items-baseline md:space-x-4">
+                      <h2 className="text-lg font-medium text-gray-900">Order #{order.number}</h2>
+                      <div className="space-y-5 sm:flex sm:items-baseline sm:justify-between sm:space-y-0 md:min-w-0 md:flex-1">
+                        <p className="text-sm font-medium text-gray-500">{order.status}</p>
+                        <div className="flex text-sm font-medium">
+                          <a href="#" className="text-indigo-600 hover:text-indigo-500">Manage order</a>
+                          <div className="ml-4 border-l border-gray-200 pl-4 sm:ml-6 sm:pl-6">
+                            <a href="#" className="text-indigo-600 hover:text-indigo-500">View Invoice</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-6 flow-root divide-y divide-gray-200 border-t border-gray-200">
+                      {[
+                        { name: 'Machined Brass Puzzle', price: '$95.00', color: 'Brass', size: '3" x 3" x 3"' },
+                        { name: 'Earthen Planter', price: '$62.00', color: 'Natural', size: 'Large' },
+                      ].map((product, i) => (
+                        <div key={i} className="py-6 sm:flex">
+                          <div className="flex space-x-4 sm:min-w-0 sm:flex-1 sm:space-x-6">
+                            <div className="w-20 h-20 sm:w-48 sm:h-48 rounded-md bg-gray-200" />
+                            <div className="min-w-0 flex-1 pt-1.5 sm:pt-0">
+                              <h3 className="text-sm font-medium text-gray-900">{product.name}</h3>
+                              <p className="truncate text-sm text-gray-500">
+                                <span>{product.color}</span> · <span>{product.size}</span>
+                              </p>
+                              <p className="mt-1 font-medium text-gray-900">{product.price}</p>
+                            </div>
+                          </div>
+                          <div className="mt-6 space-y-4 sm:mt-0 sm:ml-6 sm:w-40">
+                            <button className="w-full rounded-md bg-indigo-600 px-2.5 py-2 text-sm font-medium text-white hover:bg-indigo-700">
+                              Buy again
+                            </button>
+                            <button className="w-full rounded-md border border-gray-300 bg-white px-2.5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                              Shop similar
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                ))}
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
       </div>
     </div>
   );
