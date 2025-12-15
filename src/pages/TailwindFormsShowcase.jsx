@@ -6,6 +6,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
   Select,
   SelectContent,
@@ -13,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Image, UserCircle, ChevronDown, Mail, HelpCircle, AlertCircle } from 'lucide-react';
+import { Image, UserCircle, ChevronDown, Mail, HelpCircle, AlertCircle, Check, ChevronsUpDown } from 'lucide-react';
 
 export default function TailwindFormsShowcase() {
   return (
@@ -28,6 +35,7 @@ export default function TailwindFormsShowcase() {
       <CardStyleForms />
       <LabelOnLeftForm />
       <InputVariationsSection />
+      <SelectVariationsSection />
 
       <TokenReference />
     </div>
@@ -987,6 +995,239 @@ function InputVariationsSection() {
           <li>• Disabled: built-in Input component styles</li>
           <li>• Icons: absolute positioning with Lucide icons</li>
           <li>• Stacked inputs: <code className="bg-background px-1 py-0.5 rounded">-space-y-px</code> for connected borders</li>
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+function SelectVariationsSection() {
+  const [selectedPerson, setSelectedPerson] = React.useState('tom');
+  const [selectedStatus, setSelectedStatus] = React.useState('wade');
+  const [publishStatus, setPublishStatus] = React.useState('published');
+
+  const people = [
+    { value: 'wade', name: 'Wade Cooper' },
+    { value: 'arlene', name: 'Arlene Mccoy' },
+    { value: 'devon', name: 'Devon Webb' },
+    { value: 'tom', name: 'Tom Cook' },
+    { value: 'tanya', name: 'Tanya Fox' },
+  ];
+
+  const peopleWithStatus = [
+    { value: 'wade', name: 'Wade Cooper', online: true },
+    { value: 'arlene', name: 'Arlene Mccoy', online: false },
+    { value: 'devon', name: 'Devon Webb', online: false },
+    { value: 'tom', name: 'Tom Cook', online: true },
+    { value: 'tanya', name: 'Tanya Fox', online: false },
+  ];
+
+  const peopleWithAvatars = [
+    { value: 'wade', name: 'Wade Cooper', avatar: 'https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?w=256&h=256&fit=crop' },
+    { value: 'arlene', name: 'Arlene Mccoy', avatar: 'https://images.unsplash.com/photo-1550525811-e5869dd03032?w=256&h=256&fit=crop' },
+    { value: 'devon', name: 'Devon Webb', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=256&h=256&fit=crop' },
+    { value: 'tom', name: 'Tom Cook', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop' },
+  ];
+
+  const publishingOptions = [
+    { value: 'published', title: 'Published', description: 'This job posting can be viewed by anyone who has the link.' },
+    { value: 'draft', title: 'Draft', description: 'This job posting will no longer be publicly accessible.' },
+  ];
+
+  const currentPerson = people.find(p => p.value === selectedPerson);
+  const currentStatus = peopleWithStatus.find(p => p.value === selectedStatus);
+  const currentPublish = publishingOptions.find(o => o.value === publishStatus);
+
+  return (
+    <section className="space-y-8">
+      <div>
+        <h2 className="text-xl font-display mb-2">Select & Dropdown Variations</h2>
+        <p className="text-sm text-muted-foreground">Different select dropdown configurations and styles</p>
+      </div>
+
+      <div className="grid gap-8 lg:grid-cols-2">
+        {/* Native Select */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Native Select</h3>
+          <div>
+            <Label htmlFor="location">Location</Label>
+            <div className="mt-2">
+              <Select defaultValue="canada">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="us">United States</SelectItem>
+                  <SelectItem value="canada">Canada</SelectItem>
+                  <SelectItem value="mexico">Mexico</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
+
+        {/* Custom Select (Listbox) */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Custom Select</h3>
+          <div>
+            <Label htmlFor="assigned">Assigned to</Label>
+            <div className="mt-2">
+              <Select value={selectedPerson} onValueChange={setSelectedPerson}>
+                <SelectTrigger>
+                  <SelectValue>{currentPerson?.name}</SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {people.map((person) => (
+                    <SelectItem key={person.value} value={person.value}>
+                      {person.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
+
+        {/* Select with Check on Left */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">With Leading Check</h3>
+          <div>
+            <Label>Assigned to</Label>
+            <div className="mt-2">
+              <Select value={selectedPerson} onValueChange={setSelectedPerson}>
+                <SelectTrigger>
+                  <SelectValue>{currentPerson?.name}</SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {people.map((person) => (
+                    <SelectItem key={person.value} value={person.value}>
+                      <div className="flex items-center">
+                        {selectedPerson === person.value && <Check className="mr-2 h-4 w-4" />}
+                        <span className={selectedPerson === person.value ? 'font-semibold' : ''}>{person.name}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
+
+        {/* Select with Status Indicator */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">With Status Indicator</h3>
+          <div>
+            <Label>Assigned to</Label>
+            <div className="mt-2">
+              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <SelectTrigger>
+                  <SelectValue>
+                    {currentStatus && (
+                      <div className="flex items-center gap-2">
+                        <span className={`inline-block h-2 w-2 shrink-0 rounded-full ${currentStatus.online ? 'bg-primary' : 'bg-charcoal-200'}`} />
+                        <span>{currentStatus.name}</span>
+                      </div>
+                    )}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {peopleWithStatus.map((person) => (
+                    <SelectItem key={person.value} value={person.value}>
+                      <div className="flex items-center gap-2">
+                        <span className={`inline-block h-2 w-2 shrink-0 rounded-full ${person.online ? 'bg-primary' : 'bg-charcoal-200'}`} />
+                        <span>{person.name}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
+
+        {/* Select with Avatars */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">With Avatars</h3>
+          <div>
+            <Label>Assigned to</Label>
+            <div className="mt-2">
+              <Select value={selectedPerson} onValueChange={setSelectedPerson}>
+                <SelectTrigger>
+                  <SelectValue>
+                    {currentPerson && peopleWithAvatars.find(p => p.value === currentPerson.value) && (
+                      <div className="flex items-center gap-2">
+                        <Avatar className="h-5 w-5">
+                          <AvatarImage src={peopleWithAvatars.find(p => p.value === currentPerson.value).avatar} />
+                          <AvatarFallback className="text-xs">{currentPerson.name[0]}</AvatarFallback>
+                        </Avatar>
+                        <span>{currentPerson.name}</span>
+                      </div>
+                    )}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {peopleWithAvatars.map((person) => (
+                    <SelectItem key={person.value} value={person.value}>
+                      <div className="flex items-center gap-2">
+                        <Avatar className="h-5 w-5">
+                          <AvatarImage src={person.avatar} />
+                          <AvatarFallback className="text-xs">{person.name[0]}</AvatarFallback>
+                        </Avatar>
+                        <span>{person.name}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
+
+        {/* Split Button Select */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Split Button</h3>
+          <div>
+            <Label className="sr-only">Change published status</Label>
+            <div className="inline-flex divide-x divide-primary-700 rounded-lg overflow-hidden">
+              <div className="inline-flex items-center gap-x-1.5 bg-primary px-3 py-2 text-primary-foreground">
+                <Check className="h-5 w-5" />
+                <p className="text-sm font-semibold">{currentPublish?.title}</p>
+              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="default" size="sm" className="rounded-l-none border-l border-primary-700 px-2">
+                    <span className="sr-only">Change published status</span>
+                    <ChevronDown className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-72">
+                  {publishingOptions.map((option) => (
+                    <DropdownMenuItem 
+                      key={option.value} 
+                      onClick={() => setPublishStatus(option.value)}
+                      className="flex-col items-start p-4"
+                    >
+                      <div className="flex w-full justify-between">
+                        <p className={publishStatus === option.value ? 'font-semibold' : ''}>{option.title}</p>
+                        {publishStatus === option.value && <Check className="h-5 w-5 text-primary" />}
+                      </div>
+                      <p className="mt-2 text-muted-foreground text-xs">{option.description}</p>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+        <p className="font-medium">Design Token Mappings:</p>
+        <ul className="space-y-1 text-muted-foreground">
+          <li>• Native select replaced with Radix UI Select component</li>
+          <li>• Status indicators: <code className="bg-background px-1 py-0.5 rounded">bg-primary</code> for online</li>
+          <li>• Avatar component for user images</li>
+          <li>• Split button uses DropdownMenu + Button combination</li>
         </ul>
       </div>
     </section>
