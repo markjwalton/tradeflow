@@ -45,8 +45,15 @@ export function MediaManager() {
     }
   };
 
-  const filteredMedia = media.filter((item) =>
-    item.file_name.toLowerCase().includes(searchTerm.toLowerCase())
+  const foldersInCurrent = media
+    .filter((item) => item.file_type === 'folder' && item.folder === currentFolder)
+    .map((f) => f.file_name);
+
+  const filesInCurrent = media.filter(
+    (item) =>
+      item.file_type !== 'folder' &&
+      (item.folder || null) === currentFolder &&
+      item.file_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
