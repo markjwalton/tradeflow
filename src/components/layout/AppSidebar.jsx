@@ -193,19 +193,27 @@ export function AppSidebar({ navItems = [] }) {
       if (isIconsOnly) {
         const folderButton = (
           <button
-            onClick={(e) => toggleFolder(item.id, e)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toggleFolder(item.id, e);
+            }}
             className={cn(
-              "w-full flex items-center justify-center transition-colors group",
+              "w-full flex items-center justify-center transition-colors group relative",
               "[padding:var(--spacing-2)] [border-radius:var(--radius-lg)]",
-              childActive ? "bg-sidebar-primary" : "hover:bg-sidebar-accent"
+              childActive ? "bg-sidebar-primary/10 ring-2 ring-sidebar-primary" : "hover:bg-sidebar-accent",
+              isExpanded && "bg-sidebar-accent"
             )}
           >
             <FolderIcon 
               className="transition-colors flex-shrink-0" 
               size={iconSize}
               strokeWidth={iconStrokeWidth}
-              style={{ color: childActive ? 'var(--sidebar-primary-foreground)' : 'var(--accent-500, #b39299)' }}
+              style={{ color: childActive ? 'var(--sidebar-primary)' : 'var(--accent-500, #b39299)' }}
             />
+            {childActive && (
+              <div className="absolute -right-1 top-1/2 -translate-y-1/2 w-1 h-6 bg-sidebar-primary rounded-full" />
+            )}
           </button>
         );
         
@@ -273,13 +281,20 @@ export function AppSidebar({ navItems = [] }) {
         key={item.id}
         to={fullPageUrl}
         onMouseEnter={() => handleMouseEnter(pageName)}
+        onClick={(e) => {
+          if (isIconsOnly) {
+            e.stopPropagation();
+          }
+        }}
         className={cn(
-          "flex items-center [border-radius:var(--radius-lg)] transition-colors group",
+          "flex items-center [border-radius:var(--radius-lg)] transition-colors group relative",
           showLabels 
             ? (isChild ? "[gap:var(--spacing-2)] [padding:var(--spacing-2)]" : "[gap:var(--spacing-3)] [padding:var(--spacing-2)]") 
             : "justify-center [padding:var(--spacing-2)]",
           isActive
-            ? "bg-sidebar-primary"
+            ? isIconsOnly 
+              ? "bg-sidebar-primary/10 ring-2 ring-sidebar-primary" 
+              : "bg-sidebar-primary"
             : "hover:bg-sidebar-accent"
         )}
       >
@@ -287,8 +302,11 @@ export function AppSidebar({ navItems = [] }) {
           className="flex-shrink-0 transition-colors"
           size={iconSize}
           strokeWidth={iconStrokeWidth}
-          style={{ color: isActive ? 'var(--sidebar-primary-foreground)' : 'var(--accent-500, #b39299)' }}
+          style={{ color: isActive ? (isIconsOnly ? 'var(--sidebar-primary)' : 'var(--sidebar-primary-foreground)') : 'var(--accent-500, #b39299)' }}
         />
+        {isActive && isIconsOnly && (
+          <div className="absolute -right-1 top-1/2 -translate-y-1/2 w-1 h-6 bg-sidebar-primary rounded-full" />
+        )}
         {showLabels && <span className={cn("truncate", isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground/70", isTopLevel && "font-medium")}>{item.name || 'Unnamed'}</span>}
       </Link>
     );
