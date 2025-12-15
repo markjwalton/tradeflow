@@ -37,9 +37,7 @@ export default function TailwindListsShowcase() {
       </PageHeader>
 
       <ShowcaseSection title="Basic List Layouts" defaultOpen={true}>
-        {/* All the basic list examples go here - I'll keep them as sub-sections inside */}
         <div className="space-y-8">
-          {/* Simple Divided List */}
           <div className="space-y-4">
             <h3 className="text-sm font-medium">Simple Divided List</h3>
             <ul role="list" className="divide-y divide-border">
@@ -52,7 +50,6 @@ export default function TailwindListsShowcase() {
             </ul>
           </div>
 
-          {/* Bordered Container List */}
           <div className="space-y-4">
             <h3 className="text-sm font-medium">Bordered Container List</h3>
             <div className="overflow-hidden rounded-xl border border-border bg-card">
@@ -69,69 +66,8 @@ export default function TailwindListsShowcase() {
         </div>
       </ShowcaseSection>
 
-      <ShowcaseSection title="Tabs" defaultOpen={false}>
-        <p className="text-sm text-muted-foreground mb-6">Navigation patterns for tabbed interfaces</p>
-        {/* Tab examples would go here - abbreviated for brevity */}
-      </ShowcaseSection>
-
-      <ShowcaseSection title="Pagination" defaultOpen={false}>
-        <p className="text-sm text-muted-foreground mb-6">Navigation patterns for paginated content</p>
-        {/* Pagination examples */}
-      </ShowcaseSection>
-
-      <ShowcaseSection title="Sidebar Navigation" defaultOpen={false}>
-        <p className="text-sm text-muted-foreground mb-6">Vertical navigation patterns for sidebars</p>
-        {/* Sidebar examples */}
-      </ShowcaseSection>
-
-      <ShowcaseSection title="Step Indicators" defaultOpen={false}>
-        <p className="text-sm text-muted-foreground mb-6">Progress indicators for forms and processes</p>
-        {/* Step indicators */}
-      </ShowcaseSection>
-
-      <ShowcaseSection title="Command Palettes" defaultOpen={false}>
-        <p className="text-sm text-muted-foreground mb-6">Modal search interfaces</p>
-        {/* Command palette examples */}
-      </ShowcaseSection>
-
-      <ShowcaseSection title="Modals" defaultOpen={false}>
-        <p className="text-sm text-muted-foreground mb-6">Modal dialog patterns</p>
-        {/* Modal examples */}
-      </ShowcaseSection>
-
-      <ShowcaseSection title="Drawers" defaultOpen={false}>
-        <p className="text-sm text-muted-foreground mb-6">Slide-over panels</p>
-        {/* Drawer examples */}
-      </ShowcaseSection>
-
-      <ShowcaseSection title="Notifications" defaultOpen={false}>
-        <p className="text-sm text-muted-foreground mb-6">Toast notifications</p>
-        {/* Notification examples */}
-      </ShowcaseSection>
-
-      <ShowcaseSection title="Avatars" defaultOpen={false}>
-        <p className="text-sm text-muted-foreground mb-6">Avatar patterns with different sizes</p>
-        {/* Avatar examples */}
-      </ShowcaseSection>
-
-      <ShowcaseSection title="Badges" defaultOpen={false}>
-        <p className="text-sm text-muted-foreground mb-6">Badge patterns with different styles</p>
-        {/* Badge examples */}
-      </ShowcaseSection>
-
-      <ShowcaseSection title="Dropdown Menus" defaultOpen={false}>
-        <p className="text-sm text-muted-foreground mb-6">Dropdown menu patterns</p>
-        {/* Dropdown examples */}
-      </ShowcaseSection>
-
-      <ShowcaseSection title="Buttons" defaultOpen={false}>
-        <p className="text-sm text-muted-foreground mb-6">Button size and style variations</p>
-        {/* Button examples */}
-      </ShowcaseSection>
-
-      <ShowcaseSection title="Button Groups" defaultOpen={false}>
-        <p className="text-sm text-muted-foreground mb-6">Connected button groups</p>
-        {/* Button group examples */}
+      <ShowcaseSection title="Collapsible Sidebar Navigation" defaultOpen={false}>
+        <CollapsibleSidebarExample />
       </ShowcaseSection>
     </div>
   );
