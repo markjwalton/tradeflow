@@ -1,6 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { PageHeader } from '@/components/sturij/PageHeader';
 import { Button } from '@/components/ui/button';
+import { ShowcaseSection } from '@/components/showcase/ShowcaseSection';
 import { Badge } from '@/components/ui/badge';
 import { Paperclip, User, Calendar, CreditCard, Download } from 'lucide-react';
 
@@ -10,28 +13,27 @@ export default function TailwindDescriptionListsShowcase() {
       <PageHeader
         title="Description Lists"
         description="Key-value pair layouts and detail views converted to use design tokens."
-      />
+      >
+        <Link to={createPageUrl('TailwindShowcaseGallery')}>
+          <Button variant="outline" size="sm">← Back to Gallery</Button>
+        </Link>
+      </PageHeader>
 
-      {/* Summary Card */}
-      <SummaryCardExample />
+      <ShowcaseSection title="Basic Description Lists" defaultOpen={true}>
+        <SimpleListExample />
+        <TwoColumnGridExample />
+        <StripedRowsExample />
+      </ShowcaseSection>
 
-      {/* With Editable Fields */}
-      <EditableFieldsExample />
+      <ShowcaseSection title="Enhanced Layouts" defaultOpen={false}>
+        <SummaryCardExample />
+        <EditableFieldsExample />
+        <CardContainerExample />
+      </ShowcaseSection>
 
-      {/* Two Column Grid */}
-      <TwoColumnGridExample />
-
-      {/* Striped Rows */}
-      <StripedRowsExample />
-
-      {/* In Card Container */}
-      <CardContainerExample />
-
-      {/* Simple List */}
-      <SimpleListExample />
-
-      {/* Token Reference */}
-      <TokenReference />
+      <ShowcaseSection title="Design System Reference" defaultOpen={false}>
+        <TokenReference />
+      </ShowcaseSection>
     </div>
   );
 }

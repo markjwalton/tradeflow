@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { PageHeader } from '@/components/sturij/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -83,7 +85,11 @@ export default function TailwindDrawerShowcase() {
         <PageHeader
           title="Tailwind UI Drawer (Converted)"
           description="Headless UI → Radix UI Sheet with design tokens"
-        />
+        >
+          <Link to={createPageUrl('TailwindShowcaseGallery')}>
+            <Button variant="outline" size="sm">← Back to Gallery</Button>
+          </Link>
+        </PageHeader>
 
         <div className="mt-6 space-y-6">
           <Card style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>

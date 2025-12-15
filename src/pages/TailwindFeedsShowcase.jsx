@@ -1,6 +1,9 @@
 import React, { useState, Fragment } from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { PageHeader } from '@/components/sturij/PageHeader';
 import { Button } from '@/components/ui/button';
+import { ShowcaseSection } from '@/components/showcase/ShowcaseSection';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -20,12 +23,23 @@ export default function TailwindFeedsShowcase() {
       <PageHeader
         title="Activity Feeds & Timelines"
         description="Timeline and activity feed patterns converted to use design tokens."
-      />
+      >
+        <Link to={createPageUrl('TailwindShowcaseGallery')}>
+          <Button variant="outline" size="sm">← Back to Gallery</Button>
+        </Link>
+      </PageHeader>
 
-      <SimpleTimelineExample />
-      <RichActivityFeedExample />
+      <ShowcaseSection title="Timeline Layouts" defaultOpen={true}>
+        <SimpleTimelineExample />
+      </ShowcaseSection>
 
-      <TokenReference />
+      <ShowcaseSection title="Activity Feed with Comments" defaultOpen={false}>
+        <RichActivityFeedExample />
+      </ShowcaseSection>
+
+      <ShowcaseSection title="Design System Reference" defaultOpen={false}>
+        <TokenReference />
+      </ShowcaseSection>
     </div>
   );
 }

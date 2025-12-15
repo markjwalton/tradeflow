@@ -1,6 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { PageHeader } from '@/components/sturij/PageHeader';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { ShowcaseSection } from '@/components/showcase/ShowcaseSection';
 import { ArrowUp, ArrowDown, Users, Mail, MousePointerClick } from 'lucide-react';
 
 export default function TailwindStatsShowcase() {
@@ -9,25 +13,26 @@ export default function TailwindStatsShowcase() {
       <PageHeader
         title="Stat Layouts"
         description="KPI and metric displays converted to use design tokens and semantic colors."
-      />
+      >
+        <Link to={createPageUrl('TailwindShowcaseGallery')}>
+          <Button variant="outline" size="sm">← Back to Gallery</Button>
+        </Link>
+      </PageHeader>
 
-      {/* Grid with Change */}
-      <GridWithChangeExample />
+      <ShowcaseSection title="Grid Layouts" defaultOpen={true}>
+        <GridWithChangeExample />
+        <SimpleGridExample />
+      </ShowcaseSection>
 
-      {/* Simple Grid */}
-      <SimpleGridExample />
+      <ShowcaseSection title="Card Layouts" defaultOpen={false}>
+        <SimpleCardsExample />
+        <CardsWithIconsExample />
+        <DividedCardsExample />
+      </ShowcaseSection>
 
-      {/* Simple Cards */}
-      <SimpleCardsExample />
-
-      {/* Cards with Icons */}
-      <CardsWithIconsExample />
-
-      {/* Divided Cards */}
-      <DividedCardsExample />
-
-      {/* Token Reference */}
-      <TokenReference />
+      <ShowcaseSection title="Design System Reference" defaultOpen={false}>
+        <TokenReference />
+      </ShowcaseSection>
     </div>
   );
 }
