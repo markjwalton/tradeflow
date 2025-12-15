@@ -3023,8 +3023,8 @@ function EmptyStatesSection() {
   ];
 
   const templates = [
-    { title: 'Create a List', description: 'Another to-do system you'll try but eventually give up on.', icon: BarChart3, background: 'bg-accent-400' },
-    { title: 'Create a Calendar', description: 'Stay on top of your deadlines, or don't — it's up to you.', icon: Calendar, background: 'bg-secondary-400' },
+    { title: 'Create a List', description: "Another to-do system you'll try but eventually give up on.", icon: BarChart3, background: 'bg-accent-400' },
+    { title: 'Create a Calendar', description: "Stay on top of your deadlines, or don't — it's up to you.", icon: Calendar, background: 'bg-secondary-400' },
     { title: 'Create a Gallery', description: 'Great for mood boards and inspiration.', icon: Image, background: 'bg-primary-500' },
   ];
 
