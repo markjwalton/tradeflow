@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PageHeader } from '@/components/sturij/PageHeader';
-import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, ChevronDown, User, Building, Users, CreditCard, Home, Folder, Calendar as CalendarIcon, FileText, BarChart3, Check, CheckCircle2, Search, FolderPlus, Hash, Tag, Globe, Frown, AlertTriangle, LifeBuoy, PenSquare, Code, Image, Video, Table, X, MoreVertical, Heart, Plus, Link2, HelpCircle } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, ChevronDown, User, Building, Users, CreditCard, Home, Folder, Calendar as CalendarIcon, FileText, BarChart3, Check, CheckCircle2, Search, FolderPlus, Hash, Tag, Globe, Frown, AlertTriangle, LifeBuoy, PenSquare, Code, Image, Video, Table, X, MoreVertical, Heart, Plus, Link2, HelpCircle, Archive, Copy, Share2, Trash2, UserPlus, LogOut } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -3244,6 +3244,187 @@ export default function TailwindListsShowcase() {
             <ul className="space-y-1 text-muted-foreground">
               <li>• Smaller padding: <code className="bg-background px-1 py-0.5 rounded">px-1.5 py-0.5</code></li>
               <li>• More compact for dense layouts</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Dropdown Menus */}
+      <section className="space-y-8 mt-12 pt-8 border-t border-border">
+        <div>
+          <h2 className="text-xl font-display mb-2">Dropdown Menus</h2>
+          <p className="text-sm text-muted-foreground">Dropdown menu patterns for actions and navigation</p>
+        </div>
+
+        {/* Simple Dropdown */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Simple Dropdown</h3>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="w-full justify-center gap-1.5 sm:w-auto">
+                Options
+                <ChevronDown className="-mr-1 h-5 w-5 text-muted-foreground" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuItem>Account settings</DropdownMenuItem>
+              <DropdownMenuItem>Support</DropdownMenuItem>
+              <DropdownMenuItem>License</DropdownMenuItem>
+              <DropdownMenuItem>Sign out</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Component: <code className="bg-background px-1 py-0.5 rounded">DropdownMenu from shadcn/ui</code></li>
+              <li>• Trigger: <code className="bg-background px-1 py-0.5 rounded">Button variant="outline"</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Grouped Dropdown */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Separated Groups</h3>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="w-full justify-center gap-1.5 sm:w-auto">
+                Options
+                <ChevronDown className="-mr-1 h-5 w-5 text-muted-foreground" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem>Duplicate</DropdownMenuItem>
+              <div className="my-1 h-px bg-border" />
+              <DropdownMenuItem>Archive</DropdownMenuItem>
+              <DropdownMenuItem>Move</DropdownMenuItem>
+              <div className="my-1 h-px bg-border" />
+              <DropdownMenuItem>Share</DropdownMenuItem>
+              <DropdownMenuItem>Add to favorites</DropdownMenuItem>
+              <div className="my-1 h-px bg-border" />
+              <DropdownMenuItem>Delete</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Separator: <code className="bg-background px-1 py-0.5 rounded">my-1 h-px bg-border</code></li>
+              <li>• Groups with visual dividers</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* With Icons */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Icons</h3>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="w-full justify-center gap-1.5 sm:w-auto">
+                Options
+                <ChevronDown className="-mr-1 h-5 w-5 text-muted-foreground" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuItem>
+                <PenSquare className="mr-3 h-5 w-5 text-muted-foreground" />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Copy className="mr-3 h-5 w-5 text-muted-foreground" />
+                Duplicate
+              </DropdownMenuItem>
+              <div className="my-1 h-px bg-border" />
+              <DropdownMenuItem>
+                <Archive className="mr-3 h-5 w-5 text-muted-foreground" />
+                Archive
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <ArrowRight className="mr-3 h-5 w-5 text-muted-foreground" />
+                Move
+              </DropdownMenuItem>
+              <div className="my-1 h-px bg-border" />
+              <DropdownMenuItem>
+                <UserPlus className="mr-3 h-5 w-5 text-muted-foreground" />
+                Share
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Heart className="mr-3 h-5 w-5 text-muted-foreground" />
+                Add to favorites
+              </DropdownMenuItem>
+              <div className="my-1 h-px bg-border" />
+              <DropdownMenuItem>
+                <Trash2 className="mr-3 h-5 w-5 text-muted-foreground" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Icons: <code className="bg-background px-1 py-0.5 rounded">mr-3 h-5 w-5 text-muted-foreground</code></li>
+              <li>• Items as flex with icon alignment</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Three Dots Trigger */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Three Dots Icon Trigger</h3>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
+                <MoreVertical className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuItem>Account settings</DropdownMenuItem>
+              <DropdownMenuItem>Support</DropdownMenuItem>
+              <DropdownMenuItem>License</DropdownMenuItem>
+              <DropdownMenuItem>Sign out</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Trigger: <code className="bg-background px-1 py-0.5 rounded">Button variant="ghost" size="icon"</code></li>
+              <li>• Icon: <code className="bg-background px-1 py-0.5 rounded">MoreVertical</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* With Header */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Header Info</h3>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="w-full justify-center gap-1.5 sm:w-auto">
+                Options
+                <ChevronDown className="-mr-1 h-5 w-5 text-muted-foreground" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <div className="px-4 py-3">
+                <p className="text-sm text-muted-foreground">Signed in as</p>
+                <p className="truncate text-sm font-medium text-foreground">tom@example.com</p>
+              </div>
+              <div className="my-1 h-px bg-border" />
+              <DropdownMenuItem>Account settings</DropdownMenuItem>
+              <DropdownMenuItem>Support</DropdownMenuItem>
+              <DropdownMenuItem>License</DropdownMenuItem>
+              <div className="my-1 h-px bg-border" />
+              <DropdownMenuItem>Sign out</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Header: <code className="bg-background px-1 py-0.5 rounded">px-4 py-3</code> for user context</li>
+              <li>• Separated from menu items with divider</li>
             </ul>
           </div>
         </div>
