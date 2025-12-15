@@ -22,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Image, UserCircle, ChevronDown, Mail, HelpCircle, AlertCircle, Check, ChevronsUpDown, Paperclip, Smile, Tag, Calendar, Code, Link, AtSign } from 'lucide-react';
+import { Image, UserCircle, ChevronDown, Mail, HelpCircle, AlertCircle, Check, ChevronsUpDown, Paperclip, Smile, Tag, Calendar, Code, Link, AtSign, X } from 'lucide-react';
 
 export default function TailwindFormsShowcase() {
   return (
