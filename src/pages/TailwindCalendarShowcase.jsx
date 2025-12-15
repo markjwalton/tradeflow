@@ -25,6 +25,9 @@ export default function TailwindCalendarShowcase() {
       {/* Small Calendar with Schedule */}
       <SmallCalendarScheduleExample />
 
+      {/* Compact Calendar */}
+      <CompactCalendarExample />
+
       {/* Two Panel Calendar */}
       <TwoPanelCalendarExample />
 
@@ -337,7 +340,7 @@ function SmallCalendarScheduleExample() {
   );
 }
 
-function SmallCalendarScheduleExample() {
+function CompactCalendarExample() {
   const meetings = [
     {
       id: 1,
