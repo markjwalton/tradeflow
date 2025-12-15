@@ -27,14 +27,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 
-// Simple Header Component
-function Header() {
-  return (
-    <div className="p-4">
-      {/* Empty header */}
-    </div>
-  );
-}
+
 
 // Simple Breadcrumb Component
 function BreadcrumbNavigation({ items }) {
@@ -160,10 +153,7 @@ export default function NavigationManagerTest() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-r from-white via-[var(--color-background)] to-white">
       {/* Full Width Header */}
-      <div className="w-full bg-white/80 backdrop-blur-sm sticky top-0 z-50 rounded-xl shadow-md">
-        <div className="max-w-[1600px] mx-auto">
-          <Header />
-        </div>
+      <div className="w-full bg-white backdrop-blur-sm sticky top-0 z-50 rounded-xl shadow-md p-4">
       </div>
     </div>
   );
