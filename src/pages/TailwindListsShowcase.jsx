@@ -3619,6 +3619,135 @@ export default function TailwindListsShowcase() {
         </div>
       </section>
 
+      {/* Button Groups */}
+      <section className="space-y-8 mt-12 pt-8 border-t border-border">
+        <div>
+          <h2 className="text-xl font-display mb-2">Button Groups</h2>
+          <p className="text-sm text-muted-foreground">Connected button groups for related actions</p>
+        </div>
+
+        {/* Basic Button Group */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Basic Button Group</h3>
+          <span className="isolate inline-flex rounded-md shadow-sm">
+            <Button variant="outline" className="rounded-l-md rounded-r-none">Years</Button>
+            <Button variant="outline" className="-ml-px rounded-none">Months</Button>
+            <Button variant="outline" className="-ml-px rounded-l-none rounded-r-md">Days</Button>
+          </span>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Wrapper: <code className="bg-background px-1 py-0.5 rounded">isolate inline-flex rounded-md</code></li>
+              <li>• First: <code className="bg-background px-1 py-0.5 rounded">rounded-l-md rounded-r-none</code></li>
+              <li>• Middle: <code className="bg-background px-1 py-0.5 rounded">-ml-px rounded-none</code></li>
+              <li>• Last: <code className="bg-background px-1 py-0.5 rounded">-ml-px rounded-l-none rounded-r-md</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Icon Only Group */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Icon Only Navigation</h3>
+          <span className="isolate inline-flex rounded-md shadow-sm">
+            <Button variant="outline" size="icon" className="rounded-l-md rounded-r-none">
+              <ChevronLeft className="h-5 w-5" />
+            </Button>
+            <Button variant="outline" size="icon" className="-ml-px rounded-l-none rounded-r-md">
+              <ChevronRight className="h-5 w-5" />
+            </Button>
+          </span>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Icon buttons for navigation controls</li>
+              <li>• Equal padding for symmetry</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* With Stat/Count */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Stat/Count</h3>
+          <span className="isolate inline-flex rounded-md shadow-sm">
+            <Button variant="outline" className="inline-flex items-center gap-x-1.5 rounded-l-md rounded-r-none">
+              <Heart className="-ml-0.5 h-5 w-5 text-muted-foreground" />
+              Bookmark
+            </Button>
+            <Button variant="outline" className="-ml-px rounded-l-none rounded-r-md">
+              12k
+            </Button>
+          </span>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Left button with icon and label</li>
+              <li>• Right button shows count/metric</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Split Button with Dropdown */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Split Button with Dropdown</h3>
+          <div className="inline-flex rounded-md shadow-sm">
+            <Button variant="outline" className="rounded-l-md rounded-r-none">
+              Save changes
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon" className="-ml-px rounded-l-none rounded-r-md text-muted-foreground">
+                  <ChevronDown className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem>Save and schedule</DropdownMenuItem>
+                <DropdownMenuItem>Save and publish</DropdownMenuItem>
+                <DropdownMenuItem>Export PDF</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Primary action on left</li>
+              <li>• Dropdown trigger on right for related actions</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Checkbox + Select Combo */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Checkbox + Select Combo</h3>
+          <span className="inline-flex rounded-md border border-input overflow-hidden">
+            <span className="inline-flex shrink-0 items-center bg-background px-2 py-2 border-r border-input">
+              <input
+                type="checkbox"
+                className="h-4 w-4 rounded border-input text-primary focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                aria-label="Select all"
+              />
+            </span>
+            <select className="flex-1 bg-background py-1.5 pl-3 pr-8 text-sm border-none focus:outline-none focus:ring-2 focus:ring-ring">
+              <option>Unread messages</option>
+              <option>Sent messages</option>
+              <option>All messages</option>
+            </select>
+          </span>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Checkbox for bulk selection</li>
+              <li>• Select dropdown for filter options</li>
+              <li>• Combined in single bordered container</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {/* Token Reference */}
       <section className="space-y-4 mt-12 pt-8 border-t border-border">
         <div>
