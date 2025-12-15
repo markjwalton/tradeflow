@@ -253,7 +253,7 @@ export function StyleEditorPanel({ currentPageName }) {
   });
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+    <Sheet open={isOpen} onOpenChange={setIsOpen} modal={false}>
       <SheetTrigger asChild>
         <Button
           variant="ghost"
@@ -266,7 +266,7 @@ export function StyleEditorPanel({ currentPageName }) {
         </Button>
       </SheetTrigger>
 
-      <SheetContent className="w-[600px] overflow-y-auto [&_[role=dialog]]:z-[100000]" side="right">
+      <SheetContent className="w-[600px] overflow-y-auto [&_[role=dialog]]:z-[100000]" side="right" data-style-panel>
         <SheetHeader className="px-6 pb-4 border-b">
           <div className="flex items-center justify-between">
             <div>
