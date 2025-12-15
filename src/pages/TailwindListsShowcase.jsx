@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { PageHeader } from '@/components/sturij/PageHeader';
 import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, ChevronDown, User, Building, Users, CreditCard, Home, Folder, Calendar as CalendarIcon, FileText, BarChart3, Check, CheckCircle2, Search, FolderPlus, Hash, Tag, Globe, Frown, AlertTriangle, LifeBuoy, PenSquare, Code, Image, Video, Table, X, MoreVertical, Heart, Plus, Link2, HelpCircle, Archive, Copy, Share2, Trash2, UserPlus, LogOut } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
+import { Badge, StatusBadge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
