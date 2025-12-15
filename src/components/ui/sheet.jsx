@@ -18,7 +18,7 @@ const SheetOverlay = React.forwardRef(({ className, ...props }, ref) => (
       "fixed inset-0 bg-primary-500/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     )}
-    style={{ zIndex: 'var(--z-modal-backdrop)' }}
+    style={{ zIndex: 10000 }}
     {...props}
     ref={ref}
   />
@@ -44,7 +44,7 @@ const SheetContent = React.forwardRef(({ side = "right", className, children, ..
         sheetVariants.side[side],
         className
       )}
-      style={{ zIndex: 'var(--z-modal)', ...props.style }}
+      style={{ zIndex: 10001, ...props.style }}
       {...props}
     >
       {children}
