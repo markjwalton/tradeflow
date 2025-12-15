@@ -98,6 +98,7 @@ import Library from './pages/Library';
 import LibraryItemBuilder from './pages/LibraryItemBuilder';
 import GradientTest from './pages/GradientTest';
 import NavigationManagerTest from './pages/NavigationManagerTest';
+import TailwindDrawerShowcase from './pages/TailwindDrawerShowcase';
 import __Layout from './Layout.jsx';
 
 
@@ -202,6 +203,7 @@ export const PAGES = {
     "LibraryItemBuilder": LibraryItemBuilder,
     "GradientTest": GradientTest,
     "NavigationManagerTest": NavigationManagerTest,
+    "TailwindDrawerShowcase": TailwindDrawerShowcase,
 }
 
 export const pagesConfig = {
