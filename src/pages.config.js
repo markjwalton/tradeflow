@@ -130,6 +130,8 @@ import KeynoteHome from './pages/KeynoteHome';
 import PocketHome from './pages/PocketHome';
 import PocketLogin from './pages/PocketLogin';
 import PocketRegister from './pages/PocketRegister';
+import StudioHome from './pages/StudioHome';
+import StudioAbout from './pages/StudioAbout';
 import __Layout from './Layout.jsx';
 
 
@@ -266,6 +268,8 @@ export const PAGES = {
     "PocketHome": PocketHome,
     "PocketLogin": PocketLogin,
     "PocketRegister": PocketRegister,
+    "StudioHome": StudioHome,
+    "StudioAbout": StudioAbout,
 }
 
 export const pagesConfig = {
