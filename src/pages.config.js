@@ -101,6 +101,7 @@ import NavigationManagerTest from './pages/NavigationManagerTest';
 import TailwindDrawerShowcase from './pages/TailwindDrawerShowcase';
 import TailwindBadgesShowcase from './pages/TailwindBadgesShowcase';
 import TailwindMenuShowcase from './pages/TailwindMenuShowcase';
+import TailwindNavigationShowcase from './pages/TailwindNavigationShowcase';
 import __Layout from './Layout.jsx';
 
 
@@ -208,6 +209,7 @@ export const PAGES = {
     "TailwindDrawerShowcase": TailwindDrawerShowcase,
     "TailwindBadgesShowcase": TailwindBadgesShowcase,
     "TailwindMenuShowcase": TailwindMenuShowcase,
+    "TailwindNavigationShowcase": TailwindNavigationShowcase,
 }
 
 export const pagesConfig = {
