@@ -886,6 +886,241 @@ export default function TailwindProductShowcase() {
             </div>
           </div>
         </ShowcaseSection>
+
+        <ShowcaseSection title="Product Filters - Horizontal Dropdown">
+          <div className="bg-gray-50 p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="py-12 text-center">
+                <h1 className="text-4xl font-bold tracking-tight text-gray-900">New Arrivals</h1>
+                <p className="mx-auto mt-4 max-w-3xl text-base text-gray-500">
+                  Thoughtfully designed objects for the workspace, home, and travel.
+                </p>
+              </div>
+              <div className="border-t border-gray-200 py-6">
+                <div className="flex items-center justify-between">
+                  <button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                    Sort
+                    <ChevronDown className="-mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500" />
+                  </button>
+                  <div className="flex items-baseline space-x-8">
+                    <button className="group inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                      Category
+                      <ChevronDown className="-mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500" />
+                    </button>
+                    <button className="group inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                      Brand
+                      <ChevronDown className="-mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500" />
+                    </button>
+                    <button className="group inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                      Color
+                      <ChevronDown className="-mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Product Filters - With Active Filters">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="py-8">
+                <h1 className="text-3xl font-bold tracking-tight text-gray-900">Workspace sale</h1>
+                <p className="mt-4 max-w-xl text-sm text-gray-700">
+                  Our thoughtfully designed workspace objects are crafted in limited runs.
+                </p>
+              </div>
+              <div className="border-b border-gray-200 bg-white pb-4">
+                <div className="flex items-center justify-between">
+                  <button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                    Sort
+                    <ChevronDown className="-mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500" />
+                  </button>
+                  <div className="flex items-center divide-x divide-gray-200">
+                    <button className="px-4 inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                      <span>Category</span>
+                      <span className="ml-1.5 rounded-sm bg-gray-200 px-1.5 py-0.5 text-xs font-semibold text-gray-700">1</span>
+                      <ChevronDown className="-mr-1 ml-1 h-5 w-5 text-gray-400" />
+                    </button>
+                    <button className="px-4 inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                      <span>Color</span>
+                      <ChevronDown className="-mr-1 ml-1 h-5 w-5 text-gray-400" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gray-100 rounded-lg mt-4">
+                <div className="py-3 px-4 flex items-center">
+                  <h3 className="text-sm font-medium text-gray-500">Filters</h3>
+                  <div className="ml-4 flex flex-wrap items-center gap-2">
+                    <span className="inline-flex items-center rounded-full border border-gray-200 bg-white py-1.5 pr-2 pl-3 text-sm font-medium text-gray-900">
+                      <span>Objects</span>
+                      <button className="ml-1 inline-flex h-4 w-4 shrink-0 rounded-full p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-500">
+                        <X className="h-2 w-2" />
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Product Filters - Collapsible Full Width">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="px-4 py-8 text-center">
+                <h1 className="text-4xl font-bold tracking-tight text-gray-900">Workspace</h1>
+                <p className="mx-auto mt-4 max-w-xl text-base text-gray-500">
+                  The secret to a tidy desk? Really nice looking containers.
+                </p>
+              </div>
+              <div className="border-t border-b border-gray-200 py-4">
+                <div className="flex items-center justify-between px-4">
+                  <button className="flex items-center font-medium text-gray-700">
+                    <Search className="mr-2 h-5 w-5 text-gray-400" />
+                    2 Filters
+                  </button>
+                  <button className="text-gray-500">Clear all</button>
+                </div>
+              </div>
+              <div className="bg-gray-50 border-t border-gray-200 py-10 rounded-lg mt-4">
+                <div className="grid grid-cols-2 gap-x-4 px-4 text-sm">
+                  <div>
+                    <fieldset>
+                      <legend className="block font-medium mb-4">Price</legend>
+                      <div className="space-y-3">
+                        <label className="flex items-center gap-3">
+                          <input type="checkbox" className="rounded border-gray-300" />
+                          <span className="text-gray-600">$0 - $25</span>
+                        </label>
+                        <label className="flex items-center gap-3">
+                          <input type="checkbox" className="rounded border-gray-300" />
+                          <span className="text-gray-600">$25 - $50</span>
+                        </label>
+                      </div>
+                    </fieldset>
+                  </div>
+                  <div>
+                    <fieldset>
+                      <legend className="block font-medium mb-4">Color</legend>
+                      <div className="space-y-3">
+                        <label className="flex items-center gap-3">
+                          <input type="checkbox" className="rounded border-gray-300" />
+                          <span className="text-gray-600">White</span>
+                        </label>
+                        <label className="flex items-center gap-3">
+                          <input type="checkbox" className="rounded border-gray-300" />
+                          <span className="text-gray-600">Blue</span>
+                        </label>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Product Filters - Sidebar with Categories">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="border-b border-gray-200 pb-6 mb-6">
+                <h1 className="text-4xl font-bold tracking-tight text-gray-900">New Arrivals</h1>
+                <div className="mt-4 flex items-center justify-end">
+                  <button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                    Sort
+                    <ChevronDown className="-mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500" />
+                  </button>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
+                <div className="hidden lg:block">
+                  <h3 className="sr-only">Categories</h3>
+                  <ul className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
+                    <li><a href="#">Totes</a></li>
+                    <li><a href="#">Backpacks</a></li>
+                    <li><a href="#">Travel Bags</a></li>
+                    <li><a href="#">Hip Bags</a></li>
+                  </ul>
+                  <div className="border-b border-gray-200 py-6">
+                    <h3 className="font-medium text-gray-900 mb-4">Color</h3>
+                    <div className="space-y-4">
+                      <label className="flex items-center gap-3">
+                        <input type="checkbox" className="rounded border-gray-300" />
+                        <span className="text-sm text-gray-600">White</span>
+                      </label>
+                      <label className="flex items-center gap-3">
+                        <input type="checkbox" checked className="rounded border-gray-300" />
+                        <span className="text-sm text-gray-600">Blue</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div className="lg:col-span-3">
+                  <div className="text-center text-gray-500 py-12">Product Grid Goes Here</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Product Filters - Simple Sidebar">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="border-b border-gray-200 pb-10">
+                <h1 className="text-4xl font-bold tracking-tight text-gray-900">New Arrivals</h1>
+                <p className="mt-4 text-base text-gray-500">
+                  Checkout out the latest release of Basic Tees, new and improved with four openings!
+                </p>
+              </div>
+              <div className="pt-12 grid grid-cols-1 gap-x-8 lg:grid-cols-3 xl:grid-cols-4">
+                <aside className="hidden lg:block">
+                  <div className="divide-y divide-gray-200">
+                    <div className="py-6">
+                      <h3 className="block text-sm font-medium text-gray-900 mb-6">Color</h3>
+                      <div className="space-y-3">
+                        <label className="flex items-center gap-3">
+                          <input type="checkbox" className="rounded border-gray-300" />
+                          <span className="text-sm text-gray-600">White</span>
+                        </label>
+                        <label className="flex items-center gap-3">
+                          <input type="checkbox" className="rounded border-gray-300" />
+                          <span className="text-sm text-gray-600">Beige</span>
+                        </label>
+                        <label className="flex items-center gap-3">
+                          <input type="checkbox" className="rounded border-gray-300" />
+                          <span className="text-sm text-gray-600">Blue</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div className="py-6">
+                      <h3 className="block text-sm font-medium text-gray-900 mb-6">Category</h3>
+                      <div className="space-y-3">
+                        <label className="flex items-center gap-3">
+                          <input type="checkbox" className="rounded border-gray-300" />
+                          <span className="text-sm text-gray-600">All New Arrivals</span>
+                        </label>
+                        <label className="flex items-center gap-3">
+                          <input type="checkbox" className="rounded border-gray-300" />
+                          <span className="text-sm text-gray-600">Tees</span>
+                        </label>
+                        <label className="flex items-center gap-3">
+                          <input type="checkbox" className="rounded border-gray-300" />
+                          <span className="text-sm text-gray-600">Crewnecks</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </aside>
+                <div className="lg:col-span-2 xl:col-span-3">
+                  <div className="text-center text-gray-500 py-12">Product Grid Goes Here</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
       </div>
     </div>
   );
