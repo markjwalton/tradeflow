@@ -199,14 +199,14 @@ Format as JSON:
             variant="ghost"
             size="icon"
             className="fixed bottom-6 right-40 h-14 w-14 rounded-full shadow-2xl bg-secondary text-white hover:bg-secondary/90 border-2 border-white"
-            style={{ zIndex: 1050 }}
+            style={{ zIndex: 9998 }}
             title="Page UI Assistant"
           >
             <Paintbrush className="h-6 w-6" />
           </Button>
         </SheetTrigger>
         
-        <SheetContent className="w-[500px] overflow-y-auto">
+        <SheetContent className="w-[500px] overflow-y-auto" style={{ zIndex: 9999 }}>
           <SheetHeader className="px-6">
             <SheetTitle className="flex items-center gap-2">
               <Paintbrush className="h-5 w-5" />

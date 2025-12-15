@@ -223,14 +223,14 @@ export function PageSettingsPanel({ currentPageName }) {
           variant="ghost"
           size="icon"
           className="fixed bottom-6 right-24 h-14 w-14 rounded-full shadow-2xl border-2 border-white hover:scale-105 transition-transform"
-          style={{ zIndex: 1050, backgroundColor: 'rgba(101, 94, 84, 0.9)' }}
+          style={{ zIndex: 9998, backgroundColor: 'rgba(101, 94, 84, 0.9)' }}
           title="Page Settings"
         >
           <Settings className="h-6 w-6 text-white" />
         </Button>
       </SheetTrigger>
-      <SheetOverlay className="!bg-transparent" style={{ backgroundColor: 'oklch(0.398 0.037 159.8 / 0.3)', background: 'oklch(0.398 0.037 159.8 / 0.3)' }} />
-      <SheetContent className="w-96" style={{ backgroundColor: 'var(--background-100, rgba(255, 255, 255, 0.8))' }}>
+      <SheetOverlay className="!bg-transparent" style={{ backgroundColor: 'oklch(0.398 0.037 159.8 / 0.3)', background: 'oklch(0.398 0.037 159.8 / 0.3)', zIndex: 9998 }} />
+      <SheetContent className="w-96" style={{ backgroundColor: 'var(--background-100, rgba(255, 255, 255, 0.8))', zIndex: 9999 }}>
         <SheetHeader className="px-6">
           <div className="flex items-center justify-between">
             <h2 className="flex items-center gap-2" style={{ color: 'var(--accent-500, #C78E8E)' }}>

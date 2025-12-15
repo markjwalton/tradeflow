@@ -162,14 +162,14 @@ export function StyleEditorPanel({ currentPageName }) {
           variant="ghost"
           size="icon"
           className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-2xl border-2 border-white hover:scale-105 transition-transform"
-          style={{ zIndex: 1050, backgroundColor: 'rgba(199, 142, 142, 0.9)' }}
+          style={{ zIndex: 9998, backgroundColor: 'rgba(199, 142, 142, 0.9)' }}
           title="Style Editor"
         >
           <Palette className="h-6 w-6 text-white" />
         </Button>
       </SheetTrigger>
 
-      <SheetContent className="w-[600px] overflow-y-auto" side="right">
+      <SheetContent className="w-[600px] overflow-y-auto" side="right" style={{ zIndex: 9999 }}>
         <SheetHeader className="px-6 pb-4 border-b">
           <SheetTitle className="flex items-center gap-2 text-xl">
             <Palette className="h-5 w-5" />
