@@ -160,7 +160,7 @@ export default function NavigationManagerTest() {
           description="Manage your application navigation structure"
         />
 
-        <Tabs defaultValue="system" value={activeTab} onValueChange={setActiveTab} className="mt-6">
+        <Tabs defaultValue="system" value={activeTab} onValueChange={setActiveTab} className="mt-4">
           <TabsList>
             <TabsTrigger value="system">System Navigation</TabsTrigger>
             <TabsTrigger value="pages">Site Pages</TabsTrigger>
