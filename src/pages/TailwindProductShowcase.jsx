@@ -2843,6 +2843,357 @@ export default function TailwindProductShowcase() {
             </div>
           </div>
         </ShowcaseSection>
+
+        <ShowcaseSection title="Order Confirmation - Split Image Layout">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="grid lg:grid-cols-2">
+              <div className="h-80 lg:h-full">
+                <img
+                  src="https://tailwindcss.com/plus-assets/img/ecommerce-images/confirmation-page-06-hero.jpg"
+                  className="w-full h-full object-cover"
+                  alt="Confirmation"
+                />
+              </div>
+              <div className="max-w-2xl mx-auto px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+                <h1 className="text-sm font-medium text-indigo-600">Payment successful</h1>
+                <p className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Thanks for ordering</p>
+                <p className="mt-2 text-base text-gray-500">
+                  We appreciate your order, we're currently processing it. So hang tight!
+                </p>
+
+                <dl className="mt-16 text-sm font-medium">
+                  <dt className="text-gray-900">Tracking number</dt>
+                  <dd className="mt-2 text-indigo-600">51547878755545848512</dd>
+                </dl>
+
+                <ul className="mt-6 divide-y divide-gray-200 border-t border-gray-200 text-sm font-medium text-gray-500">
+                  {[
+                    { name: 'Basic Tee', color: 'Charcoal', size: 'L', price: '$36.00' },
+                    { name: 'Artwork Tee — Iso Dots', color: 'Peach', size: 'S', price: '$36.00' },
+                  ].map((product, i) => (
+                    <li key={i} className="flex space-x-6 py-6">
+                      <div className="w-24 h-24 bg-gray-100 rounded-md" />
+                      <div className="flex-auto space-y-1">
+                        <h3 className="text-gray-900">{product.name}</h3>
+                        <p>{product.color}</p>
+                        <p>{product.size}</p>
+                      </div>
+                      <p className="flex-none font-medium text-gray-900">{product.price}</p>
+                    </li>
+                  ))}
+                </ul>
+
+                <dl className="space-y-6 border-t border-gray-200 pt-6 text-sm font-medium text-gray-500">
+                  <div className="flex justify-between">
+                    <dt>Subtotal</dt>
+                    <dd className="text-gray-900">$72.00</dd>
+                  </div>
+                  <div className="flex justify-between">
+                    <dt>Shipping</dt>
+                    <dd className="text-gray-900">$8.00</dd>
+                  </div>
+                  <div className="flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900">
+                    <dt className="text-base">Total</dt>
+                    <dd className="text-base">$86.40</dd>
+                  </div>
+                </dl>
+
+                <div className="mt-16 grid grid-cols-2 gap-x-4 text-sm text-gray-600">
+                  <div>
+                    <dt className="font-medium text-gray-900">Shipping Address</dt>
+                    <dd className="mt-2">
+                      <address className="not-italic">
+                        <span className="block">Kristin Watson</span>
+                        <span className="block">7363 Cynthia Pass</span>
+                        <span className="block">Toronto, ON N3Y 4H8</span>
+                      </address>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="font-medium text-gray-900">Payment Information</dt>
+                    <dd className="mt-2">
+                      <p className="text-gray-900">Ending with 4242</p>
+                      <p>Expires 12 / 21</p>
+                    </dd>
+                  </div>
+                </div>
+
+                <div className="mt-16 border-t border-gray-200 py-6 text-right">
+                  <a href="#" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                    Continue Shopping <span aria-hidden="true">→</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Order Details - With Progress Tracking">
+          <div className="bg-gray-50 p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex justify-between items-baseline">
+                <h1 className="text-3xl font-bold tracking-tight text-gray-900">Order Details</h1>
+                <a href="#" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                  View invoice →
+                </a>
+              </div>
+
+              <div className="mt-2 border-b border-gray-200 pb-5 flex justify-between text-sm">
+                <dl className="flex">
+                  <dt className="text-gray-500">Order number&nbsp;</dt>
+                  <dd className="font-medium text-gray-900">W086438695</dd>
+                  <dt><span className="mx-2 text-gray-400">·</span></dt>
+                  <dd className="font-medium text-gray-900">March 22, 2021</dd>
+                </dl>
+              </div>
+
+              <div className="mt-8 space-y-24">
+                {[
+                  { name: 'Distant Mountains Artwork Tee', price: '$36.00', status: 'Processing', step: 1 },
+                  { name: 'Rainfall Artwork Tee', price: '$36.00', status: 'Shipped', step: 2 },
+                ].map((product, i) => (
+                  <div key={i} className="grid grid-cols-1 sm:grid-cols-12 gap-6">
+                    <div className="sm:col-span-5">
+                      <div className="aspect-square w-full rounded-lg bg-gray-200" />
+                    </div>
+                    <div className="sm:col-span-7">
+                      <h3 className="text-lg font-medium text-gray-900">{product.name}</h3>
+                      <p className="mt-1 font-medium text-gray-900">{product.price}</p>
+                      
+                      <dl className="grid grid-cols-2 gap-6 border-b border-gray-200 py-8">
+                        <div>
+                          <dt className="font-medium text-gray-900">Delivery address</dt>
+                          <dd className="mt-3 text-gray-500">
+                            <span className="block">Floyd Miles</span>
+                            <span className="block">7363 Cynthia Pass</span>
+                            <span className="block">Toronto, ON N3Y 4H8</span>
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="font-medium text-gray-900">Shipping updates</dt>
+                          <dd className="mt-3 text-gray-500">
+                            <p>f•••@example.com</p>
+                            <p>1•••••••••40</p>
+                          </dd>
+                        </div>
+                      </dl>
+
+                      <p className="mt-6 font-medium text-gray-900">
+                        {product.status} on March 24, 2021
+                      </p>
+                      <div className="mt-6">
+                        <div className="overflow-hidden rounded-full bg-gray-200">
+                          <div
+                            style={{ width: `${(product.step * 2 + 1) / 8 * 100}%` }}
+                            className="h-2 rounded-full bg-indigo-600"
+                          />
+                        </div>
+                        <div className="mt-6 hidden sm:grid grid-cols-4 font-medium text-gray-600">
+                          <div className="text-indigo-600">Order placed</div>
+                          <div className={`text-center ${product.step > 0 ? 'text-indigo-600' : ''}`}>Processing</div>
+                          <div className={`text-center ${product.step > 1 ? 'text-indigo-600' : ''}`}>Shipped</div>
+                          <div className={`text-right ${product.step > 2 ? 'text-indigo-600' : ''}`}>Delivered</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-24 rounded-lg bg-gray-100 px-6 py-6 lg:px-8">
+                <dl className="grid grid-cols-2 gap-6 text-sm">
+                  <div>
+                    <dt className="font-medium text-gray-900">Billing address</dt>
+                    <dd className="mt-3 text-gray-500">
+                      <span className="block">Floyd Miles</span>
+                      <span className="block">7363 Cynthia Pass</span>
+                      <span className="block">Toronto, ON N3Y 4H8</span>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="font-medium text-gray-900">Payment information</dt>
+                    <dd className="mt-3 text-gray-500">
+                      <p className="text-gray-900">Ending with 4242</p>
+                      <p>Expires 02 / 24</p>
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Order Confirmation - Simple Layout">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-3xl mx-auto">
+              <div className="max-w-xl">
+                <h1 className="text-base font-medium text-indigo-600">Thank you!</h1>
+                <p className="mt-2 text-4xl font-bold tracking-tight sm:text-5xl">It's on the way!</p>
+                <p className="mt-2 text-base text-gray-500">Your order #14034056 has shipped and will be with you soon.</p>
+
+                <dl className="mt-12 text-sm font-medium">
+                  <dt className="text-gray-900">Tracking number</dt>
+                  <dd className="mt-2 text-indigo-600">51547878755545848512</dd>
+                </dl>
+              </div>
+
+              <div className="mt-10 border-t border-gray-200">
+                <div className="flex space-x-6 border-b border-gray-200 py-10">
+                  <div className="w-20 sm:w-40 h-20 sm:h-40 bg-gray-100 rounded-lg" />
+                  <div className="flex flex-auto flex-col">
+                    <h4 className="font-medium text-gray-900">Cold Brew Bottle</h4>
+                    <p className="mt-2 text-sm text-gray-600">
+                      This glass bottle comes with a mesh insert for steeping tea or cold-brewing coffee.
+                    </p>
+                    <div className="mt-6 flex items-end">
+                      <dl className="flex divide-x divide-gray-200 text-sm">
+                        <div className="flex pr-4 sm:pr-6">
+                          <dt className="font-medium text-gray-900">Quantity</dt>
+                          <dd className="ml-2 text-gray-700">1</dd>
+                        </div>
+                        <div className="flex pl-4 sm:pl-6">
+                          <dt className="font-medium text-gray-900">Price</dt>
+                          <dd className="ml-2 text-gray-700">$32.00</dd>
+                        </div>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="sm:ml-40 sm:pl-6">
+                  <dl className="grid grid-cols-2 gap-x-6 py-10 text-sm">
+                    <div>
+                      <dt className="font-medium text-gray-900">Shipping address</dt>
+                      <dd className="mt-2 text-gray-700">
+                        <span className="block">Kristin Watson</span>
+                        <span className="block">7363 Cynthia Pass</span>
+                        <span className="block">Toronto, ON N3Y 4H8</span>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="font-medium text-gray-900">Payment method</dt>
+                      <dd className="mt-2 text-gray-700">
+                        <p>Apple Pay</p>
+                        <p>Mastercard</p>
+                        <p>•••• 1545</p>
+                      </dd>
+                    </div>
+                  </dl>
+
+                  <dl className="space-y-6 border-t border-gray-200 pt-10 text-sm">
+                    <div className="flex justify-between">
+                      <dt className="font-medium text-gray-900">Subtotal</dt>
+                      <dd className="text-gray-700">$36.00</dd>
+                    </div>
+                    <div className="flex justify-between">
+                      <dt className="flex font-medium text-gray-900">
+                        Discount
+                        <span className="ml-2 rounded-full bg-gray-200 px-2 py-0.5 text-xs text-gray-600">STUDENT50</span>
+                      </dt>
+                      <dd className="text-gray-700">-$18.00 (50%)</dd>
+                    </div>
+                    <div className="flex justify-between">
+                      <dt className="font-medium text-gray-900">Total</dt>
+                      <dd className="text-gray-900">$23.00</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Order Status - Card Layout with Tracking">
+          <div className="bg-gray-50 p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex justify-between items-baseline">
+                <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Order #54879</h1>
+                <p className="text-sm text-gray-600">
+                  Order placed <time className="font-medium text-gray-900">March 22, 2021</time>
+                </p>
+              </div>
+
+              <div className="mt-6 space-y-8">
+                {[
+                  { name: 'Nomad Tumbler', price: '$35.00', status: 'Preparing to ship', step: 1, date: 'March 24, 2021' },
+                  { name: 'Minimalist Wristwatch', price: '$149.00', status: 'Shipped', step: 2, date: 'March 23, 2021' },
+                ].map((product, i) => (
+                  <div key={i} className="border-t border-b border-gray-200 bg-white shadow-sm sm:rounded-lg sm:border">
+                    <div className="px-4 py-6 sm:px-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:p-8">
+                      <div className="sm:flex lg:col-span-7">
+                        <div className="w-full sm:w-40 h-40 bg-gray-200 rounded-lg" />
+                        <div className="mt-6 sm:mt-0 sm:ml-6">
+                          <h3 className="text-base font-medium text-gray-900">{product.name}</h3>
+                          <p className="mt-2 text-sm font-medium text-gray-900">${product.price}</p>
+                        </div>
+                      </div>
+
+                      <div className="mt-6 lg:col-span-5 lg:mt-0">
+                        <dl className="grid grid-cols-2 gap-x-6 text-sm">
+                          <div>
+                            <dt className="font-medium text-gray-900">Delivery address</dt>
+                            <dd className="mt-3 text-gray-500">
+                              <span className="block">Floyd Miles</span>
+                              <span className="block">7363 Cynthia Pass</span>
+                              <span className="block">Toronto, ON N3Y 4H8</span>
+                            </dd>
+                          </div>
+                          <div>
+                            <dt className="font-medium text-gray-900">Shipping updates</dt>
+                            <dd className="mt-3 text-gray-500">
+                              <p>f•••@example.com</p>
+                              <p>1•••••••••40</p>
+                            </dd>
+                          </div>
+                        </dl>
+                      </div>
+                    </div>
+
+                    <div className="border-t border-gray-200 px-4 py-6 sm:px-6 lg:p-8">
+                      <p className="text-sm font-medium text-gray-900">
+                        {product.status} on {product.date}
+                      </p>
+                      <div className="mt-6">
+                        <div className="overflow-hidden rounded-full bg-gray-200">
+                          <div
+                            style={{ width: `${(product.step * 2 + 1) / 8 * 100}%` }}
+                            className="h-2 rounded-full bg-indigo-600"
+                          />
+                        </div>
+                        <div className="mt-6 hidden sm:grid grid-cols-4 text-sm font-medium text-gray-600">
+                          <div className="text-indigo-600">Order placed</div>
+                          <div className={`text-center ${product.step > 0 ? 'text-indigo-600' : ''}`}>Processing</div>
+                          <div className={`text-center ${product.step > 1 ? 'text-indigo-600' : ''}`}>Shipped</div>
+                          <div className={`text-right ${product.step > 2 ? 'text-indigo-600' : ''}`}>Delivered</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-16 bg-gray-100 rounded-lg px-6 py-6 lg:px-8">
+                <dl className="grid grid-cols-2 gap-6 text-sm">
+                  <div>
+                    <dt className="font-medium text-gray-900">Billing address</dt>
+                    <dd className="mt-3 text-gray-500">
+                      <span className="block">Floyd Miles</span>
+                      <span className="block">7363 Cynthia Pass</span>
+                      <span className="block">Toronto, ON N3Y 4H8</span>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="font-medium text-gray-900">Payment information</dt>
+                    <dd className="mt-3 text-gray-500">
+                      <p className="text-gray-900">Ending with 4242</p>
+                      <p>Expires 02 / 24</p>
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
       </div>
     </div>
   );
