@@ -44,7 +44,7 @@ export function AppHeader({ user, navItems = [], onMobileMenuClick, currentPageN
         backdrop-blur-md
         supports-[backdrop-filter]:bg-background/60
       "
-      style={{ zIndex: 'var(--z-sticky)' }}
+      style={{ zIndex: 'var(--z-max)' }}
     >
       <div className="flex items-center justify-between px-4 py-2 md:px-6">
         <div className="flex items-center gap-2 sm:gap-3">

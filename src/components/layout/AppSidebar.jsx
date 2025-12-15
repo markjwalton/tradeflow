@@ -311,25 +311,27 @@ export function AppSidebar({ navItems = [] }) {
   // Use hierarchical items directly - they're already at root level
   const itemsToRender = hierarchicalNavItems;
 
+  // Don't render sidebar at all when hidden
+  if (mode === "hidden") {
+    return null;
+  }
+
   return (
     <aside
           className={cn(
             "hidden lg:flex lg:flex-col text-sidebar-foreground rounded-xl shadow-md transition-[width] duration-300 ease-in-out overflow-visible [padding:var(--spacing-4)]",
-            isHidden && "lg:w-0",
-            !isHidden && widthClass
+            widthClass
           )}
           style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)' }}
         >
-        {mode !== "hidden" && (
-          <TooltipProvider delayDuration={300}>
-            <nav className={cn(
-              "flex-1 flex flex-col",
-              showLabels ? "[gap:var(--spacing-1)]" : "[gap:var(--spacing-2)]"
-            )}>
-              {itemsToRender.map((item) => renderNavItem(item, false, !item.parent_id))}
-            </nav>
-          </TooltipProvider>
-        )}
+        <TooltipProvider delayDuration={300}>
+          <nav className={cn(
+            "flex-1 flex flex-col",
+            showLabels ? "[gap:var(--spacing-1)]" : "[gap:var(--spacing-2)]"
+          )}>
+            {itemsToRender.map((item) => renderNavItem(item, false, !item.parent_id))}
+          </nav>
+        </TooltipProvider>
       </aside>
   );
 }
