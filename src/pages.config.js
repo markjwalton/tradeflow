@@ -117,6 +117,7 @@ import TailwindFormsShowcase from './pages/TailwindFormsShowcase';
 import TailwindShowcaseGallery from './pages/TailwindShowcaseGallery';
 import TailwindProductShowcase from './pages/TailwindProductShowcase';
 import RadiantHome from './pages/RadiantHome';
+import AssetManager from './pages/AssetManager';
 import __Layout from './Layout.jsx';
 
 
@@ -240,6 +241,7 @@ export const PAGES = {
     "TailwindShowcaseGallery": TailwindShowcaseGallery,
     "TailwindProductShowcase": TailwindProductShowcase,
     "RadiantHome": RadiantHome,
+    "AssetManager": AssetManager,
 }
 
 export const pagesConfig = {
