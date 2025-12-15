@@ -15,6 +15,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import {
   Select,
   SelectContent,
@@ -44,6 +46,7 @@ export default function TailwindFormsShowcase() {
       <CheckboxVariationsSection />
       <ToggleSwitchVariationsSection />
       <PaymentMethodSection />
+      <ComboboxVariationsSection />
 
       <TokenReference />
     </div>
@@ -2554,6 +2557,279 @@ function PaymentMethodSection() {
           <li>• Muted background for nested content: <code className="bg-background px-1 py-0.5 rounded">bg-muted</code></li>
           <li>• Responsive flex layout with <code className="bg-background px-1 py-0.5 rounded">sm:flex sm:items-start sm:justify-between</code></li>
           <li>• Button component with outline variant for edit action</li>
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+function ComboboxVariationsSection() {
+  const [open, setOpen] = React.useState(false);
+  const [openStatus, setOpenStatus] = React.useState(false);
+  const [openAvatar, setOpenAvatar] = React.useState(false);
+  const [openUsername, setOpenUsername] = React.useState(false);
+  const [selectedPerson, setSelectedPerson] = React.useState(null);
+  const [selectedStatusPerson, setSelectedStatusPerson] = React.useState(null);
+  const [selectedAvatarPerson, setSelectedAvatarPerson] = React.useState(null);
+  const [selectedUsernamePerson, setSelectedUsernamePerson] = React.useState(null);
+
+  const people = [
+    { id: 1, name: 'Leslie Alexander' },
+    { id: 2, name: 'Michael Foster' },
+    { id: 3, name: 'Dries Vincent' },
+    { id: 4, name: 'Lindsay Walton' },
+  ];
+
+  const peopleWithStatus = [
+    { id: 1, name: 'Leslie Alexander', online: true },
+    { id: 2, name: 'Michael Foster', online: false },
+    { id: 3, name: 'Dries Vincent', online: true },
+    { id: 4, name: 'Lindsay Walton', online: false },
+  ];
+
+  const peopleWithAvatars = [
+    { id: 1, name: 'Leslie Alexander', imageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=256&h=256&fit=crop' },
+    { id: 2, name: 'Michael Foster', imageUrl: 'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?w=256&h=256&fit=crop' },
+    { id: 3, name: 'Dries Vincent', imageUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=256&h=256&fit=crop' },
+  ];
+
+  const peopleWithUsernames = [
+    { name: 'Leslie Alexander', username: '@lesliealexander' },
+    { name: 'Michael Foster', username: '@michaelfoster' },
+    { name: 'Dries Vincent', username: '@driesvincent' },
+  ];
+
+  return (
+    <section className="space-y-8">
+      <div>
+        <h2 className="text-xl font-display mb-2">Combobox / Autocomplete</h2>
+        <p className="text-sm text-muted-foreground">Searchable select dropdowns with filtering</p>
+      </div>
+
+      <div className="grid gap-8 lg:grid-cols-2">
+        {/* Basic Combobox */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Basic Combobox</h3>
+          <div>
+            <Label>Assigned to</Label>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={open}
+                  className="w-full justify-between"
+                >
+                  {selectedPerson ? selectedPerson.name : "Select person..."}
+                  <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-full p-0">
+                <Command>
+                  <CommandInput placeholder="Search person..." />
+                  <CommandList>
+                    <CommandEmpty>No person found.</CommandEmpty>
+                    <CommandGroup>
+                      {people.map((person) => (
+                        <CommandItem
+                          key={person.id}
+                          value={person.name}
+                          onSelect={() => {
+                            setSelectedPerson(person);
+                            setOpen(false);
+                          }}
+                        >
+                          <Check
+                            className={`mr-2 h-4 w-4 ${selectedPerson?.id === person.id ? "opacity-100" : "opacity-0"}`}
+                          />
+                          {person.name}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          </div>
+        </div>
+
+        {/* With Status Indicators */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">With Status Indicators</h3>
+          <div>
+            <Label>Assigned to</Label>
+            <Popover open={openStatus} onOpenChange={setOpenStatus}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={openStatus}
+                  className="w-full justify-between"
+                >
+                  {selectedStatusPerson ? (
+                    <div className="flex items-center gap-2">
+                      <span className={`inline-block h-2 w-2 rounded-full ${selectedStatusPerson.online ? 'bg-primary' : 'bg-charcoal-200'}`} />
+                      {selectedStatusPerson.name}
+                    </div>
+                  ) : "Select person..."}
+                  <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-full p-0">
+                <Command>
+                  <CommandInput placeholder="Search person..." />
+                  <CommandList>
+                    <CommandEmpty>No person found.</CommandEmpty>
+                    <CommandGroup>
+                      {peopleWithStatus.map((person) => (
+                        <CommandItem
+                          key={person.id}
+                          value={person.name}
+                          onSelect={() => {
+                            setSelectedStatusPerson(person);
+                            setOpenStatus(false);
+                          }}
+                        >
+                          <div className="flex items-center gap-2 flex-1">
+                            <span className={`inline-block h-2 w-2 rounded-full ${person.online ? 'bg-primary' : 'bg-charcoal-200'}`} />
+                            {person.name}
+                          </div>
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          </div>
+        </div>
+
+        {/* With Avatars */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">With Avatars</h3>
+          <div>
+            <Label>Assigned to</Label>
+            <Popover open={openAvatar} onOpenChange={setOpenAvatar}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={openAvatar}
+                  className="w-full justify-between"
+                >
+                  {selectedAvatarPerson ? (
+                    <div className="flex items-center gap-2">
+                      <Avatar className="h-5 w-5">
+                        <AvatarImage src={selectedAvatarPerson.imageUrl} />
+                        <AvatarFallback className="text-xs">{selectedAvatarPerson.name[0]}</AvatarFallback>
+                      </Avatar>
+                      {selectedAvatarPerson.name}
+                    </div>
+                  ) : "Select person..."}
+                  <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-full p-0">
+                <Command>
+                  <CommandInput placeholder="Search person..." />
+                  <CommandList>
+                    <CommandEmpty>
+                      <div className="flex items-center gap-2 px-2 py-3">
+                        <Avatar className="h-6 w-6">
+                          <AvatarFallback className="text-xs bg-muted">
+                            <UserCircle className="h-4 w-4" />
+                          </AvatarFallback>
+                        </Avatar>
+                        <span>No person found</span>
+                      </div>
+                    </CommandEmpty>
+                    <CommandGroup>
+                      {peopleWithAvatars.map((person) => (
+                        <CommandItem
+                          key={person.id}
+                          value={person.name}
+                          onSelect={() => {
+                            setSelectedAvatarPerson(person);
+                            setOpenAvatar(false);
+                          }}
+                        >
+                          <div className="flex items-center gap-2 flex-1">
+                            <Avatar className="h-6 w-6">
+                              <AvatarImage src={person.imageUrl} />
+                              <AvatarFallback className="text-xs">{person.name[0]}</AvatarFallback>
+                            </Avatar>
+                            {person.name}
+                          </div>
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          </div>
+        </div>
+
+        {/* With Secondary Text */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">With Secondary Text</h3>
+          <div>
+            <Label>Assigned to</Label>
+            <Popover open={openUsername} onOpenChange={setOpenUsername}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={openUsername}
+                  className="w-full justify-between"
+                >
+                  {selectedUsernamePerson ? (
+                    <div className="flex items-center gap-2">
+                      <span>{selectedUsernamePerson.name}</span>
+                      <span className="text-muted-foreground">{selectedUsernamePerson.username}</span>
+                    </div>
+                  ) : "Select person..."}
+                  <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-full p-0">
+                <Command>
+                  <CommandInput placeholder="Search person..." />
+                  <CommandList>
+                    <CommandEmpty>No person found.</CommandEmpty>
+                    <CommandGroup>
+                      {peopleWithUsernames.map((person, idx) => (
+                        <CommandItem
+                          key={idx}
+                          value={person.name}
+                          onSelect={() => {
+                            setSelectedUsernamePerson(person);
+                            setOpenUsername(false);
+                          }}
+                        >
+                          <div className="flex flex-1">
+                            <span className="block truncate">{person.name}</span>
+                            <span className="ml-2 block truncate text-muted-foreground">{person.username}</span>
+                          </div>
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+        <p className="font-medium">Design Token Mappings:</p>
+        <ul className="space-y-1 text-muted-foreground">
+          <li>• Command component from cmdk with Popover for dropdown</li>
+          <li>• CommandInput for search functionality with filtering</li>
+          <li>• Status indicators using <code className="bg-background px-1 py-0.5 rounded">bg-primary</code> dots</li>
+          <li>• Avatar component integration for user images</li>
+          <li>• Secondary text with <code className="bg-background px-1 py-0.5 rounded">text-muted-foreground</code></li>
         </ul>
       </div>
     </section>
