@@ -1,7 +1,7 @@
 import React from 'react';
 import { PageHeader } from '@/components/sturij/PageHeader';
 import { ShowcaseSection } from '@/components/showcase/ShowcaseSection';
-import { Star, Check, Heart, Minus, Plus, HelpCircle, ChevronDown, Clock, X, Search, ShoppingBag, ShieldCheck, CheckCircle } from 'lucide-react';
+import { Star, Check, Heart, Minus, Plus, HelpCircle, ChevronDown, Clock, X, Search, ShoppingBag, ShieldCheck, CheckCircle, Menu, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
@@ -1818,6 +1818,174 @@ export default function TailwindProductShowcase() {
                       className="aspect-square w-full rounded-lg object-cover"
                       alt="Detail 2"
                     />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Header - Simple Mega Menu">
+          <div className="bg-white rounded-lg border">
+            <div className="bg-gray-900">
+              <div className="max-w-7xl mx-auto flex h-10 items-center justify-between px-4 sm:px-6 lg:px-8">
+                <div className="text-sm font-medium text-white">CAD</div>
+                <div className="flex items-center space-x-6">
+                  <a href="#" className="text-sm font-medium text-white hover:text-gray-100">Sign in</a>
+                  <a href="#" className="text-sm font-medium text-white hover:text-gray-100">Create an account</a>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white border-b border-gray-200">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex h-16 items-center justify-between">
+                  <div className="flex items-center">
+                    <img
+                      src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
+                      className="h-8 w-auto"
+                      alt="Logo"
+                    />
+                  </div>
+                  <div className="flex items-center space-x-8">
+                    <button className="text-sm font-medium text-gray-700 hover:text-gray-800">Women</button>
+                    <button className="text-sm font-medium text-gray-700 hover:text-gray-800">Men</button>
+                    <a href="#" className="text-sm font-medium text-gray-700 hover:text-gray-800">Company</a>
+                    <a href="#" className="text-sm font-medium text-gray-700 hover:text-gray-800">Stores</a>
+                  </div>
+                  <div className="flex items-center">
+                    <a href="#" className="text-sm font-medium text-gray-700 hover:text-gray-800">Search</a>
+                    <a href="#" className="ml-8 text-sm font-medium text-gray-700 hover:text-gray-800">Help</a>
+                    <a href="#" className="ml-8 group flex items-center">
+                      <ShoppingBag className="h-6 w-6 text-gray-400 group-hover:text-gray-500" />
+                      <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">0</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Header - Promo Banner with Mega Menu">
+          <div className="bg-white rounded-lg border overflow-hidden">
+            <div className="bg-gray-900">
+              <div className="max-w-7xl mx-auto flex h-10 items-center justify-between px-4 sm:px-6 lg:px-8">
+                <div className="text-sm font-medium text-white">CAD</div>
+                <p className="text-center text-sm font-medium text-white flex-1">Get free delivery on orders over $100</p>
+                <div className="flex items-center space-x-6">
+                  <a href="#" className="text-sm font-medium text-white hover:text-gray-100">Create an account</a>
+                  <span className="h-6 w-px bg-gray-600" />
+                  <a href="#" className="text-sm font-medium text-white hover:text-gray-100">Sign in</a>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white border-b border-gray-200">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex h-16 items-center justify-between">
+                  <div className="flex items-center">
+                    <img
+                      src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
+                      className="h-8 w-auto"
+                      alt="Logo"
+                    />
+                  </div>
+                  <div className="flex items-center space-x-8">
+                    <button className="text-sm font-medium text-gray-700 hover:text-gray-800">Women</button>
+                    <button className="text-sm font-medium text-gray-700 hover:text-gray-800">Men</button>
+                    <a href="#" className="text-sm font-medium text-gray-700 hover:text-gray-800">Company</a>
+                    <a href="#" className="text-sm font-medium text-gray-700 hover:text-gray-800">Stores</a>
+                  </div>
+                  <div className="flex items-center space-x-6">
+                    <Search className="h-6 w-6 text-gray-400 hover:text-gray-500 cursor-pointer" />
+                    <User className="h-6 w-6 text-gray-400 hover:text-gray-500 cursor-pointer" />
+                    <a href="#" className="group flex items-center">
+                      <ShoppingBag className="h-6 w-6 text-gray-400 group-hover:text-gray-500" />
+                      <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">0</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Header - Centered Logo">
+          <div className="bg-white rounded-lg border">
+            <div className="bg-indigo-600">
+              <p className="flex h-10 items-center justify-center px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
+                Get free delivery on orders over $100
+              </p>
+            </div>
+            <div className="border-b border-gray-200">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex h-16 items-center justify-between">
+                  <div className="flex items-center">
+                    <button className="p-2 text-gray-400">
+                      <Menu className="h-6 w-6" />
+                    </button>
+                    <a href="#" className="ml-2 p-2 text-gray-400 hover:text-gray-500">
+                      <Search className="h-6 w-6" />
+                    </a>
+                  </div>
+                  <a href="#" className="flex">
+                    <img
+                      src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
+                      className="h-8 w-auto"
+                      alt="Logo"
+                    />
+                  </a>
+                  <div className="flex items-center justify-end">
+                    <a href="#" className="flex items-center">
+                      <img
+                        src="https://tailwindcss.com/plus-assets/img/flags/flag-canada.svg"
+                        className="block h-auto w-5"
+                        alt="Canada"
+                      />
+                      <span className="ml-3 block text-sm font-medium">CAD</span>
+                    </a>
+                    <a href="#" className="ml-6 p-2 text-gray-400 hover:text-gray-500">
+                      <Search className="h-6 w-6" />
+                    </a>
+                    <a href="#" className="p-2 text-gray-400 hover:text-gray-500 ml-4">
+                      <User className="h-6 w-6" />
+                    </a>
+                    <a href="#" className="ml-4 group flex items-center">
+                      <ShoppingBag className="h-6 w-6 text-gray-400 group-hover:text-gray-500" />
+                      <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">0</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Header - Simple Bottom Navigation">
+          <div className="bg-white rounded-lg border">
+            <div className="border-b border-gray-200">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex h-16 items-center justify-between">
+                  <div className="flex flex-1">
+                    <a href="#">
+                      <img
+                        src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
+                        className="h-8 w-auto"
+                        alt="Logo"
+                      />
+                    </a>
+                  </div>
+                  <div className="flex items-center space-x-8">
+                    <button className="text-sm font-medium text-gray-700 hover:text-gray-800">Women</button>
+                    <button className="text-sm font-medium text-gray-700 hover:text-gray-800">Men</button>
+                    <a href="#" className="text-sm font-medium text-gray-700 hover:text-gray-800">Company</a>
+                    <a href="#" className="text-sm font-medium text-gray-700 hover:text-gray-800">Stores</a>
+                  </div>
+                  <div className="flex flex-1 items-center justify-end">
+                    <Search className="h-6 w-6 text-gray-400 hover:text-gray-500 cursor-pointer" />
+                    <a href="#" className="ml-8 group flex items-center">
+                      <ShoppingBag className="h-6 w-6 text-gray-400 group-hover:text-gray-500" />
+                      <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">0</span>
+                    </a>
                   </div>
                 </div>
               </div>
