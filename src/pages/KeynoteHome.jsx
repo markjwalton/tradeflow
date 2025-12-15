@@ -1,34 +1,26 @@
-import { Calendar, MapPin, Users, Star } from 'lucide-react';
+import { Calendar, MapPin, Users, Ticket } from 'lucide-react';
 
 function Hero() {
   return (
-    <div className="relative isolate overflow-hidden bg-gradient-to-b from-indigo-100/20 pt-14">
-      <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
+    <div className="relative overflow-hidden bg-gradient-to-b from-blue-50 to-white py-24">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+          <h1 className="text-5xl font-bold tracking-tight text-blue-900 sm:text-6xl">
             DeceptiConf 2024
           </h1>
-          <p className="mt-6 text-lg leading-8 text-gray-600">
-            A community-driven design conference exploring the latest patterns and techniques
-            in user experience design. Join us for two days of inspiring talks and workshops.
+          <p className="mt-6 text-lg leading-8 text-blue-600">
+            A community-driven design conference
+          </p>
+          <p className="mt-4 text-base text-gray-600">
+            April 4-6, 2024 • Austin, Texas
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
-            <button className="rounded-2xl bg-blue-600 px-6 py-3 text-base font-semibold text-white hover:bg-blue-500">
+            <button className="rounded-2xl bg-blue-600 px-6 py-4 text-base font-semibold text-white hover:bg-blue-500">
               Get your tickets
             </button>
-            <button className="text-base font-semibold leading-7 text-gray-900">
+            <button className="text-base font-semibold leading-6 text-blue-900">
               Learn more <span aria-hidden="true">→</span>
             </button>
-          </div>
-          <div className="mt-12 flex items-center justify-center gap-8 text-sm">
-            <div className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-blue-600" />
-              <span className="text-gray-600">April 4-6, 2024</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <MapPin className="h-5 w-5 text-blue-600" />
-              <span className="text-gray-600">San Francisco, CA</span>
-            </div>
           </div>
         </div>
       </div>
@@ -42,33 +34,33 @@ function SpeakerCard({ name, role, company, image }) {
       <div className="aspect-square overflow-hidden rounded-2xl bg-gray-100">
         <div className="h-full w-full bg-gradient-to-br from-blue-400 to-purple-500" />
       </div>
-      <h3 className="mt-6 text-lg font-semibold leading-8 text-gray-900">{name}</h3>
-      <p className="text-base leading-7 text-gray-600">{role}</p>
-      <p className="text-sm leading-6 text-gray-500">{company}</p>
+      <h3 className="mt-6 text-lg font-semibold text-gray-900">{name}</h3>
+      <p className="text-sm text-blue-600">{role}</p>
+      <p className="text-sm text-gray-500">{company}</p>
     </div>
   );
 }
 
 function Speakers() {
   const speakers = [
-    { name: 'Sarah Chen', role: 'Design Director', company: 'Stripe' },
-    { name: 'Marcus Williams', role: 'VP of Design', company: 'Airbnb' },
-    { name: 'Emily Rodriguez', role: 'Lead Designer', company: 'Notion' },
-    { name: 'David Park', role: 'Design Systems Lead', company: 'GitHub' },
+    { name: 'Sarah Chen', role: 'VP of Design', company: 'Stripe' },
+    { name: 'Marcus Williams', role: 'Lead Designer', company: 'Figma' },
+    { name: 'Emily Rodriguez', role: 'Design Director', company: 'Airbnb' },
+    { name: 'David Park', role: 'Principal Designer', company: 'Netflix' },
   ];
 
   return (
-    <div className="bg-white py-24 sm:py-32">
+    <div className="bg-white py-24">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <h2 className="text-3xl font-bold tracking-tight text-blue-900 sm:text-4xl">
             Featured speakers
           </h2>
-          <p className="mt-6 text-lg leading-8 text-gray-600">
-            Learn from industry leaders and innovators shaping the future of design.
+          <p className="mt-4 text-lg text-gray-600">
+            Learn from industry leaders and innovators
           </p>
         </div>
-        <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-4">
+        <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:max-w-none lg:grid-cols-4">
           {speakers.map((speaker) => (
             <SpeakerCard key={speaker.name} {...speaker} />
           ))}
@@ -79,47 +71,72 @@ function Speakers() {
 }
 
 function Schedule() {
-  const schedule = [
-    { time: '9:00 AM', title: 'Registration & Breakfast', type: 'Break' },
-    { time: '10:00 AM', title: 'Opening Keynote', speaker: 'Sarah Chen', type: 'Talk' },
-    { time: '11:00 AM', title: 'Design Systems at Scale', speaker: 'Marcus Williams', type: 'Talk' },
-    { time: '12:00 PM', title: 'Lunch', type: 'Break' },
-    { time: '1:30 PM', title: 'Accessibility Workshop', speaker: 'Emily Rodriguez', type: 'Workshop' },
-    { time: '3:30 PM', title: 'Break', type: 'Break' },
-    { time: '4:00 PM', title: 'Future of Design Tools', speaker: 'David Park', type: 'Talk' },
+  const days = [
+    {
+      date: 'April 4',
+      sessions: [
+        { time: '9:00 AM', title: 'Opening Keynote', speaker: 'Sarah Chen' },
+        { time: '10:30 AM', title: 'Design Systems at Scale', speaker: 'Marcus Williams' },
+        { time: '2:00 PM', title: 'User Research Best Practices', speaker: 'Emily Rodriguez' },
+      ],
+    },
+    {
+      date: 'April 5',
+      sessions: [
+        { time: '9:00 AM', title: 'Accessibility in Design', speaker: 'David Park' },
+        { time: '11:00 AM', title: 'Workshop: Figma Advanced Techniques', speaker: 'Sarah Chen' },
+        { time: '3:00 PM', title: 'Panel: The Future of Design', speaker: 'All Speakers' },
+      ],
+    },
   ];
 
   return (
-    <div className="bg-gray-50 py-24 sm:py-32">
+    <div className="bg-blue-50 py-24">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Schedule</h2>
-          <p className="mt-6 text-lg leading-8 text-gray-600">
-            Two packed days of talks, workshops, and networking opportunities.
+          <h2 className="text-3xl font-bold tracking-tight text-blue-900 sm:text-4xl">
+            Schedule
+          </h2>
+          <p className="mt-4 text-lg text-gray-600">
+            Two days packed with talks, workshops, and networking
           </p>
         </div>
-        <div className="mx-auto mt-16 max-w-2xl">
-          <div className="space-y-4">
-            {schedule.map((item, index) => (
-              <div
-                key={index}
-                className="flex items-start gap-6 rounded-2xl bg-white p-6 shadow-sm"
-              >
-                <div className="flex-shrink-0">
-                  <p className="text-sm font-semibold text-blue-600">{item.time}</p>
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-base font-semibold text-gray-900">{item.title}</h3>
-                  {item.speaker && (
-                    <p className="mt-1 text-sm text-gray-600">{item.speaker}</p>
-                  )}
-                  <span className="mt-2 inline-block rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
-                    {item.type}
-                  </span>
-                </div>
+        <div className="mx-auto mt-16 grid max-w-4xl gap-8 lg:grid-cols-2">
+          {days.map((day) => (
+            <div key={day.date} className="rounded-2xl bg-white p-8">
+              <h3 className="text-xl font-bold text-blue-900">{day.date}</h3>
+              <div className="mt-6 space-y-6">
+                {day.sessions.map((session) => (
+                  <div key={session.time} className="border-l-2 border-blue-600 pl-4">
+                    <p className="text-sm font-semibold text-blue-600">{session.time}</p>
+                    <p className="mt-1 font-semibold text-gray-900">{session.title}</p>
+                    <p className="text-sm text-gray-600">{session.speaker}</p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Sponsors() {
+  return (
+    <div className="bg-white py-24">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="text-3xl font-bold tracking-tight text-blue-900 sm:text-4xl">
+            Our sponsors
+          </h2>
+        </div>
+        <div className="mx-auto mt-16 grid max-w-lg grid-cols-3 gap-8 lg:max-w-4xl">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div key={i} className="flex items-center justify-center">
+              <div className="h-12 w-32 rounded bg-gray-200" />
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -129,27 +146,23 @@ function Schedule() {
 export default function KeynoteHome() {
   return (
     <div className="bg-white">
-      <header className="absolute inset-x-0 top-0 z-50">
-        <nav className="flex items-center justify-between p-6 lg:px-8">
-          <div className="flex lg:flex-1">
-            <span className="text-2xl font-bold text-gray-900">DeceptiConf</span>
-          </div>
-          <div className="flex gap-x-12">
-            <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+      <header className="border-b border-gray-200">
+        <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
+          <span className="text-2xl font-bold text-blue-900">DeceptiConf</span>
+          <div className="flex gap-x-8">
+            <a href="#" className="text-sm font-semibold text-gray-900">
               Speakers
             </a>
-            <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
+            <a href="#" className="text-sm font-semibold text-gray-900">
               Schedule
             </a>
-            <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-              Venue
+            <a href="#" className="text-sm font-semibold text-gray-900">
+              Sponsors
             </a>
           </div>
-          <div className="flex flex-1 justify-end">
-            <button className="rounded-2xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500">
-              Get tickets
-            </button>
-          </div>
+          <button className="rounded-2xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500">
+            Get tickets
+          </button>
         </nav>
       </header>
 
@@ -157,12 +170,29 @@ export default function KeynoteHome() {
         <Hero />
         <Speakers />
         <Schedule />
+        <Sponsors />
+
+        <div className="bg-blue-600 py-16">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mx-auto max-w-2xl text-center">
+              <h2 className="text-3xl font-bold tracking-tight text-white">
+                Join us in Austin
+              </h2>
+              <p className="mx-auto mt-4 max-w-xl text-lg text-blue-100">
+                Get your tickets now for the premier design conference of 2024
+              </p>
+              <button className="mt-8 rounded-2xl bg-white px-6 py-4 text-base font-semibold text-blue-600 hover:bg-blue-50">
+                Register now
+              </button>
+            </div>
+          </div>
+        </div>
       </main>
 
-      <footer className="bg-gray-900">
-        <div className="mx-auto max-w-7xl px-6 py-12 md:flex md:items-center md:justify-between lg:px-8">
-          <p className="text-center text-xs leading-5 text-gray-400">
-            &copy; 2024 DeceptiConf. All rights reserved.
+      <footer className="bg-gray-900 py-12">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <p className="text-center text-sm text-gray-400">
+            © 2024 DeceptiConf. All rights reserved.
           </p>
         </div>
       </footer>

@@ -128,6 +128,8 @@ import SyntaxDocs from './pages/SyntaxDocs';
 import TransmitHome from './pages/TransmitHome';
 import KeynoteHome from './pages/KeynoteHome';
 import PocketHome from './pages/PocketHome';
+import PocketLogin from './pages/PocketLogin';
+import PocketRegister from './pages/PocketRegister';
 import __Layout from './Layout.jsx';
 
 
@@ -262,6 +264,8 @@ export const PAGES = {
     "TransmitHome": TransmitHome,
     "KeynoteHome": KeynoteHome,
     "PocketHome": PocketHome,
+    "PocketLogin": PocketLogin,
+    "PocketRegister": PocketRegister,
 }
 
 export const pagesConfig = {
