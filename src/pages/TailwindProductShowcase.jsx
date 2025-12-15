@@ -1992,6 +1992,273 @@ export default function TailwindProductShowcase() {
             </div>
           </div>
         </ShowcaseSection>
+
+        <ShowcaseSection title="Hero - Full Width Background">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="relative bg-gray-900">
+              <div className="absolute inset-0 overflow-hidden">
+                <img
+                  src="https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-01-hero-full-width.jpg"
+                  className="w-full h-full object-cover"
+                  alt="Hero"
+                />
+              </div>
+              <div className="absolute inset-0 bg-gray-900 opacity-50" />
+              <div className="relative max-w-3xl mx-auto flex flex-col items-center px-6 py-32 text-center sm:py-64 lg:px-0">
+                <h1 className="text-4xl font-bold tracking-tight text-white lg:text-6xl">New arrivals are here</h1>
+                <p className="mt-4 text-xl text-white">
+                  The new arrivals have, well, newly arrived. Check out the latest options from our summer small-batch release.
+                </p>
+                <a href="#" className="mt-8 inline-block rounded-md border border-transparent bg-white px-8 py-3 text-base font-medium text-gray-900 hover:bg-gray-100">
+                  Shop New Arrivals
+                </a>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Hero - Split Layout with Image">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="relative bg-gray-100">
+              <div className="grid lg:grid-cols-2">
+                <div className="max-w-2xl mx-auto px-4 py-24 lg:max-w-none lg:py-64 lg:px-16">
+                  <div>
+                    <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl xl:text-6xl">
+                      Focus on what matters
+                    </h1>
+                    <p className="mt-4 text-xl text-gray-600">
+                      All the charts, datepickers, and notifications in the world can't beat checking off some items on a paper card.
+                    </p>
+                    <div className="mt-6">
+                      <a href="#" className="inline-block rounded-md border border-transparent bg-indigo-600 px-8 py-3 font-medium text-white hover:bg-indigo-700">
+                        Shop Productivity
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div className="h-48 sm:h-64 lg:h-full">
+                  <img
+                    src="https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-02-hero-half-width.jpg"
+                    className="w-full h-full object-cover"
+                    alt="Hero"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Hero - Offset Image Grid">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="pt-16 pb-80 sm:pt-24 sm:pb-40 lg:pt-40 lg:pb-48">
+              <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="max-w-lg">
+                  <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+                    Summer styles are finally here
+                  </h1>
+                  <p className="mt-4 text-xl text-gray-500">
+                    This year, our new summer collection will shelter you from the harsh elements.
+                  </p>
+                </div>
+                <div className="mt-10">
+                  <a href="#" className="inline-block rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-center font-medium text-white hover:bg-indigo-700">
+                    Shop Collection
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Hero - Overlapping Cards">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="relative bg-gray-800 h-96">
+              <div className="absolute inset-0">
+                <img
+                  src="https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-04-hero-full-width.jpg"
+                  className="w-full h-full object-cover"
+                  alt="Hero"
+                />
+              </div>
+              <div className="absolute inset-0 bg-gray-900 opacity-50" />
+              <div className="relative max-w-3xl mx-auto px-6 py-32 text-center">
+                <h1 className="text-4xl font-bold tracking-tight text-white lg:text-6xl">Mid-Season Sale</h1>
+                <div className="mt-6">
+                  <a href="#" className="inline-block rounded-md border border-transparent bg-indigo-600 px-8 py-3 font-medium text-white hover:bg-indigo-700">
+                    Shop Collection
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className="-mt-48 max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 px-4 sm:px-6 lg:px-8">
+              {['Women\'s', 'Men\'s', 'Desk Accessories'].map((name) => (
+                <div key={name} className="relative h-96 rounded-lg bg-white shadow-xl">
+                  <div className="absolute inset-0 overflow-hidden rounded-lg">
+                    <img
+                      src="https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-04-collection-01.jpg"
+                      className="w-full h-full object-cover"
+                      alt={name}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-50" />
+                  </div>
+                  <div className="absolute inset-0 flex items-end rounded-lg p-6">
+                    <div>
+                      <p className="text-sm text-white">Shop the collection</p>
+                      <h3 className="mt-1 font-semibold text-white">
+                        <a href="#">{name}</a>
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="CTA - Full Width Image Overlay">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="relative overflow-hidden rounded-lg">
+                <div className="absolute inset-0">
+                  <img
+                    src="https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-01-feature-section-01.jpg"
+                    className="w-full h-full object-cover"
+                    alt="CTA"
+                  />
+                </div>
+                <div className="relative bg-gray-900/75 px-6 py-32 sm:px-12 sm:py-40 lg:px-16">
+                  <div className="relative max-w-3xl mx-auto flex flex-col items-center text-center">
+                    <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                      Level up your desk
+                    </h2>
+                    <p className="mt-3 text-xl text-white">
+                      Make your desk beautiful and organized. Post a picture to social media and watch it get more likes.
+                    </p>
+                    <a href="#" className="mt-8 block rounded-md border border-transparent bg-white px-8 py-3 text-base font-medium text-gray-900 hover:bg-gray-100">
+                      Shop Workspace
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="CTA - Background with Testimonials">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="relative">
+              <div className="absolute inset-0 overflow-hidden">
+                <img
+                  src="https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-02-sale-full-width.jpg"
+                  className="w-full h-full object-cover"
+                  alt="Background"
+                />
+              </div>
+              <div className="absolute inset-0 bg-white/75" />
+              <div className="relative max-w-7xl mx-auto px-4 pt-32 text-center">
+                <div className="max-w-2xl mx-auto">
+                  <h2 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
+                    Get 25% off during our one-time sale
+                  </h2>
+                  <p className="mt-4 max-w-xl mx-auto text-xl text-gray-600">
+                    Most of our products are limited releases that won't come back.
+                  </p>
+                  <a href="#" className="mt-6 inline-block rounded-md border border-transparent bg-gray-900 px-8 py-3 font-medium text-white hover:bg-gray-800">
+                    Get access to our one-time sale
+                  </a>
+                </div>
+              </div>
+              <div className="relative max-w-7xl mx-auto px-4 py-24">
+                <h2 className="text-2xl font-bold tracking-tight text-gray-900">What are people saying?</h2>
+                <div className="mt-16 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  {[
+                    { quote: 'My order arrived super quickly. The product is even better than I hoped it would be!', author: 'Sarah Peters' },
+                    { quote: 'The whole process was so simple that I ended up ordering two new items!', author: 'Kelly McPherson' },
+                    { quote: 'I know the quality will always be there.', author: 'Chris Paul' },
+                  ].map((testimonial, i) => (
+                    <blockquote key={i}>
+                      <svg width={24} height={18} viewBox="0 0 24 18" className="text-gray-300">
+                        <path
+                          d="M0 18h8.7v-5.555c-.024-3.906 1.113-6.841 2.892-9.68L6.452 0C3.188 2.644-.026 7.86 0 12.469V18zm12.408 0h8.7v-5.555C21.083 8.539 22.22 5.604 24 2.765L18.859 0c-3.263 2.644-6.476 7.86-6.451 12.469V18z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                      <p className="mt-8 text-lg text-gray-600">{testimonial.quote}</p>
+                      <cite className="mt-4 block font-semibold text-gray-900 not-italic">{testimonial.author}</cite>
+                    </blockquote>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="CTA - Image with Text Overlay">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="relative overflow-hidden rounded-lg bg-gray-800 px-6 py-32 sm:px-12 sm:py-40 lg:px-16">
+                <div className="absolute inset-0 overflow-hidden">
+                  <img
+                    src="https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-03-feature-section-full-width.jpg"
+                    className="w-full h-full object-cover"
+                    alt="Background"
+                  />
+                </div>
+                <div className="absolute inset-0 bg-gray-900/50" />
+                <div className="relative max-w-3xl mx-auto flex flex-col items-center text-center">
+                  <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">Long-term thinking</h2>
+                  <p className="mt-3 text-xl text-white">
+                    We're committed to responsible, sustainable, and ethical manufacturing. Our small-scale approach allows us to focus on quality.
+                  </p>
+                  <a href="#" className="mt-8 block rounded-md border border-transparent bg-white px-8 py-3 text-base font-medium text-gray-900 hover:bg-gray-100">
+                    Read our story
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Hero - Sale Banner with Images">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="bg-gray-800 pt-48 pb-16 sm:pb-24">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="max-w-2xl">
+                  <h2 className="text-4xl font-bold tracking-tight text-white md:text-5xl">
+                    Final Stock.
+                    <br />
+                    Up to 50% off.
+                  </h2>
+                  <div className="mt-6">
+                    <a href="#" className="font-semibold text-white">
+                      Shop the sale
+                      <span aria-hidden="true"> →</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Offer Bar - Three Column">
+          <div className="bg-white rounded-lg border overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-gray-200">
+              <div className="flex flex-col items-center justify-center bg-white px-4 py-6 text-center">
+                <p className="text-sm text-gray-500">Download the app</p>
+                <p className="font-semibold text-gray-900">Get an exclusive $5 off code</p>
+              </div>
+              <div className="flex flex-col items-center justify-center bg-white px-4 py-6 text-center">
+                <p className="text-sm text-gray-500">Return when you're ready</p>
+                <p className="font-semibold text-gray-900">60 days of free returns</p>
+              </div>
+              <div className="flex flex-col items-center justify-center bg-white px-4 py-6 text-center">
+                <p className="text-sm text-gray-500">Sign up for our newsletter</p>
+                <p className="font-semibold text-gray-900">15% off your first order</p>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
       </div>
     </div>
   );
