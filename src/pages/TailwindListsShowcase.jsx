@@ -4092,6 +4092,161 @@ export default function TailwindListsShowcase() {
         </div>
       </section>
 
+      {/* Dividers */}
+      <section className="space-y-8 mt-12 pt-8 border-t border-border">
+        <div>
+          <h2 className="text-xl font-display mb-2">Dividers</h2>
+          <p className="text-sm text-muted-foreground">Section separators with text, icons, and buttons</p>
+        </div>
+
+        {/* Centered Text Divider */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Centered Text Divider</h3>
+          <div className="flex items-center">
+            <div aria-hidden="true" className="w-full border-t border-border" />
+            <div className="relative flex justify-center">
+              <span className="bg-background px-2 text-sm text-muted-foreground">Continue</span>
+            </div>
+            <div aria-hidden="true" className="w-full border-t border-border" />
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Layout: <code className="bg-background px-1 py-0.5 rounded">flex items-center</code></li>
+              <li>• Borders: <code className="bg-background px-1 py-0.5 rounded">border-t border-border</code></li>
+              <li>• Text: <code className="bg-background px-1 py-0.5 rounded">text-sm text-muted-foreground</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Icon Divider */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Icon Divider</h3>
+          <div className="flex items-center">
+            <div aria-hidden="true" className="w-full border-t border-border" />
+            <div className="relative flex justify-center">
+              <span className="bg-background px-2 text-muted-foreground">
+                <Plus aria-hidden="true" className="h-5 w-5 text-muted-foreground" />
+              </span>
+            </div>
+            <div aria-hidden="true" className="w-full border-t border-border" />
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Icon: <code className="bg-background px-1 py-0.5 rounded">h-5 w-5</code></li>
+              <li>• Color: <code className="bg-background px-1 py-0.5 rounded">text-muted-foreground</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Left-Aligned Text Divider */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Left-Aligned Text Divider</h3>
+          <div className="flex items-center">
+            <div className="relative flex justify-start">
+              <span className="bg-background pr-2 text-sm text-muted-foreground">Continue</span>
+            </div>
+            <div aria-hidden="true" className="w-full border-t border-border" />
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Alignment: <code className="bg-background px-1 py-0.5 rounded">justify-start</code></li>
+              <li>• Padding: <code className="bg-background px-1 py-0.5 rounded">pr-2</code> (right only)</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Centered Heading Divider */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Centered Heading Divider</h3>
+          <div className="flex items-center">
+            <div aria-hidden="true" className="w-full border-t border-border" />
+            <div className="relative flex justify-center">
+              <span className="bg-background px-3 text-base font-semibold">Projects</span>
+            </div>
+            <div aria-hidden="true" className="w-full border-t border-border" />
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Text: <code className="bg-background px-1 py-0.5 rounded">text-base font-semibold</code></li>
+              <li>• Padding: <code className="bg-background px-1 py-0.5 rounded">px-3</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Left-Aligned Heading Divider */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Left-Aligned Heading Divider</h3>
+          <div className="flex items-center">
+            <div className="relative flex justify-start">
+              <span className="bg-background pr-3 text-base font-semibold">Projects</span>
+            </div>
+            <div aria-hidden="true" className="w-full border-t border-border" />
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Same as centered but with <code className="bg-background px-1 py-0.5 rounded">justify-start</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Button Divider */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Button Divider</h3>
+          <div className="flex items-center">
+            <div aria-hidden="true" className="w-full border-t border-border" />
+            <div className="relative flex justify-center">
+              <Button variant="outline" size="sm" className="bg-background whitespace-nowrap">
+                <Plus className="h-4 w-4" />
+                Button text
+              </Button>
+            </div>
+            <div aria-hidden="true" className="w-full border-t border-border" />
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Button: <code className="bg-background px-1 py-0.5 rounded">variant="outline" size="sm"</code></li>
+              <li>• Background: <code className="bg-background px-1 py-0.5 rounded">bg-background</code> ensures no gap</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Heading with Button Divider */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Heading with Button Divider</h3>
+          <div className="relative flex items-center justify-between">
+            <span className="bg-background pr-3 text-base font-semibold">Projects</span>
+            <div className="flex w-full items-center">
+              <div aria-hidden="true" className="w-full border-t border-border" />
+              <Button variant="outline" size="sm" className="bg-background whitespace-nowrap ml-3">
+                <Plus className="h-4 w-4" />
+                <span>Button text</span>
+              </Button>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Layout: <code className="bg-background px-1 py-0.5 rounded">flex items-center justify-between</code></li>
+              <li>• Heading: <code className="bg-background px-1 py-0.5 rounded">pr-3</code> for spacing</li>
+              <li>• Button: <code className="bg-background px-1 py-0.5 rounded">ml-3</code> for spacing</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {/* Token Reference */}
       <section className="space-y-4 mt-12 pt-8 border-t border-border">
         <div>
