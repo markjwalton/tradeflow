@@ -22,7 +22,7 @@ export default function AssetManager() {
 
   const queryClient = useQueryClient();
 
-  const { data: folders = [], isLoading: foldersLoading } = useQuery({
+  const { data: websiteFolders = [], isLoading: foldersLoading } = useQuery({
     queryKey: ['website-folders'],
     queryFn: () => base44.entities.WebsiteFolder.list(),
   });
@@ -194,7 +194,7 @@ export default function AssetManager() {
         </CardHeader>
         <CardContent>
           <Select value={selectedFolder?.id} onValueChange={(id) => {
-            const folder = folders.find(f => f.id === id);
+            const folder = websiteFolders.find(f => f.id === id);
             setSelectedFolder(folder);
             setCurrentPath('');
           }}>
@@ -202,7 +202,7 @@ export default function AssetManager() {
               <SelectValue placeholder="Choose a website folder..." />
             </SelectTrigger>
             <SelectContent>
-              {folders.map((folder) => (
+              {websiteFolders.map((folder) => (
                 <SelectItem key={folder.id} value={folder.id}>
                   {folder.name}
                 </SelectItem>
