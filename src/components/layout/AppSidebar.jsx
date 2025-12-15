@@ -229,7 +229,7 @@ export function AppSidebar({ navItems = [] }) {
       
       // Expanded mode - folders are expandable
       return (
-        <div key={item.id} className={isExpanded && showLabels ? "[border-radius:var(--radius-lg)] [margin-bottom:var(--spacing-1)] [margin-left:var(--spacing-3)] [margin-right:var(--spacing-3)]" : ""} style={isExpanded && showLabels ? { backgroundColor: 'oklch(0.990 0.007 83.1 / 0.5)' } : {}}>
+        <div key={item.id} className={isExpanded && showLabels ? "[border-radius:var(--radius-lg)] [margin-bottom:var(--spacing-1)]" : ""} style={isExpanded && showLabels ? { backgroundColor: 'oklch(0.990 0.007 83.1 / 0.5)' } : {}}>
           <button
             onClick={(e) => toggleFolder(item.id, e)}
             className={cn(
@@ -308,7 +308,7 @@ export function AppSidebar({ navItems = [] }) {
   return (
     <aside
           className={cn(
-            "hidden lg:flex lg:flex-col bg-card text-sidebar-foreground rounded-xl shadow-md transition-[width] duration-300 ease-in-out overflow-visible [margin-left:var(--spacing-3)] [margin-right:var(--spacing-3)]",
+            "hidden lg:flex lg:flex-col bg-card text-sidebar-foreground rounded-xl shadow-md transition-[width] duration-300 ease-in-out overflow-visible",
             isHidden && "lg:w-0",
             !isHidden && widthClass
           )}
