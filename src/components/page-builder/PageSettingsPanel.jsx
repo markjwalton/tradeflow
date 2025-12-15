@@ -11,6 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
   SheetFooter,
+  SheetOverlay,
 } from "@/components/ui/sheet";
 import {
   Collapsible,
@@ -217,11 +218,6 @@ export function PageSettingsPanel({ currentPageName }) {
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <div 
-        className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
-        style={{ backgroundColor: 'var(--primary-alpha, oklch(0.398 0.037 159.8 / 0.5))' }}
-        data-state={isOpen ? 'open' : 'closed'}
-      />
       <SheetTrigger asChild>
         <Button
           variant="ghost"
@@ -233,6 +229,7 @@ export function PageSettingsPanel({ currentPageName }) {
           <Settings className="h-6 w-6 text-white" />
         </Button>
       </SheetTrigger>
+      <SheetOverlay style={{ backgroundColor: 'var(--primary-alpha, oklch(0.398 0.037 159.8 / 0.5))' }} />
       <SheetContent className="w-96" style={{ backgroundColor: 'var(--background-100, rgba(255, 255, 255, 0.8))' }}>
         <SheetHeader className="px-6">
           <div className="flex items-center justify-between">
