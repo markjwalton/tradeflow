@@ -151,9 +151,9 @@ export default function NavigationManagerTest() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-r from-white via-[var(--color-background)] to-white">
+    <div className="min-h-screen bg-[var(--color-background)]">
       {/* Full Width Header */}
-      <div className="w-full bg-white backdrop-blur-sm sticky top-0 z-50 rounded-xl shadow-md p-4">
+      <div className="bg-[var(--color-background-paper)] sticky top-0 z-50 rounded-xl p-4" style={{ boxShadow: 'var(--shadow-card)' }}>
       </div>
     </div>
   );
