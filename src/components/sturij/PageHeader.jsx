@@ -17,7 +17,10 @@ export function PageHeader({ title, description, children }) {
       )}
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <h1 className={`text-3xl font-display text-[#C78E8E] text-[var(--accent-500)] ${description ? '[margin-bottom:var(--spacing-2)]' : ''}`}>
+          <h1 
+            className={`text-3xl font-display ${description ? '[margin-bottom:var(--spacing-2)]' : ''}`}
+            style={{ color: 'var(--accent-500, #C78E8E)' }}
+          >
             {title}
           </h1>
           {description && (
