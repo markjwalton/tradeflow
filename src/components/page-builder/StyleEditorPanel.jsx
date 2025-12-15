@@ -18,6 +18,7 @@ export function StyleEditorPanel({ currentPageName }) {
   const [friendlyNames, setFriendlyNames] = useState({});
   const [editingName, setEditingName] = useState(null);
   const [tempName, setTempName] = useState("");
+  const [highlightedElement, setHighlightedElement] = useState(null);
 
   const styleOptions = {
     backgroundColor: [
@@ -102,8 +103,12 @@ export function StyleEditorPanel({ currentPageName }) {
     if (isOpen) {
       loadSavedMappings();
       extractPageElements();
+      attachClickListeners();
+    } else {
+      removeClickListeners();
     }
-  }, [isOpen]);
+    return () => removeClickListeners();
+  }, [isOpen, pageElements]);
 
   const loadSavedMappings = async () => {
     try {
@@ -175,6 +180,39 @@ export function StyleEditorPanel({ currentPageName }) {
     });
 
     setPageElements(elements);
+  };
+
+  const attachClickListeners = () => {
+    const container = document.querySelector('[data-page-content]');
+    if (!container) return;
+
+    container.addEventListener('click', handleElementClick, true);
+  };
+
+  const removeClickListeners = () => {
+    const container = document.querySelector('[data-page-content]');
+    if (!container) return;
+
+    container.removeEventListener('click', handleElementClick, true);
+  };
+
+  const handleElementClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const targetElement = pageElements.find(el => el.element === e.target);
+    if (targetElement) {
+      setHighlightedElement(targetElement.id);
+      setOpenSections(prev => ({ ...prev, [targetElement.id]: true }));
+      
+      // Scroll to element in panel
+      setTimeout(() => {
+        const elementDiv = document.getElementById(`panel-element-${targetElement.id}`);
+        if (elementDiv) {
+          elementDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    }
   };
 
   const applyStyle = (elementId, styleProp, value) => {
@@ -263,7 +301,12 @@ export function StyleEditorPanel({ currentPageName }) {
               open={openSections[element.id]}
               onOpenChange={() => toggleSection(element.id)}
             >
-              <div className="border rounded-lg overflow-hidden">
+              <div 
+                id={`panel-element-${element.id}`}
+                className={`border rounded-lg overflow-hidden transition-all ${
+                  highlightedElement === element.id ? 'ring-2 ring-primary-500 shadow-lg' : ''
+                }`}
+              >
                 <CollapsibleTrigger className="w-full px-4 py-3 flex items-center justify-between hover:bg-muted/50 transition-colors">
                   <div className="flex-1 text-left">
                     {editingName === element.id ? (
