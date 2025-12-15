@@ -2380,6 +2380,203 @@ export default function TailwindListsShowcase() {
         </div>
       </section>
 
+      {/* Notifications / Toasts */}
+      <section className="space-y-8 mt-12 pt-8 border-t border-border">
+        <div>
+          <h2 className="text-xl font-display mb-2">Notifications / Toasts</h2>
+          <p className="text-sm text-muted-foreground">Toast notification patterns for user feedback</p>
+        </div>
+
+        {/* Success Notification */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Success with Icon</h3>
+          <div className="max-w-sm rounded-lg bg-card shadow-lg border border-border p-4">
+            <div className="flex items-start">
+              <div className="shrink-0">
+                <CheckCircle2 className="h-6 w-6 text-success" />
+              </div>
+              <div className="ml-3 w-0 flex-1 pt-0.5">
+                <p className="text-sm font-medium text-foreground">Successfully saved!</p>
+                <p className="mt-1 text-sm text-muted-foreground">Anyone with a link can now view this file.</p>
+              </div>
+              <div className="ml-4 flex shrink-0">
+                <button className="inline-flex rounded-md text-muted-foreground hover:text-foreground">
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Icon: <code className="bg-background px-1 py-0.5 rounded">CheckCircle2 text-success</code></li>
+              <li>• Container: <code className="bg-background px-1 py-0.5 rounded">bg-card shadow-lg border</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Simple with Undo */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Undo Action</h3>
+          <div className="max-w-sm rounded-lg bg-card shadow-lg border border-border p-4">
+            <div className="flex items-center">
+              <div className="flex w-0 flex-1 justify-between">
+                <p className="w-0 flex-1 text-sm font-medium text-foreground">Discussion archived</p>
+                <Button variant="link" size="sm" className="ml-3 shrink-0 h-auto p-0">Undo</Button>
+              </div>
+              <div className="ml-4 flex shrink-0">
+                <button className="inline-flex rounded-md text-muted-foreground hover:text-foreground">
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Action: <code className="bg-background px-1 py-0.5 rounded">Button variant="link"</code></li>
+              <li>• Layout: <code className="bg-background px-1 py-0.5 rounded">flex justify-between</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* With Multiple Actions */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Multiple Actions</h3>
+          <div className="max-w-sm rounded-lg bg-card shadow-lg border border-border p-4">
+            <div className="flex items-start">
+              <div className="shrink-0">
+                <LifeBuoy className="h-6 w-6 text-muted-foreground" />
+              </div>
+              <div className="ml-3 w-0 flex-1 pt-0.5">
+                <p className="text-sm font-medium text-foreground">Discussion moved</p>
+                <p className="mt-1 text-sm text-muted-foreground">Lorem ipsum dolor sit amet consectetur adipisicing.</p>
+                <div className="mt-3 flex gap-7">
+                  <Button variant="link" size="sm" className="h-auto p-0">Undo</Button>
+                  <Button variant="link" size="sm" className="h-auto p-0 text-muted-foreground">Dismiss</Button>
+                </div>
+              </div>
+              <div className="ml-4 flex shrink-0">
+                <button className="inline-flex rounded-md text-muted-foreground hover:text-foreground">
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Actions: <code className="bg-background px-1 py-0.5 rounded">flex gap-7</code> for spacing</li>
+              <li>• Secondary action: <code className="bg-background px-1 py-0.5 rounded">text-muted-foreground</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Message with Avatar */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Message with Avatar</h3>
+          <div className="max-w-md flex rounded-lg bg-card shadow-lg border border-border">
+            <div className="w-0 flex-1 p-4">
+              <div className="flex items-start">
+                <div className="shrink-0 pt-0.5">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop" />
+                    <AvatarFallback>EG</AvatarFallback>
+                  </Avatar>
+                </div>
+                <div className="ml-3 w-0 flex-1">
+                  <p className="text-sm font-medium text-foreground">Emilia Gates</p>
+                  <p className="mt-1 text-sm text-muted-foreground">Sure! 8:30pm works great!</p>
+                </div>
+              </div>
+            </div>
+            <div className="flex border-l border-border">
+              <button className="flex w-full items-center justify-center rounded-none rounded-r-lg p-4 text-sm font-medium text-primary hover:text-primary/80">
+                Reply
+              </button>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Split layout: <code className="bg-background px-1 py-0.5 rounded">flex with border-l</code></li>
+              <li>• Action button: <code className="bg-background px-1 py-0.5 rounded">text-primary</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Stacked Actions */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Stacked Actions</h3>
+          <div className="max-w-md flex rounded-lg bg-card shadow-lg border border-border divide-x divide-border">
+            <div className="flex w-0 flex-1 items-center p-4">
+              <div className="w-full">
+                <p className="text-sm font-medium text-foreground">Receive notifications</p>
+                <p className="mt-1 text-sm text-muted-foreground">Notifications may include alerts, sounds, and badges.</p>
+              </div>
+            </div>
+            <div className="flex">
+              <div className="flex flex-col divide-y divide-border">
+                <button className="flex flex-1 items-center justify-center rounded-none rounded-tr-lg px-4 py-3 text-sm font-medium text-primary hover:text-primary/80">
+                  Allow
+                </button>
+                <button className="flex flex-1 items-center justify-center rounded-none rounded-br-lg px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground">
+                  Don't allow
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Dividers: <code className="bg-background px-1 py-0.5 rounded">divide-x divide-y divide-border</code></li>
+              <li>• Vertical stack: <code className="bg-background px-1 py-0.5 rounded">flex flex-col</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* With Action Buttons */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Action Buttons</h3>
+          <div className="max-w-sm rounded-lg bg-card shadow-lg border border-border p-4">
+            <div className="flex items-start">
+              <div className="shrink-0 pt-0.5">
+                <Avatar className="h-10 w-10">
+                  <AvatarImage src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop" />
+                  <AvatarFallback>EG</AvatarFallback>
+                </Avatar>
+              </div>
+              <div className="ml-3 w-0 flex-1">
+                <p className="text-sm font-medium text-foreground">Emilia Gates</p>
+                <p className="mt-1 text-sm text-muted-foreground">Sent you an invite to connect.</p>
+                <div className="mt-4 flex gap-3">
+                  <Button size="sm">Accept</Button>
+                  <Button size="sm" variant="outline">Decline</Button>
+                </div>
+              </div>
+              <div className="ml-4 flex shrink-0">
+                <button className="inline-flex rounded-md text-muted-foreground hover:text-foreground">
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Buttons: <code className="bg-background px-1 py-0.5 rounded">Button size="sm"</code></li>
+              <li>• Button spacing: <code className="bg-background px-1 py-0.5 rounded">flex gap-3</code></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {/* Token Reference */}
       <section className="space-y-4 mt-12 pt-8 border-t border-border">
         <div>
