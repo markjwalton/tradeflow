@@ -313,11 +313,10 @@ When updating existing code:
         </div>
       </div>
 
-      {/* Gradient background that bleeds to white */}
+      {/* Warm beige background */}
       <div 
-        className="w-screen relative left-1/2 right-1/2 -mx-[50vw]"
+        className="w-screen relative left-1/2 right-1/2 -mx-[50vw] bg-secondary-100"
         style={{
-          background: 'linear-gradient(to bottom, #00CED1 0%, #7FFFD4 20%, #E0F7FA 50%, #F5FFFE 70%, #FFFFFF 100%)',
           minHeight: '100vh'
         }}
       >
