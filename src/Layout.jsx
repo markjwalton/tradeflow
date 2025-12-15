@@ -192,29 +192,55 @@ export default function Layout({ children, currentPageName }) {
             loadedNavConfig = navConfigs[0];
             setNavConfig(loadedNavConfig);
             
-            // Use items from NavigationConfig - convert to format with proper IDs
+            // Use items from NavigationConfig - preserve ALL database fields including IDs
             if (loadedNavConfig.items?.length > 0) {
               loadedNavItems = loadedNavConfig.items
                 .filter(item => item.is_visible !== false) // Only include visible items
                 .map((item) => ({
-                  id: item.id,
-                  _id: item.id, // For backward compatibility
+                  // CRITICAL: Use database ID directly - never generate new IDs
+                  id: item.id || item._id,
+                  _id: item.id || item._id, // For backward compatibility
+                  
+                  // Core navigation fields
                   name: item.name,
                   slug: item.slug,
                   item_type: item.item_type,
                   page_url: item.slug,
+                  
+                  // Icon configuration
                   icon: item.icon,
+                  icon_size: item.icon_size,
+                  icon_stroke_width: item.icon_stroke_width,
+                  
+                  // Hierarchy and ordering
                   order: item.order,
+                  parent_id: item.parent_id, // References database IDs
+                  
+                  // Display and behavior
                   is_visible: item.is_visible,
-                  parent_id: item.parent_id,
                   default_collapsed: item.default_collapsed,
+                  tooltip_text: item.tooltip_text,
                 }));
 
-              // Debug what we're passing to AppSidebar
-              console.log('=== Layout.jsx navItems Debug ===');
-              console.log('Total items after filter/map:', loadedNavItems.length);
-              console.log('Items with parent_id:', loadedNavItems.filter(i => i.parent_id).length);
-              console.log('First 5 items:', loadedNavItems.slice(0, 5));
+              // Debug navigation data flow
+              console.log('=== NAVIGATION DEBUG - Layout.jsx ===');
+              console.log('✅ Total items loaded:', loadedNavItems.length);
+              console.log('📁 Items with parent_id:', loadedNavItems.filter(i => i.parent_id).length);
+              console.log('🔍 Sample items:', loadedNavItems.slice(0, 3).map(i => ({
+                id: i.id,
+                name: i.name,
+                parent_id: i.parent_id,
+                has_icon_size: !!i.icon_size,
+                has_tooltip: !!i.tooltip_text
+              })));
+              
+              // Verify parent-child relationships
+              const orphans = loadedNavItems.filter(item => 
+                item.parent_id && !loadedNavItems.find(p => p.id === item.parent_id)
+              );
+              if (orphans.length > 0) {
+                console.warn('⚠️  Found orphaned items (parent_id references non-existent parent):', orphans);
+              }
 
               setNavItems(loadedNavItems);
             }
