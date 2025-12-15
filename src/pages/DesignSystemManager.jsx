@@ -264,19 +264,52 @@ For each recommendation, provide:
   };
 
   const tokenColors = [
-    { label: "Background 50", value: "--background-50", hex: "#fdfcf9" },
+    { label: "Background 50 (Lightest)", value: "--background-50", hex: "#fdfcf9" },
     { label: "Background 100", value: "--background-100", hex: "#f5f2ed" },
     { label: "Background 200", value: "--background-200", hex: "#ebe5da" },
+    { label: "Background 300", value: "--background-300", hex: "#ddd5c8" },
+    { label: "Background 400", value: "--background-400", hex: "#c9bfae" },
     { label: "Primary 50", value: "--primary-50", hex: "#f6f8f7" },
     { label: "Primary 100", value: "--primary-100", hex: "#e9efeb" },
+    { label: "Primary 200", value: "--primary-200", hex: "#d4e0d8" },
+    { label: "Primary 300", value: "--primary-300", hex: "#a9c3b3" },
+    { label: "Primary 400", value: "--primary-400", hex: "#75a086" },
+    { label: "Primary 500", value: "--primary-500", hex: "#4a6d55" },
+    { label: "Primary 600", value: "--primary-600", hex: "#3d5946" },
+    { label: "Primary 700", value: "--primary-700", hex: "#324839" },
+    { label: "Primary 800", value: "--primary-800", hex: "#283a2f" },
+    { label: "Primary 900", value: "--primary-900", hex: "#213027" },
     { label: "Secondary 50", value: "--secondary-50", hex: "#fdfbf8" },
     { label: "Secondary 100", value: "--secondary-100", hex: "#f8f4ee" },
+    { label: "Secondary 200", value: "--secondary-200", hex: "#ede5d9" },
+    { label: "Secondary 300", value: "--secondary-300", hex: "#ddc9b0" },
+    { label: "Secondary 400", value: "--secondary-400", hex: "#c4a37d" },
+    { label: "Secondary 500", value: "--secondary-500", hex: "#af8a62" },
     { label: "Accent 50", value: "--accent-50", hex: "#fdfbfb" },
     { label: "Accent 100", value: "--accent-100", hex: "#f9f4f4" },
+    { label: "Accent 200", value: "--accent-200", hex: "#ede5e5" },
+    { label: "Accent 300", value: "--accent-300", hex: "#d9c4c4" },
+    { label: "Accent 400", value: "--accent-400", hex: "#c19f9f" },
     { label: "Midnight 50", value: "--midnight-50", hex: "#f7f8f9" },
     { label: "Midnight 100", value: "--midnight-100", hex: "#e8eaed" },
+    { label: "Midnight 200", value: "--midnight-200", hex: "#d0d5da" },
+    { label: "Midnight 300", value: "--midnight-300", hex: "#a8b2bd" },
+    { label: "Midnight 400", value: "--midnight-400", hex: "#78879a" },
+    { label: "Midnight 500", value: "--midnight-500", hex: "#576c82" },
+    { label: "Midnight 600", value: "--midnight-600", hex: "#475d73" },
+    { label: "Midnight 700", value: "--midnight-700", hex: "#394e62" },
+    { label: "Midnight 800", value: "--midnight-800", hex: "#2f4254" },
+    { label: "Midnight 900 (Darkest)", value: "--midnight-900", hex: "#1f2d3b" },
     { label: "Charcoal 50", value: "--charcoal-50", hex: "#f9f9f9" },
-    { label: "White", value: "--background-50", hex: "#fdfcf9" },
+    { label: "Charcoal 100", value: "--charcoal-100", hex: "#efefef" },
+    { label: "Charcoal 200", value: "--charcoal-200", hex: "#dedede" },
+    { label: "Charcoal 300", value: "--charcoal-300", hex: "#c3c3c3" },
+    { label: "Charcoal 400", value: "--charcoal-400", hex: "#a3a3a3" },
+    { label: "Charcoal 500", value: "--charcoal-500", hex: "#838383" },
+    { label: "Charcoal 600", value: "--charcoal-600", hex: "#676767" },
+    { label: "Charcoal 700", value: "--charcoal-700", hex: "#525252" },
+    { label: "Charcoal 800", value: "--charcoal-800", hex: "#434343" },
+    { label: "Charcoal 900 (Dark)", value: "--charcoal-900", hex: "#373737" },
   ];
 
   const handleBackgroundChange = async (colorVar) => {
@@ -285,26 +318,11 @@ For each recommendation, provide:
     const selectedColor = tokenColors.find(c => c.value === colorVar);
     const hexFallback = selectedColor?.hex || "#f5f2ed";
     
-    try {
-      const user = await base44.auth.me();
-      await base44.auth.updateMe({
-        site_settings: {
-          ...(user.site_settings || {}),
-          backgroundColor: hexFallback
-        }
-      });
-      
-      toast.success("Background color updated - reload to see changes");
-      
-      // Apply immediately
-      document.body.style.backgroundColor = hexFallback;
-      const appShell = document.querySelector('[data-editor-layout]');
-      if (appShell) {
-        appShell.style.backgroundColor = hexFallback;
-      }
-    } catch (error) {
-      toast.error("Failed to update background");
-    }
+    // Apply immediately to DOM
+    document.documentElement.style.setProperty('--color-background', hexFallback);
+    document.body.style.backgroundColor = hexFallback;
+    
+    toast.success(`Background changed to ${selectedColor?.label}`);
   };
 
   return (
