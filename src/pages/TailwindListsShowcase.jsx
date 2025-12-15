@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { PageHeader } from '@/components/sturij/PageHeader';
+import { ShowcaseSection } from '@/components/showcase/ShowcaseSection';
 import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, ChevronDown, User, Building, Users, CreditCard, Home, Folder, Calendar as CalendarIcon, FileText, BarChart3, Check, CheckCircle2, Search, FolderPlus, Hash, Tag, Globe, Frown, AlertTriangle, LifeBuoy, PenSquare, Code, Image, Video, Table, X, MoreVertical, Heart, Plus, Link2, HelpCircle, Archive, Copy, Share2, Trash2, UserPlus, LogOut, Bell } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge, StatusBadge } from '@/components/ui/badge';
@@ -29,30 +30,18 @@ export default function TailwindListsShowcase() {
         description="Tailwind UI list patterns converted to use design tokens for consistent styling."
       />
 
-      {/* Simple Divided List */}
-      <section className="space-y-4">
-        <div>
-          <h2 className="text-xl font-display mb-2">Simple Divided List</h2>
-          <p className="text-sm text-muted-foreground">Basic divided list with responsive padding</p>
+      <ShowcaseSection title="List Layouts" defaultOpen={true}>
+        {/* Simple Divided List */}
+        <div className="space-y-4 mb-8">
+          <div>
+            <h3 className="text-base font-medium mb-2">Simple Divided List</h3>
+            <p className="text-sm text-muted-foreground">Basic divided list with responsive padding</p>
+          </div>
+          
+          <ul role="list" className="divide-y divide-border">
+...
+          </div>
         </div>
-        
-        <ul role="list" className="divide-y divide-border">
-          {sampleItems.map((item) => (
-            <li key={item.id} className="px-4 py-4 sm:px-0">
-              <p className="text-sm font-medium">{item.title}</p>
-              <p className="text-xs text-muted-foreground mt-1">{item.description}</p>
-            </li>
-          ))}
-        </ul>
-
-        <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
-          <p className="font-medium">Design Token Mappings:</p>
-          <ul className="space-y-1 text-muted-foreground">
-            <li>• Divider: <code className="bg-background px-1 py-0.5 rounded">divide-border</code> (var(--border))</li>
-            <li>• Padding: <code className="bg-background px-1 py-0.5 rounded">px-4 py-4 sm:px-0</code></li>
-          </ul>
-        </div>
-      </section>
 
       {/* Bordered Container List */}
       <section className="space-y-4">
