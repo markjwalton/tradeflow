@@ -11,6 +11,8 @@ import { ArrowLeft, Save } from 'lucide-react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { VersionHistory } from './VersionHistory';
+import { SaveAsTemplateDialog } from './SaveAsTemplateDialog';
+import { ApplyTemplateDialog } from './ApplyTemplateDialog';
 
 const entityMap = {
   page: 'CMSPage',
@@ -60,16 +62,30 @@ export function ContentEditor({ content, contentType, websiteFolderId, onClose }
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to list
         </Button>
-        {content?.id && (
-          <VersionHistory 
-            contentType={contentType}
-            contentId={content.id}
-            onRestore={() => {
-              queryClient.invalidateQueries({ queryKey: ['cms', contentType] });
-              onClose();
-            }}
-          />
-        )}
+        <div className="flex gap-2">
+          {!content?.id && (
+            <ApplyTemplateDialog
+              contentType={contentType}
+              onApply={(templateData) => setFormData({ ...templateData, id: undefined })}
+            />
+          )}
+          {content?.id && (
+            <>
+              <SaveAsTemplateDialog
+                content={formData}
+                contentType={contentType}
+              />
+              <VersionHistory 
+                contentType={contentType}
+                contentId={content.id}
+                onRestore={() => {
+                  queryClient.invalidateQueries({ queryKey: ['cms', contentType] });
+                  onClose();
+                }}
+              />
+            </>
+          )}
+        </div>
       </div>
 
       <Card>
