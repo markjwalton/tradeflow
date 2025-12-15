@@ -229,7 +229,7 @@ export function AppSidebar({ navItems = [] }) {
       
       // Expanded mode - folders are expandable
       return (
-        <div key={item.id} className={isExpanded && showLabels ? "bg-sidebar-accent [border-radius:var(--radius-lg)] [margin-bottom:var(--spacing-1)]" : ""}>
+        <div key={item.id} className={isExpanded && showLabels ? "[border-radius:var(--radius-lg)] [margin-bottom:var(--spacing-1)]" : ""} style={isExpanded && showLabels ? { backgroundColor: 'oklch(0.990 0.007 83.1 / 0.5)' } : {}}>
           <button
             onClick={(e) => toggleFolder(item.id, e)}
             className={cn(
@@ -246,7 +246,7 @@ export function AppSidebar({ navItems = [] }) {
             <span className={cn("flex-1 text-left", !item.parent_id && "font-medium")}>{item.name || 'Unnamed'}</span>
           </button>
           {isExpanded && hasChildren && (
-            <div className="[padding-bottom:var(--spacing-2)] [gap:var(--spacing-1)] [padding-left:var(--spacing-3)] flex flex-col">
+            <div className="[padding-bottom:var(--spacing-2)] [gap:var(--spacing-1)] [padding-left:var(--spacing-3)] flex flex-col" style={{ backgroundColor: 'oklch(0.990 0.007 83.1 / 0.3)' }}>
               {item.children.map((child) => renderNavItem(child, true, false))}
             </div>
           )}
