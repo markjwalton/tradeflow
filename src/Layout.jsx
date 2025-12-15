@@ -18,6 +18,7 @@ import { SidebarProvider } from "@/components/layout/SidebarContext";
 import { EditModeProvider } from "@/components/page-builder/EditModeContext";
 import { PageSettingsPanel } from "@/components/page-builder/PageSettingsPanel";
 import { PageUIPanel } from "@/components/design-assistant/PageUIPanel";
+import { StyleEditorPanel } from "@/components/page-builder/StyleEditorPanel";
 import { LiveEditWrapper } from "@/components/page-builder/LiveEditWrapper";
 import { TopEditorPanel } from "@/components/page-builder/TopEditorPanel";
 import { Palette } from "lucide-react";
@@ -498,6 +499,7 @@ export default function Layout({ children, currentPageName }) {
             </div>
           </div>
           <PageSettingsPanel currentPageName={currentPageName} />
+          <StyleEditorPanel currentPageName={currentPageName} />
           <GlobalAIAssistant />
 
           {/* Editor bubble button */}
