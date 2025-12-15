@@ -459,11 +459,9 @@ export default function NavigationManager() {
           </Tabs>
         </>
       ) : (
-        <TenantNavEditor 
-          tenantId={tenantContext?.tenantId} 
-          items={tenantNavItems}
-          isLoading={tenantLoading}
-        />
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">Navigation Manager is only available to global administrators.</p>
+        </div>
       )}
     </div>
   );
