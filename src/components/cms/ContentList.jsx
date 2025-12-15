@@ -200,7 +200,6 @@ export function ContentList({ contentType, websiteFolderId, onEdit, onCreate }) 
                   <Trash2 className="h-3 w-3 text-destructive" />
                 </Button>
               </div>
-              </div>
             </CardContent>
           </Card>
         ))}
@@ -210,21 +209,21 @@ export function ContentList({ contentType, websiteFolderId, onEdit, onCreate }) 
         <div className="text-center py-12">
           <p className="text-muted-foreground">
             No {contentType} found. Create your first one!
-            </p>
-            </div>
-            )}
+          </p>
+        </div>
+      )}
 
-            <BulkActionsBar
-            selectedCount={selectedIds.length}
-            onPublish={() => bulkUpdateMutation.mutate({ ids: selectedIds, data: { is_published: true } })}
-            onArchive={() => bulkUpdateMutation.mutate({ ids: selectedIds, data: { is_published: false } })}
-            onDelete={() => {
-            if (confirm(`Delete ${selectedIds.length} items?`)) {
-              bulkDeleteMutation.mutate(selectedIds);
-            }
-            }}
-            onClear={() => setSelectedIds([])}
-            />
-            </div>
-            );
-            }
+      <BulkActionsBar
+        selectedCount={selectedIds.length}
+        onPublish={() => bulkUpdateMutation.mutate({ ids: selectedIds, data: { is_published: true } })}
+        onArchive={() => bulkUpdateMutation.mutate({ ids: selectedIds, data: { is_published: false } })}
+        onDelete={() => {
+          if (confirm(`Delete ${selectedIds.length} items?`)) {
+            bulkDeleteMutation.mutate(selectedIds);
+          }
+        }}
+        onClear={() => setSelectedIds([])}
+      />
+    </div>
+  );
+}
