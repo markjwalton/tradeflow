@@ -4863,6 +4863,502 @@ export default function TailwindProductShowcase() {
             </div>
           </div>
         </ShowcaseSection>
+
+        <ShowcaseSection title="Category Page - With Sort & Popover Filters">
+          <div className="bg-gray-50 rounded-lg overflow-hidden">
+            <div className="bg-gray-900 h-10 flex items-center justify-between px-8 text-sm text-white">
+              <div>CAD ▼</div>
+              <div className="flex gap-6">
+                <a href="#">Sign in</a>
+                <a href="#">Create account</a>
+              </div>
+            </div>
+
+            <div className="bg-white shadow-xs px-8 h-16 flex items-center justify-between">
+              <div className="flex items-center gap-8">
+                <div className="w-8 h-8 bg-indigo-600 rounded" />
+                <div className="flex gap-8 text-sm font-medium text-gray-700">
+                  <a href="#">Women</a>
+                  <a href="#">Men</a>
+                  <a href="#">Company</a>
+                  <a href="#">Stores</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-8">
+                <a href="#" className="text-sm font-medium text-gray-700">Search</a>
+                <a href="#" className="text-sm font-medium text-gray-700">Help</a>
+                <a href="#" className="flex items-center gap-2">
+                  <ShoppingBagIcon className="h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-700">0</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="max-w-7xl mx-auto px-8">
+              <div className="py-24 text-center">
+                <h1 className="text-4xl font-bold text-gray-900">New Arrivals</h1>
+                <p className="mt-4 max-w-3xl mx-auto text-base text-gray-500">
+                  Thoughtfully designed objects for the workspace, home, and travel.
+                </p>
+              </div>
+
+              <div className="border-t border-gray-200 pt-6">
+                <div className="flex items-center justify-between">
+                  <button className="inline-flex justify-center text-sm font-medium text-gray-700">
+                    Sort <ChevronDownIcon className="ml-1 h-5 w-5 text-gray-400" />
+                  </button>
+                  <button className="text-sm font-medium text-gray-700 sm:hidden">Filters</button>
+                  <div className="hidden sm:flex sm:items-baseline sm:space-x-8">
+                    {['Category', 'Brand', 'Color', 'Sizes'].map((filter, i) => (
+                      <button key={filter} className="inline-flex items-center justify-center text-sm font-medium text-gray-700">
+                        <span>{filter}</span>
+                        {i === 0 && <span className="ml-1.5 rounded-sm bg-gray-200 px-1.5 py-0.5 text-xs">1</span>}
+                        <ChevronDownIcon className="ml-1 h-5 w-5 text-gray-400" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10 pb-24">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={i}>
+                    <div className="aspect-square sm:aspect-[2/3] w-full rounded-lg bg-gray-200" />
+                    <div className="mt-4 flex items-center justify-between text-base font-medium text-gray-900">
+                      <h3>Product Name</h3>
+                      <p>$13</p>
+                    </div>
+                    <p className="mt-1 text-sm text-gray-500 italic">Description</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="relative mt-16 overflow-hidden rounded-lg h-96">
+                <div className="absolute inset-0 bg-gray-300" />
+                <div className="absolute inset-x-0 bottom-0 rounded-br-lg rounded-bl-lg bg-black/75 p-6 backdrop-blur-sm sm:flex sm:items-center sm:justify-between">
+                  <div>
+                    <h2 className="text-xl font-bold text-white">Workspace Collection</h2>
+                    <p className="mt-1 text-sm text-gray-300">
+                      Upgrade your desk with objects that keep you organized.
+                    </p>
+                  </div>
+                  <button className="mt-6 rounded-md border border-white/25 px-4 py-3 text-base font-medium text-white sm:mt-0">
+                    View the collection
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Category Page - With Sidebar Filters">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white">
+              Get free delivery on orders over $100
+            </div>
+
+            <div className="border-b h-16 flex items-center justify-between px-8">
+              <div className="flex items-center gap-8">
+                <div className="w-8 h-8 bg-indigo-600 rounded" />
+                <div className="flex gap-8 text-sm font-medium text-gray-700">
+                  <a href="#">Women</a>
+                  <a href="#">Men</a>
+                  <a href="#">Company</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-6">
+                <a href="#" className="text-sm font-medium text-gray-700">Sign in</a>
+                <span className="h-6 w-px bg-gray-200" />
+                <a href="#" className="text-sm font-medium text-gray-700">Create account</a>
+                <a href="#" className="text-gray-400 ml-6"><MagnifyingGlassIcon className="h-6 w-6" /></a>
+                <a href="#" className="flex items-center gap-2 ml-4">
+                  <ShoppingBagIcon className="h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-700">0</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="border-b">
+              <nav className="max-w-7xl mx-auto px-8">
+                <ol className="flex items-center space-x-4 py-4">
+                  <li className="flex items-center">
+                    <a href="#" className="mr-4 text-sm font-medium text-gray-900">Men</a>
+                    <svg className="h-5 w-auto text-gray-300"><path d="M4.878 4.34H3.551L.27 16.532h1.327l3.281-12.19z" fill="currentColor" /></svg>
+                  </li>
+                  <li className="text-sm">
+                    <a href="#" className="font-medium text-gray-500">New Arrivals</a>
+                  </li>
+                </ol>
+              </nav>
+            </div>
+
+            <div className="max-w-7xl mx-auto px-8">
+              <div className="border-b border-gray-200 pt-24 pb-10">
+                <h1 className="text-4xl font-bold text-gray-900">New Arrivals</h1>
+                <p className="mt-4 text-base text-gray-500">
+                  Checkout out the latest release of Basic Tees, new and improved with four openings!
+                </p>
+              </div>
+
+              <div className="pt-12 pb-24 lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">
+                <aside>
+                  <button className="inline-flex items-center lg:hidden text-sm font-medium text-gray-700">
+                    Filters <PlusIcon className="ml-1 h-5 w-5 text-gray-400" />
+                  </button>
+
+                  <div className="hidden lg:block">
+                    <form className="divide-y divide-gray-200">
+                      {[
+                        { name: 'Color', options: ['White', 'Beige', 'Blue', 'Brown', 'Green', 'Purple'] },
+                        { name: 'Category', options: ['All New Arrivals', 'Tees', 'Crewnecks', 'Sweatshirts'] },
+                        { name: 'Sizes', options: ['XS', 'S', 'M', 'L', 'XL', '2XL'] },
+                      ].map((section) => (
+                        <div key={section.name} className="py-10 first:pt-0 last:pb-0">
+                          <legend className="block text-sm font-medium text-gray-900">{section.name}</legend>
+                          <div className="space-y-3 pt-6">
+                            {section.options.map((opt) => (
+                              <div key={opt} className="flex gap-3">
+                                <div className="flex h-5 items-center">
+                                  <div className="w-4 h-4 rounded-sm border border-gray-300" />
+                                </div>
+                                <label className="text-sm text-gray-600">{opt}</label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </form>
+                  </div>
+                </aside>
+
+                <div className="mt-6 lg:col-span-2 lg:mt-0 xl:col-span-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:gap-x-8 xl:grid-cols-3 gap-y-4">
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                      <div key={i} className="relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white">
+                        <div className="aspect-[3/4] sm:h-96 bg-gray-200" />
+                        <div className="flex flex-1 flex-col space-y-2 p-4">
+                          <h3 className="text-sm font-medium text-gray-900">Product Name</h3>
+                          <p className="text-sm text-gray-500">Description here</p>
+                          <div className="flex flex-1 flex-col justify-end">
+                            <p className="text-sm text-gray-500 italic">8 colors</p>
+                            <p className="text-base font-medium text-gray-900">$256</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Category Page - With Active Filters Bar">
+          <div className="bg-gray-50 rounded-lg overflow-hidden">
+            <div className="bg-gray-900 h-10 flex items-center justify-between px-8 text-sm text-white">
+              <div>CAD ▼</div>
+              <div>Get free delivery on orders over $100</div>
+              <div className="flex gap-6">
+                <a href="#">Create account</a>
+                <span>|</span>
+                <a href="#">Sign in</a>
+              </div>
+            </div>
+
+            <div className="bg-white px-8 h-16 flex items-center justify-between">
+              <div className="flex items-center gap-8">
+                <div className="w-8 h-8 bg-indigo-600 rounded" />
+                <div className="flex gap-8 text-sm font-medium text-gray-700">
+                  <a href="#">Women</a>
+                  <a href="#">Men</a>
+                  <a href="#">Company</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-6">
+                <a href="#" className="text-gray-400"><MagnifyingGlassIcon className="h-6 w-6" /></a>
+                <a href="#" className="text-gray-400"><UserIcon className="h-6 w-6" /></a>
+                <a href="#" className="flex items-center gap-2">
+                  <ShoppingCartIcon className="h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-700">0</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="bg-white">
+              <div className="max-w-7xl mx-auto px-8 py-16">
+                <h1 className="text-3xl font-bold text-gray-900">Workspace sale</h1>
+                <p className="mt-4 max-w-xl text-sm text-gray-700">
+                  Our thoughtfully designed workspace objects are crafted in limited runs.
+                </p>
+              </div>
+            </div>
+
+            <div className="border-b border-gray-200 bg-white pb-4">
+              <div className="max-w-7xl mx-auto flex items-center justify-between px-8">
+                <button className="inline-flex justify-center text-sm font-medium text-gray-700">
+                  Sort <ChevronDownIcon className="ml-1 h-5 w-5 text-gray-400" />
+                </button>
+                <button className="text-sm font-medium text-gray-700 sm:hidden">Filters</button>
+                <div className="hidden sm:flex divide-x divide-gray-200">
+                  {['Category', 'Brand', 'Color', 'Sizes'].map((f, i) => (
+                    <button key={f} className="px-4 inline-flex justify-center text-sm font-medium text-gray-700">
+                      <span>{f}</span>
+                      {i === 0 && <span className="ml-1.5 rounded-sm bg-gray-200 px-1.5 py-0.5 text-xs">1</span>}
+                      <ChevronDownIcon className="ml-1 h-5 w-5 text-gray-400" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-100">
+              <div className="max-w-7xl mx-auto px-8 py-3 sm:flex sm:items-center">
+                <h3 className="text-sm font-medium text-gray-500">Filters</h3>
+                <div className="hidden h-5 w-px bg-gray-300 sm:ml-4 sm:block" />
+                <div className="mt-2 sm:mt-0 sm:ml-4">
+                  <div className="flex flex-wrap items-center -m-1">
+                    <span className="m-1 inline-flex items-center rounded-full border border-gray-200 bg-white py-1.5 pr-2 pl-3 text-sm font-medium text-gray-900">
+                      <span>Objects</span>
+                      <button className="ml-1 inline-flex h-4 w-4 rounded-full p-1 text-gray-400 hover:bg-gray-200">
+                        <svg className="h-2 w-2" stroke="currentColor"><path d="M1 1l6 6m0-6L1 7" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="max-w-2xl mx-auto px-8 pt-12 pb-16 lg:max-w-7xl">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                  <div key={i}>
+                    <div className="aspect-square xl:aspect-[7/8] w-full rounded-lg bg-gray-200" />
+                    <h3 className="mt-4 text-sm text-gray-700">Product Name</h3>
+                    <p className="mt-1 text-lg font-medium text-gray-900">$48</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Category Page - With Collapsible Filter Panel">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="border-b h-16 flex items-center justify-between px-8">
+              <div className="flex items-center gap-8">
+                <div className="w-8 h-8 bg-indigo-600 rounded" />
+                <div className="flex gap-8 text-sm font-medium text-gray-700">
+                  <a href="#">Women</a>
+                  <a href="#">Men</a>
+                  <a href="#">Company</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-6">
+                <a href="#" className="text-gray-400"><MagnifyingGlassIcon className="h-6 w-6" /></a>
+                <a href="#" className="text-gray-400"><UserIcon className="h-6 w-6" /></a>
+                <a href="#" className="flex items-center gap-2">
+                  <ShoppingBagIcon className="h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-700">0</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="px-8 py-16 text-center">
+              <h1 className="text-4xl font-bold text-gray-900">Workspace</h1>
+              <p className="mt-4 max-w-xl mx-auto text-base text-gray-500">
+                The secret to a tidy desk? Put everything in really nice looking containers.
+              </p>
+            </div>
+
+            <div className="grid items-center border-t border-b border-gray-200">
+              <div className="relative py-4">
+                <div className="max-w-7xl mx-auto flex divide-x divide-gray-200 px-8 text-sm">
+                  <div className="pr-6">
+                    <button className="flex items-center font-medium text-gray-700">
+                      <FunnelIcon className="mr-2 h-5 w-5 text-gray-400" />
+                      2 Filters
+                    </button>
+                  </div>
+                  <div className="pl-6">
+                    <button className="text-gray-500">Clear all</button>
+                  </div>
+                </div>
+              </div>
+              <div className="py-4 max-w-7xl mx-auto flex justify-end px-8">
+                <button className="inline-flex justify-center text-sm font-medium text-gray-700">
+                  Sort <ChevronDownIcon className="ml-1 h-5 w-5 text-gray-400" />
+                </button>
+              </div>
+            </div>
+
+            <div className="border-t border-gray-200 py-10 max-w-7xl mx-auto px-8">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-10 text-sm">
+                <div className="space-y-6">
+                  <div className="block font-medium">Price</div>
+                  {['$0 - $25', '$25 - $50', '$50 - $75', '$75+'].map((opt) => (
+                    <div key={opt} className="flex gap-3">
+                      <div className="flex h-5 items-center">
+                        <div className="w-4 h-4 rounded-sm border border-gray-300" />
+                      </div>
+                      <label className="text-base sm:text-sm text-gray-600">{opt}</label>
+                    </div>
+                  ))}
+                </div>
+                <div className="space-y-6">
+                  <div className="block font-medium">Color</div>
+                  {['White', 'Beige', 'Blue', 'Brown'].map((opt) => (
+                    <div key={opt} className="flex gap-3">
+                      <div className="flex h-5 items-center">
+                        <div className="w-4 h-4 rounded-sm border border-gray-300 bg-indigo-600" />
+                      </div>
+                      <label className="text-base sm:text-sm text-gray-600">{opt}</label>
+                    </div>
+                  ))}
+                </div>
+                <div className="space-y-6">
+                  <div className="block font-medium">Size</div>
+                  {['XS', 'S', 'M', 'L'].map((opt) => (
+                    <div key={opt} className="flex gap-3">
+                      <div className="flex h-5 items-center">
+                        <div className="w-4 h-4 rounded-sm border border-gray-300 bg-indigo-600" />
+                      </div>
+                      <label className="text-base sm:text-sm text-gray-600">{opt}</label>
+                    </div>
+                  ))}
+                </div>
+                <div className="space-y-6">
+                  <div className="block font-medium">Category</div>
+                  {['New Arrivals', 'Tees', 'Objects', 'Sweatshirts'].map((opt) => (
+                    <div key={opt} className="flex gap-3">
+                      <div className="flex h-5 items-center">
+                        <div className="w-4 h-4 rounded-sm border border-gray-300" />
+                      </div>
+                      <label className="text-base sm:text-sm text-gray-600">{opt}</label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="max-w-7xl mx-auto px-8 pb-24">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 border-l border-gray-200">
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
+                  <div key={i} className="relative border-r border-b border-gray-200 p-4 sm:p-6">
+                    <div className="aspect-square rounded-lg bg-gray-200" />
+                    <div className="pt-10 pb-4 text-center">
+                      <h3 className="text-sm font-medium text-gray-900">Organize Set</h3>
+                      <div className="mt-3 flex flex-col items-center">
+                        <div className="flex items-center">
+                          {[0, 1, 2, 3, 4].map((r) => (
+                            <StarIcon key={r} className={`h-5 w-5 ${r < 5 ? 'text-yellow-400' : 'text-gray-200'}`} />
+                          ))}
+                        </div>
+                        <p className="mt-1 text-sm text-gray-500">38 reviews</p>
+                      </div>
+                      <p className="mt-4 text-base font-medium text-gray-900">$149</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <nav className="flex justify-between px-4 mt-6 text-sm font-medium text-gray-700">
+                <button className="inline-flex h-10 items-center rounded-md border border-gray-300 bg-white px-4 hover:bg-gray-100">
+                  Previous
+                </button>
+                <div className="hidden sm:flex space-x-2">
+                  <button className="inline-flex h-10 items-center rounded-md border border-gray-300 bg-white px-4">1</button>
+                  <button className="inline-flex h-10 items-center rounded-md border border-gray-300 bg-white px-4">2</button>
+                  <button className="inline-flex h-10 items-center rounded-md border border-indigo-600 ring-1 ring-indigo-600 bg-white px-4">3</button>
+                  <span className="inline-flex h-10 items-center px-1.5 text-gray-500">...</span>
+                  <button className="inline-flex h-10 items-center rounded-md border border-gray-300 bg-white px-4">8</button>
+                </div>
+                <button className="inline-flex h-10 items-center rounded-md border border-gray-300 bg-white px-4 hover:bg-gray-100">
+                  Next
+                </button>
+              </nav>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Category Page - With Left Sidebar Navigation">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white">
+              Get free delivery on orders over $100
+            </div>
+
+            <div className="border-b h-16 flex items-center justify-between px-8">
+              <div className="flex items-center gap-8">
+                <div className="w-8 h-8 bg-indigo-600 rounded" />
+                <div className="flex gap-8 text-sm font-medium text-gray-700">
+                  <a href="#">Women</a>
+                  <a href="#">Men</a>
+                  <a href="#">Company</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-6">
+                <a href="#" className="text-sm font-medium text-gray-700">Sign in</a>
+                <span className="h-6 w-px bg-gray-200" />
+                <a href="#" className="text-sm font-medium text-gray-700">Create account</a>
+                <a href="#" className="text-gray-400 ml-6"><MagnifyingGlassIcon className="h-6 w-6" /></a>
+                <a href="#" className="flex items-center gap-2 ml-4">
+                  <ShoppingBagIcon className="h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-700">0</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="max-w-7xl mx-auto px-8">
+              <div className="flex items-baseline justify-between border-b border-gray-200 pt-24 pb-6">
+                <h1 className="text-4xl font-bold text-gray-900">New Arrivals</h1>
+                <div className="flex items-center">
+                  <button className="inline-flex justify-center text-sm font-medium text-gray-700">
+                    Sort <ChevronDownIcon className="ml-1 h-5 w-5 text-gray-400" />
+                  </button>
+                  <button className="ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7">
+                    <Squares2X2Icon className="h-5 w-5" />
+                  </button>
+                  <button className="ml-4 p-2 text-gray-400 hover:text-gray-500 lg:hidden">
+                    <FunnelIcon className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="pt-6 pb-24 grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10">
+                <div className="hidden lg:block">
+                  <ul className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
+                    {['Totes', 'Backpacks', 'Travel Bags', 'Hip Bags', 'Laptop Sleeves'].map((cat) => (
+                      <li key={cat}><a href="#">{cat}</a></li>
+                    ))}
+                  </ul>
+
+                  {[
+                    { name: 'Color', options: ['White', 'Beige', 'Blue', 'Brown', 'Green'] },
+                    { name: 'Category', options: ['New Arrivals', 'Sale', 'Travel', 'Organization'] },
+                    { name: 'Size', options: ['2L', '6L', '12L', '18L', '20L', '40L'] },
+                  ].map((section) => (
+                    <div key={section.name} className="border-b border-gray-200 py-6">
+                      <div className="flex items-center justify-between py-3">
+                        <span className="font-medium text-gray-900 text-sm">{section.name}</span>
+                        <PlusIcon className="h-5 w-5 text-gray-400" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:col-span-3 gap-x-6 gap-y-10">
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                    <div key={i} className="text-sm">
+                      <div className="aspect-square w-full rounded-lg bg-gray-200" />
+                      <h3 className="mt-4 font-medium text-gray-900">Product Name</h3>
+                      <p className="text-gray-500 italic">White and Black</p>
+                      <p className="mt-2 font-medium text-gray-900">$50</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
       </div>
     </div>
   );
