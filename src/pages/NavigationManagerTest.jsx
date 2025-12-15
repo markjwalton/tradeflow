@@ -168,7 +168,7 @@ export default function NavigationManagerTest() {
           </TabsList>
 
           <TabsContent value="system" className="mt-4">
-            <Card>
+            <Card style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
               <CardContent className="p-6">
                 {/* Content cards will go here */}
               </CardContent>
@@ -176,7 +176,7 @@ export default function NavigationManagerTest() {
           </TabsContent>
 
           <TabsContent value="pages" className="mt-4">
-            <Card>
+            <Card style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
               <CardContent className="p-6">
                 {/* Content cards will go here */}
               </CardContent>
@@ -184,7 +184,7 @@ export default function NavigationManagerTest() {
           </TabsContent>
 
           <TabsContent value="social" className="mt-4">
-            <Card>
+            <Card style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
               <CardContent className="p-6">
                 {/* Content cards will go here */}
               </CardContent>
