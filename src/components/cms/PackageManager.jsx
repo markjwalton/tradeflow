@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Download, Package } from 'lucide-react';
 
-export function PackageManager() {
+export function PackageManager({ websiteFolderId }) {
   const { data: packages = [], isLoading } = useQuery({
     queryKey: ['packages'],
     queryFn: () => base44.entities.CMSPackage.list(),
