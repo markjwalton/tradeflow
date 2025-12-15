@@ -15,15 +15,17 @@ const entityMap = {
   section: 'CMSSection',
 };
 
-export function ContentList({ contentType, onEdit, onCreate }) {
+export function ContentList({ contentType, websiteFolderId, onEdit, onCreate }) {
   const [searchTerm, setSearchTerm] = useState('');
   const queryClient = useQueryClient();
 
   const entityName = entityMap[contentType];
 
   const { data: items = [], isLoading } = useQuery({
-    queryKey: ['cms', contentType],
-    queryFn: () => base44.entities[entityName].list(),
+    queryKey: ['cms', contentType, websiteFolderId],
+    queryFn: () => websiteFolderId 
+      ? base44.entities[entityName].filter({ website_folder_id: websiteFolderId })
+      : base44.entities[entityName].list(),
   });
 
   const deleteMutation = useMutation({

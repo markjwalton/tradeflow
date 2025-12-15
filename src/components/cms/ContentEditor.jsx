@@ -18,7 +18,7 @@ const entityMap = {
   section: 'CMSSection',
 };
 
-export function ContentEditor({ content, contentType, onClose }) {
+export function ContentEditor({ content, contentType, websiteFolderId, onClose }) {
   const [formData, setFormData] = useState(content || {});
   const queryClient = useQueryClient();
 
@@ -26,10 +26,11 @@ export function ContentEditor({ content, contentType, onClose }) {
 
   const saveMutation = useMutation({
     mutationFn: (data) => {
+      const payload = { ...data, website_folder_id: websiteFolderId };
       if (content?.id) {
-        return base44.entities[entityName].update(content.id, data);
+        return base44.entities[entityName].update(content.id, payload);
       }
-      return base44.entities[entityName].create(data);
+      return base44.entities[entityName].create(payload);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cms', contentType] });

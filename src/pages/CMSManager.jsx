@@ -4,6 +4,8 @@ import { base44 } from '@/api/base44Client';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PageHeader } from '@/components/sturij/PageHeader';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus } from 'lucide-react';
 import { ContentList } from '@/components/cms/ContentList';
 import { ContentEditor } from '@/components/cms/ContentEditor';
@@ -42,19 +44,53 @@ export default function CMSManager() {
       <ContentEditor
         content={editingContent}
         contentType={contentType}
+        websiteFolderId={selectedWebsite?.id}
         onClose={handleClose}
       />
     );
   }
 
   return (
-    <div>
+    <div className="space-y-6">
       <PageHeader 
         title="Content Management" 
         description="Manage all your website content in one place"
       />
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Website</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Select 
+            value={selectedWebsite?.id} 
+            onValueChange={(id) => {
+              const website = websiteFolders.find(w => w.id === id);
+              setSelectedWebsite(website);
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select a website to manage..." />
+            </SelectTrigger>
+            <SelectContent>
+              {websiteFolders.map((website) => (
+                <SelectItem key={website.id} value={website.id}>
+                  {website.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </CardContent>
+      </Card>
+
+      {!selectedWebsite ? (
+        <Card>
+          <CardContent className="py-12 text-center text-muted-foreground">
+            Select a website to view and manage content
+          </CardContent>
+        </Card>
+      ) : (
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
           <TabsTrigger value="pages">Pages</TabsTrigger>
           <TabsTrigger value="blog">Blog Posts</TabsTrigger>
@@ -68,6 +104,7 @@ export default function CMSManager() {
         <TabsContent value="pages">
           <ContentList
             contentType="page"
+            websiteFolderId={selectedWebsite.id}
             onEdit={(content) => handleEdit(content, 'page')}
             onCreate={() => handleCreate('page')}
           />
@@ -76,6 +113,7 @@ export default function CMSManager() {
         <TabsContent value="blog">
           <ContentList
             contentType="blog"
+            websiteFolderId={selectedWebsite.id}
             onEdit={(content) => handleEdit(content, 'blog')}
             onCreate={() => handleCreate('blog')}
           />
@@ -84,6 +122,7 @@ export default function CMSManager() {
         <TabsContent value="products">
           <ContentList
             contentType="product"
+            websiteFolderId={selectedWebsite.id}
             onEdit={(content) => handleEdit(content, 'product')}
             onCreate={() => handleCreate('product')}
           />
@@ -92,6 +131,7 @@ export default function CMSManager() {
         <TabsContent value="sections">
           <ContentList
             contentType="section"
+            websiteFolderId={selectedWebsite.id}
             onEdit={(content) => handleEdit(content, 'section')}
             onCreate={() => handleCreate('section')}
           />
@@ -106,9 +146,10 @@ export default function CMSManager() {
         </TabsContent>
 
         <TabsContent value="packages">
-          <PackageManager />
+          <PackageManager websiteFolderId={selectedWebsite.id} />
         </TabsContent>
       </Tabs>
+      )}
     </div>
   );
 }
