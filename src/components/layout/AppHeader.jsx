@@ -232,7 +232,7 @@ function ProfileMenu({ user }) {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[calc(100vw-2rem)] sm:w-72" style={{ zIndex: 99999 }}>
+      <DropdownMenuContent align="end" className="w-[calc(100vw-2rem)] sm:w-72" sideOffset={8}>
         <DropdownMenuLabel>{user.full_name || user.email}</DropdownMenuLabel>
         <DropdownMenuItem disabled className="text-[11px]">
           {user.email}
