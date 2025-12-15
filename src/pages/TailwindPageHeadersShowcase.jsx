@@ -1,6 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { PageHeader } from '@/components/sturij/PageHeader';
 import { Button } from '@/components/ui/button';
+import { ShowcaseSection } from '@/components/showcase/ShowcaseSection';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -37,34 +40,32 @@ export default function TailwindPageHeadersShowcase() {
       <PageHeader
         title="Page Headers"
         description="Page header patterns with titles, actions, breadcrumbs, and metadata converted to use design tokens."
-      />
+      >
+        <Link to={createPageUrl('TailwindShowcaseGallery')}>
+          <Button variant="outline" size="sm">← Back to Gallery</Button>
+        </Link>
+      </PageHeader>
 
-      {/* Simple Header with Actions */}
-      <SimpleHeaderExample />
+      <ShowcaseSection title="Basic Headers" defaultOpen={true}>
+        <SimpleHeaderExample />
+        <BreadcrumbHeaderExample />
+        <MetadataHeaderExample />
+      </ShowcaseSection>
 
-      {/* Header with Breadcrumb */}
-      <BreadcrumbHeaderExample />
+      <ShowcaseSection title="Profile Headers" defaultOpen={false}>
+        <ProfileCoverHeaderExample />
+        <ProfileAvatarHeaderExample />
+        <CardProfileExample />
+      </ShowcaseSection>
 
-      {/* Header with Metadata */}
-      <MetadataHeaderExample />
+      <ShowcaseSection title="Specialized Headers" defaultOpen={false}>
+        <FullHeaderExample />
+        <CompactHeaderExample />
+      </ShowcaseSection>
 
-      {/* Profile Header with Cover */}
-      <ProfileCoverHeaderExample />
-
-      {/* Profile Header with Avatar */}
-      <ProfileAvatarHeaderExample />
-
-      {/* Card Profile Overview */}
-      <CardProfileExample />
-
-      {/* Full Header with Breadcrumb + Metadata */}
-      <FullHeaderExample />
-
-      {/* Compact Header with Logo */}
-      <CompactHeaderExample />
-
-      {/* Token Reference */}
-      <TokenReference />
+      <ShowcaseSection title="Design System Reference" defaultOpen={false}>
+        <TokenReference />
+      </ShowcaseSection>
     </div>
   );
 }

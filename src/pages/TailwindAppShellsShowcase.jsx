@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { PageHeader } from '@/components/sturij/PageHeader';
 import { Button } from '@/components/ui/button';
+import { ShowcaseSection } from '@/components/showcase/ShowcaseSection';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -36,24 +39,33 @@ export default function TailwindAppShellsShowcase() {
       <PageHeader
         title="Application Shells"
         description="Complete app layouts with navigation, headers, and content areas converted to use design tokens and Radix UI."
-      />
+      >
+        <Link to={createPageUrl('TailwindShowcaseGallery')}>
+          <Button variant="outline" size="sm">← Back to Gallery</Button>
+        </Link>
+      </PageHeader>
 
-      {/* 404 Error Page */}
-      <ErrorPageExample />
+      <ShowcaseSection title="Error Pages" defaultOpen={true}>
+        <ErrorPageExample />
+      </ShowcaseSection>
 
-      {/* Dark Navigation Examples */}
-      <DarkNavExample />
-      <DarkNavWithHeaderExample />
+      <ShowcaseSection title="Dark Navigation" defaultOpen={false}>
+        <DarkNavExample />
+        <DarkNavWithHeaderExample />
+      </ShowcaseSection>
 
-      {/* Brand Navigation Examples */}
-      <BrandNavExample />
-      <BrandNavWithOverlapExample />
+      <ShowcaseSection title="Brand Navigation" defaultOpen={false}>
+        <BrandNavExample />
+        <BrandNavWithOverlapExample />
+      </ShowcaseSection>
 
-      {/* Light Navigation Examples */}
-      <LightNavExample />
+      <ShowcaseSection title="Light Navigation" defaultOpen={false}>
+        <LightNavExample />
+      </ShowcaseSection>
 
-      {/* Token Reference */}
-      <TokenReference />
+      <ShowcaseSection title="Design System Reference" defaultOpen={false}>
+        <TokenReference />
+      </ShowcaseSection>
     </div>
   );
 }
