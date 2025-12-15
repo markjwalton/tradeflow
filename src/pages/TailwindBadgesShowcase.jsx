@@ -1,7 +1,10 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { PageHeader } from '@/components/sturij/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge, DismissibleBadge, StatusBadge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
 export default function TailwindBadgesShowcase() {
@@ -23,7 +26,11 @@ export default function TailwindBadgesShowcase() {
         <PageHeader
           title="Tailwind UI Badges (Converted)"
           description="Badge components with design tokens and Lucide icons"
-        />
+        >
+          <Link to={createPageUrl('TailwindShowcaseGallery')}>
+            <Button variant="outline" size="sm">← Back to Gallery</Button>
+          </Link>
+        </PageHeader>
 
         <div className="mt-6 space-y-6">
           {/* Conversion Info */}

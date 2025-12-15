@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { PageHeader } from '@/components/sturij/PageHeader';
 import { ShowcaseSection } from '@/components/showcase/ShowcaseSection';
 import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, ChevronDown, User, Building, Users, CreditCard, Home, Folder, Calendar as CalendarIcon, FileText, BarChart3, Check, CheckCircle2, Search, FolderPlus, Hash, Tag, Globe, Frown, AlertTriangle, LifeBuoy, PenSquare, Code, Image, Video, Table, X, MoreVertical, Heart, Plus, Link2, HelpCircle, Archive, Copy, Share2, Trash2, UserPlus, LogOut, Bell } from 'lucide-react';
@@ -28,7 +30,11 @@ export default function TailwindListsShowcase() {
       <PageHeader
         title="List Layouts"
         description="Tailwind UI list patterns converted to use design tokens for consistent styling."
-      />
+      >
+        <Link to={createPageUrl('TailwindShowcaseGallery')}>
+          <Button variant="outline" size="sm">← Back to Gallery</Button>
+        </Link>
+      </PageHeader>
 
       <ShowcaseSection title="Basic List Layouts" defaultOpen={true}>
         {/* All the basic list examples go here - I'll keep them as sub-sections inside */}

@@ -1,5 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { PageHeader } from '@/components/sturij/PageHeader';
+import { Button } from '@/components/ui/button';
+import { ShowcaseSection } from '@/components/showcase/ShowcaseSection';
 
 export default function TailwindCardsShowcase() {
   return (
@@ -7,10 +11,13 @@ export default function TailwindCardsShowcase() {
       <PageHeader
         title="Card Layouts"
         description="Tailwind UI card patterns converted to use design tokens, proper semantic HTML, and accessibility features."
-      />
+      >
+        <Link to={createPageUrl('TailwindShowcaseGallery')}>
+          <Button variant="outline" size="sm">← Back to Gallery</Button>
+        </Link>
+      </PageHeader>
 
-      {/* Basic Card */}
-      <section className="space-y-4">
+      <ShowcaseSection title="Card Variants" defaultOpen={true}>
         <div>
           <h2 className="text-xl font-display mb-2">Basic Card</h2>
           <p className="text-sm text-muted-foreground">Simple card with padding and shadow</p>
@@ -232,8 +239,9 @@ export default function TailwindCardsShowcase() {
         </div>
       </section>
 
-      {/* Token Reference */}
-      <section className="space-y-4 mt-12 pt-8 border-t border-border">
+      </ShowcaseSection>
+
+      <ShowcaseSection title="Design System Reference" defaultOpen={false}>
         <div>
           <h2 className="text-xl font-display mb-2">Design System Reference</h2>
           <p className="text-sm text-muted-foreground">Complete list of design tokens used in card components</p>
@@ -268,7 +276,7 @@ export default function TailwindCardsShowcase() {
             </ul>
           </div>
         </div>
-      </section>
+      </ShowcaseSection>
     </div>
   );
 }

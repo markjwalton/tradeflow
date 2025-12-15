@@ -1,6 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import { PageHeader } from '@/components/sturij/PageHeader';
 import { Button } from '@/components/ui/button';
+import { ShowcaseSection } from '@/components/showcase/ShowcaseSection';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -17,7 +20,11 @@ export default function TailwindPeopleListsShowcase() {
       <PageHeader
         title="People & Activity Lists"
         description="Team member, discussion, and activity feed layouts converted to design tokens."
-      />
+      >
+        <Link to={createPageUrl('TailwindShowcaseGallery')}>
+          <Button variant="outline" size="sm">← Back to Gallery</Button>
+        </Link>
+      </PageHeader>
 
       {/* Simple People List */}
       <SimplePeopleListExample />
