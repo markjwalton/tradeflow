@@ -38,7 +38,7 @@ export function AppHeader({ user, navItems = [], onMobileMenuClick, currentPageN
   return (
     <header
       className="
-        sticky top-0 z-[70]
+        sticky top-0 z-[100]
         border-b
         bg-background/70
         backdrop-blur-md
