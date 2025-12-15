@@ -1,7 +1,7 @@
 import React from 'react';
 import { PageHeader } from '@/components/sturij/PageHeader';
 import { ShowcaseSection } from '@/components/showcase/ShowcaseSection';
-import { Star, Check, Heart, Minus, Plus, HelpCircle, ChevronDown, Clock, X, Search, ShoppingBag, ShieldCheck, CheckCircle, Menu, User, Trash2, Lock } from 'lucide-react';
+import { Star, Check, Heart, Minus, Plus, HelpCircle, ChevronDown, Clock, X, Search, ShoppingBag, ShieldCheck, CheckCircle, Menu, User, Trash2, Lock, ShoppingCart, MoreVertical, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
@@ -6769,6 +6769,476 @@ export default function TailwindProductShowcase() {
                       <dd className="text-gray-900">$23.00</dd>
                     </div>
                   </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Order History - Simple Grid with Status Cards">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="border-b h-16 flex items-center justify-between px-8">
+              <div className="flex items-center gap-8">
+                <div className="w-8 h-8 bg-indigo-600 rounded" />
+                <div className="flex gap-8 text-sm font-medium text-gray-700">
+                  <a href="#">Women</a>
+                  <a href="#">Men</a>
+                  <a href="#">Company</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-6">
+                <a href="#" className="text-gray-700 flex items-center gap-2">
+                  <img src="https://tailwindcss.com/plus-assets/img/flags/flag-canada.svg" className="w-5 h-auto" alt="" />
+                  <span className="text-sm font-medium">CAD</span>
+                </a>
+                <a href="#" className="text-gray-400"><MagnifyingGlassIcon className="h-6 w-6" /></a>
+                <a href="#" className="text-gray-400"><UserIcon className="h-6 w-6" /></a>
+                <a href="#" className="flex items-center gap-2">
+                  <ShoppingBagIcon className="h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-700">0</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="max-w-2xl mx-auto px-8 py-24 lg:max-w-7xl">
+              <div className="max-w-xl">
+                <h1 className="text-3xl font-bold text-gray-900">Order history</h1>
+                <p className="mt-2 text-sm text-gray-500">
+                  Check the status of recent orders, manage returns, and discover similar products.
+                </p>
+              </div>
+
+              <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10 sm:gap-y-16">
+                {[
+                  { name: 'Kicks Carrier', date: 'July 12, 2021', status: 'out-for-delivery', statusText: 'Out for delivery' },
+                  { name: 'Micro Backpack', date: 'June 21, 2021', status: 'delivered', statusText: 'Delivered on June 21' },
+                  { name: 'Drawtop Canister', date: 'June 6, 2021', status: 'cancelled', statusText: 'Cancelled' },
+                  { name: 'High Wall Tote', date: 'May 24, 2021', status: 'delivered', statusText: 'Delivered on May 24' },
+                  { name: 'Laptop Sleeve', date: 'May 21, 2021', status: 'delivered', statusText: 'Delivered on May 21' },
+                  { name: 'Shoulder Sling', date: 'Feb 17, 2021', status: 'cancelled', statusText: 'Cancelled' },
+                ].map((order, i) => (
+                  <div key={i} className="group relative">
+                    <div className="aspect-square w-full rounded-md bg-gray-200" />
+                    <h3 className="mt-4 text-sm text-gray-500">{order.name}</h3>
+                    <p className={`mt-1 text-lg font-medium ${
+                      order.status === 'delivered' ? 'text-gray-900' : 
+                      order.status === 'out-for-delivery' ? 'text-indigo-600' : 
+                      'text-gray-500'
+                    }`}>
+                      {order.statusText}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Order History - Sections with Product Lists">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="bg-gray-900 h-10 flex items-center justify-between px-8 text-sm text-white">
+              <div>CAD ▼</div>
+              <p>Get free delivery on orders over $100</p>
+              <div className="flex gap-6">
+                <a href="#">Create account</a>
+                <span>|</span>
+                <a href="#">Sign in</a>
+              </div>
+            </div>
+
+            <div className="bg-white border-b px-8 h-16 flex items-center justify-between">
+              <div className="flex items-center gap-8">
+                <div className="w-8 h-8 bg-indigo-600 rounded" />
+                <div className="flex gap-8 text-sm font-medium text-gray-700">
+                  <a href="#">Women</a>
+                  <a href="#">Men</a>
+                  <a href="#">Company</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-8">
+                <a href="#" className="text-gray-400"><MagnifyingGlassIcon className="h-6 w-6" /></a>
+                <a href="#" className="text-gray-400"><UserIcon className="h-6 w-6" /></a>
+                <a href="#" className="flex items-center gap-2">
+                  <ShoppingCartIcon className="h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-700">0</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="max-w-3xl mx-auto px-8 py-16 sm:py-24">
+              <div className="max-w-xl">
+                <h1 className="text-3xl font-bold text-gray-900">Your Orders</h1>
+                <p className="mt-2 text-sm text-gray-500">
+                  Check the status of recent orders, manage returns, and discover similar products.
+                </p>
+              </div>
+
+              <div className="mt-12 space-y-16 sm:mt-16">
+                {[
+                  { number: '4376', status: 'Delivered on January 22, 2021', products: 3 },
+                  { number: '4134', status: 'Delivered on January 5, 2021', products: 1 },
+                ].map((order) => (
+                  <div key={order.number}>
+                    <div className="space-y-1 md:flex md:items-baseline md:space-x-4">
+                      <h2 className="text-lg font-medium text-gray-900 md:shrink-0">Order #{order.number}</h2>
+                      <div className="space-y-5 sm:flex sm:items-baseline sm:justify-between sm:space-y-0 md:min-w-0 md:flex-1">
+                        <p className="text-sm font-medium text-gray-500">{order.status}</p>
+                        <div className="flex text-sm font-medium">
+                          <a href="#" className="text-indigo-600 hover:text-indigo-500">Manage order</a>
+                          <div className="ml-4 border-l border-gray-200 pl-4 sm:ml-6 sm:pl-6">
+                            <a href="#" className="text-indigo-600 hover:text-indigo-500">View Invoice</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-6 flow-root divide-y divide-gray-200 border-t border-gray-200">
+                      {Array.from({ length: order.products }).map((_, i) => (
+                        <div key={i} className="py-6 sm:flex">
+                          <div className="flex space-x-4 sm:min-w-0 sm:flex-1 sm:space-x-6">
+                            <div className="w-20 h-20 sm:w-48 sm:h-48 rounded-md bg-gray-200" />
+                            <div className="min-w-0 flex-1 pt-1.5 sm:pt-0">
+                              <h3 className="text-sm font-medium text-gray-900">Product Name</h3>
+                              <p className="truncate text-sm text-gray-500"><span>Brass</span> · <span>3" x 3" x 3"</span></p>
+                              <p className="mt-1 font-medium text-gray-900">$95.00</p>
+                            </div>
+                          </div>
+                          <div className="mt-6 space-y-4 sm:mt-0 sm:ml-6 sm:w-40">
+                            <button className="w-full rounded-md bg-indigo-600 px-2.5 py-2 text-sm font-medium text-white hover:bg-indigo-700">
+                              Buy again
+                            </button>
+                            <button className="w-full rounded-md border border-gray-300 bg-white px-2.5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                              Shop similar
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Order History - Card Table Layout">
+          <div className="bg-gray-50 rounded-lg overflow-hidden">
+            <div className="bg-white shadow-xs px-8 h-16 flex items-center justify-between">
+              <div className="flex-1">
+                <div className="w-8 h-8 bg-indigo-600 rounded" />
+              </div>
+              <div className="absolute inset-x-0 bottom-0 sm:static sm:flex-1">
+                <div className="flex h-14 sm:h-full space-x-8 overflow-x-auto px-4 sm:justify-center">
+                  <button className="text-sm font-medium text-gray-700 hover:text-gray-800">Women</button>
+                  <button className="text-sm font-medium text-gray-700 hover:text-gray-800">Men</button>
+                  <a href="#" className="text-sm font-medium text-gray-700 hover:text-gray-800">Company</a>
+                  <a href="#" className="text-sm font-medium text-gray-700 hover:text-gray-800">Stores</a>
+                </div>
+              </div>
+              <div className="flex-1 flex items-center justify-end gap-6">
+                <a href="#" className="text-gray-400"><MagnifyingGlassIcon className="h-6 w-6" /></a>
+                <a href="#" className="flex items-center gap-2">
+                  <ShoppingBagIcon className="h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-700">0</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="py-24 max-w-7xl mx-auto px-8">
+              <div className="max-w-2xl lg:max-w-4xl">
+                <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Order history</h1>
+                <p className="mt-2 text-sm text-gray-500">
+                  Check the status of recent orders, manage returns, and discover similar products.
+                </p>
+              </div>
+
+              <div className="mt-16 max-w-2xl lg:max-w-4xl space-y-8">
+                {[
+                  { number: 'WU88191111', date: 'Jul 6, 2021', delivered: 'July 12, 2021', total: '$160.00', products: 2 },
+                  { number: 'AT48441546', date: 'Dec 22, 2020', delivered: 'January 5, 2021', total: '$40.00', products: 1 },
+                ].map((order) => (
+                  <div key={order.number} className="border-t border-b border-gray-200 bg-white shadow-xs sm:rounded-lg sm:border">
+                    <div className="flex items-center border-b border-gray-200 p-4 sm:grid sm:grid-cols-4 sm:gap-x-6 sm:p-6">
+                      <dl className="grid flex-1 grid-cols-2 gap-x-6 text-sm sm:col-span-3 sm:grid-cols-3">
+                        <div>
+                          <dt className="font-medium text-gray-900">Order number</dt>
+                          <dd className="mt-1 text-gray-500">{order.number}</dd>
+                        </div>
+                        <div className="hidden sm:block">
+                          <dt className="font-medium text-gray-900">Date placed</dt>
+                          <dd className="mt-1 text-gray-500">{order.date}</dd>
+                        </div>
+                        <div>
+                          <dt className="font-medium text-gray-900">Total amount</dt>
+                          <dd className="mt-1 font-medium text-gray-900">{order.total}</dd>
+                        </div>
+                      </dl>
+
+                      <div className="flex justify-end lg:hidden">
+                        <button className="relative flex items-center text-gray-400">
+                          <MoreVertical className="h-6 w-6" />
+                        </button>
+                      </div>
+
+                      <div className="hidden lg:col-span-2 lg:flex lg:items-center lg:justify-end lg:space-x-4">
+                        <button className="rounded-md border border-gray-300 bg-white px-2.5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                          View Order
+                        </button>
+                        <button className="rounded-md border border-gray-300 bg-white px-2.5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                          View Invoice
+                        </button>
+                      </div>
+                    </div>
+
+                    <ul className="divide-y divide-gray-200">
+                      {Array.from({ length: order.products }).map((_, i) => (
+                        <li key={i} className="p-4 sm:p-6">
+                          <div className="flex items-center sm:items-start">
+                            <div className="w-20 h-20 sm:w-40 sm:h-40 rounded-lg bg-gray-200" />
+                            <div className="ml-6 flex-1 text-sm">
+                              <div className="font-medium text-gray-900 sm:flex sm:justify-between">
+                                <h5>Micro Backpack</h5>
+                                <p className="mt-2 sm:mt-0">$70.00</p>
+                              </div>
+                              <p className="hidden sm:mt-2 sm:block text-gray-500">
+                                Are you a minimalist looking for a compact carry option? Perfect size for essentials.
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="mt-6 sm:flex sm:justify-between">
+                            <div className="flex items-center">
+                              <CheckCircle className="h-5 w-5 text-green-500" />
+                              <p className="ml-2 text-sm font-medium text-gray-500">Delivered on {order.delivered}</p>
+                            </div>
+                            <div className="mt-6 flex items-center divide-x divide-gray-200 border-t border-gray-200 pt-4 text-sm font-medium sm:mt-0 sm:ml-4 sm:border-none sm:pt-0">
+                              <div className="flex flex-1 justify-center pr-4">
+                                <a href="#" className="whitespace-nowrap text-indigo-600 hover:text-indigo-500">View product</a>
+                              </div>
+                              <div className="flex flex-1 justify-center pl-4">
+                                <a href="#" className="whitespace-nowrap text-indigo-600 hover:text-indigo-500">Buy again</a>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Order History - Table Layout with Product Details">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white">
+              Get free delivery on orders over $100
+            </div>
+
+            <div className="border-b h-16 flex items-center justify-between px-8">
+              <div className="flex items-center gap-8">
+                <div className="w-8 h-8 bg-indigo-600 rounded" />
+                <div className="flex gap-8 text-sm font-medium text-gray-700">
+                  <a href="#">Women</a>
+                  <a href="#">Men</a>
+                  <a href="#">Company</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-6">
+                <a href="#" className="text-sm font-medium text-gray-700">Sign in</a>
+                <span className="h-6 w-px bg-gray-200" />
+                <a href="#" className="text-sm font-medium text-gray-700">Create account</a>
+                <a href="#" className="text-gray-400 ml-6"><MagnifyingGlassIcon className="h-6 w-6" /></a>
+                <a href="#" className="flex items-center gap-2 ml-4">
+                  <ShoppingBagIcon className="h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-700">0</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="max-w-7xl mx-auto px-8 py-16 lg:pb-24">
+              <div className="max-w-xl">
+                <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Order history</h1>
+                <p className="mt-1 text-sm text-gray-500">
+                  Check the status of recent orders, manage returns, and download invoices.
+                </p>
+              </div>
+
+              <div className="mt-16 space-y-20">
+                {[
+                  { number: 'WU88191111', date: 'January 22, 2021', total: '$104.00', products: 3 },
+                  { number: 'WU88191009', date: 'January 5, 2021', total: '$68.00', products: 2 },
+                ].map((order) => (
+                  <div key={order.number}>
+                    <div className="rounded-lg bg-gray-50 px-4 py-6 sm:flex sm:items-center sm:justify-between sm:px-6 lg:space-x-8">
+                      <dl className="flex-auto divide-y divide-gray-200 text-sm text-gray-600 sm:grid sm:grid-cols-3 sm:gap-x-6 sm:divide-y-0 lg:w-1/2 lg:flex-none lg:gap-x-8">
+                        <div className="max-sm:flex max-sm:justify-between max-sm:py-4">
+                          <dt className="font-medium text-gray-900">Date placed</dt>
+                          <dd className="sm:mt-1">{order.date}</dd>
+                        </div>
+                        <div className="max-sm:flex max-sm:justify-between max-sm:py-4">
+                          <dt className="font-medium text-gray-900">Order number</dt>
+                          <dd className="sm:mt-1">{order.number}</dd>
+                        </div>
+                        <div className="max-sm:flex max-sm:justify-between max-sm:py-4">
+                          <dt className="font-medium text-gray-900">Total amount</dt>
+                          <dd className="font-medium text-gray-900 sm:mt-1">{order.total}</dd>
+                        </div>
+                      </dl>
+                      <button className="mt-6 w-full sm:w-auto rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                        View Invoice
+                      </button>
+                    </div>
+
+                    <table className="mt-4 w-full text-gray-500 sm:mt-6">
+                      <thead className="sr-only sm:not-sr-only text-left text-sm">
+                        <tr>
+                          <th scope="col" className="py-3 pr-8 font-normal sm:w-2/5 lg:w-1/3">Product</th>
+                          <th scope="col" className="hidden w-1/5 py-3 pr-8 font-normal sm:table-cell">Price</th>
+                          <th scope="col" className="hidden py-3 pr-8 font-normal sm:table-cell">Status</th>
+                          <th scope="col" className="w-0 py-3 text-right font-normal">Info</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200 border-b border-gray-200 text-sm sm:border-t">
+                        {Array.from({ length: order.products }).map((_, i) => (
+                          <tr key={i}>
+                            <td className="py-6 pr-8">
+                              <div className="flex items-center">
+                                <div className="mr-6 w-16 h-16 rounded-sm bg-gray-200" />
+                                <div>
+                                  <div className="font-medium text-gray-900">Product Name</div>
+                                  <div className="mt-1 sm:hidden">$36.00</div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="hidden py-6 pr-8 sm:table-cell">$36.00</td>
+                            <td className="hidden py-6 pr-8 sm:table-cell">Delivered Jan 25, 2021</td>
+                            <td className="py-6 text-right font-medium whitespace-nowrap">
+                              <a href="#" className="text-indigo-600">View</a>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Order History - Detailed with Product Descriptions">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white">
+              Get free delivery on orders over $100
+            </div>
+
+            <div className="border-b h-16 flex items-center justify-between px-8">
+              <div className="flex items-center gap-8">
+                <div className="w-8 h-8 bg-indigo-600 rounded" />
+                <div className="flex gap-8 text-sm font-medium text-gray-700">
+                  <a href="#">Women</a>
+                  <a href="#">Men</a>
+                  <a href="#">Company</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-6">
+                <a href="#" className="text-sm font-medium text-gray-700">Sign in</a>
+                <span className="h-6 w-px bg-gray-200" />
+                <a href="#" className="text-sm font-medium text-gray-700">Create account</a>
+                <a href="#" className="text-gray-400 ml-6"><MagnifyingGlassIcon className="h-6 w-6" /></a>
+                <a href="#" className="flex items-center gap-2 ml-4">
+                  <ShoppingBagIcon className="h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-700">0</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="pt-16 pb-14 px-8 sm:pt-24 sm:pb-20">
+              <div className="max-w-4xl mx-auto">
+                <div className="px-4 sm:px-0">
+                  <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Order history</h1>
+                  <p className="mt-2 text-sm text-gray-500">
+                    Check the status of recent orders, manage returns, and download invoices.
+                  </p>
+                </div>
+
+                <div className="mt-16 space-y-16 sm:space-y-24">
+                  {[
+                    { number: 'WU88191111', date: 'January 22, 2021', total: '$302.00', products: 3 },
+                    { number: 'WU88191009', date: 'January 5, 2021', total: '$27.00', products: 1 },
+                  ].map((order) => (
+                    <div key={order.number}>
+                      <div className="bg-gray-50 px-4 py-6 sm:rounded-lg sm:p-6 md:flex md:items-center md:justify-between">
+                        <dl className="flex-auto divide-y divide-gray-200 text-sm text-gray-600 md:grid md:grid-cols-3 md:gap-x-6 md:divide-y-0 lg:w-1/2 lg:flex-none lg:gap-x-8">
+                          <div className="max-md:flex max-md:justify-between max-md:py-4">
+                            <dt className="font-medium text-gray-900">Order number</dt>
+                            <dd className="md:mt-1">{order.number}</dd>
+                          </div>
+                          <div className="max-md:flex max-md:justify-between max-md:py-4">
+                            <dt className="font-medium text-gray-900">Date placed</dt>
+                            <dd className="md:mt-1">{order.date}</dd>
+                          </div>
+                          <div className="max-md:flex max-md:justify-between max-md:py-4">
+                            <dt className="font-medium text-gray-900">Total amount</dt>
+                            <dd className="font-medium text-gray-900 md:mt-1">{order.total}</dd>
+                          </div>
+                        </dl>
+                        <div className="mt-6 space-y-4 sm:flex sm:space-y-0 sm:space-x-4 md:mt-0">
+                          <button className="w-full md:w-auto rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                            View Order
+                          </button>
+                          <button className="w-full md:w-auto rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                            View Invoice
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="mt-6 flow-root px-4 sm:mt-10 sm:px-0">
+                        <div className="-my-6 divide-y divide-gray-200 sm:-my-10">
+                          {Array.from({ length: order.products }).map((_, i) => (
+                            <div key={i} className="flex py-6 sm:py-10">
+                              <div className="min-w-0 flex-1 lg:flex lg:flex-col">
+                                <div className="lg:flex-1">
+                                  <div className="sm:flex">
+                                    <div>
+                                      <h4 className="font-medium text-gray-900">Nomad Tumbler</h4>
+                                      <p className="mt-2 hidden sm:block text-sm text-gray-500">
+                                        This durable double-walled insulated tumbler keeps your beverages perfect.
+                                      </p>
+                                    </div>
+                                    <p className="mt-1 font-medium text-gray-900 sm:mt-0 sm:ml-6">$35.00</p>
+                                  </div>
+                                  <div className="mt-2 flex text-sm font-medium sm:mt-4">
+                                    <a href="#" className="text-indigo-600 hover:text-indigo-500">View Product</a>
+                                    <div className="ml-4 border-l border-gray-200 pl-4 sm:ml-6 sm:pl-6">
+                                      <a href="#" className="text-indigo-600 hover:text-indigo-500">Buy Again</a>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="mt-6 font-medium">
+                                  {i === 0 ? (
+                                    <p>Out for delivery</p>
+                                  ) : i === order.products - 1 ? (
+                                    <p className="text-gray-500">Cancelled</p>
+                                  ) : (
+                                    <div className="flex space-x-2">
+                                      <CheckCircle className="h-6 w-6 text-green-500" />
+                                      <p>Delivered on January 25, 2021</p>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                              <div className="ml-4 shrink-0 sm:order-first sm:m-0 sm:mr-6">
+                                <div className="w-20 h-20 sm:w-40 sm:h-40 lg:w-52 lg:h-52 rounded-lg bg-gray-200" />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
