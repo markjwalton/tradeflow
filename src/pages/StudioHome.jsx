@@ -9,7 +9,7 @@ function Hero() {
         </h1>
         <p className="mt-6 text-xl text-neutral-600">
           We are a development studio working at the intersection of design and technology.
-          It's a really busy intersection though — a lot of our staff have been involved in
+          It&apos;s a really busy intersection though — a lot of our staff have been involved in
           hit and runs.
         </p>
         <div className="mt-10">
@@ -38,7 +38,7 @@ function Services() {
     {
       title: 'E-commerce',
       description:
-        'We are at the forefront of modern e-commerce development. Which mainly means adding your logo to the Shopify store template we have used for the past six years.',
+        "We are at the forefront of modern e-commerce development. Which mainly means adding your logo to the Shopify store template we've used for the past six years.",
     },
   ];
 
@@ -208,7 +208,7 @@ export default function StudioHome() {
                 Tell us about your project
               </h2>
               <p className="mt-4 text-lg text-neutral-300">
-                We can't wait to hear from you.
+                We can&apos;t wait to hear from you.
               </p>
               <button className="mt-10 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-neutral-950 hover:bg-neutral-100">
                 Say Hello

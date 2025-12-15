@@ -5,12 +5,12 @@ function Culture() {
     {
       title: 'Loyalty',
       description:
-        'Our team has been with us since the beginning because none of them are allowed to have LinkedIn profiles.',
+        "Our team has been with us since the beginning because none of them are allowed to have LinkedIn profiles.",
     },
     {
       title: 'Trust',
       description:
-        'We don't care when our team works just as long as they are working every waking second.',
+        "We don't care when our team works just as long as they are working every waking second.",
     },
     {
       title: 'Compassion',
@@ -121,7 +121,7 @@ export default function StudioAbout() {
                 <p className="mt-6 text-base text-neutral-600">
                   We believe in efficiency and maximizing our resources to provide the best
                   value to our clients. The primary way we do that is by re-using the same
-                  projects we have been using for the past decade.
+                  projects we've been using for the past decade.
                 </p>
               </div>
               <div className="space-y-6">
