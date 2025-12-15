@@ -217,7 +217,7 @@ export function PageSettingsPanel({ currentPageName }) {
   if (!isVisible) return null;
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen} modal={false}>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <Button
           variant="ghost"
@@ -229,8 +229,8 @@ export function PageSettingsPanel({ currentPageName }) {
           <Settings className="h-6 w-6 text-white" />
         </Button>
       </SheetTrigger>
-      <SheetOverlay className="!bg-transparent" style={{ backgroundColor: 'oklch(0.398 0.037 159.8 / 0.3)', background: 'oklch(0.398 0.037 159.8 / 0.3)', zIndex: 9998 }} />
-      <SheetContent className="w-96" style={{ backgroundColor: 'var(--background-100, rgba(255, 255, 255, 0.8))', zIndex: 9999 }}>
+      <SheetOverlay className="!bg-transparent" style={{ backgroundColor: 'oklch(0.398 0.037 159.8 / 0.3)', background: 'oklch(0.398 0.037 159.8 / 0.3)' }} />
+      <SheetContent className="w-96" style={{ backgroundColor: 'var(--background-100, rgba(255, 255, 255, 0.8))' }}>
         <SheetHeader className="px-6">
           <div className="flex items-center justify-between">
             <h2 className="flex items-center gap-2" style={{ color: 'var(--accent-500, #C78E8E)' }}>

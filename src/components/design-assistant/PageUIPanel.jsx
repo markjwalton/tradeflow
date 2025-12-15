@@ -193,7 +193,7 @@ Format as JSON:
     <>
       <StyleInspectorOverlay onElementSelect={handleElementSelect} />
       
-      <Sheet open={isOpen} onOpenChange={setIsOpen} modal={false}>
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
           <Button
             variant="ghost"
@@ -206,7 +206,7 @@ Format as JSON:
           </Button>
         </SheetTrigger>
         
-        <SheetContent className="w-[500px] overflow-y-auto" style={{ zIndex: 9999 }}>
+        <SheetContent className="w-[500px] overflow-y-auto">
           <SheetHeader className="px-6">
             <SheetTitle className="flex items-center gap-2">
               <Paintbrush className="h-5 w-5" />

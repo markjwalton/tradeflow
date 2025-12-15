@@ -156,7 +156,7 @@ export function StyleEditorPanel({ currentPageName }) {
   });
 
   return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen} modal={false}>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <Button
           variant="ghost"
@@ -169,7 +169,7 @@ export function StyleEditorPanel({ currentPageName }) {
         </Button>
       </SheetTrigger>
 
-      <SheetContent className="w-[600px] overflow-y-auto" side="right" style={{ zIndex: 9999 }}>
+      <SheetContent className="w-[600px] overflow-y-auto" side="right">
         <SheetHeader className="px-6 pb-4 border-b">
           <SheetTitle className="flex items-center gap-2 text-xl">
             <Palette className="h-5 w-5" />
