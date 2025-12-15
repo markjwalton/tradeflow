@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Image, UserCircle, ChevronDown, Mail, HelpCircle, AlertCircle, Check, ChevronsUpDown, Paperclip, Smile, Tag, Calendar, Code, Link, AtSign, X, AlertTriangle, XCircle, CheckCircle, Info } from 'lucide-react';
+import { Image, UserCircle, ChevronDown, Mail, HelpCircle, AlertCircle, Check, ChevronsUpDown, Paperclip, Smile, Tag, Calendar, Code, Link, AtSign, X, AlertTriangle, XCircle, CheckCircle, Info, Plus, FolderPlus, Database, BarChart3, Users, ChevronRight, Megaphone, Terminal } from 'lucide-react';
 
 export default function TailwindFormsShowcase() {
   return (
@@ -48,6 +48,7 @@ export default function TailwindFormsShowcase() {
       <PaymentMethodSection />
       <ComboboxVariationsSection />
       <AlertsSection />
+      <EmptyStatesSection />
 
       <TokenReference />
     </div>
@@ -3008,6 +3009,272 @@ function AlertsSection() {
           <li>• Icons from Lucide React with matching color tokens</li>
           <li>• Left accent border with <code className="bg-background px-1 py-0.5 rounded">border-l-4 border-secondary-500</code></li>
           <li>• Action buttons with color-matched hover states</li>
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+function EmptyStatesSection() {
+  const people = [
+    { name: 'Lindsay Walton', role: 'Front-end Developer', imageUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=256&h=256&fit=crop' },
+    { name: 'Courtney Henry', role: 'Designer', imageUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=256&h=256&fit=crop' },
+    { name: 'Tom Cook', role: 'Director of Product', imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=256&h=256&fit=crop' },
+  ];
+
+  const templates = [
+    { title: 'Create a List', description: 'Another to-do system you'll try but eventually give up on.', icon: BarChart3, background: 'bg-accent-400' },
+    { title: 'Create a Calendar', description: 'Stay on top of your deadlines, or don't — it's up to you.', icon: Calendar, background: 'bg-secondary-400' },
+    { title: 'Create a Gallery', description: 'Great for mood boards and inspiration.', icon: Image, background: 'bg-primary-500' },
+  ];
+
+  const projectTypes = [
+    { name: 'Marketing Campaign', description: 'I think the kids call these memes these days.', icon: Megaphone, iconColor: 'bg-accent-500' },
+    { name: 'Engineering Project', description: 'Something really expensive that will ultimately get cancelled.', icon: Terminal, iconColor: 'bg-primary-600' },
+    { name: 'Event', description: 'Like a conference all about you that no one will care about.', icon: Calendar, iconColor: 'bg-secondary-500' },
+  ];
+
+  return (
+    <section className="space-y-8">
+      <div>
+        <h2 className="text-xl font-display mb-2">Empty States</h2>
+        <p className="text-sm text-muted-foreground">Placeholders when content is missing</p>
+      </div>
+
+      <div className="grid gap-8">
+        {/* Simple Empty State */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Simple with CTA</h3>
+          <div className="text-center py-12">
+            <FolderPlus className="mx-auto h-12 w-12 text-muted-foreground" strokeWidth={1.5} />
+            <h3 className="mt-2 text-sm font-semibold text-foreground">No projects</h3>
+            <p className="mt-1 text-sm text-muted-foreground">Get started by creating a new project.</p>
+            <div className="mt-6">
+              <Button>
+                <Plus aria-hidden="true" className="mr-1.5 -ml-0.5 h-5 w-5" />
+                New Project
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Button-Style Empty State */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Button Style</h3>
+          <button
+            type="button"
+            className="relative block w-full rounded-lg border-2 border-dashed border-border p-12 text-center hover:border-muted-foreground focus:outline-2 focus:outline-offset-2 focus:outline-primary"
+          >
+            <Database className="mx-auto h-12 w-12 text-muted-foreground" strokeWidth={1.5} />
+            <span className="mt-2 block text-sm font-semibold text-foreground">Create a new database</span>
+          </button>
+        </div>
+
+        {/* Grid of Options */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Grid of Template Options</h3>
+          <div>
+            <h2 className="text-base font-display">Projects</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              You haven't created a project yet. Get started by selecting a template or start from an empty project.
+            </p>
+            <ul role="list" className="mt-6 grid grid-cols-1 gap-6 border-y border-border py-6 sm:grid-cols-2">
+              {templates.map((item, itemIdx) => (
+                <li key={itemIdx} className="flow-root">
+                  <div className="relative -m-2 flex items-center space-x-4 rounded-xl p-2 focus-within:outline-2 focus-within:outline-primary hover:bg-accent">
+                    <div className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-lg ${item.background}`}>
+                      <item.icon aria-hidden="true" className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-medium text-foreground">
+                        <a href="#" className="focus:outline-hidden">
+                          <span aria-hidden="true" className="absolute inset-0" />
+                          <span>{item.title}</span>
+                          <span aria-hidden="true"> →</span>
+                        </a>
+                      </h3>
+                      <p className="mt-1 text-sm text-muted-foreground">{item.description}</p>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-4 flex">
+              <a href="#" className="text-sm font-medium text-primary hover:text-primary/80">
+                Or start from an empty project
+                <span aria-hidden="true"> →</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Team Invite Form */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Team Invite with Form</h3>
+          <div className="mx-auto max-w-lg">
+            <div>
+              <div className="text-center">
+                <Users className="mx-auto h-12 w-12 text-muted-foreground" strokeWidth={1.5} />
+                <h2 className="mt-2 text-base font-semibold text-foreground">Add team members</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  You haven't added any team members to your project yet. As the owner of this project, you can manage team member permissions.
+                </p>
+              </div>
+              <form className="mt-6 flex gap-4">
+                <Input
+                  name="email"
+                  type="email"
+                  placeholder="Enter an email"
+                  aria-label="Email address"
+                  className="flex-1"
+                />
+                <Button type="submit">Send invite</Button>
+              </form>
+            </div>
+            <div className="mt-10">
+              <h3 className="text-sm font-medium text-muted-foreground">Team members previously added to projects</h3>
+              <ul role="list" className="mt-4 divide-y divide-border border-y border-border">
+                {people.map((person, personIdx) => (
+                  <li key={personIdx} className="flex items-center justify-between space-x-3 py-4">
+                    <div className="flex min-w-0 flex-1 items-center space-x-3">
+                      <div className="shrink-0">
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage src={person.imageUrl} />
+                          <AvatarFallback>{person.name[0]}</AvatarFallback>
+                        </Avatar>
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-medium text-foreground">{person.name}</p>
+                        <p className="truncate text-sm text-muted-foreground">{person.role}</p>
+                      </div>
+                    </div>
+                    <div className="shrink-0">
+                      <Button type="button" variant="ghost" size="sm" className="gap-1.5">
+                        <Plus aria-hidden="true" className="h-5 w-5 text-muted-foreground" />
+                        Invite
+                      </Button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* List with Icons */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">List with Icon Links</h3>
+          <div className="mx-auto max-w-lg">
+            <h2 className="text-base font-display">Create your first project</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Get started by selecting a template or start from an empty project.</p>
+            <ul role="list" className="mt-6 divide-y divide-border border-y border-border">
+              {projectTypes.map((item, itemIdx) => (
+                <li key={itemIdx}>
+                  <div className="group relative flex items-start space-x-3 py-4">
+                    <div className="shrink-0">
+                      <span className={`inline-flex h-10 w-10 items-center justify-center rounded-lg ${item.iconColor}`}>
+                        <item.icon aria-hidden="true" className="h-6 w-6 text-white" />
+                      </span>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="text-sm font-medium text-foreground">
+                        <a href="#">
+                          <span aria-hidden="true" className="absolute inset-0" />
+                          {item.name}
+                        </a>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{item.description}</p>
+                    </div>
+                    <div className="shrink-0 self-center">
+                      <ChevronRight aria-hidden="true" className="h-5 w-5 text-muted-foreground group-hover:text-foreground" />
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-6 flex">
+              <a href="#" className="text-sm font-medium text-primary hover:text-primary/80">
+                Or start from an empty project
+                <span aria-hidden="true"> →</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Team Invite with Role Selector */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Team Invite with Role Selector</h3>
+          <div className="mx-auto max-w-md sm:max-w-3xl">
+            <div>
+              <div className="text-center">
+                <Users className="mx-auto h-12 w-12 text-muted-foreground" strokeWidth={1.5} />
+                <h2 className="mt-2 text-base font-semibold text-foreground">Add team members</h2>
+                <p className="mt-1 text-sm text-muted-foreground">You haven't added any team members to your project yet.</p>
+              </div>
+              <form className="mt-6 sm:flex sm:items-center gap-4">
+                <div className="flex flex-1 items-center rounded-md border border-input bg-background focus-within:ring-2 focus-within:ring-primary">
+                  <Input
+                    name="emails"
+                    type="text"
+                    placeholder="Enter an email"
+                    aria-label="Email addresses"
+                    className="flex-1 border-0 focus-visible:ring-0"
+                  />
+                  <Select defaultValue="edit">
+                    <SelectTrigger className="w-auto border-0 border-l gap-2 focus:ring-0 rounded-l-none">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="edit">Can edit</SelectItem>
+                      <SelectItem value="view">Can view</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="mt-3 sm:mt-0 sm:shrink-0">
+                  <Button type="submit" className="w-full sm:w-auto">Send invite</Button>
+                </div>
+              </form>
+            </div>
+            <div className="mt-10">
+              <h3 className="text-sm font-medium text-muted-foreground">Recommended team members</h3>
+              <ul role="list" className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {people.map((person, personIdx) => (
+                  <li key={personIdx}>
+                    <button
+                      type="button"
+                      className="group flex w-full items-center justify-between space-x-3 rounded-full border border-border p-2 text-left shadow-sm hover:bg-accent focus:outline-2 focus:outline-offset-2 focus:outline-primary"
+                    >
+                      <span className="flex min-w-0 flex-1 items-center space-x-3">
+                        <span className="block shrink-0">
+                          <Avatar className="h-10 w-10">
+                            <AvatarImage src={person.imageUrl} />
+                            <AvatarFallback>{person.name[0]}</AvatarFallback>
+                          </Avatar>
+                        </span>
+                        <span className="block min-w-0 flex-1">
+                          <span className="block truncate text-sm font-medium text-foreground">{person.name}</span>
+                          <span className="block truncate text-sm text-muted-foreground">{person.role}</span>
+                        </span>
+                      </span>
+                      <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center">
+                        <Plus aria-hidden="true" className="h-5 w-5 text-muted-foreground group-hover:text-foreground" />
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+        <p className="font-medium">Design Token Mappings:</p>
+        <ul className="space-y-1 text-muted-foreground">
+          <li>• Empty state icons with <code className="bg-background px-1 py-0.5 rounded">strokeWidth={1.5}</code> for lighter feel</li>
+          <li>• Dashed borders for upload areas: <code className="bg-background px-1 py-0.5 rounded">border-2 border-dashed border-border</code></li>
+          <li>• Colored icon backgrounds from palette (e.g., <code className="bg-background px-1 py-0.5 rounded">bg-primary-500</code>, <code className="bg-background px-1 py-0.5 rounded">bg-accent-400</code>)</li>
+          <li>• Absolute overlay pattern for clickable cards</li>
         </ul>
       </div>
     </section>
