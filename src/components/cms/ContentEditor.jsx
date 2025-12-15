@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Save } from 'lucide-react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { VersionHistory } from './VersionHistory';
 
 const entityMap = {
   page: 'CMSPage',
@@ -25,15 +26,24 @@ export function ContentEditor({ content, contentType, websiteFolderId, onClose }
   const entityName = entityMap[contentType];
 
   const saveMutation = useMutation({
-    mutationFn: (data) => {
+    mutationFn: async (data) => {
       const payload = { ...data, website_folder_id: websiteFolderId };
+      let result;
       if (content?.id) {
-        return base44.entities[entityName].update(content.id, payload);
+        result = await base44.entities[entityName].update(content.id, payload);
+        await base44.functions.invoke('autoSaveContentVersion', {
+          contentType,
+          contentId: content.id,
+          changeSummary: 'Manual save',
+        });
+      } else {
+        result = await base44.entities[entityName].create(payload);
       }
-      return base44.entities[entityName].create(payload);
+      return result;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cms', contentType] });
+      queryClient.invalidateQueries({ queryKey: ['content-versions'] });
       onClose();
     },
   });
@@ -45,10 +55,22 @@ export function ContentEditor({ content, contentType, websiteFolderId, onClose }
 
   return (
     <div>
-      <Button variant="ghost" onClick={onClose} className="mb-4">
-        <ArrowLeft className="h-4 w-4 mr-2" />
-        Back to list
-      </Button>
+      <div className="flex items-center justify-between mb-4">
+        <Button variant="ghost" onClick={onClose}>
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to list
+        </Button>
+        {content?.id && (
+          <VersionHistory 
+            contentType={contentType}
+            contentId={content.id}
+            onRestore={() => {
+              queryClient.invalidateQueries({ queryKey: ['cms', contentType] });
+              onClose();
+            }}
+          />
+        )}
+      </div>
 
       <Card>
         <CardHeader>
