@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { Upload, FolderPlus, FileImage, Trash2, Copy, Download, FileArchive, Loader2 } from 'lucide-react';
+import { Upload, FolderPlus, FileImage, Trash2, Copy, Download, FileArchive, Loader2, ArrowRightLeft } from 'lucide-react';
 
 export default function AssetManager() {
   const [selectedFolder, setSelectedFolder] = useState(null);
@@ -19,6 +19,10 @@ export default function AssetManager() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [selectedAssets, setSelectedAssets] = useState([]);
+  const [showMigrateDialog, setShowMigrateDialog] = useState(false);
+  const [targetFolder, setTargetFolder] = useState(null);
+  const [copyMode, setCopyMode] = useState('copy');
 
   const queryClient = useQueryClient();
 
@@ -72,6 +76,16 @@ export default function AssetManager() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['website-assets'] });
       toast.success('Asset deleted');
+    },
+  });
+
+  const migrateAssetsMutation = useMutation({
+    mutationFn: (params) => base44.functions.invoke('migrateAssets', params),
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: ['website-assets'] });
+      setSelectedAssets([]);
+      setShowMigrateDialog(false);
+      toast.success(response.data.message);
     },
   });
 
@@ -171,6 +185,27 @@ export default function AssetManager() {
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
     toast.success('Copied to clipboard');
+  };
+
+  const handleMigrate = () => {
+    if (!targetFolder) {
+      toast.error('Please select a target website');
+      return;
+    }
+    migrateAssetsMutation.mutate({
+      sourceWebsiteFolderId: selectedFolder.id,
+      targetWebsiteFolderId: targetFolder.id,
+      assetIds: selectedAssets,
+      copyMode,
+    });
+  };
+
+  const toggleAssetSelection = (assetId) => {
+    setSelectedAssets(prev => 
+      prev.includes(assetId) 
+        ? prev.filter(id => id !== assetId)
+        : [...prev, assetId]
+    );
   };
 
   const subfolders = Array.from(new Set(
@@ -289,6 +324,16 @@ export default function AssetManager() {
                   </div>
                 </div>
                 <div className="flex gap-2">
+                  {selectedAssets.length > 0 && (
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setShowMigrateDialog(true)}
+                    >
+                      <ArrowRightLeft className="h-4 w-4 mr-2" />
+                      Migrate ({selectedAssets.length})
+                    </Button>
+                  )}
+                  
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button variant="outline">
@@ -401,9 +446,20 @@ export default function AssetManager() {
                 <div className="mt-6">
                   <h3 className="text-sm font-medium mb-3">Files</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {filteredAssets.map((asset) => (
-                      <Card key={asset.id} className="overflow-hidden">
-                        <div className="aspect-square bg-gray-100 flex items-center justify-center overflow-hidden">
+                   {filteredAssets.map((asset) => (
+                     <Card 
+                       key={asset.id} 
+                       className={`overflow-hidden cursor-pointer transition-all ${
+                         selectedAssets.includes(asset.id) ? 'ring-2 ring-primary' : ''
+                       }`}
+                       onClick={() => toggleAssetSelection(asset.id)}
+                     >
+                       <div className="aspect-square bg-gray-100 flex items-center justify-center overflow-hidden relative">
+                         {selectedAssets.includes(asset.id) && (
+                           <div className="absolute top-2 right-2 bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">
+                             ✓
+                           </div>
+                         )}
                           {asset.file_type === 'image' ? (
                             <img
                               src={asset.file_url}
@@ -461,6 +517,61 @@ export default function AssetManager() {
           </Card>
         </div>
       )}
+
+      <Dialog open={showMigrateDialog} onOpenChange={setShowMigrateDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Migrate Assets</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>Target Website</Label>
+              <Select value={targetFolder?.id} onValueChange={(id) => {
+                const folder = websiteFolders.find(f => f.id === id);
+                setTargetFolder(folder);
+              }}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select target website..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {websiteFolders
+                    .filter(f => f.id !== selectedFolder?.id)
+                    .map((folder) => (
+                      <SelectItem key={folder.id} value={folder.id}>
+                        {folder.name}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label>Mode</Label>
+              <Select value={copyMode} onValueChange={setCopyMode}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="copy">Copy (keep originals)</SelectItem>
+                  <SelectItem value="move">Move (delete originals)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setShowMigrateDialog(false)}>
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleMigrate}
+                disabled={!targetFolder || migrateAssetsMutation.isPending}
+              >
+                {migrateAssetsMutation.isPending ? 'Migrating...' : `${copyMode === 'copy' ? 'Copy' : 'Move'} Assets`}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
