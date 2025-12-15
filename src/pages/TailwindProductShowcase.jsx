@@ -2669,6 +2669,180 @@ export default function TailwindProductShowcase() {
             </div>
           </div>
         </ShowcaseSection>
+
+        <ShowcaseSection title="Reviews - Detailed with Rating Breakdown">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-8">
+              <div className="lg:col-span-4">
+                <h2 className="text-2xl font-bold tracking-tight text-gray-900">Customer Reviews</h2>
+                <div className="mt-3 flex items-center">
+                  <div className="flex items-center">
+                    {[0, 1, 2, 3, 4].map((rating) => (
+                      <Star key={rating} className={`h-5 w-5 ${rating < 4 ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} />
+                    ))}
+                  </div>
+                  <p className="ml-2 text-sm text-gray-900">Based on 1,624 reviews</p>
+                </div>
+
+                <div className="mt-6 space-y-3">
+                  {[
+                    { rating: 5, count: 1019, total: 1624 },
+                    { rating: 4, count: 162, total: 1624 },
+                    { rating: 3, count: 97, total: 1624 },
+                    { rating: 2, count: 199, total: 1624 },
+                    { rating: 1, count: 147, total: 1624 },
+                  ].map((item) => (
+                    <div key={item.rating} className="flex items-center text-sm">
+                      <p className="w-3 font-medium text-gray-900">{item.rating}</p>
+                      <Star className="ml-1 h-5 w-5 text-yellow-400" />
+                      <div className="relative ml-3 flex-1">
+                        <div className="h-3 rounded-full border border-gray-200 bg-gray-100" />
+                        <div
+                          style={{ width: `${Math.round((item.count / item.total) * 100)}%` }}
+                          className="absolute inset-y-0 rounded-full border border-yellow-400 bg-yellow-400"
+                        />
+                      </div>
+                      <p className="ml-3 w-10 text-right text-sm text-gray-900">
+                        {Math.round((item.count / item.total) * 100)}%
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-10">
+                  <h3 className="text-lg font-medium text-gray-900">Share your thoughts</h3>
+                  <p className="mt-1 text-sm text-gray-600">
+                    If you've used this product, share your thoughts with other customers
+                  </p>
+                  <button className="mt-6 w-full rounded-md border border-gray-300 bg-white px-8 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50">
+                    Write a review
+                  </button>
+                </div>
+              </div>
+
+              <div className="mt-16 lg:col-span-7 lg:col-start-6 lg:mt-0">
+                <div className="flow-root">
+                  <div className="-my-12 divide-y divide-gray-200">
+                    {[
+                      { author: 'Emily Selman', rating: 5, content: 'This is the bag of my dreams. I took it on my last vacation!' },
+                      { author: 'Hector Gibbons', rating: 5, content: 'Blown away by how polished this icon pack is.' },
+                      { author: 'Mark Edwards', rating: 4, content: 'Really happy with look and options of these icons.' },
+                    ].map((review, i) => (
+                      <div key={i} className="py-12">
+                        <div className="flex items-center">
+                          <div className="w-12 h-12 rounded-full bg-gray-200" />
+                          <div className="ml-4">
+                            <h4 className="text-sm font-bold text-gray-900">{review.author}</h4>
+                            <div className="mt-1 flex items-center">
+                              {[0, 1, 2, 3, 4].map((rating) => (
+                                <Star key={rating} className={`h-5 w-5 ${rating < review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} />
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        <p className="mt-4 text-base text-gray-600 italic">{review.content}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Reviews - Simple List">
+          <div className="bg-white p-8 rounded-lg">
+            <h2 className="text-lg font-medium text-gray-900">Recent reviews</h2>
+            <div className="mt-6 divide-y divide-gray-200 border-t border-b border-gray-200">
+              {[
+                { author: 'Risako M', title: "Can't say enough good things", rating: 5, date: 'May 16, 2021', content: 'The product quality is amazing, it looks and feel even better than I had anticipated.' },
+                { author: 'Jackie H', title: 'Very comfy and looks the part', rating: 5, date: 'April 6, 2021', content: 'These shirts are so comfortable, yet look classy enough for work or formal events.' },
+                { author: 'Laura G', title: 'The last shirts I may ever need', rating: 4, date: 'February 24, 2021', content: 'Even after a dozen of washes, they still look and feel good as new.' },
+              ].map((review, i) => (
+                <div key={i} className="py-10 lg:grid lg:grid-cols-12 lg:gap-x-8">
+                  <div className="lg:col-span-8 lg:col-start-5">
+                    <div className="flex items-center">
+                      {[0, 1, 2, 3, 4].map((rating) => (
+                        <Star key={rating} className={`h-5 w-5 ${rating < review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-200'}`} />
+                      ))}
+                      <p className="ml-3 text-sm text-gray-700">{review.rating}</p>
+                    </div>
+                    <div className="mt-4">
+                      <h3 className="text-sm font-medium text-gray-900">{review.title}</h3>
+                      <p className="mt-3 text-sm text-gray-500">{review.content}</p>
+                    </div>
+                  </div>
+                  <div className="mt-6 flex items-center text-sm lg:col-span-4 lg:col-start-1 lg:row-start-1 lg:mt-0 lg:flex-col lg:items-start">
+                    <p className="font-medium text-gray-900">{review.author}</p>
+                    <time className="ml-4 border-l border-gray-200 pl-4 text-gray-500 lg:mt-2 lg:ml-0 lg:border-0 lg:pl-0">
+                      {review.date}
+                    </time>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Reviews - Side by Side Layout">
+          <div className="bg-white p-8 rounded-lg">
+            <h2 className="sr-only">Customer Reviews</h2>
+            <div className="space-y-10">
+              {[
+                { author: 'Mark Edwards', title: 'This is the best white t-shirt out there', rating: 5, content: 'Scientists said it couldn\'t be done, but when I look at this shirt, I see white light.' },
+                { author: 'Blake Reid', title: 'Adds the perfect variety to my wardrobe', rating: 4, content: 'I have expanded my wardrobe with three new crewneck options!' },
+                { author: 'Ben Russel', title: 'All good things come in 6-Packs', rating: 5, content: 'Tasty beverages, strong abs, and these Basic Tees!' },
+              ].map((review, i) => (
+                <div key={i} className="flex flex-col sm:flex-row">
+                  <div className="order-2 mt-6 sm:mt-0 sm:ml-16">
+                    <h3 className="text-sm font-medium text-gray-900">{review.title}</h3>
+                    <p className="mt-3 text-sm text-gray-600">{review.content}</p>
+                  </div>
+                  <div className="order-1 flex items-center sm:flex-col sm:items-start">
+                    <div className="w-12 h-12 rounded-full bg-gray-200" />
+                    <div className="ml-4 sm:mt-4 sm:ml-0">
+                      <p className="text-sm font-medium text-gray-900">{review.author}</p>
+                      <div className="mt-2 flex items-center">
+                        {[0, 1, 2, 3, 4].map((rating) => (
+                          <Star key={rating} className={`h-5 w-5 ${rating < review.rating ? 'fill-gray-900 text-gray-900' : 'text-gray-200'}`} />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Reviews - Minimal Avatar List">
+          <div className="bg-white p-8 rounded-lg">
+            <h2 className="sr-only">Customer Reviews</h2>
+            <div className="-my-10">
+              {[
+                { author: 'Emily Selman', rating: 5, date: 'July 16, 2021', content: 'This icon pack is just what I need for my latest project.' },
+                { author: 'Hector Gibbons', rating: 5, date: 'July 12, 2021', content: 'Blown away by how polished this icon pack is.' },
+                { author: 'Mark Edwards', rating: 4, date: 'July 6, 2021', content: 'Really happy with look and options of these icons.' },
+              ].map((review, i) => (
+                <div key={i} className="flex space-x-4 text-sm text-gray-500">
+                  <div className="flex-none py-10">
+                    <div className="w-10 h-10 rounded-full bg-gray-100" />
+                  </div>
+                  <div className={`flex-1 py-10 ${i > 0 ? 'border-t border-gray-200' : ''}`}>
+                    <h3 className="font-medium text-gray-900">{review.author}</h3>
+                    <p><time>{review.date}</time></p>
+                    <div className="mt-4 flex items-center">
+                      {[0, 1, 2, 3, 4].map((rating) => (
+                        <Star key={rating} className={`h-5 w-5 ${rating < review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} />
+                      ))}
+                    </div>
+                    <p className="mt-4 text-sm text-gray-500">{review.content}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </ShowcaseSection>
       </div>
     </div>
   );
