@@ -3430,6 +3430,195 @@ export default function TailwindListsShowcase() {
         </div>
       </section>
 
+      {/* Buttons */}
+      <section className="space-y-8 mt-12 pt-8 border-t border-border">
+        <div>
+          <h2 className="text-xl font-display mb-2">Buttons</h2>
+          <p className="text-sm text-muted-foreground">Button size and style variations</p>
+        </div>
+
+        {/* Primary Sizes */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Primary - All Sizes</h3>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button size="sm" className="rounded-sm px-2 py-1 text-xs">Button text</Button>
+            <Button size="sm" className="rounded-sm px-2 py-1">Button text</Button>
+            <Button size="sm" className="rounded-md px-2.5 py-1.5">Button text</Button>
+            <Button size="default" className="rounded-md">Button text</Button>
+            <Button size="lg" className="rounded-md px-3.5 py-2.5">Button text</Button>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• XS: <code className="bg-background px-1 py-0.5 rounded">rounded-sm px-2 py-1 text-xs</code></li>
+              <li>• SM: <code className="bg-background px-1 py-0.5 rounded">rounded-sm px-2 py-1 text-sm</code></li>
+              <li>• MD: <code className="bg-background px-1 py-0.5 rounded">rounded-md px-2.5 py-1.5 text-sm</code></li>
+              <li>• LG: <code className="bg-background px-1 py-0.5 rounded">rounded-md px-3 py-2 text-sm</code></li>
+              <li>• XL: <code className="bg-background px-1 py-0.5 rounded">rounded-md px-3.5 py-2.5 text-sm</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Secondary Sizes */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Secondary/Outline - All Sizes</h3>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button variant="outline" size="sm" className="rounded-sm px-2 py-1 text-xs">Button text</Button>
+            <Button variant="outline" size="sm" className="rounded-sm px-2 py-1">Button text</Button>
+            <Button variant="outline" size="sm" className="rounded-md px-2.5 py-1.5">Button text</Button>
+            <Button variant="outline" size="default" className="rounded-md">Button text</Button>
+            <Button variant="outline" size="lg" className="rounded-md px-3.5 py-2.5">Button text</Button>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Same sizes as primary with outline variant</li>
+              <li>• Border: <code className="bg-background px-1 py-0.5 rounded">inset-ring inset-ring-input</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Soft Background */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Soft Background - All Sizes</h3>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button variant="secondary" size="sm" className="rounded-sm px-2 py-1 text-xs bg-primary-50 text-primary-600 hover:bg-primary-100">Button text</Button>
+            <Button variant="secondary" size="sm" className="rounded-sm px-2 py-1 bg-primary-50 text-primary-600 hover:bg-primary-100">Button text</Button>
+            <Button variant="secondary" size="sm" className="rounded-md px-2.5 py-1.5 bg-primary-50 text-primary-600 hover:bg-primary-100">Button text</Button>
+            <Button variant="secondary" size="default" className="rounded-md bg-primary-50 text-primary-600 hover:bg-primary-100">Button text</Button>
+            <Button variant="secondary" size="lg" className="rounded-md px-3.5 py-2.5 bg-primary-50 text-primary-600 hover:bg-primary-100">Button text</Button>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Colors: <code className="bg-background px-1 py-0.5 rounded">bg-[color]-50 text-[color]-600</code></li>
+              <li>• Hover: <code className="bg-background px-1 py-0.5 rounded">hover:bg-[color]-100</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* With Leading Icon */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Leading Icon</h3>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button size="sm" className="inline-flex items-center gap-x-1.5 rounded-md px-2.5 py-1.5">
+              <Check className="-ml-0.5 h-5 w-5" />
+              Button text
+            </Button>
+            <Button size="default" className="inline-flex items-center gap-x-1.5 rounded-md">
+              <Check className="-ml-0.5 h-5 w-5" />
+              Button text
+            </Button>
+            <Button size="lg" className="inline-flex items-center gap-x-2 rounded-md px-3.5 py-2.5">
+              <Check className="-ml-0.5 h-5 w-5" />
+              Button text
+            </Button>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Gap: <code className="bg-background px-1 py-0.5 rounded">gap-x-1.5</code> or <code className="bg-background px-1 py-0.5 rounded">gap-x-2</code></li>
+              <li>• Icon: <code className="bg-background px-1 py-0.5 rounded">-ml-0.5 h-5 w-5</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* With Trailing Icon */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Trailing Icon</h3>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button size="sm" className="inline-flex items-center gap-x-1.5 rounded-md px-2.5 py-1.5">
+              Button text
+              <Check className="-mr-0.5 h-5 w-5" />
+            </Button>
+            <Button size="default" className="inline-flex items-center gap-x-1.5 rounded-md">
+              Button text
+              <Check className="-mr-0.5 h-5 w-5" />
+            </Button>
+            <Button size="lg" className="inline-flex items-center gap-x-2 rounded-md px-3.5 py-2.5">
+              Button text
+              <Check className="-mr-0.5 h-5 w-5" />
+            </Button>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Icon: <code className="bg-background px-1 py-0.5 rounded">-mr-0.5 h-5 w-5</code> for trailing position</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Rounded/Pill Primary */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Rounded/Pill - Primary</h3>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button size="sm" className="rounded-full px-2.5 py-1 text-xs">Button text</Button>
+            <Button size="sm" className="rounded-full px-2.5 py-1">Button text</Button>
+            <Button size="sm" className="rounded-full px-3 py-1.5">Button text</Button>
+            <Button size="default" className="rounded-full px-3.5 py-2">Button text</Button>
+            <Button size="lg" className="rounded-full px-4 py-2.5">Button text</Button>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Shape: <code className="bg-background px-1 py-0.5 rounded">rounded-full</code></li>
+              <li>• Adjusted padding for pill shape balance</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Rounded/Pill Secondary */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Rounded/Pill - Secondary</h3>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button variant="outline" size="sm" className="rounded-full px-2.5 py-1 text-xs">Button text</Button>
+            <Button variant="outline" size="sm" className="rounded-full px-2.5 py-1">Button text</Button>
+            <Button variant="outline" size="sm" className="rounded-full px-3 py-1.5">Button text</Button>
+            <Button variant="outline" size="default" className="rounded-full px-3.5 py-2">Button text</Button>
+            <Button variant="outline" size="lg" className="rounded-full px-4 py-2.5">Button text</Button>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Pill outline combination</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Circular Icon Only */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Circular Icon Only</h3>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button size="icon" className="rounded-full p-1">
+              <Plus className="h-5 w-5" />
+            </Button>
+            <Button size="icon" className="rounded-full p-1.5">
+              <Plus className="h-5 w-5" />
+            </Button>
+            <Button size="icon" className="rounded-full p-2">
+              <Plus className="h-5 w-5" />
+            </Button>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• SM: <code className="bg-background px-1 py-0.5 rounded">p-1</code></li>
+              <li>• MD: <code className="bg-background px-1 py-0.5 rounded">p-1.5</code></li>
+              <li>• LG: <code className="bg-background px-1 py-0.5 rounded">p-2</code></li>
+              <li>• Equal padding for perfect circle</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {/* Token Reference */}
       <section className="space-y-4 mt-12 pt-8 border-t border-border">
         <div>
