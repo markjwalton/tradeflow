@@ -3418,6 +3418,212 @@ export default function TailwindProductShowcase() {
             </div>
           </div>
         </ShowcaseSection>
+
+        <ShowcaseSection title="Incentives - With Hero Image">
+          <div className="bg-gray-50 p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="grid grid-cols-1 items-center gap-x-16 gap-y-10 lg:grid-cols-2">
+                <div>
+                  <h2 className="text-4xl font-bold tracking-tight text-gray-900">
+                    We built our business on great customer service
+                  </h2>
+                  <p className="mt-4 text-gray-500">
+                    At the beginning at least, but then we realized we could make a lot more money if we kinda stopped
+                    caring about that. Our new strategy is to write a bunch of things that look really good in the
+                    headlines.
+                  </p>
+                </div>
+                <div className="aspect-[3/2] w-full rounded-lg bg-gray-200" />
+              </div>
+              <div className="mt-16 grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-3">
+                {[
+                  { name: 'Free shipping', description: "It's not actually free we just price it into the products." },
+                  { name: '10-year warranty', description: "If it breaks in the first 10 years we'll replace it." },
+                  { name: 'Exchanges', description: "If you don't like it, trade it to one of your friends." },
+                ].map((item) => (
+                  <div key={item.name} className="sm:flex lg:block">
+                    <div className="sm:shrink-0">
+                      <div className="w-16 h-16 bg-gray-300 rounded" />
+                    </div>
+                    <div className="mt-4 sm:mt-0 sm:ml-6 lg:mt-6 lg:ml-0">
+                      <h3 className="text-sm font-medium text-gray-900">{item.name}</h3>
+                      <p className="mt-2 text-sm text-gray-500">{item.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Incentives - 4 Column Simple Grid">
+          <div className="bg-gray-50 p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 lg:gap-x-8">
+                {[
+                  { name: 'Free Shipping', description: "It's not actually free we just price it into the products." },
+                  { name: '24/7 Customer Support', description: 'Our AI chat widget is powered by if/else statements.' },
+                  { name: 'Fast Shopping Cart', description: "Look how fast that cart is going. What does this mean?" },
+                  { name: 'Gift Cards', description: "Buy them for your friends, especially if they don't like our store." },
+                ].map((item) => (
+                  <div key={item.name}>
+                    <div className="h-24 w-auto bg-gray-300 rounded" />
+                    <h3 className="mt-6 text-sm font-medium text-gray-900">{item.name}</h3>
+                    <p className="mt-2 text-sm text-gray-500">{item.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Incentives - 3 Column with Header">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="max-w-3xl">
+                <h2 className="text-4xl font-bold tracking-tight text-gray-900">
+                  We built our business on customer service
+                </h2>
+                <p className="mt-4 text-gray-500">
+                  At the beginning at least, but then we realized we could make a lot more money if we kinda stopped caring
+                  about that. Our new strategy is to write a bunch of things that look really good.
+                </p>
+              </div>
+              <div className="mt-16 grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-3">
+                {[
+                  { name: 'Free shipping', description: "It's not actually free we just price it into the products." },
+                  { name: '10-year warranty', description: "If it breaks in the first 10 years we'll replace it." },
+                  { name: 'Exchanges', description: "If you don't like it, trade it to one of your friends." },
+                ].map((item) => (
+                  <div key={item.name} className="sm:flex lg:block">
+                    <div className="sm:shrink-0">
+                      <div className="w-16 h-16 bg-gray-300 rounded" />
+                    </div>
+                    <div className="mt-4 sm:mt-0 sm:ml-6 lg:mt-6 lg:ml-0">
+                      <h3 className="text-sm font-medium text-gray-900">{item.name}</h3>
+                      <p className="mt-2 text-sm text-gray-500">{item.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Incentives - Centered in Container">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="rounded-2xl bg-gray-50 px-6 py-16 sm:p-16">
+                <div className="mx-auto max-w-xl lg:max-w-none">
+                  <div className="text-center">
+                    <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+                      We built our business on customer service
+                    </h2>
+                  </div>
+                  <div className="mx-auto mt-12 grid max-w-sm grid-cols-1 gap-x-8 gap-y-10 sm:max-w-none lg:grid-cols-3">
+                    {[
+                      { name: 'Free shipping', description: "It's not actually free we just price it into the products." },
+                      { name: '10-year warranty', description: "If it breaks in the first 10 years we'll replace it." },
+                      { name: 'Exchanges', description: "If you don't like it, trade it to one of your friends." },
+                    ].map((item) => (
+                      <div key={item.name} className="text-center sm:flex sm:text-left lg:block lg:text-center">
+                        <div className="sm:shrink-0">
+                          <div className="flow-root">
+                            <div className="mx-auto w-16 h-16 bg-gray-300 rounded" />
+                          </div>
+                        </div>
+                        <div className="mt-3 sm:mt-0 sm:ml-6 lg:mt-6 lg:ml-0">
+                          <h3 className="text-sm font-medium text-gray-900">{item.name}</h3>
+                          <p className="mt-2 text-sm text-gray-500">{item.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Perks - 2x2 Grid with Descriptions">
+          <div className="bg-gray-50 p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto">
+              <div className="grid max-w-2xl grid-cols-1 gap-x-8 gap-y-12 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
+                {[
+                  { 
+                    name: 'Free delivery', 
+                    description: "Order now and you'll get delivery absolutely free. Well, it's not actually free, we just price it into the products." 
+                  },
+                  { 
+                    name: '10-year warranty', 
+                    description: "We have a 10 year warranty with every product that you purchase, whether that's a new pen or organizer." 
+                  },
+                  { 
+                    name: 'Exchanges', 
+                    description: 'We understand that when your product arrives you might not particularly like it. Conditions apply here.' 
+                  },
+                  { 
+                    name: 'For the planet', 
+                    description: "Like you, we love the planet, and so we've pledged 1% of all sales to preservation of the natural environment." 
+                  },
+                ].map((item) => (
+                  <div key={item.name} className="sm:flex">
+                    <div className="sm:shrink-0">
+                      <div className="flow-root">
+                        <div className="h-24 w-28 bg-gray-300 rounded" />
+                      </div>
+                    </div>
+                    <div className="mt-3 sm:mt-0 sm:ml-3">
+                      <h3 className="text-sm font-medium text-gray-900">{item.name}</h3>
+                      <p className="mt-2 text-sm text-gray-500">{item.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Perks - Horizontal Divided Bar">
+          <div className="bg-white p-8 rounded-lg">
+            <div className="max-w-7xl mx-auto divide-y divide-gray-200 lg:flex lg:justify-center lg:divide-x lg:divide-y-0 lg:py-8">
+              {[
+                { name: '10-year all-inclusive warranty', description: "We'll replace it with a new one", icon: 'Calendar' },
+                { name: 'Free shipping on returns', description: 'Send it back for free', icon: 'Refresh' },
+                { name: 'Free, contactless delivery', description: 'The shipping is on us', icon: 'Truck' },
+              ].map((item, idx) => (
+                <div key={idx} className="py-8 lg:w-1/3 lg:flex-none lg:py-0">
+                  <div className="mx-auto flex max-w-xs items-center px-4 lg:max-w-none lg:px-8">
+                    <div className="w-8 h-8 shrink-0 bg-indigo-600 rounded" />
+                    <div className="ml-4 flex flex-auto flex-col-reverse">
+                      <h3 className="font-medium text-gray-900">{item.name}</h3>
+                      <p className="text-sm text-gray-500">{item.description}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Incentives - Minimal Inline Bar">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="flex overflow-x-auto">
+              <div className="mx-auto flex space-x-12 px-4 py-3 whitespace-nowrap sm:px-6 lg:space-x-24 lg:px-8">
+                {[
+                  { name: 'Free, contactless delivery', icon: 'Truck' },
+                  { name: 'No questions asked returns', icon: 'Check' },
+                  { name: '2-year warranty', icon: 'Calendar' },
+                ].map((item) => (
+                  <div key={item.name} className="flex items-center text-sm font-medium text-indigo-600">
+                    <div className="mr-2 w-6 h-6 flex-none bg-indigo-600 rounded" />
+                    <p>{item.name}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
       </div>
     </div>
   );
