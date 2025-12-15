@@ -47,6 +47,7 @@ export default function DesignSystemManager() {
   const [editingPackage, setEditingPackage] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [expandedRecs, setExpandedRecs] = useState({});
+  const [selectedBgColor, setSelectedBgColor] = useState("--background-100");
   const [formData, setFormData] = useState({
     package_name: "",
     package_code: "",
@@ -262,6 +263,41 @@ For each recommendation, provide:
     critical: "bg-destructive-50 text-destructive"
   };
 
+  const tokenColors = [
+    { label: "Background 50", value: "--background-50" },
+    { label: "Background 100", value: "--background-100" },
+    { label: "Background 200", value: "--background-200" },
+    { label: "Primary 50", value: "--primary-50" },
+    { label: "Primary 100", value: "--primary-100" },
+    { label: "Secondary 50", value: "--secondary-50" },
+    { label: "Secondary 100", value: "--secondary-100" },
+    { label: "Accent 50", value: "--accent-50" },
+    { label: "Accent 100", value: "--accent-100" },
+    { label: "Midnight 50", value: "--midnight-50" },
+    { label: "Midnight 100", value: "--midnight-100" },
+    { label: "Charcoal 50", value: "--charcoal-50" },
+    { label: "White", value: "--background-50" },
+  ];
+
+  const handleBackgroundChange = async (colorVar) => {
+    setSelectedBgColor(colorVar);
+    
+    try {
+      const response = await base44.functions.invoke('updateFileContent', {
+        file_path: 'globals.css',
+        find: '--color-background: var(--background);',
+        replace: `--color-background: var(${colorVar});`
+      });
+      
+      toast.success("Background color updated");
+      
+      // Apply immediately without reload
+      document.documentElement.style.setProperty('--color-background', `var(${colorVar})`);
+    } catch (error) {
+      toast.error("Failed to update background");
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto min-h-screen -mt-6">
       <PageHeader 
@@ -271,7 +307,7 @@ For each recommendation, provide:
       
       <Card className="border-border mb-4">
         <CardContent className="px-2 py-1">
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center flex-wrap">
             <Button 
               variant="ghost"
               className="hover:bg-[#e9efeb] hover:text-[#273e2d]"
@@ -301,6 +337,28 @@ For each recommendation, provide:
               <Palette className="h-4 w-4 mr-2" />
               Create Custom Theme
             </Button>
+            
+            <div className="ml-auto flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Background:</span>
+              <Select value={selectedBgColor} onValueChange={handleBackgroundChange}>
+                <SelectTrigger className="w-48">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {tokenColors.map(color => (
+                    <SelectItem key={color.value} value={color.value}>
+                      <div className="flex items-center gap-2">
+                        <div 
+                          className="h-4 w-4 rounded border border-border" 
+                          style={{ backgroundColor: `var(${color.value})` }}
+                        />
+                        {color.label}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardContent>
       </Card>
