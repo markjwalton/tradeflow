@@ -225,31 +225,14 @@ function ProfileMenu({ user }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="relative flex items-center gap-2 px-1 sm:px-2 py-1 h-auto"
-        >
-          <div className="relative">
-            <Avatar className="h-8 w-8 rounded-md">
-              <AvatarImage alt={user.full_name || user.email} />
-              <AvatarFallback className="rounded-md">{initials}</AvatarFallback>
-            </Avatar>
-            {hasNotification && (
-              <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-destructive border-2 border-background" />
-            )}
-          </div>
-          <div className="hidden md:flex flex-col items-start">
-            <span className="text-xs font-medium leading-tight">
-              {user.full_name || user.email}
-            </span>
-            <span className="text-[10px] text-muted-foreground leading-tight">
-              {user.email}
-            </span>
-          </div>
-          <ChevronDown className="w-3 h-3 ml-1 hidden md:inline" />
+        <Button variant="ghost" className="p-1">
+          <Avatar className="h-10 w-10 rounded-md">
+            <AvatarImage alt={user.full_name || user.email} />
+            <AvatarFallback className="rounded-md text-base">{initials}</AvatarFallback>
+          </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[calc(100vw-2rem)] sm:w-72">
+      <DropdownMenuContent align="end" className="w-[calc(100vw-2rem)] sm:w-72" style={{ zIndex: 99999 }}>
         <DropdownMenuLabel>{user.full_name || user.email}</DropdownMenuLabel>
         <DropdownMenuItem disabled className="text-[11px]">
           {user.email}
