@@ -37,9 +37,14 @@ export default function AssetManager() {
   });
 
   const filteredAssets = assets.filter(asset => {
-    if (!currentPath) return !asset.file_path.includes('/');
-    return asset.file_path.startsWith(currentPath + '/') && 
-           asset.file_path.slice(currentPath.length + 1).split('/').length === 1;
+    if (asset.file_name === '.folder') return false;
+    if (!currentPath) {
+      return !asset.file_path.includes('/') || asset.file_path.split('/').length === 1;
+    }
+    const isInCurrentPath = asset.file_path.startsWith(currentPath + '/');
+    const relativePath = asset.file_path.slice(currentPath.length + 1);
+    const isDirectChild = relativePath.split('/').length === 1;
+    return isInCurrentPath && isDirectChild;
   });
 
   const createFolderMutation = useMutation({
@@ -168,13 +173,13 @@ export default function AssetManager() {
     toast.success('Copied to clipboard');
   };
 
-  const folders = Array.from(new Set(
+  const subfolders = Array.from(new Set(
     assets
-      .filter(a => a.file_path.startsWith(currentPath ? currentPath + '/' : ''))
       .map(a => {
         const relativePath = currentPath 
-          ? a.file_path.slice(currentPath.length + 1)
+          ? (a.file_path.startsWith(currentPath + '/') ? a.file_path.slice(currentPath.length + 1) : '')
           : a.file_path;
+        if (!relativePath) return null;
         const parts = relativePath.split('/');
         return parts.length > 1 ? parts[0] : null;
       })
@@ -186,7 +191,50 @@ export default function AssetManager() {
       <PageHeader 
         title="Asset Manager" 
         description="Manage website assets and upload files organized by website folders"
-      />
+      >
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button>
+              <FolderPlus className="h-4 w-4 mr-2" />
+              New Website
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create Website Folder</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              const name = e.target.name.value;
+              const slug = e.target.slug.value;
+              base44.entities.WebsiteFolder.create({ name, slug, is_active: true })
+                .then(() => {
+                  queryClient.invalidateQueries({ queryKey: ['website-folders'] });
+                  toast.success('Website folder created');
+                  e.target.reset();
+                });
+            }} className="space-y-4">
+              <div>
+                <Label>Website Name</Label>
+                <Input
+                  name="name"
+                  placeholder="e.g., Radiant Website"
+                  required
+                />
+              </div>
+              <div>
+                <Label>Slug</Label>
+                <Input
+                  name="slug"
+                  placeholder="e.g., radiant"
+                  required
+                />
+              </div>
+              <Button type="submit">Create Website</Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </PageHeader>
 
       <Card>
         <CardHeader>
@@ -331,11 +379,11 @@ export default function AssetManager() {
                 </p>
               </div>
 
-              {folders.length > 0 && (
+              {subfolders.length > 0 && (
                 <div className="mt-6">
                   <h3 className="text-sm font-medium mb-3">Folders</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                    {folders.map((folder) => (
+                    {subfolders.map((folder) => (
                       <button
                         key={folder}
                         onClick={() => setCurrentPath(currentPath ? `${currentPath}/${folder}` : folder)}
@@ -398,9 +446,15 @@ export default function AssetManager() {
                 </div>
               )}
 
-              {filteredAssets.length === 0 && folders.length === 0 && (
+              {filteredAssets.length === 0 && subfolders.length === 0 && !assetsLoading && (
                 <div className="text-center py-8 text-muted-foreground">
-                  No files or folders in this location
+                  No files or folders yet. Upload files or create a folder to get started.
+                </div>
+              )}
+
+              {assetsLoading && (
+                <div className="flex justify-center py-12">
+                  <Loader2 className="h-8 w-8 animate-spin" />
                 </div>
               )}
             </CardContent>
