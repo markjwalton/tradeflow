@@ -4,10 +4,12 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { Upload, Search, Trash2, Image as ImageIcon } from 'lucide-react';
+import { Upload, Search, Trash2, Image as ImageIcon, Folder } from 'lucide-react';
+import { MediaFolderManager } from './MediaFolderManager';
 
 export function MediaManager() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentFolder, setCurrentFolder] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: media = [], isLoading } = useQuery({
@@ -58,6 +60,11 @@ export function MediaManager() {
 
   return (
     <div>
+      <MediaFolderManager
+        currentFolder={currentFolder}
+        onFolderChange={setCurrentFolder}
+      />
+
       <div className="flex items-center justify-between mb-6">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -83,7 +90,22 @@ export function MediaManager() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-4 lg:grid-cols-6">
-        {filteredMedia.map((item) => (
+        {foldersInCurrent.map((folderName) => (
+          <Card
+            key={folderName}
+            className="cursor-pointer hover:shadow-lg transition-shadow"
+            onClick={() => setCurrentFolder(currentFolder ? `${currentFolder}/${folderName}` : folderName)}
+          >
+            <div className="aspect-square bg-muted flex items-center justify-center">
+              <Folder className="h-12 w-12 text-primary" />
+            </div>
+            <div className="p-2">
+              <p className="text-xs truncate font-medium">{folderName}</p>
+            </div>
+          </Card>
+        ))}
+
+        {filesInCurrent.map((item) => (
           <Card key={item.id} className="overflow-hidden">
             <div className="aspect-square bg-muted relative group">
               {item.file_type === 'image' ? (
@@ -118,9 +140,11 @@ export function MediaManager() {
         ))}
       </div>
 
-      {filteredMedia.length === 0 && (
+      {foldersInCurrent.length === 0 && filesInCurrent.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-muted-foreground">No media found</p>
+          <p className="text-muted-foreground">
+            {currentFolder ? 'This folder is empty' : 'No media found'}
+          </p>
         </div>
       )}
     </div>

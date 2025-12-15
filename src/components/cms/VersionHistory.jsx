@@ -6,9 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { History, RotateCcw, Eye, Calendar, User } from 'lucide-react';
+import { History, RotateCcw, Eye, Calendar, User, GitCompare } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import { RevisionComparison } from './RevisionComparison';
 
 export function VersionHistory({ contentType, contentId, onRestore }) {
   const [showDialog, setShowDialog] = useState(false);
@@ -95,9 +96,9 @@ export function VersionHistory({ contentType, contentId, onRestore }) {
           {compareMode && compareVersions.length === 2 && (
             <Card className="bg-blue-50 border-blue-200">
               <CardContent className="pt-6">
-                <VersionComparison 
-                  versions={versions}
-                  versionIds={compareVersions}
+                <RevisionComparison 
+                  version1={versions.find(v => v.id === compareVersions[0])}
+                  version2={versions.find(v => v.id === compareVersions[1])}
                 />
               </CardContent>
             </Card>
@@ -207,62 +208,5 @@ export function VersionHistory({ contentType, contentId, onRestore }) {
         </Dialog>
       )}
     </>
-  );
-}
-
-function VersionComparison({ versions, versionIds }) {
-  const [version1, version2] = versionIds.map(id => 
-    versions.find(v => v.id === id)
-  );
-
-  if (!version1 || !version2) return null;
-
-  const snapshot1 = JSON.parse(version1.content_snapshot);
-  const snapshot2 = JSON.parse(version2.content_snapshot);
-
-  const changedFields = [];
-  const allKeys = new Set([...Object.keys(snapshot1), ...Object.keys(snapshot2)]);
-
-  allKeys.forEach(key => {
-    if (JSON.stringify(snapshot1[key]) !== JSON.stringify(snapshot2[key])) {
-      changedFields.push({
-        field: key,
-        before: snapshot1[key],
-        after: snapshot2[key],
-      });
-    }
-  });
-
-  return (
-    <div>
-      <h3 className="font-medium mb-4">
-        Comparing Version {version1.version_number} vs Version {version2.version_number}
-      </h3>
-      {changedFields.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No differences found</p>
-      ) : (
-        <div className="space-y-3">
-          {changedFields.map(({ field, before, after }) => (
-            <div key={field} className="border-l-4 border-blue-500 pl-3">
-              <div className="text-sm font-medium mb-1">{field}</div>
-              <div className="grid grid-cols-2 gap-4 text-xs">
-                <div>
-                  <div className="text-muted-foreground mb-1">Version {version1.version_number}</div>
-                  <div className="bg-red-50 p-2 rounded">
-                    {typeof before === 'object' ? JSON.stringify(before, null, 2) : String(before || '(empty)')}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-muted-foreground mb-1">Version {version2.version_number}</div>
-                  <div className="bg-green-50 p-2 rounded">
-                    {typeof after === 'object' ? JSON.stringify(after, null, 2) : String(after || '(empty)')}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
   );
 }
