@@ -2948,6 +2948,307 @@ export default function TailwindListsShowcase() {
         </div>
       </section>
 
+      {/* Badges */}
+      <section className="space-y-8 mt-12 pt-8 border-t border-border">
+        <div>
+          <h2 className="text-xl font-display mb-2">Badges</h2>
+          <p className="text-sm text-muted-foreground">Badge patterns with different styles and colors</p>
+        </div>
+
+        {/* Flat with Border - Medium Size */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Flat with Border (px-2 py-1)</h3>
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge variant="default">Badge</Badge>
+            <Badge variant="destructive">Badge</Badge>
+            <Badge variant="warning">Badge</Badge>
+            <Badge variant="success">Badge</Badge>
+            <Badge variant="info">Badge</Badge>
+            <Badge variant="accent">Badge</Badge>
+            <Badge variant="secondary">Badge</Badge>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Component: <code className="bg-background px-1 py-0.5 rounded">Badge from shadcn/ui</code></li>
+              <li>• Variants: <code className="bg-background px-1 py-0.5 rounded">default destructive warning success info</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Flat with Status Dot - Border */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Status Dot Indicator</h3>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-x-1.5 rounded-md px-2 py-1 text-xs font-medium text-foreground border border-border">
+              <svg viewBox="0 0 6 6" aria-hidden="true" className="h-1.5 w-1.5 fill-destructive">
+                <circle r={3} cx={3} cy={3} />
+              </svg>
+              Badge
+            </span>
+            <span className="inline-flex items-center gap-x-1.5 rounded-md px-2 py-1 text-xs font-medium text-foreground border border-border">
+              <svg viewBox="0 0 6 6" aria-hidden="true" className="h-1.5 w-1.5 fill-warning">
+                <circle r={3} cx={3} cy={3} />
+              </svg>
+              Badge
+            </span>
+            <span className="inline-flex items-center gap-x-1.5 rounded-md px-2 py-1 text-xs font-medium text-foreground border border-border">
+              <svg viewBox="0 0 6 6" aria-hidden="true" className="h-1.5 w-1.5 fill-success">
+                <circle r={3} cx={3} cy={3} />
+              </svg>
+              Badge
+            </span>
+            <span className="inline-flex items-center gap-x-1.5 rounded-md px-2 py-1 text-xs font-medium text-foreground border border-border">
+              <svg viewBox="0 0 6 6" aria-hidden="true" className="h-1.5 w-1.5 fill-info">
+                <circle r={3} cx={3} cy={3} />
+              </svg>
+              Badge
+            </span>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Dot: <code className="bg-background px-1 py-0.5 rounded">h-1.5 w-1.5 fill-[color]</code></li>
+              <li>• Gap: <code className="bg-background px-1 py-0.5 rounded">gap-x-1.5</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Pill with Border */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Pill with Border</h3>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center rounded-full bg-charcoal-50 px-2 py-1 text-xs font-medium text-charcoal-600 border border-charcoal-500/10">Badge</span>
+            <span className="inline-flex items-center rounded-full bg-destructive-50 px-2 py-1 text-xs font-medium text-destructive-700 border border-destructive-600/10">Badge</span>
+            <span className="inline-flex items-center rounded-full bg-secondary-50 px-2 py-1 text-xs font-medium text-secondary-800 border border-secondary-600/20">Badge</span>
+            <span className="inline-flex items-center rounded-full bg-primary-50 px-2 py-1 text-xs font-medium text-primary-700 border border-primary-600/20">Badge</span>
+            <span className="inline-flex items-center rounded-full bg-midnight-50 px-2 py-1 text-xs font-medium text-midnight-700 border border-midnight-700/10">Badge</span>
+            <span className="inline-flex items-center rounded-full bg-accent-50 px-2 py-1 text-xs font-medium text-accent-700 border border-accent-700/10">Badge</span>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Shape: <code className="bg-background px-1 py-0.5 rounded">rounded-full</code></li>
+              <li>• Colors: <code className="bg-background px-1 py-0.5 rounded">bg-[color]-50 text-[color]-700</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Pill with Status Dot */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Pill with Status Dot</h3>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-x-1.5 rounded-full px-2 py-1 text-xs font-medium text-foreground border border-border">
+              <svg viewBox="0 0 6 6" aria-hidden="true" className="h-1.5 w-1.5 fill-destructive">
+                <circle r={3} cx={3} cy={3} />
+              </svg>
+              Badge
+            </span>
+            <span className="inline-flex items-center gap-x-1.5 rounded-full px-2 py-1 text-xs font-medium text-foreground border border-border">
+              <svg viewBox="0 0 6 6" aria-hidden="true" className="h-1.5 w-1.5 fill-warning">
+                <circle r={3} cx={3} cy={3} />
+              </svg>
+              Badge
+            </span>
+            <span className="inline-flex items-center gap-x-1.5 rounded-full px-2 py-1 text-xs font-medium text-foreground border border-border">
+              <svg viewBox="0 0 6 6" aria-hidden="true" className="h-1.5 w-1.5 fill-success">
+                <circle r={3} cx={3} cy={3} />
+              </svg>
+              Badge
+            </span>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Combines pill shape with status dots</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Dismissible Badges */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Dismissible with Remove Button</h3>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-x-0.5 rounded-md bg-charcoal-50 px-2 py-1 text-xs font-medium text-charcoal-600 border border-charcoal-500/10">
+              Badge
+              <button type="button" className="group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-charcoal-500/20">
+                <X className="h-3.5 w-3.5 stroke-charcoal-600/50 group-hover:stroke-charcoal-600/75" strokeWidth={2} />
+              </button>
+            </span>
+            <span className="inline-flex items-center gap-x-0.5 rounded-md bg-destructive-50 px-2 py-1 text-xs font-medium text-destructive-700 border border-destructive-600/10">
+              Badge
+              <button type="button" className="group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-destructive-600/20">
+                <X className="h-3.5 w-3.5 stroke-destructive-600/50 group-hover:stroke-destructive-600/75" strokeWidth={2} />
+              </button>
+            </span>
+            <span className="inline-flex items-center gap-x-0.5 rounded-md bg-secondary-50 px-2 py-1 text-xs font-medium text-secondary-800 border border-secondary-600/20">
+              Badge
+              <button type="button" className="group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-secondary-600/20">
+                <X className="h-3.5 w-3.5 stroke-secondary-700/50 group-hover:stroke-secondary-700/75" strokeWidth={2} />
+              </button>
+            </span>
+            <span className="inline-flex items-center gap-x-0.5 rounded-md bg-primary-50 px-2 py-1 text-xs font-medium text-primary-700 border border-primary-600/20">
+              Badge
+              <button type="button" className="group relative -mr-1 h-3.5 w-3.5 rounded-sm hover:bg-primary-600/20">
+                <X className="h-3.5 w-3.5 stroke-primary-700/50 group-hover:stroke-primary-700/75" strokeWidth={2} />
+              </button>
+            </span>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Remove button: <code className="bg-background px-1 py-0.5 rounded">h-3.5 w-3.5 -mr-1</code></li>
+              <li>• Hover: <code className="bg-background px-1 py-0.5 rounded">hover:bg-[color]-600/20</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Flat No Border - Medium */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Flat No Border (bg-100)</h3>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center rounded-md bg-charcoal-100 px-2 py-1 text-xs font-medium text-charcoal-600">Badge</span>
+            <span className="inline-flex items-center rounded-md bg-destructive-100 px-2 py-1 text-xs font-medium text-destructive-700">Badge</span>
+            <span className="inline-flex items-center rounded-md bg-secondary-100 px-2 py-1 text-xs font-medium text-secondary-800">Badge</span>
+            <span className="inline-flex items-center rounded-md bg-primary-100 px-2 py-1 text-xs font-medium text-primary-700">Badge</span>
+            <span className="inline-flex items-center rounded-md bg-midnight-100 px-2 py-1 text-xs font-medium text-midnight-700">Badge</span>
+            <span className="inline-flex items-center rounded-md bg-accent-100 px-2 py-1 text-xs font-medium text-accent-700">Badge</span>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Solid fill: <code className="bg-background px-1 py-0.5 rounded">bg-[color]-100</code> no border</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Pill No Border */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Pill No Border (bg-100)</h3>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center rounded-full bg-charcoal-100 px-2 py-1 text-xs font-medium text-charcoal-600">Badge</span>
+            <span className="inline-flex items-center rounded-full bg-destructive-100 px-2 py-1 text-xs font-medium text-destructive-700">Badge</span>
+            <span className="inline-flex items-center rounded-full bg-secondary-100 px-2 py-1 text-xs font-medium text-secondary-800">Badge</span>
+            <span className="inline-flex items-center rounded-full bg-primary-100 px-2 py-1 text-xs font-medium text-primary-700">Badge</span>
+            <span className="inline-flex items-center rounded-full bg-midnight-100 px-2 py-1 text-xs font-medium text-midnight-700">Badge</span>
+            <span className="inline-flex items-center rounded-full bg-accent-100 px-2 py-1 text-xs font-medium text-accent-700">Badge</span>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Pill + solid fill combination</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Status Dot with Solid Fill */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Status Dot with Solid Fill</h3>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-x-1.5 rounded-md bg-charcoal-100 px-2 py-1 text-xs font-medium text-charcoal-600">
+              <svg viewBox="0 0 6 6" aria-hidden="true" className="h-1.5 w-1.5 fill-charcoal-400">
+                <circle r={3} cx={3} cy={3} />
+              </svg>
+              Badge
+            </span>
+            <span className="inline-flex items-center gap-x-1.5 rounded-md bg-destructive-100 px-2 py-1 text-xs font-medium text-destructive-700">
+              <svg viewBox="0 0 6 6" aria-hidden="true" className="h-1.5 w-1.5 fill-destructive-500">
+                <circle r={3} cx={3} cy={3} />
+              </svg>
+              Badge
+            </span>
+            <span className="inline-flex items-center gap-x-1.5 rounded-md bg-secondary-100 px-2 py-1 text-xs font-medium text-secondary-800">
+              <svg viewBox="0 0 6 6" aria-hidden="true" className="h-1.5 w-1.5 fill-secondary-500">
+                <circle r={3} cx={3} cy={3} />
+              </svg>
+              Badge
+            </span>
+            <span className="inline-flex items-center gap-x-1.5 rounded-md bg-primary-100 px-2 py-1 text-xs font-medium text-primary-700">
+              <svg viewBox="0 0 6 6" aria-hidden="true" className="h-1.5 w-1.5 fill-primary-500">
+                <circle r={3} cx={3} cy={3} />
+              </svg>
+              Badge
+            </span>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Combined solid background with status indicators</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Pill Status Dot Solid */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Pill with Status Dot (Solid Fill)</h3>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-x-1.5 rounded-full bg-charcoal-100 px-2 py-1 text-xs font-medium text-charcoal-600">
+              <svg viewBox="0 0 6 6" aria-hidden="true" className="h-1.5 w-1.5 fill-charcoal-400">
+                <circle r={3} cx={3} cy={3} />
+              </svg>
+              Badge
+            </span>
+            <span className="inline-flex items-center gap-x-1.5 rounded-full bg-destructive-100 px-2 py-1 text-xs font-medium text-destructive-700">
+              <svg viewBox="0 0 6 6" aria-hidden="true" className="h-1.5 w-1.5 fill-destructive-500">
+                <circle r={3} cx={3} cy={3} />
+              </svg>
+              Badge
+            </span>
+            <span className="inline-flex items-center gap-x-1.5 rounded-full bg-primary-100 px-2 py-1 text-xs font-medium text-primary-700">
+              <svg viewBox="0 0 6 6" aria-hidden="true" className="h-1.5 w-1.5 fill-primary-500">
+                <circle r={3} cx={3} cy={3} />
+              </svg>
+              Badge
+            </span>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Pill shape with solid fill and status indicators</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Small Size Variations */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Small Size (px-1.5 py-0.5)</h3>
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center rounded-md bg-charcoal-50 px-1.5 py-0.5 text-xs font-medium text-charcoal-600 border border-charcoal-500/10">Badge</span>
+              <span className="inline-flex items-center rounded-md bg-destructive-50 px-1.5 py-0.5 text-xs font-medium text-destructive-700 border border-destructive-600/10">Badge</span>
+              <span className="inline-flex items-center rounded-md bg-primary-50 px-1.5 py-0.5 text-xs font-medium text-primary-700 border border-primary-600/20">Badge</span>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center rounded-full bg-charcoal-50 px-1.5 py-0.5 text-xs font-medium text-charcoal-600 border border-charcoal-500/10">Badge</span>
+              <span className="inline-flex items-center rounded-full bg-destructive-50 px-1.5 py-0.5 text-xs font-medium text-destructive-700 border border-destructive-600/10">Badge</span>
+              <span className="inline-flex items-center rounded-full bg-primary-50 px-1.5 py-0.5 text-xs font-medium text-primary-700 border border-primary-600/20">Badge</span>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center rounded-md bg-charcoal-100 px-1.5 py-0.5 text-xs font-medium text-charcoal-600">Badge</span>
+              <span className="inline-flex items-center rounded-md bg-destructive-100 px-1.5 py-0.5 text-xs font-medium text-destructive-700">Badge</span>
+              <span className="inline-flex items-center rounded-md bg-primary-100 px-1.5 py-0.5 text-xs font-medium text-primary-700">Badge</span>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Smaller padding: <code className="bg-background px-1 py-0.5 rounded">px-1.5 py-0.5</code></li>
+              <li>• More compact for dense layouts</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {/* Token Reference */}
       <section className="space-y-4 mt-12 pt-8 border-t border-border">
         <div>
