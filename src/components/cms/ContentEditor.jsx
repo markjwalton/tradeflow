@@ -90,14 +90,21 @@ export function ContentEditor({ content, contentType, websiteFolderId, onClose }
         </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            {content?.id ? 'Edit' : 'Create'} {contentType}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+      <Tabs defaultValue="content">
+        <TabsList className="mb-4">
+          <TabsTrigger value="content">Content</TabsTrigger>
+          <TabsTrigger value="seo">SEO</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="content">
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                {content?.id ? 'Edit' : 'Create'} {contentType}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <Label htmlFor="title">Title *</Label>
               <Input
@@ -182,6 +189,18 @@ export function ContentEditor({ content, contentType, websiteFolderId, onClose }
           </form>
         </CardContent>
       </Card>
+        </TabsContent>
+
+        <TabsContent value="seo">
+          <SEOPanel formData={formData} setFormData={setFormData} />
+          <div className="mt-4 flex justify-end">
+            <Button onClick={handleSubmit} disabled={saveMutation.isPending}>
+              <Save className="h-4 w-4 mr-2" />
+              {saveMutation.isPending ? 'Saving...' : 'Save'}
+            </Button>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
