@@ -10,9 +10,10 @@ const TabsList = React.forwardRef(({ className, ...props }, ref) => (
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-9 items-center justify-center rounded-lg text-muted-foreground",
+      "inline-flex h-9 items-center justify-center rounded-lg p-1 text-muted-foreground",
       className
     )}
+    style={{ backgroundColor: 'oklch(0.990 0.007 83.1 / 0.5)' }}
     {...props}
   />
 ))
@@ -23,13 +24,10 @@ const TabsTrigger = React.forwardRef(({ className, ...props }, ref) => (
     ref={ref}
     className={cn(
       "inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-      "data-[state=active]:text-foreground data-[state=active]:shadow",
+      "data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow",
       "[&:not([data-state=active])]:hover:bg-[#e9efeb] [&:not([data-state=active])]:hover:text-[#273e2d]",
       className
     )}
-    style={{
-      backgroundColor: props['data-state'] === 'active' ? 'oklch(0.962 0.010 83.1 / 0.5)' : 'transparent'
-    }}
     {...props}
   />
 ))
