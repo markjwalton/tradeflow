@@ -3850,6 +3850,248 @@ export default function TailwindListsShowcase() {
         </div>
       </section>
 
+      {/* Media Objects */}
+      <section className="space-y-8 mt-12 pt-8 border-t border-border">
+        <div>
+          <h2 className="text-xl font-display mb-2">Media Objects</h2>
+          <p className="text-sm text-muted-foreground">Image and content layout patterns</p>
+        </div>
+
+        {/* Basic Media Object */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Basic Media Object</h3>
+          <div className="flex">
+            <div className="mr-4 shrink-0">
+              <div className="h-16 w-16 rounded border border-border bg-muted flex items-center justify-center">
+                <Image className="h-8 w-8 text-muted-foreground" />
+              </div>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold">Lorem ipsum</h4>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Repudiandae sint consequuntur vel. Amet ut nobis explicabo numquam expedita quia omnis voluptatem.
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Layout: <code className="bg-background px-1 py-0.5 rounded">flex</code></li>
+              <li>• Image: <code className="bg-background px-1 py-0.5 rounded">mr-4 shrink-0 h-16 w-16</code></li>
+              <li>• Content: <code className="bg-background px-1 py-0.5 rounded">flex-1</code> (implicit)</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Centered Alignment */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Centered Image</h3>
+          <div className="flex">
+            <div className="mr-4 shrink-0 self-center">
+              <div className="h-16 w-16 rounded border border-border bg-muted flex items-center justify-center">
+                <Image className="h-8 w-8 text-muted-foreground" />
+              </div>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold">Lorem ipsum</h4>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Repudiandae sint consequuntur vel. Amet ut nobis explicabo numquam expedita quia omnis voluptatem.
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Alignment: <code className="bg-background px-1 py-0.5 rounded">self-center</code> on image wrapper</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom Aligned */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Bottom Aligned Image</h3>
+          <div className="flex">
+            <div className="mr-4 shrink-0 self-end">
+              <div className="h-16 w-16 rounded border border-border bg-muted flex items-center justify-center">
+                <Image className="h-8 w-8 text-muted-foreground" />
+              </div>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold">Lorem ipsum</h4>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Repudiandae sint consequuntur vel. Amet ut nobis explicabo numquam expedita quia omnis voluptatem.
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Alignment: <code className="bg-background px-1 py-0.5 rounded">self-end</code> on image wrapper</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Full Height Image */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Full Height Image</h3>
+          <div className="flex">
+            <div className="mr-4 shrink-0">
+              <div className="h-full w-16 rounded border border-border bg-muted flex items-center justify-center">
+                <Image className="h-8 w-8 text-muted-foreground" />
+              </div>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold">Lorem ipsum</h4>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Repudiandae sint consequuntur vel. Amet ut nobis explicabo numquam expedita quia omnis voluptatem.
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Height: <code className="bg-background px-1 py-0.5 rounded">h-full</code> stretches to match content</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Image on Right */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Image on Right</h3>
+          <div className="flex">
+            <div>
+              <h4 className="text-lg font-semibold">Lorem ipsum</h4>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Repudiandae sint consequuntur vel. Amet ut nobis explicabo numquam expedita quia omnis voluptatem.
+              </p>
+            </div>
+            <div className="ml-4 shrink-0">
+              <div className="h-16 w-16 rounded border border-border bg-muted flex items-center justify-center">
+                <Image className="h-8 w-8 text-muted-foreground" />
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Swap order in markup</li>
+              <li>• Use: <code className="bg-background px-1 py-0.5 rounded">ml-4</code> instead of mr-4</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Responsive Stacking */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Responsive Stacking</h3>
+          <div className="sm:flex">
+            <div className="mb-4 shrink-0 sm:mr-4 sm:mb-0">
+              <div className="h-16 w-16 rounded border border-border bg-muted flex items-center justify-center">
+                <Image className="h-8 w-8 text-muted-foreground" />
+              </div>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold">Lorem ipsum</h4>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Repudiandae sint consequuntur vel. Amet ut nobis explicabo numquam expedita quia omnis voluptatem.
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Layout: <code className="bg-background px-1 py-0.5 rounded">sm:flex</code> (stacked on mobile)</li>
+              <li>• Spacing: <code className="bg-background px-1 py-0.5 rounded">mb-4 sm:mr-4 sm:mb-0</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Full Width on Mobile */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Full Width Image on Mobile</h3>
+          <div className="sm:flex">
+            <div className="mb-4 shrink-0 sm:mr-4 sm:mb-0">
+              <div className="h-32 w-full sm:w-32 rounded border border-border bg-muted flex items-center justify-center">
+                <Image className="h-12 w-12 text-muted-foreground" />
+              </div>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold">Lorem ipsum</h4>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Repudiandae sint consequuntur vel. Amet ut nobis explicabo numquam expedita quia omnis voluptatem.
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Image: <code className="bg-background px-1 py-0.5 rounded">w-full sm:w-32</code></li>
+              <li>• Full width banner on mobile, fixed width on desktop</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Nested Media Objects */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Nested Media Objects</h3>
+          <div className="flex">
+            <div className="mr-4 shrink-0">
+              <div className="h-16 w-16 rounded border border-border bg-muted flex items-center justify-center">
+                <Image className="h-8 w-8 text-muted-foreground" />
+              </div>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold">Lorem ipsum</h4>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Repudiandae sint consequuntur vel. Amet ut nobis explicabo numquam expedita quia omnis.
+              </p>
+
+              <div className="mt-6 flex">
+                <div className="mr-4 shrink-0">
+                  <div className="h-12 w-12 rounded border border-border bg-muted flex items-center justify-center">
+                    <Image className="h-6 w-6 text-muted-foreground" />
+                  </div>
+                </div>
+                <div>
+                  <h4 className="text-base font-semibold">Nested item</h4>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Repudiandae sint consequuntur vel. Amet ut nobis explicabo.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 flex">
+                <div className="mr-4 shrink-0">
+                  <div className="h-12 w-12 rounded border border-border bg-muted flex items-center justify-center">
+                    <Image className="h-6 w-6 text-muted-foreground" />
+                  </div>
+                </div>
+                <div>
+                  <h4 className="text-base font-semibold">Nested item</h4>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Repudiandae sint consequuntur vel. Amet ut nobis explicabo.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Smaller nested images: <code className="bg-background px-1 py-0.5 rounded">h-12 w-12</code></li>
+              <li>• Spacing: <code className="bg-background px-1 py-0.5 rounded">mt-6</code> between nested items</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {/* Token Reference */}
       <section className="space-y-4 mt-12 pt-8 border-t border-border">
         <div>
