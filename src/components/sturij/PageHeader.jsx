@@ -6,7 +6,7 @@ export function PageHeader({ title, description, children }) {
   const breadcrumbContext = useBreadcrumb();
 
   return (
-    <div className="bg-white border [margin-bottom:var(--spacing-6)] rounded-xl" style={{ marginTop: 0 }}>
+    <div className="bg-white border [margin-bottom:var(--spacing-6)] px-6 py-4 rounded-xl" style={{ marginTop: 0 }}>
       {breadcrumbContext?.navItems && (
         <div className="mb-3">
           <AppBreadcrumb 
