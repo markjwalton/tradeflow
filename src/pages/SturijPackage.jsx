@@ -313,9 +313,9 @@ When updating existing code:
         </div>
       </div>
 
-      {/* Warm beige background */}
+      {/* Gradient background spanning full width */}
       <div 
-        className="w-screen relative left-1/2 right-1/2 -mx-[50vw] bg-secondary-100"
+        className="w-screen relative left-1/2 right-1/2 -mx-[50vw] bg-gradient-to-r from-white via-secondary-100 to-white"
         style={{
           minHeight: '100vh'
         }}
