@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Image, UserCircle, ChevronDown } from 'lucide-react';
+import { Image, UserCircle, ChevronDown, Mail, HelpCircle, AlertCircle } from 'lucide-react';
 
 export default function TailwindFormsShowcase() {
   return (
@@ -27,6 +27,7 @@ export default function TailwindFormsShowcase() {
       <TwoColumnForm />
       <CardStyleForms />
       <LabelOnLeftForm />
+      <InputVariationsSection />
 
       <TokenReference />
     </div>
@@ -618,6 +619,377 @@ function NotificationsSection() {
         </fieldset>
       </div>
     </div>
+  );
+}
+
+function InputVariationsSection() {
+  return (
+    <section className="space-y-8">
+      <div>
+        <h2 className="text-xl font-display mb-2">Input Variations</h2>
+        <p className="text-sm text-muted-foreground">Different input states, addons, and configurations</p>
+      </div>
+
+      <div className="grid gap-8 lg:grid-cols-2">
+        {/* Basic Input */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Basic Input</h3>
+          <div>
+            <Label htmlFor="email-basic">Email</Label>
+            <div className="mt-2">
+              <Input
+                id="email-basic"
+                name="email"
+                type="email"
+                placeholder="you@example.com"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Input with Help Text */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">With Help Text</h3>
+          <div>
+            <Label htmlFor="email-help">Email</Label>
+            <div className="mt-2">
+              <Input
+                id="email-help"
+                name="email"
+                type="email"
+                placeholder="you@example.com"
+                aria-describedby="email-description"
+              />
+            </div>
+            <p id="email-description" className="mt-2 text-sm text-muted-foreground">
+              We'll only use this for spam.
+            </p>
+          </div>
+        </div>
+
+        {/* Input with Error */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Error State</h3>
+          <div>
+            <Label htmlFor="email-error">Email</Label>
+            <div className="mt-2 relative">
+              <Input
+                defaultValue="adamwathan"
+                id="email-error"
+                name="email"
+                type="email"
+                placeholder="you@example.com"
+                aria-invalid="true"
+                aria-describedby="email-error-msg"
+                className="border-destructive text-destructive-foreground placeholder:text-destructive-300 focus-visible:ring-destructive pr-10"
+              />
+              <AlertCircle
+                className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-destructive"
+              />
+            </div>
+            <p id="email-error-msg" className="mt-2 text-sm text-destructive">
+              Not a valid email address.
+            </p>
+          </div>
+        </div>
+
+        {/* Disabled Input */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Disabled State</h3>
+          <div>
+            <Label htmlFor="email-disabled">Email</Label>
+            <div className="mt-2">
+              <Input
+                defaultValue="you@example.com"
+                id="email-disabled"
+                name="email"
+                type="email"
+                disabled
+                placeholder="you@example.com"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Input without Label */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Without Visible Label</h3>
+          <div>
+            <Input
+              id="email-no-label"
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              aria-label="Email"
+            />
+          </div>
+        </div>
+
+        {/* Optional Field */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Optional Field</h3>
+          <div>
+            <div className="flex justify-between">
+              <Label htmlFor="email-optional">Email</Label>
+              <span className="text-sm text-muted-foreground">Optional</span>
+            </div>
+            <div className="mt-2">
+              <Input
+                id="email-optional"
+                name="email"
+                type="email"
+                placeholder="you@example.com"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Input with Leading Icon */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Leading Icon</h3>
+          <div>
+            <Label htmlFor="email-icon">Email</Label>
+            <div className="mt-2 relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="email-icon"
+                name="email"
+                type="email"
+                placeholder="you@example.com"
+                className="pl-10"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Input with Trailing Icon */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Trailing Icon</h3>
+          <div>
+            <Label htmlFor="account-number">Account number</Label>
+            <div className="mt-2 relative">
+              <Input
+                id="account-number"
+                name="account-number"
+                type="text"
+                placeholder="000-00-0000"
+                className="pr-10"
+              />
+              <HelpCircle className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            </div>
+          </div>
+        </div>
+
+        {/* Input with Inline Leading Addon */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Inline Leading Addon</h3>
+          <div>
+            <Label htmlFor="website">Company website</Label>
+            <div className="mt-2">
+              <div className="flex items-center rounded-lg border border-input bg-background pl-3 focus-within:ring-2 focus-within:ring-primary">
+                <div className="shrink-0 text-base text-muted-foreground select-none sm:text-sm">https://</div>
+                <Input
+                  id="website"
+                  name="website"
+                  type="text"
+                  placeholder="www.example.com"
+                  className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Input with Inline Leading & Trailing Addons */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Leading & Trailing Addons</h3>
+          <div>
+            <Label htmlFor="price">Price</Label>
+            <div className="mt-2">
+              <div className="flex items-center rounded-lg border border-input bg-background px-3 focus-within:ring-2 focus-within:ring-primary">
+                <div className="shrink-0 text-base text-muted-foreground select-none sm:text-sm">$</div>
+                <Input
+                  id="price"
+                  name="price"
+                  type="text"
+                  placeholder="0.00"
+                  className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+                />
+                <div className="shrink-0 text-base text-muted-foreground select-none sm:text-sm">USD</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Input with Select Addon */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">With Trailing Select</h3>
+          <div>
+            <Label htmlFor="price-select">Price</Label>
+            <div className="mt-2">
+              <div className="flex items-center rounded-lg border border-input bg-background pl-3 focus-within:ring-2 focus-within:ring-primary">
+                <div className="shrink-0 text-base text-muted-foreground select-none sm:text-sm">$</div>
+                <Input
+                  id="price-select"
+                  name="price"
+                  type="text"
+                  placeholder="0.00"
+                  className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 rounded-r-none"
+                />
+                <Select defaultValue="usd">
+                  <SelectTrigger className="w-24 border-0 border-l focus:ring-0 focus:ring-offset-0 rounded-l-none">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="usd">USD</SelectItem>
+                    <SelectItem value="cad">CAD</SelectItem>
+                    <SelectItem value="eur">EUR</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Rounded Pill Input */}
+        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+          <h3 className="text-sm font-medium">Rounded Pill</h3>
+          <div>
+            <Label htmlFor="name-pill" className="ml-px pl-4">Name</Label>
+            <div className="mt-2">
+              <Input
+                id="name-pill"
+                name="name"
+                type="text"
+                placeholder="Jane Smith"
+                className="rounded-full px-4"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Stacked Inputs */}
+      <div className="space-y-4 mt-8">
+        <h3 className="text-lg font-display">Stacked Inputs</h3>
+        
+        <div className="rounded-lg border border-border bg-card p-6 space-y-6">
+          <div>
+            <h4 className="text-sm font-medium mb-4">Card Details (Stacked)</h4>
+            <fieldset>
+              <legend className="sr-only">Card details</legend>
+              <div className="-space-y-px rounded-lg">
+                <div className="rounded-t-lg border border-input bg-background px-3 pt-2.5 pb-1.5 focus-within:relative focus-within:z-10 focus-within:ring-2 focus-within:ring-primary">
+                  <Label htmlFor="card-number" className="block text-xs">
+                    Card number
+                  </Label>
+                  <input
+                    id="card-number"
+                    name="card-number"
+                    type="text"
+                    placeholder="Card number"
+                    className="block w-full border-0 p-0 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-0 sm:text-sm"
+                  />
+                </div>
+                <div className="grid grid-cols-2">
+                  <div className="rounded-bl-lg border border-input bg-background px-3 pt-2.5 pb-1.5 focus-within:relative focus-within:z-10 focus-within:ring-2 focus-within:ring-primary">
+                    <Label htmlFor="expiry" className="block text-xs">
+                      Expiration date
+                    </Label>
+                    <input
+                      id="expiry"
+                      name="expiry"
+                      type="text"
+                      placeholder="MM / YY"
+                      className="block w-full border-0 p-0 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-0 sm:text-sm"
+                    />
+                  </div>
+                  <div className="rounded-br-lg border border-input bg-background px-3 pt-2.5 pb-1.5 focus-within:relative focus-within:z-10 focus-within:ring-2 focus-within:ring-primary">
+                    <Label htmlFor="cvc" className="block text-xs">
+                      CVC
+                    </Label>
+                    <input
+                      id="cvc"
+                      name="cvc"
+                      type="text"
+                      placeholder="CVC"
+                      className="block w-full border-0 p-0 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-0 sm:text-sm"
+                    />
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-medium mb-4">Floating Label</h4>
+            <div className="relative">
+              <Label
+                htmlFor="name-float"
+                className="absolute -top-2 left-2 inline-block bg-card px-1 text-xs font-medium"
+              >
+                Name
+              </Label>
+              <Input
+                id="name-float"
+                name="name"
+                type="text"
+                placeholder="Jane Smith"
+              />
+            </div>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-medium mb-4">Underline Style</h4>
+            <div>
+              <Label htmlFor="name-underline">Name</Label>
+              <div className="relative mt-2">
+                <input
+                  id="name-underline"
+                  name="name"
+                  type="text"
+                  placeholder="Jane Smith"
+                  className="peer block w-full border-0 border-b border-border bg-muted/50 px-3 py-1.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-0 sm:text-sm"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-medium mb-4">With Keyboard Shortcut</h4>
+            <div>
+              <Label htmlFor="search-kbd">Quick search</Label>
+              <div className="mt-2">
+                <div className="flex items-center rounded-lg border border-input bg-background focus-within:ring-2 focus-within:ring-primary">
+                  <Input
+                    id="search-kbd"
+                    name="search"
+                    type="text"
+                    placeholder="Search..."
+                    className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+                  />
+                  <div className="flex py-1.5 pr-1.5">
+                    <kbd className="inline-flex items-center rounded border border-border bg-muted px-1 font-mono text-xs text-muted-foreground">
+                      ⌘K
+                    </kbd>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+        <p className="font-medium">Design Token Mappings:</p>
+        <ul className="space-y-1 text-muted-foreground">
+          <li>• Error state: <code className="bg-background px-1 py-0.5 rounded">border-destructive text-destructive</code></li>
+          <li>• Disabled: built-in Input component styles</li>
+          <li>• Icons: absolute positioning with Lucide icons</li>
+          <li>• Stacked inputs: <code className="bg-background px-1 py-0.5 rounded">-space-y-px</code> for connected borders</li>
+        </ul>
+      </div>
+    </section>
   );
 }
 
