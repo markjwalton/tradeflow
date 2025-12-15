@@ -3624,6 +3624,507 @@ export default function TailwindProductShowcase() {
             </div>
           </div>
         </ShowcaseSection>
+
+        <ShowcaseSection title="Full Homepage - Dark Hero with Categories & Collections">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="relative bg-gray-900">
+              <div className="absolute inset-0">
+                <div className="w-full h-full bg-gray-800" />
+              </div>
+              <div className="absolute inset-0 bg-gray-900 opacity-50" />
+              
+              <div className="relative z-10">
+                <div className="bg-gray-900 h-10 flex items-center justify-between px-8 text-sm">
+                  <div className="text-white">CAD ▼</div>
+                  <div className="flex gap-6 text-white">
+                    <a href="#" className="hover:text-gray-100">Sign in</a>
+                    <a href="#" className="hover:text-gray-100">Create account</a>
+                  </div>
+                </div>
+                
+                <div className="bg-white/10 backdrop-blur-md px-8 h-16 flex items-center justify-between">
+                  <div className="flex items-center gap-8">
+                    <div className="w-8 h-8 bg-white rounded" />
+                    <div className="flex gap-8 text-sm font-medium text-white">
+                      <a href="#">Women</a>
+                      <a href="#">Men</a>
+                      <a href="#">Company</a>
+                      <a href="#">Stores</a>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-6 text-white">
+                    <a href="#">Search</a>
+                    <a href="#">Help</a>
+                    <a href="#" className="flex items-center gap-2">
+                      <ShoppingBagIcon className="h-6 w-6" />
+                      <span>0</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div className="relative z-10 max-w-3xl mx-auto text-center px-6 py-32 sm:py-64">
+                <h1 className="text-4xl font-bold tracking-tight text-white lg:text-6xl">New arrivals are here</h1>
+                <p className="mt-4 text-xl text-white">
+                  Check out the latest options from our summer small-batch release while they're still in stock.
+                </p>
+                <button className="mt-8 rounded-md bg-white px-8 py-3 text-base font-medium text-gray-900 hover:bg-gray-100">
+                  Shop New Arrivals
+                </button>
+              </div>
+            </div>
+
+            <div className="pt-24">
+              <div className="max-w-7xl mx-auto px-8">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-bold text-gray-900">Shop by Category</h2>
+                  <a href="#" className="text-sm font-semibold text-indigo-600">Browse all →</a>
+                </div>
+                <div className="mt-4 flex gap-8 overflow-x-auto">
+                  {[
+                    'New Arrivals',
+                    'Productivity',
+                    'Workspace',
+                    'Accessories',
+                    'Sale'
+                  ].map((cat) => (
+                    <div key={cat} className="relative h-80 w-56 flex-shrink-0 rounded-lg overflow-hidden">
+                      <div className="absolute inset-0 bg-gray-200" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-gray-800 opacity-50" />
+                      <span className="absolute bottom-6 left-0 right-0 text-center text-xl font-bold text-white">
+                        {cat}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="max-w-7xl mx-auto px-8 pt-24">
+                <div className="relative overflow-hidden rounded-lg">
+                  <div className="absolute inset-0 bg-gray-300" />
+                  <div className="relative bg-gray-900/75 px-6 py-32 sm:px-12">
+                    <div className="max-w-3xl mx-auto text-center">
+                      <h2 className="text-3xl font-bold text-white sm:text-4xl">Level up your desk</h2>
+                      <p className="mt-3 text-xl text-white">
+                        Make your desk beautiful and organized. Post a picture to social media and watch it get more likes.
+                      </p>
+                      <button className="mt-8 rounded-md bg-white px-8 py-3 text-base font-medium text-gray-900">
+                        Shop Workspace
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="max-w-7xl mx-auto px-8 pt-24 pb-24">
+                <h2 className="text-2xl font-bold text-gray-900">Shop by Collection</h2>
+                <p className="mt-4 text-base text-gray-500">
+                  Each season, we collaborate with designers to create a collection inspired by nature.
+                </p>
+                <div className="mt-10 grid lg:grid-cols-3 gap-x-8 gap-y-12">
+                  {[
+                    { name: 'Handcrafted Collection', desc: 'Keep your essentials together' },
+                    { name: 'Organized Desk Collection', desc: 'Your desk will look great' },
+                    { name: 'Focus Collection', desc: 'Be more productive' }
+                  ].map((coll) => (
+                    <div key={coll.name}>
+                      <div className="aspect-[3/2] lg:aspect-[5/6] w-full rounded-lg bg-gray-200" />
+                      <h3 className="mt-4 text-base font-semibold text-gray-900">{coll.name}</h3>
+                      <p className="mt-2 text-sm text-gray-500">{coll.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Full Homepage - Split Hero with Offers Bar">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="bg-gray-900 h-10 flex items-center justify-between px-8 text-sm text-white">
+              <div>CAD ▼</div>
+              <div>Get free delivery on orders over $100</div>
+              <div className="flex gap-6">
+                <a href="#">Create account</a>
+                <span>|</span>
+                <a href="#">Sign in</a>
+              </div>
+            </div>
+
+            <div className="bg-white border-b h-16 flex items-center justify-between px-8">
+              <div className="flex items-center gap-8">
+                <div className="w-8 h-8 bg-indigo-600 rounded" />
+                <div className="flex gap-8 text-sm font-medium text-gray-700">
+                  <a href="#">Women</a>
+                  <a href="#">Men</a>
+                  <a href="#">Company</a>
+                  <a href="#">Stores</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-6">
+                <a href="#" className="text-gray-400"><MagnifyingGlassIcon className="h-6 w-6" /></a>
+                <a href="#" className="text-gray-400"><UserIcon className="h-6 w-6" /></a>
+                <a href="#" className="flex items-center gap-2 text-gray-700">
+                  <ShoppingCartIcon className="h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium">0</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="grid lg:grid-cols-3 gap-0 border-y divide-x">
+              {[
+                { name: 'Download the app', desc: 'Get an exclusive $5 off code' },
+                { name: "Return when you're ready", desc: '60 days of free returns' },
+                { name: 'Sign up for our newsletter', desc: '15% off your first order' }
+              ].map((offer) => (
+                <a key={offer.name} href="#" className="bg-white px-4 py-6 text-center hover:bg-gray-50">
+                  <p className="text-sm text-gray-500">{offer.name}</p>
+                  <p className="font-semibold text-gray-900">{offer.desc}</p>
+                </a>
+              ))}
+            </div>
+
+            <div className="grid lg:grid-cols-2">
+              <div className="bg-gray-100 px-8 py-24 lg:py-64">
+                <div className="max-w-2xl">
+                  <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl xl:text-6xl">
+                    Focus on what matters
+                  </h1>
+                  <p className="mt-4 text-xl text-gray-600">
+                    All the charts and notifications can't beat checking off items on a paper card.
+                  </p>
+                  <button className="mt-6 rounded-md bg-indigo-600 px-8 py-3 font-medium text-white hover:bg-indigo-700">
+                    Shop Productivity
+                  </button>
+                </div>
+              </div>
+              <div className="h-48 lg:h-full bg-gray-300" />
+            </div>
+
+            <div className="bg-white py-16 sm:py-24">
+              <div className="max-w-7xl mx-auto px-8">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-bold text-gray-900">Trending products</h2>
+                  <a href="#" className="text-sm font-semibold text-indigo-600">See everything →</a>
+                </div>
+                <div className="mt-8 grid grid-cols-4 gap-x-8">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i}>
+                      <div className="aspect-square w-full rounded-md bg-gray-200" />
+                      <div className="mt-6">
+                        <p className="text-sm text-gray-500">Color</p>
+                        <h3 className="mt-1 font-semibold text-gray-900">Product Name</h3>
+                        <p className="mt-1 text-gray-900">$35</p>
+                      </div>
+                      <div className="mt-6 flex items-center justify-center gap-3">
+                        <div className="w-4 h-4 rounded-full bg-gray-900" />
+                        <div className="w-4 h-4 rounded-full bg-yellow-200" />
+                        <div className="w-4 h-4 rounded-full bg-gray-300" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-100 py-16 sm:py-24">
+              <div className="max-w-7xl mx-auto px-8">
+                <h2 className="text-2xl font-bold text-gray-900">Collections</h2>
+                <div className="mt-6 grid lg:grid-cols-3 gap-x-6 gap-y-12">
+                  {[
+                    { name: 'Desk and Office', desc: 'Work from home accessories' },
+                    { name: 'Self-Improvement', desc: 'Journals and note-taking' },
+                    { name: 'Travel', desc: 'Daily commute essentials' }
+                  ].map((coll) => (
+                    <div key={coll.name}>
+                      <div className="aspect-square sm:aspect-[2/1] lg:aspect-square w-full rounded-lg bg-gray-300" />
+                      <h3 className="mt-6 text-sm text-gray-500">{coll.name}</h3>
+                      <p className="text-base font-semibold text-gray-900">{coll.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="relative overflow-hidden">
+              <div className="absolute inset-0 bg-gray-300" />
+              <div className="relative bg-white/75 px-6 py-32">
+                <div className="max-w-2xl mx-auto text-center">
+                  <h2 className="text-4xl font-bold text-gray-900 sm:text-5xl lg:text-6xl">
+                    Get 25% off during our one-time sale
+                  </h2>
+                  <p className="mt-4 max-w-xl mx-auto text-xl text-gray-600">
+                    Most products are limited releases. Get your favorites while in stock.
+                  </p>
+                  <button className="mt-6 rounded-md bg-gray-900 px-8 py-3 font-medium text-white hover:bg-gray-800">
+                    Get access to our one-time sale
+                  </button>
+                </div>
+              </div>
+
+              <div className="max-w-7xl mx-auto px-8 py-24">
+                <h2 className="text-2xl font-bold text-gray-900">What are people saying?</h2>
+                <div className="mt-16 grid lg:grid-cols-3 gap-x-8 gap-y-16">
+                  {[
+                    { quote: 'My order arrived super quickly. Very happy customer!', by: 'Sarah Peters, New Orleans' },
+                    { quote: 'The return process was so simple!', by: 'Kelly McPherson, Chicago' },
+                    { quote: "I'll probably order a few more. So convenient!", by: 'Chris Paul, Phoenix' }
+                  ].map((test, i) => (
+                    <blockquote key={i} className="sm:flex lg:block">
+                      <svg width={24} height={18} className="shrink-0 text-gray-300">
+                        <path d="M0 18h8.7v-5.555c-.024-3.906 1.113-6.841 2.892-9.68L6.452 0C3.188 2.644-.026 7.86 0 12.469V18zm12.408 0h8.7v-5.555C21.083 8.539 22.22 5.604 24 2.765L18.859 0c-3.263 2.644-6.476 7.86-6.451 12.469V18z" fill="currentColor" />
+                      </svg>
+                      <div className="mt-8 sm:mt-0 sm:ml-6 lg:mt-10 lg:ml-0">
+                        <p className="text-lg text-gray-600">{test.quote}</p>
+                        <cite className="mt-4 block font-semibold text-gray-900 not-italic">{test.by}</cite>
+                      </div>
+                    </blockquote>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Full Homepage - Image Grid Hero with Categories">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="bg-white/90 backdrop-blur-xl h-16 flex items-center justify-between px-8 border-b">
+              <div className="flex items-center gap-8">
+                <div className="w-8 h-8 bg-indigo-600 rounded" />
+                <div className="flex gap-8 text-sm font-medium text-gray-700">
+                  <a href="#">Women</a>
+                  <a href="#">Men</a>
+                  <a href="#">Company</a>
+                  <a href="#">Stores</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-6">
+                <a href="#" className="text-sm font-medium text-gray-700">Sign in</a>
+                <span className="h-6 w-px bg-gray-200" />
+                <a href="#" className="text-sm font-medium text-gray-700">Create account</a>
+                <a href="#" className="text-gray-400 ml-6"><MagnifyingGlassIcon className="h-6 w-6" /></a>
+                <a href="#" className="flex items-center gap-2">
+                  <ShoppingBagIcon className="h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-700">0</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="pt-16 pb-80 sm:pt-24">
+              <div className="relative max-w-7xl mx-auto px-8">
+                <div className="sm:max-w-lg">
+                  <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+                    Summer styles are finally here
+                  </h1>
+                  <p className="mt-4 text-xl text-gray-500">
+                    Our new summer collection will shelter you from the harsh elements.
+                  </p>
+                </div>
+                <div className="mt-10">
+                  <button className="rounded-md bg-indigo-600 px-8 py-3 text-center font-medium text-white hover:bg-indigo-700">
+                    Shop Collection
+                  </button>
+                </div>
+
+                <div className="absolute right-0 top-0 hidden lg:block">
+                  <div className="flex gap-6">
+                    <div className="grid gap-y-8">
+                      <div className="h-64 w-44 rounded-lg bg-gray-200" />
+                      <div className="h-64 w-44 rounded-lg bg-gray-200" />
+                    </div>
+                    <div className="grid gap-y-8">
+                      <div className="h-64 w-44 rounded-lg bg-gray-200" />
+                      <div className="h-64 w-44 rounded-lg bg-gray-200" />
+                      <div className="h-64 w-44 rounded-lg bg-gray-200" />
+                    </div>
+                    <div className="grid gap-y-8">
+                      <div className="h-64 w-44 rounded-lg bg-gray-200" />
+                      <div className="h-64 w-44 rounded-lg bg-gray-200" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 py-24">
+              <div className="max-w-7xl mx-auto px-8">
+                <div className="flex items-baseline justify-between">
+                  <h2 className="text-2xl font-bold text-gray-900">Shop by Category</h2>
+                  <a href="#" className="text-sm font-semibold text-indigo-600">Browse all →</a>
+                </div>
+                <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 sm:grid-rows-2 gap-6 lg:gap-8">
+                  <div className="group relative sm:row-span-2 sm:aspect-square aspect-[2/1] rounded-lg overflow-hidden">
+                    <div className="absolute inset-0 bg-gray-300" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-50" />
+                    <div className="absolute inset-0 flex items-end p-6">
+                      <div>
+                        <h3 className="font-semibold text-white">New Arrivals</h3>
+                        <p className="mt-1 text-sm text-white">Shop now</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="group relative aspect-[2/1] rounded-lg overflow-hidden">
+                    <div className="absolute inset-0 bg-gray-300" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-50" />
+                    <div className="absolute inset-0 flex items-end p-6">
+                      <div>
+                        <h3 className="font-semibold text-white">Accessories</h3>
+                        <p className="mt-1 text-sm text-white">Shop now</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="group relative aspect-[2/1] rounded-lg overflow-hidden">
+                    <div className="absolute inset-0 bg-gray-300" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-50" />
+                    <div className="absolute inset-0 flex items-end p-6">
+                      <div>
+                        <h3 className="font-semibold text-white">Workspace</h3>
+                        <p className="mt-1 text-sm text-white">Shop now</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="py-24">
+              <div className="max-w-7xl mx-auto px-8">
+                <div className="flex items-baseline justify-between">
+                  <h2 className="text-2xl font-bold text-gray-900">Our Favorites</h2>
+                  <a href="#" className="text-sm font-semibold text-indigo-600">Browse all →</a>
+                </div>
+                <div className="mt-6 grid sm:grid-cols-3 gap-x-6 gap-y-10">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i}>
+                      <div className="h-96 sm:aspect-[2/3] sm:h-auto w-full rounded-lg bg-gray-200" />
+                      <h3 className="mt-4 text-base font-semibold text-gray-900">Product Name</h3>
+                      <p className="mt-1 text-sm text-gray-500">$32</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-800 pt-14 pb-16 sm:pb-24">
+              <div className="max-w-7xl mx-auto px-8">
+                <div className="relative">
+                  <h2 className="text-4xl font-bold text-white md:text-5xl">
+                    Final Stock.<br />Up to 50% off.
+                  </h2>
+                  <div className="mt-6">
+                    <a href="#" className="font-semibold text-white">
+                      Shop the sale →
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Full Homepage - Overlapping Hero Cards">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="bg-gray-900 h-10 flex items-center justify-between px-8 text-sm text-white">
+              <div>CAD ▼</div>
+              <div className="flex gap-6">
+                <a href="#">Sign in</a>
+                <a href="#">Create account</a>
+              </div>
+            </div>
+
+            <div className="bg-white px-8 h-16 flex items-center justify-between">
+              <div className="flex items-center gap-8">
+                <div className="w-8 h-8 bg-indigo-600 rounded" />
+                <div className="flex gap-8 text-sm font-medium text-gray-700">
+                  <a href="#">Women</a>
+                  <a href="#">Men</a>
+                  <a href="#">Company</a>
+                  <a href="#">Stores</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-6">
+                <a href="#" className="text-sm font-medium text-gray-700">Search</a>
+                <a href="#" className="text-sm font-medium text-gray-700">Help</a>
+                <a href="#" className="flex items-center gap-2">
+                  <ShoppingBagIcon className="h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-700">0</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="relative bg-gray-800">
+              <div className="absolute inset-0 bg-gray-400" />
+              <div className="absolute inset-0 bg-gray-900 opacity-50" />
+              <div className="relative px-6 py-32 text-center">
+                <h1 className="text-4xl font-bold text-white sm:text-5xl md:text-6xl">Mid-Season Sale</h1>
+                <button className="mt-6 rounded-md bg-indigo-600 px-8 py-3 font-medium text-white hover:bg-indigo-700">
+                  Shop Collection
+                </button>
+              </div>
+            </div>
+
+            <div className="relative -mt-96 sm:mt-0">
+              <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 px-8">
+                {[
+                  { name: "Women's", desc: 'Shop the collection' },
+                  { name: "Men's", desc: 'Shop the collection' },
+                  { name: 'Desk Accessories', desc: 'Shop the collection' }
+                ].map((coll) => (
+                  <div key={coll.name} className="relative h-96 sm:aspect-[4/5] sm:h-auto rounded-lg overflow-hidden shadow-xl bg-white">
+                    <div className="absolute inset-0 bg-gray-200" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-50" />
+                    <div className="absolute inset-0 flex items-end p-6">
+                      <div>
+                        <p className="text-sm text-white">{coll.desc}</p>
+                        <h3 className="mt-1 font-semibold text-white">{coll.name}</h3>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="max-w-7xl mx-auto px-8 py-24">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-gray-900">Trending Products</h2>
+                <a href="#" className="text-sm font-medium text-indigo-600">Shop collection →</a>
+              </div>
+              <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-10">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i}>
+                    <div className="h-56 lg:h-72 xl:h-80 w-full rounded-md bg-gray-200" />
+                    <h3 className="mt-4 text-sm text-gray-700">Product Name</h3>
+                    <p className="mt-1 text-sm text-gray-500">Color</p>
+                    <p className="mt-1 text-sm font-medium text-gray-900">$75</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="border-t bg-gray-50 py-24">
+              <div className="max-w-7xl mx-auto px-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-12 gap-x-6">
+                  {[
+                    { name: 'Free returns', desc: 'Not what you expected? Place it back in the parcel.' },
+                    { name: 'Same day delivery', desc: 'Checkout today and receive within hours.' },
+                    { name: 'All year discount', desc: 'Use code "ALLYEAR" at checkout.' },
+                    { name: 'For the planet', desc: "We've pledged 1% of sales to nature." }
+                  ].map((perk) => (
+                    <div key={perk.name} className="text-center md:flex md:items-start md:text-left lg:block lg:text-center">
+                      <div className="md:shrink-0">
+                        <div className="h-24 w-auto mx-auto bg-gray-300 rounded" />
+                      </div>
+                      <div className="mt-6 md:mt-0 md:ml-4 lg:mt-6 lg:ml-0">
+                        <h3 className="text-base font-medium text-gray-900">{perk.name}</h3>
+                        <p className="mt-3 text-sm text-gray-500">{perk.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
       </div>
     </div>
   );
