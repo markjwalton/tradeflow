@@ -299,25 +299,46 @@ When updating existing code:
 - [ ] Verify dialog titles use text-[var(--color-midnight)]`;
 
   return (
-    <div className="bg-background min-h-screen">
-      <div className="max-w-6xl mx-auto -mt-6">
-        <PageHeader 
-          title="Sturij Design System Package"
-          description="Complete UI theme package for Base44 applications"
-        >
-          <div className="flex gap-2">
-            <Badge className="bg-success-50 text-success">
-              <CheckCircle2 className="h-3 w-3 mr-1" />
-              Production Ready
-            </Badge>
-            <Badge className="bg-info-50 text-info">
-              v1.0.0
-            </Badge>
-            <Badge className="bg-secondary/10 text-secondary">
-              Base44 Compatible
-            </Badge>
-          </div>
-        </PageHeader>
+    <div className="relative min-h-screen">
+      {/* Full-width header with dark background */}
+      <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] bg-midnight-900 text-white">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="text-2xl font-bold brand">Sturij</div>
+          <nav className="flex gap-6">
+            <a href="#" className="hover:text-primary-300 transition-colors">What we treat</a>
+            <a href="#" className="hover:text-primary-300 transition-colors">How it works</a>
+            <a href="#" className="hover:text-primary-300 transition-colors">About</a>
+          </nav>
+          <Button variant="ghost" className="text-white hover:text-primary-300">Sign in</Button>
+        </div>
+      </div>
+
+      {/* Gradient background that bleeds to white */}
+      <div 
+        className="w-screen relative left-1/2 right-1/2 -mx-[50vw]"
+        style={{
+          background: 'linear-gradient(to bottom, #00CED1 0%, #7FFFD4 20%, #E0F7FA 50%, #F5FFFE 70%, #FFFFFF 100%)',
+          minHeight: '100vh'
+        }}
+      >
+        <div className="max-w-6xl mx-auto px-6 pt-16 pb-8">
+          <PageHeader 
+            title="Sturij Design System Package"
+            description="Complete UI theme package for Base44 applications"
+          >
+            <div className="flex gap-2">
+              <Badge className="bg-success-50 text-success">
+                <CheckCircle2 className="h-3 w-3 mr-1" />
+                Production Ready
+              </Badge>
+              <Badge className="bg-info-50 text-info">
+                v1.0.0
+              </Badge>
+              <Badge className="bg-secondary/10 text-secondary">
+                Base44 Compatible
+              </Badge>
+            </div>
+          </PageHeader>
 
         <Tabs defaultValue="overview" className="space-y-6">
           <TabsList>
@@ -732,6 +753,7 @@ When updating existing code:
             </div>
           </CardContent>
         </Card>
+        </div>
       </div>
     </div>
   );
