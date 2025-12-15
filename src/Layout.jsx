@@ -222,26 +222,6 @@ export default function Layout({ children, currentPageName }) {
                   tooltip_text: item.tooltip_text,
                 }));
 
-              // Debug navigation data flow
-              console.log('=== NAVIGATION DEBUG - Layout.jsx ===');
-              console.log('✅ Total items loaded:', loadedNavItems.length);
-              console.log('📁 Items with parent_id:', loadedNavItems.filter(i => i.parent_id).length);
-              console.log('🔍 Sample items:', loadedNavItems.slice(0, 3).map(i => ({
-                id: i.id,
-                name: i.name,
-                parent_id: i.parent_id,
-                has_icon_size: !!i.icon_size,
-                has_tooltip: !!i.tooltip_text
-              })));
-              
-              // Verify parent-child relationships
-              const orphans = loadedNavItems.filter(item => 
-                item.parent_id && !loadedNavItems.find(p => p.id === item.parent_id)
-              );
-              if (orphans.length > 0) {
-                console.warn('⚠️  Found orphaned items (parent_id references non-existent parent):', orphans);
-              }
-
               setNavItems(loadedNavItems);
             }
           }

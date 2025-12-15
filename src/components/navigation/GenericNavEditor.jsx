@@ -129,13 +129,6 @@ export default function GenericNavEditor({
     return (config?.source_slugs || []).sort();
   }, [config?.source_slugs]);
   
-  // Debug navigation editor state
-  console.log('=== GenericNavEditor Debug ===');
-  console.log('Config type:', effectiveConfigType);
-  console.log('Config loaded:', !!config);
-  console.log('RAW items from DB:', rawItems.length);
-  console.log('Normalized items:', items.length);
-  
   // Initial expand logic - always check user settings on mount
   React.useEffect(() => {
     if (!initialExpandDone && items.length > 0) {

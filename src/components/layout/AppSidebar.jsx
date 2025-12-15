@@ -58,39 +58,12 @@ export function AppSidebar({ navItems = [] }) {
       });
     };
     sortItems(rootItems);
-    
-    // Debug log to verify hierarchy
-    console.log('Root items with children:', rootItems.map(r => ({
-      name: r.name,
-      children: r.children.length
-    })));
+
     
     return rootItems;
   };
 
-  // Debug RAW navItems BEFORE building hierarchy
-  console.log('RAW navItems received:', navItems.length, 'items');
-  console.log('First 10 items:', navItems.slice(0, 10).map(i => ({
-    id: i.id,
-    name: i.name,
-    parent_id: i.parent_id,
-    item_type: i.item_type
-  })));
-  console.log('Items with parent_id:', navItems.filter(i => i.parent_id).map(i => ({
-    id: i.id,
-    name: i.name,
-    parent_id: i.parent_id
-  })));
-
   const hierarchicalNavItems = buildHierarchy(navItems);
-  
-  // Debug logging
-  useEffect(() => {
-    if (navItems.length > 0) {
-      console.log('=== HIERARCHY DEBUG ===');
-      console.log('Hierarchical items:', hierarchicalNavItems);
-    }
-  }, [navItems, hierarchicalNavItems]);
 
   // Initialize expanded folders based on default_collapsed setting
   useEffect(() => {
