@@ -176,9 +176,6 @@ export default function NavigationManagerTest() {
           <Header />
         </div>
       </div>
-
-      {/* Content removed - just wrapper */}
-      </div>
     </div>
   );
 }
