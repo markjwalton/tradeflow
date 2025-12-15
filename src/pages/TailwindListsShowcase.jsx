@@ -1,7 +1,8 @@
 import React from 'react';
 import { PageHeader } from '@/components/sturij/PageHeader';
-import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, ChevronDown, User, Building, Users, CreditCard } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight, ChevronDown, User, Building, Users, CreditCard, Home, Folder, Calendar as CalendarIcon, FileText, BarChart3 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
 
 const sampleItems = [
   { id: 1, title: 'First item', description: 'Sample content for demonstration' },
@@ -722,6 +723,247 @@ export default function TailwindListsShowcase() {
               <li>• Buttons: <code className="bg-background px-1 py-0.5 rounded">ring-1 ring-inset ring-border hover:bg-accent</code></li>
               <li>• Text: <code className="bg-background px-1 py-0.5 rounded">text-foreground</code> with <code className="bg-background px-1 py-0.5 rounded">text-muted-foreground</code> for meta</li>
               <li>• Minimal style for simple use cases</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Sidebar Navigation */}
+      <section className="space-y-8 mt-12 pt-8 border-t border-border">
+        <div>
+          <h2 className="text-xl font-display mb-2">Sidebar Navigation</h2>
+          <p className="text-sm text-muted-foreground">Vertical navigation patterns for sidebars</p>
+        </div>
+
+        {/* Simple Text Navigation */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Simple Text Links</h3>
+          <nav aria-label="Sidebar" className="flex flex-1 flex-col max-w-xs bg-card border border-border rounded-xl p-4">
+            <ul role="list" className="-mx-2 space-y-1">
+              <li>
+                <a href="#" className="bg-accent text-primary group flex gap-x-3 rounded-md p-2 pl-3 text-sm font-semibold">
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-foreground hover:bg-accent hover:text-primary group flex gap-x-3 rounded-md p-2 pl-3 text-sm font-semibold">
+                  Team
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-foreground hover:bg-accent hover:text-primary group flex gap-x-3 rounded-md p-2 pl-3 text-sm font-semibold">
+                  Projects
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-foreground hover:bg-accent hover:text-primary group flex gap-x-3 rounded-md p-2 pl-3 text-sm font-semibold">
+                  Calendar
+                </a>
+              </li>
+            </ul>
+          </nav>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Active: <code className="bg-background px-1 py-0.5 rounded">bg-accent text-primary</code></li>
+              <li>• Inactive: <code className="bg-background px-1 py-0.5 rounded">text-foreground hover:bg-accent hover:text-primary</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Navigation with Badges */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Badge Counts</h3>
+          <nav aria-label="Sidebar" className="flex flex-1 flex-col max-w-xs bg-card border border-border rounded-xl p-4">
+            <ul role="list" className="-mx-2 space-y-1">
+              <li>
+                <a href="#" className="bg-accent text-primary group flex gap-x-3 rounded-md p-2 pl-3 text-sm font-semibold">
+                  Dashboard
+                  <Badge variant="secondary" className="ml-auto">5</Badge>
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-foreground hover:bg-accent hover:text-primary group flex gap-x-3 rounded-md p-2 pl-3 text-sm font-semibold">
+                  Team
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-foreground hover:bg-accent hover:text-primary group flex gap-x-3 rounded-md p-2 pl-3 text-sm font-semibold">
+                  Projects
+                  <Badge variant="secondary" className="ml-auto">12</Badge>
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-foreground hover:bg-accent hover:text-primary group flex gap-x-3 rounded-md p-2 pl-3 text-sm font-semibold">
+                  Calendar
+                  <Badge variant="secondary" className="ml-auto">20+</Badge>
+                </a>
+              </li>
+            </ul>
+          </nav>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Badges: <code className="bg-background px-1 py-0.5 rounded">Badge variant="secondary"</code></li>
+              <li>• Auto-alignment: <code className="bg-background px-1 py-0.5 rounded">ml-auto</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Navigation with Icons */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Icons</h3>
+          <nav aria-label="Sidebar" className="flex flex-1 flex-col max-w-xs bg-card border border-border rounded-xl p-4">
+            <ul role="list" className="-mx-2 space-y-1">
+              <li>
+                <a href="#" className="bg-accent text-primary group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                  <Home aria-hidden="true" className="text-primary h-6 w-6 shrink-0" />
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-foreground hover:bg-accent hover:text-primary group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                  <Users aria-hidden="true" className="text-muted-foreground group-hover:text-primary h-6 w-6 shrink-0" />
+                  Team
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-foreground hover:bg-accent hover:text-primary group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                  <Folder aria-hidden="true" className="text-muted-foreground group-hover:text-primary h-6 w-6 shrink-0" />
+                  Projects
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-foreground hover:bg-accent hover:text-primary group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                  <CalendarIcon aria-hidden="true" className="text-muted-foreground group-hover:text-primary h-6 w-6 shrink-0" />
+                  Calendar
+                </a>
+              </li>
+            </ul>
+          </nav>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Icons: Lucide with <code className="bg-background px-1 py-0.5 rounded">h-6 w-6 shrink-0</code></li>
+              <li>• Icon colors: <code className="bg-background px-1 py-0.5 rounded">text-primary</code> when active, <code className="bg-background px-1 py-0.5 rounded">text-muted-foreground</code> otherwise</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Navigation with Icons and Badges */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">With Icons and Badges</h3>
+          <nav aria-label="Sidebar" className="flex flex-1 flex-col max-w-xs bg-card border border-border rounded-xl p-4">
+            <ul role="list" className="-mx-2 space-y-1">
+              <li>
+                <a href="#" className="bg-accent text-primary group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                  <Home aria-hidden="true" className="text-primary h-6 w-6 shrink-0" />
+                  Dashboard
+                  <Badge variant="secondary" className="ml-auto">5</Badge>
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-foreground hover:bg-accent hover:text-primary group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                  <Users aria-hidden="true" className="text-muted-foreground group-hover:text-primary h-6 w-6 shrink-0" />
+                  Team
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-foreground hover:bg-accent hover:text-primary group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                  <Folder aria-hidden="true" className="text-muted-foreground group-hover:text-primary h-6 w-6 shrink-0" />
+                  Projects
+                  <Badge variant="secondary" className="ml-auto">12</Badge>
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-foreground hover:bg-accent hover:text-primary group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                  <CalendarIcon aria-hidden="true" className="text-muted-foreground group-hover:text-primary h-6 w-6 shrink-0" />
+                  Calendar
+                  <Badge variant="secondary" className="ml-auto">20+</Badge>
+                </a>
+              </li>
+            </ul>
+          </nav>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Combines icons and badges in single links</li>
+              <li>• Badge positioned with <code className="bg-background px-1 py-0.5 rounded">ml-auto</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Two-Level Navigation */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Two-Level with Groups</h3>
+          <nav aria-label="Sidebar" className="flex flex-1 flex-col max-w-xs bg-card border border-border rounded-xl p-4">
+            <ul role="list" className="flex flex-1 flex-col gap-y-7">
+              <li>
+                <ul role="list" className="-mx-2 space-y-1">
+                  <li>
+                    <a href="#" className="bg-accent text-primary group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                      <Home aria-hidden="true" className="text-primary h-6 w-6 shrink-0" />
+                      Dashboard
+                      <Badge variant="secondary" className="ml-auto">5</Badge>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="text-foreground hover:bg-accent hover:text-primary group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                      <Users aria-hidden="true" className="text-muted-foreground group-hover:text-primary h-6 w-6 shrink-0" />
+                      Team
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="text-foreground hover:bg-accent hover:text-primary group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                      <Folder aria-hidden="true" className="text-muted-foreground group-hover:text-primary h-6 w-6 shrink-0" />
+                      Projects
+                      <Badge variant="secondary" className="ml-auto">12</Badge>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <div className="text-xs font-semibold text-muted-foreground">Projects</div>
+                <ul role="list" className="-mx-2 mt-2 space-y-1">
+                  <li>
+                    <a href="#" className="text-foreground hover:bg-accent hover:text-primary group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                      <span className="border-border text-muted-foreground group-hover:border-primary group-hover:text-primary flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-background text-[0.625rem] font-medium">
+                        W
+                      </span>
+                      <span className="truncate">Website redesign</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="text-foreground hover:bg-accent hover:text-primary group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                      <span className="border-border text-muted-foreground group-hover:border-primary group-hover:text-primary flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-background text-[0.625rem] font-medium">
+                        G
+                      </span>
+                      <span className="truncate">GraphQL API</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="text-foreground hover:bg-accent hover:text-primary group flex gap-x-3 rounded-md p-2 text-sm font-semibold">
+                      <span className="border-border text-muted-foreground group-hover:border-primary group-hover:text-primary flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-background text-[0.625rem] font-medium">
+                        C
+                      </span>
+                      <span className="truncate">Customer guides</span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </nav>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Section headers: <code className="bg-background px-1 py-0.5 rounded">text-muted-foreground text-xs font-semibold</code></li>
+              <li>• Initial badges: <code className="bg-background px-1 py-0.5 rounded">border bg-background</code> with hover states</li>
+              <li>• Vertical spacing: <code className="bg-background px-1 py-0.5 rounded">gap-y-7</code> between groups</li>
             </ul>
           </div>
         </div>
