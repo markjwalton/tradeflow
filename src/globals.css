@@ -840,6 +840,11 @@
   [data-radix-dialog-overlay] {
     background-color: transparent !important;
   }
+
+  /* Force override for Radix Sheet overlay */
+  [data-state="open"][class*="bg-black"] {
+    background-color: transparent !important;
+  }
 }
 
 @layer base {
