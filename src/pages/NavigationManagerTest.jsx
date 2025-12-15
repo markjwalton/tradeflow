@@ -160,7 +160,7 @@ export default function NavigationManagerTest() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-r from-white via-[var(--color-background)] to-white">
       {/* Full Width Header */}
-      <div className="w-full bg-white/80 backdrop-blur-sm border-b border-[var(--color-border)] sticky top-0 z-50 rounded-xl">
+      <div className="w-full bg-white/80 backdrop-blur-sm sticky top-0 z-50 rounded-xl shadow-md">
         <div className="max-w-[1600px] mx-auto">
           <Header />
         </div>
