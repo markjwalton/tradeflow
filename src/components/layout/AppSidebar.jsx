@@ -292,9 +292,7 @@ export function AppSidebar({ navItems = [] }) {
             ? (isChild ? "[gap:var(--spacing-2)] [padding:var(--spacing-2)]" : "[gap:var(--spacing-3)] [padding:var(--spacing-2)]") 
             : "justify-center [padding:var(--spacing-2)]",
           isActive
-            ? isIconsOnly 
-              ? "bg-sidebar-primary/10 ring-2 ring-sidebar-primary" 
-              : "bg-sidebar-primary"
+            ? "bg-sidebar-primary ring-2 ring-sidebar-primary/20"
             : "hover:bg-sidebar-accent"
         )}
       >
@@ -302,10 +300,10 @@ export function AppSidebar({ navItems = [] }) {
           className="flex-shrink-0 transition-colors"
           size={iconSize}
           strokeWidth={iconStrokeWidth}
-          style={{ color: isActive ? (isIconsOnly ? 'var(--sidebar-primary)' : 'var(--sidebar-primary-foreground)') : 'var(--accent-500, #b39299)' }}
+          style={{ color: isActive ? 'var(--sidebar-primary-foreground)' : 'var(--accent-500, #b39299)' }}
         />
         {isActive && isIconsOnly && (
-          <div className="absolute -right-1 top-1/2 -translate-y-1/2 w-1 h-6 bg-sidebar-primary rounded-full" />
+          <div className="absolute -right-1 top-1/2 -translate-y-1/2 w-1 h-6 bg-sidebar-primary-foreground rounded-full" />
         )}
         {showLabels && <span className={cn("truncate", isActive ? "text-sidebar-primary-foreground" : "text-sidebar-foreground/70", isTopLevel && "font-medium")}>{item.name || 'Unnamed'}</span>}
       </Link>
