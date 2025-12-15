@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Palette, ChevronDown, Search, Save, Edit2, Check } from "lucide-react";
+import { Palette, ChevronDown, Search, Save, Edit2, Check, Download, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 
@@ -132,6 +132,68 @@ export function StyleEditorPanel({ currentPageName }) {
       toast.error("Failed to save mappings");
       console.error(e);
     }
+  };
+
+  const exportTheme = () => {
+    const theme = {
+      styles: elementStyles,
+      mappings: friendlyNames,
+      exportedAt: new Date().toISOString(),
+      pageName: currentPageName,
+    };
+    
+    const blob = new Blob([JSON.stringify(theme, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `theme-${currentPageName}-${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    toast.success("Theme exported successfully");
+  };
+
+  const importTheme = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    
+    input.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      try {
+        const text = await file.text();
+        const theme = JSON.parse(text);
+        
+        if (theme.styles) {
+          setElementStyles(theme.styles);
+          
+          // Apply all styles to DOM
+          Object.entries(theme.styles).forEach(([elementId, styles]) => {
+            const element = pageElements.find(e => e.id === elementId);
+            if (element?.element) {
+              Object.entries(styles).forEach(([prop, value]) => {
+                element.element.style[prop] = value;
+              });
+            }
+          });
+        }
+        
+        if (theme.mappings) {
+          setFriendlyNames(theme.mappings);
+        }
+        
+        toast.success("Theme imported and applied successfully");
+      } catch (e) {
+        toast.error("Failed to import theme");
+        console.error(e);
+      }
+    };
+    
+    input.click();
   };
 
   const generateElementKey = (element) => {
@@ -278,10 +340,20 @@ export function StyleEditorPanel({ currentPageName }) {
                 Apply styles to any element on this page
               </p>
             </div>
-            <Button onClick={saveMappings} size="sm" variant="outline">
-              <Save className="h-4 w-4 mr-2" />
-              Save Mappings
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={exportTheme} size="sm" variant="outline" title="Export theme as JSON">
+                <Download className="h-4 w-4 mr-2" />
+                Export
+              </Button>
+              <Button onClick={importTheme} size="sm" variant="outline" title="Import theme from JSON">
+                <Upload className="h-4 w-4 mr-2" />
+                Import
+              </Button>
+              <Button onClick={saveMappings} size="sm" variant="outline" title="Save friendly names">
+                <Save className="h-4 w-4 mr-2" />
+                Save
+              </Button>
+            </div>
           </div>
         </SheetHeader>
 
