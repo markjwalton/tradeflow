@@ -1070,6 +1070,10 @@
     z-index: 100000 !important;
   }
 
+  [data-radix-select-content] {
+    z-index: 100001 !important;
+  }
+
   /* Typography Utilities */
   .font-display {
     font-family: var(--font-family-display);
