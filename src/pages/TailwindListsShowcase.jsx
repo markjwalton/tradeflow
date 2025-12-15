@@ -4247,6 +4247,304 @@ export default function TailwindListsShowcase() {
         </div>
       </section>
 
+      {/* Application Shells */}
+      <section className="space-y-8 mt-12 pt-8 border-t border-border">
+        <div>
+          <h2 className="text-xl font-display mb-2">Application Shells</h2>
+          <p className="text-sm text-muted-foreground">Complete page layouts with navigation and content areas</p>
+        </div>
+
+        {/* Sidebar with Split Content */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Sidebar with Main + Activity Panel</h3>
+          <div className="rounded-lg border border-border overflow-hidden bg-background" style={{ height: '600px' }}>
+            <div className="flex h-full">
+              {/* Sidebar */}
+              <div className="w-64 border-r border-border bg-muted/30 flex flex-col">
+                <div className="h-16 flex items-center px-6 border-b border-border">
+                  <div className="h-8 w-8 rounded bg-primary-500" />
+                </div>
+                <nav className="flex-1 px-3 py-4 space-y-1">
+                  {['Projects', 'Deployments', 'Activity', 'Settings'].map((item, i) => (
+                    <div
+                      key={item}
+                      className={`px-3 py-2 rounded-md text-sm font-medium ${
+                        i === 1 ? 'bg-primary-100 text-primary-700' : 'text-muted-foreground hover:bg-muted'
+                      }`}
+                    >
+                      {item}
+                    </div>
+                  ))}
+                </nav>
+              </div>
+
+              {/* Main Content */}
+              <div className="flex-1 flex flex-col overflow-hidden">
+                {/* Header */}
+                <div className="h-16 border-b border-border px-6 flex items-center justify-between bg-background">
+                  <div className="text-sm font-medium">Deployments</div>
+                  <Button variant="outline" size="sm">Sort by</Button>
+                </div>
+
+                {/* Content Area */}
+                <div className="flex-1 overflow-y-auto">
+                  <div className="p-6 space-y-4">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-muted/50">
+                        <div className="flex items-center gap-3">
+                          <div className="h-2 w-2 rounded-full bg-primary-500" />
+                          <div>
+                            <div className="text-sm font-medium">Project {i}</div>
+                            <div className="text-xs text-muted-foreground">Deployed 1h ago</div>
+                          </div>
+                        </div>
+                        <StatusBadge variant="success">Production</StatusBadge>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Activity Panel */}
+              <div className="w-80 border-l border-border bg-muted/30 flex flex-col">
+                <div className="h-16 border-b border-border px-6 flex items-center justify-between">
+                  <div className="text-sm font-medium">Activity</div>
+                  <button className="text-xs text-primary-600">View all</button>
+                </div>
+                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <div className="h-6 w-6 rounded-full bg-muted" />
+                        <div className="text-xs font-medium">User {i}</div>
+                      </div>
+                      <p className="text-xs text-muted-foreground">Pushed to main branch</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Sidebar: <code className="bg-background px-1 py-0.5 rounded">w-64 bg-muted/30</code></li>
+              <li>• Main Content: <code className="bg-background px-1 py-0.5 rounded">flex-1 overflow-y-auto</code></li>
+              <li>• Activity Panel: <code className="bg-background px-1 py-0.5 rounded">w-80 border-l</code></li>
+              <li>• Header Height: <code className="bg-background px-1 py-0.5 rounded">h-16</code> consistent across panels</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Top Nav with Stats Dashboard */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Top Navigation with Dashboard</h3>
+          <div className="rounded-lg border border-border overflow-hidden bg-background" style={{ height: '600px' }}>
+            <div className="flex flex-col h-full">
+              {/* Top Header */}
+              <div className="h-16 border-b border-border px-6 flex items-center justify-between bg-background">
+                <div className="flex items-center gap-8">
+                  <div className="h-8 w-8 rounded bg-primary-500" />
+                  <nav className="flex gap-6 text-sm font-medium">
+                    {['Home', 'Invoices', 'Clients', 'Expenses'].map((item) => (
+                      <a key={item} href="#" className="text-muted-foreground hover:text-foreground">
+                        {item}
+                      </a>
+                    ))}
+                  </nav>
+                </div>
+                <div className="flex items-center gap-4">
+                  <Bell className="h-5 w-5 text-muted-foreground" />
+                  <div className="h-8 w-8 rounded-full bg-muted" />
+                </div>
+              </div>
+
+              {/* Secondary Nav */}
+              <div className="border-b border-border px-6 py-4 bg-background">
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-6 text-sm font-medium">
+                    {['Last 7 days', 'Last 30 days', 'All-time'].map((item, i) => (
+                      <a
+                        key={item}
+                        href="#"
+                        className={i === 0 ? 'text-primary-600' : 'text-muted-foreground hover:text-foreground'}
+                      >
+                        {item}
+                      </a>
+                    ))}
+                  </div>
+                  <Button size="sm" className="bg-primary-600 text-white">
+                    <Plus className="h-4 w-4" />
+                    New invoice
+                  </Button>
+                </div>
+              </div>
+
+              {/* Stats Grid */}
+              <div className="border-b border-border">
+                <div className="grid grid-cols-4 divide-x divide-border">
+                  {[
+                    { label: 'Revenue', value: '$405,091.00', change: '+4.75%', positive: true },
+                    { label: 'Overdue invoices', value: '$12,787.00', change: '+54.02%', positive: false },
+                    { label: 'Outstanding', value: '$245,988.00', change: '-1.39%', positive: true },
+                    { label: 'Expenses', value: '$30,156.00', change: '+10.18%', positive: false },
+                  ].map((stat) => (
+                    <div key={stat.label} className="p-6">
+                      <div className="flex items-baseline justify-between">
+                        <dt className="text-sm text-muted-foreground">{stat.label}</dt>
+                        <dd className={`text-xs font-medium ${stat.positive ? 'text-primary-600' : 'text-destructive-600'}`}>
+                          {stat.change}
+                        </dd>
+                      </div>
+                      <dd className="text-2xl font-semibold mt-2">{stat.value}</dd>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Content Area */}
+              <div className="flex-1 overflow-y-auto p-6">
+                <h2 className="text-base font-semibold mb-4">Recent activity</h2>
+                <div className="space-y-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-muted/50">
+                      <div className="flex items-center gap-4">
+                        <div className="h-10 w-10 rounded-full bg-muted" />
+                        <div>
+                          <div className="text-sm font-medium">Transaction {i}</div>
+                          <div className="text-xs text-muted-foreground">Invoice #0001{i}</div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-sm font-medium">$7,600.00</div>
+                        <StatusBadge variant="success">Paid</StatusBadge>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Header: <code className="bg-background px-1 py-0.5 rounded">h-16 border-b</code></li>
+              <li>• Stats Grid: <code className="bg-background px-1 py-0.5 rounded">grid-cols-4 divide-x</code></li>
+              <li>• Navigation: <code className="bg-background px-1 py-0.5 rounded">flex gap-6</code> for spacing</li>
+              <li>• Active Link: <code className="bg-background px-1 py-0.5 rounded">text-primary-600</code></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Sidebar + Two Column Content */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-medium">Sidebar with Two Column Content</h3>
+          <div className="rounded-lg border border-border overflow-hidden bg-background" style={{ height: '600px' }}>
+            <div className="flex h-full">
+              {/* Sidebar */}
+              <div className="w-56 border-r border-border bg-muted/30 flex flex-col">
+                <div className="h-16 flex items-center px-4 border-b border-border">
+                  <div className="h-8 w-8 rounded bg-primary-500" />
+                </div>
+                <nav className="flex-1 px-3 py-4 space-y-1">
+                  {['Dashboard', 'Projects', 'Team', 'Calendar', 'Reports'].map((item, i) => (
+                    <div
+                      key={item}
+                      className={`px-3 py-2 rounded-md text-sm ${
+                        i === 1 ? 'bg-primary-100 text-primary-700 font-medium' : 'text-muted-foreground hover:bg-muted'
+                      }`}
+                    >
+                      {item}
+                    </div>
+                  ))}
+                </nav>
+                <div className="border-t border-border p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-full bg-muted" />
+                    <div className="text-xs font-medium">User Name</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Main Content - Two Columns */}
+              <div className="flex-1 flex flex-col overflow-hidden">
+                {/* Sticky Header */}
+                <div className="h-16 border-b border-border px-6 flex items-center bg-background">
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    className="flex-1 bg-transparent text-sm outline-none"
+                  />
+                </div>
+
+                <div className="flex flex-1 overflow-hidden">
+                  {/* Left Column - List */}
+                  <div className="flex-1 border-r border-border overflow-y-auto">
+                    <div className="p-6 border-b border-border">
+                      <h2 className="text-base font-semibold">Projects</h2>
+                    </div>
+                    <div className="divide-y divide-border">
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <div key={i} className="p-4 hover:bg-muted/50 cursor-pointer">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="text-sm font-medium">Project {i}</div>
+                            <StatusBadge variant={i % 2 === 0 ? 'success' : 'default'}>
+                              {i % 2 === 0 ? 'Active' : 'Draft'}
+                            </StatusBadge>
+                          </div>
+                          <div className="text-xs text-muted-foreground">Last updated 2 days ago</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Right Column - Details */}
+                  <div className="w-96 bg-muted/30 overflow-y-auto">
+                    <div className="p-6 border-b border-border bg-background">
+                      <h2 className="text-base font-semibold">Details</h2>
+                    </div>
+                    <div className="p-6 space-y-6">
+                      <div>
+                        <div className="text-sm font-medium mb-2">Description</div>
+                        <div className="text-sm text-muted-foreground">
+                          Project details and information would be displayed here.
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-sm font-medium mb-2">Team</div>
+                        <div className="flex -space-x-2">
+                          {[1, 2, 3].map((i) => (
+                            <div key={i} className="h-8 w-8 rounded-full bg-muted border-2 border-background" />
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-sm font-medium mb-2">Progress</div>
+                        <div className="h-2 bg-muted rounded-full overflow-hidden">
+                          <div className="h-full bg-primary-500 w-2/3" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
+            <p className="font-medium">Design Token Mappings:</p>
+            <ul className="space-y-1 text-muted-foreground">
+              <li>• Sidebar: <code className="bg-background px-1 py-0.5 rounded">w-56</code> narrower than typical</li>
+              <li>• List Column: <code className="bg-background px-1 py-0.5 rounded">flex-1 border-r</code></li>
+              <li>• Detail Panel: <code className="bg-background px-1 py-0.5 rounded">w-96 bg-muted/30</code></li>
+              <li>• Sticky Elements: <code className="bg-background px-1 py-0.5 rounded">sticky top-0</code> or fixed headers</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {/* Token Reference */}
       <section className="space-y-4 mt-12 pt-8 border-t border-border">
         <div>
