@@ -38,7 +38,7 @@ function Services() {
     {
       title: 'E-commerce',
       description:
-        'We are at the forefront of modern e-commerce development. Which mainly means adding your logo to the Shopify store template we've used for the past six years.',
+        'We are at the forefront of modern e-commerce development. Which mainly means adding your logo to the Shopify store template we have used for the past six years.',
     },
   ];
 

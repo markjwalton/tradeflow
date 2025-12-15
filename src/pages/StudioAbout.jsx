@@ -121,7 +121,7 @@ export default function StudioAbout() {
                 <p className="mt-6 text-base text-neutral-600">
                   We believe in efficiency and maximizing our resources to provide the best
                   value to our clients. The primary way we do that is by re-using the same
-                  projects we've been using for the past decade.
+                  projects we have been using for the past decade.
                 </p>
               </div>
               <div className="space-y-6">
