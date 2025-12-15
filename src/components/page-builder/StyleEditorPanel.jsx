@@ -169,7 +169,7 @@ export function StyleEditorPanel({ currentPageName }) {
         </Button>
       </SheetTrigger>
 
-      <SheetContent className="w-[600px] overflow-y-auto" side="right">
+      <SheetContent className="w-[600px] overflow-y-auto [&_[role=dialog]]:z-[100000]" side="right">
         <SheetHeader className="px-6 pb-4 border-b">
           <SheetTitle className="flex items-center gap-2 text-xl">
             <Palette className="h-5 w-5" />
