@@ -78,7 +78,8 @@ export function AppHeader({ user, navItems = [], onMobileMenuClick, currentPageN
         </div>
 
         <div className="flex items-center gap-1 sm:gap-2 ml-auto">
-          {/* Search and profile will be added as components */}
+          <PageSearchBar navItems={navItems} />
+          <ProfileMenu user={user} />
         </div>
       </div>
     </header>
@@ -219,17 +220,24 @@ function ProfileMenu({ user }) {
         .toUpperCase()
     : user.email?.substring(0, 2).toUpperCase() || "U";
 
+  const [hasNotification] = useState(true);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="flex items-center gap-2 px-1 sm:px-2 py-1 h-9"
+          className="relative flex items-center gap-2 px-1 sm:px-2 py-1 h-auto"
         >
-          <Avatar className="h-7 w-7">
-            <AvatarImage alt={user.full_name || user.email} />
-            <AvatarFallback>{initials}</AvatarFallback>
-          </Avatar>
+          <div className="relative">
+            <Avatar className="h-8 w-8 rounded-md">
+              <AvatarImage alt={user.full_name || user.email} />
+              <AvatarFallback className="rounded-md">{initials}</AvatarFallback>
+            </Avatar>
+            {hasNotification && (
+              <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-destructive border-2 border-background" />
+            )}
+          </div>
           <div className="hidden md:flex flex-col items-start">
             <span className="text-xs font-medium leading-tight">
               {user.full_name || user.email}
