@@ -116,19 +116,6 @@ export default function GenericNavEditor({
   const config = navConfigs[0];
   const rawItems = config?.items || [];
   
-  // Debug navigation editor state
-  console.log('=== GenericNavEditor Debug ===');
-  console.log('Config type:', effectiveConfigType);
-  console.log('Config loaded:', !!config);
-  console.log('RAW items from DB:', rawItems.length);
-  console.log('Normalized items:', items.length);
-  console.log('Flat list length:', flatList.length);
-  
-  // Get slugs from config's source_slugs (no hardcoded fallback)
-  const effectiveSlugs = React.useMemo(() => {
-    return (config?.source_slugs || []).sort();
-  }, [config?.source_slugs]);
-  
   // Normalize IDs: database uses 'id', ensure all items have it
   const items = React.useMemo(() => {
     return rawItems.map(item => ({
@@ -136,6 +123,18 @@ export default function GenericNavEditor({
       id: item.id || item._id || generateId()
     }));
   }, [rawItems]);
+  
+  // Get slugs from config's source_slugs (no hardcoded fallback)
+  const effectiveSlugs = React.useMemo(() => {
+    return (config?.source_slugs || []).sort();
+  }, [config?.source_slugs]);
+  
+  // Debug navigation editor state
+  console.log('=== GenericNavEditor Debug ===');
+  console.log('Config type:', effectiveConfigType);
+  console.log('Config loaded:', !!config);
+  console.log('RAW items from DB:', rawItems.length);
+  console.log('Normalized items:', items.length);
   
   // Initial expand logic - always check user settings on mount
   React.useEffect(() => {
