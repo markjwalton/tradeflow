@@ -4125,6 +4125,744 @@ export default function TailwindProductShowcase() {
             </div>
           </div>
         </ShowcaseSection>
+
+        <ShowcaseSection title="Product Detail Page - Centered Logo with Side Gallery">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="border-b h-16 flex items-center justify-between px-8">
+              <div className="flex-1 flex items-center gap-8">
+                <div className="flex gap-8 text-sm font-medium text-gray-700">
+                  <a href="#">Women</a>
+                  <a href="#">Men</a>
+                  <a href="#">Company</a>
+                </div>
+              </div>
+              <div className="w-8 h-8 bg-indigo-600 rounded" />
+              <div className="flex-1 flex items-center justify-end gap-6">
+                <a href="#" className="text-gray-700 flex items-center gap-2">
+                  <img src="https://tailwindcss.com/plus-assets/img/flags/flag-canada.svg" className="w-5 h-auto" alt="" />
+                  <span className="text-sm font-medium">CAD</span>
+                </a>
+                <a href="#" className="text-gray-400"><MagnifyingGlassIcon className="h-6 w-6" /></a>
+                <a href="#" className="text-gray-400"><UserIcon className="h-6 w-6" /></a>
+                <a href="#" className="flex items-center gap-2">
+                  <ShoppingBagIcon className="h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-700">0</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="max-w-7xl mx-auto mt-8 px-8 pb-16">
+              <div className="lg:grid lg:grid-cols-12 lg:gap-x-8">
+                <div className="lg:col-span-5 lg:col-start-8">
+                  <div className="flex justify-between">
+                    <h1 className="text-xl font-medium text-gray-900">Basic Tee</h1>
+                    <p className="text-xl font-medium text-gray-900">$35</p>
+                  </div>
+                  <div className="mt-4 flex items-center">
+                    <div className="flex items-center">
+                      {[0, 1, 2, 3, 4].map((i) => (
+                        <StarIcon key={i} className={`h-5 w-5 ${i < 4 ? 'text-yellow-400' : 'text-gray-200'}`} />
+                      ))}
+                    </div>
+                    <p className="ml-2 text-sm text-gray-700">3.9</p>
+                    <div className="ml-4 text-sm text-gray-300">·</div>
+                    <a href="#" className="ml-4 text-sm font-medium text-indigo-600">See all 512 reviews</a>
+                  </div>
+                </div>
+
+                <div className="mt-8 lg:col-span-7 lg:col-start-1 lg:row-span-3 lg:row-start-1 lg:mt-0">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-3 lg:gap-8">
+                    <div className="lg:col-span-2 lg:row-span-2 aspect-square lg:aspect-auto rounded-lg bg-gray-200" />
+                    <div className="hidden lg:block rounded-lg bg-gray-200" />
+                    <div className="hidden lg:block rounded-lg bg-gray-200" />
+                  </div>
+                </div>
+
+                <div className="mt-8 lg:col-span-5">
+                  <div>
+                    <h2 className="text-sm font-medium text-gray-900">Color</h2>
+                    <div className="mt-2 flex items-center gap-x-3">
+                      <div className="flex rounded-full outline -outline-offset-1 outline-black/10">
+                        <div className="w-8 h-8 appearance-none rounded-full bg-gray-900" />
+                      </div>
+                      <div className="flex rounded-full outline -outline-offset-1 outline-black/10">
+                        <div className="w-8 h-8 appearance-none rounded-full bg-gray-400" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-8">
+                    <div className="flex items-center justify-between">
+                      <h2 className="text-sm font-medium text-gray-900">Size</h2>
+                      <a href="#" className="text-sm font-medium text-indigo-600">See sizing chart</a>
+                    </div>
+                    <div className="mt-2 grid grid-cols-3 gap-3 sm:grid-cols-6">
+                      {['XXS', 'XS', 'S', 'M', 'L', 'XL'].map((size) => (
+                        <label key={size} className="relative flex rounded-md border border-gray-300 bg-white p-3 items-center justify-center">
+                          <span className="text-sm font-medium text-gray-900 uppercase">{size}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <button className="mt-8 w-full rounded-md bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700">
+                    Add to cart
+                  </button>
+
+                  <div className="mt-10">
+                    <h2 className="text-sm font-medium text-gray-900">Description</h2>
+                    <div className="mt-4 space-y-4 text-sm text-gray-500">
+                      <p>The Basic tee is an honest new take on a classic. Hand cut and sewn locally.</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-8 border-t border-gray-200 pt-8">
+                    <h2 className="text-sm font-medium text-gray-900">Fabric & Care</h2>
+                    <ul className="mt-4 list-disc space-y-1 pl-5 text-sm text-gray-500">
+                      <li>Only the best materials</li>
+                      <li>Ethically and locally made</li>
+                      <li>Pre-washed and pre-shrunk</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-16">
+                <h2 className="text-lg font-medium text-gray-900">Recent reviews</h2>
+                <div className="mt-6 divide-y divide-gray-200 border-t border-b border-gray-200">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="py-10 lg:grid lg:grid-cols-12 lg:gap-x-8">
+                      <div className="lg:col-span-8 lg:col-start-5">
+                        <div className="flex items-center">
+                          {[0, 1, 2, 3, 4].map((r) => (
+                            <StarIcon key={r} className={`h-5 w-5 ${r < 5 ? 'text-yellow-400' : 'text-gray-200'}`} />
+                          ))}
+                          <p className="ml-3 text-sm text-gray-700">5</p>
+                        </div>
+                        <div className="mt-4">
+                          <h3 className="text-sm font-medium text-gray-900">Can't say enough good things</h3>
+                          <p className="mt-3 text-sm text-gray-500">I was really pleased with the overall shopping experience.</p>
+                        </div>
+                      </div>
+                      <div className="mt-6 flex items-center text-sm lg:col-span-4 lg:col-start-1 lg:row-start-1 lg:mt-0">
+                        <p className="font-medium text-gray-900">Risako M</p>
+                        <time className="ml-4 border-l border-gray-200 pl-4 text-gray-500">May 16, 2021</time>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-16">
+                <h2 className="text-lg font-medium text-gray-900">Customers also purchased</h2>
+                <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i}>
+                      <div className="aspect-square w-full rounded-md bg-gray-200" />
+                      <div className="mt-4 flex justify-between">
+                        <div>
+                          <h3 className="text-sm text-gray-700">Basic Tee</h3>
+                          <p className="mt-1 text-sm text-gray-500">Black</p>
+                        </div>
+                        <p className="text-sm font-medium text-gray-900">$35</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Product Detail Page - With Promo Bar & Grid Gallery">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white">
+              Get free delivery on orders over $100
+            </div>
+
+            <div className="border-b h-16 flex items-center justify-between px-8">
+              <div className="flex items-center gap-8">
+                <div className="w-8 h-8 bg-indigo-600 rounded" />
+                <div className="flex gap-8 text-sm font-medium text-gray-700">
+                  <a href="#">Women</a>
+                  <a href="#">Men</a>
+                  <a href="#">Company</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-6">
+                <a href="#" className="text-sm font-medium text-gray-700">Sign in</a>
+                <span className="h-6 w-px bg-gray-200" />
+                <a href="#" className="text-sm font-medium text-gray-700">Create account</a>
+                <a href="#" className="text-gray-700 flex items-center gap-2 ml-8">
+                  <img src="https://tailwindcss.com/plus-assets/img/flags/flag-canada.svg" className="w-5 h-auto" alt="" />
+                  <span className="text-sm font-medium">CAD</span>
+                </a>
+                <a href="#" className="text-gray-400 ml-6"><MagnifyingGlassIcon className="h-6 w-6" /></a>
+                <a href="#" className="flex items-center gap-2 ml-4">
+                  <ShoppingBagIcon className="h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-700">0</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="max-w-2xl mx-auto px-8 pt-16 pb-24 lg:max-w-7xl lg:grid lg:grid-cols-2 lg:gap-x-8">
+              <div>
+                <nav className="flex items-center space-x-2 text-sm">
+                  <a href="#" className="font-medium text-gray-500">Women</a>
+                  <span className="text-gray-300">/</span>
+                  <a href="#" className="font-medium text-gray-500">Clothing</a>
+                  <span className="text-gray-300">/</span>
+                  <span className="font-medium text-gray-500">Basic Tee 6-Pack</span>
+                </nav>
+
+                <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-3 lg:gap-8">
+                  <div className="aspect-square lg:aspect-[3/4] lg:row-span-2 w-full rounded-lg bg-gray-200" />
+                  <div className="aspect-[3/2] w-full rounded-lg bg-gray-200" />
+                  <div className="aspect-[3/2] w-full rounded-lg bg-gray-200" />
+                  <div className="lg:hidden aspect-[4/5] w-full rounded-lg bg-gray-200 mt-6" />
+                </div>
+              </div>
+
+              <div className="mt-10 lg:col-start-1 lg:row-start-2 lg:max-w-lg lg:self-start lg:mt-0">
+                <div className="lg:col-span-2 lg:pr-8">
+                  <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Basic Tee 6-Pack</h1>
+                </div>
+
+                <div className="mt-4">
+                  <p className="text-3xl tracking-tight text-gray-900">$192</p>
+                  <div className="mt-6 flex items-center">
+                    {[0, 1, 2, 3, 4].map((i) => (
+                      <StarIcon key={i} className={`h-5 w-5 ${i < 4 ? 'text-gray-900' : 'text-gray-200'}`} />
+                    ))}
+                    <a href="#" className="ml-3 text-sm font-medium text-indigo-600">117 reviews</a>
+                  </div>
+
+                  <div className="mt-6">
+                    <h3 className="text-sm font-medium text-gray-900">Color</h3>
+                    <div className="mt-4 flex items-center gap-x-3">
+                      {['bg-white', 'bg-gray-200', 'bg-gray-900'].map((color, i) => (
+                        <div key={i} className="flex rounded-full outline -outline-offset-1 outline-black/10">
+                          <div className={`w-8 h-8 rounded-full ${color}`} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mt-10">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-medium text-gray-900">Size</h3>
+                      <a href="#" className="text-sm font-medium text-indigo-600">Size guide</a>
+                    </div>
+                    <div className="mt-4 grid grid-cols-4 gap-3">
+                      {['XXS', 'XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'].map((size) => (
+                        <label key={size} className="relative flex rounded-md border border-gray-300 bg-white p-3 items-center justify-center">
+                          <span className="text-sm font-medium text-gray-900 uppercase">{size}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <button className="mt-10 w-full rounded-md bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700">
+                    Add to bag
+                  </button>
+                </div>
+
+                <div className="py-10 border-t border-gray-200 lg:pt-6 lg:pb-16">
+                  <div className="space-y-6">
+                    <p className="text-base text-gray-900">The Basic Tee 6-Pack allows you to fully express your personality.</p>
+                  </div>
+
+                  <div className="mt-10">
+                    <h3 className="text-sm font-medium text-gray-900">Highlights</h3>
+                    <ul className="mt-4 list-disc space-y-2 pl-4 text-sm">
+                      {['Hand cut and sewn locally', 'Dyed with proprietary colors', 'Pre-washed & pre-shrunk'].map((item) => (
+                        <li key={item} className="text-gray-400"><span className="text-gray-600">{item}</span></li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="mt-10">
+                    <h2 className="text-sm font-medium text-gray-900">Details</h2>
+                    <p className="mt-4 text-sm text-gray-600">Includes two black, two white, and two heather gray Basic Tees.</p>
+                  </div>
+                </div>
+
+                <div className="border-t border-gray-200">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="flex py-12">
+                      <div className="flex-none"><div className="w-12 h-12 rounded-full bg-gray-200" /></div>
+                      <div className="ml-4">
+                        <h4 className="text-sm font-bold text-gray-900">Emily Selman</h4>
+                        <div className="mt-1 flex items-center">
+                          {[0, 1, 2, 3, 4].map((r) => (
+                            <StarIcon key={r} className={`h-5 w-5 ${r < 5 ? 'text-yellow-400' : 'text-gray-300'}`} />
+                          ))}
+                        </div>
+                        <p className="mt-4 text-base text-gray-600 italic">This is the best white t-shirt out there!</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Product Detail Page - With Image Tabs & Collapsible Details">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white">
+              Get free delivery on orders over $100
+            </div>
+
+            <div className="border-b h-16 flex items-center justify-between px-8">
+              <div className="flex items-center gap-8">
+                <div className="w-8 h-8 bg-indigo-600 rounded" />
+                <div className="flex gap-8 text-sm font-medium text-gray-700">
+                  <a href="#">Women</a>
+                  <a href="#">Men</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-6">
+                <a href="#" className="text-gray-700 flex items-center gap-2">
+                  <img src="https://tailwindcss.com/plus-assets/img/flags/flag-canada.svg" className="w-5 h-auto" alt="" />
+                  <span className="text-sm font-medium">CAD</span>
+                </a>
+                <a href="#" className="text-gray-400"><MagnifyingGlassIcon className="h-6 w-6" /></a>
+                <a href="#" className="flex items-center gap-2">
+                  <ShoppingBagIcon className="h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-700">0</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="max-w-7xl mx-auto px-8">
+              <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
+                <div className="flex flex-col-reverse">
+                  <div className="mt-6 grid grid-cols-4 gap-6">
+                    {[1, 2, 3, 4].map((i) => (
+                      <div key={i} className="relative flex h-24 rounded-md bg-white">
+                        <span className="absolute inset-0 overflow-hidden rounded-md">
+                          <div className="w-full h-full bg-gray-200" />
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="aspect-square w-full rounded-lg bg-gray-200" />
+                </div>
+
+                <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
+                  <h1 className="text-3xl font-bold text-gray-900">Zip Tote Basket</h1>
+                  <div className="mt-3">
+                    <p className="text-3xl tracking-tight text-gray-900">$140</p>
+                  </div>
+
+                  <div className="mt-3 flex items-center">
+                    {[0, 1, 2, 3, 4].map((i) => (
+                      <StarIcon key={i} className={`h-5 w-5 ${i < 4 ? 'text-indigo-500' : 'text-gray-300'}`} />
+                    ))}
+                  </div>
+
+                  <div className="mt-6">
+                    <p className="text-base text-gray-700">
+                      The Zip Tote Basket is the perfect midpoint between shopping tote and comfy backpack.
+                    </p>
+                  </div>
+
+                  <div className="mt-6">
+                    <h3 className="text-sm text-gray-600">Color</h3>
+                    <div className="mt-2 flex items-center gap-x-3">
+                      {['bg-gray-700', 'bg-white', 'bg-gray-500'].map((color, i) => (
+                        <div key={i} className="flex rounded-full outline -outline-offset-1 outline-black/10">
+                          <div className={`w-8 h-8 rounded-full ${color}`} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mt-10 flex gap-4">
+                    <button className="flex-1 rounded-md bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700">
+                      Add to bag
+                    </button>
+                    <button className="rounded-md px-3 py-3 text-gray-400 hover:bg-gray-100">
+                      <HeartIcon className="h-6 w-6" />
+                    </button>
+                  </div>
+
+                  <div className="mt-12 divide-y divide-gray-200 border-t border-gray-200">
+                    {[
+                      { name: 'Features', items: ['Multiple strap configurations', 'Spacious interior', 'Water-resistant'] },
+                      { name: 'Care', items: ['Spot clean as needed', 'Hand wash with mild soap'] },
+                    ].map((detail) => (
+                      <div key={detail.name} className="py-6">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium text-gray-900">{detail.name}</span>
+                          <PlusIcon className="h-6 w-6 text-gray-400" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Product Detail Page - With Review Breakdown">
+          <div className="bg-gray-50 rounded-lg overflow-hidden">
+            <div className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white">
+              Get free delivery on orders over $100
+            </div>
+
+            <div className="bg-white border-b h-16 flex items-center justify-between px-8">
+              <div className="flex items-center gap-8">
+                <div className="w-8 h-8 bg-indigo-600 rounded" />
+                <div className="flex gap-8 text-sm font-medium text-gray-700">
+                  <a href="#">Women</a>
+                  <a href="#">Men</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-6">
+                <a href="#" className="text-sm font-medium text-gray-700">Sign in</a>
+                <a href="#" className="text-gray-400 ml-6"><MagnifyingGlassIcon className="h-6 w-6" /></a>
+                <a href="#" className="flex items-center gap-2 ml-4">
+                  <ShoppingBagIcon className="h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-700">0</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="bg-white">
+              <div className="max-w-2xl mx-auto px-8 pt-16 pb-24 lg:max-w-7xl lg:grid lg:grid-cols-2 lg:gap-x-8">
+                <div className="lg:max-w-lg lg:self-end">
+                  <nav className="flex items-center space-x-2 text-sm">
+                    <a href="#" className="font-medium text-gray-500">Travel</a>
+                    <span className="text-gray-300">/</span>
+                    <a href="#" className="font-medium text-gray-500">Bags</a>
+                  </nav>
+
+                  <div className="mt-4">
+                    <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl">Everyday Ruck Snack</h1>
+                  </div>
+
+                  <div className="mt-4 flex items-center">
+                    <p className="text-lg text-gray-900 sm:text-xl">$220</p>
+                    <div className="ml-4 border-l border-gray-300 pl-4 flex items-center">
+                      {[0, 1, 2, 3, 4].map((i) => (
+                        <StarIcon key={i} className={`h-5 w-5 ${i < 4 ? 'text-yellow-400' : 'text-gray-300'}`} />
+                      ))}
+                      <p className="ml-2 text-sm text-gray-500">1624 reviews</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 space-y-6">
+                    <p className="text-base text-gray-500">
+                      Don't compromise on snack-carrying capacity with this lightweight bag.
+                    </p>
+                  </div>
+
+                  <div className="mt-6 flex items-center">
+                    <CheckIcon className="h-5 w-5 text-green-500" />
+                    <p className="ml-2 text-sm text-gray-500">In stock and ready to ship</p>
+                  </div>
+                </div>
+
+                <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 lg:self-center">
+                  <div className="aspect-square w-full rounded-lg bg-gray-200" />
+                </div>
+
+                <div className="mt-10 lg:col-start-1 lg:row-start-2 lg:max-w-lg lg:self-start">
+                  <div>
+                    <h2 className="text-sm font-medium text-gray-700">Size</h2>
+                    <div className="mt-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {[
+                        { name: '18L', desc: 'Perfect for a reasonable amount of snacks.' },
+                        { name: '20L', desc: 'Enough room for a large amount of snacks.' }
+                      ].map((size) => (
+                        <label key={size.name} className="relative flex rounded-lg border border-gray-300 bg-white p-4">
+                          <div className="flex-1">
+                            <span className="block text-base font-medium text-gray-900">{size.name}</span>
+                            <span className="mt-1 block text-sm text-gray-500">{size.desc}</span>
+                          </div>
+                          <CheckCircleIcon className="h-5 w-5 text-indigo-600" />
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <button className="mt-10 w-full rounded-md bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700">
+                    Add to bag
+                  </button>
+
+                  <div className="mt-6 text-center">
+                    <a href="#" className="inline-flex text-base font-medium items-center">
+                      <ShieldCheckIcon className="mr-2 h-6 w-6 text-gray-400" />
+                      <span className="text-gray-500">Lifetime Guarantee</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white">
+              <div className="max-w-2xl mx-auto px-8 py-24 lg:max-w-7xl">
+                <div className="flex flex-col items-center text-center">
+                  <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">The Fine Details</h2>
+                  <p className="mt-3 max-w-3xl text-lg text-gray-600">
+                    Our patented padded snack sleeve construction protects your treats.
+                  </p>
+                </div>
+                <div className="mt-16 grid lg:grid-cols-2 gap-x-8 gap-y-16">
+                  {[1, 2].map((i) => (
+                    <div key={i}>
+                      <div className="aspect-[3/2] w-full rounded-lg bg-gray-200" />
+                      <p className="mt-8 text-base text-gray-500">
+                        The 20L model has enough space for 370 candy bars or any combination of treats.
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white">
+              <div className="max-w-2xl mx-auto px-8 py-24 lg:max-w-7xl lg:grid lg:grid-cols-12 lg:gap-x-8">
+                <div className="lg:col-span-4">
+                  <h2 className="text-2xl font-bold text-gray-900">Customer Reviews</h2>
+                  <div className="mt-3 flex items-center">
+                    <div className="flex items-center">
+                      {[0, 1, 2, 3, 4].map((i) => (
+                        <StarIcon key={i} className={`h-5 w-5 ${i < 4 ? 'text-yellow-400' : 'text-gray-300'}`} />
+                      ))}
+                    </div>
+                    <p className="ml-2 text-sm text-gray-900">Based on 1624 reviews</p>
+                  </div>
+
+                  <div className="mt-6 space-y-3">
+                    {[
+                      { rating: 5, count: 1019, total: 1624 },
+                      { rating: 4, count: 162, total: 1624 },
+                      { rating: 3, count: 97, total: 1624 },
+                    ].map((item) => (
+                      <div key={item.rating} className="flex items-center text-sm">
+                        <dt className="flex flex-1 items-center">
+                          <p className="w-3 font-medium text-gray-900">{item.rating}</p>
+                          <div className="ml-1 flex items-center">
+                            <StarIcon className={`h-5 w-5 ${item.count > 0 ? 'text-yellow-400' : 'text-gray-300'}`} />
+                            <div className="relative ml-3 flex-1">
+                              <div className="h-3 rounded-full border border-gray-200 bg-gray-100" />
+                              {item.count > 0 && (
+                                <div 
+                                  style={{ width: `${(item.count / item.total) * 100}%` }}
+                                  className="absolute inset-y-0 rounded-full border border-yellow-400 bg-yellow-400"
+                                />
+                              )}
+                            </div>
+                          </div>
+                        </dt>
+                        <dd className="ml-3 w-10 text-right text-sm text-gray-900">
+                          {Math.round((item.count / item.total) * 100)}%
+                        </dd>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-10">
+                    <h3 className="text-lg font-medium text-gray-900">Share your thoughts</h3>
+                    <p className="mt-1 text-sm text-gray-600">
+                      If you've used this product, share your thoughts with other customers
+                    </p>
+                    <button className="mt-6 w-full rounded-md border border-gray-300 bg-white px-8 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50">
+                      Write a review
+                    </button>
+                  </div>
+                </div>
+
+                <div className="mt-16 lg:col-span-7 lg:col-start-6 lg:mt-0">
+                  <div className="flow-root">
+                    <div className="-my-12 divide-y divide-gray-200">
+                      {[1, 2, 3].map((i) => (
+                        <div key={i} className="py-12">
+                          <div className="flex items-center">
+                            <div className="w-12 h-12 rounded-full bg-gray-200" />
+                            <div className="ml-4">
+                              <h4 className="text-sm font-bold text-gray-900">Emily Selman</h4>
+                              <div className="mt-1 flex items-center">
+                                {[0, 1, 2, 3, 4].map((r) => (
+                                  <StarIcon key={r} className={`h-5 w-5 ${r < 5 ? 'text-yellow-400' : 'text-gray-300'}`} />
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                          <p className="mt-4 text-base text-gray-600 italic">
+                            This is the bag of my dreams. I took it on my vacation and fit an absurd amount of snacks.
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Product Detail Page - Digital Product with Tabs">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="flex h-10 items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white">
+              Save 20% when you buy two or more kits
+            </div>
+
+            <div className="border-b h-16 flex items-center justify-between px-8">
+              <div className="flex items-center gap-8">
+                <div className="w-8 h-8 bg-indigo-600 rounded" />
+                <div className="flex gap-8 text-sm font-medium text-gray-700">
+                  <a href="#">Wireframe Kits</a>
+                  <a href="#">Icons</a>
+                  <a href="#">UI Kits</a>
+                </div>
+              </div>
+              <div className="flex items-center gap-6">
+                <a href="#" className="text-sm font-medium text-gray-700">Sign in</a>
+                <span className="h-6 w-px bg-gray-200" />
+                <a href="#" className="text-sm font-medium text-gray-700">Create account</a>
+                <a href="#" className="text-gray-400 ml-8"><MagnifyingGlassIcon className="h-6 w-6" /></a>
+                <a href="#" className="flex items-center gap-2 ml-4">
+                  <ShoppingBagIcon className="h-6 w-6 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-700">0</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="max-w-7xl mx-auto px-8 pt-14 pb-24">
+              <div className="lg:grid lg:grid-cols-7 lg:grid-rows-1 lg:gap-x-8 xl:gap-x-16">
+                <div className="lg:col-span-4 lg:row-end-1">
+                  <div className="aspect-[4/3] w-full rounded-lg bg-gray-200" />
+                </div>
+
+                <div className="mt-14 max-w-2xl lg:col-span-3 lg:row-span-2 lg:row-end-2 lg:mt-0 lg:max-w-none">
+                  <div className="flex flex-col-reverse">
+                    <div className="mt-4">
+                      <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Application UI Icon Pack</h1>
+                      <p className="mt-2 text-sm text-gray-500">Version 1.0 (Updated June 5, 2021)</p>
+                    </div>
+                    <div className="flex items-center">
+                      {[0, 1, 2, 3, 4].map((i) => (
+                        <StarIcon key={i} className={`h-5 w-5 ${i < 4 ? 'text-yellow-400' : 'text-gray-300'}`} />
+                      ))}
+                    </div>
+                  </div>
+
+                  <p className="mt-6 text-gray-500">
+                    The Application UI Icon Pack comes with over 200 icons in 3 styles: outline, filled, and branded.
+                  </p>
+
+                  <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-4">
+                    <button className="w-full rounded-md bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700">
+                      Pay $220
+                    </button>
+                    <button className="w-full rounded-md bg-indigo-50 px-8 py-3 text-base font-medium text-indigo-700 hover:bg-indigo-100">
+                      Preview
+                    </button>
+                  </div>
+
+                  <div className="mt-10 border-t border-gray-200 pt-10">
+                    <h3 className="text-sm font-medium text-gray-900">Highlights</h3>
+                    <ul className="mt-4 list-disc space-y-1 pl-5 text-sm text-gray-500">
+                      <li>200+ SVG icons in 3 unique styles</li>
+                      <li>Compatible with Figma, Sketch, and Adobe XD</li>
+                      <li>Drawn on 24 x 24 pixel grid</li>
+                    </ul>
+                  </div>
+
+                  <div className="mt-10 border-t border-gray-200 pt-10">
+                    <h3 className="text-sm font-medium text-gray-900">License</h3>
+                    <p className="mt-4 text-sm text-gray-500">
+                      For personal and professional use. <a href="#" className="font-medium text-indigo-600">Read full license</a>
+                    </p>
+                  </div>
+
+                  <div className="mt-10 border-t border-gray-200 pt-10">
+                    <h3 className="text-sm font-medium text-gray-900">Share</h3>
+                    <ul className="mt-4 flex items-center space-x-6">
+                      <li><a href="#" className="flex h-6 w-6 items-center justify-center text-gray-400"><div className="w-5 h-5 bg-gray-300 rounded" /></a></li>
+                      <li><a href="#" className="flex h-6 w-6 items-center justify-center text-gray-400"><div className="w-6 h-6 bg-gray-300 rounded" /></a></li>
+                      <li><a href="#" className="flex h-6 w-6 items-center justify-center text-gray-400"><div className="w-5 h-5 bg-gray-300 rounded" /></a></li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="mt-16 w-full max-w-2xl lg:col-span-4 lg:mt-0 lg:max-w-none">
+                  <div className="border-b border-gray-200">
+                    <div className="flex space-x-8 -mb-px">
+                      <button className="border-b-2 border-indigo-600 py-6 text-sm font-medium text-indigo-600">
+                        Customer Reviews
+                      </button>
+                      <button className="border-b-2 border-transparent py-6 text-sm font-medium text-gray-700">
+                        FAQ
+                      </button>
+                      <button className="border-b-2 border-transparent py-6 text-sm font-medium text-gray-700">
+                        License
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="-mb-10">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="flex space-x-4 text-sm text-gray-500">
+                        <div className="flex-none py-10">
+                          <div className="w-10 h-10 rounded-full bg-gray-100" />
+                        </div>
+                        <div className={`flex-1 py-10 ${i > 1 ? 'border-t border-gray-200' : ''}`}>
+                          <h3 className="font-medium text-gray-900">Emily Selman</h3>
+                          <p>July 16, 2021</p>
+                          <div className="mt-4 flex items-center">
+                            {[0, 1, 2, 3, 4].map((r) => (
+                              <StarIcon key={r} className={`h-5 w-5 ${r < 5 ? 'text-yellow-400' : 'text-gray-300'}`} />
+                            ))}
+                          </div>
+                          <p className="mt-4 text-sm text-gray-500">
+                            This icon pack is just what I need for my latest project.
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mx-auto mt-24 max-w-2xl lg:max-w-none px-8">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-medium text-gray-900">Customers also viewed</h2>
+                  <a href="#" className="text-sm font-medium text-indigo-600">View all →</a>
+                </div>
+                <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-8">
+                  {[
+                    { name: 'Fusion', category: 'UI Kit', price: '$49' },
+                    { name: 'Marketing Icon Pack', category: 'Icons', price: '$19' },
+                    { name: 'Scaffold', category: 'Wireframe Kit', price: '$29' },
+                    { name: 'Bones', category: 'Wireframe Kit', price: '$29' },
+                  ].map((prod) => (
+                    <div key={prod.name} className="group relative">
+                      <div className="relative">
+                        <div className="aspect-[4/3] w-full rounded-lg bg-gray-100" />
+                        <div className="absolute inset-0 flex items-end p-4 opacity-0 group-hover:opacity-100">
+                          <div className="w-full rounded-md bg-white/75 px-4 py-2 text-center text-sm font-medium text-gray-900 backdrop-blur-sm">
+                            View Product
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-4 flex items-center justify-between text-base font-medium text-gray-900">
+                        <h3>{prod.name}</h3>
+                        <p>{prod.price}</p>
+                      </div>
+                      <p className="mt-1 text-sm text-gray-500">{prod.category}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </ShowcaseSection>
       </div>
     </div>
   );
