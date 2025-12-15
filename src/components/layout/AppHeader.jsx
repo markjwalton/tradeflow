@@ -38,12 +38,13 @@ export function AppHeader({ user, navItems = [], onMobileMenuClick, currentPageN
   return (
     <header
       className="
-        sticky top-0 z-[100]
+        sticky top-0
         border-b
         bg-background/70
         backdrop-blur-md
         supports-[backdrop-filter]:bg-background/60
       "
+      style={{ zIndex: 'var(--z-sticky)' }}
     >
       <div className="flex items-center justify-between px-4 py-2 md:px-6">
         <div className="flex items-center gap-2 sm:gap-3">
@@ -133,7 +134,7 @@ function PageSearchBar({ navItems = [] }) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[40px] sm:w-[180px] md:w-[200px] justify-between text-muted-foreground"
+          className="w-[40px] sm:w-[200px] md:w-[240px] lg:w-[280px] justify-between text-muted-foreground"
         >
           <Search className="h-4 w-4 sm:mr-2" />
           <span className="text-xs hidden sm:inline">Search pages...</span>

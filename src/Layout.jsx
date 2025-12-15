@@ -465,8 +465,8 @@ export default function Layout({ children, currentPageName }) {
             data-editor-layout 
             className="px-2 sm:px-0"
             style={{ 
-              marginTop: editorPanelOpen ? '120px' : '0', 
-              transition: 'margin-top 300ms ease-in-out',
+              marginTop: editorPanelOpen ? 'var(--spacing-32)' : '0', 
+              transition: 'margin-top var(--duration-300) var(--ease-in-out)',
               position: 'relative',
             }}
             >
@@ -485,10 +485,9 @@ export default function Layout({ children, currentPageName }) {
             <div 
               className="relative z-10"
               style={{
-                maxWidth: `${maxWidth}px`,
-                marginLeft: contentAlignment === 'center' ? 'auto' : '0',
-                marginRight: contentAlignment === 'center' ? 'auto' : '0',
-                marginRight: contentAlignment === 'right' ? '0' : (contentAlignment === 'center' ? 'auto' : '0'),
+                maxWidth: maxWidth === 'full' ? '100%' : `${maxWidth}px`,
+                marginLeft: contentAlignment === 'center' ? 'auto' : (contentAlignment === 'right' ? 'auto' : '0'),
+                marginRight: contentAlignment === 'center' ? 'auto' : (contentAlignment === 'right' ? '0' : 'auto'),
               }}
             >
               <AppShell user={currentUser} tenant={currentTenant} navItems={navItems} currentPageName={currentPageName}>
@@ -521,8 +520,8 @@ export default function Layout({ children, currentPageName }) {
                   console.error("Failed to toggle live edit:", e);
                 }
               }}
-              className="fixed bottom-6 left-6 h-14 w-14 rounded-full shadow-2xl border-2 border-white z-[60]"
-              style={{ backgroundColor: 'rgba(199, 142, 142, 0.9)' }}
+              className="fixed bottom-6 left-6 h-14 w-14 rounded-full shadow-2xl border-2 border-white"
+              style={{ backgroundColor: 'rgba(199, 142, 142, 0.9)', zIndex: 'var(--z-max)' }}
               title="Toggle Editor Panel"
             >
               {editorPanelOpen ? "✕" : <Palette className="h-6 w-6 text-white" />}
