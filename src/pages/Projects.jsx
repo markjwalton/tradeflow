@@ -4,8 +4,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { PageLoader, CardGridLoader, ButtonLoader } from "@/components/common/LoadingStates";
 import { ErrorRecovery } from "@/components/common/ErrorRecovery";
 import { useMutationError } from "@/components/common/MutationErrorToast";
-import { Pagination } from "@/components/ui/Pagination";
 import { useDebounce } from "@/components/common/useDebounce";
+import { usePagination } from "@/components/common/usePagination";
+import { StandardPagination } from "@/components/common/StandardPagination";
 import { useValidatedForm } from "@/components/forms/useValidatedForm";
 import { ValidatedInput } from "@/components/forms/ValidatedInput";
 import { projectSchema } from "@/components/forms/FormValidation";
@@ -55,8 +56,6 @@ export default function Projects() {
   const debouncedSearch = useDebounce(search, 300);
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterCustomer, setFilterCustomer] = useState("all");
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12;
   const [showForm, setShowForm] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
   const [expandedGroups, setExpandedGroups] = useState({});
@@ -149,14 +148,10 @@ export default function Projects() {
     return matchesSearch && matchesStatus && matchesCustomer;
   });
 
-  const totalPages = Math.ceil(filteredProjects.length / itemsPerPage);
-  const paginatedProjects = filteredProjects.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const pagination = usePagination(filteredProjects, "Projects");
 
   // Group projects by status
-  const groupedProjects = paginatedProjects.reduce((acc, project) => {
+  const groupedProjects = pagination.currentItems.reduce((acc, project) => {
     const groupKey = project.status || "Unknown";
     if (!acc[groupKey]) acc[groupKey] = [];
     acc[groupKey].push(project);
@@ -336,15 +331,16 @@ export default function Projects() {
             </div>
           )}
 
-          {totalPages > 1 && (
-            <div className="mt-6">
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-              />
-            </div>
-          )}
+          <StandardPagination
+            currentPage={pagination.currentPage}
+            totalPages={pagination.totalPages}
+            totalItems={pagination.totalItems}
+            startIndex={pagination.startIndex}
+            endIndex={pagination.endIndex}
+            itemsPerPage={pagination.itemsPerPage}
+            onPageChange={pagination.goToPage}
+            onItemsPerPageChange={pagination.setItemsPerPage}
+          />
         </CardContent>
       </Card>
 

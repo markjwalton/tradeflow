@@ -4,8 +4,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { PageLoader, ButtonLoader } from "@/components/common/LoadingStates";
 import { ErrorRecovery } from "@/components/common/ErrorRecovery";
 import { useMutationError } from "@/components/common/MutationErrorToast";
-import { Pagination } from "@/components/ui/Pagination";
 import { useDebounce } from "@/components/common/useDebounce";
+import { usePagination } from "@/components/common/usePagination";
+import { StandardPagination } from "@/components/common/StandardPagination";
 import { useValidatedForm } from "@/components/forms/useValidatedForm";
 import { ValidatedInput } from "@/components/forms/ValidatedInput";
 import { ValidatedTextarea } from "@/components/forms/ValidatedTextarea";
@@ -54,8 +55,6 @@ export default function Tasks() {
   const debouncedSearch = useDebounce(search, 300);
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterProject, setFilterProject] = useState("all");
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 15;
   const [showForm, setShowForm] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [expandedStatuses, setExpandedStatuses] = useState({});
@@ -153,14 +152,10 @@ export default function Tasks() {
     return matchesSearch && matchesStatus && matchesProject;
   });
 
-  const totalPages = Math.ceil(filteredTasks.length / itemsPerPage);
-  const paginatedTasks = filteredTasks.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const pagination = usePagination(filteredTasks, "Tasks");
 
   // Group tasks by status
-  const groupedTasks = paginatedTasks.reduce((acc, task) => {
+  const groupedTasks = pagination.currentItems.reduce((acc, task) => {
     const status = task.status || "todo";
     if (!acc[status]) acc[status] = [];
     acc[status].push(task);
@@ -327,15 +322,16 @@ export default function Tasks() {
             </div>
           )}
 
-          {totalPages > 1 && (
-            <div className="mt-6">
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-              />
-            </div>
-          )}
+          <StandardPagination
+            currentPage={pagination.currentPage}
+            totalPages={pagination.totalPages}
+            totalItems={pagination.totalItems}
+            startIndex={pagination.startIndex}
+            endIndex={pagination.endIndex}
+            itemsPerPage={pagination.itemsPerPage}
+            onPageChange={pagination.goToPage}
+            onItemsPerPageChange={pagination.setItemsPerPage}
+          />
         </CardContent>
       </Card>
 
