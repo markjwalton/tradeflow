@@ -19,8 +19,14 @@ Deno.serve(async (req) => {
     });
 
     if (pages.length === 0) {
+      // Get list of available pages for helpful error
+      const allPages = await base44.asServiceRole.entities.UIPage.list();
+      const availablePages = allPages.map(p => p.page_name).join(', ');
+
       return Response.json({ 
-        error: `Page not found in database: ${page_slug}. Please ensure the page exists in the UIPage entity.`
+        error: `Page "${page_slug}" not found in UIPage database. This page needs to be synced to the database first.`,
+        available_pages: availablePages || 'No pages in database',
+        hint: 'Only pages stored in the UIPage entity can be analyzed. Please sync your pages to the database first.'
       }, { status: 404 });
     }
 
