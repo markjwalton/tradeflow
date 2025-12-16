@@ -156,84 +156,89 @@ export default function StandardPageReference() {
         {/* Main Content Area */}
         <div className="flex-1 lg:pl-72 flex flex-col">
           <div className="flex-1 overflow-y-auto">
-            {/* === PAGE HEADER SECTION === */}
-            <div className="sticky top-0 z-40 bg-white border-b border-gray-200">
-              {/* Breadcrumb Navigation */}
-              <nav 
-                aria-label="Breadcrumb" 
-                className="flex"
+            {/* Breadcrumb Navigation - Not Sticky */}
+            <nav 
+              aria-label="Breadcrumb" 
+              className="flex"
+              style={{ 
+                borderBottom: '1px solid var(--color-border)',
+                backgroundColor: 'var(--color-background)'
+              }}
+            >
+              <ol 
+                role="list" 
+                className="mx-auto flex w-full space-x-4"
                 style={{ 
-                  borderBottom: '1px solid var(--color-border)',
-                  backgroundColor: 'var(--color-background)'
+                  maxWidth: 'var(--breakpoint-xl)',
+                  paddingTop: 'var(--spacing-3)',
+                  paddingBottom: 'var(--spacing-3)',
+                  paddingLeft: 'var(--spacing-4)',
+                  paddingRight: 'var(--spacing-4)'
                 }}
               >
-                <ol 
-                  role="list" 
-                  className="mx-auto flex w-full space-x-4"
-                  style={{ 
-                    maxWidth: 'var(--breakpoint-xl)',
-                    paddingLeft: 'var(--spacing-4)',
-                    paddingRight: 'var(--spacing-4)'
-                  }}
-                >
-                  <li className="flex">
-                    <div className="flex items-center">
-                      <a 
-                        href="#" 
-                        style={{ color: 'var(--color-text-muted)' }}
-                        className="hover:text-gray-500"
-                      >
-                        <HomeIcon aria-hidden="true" className="size-5 shrink-0" />
-                        <span className="sr-only">Home</span>
-                      </a>
-                    </div>
-                  </li>
-                  <li className="flex">
-                    <div className="flex items-center">
-                      <svg
-                        fill="currentColor"
-                        viewBox="0 0 24 44"
-                        preserveAspectRatio="none"
-                        aria-hidden="true"
-                        className="h-full w-6 shrink-0"
-                        style={{ color: 'var(--color-border)' }}
-                      >
-                        <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
-                      </svg>
-                      <a
-                        href="#"
-                        className="ml-4 text-sm font-medium hover:text-gray-700"
-                        style={{ color: 'var(--color-text-muted)' }}
-                      >
-                        Category
-                      </a>
-                    </div>
-                  </li>
-                  <li className="flex">
-                    <div className="flex items-center">
-                      <svg
-                        fill="currentColor"
-                        viewBox="0 0 24 44"
-                        preserveAspectRatio="none"
-                        aria-hidden="true"
-                        className="h-full w-6 shrink-0"
-                        style={{ color: 'var(--color-border)' }}
-                      >
-                        <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
-                      </svg>
-                      <a
-                        href="#"
-                        aria-current="page"
-                        className="ml-4 text-sm font-medium"
-                        style={{ color: 'var(--color-text-secondary)' }}
-                      >
-                        Standard Page Reference
-                      </a>
-                    </div>
-                  </li>
-                </ol>
-              </nav>
+                <li className="flex">
+                  <div className="flex items-center">
+                    <a 
+                      href="#" 
+                      style={{ color: 'var(--color-text-muted)' }}
+                      className="hover:opacity-70 transition-opacity"
+                    >
+                      <HomeIcon aria-hidden="true" className="size-5 shrink-0" />
+                      <span className="sr-only">Home</span>
+                    </a>
+                  </div>
+                </li>
+                <li className="flex">
+                  <div className="flex items-center">
+                    <svg
+                      fill="currentColor"
+                      viewBox="0 0 24 44"
+                      preserveAspectRatio="none"
+                      aria-hidden="true"
+                      className="h-full w-6 shrink-0"
+                      style={{ color: 'var(--color-border)' }}
+                    >
+                      <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                    </svg>
+                    <a
+                      href="#"
+                      className="ml-4 text-sm font-medium hover:opacity-70 transition-opacity"
+                      style={{ color: 'var(--color-text-muted)' }}
+                    >
+                      Category
+                    </a>
+                  </div>
+                </li>
+                <li className="flex">
+                  <div className="flex items-center">
+                    <svg
+                      fill="currentColor"
+                      viewBox="0 0 24 44"
+                      preserveAspectRatio="none"
+                      aria-hidden="true"
+                      className="h-full w-6 shrink-0"
+                      style={{ color: 'var(--color-border)' }}
+                    >
+                      <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                    </svg>
+                    <a
+                      href="#"
+                      aria-current="page"
+                      className="ml-4 text-sm font-medium"
+                      style={{ color: 'var(--color-text-secondary)' }}
+                    >
+                      Standard Page Reference
+                    </a>
+                  </div>
+                </li>
+              </ol>
+            </nav>
 
+            {/* === PAGE HEADER SECTION - Sticky === */}
+            <div className="sticky top-0 z-40" style={{ 
+              backgroundColor: 'var(--color-background)',
+              borderBottom: '1px solid var(--color-border)'
+            }}>
               <div className="px-4 sm:px-6 lg:px-8">
 
                 {/* Page Title & Actions */}
