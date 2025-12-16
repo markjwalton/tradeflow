@@ -16,55 +16,35 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'File path required' }, { status: 400 });
     }
 
-    // Use GitHub API to read file content
-    const GITHUB_TOKEN = Deno.env.get('GITHUB_TOKEN');
-    const GITHUB_REPO = 'PickleRicc/base44-test';
-    const GITHUB_BRANCH = 'main';
+    // Read UIPage from database to get the current page content
+    const pageSlug = filePath.replace('pages/', '').replace('.js', '');
+    
+    const pages = await base44.asServiceRole.entities.UIPage.filter({ 
+      slug: pageSlug 
+    });
 
-    if (!GITHUB_TOKEN) {
-      return Response.json({ error: 'GitHub token not configured' }, { status: 500 });
+    if (pages.length === 0) {
+      return Response.json({ 
+        success: false,
+        error: `Page not found: ${pageSlug}`
+      }, { status: 404 });
     }
 
-    // Try multiple possible paths
-    const possiblePaths = [
-      filePath,
-      `src/${filePath}`,
-      filePath.replace('pages/', 'src/pages/')
-    ];
-
-    let content = null;
-    let successPath = null;
-
-    for (const path of possiblePaths) {
-      const githubUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/${path}?ref=${GITHUB_BRANCH}`;
-      
-      const response = await fetch(githubUrl, {
-        headers: {
-          'Authorization': `Bearer ${GITHUB_TOKEN}`,
-          'Accept': 'application/vnd.github.v3.raw',
-          'User-Agent': 'Base44-App'
-        }
-      });
-
-      if (response.ok) {
-        content = await response.text();
-        successPath = path;
-        break;
-      }
-    }
+    const page = pages[0];
+    const content = page.current_content_jsx;
 
     if (!content) {
       return Response.json({ 
         success: false,
-        error: `File not found in any of the attempted paths`,
-        attempted_paths: possiblePaths
+        error: `No content found for page: ${pageSlug}`
       }, { status: 404 });
     }
 
     return Response.json({ 
       success: true,
       content: content,
-      path: successPath
+      page_name: page.page_name,
+      slug: pageSlug
     });
 
   } catch (error) {
