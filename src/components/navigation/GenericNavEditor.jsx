@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { toast } from "sonner";
+import NotificationCard from "../common/NotificationCard";
 
 // Import shared nav utilities
 import { getIconOptions, getIconByName, renderIcon } from "./NavIconMap";
@@ -104,6 +105,7 @@ export default function GenericNavEditor({
   const [newPageName, setNewPageName] = useState("");
   const [newPageTitle, setNewPageTitle] = useState("");
   const [isCreatingPage, setIsCreatingPage] = useState(false);
+  const [notification, setNotification] = useState({ show: false, title: "", message: "", variant: "success" });
 
   // Build the effective config type (tenant-prefixed if tenant-specific)
   const effectiveConfigType = tenantId && !isGlobal 
@@ -501,19 +503,25 @@ export default function GenericNavEditor({
       });
 
       if (response.data.success) {
-        toast.success(`✓ Page "${newPageName}" created successfully`, { id: loadingToast });
+        toast.dismiss(loadingToast);
         
-        // Resync to get the new page in the list
-        if (syncUnallocatedPages) {
-          toast.loading("Syncing pages...", { id: loadingToast });
-          await syncUnallocatedPages();
-          toast.success("✓ Page synced and ready to allocate", { id: loadingToast });
-        }
-
-        // Close dialog and reset
+        // Close dialog first
         setShowCreatePageDialog(false);
         setNewPageName("");
         setNewPageTitle("");
+
+        // Show notification
+        setNotification({
+          show: true,
+          title: "Successfully created!",
+          message: `Page "${newPageName}" has been created and is ready to allocate.`,
+          variant: "success"
+        });
+        
+        // Resync to get the new page in the list
+        if (syncUnallocatedPages) {
+          await syncUnallocatedPages();
+        }
       }
     } catch (error) {
       toast.error(`Failed to create page: ${error.message}`, { id: loadingToast });
@@ -566,6 +574,13 @@ export default function GenericNavEditor({
 
   return (
     <>
+    <NotificationCard
+      show={notification.show}
+      onClose={() => setNotification({ ...notification, show: false })}
+      title={notification.title}
+      message={notification.message}
+      variant={notification.variant}
+    />
     <Card className="rounded-xl border-border bg-card">
       {title && (
         <CardHeader className="flex flex-row items-center justify-between">
