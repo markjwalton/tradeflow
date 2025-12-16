@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
     // Read the page file directly from the file system
     let content;
     try {
-      content = await Deno.readTextFile(`pages/${page_slug}.js`);
+      content = await Deno.readTextFile(`/src/pages/${page_slug}.js`);
     } catch (e) {
       console.error('File read error:', e);
       return Response.json({ error: `Page file not found: ${e.message}` }, { status: 404 });
