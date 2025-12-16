@@ -259,11 +259,24 @@ export default function StandardPageReference() {
             <div key={item.id} className="overflow-hidden rounded-lg bg-white shadow-sm group">
               <div className="px-4 py-5 sm:p-6">
                 <div className="flex items-start justify-between gap-3 mb-4">
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-base font-semibold text-gray-900 truncate">{item.title}</h3>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {new Date(item.created_date).toLocaleDateString()}
-                    </p>
+                  <div className="flex items-start gap-3 flex-1 min-w-0">
+                    <span className="relative inline-block shrink-0">
+                      <img
+                        alt=""
+                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        className="size-10 rounded-full outline -outline-offset-1 outline-black/5"
+                      />
+                      <span className={`absolute top-0 right-0 block size-2.5 rounded-full ring-2 ring-white ${
+                        item.status === 'active' ? 'bg-green-400' : 
+                        item.status === 'pending' ? 'bg-red-400' : 'bg-gray-300'
+                      }`} />
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-base font-semibold text-gray-900 truncate">{item.title}</h3>
+                      <p className="mt-1 text-sm text-gray-500">
+                        {new Date(item.created_date).toLocaleDateString()}
+                      </p>
+                    </div>
                   </div>
                   <Badge 
                     variant={item.status === 'active' ? 'default' : 'secondary'}
