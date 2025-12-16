@@ -342,21 +342,31 @@ export default function AssetManager() {
                       </Button>
                     </DialogTrigger>
                     <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Create Folder</DialogTitle>
-                      </DialogHeader>
-                      <div className="space-y-4">
-                        <div>
-                          <Label>Folder Name</Label>
-                          <Input
-                            value={newFolderName}
-                            onChange={(e) => setNewFolderName(e.target.value)}
-                            placeholder="e.g., images"
-                            onKeyDown={(e) => e.key === 'Enter' && handleCreateFolder()}
-                          />
-                        </div>
-                        <Button onClick={handleCreateFolder}>Create</Button>
-                      </div>
+                     <DialogHeader>
+                       <DialogTitle>Create Folder</DialogTitle>
+                     </DialogHeader>
+                     <div className="space-y-4">
+                       <div>
+                         <Label>Folder Name</Label>
+                         <Input
+                           value={newFolderName}
+                           onChange={(e) => setNewFolderName(e.target.value)}
+                           placeholder="e.g., images"
+                           onKeyDown={(e) => {
+                             if (e.key === 'Enter') {
+                               e.preventDefault();
+                               handleCreateFolder();
+                             }
+                           }}
+                         />
+                       </div>
+                       <Button 
+                         onClick={handleCreateFolder}
+                         disabled={!newFolderName.trim() || createFolderMutation.isPending}
+                       >
+                         {createFolderMutation.isPending ? 'Creating...' : 'Create'}
+                       </Button>
+                     </div>
                     </DialogContent>
                   </Dialog>
 

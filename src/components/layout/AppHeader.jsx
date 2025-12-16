@@ -225,11 +225,12 @@ function ProfileMenu({ user }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="p-1">
+        <Button variant="ghost" className="p-1 flex items-center gap-1">
           <Avatar className="h-10 w-10 rounded-md">
             <AvatarImage alt={user.full_name || user.email} />
             <AvatarFallback className="rounded-md text-base">{initials}</AvatarFallback>
           </Avatar>
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[calc(100vw-2rem)] sm:w-72" sideOffset={8}>

@@ -1065,13 +1065,22 @@
     transform: scale(1.1);
   }
 
-  /* Select dropdowns in sheets */
+  /* Select dropdowns in sheets and dialogs */
   [data-radix-popper-content-wrapper] {
     z-index: 100000 !important;
   }
 
   [data-radix-select-content] {
     z-index: 100001 !important;
+  }
+
+  /* Sheet overlay and content - ensure proper stacking */
+  [data-radix-dialog-overlay] {
+    z-index: 99998 !important;
+  }
+
+  [data-radix-dialog-content] {
+    z-index: 99999 !important;
   }
 
   /* Typography Utilities */
