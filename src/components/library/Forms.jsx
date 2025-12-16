@@ -2,19 +2,19 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { Search, Eye, EyeOff, Calendar, Check } from "lucide-react";
 
-// Base input styles
+// Base input styles - Using design tokens
 const inputBase = cn(
-  "w-full px-4 py-2.5 rounded-lg",
-  "bg-white border border-background-muted",
-  "text-charcoal placeholder:text-muted-foreground",
-  "transition-all duration-200",
-  "focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary",
-  "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-background"
+  "w-full px-[var(--spacing-4)] py-[var(--spacing-2)] rounded-[var(--radius-lg)]",
+  "bg-[var(--color-input-background)] border border-[var(--color-border)]",
+  "font-[var(--font-family-body)] text-[var(--text-base)] text-[var(--color-text-body)] placeholder:text-[var(--color-text-muted)]",
+  "transition-all duration-[var(--duration-200)]",
+  "focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] focus:border-[var(--color-primary)]",
+  "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-[var(--color-muted)]"
 );
 
-const labelBase = "block text-sm font-medium text-midnight mb-1.5";
-const errorBase = "text-sm text-destructive mt-1";
-const hintBase = "text-sm text-charcoal-light mt-1";
+const labelBase = "block font-[var(--font-family-display)] text-[var(--text-sm)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] text-[var(--color-text-secondary)] mb-[var(--spacing-2)]";
+const errorBase = "font-[var(--font-family-body)] text-[var(--text-sm)] text-[var(--color-destructive)] mt-[var(--spacing-1)]";
+const hintBase = "font-[var(--font-family-body)] text-[var(--text-sm)] text-[var(--color-text-muted)] mt-[var(--spacing-1)]";
 
 // Text Field
 export function TextField({ 
@@ -137,7 +137,7 @@ export function SelectField({
   );
 }
 
-// Checkbox Field
+// Checkbox Field - Using design tokens
 export function CheckboxField({ 
   label, 
   checked, 
@@ -148,8 +148,8 @@ export function CheckboxField({
   ...props 
 }) {
   return (
-    <label className={cn("flex items-start gap-3 cursor-pointer", disabled && "opacity-50 cursor-not-allowed", className)}>
-      <div className="relative mt-0.5">
+    <label className={cn("flex items-start gap-[var(--spacing-3)] cursor-pointer", disabled && "opacity-50 cursor-not-allowed", className)}>
+      <div className="relative mt-[var(--spacing-1)]">
         <input
           type="checkbox"
           className="sr-only"
@@ -159,18 +159,18 @@ export function CheckboxField({
           {...props}
         />
         <div className={cn(
-          "w-5 h-5 rounded border-2 transition-all duration-200",
+          "w-5 h-5 rounded-[var(--radius-sm)] border-2 transition-all duration-[var(--duration-200)]",
           "flex items-center justify-center",
           checked 
-            ? "bg-primary border-primary" 
-            : "bg-white border-border hover:border-primary"
+            ? "bg-[var(--color-primary)] border-[var(--color-primary)]" 
+            : "bg-white border-[var(--color-border)] hover:border-[var(--color-primary)]"
         )}>
           {checked && <Check className="h-3 w-3 text-white" />}
         </div>
       </div>
       <div>
-        <span className="text-sm font-medium text-[#1b2a35]">{label}</span>
-        {description && <p className="text-sm text-[#6d6d6d] mt-0.5">{description}</p>}
+        <span className="font-[var(--font-family-display)] text-[var(--text-sm)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] text-[var(--color-text-secondary)]">{label}</span>
+        {description && <p className="font-[var(--font-family-body)] text-[var(--text-sm)] text-[var(--color-text-muted)] mt-[var(--spacing-1)] leading-[var(--leading-normal)]">{description}</p>}
       </div>
     </label>
   );
@@ -225,7 +225,7 @@ export function RadioField({
   );
 }
 
-// Switch Field
+// Switch Field - Using design tokens
 export function SwitchField({ 
   label, 
   checked, 
@@ -236,10 +236,10 @@ export function SwitchField({
   ...props 
 }) {
   return (
-    <label className={cn("flex items-start justify-between gap-4 cursor-pointer", disabled && "opacity-50 cursor-not-allowed", className)}>
+    <label className={cn("flex items-start justify-between gap-[var(--spacing-4)] cursor-pointer", disabled && "opacity-50 cursor-not-allowed", className)}>
       <div>
-        <span className="text-sm font-medium text-midnight">{label}</span>
-        {description && <p className="text-sm text-charcoal-light mt-0.5">{description}</p>}
+        <span className="font-[var(--font-family-display)] text-[var(--text-sm)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] text-[var(--color-text-secondary)]">{label}</span>
+        {description && <p className="font-[var(--font-family-body)] text-[var(--text-sm)] text-[var(--color-text-muted)] mt-[var(--spacing-1)] leading-[var(--leading-normal)]">{description}</p>}
       </div>
       <div className="relative">
         <input
@@ -251,11 +251,11 @@ export function SwitchField({
           {...props}
         />
         <div className={cn(
-          "w-11 h-6 rounded-full transition-all duration-200",
-          checked ? "bg-primary" : "bg-border"
+          "w-11 h-6 rounded-full transition-all duration-[var(--duration-200)]",
+          checked ? "bg-[var(--color-primary)]" : "bg-[var(--color-switch-background)]"
         )}>
           <div className={cn(
-            "w-5 h-5 rounded-full bg-white shadow-sm transition-all duration-200",
+            "w-5 h-5 rounded-full bg-white shadow-[var(--shadow-sm)] transition-all duration-[var(--duration-200)]",
             "absolute top-0.5",
             checked ? "left-[22px]" : "left-0.5"
           )} />
