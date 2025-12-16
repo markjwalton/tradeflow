@@ -183,34 +183,33 @@ export default function StandardPageReference() {
                 Golden standard for all pages - perfect spacing, shadows, typography, and responsive design using design tokens.
               </p>
             </div>
-            <div className="flex items-center gap-[var(--spacing-3)] shrink-0">
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="gap-[var(--spacing-2)]"
+            <div className="flex items-center gap-3 shrink-0">
+              <button
+                type="button"
+                className="inline-flex items-center gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50"
               >
                 <Upload className="h-4 w-4" />
                 <span className="hidden sm:inline">Export</span>
-              </Button>
-              <Button 
-                size="sm"
-                className="gap-[var(--spacing-2)]"
+              </button>
+              <button
+                type="button"
+                className="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 <Plus className="h-4 w-4" />
                 <span className="hidden sm:inline">New Item</span>
-              </Button>
+              </button>
             </div>
           </div>
 
           {/* Filter Button */}
-          <div className="flex flex-col sm:flex-row gap-[var(--spacing-4)] pb-[var(--spacing-6)]">
-            <Button 
-              variant="outline" 
-              className="gap-[var(--spacing-2)] w-full sm:w-auto"
+          <div className="flex flex-col sm:flex-row gap-4 pb-6">
+            <button
+              type="button"
+              className="inline-flex items-center gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 w-full sm:w-auto"
             >
               <Filter className="h-4 w-4" />
               Filters
-            </Button>
+            </button>
           </div>
 
           {/* Tabs for Status Filtering */}
