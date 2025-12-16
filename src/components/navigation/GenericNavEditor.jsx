@@ -905,10 +905,12 @@ export default function GenericNavEditor({
                        return (
                          <div key={slug} className="border border-border rounded-lg overflow-hidden">
                            <div 
-                             className="flex items-center justify-between [padding:var(--spacing-2)] bg-white hover:bg-muted/30 cursor-pointer transition-colors"
-                             onClick={() => togglePageDetails(slug)}
+                             className="flex items-center justify-between [padding:var(--spacing-2)] bg-white hover:bg-muted/30 transition-colors"
                            >
-                             <div className="flex items-center [gap:var(--spacing-2)] flex-1">
+                             <div 
+                               className="flex items-center [gap:var(--spacing-2)] flex-1 cursor-pointer"
+                               onClick={() => togglePageDetails(slug)}
+                             >
                                {isExpanded ? 
                                  <ChevronDown className="h-3 w-3 text-muted-foreground" /> : 
                                  <ChevronRight className="h-3 w-3 text-muted-foreground" />
@@ -934,6 +936,21 @@ export default function GenericNavEditor({
                                  <Badge variant="outline" className="text-xs text-red-600 border-red-300">
                                    Not in System
                                  </Badge>
+                               )}
+
+                               {!isInMainNav && navItem && (
+                                 <Button
+                                   size="sm"
+                                   variant="ghost"
+                                   className="h-7 w-7 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                                   onClick={(e) => {
+                                     e.stopPropagation();
+                                     handleDeletePage(navItem);
+                                   }}
+                                   title="Delete page & files"
+                                 >
+                                   <Trash2 className="h-3 w-3" />
+                                 </Button>
                                )}
                              </div>
                            </div>
