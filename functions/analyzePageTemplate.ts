@@ -15,14 +15,28 @@ Deno.serve(async (req) => {
 
     // Read page content directly from filesystem
     let content;
-    try {
-      content = await Deno.readTextFile(`pages/${page_slug}.js`);
-    } catch (e) {
+    let possiblePaths = [
+      `pages/${page_slug}.js`,
+      `pages/${page_slug}.jsx`,
+      `src/pages/${page_slug}.js`,
+      `src/pages/${page_slug}.jsx`,
+      page_slug.includes('/') ? page_slug : null
+    ].filter(Boolean);
+
+    for (const path of possiblePaths) {
       try {
-        content = await Deno.readTextFile(`pages/${page_slug}.jsx`);
-      } catch (e2) {
-        return Response.json({ error: `Page file not found: ${page_slug}` }, { status: 404 });
+        content = await Deno.readTextFile(path);
+        break;
+      } catch (e) {
+        // Try next path
       }
+    }
+
+    if (!content) {
+      return Response.json({ 
+        error: `Page file not found: ${page_slug}`,
+        attempted_paths: possiblePaths
+      }, { status: 404 });
     }
 
     // Use AI to analyze the page and extract editable text blocks
