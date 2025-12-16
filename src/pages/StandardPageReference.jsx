@@ -10,7 +10,8 @@ import {
   Search, Filter, Download, Upload, Plus, Edit2, Trash2, 
   MoreHorizontal, Eye, Star, Share2, Settings, ChevronLeft, ChevronRight 
 } from "lucide-react";
-import { PlusIcon } from '@heroicons/react/20/solid';
+import { PlusIcon, EllipsisVerticalIcon } from '@heroicons/react/20/solid';
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { usePagination } from "@/components/common/usePagination";
 import TailwindHeader from "@/components/sturij/TailwindHeader";
 import TailwindPagination from "@/components/sturij/TailwindPagination";
@@ -299,9 +300,52 @@ export default function StandardPageReference() {
                     <Edit2 className="h-4 w-4" />
                     Edit
                   </button>
-                  <button className="p-1.5 text-gray-700 hover:bg-gray-50 rounded-md">
-                    <MoreHorizontal className="h-4 w-4" />
-                  </button>
+                  <Menu as="div" className="relative inline-block">
+                    <MenuButton className="flex items-center rounded-full p-1.5 text-gray-400 hover:text-gray-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                      <span className="sr-only">Open options</span>
+                      <EllipsisVerticalIcon aria-hidden="true" className="size-5" />
+                    </MenuButton>
+
+                    <MenuItems
+                      transition
+                      className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg outline-1 outline-black/5 transition data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+                    >
+                      <div className="py-1">
+                        <MenuItem>
+                          <a
+                            href="#"
+                            className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                          >
+                            Duplicate
+                          </a>
+                        </MenuItem>
+                        <MenuItem>
+                          <a
+                            href="#"
+                            className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                          >
+                            Share
+                          </a>
+                        </MenuItem>
+                        <MenuItem>
+                          <a
+                            href="#"
+                            className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                          >
+                            Archive
+                          </a>
+                        </MenuItem>
+                        <MenuItem>
+                          <button
+                            type="button"
+                            className="block w-full px-4 py-2 text-left text-sm text-red-700 data-focus:bg-gray-100 data-focus:text-red-900 data-focus:outline-hidden"
+                          >
+                            Delete
+                          </button>
+                        </MenuItem>
+                      </div>
+                    </MenuItems>
+                  </Menu>
                 </div>
               </div>
             </div>
