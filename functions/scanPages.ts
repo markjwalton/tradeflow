@@ -9,11 +9,18 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { config_type } = await req.json();
+    // Try to get config_type from request body, default to app_pages_source
+    let config_type = "app_pages_source";
+    try {
+      const body = await req.json();
+      config_type = body.config_type || config_type;
+    } catch (e) {
+      // No body or invalid JSON, use default
+    }
     
     // Get the NavigationConfig to read existing source_slugs
     const configs = await base44.asServiceRole.entities.NavigationConfig.filter({ 
-      config_type: config_type || "app_pages_source" 
+      config_type 
     });
 
     const existingSlugs = configs[0]?.source_slugs || [];
