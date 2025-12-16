@@ -235,10 +235,31 @@ export default function StandardPageReference() {
                   </button>
                 </div>
 
-              </div>
-            </div>
+                </div>
+                </div>
 
-            {/* === MAIN CONTENT SECTION === */}
+                {/* Tabs Navigation - Non-sticky, below header */}
+                {paginatedData.length > 0 && (
+                <div style={{ 
+                backgroundColor: 'var(--color-background)',
+                borderBottom: '1px solid var(--color-border)'
+                }}>
+                <div className="px-4 sm:px-6 lg:px-8" style={{ paddingTop: 'var(--spacing-4)', paddingBottom: 'var(--spacing-4)' }}>
+                  <TailwindTabs 
+                    tabs={[
+                      { name: 'All Items', value: 'all' },
+                      { name: 'Active', value: 'active' },
+                      { name: 'Pending', value: 'pending' },
+                      { name: 'Completed', value: 'completed' }
+                    ]}
+                    activeTab={activeTab}
+                    onTabChange={setActiveTab}
+                  />
+                </div>
+                </div>
+                )}
+
+                {/* === MAIN CONTENT SECTION === */}
             <div className="px-4 sm:px-6 lg:px-8 py-8 pb-24">
         
               {/* Progress Bar */}
@@ -424,25 +445,9 @@ export default function StandardPageReference() {
                 />
               </div>
             </div>
-          </div>
-
-          {/* Sticky Navigation Bar */}
-          <div className="sticky bottom-0 z-30 bg-white border-t border-gray-200">
-            <div className="px-4 sm:px-6 lg:px-8 py-3">
-              <TailwindTabs 
-                tabs={[
-                  { name: 'All Items', value: 'all' },
-                  { name: 'Active', value: 'active' },
-                  { name: 'Pending', value: 'pending' },
-                  { name: 'Completed', value: 'completed' }
-                ]}
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
-              />
             </div>
-          </div>
 
-          {/* Footer */}
+            {/* Footer */}
           <footer className="bg-white border-t border-gray-200">
             <div className="px-4 sm:px-6 lg:px-8 py-12 md:flex md:items-center md:justify-between">
               <div className="flex justify-center gap-x-6 md:order-2">
