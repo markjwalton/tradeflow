@@ -173,35 +173,43 @@ export default function StandardPageReference() {
             </ol>
           </nav>
 
-          {/* Page Title & Actions */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-[var(--spacing-4)] py-[var(--spacing-6)]">
-            <div className="flex-1 min-w-0">
-              <h1 
-                className="font-[var(--font-family-display)] text-[var(--text-3xl)] font-[var(--font-weight-light)] tracking-[var(--tracking-airy)] text-[var(--color-text-primary)] leading-[var(--leading-tight)]"
-              >
-                Standard Page Reference
-              </h1>
-              <p 
-                className="mt-[var(--spacing-2)] font-[var(--font-family-body)] text-[var(--text-sm)] text-[var(--color-text-muted)] leading-[var(--leading-normal)] max-w-2xl"
-              >
-                Golden standard for all pages - perfect spacing, shadows, typography, and responsive design using design tokens.
-              </p>
-            </div>
-            <div className="flex items-center gap-3 shrink-0">
-              <button
-                type="button"
-                className="inline-flex items-center gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50"
-              >
-                <Upload className="h-4 w-4" />
-                <span className="hidden sm:inline">Export</span>
-              </button>
-              <button
-                type="button"
-                className="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                <Plus className="h-4 w-4" />
-                <span className="hidden sm:inline">New Item</span>
-              </button>
+          {/* Page Title & Actions - Profile Header Pattern */}
+          <div className="py-[var(--spacing-6)]">
+            <div className="md:flex md:items-center md:justify-between md:space-x-5">
+              <div className="flex items-start space-x-5">
+                <div className="shrink-0">
+                  <div className="relative">
+                    <img
+                      alt=""
+                      src={currentUser?.profile_picture || "https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80"}
+                      className="size-16 rounded-full"
+                    />
+                    <span aria-hidden="true" className="absolute inset-0 rounded-full shadow-inner" />
+                  </div>
+                </div>
+                <div className="pt-1.5">
+                  <h1 className="text-2xl font-bold text-gray-900">Standard Page Reference</h1>
+                  <p className="text-sm font-medium text-gray-500">
+                    Golden standard for all pages - perfect spacing, shadows, typography, and responsive design using design tokens.
+                  </p>
+                </div>
+              </div>
+              <div className="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-y-0 sm:space-x-3 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50"
+                >
+                  <Upload className="h-4 w-4" />
+                  Export
+                </button>
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center gap-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  <Plus className="h-4 w-4" />
+                  New Item
+                </button>
+              </div>
             </div>
           </div>
 
