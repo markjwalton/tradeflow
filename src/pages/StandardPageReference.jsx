@@ -13,6 +13,7 @@ import {
 import { usePagination } from "@/components/common/usePagination";
 import TailwindHeader from "@/components/sturij/TailwindHeader";
 import TailwindPagination from "@/components/sturij/TailwindPagination";
+import TailwindSidebar from "@/components/sturij/TailwindSidebar";
 
 /**
  * GOLDEN STANDARD PAGE REFERENCE
@@ -77,19 +78,52 @@ export default function StandardPageReference() {
     totalItems,
   } = usePagination(filteredItems, 25);
 
-  const navigation = [
+  const headerNavigation = [
     { name: 'Dashboard', href: '#', current: true },
     { name: 'Team', href: '#', current: false },
     { name: 'Projects', href: '#', current: false },
     { name: 'Calendar', href: '#', current: false },
   ];
 
+  const sidebarNavigation = [
+    { name: 'Dashboard', href: '#', current: true },
+    {
+      name: 'Teams',
+      current: false,
+      children: [
+        { name: 'Engineering', href: '#' },
+        { name: 'Human Resources', href: '#' },
+        { name: 'Customer Success', href: '#' },
+      ],
+    },
+    {
+      name: 'Projects',
+      current: false,
+      children: [
+        { name: 'GraphQL API', href: '#' },
+        { name: 'iOS App', href: '#' },
+        { name: 'Android App', href: '#' },
+        { name: 'New Customer Portal', href: '#' },
+      ],
+    },
+    { name: 'Calendar', href: '#', current: false },
+    { name: 'Documents', href: '#', current: false },
+    { name: 'Reports', href: '#', current: false },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Tailwind UI Header */}
-      <TailwindHeader navigation={navigation} onSearch={setSearchQuery} />
-      
-      {/* === PAGE HEADER SECTION === */}
+    <div className="flex h-screen bg-gray-50">
+      {/* Tailwind UI Sidebar */}
+      <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-72 lg:flex-col">
+        <TailwindSidebar navigation={sidebarNavigation} />
+      </div>
+
+      {/* Main content area */}
+      <div className="lg:pl-72 flex flex-col flex-1">
+        {/* Tailwind UI Header */}
+        <TailwindHeader navigation={headerNavigation} onSearch={setSearchQuery} />
+        
+        {/* === PAGE HEADER SECTION === */}
       {/* Demonstrates: Title, breadcrumb, description, actions */}
       <div 
         className="sticky top-16 z-[var(--z-sticky)] backdrop-blur-sm border-b"
@@ -465,6 +499,7 @@ export default function StandardPageReference() {
             </div>
           </CardContent>
         </Card>
+      </div>
       </div>
     </div>
   );
