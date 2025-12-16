@@ -76,6 +76,25 @@ export default function ${pageName}() {
 
     const result = await response.json();
 
+    // Add page to NavigationConfig source_slugs
+    try {
+      const configs = await base44.asServiceRole.entities.NavigationConfig.filter({ 
+        config_type: "app_pages_source" 
+      });
+      
+      if (configs.length > 0) {
+        const config = configs[0];
+        const existingSlugs = config.source_slugs || [];
+        if (!existingSlugs.includes(pageName)) {
+          await base44.asServiceRole.entities.NavigationConfig.update(config.id, {
+            source_slugs: [...existingSlugs, pageName].sort()
+          });
+        }
+      }
+    } catch (e) {
+      console.error('Failed to update NavigationConfig:', e);
+    }
+
     return Response.json({ 
       success: true,
       pageName,
