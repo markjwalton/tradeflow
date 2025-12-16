@@ -375,7 +375,7 @@ export default function NavigationManager() {
 
 
   return (
-    <div className="min-h-screen -mt-6">
+    <div className="min-h-screen -mt-[var(--spacing-6)]">
       {isGlobalAdmin ? (
         <>
           <PageHeader 
@@ -384,23 +384,35 @@ export default function NavigationManager() {
           />
 
           {/* Tab Navigation */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="[margin-top:var(--spacing-4)]">
-            <TabsList>
-              <TabsTrigger value="admin">
-                <Cog className="h-4 w-4 mr-2" />
-                Admin
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-[var(--spacing-4)]">
+            <TabsList className="grid w-full max-w-md grid-cols-3 bg-[var(--tabs-list-bg)] p-[var(--spacing-1)] rounded-[var(--radius-lg)]">
+              <TabsTrigger 
+                value="admin"
+                className="flex items-center gap-[var(--spacing-2)] data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              >
+                <Cog className="h-[var(--spacing-4)] w-[var(--spacing-4)]" />
+                <span className="hidden sm:inline">Admin</span>
               </TabsTrigger>
-              <TabsTrigger value="app">
-                <FileCode className="h-4 w-4 mr-2" />
-                App Pages
+              <TabsTrigger 
+                value="app"
+                className="flex items-center gap-[var(--spacing-2)] data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              >
+                <FileCode className="h-[var(--spacing-4)] w-[var(--spacing-4)]" />
+                <span className="hidden sm:inline">App Pages</span>
               </TabsTrigger>
-              <TabsTrigger value="tenant">
-                <Users className="h-4 w-4 mr-2" />
-                Tenant
+              <TabsTrigger 
+                value="tenant"
+                className="flex items-center gap-[var(--spacing-2)] data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              >
+                <Users className="h-[var(--spacing-4)] w-[var(--spacing-4)]" />
+                <span className="hidden sm:inline">Tenant</span>
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="admin" className="[margin-top:var(--spacing-4)] space-y-6">
+            <TabsContent 
+              value="admin" 
+              className="mt-[var(--spacing-6)] space-y-[var(--spacing-6)]"
+            >
               <GenericNavEditor
                 title=""
                 configType="admin_console"
@@ -410,7 +422,10 @@ export default function NavigationManager() {
               <FullscreenPagesManager configType="admin_console" />
             </TabsContent>
 
-            <TabsContent value="app" className="[margin-top:var(--spacing-4)] space-y-6">
+            <TabsContent 
+              value="app" 
+              className="mt-[var(--spacing-6)] space-y-[var(--spacing-6)]"
+            >
               <GenericNavEditor
                 title=""
                 configType="app_pages_source"
@@ -420,8 +435,11 @@ export default function NavigationManager() {
               <FullscreenPagesManager configType="app_pages_source" />
             </TabsContent>
 
-            <TabsContent value="tenant" className="[margin-top:var(--spacing-4)]">
-              <div className="[&>*+*]:mt-[var(--spacing-4)]">
+            <TabsContent 
+              value="tenant" 
+              className="mt-[var(--spacing-6)]"
+            >
+              <div className="space-y-[var(--spacing-4)]">
                 <TenantSelector
                   tenants={tenants}
                   selectedTenantId={selectedTenantId}
@@ -430,7 +448,7 @@ export default function NavigationManager() {
                 />
 
                 {selectedTenantId === "__global__" ? (
-                  <div className="font-body text-center [padding-block:var(--spacing-12)] text-[var(--color-muted-foreground)]">
+                  <div className="font-[var(--font-family-body)] text-center py-[var(--spacing-12)] text-[var(--color-text-muted)]">
                     Select a tenant to manage their navigation
                   </div>
                 ) : (
@@ -471,8 +489,10 @@ export default function NavigationManager() {
           </Tabs>
         </>
       ) : (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">Navigation Manager is only available to global administrators.</p>
+        <div className="text-center py-[var(--spacing-12)]">
+          <p className="font-[var(--font-family-body)] text-[var(--text-base)] text-[var(--color-text-muted)]">
+            Navigation Manager is only available to global administrators.
+          </p>
         </div>
       )}
     </div>
