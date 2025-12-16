@@ -10,9 +10,9 @@ import {
   Search, Filter, Download, Upload, Plus, Edit2, Trash2, 
   MoreHorizontal, Eye, Star, Share2, Settings, ChevronLeft, ChevronRight 
 } from "lucide-react";
-import { StandardPagination } from "@/components/common/StandardPagination";
 import { usePagination } from "@/components/common/usePagination";
 import TailwindHeader from "@/components/sturij/TailwindHeader";
+import TailwindPagination from "@/components/sturij/TailwindPagination";
 
 /**
  * GOLDEN STANDARD PAGE REFERENCE
@@ -199,7 +199,7 @@ export default function StandardPageReference() {
       >
         {/* Pagination Top */}
         <div className="mb-[var(--spacing-6)]">
-          <StandardPagination
+          <TailwindPagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={goToPage}
@@ -207,12 +207,9 @@ export default function StandardPageReference() {
             onPrevPage={prevPage}
             canGoNext={canGoNext}
             canGoPrev={canGoPrev}
-            itemsPerPage={itemsPerPage}
-            onItemsPerPageChange={setItemsPerPage}
             startIndex={startIndex}
             endIndex={endIndex}
             totalItems={totalItems}
-            position="top"
           />
         </div>
 
@@ -314,7 +311,7 @@ export default function StandardPageReference() {
 
         {/* Pagination Bottom */}
         <div className="mt-[var(--spacing-8)]">
-          <StandardPagination
+          <TailwindPagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={goToPage}
@@ -322,12 +319,9 @@ export default function StandardPageReference() {
             onPrevPage={prevPage}
             canGoNext={canGoNext}
             canGoPrev={canGoPrev}
-            itemsPerPage={itemsPerPage}
-            onItemsPerPageChange={setItemsPerPage}
             startIndex={startIndex}
             endIndex={endIndex}
             totalItems={totalItems}
-            position="bottom"
           />
         </div>
       </div>
