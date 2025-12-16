@@ -255,7 +255,7 @@ export default function StandardPageReference() {
             </div>
 
             {/* === MAIN CONTENT SECTION === */}
-            <div className="px-4 sm:px-6 lg:px-8 py-8">
+            <div className="px-4 sm:px-6 lg:px-8 py-8 flex-1">
         
               {/* Progress Bar */}
               {progress.visible && (
@@ -292,103 +292,103 @@ export default function StandardPageReference() {
               {/* Grid Layout - Responsive */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {paginatedData.map((item) => (
-            <div key={item.id} className="overflow-hidden rounded-lg bg-white shadow-sm group">
-              <div className="px-4 py-5 sm:p-6">
-                <div className="flex items-start justify-between gap-3 mb-4">
-                  <div className="flex items-start gap-3 flex-1 min-w-0">
-                    <span className="relative inline-block shrink-0">
-                      <img
-                        alt=""
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        className="size-10 rounded-full outline -outline-offset-1 outline-black/5"
-                      />
-                      <span className={`absolute top-0 right-0 block size-2.5 rounded-full ring-2 ring-white ${
-                        item.status === 'active' ? 'bg-green-400' : 
-                        item.status === 'pending' ? 'bg-red-400' : 'bg-gray-300'
-                      }`} />
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-base font-semibold text-gray-900 truncate">{item.title}</h3>
-                      <p className="mt-1 text-sm text-gray-500">
-                        {new Date(item.created_date).toLocaleDateString()}
+                  <div key={item.id} className="overflow-hidden rounded-lg bg-white shadow-sm group">
+                    <div className="px-4 py-5 sm:p-6">
+                      <div className="flex items-start justify-between gap-3 mb-4">
+                        <div className="flex items-start gap-3 flex-1 min-w-0">
+                          <span className="relative inline-block shrink-0">
+                            <img
+                              alt=""
+                              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                              className="size-10 rounded-full outline -outline-offset-1 outline-black/5"
+                            />
+                            <span className={`absolute top-0 right-0 block size-2.5 rounded-full ring-2 ring-white ${
+                              item.status === 'active' ? 'bg-green-400' : 
+                              item.status === 'pending' ? 'bg-red-400' : 'bg-gray-300'
+                            }`} />
+                          </span>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-base font-semibold text-gray-900 truncate">{item.title}</h3>
+                            <p className="mt-1 text-sm text-gray-500">
+                              {new Date(item.created_date).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </div>
+                        <Badge 
+                          variant={item.status === 'active' ? 'default' : 'secondary'}
+                          className="shrink-0"
+                        >
+                          {item.status}
+                        </Badge>
+                      </div>
+                      
+                      <p className="text-sm text-gray-600 line-clamp-2 mb-4">
+                        {item.description}
                       </p>
+                      
+                      {/* Action Buttons */}
+                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        <button 
+                          onClick={() => {
+                            setSelectedItem(item);
+                            setDrawerOpen(true);
+                          }}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 rounded-md"
+                        >
+                          View
+                        </button>
+                        <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 rounded-md">
+                          Edit
+                        </button>
+                        <Menu as="div" className="relative inline-block">
+                          <MenuButton className="flex items-center rounded-full p-1.5 text-gray-400 hover:text-gray-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                            <span className="sr-only">Open options</span>
+                            <EllipsisVerticalIcon aria-hidden="true" className="size-5" />
+                          </MenuButton>
+
+                          <MenuItems
+                            transition
+                            className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg outline-1 outline-black/5 transition data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+                          >
+                            <div className="py-1">
+                              <MenuItem>
+                                <a
+                                  href="#"
+                                  className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                                >
+                                  Duplicate
+                                </a>
+                              </MenuItem>
+                              <MenuItem>
+                                <a
+                                  href="#"
+                                  className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                                >
+                                  Share
+                                </a>
+                              </MenuItem>
+                              <MenuItem>
+                                <a
+                                  href="#"
+                                  className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                                >
+                                  Archive
+                                </a>
+                              </MenuItem>
+                              <MenuItem>
+                                <button
+                                  type="button"
+                                  className="block w-full px-4 py-2 text-left text-sm text-red-700 data-focus:bg-gray-100 data-focus:text-red-900 data-focus:outline-hidden"
+                                >
+                                  Delete
+                                </button>
+                              </MenuItem>
+                            </div>
+                          </MenuItems>
+                        </Menu>
+                      </div>
                     </div>
                   </div>
-                  <Badge 
-                    variant={item.status === 'active' ? 'default' : 'secondary'}
-                    className="shrink-0"
-                  >
-                    {item.status}
-                  </Badge>
-                </div>
-                
-                <p className="text-sm text-gray-600 line-clamp-2 mb-4">
-                  {item.description}
-                </p>
-                
-                {/* Action Buttons */}
-                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <button 
-                    onClick={() => {
-                      setSelectedItem(item);
-                      setDrawerOpen(true);
-                    }}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 rounded-md"
-                  >
-                    View
-                  </button>
-                  <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 rounded-md">
-                    Edit
-                  </button>
-                  <Menu as="div" className="relative inline-block">
-                    <MenuButton className="flex items-center rounded-full p-1.5 text-gray-400 hover:text-gray-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                      <span className="sr-only">Open options</span>
-                      <EllipsisVerticalIcon aria-hidden="true" className="size-5" />
-                    </MenuButton>
-
-                    <MenuItems
-                      transition
-                      className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg outline-1 outline-black/5 transition data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
-                    >
-                      <div className="py-1">
-                        <MenuItem>
-                          <a
-                            href="#"
-                            className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                          >
-                            Duplicate
-                          </a>
-                        </MenuItem>
-                        <MenuItem>
-                          <a
-                            href="#"
-                            className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                          >
-                            Share
-                          </a>
-                        </MenuItem>
-                        <MenuItem>
-                          <a
-                            href="#"
-                            className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                          >
-                            Archive
-                          </a>
-                        </MenuItem>
-                        <MenuItem>
-                          <button
-                            type="button"
-                            className="block w-full px-4 py-2 text-left text-sm text-red-700 data-focus:bg-gray-100 data-focus:text-red-900 data-focus:outline-hidden"
-                          >
-                            Delete
-                          </button>
-                        </MenuItem>
-                      </div>
-                    </MenuItems>
-                  </Menu>
-                </div>
-              </div>
-            </div>
                 ))}
               </div>
 
@@ -487,72 +487,72 @@ export default function StandardPageReference() {
             </footer>
           </div>
         </div>
+      </div>
 
-        {/* Item Details Drawer */}
-        <Dialog open={drawerOpen} onClose={setDrawerOpen} className="relative z-10">
-          <div className="fixed inset-0" />
+      {/* Item Details Drawer */}
+      <Dialog open={drawerOpen} onClose={setDrawerOpen} className="relative z-10">
+        <div className="fixed inset-0" />
 
-          <div className="fixed inset-0 overflow-hidden">
-                <div className="absolute inset-0 overflow-hidden">
-                  <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
-                    <DialogPanel
-                      transition
-                      className="pointer-events-auto w-screen max-w-md transform transition duration-500 ease-in-out data-closed:translate-x-full sm:duration-700"
-                    >
-                      <div className="relative flex h-full flex-col overflow-y-auto bg-white py-6 shadow-xl">
-                        <div className="px-4 sm:px-6">
-                          <div className="flex items-start justify-between">
-                            <DialogTitle className="text-base font-semibold text-gray-900">
-                              {selectedItem?.title || 'Item Details'}
-                            </DialogTitle>
-                            <div className="ml-3 flex h-7 items-center">
-                              <button
-                                type="button"
-                                onClick={() => setDrawerOpen(false)}
-                                className="relative rounded-md text-gray-400 hover:text-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                              >
-                                <span className="absolute -inset-2.5" />
-                                <span className="sr-only">Close panel</span>
-                                <XMarkIcon aria-hidden="true" className="size-6" />
-                              </button>
-                            </div>
-                          </div>
+        <div className="fixed inset-0 overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
+              <DialogPanel
+                transition
+                className="pointer-events-auto w-screen max-w-md transform transition duration-500 ease-in-out data-closed:translate-x-full sm:duration-700"
+              >
+                <div className="relative flex h-full flex-col overflow-y-auto bg-white py-6 shadow-xl">
+                  <div className="px-4 sm:px-6">
+                    <div className="flex items-start justify-between">
+                      <DialogTitle className="text-base font-semibold text-gray-900">
+                        {selectedItem?.title || 'Item Details'}
+                      </DialogTitle>
+                      <div className="ml-3 flex h-7 items-center">
+                        <button
+                          type="button"
+                          onClick={() => setDrawerOpen(false)}
+                          className="relative rounded-md text-gray-400 hover:text-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        >
+                          <span className="absolute -inset-2.5" />
+                          <span className="sr-only">Close panel</span>
+                          <XMarkIcon aria-hidden="true" className="size-6" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="relative mt-6 flex-1 px-4 sm:px-6">
+                    {selectedItem && (
+                      <div className="space-y-6">
+                        <div>
+                          <h3 className="text-sm font-medium text-gray-900">Status</h3>
+                          <p className="mt-2 text-sm text-gray-700">
+                            <Badge variant={selectedItem.status === 'active' ? 'default' : 'secondary'}>
+                              {selectedItem.status}
+                            </Badge>
+                          </p>
                         </div>
-                        <div className="relative mt-6 flex-1 px-4 sm:px-6">
-                          {selectedItem && (
-                            <div className="space-y-6">
-                              <div>
-                                <h3 className="text-sm font-medium text-gray-900">Status</h3>
-                                <p className="mt-2 text-sm text-gray-700">
-                                  <Badge variant={selectedItem.status === 'active' ? 'default' : 'secondary'}>
-                                    {selectedItem.status}
-                                  </Badge>
-                                </p>
-                              </div>
-                              <div>
-                                <h3 className="text-sm font-medium text-gray-900">Category</h3>
-                                <p className="mt-2 text-sm text-gray-700">{selectedItem.category}</p>
-                              </div>
-                              <div>
-                                <h3 className="text-sm font-medium text-gray-900">Created</h3>
-                                <p className="mt-2 text-sm text-gray-700">
-                                  {new Date(selectedItem.created_date).toLocaleDateString()}
-                                </p>
-                              </div>
-                              <div>
-                                <h3 className="text-sm font-medium text-gray-900">Description</h3>
-                                <p className="mt-2 text-sm text-gray-700">{selectedItem.description}</p>
-                              </div>
-                            </div>
-                          )}
+                        <div>
+                          <h3 className="text-sm font-medium text-gray-900">Category</h3>
+                          <p className="mt-2 text-sm text-gray-700">{selectedItem.category}</p>
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-medium text-gray-900">Created</h3>
+                          <p className="mt-2 text-sm text-gray-700">
+                            {new Date(selectedItem.created_date).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-medium text-gray-900">Description</h3>
+                          <p className="mt-2 text-sm text-gray-700">{selectedItem.description}</p>
                         </div>
                       </div>
-                    </DialogPanel>
+                    )}
                   </div>
                 </div>
-              </div>
-            </Dialog>
-      </div>
+              </DialogPanel>
+            </div>
+          </div>
+        </div>
+      </Dialog>
     </div>
   );
 }
