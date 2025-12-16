@@ -17,10 +17,10 @@ Deno.serve(async (req) => {
     }
 
     // Read UIPage from database to get the current page content
-    const pageSlug = filePath.replace('pages/', '').replace('.js', '');
+    const pageSlug = filePath.replace('pages/', '').replace('.js', '').replace('.jsx', '');
     
     const pages = await base44.asServiceRole.entities.UIPage.filter({ 
-      slug: pageSlug 
+      page_name: pageSlug 
     });
 
     if (pages.length === 0) {
