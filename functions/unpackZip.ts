@@ -10,16 +10,19 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const formData = await req.formData();
-    const zipFile = formData.get('zipFile');
-    const websiteFolderId = formData.get('websiteFolderId');
+    const { zipFileUrl, websiteFolderId, currentPath } = await req.json();
 
-    if (!zipFile || !websiteFolderId) {
-      return Response.json({ error: 'Missing zipFile or websiteFolderId' }, { status: 400 });
+    if (!zipFileUrl || !websiteFolderId) {
+      return Response.json({ error: 'Missing zipFileUrl or websiteFolderId' }, { status: 400 });
     }
 
-    // Read zip file
-    const zipBuffer = await zipFile.arrayBuffer();
+    // Fetch the zip file from the URL
+    const zipResponse = await fetch(zipFileUrl);
+    if (!zipResponse.ok) {
+      return Response.json({ error: 'Failed to fetch zip file' }, { status: 400 });
+    }
+
+    const zipBuffer = await zipResponse.arrayBuffer();
     const zip = await JSZip.loadAsync(zipBuffer);
 
     const uploadedFiles = [];
@@ -47,15 +50,18 @@ Deno.serve(async (req) => {
       const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'];
       const fileType = imageExtensions.includes(extension) ? 'image' : 'other';
 
+      // Build final file path
+      const finalPath = currentPath ? `${currentPath}/${relativePath}` : relativePath;
+
       // Create asset record
       await base44.asServiceRole.entities.WebsiteAsset.create({
         website_folder_id: websiteFolderId,
         file_name: fileName,
-        file_path: relativePath,
+        file_path: finalPath,
         file_url,
         file_type: fileType,
         file_size: fileBlob.size,
-        mime_type: fileBlob.type,
+        mime_type: fileBlob.type || 'application/octet-stream',
       });
 
       uploadedFiles.push({
