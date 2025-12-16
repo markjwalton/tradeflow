@@ -238,7 +238,7 @@ export default function StandardPageReference() {
                 </div>
 
                 {/* Tabs for Status Filtering */}
-                <div className="pb-4">
+                <div className="pb-2">
                   <TailwindTabs 
                     tabs={[
                       { name: 'All Items', value: 'all' },
@@ -439,6 +439,22 @@ export default function StandardPageReference() {
                 />
               </div>
             </div>
+            </div>
+          </div>
+
+          {/* Sticky Navigation Bar */}
+          <div className="sticky bottom-0 z-30 bg-white border-t border-gray-200 lg:ml-[-18rem]">
+            <div className="px-4 sm:px-6 lg:px-8 py-3">
+              <TailwindTabs 
+                tabs={[
+                  { name: 'All Items', value: 'all' },
+                  { name: 'Active', value: 'active' },
+                  { name: 'Pending', value: 'pending' },
+                  { name: 'Completed', value: 'completed' }
+                ]}
+                activeTab={activeTab}
+                onTabChange={setActiveTab}
+              />
             </div>
           </div>
 
