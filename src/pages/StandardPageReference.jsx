@@ -155,8 +155,9 @@ export default function StandardPageReference() {
         </div>
 
         {/* Main Content Area - Accounts for Sidebar Width */}
-        <div className="flex-1 lg:pl-72 overflow-y-auto">
-          <div className="min-h-full flex flex-col">
+        <div className="flex-1 lg:pl-72 flex flex-col">
+          <div className="flex-1 overflow-y-auto">
+            <div className="min-h-full flex flex-col">
             {/* === PAGE HEADER SECTION === */}
             <div className="sticky top-0 z-40 bg-white border-b border-gray-200">
               <div className="px-4 sm:px-6 lg:px-8">
@@ -438,11 +439,11 @@ export default function StandardPageReference() {
                 />
               </div>
             </div>
+            </div>
           </div>
-        </div>
 
-        {/* Footer - Full Width at bottom */}
-        <footer className="bg-white border-t border-gray-200 w-full">
+          {/* Footer - Full Width at bottom */}
+          <footer className="bg-white border-t border-gray-200 w-full lg:ml-[-18rem]">
           <div className="px-4 sm:px-6 lg:px-8 py-12 md:flex md:items-center md:justify-between">
             <div className="flex justify-center gap-x-6 md:order-2">
               {[
@@ -484,7 +485,8 @@ export default function StandardPageReference() {
               &copy; 2025 Your Company, Inc. All rights reserved.
             </p>
           </div>
-        </footer>
+          </footer>
+        </div>
       </div>
 
       {/* Item Details Drawer */}
