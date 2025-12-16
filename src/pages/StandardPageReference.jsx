@@ -81,7 +81,7 @@ export default function StandardPageReference() {
   } = usePagination(filteredItems, 25);
 
   return (
-    <div className="flex flex-col min-h-screen" style={{ backgroundColor: 'var(--color-background)' }}>
+    <>
       {/* Breadcrumb Navigation - Not Sticky */}
       <nav 
         aria-label="Breadcrumb" 
@@ -453,20 +453,7 @@ export default function StandardPageReference() {
                   endIndex={endIndex}
                   totalItems={totalItems}
                 />
-              </div>
-            </div>
-
-            {/* Footer */}
-            <footer style={{ 
-              backgroundColor: 'var(--color-background)',
-              borderTop: '1px solid var(--color-border)'
-            }}>
-              <div style={{ 
-                paddingTop: 'var(--spacing-12)',
-                paddingBottom: 'var(--spacing-12)',
-                paddingLeft: 'var(--spacing-4)',
-                paddingRight: 'var(--spacing-4)'
-              }} className="sm:px-6 lg:px-8 md:flex md:items-center md:justify-between">
+      </div>
               <div className="flex justify-center gap-x-6 md:order-2">
                 {[
                   {
@@ -502,13 +489,6 @@ export default function StandardPageReference() {
                     <item.icon aria-hidden="true" className="size-6" />
                   </a>
                 ))}
-          </div>
-          <p className="mt-8 text-center text-sm/6 md:order-1 md:mt-0" style={{ color: 'var(--color-text-muted)' }}>
-            &copy; 2025 Your Company, Inc. All rights reserved.
-          </p>
-        </div>
-      </footer>
-
       {/* Item Details Drawer */}
       <Dialog open={drawerOpen} onClose={setDrawerOpen} className="relative z-10">
         <div className="fixed inset-0" />
