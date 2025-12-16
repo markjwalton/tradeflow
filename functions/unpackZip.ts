@@ -32,16 +32,18 @@ Deno.serve(async (req) => {
       // Skip directories
       if (zipEntry.dir) continue;
 
-      // Get file content as blob
-      const fileBlob = await zipEntry.async('blob');
+      // Get file content as Uint8Array
+      const fileContent = await zipEntry.async('uint8array');
       
-      // Create FormData for upload
-      const uploadFormData = new FormData();
-      uploadFormData.append('file', fileBlob, relativePath.split('/').pop());
+      // Create a File object
+      const fileName = relativePath.split('/').pop();
+      const file = new File([fileContent], fileName, { 
+        type: 'application/octet-stream' 
+      });
 
       // Upload file using Base44
       const { file_url } = await base44.integrations.Core.UploadFile({
-        file: fileBlob,
+        file: file,
       });
 
       // Determine file type
@@ -60,8 +62,8 @@ Deno.serve(async (req) => {
         file_path: finalPath,
         file_url,
         file_type: fileType,
-        file_size: fileBlob.size,
-        mime_type: fileBlob.type || 'application/octet-stream',
+        file_size: file.size,
+        mime_type: file.type || 'application/octet-stream',
       });
 
       uploadedFiles.push({
