@@ -254,16 +254,16 @@ export default function StandardPageReference() {
         </div>
 
         {/* Grid Layout - Responsive */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[var(--spacing-6)]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {paginatedData.map((item) => (
-            <Card key={item.id} className="group">
-              <CardHeader>
-                <div className="flex items-start justify-between gap-[var(--spacing-3)]">
+            <div key={item.id} className="overflow-hidden rounded-lg bg-white shadow-sm group">
+              <div className="px-4 py-5 sm:p-6">
+                <div className="flex items-start justify-between gap-3 mb-4">
                   <div className="flex-1 min-w-0">
-                    <CardTitle className="truncate">{item.title}</CardTitle>
-                    <CardDescription className="mt-[var(--spacing-1)]">
+                    <h3 className="text-base font-semibold text-gray-900 truncate">{item.title}</h3>
+                    <p className="mt-1 text-sm text-gray-500">
                       {new Date(item.created_date).toLocaleDateString()}
-                    </CardDescription>
+                    </p>
                   </div>
                   <Badge 
                     variant={item.status === 'active' ? 'default' : 'secondary'}
@@ -272,42 +272,27 @@ export default function StandardPageReference() {
                     {item.status}
                   </Badge>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <p 
-                  className="font-[var(--font-family-body)] text-[var(--text-sm)] text-[var(--color-text-body)] leading-[var(--leading-relaxed)] line-clamp-2 mb-[var(--spacing-4)]"
-                >
+                
+                <p className="text-sm text-gray-600 line-clamp-2 mb-4">
                   {item.description}
                 </p>
                 
                 {/* Action Buttons */}
-                <div className="flex items-center gap-[var(--spacing-2)] opacity-0 group-hover:opacity-100 transition-opacity duration-[var(--duration-200)]">
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    className="gap-[var(--spacing-2)] h-8 px-[var(--spacing-3)]"
-                  >
+                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 rounded-md">
                     <Eye className="h-4 w-4" />
                     View
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    className="gap-[var(--spacing-2)] h-8 px-[var(--spacing-3)]"
-                  >
+                  </button>
+                  <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 rounded-md">
                     <Edit2 className="h-4 w-4" />
                     Edit
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    className="h-8 w-8 p-0"
-                  >
+                  </button>
+                  <button className="p-1.5 text-gray-700 hover:bg-gray-50 rounded-md">
                     <MoreHorizontal className="h-4 w-4" />
-                  </Button>
+                  </button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
 
