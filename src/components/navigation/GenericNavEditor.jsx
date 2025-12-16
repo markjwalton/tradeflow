@@ -235,7 +235,15 @@ export default function GenericNavEditor({
 
   // Save changes explicitly
   const handleSaveChanges = () => {
-    saveMutation.mutate(items);
+    const loadingToast = toast.loading("Saving navigation changes...");
+    saveMutation.mutate(items, {
+      onSuccess: () => {
+        toast.success("✓ Navigation saved successfully", { id: loadingToast });
+      },
+      onError: (error) => {
+        toast.error(`Failed to save: ${error.message}`, { id: loadingToast });
+      }
+    });
   };
 
   // Copy from global template to tenant config
@@ -452,17 +460,39 @@ export default function GenericNavEditor({
         };
         // Ensure all existing items keep their id
         const existingItems = items.map(i => ({ ...i, id: i.id || generateId() }));
-        saveMutation.mutate([...existingItems, newItem]);
-        toast.success(`${name} added`);
+        const loadingToast = toast.loading(`Adding "${name}" to navigation...`);
+        saveMutation.mutate([...existingItems, newItem], {
+          onSuccess: () => {
+            toast.success(`✓ "${name}" added to navigation`, { id: loadingToast });
+          },
+          onError: (error) => {
+            toast.error(`Failed to add page: ${error.message}`, { id: loadingToast });
+          }
+        });
       };
 
   const handleCreateNewPage = async () => {
+    // Validation
     if (!newPageName.trim()) {
       toast.error("Page name is required");
       return;
     }
 
+    // Validate PascalCase format
+    if (!/^[A-Z][a-zA-Z0-9]*$/.test(newPageName)) {
+      toast.error("Page name must be PascalCase (e.g., MyNewPage)");
+      return;
+    }
+
+    // Check if already exists
+    if (effectiveSlugs.includes(newPageName)) {
+      toast.error("A page with this name already exists");
+      return;
+    }
+
     setIsCreatingPage(true);
+    const loadingToast = toast.loading("Creating page file...");
+
     try {
       // Create the file via backend
       const response = await base44.functions.invoke('createPageFile', {
@@ -471,11 +501,13 @@ export default function GenericNavEditor({
       });
 
       if (response.data.success) {
-        toast.success("Page file created successfully");
+        toast.success(`✓ Page "${newPageName}" created successfully`, { id: loadingToast });
         
         // Resync to get the new page in the list
         if (syncUnallocatedPages) {
+          toast.loading("Syncing pages...", { id: loadingToast });
           await syncUnallocatedPages();
+          toast.success("✓ Page synced and ready to allocate", { id: loadingToast });
         }
 
         // Close dialog and reset
@@ -484,7 +516,7 @@ export default function GenericNavEditor({
         setNewPageTitle("");
       }
     } catch (error) {
-      toast.error("Failed to create page: " + error.message);
+      toast.error(`Failed to create page: ${error.message}`, { id: loadingToast });
     } finally {
       setIsCreatingPage(false);
     }
