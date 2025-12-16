@@ -142,7 +142,7 @@ export default function NavigationManager() {
         "TailwindAppShellsShowcase", "TailwindPageHeadersShowcase", "TailwindPeopleListsShowcase",
         "TailwindTablesShowcase", "TailwindCardsShowcase", "TailwindBadgesShowcase",
         "TailwindMenuShowcase", "TailwindNavigationShowcase", "TailwindCalendarShowcase",
-        "TailwindSectionHeadersShowcase", "UXShowcase"
+        "TailwindSectionHeadersShowcase", "UXShowcase", "StandardPageReference"
       ];
       
       const configs = await base44.entities.NavigationConfig.filter({ config_type: configType });
