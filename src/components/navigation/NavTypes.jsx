@@ -163,6 +163,7 @@ export const getFolderParents = (itemId, allItems) => {
 
 /**
  * Build a flat list with depth information for rendering
+ * CRITICAL: Always show top-level items, then show children only if parent is expanded
  */
 export const buildFlatNavList = (allItems, expandedIds = new Set(), maxDepth = 3) => {
   const result = [];
@@ -176,6 +177,7 @@ export const buildFlatNavList = (allItems, expandedIds = new Set(), maxDepth = 3
       const itemHasChildren = hasChildren(item, allItems);
       const isExpanded = expandedIds.has(itemId);
       
+      // Always add the item itself
       result.push({
         ...item,
         depth,
@@ -183,12 +185,14 @@ export const buildFlatNavList = (allItems, expandedIds = new Set(), maxDepth = 3
         isExpanded,
       });
       
+      // Only recurse into children if this item is expanded
       if (itemHasChildren && isExpanded) {
         addItems(itemId, depth + 1);
       }
     });
   };
   
+  // Start with top-level items (parentId = null)
   addItems(null, 0);
   return result;
 };
