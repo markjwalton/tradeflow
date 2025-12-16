@@ -24,8 +24,9 @@ import {
 } from "@/components/ui/select";
 import { 
   Plus, GripVertical, Pencil, Trash2, Copy, FolderOpen, Power, Sparkles, Loader2,
-  Folder, File, ChevronDown, ChevronRight, MoveRight, CornerDownRight
+  Folder, File, ChevronDown, ChevronRight, MoveRight, CornerDownRight, AlertCircle, Database
 } from "lucide-react";
+import DeletePageDialog from "./DeletePageDialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -94,6 +95,11 @@ export default function GenericNavEditor({
   const [initialExpandDone, setInitialExpandDone] = useState(false);
   const [aiRecommendations, setAiRecommendations] = useState({});
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
+  const [expandedPageDetails, setExpandedPageDetails] = useState(new Set());
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [pageToDelete, setPageToDelete] = useState(null);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [originalItems, setOriginalItems] = useState([]);
 
   // Build the effective config type (tenant-prefixed if tenant-specific)
   const effectiveConfigType = tenantId && !isGlobal 
@@ -123,6 +129,32 @@ export default function GenericNavEditor({
       id: item.id || item._id || generateId()
     }));
   }, [rawItems]);
+
+  // Track original items for unsaved changes detection
+  useEffect(() => {
+    if (items.length > 0 && originalItems.length === 0) {
+      setOriginalItems(JSON.parse(JSON.stringify(items)));
+    }
+  }, [items, originalItems.length]);
+
+  // Detect unsaved changes
+  useEffect(() => {
+    if (originalItems.length === 0) return;
+    const hasChanges = JSON.stringify(items) !== JSON.stringify(originalItems);
+    setHasUnsavedChanges(hasChanges);
+  }, [items, originalItems]);
+
+  // Warn before leaving with unsaved changes
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [hasUnsavedChanges]);
   
   // Get slugs from config's source_slugs (no hardcoded fallback)
   const effectiveSlugs = React.useMemo(() => {
@@ -189,11 +221,18 @@ export default function GenericNavEditor({
             });
           }
         },
-        onSuccess: () => {
+        onSuccess: (_, newItems) => {
           queryClient.invalidateQueries({ queryKey: ["navConfig", effectiveConfigType] });
+          setOriginalItems(JSON.parse(JSON.stringify(newItems)));
+          setHasUnsavedChanges(false);
           toast.success("Navigation saved");
         },
       });
+
+  // Save changes explicitly
+  const handleSaveChanges = () => {
+    saveMutation.mutate(items);
+  };
 
   // Copy from global template to tenant config
   const handleCopyFromGlobal = () => {
@@ -307,11 +346,51 @@ export default function GenericNavEditor({
   };
 
   const handleDelete = (item) => {
-    // Remove by id and remove children by parent_id
+    // Check if page is in main navigation
+    if (item.item_type === "page" && item.slug) {
+      const isInMainNav = items.some(i => i.slug === item.slug);
+      if (isInMainNav) {
+        toast.error("Remove page from navigation first before deleting");
+        return;
+      }
+    }
+
+    // For immediate delete (folders/items without entities)
     const newItems = items.filter(i => 
       i.id !== item.id && i.parent_id !== item.id
     );
     saveMutation.mutate(newItems);
+  };
+
+  // Open delete dialog with entity detection
+  const handleDeletePage = async (page) => {
+    if (!page.slug) return;
+
+    // Check if page is in main navigation
+    const isInMainNav = items.some(i => i.slug === page.slug);
+    if (isInMainNav) {
+      toast.error("Remove page from navigation first before deleting");
+      return;
+    }
+
+    // Detect related entities (simplified - you can enhance this)
+    const relatedEntities = [];
+    // TODO: Add logic to detect entities related to this page
+    // For now, we'll just check if the page name matches any entity naming pattern
+    
+    setPageToDelete(page);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async ({ page, selectedFiles }) => {
+    // Remove from navigation
+    const newItems = items.filter(i => i.slug !== page.slug);
+    
+    // Delete selected files (this would need a backend function)
+    // For now, just remove from navigation
+    saveMutation.mutate(newItems);
+    
+    toast.success(`${selectedFiles.length} file(s) deleted`);
   };
 
   const handleDuplicate = (item) => {
@@ -398,6 +477,15 @@ export default function GenericNavEditor({
     });
   };
 
+  const togglePageDetails = (slug) => {
+    setExpandedPageDetails(prev => {
+      const next = new Set(prev);
+      if (next.has(slug)) next.delete(slug);
+      else next.add(slug);
+      return next;
+    });
+  };
+
   // Use shared flat list builder
   const buildFlatList = () => buildFlatNavList(items, expandedParents);
 
@@ -429,6 +517,23 @@ export default function GenericNavEditor({
             <Plus className="h-3.5 w-3.5 mr-1.5" />
             Add Navigation
           </Button>
+          
+          {hasUnsavedChanges && (
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="text-xs text-orange-600 border-orange-300">
+                <AlertCircle className="h-3 w-3 mr-1" />
+                Unsaved Changes
+              </Badge>
+              <Button 
+                size="sm"
+                onClick={handleSaveChanges}
+                className="bg-primary hover:bg-primary-600"
+                disabled={saveMutation.isPending}
+              >
+                {saveMutation.isPending ? "Saving..." : "Save Changes"}
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Content Area */}
@@ -775,53 +880,107 @@ export default function GenericNavEditor({
                     </h4>
                     <div className="[&>*+*]:mt-[var(--spacing-1)]">
                       {effectiveSlugs.map(slug => {
-                        const navItem = items.find(i => i.slug === slug);
-                        const isUnallocated = !navItem && unallocatedSlugs.includes(slug);
-                        const pageName = slug.replace(/([A-Z])/g, ' $1').trim();
-                        const parentPath = navItem?.parent_id 
-                          ? (() => {
-                              const getPath = (parentId) => {
-                                if (!parentId) return "";
-                                const parent = items.find(i => i.id === parentId);
-                                if (!parent) return "";
-                                const grandPath = getPath(parent.parent_id);
-                                return grandPath ? `${grandPath} > ${parent.name}` : parent.name;
-                              };
-                              return getPath(navItem.parent_id);
-                            })()
-                          : "Root";
-                        
-                        return (
-                          <div 
-                            key={slug}
-                            className="flex items-center justify-between [padding:var(--spacing-2)] bg-white/50 rounded"
-                          >
-                            <div className="flex items-center [gap:var(--spacing-2)] flex-1">
-                              <File className="h-3 w-3 text-muted-foreground" />
-                              <span className="text-sm text-[var(--color-midnight)]">{pageName}</span>
-                            </div>
-                            <div className="flex items-center [gap:var(--spacing-2)]">
-                              {navItem ? (
-                                <>
-                                  <Badge variant="outline" className="text-xs">
-                                    {parentPath}
-                                  </Badge>
-                                  <Badge className="text-xs bg-green-50 text-green-700 border-green-200">
-                                    Allocated
-                                  </Badge>
-                                </>
-                              ) : isUnallocated ? (
-                                <Badge variant="outline" className="text-xs text-orange-600 border-orange-300">
-                                  Unallocated
-                                </Badge>
-                              ) : (
-                                <Badge variant="outline" className="text-xs text-red-600 border-red-300">
-                                  Not in System
-                                </Badge>
-                              )}
-                            </div>
-                          </div>
-                        );
+                       const navItem = items.find(i => i.slug === slug);
+                       const isUnallocated = !navItem && unallocatedSlugs.includes(slug);
+                       const pageName = slug.replace(/([A-Z])/g, ' $1').trim();
+                       const isExpanded = expandedPageDetails.has(slug);
+                       const isInMainNav = items.some(i => i.slug === slug);
+
+                       // Mock entity detection (enhance this with real logic)
+                       const relatedEntities = [];
+
+                       const parentPath = navItem?.parent_id 
+                         ? (() => {
+                             const getPath = (parentId) => {
+                               if (!parentId) return "";
+                               const parent = items.find(i => i.id === parentId);
+                               if (!parent) return "";
+                               const grandPath = getPath(parent.parent_id);
+                               return grandPath ? `${grandPath} > ${parent.name}` : parent.name;
+                             };
+                             return getPath(navItem.parent_id);
+                           })()
+                         : "Root";
+
+                       return (
+                         <div key={slug} className="border border-border rounded-lg overflow-hidden">
+                           <div 
+                             className="flex items-center justify-between [padding:var(--spacing-2)] bg-white hover:bg-muted/30 cursor-pointer transition-colors"
+                             onClick={() => togglePageDetails(slug)}
+                           >
+                             <div className="flex items-center [gap:var(--spacing-2)] flex-1">
+                               {isExpanded ? 
+                                 <ChevronDown className="h-3 w-3 text-muted-foreground" /> : 
+                                 <ChevronRight className="h-3 w-3 text-muted-foreground" />
+                               }
+                               <File className="h-3 w-3 text-muted-foreground" />
+                               <span className="text-sm text-[var(--color-midnight)]">{pageName}</span>
+                             </div>
+                             <div className="flex items-center [gap:var(--spacing-2)]">
+                               {navItem ? (
+                                 <>
+                                   <Badge variant="outline" className="text-xs">
+                                     {parentPath}
+                                   </Badge>
+                                   <Badge className="text-xs bg-green-50 text-green-700 border-green-200">
+                                     Allocated
+                                   </Badge>
+                                 </>
+                               ) : isUnallocated ? (
+                                 <Badge variant="outline" className="text-xs text-orange-600 border-orange-300">
+                                   Unallocated
+                                 </Badge>
+                               ) : (
+                                 <Badge variant="outline" className="text-xs text-red-600 border-red-300">
+                                   Not in System
+                                 </Badge>
+                               )}
+                             </div>
+                           </div>
+
+                           {isExpanded && (
+                             <div className="p-3 bg-muted/20 border-t space-y-2">
+                               <div className="text-xs text-muted-foreground mb-2">
+                                 Related Entities ({relatedEntities.length}):
+                               </div>
+                               {relatedEntities.length > 0 ? (
+                                 <div className="space-y-1">
+                                   {relatedEntities.map(entity => (
+                                     <div key={entity} className="flex items-center gap-2 text-xs">
+                                       <Database className="h-3 w-3 text-blue-500" />
+                                       <span>{entity}</span>
+                                     </div>
+                                   ))}
+                                 </div>
+                               ) : (
+                                 <div className="text-xs text-muted-foreground italic">
+                                   No related entities detected
+                                 </div>
+                               )}
+
+                               {!isInMainNav && navItem && (
+                                 <Button
+                                   size="sm"
+                                   variant="destructive"
+                                   className="w-full mt-2"
+                                   onClick={(e) => {
+                                     e.stopPropagation();
+                                     handleDeletePage(navItem);
+                                   }}
+                                 >
+                                   <Trash2 className="h-3 w-3 mr-1" />
+                                   Delete Page & Files
+                                 </Button>
+                               )}
+                               {isInMainNav && (
+                                 <div className="text-xs text-orange-600 p-2 bg-orange-50 rounded border border-orange-200">
+                                   Remove from navigation before deleting
+                                 </div>
+                               )}
+                             </div>
+                           )}
+                         </div>
+                       );
                       })}
                     </div>
                   </div>
@@ -832,6 +991,15 @@ export default function GenericNavEditor({
         )}
       </CardContent>
     </Card>
+
+      {/* Delete Dialog */}
+      <DeletePageDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        page={pageToDelete}
+        relatedEntities={[]}
+        onConfirm={handleConfirmDelete}
+      />
 
       {/* Edit Sidebar */}
       <Sheet open={showDialog} onOpenChange={closeDialog}>
