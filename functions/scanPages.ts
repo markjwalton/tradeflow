@@ -9,41 +9,25 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const githubToken = Deno.env.get('GITHUB_TOKEN');
-    if (!githubToken) {
-      return Response.json({ error: 'GitHub token not configured' }, { status: 500 });
-    }
+    // Scan local pages directory
+    const pagesDir = './pages';
+    const pages = [];
 
-    // Use GitHub API to list pages folder
-    const owner = 'KieronFernieBrown';
-    const repo = 'radiant-cms';
-    const path = 'pages';
-
-    const response = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
-      {
-        headers: {
-          'Authorization': `token ${githubToken}`,
-          'Accept': 'application/vnd.github.v3+json',
-          'User-Agent': 'Base44-App'
+    try {
+      for await (const entry of Deno.readDir(pagesDir)) {
+        if (entry.isFile && (entry.name.endsWith('.js') || entry.name.endsWith('.jsx'))) {
+          const pageName = entry.name.replace(/\.(js|jsx)$/, '');
+          pages.push(pageName);
         }
       }
-    );
-
-    if (!response.ok) {
-      const errorText = await response.text();
+    } catch (error) {
       return Response.json({ 
-        error: 'Failed to fetch pages from GitHub', 
-        status: response.status,
-        details: errorText
+        error: 'Failed to read pages directory', 
+        details: error.message 
       }, { status: 500 });
     }
 
-    const files = await response.json();
-    const pages = files
-      .filter(file => file.type === 'file' && (file.name.endsWith('.js') || file.name.endsWith('.jsx')))
-      .map(file => file.name.replace(/\.(js|jsx)$/, ''))
-      .sort();
+    pages.sort();
 
     return Response.json({ 
       pages,
