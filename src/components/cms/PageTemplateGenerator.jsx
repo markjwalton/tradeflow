@@ -39,16 +39,39 @@ export default function PageTemplateGenerator() {
   // Analyze page mutation
   const analyzeMutation = useMutation({
     mutationFn: async (pageSlug) => {
+      console.log('🔍 [FRONTEND] Starting analysis for:', pageSlug);
+      
       // Fetch page content from UIPage entity
+      console.log('📦 [FRONTEND] Fetching page from UIPage entity...');
       const pages = await base44.entities.UIPage.filter({ page_name: pageSlug });
+      console.log('📦 [FRONTEND] Pages found:', pages.length);
+      
       if (pages.length === 0 || !pages[0].current_content_jsx) {
+        console.error('❌ [FRONTEND] Page not found or has no content');
         throw new Error(`Page "${pageSlug}" not found in database or has no content`);
       }
       
-      const response = await base44.functions.invoke('analyzePageTemplate', {
+      const pageContent = pages[0].current_content_jsx;
+      console.log('📄 [FRONTEND] Page content length:', pageContent.length, 'characters');
+      console.log('📄 [FRONTEND] First 200 chars:', pageContent.substring(0, 200));
+      
+      const payload = {
         page_slug: pageSlug,
-        page_content: pages[0].current_content_jsx
+        page_content: pageContent
+      };
+      
+      console.log('🚀 [FRONTEND] Invoking backend function with payload:', {
+        page_slug: payload.page_slug,
+        content_length: payload.page_content.length
       });
+      
+      const startTime = Date.now();
+      const response = await base44.functions.invoke('analyzePageTemplate', payload);
+      const duration = Date.now() - startTime;
+      
+      console.log('✅ [FRONTEND] Response received in', duration, 'ms');
+      console.log('📊 [FRONTEND] Response data:', response.data);
+      
       return response.data;
     },
     onSuccess: (data) => {
