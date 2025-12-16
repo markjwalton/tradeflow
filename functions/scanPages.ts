@@ -9,25 +9,14 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Scan local pages directory
-    const pagesDir = './pages';
-    const pages = [];
-
-    try {
-      for await (const entry of Deno.readDir(pagesDir)) {
-        if (entry.isFile && (entry.name.endsWith('.js') || entry.name.endsWith('.jsx'))) {
-          const pageName = entry.name.replace(/\.(js|jsx)$/, '');
-          pages.push(pageName);
-        }
-      }
-    } catch (error) {
-      return Response.json({ 
-        error: 'Failed to read pages directory', 
-        details: error.message 
-      }, { status: 500 });
-    }
-
-    pages.sort();
+    // Query UIPage entity to get all pages
+    const uiPages = await base44.asServiceRole.entities.UIPage.list();
+    
+    // Extract slugs from UIPage records
+    const pages = uiPages
+      .filter(page => page.slug)
+      .map(page => page.slug)
+      .sort();
 
     return Response.json({ 
       pages,
