@@ -1,5 +1,13 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react'
 import { ChevronRightIcon } from '@heroicons/react/20/solid'
+import {
+  CalendarIcon,
+  ChartPieIcon,
+  DocumentDuplicateIcon,
+  FolderIcon,
+  HomeIcon,
+  UsersIcon,
+} from '@heroicons/react/24/outline'
 import { useEffect, useState } from 'react'
 import { base44 } from '@/api/base44Client'
 
@@ -34,9 +42,10 @@ export default function TailwindSidebar({ navigation = [] }) {
                       href={item.href}
                       className={classNames(
                         item.current ? 'bg-gray-50' : 'hover:bg-gray-50',
-                        'block rounded-md py-2 pr-2 pl-10 text-sm/6 font-semibold text-gray-700',
+                        'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-gray-700',
                       )}
                     >
+                      {item.icon && <item.icon aria-hidden="true" className="size-6 shrink-0 text-gray-400" />}
                       {item.name}
                     </a>
                   ) : (
@@ -47,11 +56,12 @@ export default function TailwindSidebar({ navigation = [] }) {
                           'group flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm/6 font-semibold text-gray-700',
                         )}
                       >
+                        {item.icon && <item.icon aria-hidden="true" className="size-6 shrink-0 text-gray-400" />}
+                        {item.name}
                         <ChevronRightIcon
                           aria-hidden="true"
-                          className="size-5 shrink-0 text-gray-400 group-data-open:rotate-90 group-data-open:text-gray-500"
+                          className="ml-auto size-5 shrink-0 text-gray-400 group-data-open:rotate-90 group-data-open:text-gray-500"
                         />
-                        {item.name}
                       </DisclosureButton>
                       <DisclosurePanel as="ul" className="mt-1 px-2">
                         {item.children.map((subItem) => (

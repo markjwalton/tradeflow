@@ -8,7 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { 
   Search, Filter, Download, Upload, Plus, Edit2, Trash2, 
-  MoreHorizontal, Eye, Star, Share2, Settings, ChevronLeft, ChevronRight 
+  MoreHorizontal, Eye, Star, Share2, Settings, ChevronLeft, ChevronRight,
+  Home, Users, FolderOpen, Calendar, FileText, BarChart3
 } from "lucide-react";
 import { PlusIcon, EllipsisVerticalIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
@@ -94,9 +95,10 @@ export default function StandardPageReference() {
   ];
 
   const sidebarNavigation = [
-    { name: 'Dashboard', href: '#', current: true },
+    { name: 'Dashboard', href: '#', icon: Home, current: true },
     {
       name: 'Teams',
+      icon: Users,
       current: false,
       children: [
         { name: 'Engineering', href: '#' },
@@ -106,6 +108,7 @@ export default function StandardPageReference() {
     },
     {
       name: 'Projects',
+      icon: FolderOpen,
       current: false,
       children: [
         { name: 'GraphQL API', href: '#' },
@@ -114,9 +117,9 @@ export default function StandardPageReference() {
         { name: 'New Customer Portal', href: '#' },
       ],
     },
-    { name: 'Calendar', href: '#', current: false },
-    { name: 'Documents', href: '#', current: false },
-    { name: 'Reports', href: '#', current: false },
+    { name: 'Calendar', href: '#', icon: Calendar, current: false },
+    { name: 'Documents', href: '#', icon: FileText, current: false },
+    { name: 'Reports', href: '#', icon: BarChart3, current: false },
   ];
 
   return (
