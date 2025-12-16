@@ -13,14 +13,16 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'page_slug required' }, { status: 400 });
     }
 
-    // Read the page file directly from the file system
-    let content;
-    try {
-      content = await Deno.readTextFile(`/src/pages/${page_slug}.js`);
-    } catch (e) {
-      console.error('File read error:', e);
-      return Response.json({ error: `Page file not found: ${e.message}` }, { status: 404 });
+    // Read page content using backend function
+    const readResult = await base44.asServiceRole.functions.invoke('readFileContent', {
+      file_path: `pages/${page_slug}.js`
+    });
+
+    if (!readResult.data.success) {
+      return Response.json({ error: readResult.data.error || 'Failed to read page file' }, { status: 404 });
     }
+
+    const content = readResult.data.content;
 
     // Use AI to analyze the page and extract editable text blocks
     const analysis = await base44.asServiceRole.integrations.Core.InvokeLLM({
