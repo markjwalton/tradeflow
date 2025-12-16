@@ -133,7 +133,7 @@ export default function NavigationManager() {
         "StandaloneInstanceManager", "ProjectDetails", "TailwindKnowledgeManager",
         "ComponentShowcase", "PackageDetail", "DesignPatternAudit", "GitHubIntegration",
         "ColorMigrationDashboard", "ThemeBuilder", "ThemePreview", "FontManager", 
-        "OklchColorPicker", "DesignTokenEditor", "SiteSettings",
+        "OklchColorPicker", "DesignTokenEditor", "SiteSettings", "AssetManager", "WebsiteThemeManager",
         "RadiantHome", "KeynoteHome", "PocketHome", "PocketLogin", "PocketRegister",
         "StudioHome", "StudioAbout", "CommitHome", "CompassHome", "CompassLogin", "CompassInterviews",
         "SyntaxHome", "SyntaxDocs", "TransmitHome", "TailwindProductShowcase", "TailwindShowcaseGallery",
