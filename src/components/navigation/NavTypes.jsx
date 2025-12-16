@@ -98,10 +98,16 @@ export const hasChildren = (item, allItems) => {
 
 /**
  * Get children of a navigation item
+ * CRITICAL: Handle both null and undefined parent_id
  */
 export const getChildren = (parentId, allItems) => {
   return allItems
-    .filter((item) => item.parent_id === parentId)
+    .filter((item) => {
+      // Normalize: treat null, undefined, and empty string as "no parent"
+      const itemParent = item.parent_id || null;
+      const targetParent = parentId || null;
+      return itemParent === targetParent;
+    })
     .sort((a, b) => (a.order || 0) - (b.order || 0));
 };
 
