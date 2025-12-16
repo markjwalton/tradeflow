@@ -213,14 +213,18 @@ export default function StandardPageReference() {
           </div>
 
           {/* Tabs for Status Filtering */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="pb-0">
-            <TabsList>
-              <TabsTrigger value="all">All Items</TabsTrigger>
-              <TabsTrigger value="active">Active</TabsTrigger>
-              <TabsTrigger value="pending">Pending</TabsTrigger>
-              <TabsTrigger value="completed">Completed</TabsTrigger>
-            </TabsList>
-          </Tabs>
+          <div className="pb-[var(--spacing-6)]">
+            <TailwindTabs 
+              tabs={[
+                { name: 'All Items', value: 'all' },
+                { name: 'Active', value: 'active' },
+                { name: 'Pending', value: 'pending' },
+                { name: 'Completed', value: 'completed' }
+              ]}
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+            />
+          </div>
         </div>
       </div>
 
