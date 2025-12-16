@@ -8,33 +8,31 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { page_slug } = await req.json();
+    const { page_slug, page_content } = await req.json();
     if (!page_slug) {
       return Response.json({ error: 'page_slug required' }, { status: 400 });
     }
 
-    // Read page content from UIPage entity
-    const pages = await base44.asServiceRole.entities.UIPage.filter({ 
-      page_name: page_slug 
-    });
+    let content = page_content;
 
-    if (pages.length === 0) {
-      // Get list of available pages for helpful error
-      const allPages = await base44.asServiceRole.entities.UIPage.list();
-      const availablePages = allPages.map(p => p.page_name).join(', ');
-
-      return Response.json({ 
-        error: `Page "${page_slug}" not found in UIPage database. This page needs to be synced to the database first.`,
-        available_pages: availablePages || 'No pages in database',
-        hint: 'Only pages stored in the UIPage entity can be analyzed. Please sync your pages to the database first.'
-      }, { status: 404 });
-    }
-
-    const content = pages[0].current_content_jsx;
+    // If content not provided, try to read from UIPage entity
     if (!content) {
-      return Response.json({ 
-        error: `No content found for page: ${page_slug}`
-      }, { status: 404 });
+      const pages = await base44.asServiceRole.entities.UIPage.filter({ 
+        page_name: page_slug 
+      });
+
+      if (pages.length === 0) {
+        return Response.json({ 
+          error: `Page "${page_slug}" not found. Please provide page_content in the request.`
+        }, { status: 404 });
+      }
+
+      content = pages[0].current_content_jsx;
+      if (!content) {
+        return Response.json({ 
+          error: `No content found for page: ${page_slug}`
+        }, { status: 404 });
+      }
     }
 
     // Use AI to analyze the page and extract editable text blocks
