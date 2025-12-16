@@ -443,15 +443,6 @@ export default function GenericNavEditor({
               <h3 className="font-display text-h5 [margin-bottom:var(--spacing-3)] text-[var(--color-midnight)]">
                 Navigation Structure ({items.length} items)
               </h3>
-              {/* DEBUG */}
-              <div className="mb-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs space-y-1">
-                <div><strong>Items total:</strong> {items.length}</div>
-                <div><strong>FlatList count:</strong> {flatList.length}</div>
-                <div><strong>Top-level items:</strong> {items.filter(i => !i.parent_id).length}</div>
-                <div><strong>Items with parent_id:</strong> {items.filter(i => i.parent_id).length}</div>
-                <div><strong>Expanded folders:</strong> {Array.from(expandedParents).length}</div>
-                <div><strong>First 3 items parent_id:</strong> {items.slice(0, 3).map(i => `${i.name}(${i.parent_id || 'null'})`).join(', ')}</div>
-              </div>
             {items.length > 0 ? (
               <DragDropContext onDragEnd={handleDragEnd}>
                 <Droppable droppableId="nav-list">
@@ -696,8 +687,9 @@ export default function GenericNavEditor({
               >
                 <div className="flex items-center [gap:var(--spacing-2)]">
                   {allPagesExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                  <Folder className="h-4 w-4 text-[var(--color-accent)]" />
                   <h3 className="font-display text-h5 text-[var(--color-midnight)]">
-                    Pages Management
+                    Pages Management ({effectiveSlugs.length} pages)
                   </h3>
                 </div>
                 {syncUnallocatedPages && (
