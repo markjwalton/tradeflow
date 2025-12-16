@@ -38,7 +38,7 @@ For each editable text block, provide:
 4. The location context (e.g., "hero section", "feature card 1", "footer")
 5. Suggested field type (text, textarea, rich-text)
 
-Return a JSON array of editable blocks.`,
+Analyze up to 20 most important text blocks only.`,
       response_json_schema: {
         type: "object",
         properties: {
@@ -54,10 +54,12 @@ Return a JSON array of editable blocks.`,
                 location: { type: "string" },
                 field_type: { type: "string" },
                 char_count: { type: "number" }
-              }
+              },
+              required: ["key", "content_type", "current_text", "location", "field_type"]
             }
           }
-        }
+        },
+        required: ["page_name", "editable_blocks"]
       }
     });
 
