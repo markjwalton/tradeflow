@@ -39,6 +39,7 @@ export default function StandardPageReference() {
   const [currentUser, setCurrentUser] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [progress, setProgress] = useState({ visible: false, percent: 0, message: '' });
   
   useEffect(() => {
     base44.auth.me().then(setCurrentUser).catch(() => {});
@@ -192,6 +193,14 @@ export default function StandardPageReference() {
               <div className="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-y-0 sm:space-x-3 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
                 <button
                   type="button"
+                  onClick={() => {
+                    setProgress({ visible: true, percent: 0, message: 'Preparing export...' });
+                    setTimeout(() => setProgress({ visible: true, percent: 25, message: 'Gathering data...' }), 500);
+                    setTimeout(() => setProgress({ visible: true, percent: 50, message: 'Processing files...' }), 1000);
+                    setTimeout(() => setProgress({ visible: true, percent: 75, message: 'Compressing archive...' }), 1500);
+                    setTimeout(() => setProgress({ visible: true, percent: 100, message: 'Complete!' }), 2000);
+                    setTimeout(() => setProgress({ visible: false, percent: 0, message: '' }), 2500);
+                  }}
                   className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50"
                 >
                   <Upload className="h-4 w-4" />
@@ -238,6 +247,22 @@ export default function StandardPageReference() {
       {/* === MAIN CONTENT SECTION === */}
       {/* This is the extractable section that can be replaced per page */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-[var(--spacing-8)]">
+        
+        {/* Progress Bar */}
+        {progress.visible && (
+          <div className="mb-8 rounded-lg bg-white p-6 shadow-sm border border-gray-200">
+            <h4 className="sr-only">Status</h4>
+            <p className="text-sm font-medium text-gray-900">{progress.message}</p>
+            <div aria-hidden="true" className="mt-6">
+              <div className="overflow-hidden rounded-full bg-gray-200">
+                <div 
+                  style={{ width: `${progress.percent}%` }} 
+                  className="h-2 rounded-full bg-indigo-600 transition-all duration-500 ease-out" 
+                />
+              </div>
+            </div>
+          </div>
+        )}
         {/* Pagination Top */}
         <div className="mb-[var(--spacing-6)]">
           <TailwindPagination
