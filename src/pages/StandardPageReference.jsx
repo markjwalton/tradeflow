@@ -442,9 +442,11 @@ export default function StandardPageReference() {
             </div>
           </div>
 
-          {/* Footer - Full Width */}
-          <footer className="bg-white border-t border-gray-200 mt-auto">
-            <div className="px-4 sm:px-6 lg:px-8 py-12 md:flex md:items-center md:justify-between">
+        </div>
+
+        {/* Footer - Full Width Below Nav */}
+        <footer className="bg-white border-t border-gray-200 w-full">
+          <div className="px-4 sm:px-6 lg:px-8 py-12 md:flex md:items-center md:justify-between">
                 <div className="flex justify-center gap-x-6 md:order-2">
                   {[
                     {
@@ -483,10 +485,9 @@ export default function StandardPageReference() {
                 </div>
                 <p className="mt-8 text-center text-sm/6 text-gray-600 md:order-1 md:mt-0">
                   &copy; 2025 Your Company, Inc. All rights reserved.
-                </p>
-            </div>
-          </footer>
-        </div>
+              </p>
+          </div>
+        </footer>
 
         {/* Item Details Drawer */}
         <Dialog open={drawerOpen} onClose={setDrawerOpen} className="relative z-10">
