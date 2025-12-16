@@ -119,8 +119,18 @@ export default function NavigationManager() {
       }
       
       const configs = await base44.entities.NavigationConfig.filter({ config_type: configType });
+      
+      // Create config if it doesn't exist
       if (configs.length === 0) {
-        return { added: 0, message: "No config found" };
+        await base44.entities.NavigationConfig.create({
+          config_type: configType,
+          items: [],
+          source_slugs: allPages.sort()
+        });
+        return { 
+          added: allPages.length, 
+          message: `Created config with ${allPages.length} page(s)` 
+        };
       }
       
       const config = configs[0];
