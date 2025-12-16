@@ -6,9 +6,7 @@ import { PlusIcon, EllipsisVerticalIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Menu, MenuButton, MenuItem, MenuItems, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { usePagination } from "@/components/common/usePagination";
-import TailwindHeader from "@/components/sturij/TailwindHeader";
 import TailwindPagination from "@/components/sturij/TailwindPagination";
-import TailwindSidebar from "@/components/sturij/TailwindSidebar";
 import TailwindTabs from "@/components/sturij/TailwindTabs";
 import { 
   AdjustmentsHorizontalIcon,
@@ -82,164 +80,96 @@ export default function StandardPageReference() {
     totalItems,
   } = usePagination(filteredItems, 25);
 
-  const headerNavigation = [
-    { name: 'Dashboard', href: '#', current: true },
-    { name: 'Projects', href: '#', current: false },
-  ];
-
-  const sidebarNavigation = [
-    { name: 'Dashboard', href: '#', icon: (props) => (
-      <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-      </svg>
-    ), current: true },
-    {
-      name: 'Teams',
-      icon: (props) => (
-        <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-      ),
-      current: false,
-      children: [
-        { name: 'Engineering', href: '#' },
-        { name: 'Human Resources', href: '#' },
-        { name: 'Customer Success', href: '#' },
-      ],
-    },
-    {
-      name: 'Projects',
-      icon: (props) => (
-        <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-        </svg>
-      ),
-      current: false,
-      children: [
-        { name: 'GraphQL API', href: '#' },
-        { name: 'iOS App', href: '#' },
-        { name: 'Android App', href: '#' },
-        { name: 'New Customer Portal', href: '#' },
-      ],
-    },
-    { name: 'Calendar', href: '#', icon: (props) => (
-      <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-      </svg>
-    ), current: false },
-    { name: 'Documents', href: '#', icon: (props) => (
-      <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-      </svg>
-    ), current: false },
-    { name: 'Reports', href: '#', icon: (props) => (
-      <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-      </svg>
-    ), current: false },
-  ];
-
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
-      {/* Fixed Header - Full Width */}
-      <div className="fixed top-0 left-0 right-0 z-50 h-16 bg-white border-b border-gray-200">
-        <TailwindHeader navigation={headerNavigation} onSearch={setSearchQuery} />
-      </div>
-
-      {/* Content Below Header */}
-      <div className="flex flex-1 pt-16 overflow-hidden">
-        {/* Fixed Sidebar - Stops at sticky nav bar */}
-        <div className="hidden lg:fixed lg:inset-y-16 lg:z-40 lg:flex lg:w-72 lg:flex-col" style={{ bottom: '64px' }}>
-          <TailwindSidebar navigation={sidebarNavigation} />
-        </div>
-
-        {/* Main Content Area */}
-        <div className="flex-1 lg:pl-72 flex flex-col">
-          <div className="flex-1 overflow-y-auto">
-            {/* Breadcrumb Navigation - Not Sticky */}
-            <nav 
-              aria-label="Breadcrumb" 
-              className="flex"
-              style={{ 
-                borderBottom: '1px solid var(--color-border)',
-                backgroundColor: 'var(--color-background)'
-              }}
-            >
-              <ol 
-                role="list" 
-                className="mx-auto flex w-full space-x-4"
-                style={{ 
-                  maxWidth: 'var(--breakpoint-xl)',
-                  paddingTop: 'var(--spacing-3)',
-                  paddingBottom: 'var(--spacing-3)',
-                  paddingLeft: 'var(--spacing-4)',
-                  paddingRight: 'var(--spacing-4)'
-                }}
+    <div className="flex flex-col min-h-screen" style={{ backgroundColor: 'var(--color-background)' }}>
+      {/* Breadcrumb Navigation - Not Sticky */}
+      <nav 
+        aria-label="Breadcrumb" 
+        className="flex"
+        style={{ 
+          borderBottom: '1px solid var(--color-border)',
+          backgroundColor: 'var(--color-background)'
+        }}
+      >
+        <ol 
+          role="list" 
+          className="mx-auto flex w-full"
+          style={{ 
+            maxWidth: 'var(--breakpoint-xl)',
+            paddingTop: 'var(--spacing-3)',
+            paddingBottom: 'var(--spacing-3)',
+            paddingLeft: 'var(--spacing-4)',
+            paddingRight: 'var(--spacing-4)',
+            gap: 'var(--spacing-4)'
+          }}
+        >
+          <li className="flex">
+            <div className="flex items-center">
+              <a 
+                href="#" 
+                style={{ color: 'var(--color-text-muted)' }}
+                className="hover:opacity-70"
               >
-                <li className="flex">
-                  <div className="flex items-center">
-                    <a 
-                      href="#" 
-                      style={{ color: 'var(--color-text-muted)' }}
-                      className="hover:opacity-70 transition-opacity"
-                    >
-                      <HomeIcon aria-hidden="true" className="size-5 shrink-0" />
-                      <span className="sr-only">Home</span>
-                    </a>
-                  </div>
-                </li>
-                <li className="flex">
-                  <div className="flex items-center">
-                    <svg
-                      fill="currentColor"
-                      viewBox="0 0 24 44"
-                      preserveAspectRatio="none"
-                      aria-hidden="true"
-                      className="h-full w-6 shrink-0"
-                      style={{ color: 'var(--color-border)' }}
-                    >
-                      <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
-                    </svg>
-                    <a
-                      href="#"
-                      className="ml-4 text-sm font-medium hover:opacity-70 transition-opacity"
-                      style={{ color: 'var(--color-text-muted)' }}
-                    >
-                      Category
-                    </a>
-                  </div>
-                </li>
-                <li className="flex">
-                  <div className="flex items-center">
-                    <svg
-                      fill="currentColor"
-                      viewBox="0 0 24 44"
-                      preserveAspectRatio="none"
-                      aria-hidden="true"
-                      className="h-full w-6 shrink-0"
-                      style={{ color: 'var(--color-border)' }}
-                    >
-                      <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
-                    </svg>
-                    <a
-                      href="#"
-                      aria-current="page"
-                      className="ml-4 text-sm font-medium"
-                      style={{ color: 'var(--color-text-secondary)' }}
-                    >
-                      Standard Page Reference
-                    </a>
-                  </div>
-                </li>
-              </ol>
-            </nav>
+                <HomeIcon aria-hidden="true" className="size-5 shrink-0" />
+                <span className="sr-only">Home</span>
+              </a>
+            </div>
+          </li>
+          <li className="flex">
+            <div className="flex items-center">
+              <svg
+                fill="currentColor"
+                viewBox="0 0 24 44"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+                className="h-full w-6 shrink-0"
+                style={{ color: 'var(--color-border)' }}
+              >
+                <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+              </svg>
+              <a
+                href="#"
+                className="ml-4 text-sm font-medium hover:opacity-70"
+                style={{ color: 'var(--color-text-muted)' }}
+              >
+                Category
+              </a>
+            </div>
+          </li>
+          <li className="flex">
+            <div className="flex items-center">
+              <svg
+                fill="currentColor"
+                viewBox="0 0 24 44"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+                className="h-full w-6 shrink-0"
+                style={{ color: 'var(--color-border)' }}
+              >
+                <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+              </svg>
+              <a
+                href="#"
+                aria-current="page"
+                className="ml-4 text-sm font-medium"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
+                Standard Page Reference
+              </a>
+            </div>
+          </li>
+        </ol>
+      </nav>
 
-            {/* === PAGE HEADER SECTION - Sticky === */}
-            <div className="sticky top-0 z-40" style={{ 
-              backgroundColor: 'var(--color-background)',
-              borderBottom: '1px solid var(--color-border)'
-            }}>
-              <div className="px-4 sm:px-6 lg:px-8">
+      {/* === PAGE HEADER SECTION - Sticky === */}
+      <div className="sticky top-0 z-40" style={{ 
+        backgroundColor: 'var(--color-background)',
+        borderBottom: '1px solid var(--color-border)'
+      }}>
+        <div style={{ 
+          paddingLeft: 'var(--spacing-4)', 
+          paddingRight: 'var(--spacing-4)'
+        }} className="sm:px-6 lg:px-8">
 
                 {/* Page Title & Actions */}
                 <div className="py-6">
@@ -289,43 +219,58 @@ export default function StandardPageReference() {
                   </div>
                 </div>
 
-                {/* Filter Button */}
-                <div className="flex flex-col sm:flex-row gap-4 pb-6">
-                  <button
-                    type="button"
-                    className="inline-flex items-center gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 hover:bg-gray-50 w-full sm:w-auto"
-                  >
-                    <AdjustmentsHorizontalIcon aria-hidden="true" className="-ml-0.5 h-5 w-5" />
-                    Filters
-                  </button>
-                </div>
-
-                </div>
-                </div>
-
-                {/* Tabs Navigation - Non-sticky, below header */}
-                {paginatedData.length > 0 && (
-                <div style={{ 
+          {/* Filter Button */}
+          <div className="flex flex-col sm:flex-row gap-4" style={{ paddingBottom: 'var(--spacing-6)' }}>
+            <button
+              type="button"
+              style={{
                 backgroundColor: 'var(--color-background)',
-                borderBottom: '1px solid var(--color-border)'
-                }}>
-                <div className="px-4 sm:px-6 lg:px-8" style={{ paddingTop: 'var(--spacing-4)', paddingBottom: 'var(--spacing-4)' }}>
-                  <TailwindTabs 
-                    tabs={[
-                      { name: 'All Items', value: 'all' },
-                      { name: 'Active', value: 'active' },
-                      { name: 'Pending', value: 'pending' },
-                      { name: 'Completed', value: 'completed' }
-                    ]}
-                    activeTab={activeTab}
-                    onTabChange={setActiveTab}
-                  />
-                </div>
-                </div>
-                )}
+                color: 'var(--color-text-primary)',
+                borderColor: 'var(--color-border)'
+              }}
+              className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold shadow-xs ring-1 ring-inset hover:opacity-80 w-full sm:w-auto"
+            >
+              <AdjustmentsHorizontalIcon aria-hidden="true" className="-ml-0.5 h-5 w-5" />
+              Filters
+            </button>
+          </div>
 
-                {/* === MAIN CONTENT SECTION === */}
-            <div className="px-4 sm:px-6 lg:px-8 py-8 pb-24">
+        </div>
+      </div>
+
+      {/* Tabs Navigation - Non-sticky, below header */}
+      {paginatedData.length > 0 && (
+        <div style={{ 
+          backgroundColor: 'var(--color-background)',
+          borderBottom: '1px solid var(--color-border)'
+        }}>
+          <div style={{ 
+            paddingTop: 'var(--spacing-4)', 
+            paddingBottom: 'var(--spacing-4)',
+            paddingLeft: 'var(--spacing-4)',
+            paddingRight: 'var(--spacing-4)'
+          }} className="sm:px-6 lg:px-8">
+            <TailwindTabs 
+              tabs={[
+                { name: 'All Items', value: 'all' },
+                { name: 'Active', value: 'active' },
+                { name: 'Pending', value: 'pending' },
+                { name: 'Completed', value: 'completed' }
+              ]}
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* === MAIN CONTENT SECTION === */}
+      <div style={{ 
+        paddingTop: 'var(--spacing-8)', 
+        paddingBottom: 'var(--spacing-24)',
+        paddingLeft: 'var(--spacing-4)',
+        paddingRight: 'var(--spacing-4)'
+      }} className="sm:px-6 lg:px-8">
         
               {/* Progress Bar */}
               {progress.visible && (
@@ -510,11 +455,18 @@ export default function StandardPageReference() {
                 />
               </div>
             </div>
-            </div>
 
             {/* Footer */}
-          <footer className="bg-white border-t border-gray-200">
-            <div className="px-4 sm:px-6 lg:px-8 py-12 md:flex md:items-center md:justify-between">
+            <footer style={{ 
+              backgroundColor: 'var(--color-background)',
+              borderTop: '1px solid var(--color-border)'
+            }}>
+              <div style={{ 
+                paddingTop: 'var(--spacing-12)',
+                paddingBottom: 'var(--spacing-12)',
+                paddingLeft: 'var(--spacing-4)',
+                paddingRight: 'var(--spacing-4)'
+              }} className="sm:px-6 lg:px-8 md:flex md:items-center md:justify-between">
               <div className="flex justify-center gap-x-6 md:order-2">
                 {[
                   {
@@ -550,14 +502,12 @@ export default function StandardPageReference() {
                     <item.icon aria-hidden="true" className="size-6" />
                   </a>
                 ))}
-              </div>
-              <p className="mt-8 text-center text-sm/6 text-gray-600 md:order-1 md:mt-0">
-                &copy; 2025 Your Company, Inc. All rights reserved.
-              </p>
-            </div>
-          </footer>
+          </div>
+          <p className="mt-8 text-center text-sm/6 md:order-1 md:mt-0" style={{ color: 'var(--color-text-muted)' }}>
+            &copy; 2025 Your Company, Inc. All rights reserved.
+          </p>
         </div>
-      </div>
+      </footer>
 
       {/* Item Details Drawer */}
       <Dialog open={drawerOpen} onClose={setDrawerOpen} className="relative z-10">
