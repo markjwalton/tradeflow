@@ -138,12 +138,7 @@ export default function StandardPageReference() {
           borderColor: 'var(--color-border)',
         }}
       >
-        <div 
-          className="mx-auto px-[var(--spacing-4)] sm:px-[var(--spacing-6)] lg:px-[var(--spacing-8)]"
-          style={{
-            maxWidth: '1400px', // Can be controlled via page settings
-          }}
-        >
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
           <nav className="flex py-[var(--spacing-3)]" aria-label="Breadcrumb">
             <ol className="flex items-center gap-[var(--spacing-2)] font-[var(--font-family-display)] text-[var(--text-sm)]">
@@ -242,12 +237,7 @@ export default function StandardPageReference() {
 
       {/* === MAIN CONTENT SECTION === */}
       {/* This is the extractable section that can be replaced per page */}
-      <div 
-        className="mx-auto px-[var(--spacing-4)] sm:px-[var(--spacing-6)] lg:px-[var(--spacing-8)] py-[var(--spacing-8)]"
-        style={{
-          maxWidth: '1400px', // Can be controlled via page settings
-        }}
-      >
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-[var(--spacing-8)]">
         {/* Pagination Top */}
         <div className="mb-[var(--spacing-6)]">
           <TailwindPagination
@@ -419,12 +409,7 @@ export default function StandardPageReference() {
       </div>
 
       {/* === REFERENCE DOCUMENTATION === */}
-      <div 
-        className="mx-auto px-[var(--spacing-4)] sm:px-[var(--spacing-6)] lg:px-[var(--spacing-8)] pb-[var(--spacing-12)]"
-        style={{
-          maxWidth: '1400px',
-        }}
-      >
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pb-[var(--spacing-12)]">
         <Card>
           <CardHeader>
             <CardTitle>Design Token Reference</CardTitle>
