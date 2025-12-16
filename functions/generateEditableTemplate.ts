@@ -14,16 +14,27 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'page_slug and editable_blocks required' }, { status: 400 });
     }
 
-    // Read original page content
-    const fileContent = await base44.asServiceRole.functions.invoke('readFileContent', {
-      file_path: `pages/${page_slug}.js`
-    });
+    // Read original page content using GitHub API
+    const GITHUB_TOKEN = Deno.env.get('GITHUB_TOKEN');
+    if (!GITHUB_TOKEN) {
+      return Response.json({ error: 'GitHub token not configured' }, { status: 500 });
+    }
 
-    if (!fileContent.data?.content) {
+    const response = await fetch(
+      `https://api.github.com/repos/base44/${Deno.env.get('BASE44_APP_ID')}/contents/pages/${page_slug}.js`,
+      {
+        headers: {
+          'Authorization': `Bearer ${GITHUB_TOKEN}`,
+          'Accept': 'application/vnd.github.v3.raw'
+        }
+      }
+    );
+
+    if (!response.ok) {
       return Response.json({ error: 'Page file not found' }, { status: 404 });
     }
 
-    let content = fileContent.data.content;
+    let content = await response.text();
 
     // Generate modified page with editable areas
     const modifyPrompt = `Transform this React page to use editable content blocks from props.
