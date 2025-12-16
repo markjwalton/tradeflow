@@ -60,39 +60,39 @@ const categories = [
   { id: "feedback", label: "Feedback", icon: Bell, count: 11, color: "bg-primary" },
 ];
 
-// Section wrapper component - Matching Figma style
+// Section wrapper component - Using design tokens
 function ShowcaseSection({ id, title, description, count, children }) {
   const [expanded, setExpanded] = useState(true);
   
   return (
-    <section id={id} className="mb-6 scroll-mt-24 bg-card rounded-xl border border-border overflow-hidden">
+    <section id={id} className="mb-[var(--spacing-6)] scroll-mt-24 bg-[var(--color-card)] rounded-[var(--radius-xl)] border border-[var(--color-border)] shadow-[var(--shadow-card)] overflow-hidden">
       <button 
         onClick={() => setExpanded(!expanded)}
-        className="w-full px-6 py-4 flex items-center justify-between hover:bg-muted transition-fast"
+        className="w-full px-[var(--spacing-6)] py-[var(--spacing-4)] flex items-center justify-between hover:bg-[var(--color-muted)] transition-all duration-[var(--duration-200)]"
       >
-        <div className="flex items-center gap-3">
-          <h3 className="text-lg font-display text-midnight-900">
+        <div className="flex items-center gap-[var(--spacing-3)]">
+          <h3 className="font-[var(--font-family-display)] text-[var(--text-lg)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] text-[var(--color-text-primary)]">
             {title}
           </h3>
         </div>
-        <ChevronDown className={cn("h-5 w-5 transition-transform", !expanded && "-rotate-90")} />
+        <ChevronDown className={cn("h-5 w-5 transition-transform duration-[var(--duration-200)]", !expanded && "-rotate-90")} />
       </button>
       {expanded && (
-        <div className="px-6 pb-6">
-          {description && <p className="text-sm text-muted-foreground mb-4">{description}</p>}
-          <div className="space-y-6">{children}</div>
+        <div className="px-[var(--spacing-6)] pb-[var(--spacing-6)]">
+          {description && <p className="font-[var(--font-family-body)] text-[var(--text-sm)] text-[var(--color-text-muted)] mb-[var(--spacing-4)] leading-[var(--leading-normal)]">{description}</p>}
+          <div className="space-y-[var(--spacing-6)]">{children}</div>
         </div>
       )}
     </section>
   );
 }
 
-// Component demo wrapper - Matching Figma card style
+// Component demo wrapper - Using design tokens
 function ComponentDemo({ title, children, code }) {
   return (
-    <div className="space-y-3">
-      {title && <p className="text-sm font-medium text-midnight-900">{title}</p>}
-      <div className="p-4 bg-muted rounded-lg border border-border">
+    <div className="space-y-[var(--spacing-3)]">
+      {title && <p className="font-[var(--font-family-display)] text-[var(--text-sm)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] text-[var(--color-text-secondary)]">{title}</p>}
+      <div className="p-[var(--spacing-4)] bg-[var(--color-muted)] rounded-[var(--radius-lg)] border border-[var(--color-border)]">
         {children}
       </div>
     </div>
@@ -148,21 +148,21 @@ export default function ComponentShowcase() {
 
   return (
     <ShowcaseEditMode>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-[var(--color-background)]">
         {/* Header */}
-        <div className="bg-card border-b border-border">
-          <div className="max-w-7xl mx-auto px-6 py-6">
-            <div className="flex items-center gap-3">
+        <div className="bg-[var(--color-card)] border-b border-[var(--color-border)] shadow-[var(--shadow-sm)]">
+          <div className="max-w-7xl mx-auto px-[var(--spacing-6)] py-[var(--spacing-6)]">
+            <div className="flex items-center gap-[var(--spacing-3)]">
               <img 
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/b7a61dbf6_black_logo_300x300_transparent.png" 
                 alt="Editor icon" 
-                className="h-10 w-10"
+                className="h-[var(--spacing-10)] w-[var(--spacing-10)]"
               />
               <div>
-                <h1 className="text-2xl font-display text-midnight-900">
+                <h1 className="font-[var(--font-family-display)] text-[var(--text-2xl)] font-[var(--font-weight-light)] tracking-[var(--tracking-airy)] text-[var(--color-text-primary)]">
                   Component Library
                 </h1>
-                <p className="text-sm text-muted-foreground">
+                <p className="font-[var(--font-family-body)] text-[var(--text-sm)] text-[var(--color-text-muted)] leading-[var(--leading-normal)]">
                   Production-ready components using Sturij design tokens
                 </p>
               </div>
@@ -170,7 +170,7 @@ export default function ComponentShowcase() {
           </div>
         </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-[var(--spacing-6)] py-[var(--spacing-8)]">
         {/* Page Patterns Section */}
         {visibleCategories.includes("patterns") && (
           <ShowcaseSection
