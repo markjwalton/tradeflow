@@ -100,6 +100,10 @@ export default function GenericNavEditor({
   const [pageToDelete, setPageToDelete] = useState(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [originalItems, setOriginalItems] = useState([]);
+  const [showCreatePageDialog, setShowCreatePageDialog] = useState(false);
+  const [newPageName, setNewPageName] = useState("");
+  const [newPageTitle, setNewPageTitle] = useState("");
+  const [isCreatingPage, setIsCreatingPage] = useState(false);
 
   // Build the effective config type (tenant-prefixed if tenant-specific)
   const effectiveConfigType = tenantId && !isGlobal 
@@ -452,6 +456,40 @@ export default function GenericNavEditor({
         toast.success(`${name} added`);
       };
 
+  const handleCreateNewPage = async () => {
+    if (!newPageName.trim()) {
+      toast.error("Page name is required");
+      return;
+    }
+
+    setIsCreatingPage(true);
+    try {
+      // Create the file via backend
+      const response = await base44.functions.invoke('createPageFile', {
+        pageName: newPageName,
+        pageTitle: newPageTitle || newPageName.replace(/([A-Z])/g, ' $1').trim()
+      });
+
+      if (response.data.success) {
+        toast.success("Page file created successfully");
+        
+        // Resync to get the new page in the list
+        if (syncUnallocatedPages) {
+          await syncUnallocatedPages();
+        }
+
+        // Close dialog and reset
+        setShowCreatePageDialog(false);
+        setNewPageName("");
+        setNewPageTitle("");
+      }
+    } catch (error) {
+      toast.error("Failed to create page: " + error.message);
+    } finally {
+      setIsCreatingPage(false);
+    }
+  };
+
   const handleUnallocate = (item) => {
     // Remove only this item, move its children to top level (set parent_id to null)
     const newItems = items
@@ -504,19 +542,30 @@ export default function GenericNavEditor({
       )}
       <CardContent className="[padding-top:var(--spacing-4)]">
         <div className="flex justify-between items-center [margin-bottom:var(--spacing-3)]">
-          <Button 
-            size="sm"
-            variant="ghost"
-            className="text-sm hover:bg-green-50 hover:text-green-700"
-            onClick={() => { 
-              setEditingItem(null); 
-              setFormData({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null, item_type: "page", default_collapsed: false }); 
-              setShowDialog(true); 
-            }}
-          >
-            <Plus className="h-3.5 w-3.5 mr-1.5" />
-            Add Navigation
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button 
+              size="sm"
+              variant="ghost"
+              className="text-sm hover:bg-green-50 hover:text-green-700"
+              onClick={() => { 
+                setEditingItem(null); 
+                setFormData({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null, item_type: "page", default_collapsed: false }); 
+                setShowDialog(true); 
+              }}
+            >
+              <Plus className="h-3.5 w-3.5 mr-1.5" />
+              Add Navigation
+            </Button>
+            <Button 
+              size="sm"
+              variant="outline"
+              className="text-sm hover:bg-blue-50 hover:text-blue-700"
+              onClick={() => setShowCreatePageDialog(true)}
+            >
+              <Plus className="h-3.5 w-3.5 mr-1.5" />
+              Create New Page
+            </Button>
+          </div>
           
           {hasUnsavedChanges && (
             <div className="flex items-center gap-2">
@@ -1017,6 +1066,61 @@ export default function GenericNavEditor({
         relatedEntities={[]}
         onConfirm={handleConfirmDelete}
       />
+
+      {/* Create Page Dialog */}
+      <Sheet open={showCreatePageDialog} onOpenChange={setShowCreatePageDialog}>
+        <SheetContent className="w-96">
+          <SheetHeader>
+            <SheetTitle>Create New Page</SheetTitle>
+          </SheetHeader>
+          <div className="space-y-4 mt-6">
+            <div>
+              <Label>Page Name (e.g., MyNewPage) *</Label>
+              <Input
+                value={newPageName}
+                onChange={(e) => setNewPageName(e.target.value)}
+                placeholder="MyNewPage"
+                disabled={isCreatingPage}
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Must be PascalCase with no spaces
+              </p>
+            </div>
+            <div>
+              <Label>Display Title (optional)</Label>
+              <Input
+                value={newPageTitle}
+                onChange={(e) => setNewPageTitle(e.target.value)}
+                placeholder="My New Page"
+                disabled={isCreatingPage}
+              />
+            </div>
+          </div>
+          <SheetFooter className="mt-6">
+            <div className="flex gap-3 w-full">
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  setShowCreatePageDialog(false);
+                  setNewPageName("");
+                  setNewPageTitle("");
+                }}
+                disabled={isCreatingPage}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleCreateNewPage}
+                disabled={isCreatingPage}
+                className="flex-1"
+              >
+                {isCreatingPage ? "Creating..." : "Create Page"}
+              </Button>
+            </div>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
 
       {/* Edit Sidebar */}
       <Sheet open={showDialog} onOpenChange={closeDialog}>
