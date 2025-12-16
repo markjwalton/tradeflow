@@ -9,18 +9,25 @@ export default function NotificationCard({
   message,
   variant = "success"
 }) {
+  const iconColors = {
+    success: "text-green-400",
+    info: "text-blue-400",
+    warning: "text-yellow-400",
+    error: "text-red-400"
+  };
+
   return (
     <div
       aria-live="assertive"
-      className="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6 z-[9999]"
+      className="pointer-events-none fixed inset-0 flex items-start justify-center px-4 py-6 sm:p-6"
     >
-      <div className="flex w-full flex-col items-center space-y-4 sm:items-end">
+      <div className="flex w-full flex-col items-center space-y-4">
         <Transition show={show}>
           <div className="pointer-events-auto w-full max-w-sm rounded-lg bg-white shadow-lg outline-1 outline-black/5 transition data-closed:opacity-0 data-enter:transform data-enter:duration-300 data-enter:ease-out data-closed:data-enter:translate-y-2 data-leave:duration-100 data-leave:ease-in data-closed:data-enter:sm:translate-x-2 data-closed:data-enter:sm:translate-y-0">
             <div className="p-4">
               <div className="flex items-start">
                 <div className="shrink-0">
-                  <CheckCircleIcon aria-hidden="true" className="size-6 text-green-400" />
+                  <CheckCircleIcon aria-hidden="true" className={`size-6 ${iconColors[variant]}`} />
                 </div>
                 <div className="ml-3 w-0 flex-1 pt-0.5">
                   <p className="text-sm font-medium text-gray-900">{title}</p>
