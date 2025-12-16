@@ -13,6 +13,7 @@ import { MediaManager } from '@/components/cms/MediaManager';
 import { TemplateLibrary } from '@/components/cms/TemplateLibrary';
 import { PackageManager } from '@/components/cms/PackageManager';
 import { ScheduleManager } from '@/components/cms/ScheduleManager';
+import PageTemplateGenerator from '@/components/cms/PageTemplateGenerator';
 
 export default function CMSManager() {
   const [activeTab, setActiveTab] = useState('pages');
@@ -99,6 +100,7 @@ export default function CMSManager() {
           <TabsTrigger value="sections">Sections</TabsTrigger>
           <TabsTrigger value="media">Media Library</TabsTrigger>
           <TabsTrigger value="templates">Templates</TabsTrigger>
+          <TabsTrigger value="generator">AI Generator</TabsTrigger>
           <TabsTrigger value="packages">Packages</TabsTrigger>
           <TabsTrigger value="schedules">Schedules</TabsTrigger>
         </TabsList>
@@ -145,6 +147,10 @@ export default function CMSManager() {
 
         <TabsContent value="templates">
           <TemplateLibrary />
+        </TabsContent>
+
+        <TabsContent value="generator">
+          <PageTemplateGenerator />
         </TabsContent>
 
         <TabsContent value="packages">
