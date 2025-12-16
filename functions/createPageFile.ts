@@ -67,9 +67,10 @@ export default function ${pageName}() {
 
     if (!response.ok) {
       const error = await response.json();
+      console.error('GitHub API error:', error);
       return Response.json({ 
         error: 'Failed to create page file', 
-        details: error.message 
+        details: error.message || JSON.stringify(error)
       }, { status: 500 });
     }
 
@@ -82,6 +83,7 @@ export default function ${pageName}() {
       htmlUrl: result.content.html_url
     });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('Function error:', error);
+    return Response.json({ error: error.message, stack: error.stack }, { status: 500 });
   }
 });
