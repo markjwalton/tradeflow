@@ -1,16 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { 
-  Search, Filter, Download, Upload, Plus, Edit2, Trash2, 
-  MoreHorizontal, Eye, Star, Share2, Settings, ChevronLeft, ChevronRight,
-  Home, Users, FolderOpen, Calendar, FileText, BarChart3
-} from "lucide-react";
 import { PlusIcon, EllipsisVerticalIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Menu, MenuButton, MenuItem, MenuItems, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
@@ -19,19 +10,24 @@ import TailwindHeader from "@/components/sturij/TailwindHeader";
 import TailwindPagination from "@/components/sturij/TailwindPagination";
 import TailwindSidebar from "@/components/sturij/TailwindSidebar";
 import TailwindTabs from "@/components/sturij/TailwindTabs";
+import { 
+  ChevronRightIcon, 
+  AdjustmentsHorizontalIcon,
+  ArrowUpTrayIcon
+} from '@heroicons/react/20/solid';
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ')
+}
 
 /**
  * GOLDEN STANDARD PAGE REFERENCE
  * 
- * This page demonstrates the perfect implementation of:
- * - Design token usage for all styling
- * - Standard page structure
- * - Pagination integration
- * - Responsive layouts
- * - Proper spacing, shadows, typography
- * - Mobile/tablet optimizations
- * 
- * USE THIS AS THE TEMPLATE FOR ALL PAGES
+ * Standalone fullscreen page with:
+ * - Fixed header spanning full width at top
+ * - Fixed sidebar on left
+ * - Content area on right with proper spacing
+ * - Pixel-perfect positioning
  */
 
 export default function StandardPageReference() {
@@ -95,10 +91,18 @@ export default function StandardPageReference() {
   ];
 
   const sidebarNavigation = [
-    { name: 'Dashboard', href: '#', icon: Home, current: true },
+    { name: 'Dashboard', href: '#', icon: (props) => (
+      <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+      </svg>
+    ), current: true },
     {
       name: 'Teams',
-      icon: Users,
+      icon: (props) => (
+        <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+      ),
       current: false,
       children: [
         { name: 'Engineering', href: '#' },
@@ -108,7 +112,11 @@ export default function StandardPageReference() {
     },
     {
       name: 'Projects',
-      icon: FolderOpen,
+      icon: (props) => (
+        <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+        </svg>
+      ),
       current: false,
       children: [
         { name: 'GraphQL API', href: '#' },
@@ -117,217 +125,173 @@ export default function StandardPageReference() {
         { name: 'New Customer Portal', href: '#' },
       ],
     },
-    { name: 'Calendar', href: '#', icon: Calendar, current: false },
-    { name: 'Documents', href: '#', icon: FileText, current: false },
-    { name: 'Reports', href: '#', icon: BarChart3, current: false },
+    { name: 'Calendar', href: '#', icon: (props) => (
+      <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+    ), current: false },
+    { name: 'Documents', href: '#', icon: (props) => (
+      <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+      </svg>
+    ), current: false },
+    { name: 'Reports', href: '#', icon: (props) => (
+      <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+      </svg>
+    ), current: false },
   ];
 
   return (
-    <div className="h-screen bg-gray-50">
-      {/* Header spans full width */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
+    <div className="h-screen flex flex-col bg-gray-50">
+      {/* Fixed Header - Full Width */}
+      <div className="fixed top-0 left-0 right-0 z-50 h-16 bg-white border-b border-gray-200">
         <TailwindHeader navigation={headerNavigation} onSearch={setSearchQuery} />
       </div>
 
-      {/* Content wrapper below header */}
-      <div className="flex pt-16 h-full">
+      {/* Content Below Header */}
+      <div className="flex flex-1 pt-16">
         {/* Fixed Sidebar - Left Side */}
-        <div className="hidden lg:fixed lg:inset-y-16 lg:flex lg:w-72 lg:flex-col">
+        <div className="hidden lg:fixed lg:inset-y-16 lg:z-40 lg:flex lg:w-72 lg:flex-col">
           <TailwindSidebar navigation={sidebarNavigation} />
         </div>
 
-        {/* Main content area - Accounts for sidebar width */}
-        <div className="flex-1 lg:pl-72 overflow-y-auto">
-          {/* Top Sliding Panel */}
-          {topPanelOpen && (
-            <div className="bg-indigo-600 border-b border-indigo-700">
-              <div className="px-4 sm:px-6 lg:px-8 py-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="flex size-10 items-center justify-center rounded-lg bg-white/10">
-                      <Settings className="h-5 w-5 text-white" />
+        {/* Main Content Area - Accounts for Sidebar Width */}
+        <div className="flex-1 lg:pl-72">
+          <div className="h-full overflow-y-auto">
+            {/* === PAGE HEADER SECTION === */}
+            <div className="sticky top-0 z-40 bg-white border-b border-gray-200">
+              <div className="px-4 sm:px-6 lg:px-8">
+                {/* Breadcrumb */}
+                <nav aria-label="Breadcrumb" className="flex py-3">
+                  <ol className="flex items-center space-x-2 text-sm">
+                    <li>
+                      <a href="#" className="text-gray-400 hover:text-gray-500">Home</a>
+                    </li>
+                    <ChevronRightIcon aria-hidden="true" className="h-5 w-5 shrink-0 text-gray-400" />
+                    <li>
+                      <a href="#" className="text-gray-400 hover:text-gray-500">Category</a>
+                    </li>
+                    <ChevronRightIcon aria-hidden="true" className="h-5 w-5 shrink-0 text-gray-400" />
+                    <li>
+                      <span className="font-medium text-gray-900">Current Page</span>
+                    </li>
+                  </ol>
+                </nav>
+
+                {/* Page Title & Actions */}
+                <div className="py-6">
+                  <div className="md:flex md:items-center md:justify-between md:space-x-5">
+                    <div className="flex items-start space-x-5">
+                      <div className="shrink-0">
+                        <div className="relative">
+                          <img
+                            alt=""
+                            src={currentUser?.profile_picture || "https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80"}
+                            className="size-16 rounded-full"
+                          />
+                          <span aria-hidden="true" className="absolute inset-0 rounded-full shadow-inner" />
+                        </div>
+                      </div>
+                      <div className="pt-1.5">
+                        <h1 className="text-2xl font-bold text-gray-900">Standard Page Reference</h1>
+                        <p className="text-sm font-medium text-gray-500">
+                          Golden standard for all pages - pixel-perfect positioning with fixed header and sidebar.
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-semibold text-white">Editor Mode Active</p>
-                      <p className="text-xs text-indigo-200">Make changes to your page layout and content</p>
+                    <div className="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-y-0 sm:space-x-3 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setProgress({ visible: true, percent: 0, message: 'Preparing export...' });
+                          setTimeout(() => setProgress({ visible: true, percent: 25, message: 'Gathering data...' }), 500);
+                          setTimeout(() => setProgress({ visible: true, percent: 50, message: 'Processing files...' }), 1000);
+                          setTimeout(() => setProgress({ visible: true, percent: 75, message: 'Compressing archive...' }), 1500);
+                          setTimeout(() => setProgress({ visible: true, percent: 100, message: 'Complete!' }), 2000);
+                          setTimeout(() => setProgress({ visible: false, percent: 0, message: '' }), 2500);
+                        }}
+                        className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                      >
+                        <ArrowUpTrayIcon aria-hidden="true" className="-ml-0.5 h-5 w-5" />
+                        Export
+                      </button>
+                      <button
+                        type="button"
+                        className="inline-flex items-center justify-center gap-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                      >
+                        <PlusIcon aria-hidden="true" className="-ml-0.5 h-5 w-5" />
+                        New Item
+                      </button>
                     </div>
                   </div>
+                </div>
+
+                {/* Filter Button */}
+                <div className="flex flex-col sm:flex-row gap-4 pb-6">
                   <button
-                    onClick={() => setTopPanelOpen(false)}
-                    className="text-white hover:text-indigo-100 transition-colors"
+                    type="button"
+                    className="inline-flex items-center gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 hover:bg-gray-50 w-full sm:w-auto"
                   >
-                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <AdjustmentsHorizontalIcon aria-hidden="true" className="-ml-0.5 h-5 w-5" />
+                    Filters
                   </button>
                 </div>
+
+                {/* Tabs for Status Filtering */}
+                <div className="pb-6">
+                  <TailwindTabs 
+                    tabs={[
+                      { name: 'All Items', value: 'all' },
+                      { name: 'Active', value: 'active' },
+                      { name: 'Pending', value: 'pending' },
+                      { name: 'Completed', value: 'completed' }
+                    ]}
+                    activeTab={activeTab}
+                    onTabChange={setActiveTab}
+                  />
+                </div>
               </div>
             </div>
-          )}
 
-          {/* Demo: Toggle Panel Button */}
-          <div className="bg-gray-50 border-b border-gray-200 py-2">
-            <div className="px-4 sm:px-6 lg:px-8">
-              <button
-                onClick={() => setTopPanelOpen(!topPanelOpen)}
-                className="text-xs text-gray-600 hover:text-gray-900 underline"
-              >
-                {topPanelOpen ? 'Hide' : 'Show'} sliding panel demo
-              </button>
-            </div>
-          </div>
-          
-          {/* === PAGE HEADER SECTION === */}
-          {/* Demonstrates: Title, breadcrumb, description, actions */}
-          <div 
-            className="sticky top-0 z-40 backdrop-blur-sm border-b bg-white"
-            style={{
-              borderColor: 'var(--color-border)',
-            }}
-          >
-            <div className="px-4 sm:px-6 lg:px-8">
-          {/* Breadcrumb */}
-          <nav className="flex py-[var(--spacing-3)]" aria-label="Breadcrumb">
-            <ol className="flex items-center gap-[var(--spacing-2)] font-[var(--font-family-display)] text-[var(--text-sm)]">
-              <li>
-                <a 
-                  href="#" 
-                  className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors duration-[var(--duration-200)]"
-                >
-                  Home
-                </a>
-              </li>
-              <ChevronRight className="h-4 w-4 text-[var(--color-text-muted)]" />
-              <li>
-                <a 
-                  href="#" 
-                  className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors duration-[var(--duration-200)]"
-                >
-                  Category
-                </a>
-              </li>
-              <ChevronRight className="h-4 w-4 text-[var(--color-text-muted)]" />
-              <li>
-                <span className="text-[var(--color-text-primary)] font-[var(--font-weight-medium)]">
-                  Current Page
-                </span>
-              </li>
-            </ol>
-          </nav>
-
-          {/* Page Title & Actions - Profile Header Pattern */}
-          <div className="py-[var(--spacing-6)]">
-            <div className="md:flex md:items-center md:justify-between md:space-x-5">
-              <div className="flex items-start space-x-5">
-                <div className="shrink-0">
-                  <div className="relative">
-                    <img
-                      alt=""
-                      src={currentUser?.profile_picture || "https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80"}
-                      className="size-16 rounded-full"
-                    />
-                    <span aria-hidden="true" className="absolute inset-0 rounded-full shadow-inner" />
+            {/* === MAIN CONTENT SECTION === */}
+            <div className="px-4 sm:px-6 lg:px-8 py-8">
+        
+              {/* Progress Bar */}
+              {progress.visible && (
+                <div className="mb-8 rounded-lg bg-white p-6 shadow-sm border border-gray-200">
+                  <h4 className="sr-only">Status</h4>
+                  <p className="text-sm font-medium text-gray-900">{progress.message}</p>
+                  <div aria-hidden="true" className="mt-6">
+                    <div className="overflow-hidden rounded-full bg-gray-200">
+                      <div 
+                        style={{ width: `${progress.percent}%` }} 
+                        className="h-2 rounded-full bg-indigo-600 transition-all duration-500 ease-out" 
+                      />
+                    </div>
                   </div>
                 </div>
-                <div className="pt-1.5">
-                  <h1 className="text-2xl font-bold text-gray-900">Standard Page Reference</h1>
-                  <p className="text-sm font-medium text-gray-500">
-                    Golden standard for all pages - perfect spacing, shadows, typography, and responsive design using design tokens.
-                  </p>
-                </div>
-              </div>
-              <div className="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-y-0 sm:space-x-3 sm:space-x-reverse md:mt-0 md:flex-row md:space-x-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setProgress({ visible: true, percent: 0, message: 'Preparing export...' });
-                    setTimeout(() => setProgress({ visible: true, percent: 25, message: 'Gathering data...' }), 500);
-                    setTimeout(() => setProgress({ visible: true, percent: 50, message: 'Processing files...' }), 1000);
-                    setTimeout(() => setProgress({ visible: true, percent: 75, message: 'Compressing archive...' }), 1500);
-                    setTimeout(() => setProgress({ visible: true, percent: 100, message: 'Complete!' }), 2000);
-                    setTimeout(() => setProgress({ visible: false, percent: 0, message: '' }), 2500);
-                  }}
-                  className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50"
-                >
-                  <Upload className="h-4 w-4" />
-                  Export
-                </button>
-                <button
-                  type="button"
-                  className="inline-flex items-center justify-center gap-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
-                  <Plus className="h-4 w-4" />
-                  New Item
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Filter Button */}
-          <div className="flex flex-col sm:flex-row gap-4 pb-6">
-            <button
-              type="button"
-              className="inline-flex items-center gap-2 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 w-full sm:w-auto"
-            >
-              <Filter className="h-4 w-4" />
-              Filters
-            </button>
-          </div>
-
-          {/* Tabs for Status Filtering */}
-          <div className="pb-[var(--spacing-6)]">
-            <TailwindTabs 
-              tabs={[
-                { name: 'All Items', value: 'all' },
-                { name: 'Active', value: 'active' },
-                { name: 'Pending', value: 'pending' },
-                { name: 'Completed', value: 'completed' }
-              ]}
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-            />
-          </div>
-            </div>
-          </div>
-
-          {/* === MAIN CONTENT SECTION === */}
-          {/* This is the extractable section that can be replaced per page */}
-          <div className="px-4 sm:px-6 lg:px-8 py-[var(--spacing-8)]">
-        
-        {/* Progress Bar */}
-        {progress.visible && (
-          <div className="mb-8 rounded-lg bg-white p-6 shadow-sm border border-gray-200">
-            <h4 className="sr-only">Status</h4>
-            <p className="text-sm font-medium text-gray-900">{progress.message}</p>
-            <div aria-hidden="true" className="mt-6">
-              <div className="overflow-hidden rounded-full bg-gray-200">
-                <div 
-                  style={{ width: `${progress.percent}%` }} 
-                  className="h-2 rounded-full bg-indigo-600 transition-all duration-500 ease-out" 
+              )}
+              
+              {/* Pagination Top */}
+              <div className="mb-6">
+                <TailwindPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={goToPage}
+                  onNextPage={nextPage}
+                  onPrevPage={prevPage}
+                  canGoNext={canGoNext}
+                  canGoPrev={canGoPrev}
+                  startIndex={startIndex}
+                  endIndex={endIndex}
+                  totalItems={totalItems}
                 />
               </div>
-            </div>
-          </div>
-        )}
-        {/* Pagination Top */}
-        <div className="mb-[var(--spacing-6)]">
-          <TailwindPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={goToPage}
-            onNextPage={nextPage}
-            onPrevPage={prevPage}
-            canGoNext={canGoNext}
-            canGoPrev={canGoPrev}
-            startIndex={startIndex}
-            endIndex={endIndex}
-            totalItems={totalItems}
-          />
-        </div>
 
-        {/* Grid Layout - Responsive */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {paginatedData.map((item) => (
+              {/* Grid Layout - Responsive */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {paginatedData.map((item) => (
             <div key={item.id} className="overflow-hidden rounded-lg bg-white shadow-sm group">
               <div className="px-4 py-5 sm:p-6">
                 <div className="flex items-start justify-between gap-3 mb-4">
@@ -427,305 +391,170 @@ export default function StandardPageReference() {
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-
-        {/* Empty State */}
-        {paginatedData.length === 0 && !isLoading && (
-          <div className="text-center py-[var(--spacing-16)]">
-            <svg
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-              className="mx-auto size-12 text-gray-400"
-            >
-              <path
-                d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
-                strokeWidth={2}
-                vectorEffect="non-scaling-stroke"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <h3 className="mt-2 text-sm font-semibold text-gray-900">No items found</h3>
-            <p className="mt-1 text-sm text-gray-500">Try adjusting your search or filters to find what you're looking for.</p>
-            <div className="mt-6">
-              <button
-                type="button"
-                className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                <PlusIcon aria-hidden="true" className="mr-1.5 -ml-0.5 size-5" />
-                Create First Item
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Pagination Bottom */}
-        <div className="mt-[var(--spacing-8)]">
-          <TailwindPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={goToPage}
-            onNextPage={nextPage}
-            onPrevPage={prevPage}
-            canGoNext={canGoNext}
-            canGoPrev={canGoPrev}
-            startIndex={startIndex}
-            endIndex={endIndex}
-            totalItems={totalItems}
-          />
-        </div>
-          </div>
-
-          {/* === REFERENCE DOCUMENTATION === */}
-          <div className="px-4 sm:px-6 lg:px-8 pb-[var(--spacing-12)]">
-        <Card>
-          <CardHeader>
-            <CardTitle>Design Token Reference</CardTitle>
-            <CardDescription>
-              All elements on this page use design tokens exclusively. Copy this structure for consistent styling.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-[var(--spacing-6)]">
-            {/* Spacing Reference */}
-            <div>
-              <h3 className="font-[var(--font-family-display)] text-[var(--text-base)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] text-[var(--color-text-secondary)] mb-[var(--spacing-3)]">
-                Spacing Scale
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-[var(--spacing-4)]">
-                {[
-                  { token: '--spacing-1', value: '0.25rem', usage: 'Tight spacing' },
-                  { token: '--spacing-2', value: '0.5rem', usage: 'Small gaps' },
-                  { token: '--spacing-3', value: '0.75rem', usage: 'Icon gaps' },
-                  { token: '--spacing-4', value: '1rem', usage: 'Standard padding' },
-                  { token: '--spacing-6', value: '1.5rem', usage: 'Card padding' },
-                  { token: '--spacing-8', value: '2rem', usage: 'Section spacing' },
-                  { token: '--spacing-12', value: '3rem', usage: 'Large sections' },
-                  { token: '--spacing-16', value: '4rem', usage: 'Page sections' },
-                ].map((space) => (
-                  <div 
-                    key={space.token}
-                    className="p-[var(--spacing-3)] rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-card)]"
-                  >
-                    <code className="font-[var(--font-family-mono)] text-[var(--text-xs)] text-[var(--color-primary)]">
-                      {space.token}
-                    </code>
-                    <p className="font-[var(--font-family-body)] text-[var(--text-xs)] text-[var(--color-text-muted)] mt-[var(--spacing-1)]">
-                      {space.value} - {space.usage}
-                    </p>
-                  </div>
                 ))}
               </div>
-            </div>
 
-            {/* Typography Reference */}
-            <div>
-              <h3 className="font-[var(--font-family-display)] text-[var(--text-base)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] text-[var(--color-text-secondary)] mb-[var(--spacing-3)]">
-                Typography Scale
-              </h3>
-              <div className="space-y-[var(--spacing-3)]">
-                <div className="p-[var(--spacing-4)] rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-card)]">
-                  <p className="font-[var(--font-family-display)] text-[var(--text-3xl)] font-[var(--font-weight-light)] tracking-[var(--tracking-airy)] text-[var(--color-text-primary)]">
-                    Page Title (--text-3xl, display font, light)
-                  </p>
-                </div>
-                <div className="p-[var(--spacing-4)] rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-card)]">
-                  <p className="font-[var(--font-family-display)] text-[var(--text-xl)] font-[var(--font-weight-normal)] tracking-[var(--tracking-airy)] text-[var(--color-text-secondary)]">
-                    Section Title (--text-xl, display font, normal)
-                  </p>
-                </div>
-                <div className="p-[var(--spacing-4)] rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-card)]">
-                  <p className="font-[var(--font-family-body)] text-[var(--text-base)] text-[var(--color-text-body)] leading-[var(--leading-relaxed)]">
-                    Body Text (--text-base, body font, relaxed leading)
-                  </p>
-                </div>
-                <div className="p-[var(--spacing-4)] rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-card)]">
-                  <p className="font-[var(--font-family-body)] text-[var(--text-sm)] text-[var(--color-text-muted)] leading-[var(--leading-normal)]">
-                    Caption/Helper Text (--text-sm, muted color)
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Shadow Reference */}
-            <div>
-              <h3 className="font-[var(--font-family-display)] text-[var(--text-base)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] text-[var(--color-text-secondary)] mb-[var(--spacing-3)]">
-                Shadow Scale
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-[var(--spacing-4)]">
-                {[
-                  { token: '--shadow-sm', usage: 'Cards' },
-                  { token: '--shadow-md', usage: 'Card hover' },
-                  { token: '--shadow-lg', usage: 'Dropdowns' },
-                  { token: '--shadow-xl', usage: 'Modals' },
-                  { token: '--shadow-2xl', usage: 'Major elevation' },
-                ].map((shadow) => (
-                  <div 
-                    key={shadow.token}
-                    className="p-[var(--spacing-6)] rounded-[var(--radius-lg)] bg-[var(--color-card)]"
-                    style={{
-                      boxShadow: `var(${shadow.token})`,
-                    }}
+              {/* Empty State */}
+              {paginatedData.length === 0 && !isLoading && (
+                <div className="text-center py-16">
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                    className="mx-auto size-12 text-gray-400"
                   >
-                    <code className="font-[var(--font-family-mono)] text-[var(--text-xs)] text-[var(--color-primary)]">
-                      {shadow.token}
-                    </code>
-                    <p className="font-[var(--font-family-body)] text-[var(--text-xs)] text-[var(--color-text-muted)] mt-[var(--spacing-1)]">
-                      {shadow.usage}
-                    </p>
+                    <path
+                      d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
+                      strokeWidth={2}
+                      vectorEffect="non-scaling-stroke"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <h3 className="mt-2 text-sm font-semibold text-gray-900">No items found</h3>
+                  <p className="mt-1 text-sm text-gray-500">Try adjusting your search or filters to find what you're looking for.</p>
+                  <div className="mt-6">
+                    <button
+                      type="button"
+                      className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    >
+                      <PlusIcon aria-hidden="true" className="mr-1.5 -ml-0.5 size-5" />
+                      Create First Item
+                    </button>
                   </div>
-                ))}
+                </div>
+              )}
+
+              {/* Pagination Bottom */}
+              <div className="mt-8">
+                <TailwindPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={goToPage}
+                  onNextPage={nextPage}
+                  onPrevPage={prevPage}
+                  canGoNext={canGoNext}
+                  canGoPrev={canGoPrev}
+                  startIndex={startIndex}
+                  endIndex={endIndex}
+                  totalItems={totalItems}
+                />
               </div>
             </div>
 
-            {/* Border Radius Reference */}
-            <div>
-              <h3 className="font-[var(--font-family-display)] text-[var(--text-base)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] text-[var(--color-text-secondary)] mb-[var(--spacing-3)]">
-                Border Radius
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-[var(--spacing-4)]">
-                {[
-                  { token: '--radius-sm', value: '0.25rem' },
-                  { token: '--radius-md', value: '0.375rem' },
-                  { token: '--radius-lg', value: '0.5rem' },
-                  { token: '--radius-xl', value: '0.75rem' },
-                  { token: '--radius-2xl', value: '1rem' },
-                  { token: '--radius-full', value: '9999px' },
-                ].map((radius) => (
-                  <div 
-                    key={radius.token}
-                    className="p-[var(--spacing-4)] border border-[var(--color-border)] bg-[var(--color-card)]"
-                    style={{
-                      borderRadius: `var(${radius.token})`,
-                    }}
-                  >
-                    <code className="font-[var(--font-family-mono)] text-[var(--text-xs)] text-[var(--color-primary)]">
-                      {radius.token}
-                    </code>
-                    <p className="font-[var(--font-family-body)] text-[var(--text-xs)] text-[var(--color-text-muted)] mt-[var(--spacing-1)]">
-                      {radius.value}
-                    </p>
-                  </div>
-                ))}
+            {/* Footer */}
+            <footer className="bg-white border-t border-gray-200 mt-16">
+              <div className="px-4 sm:px-6 lg:px-8 py-12 md:flex md:items-center md:justify-between">
+                <div className="flex justify-center gap-x-6 md:order-2">
+                  {[
+                    {
+                      name: 'Facebook',
+                      href: '#',
+                      icon: (props) => (
+                        <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
+                          <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
+                        </svg>
+                      ),
+                    },
+                    {
+                      name: 'X',
+                      href: '#',
+                      icon: (props) => (
+                        <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
+                          <path d="M13.6823 10.6218L20.2391 3H18.6854L12.9921 9.61788L8.44486 3H3.2002L10.0765 13.0074L3.2002 21H4.75404L10.7663 14.0113L15.5685 21H20.8131L13.6819 10.6218H13.6823ZM11.5541 13.0956L10.8574 12.0991L5.31391 4.16971H7.70053L12.1742 10.5689L12.8709 11.5655L18.6861 19.8835H16.2995L11.5541 13.096V13.0956Z" />
+                        </svg>
+                      ),
+                    },
+                    {
+                      name: 'GitHub',
+                      href: '#',
+                      icon: (props) => (
+                        <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
+                          <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+                        </svg>
+                      ),
+                    },
+                  ].map((item) => (
+                    <a key={item.name} href={item.href} className="text-gray-600 hover:text-gray-800">
+                      <span className="sr-only">{item.name}</span>
+                      <item.icon aria-hidden="true" className="size-6" />
+                    </a>
+                  ))}
+                </div>
+                <p className="mt-8 text-center text-sm/6 text-gray-600 md:order-1 md:mt-0">
+                  &copy; 2025 Your Company, Inc. All rights reserved.
+                </p>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-          </div>
-
-          {/* Footer */}
-          <footer className="bg-white border-t border-gray-200 mt-16">
-            <div className="px-4 sm:px-6 lg:px-8 py-12 md:flex md:items-center md:justify-between">
-          <div className="flex justify-center gap-x-6 md:order-2">
-            {[
-              {
-                name: 'Facebook',
-                href: '#',
-                icon: (props) => (
-                  <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
-                    <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
-                  </svg>
-                ),
-              },
-              {
-                name: 'X',
-                href: '#',
-                icon: (props) => (
-                  <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
-                    <path d="M13.6823 10.6218L20.2391 3H18.6854L12.9921 9.61788L8.44486 3H3.2002L10.0765 13.0074L3.2002 21H4.75404L10.7663 14.0113L15.5685 21H20.8131L13.6819 10.6218H13.6823ZM11.5541 13.0956L10.8574 12.0991L5.31391 4.16971H7.70053L12.1742 10.5689L12.8709 11.5655L18.6861 19.8835H16.2995L11.5541 13.096V13.0956Z" />
-                  </svg>
-                ),
-              },
-              {
-                name: 'GitHub',
-                href: '#',
-                icon: (props) => (
-                  <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
-                    <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-                  </svg>
-                ),
-              },
-            ].map((item) => (
-              <a key={item.name} href={item.href} className="text-gray-600 hover:text-gray-800">
-                <span className="sr-only">{item.name}</span>
-                <item.icon aria-hidden="true" className="size-6" />
-              </a>
-            ))}
-          </div>
-          <p className="mt-8 text-center text-sm/6 text-gray-600 md:order-1 md:mt-0">
-            &copy; 2025 Your Company, Inc. All rights reserved.
-            </p>
-            </div>
             </footer>
 
             {/* Item Details Drawer */}
             <Dialog open={drawerOpen} onClose={setDrawerOpen} className="relative z-10">
-        <div className="fixed inset-0" />
+              <div className="fixed inset-0" />
 
-        <div className="fixed inset-0 overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
-              <DialogPanel
-                transition
-                className="pointer-events-auto w-screen max-w-md transform transition duration-500 ease-in-out data-closed:translate-x-full sm:duration-700"
-              >
-                <div className="relative flex h-full flex-col overflow-y-auto bg-white py-6 shadow-xl">
-                  <div className="px-4 sm:px-6">
-                    <div className="flex items-start justify-between">
-                      <DialogTitle className="text-base font-semibold text-gray-900">
-                        {selectedItem?.title || 'Item Details'}
-                      </DialogTitle>
-                      <div className="ml-3 flex h-7 items-center">
-                        <button
-                          type="button"
-                          onClick={() => setDrawerOpen(false)}
-                          className="relative rounded-md text-gray-400 hover:text-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                        >
-                          <span className="absolute -inset-2.5" />
-                          <span className="sr-only">Close panel</span>
-                          <XMarkIcon aria-hidden="true" className="size-6" />
-                        </button>
+              <div className="fixed inset-0 overflow-hidden">
+                <div className="absolute inset-0 overflow-hidden">
+                  <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
+                    <DialogPanel
+                      transition
+                      className="pointer-events-auto w-screen max-w-md transform transition duration-500 ease-in-out data-closed:translate-x-full sm:duration-700"
+                    >
+                      <div className="relative flex h-full flex-col overflow-y-auto bg-white py-6 shadow-xl">
+                        <div className="px-4 sm:px-6">
+                          <div className="flex items-start justify-between">
+                            <DialogTitle className="text-base font-semibold text-gray-900">
+                              {selectedItem?.title || 'Item Details'}
+                            </DialogTitle>
+                            <div className="ml-3 flex h-7 items-center">
+                              <button
+                                type="button"
+                                onClick={() => setDrawerOpen(false)}
+                                className="relative rounded-md text-gray-400 hover:text-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                              >
+                                <span className="absolute -inset-2.5" />
+                                <span className="sr-only">Close panel</span>
+                                <XMarkIcon aria-hidden="true" className="size-6" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="relative mt-6 flex-1 px-4 sm:px-6">
+                          {selectedItem && (
+                            <div className="space-y-6">
+                              <div>
+                                <h3 className="text-sm font-medium text-gray-900">Status</h3>
+                                <p className="mt-2 text-sm text-gray-700">
+                                  <Badge variant={selectedItem.status === 'active' ? 'default' : 'secondary'}>
+                                    {selectedItem.status}
+                                  </Badge>
+                                </p>
+                              </div>
+                              <div>
+                                <h3 className="text-sm font-medium text-gray-900">Category</h3>
+                                <p className="mt-2 text-sm text-gray-700">{selectedItem.category}</p>
+                              </div>
+                              <div>
+                                <h3 className="text-sm font-medium text-gray-900">Created</h3>
+                                <p className="mt-2 text-sm text-gray-700">
+                                  {new Date(selectedItem.created_date).toLocaleDateString()}
+                                </p>
+                              </div>
+                              <div>
+                                <h3 className="text-sm font-medium text-gray-900">Description</h3>
+                                <p className="mt-2 text-sm text-gray-700">{selectedItem.description}</p>
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <div className="relative mt-6 flex-1 px-4 sm:px-6">
-                    {selectedItem && (
-                      <div className="space-y-6">
-                        <div>
-                          <h3 className="text-sm font-medium text-gray-900">Status</h3>
-                          <p className="mt-2 text-sm text-gray-700">
-                            <Badge variant={selectedItem.status === 'active' ? 'default' : 'secondary'}>
-                              {selectedItem.status}
-                            </Badge>
-                          </p>
-                        </div>
-                        <div>
-                          <h3 className="text-sm font-medium text-gray-900">Category</h3>
-                          <p className="mt-2 text-sm text-gray-700">{selectedItem.category}</p>
-                        </div>
-                        <div>
-                          <h3 className="text-sm font-medium text-gray-900">Created</h3>
-                          <p className="mt-2 text-sm text-gray-700">
-                            {new Date(selectedItem.created_date).toLocaleDateString()}
-                          </p>
-                        </div>
-                        <div>
-                          <h3 className="text-sm font-medium text-gray-900">Description</h3>
-                          <p className="mt-2 text-sm text-gray-700">{selectedItem.description}</p>
-                        </div>
-                      </div>
-                    )}
+                    </DialogPanel>
                   </div>
                 </div>
-              </DialogPanel>
-            </div>
-            </div>
-            </div>
+              </div>
             </Dialog>
-            </div>
-            </div>
-            </div>
-            );
-            }
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
