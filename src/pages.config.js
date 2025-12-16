@@ -132,6 +132,7 @@ import PocketLogin from './pages/PocketLogin';
 import PocketRegister from './pages/PocketRegister';
 import StudioHome from './pages/StudioHome';
 import StudioAbout from './pages/StudioAbout';
+import StandardPageReference from './pages/StandardPageReference';
 import __Layout from './Layout.jsx';
 
 
@@ -270,6 +271,7 @@ export const PAGES = {
     "PocketRegister": PocketRegister,
     "StudioHome": StudioHome,
     "StudioAbout": StudioAbout,
+    "StandardPageReference": StandardPageReference,
 }
 
 export const pagesConfig = {
