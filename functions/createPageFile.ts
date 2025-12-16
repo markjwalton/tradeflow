@@ -59,7 +59,7 @@ export default function ${pageName}() {
         },
         body: JSON.stringify({
           message: `Create ${pageName} page`,
-          content: btoa(pageContent),
+          content: btoa(unescape(encodeURIComponent(pageContent))),
           branch: 'main'
         })
       }
