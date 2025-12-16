@@ -6,9 +6,7 @@ import { PlusIcon, EllipsisVerticalIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Menu, MenuButton, MenuItem, MenuItems, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { usePagination } from "@/components/common/usePagination";
-import TailwindHeader from "@/components/sturij/TailwindHeader";
 import TailwindPagination from "@/components/sturij/TailwindPagination";
-import TailwindSidebar from "@/components/sturij/TailwindSidebar";
 import TailwindTabs from "@/components/sturij/TailwindTabs";
 import { 
   ChevronRightIcon, 
@@ -23,11 +21,11 @@ function classNames(...classes) {
 /**
  * GOLDEN STANDARD PAGE REFERENCE
  * 
- * Standalone fullscreen page with:
- * - Fixed header spanning full width at top
- * - Fixed sidebar on left
- * - Content area on right with proper spacing
- * - Pixel-perfect positioning
+ * Standard page that integrates with main Layout:
+ * - Uses global AppShell for header and sidebar
+ * - Page-specific header with breadcrumb and actions
+ * - Sticky tabs navigation bar above footer
+ * - Clean content area with proper spacing
  */
 
 export default function StandardPageReference() {
@@ -37,7 +35,6 @@ export default function StandardPageReference() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [progress, setProgress] = useState({ visible: false, percent: 0, message: '' });
-  const [topPanelOpen, setTopPanelOpen] = useState(false);
   
   useEffect(() => {
     base44.auth.me().then(setCurrentUser).catch(() => {});
@@ -83,83 +80,10 @@ export default function StandardPageReference() {
     totalItems,
   } = usePagination(filteredItems, 25);
 
-  const headerNavigation = [
-    { name: 'Dashboard', href: '#', current: true },
-    { name: 'Projects', href: '#', current: false },
-  ];
-
-  const sidebarNavigation = [
-    { name: 'Dashboard', href: '#', icon: (props) => (
-      <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-      </svg>
-    ), current: true },
-    {
-      name: 'Teams',
-      icon: (props) => (
-        <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-      ),
-      current: false,
-      children: [
-        { name: 'Engineering', href: '#' },
-        { name: 'Human Resources', href: '#' },
-        { name: 'Customer Success', href: '#' },
-      ],
-    },
-    {
-      name: 'Projects',
-      icon: (props) => (
-        <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-        </svg>
-      ),
-      current: false,
-      children: [
-        { name: 'GraphQL API', href: '#' },
-        { name: 'iOS App', href: '#' },
-        { name: 'Android App', href: '#' },
-        { name: 'New Customer Portal', href: '#' },
-      ],
-    },
-    { name: 'Calendar', href: '#', icon: (props) => (
-      <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-      </svg>
-    ), current: false },
-    { name: 'Documents', href: '#', icon: (props) => (
-      <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-      </svg>
-    ), current: false },
-    { name: 'Reports', href: '#', icon: (props) => (
-      <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-      </svg>
-    ), current: false },
-  ];
-
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
-      {/* Fixed Header - Full Width */}
-      <div className="fixed top-0 left-0 right-0 z-50 h-16 bg-white border-b border-gray-200">
-        <TailwindHeader navigation={headerNavigation} onSearch={setSearchQuery} />
-      </div>
-
-      {/* Content Below Header */}
-      <div className="flex flex-1 pt-16 overflow-hidden">
-        {/* Fixed Sidebar - Left Side */}
-        <div className="hidden lg:fixed lg:inset-y-16 lg:bottom-0 lg:z-40 lg:flex lg:w-72 lg:flex-col">
-          <TailwindSidebar navigation={sidebarNavigation} />
-        </div>
-
-        {/* Main Content Area - Accounts for Sidebar Width */}
-        <div className="flex-1 lg:pl-72 flex flex-col">
-          <div className="flex-1 overflow-y-auto">
-            <div className="min-h-full flex flex-col">
-            {/* === PAGE HEADER SECTION === */}
-            <div className="sticky top-0 z-40 bg-white border-b border-gray-200">
+    <>
+      {/* === PAGE HEADER SECTION === */}
+      <div className="sticky top-0 z-40 bg-white border-b border-gray-200">
               <div className="px-4 sm:px-6 lg:px-8">
                 {/* Breadcrumb */}
                 <nav aria-label="Breadcrumb" className="flex py-3">
@@ -237,24 +161,11 @@ export default function StandardPageReference() {
                   </button>
                 </div>
 
-                {/* Tabs for Status Filtering */}
-                <div className="pb-2">
-                  <TailwindTabs 
-                    tabs={[
-                      { name: 'All Items', value: 'all' },
-                      { name: 'Active', value: 'active' },
-                      { name: 'Pending', value: 'pending' },
-                      { name: 'Completed', value: 'completed' }
-                    ]}
-                    activeTab={activeTab}
-                    onTabChange={setActiveTab}
-                  />
-                </div>
               </div>
-            </div>
+      </div>
 
-            {/* === MAIN CONTENT SECTION === */}
-            <div className="px-4 sm:px-6 lg:px-8 py-8 flex-1">
+      {/* === MAIN CONTENT SECTION === */}
+      <div className="px-4 sm:px-6 lg:px-8 py-8">
         
               {/* Progress Bar */}
               {progress.visible && (
@@ -423,69 +334,36 @@ export default function StandardPageReference() {
                 </div>
               )}
 
-              {/* Pagination Bottom */}
-              <div className="mt-8">
-                <TailwindPagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={goToPage}
-                  onNextPage={nextPage}
-                  onPrevPage={prevPage}
-                  canGoNext={canGoNext}
-                  canGoPrev={canGoPrev}
-                  startIndex={startIndex}
-                  endIndex={endIndex}
-                  totalItems={totalItems}
-                />
-              </div>
-            </div>
-            </div>
-          </div>
+        {/* Pagination Bottom */}
+        <div className="mt-8 mb-20">
+          <TailwindPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={goToPage}
+            onNextPage={nextPage}
+            onPrevPage={prevPage}
+            canGoNext={canGoNext}
+            canGoPrev={canGoPrev}
+            startIndex={startIndex}
+            endIndex={endIndex}
+            totalItems={totalItems}
+          />
+        </div>
+      </div>
 
-          {/* Footer - Full Width at bottom */}
-          <footer className="bg-white border-t border-gray-200 w-full lg:ml-[-18rem]">
-          <div className="px-4 sm:px-6 lg:px-8 py-12 md:flex md:items-center md:justify-between">
-            <div className="flex justify-center gap-x-6 md:order-2">
-              {[
-                {
-                  name: 'Facebook',
-                  href: '#',
-                  icon: (props) => (
-                    <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
-                      <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
-                    </svg>
-                  ),
-                },
-                {
-                  name: 'X',
-                  href: '#',
-                  icon: (props) => (
-                    <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
-                      <path d="M13.6823 10.6218L20.2391 3H18.6854L12.9921 9.61788L8.44486 3H3.2002L10.0765 13.0074L3.2002 21H4.75404L10.7663 14.0113L15.5685 21H20.8131L13.6819 10.6218H13.6823ZM11.5541 13.0956L10.8574 12.0991L5.31391 4.16971H7.70053L12.1742 10.5689L12.8709 11.5655L18.6861 19.8835H16.2995L11.5541 13.096V13.0956Z" />
-                    </svg>
-                  ),
-                },
-                {
-                  name: 'GitHub',
-                  href: '#',
-                  icon: (props) => (
-                    <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
-                      <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-                    </svg>
-                  ),
-                },
-              ].map((item) => (
-                <a key={item.name} href={item.href} className="text-gray-600 hover:text-gray-800">
-                  <span className="sr-only">{item.name}</span>
-                  <item.icon aria-hidden="true" className="size-6" />
-                </a>
-              ))}
-            </div>
-            <p className="mt-8 text-center text-sm/6 text-gray-600 md:order-1 md:mt-0">
-              &copy; 2025 Your Company, Inc. All rights reserved.
-            </p>
-          </div>
-          </footer>
+      {/* Sticky Navigation Bar - Above Footer */}
+      <div className="sticky bottom-0 z-30 bg-white border-t border-gray-200">
+        <div className="px-4 sm:px-6 lg:px-8 py-3">
+          <TailwindTabs 
+            tabs={[
+              { name: 'All Items', value: 'all' },
+              { name: 'Active', value: 'active' },
+              { name: 'Pending', value: 'pending' },
+              { name: 'Completed', value: 'completed' }
+            ]}
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+          />
         </div>
       </div>
 
@@ -553,6 +431,6 @@ export default function StandardPageReference() {
           </div>
         </div>
       </Dialog>
-    </div>
+    </>
   );
 }
