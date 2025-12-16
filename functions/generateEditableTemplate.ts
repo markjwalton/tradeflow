@@ -14,14 +14,16 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'page_slug and editable_blocks required' }, { status: 400 });
     }
 
-    // Read original page content from file system
-    let content;
-    try {
-      content = await Deno.readTextFile(`/src/pages/${page_slug}.js`);
-    } catch (e) {
-      console.error('File read error:', e);
-      return Response.json({ error: `Page file not found: ${e.message}` }, { status: 404 });
+    // Read original page content using backend function
+    const readResult = await base44.asServiceRole.functions.invoke('readFileContent', {
+      file_path: `pages/${page_slug}.js`
+    });
+
+    if (!readResult.data.success) {
+      return Response.json({ error: readResult.data.error || 'Failed to read page file' }, { status: 404 });
     }
+
+    const content = readResult.data.content;
 
     // Generate modified page with editable areas
     const modifyPrompt = `Transform this React page to use editable content blocks from props.
