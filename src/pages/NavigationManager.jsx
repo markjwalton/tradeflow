@@ -133,7 +133,16 @@ export default function NavigationManager() {
         "StandaloneInstanceManager", "ProjectDetails", "TailwindKnowledgeManager",
         "ComponentShowcase", "PackageDetail", "DesignPatternAudit", "GitHubIntegration",
         "ColorMigrationDashboard", "ThemeBuilder", "ThemePreview", "FontManager", 
-        "OklchColorPicker", "DesignTokenEditor", "SiteSettings"
+        "OklchColorPicker", "DesignTokenEditor", "SiteSettings",
+        "RadiantHome", "KeynoteHome", "PocketHome", "PocketLogin", "PocketRegister",
+        "StudioHome", "StudioAbout", "CommitHome", "CompassHome", "CompassLogin", "CompassInterviews",
+        "SyntaxHome", "SyntaxDocs", "TransmitHome", "TailwindProductShowcase", "TailwindShowcaseGallery",
+        "TailwindListsShowcase", "TailwindFeedsShowcase", "TailwindDrawerShowcase",
+        "TailwindDescriptionListsShowcase", "TailwindStatsShowcase", "TailwindFormsShowcase",
+        "TailwindAppShellsShowcase", "TailwindPageHeadersShowcase", "TailwindPeopleListsShowcase",
+        "TailwindTablesShowcase", "TailwindCardsShowcase", "TailwindBadgesShowcase",
+        "TailwindMenuShowcase", "TailwindNavigationShowcase", "TailwindCalendarShowcase",
+        "TailwindSectionHeadersShowcase", "UXShowcase"
       ];
       
       const configs = await base44.entities.NavigationConfig.filter({ config_type: configType });
