@@ -157,8 +157,8 @@ export default function StandardPageReference() {
         </div>
 
         {/* Main Content Area - Accounts for Sidebar Width */}
-        <div className="flex-1 lg:pl-72">
-          <div className="h-full overflow-y-auto">
+        <div className="flex-1 lg:pl-72 flex flex-col">
+          <div className="flex-1 overflow-y-auto">
             {/* === PAGE HEADER SECTION === */}
             <div className="sticky top-0 z-40 bg-white border-b border-gray-200">
               <div className="px-4 sm:px-6 lg:px-8">
@@ -441,12 +441,10 @@ export default function StandardPageReference() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Footer - Full Width */}
-      <footer className="bg-white border-t border-gray-200">
-          <div className="px-4 sm:px-6 lg:px-8 py-12 md:flex md:items-center md:justify-between">
+          {/* Footer - Full Width */}
+          <footer className="bg-white border-t border-gray-200 mt-auto">
+            <div className="px-4 sm:px-6 lg:px-8 py-12 md:flex md:items-center md:justify-between">
                 <div className="flex justify-center gap-x-6 md:order-2">
                   {[
                     {
@@ -485,9 +483,10 @@ export default function StandardPageReference() {
                 </div>
                 <p className="mt-8 text-center text-sm/6 text-gray-600 md:order-1 md:mt-0">
                   &copy; 2025 Your Company, Inc. All rights reserved.
-              </p>
-          </div>
-        </footer>
+                </p>
+            </div>
+          </footer>
+        </div>
 
         {/* Item Details Drawer */}
         <Dialog open={drawerOpen} onClose={setDrawerOpen} className="relative z-10">
@@ -550,9 +549,9 @@ export default function StandardPageReference() {
                       </div>
                     </DialogPanel>
                   </div>
+                </div>
               </div>
-            </div>
-          </Dialog>
+            </Dialog>
       </div>
     </div>
   );
