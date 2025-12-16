@@ -23,6 +23,7 @@ export default function PageTemplateGenerator() {
   const [analysisResult, setAnalysisResult] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState(null);
+  const [syncStatus, setSyncStatus] = useState({});
 
   // Fetch website folders
   const { data: folders = [] } = useQuery({
@@ -35,6 +36,28 @@ export default function PageTemplateGenerator() {
     "RadiantHome", "KeynoteHome", "PocketHome", "StudioHome", "CommitHome",
     "CompassHome", "SyntaxHome", "TransmitHome"
   ];
+
+  // Sync page mutation
+  const syncMutation = useMutation({
+    mutationFn: async (pageName) => {
+      const response = await base44.functions.invoke('syncPageToDatabase', {
+        page_name: pageName,
+        repo_owner: 'your-org', // TODO: Configure this
+        repo_name: 'your-repo',  // TODO: Configure this
+        branch: 'main'
+      });
+      return response.data;
+    },
+    onSuccess: (data, pageName) => {
+      setSyncStatus(prev => ({ ...prev, [pageName]: 'synced' }));
+      toast.success(`${pageName} synced to database`);
+      queryClient.invalidateQueries({ queryKey: ['uiPages'] });
+    },
+    onError: (error, pageName) => {
+      setSyncStatus(prev => ({ ...prev, [pageName]: 'error' }));
+      toast.error(`Sync failed: ${error.message}`);
+    }
+  });
 
   // Analyze page mutation
   const analyzeMutation = useMutation({
@@ -111,20 +134,45 @@ export default function PageTemplateGenerator() {
         <CardContent className="space-y-4">
           {/* Page Selection */}
           <div className="space-y-2">
-            <Label>Select Page Template</Label>
+            <div className="flex items-center justify-between">
+              <Label>Select Page Template</Label>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  templatePages.forEach(page => syncMutation.mutate(page));
+                }}
+                disabled={syncMutation.isPending}
+              >
+                {syncMutation.isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Syncing...
+                  </>
+                ) : (
+                  'Sync All Pages'
+                )}
+              </Button>
+            </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {templatePages.map(page => (
-                <Button
-                  key={page}
-                  variant={selectedPage === page ? "default" : "outline"}
-                  className="w-full"
-                  onClick={() => {
-                    setSelectedPage(page);
-                    setAnalysisResult(null);
-                  }}
-                >
-                  {page.replace(/([A-Z])/g, ' $1').trim()}
-                </Button>
+                <div key={page} className="relative">
+                  <Button
+                    variant={selectedPage === page ? "default" : "outline"}
+                    className="w-full"
+                    onClick={() => {
+                      setSelectedPage(page);
+                      setAnalysisResult(null);
+                    }}
+                  >
+                    {page.replace(/([A-Z])/g, ' $1').trim()}
+                  </Button>
+                  {syncStatus[page] === 'synced' && (
+                    <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center" variant="default">
+                      ✓
+                    </Badge>
+                  )}
+                </div>
               ))}
             </div>
           </div>
