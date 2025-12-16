@@ -9,18 +9,18 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Query UIPage entity to get all pages
-    const uiPages = await base44.asServiceRole.entities.UIPage.list();
+    const { config_type } = await req.json();
     
-    // Extract slugs from UIPage records
-    const pages = uiPages
-      .filter(page => page.slug)
-      .map(page => page.slug)
-      .sort();
+    // Get the NavigationConfig to read existing source_slugs
+    const configs = await base44.asServiceRole.entities.NavigationConfig.filter({ 
+      config_type: config_type || "app_pages_source" 
+    });
 
+    const existingSlugs = configs[0]?.source_slugs || [];
+    
     return Response.json({ 
-      pages,
-      count: pages.length 
+      pages: existingSlugs.sort(),
+      count: existingSlugs.length 
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
