@@ -335,11 +335,9 @@ export default function StandardPageReference() {
                     }}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 rounded-md"
                   >
-                    <Eye className="h-4 w-4" />
                     View
                   </button>
                   <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 rounded-md">
-                    <Edit2 className="h-4 w-4" />
                     Edit
                   </button>
                   <Menu as="div" className="relative inline-block">
@@ -486,15 +484,15 @@ export default function StandardPageReference() {
                 </div>
                 <p className="mt-8 text-center text-sm/6 text-gray-600 md:order-1 md:mt-0">
                   &copy; 2025 Your Company, Inc. All rights reserved.
-                </p>
+              </p>
             </div>
           </footer>
 
-          {/* Item Details Drawer */}
-            <Dialog open={drawerOpen} onClose={setDrawerOpen} className="relative z-10">
-              <div className="fixed inset-0" />
+        {/* Item Details Drawer */}
+        <Dialog open={drawerOpen} onClose={setDrawerOpen} className="relative z-10">
+          <div className="fixed inset-0" />
 
-              <div className="fixed inset-0 overflow-hidden">
+          <div className="fixed inset-0 overflow-hidden">
                 <div className="absolute inset-0 overflow-hidden">
                   <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
                     <DialogPanel
@@ -551,10 +549,9 @@ export default function StandardPageReference() {
                       </div>
                     </DialogPanel>
                   </div>
-                </div>
               </div>
-            </Dialog>
-        </div>
+            </div>
+          </Dialog>
       </div>
     </div>
   );
