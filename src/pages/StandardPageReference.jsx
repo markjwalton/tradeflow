@@ -10,6 +10,7 @@ import {
   Search, Filter, Download, Upload, Plus, Edit2, Trash2, 
   MoreHorizontal, Eye, Star, Share2, Settings, ChevronLeft, ChevronRight 
 } from "lucide-react";
+import { PlusIcon } from '@heroicons/react/20/solid';
 import { usePagination } from "@/components/common/usePagination";
 import TailwindHeader from "@/components/sturij/TailwindHeader";
 import TailwindPagination from "@/components/sturij/TailwindPagination";
@@ -312,39 +313,33 @@ export default function StandardPageReference() {
 
         {/* Empty State */}
         {paginatedData.length === 0 && !isLoading && (
-          <div 
-            className="text-center py-[var(--spacing-16)]"
-            style={{
-              borderRadius: 'var(--radius-xl)',
-              border: '2px dashed var(--color-border)',
-              backgroundColor: 'var(--color-card)',
-            }}
-          >
-            <div 
-              className="mx-auto flex items-center justify-center mb-[var(--spacing-4)]"
-              style={{
-                width: 'var(--spacing-16)',
-                height: 'var(--spacing-16)',
-                borderRadius: 'var(--radius-full)',
-                backgroundColor: 'var(--color-muted)',
-              }}
+          <div className="text-center py-[var(--spacing-16)]">
+            <svg
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              className="mx-auto size-12 text-gray-400"
             >
-              <Search className="h-8 w-8 text-[var(--color-text-muted)]" />
+              <path
+                d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
+                strokeWidth={2}
+                vectorEffect="non-scaling-stroke"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <h3 className="mt-2 text-sm font-semibold text-gray-900">No items found</h3>
+            <p className="mt-1 text-sm text-gray-500">Try adjusting your search or filters to find what you're looking for.</p>
+            <div className="mt-6">
+              <button
+                type="button"
+                className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                <PlusIcon aria-hidden="true" className="mr-1.5 -ml-0.5 size-5" />
+                Create First Item
+              </button>
             </div>
-            <h3 
-              className="font-[var(--font-family-display)] text-[var(--text-lg)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] text-[var(--color-text-primary)] mb-[var(--spacing-2)]"
-            >
-              No items found
-            </h3>
-            <p 
-              className="font-[var(--font-family-body)] text-[var(--text-sm)] text-[var(--color-text-muted)] leading-[var(--leading-normal)] mb-[var(--spacing-6)]"
-            >
-              Try adjusting your search or filters to find what you're looking for.
-            </p>
-            <Button>
-              <Plus className="h-4 w-4 mr-[var(--spacing-2)]" />
-              Create First Item
-            </Button>
           </div>
         )}
 
