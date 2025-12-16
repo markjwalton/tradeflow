@@ -107,43 +107,16 @@ export default function NavigationManager() {
     }
   };
 
-  // Sync unallocated pages mutation - manually adds known showcase pages to source_slugs
+  // Sync unallocated pages mutation - dynamically scans pages folder
   const syncUnallocatedPages = useMutation({
     mutationFn: async (configType) => {
-      // Hardcoded list of known pages that should be available
-      const knownPages = [
-        "Dashboard", "NavigationManager", "PageBuilder", "TenantManager", "LayoutPatternManager",
-        "RuleBook", "CSSAudit", "TestDataManager", "UILibrary", "Components", "BrandIdentity",
-        "ComponentPatterns", "TypographyShowcase", "ButtonsShowcase", "CardsShowcase", 
-        "FormsShowcase", "LayoutShowcase", "NavigationShowcase", "DataDisplayShowcase",
-        "FeedbackShowcase", "Projects", "ProjectDetail", "ProjectsOverview", "ProjectForm",
-        "Tasks", "Customers", "Team", "Calendar", "Estimates", "Home", "Setup", "TenantAccess",
-        "WorkflowDesigner", "WorkflowLibrary", "FormBuilder", "FormTemplates", 
-        "ChecklistBuilder", "ChecklistTemplates", "AppointmentHub", "AppointmentConfirm",
-        "AppointmentManager", "WebsiteEnquiryForm", "InterestOptionsManager", "MindMapEditor",
-        "TemplateLibrary", "CommunityLibrary", "CommunityPublish", "PackageLibrary",
-        "SturijPackage", "GeneratedApps", "PackageExport", "BusinessTemplates", "EntityLibrary",
-        "FeatureLibrary", "PageLibrary", "PlaygroundSummary", "SprintManager", "RoadmapManager",
-        "LearnedPatterns", "DesignSystemManager", "SecurityMonitor", "PerformanceMonitor",
-        "APIManager", "CMSManager", "KnowledgeManager", "RoadmapJournal", "ConceptWorkbench",
-        "LivePreview", "TestingHub", "DebugProjectWorkspace", "DebugProjectEditor",
-        "LayoutBuilder", "LookupTestForms", "ViolationReport", "DesignTokens", "TokenPreview",
-        "ERDEditor", "SystemSpecification", "PromptSettings", "DashboardManager",
-        "PlaygroundEntity", "PlaygroundPage", "PlaygroundFeature", "StandaloneAPIStrategy",
-        "StandaloneInstanceManager", "ProjectDetails", "TailwindKnowledgeManager",
-        "ComponentShowcase", "PackageDetail", "DesignPatternAudit", "GitHubIntegration",
-        "ColorMigrationDashboard", "ThemeBuilder", "ThemePreview", "FontManager", 
-        "OklchColorPicker", "DesignTokenEditor", "SiteSettings", "AssetManager", "WebsiteThemeManager",
-        "RadiantHome", "KeynoteHome", "PocketHome", "PocketLogin", "PocketRegister",
-        "StudioHome", "StudioAbout", "CommitHome", "CompassHome", "CompassLogin", "CompassInterviews",
-        "SyntaxHome", "SyntaxDocs", "TransmitHome", "TailwindProductShowcase", "TailwindShowcaseGallery",
-        "TailwindListsShowcase", "TailwindFeedsShowcase", "TailwindDrawerShowcase",
-        "TailwindDescriptionListsShowcase", "TailwindStatsShowcase", "TailwindFormsShowcase",
-        "TailwindAppShellsShowcase", "TailwindPageHeadersShowcase", "TailwindPeopleListsShowcase",
-        "TailwindTablesShowcase", "TailwindCardsShowcase", "TailwindBadgesShowcase",
-        "TailwindMenuShowcase", "TailwindNavigationShowcase", "TailwindCalendarShowcase",
-        "TailwindSectionHeadersShowcase", "UXShowcase", "StandardPageReference"
-      ];
+      // Scan pages folder dynamically
+      const scanResult = await base44.functions.invoke('scanPages');
+      const allPages = scanResult.data?.pages || [];
+      
+      if (allPages.length === 0) {
+        return { added: 0, message: "No pages found in pages folder" };
+      }
       
       const configs = await base44.entities.NavigationConfig.filter({ config_type: configType });
       if (configs.length === 0) {
@@ -154,7 +127,7 @@ export default function NavigationManager() {
       const currentSourceSlugs = config.source_slugs || [];
       
       // Find pages not in source_slugs
-      const missingPages = knownPages.filter(slug => !currentSourceSlugs.includes(slug));
+      const missingPages = allPages.filter(slug => !currentSourceSlugs.includes(slug));
       
       if (missingPages.length === 0) {
         return { added: 0, message: "All pages already in config" };
