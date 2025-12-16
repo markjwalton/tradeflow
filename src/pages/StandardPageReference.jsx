@@ -442,22 +442,6 @@ export default function StandardPageReference() {
             </div>
           </div>
 
-          {/* Sticky Navigation Bar */}
-          <div className="sticky bottom-0 z-30 bg-white border-t border-gray-200 lg:ml-[-18rem]">
-            <div className="px-4 sm:px-6 lg:px-8 py-3">
-              <TailwindTabs 
-                tabs={[
-                  { name: 'All Items', value: 'all' },
-                  { name: 'Active', value: 'active' },
-                  { name: 'Pending', value: 'pending' },
-                  { name: 'Completed', value: 'completed' }
-                ]}
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
-              />
-            </div>
-          </div>
-
           {/* Footer - Full Width at bottom */}
           <footer className="bg-white border-t border-gray-200 w-full lg:ml-[-18rem]">
           <div className="px-4 sm:px-6 lg:px-8 py-12 md:flex md:items-center md:justify-between">
