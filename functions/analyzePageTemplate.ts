@@ -29,30 +29,34 @@ Deno.serve(async (req) => {
 
     let content = page_content;
 
-    // If content not provided, try to read from UIPage entity
+    // If content not provided, try multiple sources
     if (!content) {
-      console.log('📦 [BACKEND] No content provided, fetching from database...');
+      console.log('📦 [BACKEND] No content provided, trying database first...');
       const pages = await base44.asServiceRole.entities.UIPage.filter({ 
         page_name: page_slug 
       });
 
       console.log('📦 [BACKEND] Database query result:', pages.length, 'pages found');
 
-      if (pages.length === 0) {
-        console.error('❌ [BACKEND] Page not found in database');
-        return Response.json({ 
-          error: `Page "${page_slug}" not found. Please provide page_content in the request.`
-        }, { status: 404 });
+      if (pages.length > 0 && pages[0].current_content_jsx) {
+        content = pages[0].current_content_jsx;
+        console.log('✅ [BACKEND] Content fetched from database:', content.length, 'chars');
+      } else {
+        // Try reading from filesystem
+        console.log('📁 [BACKEND] Not in database, trying filesystem...');
+        try {
+          const filePath = `pages/${page_slug}.js`;
+          console.log('📁 [BACKEND] Reading file:', filePath);
+          content = await Deno.readTextFile(filePath);
+          console.log('✅ [BACKEND] Content read from filesystem:', content.length, 'chars');
+        } catch (fsError) {
+          console.error('❌ [BACKEND] Filesystem read failed:', fsError.message);
+          return Response.json({ 
+            error: `Page "${page_slug}" not found in database or filesystem`,
+            details: fsError.message
+          }, { status: 404 });
+        }
       }
-
-      content = pages[0].current_content_jsx;
-      if (!content) {
-        console.error('❌ [BACKEND] Page exists but has no content');
-        return Response.json({ 
-          error: `No content found for page: ${page_slug}`
-        }, { status: 404 });
-      }
-      console.log('✅ [BACKEND] Content fetched from database:', content.length, 'chars');
     } else {
       console.log('✅ [BACKEND] Using provided content:', content.length, 'chars');
     }
