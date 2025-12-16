@@ -414,6 +414,22 @@ export default function Layout({ children, currentPageName }) {
         <EditModeProvider>
           <div className="min-h-screen">
             <LiveEditWrapper>{children}</LiveEditWrapper>
+
+            {/* Exit fullscreen button */}
+            <Button
+              onClick={() => window.history.back()}
+              variant="ghost"
+              size="sm"
+              className="fixed top-4 right-4 h-10 px-4 bg-black/20 hover:bg-black/40 text-white backdrop-blur-sm border border-white/20"
+              style={{ zIndex: 'var(--z-max)' }}
+              title="Exit fullscreen"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              Back
+            </Button>
           </div>
           <PageSettingsPanel currentPageName={currentPageName} />
           <PageUIPanel currentPageName={currentPageName} />
