@@ -416,25 +416,6 @@ export default function GenericNavEditor({
       )}
       <CardContent className="[padding-top:var(--spacing-4)]">
         <div className="flex justify-between items-center [margin-bottom:var(--spacing-3)]">
-          <div className="flex [gap:var(--spacing-2)]">
-            {syncUnallocatedPages && (
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={syncUnallocatedPages}
-                disabled={isSyncing}
-                title="Scan config and refresh unallocated pages"
-                className="text-sm hover:bg-green-50 hover:text-green-700"
-              >
-                {isSyncing ? (
-                  <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
-                ) : (
-                  <Sparkles className="h-3.5 w-3.5 mr-1.5" />
-                )}
-                Sync Pages
-              </Button>
-            )}
-          </div>
           <Button 
             size="sm"
             variant="ghost"
