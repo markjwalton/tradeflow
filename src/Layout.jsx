@@ -397,7 +397,9 @@ export default function Layout({ children, currentPageName }) {
     return <div className="min-h-screen bg-[var(--color-background)]">{children}</div>;
   }
 
-  if (fullscreenPages.includes(currentPageName)) {
+  const isFullscreenPage = fullscreenPages.includes(currentPageName);
+
+  if (isFullscreenPage) {
     const fullscreenContextValue = {
       tenant: currentTenant,
       tenantId: currentTenant?.id,
@@ -508,8 +510,8 @@ export default function Layout({ children, currentPageName }) {
           <StyleEditorPanel currentPageName={currentPageName} />
           <GlobalAIAssistant />
 
-          {/* Editor bubble button */}
-          {showEditorBubble && (
+          {/* Editor bubble button - hide on fullscreen pages */}
+          {showEditorBubble && !isFullscreenPage && (
             <Button
               onClick={async () => {
                 const newState = !editorPanelOpen;
