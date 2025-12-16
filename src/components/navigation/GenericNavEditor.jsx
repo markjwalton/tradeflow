@@ -127,9 +127,10 @@ export default function GenericNavEditor({
 
   const config = navConfigs[0];
   const rawItems = config?.items || [];
-  
+
   // Normalize IDs: database uses 'id', ensure all items have it
   const items = React.useMemo(() => {
+    if (!Array.isArray(rawItems)) return [];
     return rawItems.map(item => ({
       ...item,
       id: item.id || item._id || generateId()
@@ -164,7 +165,8 @@ export default function GenericNavEditor({
   
   // Get slugs from config's source_slugs (no hardcoded fallback)
   const effectiveSlugs = React.useMemo(() => {
-    return (config?.source_slugs || []).sort();
+    const slugs = config?.source_slugs || [];
+    return Array.isArray(slugs) ? slugs.sort() : [];
   }, [config?.source_slugs]);
   
   // Initial expand logic - always check user settings on mount
@@ -202,8 +204,8 @@ export default function GenericNavEditor({
   }, [items, initialExpandDone, configType]);
 
   // Calculate unallocated slugs using effective (merged) slugs
-  const allocatedSlugs = items.map(i => i.slug).filter(Boolean);
-  const unallocatedSlugs = effectiveSlugs.filter(slug => !allocatedSlugs.includes(slug));
+  const allocatedSlugs = Array.isArray(items) ? items.map(i => i.slug).filter(Boolean) : [];
+  const unallocatedSlugs = Array.isArray(effectiveSlugs) ? effectiveSlugs.filter(slug => !allocatedSlugs.includes(slug)) : [];
 
   // Use shared hierarchy helpers
   const getItemsByParent = (parentId) => getChildren(parentId, items);
