@@ -14,6 +14,7 @@ import { usePagination } from "@/components/common/usePagination";
 import TailwindHeader from "@/components/sturij/TailwindHeader";
 import TailwindPagination from "@/components/sturij/TailwindPagination";
 import TailwindSidebar from "@/components/sturij/TailwindSidebar";
+import TailwindTabs from "@/components/sturij/TailwindTabs";
 
 /**
  * GOLDEN STANDARD PAGE REFERENCE
