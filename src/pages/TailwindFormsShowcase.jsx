@@ -2363,39 +2363,39 @@ function ToggleSwitchVariationsSection() {
   const [notifications, setNotifications] = React.useState(true);
 
   return (
-    <section className="space-y-8">
+    <section className="space-y-[var(--spacing-8)]">
       <div>
-        <h2 className="text-xl font-display mb-2">Toggle Switch Variations</h2>
-        <p className="text-sm text-muted-foreground">Toggle switches with different layouts and styles</p>
+        <h2 className="font-[var(--font-family-display)] text-[var(--text-xl)] font-[var(--font-weight-light)] tracking-[var(--tracking-airy)] text-[var(--color-text-primary)] mb-[var(--spacing-2)]">Toggle Switch Variations</h2>
+        <p className="font-[var(--font-family-body)] text-[var(--text-sm)] text-[var(--color-text-muted)] leading-[var(--leading-normal)]">Toggle switches with different layouts and styles</p>
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-2">
+      <div className="grid gap-[var(--spacing-8)] lg:grid-cols-2">
         {/* Basic Toggle */}
-        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
-          <h3 className="text-sm font-medium">Basic Toggle</h3>
-          <div className="flex items-center gap-3">
+        <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-card)] p-[var(--spacing-6)] shadow-[var(--shadow-card)] space-y-[var(--spacing-4)]">
+          <h3 className="font-[var(--font-family-display)] text-[var(--text-sm)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] text-[var(--color-text-secondary)]">Basic Toggle</h3>
+          <div className="flex items-center gap-[var(--spacing-3)]">
             <Switch
               id="basic-toggle"
               checked={enabled}
               onCheckedChange={setEnabled}
             />
-            <Label htmlFor="basic-toggle" className="text-sm">
+            <Label htmlFor="basic-toggle" className="font-[var(--font-family-display)] text-[var(--text-sm)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] text-[var(--color-text-secondary)]">
               Enable notifications
             </Label>
           </div>
         </div>
 
         {/* Toggle with Icons */}
-        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
-          <h3 className="text-sm font-medium">With Icons</h3>
-          <div className="flex items-center gap-3">
-            <div className="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-primary" style={{ backgroundColor: enabled ? 'var(--primary)' : 'var(--muted)' }}>
-              <span className={`relative inline-block h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${enabled ? 'translate-x-5' : 'translate-x-0.5'}`}>
-                <span className={`absolute inset-0 flex items-center justify-center transition-opacity ${enabled ? 'opacity-0' : 'opacity-100'}`}>
-                  <X className="h-3 w-3 text-muted-foreground" />
+        <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-card)] p-[var(--spacing-6)] shadow-[var(--shadow-card)] space-y-[var(--spacing-4)]">
+          <h3 className="font-[var(--font-family-display)] text-[var(--text-sm)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] text-[var(--color-text-secondary)]">With Icons</h3>
+          <div className="flex items-center gap-[var(--spacing-3)]">
+            <div className="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-[var(--duration-200)] focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-[var(--color-ring)]" style={{ backgroundColor: enabled ? 'var(--color-primary)' : 'var(--color-switch-background)' }}>
+              <span className={`relative inline-block h-5 w-5 rounded-full bg-white shadow-[var(--shadow-sm)] transition-transform duration-[var(--duration-200)] ${enabled ? 'translate-x-5' : 'translate-x-0.5'}`}>
+                <span className={`absolute inset-0 flex items-center justify-center transition-opacity duration-[var(--duration-200)] ${enabled ? 'opacity-0' : 'opacity-100'}`}>
+                  <X className="h-3 w-3 text-[var(--color-text-muted)]" />
                 </span>
-                <span className={`absolute inset-0 flex items-center justify-center transition-opacity ${enabled ? 'opacity-100' : 'opacity-0'}`}>
-                  <Check className="h-3 w-3 text-primary" />
+                <span className={`absolute inset-0 flex items-center justify-center transition-opacity duration-[var(--duration-200)] ${enabled ? 'opacity-100' : 'opacity-0'}`}>
+                  <Check className="h-3 w-3 text-[var(--color-primary)]" />
                 </span>
               </span>
               <input
@@ -2406,19 +2406,19 @@ function ToggleSwitchVariationsSection() {
                 aria-label="Toggle with icons"
               />
             </div>
-            <Label className="text-sm">Enable feature</Label>
+            <Label className="font-[var(--font-family-display)] text-[var(--text-sm)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] text-[var(--color-text-secondary)]">Enable feature</Label>
           </div>
         </div>
 
         {/* Toggle with Description */}
-        <div className="rounded-lg border border-border bg-card p-6 space-y-4 lg:col-span-2">
-          <h3 className="text-sm font-medium">With Description</h3>
+        <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-card)] p-[var(--spacing-6)] shadow-[var(--shadow-card)] space-y-[var(--spacing-4)] lg:col-span-2">
+          <h3 className="font-[var(--font-family-display)] text-[var(--text-sm)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] text-[var(--color-text-secondary)]">With Description</h3>
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <Label htmlFor="available-toggle" className="font-medium">
+              <Label htmlFor="available-toggle" className="font-[var(--font-family-display)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] text-[var(--color-text-secondary)]">
                 Available to hire
               </Label>
-              <p className="text-sm text-muted-foreground">
+              <p className="font-[var(--font-family-body)] text-[var(--text-sm)] text-[var(--color-text-muted)] leading-[var(--leading-normal)]">
                 Nulla amet tempus sit accumsan. Aliquet turpis sed sit lacinia.
               </p>
             </div>
@@ -2431,33 +2431,33 @@ function ToggleSwitchVariationsSection() {
         </div>
 
         {/* Small Toggle with Short Label */}
-        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
-          <h3 className="text-sm font-medium">Small with Short Label</h3>
-          <div className="flex items-center justify-between gap-3">
+        <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-card)] p-[var(--spacing-6)] shadow-[var(--shadow-card)] space-y-[var(--spacing-4)]">
+          <h3 className="font-[var(--font-family-display)] text-[var(--text-sm)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] text-[var(--color-text-secondary)]">Small with Short Label</h3>
+          <div className="flex items-center justify-between gap-[var(--spacing-3)]">
             <Switch
               id="annual-toggle"
               checked={annual}
               onCheckedChange={setAnnual}
             />
-            <div className="text-sm">
-              <Label htmlFor="annual-toggle" className="font-medium">
+            <div className="font-[var(--font-family-body)] text-[var(--text-sm)]">
+              <Label htmlFor="annual-toggle" className="font-[var(--font-family-display)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)]">
                 Annual billing
               </Label>{' '}
-              <span className="text-muted-foreground">(Save 10%)</span>
+              <span className="text-[var(--color-text-muted)]">(Save 10%)</span>
             </div>
           </div>
         </div>
 
         {/* Toggle in List */}
-        <div className="rounded-lg border border-border bg-card p-6 space-y-4">
-          <h3 className="text-sm font-medium">In List</h3>
-          <div className="divide-y divide-border">
-            <div className="flex items-center justify-between py-4">
+        <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-card)] p-[var(--spacing-6)] shadow-[var(--shadow-card)] space-y-[var(--spacing-4)]">
+          <h3 className="font-[var(--font-family-display)] text-[var(--text-sm)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] text-[var(--color-text-secondary)]">In List</h3>
+          <div className="divide-y divide-[var(--color-border)]">
+            <div className="flex items-center justify-between py-[var(--spacing-4)]">
               <div className="flex-1">
-                <Label htmlFor="notifications-toggle" className="font-medium">
+                <Label htmlFor="notifications-toggle" className="font-[var(--font-family-display)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] text-[var(--color-text-secondary)]">
                   Push notifications
                 </Label>
-                <p className="text-sm text-muted-foreground">
+                <p className="font-[var(--font-family-body)] text-[var(--text-sm)] text-[var(--color-text-muted)] leading-[var(--leading-normal)]">
                   Receive notifications on your device
                 </p>
               </div>
@@ -2467,23 +2467,23 @@ function ToggleSwitchVariationsSection() {
                 onCheckedChange={setNotifications}
               />
             </div>
-            <div className="flex items-center justify-between py-4">
+            <div className="flex items-center justify-between py-[var(--spacing-4)]">
               <div className="flex-1">
-                <Label htmlFor="email-toggle" className="font-medium">
+                <Label htmlFor="email-toggle" className="font-[var(--font-family-display)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] text-[var(--color-text-secondary)]">
                   Email updates
                 </Label>
-                <p className="text-sm text-muted-foreground">
+                <p className="font-[var(--font-family-body)] text-[var(--text-sm)] text-[var(--color-text-muted)] leading-[var(--leading-normal)]">
                   Get updates via email
                 </p>
               </div>
               <Switch id="email-toggle" />
             </div>
-            <div className="flex items-center justify-between py-4">
+            <div className="flex items-center justify-between py-[var(--spacing-4)]">
               <div className="flex-1">
-                <Label htmlFor="sms-toggle" className="font-medium">
+                <Label htmlFor="sms-toggle" className="font-[var(--font-family-display)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] text-[var(--color-text-secondary)]">
                   SMS alerts
                 </Label>
-                <p className="text-sm text-muted-foreground">
+                <p className="font-[var(--font-family-body)] text-[var(--text-sm)] text-[var(--color-text-muted)] leading-[var(--leading-normal)]">
                   Receive text message alerts
                 </p>
               </div>
@@ -2493,13 +2493,13 @@ function ToggleSwitchVariationsSection() {
         </div>
       </div>
 
-      <div className="rounded-lg bg-muted p-4 text-xs space-y-2">
-        <p className="font-medium">Design Token Mappings:</p>
-        <ul className="space-y-1 text-muted-foreground">
+      <div className="rounded-[var(--radius-lg)] bg-[var(--color-muted)] p-[var(--spacing-4)] text-[var(--text-xs)] space-y-[var(--spacing-2)]">
+        <p className="font-[var(--font-weight-medium)]">Design Token Mappings:</p>
+        <ul className="space-y-[var(--spacing-1)] text-[var(--color-text-muted)]">
           <li>• Switch component from Radix UI with smooth transitions</li>
-          <li>• Icons using <code className="bg-background px-1 py-0.5 rounded">opacity</code> and <code className="bg-background px-1 py-0.5 rounded">transform</code> transitions</li>
-          <li>• Flexible layouts with <code className="bg-background px-1 py-0.5 rounded">justify-between</code> for alignment</li>
-          <li>• List dividers using <code className="bg-background px-1 py-0.5 rounded">divide-y divide-border</code></li>
+          <li>• Icons using <code className="bg-[var(--color-background)] px-[var(--spacing-1)] py-0.5 rounded">opacity</code> and <code className="bg-[var(--color-background)] px-[var(--spacing-1)] py-0.5 rounded">transform</code> transitions</li>
+          <li>• Flexible layouts with <code className="bg-[var(--color-background)] px-[var(--spacing-1)] py-0.5 rounded">justify-between</code> for alignment</li>
+          <li>• List dividers using <code className="bg-[var(--color-background)] px-[var(--spacing-1)] py-0.5 rounded">divide-y divide-[var(--color-border)]</code></li>
         </ul>
       </div>
     </section>
