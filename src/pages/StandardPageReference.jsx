@@ -11,7 +11,8 @@ import {
   MoreHorizontal, Eye, Star, Share2, Settings, ChevronLeft, ChevronRight 
 } from "lucide-react";
 import { PlusIcon, EllipsisVerticalIcon } from '@heroicons/react/20/solid';
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
+import { XMarkIcon } from '@heroicons/react/24/outline';
+import { Menu, MenuButton, MenuItem, MenuItems, Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { usePagination } from "@/components/common/usePagination";
 import TailwindHeader from "@/components/sturij/TailwindHeader";
 import TailwindPagination from "@/components/sturij/TailwindPagination";
@@ -36,6 +37,8 @@ export default function StandardPageReference() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
   const [currentUser, setCurrentUser] = useState(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
   
   useEffect(() => {
     base44.auth.me().then(setCurrentUser).catch(() => {});
@@ -292,7 +295,13 @@ export default function StandardPageReference() {
                 
                 {/* Action Buttons */}
                 <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 rounded-md">
+                  <button 
+                    onClick={() => {
+                      setSelectedItem(item);
+                      setDrawerOpen(true);
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 rounded-md"
+                  >
                     <Eye className="h-4 w-4" />
                     View
                   </button>
