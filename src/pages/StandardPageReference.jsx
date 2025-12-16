@@ -488,7 +488,6 @@ export default function StandardPageReference() {
           </div>
         </div>
       </div>
-      </div>
 
       {/* Item Details Drawer */}
       <Dialog open={drawerOpen} onClose={setDrawerOpen} className="relative z-10">
