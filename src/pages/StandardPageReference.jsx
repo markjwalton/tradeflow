@@ -63,7 +63,7 @@ export default function StandardPageReference() {
   const {
     currentPage,
     totalPages,
-    paginatedData,
+    paginatedData = [],
     goToPage,
     nextPage,
     prevPage,
