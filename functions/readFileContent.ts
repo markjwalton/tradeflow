@@ -9,7 +9,8 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { filePath } = await req.json();
+    const payload = await req.json();
+    const filePath = payload.file_path || payload.filePath;
 
     if (!filePath) {
       return Response.json({ error: 'File path required' }, { status: 400 });
