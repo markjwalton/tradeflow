@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { StandardPagination } from "@/components/common/StandardPagination";
 import { usePagination } from "@/components/common/usePagination";
+import TailwindHeader from "@/components/sturij/TailwindHeader";
 
 /**
  * GOLDEN STANDARD PAGE REFERENCE
@@ -76,17 +77,22 @@ export default function StandardPageReference() {
     totalItems,
   } = usePagination(filteredItems, 25);
 
+  const navigation = [
+    { name: 'Dashboard', href: '#', current: true },
+    { name: 'Team', href: '#', current: false },
+    { name: 'Projects', href: '#', current: false },
+    { name: 'Calendar', href: '#', current: false },
+  ];
+
   return (
-    <div 
-      className="min-h-screen"
-      style={{
-        backgroundColor: 'var(--color-background)',
-      }}
-    >
+    <div className="min-h-screen bg-gray-50">
+      {/* Tailwind UI Header */}
+      <TailwindHeader navigation={navigation} onSearch={setSearchQuery} />
+      
       {/* === PAGE HEADER SECTION === */}
       {/* Demonstrates: Title, breadcrumb, description, actions */}
       <div 
-        className="sticky top-0 z-[var(--z-sticky)] backdrop-blur-sm border-b"
+        className="sticky top-16 z-[var(--z-sticky)] backdrop-blur-sm border-b"
         style={{
           backgroundColor: 'var(--color-background)',
           borderColor: 'var(--color-border)',
@@ -160,20 +166,8 @@ export default function StandardPageReference() {
             </div>
           </div>
 
-          {/* Search & Filters Bar */}
+          {/* Filter Button */}
           <div className="flex flex-col sm:flex-row gap-[var(--spacing-4)] pb-[var(--spacing-6)]">
-            {/* Search */}
-            <div className="relative flex-1">
-              <Search className="absolute left-[var(--spacing-3)] top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--color-text-muted)]" />
-              <Input
-                placeholder="Search items..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-[var(--spacing-10)]"
-              />
-            </div>
-            
-            {/* Filter Button */}
             <Button 
               variant="outline" 
               className="gap-[var(--spacing-2)] w-full sm:w-auto"
