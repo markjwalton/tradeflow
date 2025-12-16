@@ -237,7 +237,7 @@ export default function StandardPageReference() {
                 </div>
 
                 {/* Tabs for Status Filtering */}
-                <div className="pb-6">
+                <div className="pb-4">
                   <TailwindTabs 
                     tabs={[
                       { name: 'All Items', value: 'all' },
@@ -438,9 +438,11 @@ export default function StandardPageReference() {
                 />
               </div>
             </div>
+          </div>
+        </div>
 
-            {/* Footer - Full Width at bottom of scrollable content */}
-            <footer className="bg-white border-t border-gray-200 mt-auto">
+        {/* Footer - Full Width at bottom */}
+        <footer className="bg-white border-t border-gray-200 w-full">
           <div className="px-4 sm:px-6 lg:px-8 py-12 md:flex md:items-center md:justify-between">
             <div className="flex justify-center gap-x-6 md:order-2">
               {[
@@ -483,8 +485,6 @@ export default function StandardPageReference() {
             </p>
           </div>
         </footer>
-          </div>
-        </div>
       </div>
 
       {/* Item Details Drawer */}
