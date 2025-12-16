@@ -16,9 +16,10 @@ Deno.serve(async (req) => {
     // Read the page file directly from the file system
     let content;
     try {
-      content = await Deno.readTextFile(`/src/pages/${page_slug}.js`);
+      content = await Deno.readTextFile(`pages/${page_slug}.js`);
     } catch (e) {
-      return Response.json({ error: 'Page file not found' }, { status: 404 });
+      console.error('File read error:', e);
+      return Response.json({ error: `Page file not found: ${e.message}` }, { status: 404 });
     }
 
     // Use AI to analyze the page and extract editable text blocks
