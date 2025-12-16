@@ -550,6 +550,71 @@ export default function StandardPageReference() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Item Details Drawer */}
+      <Dialog open={drawerOpen} onClose={setDrawerOpen} className="relative z-10">
+        <div className="fixed inset-0" />
+
+        <div className="fixed inset-0 overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
+              <DialogPanel
+                transition
+                className="pointer-events-auto w-screen max-w-md transform transition duration-500 ease-in-out data-closed:translate-x-full sm:duration-700"
+              >
+                <div className="relative flex h-full flex-col overflow-y-auto bg-white py-6 shadow-xl">
+                  <div className="px-4 sm:px-6">
+                    <div className="flex items-start justify-between">
+                      <DialogTitle className="text-base font-semibold text-gray-900">
+                        {selectedItem?.title || 'Item Details'}
+                      </DialogTitle>
+                      <div className="ml-3 flex h-7 items-center">
+                        <button
+                          type="button"
+                          onClick={() => setDrawerOpen(false)}
+                          className="relative rounded-md text-gray-400 hover:text-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        >
+                          <span className="absolute -inset-2.5" />
+                          <span className="sr-only">Close panel</span>
+                          <XMarkIcon aria-hidden="true" className="size-6" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="relative mt-6 flex-1 px-4 sm:px-6">
+                    {selectedItem && (
+                      <div className="space-y-6">
+                        <div>
+                          <h3 className="text-sm font-medium text-gray-900">Status</h3>
+                          <p className="mt-2 text-sm text-gray-700">
+                            <Badge variant={selectedItem.status === 'active' ? 'default' : 'secondary'}>
+                              {selectedItem.status}
+                            </Badge>
+                          </p>
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-medium text-gray-900">Category</h3>
+                          <p className="mt-2 text-sm text-gray-700">{selectedItem.category}</p>
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-medium text-gray-900">Created</h3>
+                          <p className="mt-2 text-sm text-gray-700">
+                            {new Date(selectedItem.created_date).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-medium text-gray-900">Description</h3>
+                          <p className="mt-2 text-sm text-gray-700">{selectedItem.description}</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </DialogPanel>
+            </div>
+          </div>
+        </div>
+      </Dialog>
       </div>
     </div>
   );
