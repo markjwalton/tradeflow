@@ -25,31 +25,46 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'GitHub token not configured' }, { status: 500 });
     }
 
-    // Ensure file path is correctly formatted for GitHub API (should be src/pages/...)
-    const fullPath = filePath.startsWith('src/') ? filePath : `src/${filePath}`;
-    const githubUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/${fullPath}?ref=${GITHUB_BRANCH}`;
-    
-    const response = await fetch(githubUrl, {
-      headers: {
-        'Authorization': `Bearer ${GITHUB_TOKEN}`,
-        'Accept': 'application/vnd.github.v3.raw',
-        'User-Agent': 'Base44-App'
-      }
-    });
+    // Try multiple possible paths
+    const possiblePaths = [
+      filePath,
+      `src/${filePath}`,
+      filePath.replace('pages/', 'src/pages/')
+    ];
 
-    if (!response.ok) {
-      return Response.json({ 
-        success: false,
-        error: `GitHub API error: ${response.status} ${response.statusText}`,
-        requested_path: fullPath
-      }, { status: response.status });
+    let content = null;
+    let successPath = null;
+
+    for (const path of possiblePaths) {
+      const githubUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/${path}?ref=${GITHUB_BRANCH}`;
+      
+      const response = await fetch(githubUrl, {
+        headers: {
+          'Authorization': `Bearer ${GITHUB_TOKEN}`,
+          'Accept': 'application/vnd.github.v3.raw',
+          'User-Agent': 'Base44-App'
+        }
+      });
+
+      if (response.ok) {
+        content = await response.text();
+        successPath = path;
+        break;
+      }
     }
 
-    const content = await response.text();
+    if (!content) {
+      return Response.json({ 
+        success: false,
+        error: `File not found in any of the attempted paths`,
+        attempted_paths: possiblePaths
+      }, { status: 404 });
+    }
 
     return Response.json({ 
       success: true,
-      content: content
+      content: content,
+      path: successPath
     });
 
   } catch (error) {
