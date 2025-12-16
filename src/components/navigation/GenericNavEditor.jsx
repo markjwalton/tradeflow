@@ -441,13 +441,16 @@ export default function GenericNavEditor({
             {/* Main Navigation Items */}
             <div className="[margin-bottom:var(--spacing-6)]">
               <h3 className="font-display text-h5 [margin-bottom:var(--spacing-3)] text-[var(--color-midnight)]">
-                Navigation Structure ({items.length} items, {flatList.length} visible)
+                Navigation Structure ({items.length} items)
               </h3>
               {/* DEBUG */}
-              <div className="mb-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
-                <div>Items: {items.length} | FlatList: {flatList.length}</div>
-                <div>First 3 items: {items.slice(0, 3).map(i => i.name).join(', ')}</div>
-                <div>Expanded: {Array.from(expandedParents).length}</div>
+              <div className="mb-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs space-y-1">
+                <div><strong>Items total:</strong> {items.length}</div>
+                <div><strong>FlatList count:</strong> {flatList.length}</div>
+                <div><strong>Top-level items:</strong> {items.filter(i => !i.parent_id).length}</div>
+                <div><strong>Items with parent_id:</strong> {items.filter(i => i.parent_id).length}</div>
+                <div><strong>Expanded folders:</strong> {Array.from(expandedParents).length}</div>
+                <div><strong>First 3 items parent_id:</strong> {items.slice(0, 3).map(i => `${i.name}(${i.parent_id || 'null'})`).join(', ')}</div>
               </div>
             {items.length > 0 ? (
               <DragDropContext onDragEnd={handleDragEnd}>
