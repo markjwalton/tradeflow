@@ -150,15 +150,15 @@ export default function StandardPageReference() {
       </div>
 
       {/* Content Below Header */}
-      <div className="flex flex-1 pt-16">
+      <div className="flex flex-1 pt-16 overflow-hidden">
         {/* Fixed Sidebar - Left Side */}
-        <div className="hidden lg:fixed lg:inset-y-16 lg:z-40 lg:flex lg:w-72 lg:flex-col">
+        <div className="hidden lg:fixed lg:inset-y-16 lg:bottom-0 lg:z-40 lg:flex lg:w-72 lg:flex-col">
           <TailwindSidebar navigation={sidebarNavigation} />
         </div>
 
         {/* Main Content Area - Accounts for Sidebar Width */}
-        <div className="flex-1 lg:pl-72 flex flex-col">
-          <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 lg:pl-72 overflow-y-auto">
+          <div className="min-h-full flex flex-col">
             {/* === PAGE HEADER SECTION === */}
             <div className="sticky top-0 z-40 bg-white border-b border-gray-200">
               <div className="px-4 sm:px-6 lg:px-8">
@@ -440,12 +440,10 @@ export default function StandardPageReference() {
                 />
               </div>
             </div>
-          </div>
 
-        </div>
-
-        {/* Footer - Full Width Below Nav */}
-        <footer className="bg-white border-t border-gray-200 w-full">
+            {/* Footer - Full Width */}
+            <footer className="bg-white border-t border-gray-200 mt-auto">
+              <div className="px-4 sm:px-6 lg:px-8 py-12 md:flex md:items-center md:justify-between">
           <div className="px-4 sm:px-6 lg:px-8 py-12 md:flex md:items-center md:justify-between">
                 <div className="flex justify-center gap-x-6 md:order-2">
                   {[
@@ -485,9 +483,11 @@ export default function StandardPageReference() {
                 </div>
                 <p className="mt-8 text-center text-sm/6 text-gray-600 md:order-1 md:mt-0">
                   &copy; 2025 Your Company, Inc. All rights reserved.
-              </p>
+                </p>
+              </div>
+            </footer>
           </div>
-        </footer>
+        </div>
 
         {/* Item Details Drawer */}
         <Dialog open={drawerOpen} onClose={setDrawerOpen} className="relative z-10">
