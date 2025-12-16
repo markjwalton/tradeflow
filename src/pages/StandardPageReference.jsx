@@ -573,6 +573,6 @@ export default function StandardPageReference() {
           </div>
         </div>
       </Dialog>
-    </div>
+    </>
   );
 }
