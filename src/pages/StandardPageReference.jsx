@@ -405,48 +405,51 @@ export default function StandardPageReference() {
                       }}
                       className="absolute right-0 z-10 mt-2 w-56 origin-top-right outline-1 outline-black/5 transition data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
                     >
-                            <div className="py-1">
-                              <MenuItem>
-                                <a
-                                  href="#"
-                                  className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                                >
-                                  Duplicate
-                                </a>
-                              </MenuItem>
-                              <MenuItem>
-                                <a
-                                  href="#"
-                                  className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                                >
-                                  Share
-                                </a>
-                              </MenuItem>
-                              <MenuItem>
-                                <a
-                                  href="#"
-                                  className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                                >
-                                  Archive
-                                </a>
-                              </MenuItem>
-                              <MenuItem>
-                                <button
-                                  type="button"
-                                  className="block w-full px-4 py-2 text-left text-sm text-red-700 data-focus:bg-gray-100 data-focus:text-red-900 data-focus:outline-hidden"
-                                >
-                                  Delete
-                                </button>
-                              </MenuItem>
-                            </div>
-                          </MenuItems>
-                        </Menu>
+                      <div style={{ paddingTop: 'var(--spacing-1)', paddingBottom: 'var(--spacing-1)' }}>
+                        <MenuItem>
+                          <a
+                            href="#"
+                            className="block px-4 py-2 text-sm data-focus:outline-hidden hover:opacity-70"
+                            style={{ color: 'var(--color-text-secondary)' }}
+                          >
+                            Duplicate
+                          </a>
+                        </MenuItem>
+                        <MenuItem>
+                          <a
+                            href="#"
+                            className="block px-4 py-2 text-sm data-focus:outline-hidden hover:opacity-70"
+                            style={{ color: 'var(--color-text-secondary)' }}
+                          >
+                            Share
+                          </a>
+                        </MenuItem>
+                        <MenuItem>
+                          <a
+                            href="#"
+                            className="block px-4 py-2 text-sm data-focus:outline-hidden hover:opacity-70"
+                            style={{ color: 'var(--color-text-secondary)' }}
+                          >
+                            Archive
+                          </a>
+                        </MenuItem>
+                        <MenuItem>
+                          <button
+                            type="button"
+                            className="block w-full px-4 py-2 text-left text-sm data-focus:outline-hidden hover:opacity-70"
+                            style={{ color: 'var(--color-destructive)' }}
+                          >
+                            Delete
+                          </button>
+                        </MenuItem>
                       </div>
+                    </MenuItems>
+                    </Menu>
                     </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                    </div>
+                    ))}
+                    </div>
 
         {/* Empty State */}
         {paginatedData.length === 0 && !isLoading && (
