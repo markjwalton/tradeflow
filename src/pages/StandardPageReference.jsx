@@ -40,6 +40,7 @@ export default function StandardPageReference() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [progress, setProgress] = useState({ visible: false, percent: 0, message: '' });
+  const [topPanelOpen, setTopPanelOpen] = useState(false);
   
   useEffect(() => {
     base44.auth.me().then(setCurrentUser).catch(() => {});
@@ -127,8 +128,46 @@ export default function StandardPageReference() {
 
       {/* Main content area */}
       <div className="lg:pl-72 flex flex-col flex-1">
+        {/* Top Sliding Panel */}
+        {topPanelOpen && (
+          <div className="bg-indigo-600 border-b border-indigo-700">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex size-10 items-center justify-center rounded-lg bg-white/10">
+                    <Settings className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-white">Editor Mode Active</p>
+                    <p className="text-xs text-indigo-200">Make changes to your page layout and content</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setTopPanelOpen(false)}
+                  className="text-white hover:text-indigo-100 transition-colors"
+                >
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         {/* Tailwind UI Header */}
         <TailwindHeader navigation={headerNavigation} onSearch={setSearchQuery} />
+
+        {/* Demo: Toggle Panel Button */}
+        <div className="bg-gray-50 border-b border-gray-200 py-2">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <button
+              onClick={() => setTopPanelOpen(!topPanelOpen)}
+              className="text-xs text-gray-600 hover:text-gray-900 underline"
+            >
+              {topPanelOpen ? 'Hide' : 'Show'} sliding panel demo
+            </button>
+          </div>
+        </div>
         
         {/* === PAGE HEADER SECTION === */}
       {/* Demonstrates: Title, breadcrumb, description, actions */}
