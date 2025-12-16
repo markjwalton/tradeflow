@@ -15,8 +15,8 @@ Deno.serve(async (req) => {
     }
 
     // Use GitHub API to list pages folder
-    const owner = 'your-org'; // Update with actual owner
-    const repo = 'your-repo'; // Update with actual repo
+    const owner = 'KieronFernieBrown';
+    const repo = 'radiant-cms';
     const path = 'pages';
 
     const response = await fetch(
@@ -31,9 +31,11 @@ Deno.serve(async (req) => {
     );
 
     if (!response.ok) {
+      const errorText = await response.text();
       return Response.json({ 
         error: 'Failed to fetch pages from GitHub', 
-        status: response.status 
+        status: response.status,
+        details: errorText
       }, { status: 500 });
     }
 
