@@ -16,36 +16,40 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'File path required' }, { status: 400 });
     }
 
-    // Read UIPage from database to get the current page content
+    // Try to read from UIPage entity first, then fallback to actual file
     const pageSlug = filePath.replace('pages/', '').replace('.js', '').replace('.jsx', '');
     
+    // First attempt: Check UIPage entity
     const pages = await base44.asServiceRole.entities.UIPage.filter({ 
       page_name: pageSlug 
     });
 
-    if (pages.length === 0) {
+    if (pages.length > 0 && pages[0].current_content_jsx) {
       return Response.json({ 
-        success: false,
-        error: `Page not found: ${pageSlug}`
-      }, { status: 404 });
+        success: true,
+        content: pages[0].current_content_jsx,
+        page_name: pages[0].page_name,
+        slug: pageSlug,
+        source: 'database'
+      });
     }
 
-    const page = pages[0];
-    const content = page.current_content_jsx;
-
-    if (!content) {
+    // Second attempt: Read from actual file system
+    try {
+      const fileContent = await Deno.readTextFile(filePath);
+      return Response.json({ 
+        success: true,
+        content: fileContent,
+        slug: pageSlug,
+        source: 'filesystem'
+      });
+    } catch (fileError) {
       return Response.json({ 
         success: false,
-        error: `No content found for page: ${pageSlug}`
+        error: `Page not found in database or filesystem: ${pageSlug}`,
+        details: fileError.message
       }, { status: 404 });
     }
-
-    return Response.json({ 
-      success: true,
-      content: content,
-      page_name: page.page_name,
-      slug: pageSlug
-    });
 
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
