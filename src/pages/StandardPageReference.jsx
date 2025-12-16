@@ -11,9 +11,9 @@ import TailwindPagination from "@/components/sturij/TailwindPagination";
 import TailwindSidebar from "@/components/sturij/TailwindSidebar";
 import TailwindTabs from "@/components/sturij/TailwindTabs";
 import { 
-  ChevronRightIcon, 
   AdjustmentsHorizontalIcon,
-  ArrowUpTrayIcon
+  ArrowUpTrayIcon,
+  HomeIcon
 } from '@heroicons/react/20/solid';
 
 function classNames(...classes) {
@@ -158,23 +158,83 @@ export default function StandardPageReference() {
           <div className="flex-1 overflow-y-auto">
             {/* === PAGE HEADER SECTION === */}
             <div className="sticky top-0 z-40 bg-white border-b border-gray-200">
+              {/* Breadcrumb Navigation */}
+              <nav 
+                aria-label="Breadcrumb" 
+                className="flex"
+                style={{ 
+                  borderBottom: '1px solid var(--color-border)',
+                  backgroundColor: 'var(--color-background)'
+                }}
+              >
+                <ol 
+                  role="list" 
+                  className="mx-auto flex w-full space-x-4"
+                  style={{ 
+                    maxWidth: 'var(--breakpoint-xl)',
+                    paddingLeft: 'var(--spacing-4)',
+                    paddingRight: 'var(--spacing-4)'
+                  }}
+                >
+                  <li className="flex">
+                    <div className="flex items-center">
+                      <a 
+                        href="#" 
+                        style={{ color: 'var(--color-text-muted)' }}
+                        className="hover:text-gray-500"
+                      >
+                        <HomeIcon aria-hidden="true" className="size-5 shrink-0" />
+                        <span className="sr-only">Home</span>
+                      </a>
+                    </div>
+                  </li>
+                  <li className="flex">
+                    <div className="flex items-center">
+                      <svg
+                        fill="currentColor"
+                        viewBox="0 0 24 44"
+                        preserveAspectRatio="none"
+                        aria-hidden="true"
+                        className="h-full w-6 shrink-0"
+                        style={{ color: 'var(--color-border)' }}
+                      >
+                        <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                      </svg>
+                      <a
+                        href="#"
+                        className="ml-4 text-sm font-medium hover:text-gray-700"
+                        style={{ color: 'var(--color-text-muted)' }}
+                      >
+                        Category
+                      </a>
+                    </div>
+                  </li>
+                  <li className="flex">
+                    <div className="flex items-center">
+                      <svg
+                        fill="currentColor"
+                        viewBox="0 0 24 44"
+                        preserveAspectRatio="none"
+                        aria-hidden="true"
+                        className="h-full w-6 shrink-0"
+                        style={{ color: 'var(--color-border)' }}
+                      >
+                        <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                      </svg>
+                      <a
+                        href="#"
+                        aria-current="page"
+                        className="ml-4 text-sm font-medium"
+                        style={{ color: 'var(--color-text-secondary)' }}
+                      >
+                        Standard Page Reference
+                      </a>
+                    </div>
+                  </li>
+                </ol>
+              </nav>
+
               <div className="px-4 sm:px-6 lg:px-8">
-                {/* Breadcrumb */}
-                <nav aria-label="Breadcrumb" className="flex py-3">
-                  <ol className="flex items-center space-x-2 text-sm">
-                    <li>
-                      <a href="#" className="text-gray-400 hover:text-gray-500">Home</a>
-                    </li>
-                    <ChevronRightIcon aria-hidden="true" className="h-5 w-5 shrink-0 text-gray-400" />
-                    <li>
-                      <a href="#" className="text-gray-400 hover:text-gray-500">Category</a>
-                    </li>
-                    <ChevronRightIcon aria-hidden="true" className="h-5 w-5 shrink-0 text-gray-400" />
-                    <li>
-                      <span className="font-medium text-gray-900">Current Page</span>
-                    </li>
-                  </ol>
-                </nav>
 
                 {/* Page Title & Actions */}
                 <div className="py-6">
