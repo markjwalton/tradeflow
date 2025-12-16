@@ -16,6 +16,7 @@ import { toast } from "sonner";
 
 import GenericNavEditor from "@/components/navigation/GenericNavEditor";
 import TenantSelector from "@/components/navigation/TenantSelector";
+import FullscreenPagesManager from "@/components/navigation/FullscreenPagesManager";
 import { useEditMode } from "@/components/page-builder/EditModeContext";
 import { PageHeader } from "@/components/sturij";
 
@@ -390,22 +391,24 @@ export default function NavigationManager() {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="admin" className="[margin-top:var(--spacing-4)]">
+            <TabsContent value="admin" className="[margin-top:var(--spacing-4)] space-y-6">
               <GenericNavEditor
                 title=""
                 configType="admin_console"
                 syncUnallocatedPages={() => syncUnallocatedPages.mutate("admin_console")}
                 isSyncing={syncUnallocatedPages.isPending}
               />
+              <FullscreenPagesManager configType="admin_console" />
             </TabsContent>
 
-            <TabsContent value="app" className="[margin-top:var(--spacing-4)]">
+            <TabsContent value="app" className="[margin-top:var(--spacing-4)] space-y-6">
               <GenericNavEditor
                 title=""
                 configType="app_pages_source"
                 syncUnallocatedPages={() => syncUnallocatedPages.mutate("app_pages_source")}
                 isSyncing={syncUnallocatedPages.isPending}
               />
+              <FullscreenPagesManager configType="app_pages_source" />
             </TabsContent>
 
             <TabsContent value="tenant" className="[margin-top:var(--spacing-4)]">
