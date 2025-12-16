@@ -485,6 +485,8 @@ export default function StandardPageReference() {
             </p>
           </div>
         </footer>
+          </div>
+        </div>
       </div>
 
       {/* Item Details Drawer */}
