@@ -528,7 +528,8 @@ export default function Layout({ children, currentPageName }) {
 
           {/* Editor bubble button - hide on fullscreen pages */}
           {showEditorBubble && !isFullscreenPage && (
-            <Button
+            <button
+              type="button"
               onClick={async () => {
                 const newState = !editorPanelOpen;
                 setEditorPanelOpen(newState);
@@ -548,12 +549,18 @@ export default function Layout({ children, currentPageName }) {
                   console.error("Failed to toggle live edit:", e);
                 }
               }}
-              className="fixed bottom-6 left-6 h-14 w-14 rounded-full shadow-2xl border-2 border-white"
-              style={{ backgroundColor: 'rgba(199, 142, 142, 0.9)', zIndex: 'var(--z-max)' }}
+              className="fixed bottom-6 left-6 rounded-full bg-indigo-600 p-2 text-white shadow-2xl hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              style={{ zIndex: 'var(--z-max)' }}
               title="Toggle Editor Panel"
             >
-              {editorPanelOpen ? "✕" : <Palette className="h-6 w-6 text-white" />}
-            </Button>
+              {editorPanelOpen ? (
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <Palette className="h-6 w-6" />
+              )}
+            </button>
           )}
         </SidebarProvider>
         </EditModeProvider>
