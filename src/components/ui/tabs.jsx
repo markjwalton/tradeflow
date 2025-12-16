@@ -1,4 +1,3 @@
-
 import * as React from "react"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
 
@@ -10,10 +9,9 @@ const TabsList = React.forwardRef(({ className, ...props }, ref) => (
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-9 items-center justify-center rounded-lg p-1 text-muted-foreground",
+      "inline-flex h-[var(--spacing-10)] items-center justify-center rounded-[var(--radius-lg)] p-[var(--spacing-1)] bg-[var(--tabs-list-bg)] text-[var(--color-text-muted)]",
       className
     )}
-    style={{ backgroundColor: 'oklch(0.990 0.007 83.1 / 0.5)' }}
     {...props}
   />
 ))
@@ -23,9 +21,9 @@ const TabsTrigger = React.forwardRef(({ className, ...props }, ref) => (
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-      "data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow",
-      "[&:not([data-state=active])]:hover:bg-[#e9efeb] [&:not([data-state=active])]:hover:text-[#273e2d]",
+      "inline-flex items-center justify-center whitespace-nowrap rounded-[var(--radius-md)] px-[var(--spacing-4)] py-[var(--spacing-2)] font-[var(--font-family-display)] text-[var(--text-sm)] font-[var(--font-weight-medium)] tracking-[var(--tracking-airy)] ring-offset-[var(--color-background)] transition-all duration-[var(--duration-200)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+      "data-[state=active]:bg-[var(--color-background)] data-[state=active]:text-[var(--color-text-primary)] data-[state=active]:shadow-[var(--shadow-sm)]",
+      "data-[state=inactive]:hover:bg-[var(--tabs-trigger-hover-bg)] data-[state=inactive]:hover:text-[var(--tabs-trigger-hover-color)]",
       className
     )}
     {...props}
@@ -37,7 +35,7 @@ const TabsContent = React.forwardRef(({ className, ...props }, ref) => (
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+      "mt-[var(--spacing-2)] ring-offset-[var(--color-background)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2",
       className
     )}
     {...props}
