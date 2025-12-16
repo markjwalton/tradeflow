@@ -39,8 +39,15 @@ export default function PageTemplateGenerator() {
   // Analyze page mutation
   const analyzeMutation = useMutation({
     mutationFn: async (pageSlug) => {
+      // Fetch page content from UIPage entity
+      const pages = await base44.entities.UIPage.filter({ page_name: pageSlug });
+      if (pages.length === 0 || !pages[0].current_content_jsx) {
+        throw new Error(`Page "${pageSlug}" not found in database or has no content`);
+      }
+      
       const response = await base44.functions.invoke('analyzePageTemplate', {
-        page_slug: pageSlug
+        page_slug: pageSlug,
+        page_content: pages[0].current_content_jsx
       });
       return response.data;
     },
