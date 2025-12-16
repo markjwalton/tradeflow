@@ -16,27 +16,38 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'File path required' }, { status: 400 });
     }
 
-    // List all directories to debug
-    const rootEntries = [];
-    try {
-      for await (const entry of Deno.readDir('/')) {
-        rootEntries.push(entry.name);
-      }
-    } catch {}
+    // Use GitHub API to read file content
+    const GITHUB_TOKEN = Deno.env.get('GITHUB_TOKEN');
+    const GITHUB_REPO = 'PickleRicc/base44-test';
+    const GITHUB_BRANCH = 'main';
 
-    const srcEntries = [];
-    try {
-      for await (const entry of Deno.readDir('/src')) {
-        srcEntries.push(entry.name);
+    if (!GITHUB_TOKEN) {
+      return Response.json({ error: 'GitHub token not configured' }, { status: 500 });
+    }
+
+    const githubUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/${filePath}?ref=${GITHUB_BRANCH}`;
+    
+    const response = await fetch(githubUrl, {
+      headers: {
+        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+        'Accept': 'application/vnd.github.v3.raw',
+        'User-Agent': 'Base44-App'
       }
-    } catch {}
+    });
+
+    if (!response.ok) {
+      return Response.json({ 
+        success: false,
+        error: `GitHub API error: ${response.status} ${response.statusText}` 
+      }, { status: response.status });
+    }
+
+    const content = await response.text();
 
     return Response.json({ 
-      error: 'Debug info',
-      rootEntries,
-      srcEntries,
-      requestedFile: filePath
-    }, { status: 200 });
+      success: true,
+      content: content
+    });
 
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
