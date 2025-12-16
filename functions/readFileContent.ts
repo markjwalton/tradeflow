@@ -25,7 +25,9 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'GitHub token not configured' }, { status: 500 });
     }
 
-    const githubUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/${filePath}?ref=${GITHUB_BRANCH}`;
+    // Ensure file path is correctly formatted for GitHub API (should be src/pages/...)
+    const fullPath = filePath.startsWith('src/') ? filePath : `src/${filePath}`;
+    const githubUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/${fullPath}?ref=${GITHUB_BRANCH}`;
     
     const response = await fetch(githubUrl, {
       headers: {
@@ -38,7 +40,8 @@ Deno.serve(async (req) => {
     if (!response.ok) {
       return Response.json({ 
         success: false,
-        error: `GitHub API error: ${response.status} ${response.statusText}` 
+        error: `GitHub API error: ${response.status} ${response.statusText}`,
+        requested_path: fullPath
       }, { status: response.status });
     }
 
