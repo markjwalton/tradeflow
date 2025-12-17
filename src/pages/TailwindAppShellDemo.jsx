@@ -145,6 +145,7 @@ function AppShellContent() {
               logoSrc="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/c94580ddf_sturij-logo.png"
               logoAlt="Sturij"
               onNavigate={(item) => console.log('Navigate to:', item.name)}
+              onEditorToggle={() => setEditorOpen(!editorOpen)}
             />
           </div>
         )}
