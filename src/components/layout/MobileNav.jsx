@@ -145,7 +145,8 @@ export function MobileNav({ isOpen, onClose, navItems = [] }) {
       {/* Backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-50 lg:hidden"
+          className="fixed inset-0 bg-black/50 lg:hidden"
+          style={{ zIndex: 'var(--z-modal-backdrop)' }}
           onClick={onClose}
         />
       )}
@@ -153,9 +154,10 @@ export function MobileNav({ isOpen, onClose, navItems = [] }) {
       {/* Drawer */}
       <div
         className={cn(
-          "fixed top-0 left-0 h-full w-80 bg-background z-50 transform transition-transform duration-300 ease-in-out lg:hidden overflow-y-auto",
+          "fixed top-0 left-0 h-full w-80 bg-background transform transition-transform duration-300 ease-in-out lg:hidden overflow-y-auto shadow-2xl",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
+        style={{ zIndex: 'var(--z-modal)' }}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b">
