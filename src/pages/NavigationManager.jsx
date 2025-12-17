@@ -420,20 +420,53 @@ export default function NavigationManager() {
 
           <div className="mt-[var(--spacing-6)] space-y-[var(--spacing-6)]">
             {navMode === "side" ? (
-              <Card className="p-[var(--spacing-6)]">
-                <h2 className="text-[var(--text-xl)] font-[var(--font-family-display)] font-[var(--font-weight-medium)] mb-[var(--spacing-4)]">
-                  Admin Console Navigation
-                </h2>
-                <GenericNavEditor
-                  title=""
-                  configType="admin_console"
-                  syncUnallocatedPages={() => syncUnallocatedPages.mutate("admin_console")}
-                  isSyncing={syncUnallocatedPages.isPending}
-                />
-                <div className="mt-[var(--spacing-6)]">
-                  <FullscreenPagesManager configType="admin_console" />
-                </div>
-              </Card>
+              <>
+                <Card className="p-[var(--spacing-6)]">
+                  <h2 className="text-[var(--text-xl)] font-[var(--font-family-display)] font-[var(--font-weight-medium)] mb-[var(--spacing-4)]">
+                    Admin Console Navigation
+                  </h2>
+                  <GenericNavEditor
+                    title=""
+                    configType="admin_console"
+                    syncUnallocatedPages={() => syncUnallocatedPages.mutate("admin_console")}
+                    isSyncing={syncUnallocatedPages.isPending}
+                  />
+                  <div className="mt-[var(--spacing-6)]">
+                    <FullscreenPagesManager configType="admin_console" />
+                  </div>
+                </Card>
+
+                <Card className="p-[var(--spacing-6)]">
+                  <h2 className="text-[var(--text-xl)] font-[var(--font-family-display)] font-[var(--font-weight-medium)] mb-[var(--spacing-4)]">
+                    App Pages (Global Template)
+                  </h2>
+                  <GenericNavEditor
+                    title=""
+                    configType="app_pages_source"
+                    syncUnallocatedPages={() => syncUnallocatedPages.mutate("app_pages_source")}
+                    isSyncing={syncUnallocatedPages.isPending}
+                  />
+                </Card>
+
+                <Card className="p-[var(--spacing-6)]">
+                  <div className="flex items-center justify-between mb-[var(--spacing-4)]">
+                    <h2 className="text-[var(--text-xl)] font-[var(--font-family-display)] font-[var(--font-weight-medium)]">
+                      Tenant-Specific Navigation
+                    </h2>
+                    <TenantSelector
+                      tenants={tenants}
+                      selectedTenantId={selectedTenantId}
+                      onTenantChange={setSelectedTenantId}
+                    />
+                  </div>
+                  <GenericNavEditor
+                    title=""
+                    configType="tenant_specific"
+                    tenantId={selectedTenantId}
+                    copyGlobalTemplate={() => copyGlobalToTenant.mutate(selectedTenantId)}
+                  />
+                </Card>
+              </>
             ) : (
               <Card className="p-[var(--spacing-6)]">
                 <h2 className="text-[var(--text-xl)] font-[var(--font-family-display)] font-[var(--font-weight-medium)] mb-[var(--spacing-4)]">
