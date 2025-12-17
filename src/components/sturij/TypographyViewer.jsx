@@ -12,7 +12,7 @@ export default function TypographyViewer() {
       <div>
         <h4 className="text-sm font-semibold mb-2 text-gray-900">Font Families</h4>
         <div className="space-y-2">
-          {Object.entries(typography.fontFamilies).map(([name, value]) => (
+          {Object.entries(typography.fonts).map(([name, value]) => (
             <div key={name} className="p-3 bg-gray-50 rounded border border-gray-200">
               <div className="text-xs text-gray-600 mb-1 capitalize">{name}</div>
               <div style={{ fontFamily: value }} className="text-base">
@@ -28,7 +28,7 @@ export default function TypographyViewer() {
       <div>
         <h4 className="text-sm font-semibold mb-2 text-gray-900">Font Sizes</h4>
         <div className="space-y-2">
-          {Object.entries(typography.fontSizes).map(([name, value]) => (
+          {Object.entries(typography.sizes).map(([name, value]) => (
             <div key={name} className="p-3 bg-gray-50 rounded border border-gray-200 flex items-baseline justify-between">
               <div style={{ fontSize: value }}>Sample Text</div>
               <div className="flex items-baseline gap-2">
@@ -40,11 +40,11 @@ export default function TypographyViewer() {
         </div>
       </div>
 
-      {/* Font Weights */}
+      {/* Letter Spacing */}
       <div>
-        <h4 className="text-sm font-semibold mb-2 text-gray-900">Font Weights</h4>
+        <h4 className="text-sm font-semibold mb-2 text-gray-900">Letter Spacing</h4>
         <div className="space-y-2">
-          {Object.entries(typography.fontWeights).map(([name, value]) => (
+          {Object.entries(typography.letterSpacing).map(([name, value]) => (
             <div key={name} className="p-3 bg-gray-50 rounded border border-gray-200 flex items-baseline justify-between">
               <div style={{ fontWeight: value }}>Sample Text</div>
               <div className="flex items-baseline gap-2">
@@ -74,21 +74,7 @@ export default function TypographyViewer() {
         </div>
       </div>
 
-      {/* Letter Spacing */}
-      <div>
-        <h4 className="text-sm font-semibold mb-2 text-gray-900">Letter Spacing</h4>
-        <div className="space-y-2">
-          {Object.entries(typography.letterSpacing).map(([name, value]) => (
-            <div key={name} className="p-3 bg-gray-50 rounded border border-gray-200 flex items-baseline justify-between">
-              <div style={{ letterSpacing: value }}>Sample Text</div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-xs text-gray-600 capitalize">{name}</span>
-                <code className="text-[10px] text-gray-500">{value}</code>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+
     </div>
   );
 }

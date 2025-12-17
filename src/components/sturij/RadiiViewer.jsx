@@ -1,4 +1,4 @@
-import { borderRadius } from '@/components/library/designTokens';
+import { radii } from '@/components/library/designTokens';
 
 export default function RadiiViewer() {
   return (
@@ -9,7 +9,7 @@ export default function RadiiViewer() {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        {Object.entries(borderRadius).map(([name, value]) => (
+        {Object.entries(radii).map(([name, value]) => (
           <div key={name} className="space-y-2">
             <div className="text-xs text-gray-600 capitalize">{name}</div>
             <div 
