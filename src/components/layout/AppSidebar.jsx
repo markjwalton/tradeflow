@@ -310,7 +310,7 @@ export function AppSidebar({ navItems = [], onEditorToggle }) {
   return (
     <aside
           className={cn(
-            "hidden lg:flex lg:flex-col text-sidebar-foreground rounded-xl shadow-md transition-[width] duration-300 ease-in-out overflow-visible [padding:var(--spacing-4)]",
+            "hidden md:flex md:flex-col text-sidebar-foreground rounded-xl shadow-md transition-[width] duration-300 ease-in-out overflow-visible [padding:var(--spacing-4)]",
             widthClass
           )}
           style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)' }}

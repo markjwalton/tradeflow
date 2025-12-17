@@ -51,7 +51,7 @@ export function AppHeader({ user, navItems = [], onMobileMenuClick, currentPageN
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden"
+            className="md:hidden"
             onClick={onMobileMenuClick}
           >
             <Menu className="w-5 h-5" />
@@ -61,7 +61,7 @@ export function AppHeader({ user, navItems = [], onMobileMenuClick, currentPageN
           <Button
             variant="ghost"
             size="icon"
-            className="hidden lg:flex"
+            className="hidden md:flex"
             onClick={cycleMode}
           >
             <Menu className="w-5 h-5" />
