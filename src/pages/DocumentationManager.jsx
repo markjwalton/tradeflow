@@ -374,20 +374,6 @@ export default function DocumentationManager() {
         completed_date: newCompleted ? new Date().toISOString() : null
       }
     });
-
-    // Check if list should be archived
-    setTimeout(() => {
-      const listItems = todoItems.filter(i => i.list_id === item.list_id);
-      const allComplete = listItems.every(i => i.id === item.id ? newCompleted : i.is_completed);
-      if (allComplete && listItems.length > 0) {
-        updateListMutation.mutate({
-          id: item.list_id,
-          data: { status: "archived" }
-        });
-        toast.success("List completed and archived!");
-        setSelectedList(null);
-      }
-    }, 100);
   };
 
   // AI analyze changes
@@ -605,6 +591,25 @@ export default function DocumentationManager() {
     });
     setSelectedItems([]);
     toast.success("Items completed");
+  };
+
+  // Handle archive list
+  const handleArchiveList = () => {
+    if (!selectedList) return;
+    const listItems = todoItems.filter(i => i.list_id === selectedList.id);
+    const allComplete = listItems.every(i => i.is_completed);
+    
+    if (!allComplete) {
+      toast.error("Complete all items before archiving");
+      return;
+    }
+    
+    updateListMutation.mutate({
+      id: selectedList.id,
+      data: { status: "archived" }
+    });
+    toast.success("List archived!");
+    setSelectedList(null);
   };
 
   // Generate prompt for single item
@@ -1971,6 +1976,7 @@ export default function DocumentationManager() {
                         <p className="text-sm font-semibold mb-3">{selectedItems.length} items selected</p>
                         <div className="flex gap-2">
                           <Button size="sm" onClick={handleGenerateItemsPrompt}>
+                            <Sparkles className="w-4 h-4 mr-2" />
                             Generate Prompt
                           </Button>
                           <Button size="sm" variant="outline" onClick={handleCompleteSelectedItems}>
@@ -1980,6 +1986,21 @@ export default function DocumentationManager() {
                             Clear Selection
                           </Button>
                         </div>
+                      </div>
+                    )}
+
+                    {/* Archive List Button */}
+                    {todoItems.filter(i => i.list_id === selectedList.id).length > 0 && (
+                      <div className="mt-4 pt-4 border-t" style={{ borderColor: 'var(--color-border)' }}>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={handleArchiveList}
+                          className="w-full"
+                        >
+                          <Archive className="w-4 h-4 mr-2" />
+                          Archive List
+                        </Button>
                       </div>
                     )}
 
