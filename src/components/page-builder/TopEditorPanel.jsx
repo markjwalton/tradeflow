@@ -142,9 +142,9 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
         }}>
           {viewMode === 'focus' ? (
             selectedElement ? (
-              <div className="h-full space-y-2 overflow-auto">
+              <div className="h-full space-y-2">
                 {showStyleEditor && (
-                  <div className="pb-2 border-b">
+                  <div className="pb-2 border-b bg-accent/5 rounded-md p-3">
                     <StylePropertyEditor
                       selectedElement={selectedElement}
                       horizontal={true}
