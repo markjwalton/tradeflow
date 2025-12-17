@@ -233,7 +233,7 @@ Format as JSON:
 
   const handleOpenPanel = () => {
     setIsOpen(true);
-    setMode('styles'); // Start in styles mode
+    setMode('editor'); // Start in editor mode
   };
 
   const handleStyleSelect = (style) => {
