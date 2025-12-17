@@ -215,8 +215,10 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
               <ComponentPalettePanel />
             </TabsContent>
 
-            <TabsContent value="styling">
-              <StyleEditorPanel currentPageName="" />
+            <TabsContent value="styling" className="mt-0">
+              <div className="h-[400px]">
+                <StyleEditorPanel currentPageName="" />
+              </div>
             </TabsContent>
 
             <TabsContent value="layout">
