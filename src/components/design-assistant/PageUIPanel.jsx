@@ -61,6 +61,13 @@ export function PageUIPanel({ currentPageName }) {
     toast.success(`Selected: ${elementData.tagName}`);
   };
 
+  // Deactivate selector when panel closes
+  useEffect(() => {
+    if (!isOpen && tokenApplier?.deactivateTokenApplier) {
+      tokenApplier.deactivateTokenApplier();
+    }
+  }, [isOpen, tokenApplier]);
+
   const analyzeStyleSource = () => {
     if (!selectedElement || !selectedElement.classes) return [];
     
