@@ -8,6 +8,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Paintbrush, Sparkles, Copy, ChevronDown, Loader2, Save, List, Target } from "lucide-react";
 import { StylesList } from "./StylesList";
 import { DesignTokensBrowser } from "./DesignTokensBrowser";
+import { StylePropertyEditor } from "./StylePropertyEditor";
 import { useEditMode } from "@/components/page-builder/EditModeContext";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
