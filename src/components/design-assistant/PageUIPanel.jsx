@@ -61,12 +61,23 @@ export function PageUIPanel({ currentPageName }) {
     toast.success(`Selected: ${elementData.tagName}`);
   };
 
-  // Deactivate selector when panel closes
-  useEffect(() => {
-    if (!isOpen && tokenApplier?.deactivateTokenApplier) {
+  const handleClose = () => {
+    setIsOpen(false);
+    setSelectedElement(null);
+    setSelectedDomElement(null);
+    setUserRequest('');
+    setAiResponse(null);
+    if (tokenApplier?.deactivateTokenApplier) {
       tokenApplier.deactivateTokenApplier();
     }
-  }, [isOpen, tokenApplier]);
+  };
+
+  const handleReset = () => {
+    setSelectedElement(null);
+    setSelectedDomElement(null);
+    setUserRequest('');
+    setAiResponse(null);
+  };
 
   const analyzeStyleSource = () => {
     if (!selectedElement || !selectedElement.classes) return [];
@@ -218,7 +229,7 @@ Format as JSON:
     <>
       <StyleInspectorOverlay onElementSelect={handleElementSelect} />
       
-      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <Sheet open={isOpen} onOpenChange={(open) => { if (!open) handleClose(); else setIsOpen(open); }}>
         <SheetTrigger asChild>
           <Button
             variant="ghost"

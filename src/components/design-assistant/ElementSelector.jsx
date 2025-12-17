@@ -11,22 +11,21 @@ export function ElementSelector({ children }) {
     document.body.style.cursor = 'crosshair';
 
     const shouldIgnoreElement = (element) => {
-      // Ignore token applier UI controls
+      // Ignore token applier UI controls and overlays
       if (element.closest('[data-token-applier-ui]')) return true;
+      if (element.hasAttribute('data-token-applier-ui')) return true;
 
-      // Ignore dialog/drawer backdrops and overlays from headless UI
+      // Ignore Radix UI dialog/drawer overlays
+      if (element.hasAttribute('data-radix-dialog-overlay')) return true;
+      if (element.hasAttribute('data-radix-dialog-content')) return true;
       if (element.hasAttribute('data-headlessui-state')) return true;
+
+      // Ignore layout wrappers with data-editor-layout
+      if (element.hasAttribute('data-editor-layout')) return true;
 
       const classes = element.className || '';
 
-      // Only ignore explicitly non-interactive elements
-      if (typeof classes === 'string' && classes.includes('pointer-events-none')) return true;
-
-      // Ignore transparent overlays that cover the whole screen
-      if (classes.includes('fixed') && classes.includes('inset-0') && 
-          (classes.includes('bg-transparent') || classes.includes('opacity-0'))) return true;
-
-      // Ignore main structural elements
+      // Ignore structural wrappers
       const tagName = element.tagName.toLowerCase();
       if (tagName === 'html' || tagName === 'body') return true;
       if (element.id === 'root') return true;
@@ -34,31 +33,17 @@ export function ElementSelector({ children }) {
       return false;
     };
 
-    const findSelectableElement = (target) => {
-      let element = target;
-      // Traverse up the DOM to find a non-ignored element
-      while (element && element !== document.body) {
-        if (!shouldIgnoreElement(element)) {
-          return element;
-        }
-        element = element.parentElement;
-      }
-      return null;
-    };
-
     const handleClick = (e) => {
-      const selectableElement = findSelectableElement(e.target);
-      if (!selectableElement) return;
+      if (shouldIgnoreElement(e.target)) return;
 
       e.preventDefault();
       e.stopPropagation();
-      selectElement(selectableElement);
+      selectElement(e.target);
     };
 
     const handleMouseOver = (e) => {
-      const selectableElement = findSelectableElement(e.target);
-      if (!selectableElement) return;
-      setHoveredElement(selectableElement);
+      if (shouldIgnoreElement(e.target)) return;
+      setHoveredElement(e.target);
     };
 
     const handleMouseOut = () => {
