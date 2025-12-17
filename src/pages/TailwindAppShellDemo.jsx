@@ -146,27 +146,34 @@ export default function TailwindAppShellDemo() {
               <TailwindBreadcrumb pages={breadcrumbPages} />
 
               {/* Page Header */}
-              <div className="mb-6">
-                <h1 className="text-2xl font-semibold text-gray-900">AppShell Demo</h1>
-                <div className="flex gap-2 mt-4">
-                  <button
-                    onClick={() => setNavigationMode('expanded')}
-                    className={`px-3 py-1 rounded text-sm ${navigationMode === 'expanded' ? 'bg-indigo-600 text-white' : 'bg-gray-200'}`}
-                  >
-                    Expanded
-                  </button>
-                  <button
-                    onClick={() => setNavigationMode('icons')}
-                    className={`px-3 py-1 rounded text-sm ${navigationMode === 'icons' ? 'bg-indigo-600 text-white' : 'bg-gray-200'}`}
-                  >
-                    Icons
-                  </button>
-                  <button
-                    onClick={() => setNavigationMode('hidden')}
-                    className={`px-3 py-1 rounded text-sm ${navigationMode === 'hidden' ? 'bg-indigo-600 text-white' : 'bg-gray-200'}`}
-                  >
-                    Hidden
-                  </button>
+              <div className="mb-6 border-b border-gray-200 pb-5">
+                <div className="sm:flex sm:items-center sm:justify-between">
+                  <div className="min-w-0 flex-1">
+                    <h1 className="text-2xl font-semibold text-gray-900">AppShell Demo</h1>
+                    <p className="mt-1 text-sm text-gray-500">
+                      Explore the full-featured application shell with customizable navigation, drawers, and layouts.
+                    </p>
+                  </div>
+                  <div className="mt-4 flex gap-2 sm:ml-4 sm:mt-0">
+                    <button
+                      onClick={() => setNavigationMode('expanded')}
+                      className={`px-3 py-1 rounded text-sm ${navigationMode === 'expanded' ? 'bg-indigo-600 text-white' : 'bg-gray-200'}`}
+                    >
+                      Expanded
+                    </button>
+                    <button
+                      onClick={() => setNavigationMode('icons')}
+                      className={`px-3 py-1 rounded text-sm ${navigationMode === 'icons' ? 'bg-indigo-600 text-white' : 'bg-gray-200'}`}
+                    >
+                      Icons
+                    </button>
+                    <button
+                      onClick={() => setNavigationMode('hidden')}
+                      className={`px-3 py-1 rounded text-sm ${navigationMode === 'hidden' ? 'bg-indigo-600 text-white' : 'bg-gray-200'}`}
+                    >
+                      Hidden
+                    </button>
+                  </div>
                 </div>
               </div>
 
