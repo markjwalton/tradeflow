@@ -22,6 +22,16 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
   const [activeTab, setActiveTab] = useState("current");
   const [showStyleEditor, setShowStyleEditor] = useState(true);
 
+  // Push content down when editor opens
+  React.useEffect(() => {
+    if (isOpen) {
+      const marginTop = viewMode === 'full' ? '500px' : (selectedElement && showStyleEditor ? '400px' : (selectedElement ? '250px' : '120px'));
+      document.querySelector('[data-editor-layout]')?.style.setProperty('margin-top', marginTop);
+    } else {
+      document.querySelector('[data-editor-layout]')?.style.setProperty('margin-top', '0');
+    }
+  }, [isOpen, viewMode, selectedElement, showStyleEditor]);
+
   const handleViewModeChange = (mode) => {
     setViewMode(mode);
     if (onViewModeChange) onViewModeChange(mode);
