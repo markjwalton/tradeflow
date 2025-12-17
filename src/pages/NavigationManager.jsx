@@ -10,9 +10,9 @@ import {
   SheetTitle,
   SheetFooter,
 } from "@/components/ui/sheet";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileCode, Loader2, Cog, Users } from "lucide-react";
+import { LayoutDashboard, Menu } from "lucide-react";
 import { toast } from "sonner";
+import { Card } from "@/components/ui/card";
 
 import GenericNavEditor from "@/components/navigation/GenericNavEditor";
 import TenantSelector from "@/components/navigation/TenantSelector";
@@ -50,15 +50,15 @@ export default function NavigationManager() {
   const isGlobalAdmin = currentUser?.is_global_admin === true;
   const isTenantAdminOnly = tenantContext?.isTenantAdmin && !isGlobalAdmin;
   
-  const [activeTab, setActiveTab] = useState("admin");
-  const [pageSettings, setPageSettings] = useState({ defaultTab: "admin", defaultCollapsed: false });
+  const [navMode, setNavMode] = useState("side"); // "side" or "top"
+  const [pageSettings, setPageSettings] = useState({ navMode: "side", defaultCollapsed: false });
   
   // Load settings from user profile
   useEffect(() => {
     if (currentUser?.ui_preferences?.navManager_settings) {
       const settings = currentUser.ui_preferences.navManager_settings;
       setPageSettings(settings);
-      setActiveTab(settings.defaultTab || "admin");
+      setNavMode(settings.navMode || "side");
     }
   }, [currentUser]);
 
@@ -79,8 +79,8 @@ export default function NavigationManager() {
       const updatedUser = await base44.auth.me();
       setCurrentUser(updatedUser);
       
-      if (key === "defaultTab") {
-        setActiveTab(value);
+      if (key === "navMode") {
+        setNavMode(value);
       }
       
       // When defaultCollapsed changes, update all folder items in NavigationConfig
@@ -326,18 +326,16 @@ export default function NavigationManager() {
         type: "divider"
       },
       {
-        key: "defaultTab",
-        label: "Default Tab",
+        key: "navMode",
+        label: "Navigation Mode",
         type: "select",
-        value: pageSettings.defaultTab || "admin",
+        value: pageSettings.navMode || "side",
         options: [
-          { value: "admin", label: "Admin Console" },
-          { value: "app", label: "App Pages" },
-          { value: "topnav", label: "Top Nav Secondary" },
-          { value: "tenant", label: "Tenant Navigation" }
+          { value: "side", label: "Side Navigation" },
+          { value: "top", label: "Top Navigation" }
         ],
-        description: "Which tab to show by default",
-        onChange: (value) => handleSaveSettings("defaultTab", value)
+        description: "Which navigation to manage",
+        onChange: (value) => handleSaveSettings("navMode", value)
       },
       {
         key: "defaultCollapsed",
@@ -385,15 +383,6 @@ export default function NavigationManager() {
     },
   });
 
-  // Tenant-specific navigation uses NavigationItem entity
-  const { data: tenantNavItems = [], isLoading: tenantLoading } = useQuery({
-    queryKey: ["tenantNavItems", selectedTenantId],
-    queryFn: () => base44.entities.NavigationItem.filter({ tenant_id: selectedTenantId }, "order"),
-    enabled: activeTab === "tenant" && selectedTenantId !== "__global__",
-  });
-
-
-
   return (
     <div className="min-h-screen -mt-[var(--spacing-6)]">
       {isGlobalAdmin ? (
@@ -403,129 +392,62 @@ export default function NavigationManager() {
             description={pageData?.data?.description || "Configure navigation menus and structure"}
           />
 
-          {/* Tab Navigation */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-[var(--spacing-4)]">
-            <TabsList className="grid w-full max-w-3xl grid-cols-4 bg-[var(--tabs-list-bg)] p-[var(--spacing-1)] rounded-[var(--radius-lg)]">
-              <TabsTrigger 
-                value="admin"
-                className="flex items-center gap-[var(--spacing-2)] data-[state=active]:bg-white data-[state=active]:shadow-sm"
-              >
-                <Cog className="h-[var(--spacing-4)] w-[var(--spacing-4)]" />
-                <span className="hidden sm:inline">Admin</span>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="app"
-                className="flex items-center gap-[var(--spacing-2)] data-[state=active]:bg-white data-[state=active]:shadow-sm"
-              >
-                <FileCode className="h-[var(--spacing-4)] w-[var(--spacing-4)]" />
-                <span className="hidden sm:inline">App Pages</span>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="topnav"
-                className="flex items-center gap-[var(--spacing-2)] data-[state=active]:bg-white data-[state=active]:shadow-sm"
-              >
-                <FileCode className="h-[var(--spacing-4)] w-[var(--spacing-4)]" />
-                <span className="hidden sm:inline">Top Nav</span>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="tenant"
-                className="flex items-center gap-[var(--spacing-2)] data-[state=active]:bg-white data-[state=active]:shadow-sm"
-              >
-                <Users className="h-[var(--spacing-4)] w-[var(--spacing-4)]" />
-                <span className="hidden sm:inline">Tenant</span>
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent 
-              value="admin" 
-              className="mt-[var(--spacing-6)] space-y-[var(--spacing-6)]"
+          {/* Navigation Mode Toggle */}
+          <div className="mt-[var(--spacing-6)] flex items-center gap-[var(--spacing-3)]">
+            <Button
+              variant={navMode === "side" ? "default" : "outline"}
+              onClick={() => {
+                setNavMode("side");
+                handleSaveSettings("navMode", "side");
+              }}
+              className="flex items-center gap-[var(--spacing-2)]"
             >
-              <GenericNavEditor
-                title=""
-                configType="admin_console"
-                syncUnallocatedPages={() => syncUnallocatedPages.mutate("admin_console")}
-                isSyncing={syncUnallocatedPages.isPending}
-              />
-              <FullscreenPagesManager configType="admin_console" />
-            </TabsContent>
-
-            <TabsContent 
-              value="app" 
-              className="mt-[var(--spacing-6)] space-y-[var(--spacing-6)]"
+              <LayoutDashboard className="h-[var(--spacing-4)] w-[var(--spacing-4)]" />
+              Side Navigation
+            </Button>
+            <Button
+              variant={navMode === "top" ? "default" : "outline"}
+              onClick={() => {
+                setNavMode("top");
+                handleSaveSettings("navMode", "top");
+              }}
+              className="flex items-center gap-[var(--spacing-2)]"
             >
-              <GenericNavEditor
-                title=""
-                configType="app_pages_source"
-                syncUnallocatedPages={() => syncUnallocatedPages.mutate("app_pages_source")}
-                isSyncing={syncUnallocatedPages.isPending}
-              />
-              <FullscreenPagesManager configType="app_pages_source" />
-            </TabsContent>
+              <Menu className="h-[var(--spacing-4)] w-[var(--spacing-4)]" />
+              Top Navigation
+            </Button>
+          </div>
 
-            <TabsContent 
-              value="topnav" 
-              className="mt-[var(--spacing-6)] space-y-[var(--spacing-6)]"
-            >
-              <GenericNavEditor
-                title=""
-                configType="top_nav_secondary"
-                syncUnallocatedPages={() => syncUnallocatedPages.mutate("top_nav_secondary")}
-                isSyncing={syncUnallocatedPages.isPending}
-              />
-            </TabsContent>
-
-            <TabsContent 
-              value="tenant" 
-              className="mt-[var(--spacing-6)]"
-            >
-              <div className="space-y-[var(--spacing-4)]">
-                <TenantSelector
-                  tenants={tenants}
-                  selectedTenantId={selectedTenantId}
-                  onSelectTenant={setSelectedTenantId}
-                  showGlobal={false}
+          <div className="mt-[var(--spacing-6)] space-y-[var(--spacing-6)]">
+            {navMode === "side" ? (
+              <Card className="p-[var(--spacing-6)]">
+                <h2 className="text-[var(--text-xl)] font-[var(--font-family-display)] font-[var(--font-weight-medium)] mb-[var(--spacing-4)]">
+                  Admin Console Navigation
+                </h2>
+                <GenericNavEditor
+                  title=""
+                  configType="admin_console"
+                  syncUnallocatedPages={() => syncUnallocatedPages.mutate("admin_console")}
+                  isSyncing={syncUnallocatedPages.isPending}
                 />
-
-                {selectedTenantId === "__global__" ? (
-                  <div className="font-[var(--font-family-body)] text-center py-[var(--spacing-12)] text-[var(--color-text-muted)]">
-                    Select a tenant to manage their navigation
-                  </div>
-                ) : (
-                  <GenericNavEditor
-                    title={`Tenant Navigation: ${tenants.find(t => t.id === selectedTenantId)?.name || 'Unknown'}`}
-                    configType={`tenant_nav_${selectedTenantId}`}
-                    syncUnallocatedPages={() => syncUnallocatedPages.mutate(`tenant_nav_${selectedTenantId}`)}
-                    isSyncing={syncUnallocatedPages.isPending}
-                    showCopyButton={true}
-                    copyButtonLabel="Copy from App Pages Template"
-                    onCopyFromTemplate={async () => {
-                      try {
-                        const appConfigs = await base44.entities.NavigationConfig.filter({ config_type: "app_pages_source" });
-                        const appItems = appConfigs[0]?.items || [];
-                        if (appItems.length === 0) {
-                          toast.error("No App Pages template to copy from");
-                          return;
-                        }
-                        const tenantConfigs = await base44.entities.NavigationConfig.filter({ config_type: `tenant_nav_${selectedTenantId}` });
-                        if (tenantConfigs[0]) {
-                          await base44.entities.NavigationConfig.update(tenantConfigs[0].id, { items: appItems });
-                        } else {
-                          await base44.entities.NavigationConfig.create({
-                            config_type: `tenant_nav_${selectedTenantId}`,
-                            items: appItems
-                          });
-                        }
-                        queryClient.invalidateQueries({ queryKey: ["navConfig", `tenant_nav_${selectedTenantId}`] });
-                        toast.success("Copied from App Pages template");
-                      } catch (e) {
-                        toast.error("Failed to copy: " + e.message);
-                      }
-                    }}
-                  />
-                )}
-              </div>
-            </TabsContent>
-          </Tabs>
+                <div className="mt-[var(--spacing-6)]">
+                  <FullscreenPagesManager configType="admin_console" />
+                </div>
+              </Card>
+            ) : (
+              <Card className="p-[var(--spacing-6)]">
+                <h2 className="text-[var(--text-xl)] font-[var(--font-family-display)] font-[var(--font-weight-medium)] mb-[var(--spacing-4)]">
+                  Top Navigation Secondary Links
+                </h2>
+                <GenericNavEditor
+                  title=""
+                  configType="top_nav_secondary"
+                  syncUnallocatedPages={() => syncUnallocatedPages.mutate("top_nav_secondary")}
+                  isSyncing={syncUnallocatedPages.isPending}
+                />
+              </Card>
+            )}
+          </div>
         </>
       ) : (
         <div className="text-center py-[var(--spacing-12)]">
