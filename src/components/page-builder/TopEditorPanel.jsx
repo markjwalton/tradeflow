@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { X, ChevronDown, ChevronUp, Layout, Palette, Layers, Settings, Maximize2, Minimize2, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { base44 } from "@/api/base44Client";
 import { ComponentPalettePanel } from "./ComponentPalettePanel";
 import { StylingPanel } from "./StylingPanel";
 import { LayoutBuilderPanel } from "./LayoutBuilderPanel";
@@ -127,8 +128,10 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
 
       {!isCollapsed && (
         <div className="px-6 py-4" style={{ 
-          height: viewMode === 'focus' ? '76px' : '456px', 
-          overflowY: viewMode === 'focus' ? 'hidden' : 'auto',
+          height: viewMode === 'focus' ? 'auto' : '456px', 
+          minHeight: viewMode === 'focus' ? '76px' : '456px',
+          maxHeight: viewMode === 'focus' ? '300px' : '456px',
+          overflowY: 'auto',
           backgroundColor: 'var(--color-editor-background, var(--color-background))'
         }}>
           {viewMode === 'focus' ? (
