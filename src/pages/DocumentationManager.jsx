@@ -300,6 +300,36 @@ export default function DocumentationManager() {
     createListMutation.mutate({ heading: listHeading, summary: listSummary });
   };
 
+  // Convert discussion to todo item
+  const handleDiscussionToTodo = (discussion) => {
+    if (!selectedList) {
+      toast.error("Please select a list first");
+      return;
+    }
+    const listItems = todoItems.filter(i => i.list_id === selectedList.id);
+    createItemMutation.mutate({
+      list_id: selectedList.id,
+      description: `[Discussion] ${discussion.title}`,
+      order: listItems.length
+    });
+    toast.success("Added to todo list");
+  };
+
+  // Convert comment to todo item
+  const handleCommentToTodo = (comment) => {
+    if (!selectedList) {
+      toast.error("Please select a list first");
+      return;
+    }
+    const listItems = todoItems.filter(i => i.list_id === selectedList.id);
+    createItemMutation.mutate({
+      list_id: selectedList.id,
+      description: `[${comment.document_title}] ${comment.comment}`,
+      order: listItems.length
+    });
+    toast.success("Added to todo list");
+  };
+
   // Handle add item
   const handleAddItem = () => {
     if (!selectedList || !newItemDesc) return;
@@ -868,7 +898,19 @@ export default function DocumentationManager() {
                                   v{comment.document_version} • {comment.section}
                                 </p>
                               </div>
-                              <Badge>{comment.priority}</Badge>
+                              <div className="flex items-center gap-2">
+                                <Badge>{comment.priority}</Badge>
+                                <Button 
+                                  size="sm" 
+                                  variant="ghost"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleCommentToTodo(comment);
+                                  }}
+                                >
+                                  <Check className="w-4 h-4" />
+                                </Button>
+                              </div>
                             </div>
                             {comment.selected_text && (
                               <p className="text-sm italic mt-2" style={{ color: 'var(--text-body)' }}>
@@ -1189,6 +1231,16 @@ export default function DocumentationManager() {
                                     </p>
                                   )}
                                 </div>
+                                <Button 
+                                  size="sm" 
+                                  variant="ghost"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDiscussionToTodo(disc);
+                                  }}
+                                >
+                                  <Check className="w-4 h-4" />
+                                </Button>
                               </div>
                               <p className="text-sm mt-2">{disc.content}</p>
                             </div>
