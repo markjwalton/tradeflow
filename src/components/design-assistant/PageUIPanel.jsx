@@ -339,6 +339,52 @@ Format as JSON:
           </SheetHeader>
 
           <div className="space-y-6 py-6 px-6">
+            {mode === 'editor' && (
+              <div>
+                <Label className="text-sm font-medium mb-4 block">Style Property Editor</Label>
+                <StylePropertyEditor 
+                  selectedElement={selectedElement}
+                  onApply={(property, value, applyToAll) => {
+                    if (!selectedElement?.element) {
+                      toast.error("No element selected");
+                      return;
+                    }
+
+                    if (applyToAll) {
+                      // Apply to all elements with the same class
+                      const className = typeof selectedElement.className === 'string' ? selectedElement.className : '';
+                      const targetClass = className.split(' ').filter(c => c)[0];
+                      
+                      if (targetClass) {
+                        const elements = document.querySelectorAll(`.${targetClass}`);
+                        elements.forEach(el => {
+                          el.style[property] = value;
+                        });
+                        toast.success(`Applied to ${elements.length} elements with .${targetClass}`);
+                      } else {
+                        // If no class, apply to all elements of same tag
+                        const elements = document.querySelectorAll(selectedElement.tagName);
+                        elements.forEach(el => {
+                          el.style[property] = value;
+                        });
+                        toast.success(`Applied to all ${selectedElement.tagName} elements`);
+                      }
+                    } else {
+                      // Apply to selected element only
+                      selectedElement.element.style[property] = value;
+                      toast.success(`Applied to selected element`);
+                    }
+
+                    // Update selected element styles
+                    const computedStyle = window.getComputedStyle(selectedElement.element);
+                    if (tokenApplier?.selectElement) {
+                      tokenApplier.selectElement(selectedElement.element);
+                    }
+                  }}
+                />
+              </div>
+            )}
+
             {mode === 'tokens' && (
               <div>
                 <Label className="text-sm font-medium mb-4 block">Design Tokens</Label>
