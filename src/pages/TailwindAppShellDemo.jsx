@@ -126,7 +126,7 @@ export default function TailwindAppShellDemo() {
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar Navigation */}
         {navigationMode !== 'hidden' && (
-          <div className={navigationMode === 'icons' ? 'w-20' : 'w-64'}>
+          <div className={`${navigationMode === 'icons' ? 'w-20' : 'w-64'} flex flex-col`}>
             <TailwindNavigation
               navigation={navigation}
               navigationMode={navigationMode}
