@@ -5,7 +5,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { FileText, MessageSquare, Sparkles, Copy, Check, Archive, Send, Download, CheckCircle2 } from "lucide-react";
+import { FileText, MessageSquare, Sparkles, Copy, Check, Archive, Send, Download, CheckCircle2, Trash2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -91,6 +91,14 @@ export default function DocumentationManager() {
     mutationFn: ({ id, data }) => base44.entities.DocumentComment.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries(['documentComments']);
+    },
+  });
+
+  const deleteCommentMutation = useMutation({
+    mutationFn: (id) => base44.entities.DocumentComment.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['documentComments']);
+      toast.success("Comment deleted");
     },
   });
 
@@ -190,6 +198,14 @@ export default function DocumentationManager() {
     mutationFn: ({ id, data }) => base44.entities.DiscussionPoint.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries(['discussionPoints']);
+    },
+  });
+
+  const deleteDiscussionMutation = useMutation({
+    mutationFn: (id) => base44.entities.DiscussionPoint.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['discussionPoints']);
+      toast.success("Discussion deleted");
     },
   });
 
@@ -1004,31 +1020,44 @@ export default function DocumentationManager() {
                                 </p>
                               </div>
                               <div className="flex items-center gap-2">
-                                <Badge>{comment.priority}</Badge>
-                                <Button 
-                                  size="sm" 
-                                  variant="ghost"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleCommentToTodo(comment);
-                                  }}
-                                  title="Add to todo"
-                                >
-                                  <Check className="w-4 h-4" />
-                                </Button>
-                                <Button 
-                                  size="sm" 
-                                  variant="outline"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    updateCommentMutation.mutate({
-                                      id: comment.id,
-                                      data: { status: "completed", completed_date: new Date().toISOString() }
-                                    });
-                                  }}
-                                >
-                                  Complete
-                                </Button>
+                              <Badge>{comment.priority}</Badge>
+                              <Button 
+                                size="sm" 
+                                variant="ghost"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleCommentToTodo(comment);
+                                }}
+                                title="Add to todo"
+                              >
+                                <Check className="w-4 h-4" />
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  updateCommentMutation.mutate({
+                                    id: comment.id,
+                                    data: { status: "completed", completed_date: new Date().toISOString() }
+                                  });
+                                }}
+                              >
+                                Complete
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="ghost"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (window.confirm("Delete this comment?")) {
+                                    deleteCommentMutation.mutate(comment.id);
+                                  }
+                                }}
+                                title="Delete"
+                              >
+                                <Trash2 className="w-4 h-4 text-destructive" />
+                              </Button>
                               </div>
                             </div>
                             {comment.selected_text && (
@@ -1102,13 +1131,25 @@ export default function DocumentationManager() {
                         <CardContent className="p-4">
                           <p className="font-semibold text-sm">{comment.document_title} (v{comment.document_version})</p>
                           <p className="text-sm mt-2">{comment.comment}</p>
-                          <Button 
-                            size="sm" 
-                            className="mt-2"
-                            onClick={() => updateCommentMutation.mutate({ id: comment.id, data: { status: "submitted" } })}
-                          >
-                            Submit
-                          </Button>
+                          <div className="flex gap-2 mt-2">
+                            <Button 
+                              size="sm"
+                              onClick={() => updateCommentMutation.mutate({ id: comment.id, data: { status: "submitted" } })}
+                            >
+                              Submit
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="ghost"
+                              onClick={() => {
+                                if (window.confirm("Delete this draft comment?")) {
+                                  deleteCommentMutation.mutate(comment.id);
+                                }
+                              }}
+                            >
+                              <Trash2 className="w-4 h-4 text-destructive" />
+                            </Button>
+                          </div>
                         </CardContent>
                       </Card>
                     ))}
@@ -1382,6 +1423,19 @@ export default function DocumentationManager() {
                                   >
                                     Complete
                                   </Button>
+                                  <Button 
+                                    size="sm" 
+                                    variant="ghost"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      if (window.confirm("Delete this discussion point?")) {
+                                        deleteDiscussionMutation.mutate(disc.id);
+                                      }
+                                    }}
+                                    title="Delete"
+                                  >
+                                    <Trash2 className="w-4 h-4 text-destructive" />
+                                  </Button>
                                 </div>
                               </div>
                               <p className="text-sm mt-2">{disc.content}</p>
@@ -1453,13 +1507,25 @@ export default function DocumentationManager() {
                           <Badge variant="outline" className="mt-1">{disc.reference_type}</Badge>
                           {disc.category && <Badge className="ml-2">{disc.category}</Badge>}
                           <p className="text-sm mt-2">{disc.content}</p>
-                          <Button 
-                            size="sm" 
-                            className="mt-2"
-                            onClick={() => updateDiscussionMutation.mutate({ id: disc.id, data: { status: "submitted" } })}
-                          >
-                            Submit
-                          </Button>
+                          <div className="flex gap-2 mt-2">
+                            <Button 
+                              size="sm"
+                              onClick={() => updateDiscussionMutation.mutate({ id: disc.id, data: { status: "submitted" } })}
+                            >
+                              Submit
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="ghost"
+                              onClick={() => {
+                                if (window.confirm("Delete this draft discussion?")) {
+                                  deleteDiscussionMutation.mutate(disc.id);
+                                }
+                              }}
+                            >
+                              <Trash2 className="w-4 h-4 text-destructive" />
+                            </Button>
+                          </div>
                         </CardContent>
                       </Card>
                     ))}
