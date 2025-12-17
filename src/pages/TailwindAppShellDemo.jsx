@@ -255,14 +255,15 @@ export default function TailwindAppShellDemo() {
       />
 
       {/* Right Drawer with Tabs */}
-      <TailwindDrawer
-        open={rightDrawerOpen}
-        onClose={() => setRightDrawerOpen(false)}
-        title="Design Tokens"
-        side="right"
-        maxWidth="lg"
-      >
-        <div data-token-applier-ui>
+      <div data-token-applier-ui>
+        <TailwindDrawer
+          open={rightDrawerOpen}
+          onClose={() => setRightDrawerOpen(false)}
+          title="Design Tokens"
+          side="right"
+          maxWidth="lg"
+        >
+          <div data-token-applier-ui>
           <TokenApplierControls />
           <TailwindTabsNav
             key={activeTab}
@@ -284,7 +285,8 @@ export default function TailwindAppShellDemo() {
             <RadiiViewer />
           ) : null}
         </div>
-      </TailwindDrawer>
+        </TailwindDrawer>
+      </div>
 
       {/* Left Drawer */}
       <TailwindDrawer

@@ -27,20 +27,22 @@ export function TokenApplierControls() {
 
   if (!isActive) {
     return (
-      <Button
-        onClick={activateTokenApplier}
-        variant="outline"
-        size="sm"
-        className="gap-2"
-      >
-        <Paintbrush className="h-4 w-4" />
-        Start Token Applier
-      </Button>
+      <div data-token-applier-ui>
+        <Button
+          onClick={activateTokenApplier}
+          variant="outline"
+          size="sm"
+          className="gap-2"
+        >
+          <Paintbrush className="h-4 w-4" />
+          Start Token Applier
+        </Button>
+      </div>
     );
   }
 
   return (
-    <Card className="p-4 space-y-4 border-primary-300 bg-primary-50">
+    <Card className="p-4 space-y-4 border-primary-300 bg-primary-50" data-token-applier-ui>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Paintbrush className="h-4 w-4 text-primary-600" />

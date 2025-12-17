@@ -2,14 +2,16 @@ import React, { useEffect } from 'react';
 import { useTokenApplier } from './TokenApplierContext';
 
 export function ElementSelector({ children }) {
-  const { isActive, selectElement, setHoveredElement } = useTokenApplier();
+  const { isActive, selectElement, setHoveredElement, hoveredElement } = useTokenApplier();
 
   useEffect(() => {
     if (!isActive) return;
 
     const handleClick = (e) => {
       // Ignore clicks on the drawer and controls
-      if (e.target.closest('[data-token-applier-ui]')) {
+      if (e.target.closest('[data-token-applier-ui]') || 
+          e.target.closest('[data-radix-dialog-content]') ||
+          e.target.closest('[role="dialog"]')) {
         return;
       }
       
@@ -19,7 +21,9 @@ export function ElementSelector({ children }) {
     };
 
     const handleMouseOver = (e) => {
-      if (e.target.closest('[data-token-applier-ui]')) {
+      if (e.target.closest('[data-token-applier-ui]') ||
+          e.target.closest('[data-radix-dialog-content]') ||
+          e.target.closest('[role="dialog"]')) {
         return;
       }
       setHoveredElement(e.target);
@@ -39,6 +43,22 @@ export function ElementSelector({ children }) {
       document.removeEventListener('mouseout', handleMouseOut);
     };
   }, [isActive, selectElement, setHoveredElement]);
+
+  // Add hover effect
+  useEffect(() => {
+    if (!hoveredElement || !isActive) return;
+
+    const originalOutline = hoveredElement.style.outline;
+    const originalOutlineOffset = hoveredElement.style.outlineOffset;
+    
+    hoveredElement.style.outline = '2px dashed var(--primary-500)';
+    hoveredElement.style.outlineOffset = '2px';
+
+    return () => {
+      hoveredElement.style.outline = originalOutline;
+      hoveredElement.style.outlineOffset = originalOutlineOffset;
+    };
+  }, [hoveredElement, isActive]);
 
   return <>{children}</>;
 }
