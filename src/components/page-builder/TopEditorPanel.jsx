@@ -39,9 +39,6 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
   const handleViewModeChange = (mode) => {
     setViewMode(mode);
     if (onViewModeChange) onViewModeChange(mode);
-    // Update layout margin to push content down
-    const marginTop = mode === 'full' ? '500px' : (selectedElement && showStyleEditor ? '400px' : (selectedElement ? '250px' : '120px'));
-    document.querySelector('[data-editor-layout]')?.style.setProperty('margin-top', marginTop);
   };
 
   const handleApplyChanges = () => {
