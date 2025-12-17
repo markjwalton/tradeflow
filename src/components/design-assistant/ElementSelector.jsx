@@ -11,20 +11,8 @@ export function ElementSelector({ children }) {
     document.body.style.cursor = 'crosshair';
 
     const shouldIgnoreElement = (element) => {
-      // Ignore token applier UI
+      // Only ignore token applier UI controls
       if (element.closest('[data-token-applier-ui]')) return true;
-      
-      // Ignore dialog/drawer backdrops and overlays
-      if (element.hasAttribute('data-headlessui-state')) return true;
-      
-      // Ignore elements that are full-screen overlays (typically backdrops)
-      const classes = element.className || '';
-      if (typeof classes === 'string' && classes.includes('fixed inset-0')) return true;
-      if (typeof classes === 'string' && classes.includes('absolute inset-0')) return true;
-      
-      // Ignore if it's a drawer/dialog wrapper with pointer-events-none
-      if (typeof classes === 'string' && classes.includes('pointer-events-none')) return true;
-      
       return false;
     };
 
