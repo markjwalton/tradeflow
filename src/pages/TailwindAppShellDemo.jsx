@@ -86,98 +86,98 @@ export default function TailwindAppShellDemo() {
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
-        <header className="bg-white shadow-sm z-10">
-          <div className="px-4 py-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-semibold text-gray-900">AppShell Demo</h1>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setNavigationMode('expanded')}
-                  className={`px-3 py-1 rounded text-sm ${navigationMode === 'expanded' ? 'bg-indigo-600 text-white' : 'bg-gray-200'}`}
-                >
-                  Expanded
-                </button>
-                <button
-                  onClick={() => setNavigationMode('icons')}
-                  className={`px-3 py-1 rounded text-sm ${navigationMode === 'icons' ? 'bg-indigo-600 text-white' : 'bg-gray-200'}`}
-                >
-                  Icons
-                </button>
-                <button
-                  onClick={() => setNavigationMode('hidden')}
-                  className={`px-3 py-1 rounded text-sm ${navigationMode === 'hidden' ? 'bg-indigo-600 text-white' : 'bg-gray-200'}`}
-                >
-                  Hidden
-                </button>
+          {/* Header */}
+          <header className="bg-white shadow-sm z-10">
+            <div className="px-4 py-4 sm:px-6 lg:px-8">
+              <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-semibold text-gray-900">AppShell Demo</h1>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setNavigationMode('expanded')}
+                    className={`px-3 py-1 rounded text-sm ${navigationMode === 'expanded' ? 'bg-indigo-600 text-white' : 'bg-gray-200'}`}
+                  >
+                    Expanded
+                  </button>
+                  <button
+                    onClick={() => setNavigationMode('icons')}
+                    className={`px-3 py-1 rounded text-sm ${navigationMode === 'icons' ? 'bg-indigo-600 text-white' : 'bg-gray-200'}`}
+                  >
+                    Icons
+                  </button>
+                  <button
+                    onClick={() => setNavigationMode('hidden')}
+                    className={`px-3 py-1 rounded text-sm ${navigationMode === 'hidden' ? 'bg-indigo-600 text-white' : 'bg-gray-200'}`}
+                  >
+                    Hidden
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        </header>
+          </header>
 
-        {/* Scrollable Content */}
-        <main className="flex-1 overflow-y-auto">
-          <div className="px-4 py-6 sm:px-6 lg:px-8">
-            {/* Breadcrumb */}
-            <TailwindBreadcrumb pages={breadcrumbPages} />
+          {/* Scrollable Content */}
+          <main className="flex-1 overflow-y-auto">
+            <div className="px-4 py-6 sm:px-6 lg:px-8">
+              {/* Breadcrumb */}
+              <TailwindBreadcrumb pages={breadcrumbPages} />
 
-            {/* Demo Controls */}
-            <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-              <button
-                onClick={() => setTopDrawerOpen(true)}
-                className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
-              >
-                Open Top Drawer
-              </button>
-              <button
-                onClick={() => setRightDrawerOpen(true)}
-                className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
-              >
-                Open Right Drawer
-              </button>
-              <button
-                onClick={() => setBottomDrawerOpen(true)}
-                className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
-              >
-                Open Bottom Drawer
-              </button>
-              <button
-                onClick={() => setLeftDrawerOpen(true)}
-                className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
-              >
-                Open Left Drawer
-              </button>
+              {/* Demo Controls */}
+              <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+                <button
+                  onClick={() => setTopDrawerOpen(true)}
+                  className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
+                >
+                  Open Top Drawer
+                </button>
+                <button
+                  onClick={() => setRightDrawerOpen(true)}
+                  className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
+                >
+                  Open Right Drawer
+                </button>
+                <button
+                  onClick={() => setBottomDrawerOpen(true)}
+                  className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
+                >
+                  Open Bottom Drawer
+                </button>
+                <button
+                  onClick={() => setLeftDrawerOpen(true)}
+                  className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
+                >
+                  Open Left Drawer
+                </button>
+              </div>
+
+              {/* Cards Grid */}
+              <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <TailwindCard>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Plain Card</h3>
+                  <p className="text-gray-600">This is a simple card with content.</p>
+                </TailwindCard>
+
+                <TailwindCardWithHeader title="Card with Header" headerContent={<span className="text-sm text-gray-500">Last updated 2 hours ago</span>}>
+                  <p className="text-gray-600">This card has a header section.</p>
+                </TailwindCardWithHeader>
+              </div>
+
+              {/* List */}
+              <div className="mt-8">
+                <TailwindCard>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Task List</h3>
+                  <TailwindList
+                    items={listItems}
+                    renderItem={(item) => (
+                      <div>
+                        <h4 className="font-medium text-gray-900">{item.name}</h4>
+                        <p className="text-sm text-gray-500">{item.description}</p>
+                      </div>
+                    )}
+                  />
+                </TailwindCard>
+              </div>
             </div>
-
-            {/* Cards Grid */}
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-              <TailwindCard>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Plain Card</h3>
-                <p className="text-gray-600">This is a simple card with content.</p>
-              </TailwindCard>
-
-              <TailwindCardWithHeader title="Card with Header" headerContent={<span className="text-sm text-gray-500">Last updated 2 hours ago</span>}>
-                <p className="text-gray-600">This card has a header section.</p>
-              </TailwindCardWithHeader>
-            </div>
-
-            {/* List */}
-            <div className="mt-8">
-              <TailwindCard>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Task List</h3>
-                <TailwindList
-                  items={listItems}
-                  renderItem={(item) => (
-                    <div>
-                      <h4 className="font-medium text-gray-900">{item.name}</h4>
-                      <p className="text-sm text-gray-500">{item.description}</p>
-                    </div>
-                  )}
-                />
-              </TailwindCard>
-            </div>
-          </div>
-        </main>
+          </main>
         </div>
       </div>
 
