@@ -11,7 +11,8 @@ export default function TailwindDrawer({
   side = 'right', // 'right', 'left', 'top', 'bottom'
   maxWidth = 'md', // 'sm', 'md', 'lg', 'xl', '2xl' (for left/right)
   maxHeight = 'md', // 'sm', 'md', 'lg', 'xl' (for top/bottom)
-  pushContent = false // if true, pushes content instead of overlaying (only for top/bottom)
+  pushContent = false, // if true, pushes content instead of overlaying (only for top/bottom)
+  preventBackdropClose = false // if true, prevents closing when clicking backdrop
 }) {
   const isHorizontal = side === 'left' || side === 'right';
   const isVertical = side === 'top' || side === 'bottom';
@@ -77,7 +78,7 @@ export default function TailwindDrawer({
   }
 
   return (
-    <Dialog open={open} onClose={onClose} className="relative z-10">
+    <Dialog open={open} onClose={preventBackdropClose ? () => {} : onClose} className="relative z-10">
       <div className="fixed inset-0 bg-transparent" />
 
       <div className="fixed inset-0 overflow-hidden">

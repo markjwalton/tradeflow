@@ -12,7 +12,7 @@ import TypographyViewer from '../components/sturij/TypographyViewer';
 import SpacingViewer from '../components/sturij/SpacingViewer';
 import ShadowsViewer from '../components/sturij/ShadowsViewer';
 import RadiiViewer from '../components/sturij/RadiiViewer';
-import { TokenApplierProvider } from '../components/design-assistant/TokenApplierContext';
+import { TokenApplierProvider, useTokenApplier } from '../components/design-assistant/TokenApplierContext';
 import { TokenApplierControls } from '../components/design-assistant/TokenApplierControls';
 import { ElementSelector } from '../components/design-assistant/ElementSelector';
 import {
@@ -82,7 +82,8 @@ const user = {
   imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 };
 
-export default function TailwindAppShellDemo() {
+function AppShellContent() {
+  const { isActive } = useTokenApplier();
   const [navigationMode, setNavigationMode] = useState('expanded');
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
@@ -99,8 +100,6 @@ export default function TailwindAppShellDemo() {
   ];
 
   return (
-    <TokenApplierProvider>
-      <ElementSelector>
         <div className="flex flex-col h-screen bg-gray-100">
       {/* Top Navigation */}
       <TailwindTopNav
@@ -262,6 +261,7 @@ export default function TailwindAppShellDemo() {
           title="Design Tokens"
           side="right"
           maxWidth="lg"
+          preventBackdropClose={isActive}
         >
           <div data-token-applier-ui>
           <TokenApplierControls />
@@ -344,6 +344,14 @@ export default function TailwindAppShellDemo() {
         </div>
       </TailwindDrawer>
         </div>
+  );
+}
+
+export default function TailwindAppShellDemo() {
+  return (
+    <TokenApplierProvider>
+      <ElementSelector>
+        <AppShellContent />
       </ElementSelector>
     </TokenApplierProvider>
   );
