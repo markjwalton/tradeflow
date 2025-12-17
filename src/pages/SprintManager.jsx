@@ -60,6 +60,10 @@ export default function SprintManager() {
       toast.success("Sprint updated");
       setShowDialog(false);
     },
+    onError: (error) => {
+      console.error("Update error:", error);
+      toast.error("Failed to update: " + (error.message || "Unauthorized"));
+    },
   });
 
   const deleteMutation = useMutation({
