@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { X, Target } from 'lucide-react';
 
-export default function TokenApplierControls() {
+export function TokenApplierControls() {
   const { isActive, selectedElement, activateTokenApplier, deactivateTokenApplier, saveMapping } = useTokenApplier();
   const [componentType, setComponentType] = useState('');
   const [selector, setSelector] = useState('');
