@@ -1,14 +1,15 @@
 import { cn } from "@/lib/utils";
 import { useAppSidebar } from "./SidebarContext";
 import { Link, useLocation } from "react-router-dom";
-import { ChevronDown, ChevronRight, Folder, FolderOpen, Home } from "lucide-react";
+import { ChevronDown, ChevronRight, Folder, FolderOpen, Home, Palette } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { createPageUrl } from "@/utils";
 import { getIconByName } from "@/components/navigation/NavIconMap";
 import { usePrefetchRoute } from "@/components/common/usePrefetchRoute";
+import { base44 } from "@/api/base44Client";
 
-export function AppSidebar({ navItems = [] }) {
+export function AppSidebar({ navItems = [], onEditorToggle }) {
   const { mode, isHidden } = useAppSidebar();
   const location = useLocation();
   const [expandedFolders, setExpandedFolders] = useState(new Set());
@@ -321,6 +322,51 @@ export function AppSidebar({ navItems = [] }) {
           )}>
             {itemsToRender.map((item) => renderNavItem(item, false, !item.parent_id))}
           </nav>
+
+          {/* Editor Toggle Button */}
+          <div className="border-t border-sidebar-border [padding-top:var(--spacing-3)] [margin-top:var(--spacing-2)]">
+            {isIconsOnly ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={onEditorToggle}
+                    className={cn(
+                      "w-full flex items-center justify-center transition-colors group relative",
+                      "[padding:var(--spacing-2)] [border-radius:var(--radius-lg)]",
+                      "hover:bg-sidebar-accent"
+                    )}
+                  >
+                    <Palette 
+                      className="transition-colors flex-shrink-0" 
+                      size={24}
+                      strokeWidth={1.5}
+                      style={{ color: 'var(--accent-500, #b39299)' }}
+                    />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="right" className="text-base [padding:var(--spacing-3)]">
+                  Toggle Editor
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <button
+                onClick={onEditorToggle}
+                className={cn(
+                  "w-full flex items-center transition-colors group",
+                  "[gap:var(--spacing-3)] [padding:var(--spacing-2)] [border-radius:var(--radius-lg)]",
+                  "hover:bg-sidebar-accent"
+                )}
+              >
+                <Palette 
+                  className="flex-shrink-0 transition-colors"
+                  size={20}
+                  strokeWidth={1.25}
+                  style={{ color: 'var(--accent-500, #b39299)' }}
+                />
+                <span className="truncate text-sidebar-foreground/70">Toggle Editor</span>
+              </button>
+            )}
+          </div>
         </TooltipProvider>
       </aside>
   );

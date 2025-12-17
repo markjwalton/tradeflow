@@ -525,7 +525,30 @@ export default function Layout({ children, currentPageName }) {
                 marginRight: contentAlignment === 'center' ? 'auto' : (contentAlignment === 'right' ? '0' : 'auto'),
               }}
             >
-              <AppShell user={currentUser} tenant={currentTenant} navItems={navItems} currentPageName={currentPageName}>
+              <AppShell 
+                user={currentUser} 
+                tenant={currentTenant} 
+                navItems={navItems} 
+                currentPageName={currentPageName}
+                onEditorToggle={async () => {
+                  const newState = !editorPanelOpen;
+                  setEditorPanelOpen(newState);
+                  try {
+                    const user = await base44.auth.me();
+                    await base44.auth.updateMe({
+                      ui_preferences: {
+                        ...(user.ui_preferences || {}),
+                        liveEditMode: newState
+                      }
+                    });
+                    window.dispatchEvent(new CustomEvent('ui-preferences-changed', { 
+                      detail: { liveEditMode: newState } 
+                    }));
+                  } catch (e) {
+                    console.error("Failed to toggle live edit:", e);
+                  }
+                }}
+              >
                 <LiveEditWrapper>{children}</LiveEditWrapper>
               </AppShell>
             </div>
