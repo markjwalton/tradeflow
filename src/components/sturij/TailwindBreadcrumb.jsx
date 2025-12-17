@@ -2,8 +2,8 @@ import { HomeIcon } from '@heroicons/react/20/solid';
 
 export default function TailwindBreadcrumb({ pages = [] }) {
   return (
-    <nav aria-label="Breadcrumb" className="flex max-w-2xl">
-      <ol role="list" className="flex items-center space-x-4 rounded-md bg-white px-6 h-[20px] shadow-sm">
+    <nav aria-label="Breadcrumb" className="flex">
+      <ol role="list" className="flex items-center space-x-4 rounded-md bg-white px-6 shadow-sm">
         <li className="flex">
           <div className="flex items-center">
             <a href="#" className="text-gray-400 hover:text-gray-500">
