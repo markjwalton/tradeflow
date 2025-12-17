@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 import { ComponentPalettePanel } from "./ComponentPalettePanel";
-import { StylingPanel } from "./StylingPanel.jsx";
+import StylingPanel from "./StylingPanel.jsx";
 import { LayoutBuilderPanel } from "./LayoutBuilderPanel";
 import { PageSettingsTab } from "./PageSettingsTab";
 import { ElementEditor } from "./ElementEditor";
