@@ -29,7 +29,7 @@ export default function DocumentationManager() {
   // Fetch documents
   const { data: documents = [] } = useQuery({
     queryKey: ['frameworkDocs'],
-    queryFn: () => base44.entities.FrameworkDocument.filter({ status: 'published' }),
+    queryFn: () => base44.entities.FrameworkDocument.list('-created_date'),
   });
 
   // Fetch comments
@@ -42,6 +42,18 @@ export default function DocumentationManager() {
   const { data: discussions = [] } = useQuery({
     queryKey: ['discussionPoints'],
     queryFn: () => base44.entities.DiscussionPoint.list(),
+  });
+
+  // Fetch todo lists
+  const { data: todoLists = [] } = useQuery({
+    queryKey: ['todoLists'],
+    queryFn: () => base44.entities.TodoList.list('-created_date'),
+  });
+
+  // Fetch todo list items
+  const { data: todoItems = [] } = useQuery({
+    queryKey: ['todoItems'],
+    queryFn: () => base44.entities.TodoListItem.list(),
   });
 
   // Get latest versions
@@ -246,6 +258,81 @@ export default function DocumentationManager() {
     toast.success("Discussion points archived");
   };
 
+  // Todo list mutations
+  const createListMutation = useMutation({
+    mutationFn: (data) => base44.entities.TodoList.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['todoLists']);
+      setListHeading("");
+      setListSummary("");
+      toast.success("List created");
+    },
+  });
+
+  const updateListMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.TodoList.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['todoLists']);
+    },
+  });
+
+  const createItemMutation = useMutation({
+    mutationFn: (data) => base44.entities.TodoListItem.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['todoItems']);
+      setNewItemDesc("");
+    },
+  });
+
+  const updateItemMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.TodoListItem.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['todoItems']);
+    },
+  });
+
+  // Handle create list
+  const handleCreateList = () => {
+    if (!listHeading) {
+      toast.error("Heading is required");
+      return;
+    }
+    createListMutation.mutate({ heading: listHeading, summary: listSummary });
+  };
+
+  // Handle add item
+  const handleAddItem = () => {
+    if (!selectedList || !newItemDesc) return;
+    const listItems = todoItems.filter(i => i.list_id === selectedList.id);
+    createItemMutation.mutate({
+      list_id: selectedList.id,
+      description: newItemDesc,
+      order: listItems.length
+    });
+  };
+
+  // Handle toggle item
+  const handleToggleItem = (item) => {
+    updateItemMutation.mutate({
+      id: item.id,
+      data: { is_completed: !item.is_completed }
+    });
+
+    // Check if list should be archived
+    setTimeout(() => {
+      const listItems = todoItems.filter(i => i.list_id === item.list_id);
+      const allComplete = listItems.every(i => i.id === item.id ? !item.is_completed : i.is_completed);
+      if (allComplete && listItems.length > 0) {
+        updateListMutation.mutate({
+          id: item.list_id,
+          data: { status: "archived" }
+        });
+        toast.success("List completed and archived!");
+        setSelectedList(null);
+      }
+    }, 100);
+  };
+
   // AI analyze changes
   const handleAnalyzeChanges = async () => {
     if (!selectedDoc || !selectedDoc.previous_version_id) {
@@ -295,6 +382,12 @@ export default function DocumentationManager() {
   const [selectedDiscussions, setSelectedDiscussions] = useState([]);
   const [discussionPrompt, setDiscussionPrompt] = useState("");
 
+  // Todo list state
+  const [listHeading, setListHeading] = useState("");
+  const [listSummary, setListSummary] = useState("");
+  const [selectedList, setSelectedList] = useState(null);
+  const [newItemDesc, setNewItemDesc] = useState("");
+
   // Download document as markdown
   const handleDownload = (doc) => {
     const blob = new Blob([doc.content], { type: 'text/markdown' });
@@ -329,6 +422,17 @@ export default function DocumentationManager() {
   // Filter discussions by status
   const draftDiscussions = discussions.filter(d => d.status === "draft");
   const submittedDiscussions = discussions.filter(d => d.status === "submitted" || d.status === "in_prompt");
+
+  // Filter todo lists
+  const activeLists = todoLists.filter(l => l.status === "active");
+  const archivedLists = todoLists.filter(l => l.status === "archived");
+  
+  // Calculate outstanding items across all active lists
+  const totalOutstanding = activeLists.reduce((sum, list) => {
+    const listItems = todoItems.filter(i => i.list_id === list.id);
+    const incomplete = listItems.filter(i => !i.is_completed).length;
+    return sum + incomplete;
+  }, 0);
 
   // Pagination for all documents view
   const {
@@ -382,6 +486,13 @@ export default function DocumentationManager() {
             Discussion
             {submittedDiscussions.length > 0 && (
               <Badge variant="destructive" className="ml-2">{submittedDiscussions.length}</Badge>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="outstanding">
+            <Check className="w-4 h-4 mr-2" />
+            Outstanding
+            {totalOutstanding > 0 && (
+              <Badge variant="destructive" className="ml-2">{totalOutstanding}</Badge>
             )}
           </TabsTrigger>
         </TabsList>
@@ -1152,6 +1263,167 @@ export default function DocumentationManager() {
                 </CardContent>
               </Card>
             )}
+          </div>
+        </TabsContent>
+
+        {/* Outstanding/Todo Lists Tab */}
+        <TabsContent value="outstanding">
+          <div className="grid grid-cols-12 gap-6">
+            {/* Lists Sidebar */}
+            <div className="col-span-4 space-y-4">
+              {/* Create New List */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">New List</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <input
+                    type="text"
+                    value={listHeading}
+                    onChange={(e) => setListHeading(e.target.value)}
+                    placeholder="List heading..."
+                    className="w-full px-3 py-2 border rounded-md text-sm"
+                    style={{ borderColor: 'var(--color-border)' }}
+                  />
+                  <Textarea
+                    value={listSummary}
+                    onChange={(e) => setListSummary(e.target.value)}
+                    rows={2}
+                    placeholder="Summary..."
+                    className="text-sm"
+                  />
+                  <Button size="sm" onClick={handleCreateList}>Create List</Button>
+                </CardContent>
+              </Card>
+
+              {/* Active Lists */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Active Lists ({activeLists.length})</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {activeLists.map(list => {
+                      const items = todoItems.filter(i => i.list_id === list.id);
+                      const incomplete = items.filter(i => !i.is_completed).length;
+                      return (
+                        <Card 
+                          key={list.id}
+                          className={`cursor-pointer hover:shadow-md transition-shadow ${selectedList?.id === list.id ? 'ring-2 ring-primary' : ''}`}
+                          onClick={() => setSelectedList(list)}
+                        >
+                          <CardContent className="p-3">
+                            <div className="flex justify-between items-start">
+                              <p className="font-semibold text-sm">{list.heading}</p>
+                              {incomplete > 0 && (
+                                <Badge variant="destructive" className="text-xs">{incomplete}</Badge>
+                              )}
+                            </div>
+                            {list.summary && (
+                              <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
+                                {list.summary}
+                              </p>
+                            )}
+                            <p className="text-xs mt-2" style={{ color: 'var(--color-text-subtle)' }}>
+                              {items.filter(i => i.is_completed).length} / {items.length} complete
+                            </p>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Archived Lists */}
+              {archivedLists.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base">Archived ({archivedLists.length})</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {archivedLists.map(list => (
+                        <div 
+                          key={list.id}
+                          className="p-2 rounded text-sm"
+                          style={{ backgroundColor: 'var(--color-muted)' }}
+                        >
+                          <p className="font-semibold">{list.heading}</p>
+                          <Badge variant="outline" className="mt-1 text-xs">Completed</Badge>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+
+            {/* List Details */}
+            <div className="col-span-8">
+              {selectedList ? (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>{selectedList.heading}</CardTitle>
+                    <CardDescription>{selectedList.summary}</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {/* Add Item */}
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={newItemDesc}
+                        onChange={(e) => setNewItemDesc(e.target.value)}
+                        placeholder="Add new item..."
+                        className="flex-1 px-3 py-2 border rounded-md text-sm"
+                        style={{ borderColor: 'var(--color-border)' }}
+                        onKeyPress={(e) => e.key === 'Enter' && handleAddItem()}
+                      />
+                      <Button size="sm" onClick={handleAddItem}>Add</Button>
+                    </div>
+
+                    {/* Items List */}
+                    <div className="space-y-2">
+                      {todoItems
+                        .filter(i => i.list_id === selectedList.id)
+                        .sort((a, b) => a.order - b.order)
+                        .map(item => (
+                          <div 
+                            key={item.id}
+                            className="flex items-start gap-3 p-3 rounded hover:bg-muted/50 transition-colors"
+                            style={{ backgroundColor: item.is_completed ? 'var(--color-muted)' : 'transparent' }}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={item.is_completed}
+                              onChange={() => handleToggleItem(item)}
+                              className="mt-1 cursor-pointer"
+                            />
+                            <p 
+                              className={`flex-1 text-sm ${item.is_completed ? 'line-through' : ''}`}
+                              style={{ color: item.is_completed ? 'var(--color-text-muted)' : 'var(--color-text-body)' }}
+                            >
+                              {item.description}
+                            </p>
+                          </div>
+                        ))}
+                    </div>
+
+                    {todoItems.filter(i => i.list_id === selectedList.id).length === 0 && (
+                      <p className="text-center py-8" style={{ color: 'var(--color-text-muted)' }}>
+                        No items yet. Add your first item above.
+                      </p>
+                    )}
+                  </CardContent>
+                </Card>
+              ) : (
+                <Card>
+                  <CardContent className="flex items-center justify-center" style={{ padding: 'var(--spacing-16)' }}>
+                    <p style={{ color: 'var(--text-muted)' }}>Select a list to view items</p>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
           </div>
         </TabsContent>
       </Tabs>
