@@ -565,6 +565,9 @@ export default function DocumentationManager() {
                         <CardTitle>{selectedDoc.title}</CardTitle>
                         <CardDescription>Version {selectedDoc.version}</CardDescription>
                       </div>
+                      <Button size="sm" onClick={handleTextSelection}>
+                        Add Comment
+                      </Button>
                     </div>
                   </CardHeader>
                   <CardContent>
