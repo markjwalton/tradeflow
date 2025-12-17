@@ -68,7 +68,7 @@ export default function TailwindFooter({
   className = '' 
 }) {
   return (
-    <footer className={`relative z-10 bg-white ${className}`}>
+    <footer className={`relative z-10 bg-white shadow-[0_-1px_3px_0_rgb(0_0_0_/_0.1)] ${className}`}>
       <div className="mx-auto max-w-7xl px-6 py-12 md:flex md:items-center md:justify-between lg:px-8">
         <div className="flex justify-center gap-x-6 md:order-2">
           {navigation.map((item) => (
