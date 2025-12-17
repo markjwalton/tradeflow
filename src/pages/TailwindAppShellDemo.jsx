@@ -85,12 +85,9 @@ export default function TailwindAppShellDemo() {
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
   const [topDrawerOpen, setTopDrawerOpen] = useState(false);
   const [bottomDrawerOpen, setBottomDrawerOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('details');
+  const [activeTab, setActiveTab] = useState('colours');
 
   const drawerTabs = [
-    { id: 'details', name: 'Details', current: activeTab === 'details' },
-    { id: 'activity', name: 'Activity', current: activeTab === 'activity' },
-    { id: 'settings', name: 'Settings', current: activeTab === 'settings' },
     { id: 'colours', name: 'Colours', current: activeTab === 'colours' },
     { id: 'typography', name: 'Typography', current: activeTab === 'typography' },
     { id: 'spacing', name: 'Spacing', current: activeTab === 'spacing' },
@@ -267,59 +264,7 @@ export default function TailwindAppShellDemo() {
           onTabChange={(tab) => setActiveTab(tab.id)}
         />
         <div className="mt-6">
-          {activeTab === 'details' ? (
-            <div className="space-y-4">
-              <h3 className="font-semibold text-gray-900">Project Overview</h3>
-              <p className="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-              <div className="border-t border-gray-200 pt-4">
-                <dl className="space-y-3">
-                  <div>
-                    <dt className="text-sm font-medium text-gray-500">Status</dt>
-                    <dd className="text-sm text-gray-900">Active</dd>
-                  </div>
-                  <div>
-                    <dt className="text-sm font-medium text-gray-500">Team</dt>
-                    <dd className="text-sm text-gray-900">Engineering</dd>
-                  </div>
-                  <div>
-                    <dt className="text-sm font-medium text-gray-500">Due Date</dt>
-                    <dd className="text-sm text-gray-900">Dec 31, 2024</dd>
-                  </div>
-                </dl>
-              </div>
-            </div>
-          ) : activeTab === 'activity' ? (
-            <div className="space-y-4">
-              <h3 className="font-semibold text-gray-900">Recent Activity</h3>
-              <TailwindList
-                items={[
-                  { id: 1, action: 'Updated documentation', time: '2 hours ago' },
-                  { id: 2, action: 'Added new feature', time: '5 hours ago' },
-                  { id: 3, action: 'Fixed bug #123', time: '1 day ago' },
-                ]}
-                renderItem={(item) => (
-                  <div>
-                    <p className="text-sm text-gray-900">{item.action}</p>
-                    <p className="text-xs text-gray-500">{item.time}</p>
-                  </div>
-                )}
-              />
-            </div>
-          ) : activeTab === 'settings' ? (
-            <div className="space-y-4">
-              <h3 className="font-semibold text-gray-900">Project Settings</h3>
-              <div className="space-y-3">
-                <label className="flex items-center">
-                  <input type="checkbox" className="rounded border-gray-300" />
-                  <span className="ml-2 text-sm text-gray-700">Enable notifications</span>
-                </label>
-                <label className="flex items-center">
-                  <input type="checkbox" className="rounded border-gray-300" />
-                  <span className="ml-2 text-sm text-gray-700">Auto-archive completed tasks</span>
-                </label>
-              </div>
-            </div>
-          ) : activeTab === 'colours' ? (
+          {activeTab === 'colours' ? (
             <StylesViewer />
           ) : activeTab === 'typography' ? (
             <TypographyViewer />
