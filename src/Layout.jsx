@@ -24,6 +24,7 @@ import { TopEditorPanel } from "@/components/page-builder/TopEditorPanel";
 import { TokenApplierProvider } from "@/components/design-assistant/TokenApplierContext";
 import { ElementSelector } from "@/components/design-assistant/ElementSelector";
 import { SelectionOverlay } from "@/components/design-assistant/SelectionOverlay";
+import { PageUIPanel } from "@/components/design-assistant/PageUIPanel";
 import { Palette } from "lucide-react";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { WebVitals } from "@/components/common/WebVitals";
@@ -436,10 +437,9 @@ export default function Layout({ children, currentPageName }) {
           </div>
           <PageSettingsPanel currentPageName={currentPageName} />
           <TokenApplierProvider>
-            <ElementSelector>
-              <PageUIPanel currentPageName={currentPageName} />
-            </ElementSelector>
+            <ElementSelector />
             <SelectionOverlay />
+            <PageUIPanel currentPageName={currentPageName} />
           </TokenApplierProvider>
           <GlobalAIAssistant />
         </EditModeProvider>
