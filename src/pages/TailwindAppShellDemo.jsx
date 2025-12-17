@@ -261,6 +261,7 @@ export default function TailwindAppShellDemo() {
         maxWidth="lg"
       >
         <TailwindTabsNav
+          key={activeTab}
           tabs={drawerTabs}
           activeTab={activeTab}
           onTabChange={(tab) => setActiveTab(tab.id)}
