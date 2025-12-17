@@ -5,7 +5,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { FileText, MessageSquare, Sparkles, Copy, Check, Archive, Send, Download } from "lucide-react";
+import { FileText, MessageSquare, Sparkles, Copy, Check, Archive, Send, Download, CheckCircle2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -15,6 +15,7 @@ import TailwindPagination from "@/components/sturij/TailwindPagination";
 
 export default function DocumentationManager() {
   const [activeTab, setActiveTab] = useState("documents");
+  const [commentStatus, setCommentStatus] = useState("draft");
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedText, setSelectedText] = useState("");
@@ -110,7 +111,7 @@ export default function DocumentationManager() {
   };
 
   // Save comment
-  const handleSaveComment = (isDraft = false) => {
+  const handleSaveComment = (status = "draft") => {
     if (!selectedDoc || !commentText) return;
     
     createCommentMutation.mutate({
@@ -120,12 +121,13 @@ export default function DocumentationManager() {
       selected_text: selectedText,
       section: commentSection,
       comment: commentText,
-      status: isDraft ? "draft" : "submitted"
+      status: status
     });
     
     setShowCommentBox(false);
     setSelectedText("");
     setCommentSection("");
+    setCommentStatus("draft");
   };
 
   // Generate prompt from comments
@@ -156,15 +158,16 @@ export default function DocumentationManager() {
 
   // Complete and archive
   const handleComplete = () => {
+    const now = new Date().toISOString();
     selectedComments.forEach(id => {
       updateCommentMutation.mutate({
         id,
-        data: { status: "archived" }
+        data: { status: "completed", completed_date: now }
       });
     });
     setSelectedComments([]);
     setGeneratedPrompt("");
-    toast.success("Comments archived");
+    toast.success("Comments completed");
   };
 
   // Discussion mutations
@@ -247,15 +250,16 @@ export default function DocumentationManager() {
 
   // Complete discussions
   const handleCompleteDiscussions = () => {
+    const now = new Date().toISOString();
     selectedDiscussions.forEach(id => {
       updateDiscussionMutation.mutate({
         id,
-        data: { status: "archived" }
+        data: { status: "completed", completed_date: now }
       });
     });
     setSelectedDiscussions([]);
     setDiscussionPrompt("");
-    toast.success("Discussion points archived");
+    toast.success("Discussion points completed");
   };
 
   // Todo list mutations
@@ -343,15 +347,19 @@ export default function DocumentationManager() {
 
   // Handle toggle item
   const handleToggleItem = (item) => {
+    const newCompleted = !item.is_completed;
     updateItemMutation.mutate({
       id: item.id,
-      data: { is_completed: !item.is_completed }
+      data: { 
+        is_completed: newCompleted,
+        completed_date: newCompleted ? new Date().toISOString() : null
+      }
     });
 
     // Check if list should be archived
     setTimeout(() => {
       const listItems = todoItems.filter(i => i.list_id === item.list_id);
-      const allComplete = listItems.every(i => i.id === item.id ? !item.is_completed : i.is_completed);
+      const allComplete = listItems.every(i => i.id === item.id ? newCompleted : i.is_completed);
       if (allComplete && listItems.length > 0) {
         updateListMutation.mutate({
           id: item.list_id,
@@ -441,8 +449,21 @@ export default function DocumentationManager() {
 
   // Filter comments by status
   const draftComments = comments.filter(c => c.status === "draft");
+  const actionComments = comments.filter(c => c.status === "action");
   const submittedComments = comments.filter(c => c.status === "submitted" || c.status === "in_prompt");
   const archivedComments = comments.filter(c => c.status === "archived");
+  
+  // Fetch audit log data
+  const completedComments = comments.filter(c => c.completed_date);
+  const completedDiscussions = discussions.filter(d => d.completed_date);
+  const completedTodoItems = todoItems.filter(i => i.completed_date);
+  
+  // Combine and sort audit log
+  const auditLog = [
+    ...completedComments.map(c => ({ type: "comment", data: c, date: c.completed_date })),
+    ...completedDiscussions.map(d => ({ type: "discussion", data: d, date: d.completed_date })),
+    ...completedTodoItems.map(i => ({ type: "todo", data: i, date: i.completed_date }))
+  ].sort((a, b) => new Date(b.date) - new Date(a.date));
   
   // Get comments for current document
   const currentDocComments = selectedDoc 
@@ -479,6 +500,21 @@ export default function DocumentationManager() {
     totalItems,
   } = usePagination(filteredDocs, 10);
 
+  // Pagination for audit log
+  const {
+    currentPage: auditPage,
+    totalPages: auditTotalPages,
+    paginatedData: paginatedAudit = [],
+    goToPage: auditGoToPage,
+    nextPage: auditNextPage,
+    prevPage: auditPrevPage,
+    canGoNext: auditCanGoNext,
+    canGoPrev: auditCanGoPrev,
+    startIndex: auditStartIndex,
+    endIndex: auditEndIndex,
+    totalItems: auditTotalItems,
+  } = usePagination(auditLog, 25);
+
   return (
     <div style={{ padding: 'var(--spacing-6)' }}>
       <div style={{ marginBottom: 'var(--spacing-6)' }}>
@@ -503,8 +539,8 @@ export default function DocumentationManager() {
           <TabsTrigger value="changeControl">
             <MessageSquare className="w-4 h-4 mr-2" />
             Change Control
-            {submittedComments.length > 0 && (
-              <Badge variant="destructive" className="ml-2">{submittedComments.length}</Badge>
+            {(submittedComments.length + actionComments.length) > 0 && (
+              <Badge variant="destructive" className="ml-2">{submittedComments.length + actionComments.length}</Badge>
             )}
           </TabsTrigger>
           <TabsTrigger value="highlights">
@@ -523,6 +559,13 @@ export default function DocumentationManager() {
             Outstanding
             {totalOutstanding > 0 && (
               <Badge variant="destructive" className="ml-2">{totalOutstanding}</Badge>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="audit">
+            <Archive className="w-4 h-4 mr-2" />
+            Audit Log
+            {auditLog.length > 0 && (
+              <Badge variant="outline" className="ml-2">{auditLog.length}</Badge>
             )}
           </TabsTrigger>
         </TabsList>
@@ -648,10 +691,13 @@ export default function DocumentationManager() {
                           autoFocus
                         />
                         <div className="flex gap-2 mt-3">
-                          <Button onClick={() => handleSaveComment(true)} variant="outline" size="sm">
+                          <Button onClick={() => handleSaveComment("draft")} variant="outline" size="sm">
                             Save Draft
                           </Button>
-                          <Button onClick={() => handleSaveComment(false)} size="sm">
+                          <Button onClick={() => handleSaveComment("action")} variant="secondary" size="sm">
+                            Save as Action
+                          </Button>
+                          <Button onClick={() => handleSaveComment("submitted")} size="sm">
                             <Send className="w-4 h-4 mr-2" />
                             Submit
                           </Button>
@@ -846,7 +892,51 @@ export default function DocumentationManager() {
         {/* Change Control Tab */}
         <TabsContent value="changeControl">
           <div className="space-y-6">
-            {/* Action List */}
+            {/* Action Items */}
+            {actionComments.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Action Items</CardTitle>
+                  <CardDescription>Comments marked as actions requiring attention</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {actionComments.map(comment => (
+                      <Card key={comment.id}>
+                        <CardContent className="p-4">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <p className="font-semibold text-sm">{comment.document_title}</p>
+                              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                                v{comment.document_version} • {comment.section}
+                              </p>
+                            </div>
+                            <Badge variant="warning">Action</Badge>
+                          </div>
+                          {comment.selected_text && (
+                            <p className="text-sm italic mt-2" style={{ color: 'var(--text-body)' }}>
+                              "{comment.selected_text}"
+                            </p>
+                          )}
+                          <p className="text-sm mt-2">{comment.comment}</p>
+                          <div className="flex gap-2 mt-3">
+                            <Button 
+                              size="sm"
+                              variant="outline"
+                              onClick={() => updateCommentMutation.mutate({ id: comment.id, data: { status: "submitted" } })}
+                            >
+                              Move to Submitted
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Submitted Changes */}
             <Card>
               <CardHeader>
                 <div className="flex justify-between items-start">
@@ -1480,6 +1570,110 @@ export default function DocumentationManager() {
               )}
             </div>
           </div>
+        </TabsContent>
+
+        {/* Audit Log Tab */}
+        <TabsContent value="audit">
+          <Card>
+            <CardHeader>
+              <CardTitle>Audit Log</CardTitle>
+              <CardDescription>Completed items from all areas in chronological order</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div style={{ marginBottom: 'var(--spacing-4)' }}>
+                <TailwindPagination
+                  currentPage={auditPage}
+                  totalPages={auditTotalPages}
+                  onPageChange={auditGoToPage}
+                  onNextPage={auditNextPage}
+                  onPrevPage={auditPrevPage}
+                  canGoNext={auditCanGoNext}
+                  canGoPrev={auditCanGoPrev}
+                  startIndex={auditStartIndex}
+                  endIndex={auditEndIndex}
+                  totalItems={auditTotalItems}
+                />
+              </div>
+
+              <div className="space-y-3">
+                {paginatedAudit.map((entry, idx) => (
+                  <Card key={idx} className="hover:shadow-md transition-shadow">
+                    <CardContent className="p-4">
+                      <div className="flex items-start gap-4">
+                        <div className="mt-1">
+                          <CheckCircle2 className="w-5 h-5 text-green-600" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start mb-2">
+                            <div>
+                              <Badge variant="outline" className="text-xs">
+                                {entry.type === "comment" ? "Comment" : entry.type === "discussion" ? "Discussion" : "Todo Item"}
+                              </Badge>
+                              <p className="text-xs mt-1" style={{ color: 'var(--color-text-subtle)' }}>
+                                Completed: {new Date(entry.date).toLocaleString()}
+                              </p>
+                            </div>
+                          </div>
+                          
+                          {entry.type === "comment" && (
+                            <div>
+                              <p className="font-semibold text-sm">{entry.data.document_title} v{entry.data.document_version}</p>
+                              <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{entry.data.section}</p>
+                              {entry.data.selected_text && (
+                                <p className="text-sm italic mt-2" style={{ color: 'var(--color-text-body)' }}>
+                                  "{entry.data.selected_text}"
+                                </p>
+                              )}
+                              <p className="text-sm mt-1">{entry.data.comment}</p>
+                            </div>
+                          )}
+
+                          {entry.type === "discussion" && (
+                            <div>
+                              <p className="font-semibold text-sm">{entry.data.title}</p>
+                              <p className="text-sm mt-1">{entry.data.content}</p>
+                              {entry.data.document_title && (
+                                <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
+                                  Ref: {entry.data.document_title} v{entry.data.document_version}
+                                </p>
+                              )}
+                            </div>
+                          )}
+
+                          {entry.type === "todo" && (
+                            <div>
+                              <p className="text-sm">{entry.data.description}</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+
+              {paginatedAudit.length === 0 && (
+                <div className="text-center py-12">
+                  <p style={{ color: 'var(--color-text-muted)' }}>No completed items yet</p>
+                </div>
+              )}
+
+              <div style={{ marginTop: 'var(--spacing-4)' }}>
+                <TailwindPagination
+                  currentPage={auditPage}
+                  totalPages={auditTotalPages}
+                  onPageChange={auditGoToPage}
+                  onNextPage={auditNextPage}
+                  onPrevPage={auditPrevPage}
+                  canGoNext={auditCanGoNext}
+                  canGoPrev={auditCanGoPrev}
+                  startIndex={auditStartIndex}
+                  endIndex={auditEndIndex}
+                  totalItems={auditTotalItems}
+                />
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
