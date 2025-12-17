@@ -310,29 +310,6 @@ export default function TailwindAppShellDemo() {
         </div>
       </TailwindDrawer>
 
-      {/* Top Drawer */}
-      <TailwindDrawer
-        open={topDrawerOpen}
-        onClose={() => setTopDrawerOpen(false)}
-        title="Notifications"
-        side="top"
-        maxHeight="lg"
-      >
-        <TailwindList
-          items={[
-            { id: 1, title: 'New comment', message: 'John commented on your task' },
-            { id: 2, title: 'Task completed', message: 'Project milestone reached' },
-            { id: 3, title: 'Reminder', message: 'Meeting in 30 minutes' },
-          ]}
-          renderItem={(item) => (
-            <div>
-              <h4 className="font-medium text-gray-900">{item.title}</h4>
-              <p className="text-sm text-gray-500">{item.message}</p>
-            </div>
-          )}
-        />
-      </TailwindDrawer>
-
       {/* Bottom Drawer */}
       <TailwindDrawer
         open={bottomDrawerOpen}
