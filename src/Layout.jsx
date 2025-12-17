@@ -16,9 +16,6 @@ import GlobalAIAssistant from "@/components/ai-assistant/GlobalAIAssistant";
 import { AppShell } from "@/components/layout/AppShell";
 import { SidebarProvider } from "@/components/layout/SidebarContext";
 import { EditModeProvider, useEditMode } from "@/components/page-builder/EditModeContext";
-import { PageSettingsPanel } from "@/components/page-builder/PageSettingsPanel";
-import { PageUIPanel } from "@/components/design-assistant/PageUIPanel";
-import { StyleEditorPanel } from "@/components/page-builder/StyleEditorPanel";
 import { LiveEditWrapper } from "@/components/page-builder/LiveEditWrapper";
 import { TopEditorPanel } from "@/components/page-builder/TopEditorPanel";
 import { TokenApplierProvider } from "@/components/design-assistant/TokenApplierContext";
@@ -85,12 +82,6 @@ function LayoutContent({ children, currentPageName, currentUser, currentTenant, 
             Back
           </Button>
         </div>
-        <PageSettingsPanel currentPageName={currentPageName} />
-        <TokenApplierProvider>
-          <ElementSelector />
-          <SelectionOverlay />
-          <PageUIPanel currentPageName={currentPageName} />
-        </TokenApplierProvider>
         <GlobalAIAssistant />
       </TenantContext.Provider>
     );
@@ -162,13 +153,6 @@ function LayoutContent({ children, currentPageName, currentUser, currentTenant, 
             </AppShell>
           </div>
         </div>
-        <PageSettingsPanel currentPageName={currentPageName} />
-        <StyleEditorPanel currentPageName={currentPageName} />
-        <TokenApplierProvider>
-          <ElementSelector />
-          <SelectionOverlay />
-          <PageUIPanel currentPageName={currentPageName} />
-        </TokenApplierProvider>
         <GlobalAIAssistant />
 
         {/* Editor bubble button - hide on fullscreen pages */}
