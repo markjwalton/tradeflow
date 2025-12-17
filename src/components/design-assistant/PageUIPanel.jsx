@@ -342,6 +342,11 @@ Format as JSON:
             {mode === 'editor' && (
               <div>
                 <Label className="text-sm font-medium mb-4 block">Style Property Editor</Label>
+                {!selectedElement ? (
+                  <div className="text-sm text-muted-foreground p-3 border rounded-lg text-center">
+                    Click "Element" mode button, then click any element on the page to inspect and edit its styles
+                  </div>
+                ) : null}
                 <StylePropertyEditor 
                   selectedElement={selectedElement}
                   onApply={(property, value, applyToAll) => {
