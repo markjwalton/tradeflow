@@ -263,6 +263,7 @@ function AppShellContent() {
       />
 
       {/* Right Drawer with Tabs */}
+      {!editorOpen && (
       <div data-token-applier-ui>
         <TailwindDrawer
           open={rightDrawerOpen}
@@ -296,6 +297,7 @@ function AppShellContent() {
         </div>
         </TailwindDrawer>
       </div>
+      )}
 
       {/* Left Drawer */}
       <TailwindDrawer
