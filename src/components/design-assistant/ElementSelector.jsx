@@ -54,7 +54,8 @@ export function ElementSelector({ children }) {
         const hasText = current.textContent?.trim().length > 0;
         const hasChildren = current.children.length > 0;
         const isInteractive = ['button', 'a', 'input', 'select', 'textarea'].includes(current.tagName.toLowerCase());
-        const hasSemanticClasses = (current.className || '').match(/\b(card|button|input|heading|text|list|item|nav|menu|form)\b/);
+        const classNameStr = typeof current.className === 'string' ? current.className : (current.className?.baseVal || '');
+        const hasSemanticClasses = classNameStr.match(/\b(card|button|input|heading|text|list|item|nav|menu|form)\b/);
 
         if (isInteractive || hasSemanticClasses || (hasText && current.children.length < 5)) {
           return current;
