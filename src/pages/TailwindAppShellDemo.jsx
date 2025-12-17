@@ -334,5 +334,7 @@ export default function TailwindAppShellDemo() {
         </div>
       </TailwindDrawer>
     </div>
+      </ElementSelector>
+    </TokenApplierProvider>
   );
 }
