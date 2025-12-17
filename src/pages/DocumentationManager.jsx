@@ -705,8 +705,25 @@ export default function DocumentationManager() {
             {/* Action List */}
             <Card>
               <CardHeader>
-                <CardTitle>Submitted Changes</CardTitle>
-                <CardDescription>Select items to generate update prompt</CardDescription>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <CardTitle>Submitted Changes</CardTitle>
+                    <CardDescription>
+                      {selectedComments.length > 0 
+                        ? `${selectedComments.length} selected for prompt`
+                        : "Tick multiple items to group in one prompt"}
+                    </CardDescription>
+                  </div>
+                  {selectedComments.length > 0 && (
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setSelectedComments([])}
+                    >
+                      Clear Selection
+                    </Button>
+                  )}
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
