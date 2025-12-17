@@ -101,7 +101,7 @@ export function TokenApplierProvider({ children }) {
     try {
       await base44.entities.ComponentStyleMapping.create({
         component_type: componentType || selectedElement.tagName,
-        selector: selector || selectedElement.className,
+        selector: selector || (typeof selectedElement.className === 'string' ? selectedElement.className : ''),
         token_mappings: tokenMappings,
         category: 'custom'
       });
