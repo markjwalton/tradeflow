@@ -44,6 +44,7 @@ export function PageUIPanel({ currentPageName }) {
   useEffect(() => {
     if (selectedElement) {
       setIsOpen(true);
+      setMode('element');
     }
   }, [selectedElement]);
 
@@ -51,8 +52,13 @@ export function PageUIPanel({ currentPageName }) {
     if (tokenApplier?.selectElement) {
       tokenApplier.selectElement(null);
     }
+    if (tokenApplier?.deactivateTokenApplier) {
+      tokenApplier.deactivateTokenApplier();
+    }
     setUserRequest('');
     setAiResponse(null);
+    setMode('styles');
+    setHighlightedElements([]);
   };
 
   const handleClose = () => {
