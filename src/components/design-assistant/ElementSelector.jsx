@@ -13,19 +13,19 @@ export function ElementSelector({ children }) {
     const shouldIgnoreElement = (element) => {
       // Ignore token applier UI controls
       if (element.closest('[data-token-applier-ui]')) return true;
-      
+
       // Ignore dialog/drawer backdrops and overlays from headless UI
       if (element.hasAttribute('data-headlessui-state')) return true;
-      
+
       const classes = element.className || '';
-      
+
       // Only ignore explicitly non-interactive elements
       if (typeof classes === 'string' && classes.includes('pointer-events-none')) return true;
-      
+
       // Ignore transparent overlays that cover the whole screen
       if (classes.includes('fixed') && classes.includes('inset-0') && 
           (classes.includes('bg-transparent') || classes.includes('opacity-0'))) return true;
-      
+
       // Ignore main structural elements
       const tagName = element.tagName.toLowerCase();
       if (tagName === 'html' || tagName === 'body') return true;
@@ -34,17 +34,31 @@ export function ElementSelector({ children }) {
       return false;
     };
 
+    const findSelectableElement = (target) => {
+      let element = target;
+      // Traverse up the DOM to find a non-ignored element
+      while (element && element !== document.body) {
+        if (!shouldIgnoreElement(element)) {
+          return element;
+        }
+        element = element.parentElement;
+      }
+      return null;
+    };
+
     const handleClick = (e) => {
-      if (shouldIgnoreElement(e.target)) return;
-      
+      const selectableElement = findSelectableElement(e.target);
+      if (!selectableElement) return;
+
       e.preventDefault();
       e.stopPropagation();
-      selectElement(e.target);
+      selectElement(selectableElement);
     };
 
     const handleMouseOver = (e) => {
-      if (shouldIgnoreElement(e.target)) return;
-      setHoveredElement(e.target);
+      const selectableElement = findSelectableElement(e.target);
+      if (!selectableElement) return;
+      setHoveredElement(selectableElement);
     };
 
     const handleMouseOut = () => {
