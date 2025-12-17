@@ -16,7 +16,7 @@ import { TokenApplierProvider, useTokenApplier } from '../components/design-assi
 import { TokenApplierControls } from '../components/design-assistant/TokenApplierControls';
 import { ElementSelector } from '../components/design-assistant/ElementSelector';
 import { TopEditorPanel } from '../components/page-builder/TopEditorPanel';
-import { EditModeProvider, useEditMode } from '../components/page-builder/EditModeContext';
+import { EditModeProvider } from '../components/page-builder/EditModeContext';
 import {
   HomeIcon,
   UsersIcon,
@@ -86,7 +86,6 @@ const user = {
 
 function AppShellContent() {
   const { isActive } = useTokenApplier();
-  const { setEditMode } = useEditMode();
   const [navigationMode, setNavigationMode] = useState('expanded');
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
@@ -153,10 +152,7 @@ function AppShellContent() {
               logoSrc="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/c94580ddf_sturij-logo.png"
               logoAlt="Sturij"
               onNavigate={(item) => console.log('Navigate to:', item.name)}
-              onEditorToggle={() => {
-                setEditorOpen(!editorOpen);
-                setEditMode(!editorOpen);
-              }}
+              onEditorToggle={() => setEditorOpen(!editorOpen)}
             />
           </div>
         )}
