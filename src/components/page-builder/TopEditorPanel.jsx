@@ -80,10 +80,10 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => handleViewModeChange(viewMode === 'focus' ? 'full' : 'focus')}
-            title={viewMode === 'focus' ? 'Switch to Full View' : 'Switch to Focus View'}
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            title={isCollapsed ? 'Expand Editor' : 'Collapse Editor'}
           >
-            {viewMode === 'focus' ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
+            {isCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
           </Button>
           <Button 
             variant="ghost" 
