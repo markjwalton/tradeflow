@@ -8,6 +8,10 @@ import TailwindFooter from '../components/sturij/TailwindFooter';
 import TailwindBreadcrumb from '../components/sturij/TailwindBreadcrumb';
 import TailwindTabsNav from '../components/sturij/TailwindTabsNav';
 import StylesViewer from '../components/sturij/StylesViewer';
+import TypographyViewer from '../components/sturij/TypographyViewer';
+import SpacingViewer from '../components/sturij/SpacingViewer';
+import ShadowsViewer from '../components/sturij/ShadowsViewer';
+import RadiiViewer from '../components/sturij/RadiiViewer';
 import {
   HomeIcon,
   UsersIcon,
@@ -87,7 +91,11 @@ export default function TailwindAppShellDemo() {
     { id: 'details', name: 'Details', current: activeTab === 'details' },
     { id: 'activity', name: 'Activity', current: activeTab === 'activity' },
     { id: 'settings', name: 'Settings', current: activeTab === 'settings' },
-    { id: 'styles', name: 'Styles', current: activeTab === 'styles' },
+    { id: 'colours', name: 'Colours', current: activeTab === 'colours' },
+    { id: 'typography', name: 'Typography', current: activeTab === 'typography' },
+    { id: 'spacing', name: 'Spacing', current: activeTab === 'spacing' },
+    { id: 'shadows', name: 'Shadows', current: activeTab === 'shadows' },
+    { id: 'radii', name: 'Radii', current: activeTab === 'radii' },
   ];
 
   return (
@@ -310,8 +318,16 @@ export default function TailwindAppShellDemo() {
                 </label>
               </div>
             </div>
-          ) : activeTab === 'styles' ? (
+          ) : activeTab === 'colours' ? (
             <StylesViewer />
+          ) : activeTab === 'typography' ? (
+            <TypographyViewer />
+          ) : activeTab === 'spacing' ? (
+            <SpacingViewer />
+          ) : activeTab === 'shadows' ? (
+            <ShadowsViewer />
+          ) : activeTab === 'radii' ? (
+            <RadiiViewer />
           ) : null}
         </div>
       </TailwindDrawer>
