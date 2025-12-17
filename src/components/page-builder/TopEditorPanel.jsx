@@ -141,62 +141,10 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
 
       {!isCollapsed && (
         <div className="px-6 py-2" style={{ 
-          height: viewMode === 'focus' 
-            ? (selectedElement ? (showStyleEditor ? '356px' : '206px') : '76px')
-            : '456px',
+          height: '456px',
           overflowY: 'auto',
           backgroundColor: 'var(--color-editor-background, var(--color-background))'
         }}>
-          {viewMode === 'focus' ? (
-            selectedElement ? (
-              <div className="h-full space-y-2">
-                {showStyleEditor && (
-                  <div className="pb-2 border-b bg-accent/5 rounded-md p-3">
-                    <StylePropertyEditor
-                      selectedElement={selectedElement}
-                      horizontal={true}
-                      onApply={(property, value, applyToAll) => {
-                        setHasChanges(true);
-                        if (!selectedElement?.element) return;
-
-                        if (applyToAll) {
-                          const className = typeof selectedElement.className === 'string' ? selectedElement.className : '';
-                          const targetClass = className.split(' ').filter(c => c)[0];
-                          
-                          if (targetClass) {
-                            const elements = document.querySelectorAll(`.${targetClass}`);
-                            elements.forEach(el => {
-                              el.style[property] = value;
-                            });
-                            toast.success(`Applied to ${elements.length} elements`);
-                          }
-                        } else {
-                          selectedElement.element.style[property] = value;
-                          toast.success(`Applied to selected element`);
-                        }
-                      }}
-                    />
-                  </div>
-                )}
-                <ElementEditor 
-                  selectedElement={selectedElement}
-                  activeSection={activeTab}
-                  showHeader={false}
-                  onApplyStyle={(style) => {
-                    setHasChanges(true);
-                    window.dispatchEvent(new CustomEvent('apply-element-style', { detail: style }));
-                  }}
-                />
-              </div>
-            ) : (
-              <div className="h-full flex items-center justify-center border-2 border-dashed border-muted rounded-lg">
-                <div className="text-center">
-                  <Layers className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                  <p className="text-sm font-medium text-muted-foreground">Click any element on the page to edit</p>
-                </div>
-              </div>
-            )
-          ) : (
           <Tabs defaultValue="components" className="w-full">
             <TabsList className="grid w-full grid-cols-4 mb-4">
               <TabsTrigger value="components" className="gap-2">
