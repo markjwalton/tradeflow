@@ -61,12 +61,10 @@ export default function DocumentationManager() {
   const latestDocs = documents.filter(doc => doc.is_latest);
 
   // For "All Documents" tab - show ALL documents (not just latest)
-  const allDocuments = documents;
-
-  // Filter by category
+  // Filter by category first, then paginate
   const filteredDocs = selectedCategory === "all" 
-    ? allDocuments 
-    : allDocuments.filter(doc => doc.category === selectedCategory);
+    ? documents 
+    : documents.filter(doc => doc.category === selectedCategory);
 
   // Group by category
   const docsByCategory = latestDocs.reduce((acc, doc) => {
@@ -508,13 +506,50 @@ export default function DocumentationManager() {
   // Filter todo lists
   const activeLists = todoLists.filter(l => l.status === "active");
   const archivedLists = todoLists.filter(l => l.status === "archived");
-  
+
   // Calculate outstanding items across all active lists
   const totalOutstanding = activeLists.reduce((sum, list) => {
     const listItems = todoItems.filter(i => i.list_id === list.id);
     const incomplete = listItems.filter(i => !i.is_completed).length;
     return sum + incomplete;
   }, 0);
+
+  // Group todo items by sprint
+  const groupItemsBySprint = (items) => {
+    const groups = {};
+    items.forEach(item => {
+      const match = item.description.match(/^Sprint (\d+) Week (\d+):/);
+      if (match) {
+        const sprintKey = `Sprint ${match[1]}`;
+        if (!groups[sprintKey]) {
+          groups[sprintKey] = [];
+        }
+        groups[sprintKey].push(item);
+      } else {
+        if (!groups['Other']) {
+          groups['Other'] = [];
+        }
+        groups['Other'].push(item);
+      }
+    });
+    return groups;
+  };
+
+  // Handle toggle sprint group
+  const handleToggleSprintGroup = (groupItems) => {
+    const allComplete = groupItems.every(i => i.is_completed);
+    const newCompletedState = !allComplete;
+
+    groupItems.forEach(item => {
+      updateItemMutation.mutate({
+        id: item.id,
+        data: { 
+          is_completed: newCompletedState,
+          completed_date: newCompletedState ? new Date().toISOString() : null
+        }
+      });
+    });
+  };
 
   // Pagination for all documents view
   const {
@@ -1652,31 +1687,69 @@ export default function DocumentationManager() {
                       <Button size="sm" onClick={handleAddItem}>Add</Button>
                     </div>
 
-                    {/* Items List */}
-                    <div className="space-y-2">
-                      {todoItems
-                        .filter(i => i.list_id === selectedList.id)
-                        .sort((a, b) => a.order - b.order)
-                        .map(item => (
-                          <div 
-                            key={item.id}
-                            className="flex items-start gap-3 p-3 rounded hover:bg-muted/50 transition-colors"
-                            style={{ backgroundColor: item.is_completed ? 'var(--color-muted)' : 'transparent' }}
-                          >
-                            <input
-                              type="checkbox"
-                              checked={item.is_completed}
-                              onChange={() => handleToggleItem(item)}
-                              className="mt-1 cursor-pointer"
-                            />
-                            <p 
-                              className={`flex-1 text-sm ${item.is_completed ? 'line-through' : ''}`}
-                              style={{ color: item.is_completed ? 'var(--color-text-muted)' : 'var(--color-text-body)' }}
-                            >
-                              {item.description}
-                            </p>
-                          </div>
-                        ))}
+                    {/* Items List - Grouped by Sprint */}
+                    <div className="space-y-4">
+                      {(() => {
+                        const items = todoItems
+                          .filter(i => i.list_id === selectedList.id)
+                          .sort((a, b) => a.order - b.order);
+                        const groups = groupItemsBySprint(items);
+
+                        return Object.entries(groups).map(([groupName, groupItems]) => {
+                          const allComplete = groupItems.every(i => i.is_completed);
+                          const someComplete = groupItems.some(i => i.is_completed);
+                          const completeCount = groupItems.filter(i => i.is_completed).length;
+
+                          return (
+                            <div key={groupName} className="border rounded-lg p-3" style={{ borderColor: 'var(--color-border)' }}>
+                              {/* Group Header */}
+                              <div className="flex items-center gap-3 mb-2 pb-2 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                                <input
+                                  type="checkbox"
+                                  checked={allComplete}
+                                  ref={(el) => {
+                                    if (el) el.indeterminate = someComplete && !allComplete;
+                                  }}
+                                  onChange={() => handleToggleSprintGroup(groupItems)}
+                                  className="cursor-pointer"
+                                />
+                                <div className="flex-1">
+                                  <p className="font-semibold text-sm" style={{ color: 'var(--color-text-primary)' }}>
+                                    {groupName}
+                                  </p>
+                                  <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                                    {completeCount} / {groupItems.length} complete
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Group Items */}
+                              <div className="space-y-1 ml-6">
+                                {groupItems.map(item => (
+                                  <div 
+                                    key={item.id}
+                                    className="flex items-start gap-3 p-2 rounded hover:bg-muted/50 transition-colors"
+                                    style={{ backgroundColor: item.is_completed ? 'var(--color-muted)' : 'transparent' }}
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      checked={item.is_completed}
+                                      onChange={() => handleToggleItem(item)}
+                                      className="mt-1 cursor-pointer"
+                                    />
+                                    <p 
+                                      className={`flex-1 text-sm ${item.is_completed ? 'line-through' : ''}`}
+                                      style={{ color: item.is_completed ? 'var(--color-text-muted)' : 'var(--color-text-body)' }}
+                                    >
+                                      {item.description.replace(/^Sprint \d+ Week \d+: /, '')}
+                                    </p>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        });
+                      })()}
                     </div>
 
                     {todoItems.filter(i => i.list_id === selectedList.id).length === 0 && (
