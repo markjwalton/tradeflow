@@ -90,6 +90,7 @@ function AppShellContent() {
   const [topDrawerOpen, setTopDrawerOpen] = useState(false);
   const [bottomDrawerOpen, setBottomDrawerOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('colours');
+  const [editorOpen, setEditorOpen] = useState(false);
 
   const drawerTabs = [
     { id: 'colours', name: 'Colours', current: activeTab === 'colours' },
