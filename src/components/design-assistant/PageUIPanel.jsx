@@ -286,7 +286,15 @@ Format as JSON:
               )}
             </div>
             
-            <div className="grid grid-cols-3 gap-2 mt-4">
+            <div className="grid grid-cols-4 gap-2 mt-4">
+              <Button 
+                variant={mode === 'editor' ? 'default' : 'outline'} 
+                size="sm"
+                onClick={() => { setMode('editor'); if (!selectedElement && tokenApplier?.activateTokenApplier) tokenApplier.activateTokenApplier(); }}
+              >
+                <Paintbrush className="h-4 w-4 mr-1" />
+                Editor
+              </Button>
               <Button 
                 variant={mode === 'tokens' ? 'default' : 'outline'} 
                 size="sm"
