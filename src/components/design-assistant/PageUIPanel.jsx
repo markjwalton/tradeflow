@@ -4,7 +4,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter } from "@/components/ui/sheet";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Paintbrush, Sparkles, Copy, ChevronDown, Loader2, Save, List } from "lucide-react";
+import { Paintbrush, Sparkles, Copy, ChevronDown, Loader2, Save, List, Target } from "lucide-react";
+import { StylesList } from "./StylesList";
 import { useEditMode } from "@/components/page-builder/EditModeContext";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
@@ -22,6 +23,8 @@ export function PageUIPanel({ currentPageName }) {
   const [elementDetailsOpen, setElementDetailsOpen] = useState(true);
   const [styleAnalysisOpen, setStyleAnalysisOpen] = useState(true);
   const [isVisible, setIsVisible] = useState(true);
+  const [mode, setMode] = useState('styles'); // 'styles' or 'element'
+  const [highlightedElements, setHighlightedElements] = useState([]);
 
   useEffect(() => {
     const loadPreferences = async () => {
@@ -216,6 +219,23 @@ Format as JSON:
 
   const handleOpenPanel = () => {
     setIsOpen(true);
+    setMode('styles'); // Start in styles mode
+  };
+
+  const handleStyleSelect = (style) => {
+    // Select the first element with this style
+    if (style.elements && style.elements.length > 0) {
+      const firstElement = style.elements[0];
+      if (tokenApplier?.selectElement) {
+        tokenApplier.selectElement(firstElement);
+      }
+      setHighlightedElements(style.elements);
+      setMode('element');
+    }
+  };
+
+  const handleSwitchToElementMode = () => {
+    setMode('element');
     if (tokenApplier?.activateTokenApplier) {
       tokenApplier.activateTokenApplier();
     }
@@ -249,12 +269,45 @@ Format as JSON:
                 </Button>
               )}
             </div>
+            
+            <div className="flex gap-2 mt-4">
+              <Button 
+                variant={mode === 'styles' ? 'default' : 'outline'} 
+                size="sm"
+                onClick={() => setMode('styles')}
+                className="flex-1"
+              >
+                <List className="h-4 w-4 mr-2" />
+                Browse Styles
+              </Button>
+              <Button 
+                variant={mode === 'element' ? 'default' : 'outline'} 
+                size="sm"
+                onClick={handleSwitchToElementMode}
+                className="flex-1"
+              >
+                <Target className="h-4 w-4 mr-2" />
+                Select Element
+              </Button>
+            </div>
+            
             <p className="text-sm text-muted-foreground">
-              {selectedElement?.tagName ? `Selected: ${selectedElement.tagName}` : "Hover and click to select an element"}
+              {mode === 'styles' 
+                ? "Choose a style to highlight elements" 
+                : selectedElement?.tagName 
+                  ? `Selected: ${selectedElement.tagName}` 
+                  : "Click any element to select it"}
             </p>
           </SheetHeader>
 
           <div className="space-y-6 py-6 px-6">
+            {mode === 'styles' && !selectedElement && (
+              <div>
+                <Label className="text-sm font-medium mb-4 block">Available Styles</Label>
+                <StylesList onStyleSelect={handleStyleSelect} />
+              </div>
+            )}
+
             {selectedElement && (
               <>
                 <Collapsible open={elementDetailsOpen} onOpenChange={setElementDetailsOpen}>

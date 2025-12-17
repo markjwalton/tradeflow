@@ -109,21 +109,41 @@ export function SelectionOverlay() {
 
       {/* Selected overlay */}
       {selectedPosition && (
-        <div
-          style={{
-            position: 'fixed',
-            top: `${selectedPosition.top}px`,
-            left: `${selectedPosition.left}px`,
-            width: `${selectedPosition.width}px`,
-            height: `${selectedPosition.height}px`,
-            border: '3px solid var(--primary-600)',
-            background: 'var(--primary-300)',
-            opacity: 0.2,
-            pointerEvents: 'none',
-            zIndex: 999998,
-            animation: 'pulse 2s ease-in-out infinite',
-          }}
-        />
+        <>
+          <div
+            style={{
+              position: 'fixed',
+              top: `${selectedPosition.top}px`,
+              left: `${selectedPosition.left}px`,
+              width: `${selectedPosition.width}px`,
+              height: `${selectedPosition.height}px`,
+              border: '3px solid var(--primary-600)',
+              background: 'var(--primary-300)',
+              opacity: 0.25,
+              pointerEvents: 'none',
+              zIndex: 999998,
+            }}
+          />
+          <div
+            style={{
+              position: 'fixed',
+              top: `${selectedPosition.top - 30}px`,
+              left: `${selectedPosition.left}px`,
+              background: 'var(--primary-600)',
+              color: 'white',
+              padding: '4px 8px',
+              borderRadius: '4px',
+              fontSize: '12px',
+              fontFamily: 'monospace',
+              pointerEvents: 'none',
+              zIndex: 999999,
+              whiteSpace: 'nowrap',
+              fontWeight: 'bold',
+            }}
+          >
+            SELECTED
+          </div>
+        </>
       )}
     </>
   );
