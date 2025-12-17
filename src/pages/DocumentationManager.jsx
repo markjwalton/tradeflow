@@ -980,11 +980,11 @@ export default function DocumentationManager() {
                   currentPage={currentPage}
                   totalPages={totalPages}
                   onPageChange={goToPage}
-                  onNextPage={nextPage}
-                  onPrevPage={prevPage}
+                  onNextPage={docNextPage}
+                  onPrevPage={docPrevPage}
                   canGoNext={canGoNext}
                   canGoPrev={canGoPrev}
-                  startIndex={startIndex}
+                  startIndex={startIndex - 1}
                   endIndex={endIndex}
                   totalItems={totalItems}
                 />
@@ -2059,7 +2059,7 @@ export default function DocumentationManager() {
                   onPrevPage={auditPrevPage}
                   canGoNext={auditCanGoNext}
                   canGoPrev={auditCanGoPrev}
-                  startIndex={auditStartIndex}
+                  startIndex={auditStartIndex - 1}
                   endIndex={auditEndIndex}
                   totalItems={auditTotalItems}
                 />
