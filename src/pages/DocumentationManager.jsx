@@ -309,6 +309,8 @@ export default function DocumentationManager() {
     mutationFn: ({ id, data }) => base44.entities.TodoListItem.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries(['todoItems']);
+      setEditingItemComment(null);
+      setItemCommentText("");
     },
   });
 
@@ -442,6 +444,11 @@ export default function DocumentationManager() {
   const [listSummary, setListSummary] = useState("");
   const [selectedList, setSelectedList] = useState(null);
   const [newItemDesc, setNewItemDesc] = useState("");
+  const [editingItemComment, setEditingItemComment] = useState(null);
+  const [itemCommentText, setItemCommentText] = useState("");
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [itemsPrompt, setItemsPrompt] = useState("");
+  const [expandedComments, setExpandedComments] = useState({});
 
   // Audit/Archive mode
   const [auditMode, setAuditMode] = useState("audit");
@@ -549,6 +556,55 @@ export default function DocumentationManager() {
         }
       });
     });
+  };
+
+  // Handle save item comment
+  const handleSaveItemComment = (item, status) => {
+    updateItemMutation.mutate({
+      id: item.id,
+      data: {
+        ...item,
+        comment: itemCommentText,
+        comment_status: status
+      }
+    });
+  };
+
+  // Handle generate items prompt
+  const handleGenerateItemsPrompt = () => {
+    if (selectedItems.length === 0) {
+      toast.error("Select items to generate prompt");
+      return;
+    }
+
+    const itemsList = selectedItems
+      .map(id => todoItems.find(i => i.id === id))
+      .filter(Boolean)
+      .map(item => `- ${item.description}${item.comment ? `\n  Note: ${item.comment}` : ''}`)
+      .join('\n\n');
+
+    const prompt = `Please address the following todo items:\n\n${itemsList}\n\nProvide implementation guidance and code examples where appropriate.`;
+
+    setItemsPrompt(prompt);
+  };
+
+  // Handle complete selected items
+  const handleCompleteSelectedItems = () => {
+    const now = new Date().toISOString();
+    selectedItems.forEach(id => {
+      const item = todoItems.find(i => i.id === id);
+      if (item) {
+        updateItemMutation.mutate({
+          id: item.id,
+          data: { 
+            is_completed: true,
+            completed_date: now
+          }
+        });
+      }
+    });
+    setSelectedItems([]);
+    toast.success("Items completed");
   };
 
   // Pagination for all documents view
@@ -1724,28 +1780,122 @@ export default function DocumentationManager() {
                               </div>
 
                               {/* Group Items */}
-                              <div className="space-y-1 ml-6">
-                                {groupItems.map(item => (
-                                  <div 
-                                    key={item.id}
-                                    className="flex items-start gap-3 p-2 rounded hover:bg-muted/50 transition-colors"
-                                    style={{ backgroundColor: item.is_completed ? 'var(--color-muted)' : 'transparent' }}
-                                  >
-                                    <input
-                                      type="checkbox"
-                                      checked={item.is_completed}
-                                      onChange={() => handleToggleItem(item)}
-                                      className="mt-1 cursor-pointer"
-                                    />
-                                    <p 
-                                      className={`flex-1 text-sm ${item.is_completed ? 'line-through' : ''}`}
-                                      style={{ color: item.is_completed ? 'var(--color-text-muted)' : 'var(--color-text-body)' }}
-                                    >
-                                      {item.description.replace(/^Sprint \d+ Week \d+: /, '')}
-                                    </p>
-                                  </div>
-                                ))}
-                              </div>
+                                              <div className="space-y-1 ml-6">
+                                                {groupItems.map(item => (
+                                                  <div key={item.id} className="border-l-2 pl-3 py-1" style={{ borderColor: 'var(--color-border)' }}>
+                                                    <div 
+                                                      className="flex items-start gap-3 p-2 rounded hover:bg-muted/50 transition-colors cursor-pointer"
+                                                      style={{ backgroundColor: item.is_completed ? 'var(--color-muted)' : 'transparent' }}
+                                                      onClick={() => {
+                                                        setSelectedItems(prev => 
+                                                          prev.includes(item.id) 
+                                                            ? prev.filter(id => id !== item.id)
+                                                            : [...prev, item.id]
+                                                        );
+                                                      }}
+                                                    >
+                                                      <input
+                                                        type="checkbox"
+                                                        checked={selectedItems.includes(item.id)}
+                                                        onChange={(e) => e.stopPropagation()}
+                                                        className="mt-1 cursor-pointer"
+                                                      />
+                                                      <input
+                                                        type="checkbox"
+                                                        checked={item.is_completed}
+                                                        onChange={(e) => {
+                                                          e.stopPropagation();
+                                                          handleToggleItem(item);
+                                                        }}
+                                                        className="mt-1 cursor-pointer"
+                                                      />
+                                                      <div className="flex-1">
+                                                        <p 
+                                                          className={`text-sm ${item.is_completed ? 'line-through' : ''}`}
+                                                          style={{ color: item.is_completed ? 'var(--color-text-muted)' : 'var(--color-text-body)' }}
+                                                        >
+                                                          {item.description.replace(/^Sprint \d+ Week \d+: /, '')}
+                                                        </p>
+                                                        {item.comment && (
+                                                          <div className="mt-1">
+                                                            <Button
+                                                              size="sm"
+                                                              variant="ghost"
+                                                              className="h-6 px-2 text-xs"
+                                                              onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setExpandedComments(prev => ({
+                                                                  ...prev,
+                                                                  [item.id]: !prev[item.id]
+                                                                }));
+                                                              }}
+                                                            >
+                                                              {expandedComments[item.id] ? 'Hide' : 'Show'} Comment
+                                                            </Button>
+                                                            {expandedComments[item.id] && (
+                                                              <div className="mt-1 p-2 rounded text-xs" style={{ backgroundColor: 'var(--color-muted)' }}>
+                                                                {item.comment}
+                                                                {item.comment_status && (
+                                                                  <Badge variant="outline" className="ml-2 text-xs">{item.comment_status}</Badge>
+                                                                )}
+                                                              </div>
+                                                            )}
+                                                          </div>
+                                                        )}
+                                                      </div>
+                                                      <Button
+                                                        size="sm"
+                                                        variant="ghost"
+                                                        onClick={(e) => {
+                                                          e.stopPropagation();
+                                                          setEditingItemComment(item.id);
+                                                          setItemCommentText(item.comment || "");
+                                                        }}
+                                                        className="h-8 w-8 p-0"
+                                                      >
+                                                        <MessageSquare className="w-4 h-4" />
+                                                      </Button>
+                                                    </div>
+
+                                                    {editingItemComment === item.id && (
+                                                      <div className="mt-2 p-3 rounded border" style={{ borderColor: 'var(--color-primary)', backgroundColor: 'var(--color-accent-50)' }}>
+                                                        <Textarea
+                                                          value={itemCommentText}
+                                                          onChange={(e) => setItemCommentText(e.target.value)}
+                                                          rows={3}
+                                                          placeholder="Add a comment..."
+                                                          className="text-sm"
+                                                        />
+                                                        <div className="flex gap-2 mt-2">
+                                                          <Button 
+                                                            size="sm"
+                                                            variant="outline"
+                                                            onClick={() => handleSaveItemComment(item, "draft")}
+                                                          >
+                                                            Save Draft
+                                                          </Button>
+                                                          <Button 
+                                                            size="sm"
+                                                            onClick={() => handleSaveItemComment(item, "saved")}
+                                                          >
+                                                            Save
+                                                          </Button>
+                                                          <Button 
+                                                            size="sm"
+                                                            variant="ghost"
+                                                            onClick={() => {
+                                                              setEditingItemComment(null);
+                                                              setItemCommentText("");
+                                                            }}
+                                                          >
+                                                            Cancel
+                                                          </Button>
+                                                        </div>
+                                                      </div>
+                                                    )}
+                                                  </div>
+                                                ))}
+                                              </div>
                             </div>
                           );
                         });
@@ -1756,6 +1906,47 @@ export default function DocumentationManager() {
                       <p className="text-center py-8" style={{ color: 'var(--color-text-muted)' }}>
                         No items yet. Add your first item above.
                       </p>
+                    )}
+
+                    {/* Selected Items Actions */}
+                    {selectedItems.length > 0 && (
+                      <div className="mt-4 p-4 rounded border" style={{ borderColor: 'var(--color-primary)', backgroundColor: 'var(--color-primary-50)' }}>
+                        <p className="text-sm font-semibold mb-3">{selectedItems.length} items selected</p>
+                        <div className="flex gap-2">
+                          <Button size="sm" onClick={handleGenerateItemsPrompt}>
+                            Generate Prompt
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={handleCompleteSelectedItems}>
+                            Complete Selected
+                          </Button>
+                          <Button size="sm" variant="ghost" onClick={() => setSelectedItems([])}>
+                            Clear Selection
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Generated Items Prompt */}
+                    {itemsPrompt && (
+                      <div className="mt-4 p-4 rounded border" style={{ borderColor: 'var(--color-border)' }}>
+                        <p className="text-sm font-semibold mb-2">Generated Prompt</p>
+                        <Textarea value={itemsPrompt} readOnly rows={8} className="text-sm" />
+                        <div className="flex gap-2 mt-3">
+                          <Button 
+                            size="sm"
+                            onClick={() => {
+                              navigator.clipboard.writeText(itemsPrompt);
+                              toast.success("Copied to clipboard");
+                            }}
+                          >
+                            <Copy className="w-4 h-4 mr-2" />
+                            Copy
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={handleCompleteSelectedItems}>
+                            Mark Complete
+                          </Button>
+                        </div>
+                      </div>
                     )}
                   </CardContent>
                 </Card>
