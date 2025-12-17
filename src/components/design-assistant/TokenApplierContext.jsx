@@ -13,6 +13,7 @@ export function TokenApplierProvider({ children }) {
   const [isActive, setIsActive] = useState(false);
   const [selectedElement, setSelectedElement] = useState(null);
   const [hoveredElement, setHoveredElement] = useState(null);
+  const [highlightedElements, setHighlightedElements] = useState([]);
 
   const activateTokenApplier = useCallback(() => {
     setIsActive(true);

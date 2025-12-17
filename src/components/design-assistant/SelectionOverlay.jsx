@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useTokenApplier } from './TokenApplierContext';
 
 export function SelectionOverlay() {
-  const { hoveredElement, selectedElement, isActive } = useTokenApplier();
+  const { hoveredElement, selectedElement, highlightedElements = [], isActive } = useTokenApplier();
   const [overlayPosition, setOverlayPosition] = useState(null);
   const [selectedPosition, setSelectedPosition] = useState(null);
 

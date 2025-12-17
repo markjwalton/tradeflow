@@ -25,7 +25,6 @@ export function PageUIPanel({ currentPageName }) {
   const [styleAnalysisOpen, setStyleAnalysisOpen] = useState(true);
   const [isVisible, setIsVisible] = useState(true);
   const [mode, setMode] = useState('styles'); // 'styles', 'tokens', or 'element'
-  const [highlightedElements, setHighlightedElements] = useState([]);
 
   useEffect(() => {
     const loadPreferences = async () => {
@@ -56,13 +55,15 @@ export function PageUIPanel({ currentPageName }) {
     if (tokenApplier?.selectElement) {
       tokenApplier.selectElement(null);
     }
+    if (tokenApplier?.setHighlightedElements) {
+      tokenApplier.setHighlightedElements([]);
+    }
     if (tokenApplier?.deactivateTokenApplier) {
       tokenApplier.deactivateTokenApplier();
     }
     setUserRequest('');
     setAiResponse(null);
     setMode('styles');
-    setHighlightedElements([]);
   };
 
   const handleClose = () => {
@@ -233,13 +234,15 @@ Format as JSON:
   };
 
   const handleStyleSelect = (style) => {
-    // Select the first element with this style
+    // Highlight all elements with this style
     if (style.elements && style.elements.length > 0) {
-      const firstElement = style.elements[0];
-      if (tokenApplier?.selectElement) {
-        tokenApplier.selectElement(firstElement);
+      if (tokenApplier?.setHighlightedElements) {
+        tokenApplier.setHighlightedElements(style.elements);
       }
-      setHighlightedElements(style.elements);
+      // Select the first element for inspection
+      if (tokenApplier?.selectElement) {
+        tokenApplier.selectElement(style.elements[0]);
+      }
       setMode('element');
     }
   };
