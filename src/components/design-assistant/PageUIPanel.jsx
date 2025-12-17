@@ -244,10 +244,17 @@ Format as JSON:
         
         <SheetContent className="w-[500px] overflow-y-auto">
           <SheetHeader className="px-6">
-            <SheetTitle className="flex items-center gap-2">
-              <Paintbrush className="h-5 w-5" />
-              Page UI Assistant
-            </SheetTitle>
+            <div className="flex items-center justify-between">
+              <SheetTitle className="flex items-center gap-2">
+                <Paintbrush className="h-5 w-5" />
+                Page UI Assistant
+              </SheetTitle>
+              {selectedElement && (
+                <Button variant="ghost" size="sm" onClick={handleReset}>
+                  Clear Selection
+                </Button>
+              )}
+            </div>
             <p className="text-sm text-muted-foreground">
               {selectedElement?.tagName ? `Selected: ${selectedElement.tagName}` : "Hover and click to select an element"}
             </p>
