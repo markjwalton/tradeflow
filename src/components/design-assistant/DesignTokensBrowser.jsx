@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Search, Palette, Type, Space, BoxSelect } from 'lucide-react';
-import { colors, spacing, typography, radii } from '@/components/library/designTokens';
+import { Search } from 'lucide-react';
 
 export function DesignTokensBrowser({ onApplyToken }) {
   const [search, setSearch] = useState('');
