@@ -22,6 +22,7 @@ export default function DocumentationManager() {
   const [commentSection, setCommentSection] = useState("");
   const [selectedComments, setSelectedComments] = useState([]);
   const [generatedPrompt, setGeneratedPrompt] = useState("");
+  const [showCommentBox, setShowCommentBox] = useState(false);
   
   const queryClient = useQueryClient();
 
@@ -91,12 +92,8 @@ export default function DocumentationManager() {
       setCommentSection(heading?.textContent || "General");
       
       // Pre-fill comment box
-      setCommentText(
-        `Document: ${selectedDoc.title} (v${selectedDoc.version})\n` +
-        `Section: ${heading?.textContent || "General"}\n` +
-        `Selected: "${text}"\n\n` +
-        `Comment: `
-      );
+      setCommentText(`Comment: `);
+      setShowCommentBox(true);
     }
   };
 
@@ -113,6 +110,10 @@ export default function DocumentationManager() {
       comment: commentText,
       status: isDraft ? "draft" : "submitted"
     });
+    
+    setShowCommentBox(false);
+    setSelectedText("");
+    setCommentSection("");
   };
 
   // Generate prompt from comments
@@ -319,6 +320,11 @@ export default function DocumentationManager() {
   const draftComments = comments.filter(c => c.status === "draft");
   const submittedComments = comments.filter(c => c.status === "submitted" || c.status === "in_prompt");
   const archivedComments = comments.filter(c => c.status === "archived");
+  
+  // Get comments for current document
+  const currentDocComments = selectedDoc 
+    ? comments.filter(c => c.document_id === selectedDoc.id && c.status !== "archived")
+    : [];
 
   // Filter discussions by status
   const draftDiscussions = discussions.filter(d => d.status === "draft");
@@ -448,12 +454,67 @@ export default function DocumentationManager() {
                         <CardTitle>{selectedDoc.title}</CardTitle>
                         <CardDescription>Version {selectedDoc.version}</CardDescription>
                       </div>
-                      <Button size="sm" onClick={handleTextSelection}>
-                        Add Comment
-                      </Button>
                     </div>
                   </CardHeader>
                   <CardContent>
+                    {!showCommentBox && (
+                      <p className="text-sm mb-4" style={{ color: 'var(--color-text-muted)' }}>
+                        Select text to add a comment
+                      </p>
+                    )}
+
+                    {showCommentBox && (
+                      <div style={{ 
+                        marginBottom: 'var(--spacing-6)', 
+                        padding: 'var(--spacing-4)', 
+                        backgroundColor: 'var(--color-accent-50)', 
+                        borderRadius: 'var(--radius-lg)',
+                        border: '2px solid var(--color-primary)'
+                      }}>
+                        <div className="flex justify-between items-start mb-3">
+                          <div>
+                            <p className="text-xs font-semibold" style={{ color: 'var(--color-text-secondary)' }}>
+                              {selectedDoc.title} v{selectedDoc.version} • {commentSection}
+                            </p>
+                          </div>
+                          <Button 
+                            size="sm" 
+                            variant="ghost"
+                            onClick={() => {
+                              setShowCommentBox(false);
+                              setSelectedText("");
+                              setCommentText("");
+                            }}
+                          >
+                            ✕
+                          </Button>
+                        </div>
+                        <p className="text-sm italic mb-3 p-3 rounded" style={{ 
+                          backgroundColor: 'var(--color-background)',
+                          color: 'var(--color-text-body)',
+                          borderLeft: '3px solid var(--color-primary)'
+                        }}>
+                          "{selectedText}"
+                        </p>
+                        <Textarea
+                          value={commentText}
+                          onChange={(e) => setCommentText(e.target.value)}
+                          rows={4}
+                          placeholder="Add your comment..."
+                          autoFocus
+                        />
+                        <div className="flex gap-2 mt-3">
+                          <Button onClick={() => handleSaveComment(true)} variant="outline" size="sm">
+                            Save Draft
+                          </Button>
+                          <Button onClick={() => handleSaveComment(false)} size="sm">
+                            <Send className="w-4 h-4 mr-2" />
+                            Submit
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+
                     <div 
                       className="prose prose-sm max-w-none"
                       onMouseUp={handleTextSelection}
@@ -461,12 +522,14 @@ export default function DocumentationManager() {
                         userSelect: 'text',
                         fontFamily: 'var(--font-family-body)',
                         lineHeight: 'var(--leading-relaxed)',
-                        color: 'var(--color-text-body)'
+                        color: 'var(--color-text-body)',
+                        opacity: showCommentBox ? 0.4 : 1,
+                        pointerEvents: showCommentBox ? 'none' : 'auto'
                       }}
                     >
                       <ReactMarkdown
                         components={{
-                          h1: ({ children }) => <h1 style={{ fontFamily: 'var(--font-family-display)', fontSize: 'var(--text-3xl)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)', marginTop: 'var(--spacing-8)', marginBottom: 'var(--spacing-4)' }}>{children}</h1>,
+                          h1: ({ children }) => <h1 id={`section-${String(children).toLowerCase().replace(/\s+/g, '-')}`} style={{ fontFamily: 'var(--font-family-display)', fontSize: 'var(--text-3xl)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)', marginTop: 'var(--spacing-8)', marginBottom: 'var(--spacing-4)' }}>{children}</h1>,
                           h2: ({ children }) => <h2 style={{ fontFamily: 'var(--font-family-display)', fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)', marginTop: 'var(--spacing-6)', marginBottom: 'var(--spacing-3)' }}>{children}</h2>,
                           h3: ({ children }) => <h3 style={{ fontFamily: 'var(--font-family-display)', fontSize: 'var(--text-xl)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', marginTop: 'var(--spacing-4)', marginBottom: 'var(--spacing-2)' }}>{children}</h3>,
                           p: ({ children }) => <p style={{ marginTop: 'var(--spacing-3)', marginBottom: 'var(--spacing-3)' }}>{children}</p>,
@@ -483,23 +546,37 @@ export default function DocumentationManager() {
                       </ReactMarkdown>
                     </div>
 
-                    {/* Comment Box */}
-                    {commentText && (
+                    {/* Existing Comments on Document */}
+                    {currentDocComments.length > 0 && !showCommentBox && (
                       <div style={{ marginTop: 'var(--spacing-6)', padding: 'var(--spacing-4)', backgroundColor: 'var(--color-muted)', borderRadius: 'var(--radius-lg)' }}>
-                        <Textarea
-                          value={commentText}
-                          onChange={(e) => setCommentText(e.target.value)}
-                          rows={6}
-                          placeholder="Add your comment..."
-                        />
-                        <div className="flex gap-2" style={{ marginTop: 'var(--spacing-4)' }}>
-                          <Button onClick={() => handleSaveComment(true)} variant="outline">
-                            Save Draft
-                          </Button>
-                          <Button onClick={() => handleSaveComment(false)}>
-                            <Send className="w-4 h-4 mr-2" />
-                            Submit
-                          </Button>
+                        <h4 className="text-sm font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>
+                          Comments on this Document ({currentDocComments.length})
+                        </h4>
+                        <div className="space-y-2">
+                          {currentDocComments.map(comment => (
+                            <div 
+                              key={comment.id}
+                              className="p-3 rounded cursor-pointer hover:bg-white/50 transition-colors"
+                              onClick={() => setActiveTab("changeControl")}
+                              style={{ 
+                                backgroundColor: 'var(--color-background)',
+                                borderLeft: '3px solid var(--color-primary)'
+                              }}
+                            >
+                              <div className="flex justify-between items-start mb-1">
+                                <p className="text-xs font-semibold" style={{ color: 'var(--color-text-secondary)' }}>
+                                  {comment.section}
+                                </p>
+                                <Badge variant="outline" className="text-xs">{comment.status}</Badge>
+                              </div>
+                              <p className="text-xs italic mb-2" style={{ color: 'var(--color-text-muted)' }}>
+                                "{comment.selected_text}"
+                              </p>
+                              <p className="text-xs" style={{ color: 'var(--color-text-body)' }}>
+                                {comment.comment}
+                              </p>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     )}
