@@ -333,6 +333,7 @@ export default function NavigationManager() {
         options: [
           { value: "admin", label: "Admin Console" },
           { value: "app", label: "App Pages" },
+          { value: "topnav", label: "Top Nav Secondary" },
           { value: "tenant", label: "Tenant Navigation" }
         ],
         description: "Which tab to show by default",
@@ -404,7 +405,7 @@ export default function NavigationManager() {
 
           {/* Tab Navigation */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-[var(--spacing-4)]">
-            <TabsList className="grid w-full max-w-md grid-cols-3 bg-[var(--tabs-list-bg)] p-[var(--spacing-1)] rounded-[var(--radius-lg)]">
+            <TabsList className="grid w-full max-w-3xl grid-cols-4 bg-[var(--tabs-list-bg)] p-[var(--spacing-1)] rounded-[var(--radius-lg)]">
               <TabsTrigger 
                 value="admin"
                 className="flex items-center gap-[var(--spacing-2)] data-[state=active]:bg-white data-[state=active]:shadow-sm"
@@ -418,6 +419,13 @@ export default function NavigationManager() {
               >
                 <FileCode className="h-[var(--spacing-4)] w-[var(--spacing-4)]" />
                 <span className="hidden sm:inline">App Pages</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="topnav"
+                className="flex items-center gap-[var(--spacing-2)] data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              >
+                <FileCode className="h-[var(--spacing-4)] w-[var(--spacing-4)]" />
+                <span className="hidden sm:inline">Top Nav</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="tenant"
@@ -452,6 +460,18 @@ export default function NavigationManager() {
                 isSyncing={syncUnallocatedPages.isPending}
               />
               <FullscreenPagesManager configType="app_pages_source" />
+            </TabsContent>
+
+            <TabsContent 
+              value="topnav" 
+              className="mt-[var(--spacing-6)] space-y-[var(--spacing-6)]"
+            >
+              <GenericNavEditor
+                title=""
+                configType="top_nav_secondary"
+                syncUnallocatedPages={() => syncUnallocatedPages.mutate("top_nav_secondary")}
+                isSyncing={syncUnallocatedPages.isPending}
+              />
             </TabsContent>
 
             <TabsContent 
