@@ -104,11 +104,13 @@ function LayoutContent({ children, currentPageName, currentUser, currentTenant, 
       <link rel="stylesheet" href="https://use.typekit.net/iwm1gcu.css" />
       <style dangerouslySetInnerHTML={{ __html: cssVariables }} />
       <SidebarProvider>
-        <TopEditorPanel 
-          isOpen={editorPanelOpen} 
-          onClose={() => setEditorPanelOpen(false)} 
-          onViewModeChange={setEditorViewMode}
-        />
+        {editorPanelOpen && (
+          <TopEditorPanel 
+            isOpen={editorPanelOpen} 
+            onClose={() => setEditorPanelOpen(false)} 
+            onViewModeChange={setEditorViewMode}
+          />
+        )}
         <div 
           className="px-2 sm:px-0"
         >
