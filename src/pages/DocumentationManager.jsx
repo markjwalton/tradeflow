@@ -656,31 +656,31 @@ export default function DocumentationManager() {
   const {
     currentPage,
     totalPages,
-    paginatedData: paginatedDocs = [],
+    currentItems: paginatedDocs = [],
     goToPage,
-    nextPage,
-    prevPage,
-    canGoNext,
-    canGoPrev,
+    nextPage: docNextPage,
+    previousPage: docPrevPage,
     startIndex,
     endIndex,
     totalItems,
-  } = usePagination(filteredDocs, 10);
+    hasNextPage: canGoNext,
+    hasPreviousPage: canGoPrev,
+  } = usePagination(filteredDocs, null);
 
   // Pagination for audit log
   const {
     currentPage: auditPage,
     totalPages: auditTotalPages,
-    paginatedData: paginatedAudit = [],
+    currentItems: paginatedAudit = [],
     goToPage: auditGoToPage,
     nextPage: auditNextPage,
-    prevPage: auditPrevPage,
-    canGoNext: auditCanGoNext,
-    canGoPrev: auditCanGoPrev,
+    previousPage: auditPrevPage,
     startIndex: auditStartIndex,
     endIndex: auditEndIndex,
     totalItems: auditTotalItems,
-  } = usePagination(auditLog, 25);
+    hasNextPage: auditCanGoNext,
+    hasPreviousPage: auditCanGoPrev,
+  } = usePagination(auditLog, null);
 
   return (
     <div style={{ padding: 'var(--spacing-6)' }}>
@@ -1043,11 +1043,11 @@ export default function DocumentationManager() {
                   currentPage={currentPage}
                   totalPages={totalPages}
                   onPageChange={goToPage}
-                  onNextPage={nextPage}
-                  onPrevPage={prevPage}
+                  onNextPage={docNextPage}
+                  onPrevPage={docPrevPage}
                   canGoNext={canGoNext}
                   canGoPrev={canGoPrev}
-                  startIndex={startIndex}
+                  startIndex={startIndex - 1}
                   endIndex={endIndex}
                   totalItems={totalItems}
                 />
@@ -2144,7 +2144,7 @@ export default function DocumentationManager() {
                   onPrevPage={auditPrevPage}
                   canGoNext={auditCanGoNext}
                   canGoPrev={auditCanGoPrev}
-                  startIndex={auditStartIndex}
+                  startIndex={auditStartIndex - 1}
                   endIndex={auditEndIndex}
                   totalItems={auditTotalItems}
                 />
