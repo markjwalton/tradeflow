@@ -1,6 +1,7 @@
 import React from 'react';
 
 export default function StylesViewer() {
+  console.log('StylesViewer rendered');
   const colorTokens = {
     'Primary': [50, 100, 200, 300, 400, 500, 600, 700, 800, 900],
     'Secondary': [50, 100, 200, 300, 400, 500, 600, 700, 800, 900],

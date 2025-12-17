@@ -258,7 +258,7 @@ export default function TailwindAppShellDemo() {
           onTabChange={setActiveTab}
         />
         <div className="mt-6">
-          {activeTab === 'details' && (
+          {activeTab === 'details' ? (
             <div className="space-y-4">
               <h3 className="font-semibold text-gray-900">Project Overview</h3>
               <p className="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
@@ -279,8 +279,7 @@ export default function TailwindAppShellDemo() {
                 </dl>
               </div>
             </div>
-          )}
-          {activeTab === 'activity' && (
+          ) : activeTab === 'activity' ? (
             <div className="space-y-4">
               <h3 className="font-semibold text-gray-900">Recent Activity</h3>
               <TailwindList
@@ -297,8 +296,7 @@ export default function TailwindAppShellDemo() {
                 )}
               />
             </div>
-          )}
-          {activeTab === 'settings' && (
+          ) : activeTab === 'settings' ? (
             <div className="space-y-4">
               <h3 className="font-semibold text-gray-900">Project Settings</h3>
               <div className="space-y-3">
@@ -312,8 +310,9 @@ export default function TailwindAppShellDemo() {
                 </label>
               </div>
             </div>
-          )}
-          {activeTab === 'styles' && <StylesViewer />}
+          ) : activeTab === 'styles' ? (
+            <StylesViewer />
+          ) : null}
         </div>
       </TailwindDrawer>
 
