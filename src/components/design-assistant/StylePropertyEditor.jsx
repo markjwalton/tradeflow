@@ -94,14 +94,14 @@ export function StylePropertyEditor({ selectedElement, onApply }) {
   }
 
   const styleProperties = [
-    { key: 'backgroundColor', label: 'Background', current: selectedElement.styles?.backgroundColor },
-    { key: 'color', label: 'Text Color', current: selectedElement.styles?.color },
-    { key: 'fontFamily', label: 'Font Family', current: selectedElement.styles?.fontFamily },
-    { key: 'fontSize', label: 'Font Size', current: selectedElement.styles?.fontSize },
-    { key: 'padding', label: 'Padding', current: selectedElement.styles?.padding },
-    { key: 'margin', label: 'Margin', current: selectedElement.styles?.margin },
-    { key: 'borderRadius', label: 'Border Radius', current: selectedElement.styles?.borderRadius },
-    { key: 'boxShadow', label: 'Box Shadow', current: selectedElement.styles?.boxShadow },
+    { key: 'backgroundColor', label: 'Background', current: currentStyles.backgroundColor },
+    { key: 'color', label: 'Text Color', current: currentStyles.color },
+    { key: 'fontFamily', label: 'Font Family', current: currentStyles.fontFamily },
+    { key: 'fontSize', label: 'Font Size', current: currentStyles.fontSize },
+    { key: 'padding', label: 'Padding', current: currentStyles.padding },
+    { key: 'margin', label: 'Margin', current: currentStyles.margin },
+    { key: 'borderRadius', label: 'Border Radius', current: currentStyles.borderRadius },
+    { key: 'boxShadow', label: 'Box Shadow', current: currentStyles.boxShadow },
   ];
 
   const handleApply = (property, value, applyToAll) => {
