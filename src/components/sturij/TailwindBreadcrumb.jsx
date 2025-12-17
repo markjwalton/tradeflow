@@ -6,7 +6,7 @@ export default function TailwindBreadcrumb({ pages = [] }) {
       <ol role="list" className="flex items-center space-x-4 rounded-md bg-white px-6 shadow-sm">
         <li className="flex">
           <div className="flex items-center">
-            <a href="#" className="text-gray-400 hover:text-gray-500">
+            <a href="#" className="text-muted hover:text-secondary">
               <HomeIcon aria-hidden="true" className="size-5 shrink-0" />
               <span className="sr-only">Home</span>
             </a>
@@ -20,14 +20,14 @@ export default function TailwindBreadcrumb({ pages = [] }) {
                 viewBox="0 0 24 44"
                 preserveAspectRatio="none"
                 aria-hidden="true"
-                className="h-full w-6 shrink-0 text-gray-200"
+                className="h-full w-6 shrink-0 text-subtle"
               >
                 <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
               </svg>
               <a
                 href={page.href}
                 aria-current={page.current ? 'page' : undefined}
-                className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"
+                className="ml-4 font-display text-sm font-medium text-secondary hover:text-primary"
               >
                 {page.name}
               </a>
