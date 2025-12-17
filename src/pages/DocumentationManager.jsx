@@ -464,9 +464,9 @@ export default function DocumentationManager() {
   const completedDiscussions = discussions.filter(d => d.completed_date);
   const completedTodoItems = todoItems.filter(i => i.completed_date);
 
-  // Archive: all submitted items
-  const archivedComments = comments.filter(c => c.status === "submitted" || c.status === "in_prompt" || c.status === "completed");
-  const archivedDiscussions = discussions.filter(d => d.status === "submitted" || d.status === "in_prompt" || d.status === "completed");
+  // Archive view: all submitted items
+  const archiveViewComments = comments.filter(c => c.status === "submitted" || c.status === "in_prompt" || c.status === "completed");
+  const archiveViewDiscussions = discussions.filter(d => d.status === "submitted" || d.status === "in_prompt" || d.status === "completed");
 
   // Combine and sort based on mode
   const auditLog = auditMode === "audit" 
@@ -476,8 +476,8 @@ export default function DocumentationManager() {
         ...completedTodoItems.map(i => ({ type: "todo", data: i, date: i.completed_date }))
       ].sort((a, b) => new Date(b.date) - new Date(a.date))
     : [
-        ...archivedComments.map(c => ({ type: "comment", data: c, date: c.updated_date })),
-        ...archivedDiscussions.map(d => ({ type: "discussion", data: d, date: d.updated_date }))
+        ...archiveViewComments.map(c => ({ type: "comment", data: c, date: c.updated_date })),
+        ...archiveViewDiscussions.map(d => ({ type: "discussion", data: d, date: d.updated_date }))
       ].sort((a, b) => new Date(b.date) - new Date(a.date));
   
   // Get comments for current document
