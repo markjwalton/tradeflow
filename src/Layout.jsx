@@ -111,10 +111,6 @@ function LayoutContent({ children, currentPageName, currentUser, currentTenant, 
         />
         <div 
           className="px-2 sm:px-0"
-          style={{ 
-            marginTop: editorPanelOpen ? (editorViewMode === 'collapsed' ? '44px' : '500px') : '0', 
-            transition: 'margin-top 300ms ease-in-out',
-          }}
         >
           {backgroundImage && (
             <div 
