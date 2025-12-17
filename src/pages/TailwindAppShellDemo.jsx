@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import TailwindNavigation from '../components/sturij/TailwindNavigation';
+import TailwindTopNav from '../components/sturij/TailwindTopNav';
 import TailwindDrawer from '../components/sturij/TailwindDrawer';
 import { TailwindCard, TailwindCardWithHeader } from '../components/sturij/TailwindCard';
 import TailwindList from '../components/sturij/TailwindList';
@@ -54,6 +55,25 @@ const listItems = [
   { id: 3, name: 'Task 3', description: 'Update design system' },
 ];
 
+const topNavigation = [
+  { name: 'Dashboard', href: '#', current: true },
+  { name: 'Team', href: '#', current: false },
+  { name: 'Projects', href: '#', current: false },
+  { name: 'Calendar', href: '#', current: false },
+];
+
+const userNavigation = [
+  { name: 'Your profile', href: '#' },
+  { name: 'Settings', href: '#' },
+  { name: 'Sign out', href: '#' },
+];
+
+const user = {
+  name: 'Tom Cook',
+  email: 'tom@example.com',
+  imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+};
+
 export default function TailwindAppShellDemo() {
   const [navigationMode, setNavigationMode] = useState('expanded');
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
@@ -70,6 +90,15 @@ export default function TailwindAppShellDemo() {
 
   return (
     <div className="flex flex-col h-screen bg-gray-100">
+      {/* Top Navigation */}
+      <TailwindTopNav
+        navigation={topNavigation}
+        userNavigation={userNavigation}
+        user={user}
+        onNotificationClick={() => setTopDrawerOpen(true)}
+        onSearch={(query) => console.log('Search:', query)}
+      />
+
       {/* Top Drawer - Pushes content */}
       <TailwindDrawer
         open={topDrawerOpen}
@@ -110,12 +139,16 @@ export default function TailwindAppShellDemo() {
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Header */}
-          <header className="bg-white shadow-sm z-10">
-            <div className="px-4 py-4 sm:px-6 lg:px-8">
-              <div className="flex items-center justify-between">
+          {/* Scrollable Content */}
+          <main className="flex-1 overflow-y-auto">
+            <div className="px-4 py-6 sm:px-6 lg:px-8">
+              {/* Breadcrumb */}
+              <TailwindBreadcrumb pages={breadcrumbPages} />
+
+              {/* Page Header */}
+              <div className="mb-6">
                 <h1 className="text-2xl font-semibold text-gray-900">AppShell Demo</h1>
-                <div className="flex gap-2">
+                <div className="flex gap-2 mt-4">
                   <button
                     onClick={() => setNavigationMode('expanded')}
                     className={`px-3 py-1 rounded text-sm ${navigationMode === 'expanded' ? 'bg-indigo-600 text-white' : 'bg-gray-200'}`}
@@ -136,14 +169,6 @@ export default function TailwindAppShellDemo() {
                   </button>
                 </div>
               </div>
-            </div>
-          </header>
-
-          {/* Scrollable Content */}
-          <main className="flex-1 overflow-y-auto">
-            <div className="px-4 py-6 sm:px-6 lg:px-8">
-              {/* Breadcrumb */}
-              <TailwindBreadcrumb pages={breadcrumbPages} />
 
               {/* Demo Controls */}
               <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
