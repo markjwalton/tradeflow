@@ -134,6 +134,7 @@ import StudioHome from './pages/StudioHome';
 import StudioAbout from './pages/StudioAbout';
 import StandardPageReference from './pages/StandardPageReference';
 import DocumentationManager from './pages/DocumentationManager';
+import TailwindAppShellDemo from './pages/TailwindAppShellDemo';
 import __Layout from './Layout.jsx';
 
 
@@ -274,6 +275,7 @@ export const PAGES = {
     "StudioAbout": StudioAbout,
     "StandardPageReference": StandardPageReference,
     "DocumentationManager": DocumentationManager,
+    "TailwindAppShellDemo": TailwindAppShellDemo,
 }
 
 export const pagesConfig = {
