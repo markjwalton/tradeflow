@@ -11,6 +11,7 @@ import { LayoutBuilderPanel } from "./LayoutBuilderPanel";
 import { PageSettingsTab } from "./PageSettingsTab";
 import { ElementEditor } from "./ElementEditor";
 import { useEditMode } from "./EditModeContext";
+import { StylePropertyEditor } from "@/components/design-assistant/StylePropertyEditor";
 
 export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
   const { selectedElement } = useEditMode();
@@ -18,6 +19,7 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
   const [viewMode, setViewMode] = useState("focus"); // 'focus' or 'full'
   const [hasChanges, setHasChanges] = useState(false);
   const [activeTab, setActiveTab] = useState("current");
+  const [showStyleEditor, setShowStyleEditor] = useState(true);
 
   const handleViewModeChange = (mode) => {
     setViewMode(mode);
@@ -50,18 +52,29 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
           </div>
 
           {viewMode === 'focus' && selectedElement && (
-            <div className="flex gap-1">
-              {["current", "colors", "spacing", "typography", "borders"].map(tab => (
-                <Button
-                  key={tab}
-                  variant={activeTab === tab ? "default" : "ghost"}
-                  size="sm"
-                  onClick={() => setActiveTab(tab)}
-                  className="text-xs h-7 px-3 capitalize"
-                >
-                  {tab}
-                </Button>
-              ))}
+            <div className="flex gap-2">
+              <Button
+                variant={showStyleEditor ? "default" : "outline"}
+                size="sm"
+                onClick={() => setShowStyleEditor(!showStyleEditor)}
+                className="text-xs h-7 px-3"
+              >
+                <Palette className="h-3 w-3 mr-1" />
+                Style Editor
+              </Button>
+              <div className="flex gap-1 border-l pl-2">
+                {["current", "colors", "spacing", "typography", "borders"].map(tab => (
+                  <Button
+                    key={tab}
+                    variant={activeTab === tab ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => setActiveTab(tab)}
+                    className="text-xs h-7 px-3 capitalize"
+                  >
+                    {tab}
+                  </Button>
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -120,14 +133,41 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
         }}>
           {viewMode === 'focus' ? (
             selectedElement ? (
-              <div className="h-full overflow-auto">
+              <div className="h-full space-y-2 overflow-auto">
+                {showStyleEditor && (
+                  <div className="pb-2 border-b">
+                    <StylePropertyEditor
+                      selectedElement={selectedElement}
+                      horizontal={true}
+                      onApply={(property, value, applyToAll) => {
+                        setHasChanges(true);
+                        if (!selectedElement?.element) return;
+
+                        if (applyToAll) {
+                          const className = typeof selectedElement.className === 'string' ? selectedElement.className : '';
+                          const targetClass = className.split(' ').filter(c => c)[0];
+                          
+                          if (targetClass) {
+                            const elements = document.querySelectorAll(`.${targetClass}`);
+                            elements.forEach(el => {
+                              el.style[property] = value;
+                            });
+                            toast.success(`Applied to ${elements.length} elements`);
+                          }
+                        } else {
+                          selectedElement.element.style[property] = value;
+                          toast.success(`Applied to selected element`);
+                        }
+                      }}
+                    />
+                  </div>
+                )}
                 <ElementEditor 
                   selectedElement={selectedElement}
                   activeSection={activeTab}
                   showHeader={false}
                   onApplyStyle={(style) => {
                     setHasChanges(true);
-                    // Dispatch event to LiveEditWrapper to apply the style
                     window.dispatchEvent(new CustomEvent('apply-element-style', { detail: style }));
                   }}
                 />

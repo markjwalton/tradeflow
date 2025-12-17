@@ -3,15 +3,48 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 
-export function StylePropertyEditor({ selectedElement, onApply }) {
+// Find all DOM elements matching the selected element's classes
+function findMatchingElements(element) {
+  if (!element) return [];
+  
+  const className = typeof element.className === 'string' ? element.className : '';
+  const classes = className.split(' ').filter(c => c);
+  
+  if (classes.length === 0) {
+    // No classes - match by tag
+    return Array.from(document.querySelectorAll(element.tagName));
+  }
+  
+  // Match by first class
+  const selector = `.${classes[0]}`;
+  return Array.from(document.querySelectorAll(selector));
+}
+
+export function StylePropertyEditor({ selectedElement, onApply, horizontal = false }) {
   const [styleEdits, setStyleEdits] = useState({});
   const [tokens, setTokens] = useState({});
   const [currentStyles, setCurrentStyles] = useState({});
+  const [matchingElements, setMatchingElements] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     if (!selectedElement?.element) return;
+
+    // Find all matching elements and set current index
+    const matches = findMatchingElements(selectedElement.element);
+    setMatchingElements(matches);
+    const currentIdx = matches.findIndex(el => el === selectedElement.element);
+    setCurrentIndex(currentIdx >= 0 ? currentIdx : 0);
+
+    // Highlight all matching elements
+    matches.forEach((el, idx) => {
+      el.style.outline = idx === currentIdx 
+        ? '2px solid var(--color-primary)' 
+        : '1px dashed var(--color-primary-300)';
+    });
 
     // Get computed styles from the actual element
     const computed = window.getComputedStyle(selectedElement.element);
@@ -25,6 +58,13 @@ export function StylePropertyEditor({ selectedElement, onApply }) {
       borderRadius: computed.borderRadius,
       boxShadow: computed.boxShadow,
     });
+
+    return () => {
+      // Clean up highlights on unmount
+      matches.forEach(el => {
+        el.style.outline = '';
+      });
+    };
 
     // Extract all CSS variables from :root
     const root = getComputedStyle(document.documentElement);
@@ -108,9 +148,38 @@ export function StylePropertyEditor({ selectedElement, onApply }) {
     onApply(property, value, applyToAll);
   };
 
+  const handleNavigate = (direction) => {
+    if (matchingElements.length === 0) return;
+    
+    const newIndex = direction === 'next' 
+      ? (currentIndex + 1) % matchingElements.length 
+      : (currentIndex - 1 + matchingElements.length) % matchingElements.length;
+    
+    setCurrentIndex(newIndex);
+    
+    // Update highlights
+    matchingElements.forEach((el, idx) => {
+      el.style.outline = idx === newIndex 
+        ? '2px solid var(--color-primary)' 
+        : '1px dashed var(--color-primary-300)';
+    });
+    
+    // Scroll to element
+    matchingElements[newIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    
+    // Notify parent of new selection
+    if (window.tokenApplier?.selectElement) {
+      window.tokenApplier.selectElement(matchingElements[newIndex]);
+    }
+  };
+
+  const containerClass = horizontal 
+    ? "flex flex-wrap items-start gap-3" 
+    : "space-y-4";
+
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2 mb-4">
+    <div className={containerClass}>
+      <div className={horizontal ? "flex items-center gap-2 min-w-[200px]" : "flex items-center gap-2 mb-4"}>
         <Badge variant="outline" className="text-xs">
           {selectedElement.tagName}
         </Badge>
@@ -119,23 +188,60 @@ export function StylePropertyEditor({ selectedElement, onApply }) {
             .{(typeof selectedElement.className === 'string' ? selectedElement.className : '').split(' ')[0]}
           </Badge>
         )}
+        {matchingElements.length > 1 && (
+          <div className="flex items-center gap-1 ml-2">
+            <Badge variant="default" className="text-xs">
+              {matchingElements.length} instances
+            </Badge>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => handleNavigate('prev')}
+              className="h-6 w-6 p-0"
+              title="Previous instance"
+            >
+              <ChevronLeft className="h-3 w-3" />
+            </Button>
+            <span className="text-xs text-muted-foreground">
+              {currentIndex + 1}/{matchingElements.length}
+            </span>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => handleNavigate('next')}
+              className="h-6 w-6 p-0"
+              title="Next instance"
+            >
+              <ChevronRight className="h-3 w-3" />
+            </Button>
+          </div>
+        )}
       </div>
 
       {styleProperties.map(({ key, label, current }) => (
-        <div key={key} className="border rounded-lg p-3 space-y-2">
-          <Label className="text-xs font-medium">{label}</Label>
-          
-          <div className="text-xs text-muted-foreground font-mono truncate">
-            Current: {current || 'none'}
+        <div 
+          key={key} 
+          className={horizontal 
+            ? "border rounded-lg p-2 flex items-center gap-2 min-w-[280px]" 
+            : "border rounded-lg p-3 space-y-2"
+          }
+        >
+          <div className={horizontal ? "flex-shrink-0 w-24" : ""}>
+            <Label className="text-xs font-medium">{label}</Label>
+            {!horizontal && (
+              <div className="text-xs text-muted-foreground font-mono truncate mt-1">
+                {current || 'none'}
+              </div>
+            )}
           </div>
 
           {tokens[key]?.length > 0 ? (
-            <>
+            <div className={horizontal ? "flex items-center gap-2 flex-1" : "space-y-2"}>
               <Select 
                 value={styleEdits[key] || ''} 
                 onValueChange={(value) => setStyleEdits(prev => ({ ...prev, [key]: value }))}
               >
-                <SelectTrigger className="h-8 text-xs">
+                <SelectTrigger className={horizontal ? "h-7 text-xs flex-1" : "h-8 text-xs"}>
                   <SelectValue placeholder="Select token..." />
                 </SelectTrigger>
                 <SelectContent>
@@ -148,29 +254,31 @@ export function StylePropertyEditor({ selectedElement, onApply }) {
               </Select>
 
               {styleEdits[key] && (
-                <div className="flex gap-2">
+                <div className="flex gap-1">
                   <Button
                     size="sm"
                     variant="outline"
-                    className="flex-1 h-7 text-xs"
+                    className={horizontal ? "h-7 text-xs px-2" : "flex-1 h-7 text-xs"}
                     onClick={() => handleApply(key, styleEdits[key], false)}
+                    title="Apply to current instance"
                   >
-                    Apply to This
+                    {horizontal ? "1" : "Apply to This"}
                   </Button>
                   <Button
                     size="sm"
                     variant="default"
-                    className="flex-1 h-7 text-xs"
+                    className={horizontal ? "h-7 text-xs px-2" : "flex-1 h-7 text-xs"}
                     onClick={() => handleApply(key, styleEdits[key], true)}
+                    title="Apply to all instances"
                   >
-                    Apply to All
+                    {horizontal ? "All" : "Apply to All"}
                   </Button>
                 </div>
               )}
-            </>
+            </div>
           ) : (
             <div className="text-xs text-muted-foreground italic">
-              No tokens available for this property
+              No tokens
             </div>
           )}
         </div>
