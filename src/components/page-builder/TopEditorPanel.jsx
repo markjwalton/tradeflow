@@ -205,9 +205,8 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
               />
             </TabsContent>
           </Tabs>
+          </div>
           )}
-        </div>
-      )}
     </div>
   );
 }
