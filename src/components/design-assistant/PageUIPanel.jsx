@@ -206,20 +206,27 @@ Format as JSON:
 
   if (!isVisible) return null;
 
+  const handleOpenPanel = () => {
+    setIsOpen(true);
+    if (tokenApplier?.activateTokenApplier) {
+      tokenApplier.activateTokenApplier();
+    }
+  };
+
   return (
     <>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={handleOpenPanel}
+        className="fixed bottom-6 right-40 h-14 w-14 rounded-full shadow-2xl bg-secondary text-white hover:bg-secondary/90 border-2 border-white"
+        style={{ zIndex: 9998 }}
+        title="Page UI Assistant - Click to select elements"
+      >
+        <Paintbrush className="h-6 w-6" />
+      </Button>
+
       <Sheet open={isOpen} onOpenChange={(open) => { if (!open) handleClose(); else setIsOpen(open); }}>
-        <SheetTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="fixed bottom-6 right-40 h-14 w-14 rounded-full shadow-2xl bg-secondary text-white hover:bg-secondary/90 border-2 border-white"
-            style={{ zIndex: 9998 }}
-            title="Page UI Assistant"
-          >
-            <Paintbrush className="h-6 w-6" />
-          </Button>
-        </SheetTrigger>
         
         <SheetContent className="w-[500px] overflow-y-auto">
           <SheetHeader className="px-6">
