@@ -32,9 +32,12 @@ export function PageUIPanel({ currentPageName }) {
         const user = await base44.auth.me();
         if (user?.ui_preferences?.showPageUIPanel !== undefined) {
           setIsVisible(user.ui_preferences.showPageUIPanel);
+        } else {
+          setIsVisible(true); // Default to visible
         }
       } catch (e) {
         // User not logged in - show by default
+        setIsVisible(true);
       }
     };
     loadPreferences();
