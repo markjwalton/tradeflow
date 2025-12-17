@@ -1003,8 +1003,25 @@ export default function DocumentationManager() {
             {submittedDiscussions.length > 0 && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Active Discussions</CardTitle>
-                  <CardDescription>Select items to generate discussion prompt</CardDescription>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <CardTitle>Active Discussions</CardTitle>
+                      <CardDescription>
+                        {selectedDiscussions.length > 0 
+                          ? `${selectedDiscussions.length} selected for prompt`
+                          : "Tick multiple items to group in one prompt"}
+                      </CardDescription>
+                    </div>
+                    {selectedDiscussions.length > 0 && (
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => setSelectedDiscussions([])}
+                      >
+                        Clear Selection
+                      </Button>
+                    )}
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
