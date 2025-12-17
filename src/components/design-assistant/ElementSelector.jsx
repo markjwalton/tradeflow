@@ -7,10 +7,14 @@ export function ElementSelector({ children }) {
   useEffect(() => {
     if (!isActive) return;
 
+    // Change cursor to crosshair when active
+    document.body.style.cursor = 'crosshair';
+
     const handleClick = (e) => {
       // Ignore clicks on the drawer and controls
       if (e.target.closest('[data-token-applier-ui]') || 
           e.target.closest('[data-radix-dialog-content]') ||
+          e.target.closest('[data-radix-dialog-overlay]') ||
           e.target.closest('[role="dialog"]')) {
         return;
       }
@@ -38,6 +42,7 @@ export function ElementSelector({ children }) {
     document.addEventListener('mouseout', handleMouseOut);
 
     return () => {
+      document.body.style.cursor = '';
       document.removeEventListener('click', handleClick, true);
       document.removeEventListener('mouseover', handleMouseOver);
       document.removeEventListener('mouseout', handleMouseOut);

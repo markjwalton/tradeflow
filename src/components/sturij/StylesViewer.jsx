@@ -29,12 +29,15 @@ export default function StylesViewer() {
                   {colorValue || 'not found'}
                 </code>
                 {isActive && colorValue && (
-                  <div className="flex gap-1">
+                  <div className="flex gap-1" data-token-applier-ui>
                     <Button
                       size="sm"
                       variant="ghost"
                       className="h-6 px-2 text-[10px]"
-                      onClick={() => applyToken('backgroundColor', colorValue, `${paletteName}-${shadeName}`)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        applyToken('backgroundColor', colorValue, `${paletteName}-${shadeName}`);
+                      }}
                     >
                       <Paintbrush className="h-3 w-3 mr-1" />
                       BG
@@ -43,7 +46,10 @@ export default function StylesViewer() {
                       size="sm"
                       variant="ghost"
                       className="h-6 px-2 text-[10px]"
-                      onClick={() => applyToken('color', colorValue, `${paletteName}-${shadeName}`)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        applyToken('color', colorValue, `${paletteName}-${shadeName}`);
+                      }}
                     >
                       <Paintbrush className="h-3 w-3 mr-1" />
                       Text
