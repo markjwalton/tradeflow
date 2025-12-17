@@ -331,7 +331,31 @@ Format as JSON:
                   </div>
                 ) : (
                   <DesignTokensBrowser onApplyToken={(data) => {
-                    toast.info(`Apply ${data.token.name} to selected element - feature coming soon`);
+                    if (!selectedElement?.element) {
+                      toast.error("No element selected");
+                      return;
+                    }
+
+                    const { token, category } = data;
+
+                    // Map token categories to CSS properties
+                    const propertyMap = {
+                      colors: 'backgroundColor',
+                      spacing: 'padding',
+                      typography: token.name.includes('font-family') ? 'fontFamily' : 
+                                 token.name.includes('font-size') ? 'fontSize' : 
+                                 token.name.includes('line-height') ? 'lineHeight' : 
+                                 token.name.includes('letter-spacing') ? 'letterSpacing' : 'fontSize',
+                      radii: 'borderRadius'
+                    };
+
+                    const property = propertyMap[category] || 'backgroundColor';
+                    const value = token.cssVar || token.value;
+
+                    // Apply the token
+                    selectedElement.element.style[property] = value;
+
+                    toast.success(`Applied ${token.name} to selected element`);
                   }} />
                 )}
               </div>
