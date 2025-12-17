@@ -25,8 +25,8 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
   const handleViewModeChange = (mode) => {
     setViewMode(mode);
     if (onViewModeChange) onViewModeChange(mode);
-    // Update layout margin
-    const marginTop = mode === 'full' ? '500px' : '120px';
+    // Update layout margin - expanded when style editor is shown
+    const marginTop = mode === 'full' ? '500px' : (showStyleEditor && selectedElement ? '180px' : '120px');
     document.querySelector('[data-editor-layout]')?.style.setProperty('margin-top', marginTop);
   };
 
@@ -37,10 +37,16 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
 
   if (!isOpen) return null;
 
+  const panelHeight = isCollapsed ? '44px' : (
+    viewMode === 'focus' 
+      ? (showStyleEditor && selectedElement ? '180px' : '120px')
+      : '500px'
+  );
+
   return (
     <div 
       className="fixed top-0 left-0 right-0 z-[100] bg-card border-b transition-all duration-300"
-      style={{ height: isCollapsed ? '44px' : (viewMode === 'focus' ? '120px' : '500px') }}
+      style={{ height: panelHeight }}
     >
       <div className="flex items-center justify-between px-6 py-2 border-b bg-muted/30">
         <div className="flex items-center gap-6">
@@ -127,10 +133,10 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
       </div>
 
       {!isCollapsed && (
-        <div className="px-6 py-4" style={{ 
-          height: viewMode === 'focus' ? 'auto' : '456px', 
-          minHeight: viewMode === 'focus' ? '76px' : '456px',
-          maxHeight: viewMode === 'focus' ? '300px' : '456px',
+        <div className="px-6 py-2" style={{ 
+          height: viewMode === 'focus' 
+            ? (showStyleEditor && selectedElement ? '136px' : '76px')
+            : '456px',
           overflowY: 'auto',
           backgroundColor: 'var(--color-editor-background, var(--color-background))'
         }}>
