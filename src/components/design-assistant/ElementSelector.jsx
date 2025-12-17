@@ -30,7 +30,7 @@ export function ElementSelector({ children }) {
       if (tagName === 'html' || tagName === 'body') return true;
 
       // Ignore generic positioning wrappers (common culprits)
-      const className = element.className || '';
+      const className = typeof element.className === 'string' ? element.className : (element.className?.baseVal || '');
       if (className.includes('absolute') && className.includes('inset-0')) return true;
       if (className.includes('fixed') && className.includes('inset-0')) return true;
 
