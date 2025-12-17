@@ -14,10 +14,8 @@ import { useTokenApplier } from "./TokenApplierContext";
 export function PageUIPanel({ currentPageName }) {
   const { isEditMode } = useEditMode();
   const tokenApplier = useTokenApplier();
-  const tokenSelectedElement = tokenApplier?.selectedElement;
+  const selectedElement = tokenApplier?.selectedElement;
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedElement, setSelectedElement] = useState(null);
-  const [selectedDomElement, setSelectedDomElement] = useState(null);
   const [userRequest, setUserRequest] = useState("");
   const [aiResponse, setAiResponse] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -39,44 +37,27 @@ export function PageUIPanel({ currentPageName }) {
     loadPreferences();
   }, []);
 
-  // Sync with TokenApplier selection
+  // Open panel when element is selected
   useEffect(() => {
-    if (tokenSelectedElement) {
-      const elementData = {
-        tagName: tokenSelectedElement.tagName,
-        id: tokenSelectedElement.id,
-        classes: tokenSelectedElement.className ? tokenSelectedElement.className.split(' ') : [],
-        computedStyles: tokenSelectedElement.styles
-      };
-      setSelectedElement(elementData);
-      setSelectedDomElement(tokenSelectedElement.element);
+    if (selectedElement) {
       setIsOpen(true);
     }
-  }, [tokenSelectedElement]);
+  }, [selectedElement]);
 
-  const handleElementSelect = (elementData, domElement) => {
-    setSelectedElement(elementData);
-    setSelectedDomElement(domElement);
-    setIsOpen(true);
-    toast.success(`Selected: ${elementData.tagName}`);
+  const handleReset = () => {
+    if (tokenApplier?.selectElement) {
+      tokenApplier.selectElement(null);
+    }
+    setUserRequest('');
+    setAiResponse(null);
   };
 
   const handleClose = () => {
     setIsOpen(false);
-    setSelectedElement(null);
-    setSelectedDomElement(null);
-    setUserRequest('');
-    setAiResponse(null);
+    handleReset();
     if (tokenApplier?.deactivateTokenApplier) {
       tokenApplier.deactivateTokenApplier();
     }
-  };
-
-  const handleReset = () => {
-    setSelectedElement(null);
-    setSelectedDomElement(null);
-    setUserRequest('');
-    setAiResponse(null);
   };
 
   const analyzeStyleSource = () => {
@@ -227,8 +208,6 @@ Format as JSON:
 
   return (
     <>
-      <StyleInspectorOverlay onElementSelect={handleElementSelect} />
-      
       <Sheet open={isOpen} onOpenChange={(open) => { if (!open) handleClose(); else setIsOpen(open); }}>
         <SheetTrigger asChild>
           <Button

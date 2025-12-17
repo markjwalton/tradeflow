@@ -7,43 +7,43 @@ export function ElementSelector({ children }) {
   useEffect(() => {
     if (!isActive) return;
 
-    // Change cursor to crosshair when active
     document.body.style.cursor = 'crosshair';
 
     const shouldIgnoreElement = (element) => {
-      // Ignore token applier UI controls and overlays
+      // Ignore token applier UI
       if (element.closest('[data-token-applier-ui]')) return true;
       if (element.hasAttribute('data-token-applier-ui')) return true;
 
-      // Ignore Radix UI dialog/drawer overlays
+      // Ignore Radix overlays/dialogs
       if (element.hasAttribute('data-radix-dialog-overlay')) return true;
       if (element.hasAttribute('data-radix-dialog-content')) return true;
+      if (element.hasAttribute('data-radix-sheet-overlay')) return true;
+      if (element.hasAttribute('data-radix-sheet-content')) return true;
       if (element.hasAttribute('data-headlessui-state')) return true;
 
-      // Ignore layout wrappers with data-editor-layout
+      // Ignore editor layouts
       if (element.hasAttribute('data-editor-layout')) return true;
 
-      const classes = element.className || '';
-
-      // Ignore structural wrappers
+      // Ignore top-level structural elements
       const tagName = element.tagName.toLowerCase();
       if (tagName === 'html' || tagName === 'body') return true;
-      if (element.id === 'root') return true;
 
       return false;
     };
 
     const handleClick = (e) => {
-      if (shouldIgnoreElement(e.target)) return;
+      const target = e.target;
+      if (shouldIgnoreElement(target)) return;
 
       e.preventDefault();
       e.stopPropagation();
-      selectElement(e.target);
+      selectElement(target);
     };
 
     const handleMouseOver = (e) => {
-      if (shouldIgnoreElement(e.target)) return;
-      setHoveredElement(e.target);
+      const target = e.target;
+      if (shouldIgnoreElement(target)) return;
+      setHoveredElement(target);
     };
 
     const handleMouseOut = () => {
@@ -61,75 +61,6 @@ export function ElementSelector({ children }) {
       document.removeEventListener('mouseout', handleMouseOut);
     };
   }, [isActive, selectElement, setHoveredElement]);
-
-  // Add hover effect with rectangle overlay and tooltip
-  useEffect(() => {
-    if (!hoveredElement || !isActive) return;
-
-    const rect = hoveredElement.getBoundingClientRect();
-    
-    // Create rectangle overlay
-    const overlay = document.createElement('div');
-    overlay.setAttribute('data-token-applier-ui', 'true');
-    overlay.style.cssText = `
-      position: fixed;
-      top: ${rect.top}px;
-      left: ${rect.left}px;
-      width: ${rect.width}px;
-      height: ${rect.height}px;
-      border: 2px solid var(--primary-500);
-      background: var(--primary-200);
-      opacity: 0.15;
-      pointer-events: none;
-      z-index: 999998;
-      transition: all 150ms ease-out;
-    `;
-    document.body.appendChild(overlay);
-    
-    // Create tooltip
-    const tooltip = document.createElement('div');
-    tooltip.setAttribute('data-token-applier-ui', 'true');
-    const tagName = hoveredElement.tagName.toLowerCase();
-    const classes = hoveredElement.className ? `.${hoveredElement.className.split(' ').join('.')}` : '';
-    
-    tooltip.style.cssText = `
-      position: fixed;
-      top: ${rect.top - 30}px;
-      left: ${rect.left}px;
-      background: var(--primary-600);
-      color: white;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 12px;
-      font-family: monospace;
-      pointer-events: none;
-      z-index: 999999;
-      white-space: nowrap;
-    `;
-    tooltip.textContent = `${tagName}${classes.length > 30 ? classes.substring(0, 30) + '...' : classes}`;
-    document.body.appendChild(tooltip);
-
-    // Update overlay position on scroll
-    const updatePosition = () => {
-      const newRect = hoveredElement.getBoundingClientRect();
-      overlay.style.top = `${newRect.top}px`;
-      overlay.style.left = `${newRect.left}px`;
-      overlay.style.width = `${newRect.width}px`;
-      overlay.style.height = `${newRect.height}px`;
-      tooltip.style.top = `${newRect.top - 30}px`;
-      tooltip.style.left = `${newRect.left}px`;
-    };
-    
-    window.addEventListener('scroll', updatePosition, true);
-    window.addEventListener('resize', updatePosition);
-
-    return () => {
-      overlay.remove();
-      tooltip.remove();
-      window.removeEventListener('scroll', updatePosition, true);
-      window.removeEventListener('resize', updatePosition);
-    };
-  }, [hoveredElement, isActive]);
 
   return <>{children}</>;
 }

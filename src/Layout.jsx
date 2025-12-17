@@ -21,6 +21,9 @@ import { PageUIPanel } from "@/components/design-assistant/PageUIPanel";
 import { StyleEditorPanel } from "@/components/page-builder/StyleEditorPanel";
 import { LiveEditWrapper } from "@/components/page-builder/LiveEditWrapper";
 import { TopEditorPanel } from "@/components/page-builder/TopEditorPanel";
+import { TokenApplierProvider } from "@/components/design-assistant/TokenApplierContext";
+import { ElementSelector } from "@/components/design-assistant/ElementSelector";
+import { SelectionOverlay } from "@/components/design-assistant/SelectionOverlay";
 import { Palette } from "lucide-react";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { WebVitals } from "@/components/common/WebVitals";
@@ -432,7 +435,12 @@ export default function Layout({ children, currentPageName }) {
             </Button>
           </div>
           <PageSettingsPanel currentPageName={currentPageName} />
-          <PageUIPanel currentPageName={currentPageName} />
+          <TokenApplierProvider>
+            <ElementSelector>
+              <PageUIPanel currentPageName={currentPageName} />
+            </ElementSelector>
+            <SelectionOverlay />
+          </TokenApplierProvider>
           <GlobalAIAssistant />
         </EditModeProvider>
       </TenantContext.Provider>
@@ -524,6 +532,12 @@ export default function Layout({ children, currentPageName }) {
           </div>
           <PageSettingsPanel currentPageName={currentPageName} />
           <StyleEditorPanel currentPageName={currentPageName} />
+          <TokenApplierProvider>
+            <ElementSelector>
+              <PageUIPanel currentPageName={currentPageName} />
+            </ElementSelector>
+            <SelectionOverlay />
+          </TokenApplierProvider>
           <GlobalAIAssistant />
 
           {/* Editor bubble button - hide on fullscreen pages */}
