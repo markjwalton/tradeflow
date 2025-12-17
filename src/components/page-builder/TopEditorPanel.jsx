@@ -64,33 +64,6 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
               className="h-6"
             />
           </div>
-
-          {viewMode === 'focus' && selectedElement && (
-            <div className="flex gap-2">
-              <Button
-                variant={showStyleEditor ? "default" : "outline"}
-                size="sm"
-                onClick={() => setShowStyleEditor(!showStyleEditor)}
-                className="text-xs h-7 px-3"
-              >
-                <Palette className="h-3 w-3 mr-1" />
-                Style Editor
-              </Button>
-              <div className="flex gap-1 border-l pl-2">
-                {["current", "colors", "spacing", "typography", "borders"].map(tab => (
-                  <Button
-                    key={tab}
-                    variant={activeTab === tab ? "default" : "ghost"}
-                    size="sm"
-                    onClick={() => setActiveTab(tab)}
-                    className="text-xs h-7 px-3 capitalize"
-                  >
-                    {tab}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
         
         <div className="flex items-center gap-2">
