@@ -16,7 +16,7 @@ import { TokenApplierProvider, useTokenApplier } from '../components/design-assi
 import { TokenApplierControls } from '../components/design-assistant/TokenApplierControls';
 import { ElementSelector } from '../components/design-assistant/ElementSelector';
 import { TopEditorPanel } from '../components/page-builder/TopEditorPanel';
-import { EditModeProvider } from '../components/page-builder/EditModeContext';
+import { EditModeProvider, useEditMode } from '../components/page-builder/EditModeContext';
 import {
   HomeIcon,
   UsersIcon,
@@ -86,6 +86,7 @@ const user = {
 
 function AppShellContent() {
   const { isActive } = useTokenApplier();
+  const { selectedElement } = useEditMode();
   const [navigationMode, setNavigationMode] = useState('expanded');
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
@@ -107,6 +108,7 @@ function AppShellContent() {
       <TopEditorPanel 
         isOpen={editorOpen} 
         onClose={() => setEditorOpen(false)}
+        selectedElement={selectedElement}
       />
       <div className="flex flex-col h-screen bg-gray-100" style={{ marginTop: editorOpen ? '120px' : '0', transition: 'margin-top 300ms ease-in-out' }}>
       {/* Top Navigation */}
