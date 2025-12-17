@@ -6,6 +6,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Paintbrush, Sparkles, Copy, ChevronDown, Loader2, Save, List, Target } from "lucide-react";
 import { StylesList } from "./StylesList";
+import { DesignTokensBrowser } from "./DesignTokensBrowser";
 import { useEditMode } from "@/components/page-builder/EditModeContext";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
@@ -23,7 +24,7 @@ export function PageUIPanel({ currentPageName }) {
   const [elementDetailsOpen, setElementDetailsOpen] = useState(true);
   const [styleAnalysisOpen, setStyleAnalysisOpen] = useState(true);
   const [isVisible, setIsVisible] = useState(true);
-  const [mode, setMode] = useState('styles'); // 'styles' or 'element'
+  const [mode, setMode] = useState('styles'); // 'styles', 'tokens', or 'element'
   const [highlightedElements, setHighlightedElements] = useState([]);
 
   useEffect(() => {
@@ -279,40 +280,63 @@ Format as JSON:
               )}
             </div>
             
-            <div className="flex gap-2 mt-4">
+            <div className="grid grid-cols-3 gap-2 mt-4">
+              <Button 
+                variant={mode === 'tokens' ? 'default' : 'outline'} 
+                size="sm"
+                onClick={() => setMode('tokens')}
+              >
+                <Paintbrush className="h-4 w-4 mr-1" />
+                Tokens
+              </Button>
               <Button 
                 variant={mode === 'styles' ? 'default' : 'outline'} 
                 size="sm"
                 onClick={() => setMode('styles')}
-                className="flex-1"
               >
-                <List className="h-4 w-4 mr-2" />
-                CSS Classes
+                <List className="h-4 w-4 mr-1" />
+                Classes
               </Button>
               <Button 
                 variant={mode === 'element' ? 'default' : 'outline'} 
                 size="sm"
                 onClick={handleSwitchToElementMode}
-                className="flex-1"
               >
-                <Target className="h-4 w-4 mr-2" />
-                Select Element
+                <Target className="h-4 w-4 mr-1" />
+                Element
               </Button>
             </div>
             
             <p className="text-sm text-muted-foreground">
-              {mode === 'styles' 
-                ? "All CSS classes used on this page. Click one to highlight elements using it." 
-                : selectedElement?.tagName 
-                  ? `Selected: ${selectedElement.tagName}` 
-                  : "Click any element on the page to inspect and modify it"}
+              {mode === 'tokens' 
+                ? "Design tokens from globals.css. Select an element first, then apply tokens." 
+                : mode === 'styles' 
+                  ? "CSS classes used on this page. Click one to highlight elements using it." 
+                  : selectedElement?.tagName 
+                    ? `Selected: ${selectedElement.tagName}` 
+                    : "Click any element on the page to inspect and modify it"}
             </p>
           </SheetHeader>
 
           <div className="space-y-6 py-6 px-6">
+            {mode === 'tokens' && (
+              <div>
+                <Label className="text-sm font-medium mb-4 block">Design Tokens</Label>
+                {!selectedElement ? (
+                  <div className="text-sm text-muted-foreground p-4 border rounded-lg">
+                    Select an element first to apply design tokens
+                  </div>
+                ) : (
+                  <DesignTokensBrowser onApplyToken={(data) => {
+                    toast.info(`Apply ${data.token.name} to selected element - feature coming soon`);
+                  }} />
+                )}
+              </div>
+            )}
+
             {mode === 'styles' && !selectedElement && (
               <div>
-                <Label className="text-sm font-medium mb-4 block">Available Styles</Label>
+                <Label className="text-sm font-medium mb-4 block">CSS Classes</Label>
                 <StylesList onStyleSelect={handleStyleSelect} />
               </div>
             )}
