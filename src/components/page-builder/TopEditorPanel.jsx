@@ -46,7 +46,7 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
   return (
     <div 
       className="fixed top-0 left-0 right-0 bg-card border-b transition-all duration-300"
-      style={{ height: panelHeight, zIndex: 'var(--z-editor)' }}
+      style={{ height: panelHeight, zIndex: 10000 }}
     >
       <div className="flex items-center justify-between px-6 py-2 border-b bg-muted/30">
         <div className="flex items-center gap-6">
