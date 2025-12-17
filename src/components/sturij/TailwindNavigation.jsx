@@ -20,7 +20,7 @@ export default function TailwindNavigation({
 
   return (
     <div className={classNames(
-      "relative flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white",
+      "relative flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white z-0",
       isIconsOnly ? "px-2" : "px-6"
     )}>
       {logoSrc && (
