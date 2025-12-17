@@ -61,14 +61,17 @@ export function TokenApplierProvider({ children }) {
       return;
     }
 
-    // Find all matching elements
-    let matchingElements = [];
+    // Build a specific selector - combine tag + first class for better matching
+    let selector = selectedElement.tagName.toLowerCase();
     if (selectedElement.className) {
       const firstClass = selectedElement.className.split(' ')[0];
-      matchingElements = Array.from(document.querySelectorAll(`.${firstClass}`));
-    } else {
-      matchingElements = Array.from(document.querySelectorAll(selectedElement.tagName));
+      if (firstClass && !firstClass.startsWith('data-')) {
+        selector = `${selector}.${firstClass}`;
+      }
     }
+
+    // Find all matching elements (limit to 100 to prevent performance issues)
+    const matchingElements = Array.from(document.querySelectorAll(selector)).slice(0, 100);
 
     // Apply the style to all matching elements
     matchingElements.forEach(el => {
