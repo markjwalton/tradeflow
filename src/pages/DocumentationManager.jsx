@@ -1831,7 +1831,9 @@ export default function DocumentationManager() {
 
                               {/* Group Items */}
                                               <div className="space-y-1 ml-6">
-                                                {groupItems.map(item => (
+                                                {groupItems.map(item => {
+                                                  const relatedList = item.related_list_id ? todoLists.find(l => l.id === item.related_list_id) : null;
+                                                  return (
                                                   <div key={item.id} className="border-l-2 pl-3 py-1" style={{ borderColor: 'var(--color-border)' }}>
                                                     <div 
                                                       className="flex items-start gap-3 p-2 rounded hover:bg-muted/50 transition-colors cursor-pointer"
@@ -1863,6 +1865,16 @@ export default function DocumentationManager() {
                                                         >
                                                           {item.description.replace(/^Sprint \d+ Week \d+: /, '')}
                                                         </p>
+                                                        {relatedList && (
+                                                          <div className="flex items-center gap-2 mt-1">
+                                                            <Badge variant="outline" className="text-xs">
+                                                              {item.blocks_completion ? '🔒 Blocked by' : '🔗 Linked to'}
+                                                            </Badge>
+                                                            <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                                                              {relatedList.heading}
+                                                            </span>
+                                                          </div>
+                                                        )}
                                                         {item.comment && (
                                                           <div className="mt-1">
                                                             <Button
@@ -1889,8 +1901,8 @@ export default function DocumentationManager() {
                                                             )}
                                                           </div>
                                                         )}
-                                                      </div>
-                                                      <div className="flex gap-1">
+                                                        </div>
+                                                        <div className="flex gap-1">
                                                         <Button
                                                           size="sm"
                                                           variant="ghost"
@@ -1917,9 +1929,9 @@ export default function DocumentationManager() {
                                                           <MessageSquare className="w-4 h-4" />
                                                         </Button>
                                                       </div>
-                                                    </div>
+                                                      </div>
 
-                                                    {editingItemComment === item.id && (
+                                                      {editingItemComment === item.id && (
                                                       <div className="mt-2 p-3 rounded border" style={{ borderColor: 'var(--color-primary)', backgroundColor: 'var(--color-accent-50)' }}>
                                                         <Textarea
                                                           value={itemCommentText}
@@ -1954,10 +1966,10 @@ export default function DocumentationManager() {
                                                           </Button>
                                                         </div>
                                                       </div>
-                                                    )}
-                                                  </div>
-                                                ))}
-                                              </div>
+                                                      )}
+                                                      </div>
+                                                      )})}
+                                                      </div>
                             </div>
                           );
                         });
