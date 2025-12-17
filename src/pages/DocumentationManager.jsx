@@ -607,6 +607,51 @@ export default function DocumentationManager() {
     toast.success("Items completed");
   };
 
+  // Generate prompt for single item
+  const handleGenerateItemPrompt = (item) => {
+    const relevantDocs = latestDocs.map(doc => `- ${doc.title} (v${doc.version}) - ${doc.category}`).join('\n');
+
+    const prompt = `# Task: ${item.description}
+
+  ${item.comment ? `## Additional Context\n${item.comment}\n` : ''}
+  ## Project Framework
+
+  This task is part of the AppShell framework implementation. Please reference the following documentation for context:
+
+  ${relevantDocs}
+
+  ## Requirements
+
+  1. Follow the framework's design token system (use CSS variables from globals.css)
+  2. Ensure components are reusable and well-documented
+  3. Use React hooks and @tanstack/react-query for data management
+  4. Apply Tailwind CSS styling with semantic class names
+  5. Implement responsive design for mobile and desktop
+  6. Follow the existing code patterns in Layout.js and component structure
+
+  ## Expected Deliverables
+
+  Please provide:
+  - Implementation code with inline comments
+  - Any new entity schemas if needed
+  - Component usage examples
+  - Integration notes with existing framework
+
+  ## Framework Context
+
+  The AppShell framework provides:
+  - Dynamic layout configuration (headers, footers, sidebars)
+  - Design token system for consistent styling
+  - Component library with standardized patterns
+  - Theme management and customization
+  - Page builder capabilities
+
+  Please implement this task following these guidelines and the documentation referenced above.`;
+
+    setItemsPrompt(prompt);
+    toast.success("Prompt generated");
+  };
+
   // Pagination for all documents view
   const {
     currentPage,
@@ -1843,18 +1888,33 @@ export default function DocumentationManager() {
                                                           </div>
                                                         )}
                                                       </div>
-                                                      <Button
-                                                        size="sm"
-                                                        variant="ghost"
-                                                        onClick={(e) => {
-                                                          e.stopPropagation();
-                                                          setEditingItemComment(item.id);
-                                                          setItemCommentText(item.comment || "");
-                                                        }}
-                                                        className="h-8 w-8 p-0"
-                                                      >
-                                                        <MessageSquare className="w-4 h-4" />
-                                                      </Button>
+                                                      <div className="flex gap-1">
+                                                        <Button
+                                                          size="sm"
+                                                          variant="ghost"
+                                                          onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleGenerateItemPrompt(item);
+                                                          }}
+                                                          className="h-8 w-8 p-0"
+                                                          title="Generate prompt"
+                                                        >
+                                                          <Sparkles className="w-4 h-4" />
+                                                        </Button>
+                                                        <Button
+                                                          size="sm"
+                                                          variant="ghost"
+                                                          onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setEditingItemComment(item.id);
+                                                            setItemCommentText(item.comment || "");
+                                                          }}
+                                                          className="h-8 w-8 p-0"
+                                                          title="Add comment"
+                                                        >
+                                                          <MessageSquare className="w-4 h-4" />
+                                                        </Button>
+                                                      </div>
                                                     </div>
 
                                                     {editingItemComment === item.id && (
