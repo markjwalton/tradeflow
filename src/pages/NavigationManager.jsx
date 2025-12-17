@@ -286,6 +286,42 @@ export default function NavigationManager() {
         variant: "outline"
       },
       {
+        key: "downloadConfig",
+        label: "Download Navigation Config",
+        type: "button",
+        buttonLabel: "Download as JSON",
+        description: "Download current navigation config to a file",
+        onClick: async () => {
+          try {
+            const configs = await base44.entities.NavigationConfig.filter({});
+            const downloadData = {
+              timestamp: new Date().toISOString(),
+              configs: configs.map(c => ({
+                config_type: c.config_type,
+                items: c.items,
+                source_slugs: c.source_slugs,
+                public_pages: c.public_pages,
+                standalone_pages: c.standalone_pages,
+                fullscreen_pages: c.fullscreen_pages
+              }))
+            };
+            const blob = new Blob([JSON.stringify(downloadData, null, 2)], { type: 'application/json' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `navigation-config-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+            toast.success("Navigation config downloaded");
+          } catch (e) {
+            toast.error("Failed to download: " + e.message);
+          }
+        },
+        variant: "secondary"
+      },
+      {
         key: "divider1",
         type: "divider"
       },
