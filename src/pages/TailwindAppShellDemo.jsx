@@ -15,6 +15,8 @@ import RadiiViewer from '../components/sturij/RadiiViewer';
 import { TokenApplierProvider, useTokenApplier } from '../components/design-assistant/TokenApplierContext';
 import { TokenApplierControls } from '../components/design-assistant/TokenApplierControls';
 import { ElementSelector } from '../components/design-assistant/ElementSelector';
+import { TopEditorPanel } from '../components/page-builder/TopEditorPanel';
+import { EditModeProvider } from '../components/page-builder/EditModeContext';
 import {
   HomeIcon,
   UsersIcon,
@@ -101,7 +103,12 @@ function AppShellContent() {
   ];
 
   return (
-        <div className="flex flex-col h-screen bg-gray-100">
+    <>
+      <TopEditorPanel 
+        isOpen={editorOpen} 
+        onClose={() => setEditorOpen(false)}
+      />
+      <div className="flex flex-col h-screen bg-gray-100" style={{ marginTop: editorOpen ? '120px' : '0', transition: 'margin-top 300ms ease-in-out' }}>
       {/* Top Navigation */}
       <TailwindTopNav
         navigation={topNavigation}
@@ -345,16 +352,19 @@ function AppShellContent() {
           </button>
         </div>
       </TailwindDrawer>
-        </div>
+      </div>
+    </>
   );
 }
 
 export default function TailwindAppShellDemo() {
   return (
-    <TokenApplierProvider>
-      <ElementSelector>
-        <AppShellContent />
-      </ElementSelector>
-    </TokenApplierProvider>
+    <EditModeProvider>
+      <TokenApplierProvider>
+        <ElementSelector>
+          <AppShellContent />
+        </ElementSelector>
+      </TokenApplierProvider>
+    </EditModeProvider>
   );
 }
