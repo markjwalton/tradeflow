@@ -45,6 +45,37 @@ export default function TailwindDrawer({
     xl: 'max-h-[600px]',
   };
 
+  // Push content mode - renders as a collapsible div instead of a modal
+  if (pushContent && (side === 'top' || side === 'bottom')) {
+    return (
+      <div 
+        className={`bg-white shadow-xl transition-all duration-500 ease-in-out overflow-hidden ${
+          open ? maxHeightClasses[maxHeight] : 'max-h-0'
+        }`}
+      >
+        <div className="px-4 py-4 sm:px-6">
+          <div className="flex items-start justify-between">
+            <h3 className="text-base font-semibold text-gray-900">{title}</h3>
+            <div className="ml-3 flex h-7 items-center">
+              <button
+                type="button"
+                onClick={onClose}
+                className="relative rounded-md text-gray-400 hover:text-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                <span className="absolute -inset-2.5" />
+                <span className="sr-only">Close panel</span>
+                <XMarkIcon aria-hidden="true" className="size-6" />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="px-4 pb-4 sm:px-6 overflow-y-auto" style={{ maxHeight: 'calc(100% - 4rem)' }}>
+          {children}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Dialog open={open} onClose={onClose} className="relative z-10">
       <div className="fixed inset-0" />
