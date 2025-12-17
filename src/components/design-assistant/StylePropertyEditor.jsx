@@ -8,9 +8,23 @@ import { toast } from 'sonner';
 export function StylePropertyEditor({ selectedElement, onApply }) {
   const [styleEdits, setStyleEdits] = useState({});
   const [tokens, setTokens] = useState({});
+  const [currentStyles, setCurrentStyles] = useState({});
 
   useEffect(() => {
-    if (!selectedElement) return;
+    if (!selectedElement?.element) return;
+
+    // Get computed styles from the actual element
+    const computed = window.getComputedStyle(selectedElement.element);
+    setCurrentStyles({
+      backgroundColor: computed.backgroundColor,
+      color: computed.color,
+      fontFamily: computed.fontFamily,
+      fontSize: computed.fontSize,
+      padding: computed.padding,
+      margin: computed.margin,
+      borderRadius: computed.borderRadius,
+      boxShadow: computed.boxShadow,
+    });
 
     // Extract all CSS variables from :root
     const root = getComputedStyle(document.documentElement);
