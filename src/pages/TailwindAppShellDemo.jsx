@@ -12,6 +12,9 @@ import TypographyViewer from '../components/sturij/TypographyViewer';
 import SpacingViewer from '../components/sturij/SpacingViewer';
 import ShadowsViewer from '../components/sturij/ShadowsViewer';
 import RadiiViewer from '../components/sturij/RadiiViewer';
+import { TokenApplierProvider } from '../components/design-assistant/TokenApplierContext';
+import { TokenApplierControls } from '../components/design-assistant/TokenApplierControls';
+import { ElementSelector } from '../components/design-assistant/ElementSelector';
 import {
   HomeIcon,
   UsersIcon,
@@ -96,7 +99,9 @@ export default function TailwindAppShellDemo() {
   ];
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100">
+    <TokenApplierProvider>
+      <ElementSelector>
+        <div className="flex flex-col h-screen bg-gray-100">
       {/* Top Navigation */}
       <TailwindTopNav
         navigation={topNavigation}
@@ -253,16 +258,19 @@ export default function TailwindAppShellDemo() {
       <TailwindDrawer
         open={rightDrawerOpen}
         onClose={() => setRightDrawerOpen(false)}
-        title="Project Details"
+        title="Design Tokens"
         side="right"
         maxWidth="lg"
       >
-        <TailwindTabsNav
-          key={activeTab}
-          tabs={drawerTabs}
-          activeTab={activeTab}
-          onTabChange={(tab) => setActiveTab(tab.id)}
-        />
+        <div data-token-applier-ui>
+          <TokenApplierControls />
+          <TailwindTabsNav
+            key={activeTab}
+            tabs={drawerTabs}
+            activeTab={activeTab}
+            onTabChange={(tab) => setActiveTab(tab.id)}
+          />
+        </div>
         <div className="mt-6">
           {activeTab === 'colours' ? (
             <StylesViewer />
@@ -333,7 +341,7 @@ export default function TailwindAppShellDemo() {
           </button>
         </div>
       </TailwindDrawer>
-    </div>
+        </div>
       </ElementSelector>
     </TokenApplierProvider>
   );
