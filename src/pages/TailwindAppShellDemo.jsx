@@ -255,7 +255,7 @@ export default function TailwindAppShellDemo() {
         <TailwindTabsNav
           tabs={drawerTabs}
           activeTab={activeTab}
-          onTabChange={setActiveTab}
+          onTabChange={(tab) => setActiveTab(tab.id)}
         />
         <div className="mt-6">
           {activeTab === 'details' ? (
