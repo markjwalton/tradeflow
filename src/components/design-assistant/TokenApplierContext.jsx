@@ -56,27 +56,13 @@ export function TokenApplierProvider({ children }) {
   }, []);
 
   const applyToken = useCallback(async (property, tokenValue, tokenName) => {
-    if (!selectedElement) {
+    if (!selectedElement?.element) {
       toast.error('Please select an element first');
       return;
     }
 
-    // Build a specific selector - combine tag + first class for better matching
-    let selector = selectedElement.tagName.toLowerCase();
-    if (selectedElement.className) {
-      const firstClass = selectedElement.className.split(' ')[0];
-      if (firstClass && !firstClass.startsWith('data-')) {
-        selector = `${selector}.${firstClass}`;
-      }
-    }
-
-    // Find all matching elements (limit to 100 to prevent performance issues)
-    const matchingElements = Array.from(document.querySelectorAll(selector)).slice(0, 100);
-
-    // Apply the style to all matching elements
-    matchingElements.forEach(el => {
-      el.style[property] = tokenValue;
-    });
+    // Apply style ONLY to the selected element
+    selectedElement.element.style[property] = tokenValue;
     
     // Update selected element info
     const computedStyle = window.getComputedStyle(selectedElement.element);
@@ -88,7 +74,7 @@ export function TokenApplierProvider({ children }) {
       }
     }));
 
-    toast.success(`Applied ${tokenName} to ${matchingElements.length} element${matchingElements.length > 1 ? 's' : ''}`);
+    toast.success(`Applied ${tokenName} to selected element`);
   }, [selectedElement]);
 
   const saveMapping = useCallback(async (componentType, selector) => {

@@ -9,9 +9,11 @@ import { useEditMode } from "@/components/page-builder/EditModeContext";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 import StyleInspectorOverlay from "./StyleInspectorOverlay";
+import { useTokenApplier } from "./TokenApplierContext";
 
 export function PageUIPanel({ currentPageName }) {
   const { isEditMode } = useEditMode();
+  const { selectedElement: tokenSelectedElement } = useTokenApplier();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedElement, setSelectedElement] = useState(null);
   const [selectedDomElement, setSelectedDomElement] = useState(null);
@@ -35,6 +37,21 @@ export function PageUIPanel({ currentPageName }) {
     };
     loadPreferences();
   }, []);
+
+  // Sync with TokenApplier selection
+  useEffect(() => {
+    if (tokenSelectedElement) {
+      const elementData = {
+        tagName: tokenSelectedElement.tagName,
+        id: tokenSelectedElement.id,
+        classes: tokenSelectedElement.className ? tokenSelectedElement.className.split(' ') : [],
+        computedStyles: tokenSelectedElement.styles
+      };
+      setSelectedElement(elementData);
+      setSelectedDomElement(tokenSelectedElement.element);
+      setIsOpen(true);
+    }
+  }, [tokenSelectedElement]);
 
   const handleElementSelect = (elementData, domElement) => {
     setSelectedElement(elementData);
