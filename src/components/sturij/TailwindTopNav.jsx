@@ -7,8 +7,8 @@ function classNames(...classes) {
 }
 
 export default function TailwindTopNav({
-  logoSrc = 'https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600',
-  logoAlt = 'Your Company',
+  logoSrc = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/c94580ddf_sturij-logo.png',
+  logoAlt = 'Sturij',
   navigation = [],
   userNavigation = [],
   user = null,
