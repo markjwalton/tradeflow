@@ -70,6 +70,30 @@ export default function TailwindAppShellDemo() {
 
   return (
     <div className="flex flex-col h-screen bg-gray-100">
+      {/* Top Drawer - Pushes content */}
+      <TailwindDrawer
+        open={topDrawerOpen}
+        onClose={() => setTopDrawerOpen(false)}
+        title="Notifications"
+        side="top"
+        maxHeight="lg"
+        pushContent={true}
+      >
+        <TailwindList
+          items={[
+            { id: 1, title: 'New comment', message: 'John commented on your task' },
+            { id: 2, title: 'Task completed', message: 'Project milestone reached' },
+            { id: 3, title: 'Reminder', message: 'Meeting in 30 minutes' },
+          ]}
+          renderItem={(item) => (
+            <div>
+              <h4 className="font-medium text-gray-900">{item.title}</h4>
+              <p className="text-sm text-gray-500">{item.message}</p>
+            </div>
+          )}
+        />
+      </TailwindDrawer>
+
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar Navigation */}
         {navigationMode !== 'hidden' && (
