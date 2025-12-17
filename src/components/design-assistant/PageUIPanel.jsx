@@ -310,15 +310,21 @@ Format as JSON:
               </Button>
             </div>
             
-            <p className="text-sm text-muted-foreground">
-              {mode === 'tokens' 
-                ? "Design tokens from globals.css. Select an element first, then apply tokens." 
-                : mode === 'styles' 
-                  ? "CSS classes used on this page. Click one to highlight elements using it." 
-                  : selectedElement?.tagName 
-                    ? `Selected: ${selectedElement.tagName}` 
-                    : "Click any element on the page to inspect and modify it"}
-            </p>
+            {selectedElement && (
+              <div className="flex items-center gap-2 mt-2">
+                <Badge variant="outline" className="text-xs">
+                  {selectedElement.tagName}
+                </Badge>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-6 text-xs"
+                  onClick={handleReset}
+                >
+                  Clear & Select New
+                </Button>
+              </div>
+            )}
           </SheetHeader>
 
           <div className="space-y-6 py-6 px-6">
@@ -326,33 +332,38 @@ Format as JSON:
               <div>
                 <Label className="text-sm font-medium mb-4 block">Design Tokens</Label>
                 {!selectedElement ? (
-                  <div className="text-sm text-muted-foreground p-4 border rounded-lg">
-                    Select an element first to apply design tokens
+                  <div className="text-sm text-muted-foreground p-3 border rounded-lg text-center">
+                    Click "Element" mode and select something on the page
                   </div>
                 ) : (
                   <DesignTokensBrowser onApplyToken={(data) => {
-                    if (!selectedElement?.element) {
-                      toast.error("No element selected");
+                    const { type, token, target } = data;
+
+                    let targetEl = selectedElement.element;
+
+                    // If specific heading target, find/create it
+                    if (target !== 'element' && ['h1', 'h2', 'h3'].includes(target)) {
+                      const heading = selectedElement.element.querySelector(target);
+                      if (heading) {
+                        targetEl = heading;
+                      }
+                    }
+
+                    if (!targetEl) {
+                      toast.error("Target element not found");
                       return;
                     }
 
-                    const { type, token } = data;
+                    // Apply based on type
+                    if (type === 'background') {
+                      targetEl.style.backgroundColor = token.cssVar || token.value;
+                    } else if (type === 'text-color') {
+                      targetEl.style.color = token.cssVar || token.value;
+                    } else if (type === 'font') {
+                      targetEl.style.fontFamily = token.cssVar || token.value;
+                    }
 
-                    // Map token types to CSS properties
-                    const propertyMap = {
-                      color: 'backgroundColor',
-                      spacing: 'padding',
-                      typography: token.name.includes('font-') ? 'fontFamily' : 'fontSize',
-                      radius: 'borderRadius'
-                    };
-
-                    const property = propertyMap[type] || 'backgroundColor';
-                    const value = token.value;
-
-                    // Apply the token
-                    selectedElement.element.style[property] = value;
-
-                    toast.success(`Applied ${token.name} to selected element`);
+                    toast.success(`Applied to ${target === 'element' ? 'element' : target.toUpperCase()}`);
                   }} />
                 )}
               </div>

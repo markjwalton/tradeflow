@@ -9,171 +9,171 @@ import { colors, spacing, typography, radii } from '@/components/library/designT
 
 export function DesignTokensBrowser({ onApplyToken }) {
   const [search, setSearch] = useState('');
+  const [targetElement, setTargetElement] = useState('element');
 
-  // Generate color tokens from imported data
-  const colorTokens = Object.entries(colors).flatMap(([palette, shades]) => {
-    if (typeof shades === 'string') {
-      return [{ name: palette, value: shades, category: 'semantic' }];
-    }
-    return Object.entries(shades)
-      .filter(([shade]) => !isNaN(shade) || ['DEFAULT', 'light', 'dark'].includes(shade))
-      .map(([shade, value]) => ({
-        name: `${palette}-${shade}`,
-        value: value,
-        category: palette
-      }));
-  });
+  // Extract tokens directly from globals.css
+  const extractGlobalsTokens = () => {
+    const root = getComputedStyle(document.documentElement);
+    
+    const colorTokens = [];
+    const backgroundTokens = [];
+    const fontTokens = [];
+    
+    // Get all CSS variables
+    const allProps = Array.from(document.styleSheets)
+      .flatMap(sheet => {
+        try {
+          return Array.from(sheet.cssRules);
+        } catch (e) {
+          return [];
+        }
+      })
+      .filter(rule => rule.selectorText === ':root')
+      .flatMap(rule => Array.from(rule.style))
+      .filter(prop => prop.startsWith('--'));
+    
+    allProps.forEach(prop => {
+      const value = root.getPropertyValue(prop).trim();
+      
+      if (prop.startsWith('--color-') || prop.startsWith('--primary-') || prop.startsWith('--secondary-') || prop.startsWith('--accent-')) {
+        colorTokens.push({
+          name: prop.replace('--', ''),
+          cssVar: `var(${prop})`,
+          value: value,
+          type: 'color'
+        });
+      } else if (prop.startsWith('--bg-') || prop.includes('background')) {
+        backgroundTokens.push({
+          name: prop.replace('--', ''),
+          cssVar: `var(${prop})`,
+          value: value,
+          type: 'background'
+        });
+      } else if (prop.startsWith('--font-family-')) {
+        fontTokens.push({
+          name: prop.replace('--', ''),
+          cssVar: `var(${prop})`,
+          value: value,
+          type: 'font'
+        });
+      }
+    });
+    
+    return { colorTokens, backgroundTokens, fontTokens };
+  };
 
-  // Generate spacing tokens
-  const spacingTokens = Object.entries(spacing).map(([key, value]) => ({
-    name: `spacing-${key}`,
-    value: `var(--spacing-${key})`,
-    display: value
-  }));
-
-  // Generate typography tokens
-  const typographyTokens = [
-    ...Object.entries(typography.sizes).map(([key, value]) => ({
-      name: `text-${key}`,
-      value: `var(--text-${key})`,
-      display: value
-    })),
-    ...Object.entries(typography.fonts).map(([key, value]) => ({
-      name: `font-${key}`,
-      value: `var(--font-family-${key === 'heading' ? 'display' : key})`,
-      display: value.split(',')[0]
-    }))
-  ];
-
-  // Generate radius tokens
-  const radiusTokens = Object.entries(radii).map(([key, value]) => ({
-    name: `radius-${key}`,
-    value: `var(--radius-${key})`,
-    display: value
-  }));
+  const { colorTokens, backgroundTokens, fontTokens } = extractGlobalsTokens();
 
   const filterTokens = (tokens) => 
     tokens.filter(t => t.name.toLowerCase().includes(search.toLowerCase()));
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search tokens..."
-          className="pl-9"
+          className="pl-9 h-9"
         />
       </div>
 
-      <Tabs defaultValue="colors">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="colors" className="text-xs">
-            <Palette className="h-3 w-3 mr-1" />
-            Colors
-          </TabsTrigger>
-          <TabsTrigger value="spacing" className="text-xs">
-            <Space className="h-3 w-3 mr-1" />
-            Spacing
-          </TabsTrigger>
-          <TabsTrigger value="text" className="text-xs">
-            <Type className="h-3 w-3 mr-1" />
-            Text
-          </TabsTrigger>
-          <TabsTrigger value="radius" className="text-xs">
-            <BoxSelect className="h-3 w-3 mr-1" />
-            Radius
-          </TabsTrigger>
+      <div className="flex gap-2">
+        <Button 
+          variant={targetElement === 'element' ? 'default' : 'outline'} 
+          size="sm" 
+          className="flex-1 h-8 text-xs"
+          onClick={() => setTargetElement('element')}
+        >
+          Element
+        </Button>
+        <Button 
+          variant={targetElement === 'h1' ? 'default' : 'outline'} 
+          size="sm" 
+          className="flex-1 h-8 text-xs"
+          onClick={() => setTargetElement('h1')}
+        >
+          H1
+        </Button>
+        <Button 
+          variant={targetElement === 'h2' ? 'default' : 'outline'} 
+          size="sm" 
+          className="flex-1 h-8 text-xs"
+          onClick={() => setTargetElement('h2')}
+        >
+          H2
+        </Button>
+        <Button 
+          variant={targetElement === 'h3' ? 'default' : 'outline'} 
+          size="sm" 
+          className="flex-1 h-8 text-xs"
+          onClick={() => setTargetElement('h3')}
+        >
+          H3
+        </Button>
+      </div>
+
+      <Tabs defaultValue="backgrounds" className="w-full">
+        <TabsList className="grid w-full grid-cols-3 h-9">
+          <TabsTrigger value="backgrounds" className="text-xs">Backgrounds</TabsTrigger>
+          <TabsTrigger value="text" className="text-xs">Text</TabsTrigger>
+          <TabsTrigger value="fonts" className="text-xs">Fonts</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="colors">
-          <ScrollArea className="h-[350px]">
-            <div className="space-y-2">
-              {filterTokens(colorTokens).map((token) => (
+        <TabsContent value="backgrounds" className="mt-3">
+          <ScrollArea className="h-[300px]">
+            <div className="space-y-1">
+              {filterTokens([...colorTokens, ...backgroundTokens].filter(t => t.type === 'color' || t.type === 'background')).map((token) => (
                 <Button
                   key={token.name}
-                  variant="outline"
-                  className="w-full justify-start h-auto py-2 px-3"
-                  onClick={() => onApplyToken({ type: 'color', token })}
+                  variant="ghost"
+                  className="w-full justify-start h-auto py-1.5 px-2 hover:bg-muted"
+                  onClick={() => onApplyToken({ type: 'background', token, target: targetElement })}
                 >
                   <div 
-                    className="w-6 h-6 rounded border mr-3 flex-shrink-0" 
-                    style={{ backgroundColor: token.value }}
+                    className="w-5 h-5 rounded border mr-2 flex-shrink-0" 
+                    style={{ backgroundColor: token.cssVar || token.value }}
                   />
-                  <div className="text-left flex-1">
-                    <code className="text-xs font-mono">{token.name}</code>
-                    <div className="text-xs text-muted-foreground">{token.value}</div>
-                  </div>
-                  <Badge variant="secondary" className="text-xs ml-2">
-                    {token.category}
-                  </Badge>
+                  <code className="text-xs font-mono flex-1 text-left">{token.name}</code>
                 </Button>
               ))}
             </div>
           </ScrollArea>
         </TabsContent>
 
-        <TabsContent value="spacing">
-          <ScrollArea className="h-[350px]">
-            <div className="space-y-2">
-              {filterTokens(spacingTokens).map((token) => (
+        <TabsContent value="text" className="mt-3">
+          <ScrollArea className="h-[300px]">
+            <div className="space-y-1">
+              {filterTokens(colorTokens.filter(t => t.name.includes('text'))).map((token) => (
                 <Button
                   key={token.name}
-                  variant="outline"
-                  className="w-full justify-start h-auto py-2 px-3"
-                  onClick={() => onApplyToken({ type: 'spacing', token })}
+                  variant="ghost"
+                  className="w-full justify-start h-auto py-1.5 px-2 hover:bg-muted"
+                  onClick={() => onApplyToken({ type: 'text-color', token, target: targetElement })}
                 >
-                  <div className="text-left flex-1">
-                    <code className="text-xs font-mono">{token.name}</code>
-                    <div className="text-xs text-muted-foreground">
-                      {token.value} = {token.display}
-                    </div>
-                  </div>
+                  <div 
+                    className="w-5 h-5 rounded border mr-2 flex-shrink-0" 
+                    style={{ backgroundColor: token.cssVar || token.value }}
+                  />
+                  <code className="text-xs font-mono flex-1 text-left">{token.name}</code>
                 </Button>
               ))}
             </div>
           </ScrollArea>
         </TabsContent>
 
-        <TabsContent value="text">
-          <ScrollArea className="h-[350px]">
-            <div className="space-y-2">
-              {filterTokens(typographyTokens).map((token) => (
+        <TabsContent value="fonts" className="mt-3">
+          <ScrollArea className="h-[300px]">
+            <div className="space-y-1">
+              {filterTokens(fontTokens).map((token) => (
                 <Button
                   key={token.name}
-                  variant="outline"
-                  className="w-full justify-start h-auto py-2 px-3"
-                  onClick={() => onApplyToken({ type: 'typography', token })}
+                  variant="ghost"
+                  className="w-full justify-start h-auto py-1.5 px-2 hover:bg-muted"
+                  onClick={() => onApplyToken({ type: 'font', token, target: targetElement })}
                 >
-                  <div className="text-left flex-1">
-                    <code className="text-xs font-mono">{token.name}</code>
-                    <div className="text-xs text-muted-foreground">
-                      {token.display}
-                    </div>
-                  </div>
-                </Button>
-              ))}
-            </div>
-          </ScrollArea>
-        </TabsContent>
-
-        <TabsContent value="radius">
-          <ScrollArea className="h-[350px]">
-            <div className="space-y-2">
-              {filterTokens(radiusTokens).map((token) => (
-                <Button
-                  key={token.name}
-                  variant="outline"
-                  className="w-full justify-start h-auto py-2 px-3"
-                  onClick={() => onApplyToken({ type: 'radius', token })}
-                >
-                  <div className="text-left flex-1">
-                    <code className="text-xs font-mono">{token.name}</code>
-                    <div className="text-xs text-muted-foreground">
-                      {token.value} = {token.display}
-                    </div>
-                  </div>
+                  <code className="text-xs font-mono flex-1 text-left">{token.name}</code>
                 </Button>
               ))}
             </div>

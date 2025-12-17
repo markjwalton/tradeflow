@@ -44,35 +44,24 @@ export function StylesList({ onStyleSelect }) {
           tags: Array.from(s.tags)
         }));
 
-      // Categorize styles
+      // Only categorize visually meaningful styles
       const categories = {
-        buttons: [],
-        cards: [],
-        typography: [],
-        layout: [],
-        colors: [],
-        spacing: [],
-        other: []
+        backgrounds: [],
+        text: [],
+        fonts: []
       };
 
       stylesList.forEach(style => {
         const name = style.className.toLowerCase();
         const tags = style.tags.join(',');
         
-        if (name.includes('btn') || name.includes('button') || tags.includes('button')) {
-          categories.buttons.push(style);
-        } else if (name.includes('card') || name.includes('panel') || name.includes('box')) {
-          categories.cards.push(style);
-        } else if (name.includes('text-') || name.includes('font-') || name.includes('leading-') || name.includes('tracking-') || tags.includes('h1') || tags.includes('h2') || tags.includes('h3') || tags.includes('p')) {
-          categories.typography.push(style);
-        } else if (name.includes('flex') || name.includes('grid') || name.includes('container') || name.includes('w-') || name.includes('h-')) {
-          categories.layout.push(style);
-        } else if (name.includes('bg-') || name.includes('text-') || name.includes('border-')) {
-          categories.colors.push(style);
-        } else if (name.includes('p-') || name.includes('m-') || name.includes('gap-') || name.includes('space-')) {
-          categories.spacing.push(style);
-        } else {
-          categories.other.push(style);
+        // Only include visually meaningful classes
+        if (name.startsWith('bg-') && !name.includes('opacity')) {
+          categories.backgrounds.push(style);
+        } else if (name.startsWith('text-') && !name.includes('align') && !name.includes('decoration') && !name.includes('transform') && !name.includes('wrap')) {
+          categories.text.push(style);
+        } else if (name.startsWith('font-')) {
+          categories.fonts.push(style);
         }
       });
 
