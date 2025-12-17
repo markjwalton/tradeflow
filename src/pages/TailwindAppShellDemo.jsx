@@ -121,6 +121,7 @@ function AppShellContent() {
       />
 
       {/* Top Drawer - Pushes content */}
+      {!editorOpen && (
       <TailwindDrawer
         open={topDrawerOpen}
         onClose={() => setTopDrawerOpen(false)}
@@ -143,6 +144,7 @@ function AppShellContent() {
           )}
         />
       </TailwindDrawer>
+      )}
 
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar Navigation */}
