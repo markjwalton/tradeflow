@@ -2,6 +2,7 @@ import { colors } from '@/components/library/designTokens';
 import { useTokenApplier } from '@/components/design-assistant/TokenApplierContext';
 import { Button } from '@/components/ui/button';
 import { Paintbrush } from 'lucide-react';
+import React from 'react';
 
 export default function StylesViewer() {
   const { isActive, applyToken } = useTokenApplier();
