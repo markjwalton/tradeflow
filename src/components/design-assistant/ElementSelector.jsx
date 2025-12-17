@@ -64,7 +64,8 @@ export function ElementSelector({ children }) {
         // Skip generic wrappers (div/span with only positioning/layout classes)
         const tagName = current.tagName.toLowerCase();
         if ((tagName === 'div' || tagName === 'span') && hasChildren) {
-          const classes = (current.className || '').split(' ').filter(c => c);
+          const classNameStr2 = typeof current.className === 'string' ? current.className : (current.className?.baseVal || '');
+          const classes = classNameStr2.split(' ').filter(c => c);
           const isGenericWrapper = classes.every(c => 
             c.startsWith('flex') || c.startsWith('grid') || c.startsWith('p-') || 
             c.startsWith('m-') || c.startsWith('w-') || c.startsWith('h-') ||
