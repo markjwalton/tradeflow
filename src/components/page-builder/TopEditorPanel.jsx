@@ -17,20 +17,24 @@ import { StylePropertyEditor } from "@/components/design-assistant/StyleProperty
 export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
   const { selectedElement } = useEditMode();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [viewMode, setViewMode] = useState("focus"); // 'focus' or 'full'
+  const [viewMode, setViewMode] = useState("full"); // 'focus' or 'full' - default to full for better UX
   const [hasChanges, setHasChanges] = useState(false);
-  const [activeTab, setActiveTab] = useState("current");
+  const [activeTab, setActiveTab] = useState("components");
   const [showStyleEditor, setShowStyleEditor] = useState(true);
 
-  // Push content down when editor opens
+  // Push content down when editor opens - ensure it happens immediately
   React.useEffect(() => {
+    const editorLayout = document.querySelector('[data-editor-layout]');
+    if (!editorLayout) return;
+
     if (isOpen) {
-      const marginTop = viewMode === 'full' ? '500px' : (selectedElement && showStyleEditor ? '400px' : (selectedElement ? '250px' : '120px'));
-      document.querySelector('[data-editor-layout]')?.style.setProperty('margin-top', marginTop);
+      const marginTop = isCollapsed ? '44px' : (viewMode === 'full' ? '500px' : '120px');
+      editorLayout.style.setProperty('margin-top', marginTop, 'important');
+      editorLayout.style.setProperty('transition', 'margin-top 300ms ease-in-out');
     } else {
-      document.querySelector('[data-editor-layout]')?.style.setProperty('margin-top', '0');
+      editorLayout.style.setProperty('margin-top', '0', 'important');
     }
-  }, [isOpen, viewMode, selectedElement, showStyleEditor]);
+  }, [isOpen, viewMode, isCollapsed]);
 
   const handleViewModeChange = (mode) => {
     setViewMode(mode);
