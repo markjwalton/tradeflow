@@ -287,7 +287,7 @@ Format as JSON:
                 className="flex-1"
               >
                 <List className="h-4 w-4 mr-2" />
-                Browse Styles
+                CSS Classes
               </Button>
               <Button 
                 variant={mode === 'element' ? 'default' : 'outline'} 
