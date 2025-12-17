@@ -302,10 +302,10 @@ Format as JSON:
             
             <p className="text-sm text-muted-foreground">
               {mode === 'styles' 
-                ? "Choose a style to highlight elements" 
+                ? "All CSS classes used on this page. Click one to highlight elements using it." 
                 : selectedElement?.tagName 
                   ? `Selected: ${selectedElement.tagName}` 
-                  : "Click any element to select it"}
+                  : "Click any element on the page to inspect and modify it"}
             </p>
           </SheetHeader>
 
