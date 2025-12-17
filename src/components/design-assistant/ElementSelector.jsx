@@ -63,24 +63,35 @@ export function ElementSelector({ children }) {
     };
   }, [isActive, selectElement, setHoveredElement]);
 
-  // Add hover effect with tooltip
+  // Add hover effect with rectangle overlay and tooltip
   useEffect(() => {
     if (!hoveredElement || !isActive) return;
 
-    const originalOutline = hoveredElement.style.outline;
-    const originalOutlineOffset = hoveredElement.style.outlineOffset;
-    const originalBoxShadow = hoveredElement.style.boxShadow;
+    const rect = hoveredElement.getBoundingClientRect();
     
-    hoveredElement.style.outline = '2px solid var(--primary-500)';
-    hoveredElement.style.outlineOffset = '2px';
-    hoveredElement.style.boxShadow = '0 0 0 2px var(--primary-200)';
+    // Create rectangle overlay
+    const overlay = document.createElement('div');
+    overlay.setAttribute('data-token-applier-ui', 'true');
+    overlay.style.cssText = `
+      position: fixed;
+      top: ${rect.top}px;
+      left: ${rect.left}px;
+      width: ${rect.width}px;
+      height: ${rect.height}px;
+      border: 2px solid var(--primary-500);
+      background: var(--primary-200);
+      opacity: 0.15;
+      pointer-events: none;
+      z-index: 999998;
+      transition: all 150ms ease-out;
+    `;
+    document.body.appendChild(overlay);
     
     // Create tooltip
     const tooltip = document.createElement('div');
     tooltip.setAttribute('data-token-applier-ui', 'true');
     const tagName = hoveredElement.tagName.toLowerCase();
     const classes = hoveredElement.className ? `.${hoveredElement.className.split(' ').join('.')}` : '';
-    const rect = hoveredElement.getBoundingClientRect();
     
     tooltip.style.cssText = `
       position: fixed;
@@ -99,11 +110,25 @@ export function ElementSelector({ children }) {
     tooltip.textContent = `${tagName}${classes.length > 30 ? classes.substring(0, 30) + '...' : classes}`;
     document.body.appendChild(tooltip);
 
+    // Update overlay position on scroll
+    const updatePosition = () => {
+      const newRect = hoveredElement.getBoundingClientRect();
+      overlay.style.top = `${newRect.top}px`;
+      overlay.style.left = `${newRect.left}px`;
+      overlay.style.width = `${newRect.width}px`;
+      overlay.style.height = `${newRect.height}px`;
+      tooltip.style.top = `${newRect.top - 30}px`;
+      tooltip.style.left = `${newRect.left}px`;
+    };
+    
+    window.addEventListener('scroll', updatePosition, true);
+    window.addEventListener('resize', updatePosition);
+
     return () => {
-      hoveredElement.style.outline = originalOutline;
-      hoveredElement.style.outlineOffset = originalOutlineOffset;
-      hoveredElement.style.boxShadow = originalBoxShadow;
+      overlay.remove();
       tooltip.remove();
+      window.removeEventListener('scroll', updatePosition, true);
+      window.removeEventListener('resize', updatePosition);
     };
   }, [hoveredElement, isActive]);
 
