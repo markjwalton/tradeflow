@@ -130,24 +130,17 @@ function LayoutContent({ children, currentPageName, currentUser, currentTenant, 
               }}
             />
           )}
-          <div 
-            className="relative z-10"
-            style={{
-              maxWidth: maxWidth === 'full' ? '100%' : `${maxWidth}px`,
-              marginLeft: contentAlignment === 'center' ? 'auto' : (contentAlignment === 'right' ? 'auto' : '0'),
-              marginRight: contentAlignment === 'center' ? 'auto' : (contentAlignment === 'right' ? '0' : 'auto'),
-            }}
+          <AppShell 
+            user={currentUser} 
+            tenant={currentTenant} 
+            navItems={navItems} 
+            currentPageName={currentPageName}
+            onEditorToggle={handleEditorToggle}
+            maxWidth={maxWidth}
+            contentAlignment={contentAlignment}
           >
-            <AppShell 
-              user={currentUser} 
-              tenant={currentTenant} 
-              navItems={navItems} 
-              currentPageName={currentPageName}
-              onEditorToggle={handleEditorToggle}
-            >
-              <LiveEditWrapper>{children}</LiveEditWrapper>
-            </AppShell>
-          </div>
+            <LiveEditWrapper>{children}</LiveEditWrapper>
+          </AppShell>
         </div>
         <GlobalAIAssistant />
 
