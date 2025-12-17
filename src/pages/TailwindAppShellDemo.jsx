@@ -178,12 +178,13 @@ export default function TailwindAppShellDemo() {
             </div>
           </div>
         </main>
-
-        {/* Footer */}
-        <TailwindFooter 
-          copyrightText="© 2024 Your Company, Inc. All rights reserved."
-        />
+        </div>
       </div>
+
+      {/* Footer - Full Width */}
+      <TailwindFooter 
+        copyrightText="© 2024 Your Company, Inc. All rights reserved."
+      />
 
       {/* Right Drawer with Tabs */}
       <TailwindDrawer
