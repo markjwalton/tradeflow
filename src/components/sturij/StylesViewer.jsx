@@ -10,8 +10,10 @@ export default function StylesViewer() {
     ['primary', 'secondary', 'accent', 'background', 'midnight', 'charcoal', 'destructive'].forEach(name => {
       colors[name] = {};
       [50, 100, 200, 300, 400, 500, 600, 700, 800, 900].forEach(shade => {
-        const value = root.getPropertyValue(`--${name}-${shade}`).trim();
-        colors[name][shade] = value || `oklch(0.5 0.1 0)`;
+        const cssVar = `--${name}-${shade}`;
+        const value = root.getPropertyValue(cssVar).trim();
+        // Store both the OKLCH value and use it directly in style
+        colors[name][shade] = value || '#cccccc';
       });
     });
     
