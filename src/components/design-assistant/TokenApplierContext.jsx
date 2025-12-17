@@ -61,8 +61,19 @@ export function TokenApplierProvider({ children }) {
       return;
     }
 
-    // Apply the style directly to the element
-    selectedElement.element.style[property] = tokenValue;
+    // Find all matching elements
+    let matchingElements = [];
+    if (selectedElement.className) {
+      const firstClass = selectedElement.className.split(' ')[0];
+      matchingElements = Array.from(document.querySelectorAll(`.${firstClass}`));
+    } else {
+      matchingElements = Array.from(document.querySelectorAll(selectedElement.tagName));
+    }
+
+    // Apply the style to all matching elements
+    matchingElements.forEach(el => {
+      el.style[property] = tokenValue;
+    });
     
     // Update selected element info
     const computedStyle = window.getComputedStyle(selectedElement.element);
@@ -74,7 +85,7 @@ export function TokenApplierProvider({ children }) {
       }
     }));
 
-    toast.success(`Applied ${tokenName} to ${property}`);
+    toast.success(`Applied ${tokenName} to ${matchingElements.length} element${matchingElements.length > 1 ? 's' : ''}`);
   }, [selectedElement]);
 
   const saveMapping = useCallback(async (componentType, selector) => {
