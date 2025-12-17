@@ -13,7 +13,8 @@ import { useTokenApplier } from "./TokenApplierContext";
 
 export function PageUIPanel({ currentPageName }) {
   const { isEditMode } = useEditMode();
-  const { selectedElement: tokenSelectedElement } = useTokenApplier();
+  const tokenApplier = useTokenApplier();
+  const tokenSelectedElement = tokenApplier?.selectedElement;
   const [isOpen, setIsOpen] = useState(false);
   const [selectedElement, setSelectedElement] = useState(null);
   const [selectedDomElement, setSelectedDomElement] = useState(null);

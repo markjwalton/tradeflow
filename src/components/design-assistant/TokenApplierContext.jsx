@@ -6,10 +6,7 @@ const TokenApplierContext = createContext(null);
 
 export const useTokenApplier = () => {
   const context = useContext(TokenApplierContext);
-  if (!context) {
-    throw new Error('useTokenApplier must be used within TokenApplierProvider');
-  }
-  return context;
+  return context; // Return null if not within provider
 };
 
 export function TokenApplierProvider({ children }) {
