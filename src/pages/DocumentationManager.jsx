@@ -1830,7 +1830,10 @@ export default function DocumentationManager() {
                                                   <div key={item.id} className="border-l-2 pl-3 py-1" style={{ borderColor: 'var(--color-border)' }}>
                                                     <div 
                                                       className="flex items-start gap-3 p-2 rounded hover:bg-muted/50 transition-colors cursor-pointer"
-                                                      style={{ backgroundColor: item.is_completed ? 'var(--color-muted)' : 'transparent' }}
+                                                      style={{ 
+                                                        backgroundColor: item.is_completed ? 'var(--color-muted)' : (selectedItems.includes(item.id) ? 'var(--color-primary-50)' : 'transparent'),
+                                                        borderLeft: selectedItems.includes(item.id) ? '3px solid var(--color-primary)' : 'none'
+                                                      }}
                                                       onClick={() => {
                                                         setSelectedItems(prev => 
                                                           prev.includes(item.id) 
@@ -1839,12 +1842,6 @@ export default function DocumentationManager() {
                                                         );
                                                       }}
                                                     >
-                                                      <input
-                                                        type="checkbox"
-                                                        checked={selectedItems.includes(item.id)}
-                                                        onChange={(e) => e.stopPropagation()}
-                                                        className="mt-1 cursor-pointer"
-                                                      />
                                                       <input
                                                         type="checkbox"
                                                         checked={item.is_completed}
