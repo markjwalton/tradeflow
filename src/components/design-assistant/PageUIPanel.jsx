@@ -214,7 +214,7 @@ Format as JSON:
         description: aiResponse.understanding || "",
         element_type: selectedElement.tagName || "unknown",
         before_styles: { 
-          classes: selectedElement.className ? selectedElement.className.split(' ').filter(c => c) : [], 
+          classes: typeof selectedElement.className === 'string' ? selectedElement.className.split(' ').filter(c => c) : [], 
           inline: selectedElement.element?.getAttribute('style') || null 
         },
         after_styles: { changes: aiResponse.changes_needed || "" },
