@@ -77,13 +77,8 @@ export default function TailwindDrawer({
   }
 
   return (
-    <Dialog open={open} onClose={() => {}} className="relative z-10">
-      <div className="fixed inset-0" onClick={(e) => {
-        // Only close if clicking the backdrop, not the drawer content
-        if (e.target === e.currentTarget) {
-          onClose();
-        }
-      }} />
+    <Dialog open={open} onClose={onClose} className="relative z-10">
+      <div className="fixed inset-0 bg-transparent" />
 
       <div className="fixed inset-0 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
