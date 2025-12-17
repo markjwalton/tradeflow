@@ -31,6 +31,7 @@ if (typeof window !== 'undefined') {
 function LayoutContent({ children, currentPageName, currentUser, currentTenant, navItems, isFullscreenPage, publicPages, standalonePages, fullscreenPages, userRoles, isGlobalAdmin, isTenantAdmin, siteSettings }) {
   const { toggleEditMode } = useEditMode();
   const [editorPanelOpen, setEditorPanelOpen] = useState(false);
+  const [editorViewMode, setEditorViewMode] = useState('full');
   const [showEditorBubble, setShowEditorBubble] = useState(true);
 
   useEffect(() => {
@@ -106,16 +107,14 @@ function LayoutContent({ children, currentPageName, currentUser, currentTenant, 
         <TopEditorPanel 
           isOpen={editorPanelOpen} 
           onClose={() => setEditorPanelOpen(false)} 
-          onViewModeChange={(mode) => {
-            // Track view mode for layout adjustment
-          }}
+          onViewModeChange={setEditorViewMode}
         />
         <div 
           data-editor-layout 
           className="px-2 sm:px-0"
           style={{ 
-            marginTop: editorPanelOpen ? '120px' : '0', 
-            transition: 'margin-top var(--duration-300) var(--ease-in-out)',
+            marginTop: editorPanelOpen ? (editorViewMode === 'collapsed' ? '44px' : '500px') : '0', 
+            transition: 'margin-top 300ms ease-in-out',
             position: 'relative',
           }}
         >

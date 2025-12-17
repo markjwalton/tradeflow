@@ -22,19 +22,12 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
   const [activeTab, setActiveTab] = useState("components");
   const [showStyleEditor, setShowStyleEditor] = useState(true);
 
-  // Push content down when editor opens - ensure it happens immediately
+  // Notify layout about collapsed state changes
   React.useEffect(() => {
-    const editorLayout = document.querySelector('[data-editor-layout]');
-    if (!editorLayout) return;
-
-    if (isOpen) {
-      const marginTop = isCollapsed ? '44px' : (viewMode === 'full' ? '500px' : '120px');
-      editorLayout.style.setProperty('margin-top', marginTop, 'important');
-      editorLayout.style.setProperty('transition', 'margin-top 300ms ease-in-out');
-    } else {
-      editorLayout.style.setProperty('margin-top', '0', 'important');
+    if (onViewModeChange) {
+      onViewModeChange(isCollapsed ? 'collapsed' : 'full');
     }
-  }, [isOpen, viewMode, isCollapsed]);
+  }, [isCollapsed, onViewModeChange]);
 
   const handleViewModeChange = (mode) => {
     setViewMode(mode);
