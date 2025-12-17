@@ -5,11 +5,13 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { FileText, MessageSquare, Sparkles, Copy, Check, Archive, Send } from "lucide-react";
+import { FileText, MessageSquare, Sparkles, Copy, Check, Archive, Send, Download } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import { usePagination } from "@/components/common/usePagination";
+import TailwindPagination from "@/components/sturij/TailwindPagination";
 
 export default function DocumentationManager() {
   const [activeTab, setActiveTab] = useState("documents");
@@ -187,6 +189,20 @@ export default function DocumentationManager() {
   const [highlights, setHighlights] = useState([]);
   const [analyzing, setAnalyzing] = useState(false);
 
+  // Download document as markdown
+  const handleDownload = (doc) => {
+    const blob = new Blob([doc.content], { type: 'text/markdown' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${doc.title.replace(/[^a-z0-9]/gi, '_')}_v${doc.version}.md`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
+    toast.success("Document downloaded");
+  };
+
   const loadHighlights = async () => {
     setAnalyzing(true);
     const changes = await handleAnalyzeChanges();
@@ -198,6 +214,21 @@ export default function DocumentationManager() {
   const draftComments = comments.filter(c => c.status === "draft");
   const submittedComments = comments.filter(c => c.status === "submitted" || c.status === "in_prompt");
   const archivedComments = comments.filter(c => c.status === "archived");
+
+  // Pagination for all documents view
+  const {
+    currentPage,
+    totalPages,
+    paginatedData: paginatedDocs = [],
+    goToPage,
+    nextPage,
+    prevPage,
+    canGoNext,
+    canGoPrev,
+    startIndex,
+    endIndex,
+    totalItems,
+  } = usePagination(filteredDocs, 10);
 
   return (
     <div style={{ padding: 'var(--spacing-6)' }}>
@@ -215,6 +246,10 @@ export default function DocumentationManager() {
           <TabsTrigger value="documents">
             <FileText className="w-4 h-4 mr-2" />
             Documents
+          </TabsTrigger>
+          <TabsTrigger value="allDocuments">
+            <FileText className="w-4 h-4 mr-2" />
+            All Documents
           </TabsTrigger>
           <TabsTrigger value="changeControl">
             <MessageSquare className="w-4 h-4 mr-2" />
@@ -260,13 +295,24 @@ export default function DocumentationManager() {
                       <Card 
                         key={doc.id}
                         className={`cursor-pointer hover:shadow-md transition-shadow ${selectedDoc?.id === doc.id ? 'ring-2 ring-primary' : ''}`}
-                        onClick={() => setSelectedDoc(doc)}
                         style={{ marginBottom: 'var(--spacing-2)' }}
                       >
-                        <CardHeader className="p-4">
+                        <CardHeader className="p-4" onClick={() => setSelectedDoc(doc)}>
                           <div className="flex justify-between items-start">
                             <CardTitle className="text-sm">{doc.title}</CardTitle>
-                            <Badge variant="outline">v{doc.version}</Badge>
+                            <div className="flex items-center gap-2">
+                              <Button 
+                                size="sm" 
+                                variant="ghost"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDownload(doc);
+                                }}
+                              >
+                                <Download className="w-4 h-4" />
+                              </Button>
+                              <Badge variant="outline">v{doc.version}</Badge>
+                            </div>
                           </div>
                         </CardHeader>
                       </Card>
@@ -295,9 +341,30 @@ export default function DocumentationManager() {
                     <div 
                       className="prose prose-sm max-w-none"
                       onMouseUp={handleTextSelection}
-                      style={{ userSelect: 'text' }}
+                      style={{ 
+                        userSelect: 'text',
+                        fontFamily: 'var(--font-family-body)',
+                        lineHeight: 'var(--leading-relaxed)',
+                        color: 'var(--color-text-body)'
+                      }}
                     >
-                      <ReactMarkdown>{selectedDoc.content}</ReactMarkdown>
+                      <ReactMarkdown
+                        components={{
+                          h1: ({ children }) => <h1 style={{ fontFamily: 'var(--font-family-display)', fontSize: 'var(--text-3xl)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)', marginTop: 'var(--spacing-8)', marginBottom: 'var(--spacing-4)' }}>{children}</h1>,
+                          h2: ({ children }) => <h2 style={{ fontFamily: 'var(--font-family-display)', fontSize: 'var(--text-2xl)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)', marginTop: 'var(--spacing-6)', marginBottom: 'var(--spacing-3)' }}>{children}</h2>,
+                          h3: ({ children }) => <h3 style={{ fontFamily: 'var(--font-family-display)', fontSize: 'var(--text-xl)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', marginTop: 'var(--spacing-4)', marginBottom: 'var(--spacing-2)' }}>{children}</h3>,
+                          p: ({ children }) => <p style={{ marginTop: 'var(--spacing-3)', marginBottom: 'var(--spacing-3)' }}>{children}</p>,
+                          ul: ({ children }) => <ul style={{ marginLeft: 'var(--spacing-6)', marginTop: 'var(--spacing-2)', marginBottom: 'var(--spacing-2)' }}>{children}</ul>,
+                          ol: ({ children }) => <ol style={{ marginLeft: 'var(--spacing-6)', marginTop: 'var(--spacing-2)', marginBottom: 'var(--spacing-2)' }}>{children}</ol>,
+                          li: ({ children }) => <li style={{ marginTop: 'var(--spacing-2)', marginBottom: 'var(--spacing-2)' }}>{children}</li>,
+                          code: ({ inline, children }) => inline ? 
+                            <code style={{ backgroundColor: 'var(--color-muted)', padding: '2px 6px', borderRadius: 'var(--radius-sm)', fontSize: 'var(--text-sm)', fontFamily: 'var(--font-family-mono)' }}>{children}</code> :
+                            <code style={{ display: 'block', backgroundColor: 'var(--color-muted)', padding: 'var(--spacing-4)', borderRadius: 'var(--radius-md)', fontSize: 'var(--text-sm)', fontFamily: 'var(--font-family-mono)', overflowX: 'auto' }}>{children}</code>,
+                          blockquote: ({ children }) => <blockquote style={{ borderLeft: '4px solid var(--color-primary)', paddingLeft: 'var(--spacing-4)', marginLeft: '0', marginTop: 'var(--spacing-4)', marginBottom: 'var(--spacing-4)', fontStyle: 'italic', color: 'var(--color-text-muted)' }}>{children}</blockquote>,
+                        }}
+                      >
+                        {selectedDoc.content}
+                      </ReactMarkdown>
                     </div>
 
                     {/* Comment Box */}
@@ -331,6 +398,112 @@ export default function DocumentationManager() {
               )}
             </div>
           </div>
+        </TabsContent>
+
+        {/* All Documents Tab */}
+        <TabsContent value="allDocuments">
+          <Card>
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <div>
+                  <CardTitle>All Documents</CardTitle>
+                  <CardDescription>Browse and download all framework documents</CardDescription>
+                </div>
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="w-64">
+                    <SelectValue placeholder="Filter by category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="Developer Specification">Developer Specification</SelectItem>
+                    <SelectItem value="AI Guidelines">AI Guidelines</SelectItem>
+                    <SelectItem value="Technical Specification">Technical Specification</SelectItem>
+                    <SelectItem value="Sprint Plan">Sprint Plan</SelectItem>
+                    <SelectItem value="Architecture">Architecture</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div style={{ marginBottom: 'var(--spacing-4)' }}>
+                <TailwindPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={goToPage}
+                  onNextPage={nextPage}
+                  onPrevPage={prevPage}
+                  canGoNext={canGoNext}
+                  canGoPrev={canGoPrev}
+                  startIndex={startIndex}
+                  endIndex={endIndex}
+                  totalItems={totalItems}
+                />
+              </div>
+
+              <div className="space-y-3">
+                {paginatedDocs.map(doc => (
+                  <Card key={doc.id} className="hover:shadow-md transition-shadow">
+                    <CardContent className="p-6">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                              {doc.title}
+                            </h3>
+                            <Badge variant="outline">v{doc.version}</Badge>
+                            <Badge>{doc.category}</Badge>
+                          </div>
+                          {doc.change_summary && (
+                            <p className="text-sm" style={{ color: 'var(--color-text-muted)', marginTop: 'var(--spacing-2)' }}>
+                              {doc.change_summary}
+                            </p>
+                          )}
+                          <p className="text-xs" style={{ color: 'var(--color-text-subtle)', marginTop: 'var(--spacing-2)' }}>
+                            Updated: {new Date(doc.updated_date).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button 
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              setSelectedDoc(doc);
+                              setActiveTab("documents");
+                            }}
+                          >
+                            <FileText className="w-4 h-4 mr-2" />
+                            View
+                          </Button>
+                          <Button 
+                            size="sm"
+                            onClick={() => handleDownload(doc)}
+                          >
+                            <Download className="w-4 h-4 mr-2" />
+                            Download
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+
+              <div style={{ marginTop: 'var(--spacing-4)' }}>
+                <TailwindPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={goToPage}
+                  onNextPage={nextPage}
+                  onPrevPage={prevPage}
+                  canGoNext={canGoNext}
+                  canGoPrev={canGoPrev}
+                  startIndex={startIndex}
+                  endIndex={endIndex}
+                  totalItems={totalItems}
+                />
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Change Control Tab */}
