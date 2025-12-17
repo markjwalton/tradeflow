@@ -48,11 +48,7 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
 
   if (!isOpen) return null;
 
-  const panelHeight = isCollapsed ? '44px' : (
-    viewMode === 'focus' 
-      ? (selectedElement ? (showStyleEditor ? '400px' : '250px') : '120px')
-      : '500px'
-  );
+  const panelHeight = isCollapsed ? '44px' : '500px';
 
   return (
     <div 
