@@ -7,6 +7,7 @@ import TailwindList from '../components/sturij/TailwindList';
 import TailwindFooter from '../components/sturij/TailwindFooter';
 import TailwindBreadcrumb from '../components/sturij/TailwindBreadcrumb';
 import TailwindTabsNav from '../components/sturij/TailwindTabsNav';
+import StylesViewer from '../components/sturij/StylesViewer';
 import {
   HomeIcon,
   UsersIcon,
@@ -86,6 +87,7 @@ export default function TailwindAppShellDemo() {
     { id: 'details', name: 'Details' },
     { id: 'activity', name: 'Activity' },
     { id: 'settings', name: 'Settings' },
+    { id: 'styles', name: 'Styles' },
   ];
 
   return (
@@ -311,6 +313,7 @@ export default function TailwindAppShellDemo() {
               </div>
             </div>
           )}
+          {activeTab === 'styles' && <StylesViewer />}
         </div>
       </TailwindDrawer>
 
