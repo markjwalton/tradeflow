@@ -12,7 +12,7 @@ export function StylesList({ onStyleSelect }) {
   useEffect(() => {
     // Extract all unique classes from the page
     const extractStyles = () => {
-      const allElements = document.querySelectorAll('[data-page-content] *');
+      const allElements = document.querySelectorAll('body *:not([data-token-applier-ui]):not([data-token-applier-ui] *)');
       const classMap = new Map();
 
       allElements.forEach(element => {
