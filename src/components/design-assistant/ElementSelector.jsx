@@ -15,6 +15,7 @@ export function ElementSelector({ children }) {
       if (e.target.closest('[data-token-applier-ui]') || 
           e.target.closest('[data-radix-dialog-content]') ||
           e.target.closest('[data-radix-dialog-overlay]') ||
+          e.target.closest('[data-headlessui-state]') ||
           e.target.closest('[role="dialog"]')) {
         return;
       }

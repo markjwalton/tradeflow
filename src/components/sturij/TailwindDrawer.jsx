@@ -85,9 +85,10 @@ export default function TailwindDrawer({
           <div className={`pointer-events-none fixed flex ${isHorizontal ? 'max-w-full' : 'max-h-full w-full justify-center'} ${sideClasses[side]}`}>
             <DialogPanel
               transition
+              data-token-applier-ui
               className={`pointer-events-auto ${isHorizontal ? `w-screen ${maxWidthClasses[maxWidth]}` : `w-full ${maxHeightClasses[maxHeight]}`} transform transition duration-500 ease-in-out ${transitionClasses[side]} sm:duration-700`}
             >
-              <div className={`relative flex ${isHorizontal ? 'h-full flex-col' : 'w-full flex-row'} overflow-y-auto bg-white ${isHorizontal ? 'py-6' : 'px-6'} shadow-xl`}>
+              <div data-token-applier-ui className={`relative flex ${isHorizontal ? 'h-full flex-col' : 'w-full flex-row'} overflow-y-auto bg-white ${isHorizontal ? 'py-6' : 'px-6'} shadow-xl`}>
                 <div className="px-4 sm:px-6">
                   <div className="flex items-start justify-between">
                     <DialogTitle className="text-base font-semibold text-gray-900">{title}</DialogTitle>
