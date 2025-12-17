@@ -49,7 +49,7 @@ export default function Layout({ children, currentPageName }) {
   const [navConfig, setNavConfig] = useState(null);
   const [navItems, setNavItems] = useState([]);
   const [editorPanelOpen, setEditorPanelOpen] = useState(false);
-  const [showEditorBubble, setShowEditorBubble] = useState(true);
+  const [showEditorBubble, setShowEditorBubble] = useState(true); // Always show by default
   const [siteSettings, setSiteSettings] = useState(null);
   
   const urlParams = new URLSearchParams(window.location.search);
@@ -67,8 +67,9 @@ export default function Layout({ children, currentPageName }) {
     const loadBubblePreference = async () => {
       try {
         const user = await base44.auth.me();
-        if (user?.ui_preferences?.showEditorBubble !== undefined) {
-          setShowEditorBubble(user.ui_preferences.showEditorBubble);
+        // Keep editor bubble visible - only hide if explicitly set to false
+        if (user?.ui_preferences?.showEditorBubble === false) {
+          setShowEditorBubble(false);
         }
         // Always turn off live edit mode on page load
         await base44.auth.updateMe({
