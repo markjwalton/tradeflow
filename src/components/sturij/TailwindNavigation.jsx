@@ -10,7 +10,8 @@ export default function TailwindNavigation({
   navigationMode = 'expanded', // 'expanded', 'icons', 'hidden'
   logoSrc,
   logoAlt = 'Company Logo',
-  onNavigate 
+  onNavigate,
+  onEditorToggle
 }) {
   if (navigationMode === 'hidden') {
     return null;
