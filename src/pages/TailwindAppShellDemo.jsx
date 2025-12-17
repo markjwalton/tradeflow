@@ -89,7 +89,7 @@ export default function TailwindAppShellDemo() {
 
   const drawerTabs = [
     { id: 'colours', name: 'Colours', current: activeTab === 'colours' },
-    { id: 'typography', name: 'Typography', current: activeTab === 'typography' },
+    { id: 'typography', name: 'Type', current: activeTab === 'typography' },
     { id: 'spacing', name: 'Spacing', current: activeTab === 'spacing' },
     { id: 'shadows', name: 'Shadows', current: activeTab === 'shadows' },
     { id: 'radii', name: 'Radii', current: activeTab === 'radii' },
