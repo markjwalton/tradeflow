@@ -61,24 +61,25 @@ export function PageUIPanel({ currentPageName }) {
   };
 
   const analyzeStyleSource = () => {
-    if (!selectedElement || !selectedElement.classes) return [];
+    if (!selectedElement) return [];
     
     const sources = [];
+    const classes = selectedElement.className ? selectedElement.className.split(' ').filter(c => c) : [];
     
-    if (selectedElement.inlineStyles) {
+    if (selectedElement.element?.getAttribute('style')) {
       sources.push({ type: "inline", description: "Inline styles directly on element" });
     }
     
-    const themeClasses = (selectedElement.classes || []).filter(cls => 
-      cls && (cls.startsWith('text-') || cls.startsWith('bg-') || cls.startsWith('border-') || 
-      cls.includes('primary') || cls.includes('secondary') || cls.includes('accent'))
+    const themeClasses = classes.filter(cls => 
+      cls.startsWith('text-') || cls.startsWith('bg-') || cls.startsWith('border-') || 
+      cls.includes('primary') || cls.includes('secondary') || cls.includes('accent')
     );
     if (themeClasses.length > 0) {
       sources.push({ type: "theme", description: `Theme tokens: ${themeClasses.join(', ')}` });
     }
     
-    const customClasses = (selectedElement.classes || []).filter(cls => 
-      cls && !themeClasses.includes(cls) && !cls.startsWith('flex') && !cls.startsWith('grid')
+    const customClasses = classes.filter(cls => 
+      !themeClasses.includes(cls) && !cls.startsWith('flex') && !cls.startsWith('grid')
     );
     if (customClasses.length > 0) {
       sources.push({ type: "custom", description: `Custom classes: ${customClasses.join(', ')}` });
@@ -112,9 +113,9 @@ DESIGN SYSTEM CONTEXT:
 
 SELECTED ELEMENT:
 Tag: ${selectedElement?.tagName || 'unknown'}
-Classes: ${(selectedElement?.classes || []).join(', ') || 'none'}
-Inline Styles: ${selectedElement?.inlineStyles || "none"}
-Parent: ${selectedElement?.parentElement?.tagName || 'none'} with classes: ${(selectedElement?.parentElement?.classes || []).join(', ') || 'none'}
+Classes: ${selectedElement?.className || 'none'}
+ID: ${selectedElement?.id || 'none'}
+Inline Styles: ${selectedElement?.element?.getAttribute('style') || "none"}
 
 COMPUTED STYLES:
 ${selectedElement?.computedStyles ? Object.entries(selectedElement.computedStyles).map(([k, v]) => `${k}: ${v || ''}`).join('\n') : 'none'}
@@ -161,7 +162,11 @@ Format as JSON:
       await base44.entities.DesignInteraction.create({
         page_slug: currentPageName,
         user_request: userRequest,
-        selected_element: selectedElement,
+        selected_element: {
+          tagName: selectedElement.tagName,
+          className: selectedElement.className,
+          id: selectedElement.id
+        },
         ai_assessment: response.assessment,
         generated_prompt: response.generated_prompt,
         was_applied: false,
@@ -192,7 +197,10 @@ Format as JSON:
         category: "other",
         description: aiResponse.understanding || "",
         element_type: selectedElement.tagName || "unknown",
-        before_styles: { classes: selectedElement.classes || [], inline: selectedElement.inlineStyles || null },
+        before_styles: { 
+          classes: selectedElement.className ? selectedElement.className.split(' ').filter(c => c) : [], 
+          inline: selectedElement.element?.getAttribute('style') || null 
+        },
         after_styles: { changes: aiResponse.changes_needed || "" },
         change_notes: aiResponse.assessment || "",
         is_validated: false,
@@ -259,12 +267,9 @@ Format as JSON:
                       <div className="px-4 pb-4 space-y-2 border-t pt-4 text-xs font-mono">
                         <p><strong>Tag:</strong> {selectedElement?.tagName || 'unknown'}</p>
                         {selectedElement?.id && <p><strong>ID:</strong> {selectedElement.id}</p>}
-                        <p><strong>Classes:</strong> {(selectedElement?.classes || []).join(', ') || 'none'}</p>
-                        {selectedElement?.inlineStyles && (
-                          <p><strong>Inline:</strong> {selectedElement.inlineStyles}</p>
-                        )}
-                        {selectedElement?.parentElement && (
-                          <p><strong>Parent:</strong> {selectedElement.parentElement.tagName}</p>
+                        <p><strong>Classes:</strong> {selectedElement?.className || 'none'}</p>
+                        {selectedElement?.element?.getAttribute('style') && (
+                          <p><strong>Inline:</strong> {selectedElement.element.getAttribute('style')}</p>
                         )}
                       </div>
                     </CollapsibleContent>
