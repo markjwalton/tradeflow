@@ -25,8 +25,8 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
   const handleViewModeChange = (mode) => {
     setViewMode(mode);
     if (onViewModeChange) onViewModeChange(mode);
-    // Update layout margin - expanded when style editor is shown
-    const marginTop = mode === 'full' ? '500px' : (showStyleEditor && selectedElement ? '180px' : '120px');
+    // Update layout margin to push content down
+    const marginTop = mode === 'full' ? '500px' : (selectedElement && showStyleEditor ? '400px' : (selectedElement ? '250px' : '120px'));
     document.querySelector('[data-editor-layout]')?.style.setProperty('margin-top', marginTop);
   };
 

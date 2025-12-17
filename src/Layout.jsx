@@ -126,7 +126,7 @@ function LayoutContent({ children, currentPageName, currentUser, currentTenant, 
           data-editor-layout 
           className="px-2 sm:px-0"
           style={{ 
-            marginTop: editorPanelOpen ? 'var(--spacing-32)' : '0', 
+            marginTop: editorPanelOpen ? '120px' : '0', 
             transition: 'margin-top var(--duration-300) var(--ease-in-out)',
             position: 'relative',
           }}
