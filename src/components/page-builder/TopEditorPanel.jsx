@@ -13,6 +13,7 @@ import { PageSettingsTab } from "./PageSettingsTab";
 import { ElementEditor } from "./ElementEditor";
 import { useEditMode } from "./EditModeContext";
 import { StylePropertyEditor } from "@/components/design-assistant/StylePropertyEditor";
+import { StyleEditorPanel } from "./StyleEditorPanel";
 
 export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
   const { selectedElement } = useEditMode();
@@ -215,13 +216,7 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
             </TabsContent>
 
             <TabsContent value="styling">
-              <StylingPanel 
-                selectedElement={selectedElement}
-                onApplyStyle={(style) => {
-                  setHasChanges(true);
-                  toast.info("Style applied");
-                }}
-              />
+              <StyleEditorPanel currentPageName="" />
             </TabsContent>
 
             <TabsContent value="layout">
