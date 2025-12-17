@@ -8,17 +8,25 @@ export default function TailwindDrawer({
   onClose, 
   title, 
   children,
-  side = 'right', // 'right' or 'left'
-  maxWidth = 'md' // 'sm', 'md', 'lg', 'xl', '2xl'
+  side = 'right', // 'right', 'left', 'top', 'bottom'
+  maxWidth = 'md', // 'sm', 'md', 'lg', 'xl', '2xl' (for left/right)
+  maxHeight = 'md' // 'sm', 'md', 'lg', 'xl' (for top/bottom)
 }) {
+  const isHorizontal = side === 'left' || side === 'right';
+  const isVertical = side === 'top' || side === 'bottom';
+
   const sideClasses = {
-    right: 'right-0 pl-10 sm:pl-16',
-    left: 'left-0 pr-10 sm:pr-16',
+    right: 'inset-y-0 right-0 pl-10 sm:pl-16',
+    left: 'inset-y-0 left-0 pr-10 sm:pr-16',
+    top: 'inset-x-0 top-0 pb-10',
+    bottom: 'inset-x-0 bottom-0 pt-10',
   };
 
   const transitionClasses = {
     right: 'data-closed:translate-x-full',
     left: 'data-closed:-translate-x-full',
+    top: 'data-closed:-translate-y-full',
+    bottom: 'data-closed:translate-y-full',
   };
 
   const maxWidthClasses = {
@@ -29,18 +37,25 @@ export default function TailwindDrawer({
     '2xl': 'max-w-2xl',
   };
 
+  const maxHeightClasses = {
+    sm: 'max-h-[300px]',
+    md: 'max-h-[400px]',
+    lg: 'max-h-[500px]',
+    xl: 'max-h-[600px]',
+  };
+
   return (
     <Dialog open={open} onClose={onClose} className="relative z-10">
       <div className="fixed inset-0" />
 
       <div className="fixed inset-0 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
-          <div className={`pointer-events-none fixed inset-y-0 flex max-w-full ${sideClasses[side]}`}>
+          <div className={`pointer-events-none fixed flex ${isHorizontal ? 'max-w-full' : 'max-h-full w-full justify-center'} ${sideClasses[side]}`}>
             <DialogPanel
               transition
-              className={`pointer-events-auto w-screen ${maxWidthClasses[maxWidth]} transform transition duration-500 ease-in-out ${transitionClasses[side]} sm:duration-700`}
+              className={`pointer-events-auto ${isHorizontal ? `w-screen ${maxWidthClasses[maxWidth]}` : `w-full ${maxHeightClasses[maxHeight]}`} transform transition duration-500 ease-in-out ${transitionClasses[side]} sm:duration-700`}
             >
-              <div className="relative flex h-full flex-col overflow-y-auto bg-white py-6 shadow-xl">
+              <div className={`relative flex ${isHorizontal ? 'h-full flex-col' : 'w-full flex-row'} overflow-y-auto bg-white ${isHorizontal ? 'py-6' : 'px-6'} shadow-xl`}>
                 <div className="px-4 sm:px-6">
                   <div className="flex items-start justify-between">
                     <DialogTitle className="text-base font-semibold text-gray-900">{title}</DialogTitle>
@@ -57,7 +72,7 @@ export default function TailwindDrawer({
                     </div>
                   </div>
                 </div>
-                <div className="relative mt-6 flex-1 px-4 sm:px-6">{children}</div>
+                <div className={`relative ${isHorizontal ? 'mt-6' : 'ml-6'} flex-1 px-4 sm:px-6`}>{children}</div>
               </div>
             </DialogPanel>
           </div>
