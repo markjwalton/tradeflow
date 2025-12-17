@@ -19,15 +19,12 @@ export function ElementSelector({ children }) {
       
       const classes = element.className || '';
       
-      // Ignore elements that are full-screen overlays (typically backdrops)
-      if (
-        typeof classes === 'string' && 
-        (
-          (classes.includes('fixed inset-0') && classes.includes('bg-transparent')) ||
-          (classes.includes('absolute inset-0') && classes.includes('overflow-hidden')) ||
-          classes.includes('pointer-events-none')
-        )
-      ) return true;
+      // Only ignore explicitly non-interactive elements
+      if (typeof classes === 'string' && classes.includes('pointer-events-none')) return true;
+      
+      // Ignore transparent overlays that cover the whole screen
+      if (classes.includes('fixed') && classes.includes('inset-0') && 
+          (classes.includes('bg-transparent') || classes.includes('opacity-0'))) return true;
       
       // Ignore main structural elements
       const tagName = element.tagName.toLowerCase();
@@ -72,9 +69,11 @@ export function ElementSelector({ children }) {
 
     const originalOutline = hoveredElement.style.outline;
     const originalOutlineOffset = hoveredElement.style.outlineOffset;
+    const originalBoxShadow = hoveredElement.style.boxShadow;
     
     hoveredElement.style.outline = '2px solid var(--primary-500)';
     hoveredElement.style.outlineOffset = '2px';
+    hoveredElement.style.boxShadow = '0 0 0 2px var(--primary-200)';
     
     // Create tooltip
     const tooltip = document.createElement('div');
@@ -103,6 +102,7 @@ export function ElementSelector({ children }) {
     return () => {
       hoveredElement.style.outline = originalOutline;
       hoveredElement.style.outlineOffset = originalOutlineOffset;
+      hoveredElement.style.boxShadow = originalBoxShadow;
       tooltip.remove();
     };
   }, [hoveredElement, isActive]);
