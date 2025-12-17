@@ -12,7 +12,7 @@ export default function StylesViewer() {
       colorData[name] = {};
       [50, 100, 200, 300, 400, 500, 600, 700, 800, 900].forEach(shade => {
         const value = computedStyle.getPropertyValue(`--${name}-${shade}`).trim();
-        colorData[name][shade] = value;
+        colorData[name][shade] = value || 'not found';
       });
     });
     
@@ -37,8 +37,8 @@ export default function StylesViewer() {
                   style={{ backgroundColor: value }}
                 />
                 <div className="text-xs text-gray-700 mt-1">{shade}</div>
-                <code className="text-[10px] text-gray-500 block truncate" title={value}>
-                  {value.substring(0, 15)}...
+                <code className="text-[10px] text-gray-500 block" title={value}>
+                  {value}
                 </code>
               </div>
             ))}
