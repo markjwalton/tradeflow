@@ -15,7 +15,7 @@ export const useTenant = () => useContext(TenantContext);
 import GlobalAIAssistant from "@/components/ai-assistant/GlobalAIAssistant";
 import { AppShell } from "@/components/layout/AppShell";
 import { SidebarProvider } from "@/components/layout/SidebarContext";
-import { EditModeProvider } from "@/components/page-builder/EditModeContext";
+import { EditModeProvider, useEditMode } from "@/components/page-builder/EditModeContext";
 import { PageSettingsPanel } from "@/components/page-builder/PageSettingsPanel";
 import { PageUIPanel } from "@/components/design-assistant/PageUIPanel";
 import { StyleEditorPanel } from "@/components/page-builder/StyleEditorPanel";
@@ -34,6 +34,166 @@ if (typeof window !== 'undefined') {
   initializeSentry();
 }
 
+function LayoutContent({ children, currentPageName, currentUser, currentTenant, navItems, isFullscreenPage, publicPages, standalonePages, fullscreenPages, userRoles, isGlobalAdmin, isTenantAdmin, siteSettings }) {
+  const { toggleEditMode } = useEditMode();
+  const [editorPanelOpen, setEditorPanelOpen] = useState(false);
+  const [showEditorBubble, setShowEditorBubble] = useState(true);
+
+  useEffect(() => {
+    const handlePreferencesChange = (event) => {
+      setShowEditorBubble(event.detail.showEditorBubble ?? true);
+    };
+
+    window.addEventListener('ui-preferences-changed', handlePreferencesChange);
+    return () => window.removeEventListener('ui-preferences-changed', handlePreferencesChange);
+  }, []);
+
+  const handleEditorToggle = () => {
+    const newState = !editorPanelOpen;
+    setEditorPanelOpen(newState);
+    toggleEditMode();
+  };
+
+  if (isFullscreenPage) {
+    const fullscreenContextValue = {
+      tenant: currentTenant,
+      tenantId: currentTenant?.id,
+      tenantSlug: currentTenant?.slug,
+      tenantName: currentTenant?.name,
+      userRoles,
+      isGlobalAdmin,
+      isTenantAdmin,
+    };
+    return (
+      <TenantContext.Provider value={fullscreenContextValue}>
+        <div className="min-h-screen">
+          <LiveEditWrapper>{children}</LiveEditWrapper>
+
+          {/* Exit fullscreen button */}
+          <Button
+            onClick={() => window.history.back()}
+            variant="ghost"
+            size="sm"
+            className="fixed top-4 right-4 h-10 px-4 bg-black/20 hover:bg-black/40 text-white backdrop-blur-sm border border-white/20"
+            style={{ zIndex: 'var(--z-max)' }}
+            title="Exit fullscreen"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back
+          </Button>
+        </div>
+        <PageSettingsPanel currentPageName={currentPageName} />
+        <TokenApplierProvider>
+          <ElementSelector />
+          <SelectionOverlay />
+          <PageUIPanel currentPageName={currentPageName} />
+        </TokenApplierProvider>
+        <GlobalAIAssistant />
+      </TenantContext.Provider>
+    );
+  }
+
+  const tenantContextValue = {
+    tenant: currentTenant,
+    tenantId: currentTenant?.id,
+    tenantSlug: currentTenant?.slug,
+    tenantName: currentTenant?.name,
+    userRoles,
+    isGlobalAdmin,
+    isTenantAdmin,
+  };
+
+  const maxWidth = (siteSettings?.maxWidth && String(siteSettings.maxWidth)) || "1400";
+  const contentAlignment = (siteSettings?.contentAlignment && String(siteSettings.contentAlignment)) || "center";
+  const backgroundImage = siteSettings?.backgroundImage && String(siteSettings.backgroundImage);
+
+  return (
+    <TenantContext.Provider value={tenantContextValue}>
+      <link rel="stylesheet" href="https://use.typekit.net/iwm1gcu.css" />
+      <style dangerouslySetInnerHTML={{ __html: cssVariables }} />
+      <SidebarProvider>
+        <TopEditorPanel 
+          isOpen={editorPanelOpen} 
+          onClose={() => setEditorPanelOpen(false)} 
+          onViewModeChange={(mode) => {
+            // Track view mode for layout adjustment
+          }}
+        />
+        <div 
+          data-editor-layout 
+          className="px-2 sm:px-0"
+          style={{ 
+            marginTop: editorPanelOpen ? 'var(--spacing-32)' : '0', 
+            transition: 'margin-top var(--duration-300) var(--ease-in-out)',
+            position: 'relative',
+          }}
+        >
+          {backgroundImage && (
+            <div 
+              className="fixed inset-0 z-0 pointer-events-none"
+              style={{
+                backgroundImage: `url(${backgroundImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                opacity: 0.15,
+              }}
+            />
+          )}
+          <div 
+            className="relative z-10"
+            style={{
+              maxWidth: maxWidth === 'full' ? '100%' : `${maxWidth}px`,
+              marginLeft: contentAlignment === 'center' ? 'auto' : (contentAlignment === 'right' ? 'auto' : '0'),
+              marginRight: contentAlignment === 'center' ? 'auto' : (contentAlignment === 'right' ? '0' : 'auto'),
+            }}
+          >
+            <AppShell 
+              user={currentUser} 
+              tenant={currentTenant} 
+              navItems={navItems} 
+              currentPageName={currentPageName}
+              onEditorToggle={handleEditorToggle}
+            >
+              <LiveEditWrapper>{children}</LiveEditWrapper>
+            </AppShell>
+          </div>
+        </div>
+        <PageSettingsPanel currentPageName={currentPageName} />
+        <StyleEditorPanel currentPageName={currentPageName} />
+        <TokenApplierProvider>
+          <ElementSelector />
+          <SelectionOverlay />
+          <PageUIPanel currentPageName={currentPageName} />
+        </TokenApplierProvider>
+        <GlobalAIAssistant />
+
+        {/* Editor bubble button - hide on fullscreen pages */}
+        {showEditorBubble && !isFullscreenPage && (
+          <button
+            type="button"
+            onClick={handleEditorToggle}
+            className="fixed bottom-6 left-6 rounded-full bg-indigo-600 p-2 text-white shadow-2xl hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            style={{ zIndex: 'var(--z-max)' }}
+            title="Toggle Editor Panel"
+          >
+            {editorPanelOpen ? (
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <Palette className="h-6 w-6" />
+            )}
+          </button>
+        )}
+      </SidebarProvider>
+    </TenantContext.Provider>
+  );
+}
+
 export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -48,8 +208,6 @@ export default function Layout({ children, currentPageName }) {
   const [isTenantAdmin, setIsTenantAdmin] = useState(false);
   const [navConfig, setNavConfig] = useState(null);
   const [navItems, setNavItems] = useState([]);
-  const [editorPanelOpen, setEditorPanelOpen] = useState(false);
-  const [showEditorBubble, setShowEditorBubble] = useState(true); // Always show by default
   const [siteSettings, setSiteSettings] = useState(null);
   
   const urlParams = new URLSearchParams(window.location.search);
@@ -67,10 +225,6 @@ export default function Layout({ children, currentPageName }) {
     const loadBubblePreference = async () => {
       try {
         const user = await base44.auth.me();
-        // Keep editor bubble visible - only hide if explicitly set to false
-        if (user?.ui_preferences?.showEditorBubble === false) {
-          setShowEditorBubble(false);
-        }
         // Always turn off live edit mode on page load
         await base44.auth.updateMe({
           ui_preferences: {
@@ -138,10 +292,6 @@ export default function Layout({ children, currentPageName }) {
       }
     };
 
-    const handlePreferencesChange = (event) => {
-      setShowEditorBubble(event.detail.showEditorBubble ?? true);
-    };
-
     const handleSiteSettingsChange = (event) => {
       setSiteSettings(event.detail);
       // Apply dark mode
@@ -183,7 +333,6 @@ export default function Layout({ children, currentPageName }) {
     };
     loadSiteSettings();
 
-    window.addEventListener('ui-preferences-changed', handlePreferencesChange);
     window.addEventListener('site-settings-changed', handleSiteSettingsChange);
 
     const checkAccess = async () => {
@@ -386,10 +535,9 @@ export default function Layout({ children, currentPageName }) {
     
     // Cleanup event listeners
     return () => {
-      window.removeEventListener('ui-preferences-changed', handlePreferencesChange);
       window.removeEventListener('site-settings-changed', handleSiteSettingsChange);
     };
-    }, [currentPageName]);
+  }, [currentPageName]);
 
   // Pages without layout wrapper (TenantAccess, Setup, ClientOnboardingPortal render without chrome)
   if (currentPageName === "TenantAccess" || currentPageName === "Setup" || currentPageName === "ClientOnboardingPortal") {
@@ -402,50 +550,6 @@ export default function Layout({ children, currentPageName }) {
   }
 
   const isFullscreenPage = fullscreenPages.includes(currentPageName);
-
-  if (isFullscreenPage) {
-    const fullscreenContextValue = {
-      tenant: currentTenant,
-      tenantId: currentTenant?.id,
-      tenantSlug: currentTenant?.slug,
-      tenantName: currentTenant?.name,
-      userRoles,
-      isGlobalAdmin,
-      isTenantAdmin,
-    };
-    return (
-      <TenantContext.Provider value={fullscreenContextValue}>
-        <EditModeProvider>
-          <div className="min-h-screen">
-            <LiveEditWrapper>{children}</LiveEditWrapper>
-
-            {/* Exit fullscreen button */}
-            <Button
-              onClick={() => window.history.back()}
-              variant="ghost"
-              size="sm"
-              className="fixed top-4 right-4 h-10 px-4 bg-black/20 hover:bg-black/40 text-white backdrop-blur-sm border border-white/20"
-              style={{ zIndex: 'var(--z-max)' }}
-              title="Exit fullscreen"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-              </svg>
-              Back
-            </Button>
-          </div>
-          <PageSettingsPanel currentPageName={currentPageName} />
-          <TokenApplierProvider>
-            <ElementSelector />
-            <SelectionOverlay />
-            <PageUIPanel currentPageName={currentPageName} />
-          </TokenApplierProvider>
-          <GlobalAIAssistant />
-        </EditModeProvider>
-      </TenantContext.Provider>
-    );
-  }
 
   // Show loading while checking
   if (checkingAccess) {
@@ -467,140 +571,26 @@ export default function Layout({ children, currentPageName }) {
     return null;
   }
 
-  const tenantContextValue = {
-    tenant: currentTenant,
-    tenantId: currentTenant?.id,
-    tenantSlug: currentTenant?.slug,
-    tenantName: currentTenant?.name,
-    userRoles,
-    isGlobalAdmin,
-    isTenantAdmin,
-  };
-
-  const maxWidth = (siteSettings?.maxWidth && String(siteSettings.maxWidth)) || "1400";
-  const contentAlignment = (siteSettings?.contentAlignment && String(siteSettings.contentAlignment)) || "center";
-  const backgroundImage = siteSettings?.backgroundImage && String(siteSettings.backgroundImage);
-
   return (
     <ErrorBoundary>
       <WebVitals />
-      <TenantContext.Provider value={tenantContextValue}>
-        <link rel="stylesheet" href="https://use.typekit.net/iwm1gcu.css" />
-        <style dangerouslySetInnerHTML={{ __html: cssVariables }} />
-        <EditModeProvider>
-        <SidebarProvider>
-          <TopEditorPanel 
-            isOpen={editorPanelOpen} 
-            onClose={() => setEditorPanelOpen(false)} 
-            onViewModeChange={(mode) => {
-              // Track view mode for layout adjustment
-            }}
-          />
-          <div 
-            data-editor-layout 
-            className="px-2 sm:px-0"
-            style={{ 
-              marginTop: editorPanelOpen ? 'var(--spacing-32)' : '0', 
-              transition: 'margin-top var(--duration-300) var(--ease-in-out)',
-              position: 'relative',
-            }}
-            >
-            {backgroundImage && (
-              <div 
-                className="fixed inset-0 z-0 pointer-events-none"
-                style={{
-                  backgroundImage: `url(${backgroundImage})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  backgroundRepeat: 'no-repeat',
-                  opacity: 0.15,
-                }}
-              />
-            )}
-            <div 
-              className="relative z-10"
-              style={{
-                maxWidth: maxWidth === 'full' ? '100%' : `${maxWidth}px`,
-                marginLeft: contentAlignment === 'center' ? 'auto' : (contentAlignment === 'right' ? 'auto' : '0'),
-                marginRight: contentAlignment === 'center' ? 'auto' : (contentAlignment === 'right' ? '0' : 'auto'),
-              }}
-            >
-              <AppShell 
-                user={currentUser} 
-                tenant={currentTenant} 
-                navItems={navItems} 
-                currentPageName={currentPageName}
-                onEditorToggle={async () => {
-                  const newState = !editorPanelOpen;
-                  setEditorPanelOpen(newState);
-                  try {
-                    const user = await base44.auth.me();
-                    await base44.auth.updateMe({
-                      ui_preferences: {
-                        ...(user.ui_preferences || {}),
-                        liveEditMode: newState
-                      }
-                    });
-                    window.dispatchEvent(new CustomEvent('ui-preferences-changed', { 
-                      detail: { liveEditMode: newState } 
-                    }));
-                  } catch (e) {
-                    console.error("Failed to toggle live edit:", e);
-                  }
-                }}
-              >
-                <LiveEditWrapper>{children}</LiveEditWrapper>
-              </AppShell>
-            </div>
-          </div>
-          <PageSettingsPanel currentPageName={currentPageName} />
-          <StyleEditorPanel currentPageName={currentPageName} />
-          <TokenApplierProvider>
-            <ElementSelector />
-            <SelectionOverlay />
-            <PageUIPanel currentPageName={currentPageName} />
-          </TokenApplierProvider>
-          <GlobalAIAssistant />
-
-          {/* Editor bubble button - hide on fullscreen pages */}
-          {showEditorBubble && !isFullscreenPage && (
-            <button
-              type="button"
-              onClick={async () => {
-                const newState = !editorPanelOpen;
-                setEditorPanelOpen(newState);
-                // Toggle live edit mode
-                try {
-                  const user = await base44.auth.me();
-                  await base44.auth.updateMe({
-                    ui_preferences: {
-                      ...(user.ui_preferences || {}),
-                      liveEditMode: newState
-                    }
-                  });
-                  window.dispatchEvent(new CustomEvent('ui-preferences-changed', { 
-                    detail: { liveEditMode: newState } 
-                  }));
-                } catch (e) {
-                  console.error("Failed to toggle live edit:", e);
-                }
-              }}
-              className="fixed bottom-6 left-6 rounded-full bg-indigo-600 p-2 text-white shadow-2xl hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              style={{ zIndex: 'var(--z-max)' }}
-              title="Toggle Editor Panel"
-            >
-              {editorPanelOpen ? (
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <Palette className="h-6 w-6" />
-              )}
-            </button>
-          )}
-        </SidebarProvider>
-        </EditModeProvider>
-        </TenantContext.Provider>
-        </ErrorBoundary>
-        );
-        }
+      <EditModeProvider>
+        <LayoutContent 
+          children={children}
+          currentPageName={currentPageName}
+          currentUser={currentUser}
+          currentTenant={currentTenant}
+          navItems={navItems}
+          isFullscreenPage={isFullscreenPage}
+          publicPages={publicPages}
+          standalonePages={standalonePages}
+          fullscreenPages={fullscreenPages}
+          userRoles={userRoles}
+          isGlobalAdmin={isGlobalAdmin}
+          isTenantAdmin={isTenantAdmin}
+          siteSettings={siteSettings}
+        />
+      </EditModeProvider>
+    </ErrorBoundary>
+  );
+}
