@@ -69,22 +69,23 @@ export default function TailwindAppShellDemo() {
   ];
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar Navigation */}
-      {navigationMode !== 'hidden' && (
-        <div className={navigationMode === 'icons' ? 'w-20' : 'w-64'}>
-          <TailwindNavigation
-            navigation={navigation}
-            navigationMode={navigationMode}
-            logoSrc="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-            logoAlt="Company Logo"
-            onNavigate={(item) => console.log('Navigate to:', item.name)}
-          />
-        </div>
-      )}
+    <div className="flex flex-col h-screen bg-gray-100">
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar Navigation */}
+        {navigationMode !== 'hidden' && (
+          <div className={navigationMode === 'icons' ? 'w-20' : 'w-64'}>
+            <TailwindNavigation
+              navigation={navigation}
+              navigationMode={navigationMode}
+              logoSrc="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
+              logoAlt="Company Logo"
+              onNavigate={(item) => console.log('Navigate to:', item.name)}
+            />
+          </div>
+        )}
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
         <header className="bg-white shadow-sm z-10">
           <div className="px-4 py-4 sm:px-6 lg:px-8">
