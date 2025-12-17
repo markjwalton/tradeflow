@@ -146,7 +146,7 @@ export default function TailwindAppShellDemo() {
               <TailwindBreadcrumb pages={breadcrumbPages} />
 
               {/* Page Header */}
-              <div className="mb-6 border-b border-gray-200 pb-5">
+              <div className="mt-6 mb-6 border-b border-gray-200 pb-5">
                 <div className="sm:flex sm:items-center sm:justify-between">
                   <div className="min-w-0 flex-1">
                     <h1 className="text-2xl font-semibold text-gray-900">AppShell Demo</h1>
