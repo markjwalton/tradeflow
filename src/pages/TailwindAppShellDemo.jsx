@@ -84,10 +84,10 @@ export default function TailwindAppShellDemo() {
   const [activeTab, setActiveTab] = useState('details');
 
   const drawerTabs = [
-    { id: 'details', name: 'Details' },
-    { id: 'activity', name: 'Activity' },
-    { id: 'settings', name: 'Settings' },
-    { id: 'styles', name: 'Styles' },
+    { id: 'details', name: 'Details', current: activeTab === 'details' },
+    { id: 'activity', name: 'Activity', current: activeTab === 'activity' },
+    { id: 'settings', name: 'Settings', current: activeTab === 'settings' },
+    { id: 'styles', name: 'Styles', current: activeTab === 'styles' },
   ];
 
   return (
