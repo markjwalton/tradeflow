@@ -30,10 +30,11 @@ export function TokenApplierProvider({ children }) {
     if (!element) return;
     
     const computedStyle = window.getComputedStyle(element);
+    const className = typeof element.className === 'string' ? element.className : (element.className?.baseVal || '');
     const elementInfo = {
       element,
       tagName: element.tagName.toLowerCase(),
-      className: element.className,
+      className: className,
       id: element.id,
       styles: {
         backgroundColor: computedStyle.backgroundColor,
@@ -50,7 +51,8 @@ export function TokenApplierProvider({ children }) {
     };
     
     setSelectedElement(elementInfo);
-    toast.success(`Selected: ${elementInfo.tagName}${elementInfo.className ? '.' + elementInfo.className.split(' ')[0] : ''}`);
+    const firstClass = className ? '.' + className.split(' ')[0] : '';
+    toast.success(`Selected: ${elementInfo.tagName}${firstClass}`);
   }, []);
 
   const applyToken = useCallback(async (property, tokenValue, tokenName) => {
