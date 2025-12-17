@@ -115,6 +115,8 @@ export function TokenApplierProvider({ children }) {
     selectedElement,
     hoveredElement,
     setHoveredElement,
+    highlightedElements,
+    setHighlightedElements,
     activateTokenApplier,
     deactivateTokenApplier,
     selectElement,
