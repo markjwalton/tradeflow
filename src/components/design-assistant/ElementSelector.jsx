@@ -11,12 +11,8 @@ export function ElementSelector({ children }) {
     document.body.style.cursor = 'crosshair';
 
     const handleClick = (e) => {
-      // Ignore clicks on the drawer and controls
-      if (e.target.closest('[data-token-applier-ui]') || 
-          e.target.closest('[data-radix-dialog-content]') ||
-          e.target.closest('[data-radix-dialog-overlay]') ||
-          e.target.closest('[data-headlessui-state]') ||
-          e.target.closest('[role="dialog"]')) {
+      // Ignore clicks on the drawer controls and UI
+      if (e.target.closest('[data-token-applier-ui]')) {
         return;
       }
       
@@ -26,9 +22,7 @@ export function ElementSelector({ children }) {
     };
 
     const handleMouseOver = (e) => {
-      if (e.target.closest('[data-token-applier-ui]') ||
-          e.target.closest('[data-radix-dialog-content]') ||
-          e.target.closest('[role="dialog"]')) {
+      if (e.target.closest('[data-token-applier-ui]')) {
         return;
       }
       setHoveredElement(e.target);
