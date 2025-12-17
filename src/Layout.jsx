@@ -110,12 +110,10 @@ function LayoutContent({ children, currentPageName, currentUser, currentTenant, 
           onViewModeChange={setEditorViewMode}
         />
         <div 
-          data-editor-layout 
           className="px-2 sm:px-0"
           style={{ 
-            marginTop: editorPanelOpen ? (editorViewMode === 'collapsed' ? '44px' : '500px') : '0', 
-            transition: 'margin-top 300ms ease-in-out',
-            position: 'relative',
+            paddingTop: editorPanelOpen ? (editorViewMode === 'collapsed' ? '44px' : '500px') : '0', 
+            transition: 'padding-top 300ms ease-in-out',
           }}
         >
           {backgroundImage && (
@@ -130,17 +128,23 @@ function LayoutContent({ children, currentPageName, currentUser, currentTenant, 
               }}
             />
           )}
-          <AppShell 
-            user={currentUser} 
-            tenant={currentTenant} 
-            navItems={navItems} 
-            currentPageName={currentPageName}
-            onEditorToggle={handleEditorToggle}
-            maxWidth={maxWidth}
-            contentAlignment={contentAlignment}
+          <div 
+            style={{
+              maxWidth: maxWidth === 'full' ? '100%' : `${maxWidth}px`,
+              marginLeft: contentAlignment === 'center' ? 'auto' : (contentAlignment === 'right' ? 'auto' : '0'),
+              marginRight: contentAlignment === 'center' ? 'auto' : (contentAlignment === 'right' ? '0' : 'auto'),
+            }}
           >
-            <LiveEditWrapper>{children}</LiveEditWrapper>
-          </AppShell>
+            <AppShell 
+              user={currentUser} 
+              tenant={currentTenant} 
+              navItems={navItems} 
+              currentPageName={currentPageName}
+              onEditorToggle={handleEditorToggle}
+            >
+              <LiveEditWrapper>{children}</LiveEditWrapper>
+            </AppShell>
+          </div>
         </div>
         <GlobalAIAssistant />
 

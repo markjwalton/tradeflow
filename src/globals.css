@@ -348,6 +348,7 @@
   --z-tooltip: 1070;
   --z-toast: 1080;
   --z-max: 9999;
+  --z-editor: 10000;
 }
 
 .dark {

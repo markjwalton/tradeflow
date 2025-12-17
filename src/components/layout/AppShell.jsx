@@ -5,21 +5,14 @@ import { AppContent } from "./AppContent";
 import { MobileNav } from "./MobileNav";
 import { useState } from "react";
 
-export function AppShell({ children, user, tenant, navItems = [], currentPageName, onEditorToggle, maxWidth = "1400", contentAlignment = "center" }) {
+export function AppShell({ children, user, tenant, navItems = [], currentPageName, onEditorToggle }) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   // AppSidebar builds its own hierarchy from flat items
   // Just pass the flat array directly
   
   return (
-    <div 
-      className="min-h-screen flex flex-col bg-[var(--color-background)]"
-      style={{
-        maxWidth: maxWidth === 'full' ? '100%' : `${maxWidth}px`,
-        marginLeft: contentAlignment === 'center' ? 'auto' : (contentAlignment === 'right' ? 'auto' : '0'),
-        marginRight: contentAlignment === 'center' ? 'auto' : (contentAlignment === 'right' ? '0' : 'auto'),
-      }}
-    >
+    <div className="min-h-screen flex flex-col bg-[var(--color-background)]">
       <AppHeader 
         user={user} 
         navItems={navItems}
