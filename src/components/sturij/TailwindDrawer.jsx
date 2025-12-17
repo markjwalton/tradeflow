@@ -10,7 +10,8 @@ export default function TailwindDrawer({
   children,
   side = 'right', // 'right', 'left', 'top', 'bottom'
   maxWidth = 'md', // 'sm', 'md', 'lg', 'xl', '2xl' (for left/right)
-  maxHeight = 'md' // 'sm', 'md', 'lg', 'xl' (for top/bottom)
+  maxHeight = 'md', // 'sm', 'md', 'lg', 'xl' (for top/bottom)
+  pushContent = false // if true, pushes content instead of overlaying (only for top/bottom)
 }) {
   const isHorizontal = side === 'left' || side === 'right';
   const isVertical = side === 'top' || side === 'bottom';
