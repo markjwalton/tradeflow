@@ -79,7 +79,8 @@ export function PageUIPanel({ currentPageName }) {
     if (!selectedElement) return [];
     
     const sources = [];
-    const classes = selectedElement.className ? selectedElement.className.split(' ').filter(c => c) : [];
+    const className = typeof selectedElement.className === 'string' ? selectedElement.className : '';
+    const classes = className ? className.split(' ').filter(c => c) : [];
     
     if (selectedElement.element?.getAttribute('style')) {
       sources.push({ type: "inline", description: "Inline styles directly on element" });
