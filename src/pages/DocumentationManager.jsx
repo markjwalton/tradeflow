@@ -997,8 +997,22 @@ export default function DocumentationManager() {
                                     e.stopPropagation();
                                     handleCommentToTodo(comment);
                                   }}
+                                  title="Add to todo"
                                 >
                                   <Check className="w-4 h-4" />
+                                </Button>
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    updateCommentMutation.mutate({
+                                      id: comment.id,
+                                      data: { status: "completed", completed_date: new Date().toISOString() }
+                                    });
+                                  }}
+                                >
+                                  Complete
                                 </Button>
                               </div>
                             </div>
@@ -1021,6 +1035,13 @@ export default function DocumentationManager() {
                     disabled={selectedComments.length === 0}
                   >
                     Generate Prompt
+                  </Button>
+                  <Button 
+                    onClick={handleComplete}
+                    disabled={selectedComments.length === 0}
+                    variant="outline"
+                  >
+                    Complete Selected
                   </Button>
                 </div>
               </CardContent>
@@ -1321,16 +1342,32 @@ export default function DocumentationManager() {
                                     </p>
                                   )}
                                 </div>
-                                <Button 
-                                  size="sm" 
-                                  variant="ghost"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDiscussionToTodo(disc);
-                                  }}
-                                >
-                                  <Check className="w-4 h-4" />
-                                </Button>
+                                <div className="flex items-center gap-2">
+                                  <Button 
+                                    size="sm" 
+                                    variant="ghost"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleDiscussionToTodo(disc);
+                                    }}
+                                    title="Add to todo"
+                                  >
+                                    <Check className="w-4 h-4" />
+                                  </Button>
+                                  <Button 
+                                    size="sm" 
+                                    variant="outline"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      updateDiscussionMutation.mutate({
+                                        id: disc.id,
+                                        data: { status: "completed", completed_date: new Date().toISOString() }
+                                      });
+                                    }}
+                                  >
+                                    Complete
+                                  </Button>
+                                </div>
                               </div>
                               <p className="text-sm mt-2">{disc.content}</p>
                             </div>
@@ -1346,6 +1383,13 @@ export default function DocumentationManager() {
                       disabled={selectedDiscussions.length === 0}
                     >
                       Generate Prompt
+                    </Button>
+                    <Button 
+                      onClick={handleCompleteDiscussions}
+                      disabled={selectedDiscussions.length === 0}
+                      variant="outline"
+                    >
+                      Complete Selected
                     </Button>
                   </div>
                 </CardContent>
