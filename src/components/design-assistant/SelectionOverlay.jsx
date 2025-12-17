@@ -75,122 +75,57 @@ export function SelectionOverlay() {
         const isSelected = element === selectedElement?.element;
         
         return (
-          <React.Fragment key={index}>
-            <div
-              style={{
-                position: 'fixed',
-                top: `${rect.top}px`,
-                left: `${rect.left}px`,
-                width: `${rect.width}px`,
-                height: `${rect.height}px`,
-                border: `2px solid ${isSelected ? 'var(--primary-600)' : 'rgb(234, 179, 8)'}`,
-                background: isSelected ? 'var(--primary-300)' : 'rgb(254, 240, 138)',
-                opacity: 0.25,
-                pointerEvents: 'none',
-                zIndex: 999997,
-              }}
-            />
-            {index === 0 && (
-              <div
-                style={{
-                  position: 'fixed',
-                  top: `${rect.top - 30}px`,
-                  left: `${rect.left}px`,
-                  background: 'rgb(234, 179, 8)',
-                  color: 'white',
-                  padding: '4px 8px',
-                  borderRadius: '4px',
-                  fontSize: '12px',
-                  fontFamily: 'monospace',
-                  pointerEvents: 'none',
-                  zIndex: 999999,
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {highlightedElements.length} element{highlightedElements.length > 1 ? 's' : ''} with this class
-              </div>
-            )}
-          </React.Fragment>
+          <div
+            key={index}
+            style={{
+              position: 'fixed',
+              top: `${rect.top}px`,
+              left: `${rect.left}px`,
+              width: `${rect.width}px`,
+              height: `${rect.height}px`,
+              border: `1px dashed ${isSelected ? 'var(--primary-600)' : 'rgb(234, 179, 8)'}`,
+              background: isSelected ? 'var(--primary-300)' : 'rgb(254, 240, 138)',
+              opacity: 0.1,
+              pointerEvents: 'none',
+              zIndex: 999997,
+            }}
+          />
         );
       })}
 
       {/* Hover overlay */}
       {overlayPosition && !selectedElement && (
-        <>
-          <div
-            style={{
-              position: 'fixed',
-              top: `${overlayPosition.top}px`,
-              left: `${overlayPosition.left}px`,
-              width: `${overlayPosition.width}px`,
-              height: `${overlayPosition.height}px`,
-              border: '2px solid var(--primary-500)',
-              background: 'var(--primary-200)',
-              opacity: 0.15,
-              pointerEvents: 'none',
-              zIndex: 999998,
-              transition: 'all 150ms ease-out',
-            }}
-          />
-          <div
-            style={{
-              position: 'fixed',
-              top: `${overlayPosition.top - 30}px`,
-              left: `${overlayPosition.left}px`,
-              background: 'var(--primary-600)',
-              color: 'white',
-              padding: '4px 8px',
-              borderRadius: '4px',
-              fontSize: '12px',
-              fontFamily: 'monospace',
-              pointerEvents: 'none',
-              zIndex: 999999,
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {hoveredElement.tagName.toLowerCase()}
-            {hoveredElement.className ? `.${hoveredElement.className.split(' ')[0]}` : ''}
-          </div>
-        </>
+        <div
+          style={{
+            position: 'fixed',
+            top: `${overlayPosition.top}px`,
+            left: `${overlayPosition.left}px`,
+            width: `${overlayPosition.width}px`,
+            height: `${overlayPosition.height}px`,
+            border: '1px solid var(--primary-500)',
+            background: 'var(--primary-200)',
+            opacity: 0.08,
+            pointerEvents: 'none',
+            zIndex: 999998,
+            transition: 'all 150ms ease-out',
+          }}
+        />
       )}
 
       {/* Selected overlay */}
       {selectedPosition && (
-        <>
-          <div
-            style={{
-              position: 'fixed',
-              top: `${selectedPosition.top}px`,
-              left: `${selectedPosition.left}px`,
-              width: `${selectedPosition.width}px`,
-              height: `${selectedPosition.height}px`,
-              border: '3px solid var(--primary-600)',
-              background: 'var(--primary-300)',
-              opacity: 0.25,
-              pointerEvents: 'none',
-              zIndex: 999998,
-            }}
-          />
-          <div
-            style={{
-              position: 'fixed',
-              top: `${selectedPosition.top - 30}px`,
-              left: `${selectedPosition.left}px`,
-              background: 'var(--primary-600)',
-              color: 'white',
-              padding: '4px 8px',
-              borderRadius: '4px',
-              fontSize: '12px',
-              fontFamily: 'monospace',
-              pointerEvents: 'none',
-              zIndex: 999999,
-              whiteSpace: 'nowrap',
-              fontWeight: 'bold',
-            }}
-          >
-            SELECTED
-          </div>
-        </>
+        <div
+          style={{
+            position: 'fixed',
+            top: `${selectedPosition.top}px`,
+            left: `${selectedPosition.left}px`,
+            width: `${selectedPosition.width}px`,
+            height: `${selectedPosition.height}px`,
+            border: '2px solid var(--primary-600)',
+            pointerEvents: 'none',
+            zIndex: 999998,
+          }}
+        />
       )}
     </>
   );
