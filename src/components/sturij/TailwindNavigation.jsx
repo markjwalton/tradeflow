@@ -23,11 +23,6 @@ export default function TailwindNavigation({
       "relative flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white z-0",
       isIconsOnly ? "px-2 pt-6" : "px-6 pt-6"
     )}>
-      {logoSrc && !isIconsOnly && (
-        <div className="flex items-center">
-          <img src={logoSrc} alt={logoAlt} className="h-12 w-auto" />
-        </div>
-      )}
       <nav className="relative flex flex-1 flex-col">
         <ul role="list" className="flex flex-1 flex-col gap-y-7">
           <li>
