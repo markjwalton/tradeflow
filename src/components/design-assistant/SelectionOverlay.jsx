@@ -63,10 +63,57 @@ export function SelectionOverlay() {
     };
   }, [selectedElement]);
 
-  if (!isActive) return null;
+  if (!isActive && highlightedElements.length === 0) return null;
 
   return (
     <>
+      {/* Highlighted elements (from style selection) */}
+      {highlightedElements.length > 0 && highlightedElements.map((element, index) => {
+        const rect = element?.getBoundingClientRect();
+        if (!rect) return null;
+        
+        const isSelected = element === selectedElement?.element;
+        
+        return (
+          <React.Fragment key={index}>
+            <div
+              style={{
+                position: 'fixed',
+                top: `${rect.top}px`,
+                left: `${rect.left}px`,
+                width: `${rect.width}px`,
+                height: `${rect.height}px`,
+                border: `2px solid ${isSelected ? 'var(--primary-600)' : 'rgb(234, 179, 8)'}`,
+                background: isSelected ? 'var(--primary-300)' : 'rgb(254, 240, 138)',
+                opacity: 0.25,
+                pointerEvents: 'none',
+                zIndex: 999997,
+              }}
+            />
+            {index === 0 && (
+              <div
+                style={{
+                  position: 'fixed',
+                  top: `${rect.top - 30}px`,
+                  left: `${rect.left}px`,
+                  background: 'rgb(234, 179, 8)',
+                  color: 'white',
+                  padding: '4px 8px',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  fontFamily: 'monospace',
+                  pointerEvents: 'none',
+                  zIndex: 999999,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {highlightedElements.length} element{highlightedElements.length > 1 ? 's' : ''} with this class
+              </div>
+            )}
+          </React.Fragment>
+        );
+      })}
+
       {/* Hover overlay */}
       {overlayPosition && !selectedElement && (
         <>
