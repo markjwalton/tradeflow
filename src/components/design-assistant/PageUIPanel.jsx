@@ -336,21 +336,18 @@ Format as JSON:
                       return;
                     }
 
-                    const { token, category } = data;
+                    const { type, token } = data;
 
-                    // Map token categories to CSS properties
+                    // Map token types to CSS properties
                     const propertyMap = {
-                      colors: 'backgroundColor',
+                      color: 'backgroundColor',
                       spacing: 'padding',
-                      typography: token.name.includes('font-family') ? 'fontFamily' : 
-                                 token.name.includes('font-size') ? 'fontSize' : 
-                                 token.name.includes('line-height') ? 'lineHeight' : 
-                                 token.name.includes('letter-spacing') ? 'letterSpacing' : 'fontSize',
-                      radii: 'borderRadius'
+                      typography: token.name.includes('font-') ? 'fontFamily' : 'fontSize',
+                      radius: 'borderRadius'
                     };
 
-                    const property = propertyMap[category] || 'backgroundColor';
-                    const value = token.cssVar || token.value;
+                    const property = propertyMap[type] || 'backgroundColor';
+                    const value = token.value;
 
                     // Apply the token
                     selectedElement.element.style[property] = value;
