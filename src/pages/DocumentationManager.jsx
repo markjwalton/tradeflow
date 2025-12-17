@@ -37,6 +37,12 @@ export default function DocumentationManager() {
     queryFn: () => base44.entities.DocumentComment.list(),
   });
 
+  // Fetch discussion points
+  const { data: discussions = [] } = useQuery({
+    queryKey: ['discussionPoints'],
+    queryFn: () => base44.entities.DiscussionPoint.list(),
+  });
+
   // Get latest versions
   const latestDocs = documents.filter(doc => doc.is_latest);
   
@@ -148,6 +154,97 @@ export default function DocumentationManager() {
     toast.success("Comments archived");
   };
 
+  // Discussion mutations
+  const createDiscussionMutation = useMutation({
+    mutationFn: (data) => base44.entities.DiscussionPoint.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['discussionPoints']);
+      setDiscussionTitle("");
+      setDiscussionContent("");
+      setDiscussionRefType("general");
+      setDiscussionCategory("");
+      toast.success("Discussion point saved");
+    },
+  });
+
+  const updateDiscussionMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.DiscussionPoint.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['discussionPoints']);
+    },
+  });
+
+  // Handle discussion save
+  const handleSaveDiscussion = (isDraft = false) => {
+    if (!discussionTitle || !discussionContent) {
+      toast.error("Title and content are required");
+      return;
+    }
+
+    const data = {
+      title: discussionTitle,
+      content: discussionContent,
+      reference_type: discussionRefType,
+      status: isDraft ? "draft" : "submitted"
+    };
+
+    if (discussionRefType === "category" && discussionCategory) {
+      data.category = discussionCategory;
+      const categoryDoc = latestDocs.find(d => d.category === discussionCategory);
+      if (categoryDoc) {
+        data.document_id = categoryDoc.id;
+        data.document_title = categoryDoc.title;
+        data.document_version = categoryDoc.version;
+      }
+    }
+
+    createDiscussionMutation.mutate(data);
+  };
+
+  // Generate discussion prompt
+  const handleGenerateDiscussionPrompt = () => {
+    if (selectedDiscussions.length === 0) {
+      toast.error("Select discussion points to generate prompt");
+      return;
+    }
+
+    const discussionsList = selectedDiscussions
+      .map(id => discussions.find(d => d.id === id))
+      .filter(Boolean)
+      .map(d => {
+        let ref = "";
+        if (d.reference_type === "category" && d.document_title) {
+          ref = `\nReference: ${d.document_title} (v${d.document_version}) - ${d.category}`;
+        }
+        return `### ${d.title}\n${d.content}${ref}`;
+      })
+      .join('\n\n');
+
+    const prompt = `Please review and address these discussion points about the framework documentation:\n\n${discussionsList}\n\nProvide recommendations, clarifications, or updates to the documentation as needed.`;
+    
+    setDiscussionPrompt(prompt);
+    
+    selectedDiscussions.forEach(id => {
+      updateDiscussionMutation.mutate({
+        id,
+        data: { status: "in_prompt" }
+      });
+    });
+  };
+
+  // Complete discussions
+  const handleCompleteDiscussions = () => {
+    selectedDiscussions.forEach(id => {
+      updateDiscussionMutation.mutate({
+        id,
+        data: { status: "archived" }
+      });
+    });
+    setSelectedDiscussions([]);
+    setDiscussionPrompt("");
+    toast.success("Discussion points archived");
+  };
+
   // AI analyze changes
   const handleAnalyzeChanges = async () => {
     if (!selectedDoc || !selectedDoc.previous_version_id) {
@@ -188,6 +285,14 @@ export default function DocumentationManager() {
 
   const [highlights, setHighlights] = useState([]);
   const [analyzing, setAnalyzing] = useState(false);
+  
+  // Discussion state
+  const [discussionTitle, setDiscussionTitle] = useState("");
+  const [discussionContent, setDiscussionContent] = useState("");
+  const [discussionRefType, setDiscussionRefType] = useState("general");
+  const [discussionCategory, setDiscussionCategory] = useState("");
+  const [selectedDiscussions, setSelectedDiscussions] = useState([]);
+  const [discussionPrompt, setDiscussionPrompt] = useState("");
 
   // Download document as markdown
   const handleDownload = (doc) => {
@@ -214,6 +319,10 @@ export default function DocumentationManager() {
   const draftComments = comments.filter(c => c.status === "draft");
   const submittedComments = comments.filter(c => c.status === "submitted" || c.status === "in_prompt");
   const archivedComments = comments.filter(c => c.status === "archived");
+
+  // Filter discussions by status
+  const draftDiscussions = discussions.filter(d => d.status === "draft");
+  const submittedDiscussions = discussions.filter(d => d.status === "submitted" || d.status === "in_prompt");
 
   // Pagination for all documents view
   const {
@@ -261,6 +370,13 @@ export default function DocumentationManager() {
           <TabsTrigger value="highlights">
             <Sparkles className="w-4 h-4 mr-2" />
             Highlights
+          </TabsTrigger>
+          <TabsTrigger value="discussion">
+            <MessageSquare className="w-4 h-4 mr-2" />
+            Discussion
+            {submittedDiscussions.length > 0 && (
+              <Badge variant="destructive" className="ml-2">{submittedDiscussions.length}</Badge>
+            )}
           </TabsTrigger>
         </TabsList>
 
@@ -722,6 +838,209 @@ export default function DocumentationManager() {
                 </Card>
               )}
             </div>
+          </div>
+        </TabsContent>
+
+        {/* Discussion Tab */}
+        <TabsContent value="discussion">
+          <div className="space-y-6">
+            {/* Create Discussion Point */}
+            <Card>
+              <CardHeader>
+                <CardTitle>New Discussion Point</CardTitle>
+                <CardDescription>Start a discussion about the framework documentation</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Title</label>
+                  <input
+                    type="text"
+                    value={discussionTitle}
+                    onChange={(e) => setDiscussionTitle(e.target.value)}
+                    placeholder="Discussion topic..."
+                    className="w-full px-3 py-2 border rounded-md"
+                    style={{ borderColor: 'var(--color-border)' }}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Reference Type</label>
+                  <Select value={discussionRefType} onValueChange={setDiscussionRefType}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="general">General Discussion</SelectItem>
+                      <SelectItem value="category">Category Reference</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {discussionRefType === "category" && (
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Category</label>
+                    <Select value={discussionCategory} onValueChange={setDiscussionCategory}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Developer Specification">Developer Specification</SelectItem>
+                        <SelectItem value="AI Guidelines">AI Guidelines</SelectItem>
+                        <SelectItem value="Technical Specification">Technical Specification</SelectItem>
+                        <SelectItem value="Sprint Plan">Sprint Plan</SelectItem>
+                        <SelectItem value="Architecture">Architecture</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {discussionCategory && (
+                      <p className="text-xs mt-2" style={{ color: 'var(--color-text-muted)' }}>
+                        Latest: {latestDocs.find(d => d.category === discussionCategory)?.title} 
+                        {" v"}{latestDocs.find(d => d.category === discussionCategory)?.version}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Discussion Content</label>
+                  <Textarea
+                    value={discussionContent}
+                    onChange={(e) => setDiscussionContent(e.target.value)}
+                    rows={8}
+                    placeholder="Describe the topic, questions, or issues to discuss..."
+                  />
+                </div>
+
+                <div className="flex gap-2">
+                  <Button onClick={() => handleSaveDiscussion(true)} variant="outline">
+                    Save Draft
+                  </Button>
+                  <Button onClick={() => handleSaveDiscussion(false)}>
+                    <Send className="w-4 h-4 mr-2" />
+                    Submit
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Submitted Discussions */}
+            {submittedDiscussions.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Active Discussions</CardTitle>
+                  <CardDescription>Select items to generate discussion prompt</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {submittedDiscussions.map(disc => (
+                      <Card 
+                        key={disc.id}
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() => {
+                          setSelectedDiscussions(prev => 
+                            prev.includes(disc.id) 
+                              ? prev.filter(id => id !== disc.id)
+                              : [...prev, disc.id]
+                          );
+                        }}
+                      >
+                        <CardContent className="p-4">
+                          <div className="flex items-start gap-4">
+                            <input 
+                              type="checkbox" 
+                              checked={selectedDiscussions.includes(disc.id)}
+                              readOnly
+                            />
+                            <div className="flex-1">
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <p className="font-semibold text-sm">{disc.title}</p>
+                                  <div className="flex gap-2 mt-1">
+                                    <Badge variant="outline">{disc.reference_type}</Badge>
+                                    {disc.category && <Badge>{disc.category}</Badge>}
+                                  </div>
+                                  {disc.document_title && (
+                                    <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>
+                                      Ref: {disc.document_title} (v{disc.document_version})
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                              <p className="text-sm mt-2">{disc.content}</p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+
+                  <div className="flex gap-2" style={{ marginTop: 'var(--spacing-4)' }}>
+                    <Button 
+                      onClick={handleGenerateDiscussionPrompt}
+                      disabled={selectedDiscussions.length === 0}
+                    >
+                      Generate Prompt
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Generated Discussion Prompt */}
+            {discussionPrompt && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Generated Discussion Prompt</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Textarea value={discussionPrompt} readOnly rows={12} />
+                  <div className="flex gap-2" style={{ marginTop: 'var(--spacing-4)' }}>
+                    <Button 
+                      onClick={() => {
+                        navigator.clipboard.writeText(discussionPrompt);
+                        toast.success("Copied to clipboard");
+                      }}
+                    >
+                      <Copy className="w-4 h-4 mr-2" />
+                      Copy Prompt
+                    </Button>
+                    <Button onClick={handleCompleteDiscussions}>
+                      <Check className="w-4 h-4 mr-2" />
+                      Mark Complete
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Draft Discussions */}
+            {draftDiscussions.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Draft Discussions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {draftDiscussions.map(disc => (
+                      <Card key={disc.id}>
+                        <CardContent className="p-4">
+                          <p className="font-semibold text-sm">{disc.title}</p>
+                          <Badge variant="outline" className="mt-1">{disc.reference_type}</Badge>
+                          {disc.category && <Badge className="ml-2">{disc.category}</Badge>}
+                          <p className="text-sm mt-2">{disc.content}</p>
+                          <Button 
+                            size="sm" 
+                            className="mt-2"
+                            onClick={() => updateDiscussionMutation.mutate({ id: disc.id, data: { status: "submitted" } })}
+                          >
+                            Submit
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </TabsContent>
       </Tabs>
