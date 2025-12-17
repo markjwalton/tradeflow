@@ -59,11 +59,14 @@ export default function DocumentationManager() {
 
   // Get latest versions
   const latestDocs = documents.filter(doc => doc.is_latest);
-  
+
+  // For "All Documents" tab - show ALL documents (not just latest)
+  const allDocuments = documents;
+
   // Filter by category
   const filteredDocs = selectedCategory === "all" 
-    ? latestDocs 
-    : latestDocs.filter(doc => doc.category === selectedCategory);
+    ? allDocuments 
+    : allDocuments.filter(doc => doc.category === selectedCategory);
 
   // Group by category
   const docsByCategory = latestDocs.reduce((acc, doc) => {
@@ -426,6 +429,9 @@ export default function DocumentationManager() {
   const [selectedList, setSelectedList] = useState(null);
   const [newItemDesc, setNewItemDesc] = useState("");
 
+  // Audit/Archive mode
+  const [auditMode, setAuditMode] = useState("audit");
+
   // Download document as markdown
   const handleDownload = (doc) => {
     const blob = new Blob([doc.content], { type: 'text/markdown' });
@@ -457,13 +463,22 @@ export default function DocumentationManager() {
   const completedComments = comments.filter(c => c.completed_date);
   const completedDiscussions = discussions.filter(d => d.completed_date);
   const completedTodoItems = todoItems.filter(i => i.completed_date);
-  
-  // Combine and sort audit log
-  const auditLog = [
-    ...completedComments.map(c => ({ type: "comment", data: c, date: c.completed_date })),
-    ...completedDiscussions.map(d => ({ type: "discussion", data: d, date: d.completed_date })),
-    ...completedTodoItems.map(i => ({ type: "todo", data: i, date: i.completed_date }))
-  ].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  // Archive: all submitted items
+  const archivedComments = comments.filter(c => c.status === "submitted" || c.status === "in_prompt" || c.status === "completed");
+  const archivedDiscussions = discussions.filter(d => d.status === "submitted" || d.status === "in_prompt" || d.status === "completed");
+
+  // Combine and sort based on mode
+  const auditLog = auditMode === "audit" 
+    ? [
+        ...completedComments.map(c => ({ type: "comment", data: c, date: c.completed_date })),
+        ...completedDiscussions.map(d => ({ type: "discussion", data: d, date: d.completed_date })),
+        ...completedTodoItems.map(i => ({ type: "todo", data: i, date: i.completed_date }))
+      ].sort((a, b) => new Date(b.date) - new Date(a.date))
+    : [
+        ...archivedComments.map(c => ({ type: "comment", data: c, date: c.updated_date })),
+        ...archivedDiscussions.map(d => ({ type: "discussion", data: d, date: d.updated_date }))
+      ].sort((a, b) => new Date(b.date) - new Date(a.date));
   
   // Get comments for current document
   const currentDocComments = selectedDoc 
@@ -1620,8 +1635,32 @@ export default function DocumentationManager() {
         <TabsContent value="audit">
           <Card>
             <CardHeader>
-              <CardTitle>Audit Log</CardTitle>
-              <CardDescription>Completed items from all areas in chronological order</CardDescription>
+              <div className="flex justify-between items-start">
+                <div>
+                  <CardTitle>Audit Log</CardTitle>
+                  <CardDescription>
+                    {auditMode === "audit" 
+                      ? "Completed items from all areas in chronological order" 
+                      : "All submitted items from change control and discussions"}
+                  </CardDescription>
+                </div>
+                <div className="flex gap-2">
+                  <Button 
+                    size="sm" 
+                    variant={auditMode === "audit" ? "default" : "outline"}
+                    onClick={() => setAuditMode("audit")}
+                  >
+                    Audit
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant={auditMode === "archive" ? "default" : "outline"}
+                    onClick={() => setAuditMode("archive")}
+                  >
+                    Archive
+                  </Button>
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <div style={{ marginBottom: 'var(--spacing-4)' }}>
@@ -1649,15 +1688,20 @@ export default function DocumentationManager() {
                         </div>
                         <div className="flex-1">
                           <div className="flex justify-between items-start mb-2">
-                            <div>
-                              <Badge variant="outline" className="text-xs">
-                                {entry.type === "comment" ? "Comment" : entry.type === "discussion" ? "Discussion" : "Todo Item"}
-                              </Badge>
-                              <p className="text-xs mt-1" style={{ color: 'var(--color-text-subtle)' }}>
-                                Completed: {new Date(entry.date).toLocaleString()}
-                              </p>
+                              <div>
+                                <Badge variant="outline" className="text-xs">
+                                  {entry.type === "comment" ? "Comment" : entry.type === "discussion" ? "Discussion" : "Todo Item"}
+                                </Badge>
+                                <p className="text-xs mt-1" style={{ color: 'var(--color-text-subtle)' }}>
+                                  {auditMode === "audit" && entry.data.completed_date
+                                    ? `Completed: ${new Date(entry.data.completed_date).toLocaleString()}`
+                                    : `Updated: ${new Date(entry.date).toLocaleString()}`}
+                                </p>
+                              </div>
+                              {entry.data.status && (
+                                <Badge variant="secondary" className="text-xs">{entry.data.status}</Badge>
+                              )}
                             </div>
-                          </div>
                           
                           {entry.type === "comment" && (
                             <div>
@@ -1698,7 +1742,9 @@ export default function DocumentationManager() {
 
               {paginatedAudit.length === 0 && (
                 <div className="text-center py-12">
-                  <p style={{ color: 'var(--color-text-muted)' }}>No completed items yet</p>
+                  <p style={{ color: 'var(--color-text-muted)' }}>
+                    {auditMode === "audit" ? "No completed items yet" : "No submitted items yet"}
+                  </p>
                 </div>
               )}
 
