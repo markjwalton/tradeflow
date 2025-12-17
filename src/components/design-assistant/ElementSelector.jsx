@@ -11,8 +11,29 @@ export function ElementSelector({ children }) {
     document.body.style.cursor = 'crosshair';
 
     const shouldIgnoreElement = (element) => {
-      // Only ignore token applier UI controls
+      // Ignore token applier UI controls
       if (element.closest('[data-token-applier-ui]')) return true;
+      
+      // Ignore dialog/drawer backdrops and overlays from headless UI
+      if (element.hasAttribute('data-headlessui-state')) return true;
+      
+      const classes = element.className || '';
+      
+      // Ignore elements that are full-screen overlays (typically backdrops)
+      if (
+        typeof classes === 'string' && 
+        (
+          (classes.includes('fixed inset-0') && classes.includes('bg-transparent')) ||
+          (classes.includes('absolute inset-0') && classes.includes('overflow-hidden')) ||
+          classes.includes('pointer-events-none')
+        )
+      ) return true;
+      
+      // Ignore main structural elements
+      const tagName = element.tagName.toLowerCase();
+      if (tagName === 'html' || tagName === 'body') return true;
+      if (element.id === 'root') return true;
+
       return false;
     };
 
@@ -51,7 +72,6 @@ export function ElementSelector({ children }) {
 
     const originalOutline = hoveredElement.style.outline;
     const originalOutlineOffset = hoveredElement.style.outlineOffset;
-    const originalPosition = hoveredElement.style.position;
     
     hoveredElement.style.outline = '2px solid var(--primary-500)';
     hoveredElement.style.outlineOffset = '2px';

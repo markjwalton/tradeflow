@@ -1,57 +1,38 @@
 import React, { useState } from 'react';
 import { useTokenApplier } from './TokenApplierContext';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Paintbrush, X, Save, Eye } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
+import { X, Target } from 'lucide-react';
 
-export function TokenApplierControls() {
-  const { 
-    isActive, 
-    selectedElement, 
-    activateTokenApplier, 
-    deactivateTokenApplier,
-    saveMapping 
-  } = useTokenApplier();
-  
+export default function TokenApplierControls() {
+  const { isActive, selectedElement, activateTokenApplier, deactivateTokenApplier, saveMapping } = useTokenApplier();
   const [componentType, setComponentType] = useState('');
   const [selector, setSelector] = useState('');
 
-  React.useEffect(() => {
-    if (selectedElement) {
-      setComponentType(selectedElement.tagName);
-      setSelector(selectedElement.className || selectedElement.id);
-    }
-  }, [selectedElement]);
-
   if (!isActive) {
     return (
-      <div data-token-applier-ui>
-        <Button
-          onClick={activateTokenApplier}
-          variant="outline"
-          size="sm"
-          className="gap-2"
-        >
-          <Paintbrush className="h-4 w-4" />
+      <div className="p-4 border-b" data-token-applier-ui>
+        <Button onClick={activateTokenApplier} className="w-full">
+          <Target className="h-4 w-4 mr-2" />
           Start Token Applier
         </Button>
+        <p className="text-xs text-muted-foreground mt-2">
+          Activate to select elements and apply design tokens
+        </p>
       </div>
     );
   }
 
   return (
-    <Card className="p-4 space-y-4 border-primary-300 bg-primary-50" data-token-applier-ui>
+    <div className="p-4 border-b space-y-4" data-token-applier-ui>
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Paintbrush className="h-4 w-4 text-primary-600" />
-          <span className="font-semibold text-sm">Token Applier Active</span>
-        </div>
-        <Button
-          onClick={deactivateTokenApplier}
-          variant="ghost"
+        <h3 className="text-sm font-semibold text-primary-600">Token Applier Active</h3>
+        <Button 
+          onClick={deactivateTokenApplier} 
+          variant="ghost" 
           size="sm"
+          className="h-8 px-2"
         >
           <X className="h-4 w-4" />
         </Button>
@@ -59,57 +40,62 @@ export function TokenApplierControls() {
 
       {selectedElement ? (
         <div className="space-y-3">
-          <div className="text-sm">
-            <div className="font-medium mb-2">Selected Element:</div>
-            <div className="flex items-center gap-2 mb-2">
-              <Badge variant="secondary">{selectedElement.tagName}</Badge>
-              {selectedElement.className && (
-                <Badge variant="outline" className="font-mono text-xs">
-                  .{selectedElement.className.split(' ')[0]}
-                </Badge>
-              )}
-            </div>
-            <div className="text-xs text-muted-foreground space-y-1">
-              {Object.entries(selectedElement.styles).map(([prop, value]) => (
-                value && value !== 'none' && value !== 'normal' && value !== 'auto' && (
-                  <div key={prop} className="flex justify-between">
-                    <span className="font-mono">{prop}:</span>
-                    <span className="font-mono truncate max-w-[200px]">{value}</span>
-                  </div>
-                )
-              ))}
-            </div>
+          <div className="p-3 bg-primary-50 rounded border border-primary-200">
+            <p className="text-xs font-medium text-primary-900 mb-1">Selected Element</p>
+            <p className="text-xs font-mono text-primary-700">
+              {selectedElement.tagName}
+              {selectedElement.className ? `.${selectedElement.className.split(' ')[0]}` : ''}
+            </p>
+          </div>
+
+          <div className="p-3 bg-muted rounded space-y-2 text-xs">
+            <p className="font-medium">Current Styles:</p>
+            {Object.entries(selectedElement.styles).map(([key, value]) => (
+              <p key={key} className="font-mono">
+                <span className="text-muted-foreground">{key}:</span> {value}
+              </p>
+            ))}
           </div>
 
           <div className="space-y-2">
-            <Input
-              placeholder="Component type (e.g., button-primary)"
-              value={componentType}
-              onChange={(e) => setComponentType(e.target.value)}
-              className="text-sm"
-            />
-            <Input
-              placeholder="CSS selector (e.g., .btn-primary)"
-              value={selector}
-              onChange={(e) => setSelector(e.target.value)}
-              className="text-sm"
-            />
-            <Button
-              onClick={() => saveMapping(componentType, selector)}
-              size="sm"
-              className="w-full gap-2"
+            <div>
+              <Label htmlFor="component-type" className="text-xs">Component Type</Label>
+              <Input
+                id="component-type"
+                value={componentType}
+                onChange={(e) => setComponentType(e.target.value)}
+                placeholder="e.g., button-primary, card-header"
+                className="h-8 text-xs"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="selector" className="text-xs">CSS Selector</Label>
+              <Input
+                id="selector"
+                value={selector}
+                onChange={(e) => setSelector(e.target.value)}
+                placeholder="e.g., .btn-primary, .card > .header"
+                className="h-8 text-xs"
+              />
+            </div>
+
+            <Button 
+              onClick={() => saveMapping(componentType, selector)} 
+              className="w-full h-8 text-xs"
+              disabled={!componentType}
             >
-              <Save className="h-3 w-3" />
               Save Mapping
             </Button>
           </div>
         </div>
       ) : (
-        <div className="text-sm text-muted-foreground flex items-center gap-2">
-          <Eye className="h-4 w-4" />
-          Click any element on the page to select it
+        <div className="p-3 bg-muted rounded">
+          <p className="text-xs text-muted-foreground">
+            Click any element on the page to select it and apply tokens
+          </p>
         </div>
       )}
-    </Card>
+    </div>
   );
 }
