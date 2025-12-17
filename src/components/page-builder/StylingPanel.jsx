@@ -1,202 +1,385 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Slider } from "@/components/ui/slider";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronDown, ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const colorTokens = {
-  primary: ["primary-50", "primary-100", "primary-200", "primary-300", "primary-400", "primary-500", "primary-600", "primary-700", "primary-800", "primary-900"],
-  secondary: ["secondary-50", "secondary-100", "secondary-200", "secondary-300", "secondary-400", "secondary-500", "secondary-600", "secondary-700", "secondary-800", "secondary-900"],
-  accent: ["accent-50", "accent-100", "accent-200", "accent-300", "accent-400", "accent-500", "accent-600", "accent-700", "accent-800", "accent-900"],
-  semantic: ["background", "foreground", "muted", "muted-foreground", "card", "card-foreground", "destructive", "success", "warning", "info"],
+// Style categories with their properties
+const styleCategories = [
+  {
+    id: "border",
+    name: "Border Styles",
+    properties: ["border-width", "border-color", "border-style", "border-radius"]
+  },
+  {
+    id: "spacing",
+    name: "Paddings / Margins",
+    properties: ["padding", "padding-top", "padding-right", "padding-bottom", "padding-left", "margin", "margin-top", "margin-right", "margin-bottom", "margin-left"]
+  },
+  {
+    id: "font",
+    name: "Font Styles",
+    properties: ["font-family", "font-size", "font-weight", "font-style", "line-height", "letter-spacing"]
+  },
+  {
+    id: "text",
+    name: "Text Styles",
+    properties: ["color", "text-align", "text-decoration", "text-transform"]
+  },
+  {
+    id: "background",
+    name: "Background Styles",
+    properties: ["background-color", "background-image", "background-size", "background-position"]
+  },
+  {
+    id: "position",
+    name: "Position Styles",
+    properties: ["position", "top", "right", "bottom", "left", "z-index", "display", "flex-direction", "justify-content", "align-items"]
+  },
+  {
+    id: "extras",
+    name: "Extras",
+    properties: ["opacity", "cursor", "overflow", "visibility"]
+  },
+  {
+    id: "css3",
+    name: "CSS3 Styles",
+    properties: ["box-shadow", "transform", "transition", "animation"]
+  }
+];
+
+// Element types that can be styled
+const elementTypes = [
+  { value: "button", label: "Button" },
+  { value: "heading", label: "Heading" },
+  { value: "paragraph", label: "Paragraph" },
+  { value: "link", label: "Link" },
+  { value: "card", label: "Card" },
+  { value: "input", label: "Input" },
+  { value: "container", label: "Container" },
+  { value: "image", label: "Image" },
+  { value: "list", label: "List" },
+  { value: "table", label: "Table" }
+];
+
+// Helper to check if a category has token values applied
+const getCategoryStatus = (category, currentStyles) => {
+  if (!currentStyles) return "none";
+  const hasToken = category.properties.some(prop => currentStyles[prop]?.startsWith("var(--"));
+  return hasToken ? "token" : "custom";
 };
 
-const spacingTokens = ["0", "1", "2", "3", "4", "5", "6", "8", "10", "12", "16", "20", "24", "32"];
-const radiusTokens = ["none", "sm", "md", "lg", "xl", "2xl", "full"];
-const fontSizes = ["xs", "sm", "base", "lg", "xl", "2xl", "3xl", "4xl"];
-const fontWeights = [{ value: "300", label: "Light" }, { value: "400", label: "Normal" }, { value: "500", label: "Medium" }, { value: "600", label: "Semibold" }, { value: "700", label: "Bold" }];
-
 export function StylingPanel({ selectedElement, onApplyStyle }) {
-  const [activeTab, setActiveTab] = useState("colors");
+  const [selectedElementType, setSelectedElementType] = useState("button");
+  const [currentStyle, setCurrentStyle] = useState("");
+  const [instances, setInstances] = useState([]);
+  const [currentInstanceIndex, setCurrentInstanceIndex] = useState(0);
+  const [applyToInstance, setApplyToInstance] = useState(false);
+  const [applyToAll, setApplyToAll] = useState(false);
+  const [expandedCategories, setExpandedCategories] = useState({});
+  const [categoryStyles, setCategoryStyles] = useState({});
+  const [pageStylesLoaded, setPageStylesLoaded] = useState(false);
 
-  const handleApplyColor = (type, value) => {
-    if (!selectedElement) return;
-    const className = type === "text" ? `text-${value}` : `bg-${value}`;
-    onApplyStyle?.({ className });
-  };
-
-  const handleApplySpacing = (type, value) => {
-    if (!selectedElement) return;
-    const className = type === "padding" ? `p-${value}` : `m-${value}`;
-    onApplyStyle?.({ className });
-  };
-
-  const handleApplyRadius = (value) => {
-    if (!selectedElement) return;
-    onApplyStyle?.({ className: `rounded-${value}` });
-  };
-
-  const handleApplyTypography = (property, value) => {
-    if (!selectedElement) return;
-    const classNames = {
-      size: `text-${value}`,
-      weight: `font-${value}`,
+  // Find all instances of the selected element type on the page
+  const loadPageStyles = () => {
+    const selectors = {
+      button: "button, [role='button'], .btn",
+      heading: "h1, h2, h3, h4, h5, h6",
+      paragraph: "p",
+      link: "a",
+      card: "[class*='card'], .card",
+      input: "input, textarea, select",
+      container: "div[class*='container'], .container, section",
+      image: "img",
+      list: "ul, ol",
+      table: "table"
     };
-    onApplyStyle?.({ className: classNames[property] });
+
+    const selector = selectors[selectedElementType];
+    if (!selector) return;
+
+    const elements = document.querySelectorAll(`[data-page-content] ${selector}`);
+    const foundInstances = Array.from(elements).filter(el => !el.closest('[data-token-applier-ui]'));
+    
+    setInstances(foundInstances);
+    setCurrentInstanceIndex(0);
+    setPageStylesLoaded(true);
+
+    // Get computed styles of first instance
+    if (foundInstances.length > 0) {
+      const computed = window.getComputedStyle(foundInstances[0]);
+      const styles = {};
+      styleCategories.forEach(cat => {
+        cat.properties.forEach(prop => {
+          styles[prop] = computed.getPropertyValue(prop);
+        });
+      });
+      setCategoryStyles(styles);
+    }
   };
 
-  if (!selectedElement) {
-    return (
-      <div className="flex items-center justify-center h-[300px] border-2 border-dashed rounded-lg">
-        <p className="text-sm text-muted-foreground">Select an element to apply styles</p>
-      </div>
-    );
-  }
+  // Navigate through instances
+  const goToPreviousInstance = () => {
+    if (currentInstanceIndex > 0) {
+      setCurrentInstanceIndex(currentInstanceIndex - 1);
+      highlightInstance(currentInstanceIndex - 1);
+    }
+  };
+
+  const goToNextInstance = () => {
+    if (currentInstanceIndex < instances.length - 1) {
+      setCurrentInstanceIndex(currentInstanceIndex + 1);
+      highlightInstance(currentInstanceIndex + 1);
+    }
+  };
+
+  const highlightInstance = (index) => {
+    // Remove previous highlights
+    instances.forEach(el => {
+      el.style.outline = "";
+    });
+    // Add highlight to current
+    if (instances[index]) {
+      instances[index].style.outline = "2px solid var(--primary-500)";
+      instances[index].scrollIntoView({ behavior: "smooth", block: "center" });
+      
+      // Update category styles for this instance
+      const computed = window.getComputedStyle(instances[index]);
+      const styles = {};
+      styleCategories.forEach(cat => {
+        cat.properties.forEach(prop => {
+          styles[prop] = computed.getPropertyValue(prop);
+        });
+      });
+      setCategoryStyles(styles);
+    }
+  };
+
+  // Toggle category expansion
+  const toggleCategory = (categoryId) => {
+    setExpandedCategories(prev => ({
+      ...prev,
+      [categoryId]: !prev[categoryId]
+    }));
+  };
+
+  // Reset all styles
+  const handleReset = () => {
+    setCurrentStyle("");
+    setCategoryStyles({});
+    setApplyToInstance(false);
+    setApplyToAll(false);
+    instances.forEach(el => {
+      el.style.outline = "";
+    });
+  };
+
+  // Save styles
+  const handleSave = () => {
+    if (applyToAll && instances.length > 0) {
+      instances.forEach(el => {
+        // Apply current style to all instances
+        if (currentStyle) {
+          el.style.cssText += currentStyle;
+        }
+      });
+    } else if (applyToInstance && instances[currentInstanceIndex]) {
+      // Apply only to current instance
+      if (currentStyle) {
+        instances[currentInstanceIndex].style.cssText += currentStyle;
+      }
+    }
+    onApplyStyle?.({ style: currentStyle, instances: applyToAll ? instances : [instances[currentInstanceIndex]] });
+  };
+
+  // Get current token value for display
+  const getCurrentTokenValue = (category) => {
+    const firstProp = category.properties[0];
+    const value = categoryStyles[firstProp];
+    if (value?.startsWith("var(--")) {
+      return value.replace("var(", "").replace(")", "");
+    }
+    return value || "Not set";
+  };
+
+  // Cleanup highlights on unmount
+  useEffect(() => {
+    return () => {
+      instances.forEach(el => {
+        if (el) el.style.outline = "";
+      });
+    };
+  }, [instances]);
 
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-      <TabsList className="grid w-full grid-cols-4">
-        <TabsTrigger value="colors">Colors</TabsTrigger>
-        <TabsTrigger value="spacing">Spacing</TabsTrigger>
-        <TabsTrigger value="typography">Typography</TabsTrigger>
-        <TabsTrigger value="borders">Borders</TabsTrigger>
-      </TabsList>
+    <div className="space-y-4">
+      {/* Header row */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Label className="text-sm font-medium">Current Page Styles:</Label>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={loadPageStyles}
+          >
+            Load
+          </Button>
+        </div>
+        <Button variant="outline" size="sm" onClick={handleReset}>
+          <RotateCcw className="h-4 w-4 mr-1" />
+          Reset
+        </Button>
+      </div>
 
-      <ScrollArea className="h-[280px] mt-4">
-        <TabsContent value="colors" className="space-y-4 mt-0">
-          {Object.entries(colorTokens).map(([category, tokens]) => (
-            <div key={category} className="space-y-2">
-              <Label className="text-xs font-medium capitalize">{category}</Label>
-              <div className="grid grid-cols-5 gap-2">
-                {tokens.map((token) => (
-                  <button
-                    key={token}
-                    className={cn(
-                      "h-10 w-full rounded border-2 hover:scale-105 transition-transform",
-                      `bg-${token}`
+      {/* Element selector and style input */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label className="text-sm">Element</Label>
+          <Select value={selectedElementType} onValueChange={setSelectedElementType}>
+            <SelectTrigger className="bg-charcoal-900 text-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {elementTypes.map(type => (
+                <SelectItem key={type.value} value={type.value}>
+                  {type.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-2">
+          <Label className="text-sm">Style</Label>
+          <Input 
+            value={currentStyle}
+            onChange={(e) => setCurrentStyle(e.target.value)}
+            placeholder="--color-alert-{type}-text"
+            className="font-mono text-sm"
+          />
+        </div>
+      </div>
+
+      {/* Instance navigation and preview */}
+      {pageStylesLoaded && instances.length > 0 && (
+        <div className="flex items-center justify-between border rounded-lg p-4 bg-muted/30">
+          <div className="text-sm text-muted-foreground">
+            Instances: {instances.length}
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={goToPreviousInstance}
+              disabled={currentInstanceIndex === 0}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={goToNextInstance}
+              disabled={currentInstanceIndex >= instances.length - 1}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+
+          {/* Preview of selected element */}
+          <div className="flex items-center gap-4">
+            <div className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm">
+              {selectedElementType === "button" ? "Button text" : selectedElementType}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <Label className="text-sm">Apply</Label>
+            <div className="flex items-center gap-2">
+              <Checkbox 
+                id="apply-instance"
+                checked={applyToInstance}
+                onCheckedChange={setApplyToInstance}
+              />
+              <Label htmlFor="apply-instance" className="text-xs">{currentInstanceIndex + 1}</Label>
+            </div>
+            <div className="flex items-center gap-2">
+              <Checkbox 
+                id="apply-all"
+                checked={applyToAll}
+                onCheckedChange={setApplyToAll}
+              />
+              <Label htmlFor="apply-all" className="text-xs">{instances.length}</Label>
+            </div>
+          </div>
+
+          <Button size="sm" onClick={handleSave}>
+            Save
+          </Button>
+        </div>
+      )}
+
+      {/* Style categories */}
+      <ScrollArea className="h-[280px]">
+        <div className="space-y-1">
+          {styleCategories.map((category) => {
+            const status = getCategoryStatus(category, categoryStyles);
+            const isExpanded = expandedCategories[category.id];
+            const currentValue = getCurrentTokenValue(category);
+
+            return (
+              <Collapsible 
+                key={category.id}
+                open={isExpanded}
+                onOpenChange={() => toggleCategory(category.id)}
+              >
+                <CollapsibleTrigger className="flex items-center justify-between w-full p-3 hover:bg-muted/50 rounded-lg">
+                  <span className="font-medium text-sm">{category.name}</span>
+                  <div className="flex items-center gap-3">
+                    {currentValue !== "Not set" && (
+                      <span className="text-xs text-muted-foreground font-mono">
+                        Current: {currentValue.length > 25 ? currentValue.slice(0, 25) + "..." : currentValue}
+                      </span>
                     )}
-                    onClick={() => handleApplyColor("background", token)}
-                    title={token}
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
-        </TabsContent>
-
-        <TabsContent value="spacing" className="space-y-4 mt-0">
-          <div className="space-y-3">
-            <div>
-              <Label className="text-sm mb-2 block">Padding</Label>
-              <div className="grid grid-cols-7 gap-2">
-                {spacingTokens.map((value) => (
-                  <Button
-                    key={value}
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleApplySpacing("padding", value)}
-                    className="text-xs"
-                  >
-                    {value}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <Label className="text-sm mb-2 block">Margin</Label>
-              <div className="grid grid-cols-7 gap-2">
-                {spacingTokens.map((value) => (
-                  <Button
-                    key={value}
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleApplySpacing("margin", value)}
-                    className="text-xs"
-                  >
-                    {value}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="typography" className="space-y-4 mt-0">
-          <div>
-            <Label className="text-sm mb-2 block">Font Size</Label>
-            <div className="grid grid-cols-4 gap-2">
-              {fontSizes.map((size) => (
-                <Button
-                  key={size}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleApplyTypography("size", size)}
-                  className="text-xs"
-                >
-                  {size}
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <Label className="text-sm mb-2 block">Font Weight</Label>
-            <div className="grid grid-cols-3 gap-2">
-              {fontWeights.map((weight) => (
-                <Button
-                  key={weight.value}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleApplyTypography("weight", weight.value)}
-                  className="text-xs"
-                >
-                  {weight.label}
-                </Button>
-              ))}
-            </div>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="borders" className="space-y-4 mt-0">
-          <div>
-            <Label className="text-sm mb-2 block">Border Radius</Label>
-            <div className="grid grid-cols-4 gap-2">
-              {radiusTokens.map((radius) => (
-                <Button
-                  key={radius}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleApplyRadius(radius)}
-                  className="text-xs"
-                >
-                  {radius}
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <Label className="text-sm mb-2 block">Border Width</Label>
-            <div className="grid grid-cols-4 gap-2">
-              {["0", "1", "2", "4", "8"].map((width) => (
-                <Button
-                  key={width}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => onApplyStyle?.({ className: `border-${width}` })}
-                  className="text-xs"
-                >
-                  {width}px
-                </Button>
-              ))}
-            </div>
-          </div>
-        </TabsContent>
+                    <div 
+                      className={cn(
+                        "w-3 h-3 rounded-full",
+                        status === "token" ? "bg-green-500" : "bg-red-500"
+                      )}
+                    />
+                    <ChevronDown className={cn(
+                      "h-4 w-4 transition-transform",
+                      isExpanded && "rotate-180"
+                    )} />
+                  </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="px-3 pb-3">
+                  <div className="space-y-2 pt-2 border-t">
+                    {category.properties.map(prop => (
+                      <div key={prop} className="flex items-center justify-between text-sm">
+                        <Label className="text-xs text-muted-foreground">{prop}</Label>
+                        <Input 
+                          className="w-48 h-8 text-xs font-mono"
+                          value={categoryStyles[prop] || ""}
+                          onChange={(e) => setCategoryStyles(prev => ({
+                            ...prev,
+                            [prop]: e.target.value
+                          }))}
+                          placeholder="Enter value or token"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            );
+          })}
+        </div>
       </ScrollArea>
-    </Tabs>
+    </div>
   );
 }
