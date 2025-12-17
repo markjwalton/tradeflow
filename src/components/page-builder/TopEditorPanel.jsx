@@ -39,7 +39,7 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
 
   const panelHeight = isCollapsed ? '44px' : (
     viewMode === 'focus' 
-      ? (showStyleEditor && selectedElement ? '180px' : '120px')
+      ? (selectedElement ? (showStyleEditor ? '400px' : '250px') : '120px')
       : '500px'
   );
 
@@ -135,7 +135,7 @@ export function TopEditorPanel({ isOpen, onClose, onViewModeChange }) {
       {!isCollapsed && (
         <div className="px-6 py-2" style={{ 
           height: viewMode === 'focus' 
-            ? (showStyleEditor && selectedElement ? '136px' : '76px')
+            ? (selectedElement ? (showStyleEditor ? '356px' : '206px') : '76px')
             : '456px',
           overflowY: 'auto',
           backgroundColor: 'var(--color-editor-background, var(--color-background))'
