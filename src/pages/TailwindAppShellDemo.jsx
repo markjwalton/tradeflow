@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import TailwindNavigation from '../components/sturij/TailwindNavigation';
 import TailwindTopNav from '../components/sturij/TailwindTopNav';
+import TailwindMobileDrawer from '../components/sturij/TailwindMobileDrawer';
 import TailwindDrawer from '../components/sturij/TailwindDrawer';
 import { TailwindCard, TailwindCardWithHeader } from '../components/sturij/TailwindCard';
 import TailwindList from '../components/sturij/TailwindList';
@@ -94,6 +95,7 @@ function AppShellContent() {
   const [bottomDrawerOpen, setBottomDrawerOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('colours');
   const [editorOpen, setEditorOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const drawerTabs = [
     { id: 'colours', name: 'Colours', current: activeTab === 'colours' },
