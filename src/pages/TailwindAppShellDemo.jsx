@@ -98,6 +98,7 @@ function AppShellContent() {
   const { selectedElement } = useEditMode();
   const [navigationMode, setNavigationMode] = useState('expanded');
   const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
+  const [pagePropertiesOpen, setPagePropertiesOpen] = useState(false);
   const [leftDrawerOpen, setLeftDrawerOpen] = useState(false);
   const [topDrawerOpen, setTopDrawerOpen] = useState(false);
   const [bottomDrawerOpen, setBottomDrawerOpen] = useState(false);
@@ -105,6 +106,8 @@ function AppShellContent() {
   const [editorOpen, setEditorOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
 
   // Fetch current user
   useEffect(() => {
@@ -117,6 +120,15 @@ function AppShellContent() {
     queryFn: () => base44.entities.NavigationConfig.list(),
   });
 
+  // Fetch UIPage for current page
+  const { data: currentPageData } = useQuery({
+    queryKey: ['uiPage', CURRENT_PAGE_SLUG],
+    queryFn: async () => {
+      const pages = await base44.entities.UIPage.filter({ slug: CURRENT_PAGE_SLUG });
+      return pages[0] || null;
+    },
+  });
+
   // Get main nav (admin_console) and secondary nav (app_pages_source or live_pages_source)
   const mainNavConfig = navConfigs.find(c => c.config_type === 'admin_console');
   const secondaryNavConfig = navConfigs.find(c => c.config_type === 'app_pages_source' || c.config_type === 'live_pages_source');
@@ -125,22 +137,68 @@ function AppShellContent() {
   const mainNavigation = useMemo(() => {
     if (!mainNavConfig?.items) return [];
     const hierarchy = buildNavHierarchy(mainNavConfig.items.filter(i => i.is_visible !== false));
-    return convertToNavFormat(hierarchy, 'TailwindAppShellDemo');
+    return convertToNavFormat(hierarchy, CURRENT_PAGE_SLUG);
   }, [mainNavConfig]);
 
-  // Build secondary navigation (flat, top-level items only for the header)
+  // Build secondary navigation - all pages from live_pages_source
   const secondaryNavigation = useMemo(() => {
     if (!secondaryNavConfig?.items) return [];
-    const topLevel = secondaryNavConfig.items
-      .filter(i => !i.parent_id && i.is_visible !== false && i.item_type === 'page')
+    // Get all page items (not folders)
+    const allPages = secondaryNavConfig.items
+      .filter(i => i.is_visible !== false && i.item_type === 'page')
       .sort((a, b) => (a.order || 0) - (b.order || 0))
-      .slice(0, 5); // Limit to 5 items for header
-    return topLevel.map(item => ({
+      .slice(0, 8); // Limit for header
+    return allPages.map(item => ({
       name: item.name,
       href: item.slug ? createPageUrl(item.slug) : '#',
-      current: false,
+      current: item.slug === CURRENT_PAGE_SLUG,
     }));
   }, [secondaryNavConfig]);
+
+  // Search through all pages
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    if (!query.trim()) {
+      setSearchResults([]);
+      return;
+    }
+    const allPages = secondaryNavConfig?.items?.filter(i => i.item_type === 'page') || [];
+    const filtered = allPages.filter(p => 
+      p.name.toLowerCase().includes(query.toLowerCase()) ||
+      p.slug?.toLowerCase().includes(query.toLowerCase())
+    ).slice(0, 10);
+    setSearchResults(filtered);
+  };
+
+  // Build breadcrumb from navigation hierarchy
+  const breadcrumbPages = useMemo(() => {
+    if (!mainNavConfig?.items) return [];
+    const currentItem = mainNavConfig.items.find(i => i.slug === CURRENT_PAGE_SLUG);
+    if (!currentItem) return [{ name: 'AppShell Demo', href: '#', current: true }];
+    
+    const trail = [];
+    let item = currentItem;
+    while (item) {
+      trail.unshift({
+        name: item.name,
+        href: item.slug ? createPageUrl(item.slug) : '#',
+        current: item.slug === CURRENT_PAGE_SLUG,
+      });
+      item = item.parent_id ? mainNavConfig.items.find(i => i.id === item.parent_id) : null;
+    }
+    return trail;
+  }, [mainNavConfig]);
+
+  // Page title from breadcrumb or UIPage
+  const pageTitle = currentPageData?.page_name || breadcrumbPages[breadcrumbPages.length - 1]?.name || 'AppShell Demo';
+  const pageDescription = currentPageData?.description || 'Explore the full-featured application shell with customizable navigation, drawers, and layouts.';
+
+  // User navigation with actual links
+  const userNavigation = [
+    { name: 'Your profile', href: '#', onClick: () => {} },
+    { name: 'Settings', href: createPageUrl('SiteSettings'), onClick: () => {} },
+    { name: 'Sign out', href: '#', onClick: () => base44.auth.logout() },
+  ];
 
   const user = currentUser ? {
     name: currentUser.full_name || currentUser.email,
