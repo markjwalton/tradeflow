@@ -132,6 +132,14 @@ function AppShellContent() {
         onNotificationClick={() => setTopDrawerOpen(true)}
         onSearch={(query) => console.log('Search:', query)}
         onMobileMenuClick={() => setMobileNavOpen(true)}
+        onSidebarToggle={() => {
+          // Cycle through navigation modes: expanded -> icons -> hidden -> expanded
+          setNavigationMode((prev) => {
+            if (prev === 'expanded') return 'icons';
+            if (prev === 'icons') return 'hidden';
+            return 'expanded';
+          });
+        }}
       />
 
       {/* Top Drawer - Pushes content */}
