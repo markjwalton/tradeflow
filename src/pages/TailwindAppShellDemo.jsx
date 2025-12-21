@@ -313,12 +313,16 @@ function AppShellContent() {
               <div className="mt-6 mb-6 border-b border-gray-200 pb-5">
                 <div className="sm:flex sm:items-center sm:justify-between">
                   <div className="min-w-0 flex-1">
-                    <h1 className="text-2xl font-semibold text-gray-900">AppShell Demo</h1>
-                    <p className="mt-1 text-sm text-gray-500">
-                      Explore the full-featured application shell with customizable navigation, drawers, and layouts.
-                    </p>
+                    <h1 className="text-2xl font-semibold text-gray-900">{pageTitle}</h1>
+                    <p className="mt-1 text-sm text-gray-500">{pageDescription}</p>
                   </div>
                   <div className="mt-4 flex gap-2 sm:ml-4 sm:mt-0">
+                    <button
+                      onClick={() => setPagePropertiesOpen(true)}
+                      className="px-3 py-1 rounded text-sm bg-gray-200 hover:bg-gray-300"
+                    >
+                      Page Properties
+                    </button>
                     <button
                       onClick={() => setNavigationMode('expanded')}
                       className={`px-3 py-1 rounded text-sm ${navigationMode === 'expanded' ? 'bg-indigo-600 text-white' : 'bg-gray-200'}`}
