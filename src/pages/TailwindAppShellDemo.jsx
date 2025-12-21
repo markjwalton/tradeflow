@@ -502,6 +502,105 @@ function AppShellContent() {
           </button>
         </div>
       </TailwindDrawer>
+
+      {/* Page Properties Drawer */}
+      <TailwindDrawer
+        open={pagePropertiesOpen}
+        onClose={() => setPagePropertiesOpen(false)}
+        title="Page Properties"
+        side="right"
+        maxWidth="md"
+      >
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="page-name">Page Name</Label>
+            <Input 
+              id="page-name" 
+              defaultValue={currentPageData?.page_name || pageTitle} 
+              placeholder="Enter page name"
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="page-slug">URL Slug</Label>
+            <Input 
+              id="page-slug" 
+              defaultValue={currentPageData?.slug || CURRENT_PAGE_SLUG} 
+              placeholder="page-url-slug"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="page-description">Description</Label>
+            <Textarea 
+              id="page-description" 
+              defaultValue={currentPageData?.description || ''} 
+              placeholder="Brief description of this page"
+              rows={3}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="page-category">Category</Label>
+            <Select defaultValue={currentPageData?.category || 'Custom'}>
+              <SelectTrigger id="page-category">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Dashboard">Dashboard</SelectItem>
+                <SelectItem value="Form">Form</SelectItem>
+                <SelectItem value="Detail">Detail</SelectItem>
+                <SelectItem value="List">List</SelectItem>
+                <SelectItem value="Custom">Custom</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="nav-mode">Default Navigation Mode</Label>
+            <Select defaultValue={currentPageData?.navigation_mode || 'expanded'}>
+              <SelectTrigger id="nav-mode">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="expanded">Expanded</SelectItem>
+                <SelectItem value="icons">Icons Only</SelectItem>
+                <SelectItem value="hidden">Hidden</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex items-center justify-between py-2">
+            <div>
+              <Label>Show Breadcrumb</Label>
+              <p className="text-xs text-gray-500">Display breadcrumb navigation</p>
+            </div>
+            <Switch defaultChecked={currentPageData?.show_breadcrumb ?? true} />
+          </div>
+
+          <div className="flex items-center justify-between py-2">
+            <div>
+              <Label>Include in App Shell</Label>
+              <p className="text-xs text-gray-500">Render within the main layout</p>
+            </div>
+            <Switch defaultChecked={currentPageData?.includes_app_shell ?? true} />
+          </div>
+
+          <div className="flex items-center justify-between py-2">
+            <div>
+              <Label>Enable Pagination</Label>
+              <p className="text-xs text-gray-500">Show pagination controls</p>
+            </div>
+            <Switch defaultChecked={currentPageData?.pagination_enabled ?? false} />
+          </div>
+
+          <div className="pt-4 border-t">
+            <button className="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-500">
+              Save Properties
+            </button>
+          </div>
+        </div>
+      </TailwindDrawer>
       </div>
     </>
   );
