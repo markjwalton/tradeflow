@@ -143,21 +143,37 @@ export default function TailwindNavigation({
 
       {/* Editor Toggle Button */}
       {onEditorToggle && (
-        <div className="border-t border-gray-200 pt-3">
-          <button
-            onClick={onEditorToggle}
-            className={classNames(
-              "group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-gray-700 hover:bg-gray-50 w-full",
-              isIconsOnly && "justify-center"
+        <TooltipProvider delayDuration={300}>
+          <div className="border-t border-gray-200 pt-3">
+            {isIconsOnly ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={onEditorToggle}
+                    className="group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-gray-700 hover:bg-gray-50 w-full justify-center"
+                  >
+                    <svg className="size-6 shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                    </svg>
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  Toggle Editor
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <button
+                onClick={onEditorToggle}
+                className="group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-gray-700 hover:bg-gray-50 w-full"
+              >
+                <svg className="size-6 shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                </svg>
+                Toggle Editor
+              </button>
             )}
-            title={isIconsOnly ? "Toggle Editor" : undefined}
-          >
-            <svg className="size-6 shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-            </svg>
-            {!isIconsOnly && "Toggle Editor"}
-          </button>
-        </div>
+          </div>
+        </TooltipProvider>
       )}
     </div>
   );
