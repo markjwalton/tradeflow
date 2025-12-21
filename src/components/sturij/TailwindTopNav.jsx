@@ -19,7 +19,7 @@ export default function TailwindTopNav({
 }) {
   return (
     <Disclosure as="header" className="relative z-10 bg-white shadow-sm">
-      <div className="mx-auto max-w-full px-2 sm:px-4 lg:divide-y lg:divide-gray-200 lg:px-8">
+      <div className="mx-auto max-w-full px-2 sm:px-4 md:divide-y md:divide-gray-200 lg:px-8">
         <div className="relative flex h-16 justify-between">
           <div className="relative z-10 flex items-center px-2 lg:px-0">
             {/* Sidebar toggle - visible on tablet (md) and desktop (lg) */}
@@ -62,7 +62,7 @@ export default function TailwindTopNav({
               <Bars3Icon aria-hidden="true" className="size-6" />
             </button>
           </div>
-          <div className="hidden lg:relative lg:z-10 lg:ml-4 lg:flex lg:items-center">
+          <div className="hidden md:relative md:z-10 md:ml-4 md:flex md:items-center">
             <button
               type="button"
               onClick={onNotificationClick}
@@ -105,7 +105,7 @@ export default function TailwindTopNav({
             )}
           </div>
         </div>
-        <nav aria-label="Global" className="hidden lg:flex lg:space-x-8 lg:py-2">
+        <nav aria-label="Global" className="hidden md:flex md:space-x-8 md:py-2">
           {navigation.map((item) => (
             <a
               key={item.name}
@@ -123,7 +123,7 @@ export default function TailwindTopNav({
         </nav>
       </div>
 
-      <DisclosurePanel as="nav" aria-label="Global" className="lg:hidden">
+      <DisclosurePanel as="nav" aria-label="Global" className="md:hidden">
         <div className="space-y-1 px-2 pt-2 pb-3">
           {navigation.map((item) => (
             <DisclosureButton
