@@ -244,7 +244,9 @@ function AppShellContent() {
         userNavigation={userNavigation}
         user={user}
         onNotificationClick={() => setTopDrawerOpen(true)}
-        onSearch={(query) => console.log('Search:', query)}
+        onSearch={handleSearch}
+        searchResults={searchResults}
+        searchQuery={searchQuery}
         onMobileMenuClick={() => setMobileNavOpen(true)}
         onSidebarToggle={() => {
           // Cycle through navigation modes: expanded -> icons -> hidden -> expanded
