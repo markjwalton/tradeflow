@@ -113,6 +113,17 @@ function AppShellContent() {
         selectedElement={selectedElement}
       />
       <div className="flex flex-col h-screen bg-gray-100" style={{ marginTop: editorOpen ? '120px' : '0', transition: 'margin-top 300ms ease-in-out' }}>
+      {/* Mobile Navigation Drawer */}
+      <TailwindMobileDrawer
+        open={mobileNavOpen}
+        onClose={() => setMobileNavOpen(false)}
+        navigation={navigation}
+        user={user}
+        onNavigate={(item) => console.log('Navigate to:', item.name)}
+        onSettings={() => console.log('Settings clicked')}
+        onLogout={() => console.log('Logout clicked')}
+      />
+
       {/* Top Navigation */}
       <TailwindTopNav
         navigation={topNavigation}
@@ -120,6 +131,7 @@ function AppShellContent() {
         user={user}
         onNotificationClick={() => setTopDrawerOpen(true)}
         onSearch={(query) => console.log('Search:', query)}
+        onMobileMenuClick={() => setMobileNavOpen(true)}
       />
 
       {/* Top Drawer - Pushes content */}
