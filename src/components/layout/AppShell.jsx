@@ -2,7 +2,7 @@ import { AppHeader } from "./AppHeader";
 import { AppSidebar } from "./AppSidebar";
 import { AppFooter } from "./AppFooter";
 import { AppContent } from "./AppContent";
-import { MobileNav } from "./MobileNav";
+import { MobileNav } from "./MobileNav.jsx";
 import { useState } from "react";
 
 export function AppShell({ children, user, tenant, navItems = [], currentPageName, onEditorToggle }) {
