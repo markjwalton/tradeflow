@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ChevronRightIcon, ChevronDownIcon } from '@heroicons/react/20/solid';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -66,14 +67,39 @@ export default function TailwindNavigation({
       return (
         <li key={item.name}>
           {isIconsOnly ? (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                {folderButton}
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                {item.name}
-              </TooltipContent>
-            </Tooltip>
+            <Popover>
+              <PopoverTrigger asChild>
+                <button
+                  className={classNames(
+                    item.current ? 'bg-gray-50' : 'hover:bg-gray-50',
+                    'group flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm/6 font-semibold text-gray-700 justify-center'
+                  )}
+                >
+                  <Icon aria-hidden="true" className="size-6 shrink-0 text-gray-400" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent side="right" align="start" className="w-48 p-2">
+                <div className="font-semibold text-sm text-gray-900 mb-2 px-2">{item.name}</div>
+                <ul className="space-y-1">
+                  {item.children.map((subItem) => (
+                    <li key={subItem.name}>
+                      <a
+                        href={subItem.href || '#'}
+                        onClick={(e) => {
+                          if (onNavigate) {
+                            e.preventDefault();
+                            onNavigate(subItem);
+                          }
+                        }}
+                        className="block rounded-md py-2 px-2 text-sm text-gray-700 hover:bg-gray-50"
+                      >
+                        {subItem.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </PopoverContent>
+            </Popover>
           ) : (
             folderButton
           )}
