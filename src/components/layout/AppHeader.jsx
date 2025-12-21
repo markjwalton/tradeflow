@@ -38,21 +38,23 @@ export function AppHeader({ user, navItems = [], onMobileMenuClick, currentPageN
   return (
     <header
       className="
+        sticky top-0
         border-b
-        bg-background/70
+        bg-background/95
         backdrop-blur-md
-        supports-[backdrop-filter]:bg-background/60
+        supports-[backdrop-filter]:bg-background/80
       "
       style={{ zIndex: 'var(--z-fixed)' }}
     >
-      <div className="flex items-center justify-between px-4 py-2 md:px-6">
-        <div className="flex items-center gap-2 sm:gap-3">
-          {/* Mobile menu button */}
+      <div className="flex items-center justify-between px-3 py-2 md:px-6">
+        <div className="flex items-center gap-2 md:gap-3">
+          {/* Mobile menu button - burger icon to left of logo */}
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="md:hidden h-10 w-10 touch-target"
             onClick={onMobileMenuClick}
+            aria-label="Open navigation menu"
           >
             <Menu className="w-5 h-5" />
           </Button>
@@ -63,22 +65,30 @@ export function AppHeader({ user, navItems = [], onMobileMenuClick, currentPageN
             size="icon"
             className="hidden md:flex"
             onClick={cycleMode}
+            aria-label="Toggle sidebar"
           >
             <Menu className="w-5 h-5" />
           </Button>
 
-          <Link to={createPageUrl("Dashboard")} className="flex items-center gap-2">
+          {/* Logo */}
+          <Link to={createPageUrl("Dashboard")} className="flex items-center">
             <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/c94580ddf_sturij-logo.png"
               alt="Sturij"
-              className="w-auto h-[35px] sm:h-[45px] md:h-[51px] relative z-[80]"
+              className="w-auto h-8 md:h-[51px]"
             />
           </Link>
         </div>
 
-        <div className="flex items-center gap-1 sm:gap-2 ml-auto">
+        {/* Right side actions */}
+        <div className="flex items-center gap-1 md:gap-2 ml-auto">
+          {/* Search - icon only on mobile */}
           <PageSearchBar navItems={navItems} />
-          <ProfileMenu user={user} />
+          
+          {/* Profile - hidden on mobile, shown in drawer instead */}
+          <div className="hidden md:block">
+            <ProfileMenu user={user} />
+          </div>
         </div>
       </div>
     </header>
