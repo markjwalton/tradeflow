@@ -137,6 +137,15 @@ export default function SiteSettings() {
         const loadedSettings = user?.site_settings || defaultSettings;
         setSettings(loadedSettings);
         setOriginalSettings(loadedSettings);
+        
+        // Load UI preferences
+        if (user?.ui_preferences) {
+          setUiPreferences({
+            showEditorBubble: user.ui_preferences.showEditorBubble ?? true,
+            showPageProperties: user.ui_preferences.showPageProperties ?? false,
+            showAIAssistant: user.ui_preferences.showAIAssistant ?? true,
+          });
+        }
       } catch (e) {
         console.error("Failed to load site settings:", e);
       }
