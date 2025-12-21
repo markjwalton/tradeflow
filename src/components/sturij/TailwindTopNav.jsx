@@ -125,22 +125,37 @@ export default function TailwindTopNav({
                 <MenuButton className="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">Open user menu</span>
-                  <img
-                    alt=""
-                    src={user.imageUrl}
-                    className="size-8 rounded-full bg-gray-100 outline -outline-offset-1 outline-black/5"
-                  />
+                  {user.imageUrl ? (
+                    <img
+                      alt=""
+                      src={user.imageUrl}
+                      className="size-8 rounded-full bg-gray-100 outline -outline-offset-1 outline-black/5"
+                    />
+                  ) : (
+                    <div className="size-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-medium text-sm">
+                      {user.name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase() || 'U'}
+                    </div>
+                  )}
                 </MenuButton>
 
                 <MenuItems
                   transition
                   className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg outline-1 outline-black/5 transition data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
                 >
+                  <div className="px-4 py-2 border-b border-gray-100">
+                    <p className="text-sm font-medium text-gray-900 truncate">{user.name}</p>
+                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                  </div>
                   {userNavigation.map((item) => (
                     <MenuItem key={item.name}>
                       <a
                         href={item.href}
-                        onClick={item.onClick}
+                        onClick={(e) => {
+                          if (item.onClick) {
+                            e.preventDefault();
+                            item.onClick();
+                          }
+                        }}
                         className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
                       >
                         {item.name}
