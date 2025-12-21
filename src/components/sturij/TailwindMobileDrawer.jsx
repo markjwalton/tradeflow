@@ -1,7 +1,7 @@
 import { Fragment, useState } from 'react';
 import { Dialog, DialogBackdrop, DialogPanel, TransitionChild } from '@headlessui/react';
 import { XMarkIcon, ChevronDownIcon, ChevronRightIcon, Cog6ToothIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
-import { HomeIcon, FolderIcon, FolderOpenIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, FolderIcon as FolderIconOutline, FolderOpenIcon } from '@heroicons/react/24/outline';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -50,8 +50,8 @@ export default function TailwindMobileDrawer({
     const Icon = item.icon || HomeIcon;
 
     if (isFolder) {
-      const FolderIcon = isExpanded ? FolderOpenIcon : FolderIcon;
-      const DisplayIcon = item.icon || FolderIcon;
+      const FolderDisplayIcon = isExpanded ? FolderOpenIcon : FolderIconOutline;
+      const DisplayIcon = item.icon || FolderDisplayIcon;
 
       return (
         <div key={item.name}>
