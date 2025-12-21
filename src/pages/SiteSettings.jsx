@@ -100,6 +100,11 @@ export default function SiteSettings() {
     backgroundSeason: "spring",
     darkMode: false,
   });
+  const [uiPreferences, setUiPreferences] = useState({
+    showEditorBubble: true,
+    showPageProperties: false,
+    showAIAssistant: true,
+  });
   const [originalSettings, setOriginalSettings] = useState(null);
   const [hasChanges, setHasChanges] = useState(false);
   const [generatingBackground, setGeneratingBackground] = useState(false);
