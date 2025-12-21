@@ -787,6 +787,65 @@ export default function SiteSettings() {
 
         <Card>
           <CardHeader>
+            <CardTitle>Floating Tools</CardTitle>
+            <CardDescription>Control which floating tool buttons appear in the bottom corners</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div className="flex items-center gap-3">
+                <Palette className="h-5 w-5 text-indigo-600" />
+                <div>
+                  <div className="font-semibold">Page Editor</div>
+                  <div className="text-sm text-muted-foreground">Show page editor toggle button (bottom left)</div>
+                </div>
+              </div>
+              <Switch
+                checked={uiPreferences.showEditorBubble}
+                onCheckedChange={(v) => {
+                  setUiPreferences({ ...uiPreferences, showEditorBubble: v });
+                  setHasChanges(true);
+                }}
+              />
+            </div>
+
+            <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div className="flex items-center gap-3">
+                <Settings2 className="h-5 w-5 text-primary" />
+                <div>
+                  <div className="font-semibold">Page Properties</div>
+                  <div className="text-sm text-muted-foreground">Show page properties button (bottom left)</div>
+                </div>
+              </div>
+              <Switch
+                checked={uiPreferences.showPageProperties}
+                onCheckedChange={(v) => {
+                  setUiPreferences({ ...uiPreferences, showPageProperties: v });
+                  setHasChanges(true);
+                }}
+              />
+            </div>
+
+            <div className="flex items-center justify-between p-4 border rounded-lg">
+              <div className="flex items-center gap-3">
+                <MessageSquare className="h-5 w-5 text-secondary" />
+                <div>
+                  <div className="font-semibold">AI Chat</div>
+                  <div className="text-sm text-muted-foreground">Show AI assistant button (bottom right)</div>
+                </div>
+              </div>
+              <Switch
+                checked={uiPreferences.showAIAssistant}
+                onCheckedChange={(v) => {
+                  setUiPreferences({ ...uiPreferences, showAIAssistant: v });
+                  setHasChanges(true);
+                }}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
             <CardTitle>Background Image</CardTitle>
             <CardDescription>Generate AI-powered seasonal landscape backgrounds</CardDescription>
           </CardHeader>
