@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
+import { createPageUrl } from '@/utils';
 import TailwindNavigation from '../components/sturij/TailwindNavigation';
 import TailwindTopNav from '../components/sturij/TailwindTopNav';
 import TailwindMobileDrawer from '../components/sturij/TailwindMobileDrawer';
@@ -18,42 +21,13 @@ import { TokenApplierControls } from '../components/design-assistant/TokenApplie
 import { ElementSelector } from '../components/design-assistant/ElementSelector';
 import { TopEditorPanel } from '../components/page-builder/TopEditorPanel';
 import { EditModeProvider, useEditMode } from '../components/page-builder/EditModeContext';
+import { getIconByName } from '../components/navigation/NavIconMap';
 import {
-  HomeIcon,
-  UsersIcon,
   FolderIcon,
   CalendarIcon,
   DocumentDuplicateIcon,
-  ChartPieIcon,
+  UsersIcon,
 } from '@heroicons/react/24/outline';
-
-const navigation = [
-  { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-  {
-    name: 'Teams',
-    icon: UsersIcon,
-    current: false,
-    children: [
-      { name: 'Engineering', href: '#' },
-      { name: 'Human Resources', href: '#' },
-      { name: 'Customer Success', href: '#' },
-    ],
-  },
-  {
-    name: 'Projects',
-    icon: FolderIcon,
-    current: false,
-    children: [
-      { name: 'GraphQL API', href: '#' },
-      { name: 'iOS App', href: '#' },
-      { name: 'Android App', href: '#' },
-      { name: 'New Customer Portal', href: '#' },
-    ],
-  },
-  { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
-  { name: 'Documents', href: '#', icon: DocumentDuplicateIcon, current: false },
-  { name: 'Reports', href: '#', icon: ChartPieIcon, current: false },
-];
 
 const breadcrumbPages = [
   { name: 'Projects', href: '#', current: false },
@@ -66,18 +40,62 @@ const listItems = [
   { id: 3, name: 'Task 3', description: 'Update design system' },
 ];
 
-const topNavigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
-];
-
 const userNavigation = [
   { name: 'Your profile', href: '#' },
   { name: 'Settings', href: '#' },
   { name: 'Sign out', href: '#' },
 ];
+
+// Build hierarchical navigation from flat items
+function buildNavHierarchy(items) {
+  if (!items || items.length === 0) return [];
+  
+  const itemMap = new Map();
+  const roots = [];
+  
+  // First pass: create map
+  items.forEach(item => {
+    itemMap.set(item.id, { ...item, children: [] });
+  });
+  
+  // Second pass: build tree
+  items.forEach(item => {
+    const node = itemMap.get(item.id);
+    if (item.parent_id && itemMap.has(item.parent_id)) {
+      itemMap.get(item.parent_id).children.push(node);
+    } else if (!item.parent_id) {
+      roots.push(node);
+    }
+  });
+  
+  // Sort by order
+  const sortByOrder = (a, b) => (a.order || 0) - (b.order || 0);
+  roots.sort(sortByOrder);
+  roots.forEach(root => root.children.sort(sortByOrder));
+  
+  return roots;
+}
+
+// Convert NavigationConfig items to component format with icons
+function convertToNavFormat(items, currentSlug) {
+  return items.map(item => {
+    const IconComponent = getIconByName(item.icon);
+    const converted = {
+      name: item.name,
+      href: item.slug ? createPageUrl(item.slug) : '#',
+      icon: IconComponent,
+      current: item.slug === currentSlug,
+    };
+    if (item.children && item.children.length > 0) {
+      converted.children = item.children.map(child => ({
+        name: child.name,
+        href: child.slug ? createPageUrl(child.slug) : '#',
+        current: child.slug === currentSlug,
+      }));
+    }
+    return converted;
+  });
+}
 
 const user = {
   name: 'Tom Cook',
