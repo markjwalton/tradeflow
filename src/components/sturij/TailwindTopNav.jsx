@@ -1,4 +1,4 @@
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
@@ -18,7 +18,7 @@ export default function TailwindTopNav({
   onSidebarToggle,
 }) {
   return (
-    <Disclosure as="header" className="relative z-10 bg-white shadow-sm">
+    <header className="relative z-10 bg-white shadow-sm">
       <div className="mx-auto max-w-full px-2 sm:px-4 md:divide-y md:divide-gray-200 lg:px-8">
         <div className="relative flex h-16 justify-between">
           <div className="relative z-10 flex items-center px-2 lg:px-0">
@@ -122,65 +122,6 @@ export default function TailwindTopNav({
           ))}
         </nav>
       </div>
-
-      <DisclosurePanel as="nav" aria-label="Global" className="md:hidden">
-        <div className="space-y-1 px-2 pt-2 pb-3">
-          {navigation.map((item) => (
-            <DisclosureButton
-              key={item.name}
-              as="a"
-              href={item.href}
-              onClick={item.onClick}
-              aria-current={item.current ? 'page' : undefined}
-              className={classNames(
-                item.current ? 'bg-gray-100 text-gray-900' : 'text-gray-900 hover:bg-gray-50',
-                'block rounded-md px-3 py-2 text-base font-medium',
-              )}
-            >
-              {item.name}
-            </DisclosureButton>
-          ))}
-        </div>
-        {user && (
-          <div className="border-t border-gray-200 pt-4 pb-3">
-            <div className="flex items-center px-4">
-              <div className="shrink-0">
-                <img
-                  alt=""
-                  src={user.imageUrl}
-                  className="size-10 rounded-full bg-gray-100 outline -outline-offset-1 outline-black/5"
-                />
-              </div>
-              <div className="ml-3">
-                <div className="text-base font-medium text-gray-800">{user.name}</div>
-                <div className="text-sm font-medium text-gray-500">{user.email}</div>
-              </div>
-              <button
-                type="button"
-                onClick={onNotificationClick}
-                className="relative ml-auto shrink-0 rounded-full p-1 text-gray-400 hover:text-gray-500 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600"
-              >
-                <span className="absolute -inset-1.5" />
-                <span className="sr-only">View notifications</span>
-                <BellIcon aria-hidden="true" className="size-6" />
-              </button>
-            </div>
-            <div className="mt-3 space-y-1 px-2">
-              {userNavigation.map((item) => (
-                <DisclosureButton
-                  key={item.name}
-                  as="a"
-                  href={item.href}
-                  onClick={item.onClick}
-                  className="block rounded-md px-3 py-2 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900"
-                >
-                  {item.name}
-                </DisclosureButton>
-              ))}
-            </div>
-          </div>
-        )}
-      </DisclosurePanel>
-    </Disclosure>
+    </header>
   );
 }
