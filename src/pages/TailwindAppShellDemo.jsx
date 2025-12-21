@@ -97,12 +97,6 @@ function convertToNavFormat(items, currentSlug) {
   });
 }
 
-const user = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
-  imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-};
-
 function AppShellContent() {
   const { isActive } = useTokenApplier();
   const { selectedElement } = useEditMode();
@@ -114,6 +108,49 @@ function AppShellContent() {
   const [activeTab, setActiveTab] = useState('colours');
   const [editorOpen, setEditorOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // Fetch current user
+  useEffect(() => {
+    base44.auth.me().then(setCurrentUser).catch(() => {});
+  }, []);
+
+  // Fetch navigation configs
+  const { data: navConfigs = [] } = useQuery({
+    queryKey: ['navigationConfigs'],
+    queryFn: () => base44.entities.NavigationConfig.list(),
+  });
+
+  // Get main nav (admin_console) and secondary nav (app_pages_source or live_pages_source)
+  const mainNavConfig = navConfigs.find(c => c.config_type === 'admin_console');
+  const secondaryNavConfig = navConfigs.find(c => c.config_type === 'app_pages_source' || c.config_type === 'live_pages_source');
+
+  // Build navigation hierarchy
+  const mainNavigation = useMemo(() => {
+    if (!mainNavConfig?.items) return [];
+    const hierarchy = buildNavHierarchy(mainNavConfig.items.filter(i => i.is_visible !== false));
+    return convertToNavFormat(hierarchy, 'TailwindAppShellDemo');
+  }, [mainNavConfig]);
+
+  // Build secondary navigation (flat, top-level items only for the header)
+  const secondaryNavigation = useMemo(() => {
+    if (!secondaryNavConfig?.items) return [];
+    const topLevel = secondaryNavConfig.items
+      .filter(i => !i.parent_id && i.is_visible !== false && i.item_type === 'page')
+      .sort((a, b) => (a.order || 0) - (b.order || 0))
+      .slice(0, 5); // Limit to 5 items for header
+    return topLevel.map(item => ({
+      name: item.name,
+      href: item.slug ? createPageUrl(item.slug) : '#',
+      current: false,
+    }));
+  }, [secondaryNavConfig]);
+
+  const user = currentUser ? {
+    name: currentUser.full_name || currentUser.email,
+    email: currentUser.email,
+    imageUrl: currentUser.avatar_url,
+  } : null;
 
   const drawerTabs = [
     { id: 'colours', name: 'Colours', current: activeTab === 'colours' },
