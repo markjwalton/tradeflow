@@ -126,7 +126,7 @@ export default function TailwindNavigation({
 
   return (
     <div className={classNames(
-      "hidden lg:flex relative grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white z-0",
+      "hidden md:flex relative grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white z-0",
       isIconsOnly ? "px-2 pt-6" : "px-6 pt-6"
     )}>
       <TooltipProvider delayDuration={300}>

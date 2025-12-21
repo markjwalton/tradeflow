@@ -109,7 +109,7 @@ export default function TailwindMobileDrawer({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} className="relative z-50 lg:hidden">
+    <Dialog open={open} onClose={onClose} className="relative z-50 md:hidden">
       <DialogBackdrop
         transition
         className="fixed inset-0 bg-black/50 transition-opacity duration-300 ease-linear data-closed:opacity-0"
