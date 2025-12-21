@@ -177,6 +177,7 @@ export default function SiteSettings() {
           contentAlignment: String(settings.contentAlignment || "center"),
           backgroundImage: settings.backgroundImage ? String(settings.backgroundImage) : null,
         },
+        ui_preferences: uiPreferences,
       });
       
       const savedSettings = {
@@ -203,6 +204,7 @@ export default function SiteSettings() {
       }
 
       window.dispatchEvent(new CustomEvent('site-settings-changed', { detail: savedSettings }));
+      window.dispatchEvent(new CustomEvent('ui-preferences-changed', { detail: uiPreferences }));
       toast.success("Site settings saved successfully");
     } catch (e) {
       console.error("Failed to save site settings:", e);
