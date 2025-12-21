@@ -21,16 +21,18 @@ export default function TailwindTopNav({
     <Disclosure as="header" className="relative z-10 bg-white shadow-sm">
       <div className="mx-auto max-w-full px-2 sm:px-4 lg:divide-y lg:divide-gray-200 lg:px-8">
         <div className="relative flex h-16 justify-between">
-          <div className="relative z-10 flex px-2 lg:px-0">
+          <div className="relative z-10 flex items-center px-2 lg:px-0">
             {/* Desktop sidebar toggle - left of logo */}
-            <button
-              type="button"
-              onClick={onSidebarToggle}
-              className="hidden lg:inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-600 mr-2"
-            >
-              <span className="sr-only">Toggle sidebar</span>
-              <Bars3Icon aria-hidden="true" className="size-6" />
-            </button>
+            {onSidebarToggle && (
+              <button
+                type="button"
+                onClick={onSidebarToggle}
+                className="hidden lg:inline-flex items-center justify-center rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-600 mr-2"
+              >
+                <span className="sr-only">Toggle sidebar</span>
+                <Bars3Icon aria-hidden="true" className="h-6 w-6" />
+              </button>
+            )}
             <div className="flex shrink-0 items-center">
               <img alt={logoAlt} src={logoSrc} className="h-12 w-auto" />
             </div>
