@@ -1,6 +1,8 @@
+import { useState, useRef, useEffect } from 'react';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { createPageUrl } from '@/utils';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -13,10 +15,25 @@ export default function TailwindTopNav({
   userNavigation = [],
   user = null,
   onSearch,
+  searchResults = [],
+  searchQuery = '',
   onNotificationClick,
   onMobileMenuClick,
   onSidebarToggle,
 }) {
+  const [showResults, setShowResults] = useState(false);
+  const searchRef = useRef(null);
+
+  // Close results when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (searchRef.current && !searchRef.current.contains(e.target)) {
+        setShowResults(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
   return (
     <header className="relative z-10 bg-white shadow-sm">
       <div className="mx-auto max-w-full px-2 sm:px-4 md:divide-y md:divide-gray-200 lg:px-8">
