@@ -33,12 +33,30 @@ function LayoutContent({ children, currentPageName, currentUser, currentTenant, 
   const [editorPanelOpen, setEditorPanelOpen] = useState(false);
   const [editorViewMode, setEditorViewMode] = useState('full');
   const [showEditorBubble, setShowEditorBubble] = useState(true);
+  const [showPageProperties, setShowPageProperties] = useState(false);
+  const [showAIAssistant, setShowAIAssistant] = useState(true);
 
   useEffect(() => {
     const handlePreferencesChange = (event) => {
       setShowEditorBubble(event.detail.showEditorBubble ?? true);
+      setShowPageProperties(event.detail.showPageProperties ?? false);
+      setShowAIAssistant(event.detail.showAIAssistant ?? true);
     };
 
+    const loadPreferences = async () => {
+      try {
+        const user = await base44.auth.me();
+        if (user?.ui_preferences) {
+          setShowEditorBubble(user.ui_preferences.showEditorBubble ?? true);
+          setShowPageProperties(user.ui_preferences.showPageProperties ?? false);
+          setShowAIAssistant(user.ui_preferences.showAIAssistant ?? true);
+        }
+      } catch (e) {
+        // User not logged in
+      }
+    };
+    
+    loadPreferences();
     window.addEventListener('ui-preferences-changed', handlePreferencesChange);
     return () => window.removeEventListener('ui-preferences-changed', handlePreferencesChange);
   }, []);
