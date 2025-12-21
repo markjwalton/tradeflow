@@ -172,17 +172,21 @@ function AppShellContent() {
       <TailwindMobileDrawer
         open={mobileNavOpen}
         onClose={() => setMobileNavOpen(false)}
-        navigation={navigation}
-        secondaryNavigation={topNavigation}
+        navigation={mainNavigation}
+        secondaryNavigation={secondaryNavigation}
         user={user}
-        onNavigate={(item) => console.log('Navigate to:', item.name)}
-        onSettings={() => console.log('Settings clicked')}
-        onLogout={() => console.log('Logout clicked')}
+        onNavigate={(item) => {
+          if (item.href && item.href !== '#') {
+            window.location.href = item.href;
+          }
+        }}
+        onSettings={() => window.location.href = createPageUrl('SiteSettings')}
+        onLogout={() => base44.auth.logout()}
       />
 
       {/* Top Navigation */}
       <TailwindTopNav
-        navigation={topNavigation}
+        navigation={secondaryNavigation}
         userNavigation={userNavigation}
         user={user}
         onNotificationClick={() => setTopDrawerOpen(true)}
