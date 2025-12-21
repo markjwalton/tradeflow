@@ -54,18 +54,48 @@ export default function TailwindTopNav({
               <img alt={logoAlt} src={logoSrc} className="h-12 w-auto" />
             </div>
           </div>
-          <div className="relative z-0 flex flex-1 items-center justify-center px-2 sm:absolute sm:inset-0">
-            <div className="grid w-full grid-cols-1 sm:max-w-xs">
-              <input
-                name="search"
-                placeholder="Search"
-                onChange={(e) => onSearch?.(e.target.value)}
-                className="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pr-3 pl-10 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-              />
-              <MagnifyingGlassIcon
-                aria-hidden="true"
-                className="pointer-events-none col-start-1 row-start-1 ml-3 size-5 self-center text-gray-400"
-              />
+          <div className="relative z-0 flex flex-1 items-center justify-center px-2 sm:absolute sm:inset-0" ref={searchRef}>
+            <div className="relative w-full sm:max-w-xs">
+              <div className="grid w-full grid-cols-1">
+                <input
+                  name="search"
+                  placeholder="Search pages..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    onSearch?.(e.target.value);
+                    setShowResults(true);
+                  }}
+                  onFocus={() => setShowResults(true)}
+                  className="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pr-3 pl-10 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                />
+                <MagnifyingGlassIcon
+                  aria-hidden="true"
+                  className="pointer-events-none col-start-1 row-start-1 ml-3 size-5 self-center text-gray-400"
+                />
+              </div>
+              {/* Search Results Dropdown */}
+              {showResults && searchResults.length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-md shadow-lg border border-gray-200 max-h-64 overflow-y-auto z-50">
+                  {searchResults.map((result) => (
+                    <a
+                      key={result.id || result.slug}
+                      href={result.slug ? createPageUrl(result.slug) : '#'}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => setShowResults(false)}
+                    >
+                      <div className="font-medium">{result.name}</div>
+                      {result.slug && (
+                        <div className="text-xs text-gray-500">{result.slug}</div>
+                      )}
+                    </a>
+                  ))}
+                </div>
+              )}
+              {showResults && searchQuery && searchResults.length === 0 && (
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-md shadow-lg border border-gray-200 z-50">
+                  <div className="px-4 py-3 text-sm text-gray-500">No pages found</div>
+                </div>
+              )}
             </div>
           </div>
           <div className="relative z-10 flex items-center md:hidden">
