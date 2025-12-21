@@ -146,23 +146,29 @@ function LayoutContent({ children, currentPageName, currentUser, currentTenant, 
         </div>
         <GlobalAIAssistant />
 
-        {/* Editor bubble button - hide on fullscreen pages */}
-        {showEditorBubble && !isFullscreenPage && (
-          <button
-            type="button"
-            onClick={handleEditorToggle}
-            className="fixed bottom-6 left-6 rounded-full bg-indigo-600 p-2 text-white shadow-2xl hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        {/* Tools bubble buttons - hide on fullscreen pages */}
+        {!isFullscreenPage && (showEditorBubble || showPageProperties || showAIAssistant) && (
+          <div 
+            className="fixed bottom-6 left-6 flex flex-col-reverse gap-2"
             style={{ zIndex: 'var(--z-max)' }}
-            title="Toggle Editor Panel"
           >
-            {editorPanelOpen ? (
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <Palette className="h-6 w-6" />
+            {showEditorBubble && (
+              <button
+                type="button"
+                onClick={handleEditorToggle}
+                className="rounded-full bg-indigo-600 p-3 text-white shadow-2xl hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                title="Page Editor"
+              >
+                {editorPanelOpen ? (
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <Palette className="h-5 w-5" />
+                )}
+              </button>
             )}
-          </button>
+          </div>
         )}
       </SidebarProvider>
     </TenantContext.Provider>
