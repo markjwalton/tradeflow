@@ -22,6 +22,11 @@ import { ElementSelector } from '../components/design-assistant/ElementSelector'
 import { TopEditorPanel } from '../components/page-builder/TopEditorPanel';
 import { EditModeProvider, useEditMode } from '../components/page-builder/EditModeContext';
 import { getIconByName } from '../components/navigation/NavIconMap';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   FolderIcon,
   CalendarIcon,
@@ -29,21 +34,12 @@ import {
   UsersIcon,
 } from '@heroicons/react/24/outline';
 
-const breadcrumbPages = [
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Project Nero', href: '#', current: true },
-];
+const CURRENT_PAGE_SLUG = 'TailwindAppShellDemo';
 
 const listItems = [
   { id: 1, name: 'Task 1', description: 'Complete project documentation' },
   { id: 2, name: 'Task 2', description: 'Review code changes' },
   { id: 3, name: 'Task 3', description: 'Update design system' },
-];
-
-const userNavigation = [
-  { name: 'Your profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
 ];
 
 // Build hierarchical navigation from flat items
