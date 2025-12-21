@@ -1,5 +1,6 @@
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
-import { ChevronRightIcon } from '@heroicons/react/20/solid';
+import { useState } from 'react';
+import { ChevronRightIcon, ChevronDownIcon } from '@heroicons/react/20/solid';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
