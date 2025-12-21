@@ -118,6 +118,7 @@ function AppShellContent() {
         open={mobileNavOpen}
         onClose={() => setMobileNavOpen(false)}
         navigation={navigation}
+        secondaryNavigation={topNavigation}
         user={user}
         onNavigate={(item) => console.log('Navigate to:', item.name)}
         onSettings={() => console.log('Settings clicked')}

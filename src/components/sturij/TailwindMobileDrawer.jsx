@@ -11,6 +11,7 @@ export default function TailwindMobileDrawer({
   open,
   onClose,
   navigation = [],
+  secondaryNavigation = [],
   user = null,
   logoSrc = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/c94580ddf_sturij-logo.png',
   logoAlt = 'Sturij',
@@ -142,10 +143,35 @@ export default function TailwindMobileDrawer({
               />
             </div>
 
-            {/* Navigation */}
+            {/* Main Navigation */}
             <nav className="flex-1 py-2">
               {navigation.map((item) => renderNavItem(item, false))}
             </nav>
+
+            {/* Secondary Navigation */}
+            {secondaryNavigation.length > 0 && (
+              <>
+                <div className="border-t border-gray-200" />
+                <nav className="py-2">
+                  {secondaryNavigation.map((item) => (
+                    <button
+                      key={item.name}
+                      onClick={() => handleNavClick(item)}
+                      className={classNames(
+                        'w-full flex items-center gap-3 px-4 py-3 text-left transition-colors min-h-[44px]',
+                        item.current
+                          ? 'bg-indigo-600 text-white'
+                          : 'text-gray-700 hover:bg-gray-100'
+                      )}
+                    >
+                      <span className={classNames('truncate', item.current && 'font-medium')}>
+                        {item.name}
+                      </span>
+                    </button>
+                  ))}
+                </nav>
+              </>
+            )}
 
             {/* Separator */}
             <div className="border-t border-gray-200" />

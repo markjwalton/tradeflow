@@ -14,12 +14,12 @@ export default function TailwindNavigation({
   onNavigate,
   onEditorToggle
 }) {
+  const [expandedFolders, setExpandedFolders] = useState(new Set());
+  const isIconsOnly = navigationMode === 'icons';
+
   if (navigationMode === 'hidden') {
     return null;
   }
-
-  const isIconsOnly = navigationMode === 'icons';
-  const [expandedFolders, setExpandedFolders] = useState(new Set());
 
   const toggleFolder = (itemName, event) => {
     if (event) {
@@ -126,7 +126,7 @@ export default function TailwindNavigation({
 
   return (
     <div className={classNames(
-      "relative flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white z-0",
+      "hidden lg:flex relative grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white z-0",
       isIconsOnly ? "px-2 pt-6" : "px-6 pt-6"
     )}>
       <TooltipProvider delayDuration={300}>
