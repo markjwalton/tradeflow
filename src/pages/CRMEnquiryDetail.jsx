@@ -11,7 +11,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { ArrowLeft, Edit, FileText, User, Calendar, ArrowRight, FolderPlus } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
-import { CRMAppShell } from '../components/crm/CRMAppShell';
 
 export default function CRMEnquiryDetail() {
   const navigate = useNavigate();
@@ -136,7 +135,7 @@ export default function CRMEnquiryDetail() {
     enquiry.status !== 'Archived';
 
   return (
-    <CRMAppShell currentPage="CRMEnquiries" breadcrumbs={[{ label: 'Enquiries', href: createPageUrl('CRMEnquiries') }, { label: 'Enquiry Detail' }]}>
+    <div className="space-y-6">
       <Button
         variant="ghost"
         onClick={() => navigate(createPageUrl('CRMEnquiries'))}
@@ -333,6 +332,6 @@ export default function CRMEnquiryDetail() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </CRMAppShell>
+    </div>
   );
 }

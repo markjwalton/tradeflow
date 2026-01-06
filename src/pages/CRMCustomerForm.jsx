@@ -14,7 +14,6 @@ import { ArrowLeft, Save, User } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
 import PostcodeLookup from '../components/crm/PostcodeLookup';
-import { CRMAppShell } from '../components/crm/CRMAppShell';
 
 // Generate customer number: [R/T/C/E][MM][YY][NNN]
 const generateCustomerNumber = async (customerType) => {
@@ -185,7 +184,7 @@ export default function CRMCustomerForm() {
   }
 
   return (
-    <CRMAppShell currentPage="CRMCustomers" breadcrumbs={[{ label: 'Customers', href: createPageUrl('CRMCustomers') }, { label: isEditing ? 'Edit Customer' : 'New Customer' }]}>
+    <div className="space-y-6">
       <div className="max-w-2xl mx-auto">
       <Button
         variant="ghost"
@@ -434,6 +433,6 @@ export default function CRMCustomerForm() {
         </CardContent>
       </Card>
       </div>
-    </CRMAppShell>
+    </div>
   );
 }

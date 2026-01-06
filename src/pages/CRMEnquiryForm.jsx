@@ -14,7 +14,6 @@ import { ArrowLeft, Save, FileText, UserPlus } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
 import QuickCustomerForm from '../components/crm/QuickCustomerForm';
-import { CRMAppShell } from '../components/crm/CRMAppShell';
 
 export default function CRMEnquiryForm() {
   const navigate = useNavigate();
@@ -120,7 +119,7 @@ export default function CRMEnquiryForm() {
   }
 
   return (
-    <CRMAppShell currentPage="CRMEnquiries" breadcrumbs={[{ label: 'Enquiries', href: createPageUrl('CRMEnquiries') }, { label: isEditing ? 'Edit Enquiry' : 'New Enquiry' }]}>
+    <div className="space-y-6">
       <div className="max-w-2xl mx-auto">
       <Button
         variant="ghost"
@@ -329,6 +328,6 @@ export default function CRMEnquiryForm() {
         </CardContent>
       </Card>
       </div>
-    </CRMAppShell>
+    </div>
   );
 }
