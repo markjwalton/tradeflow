@@ -25,7 +25,7 @@ import { WebVitals } from "@/components/common/WebVitals";
 // Sentry disabled - no DSN configured
 // import { initializeSentry, setUserContext } from "@/components/common/sentryConfig";
 
-function LayoutContent({ children, currentPageName, currentUser, currentTenant, navItems, isFullscreenPage, publicPages, standalonePages, fullscreenPages, userRoles, isGlobalAdmin, isTenantAdmin, siteSettings }) {
+const LayoutContent = React.memo(function LayoutContent({ children, currentPageName, currentUser, currentTenant, navItems, isFullscreenPage, publicPages, standalonePages, fullscreenPages, userRoles, isGlobalAdmin, isTenantAdmin, siteSettings }) {
   const { toggleEditMode } = useEditMode();
   const [editorPanelOpen, setEditorPanelOpen] = useState(false);
   const [editorViewMode, setEditorViewMode] = useState('full');
@@ -185,7 +185,7 @@ function LayoutContent({ children, currentPageName, currentUser, currentTenant, 
       </SidebarProvider>
     </TenantContext.Provider>
   );
-}
+});
 
 // Cache key for session-level caching
 const LAYOUT_CACHE_KEY = 'layout_init_cache';
@@ -218,6 +218,8 @@ export default function Layout({ children, currentPageName }) {
   const isTenantPage = false;
 
   useEffect(() => {
+    let isMounted = true;
+    
     // Check if we already ran init recently (session cache)
     const cachedInit = sessionStorage.getItem(LAYOUT_CACHE_KEY);
     const skipHeavyInit = cachedInit && (Date.now() - parseInt(cachedInit)) < LAYOUT_CACHE_TTL;
@@ -235,6 +237,8 @@ export default function Layout({ children, currentPageName }) {
 
     const checkAccess = async () => {
       try {
+        if (!isMounted) return;
+        
         // OPTIMIZATION: Fetch user first - we need it for everything
         let user = null;
         try {
@@ -242,6 +246,8 @@ export default function Layout({ children, currentPageName }) {
         } catch (e) {
           // Not logged in - continue with public page check
         }
+
+        if (!isMounted) return;
 
         // Apply user settings immediately if available (no extra API call)
         if (user) {
@@ -434,6 +440,7 @@ export default function Layout({ children, currentPageName }) {
     checkAccess();
     
     return () => {
+      isMounted = false;
       window.removeEventListener('site-settings-changed', handleSiteSettingsChange);
     };
   }, []); // Run once on mount
