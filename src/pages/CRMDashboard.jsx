@@ -69,7 +69,7 @@ export default function CRMDashboard() {
 
   return (
     <div className="space-y-6">
-      <CRMPageHeader
+      <PageHeader
         title="CRM Dashboard"
         description="Overview of your customer relationships"
         icon={LayoutDashboard}
@@ -85,72 +85,72 @@ export default function CRMDashboard() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <CRMCard>
-          <CRMCardContent className="pt-6">
+        <Card>
+          <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Total Customers</p>
-                <p className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>{customers.length}</p>
+                <p className="text-[var(--text-sm)] text-[var(--text-muted)]">Total Customers</p>
+                <p className="text-3xl font-bold text-[var(--text-primary)]">{customers.length}</p>
               </div>
-              <Users className="h-8 w-8 text-muted-foreground" />
+              <Users className="h-8 w-8 text-[var(--text-muted)]" />
             </div>
-          </CRMCardContent>
-        </CRMCard>
+          </CardContent>
+        </Card>
 
-        <CRMCard className="border" style={{ borderColor: 'var(--primary-200)', backgroundColor: 'var(--primary-50)' }}>
-          <CRMCardContent className="pt-6">
+        <Card className="border-[var(--primary-200)] bg-[var(--primary-50)]">
+          <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm" style={{ color: 'var(--primary-600)' }}>New Enquiries</p>
-                <p className="text-3xl font-bold" style={{ color: 'var(--primary-700)' }}>{newEnquiries}</p>
+                <p className="text-[var(--text-sm)] text-[var(--primary-600)]">New Enquiries</p>
+                <p className="text-3xl font-bold text-[var(--primary-700)]">{newEnquiries}</p>
               </div>
-              <FileText className="h-8 w-8" style={{ color: 'var(--primary-400)' }} />
+              <FileText className="h-8 w-8 text-[var(--primary-400)]" />
             </div>
-          </CRMCardContent>
-        </CRMCard>
+          </CardContent>
+        </Card>
 
-        <CRMCard className="border" style={{ borderColor: 'var(--secondary-200)', backgroundColor: 'var(--secondary-50)' }}>
-          <CRMCardContent className="pt-6">
+        <Card className="border-[var(--secondary-200)] bg-[var(--secondary-50)]">
+          <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm" style={{ color: 'var(--secondary-600)' }}>Qualified</p>
-                <p className="text-3xl font-bold" style={{ color: 'var(--secondary-700)' }}>{qualifiedEnquiries}</p>
+                <p className="text-[var(--text-sm)] text-[var(--secondary-600)]">Qualified</p>
+                <p className="text-3xl font-bold text-[var(--secondary-700)]">{qualifiedEnquiries}</p>
               </div>
-              <TrendingUp className="h-8 w-8" style={{ color: 'var(--secondary-400)' }} />
+              <TrendingUp className="h-8 w-8 text-[var(--secondary-400)]" />
             </div>
-          </CRMCardContent>
-        </CRMCard>
+          </CardContent>
+        </Card>
 
-        <CRMCard className="border" style={{ borderColor: 'var(--accent-200)', backgroundColor: 'var(--accent-50)' }}>
-          <CRMCardContent className="pt-6">
+        <Card className="border-[var(--accent-200)] bg-[var(--accent-50)]">
+          <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm" style={{ color: 'var(--accent-600)' }}>Active Projects</p>
-                <p className="text-3xl font-bold" style={{ color: 'var(--accent-700)' }}>{activeProjects}</p>
+                <p className="text-[var(--text-sm)] text-[var(--accent-600)]">Active Projects</p>
+                <p className="text-3xl font-bold text-[var(--accent-700)]">{activeProjects}</p>
               </div>
-              <FolderKanban className="h-8 w-8" style={{ color: 'var(--accent-400)' }} />
+              <FolderKanban className="h-8 w-8 text-[var(--accent-400)]" />
             </div>
-          </CRMCardContent>
-        </CRMCard>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Recent Enquiries */}
-        <CRMCard>
-          <CRMCardHeader className="flex flex-row items-center justify-between">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>Recent Enquiries</h3>
-              <p className="text-sm text-muted-foreground">Latest customer enquiries</p>
+              <h3 className="text-lg font-semibold text-[var(--text-primary)]">Recent Enquiries</h3>
+              <p className="text-[var(--text-sm)] text-[var(--text-muted)]">Latest customer enquiries</p>
             </div>
             <Link to={createPageUrl('CRMEnquiries')}>
               <Button variant="ghost" size="sm">
                 View All <ArrowRight className="h-4 w-4 ml-1" />
               </Button>
             </Link>
-          </CRMCardHeader>
-          <CRMCardContent>
+          </CardHeader>
+          <CardContent>
             {recentEnquiries.length === 0 ? (
-              <p className="text-muted-foreground text-center py-8">No enquiries yet</p>
+              <p className="text-[var(--text-muted)] text-center py-8">No enquiries yet</p>
             ) : (
               <div className="space-y-3">
                 {recentEnquiries.map((enquiry) => {
@@ -159,24 +159,24 @@ export default function CRMDashboard() {
                     <Link
                       key={enquiry.id}
                       to={createPageUrl('CRMEnquiryDetail') + `?id=${enquiry.id}`}
-                      className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-colors"
+                      className="flex items-center justify-between p-3 rounded-[var(--radius-lg)] border border-[var(--color-border)] hover:bg-[var(--color-muted)]/50 transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                          <span className="text-sm font-medium text-primary">
+                        <div className="h-10 w-10 rounded-[var(--radius-full)] bg-[var(--primary-100)] flex items-center justify-center">
+                          <span className="text-[var(--text-sm)] font-medium text-[var(--color-primary)]">
                             {customer?.first_name?.[0]}{customer?.surname?.[0]}
                           </span>
                         </div>
                         <div>
-                          <p className="font-medium">
+                          <p className="font-medium text-[var(--text-primary)]">
                             {customer ? `${customer.first_name} ${customer.surname}` : 'Unknown'}
                           </p>
-                          <p className="text-sm text-muted-foreground">{enquiry.inbound_channel}</p>
+                          <p className="text-[var(--text-sm)] text-[var(--text-muted)]">{enquiry.inbound_channel}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
                         <Badge className={getStatusColor(enquiry.status)}>{enquiry.status}</Badge>
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-[var(--text-xs)] text-[var(--text-muted)]">
                           {formatRelativeDate(enquiry.enquiry_date)}
                         </span>
                       </div>
@@ -185,25 +185,25 @@ export default function CRMDashboard() {
                 })}
               </div>
             )}
-          </CRMCardContent>
-        </CRMCard>
+          </CardContent>
+        </Card>
 
         {/* Recent Activity */}
-        <CRMCard>
-          <CRMCardHeader className="flex flex-row items-center justify-between">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>Recent Activity</h3>
-              <p className="text-sm text-muted-foreground">Latest interactions</p>
+              <h3 className="text-lg font-semibold text-[var(--text-primary)]">Recent Activity</h3>
+              <p className="text-[var(--text-sm)] text-[var(--text-muted)]">Latest interactions</p>
             </div>
             <Link to={createPageUrl('CRMInteractions')}>
               <Button variant="ghost" size="sm">
                 View All <ArrowRight className="h-4 w-4 ml-1" />
               </Button>
             </Link>
-          </CRMCardHeader>
-          <CRMCardContent>
+          </CardHeader>
+          <CardContent>
             {interactions.length === 0 ? (
-              <p className="text-muted-foreground text-center py-8">No interactions logged</p>
+              <p className="text-[var(--text-muted)] text-center py-8">No interactions logged</p>
             ) : (
               <div className="space-y-3">
                 {interactions.map((interaction) => {
@@ -211,46 +211,46 @@ export default function CRMDashboard() {
                   return (
                     <div
                       key={interaction.id}
-                      className="flex items-start gap-3 p-3 rounded-lg border"
+                      className="flex items-start gap-3 p-3 rounded-[var(--radius-lg)] border border-[var(--color-border)]"
                     >
-                      <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center mt-0.5">
+                      <div className="h-8 w-8 rounded-[var(--radius-full)] bg-[var(--color-muted)] flex items-center justify-center mt-0.5">
                         {interaction.interaction_type === 'Phone Call' ? (
-                          <Phone className="h-4 w-4" />
+                          <Phone className="h-4 w-4 text-[var(--text-muted)]" />
                         ) : interaction.interaction_type === 'Design Visit' ? (
-                          <Calendar className="h-4 w-4" />
+                          <Calendar className="h-4 w-4 text-[var(--text-muted)]" />
                         ) : (
-                          <MessageSquare className="h-4 w-4" />
+                          <MessageSquare className="h-4 w-4 text-[var(--text-muted)]" />
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
-                          <p className="font-medium truncate">
+                          <p className="font-medium truncate text-[var(--text-primary)]">
                             {customer ? `${customer.first_name} ${customer.surname}` : 'Unknown'}
                           </p>
-                          <span className="text-xs text-muted-foreground whitespace-nowrap">
+                          <span className="text-[var(--text-xs)] text-[var(--text-muted)] whitespace-nowrap">
                             {formatRelativeDate(interaction.interaction_date)}
                           </span>
                         </div>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-[var(--text-sm)] text-[var(--text-muted)]">
                           {interaction.interaction_type}
                         </p>
-                        <p className="text-sm line-clamp-2 mt-1">{interaction.summary_notes}</p>
+                        <p className="text-[var(--text-sm)] text-[var(--text-body)] line-clamp-2 mt-1">{interaction.summary_notes}</p>
                       </div>
                     </div>
                   );
                 })}
               </div>
             )}
-          </CRMCardContent>
-        </CRMCard>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Quick Actions */}
-      <CRMCard>
-        <CRMCardHeader>
-          <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>Quick Actions</h3>
-        </CRMCardHeader>
-        <CRMCardContent>
+      <Card>
+        <CardHeader>
+          <h3 className="text-lg font-semibold text-[var(--text-primary)]">Quick Actions</h3>
+        </CardHeader>
+        <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             <Link to={createPageUrl('CRMCustomerForm')}>
               <Button variant="outline" className="w-full h-auto py-4 flex flex-col gap-2">
@@ -283,8 +283,8 @@ export default function CRMDashboard() {
               </Button>
             </Link>
           </div>
-        </CRMCardContent>
-      </CRMCard>
+        </CardContent>
+      </Card>
     </div>
   );
 }
