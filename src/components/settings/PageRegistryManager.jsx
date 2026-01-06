@@ -141,8 +141,10 @@ export default function PageRegistryManager() {
 
   // Sync pages from source_slugs to registry
   const handleSyncPages = async () => {
+    // Exclude deleted pages from being re-added
+    const deletedSlugs = pages.filter(p => p.status === 'deleted').map(p => p.slug);
     const existingSlugs = pages.map(p => p.slug);
-    const newSlugs = sourceSlugs.filter(s => !existingSlugs.includes(s));
+    const newSlugs = sourceSlugs.filter(s => !existingSlugs.includes(s) && !deletedSlugs.includes(s));
     
     if (newSlugs.length === 0) {
       toast.info("All pages are already registered");
