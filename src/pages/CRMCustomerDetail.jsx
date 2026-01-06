@@ -15,13 +15,12 @@ export default function CRMCustomerDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const customerId = urlParams.get('id');
 
-  const { data: customers = [], isLoading: customerLoading } = useQuery({
-    queryKey: ['crmCustomer', customerId],
-    queryFn: () => base44.entities.CRMCustomer.filter({ id: customerId }),
-    enabled: !!customerId,
+  const { data: allCustomers = [], isLoading: customerLoading } = useQuery({
+    queryKey: ['crmCustomers'],
+    queryFn: () => base44.entities.CRMCustomer.list(),
   });
 
-  const customer = customers[0];
+  const customer = allCustomers.find(c => c.id === customerId);
 
   const { data: address } = useQuery({
     queryKey: ['address', customer?.primary_address_id],
