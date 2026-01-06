@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { Loader2 } from "lucide-react";
+import "./globals.css";
 import { Button } from "@/components/ui/button";
 // DISABLED: Prefetching was causing excessive network requests
 // import { prefetchOnIdle, prefetchDashboardQueries, prefetchLibraryQueries } from "@/components/common/queryPrefetch";
