@@ -536,7 +536,7 @@ export default function Layout({ children, currentPageName }) {
     return () => {
       window.removeEventListener('site-settings-changed', handleSiteSettingsChange);
     };
-  }, [currentPageName]);
+  }, []); // Run once on mount - currentPageName changes shouldn't re-run access check
 
   // Pages without layout wrapper (TenantAccess, Setup, ClientOnboardingPortal render without chrome)
   if (currentPageName === "TenantAccess" || currentPageName === "Setup" || currentPageName === "ClientOnboardingPortal") {
