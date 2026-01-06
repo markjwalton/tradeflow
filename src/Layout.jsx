@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
-import { cssVariables } from "@/components/library/designTokens";
+// cssVariables removed - all tokens defined in globals.css
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 // DISABLED: Prefetching was causing excessive network requests
@@ -117,7 +117,6 @@ function LayoutContent({ children, currentPageName, currentUser, currentTenant, 
   return (
     <TenantContext.Provider value={tenantContextValue}>
       <link rel="stylesheet" href="https://use.typekit.net/iwm1gcu.css" />
-      <style dangerouslySetInnerHTML={{ __html: cssVariables }} />
       <SidebarProvider>
         {editorPanelOpen && (
           <TopEditorPanel 
