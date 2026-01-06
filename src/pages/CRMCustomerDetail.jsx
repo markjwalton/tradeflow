@@ -7,7 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Edit, User, MapPin, Phone, Mail, MessageSquare, FileText, FolderOpen } from 'lucide-react';
+import { ArrowLeft, Edit, User, MapPin, Phone, Mail, MessageSquare, FileText, FolderOpen, Plus } from 'lucide-react';
+import InteractionTimeline from '../components/crm/InteractionTimeline';
 
 export default function CRMCustomerDetail() {
   const navigate = useNavigate();
@@ -205,9 +206,10 @@ export default function CRMCustomerDetail() {
               ) : (
                 <div className="space-y-3">
                   {enquiries.map((enquiry) => (
-                    <div
+                    <Link
                       key={enquiry.id}
-                      className="flex items-center justify-between p-3 border rounded-lg"
+                      to={createPageUrl('CRMEnquiryDetail') + `?id=${enquiry.id}`}
+                      className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors"
                     >
                       <div>
                         <p className="font-medium">{enquiry.inbound_channel}</p>
@@ -216,7 +218,7 @@ export default function CRMCustomerDetail() {
                         </p>
                       </div>
                       <Badge>{enquiry.status}</Badge>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               )}
@@ -237,9 +239,10 @@ export default function CRMCustomerDetail() {
               ) : (
                 <div className="space-y-3">
                   {projects.map((project) => (
-                    <div
+                    <Link
                       key={project.id}
-                      className="flex items-center justify-between p-3 border rounded-lg"
+                      to={createPageUrl('CRMProjectDetail') + `?id=${project.id}`}
+                      className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors"
                     >
                       <div>
                         <p className="font-medium">
@@ -250,7 +253,7 @@ export default function CRMCustomerDetail() {
                         </p>
                       </div>
                       <Badge>{project.status}</Badge>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               )}
@@ -260,35 +263,12 @@ export default function CRMCustomerDetail() {
 
         <TabsContent value="interactions" className="mt-4">
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Interactions</CardTitle>
-              <Link to={createPageUrl('CRMInteractionForm') + `?customer_id=${customer.id}`}>
-                <Button size="sm">Log Interaction</Button>
-              </Link>
-            </CardHeader>
-            <CardContent>
-              {interactions.length === 0 ? (
-                <p className="text-muted-foreground text-center py-8">
-                  No interactions logged
-                </p>
-              ) : (
-                <div className="space-y-3">
-                  {interactions.map((interaction) => (
-                    <div
-                      key={interaction.id}
-                      className="p-3 border rounded-lg"
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <Badge variant="outline">{interaction.interaction_type}</Badge>
-                        <span className="text-sm text-muted-foreground">
-                          {new Date(interaction.interaction_date).toLocaleDateString()}
-                        </span>
-                      </div>
-                      <p className="text-sm">{interaction.summary_notes}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
+            <CardContent className="pt-6">
+              <InteractionTimeline
+                interactions={interactions}
+                customerId={customer.id}
+                emptyMessage="No interactions logged for this customer"
+              />
             </CardContent>
           </Card>
         </TabsContent>
