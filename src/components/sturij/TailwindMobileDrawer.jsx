@@ -59,23 +59,23 @@ export default function TailwindMobileDrawer({
           <button
             onClick={(e) => toggleFolder(item.id || item.name, e)}
             className={classNames(
-              'w-full flex items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-gray-100',
+              'w-full flex items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-[var(--background-100)]',
               isChild && 'pl-8',
               'min-h-[44px]'
             )}
           >
             {isExpanded ? (
-              <ChevronDown className="h-4 w-4 text-gray-400" />
+              <ChevronDown className="h-4 w-4 text-[var(--text-muted)]" />
             ) : (
-              <ChevronRight className="h-4 w-4 text-gray-400" />
+              <ChevronRight className="h-4 w-4 text-[var(--text-muted)]" />
             )}
-            <DisplayIcon className="h-5 w-5 text-indigo-500" />
-            <span className={classNames('flex-1', !isChild && 'font-medium text-gray-900')}>
+            <DisplayIcon className="h-5 w-5 text-[var(--color-primary)]" />
+            <span className={classNames('flex-1', !isChild && 'font-medium text-[var(--text-primary)]')}>
               {item.name}
             </span>
           </button>
           {isExpanded && (
-            <div className="bg-gray-50">
+            <div className="bg-[var(--background-50)]">
               {item.children.map((child) => renderNavItem(child, true))}
             </div>
           )}
@@ -91,14 +91,14 @@ export default function TailwindMobileDrawer({
           'w-full flex items-center gap-3 px-4 py-3 text-left transition-colors min-h-[44px]',
           isChild && 'pl-12',
           item.current
-            ? 'bg-indigo-600 text-white'
-            : 'text-gray-700 hover:bg-gray-100'
+            ? 'bg-[var(--color-primary)] text-[var(--color-primary-foreground)]'
+            : 'text-[var(--text-secondary)] hover:bg-[var(--background-100)]'
         )}
       >
         <Icon
           className={classNames(
             'h-5 w-5',
-            item.current ? 'text-white' : 'text-indigo-500'
+            item.current ? 'text-[var(--color-primary-foreground)]' : 'text-[var(--color-primary)]'
           )}
         />
         <span className={classNames('truncate', item.current && 'font-medium')}>
@@ -110,10 +110,10 @@ export default function TailwindMobileDrawer({
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent side="left" className="w-full max-w-xs p-0">
-        <div className="flex grow flex-col gap-y-2 overflow-y-auto bg-white h-full">
+      <SheetContent side="left" className="w-full max-w-xs p-0 bg-[var(--color-sidebar)] border-[var(--color-border)]">
+        <div className="flex grow flex-col gap-y-2 overflow-y-auto h-full">
           {/* Header with logo */}
-          <div className="flex h-16 shrink-0 items-center justify-between px-4 border-b border-gray-200">
+          <div className="flex h-16 shrink-0 items-center justify-between px-4 border-b border-[var(--color-border)]">
             <img
               alt={logoAlt}
               src={logoSrc}
@@ -122,7 +122,7 @@ export default function TailwindMobileDrawer({
             <button
               type="button"
               onClick={onClose}
-              className="p-2 text-gray-400 hover:text-gray-500"
+              className="p-2 text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
             >
               <span className="sr-only">Close sidebar</span>
               <X className="h-5 w-5" aria-hidden="true" />
@@ -137,7 +137,7 @@ export default function TailwindMobileDrawer({
           {/* Secondary Navigation */}
           {secondaryNavigation.length > 0 && (
             <>
-              <div className="border-t border-gray-200" />
+              <div className="border-t border-[var(--color-border)]" />
               <nav className="py-2">
                 {secondaryNavigation.map((item) => (
                   <button
@@ -146,8 +146,8 @@ export default function TailwindMobileDrawer({
                     className={classNames(
                       'w-full flex items-center gap-3 px-4 py-3 text-left transition-colors min-h-[44px]',
                       item.current
-                        ? 'bg-indigo-600 text-white'
-                        : 'text-gray-700 hover:bg-gray-100'
+                        ? 'bg-[var(--color-primary)] text-[var(--color-primary-foreground)]'
+                        : 'text-[var(--text-secondary)] hover:bg-[var(--background-100)]'
                     )}
                   >
                     <span className={classNames('truncate', item.current && 'font-medium')}>
@@ -160,7 +160,7 @@ export default function TailwindMobileDrawer({
           )}
 
           {/* Separator */}
-          <div className="border-t border-gray-200" />
+          <div className="border-t border-[var(--color-border)]" />
 
           {/* Settings */}
           <div className="py-2">
@@ -169,15 +169,15 @@ export default function TailwindMobileDrawer({
                 onSettings?.();
                 onClose();
               }}
-              className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 transition-colors min-h-[44px]"
+              className="w-full flex items-center gap-3 px-4 py-3 text-[var(--text-secondary)] hover:bg-[var(--background-100)] transition-colors min-h-[44px]"
             >
-              <Settings className="h-5 w-5 text-gray-400" />
+              <Settings className="h-5 w-5 text-[var(--text-muted)]" />
               <span>Settings</span>
             </button>
           </div>
 
           {/* Separator */}
-          <div className="border-t border-gray-200" />
+          <div className="border-t border-[var(--color-border)]" />
 
           {/* User section */}
           {user && (
@@ -187,16 +187,16 @@ export default function TailwindMobileDrawer({
                   <img
                     src={user.imageUrl}
                     alt={user.name || user.email}
-                    className="h-10 w-10 rounded-full bg-gray-100"
+                    className="h-10 w-10 rounded-full bg-[var(--background-100)]"
                   />
                 ) : (
-                  <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                    <span className="text-sm font-medium text-indigo-600">{userInitials}</span>
+                  <div className="h-10 w-10 rounded-full bg-[var(--primary-100)] flex items-center justify-center">
+                    <span className="text-sm font-medium text-[var(--primary-600)]">{userInitials}</span>
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-gray-900 truncate">{user.name || 'User'}</p>
-                  <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                  <p className="font-medium text-[var(--text-primary)] truncate">{user.name || 'User'}</p>
+                  <p className="text-xs text-[var(--text-muted)] truncate">{user.email}</p>
                 </div>
               </div>
               <button
@@ -204,7 +204,7 @@ export default function TailwindMobileDrawer({
                   onLogout?.();
                   onClose();
                 }}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors min-h-[44px]"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[var(--background-100)] hover:bg-[var(--background-200)] rounded-lg transition-colors min-h-[44px]"
               >
                 <LogOut className="h-4 w-4" />
                 <span>Log out</span>
