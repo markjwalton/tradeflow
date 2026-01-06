@@ -671,7 +671,7 @@ export default function SiteSettings() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--color-${settings.iconOnlyParentHoverColor})` }}
+                  style={getColorStyle(settings.iconOnlyParentHoverColor)}
                 />
                 <Select
                   value={settings.iconOnlyParentHoverColor}
@@ -686,7 +686,7 @@ export default function SiteSettings() {
                         <div className="flex items-center gap-2">
                           <div
                             className="w-4 h-4 rounded border"
-                            style={{ backgroundColor: `var(--color-${color.value})` }}
+                            style={{ backgroundColor: color.hex }}
                           />
                           {color.label}
                         </div>
@@ -702,7 +702,7 @@ export default function SiteSettings() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--color-${settings.iconOnlyPageHoverColor})` }}
+                  style={getColorStyle(settings.iconOnlyPageHoverColor)}
                 />
                 <Select
                   value={settings.iconOnlyPageHoverColor}
@@ -717,7 +717,7 @@ export default function SiteSettings() {
                         <div className="flex items-center gap-2">
                           <div
                             className="w-4 h-4 rounded border"
-                            style={{ backgroundColor: `var(--color-${color.value})` }}
+                            style={{ backgroundColor: color.hex }}
                           />
                           {color.label}
                         </div>
