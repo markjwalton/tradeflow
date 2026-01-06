@@ -290,6 +290,20 @@ export default function SiteSettings() {
     setGeneratingBackground(false);
   };
 
+  if (isLoading || !settings) {
+    return (
+      <div className="max-w-5xl mx-auto pb-8 -mt-6">
+        <PageHeader 
+          title="Site Settings"
+          description="Configure global appearance settings for the application"
+        />
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-5xl mx-auto pb-8 -mt-6">
       <PageHeader 
