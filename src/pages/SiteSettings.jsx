@@ -477,7 +477,7 @@ export default function SiteSettings() {
                 {settings.overlayColor !== "none" && (
                   <div
                     className="w-8 h-8 rounded border-2 flex-shrink-0"
-                    style={{ backgroundColor: `var(--color-${settings.overlayColor})` }}
+                    style={getColorStyle(settings.overlayColor)}
                   />
                 )}
                 {settings.overlayColor === "none" && (
@@ -497,7 +497,7 @@ export default function SiteSettings() {
                           {color.value !== "none" && (
                             <div
                               className="w-4 h-4 rounded border"
-                              style={{ backgroundColor: `var(--color-${color.value})` }}
+                              style={{ backgroundColor: color.hex || '#cccccc' }}
                             />
                           )}
                           {color.label}
