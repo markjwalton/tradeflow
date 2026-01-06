@@ -1,3 +1,6 @@
+// This component contains the entire PerformanceMonitor logic as a tab
+// Extracted from pages/PerformanceMonitor.js (lines 397-1444)
+
 import React, { useState, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -239,70 +242,1105 @@ function IssuesGroupedView({ issues, generateAIRecommendation, isGeneratingRecom
   );
 }
 
-export default function SecurityDashboardTab() {
+function MetricsGroupedView({ metrics, getThreshold }) {
+  const [expandedTypes, setExpandedTypes] = useState(new Set());
+
+  const groupedMetrics = useMemo(() => {
+    const groups = {};
+    metrics.forEach(m => {
+      const type = m.metric_type;
+      if (!groups[type]) {
+        groups[type] = { metrics: [], ok: 0, warning: 0, critical: 0 };
+      }
+      groups[type].metrics.push(m);
+      groups[type][m.status || "ok"]++;
+    });
+    return groups;
+  }, [metrics]);
+
+  const toggleType = (type) => {
+    setExpandedTypes(prev => {
+      const next = new Set(prev);
+      if (next.has(type)) next.delete(type);
+      else next.add(type);
+      return next;
+    });
+  };
+
   return (
-    <Tabs defaultValue="csp" className="space-y-6">
-      <TabsList className="grid w-full grid-cols-3">
-        <TabsTrigger value="csp" className="flex items-center gap-2">
-          <Shield className="h-4 w-4" />
-          CSP Headers
-        </TabsTrigger>
-        <TabsTrigger value="audit" className="flex items-center gap-2">
-          <FileCode2 className="h-4 w-4" />
-          NPM Audit
-        </TabsTrigger>
-        <TabsTrigger value="sentry" className="flex items-center gap-2">
-          <Lock className="h-4 w-4" />
-          Error Tracking
-        </TabsTrigger>
-      </TabsList>
+    <div className="space-y-2">
+      {Object.entries(groupedMetrics).map(([type, group]) => {
+        const Icon = metricTypeIcons[type] || Activity;
+        const isExpanded = expandedTypes.has(type);
+        const threshold = getThreshold(type);
+        
+        return (
+          <Card key={type}>
+            <button
+              onClick={() => toggleType(type)}
+              className="w-full p-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
+            >
+              <div className="flex items-center gap-4">
+                {isExpanded ? <ChevronDown className="h-5 w-5 text-muted-foreground" /> : <ChevronRight className="h-5 w-5 text-muted-foreground" />}
+                <div className="flex items-center gap-2">
+                  <Icon className="h-5 w-5 text-info" />
+                  <span className="font-medium capitalize">{type.replace(/_/g, " ")}</span>
+                </div>
+                <Badge variant="outline">{group.metrics.length} items</Badge>
+              </div>
+              
+              <div className="flex items-center gap-4">
+                <div className="flex gap-2">
+                  {group.ok > 0 && <Badge className="bg-success-50 text-success">{group.ok} OK</Badge>}
+                  {group.warning > 0 && <Badge className="bg-warning/10 text-warning">{group.warning} Warning</Badge>}
+                  {group.critical > 0 && <Badge className="bg-destructive-50 text-destructive">{group.critical} Critical</Badge>}
+                </div>
+                <div className="text-sm text-muted-foreground w-32 text-right">
+                  Threshold: {threshold.warning}/{threshold.critical} {threshold.unit}
+                </div>
+              </div>
+            </button>
+            
+            {isExpanded && (
+              <div className="border-t">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Resource</TableHead>
+                      <TableHead>Value</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Trend</TableHead>
+                      <TableHead>Last Measured</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {group.metrics.map(metric => (
+                      <TableRow key={metric.id}>
+                        <TableCell>
+                          <div className="font-medium">{metric.resource_name}</div>
+                          <div className="text-xs text-muted-foreground">{metric.resource_path}</div>
+                        </TableCell>
+                        <TableCell className="font-mono">
+                          {metric.value} {metric.unit}
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={statusColors[metric.status || "ok"]}>
+                            {metric.status || "ok"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          {trendIcons[metric.trend || "stable"]}
+                        </TableCell>
+                        <TableCell className="text-sm text-muted-foreground">
+                          {metric.measured_at ? format(new Date(metric.measured_at), "MMM d, HH:mm") : "-"}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </Card>
+        );
+      })}
+    </div>
+  );
+}
 
-      <TabsContent value="csp">
-        <CSPConfig />
-      </TabsContent>
+export default function PerformanceTab() {
+  const queryClient = useQueryClient();
+  const [activeTab, setActiveTab] = useState("overview");
+  const [viewMode, setViewMode] = useState("global");
+  const [selectedTenantId, setSelectedTenantId] = useState("");
+  const [showThresholdEditor, setShowThresholdEditor] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
+  const [scanProgress, setScanProgress] = useState({ current: 0, total: 0, items: [] });
+  const [isGeneratingRecommendations, setIsGeneratingRecommendations] = useState(false);
+  const [aiSystemReview, setAiSystemReview] = useState(null);
+  const [isGeneratingSystemReview, setIsGeneratingSystemReview] = useState(false);
+  const [aiReviewHistory, setAiReviewHistory] = useState([]);
+  const [isAddingRecToRoadmap, setIsAddingRecToRoadmap] = useState(false);
 
-      <TabsContent value="audit">
-        <NPMAudit />
-      </TabsContent>
+  const { data: metrics = [], isLoading: loadingMetrics } = useQuery({
+    queryKey: ["performanceMetrics"],
+    queryFn: () => base44.entities.PerformanceMetric.list("-measured_at", 500)
+  });
 
-      <TabsContent value="sentry" className="space-y-4">
-        <div className="bg-card border rounded-lg p-6">
-          <h3 className="text-lg font-medium mb-4">Sentry Error Tracking</h3>
-          <div className="space-y-4">
-            <div>
-              <h4 className="font-medium mb-2">Setup Instructions</h4>
-              <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
-                <li>Create a free account at <a href="https://sentry.io" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">sentry.io</a></li>
-                <li>Create a new project for your application</li>
-                <li>Copy your DSN (Data Source Name)</li>
-                <li>Add to your environment variables: <code className="bg-muted px-1 rounded">VITE_SENTRY_DSN=your-dsn-here</code></li>
-                <li>Optionally set: <code className="bg-muted px-1 rounded">VITE_APP_VERSION=1.0.0</code></li>
-              </ol>
-            </div>
-            <div>
-              <h4 className="font-medium mb-2">Features Enabled</h4>
-              <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                <li>Automatic error capture with stack traces</li>
-                <li>Performance monitoring (10% sampling in production)</li>
-                <li>Session replay for debugging (10% of sessions)</li>
-                <li>User context tracking</li>
-                <li>Custom breadcrumbs for debugging</li>
-                <li>Filtered errors (network issues, browser extensions, etc.)</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-medium mb-2">Status</h4>
-              <p className="text-sm text-muted-foreground">
-                {import.meta.env.VITE_SENTRY_DSN ? (
-                  <span className="text-success">✓ Sentry is configured and active</span>
-                ) : (
-                  <span className="text-warning">⚠ Sentry DSN not configured. Add VITE_SENTRY_DSN to enable error tracking.</span>
-                )}
-              </p>
-            </div>
-          </div>
+  const { data: issues = [], isLoading: loadingIssues } = useQuery({
+    queryKey: ["performanceIssues"],
+    queryFn: () => base44.entities.PerformanceIssue.list("-created_date")
+  });
+
+  const { data: thresholds = [] } = useQuery({
+    queryKey: ["performanceThresholds"],
+    queryFn: () => base44.entities.PerformanceThreshold.list()
+  });
+
+  const { data: tenants = [] } = useQuery({
+    queryKey: ["tenants"],
+    queryFn: () => base44.entities.Tenant.list()
+  });
+
+  const { data: pageTemplates = [] } = useQuery({
+    queryKey: ["pageTemplates"],
+    queryFn: () => base44.entities.PageTemplate.list()
+  });
+
+  const { data: featureTemplates = [] } = useQuery({
+    queryKey: ["featureTemplates"],
+    queryFn: () => base44.entities.FeatureTemplate.list()
+  });
+
+  const { data: entityTemplates = [] } = useQuery({
+    queryKey: ["entityTemplates"],
+    queryFn: () => base44.entities.EntityTemplate.list()
+  });
+
+  const { data: apiLogs = [] } = useQuery({
+    queryKey: ["apiLogs"],
+    queryFn: () => base44.entities.APILog.list("-created_date", 100)
+  });
+
+  const { data: roadmapItems = [] } = useQuery({
+    queryKey: ["roadmapItems"],
+    queryFn: () => base44.entities.RoadmapItem.list()
+  });
+
+  const updateIssueMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.PerformanceIssue.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["performanceIssues"] });
+      toast.success("Issue updated");
+    }
+  });
+
+  const createRoadmapMutation = useMutation({
+    mutationFn: async (issue) => {
+      const roadmapItem = await base44.entities.RoadmapItem.create({
+        title: `Performance: ${issue.resource_name}`,
+        description: issue.description,
+        category: "improvement",
+        priority: issue.severity === "critical" ? "critical" : issue.severity === "high" ? "high" : "medium",
+        status: "backlog",
+        source: "ai_assistant",
+        notes: issue.ai_recommendation,
+        tags: ["performance", "refactoring"]
+      });
+      await base44.entities.PerformanceIssue.update(issue.id, {
+        roadmap_item_id: roadmapItem.id,
+        status: "in_progress"
+      });
+      return roadmapItem;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["performanceIssues"] });
+      queryClient.invalidateQueries({ queryKey: ["roadmapItems"] });
+      toast.success("Added to roadmap");
+    }
+  });
+
+  const saveThresholdMutation = useMutation({
+    mutationFn: async (data) => {
+      const existing = thresholds.find(t => t.metric_type === data.metric_type);
+      if (existing) {
+        return base44.entities.PerformanceThreshold.update(existing.id, data);
+      }
+      return base44.entities.PerformanceThreshold.create(data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["performanceThresholds"] });
+      toast.success("Threshold saved");
+    }
+  });
+
+  const getThreshold = (metricType) => {
+    const custom = thresholds.find(t => t.metric_type === metricType);
+    return custom || DEFAULT_THRESHOLDS[metricType] || { warning: 100, critical: 200, unit: "lines" };
+  };
+
+  const runPerformanceScan = async () => {
+    setIsScanning(true);
+    
+    const scanItems = [
+      { name: "Page Templates", type: "pages", status: "pending" },
+      { name: "Feature Templates", type: "features", status: "pending" },
+      { name: "Entity Templates", type: "entities", status: "pending" },
+      { name: "Database Sizes", type: "database", status: "pending" },
+      { name: "API Response Times", type: "api", status: "pending" },
+      { name: "Analyzing Complexity", type: "complexity", status: "pending" },
+      { name: "Checking Thresholds", type: "thresholds", status: "pending" },
+      { name: "Creating Issues", type: "issues", status: "pending" },
+      { name: "Saving Metrics", type: "save", status: "pending" },
+    ];
+    
+    setScanProgress({ current: 0, total: scanItems.length, items: scanItems });
+    
+    const updateProgress = (index, status, details = "") => {
+      setScanProgress(prev => ({
+        ...prev,
+        current: index + 1,
+        items: prev.items.map((item, i) => 
+          i === index ? { ...item, status, details } : item
+        )
+      }));
+    };
+
+    try {
+      const newMetrics = [];
+      const newIssues = [];
+
+      updateProgress(0, "running", `Found ${pageTemplates.length} pages`);
+      await new Promise(r => setTimeout(r, 300));
+      
+      for (const page of pageTemplates) {
+        const componentCount = page.components?.length || 0;
+        const estimatedLines = 50 + (componentCount * 30);
+        const threshold = getThreshold("page_size");
+        
+        const status = estimatedLines >= threshold.critical ? "critical" :
+                       estimatedLines >= threshold.warning ? "warning" : "ok";
+
+        newMetrics.push({
+          metric_type: "page_size",
+          resource_name: page.name,
+          resource_path: `pages/${page.name}`,
+          value: estimatedLines,
+          unit: "lines",
+          threshold: threshold.warning,
+          status,
+          is_global: true,
+          measured_at: new Date().toISOString()
+        });
+
+        if (status !== "ok") {
+          newIssues.push({
+            resource_name: page.name,
+            resource_path: `pages/${page.name}`,
+            issue_type: "size_exceeded",
+            severity: status === "critical" ? "high" : "medium",
+            description: `Page "${page.name}" has ${estimatedLines} lines (threshold: ${threshold.warning})`,
+            is_global: true,
+            status: "open"
+          });
+        }
+      }
+      updateProgress(0, "done", `${pageTemplates.length} pages scanned`);
+
+      updateProgress(1, "running", `Found ${featureTemplates.length} features`);
+      await new Promise(r => setTimeout(r, 300));
+      
+      for (const feature of featureTemplates) {
+        const complexity = feature.complexity || "medium";
+        const estimatedLines = complexity === "high" ? 300 : complexity === "medium" ? 150 : 80;
+        const threshold = getThreshold("component_size");
+        
+        const status = estimatedLines >= threshold.critical ? "critical" :
+                       estimatedLines >= threshold.warning ? "warning" : "ok";
+
+        newMetrics.push({
+          metric_type: "component_size",
+          resource_name: feature.name,
+          resource_path: `features/${feature.name}`,
+          value: estimatedLines,
+          unit: "lines",
+          threshold: threshold.warning,
+          status,
+          is_global: true,
+          measured_at: new Date().toISOString()
+        });
+
+        if (status !== "ok") {
+          newIssues.push({
+            resource_name: feature.name,
+            resource_path: `features/${feature.name}`,
+            issue_type: "complexity_high",
+            severity: status === "critical" ? "high" : "medium",
+            description: `Feature "${feature.name}" estimated at ${estimatedLines} lines (${complexity} complexity)`,
+            is_global: true,
+            status: "open"
+          });
+        }
+      }
+      updateProgress(1, "done", `${featureTemplates.length} features scanned`);
+
+      updateProgress(2, "running", `Checking ${entityTemplates.length} entities`);
+      await new Promise(r => setTimeout(r, 300));
+      
+      for (const entity of entityTemplates) {
+        const propCount = Object.keys(entity.schema?.properties || {}).length;
+        
+        newMetrics.push({
+          metric_type: "component_size",
+          resource_name: entity.name,
+          resource_path: `entities/${entity.name}`,
+          value: propCount,
+          unit: "properties",
+          status: propCount > 20 ? "warning" : "ok",
+          is_global: true,
+          measured_at: new Date().toISOString()
+        });
+      }
+      updateProgress(2, "done", `${entityTemplates.length} entities checked`);
+
+      updateProgress(3, "running", "Estimating database sizes");
+      await new Promise(r => setTimeout(r, 300));
+      
+      for (const entity of entityTemplates) {
+        const propCount = Object.keys(entity.schema?.properties || {}).length;
+        const estimatedRecords = Math.floor(Math.random() * 500) + 10;
+        const estimatedSize = estimatedRecords * propCount * 50;
+        
+        newMetrics.push({
+          metric_type: "memory_usage",
+          resource_name: entity.name,
+          resource_path: `database/${entity.name}`,
+          value: Math.round(estimatedSize / 1024),
+          unit: "kb",
+          status: estimatedSize > 500000 ? "warning" : "ok",
+          is_global: true,
+          measured_at: new Date().toISOString()
+        });
+      }
+      updateProgress(3, "done", `${entityTemplates.length} database tables estimated`);
+
+      updateProgress(4, "running", "Analyzing API response times");
+      await new Promise(r => setTimeout(r, 300));
+      
+      const apiByEndpoint = {};
+      apiLogs.forEach(log => {
+        const key = log.api_name || log.endpoint;
+        if (!apiByEndpoint[key]) {
+          apiByEndpoint[key] = { times: [], count: 0, errors: 0 };
+        }
+        apiByEndpoint[key].times.push(log.response_time_ms || 0);
+        apiByEndpoint[key].count++;
+        if (!log.success) apiByEndpoint[key].errors++;
+      });
+
+      Object.entries(apiByEndpoint).forEach(([name, data]) => {
+        const avgTime = data.times.length > 0 
+          ? Math.round(data.times.reduce((a, b) => a + b, 0) / data.times.length)
+          : 0;
+        const threshold = getThreshold("api_response");
+        const status = avgTime >= threshold.critical ? "critical" :
+                       avgTime >= threshold.warning ? "warning" : "ok";
+
+        newMetrics.push({
+          metric_type: "api_response",
+          resource_name: name,
+          resource_path: `api/${name}`,
+          value: avgTime,
+          unit: "ms",
+          threshold: threshold.warning,
+          status,
+          is_global: true,
+          measured_at: new Date().toISOString()
+        });
+
+        if (status !== "ok") {
+          newIssues.push({
+            resource_name: name,
+            resource_path: `api/${name}`,
+            issue_type: "api_slow",
+            severity: status === "critical" ? "high" : "medium",
+            description: `API "${name}" has avg response time of ${avgTime}ms (${data.count} calls, ${data.errors} errors)`,
+            is_global: true,
+            status: "open"
+          });
+        }
+      });
+      updateProgress(4, "done", `${Object.keys(apiByEndpoint).length} APIs analyzed`);
+
+      updateProgress(5, "running", "Calculating complexity scores");
+      await new Promise(r => setTimeout(r, 400));
+      updateProgress(5, "done", `${newMetrics.length} metrics calculated`);
+
+      updateProgress(6, "running", "Comparing against thresholds");
+      await new Promise(r => setTimeout(r, 300));
+      const warningCount = newMetrics.filter(m => m.status === "warning").length;
+      const criticalCount = newMetrics.filter(m => m.status === "critical").length;
+      updateProgress(6, "done", `${warningCount} warnings, ${criticalCount} critical`);
+
+      updateProgress(7, "running", `Creating ${newIssues.length} issues`);
+      for (const issue of newIssues) {
+        const existing = issues.find(i => 
+          i.resource_name === issue.resource_name && 
+          i.issue_type === issue.issue_type &&
+          i.status === "open"
+        );
+        if (!existing) {
+          await base44.entities.PerformanceIssue.create(issue);
+        }
+      }
+      updateProgress(7, "done", `${newIssues.length} issues created`);
+
+      updateProgress(8, "running", `Saving ${newMetrics.length} metrics`);
+      for (const metric of newMetrics) {
+        await base44.entities.PerformanceMetric.create(metric);
+      }
+      updateProgress(8, "done", `${newMetrics.length} metrics saved`);
+
+      queryClient.invalidateQueries({ queryKey: ["performanceMetrics"] });
+      queryClient.invalidateQueries({ queryKey: ["performanceIssues"] });
+      toast.success(`Scan complete: ${newMetrics.length} metrics, ${newIssues.length} issues found`);
+    } catch (error) {
+      toast.error("Scan failed: " + error.message);
+    } finally {
+      setIsScanning(false);
+      setTimeout(() => setScanProgress({ current: 0, total: 0, items: [] }), 3000);
+    }
+  };
+
+  const generateAIRecommendation = async (issue) => {
+    setIsGeneratingRecommendations(true);
+    try {
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `Analyze this performance issue and provide specific recommendations:
+
+Issue: ${issue.issue_type}
+Resource: ${issue.resource_name}
+Path: ${issue.resource_path}
+Description: ${issue.description}
+Severity: ${issue.severity}
+
+Provide:
+1. A clear explanation of the problem
+2. 3-5 specific actionable steps to fix it
+3. Estimated effort (low/medium/high)
+4. Priority recommendation
+
+Focus on code refactoring, component splitting, and performance optimization best practices.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            explanation: { type: "string" },
+            actions: { type: "array", items: { type: "string" } },
+            effort: { type: "string" },
+            priority: { type: "string" },
+            summary: { type: "string" }
+          }
+        }
+      });
+
+      await base44.entities.PerformanceIssue.update(issue.id, {
+        ai_recommendation: result.summary || result.explanation,
+        suggested_actions: result.actions || []
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["performanceIssues"] });
+      toast.success("AI recommendation generated");
+    } catch (error) {
+      toast.error("Failed to generate recommendation");
+    } finally {
+      setIsGeneratingRecommendations(false);
+    }
+  };
+
+  const generateSystemReview = async () => {
+    setIsGeneratingSystemReview(true);
+    try {
+      const systemSummary = {
+        pages: pageTemplates.length,
+        features: featureTemplates.length,
+        entities: entityTemplates.length,
+        openIssues: issues.filter(i => i.status === "open").length,
+        criticalIssues: issues.filter(i => i.severity === "critical" || i.severity === "high").length,
+        metrics: {
+          ok: metrics.filter(m => m.status === "ok").length,
+          warning: metrics.filter(m => m.status === "warning").length,
+          critical: metrics.filter(m => m.status === "critical").length
+        },
+        apiStats: apiLogs.length > 0 ? {
+          totalCalls: apiLogs.length,
+          avgResponseTime: Math.round(apiLogs.reduce((a, b) => a + (b.response_time_ms || 0), 0) / apiLogs.length),
+          errorRate: Math.round((apiLogs.filter(l => !l.success).length / apiLogs.length) * 100)
+        } : null,
+        issueTypes: issues.reduce((acc, i) => {
+          acc[i.issue_type] = (acc[i.issue_type] || 0) + 1;
+          return acc;
+        }, {})
+      };
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are a senior software architect reviewing a web application's performance. Analyze this system data and provide a comprehensive performance review:
+
+SYSTEM OVERVIEW:
+- ${systemSummary.pages} pages, ${systemSummary.features} features, ${systemSummary.entities} entities
+- ${systemSummary.openIssues} open performance issues (${systemSummary.criticalIssues} critical/high)
+- Metrics: ${systemSummary.metrics.ok} OK, ${systemSummary.metrics.warning} warnings, ${systemSummary.metrics.critical} critical
+
+${systemSummary.apiStats ? `API PERFORMANCE:
+- ${systemSummary.apiStats.totalCalls} total API calls tracked
+- Average response time: ${systemSummary.apiStats.avgResponseTime}ms
+- Error rate: ${systemSummary.apiStats.errorRate}%` : 'No API data available yet.'}
+
+ISSUE BREAKDOWN:
+${Object.entries(systemSummary.issueTypes).map(([type, count]) => `- ${type}: ${count}`).join('\n') || 'No issues tracked'}
+
+Provide:
+1. Overall assessment (grade A-F with explanation)
+2. Top 3 priority areas needing attention
+3. 5-7 specific, actionable recommendations for performance improvement
+4. Quick wins (things that can be fixed immediately)
+5. Long-term improvements (architectural changes needed)
+6. Estimated performance improvement potential (percentage)`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            grade: { type: "string" },
+            gradeExplanation: { type: "string" },
+            priorityAreas: { type: "array", items: { type: "object", properties: { area: { type: "string" }, reason: { type: "string" } } } },
+            recommendations: { type: "array", items: { type: "object", properties: { title: { type: "string" }, description: { type: "string" }, effort: { type: "string" }, impact: { type: "string" } } } },
+            quickWins: { type: "array", items: { type: "string" } },
+            longTermImprovements: { type: "array", items: { type: "string" } },
+            improvementPotential: { type: "string" }
+          }
+        }
+      });
+
+      setAiSystemReview(result);
+      setAiReviewHistory(prev => [{
+        review: result,
+        date: new Date().toISOString(),
+        issueSnapshot: filteredIssues.map(i => ({ id: i.id, status: i.status, roadmap_item_id: i.roadmap_item_id }))
+      }, ...prev].slice(0, 10));
+      toast.success("AI system review generated");
+    } catch (error) {
+      toast.error("Failed to generate system review");
+    } finally {
+      setIsGeneratingSystemReview(false);
+    }
+  };
+
+  const filteredMetrics = metrics.filter(m => {
+    if (viewMode === "global") return m.is_global !== false;
+    if (selectedTenantId) return m.tenant_id === selectedTenantId;
+    return !m.is_global;
+  });
+
+  const filteredIssues = issues.filter(i => {
+    if (viewMode === "global") return i.is_global !== false;
+    if (selectedTenantId) return i.tenant_id === selectedTenantId;
+    return !m.is_global;
+  });
+
+  const openIssues = filteredIssues.filter(i => i.status === "open");
+  const criticalIssues = openIssues.filter(i => i.severity === "critical" || i.severity === "high");
+
+  const addRecToRoadmap = async (rec) => {
+    setIsAddingRecToRoadmap(true);
+    try {
+      await base44.entities.RoadmapItem.create({
+        title: `Performance: ${rec.title}`,
+        description: rec.description,
+        category: "improvement",
+        priority: rec.impact === "high" ? "high" : "medium",
+        status: "backlog",
+        source: "ai_assistant",
+        notes: `Effort: ${rec.effort || "unknown"}`,
+        tags: ["performance", "refactoring"]
+      });
+      queryClient.invalidateQueries({ queryKey: ["roadmapItems"] });
+      toast.success("Added to roadmap");
+    } catch (error) {
+      toast.error("Failed to add to roadmap");
+    } finally {
+      setIsAddingRecToRoadmap(false);
+    }
+  };
+
+  const stats = useMemo(() => {
+    const byType = {};
+    filteredMetrics.forEach(m => {
+      if (!byType[m.metric_type]) byType[m.metric_type] = { ok: 0, warning: 0, critical: 0, total: 0 };
+      byType[m.metric_type][m.status || "ok"]++;
+      byType[m.metric_type].total++;
+    });
+
+    const healthScore = filteredMetrics.length > 0 
+      ? Math.round((filteredMetrics.filter(m => m.status === "ok").length / filteredMetrics.length) * 100)
+      : 100;
+
+    return { byType, healthScore };
+  }, [filteredMetrics]);
+
+  return (
+    <div className="space-y-6">
+      {/* Toolbar */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Tabs value={viewMode} onValueChange={setViewMode}>
+            <TabsList>
+              <TabsTrigger value="global" className="gap-2">
+                <Globe className="h-4 w-4" />
+                Global
+              </TabsTrigger>
+              <TabsTrigger value="tenant" className="gap-2">
+                <Building2 className="h-4 w-4" />
+                Tenant Sites
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+          {viewMode === "tenant" && (
+            <Select value={selectedTenantId} onValueChange={setSelectedTenantId}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="All tenants" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={null}>All Tenants</SelectItem>
+                {tenants.map(t => (
+                  <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
         </div>
-      </TabsContent>
-    </Tabs>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setShowThresholdEditor(true)}>
+            <Settings className="h-4 w-4 mr-2" />
+            Thresholds
+          </Button>
+          <Button onClick={runPerformanceScan} disabled={isScanning}>
+            {isScanning ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <RefreshCw className="h-4 w-4 mr-2" />}
+            Run Scan
+          </Button>
+        </div>
+      </div>
+
+      {/* Scan Progress */}
+      {scanProgress.total > 0 && (
+        <Card className="border-info/20 bg-info-50">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base flex items-center gap-2">
+              <Loader2 className={`h-4 w-4 ${isScanning ? "animate-spin" : ""}`} />
+              {isScanning ? "Scanning..." : "Scan Complete"}
+              <span className="text-sm font-normal text-muted-foreground">
+                ({scanProgress.current}/{scanProgress.total})
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {scanProgress.items.map((item) => (
+                <div key={item.type} className="flex items-center gap-3 text-sm">
+                  <div className="w-5">
+                    {item.status === "pending" && <Circle className="h-4 w-4 text-muted-foreground" />}
+                    {item.status === "running" && <Loader2 className="h-4 w-4 text-info animate-spin" />}
+                    {item.status === "done" && <CheckCircle2 className="h-4 w-4 text-success" />}
+                  </div>
+                  <span className="text-muted-foreground">{item.name}</span>
+                  {item.details && <span className="text-muted-foreground text-xs">— {item.details}</span>}
+                </div>
+              ))}
+            </div>
+            <Progress 
+              value={(scanProgress.current / scanProgress.total) * 100} 
+              className="mt-4 h-2" 
+            />
+          </CardContent>
+        </Card>
+      )}
+
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList>
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="web-vitals" className="gap-2">
+            <Activity className="h-4 w-4" />
+            Web Vitals
+          </TabsTrigger>
+          <TabsTrigger value="metrics">Metrics ({filteredMetrics.length})</TabsTrigger>
+          <TabsTrigger value="issues">
+            Issues ({openIssues.length})
+            {criticalIssues.length > 0 && (
+              <Badge className="ml-2 bg-destructive text-destructive-foreground">{criticalIssues.length}</Badge>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="reports">Reports</TabsTrigger>
+          <TabsTrigger value="ai-review" className="gap-2">
+            <Sparkles className="h-4 w-4" />
+            AI Review
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="web-vitals" className="space-y-6">
+          <WebVitalsCard />
+        </TabsContent>
+
+        <TabsContent value="overview" className="space-y-6">
+          <div className="grid grid-cols-4 gap-4">
+            <Card className={stats.healthScore >= 80 ? "border-success/20" : stats.healthScore >= 50 ? "border-warning/20" : "border-destructive/20"}>
+              <CardContent className="pt-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-sm text-muted-foreground">Health Score</div>
+                    <div className={`text-3xl font-bold ${
+                      stats.healthScore >= 80 ? "text-success" : 
+                      stats.healthScore >= 50 ? "text-warning" : "text-destructive"
+                    }`}>
+                      {stats.healthScore}%
+                    </div>
+                  </div>
+                  {stats.healthScore >= 80 ? (
+                    <CheckCircle2 className="h-10 w-10 text-success" />
+                  ) : stats.healthScore >= 50 ? (
+                    <AlertTriangle className="h-10 w-10 text-warning" />
+                  ) : (
+                    <XCircle className="h-10 w-10 text-destructive" />
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="pt-4">
+                <div className="text-sm text-muted-foreground">Open Issues</div>
+                <div className="text-3xl font-bold">{openIssues.length}</div>
+                {criticalIssues.length > 0 && (
+                  <p className="text-xs text-destructive">{criticalIssues.length} critical</p>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="pt-4">
+                <div className="text-sm text-muted-foreground">Resources Tracked</div>
+                <div className="text-3xl font-bold">{filteredMetrics.length}</div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="pt-4">
+                <div className="text-sm text-muted-foreground">Last Scan</div>
+                <div className="text-lg font-medium">
+                  {metrics[0]?.measured_at ? format(new Date(metrics[0].measured_at), "MMM d, HH:mm") : "Never"}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Metrics by Type</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {Object.entries(stats.byType).map(([type, counts]) => {
+                  const Icon = metricTypeIcons[type] || Activity;
+                  const okPercent = counts.total > 0 ? (counts.ok / counts.total) * 100 : 100;
+                  const warnPercent = counts.total > 0 ? (counts.warning / counts.total) * 100 : 0;
+                  const critPercent = counts.total > 0 ? (counts.critical / counts.total) * 100 : 0;
+                  
+                  return (
+                    <div key={type} className="flex items-center gap-4">
+                      <div className="flex items-center gap-2 w-40">
+                        <Icon className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm font-medium capitalize">{type.replace("_", " ")}</span>
+                      </div>
+                      <div className="flex-1 h-4 bg-muted rounded-full overflow-hidden flex">
+                        <div className="h-full bg-success" style={{ width: `${okPercent}%` }} />
+                        <div className="h-full bg-warning" style={{ width: `${warnPercent}%` }} />
+                        <div className="h-full bg-destructive" style={{ width: `${critPercent}%` }} />
+                      </div>
+                      <div className="w-24 text-right text-sm text-muted-foreground">
+                        {counts.ok}/{counts.total} OK
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+
+          {criticalIssues.length > 0 && (
+            <Card className="border-destructive/20">
+              <CardHeader>
+                <CardTitle className="text-destructive flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5" />
+                  Critical Issues Requiring Attention
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {criticalIssues.slice(0, 5).map(issue => (
+                    <div key={issue.id} className="flex items-center justify-between p-3 bg-destructive-50 rounded-lg">
+                      <div>
+                        <p className="font-medium">{issue.resource_name}</p>
+                        <p className="text-sm text-muted-foreground">{issue.description}</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => generateAIRecommendation(issue)}
+                          disabled={isGeneratingRecommendations}
+                        >
+                          <Sparkles className="h-3 w-3 mr-1" />
+                          AI Fix
+                        </Button>
+                        <Button 
+                          size="sm"
+                          onClick={() => createRoadmapMutation.mutate(issue)}
+                        >
+                          <Flag className="h-3 w-3 mr-1" />
+                          Add to Roadmap
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
+
+        <TabsContent value="metrics">
+          {loadingMetrics ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          ) : filteredMetrics.length === 0 ? (
+            <Card>
+              <CardContent className="py-12 text-center text-muted-foreground">
+                No metrics yet. Run a scan to collect data.
+              </CardContent>
+            </Card>
+          ) : (
+            <MetricsGroupedView metrics={filteredMetrics} getThreshold={getThreshold} />
+          )}
+        </TabsContent>
+
+        <TabsContent value="issues" className="space-y-4">
+          {loadingIssues ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          ) : filteredIssues.length === 0 ? (
+            <Card>
+              <CardContent className="py-12 text-center text-muted-foreground">
+                <CheckCircle2 className="h-12 w-12 mx-auto mb-4 text-success" />
+                <p>No performance issues found!</p>
+              </CardContent>
+            </Card>
+          ) : (
+            <IssuesGroupedView 
+              issues={filteredIssues} 
+              generateAIRecommendation={generateAIRecommendation}
+              isGeneratingRecommendations={isGeneratingRecommendations}
+              createRoadmapMutation={createRoadmapMutation}
+              updateIssueMutation={updateIssueMutation}
+            />
+          )}
+        </TabsContent>
+
+        <TabsContent value="reports" className="space-y-6">
+          <div className="grid grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Page Size Distribution</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={filteredMetrics.filter(m => m.metric_type === "page_size").slice(0, 10)}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="resource_name" tick={{ fontSize: 10 }} angle={-45} textAnchor="end" height={80} />
+                      <YAxis />
+                      <Tooltip />
+                      <Bar dataKey="value" fill="var(--color-info)" name="Lines" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Status Breakdown</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={[
+                          { name: "OK", value: filteredMetrics.filter(m => m.status === "ok").length, fill: "var(--color-success)" },
+                          { name: "Warning", value: filteredMetrics.filter(m => m.status === "warning").length, fill: "var(--color-warning)" },
+                          { name: "Critical", value: filteredMetrics.filter(m => m.status === "critical").length, fill: "var(--color-destructive)" }
+                        ].filter(d => d.value > 0)}
+                        dataKey="value"
+                        nameKey="name"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={80}
+                        label={({ name, value }) => `${name}: ${value}`}
+                      />
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {viewMode === "tenant" && !selectedTenantId && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Tenant Health Comparison</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {tenants.map(tenant => {
+                    const tenantMetrics = metrics.filter(m => m.tenant_id === tenant.id);
+                    const okCount = tenantMetrics.filter(m => m.status === "ok").length;
+                    const healthPercent = tenantMetrics.length > 0 ? Math.round((okCount / tenantMetrics.length) * 100) : 100;
+                    
+                    return (
+                      <div key={tenant.id} className="flex items-center gap-4">
+                        <div className="w-40 font-medium truncate">{tenant.name}</div>
+                        <div className="flex-1">
+                          <Progress value={healthPercent} className="h-3" />
+                        </div>
+                        <div className={`w-16 text-right font-medium ${
+                          healthPercent >= 80 ? "text-success" : 
+                          healthPercent >= 50 ? "text-warning" : "text-destructive"
+                        }`}>
+                          {healthPercent}%
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
+
+        <TabsContent value="ai-review" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold">AI Performance Review History</h2>
+              <p className="text-sm text-muted-foreground">Collapsible reviews with roadmap integration</p>
+            </div>
+            <Button 
+              onClick={generateSystemReview} 
+              disabled={isGeneratingSystemReview}
+            >
+              {isGeneratingSystemReview ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Sparkles className="h-4 w-4 mr-2" />
+              )}
+              Run New Review
+            </Button>
+          </div>
+
+          {isGeneratingSystemReview && (
+            <Card>
+              <CardContent className="py-12 text-center">
+                <Loader2 className="h-12 w-12 mx-auto mb-4 animate-spin text-accent" />
+                <p className="font-medium">Analyzing your system...</p>
+                <p className="text-sm text-muted-foreground mt-2">This may take a few moments</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {!isGeneratingSystemReview && (aiSystemReview || aiReviewHistory.length > 0) && (
+            <div className="space-y-3">
+              {aiSystemReview && (
+                <PerformanceAuditCard
+                  review={aiSystemReview}
+                  issues={filteredIssues}
+                  onAddToRoadmap={addRecToRoadmap}
+                  roadmapItems={roadmapItems}
+                  isAddingToRoadmap={isAddingRecToRoadmap}
+                  defaultExpanded={true}
+                  reviewDate={new Date().toISOString()}
+                />
+              )}
+              
+              {aiReviewHistory.slice(aiSystemReview ? 1 : 0).map((item, index) => (
+                <PerformanceAuditCard
+                  key={index}
+                  review={item.review}
+                  issues={filteredIssues}
+                  onAddToRoadmap={addRecToRoadmap}
+                  roadmapItems={roadmapItems}
+                  isAddingToRoadmap={isAddingRecToRoadmap}
+                  defaultExpanded={false}
+                  reviewDate={item.date}
+                />
+              ))}
+            </div>
+          )}
+
+          {!isGeneratingSystemReview && !aiSystemReview && aiReviewHistory.length === 0 && (
+            <Card>
+              <CardContent className="py-12 text-center text-muted-foreground">
+                <Sparkles className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <p>No performance reviews yet</p>
+                <p className="text-sm mt-2">Run an AI review to get comprehensive analysis</p>
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
+      </Tabs>
+
+      <Dialog open={showThresholdEditor} onOpenChange={setShowThresholdEditor}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Performance Thresholds</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            {Object.entries(DEFAULT_THRESHOLDS).map(([type, defaults]) => {
+              const current = getThreshold(type);
+              const Icon = metricTypeIcons[type] || Activity;
+              return (
+                <div key={type} className="flex items-center gap-4 p-3 border rounded-lg">
+                  <div className="flex items-center gap-2 w-40">
+                    <Icon className="h-4 w-4" />
+                    <span className="text-sm font-medium capitalize">{type.replace("_", " ")}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Label className="text-xs text-warning">Warning:</Label>
+                    <Input 
+                      type="number" 
+                      className="w-20" 
+                      defaultValue={current.warning}
+                      id={`warning-${type}`}
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Label className="text-xs text-destructive">Critical:</Label>
+                    <Input 
+                      type="number" 
+                      className="w-20" 
+                      defaultValue={current.critical}
+                      id={`critical-${type}`}
+                    />
+                  </div>
+                  <Badge variant="outline">{current.unit}</Badge>
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => {
+                      const warning = parseInt(document.getElementById(`warning-${type}`).value);
+                      const critical = parseInt(document.getElementById(`critical-${type}`).value);
+                      saveThresholdMutation.mutate({
+                        metric_type: type,
+                        warning_threshold: warning,
+                        critical_threshold: critical,
+                        unit: current.unit
+                      });
+                    }}
+                  >
+                    Save
+                  </Button>
+                </div>
+              );
+            })}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 }
