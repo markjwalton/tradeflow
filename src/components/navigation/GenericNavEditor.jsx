@@ -242,12 +242,7 @@ export default function GenericNavEditor({
           sessionStorage.removeItem('nav_config_cache');
           sessionStorage.removeItem('layout_init_cache');
           
-          toast.success("Navigation saved - refreshing...");
-          
-          // Force reload after a brief delay
-          setTimeout(() => {
-            window.location.reload();
-          }, 500);
+          toast.success("Navigation saved");
         },
       });
 
