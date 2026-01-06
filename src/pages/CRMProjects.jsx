@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Search, FolderOpen, Calendar } from 'lucide-react';
+import { Search, FolderOpen, Calendar, Plus, MapPin } from 'lucide-react';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
 
 export default function CRMProjects() {
@@ -25,6 +25,16 @@ export default function CRMProjects() {
     queryKey: ['crmCustomers'],
     queryFn: () => base44.entities.CRMCustomer.list(),
   });
+
+  const { data: addresses = [] } = useQuery({
+    queryKey: ['addresses'],
+    queryFn: () => base44.entities.Address.list(),
+  });
+
+  const addressMap = addresses.reduce((acc, addr) => {
+    acc[addr.id] = addr;
+    return acc;
+  }, {});
 
   const { getOptions, isLoading: optionsLoading } = useAllDropdownOptions();
   const projectStatuses = getOptions('Project Statuses');
@@ -89,6 +99,12 @@ export default function CRMProjects() {
             Manage your customer projects
           </p>
         </div>
+        <Link to={createPageUrl('CRMProjectForm')}>
+          <Button>
+            <Plus className="h-4 w-4 mr-2" />
+            New Project
+          </Button>
+        </Link>
       </div>
 
       <Card>
@@ -135,6 +151,7 @@ export default function CRMProjects() {
                 <TableRow>
                   <TableHead>Created</TableHead>
                   <TableHead>Customer</TableHead>
+                  <TableHead>Location</TableHead>
                   <TableHead>Scope</TableHead>
                   <TableHead>Rooms</TableHead>
                   <TableHead>Status</TableHead>
@@ -159,9 +176,24 @@ export default function CRMProjects() {
                         </div>
                       </TableCell>
                       <TableCell className="font-medium">
-                        {customer
-                          ? `${customer.first_name} ${customer.surname}`
-                          : 'Unknown'}
+                        <Link
+                          to={createPageUrl('CRMCustomerDetail') + `?id=${project.customer_id}`}
+                          className="hover:underline text-primary"
+                        >
+                          {customer
+                            ? `${customer.first_name} ${customer.surname}`
+                            : 'Unknown'}
+                        </Link>
+                      </TableCell>
+                      <TableCell>
+                        {addressMap[project.project_address_id] && (
+                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                            <MapPin className="h-3 w-3" />
+                            <span>
+                              {addressMap[project.project_address_id].city}
+                            </span>
+                          </div>
+                        )}
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-wrap gap-1">
