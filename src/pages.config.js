@@ -4,7 +4,6 @@ import AppointmentConfirm from './pages/AppointmentConfirm';
 import AppointmentHub from './pages/AppointmentHub';
 import AppointmentManager from './pages/AppointmentManager';
 import AssetManager from './pages/AssetManager';
-import BrandIdentity from './pages/BrandIdentity';
 import ButtonsShowcase from './pages/ButtonsShowcase';
 import CMSManager from './pages/CMSManager';
 import CRMCustomerDetail from './pages/CRMCustomerDetail';
@@ -43,7 +42,6 @@ import DebugProjectWorkspace from './pages/DebugProjectWorkspace';
 import DebugShell from './pages/DebugShell';
 import DesignPatternAudit from './pages/DesignPatternAudit';
 import DesignSystemManager from './pages/DesignSystemManager';
-import DesignTokenEditor from './pages/DesignTokenEditor';
 import DevTools from './pages/DevTools';
 import DeveloperDocs from './pages/DeveloperDocs';
 import DocumentationManager from './pages/DocumentationManager';
@@ -112,26 +110,7 @@ import SyntaxDocs from './pages/SyntaxDocs';
 import SyntaxHome from './pages/SyntaxHome';
 import SystemHealth from './pages/SystemHealth';
 import SystemSpecification from './pages/SystemSpecification';
-import TailwindAppShellDemo from './pages/TailwindAppShellDemo';
-import TailwindAppShellsShowcase from './pages/TailwindAppShellsShowcase';
-import TailwindBadgesShowcase from './pages/TailwindBadgesShowcase';
-import TailwindCalendarShowcase from './pages/TailwindCalendarShowcase';
-import TailwindCardsShowcase from './pages/TailwindCardsShowcase';
-import TailwindDescriptionListsShowcase from './pages/TailwindDescriptionListsShowcase';
-import TailwindDrawerShowcase from './pages/TailwindDrawerShowcase';
-import TailwindFeedsShowcase from './pages/TailwindFeedsShowcase';
-import TailwindFormsShowcase from './pages/TailwindFormsShowcase';
 import TailwindKnowledgeManager from './pages/TailwindKnowledgeManager';
-import TailwindListsShowcase from './pages/TailwindListsShowcase';
-import TailwindMenuShowcase from './pages/TailwindMenuShowcase';
-import TailwindNavigationShowcase from './pages/TailwindNavigationShowcase';
-import TailwindPageHeadersShowcase from './pages/TailwindPageHeadersShowcase';
-import TailwindPeopleListsShowcase from './pages/TailwindPeopleListsShowcase';
-import TailwindProductShowcase from './pages/TailwindProductShowcase';
-import TailwindSectionHeadersShowcase from './pages/TailwindSectionHeadersShowcase';
-import TailwindShowcaseGallery from './pages/TailwindShowcaseGallery';
-import TailwindStatsShowcase from './pages/TailwindStatsShowcase';
-import TailwindTablesShowcase from './pages/TailwindTablesShowcase';
 import Tasks from './pages/Tasks';
 import Team from './pages/Team';
 import TenantAccess from './pages/TenantAccess';
@@ -140,9 +119,6 @@ import TenantOnboardingPortal from './pages/TenantOnboardingPortal';
 import TenantSetup from './pages/TenantSetup';
 import TestDataManager from './pages/TestDataManager';
 import TestingHub from './pages/TestingHub';
-import ThemeBuilder from './pages/ThemeBuilder';
-import ThemePreview from './pages/ThemePreview';
-import TokenPreview from './pages/TokenPreview';
 import TransmitHome from './pages/TransmitHome';
 import TypographyShowcase from './pages/TypographyShowcase';
 import UILibrary from './pages/UILibrary';
@@ -160,7 +136,6 @@ export const PAGES = {
     "AppointmentHub": AppointmentHub,
     "AppointmentManager": AppointmentManager,
     "AssetManager": AssetManager,
-    "BrandIdentity": BrandIdentity,
     "ButtonsShowcase": ButtonsShowcase,
     "CMSManager": CMSManager,
     "CRMCustomerDetail": CRMCustomerDetail,
@@ -199,7 +174,6 @@ export const PAGES = {
     "DebugShell": DebugShell,
     "DesignPatternAudit": DesignPatternAudit,
     "DesignSystemManager": DesignSystemManager,
-    "DesignTokenEditor": DesignTokenEditor,
     "DevTools": DevTools,
     "DeveloperDocs": DeveloperDocs,
     "DocumentationManager": DocumentationManager,
@@ -268,26 +242,7 @@ export const PAGES = {
     "SyntaxHome": SyntaxHome,
     "SystemHealth": SystemHealth,
     "SystemSpecification": SystemSpecification,
-    "TailwindAppShellDemo": TailwindAppShellDemo,
-    "TailwindAppShellsShowcase": TailwindAppShellsShowcase,
-    "TailwindBadgesShowcase": TailwindBadgesShowcase,
-    "TailwindCalendarShowcase": TailwindCalendarShowcase,
-    "TailwindCardsShowcase": TailwindCardsShowcase,
-    "TailwindDescriptionListsShowcase": TailwindDescriptionListsShowcase,
-    "TailwindDrawerShowcase": TailwindDrawerShowcase,
-    "TailwindFeedsShowcase": TailwindFeedsShowcase,
-    "TailwindFormsShowcase": TailwindFormsShowcase,
     "TailwindKnowledgeManager": TailwindKnowledgeManager,
-    "TailwindListsShowcase": TailwindListsShowcase,
-    "TailwindMenuShowcase": TailwindMenuShowcase,
-    "TailwindNavigationShowcase": TailwindNavigationShowcase,
-    "TailwindPageHeadersShowcase": TailwindPageHeadersShowcase,
-    "TailwindPeopleListsShowcase": TailwindPeopleListsShowcase,
-    "TailwindProductShowcase": TailwindProductShowcase,
-    "TailwindSectionHeadersShowcase": TailwindSectionHeadersShowcase,
-    "TailwindShowcaseGallery": TailwindShowcaseGallery,
-    "TailwindStatsShowcase": TailwindStatsShowcase,
-    "TailwindTablesShowcase": TailwindTablesShowcase,
     "Tasks": Tasks,
     "Team": Team,
     "TenantAccess": TenantAccess,
@@ -296,9 +251,6 @@ export const PAGES = {
     "TenantSetup": TenantSetup,
     "TestDataManager": TestDataManager,
     "TestingHub": TestingHub,
-    "ThemeBuilder": ThemeBuilder,
-    "ThemePreview": ThemePreview,
-    "TokenPreview": TokenPreview,
     "TransmitHome": TransmitHome,
     "TypographyShowcase": TypographyShowcase,
     "UILibrary": UILibrary,

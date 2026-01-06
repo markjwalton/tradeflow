@@ -233,25 +233,46 @@ export default function Layout({ children, currentPageName }) {
         document.documentElement.classList.remove('dark');
       }
       
-      // Apply colors to CSS variables that components actually use
+      // Apply Tailwind 4.0 CSS variable updates
       if (newSettings) {
-        const colorMap = {
-          'background-50': '#fdfcfa', 'background-100': '#f5f3ef', 'background-200': '#e8e5de',
-          'primary-50': '#f0f5f3', 'primary-100': '#dce8e3', 'primary-500': '#4a7c6b',
-          'sidebar': '#faf9f7', 'card': '#ffffff', 'muted': '#e5e2dc', 'background': '#f5f3ef',
-        };
         const root = document.documentElement;
+
+        // Direct CSS variable mapping for Tailwind 4.0 compatibility
+        const varMap = {
+          'background-50': '--background-50',
+          'background-100': '--background-100',
+          'background-200': '--background-200',
+          'primary-50': '--primary-50',
+          'primary-100': '--primary-100',
+          'primary-500': '--primary-500',
+          'sidebar': '--background-50',
+          'card': '--background-50',
+          'muted': '--background-200',
+          'background': '--background-100'
+        };
+
         if (newSettings.backgroundColor) {
-          const hex = colorMap[newSettings.backgroundColor] || '#f5f3ef';
-          root.style.setProperty('--color-background', hex);
+          const cssVar = varMap[newSettings.backgroundColor];
+          if (cssVar) {
+            const value = getComputedStyle(root).getPropertyValue(cssVar);
+            root.style.setProperty('--color-background', value || `var(${cssVar})`);
+          }
         }
+
         if (newSettings.navbarBackground) {
-          const hex = colorMap[newSettings.navbarBackground] || '#ffffff';
-          root.style.setProperty('--color-card', hex);
+          const cssVar = varMap[newSettings.navbarBackground];
+          if (cssVar) {
+            const value = getComputedStyle(root).getPropertyValue(cssVar);
+            root.style.setProperty('--color-card', value || `var(${cssVar})`);
+          }
         }
+
         if (newSettings.panelBackground) {
-          const hex = colorMap[newSettings.panelBackground] || '#faf9f7';
-          root.style.setProperty('--color-sidebar', hex);
+          const cssVar = varMap[newSettings.panelBackground];
+          if (cssVar) {
+            const value = getComputedStyle(root).getPropertyValue(cssVar);
+            root.style.setProperty('--color-sidebar', value || `var(${cssVar})`);
+          }
         }
       }
     };
