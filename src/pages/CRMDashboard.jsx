@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { 
   Users, FileText, FolderKanban, MessageSquare, 
   Plus, ArrowRight, Clock, TrendingUp,
-  Calendar, Phone
+  Calendar, Phone, Settings
 } from 'lucide-react';
 import { format, isToday, isYesterday, differenceInDays } from 'date-fns';
 
@@ -195,7 +195,7 @@ export default function CRMDashboard() {
               <CardTitle className="text-lg">Recent Activity</CardTitle>
               <CardDescription>Latest interactions</CardDescription>
             </div>
-            <Link to={createPageUrl('CRMCustomers')}>
+            <Link to={createPageUrl('CRMInteractions')}>
               <Button variant="ghost" size="sm">
                 View All <ArrowRight className="h-4 w-4 ml-1" />
               </Button>
@@ -251,7 +251,7 @@ export default function CRMDashboard() {
           <CardTitle className="text-lg">Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             <Link to={createPageUrl('CRMCustomerForm')}>
               <Button variant="outline" className="w-full h-auto py-4 flex flex-col gap-2">
                 <Users className="h-5 w-5" />
@@ -270,10 +270,16 @@ export default function CRMDashboard() {
                 <span>Log Interaction</span>
               </Button>
             </Link>
-            <Link to={createPageUrl('CRMInteractions')}>
+            <Link to={createPageUrl('CRMProjectForm')}>
               <Button variant="outline" className="w-full h-auto py-4 flex flex-col gap-2">
-                <MessageSquare className="h-5 w-5" />
-                <span>All Interactions</span>
+                <FolderKanban className="h-5 w-5" />
+                <span>New Project</span>
+              </Button>
+            </Link>
+            <Link to={createPageUrl('CRMSettings')}>
+              <Button variant="outline" className="w-full h-auto py-4 flex flex-col gap-2">
+                <Settings className="h-5 w-5" />
+                <span>CRM Settings</span>
               </Button>
             </Link>
           </div>
