@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Search, FolderOpen, Calendar, Plus, MapPin } from 'lucide-react';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
 import CRMPagination, { usePagination } from '../components/crm/CRMPagination';
-import { CRMAppShell, CRMPageHeader, CRMCard, CRMCardContent, CRMCardHeader } from '../components/crm/CRMAppShell';
+import { CRMPageHeader, CRMCard, CRMCardContent, CRMCardHeader } from '../components/crm/CRMUI';
 
 export default function CRMProjects() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -91,7 +91,7 @@ export default function CRMProjects() {
   }
 
   return (
-    <CRMAppShell currentPage="CRMProjects" breadcrumbs={[{ label: 'Projects' }]}>
+    <div className="space-y-6">
       <CRMPageHeader
         title="Projects"
         description="Manage your customer projects"
@@ -236,6 +236,6 @@ export default function CRMProjects() {
           )}
         </CRMCardContent>
       </CRMCard>
-    </CRMAppShell>
+    </div>
   );
 }

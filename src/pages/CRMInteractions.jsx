@@ -10,7 +10,7 @@ import { Search, MessageSquare, Plus } from 'lucide-react';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
 import InteractionCard from '../components/crm/InteractionCard';
 import CRMPagination, { usePagination } from '../components/crm/CRMPagination';
-import { CRMAppShell, CRMPageHeader, CRMCard, CRMCardContent, CRMCardHeader } from '../components/crm/CRMAppShell';
+import { CRMPageHeader, CRMCard, CRMCardContent, CRMCardHeader } from '../components/crm/CRMUI';
 
 export default function CRMInteractions() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -63,7 +63,7 @@ export default function CRMInteractions() {
   }
 
   return (
-    <CRMAppShell currentPage="CRMInteractions" breadcrumbs={[{ label: 'Interactions' }]}>
+    <div className="space-y-6">
       <CRMPageHeader
         title="Interactions"
         description="All customer interactions"
@@ -140,6 +140,6 @@ export default function CRMInteractions() {
           )}
         </CRMCardContent>
       </CRMCard>
-    </CRMAppShell>
+    </div>
   );
 }

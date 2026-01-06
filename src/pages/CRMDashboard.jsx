@@ -11,7 +11,7 @@ import {
   Calendar, Phone, Settings, LayoutDashboard
 } from 'lucide-react';
 import { format, isToday, isYesterday, differenceInDays } from 'date-fns';
-import { CRMAppShell, CRMPageHeader, CRMCard, CRMCardContent, CRMCardHeader } from '../components/crm/CRMAppShell';
+import { CRMPageHeader, CRMCard, CRMCardContent, CRMCardHeader } from '../components/crm/CRMUI';
 
 export default function CRMDashboard() {
   const { data: customers = [] } = useQuery({
@@ -67,7 +67,7 @@ export default function CRMDashboard() {
   };
 
   return (
-    <CRMAppShell currentPage="CRMDashboard" breadcrumbs={[{ label: 'Dashboard' }]}>
+    <div className="space-y-6">
       <CRMPageHeader
         title="CRM Dashboard"
         description="Overview of your customer relationships"
@@ -284,6 +284,6 @@ export default function CRMDashboard() {
           </div>
         </CRMCardContent>
       </CRMCard>
-    </CRMAppShell>
+    </div>
   );
 }
