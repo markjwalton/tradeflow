@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,12 +12,8 @@ import InteractionTimeline from '../components/crm/InteractionTimeline';
 
 export default function CRMCustomerDetail() {
   const navigate = useNavigate();
-  
-  // Capture customer ID once on mount using useState initializer
-  const [customerId] = useState(() => {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('id');
-  });
+  const [searchParams] = useSearchParams();
+  const customerId = searchParams.get('id');
 
   const { data: allCustomers = [], isLoading: customerLoading } = useQuery({
     queryKey: ['crmCustomers'],
