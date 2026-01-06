@@ -38,7 +38,6 @@ import DebugProjectWorkspace from './pages/DebugProjectWorkspace';
 import DebugShell from './pages/DebugShell';
 import DesignPatternAudit from './pages/DesignPatternAudit';
 import DesignSystemManager from './pages/DesignSystemManager';
-import DevTools from './pages/DevTools';
 import DeveloperDocs from './pages/DeveloperDocs';
 import DocumentationManager from './pages/DocumentationManager';
 import Estimates from './pages/Estimates';
@@ -71,7 +70,6 @@ import PackageDetail from './pages/PackageDetail';
 import PackageExport from './pages/PackageExport';
 import Packages from './pages/Packages';
 import PageBuilder from './pages/PageBuilder';
-import PerformanceMonitor from './pages/PerformanceMonitor';
 import PlaygroundSummary from './pages/PlaygroundSummary';
 import PocketHome from './pages/PocketHome';
 import PocketLogin from './pages/PocketLogin';
@@ -87,8 +85,6 @@ import RoadmapJournal from './pages/RoadmapJournal';
 import RoadmapManager from './pages/RoadmapManager';
 import RuleBook from './pages/RuleBook';
 import SchemaVisualEditor from './pages/SchemaVisualEditor';
-import SecurityDashboard from './pages/SecurityDashboard';
-import SecurityMonitor from './pages/SecurityMonitor';
 import Setup from './pages/Setup';
 import SiteSettings from './pages/SiteSettings';
 import SprintManager from './pages/SprintManager';
@@ -99,7 +95,6 @@ import StudioHome from './pages/StudioHome';
 import SturijPackage from './pages/SturijPackage';
 import SyntaxDocs from './pages/SyntaxDocs';
 import SyntaxHome from './pages/SyntaxHome';
-import SystemHealth from './pages/SystemHealth';
 import SystemSpecification from './pages/SystemSpecification';
 import TailwindKnowledgeManager from './pages/TailwindKnowledgeManager';
 import Tasks from './pages/Tasks';
@@ -112,7 +107,6 @@ import TestDataManager from './pages/TestDataManager';
 import TestingHub from './pages/TestingHub';
 import TransmitHome from './pages/TransmitHome';
 import UXShowcase from './pages/UXShowcase';
-import ViolationReport from './pages/ViolationReport';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import WebsiteThemeManager from './pages/WebsiteThemeManager';
 import SystemMonitor from './pages/SystemMonitor';
@@ -160,7 +154,6 @@ export const PAGES = {
     "DebugShell": DebugShell,
     "DesignPatternAudit": DesignPatternAudit,
     "DesignSystemManager": DesignSystemManager,
-    "DevTools": DevTools,
     "DeveloperDocs": DeveloperDocs,
     "DocumentationManager": DocumentationManager,
     "Estimates": Estimates,
@@ -193,7 +186,6 @@ export const PAGES = {
     "PackageExport": PackageExport,
     "Packages": Packages,
     "PageBuilder": PageBuilder,
-    "PerformanceMonitor": PerformanceMonitor,
     "PlaygroundSummary": PlaygroundSummary,
     "PocketHome": PocketHome,
     "PocketLogin": PocketLogin,
@@ -209,8 +201,6 @@ export const PAGES = {
     "RoadmapManager": RoadmapManager,
     "RuleBook": RuleBook,
     "SchemaVisualEditor": SchemaVisualEditor,
-    "SecurityDashboard": SecurityDashboard,
-    "SecurityMonitor": SecurityMonitor,
     "Setup": Setup,
     "SiteSettings": SiteSettings,
     "SprintManager": SprintManager,
@@ -221,7 +211,6 @@ export const PAGES = {
     "SturijPackage": SturijPackage,
     "SyntaxDocs": SyntaxDocs,
     "SyntaxHome": SyntaxHome,
-    "SystemHealth": SystemHealth,
     "SystemSpecification": SystemSpecification,
     "TailwindKnowledgeManager": TailwindKnowledgeManager,
     "Tasks": Tasks,
@@ -234,7 +223,6 @@ export const PAGES = {
     "TestingHub": TestingHub,
     "TransmitHome": TransmitHome,
     "UXShowcase": UXShowcase,
-    "ViolationReport": ViolationReport,
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
     "WebsiteThemeManager": WebsiteThemeManager,
     "SystemMonitor": SystemMonitor,
