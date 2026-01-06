@@ -9,12 +9,13 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Plus, Search, FileText, Calendar } from 'lucide-react';
+import { Plus, Search, FileText, Calendar, Clock } from 'lucide-react';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
 
 export default function CRMEnquiries() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [channelFilter, setChannelFilter] = useState('all');
 
   const { data: enquiries = [], isLoading } = useQuery({
     queryKey: ['crmEnquiries'],
@@ -28,6 +29,7 @@ export default function CRMEnquiries() {
 
   const { getOptions, isLoading: optionsLoading } = useAllDropdownOptions();
   const enquiryStatuses = getOptions('Enquiry Statuses');
+  const inboundChannels = getOptions('Inbound Channels');
 
   const customerMap = customers.reduce((acc, customer) => {
     acc[customer.id] = customer;
@@ -46,9 +48,25 @@ export default function CRMEnquiries() {
       enquiry.inbound_channel?.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus = statusFilter === 'all' || enquiry.status === statusFilter;
+    const matchesChannel = channelFilter === 'all' || enquiry.inbound_channel === channelFilter;
 
-    return matchesSearch && matchesStatus;
+    return matchesSearch && matchesStatus && matchesChannel;
   });
+
+  // Sort enquiries: New first, then by date
+  const sortedEnquiries = [...filteredEnquiries].sort((a, b) => {
+    if (a.status === 'New' && b.status !== 'New') return -1;
+    if (a.status !== 'New' && b.status === 'New') return 1;
+    return new Date(b.enquiry_date) - new Date(a.enquiry_date);
+  });
+
+  // Calculate stats
+  const stats = {
+    total: enquiries.length,
+    new: enquiries.filter((e) => e.status === 'New').length,
+    qualified: enquiries.filter((e) => e.status === 'Qualified').length,
+    converted: enquiries.filter((e) => e.status === 'ConvertedToProject').length,
+  };
 
   const getStatusBadgeColor = (status) => {
     const colors = {
@@ -91,6 +109,34 @@ export default function CRMEnquiries() {
         </Link>
       </div>
 
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <Card>
+          <CardContent className="pt-4">
+            <div className="text-2xl font-bold">{stats.total}</div>
+            <p className="text-sm text-muted-foreground">Total Enquiries</p>
+          </CardContent>
+        </Card>
+        <Card className="border-blue-200 bg-blue-50/50">
+          <CardContent className="pt-4">
+            <div className="text-2xl font-bold text-blue-700">{stats.new}</div>
+            <p className="text-sm text-blue-600">New</p>
+          </CardContent>
+        </Card>
+        <Card className="border-green-200 bg-green-50/50">
+          <CardContent className="pt-4">
+            <div className="text-2xl font-bold text-green-700">{stats.qualified}</div>
+            <p className="text-sm text-green-600">Qualified</p>
+          </CardContent>
+        </Card>
+        <Card className="border-emerald-200 bg-emerald-50/50">
+          <CardContent className="pt-4">
+            <div className="text-2xl font-bold text-emerald-700">{stats.converted}</div>
+            <p className="text-sm text-emerald-600">Converted</p>
+          </CardContent>
+        </Card>
+      </div>
+
       <Card>
         <CardHeader className="pb-4">
           <div className="flex flex-col sm:flex-row gap-4">
@@ -103,8 +149,21 @@ export default function CRMEnquiries() {
                 className="pl-10"
               />
             </div>
+            <Select value={channelFilter} onValueChange={setChannelFilter}>
+              <SelectTrigger className="w-[150px]">
+                <SelectValue placeholder="All Channels" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Channels</SelectItem>
+                {inboundChannels.map((channel) => (
+                  <SelectItem key={channel.value} value={channel.value}>
+                    {channel.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[150px]">
                 <SelectValue placeholder="All Statuses" />
               </SelectTrigger>
               <SelectContent>
@@ -142,7 +201,7 @@ export default function CRMEnquiries() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredEnquiries.map((enquiry) => {
+                {sortedEnquiries.map((enquiry) => {
                   const customer = customerMap[enquiry.customer_id];
                   return (
                     <TableRow key={enquiry.id}>
@@ -153,9 +212,14 @@ export default function CRMEnquiries() {
                         </div>
                       </TableCell>
                       <TableCell className="font-medium">
-                        {customer
-                          ? `${customer.first_name} ${customer.surname}`
-                          : 'Unknown'}
+                        <Link
+                          to={createPageUrl('CRMCustomerDetail') + `?id=${enquiry.customer_id}`}
+                          className="hover:underline text-primary"
+                        >
+                          {customer
+                            ? `${customer.first_name} ${customer.surname}`
+                            : 'Unknown'}
+                        </Link>
                       </TableCell>
                       <TableCell>{enquiry.inbound_channel}</TableCell>
                       <TableCell>
