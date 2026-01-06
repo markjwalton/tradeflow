@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -11,6 +10,7 @@ import { Search, MessageSquare, Plus } from 'lucide-react';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
 import InteractionCard from '../components/crm/InteractionCard';
 import CRMPagination, { usePagination } from '../components/crm/CRMPagination';
+import { CRMPageWrapper, CRMPageHeader, CRMCard, CRMCardContent, CRMCardHeader } from '../components/crm/CRMPageWrapper';
 
 export default function CRMInteractions() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -63,27 +63,24 @@ export default function CRMInteractions() {
   }
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-semibold flex items-center gap-2">
-            <MessageSquare className="h-6 w-6" />
-            Interactions
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            All customer interactions
-          </p>
-        </div>
-        <Link to={createPageUrl('CRMInteractionForm')}>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Log Interaction
-          </Button>
-        </Link>
-      </div>
+    <CRMPageWrapper>
+      <CRMPageHeader
+        title="Interactions"
+        description="All customer interactions"
+        icon={MessageSquare}
+        breadcrumbs={[{ label: 'Interactions' }]}
+        actions={
+          <Link to={createPageUrl('CRMInteractionForm')}>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Log Interaction
+            </Button>
+          </Link>
+        }
+      />
 
-      <Card>
-        <CardHeader className="pb-4">
+      <CRMCard>
+        <CRMCardHeader className="pb-4">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -108,8 +105,8 @@ export default function CRMInteractions() {
               </SelectContent>
             </Select>
           </div>
-        </CardHeader>
-        <CardContent>
+        </CRMCardHeader>
+        <CRMCardContent>
           {filteredInteractions.length === 0 ? (
             <div className="text-center py-12">
               <MessageSquare className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
@@ -142,8 +139,8 @@ export default function CRMInteractions() {
               )}
             </>
           )}
-        </CardContent>
-      </Card>
-    </div>
+        </CRMCardContent>
+      </CRMCard>
+    </CRMPageWrapper>
   );
 }

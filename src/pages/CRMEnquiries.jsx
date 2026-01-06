@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -12,6 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Plus, Search, FileText, Calendar, Clock } from 'lucide-react';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
 import CRMPagination, { usePagination } from '../components/crm/CRMPagination';
+import { CRMPageWrapper, CRMPageHeader, CRMCard, CRMCardContent, CRMCardHeader } from '../components/crm/CRMPageWrapper';
 
 export default function CRMEnquiries() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -93,55 +93,52 @@ export default function CRMEnquiries() {
   }
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-semibold flex items-center gap-2">
-            <FileText className="h-6 w-6" />
-            Enquiries
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Manage incoming customer enquiries
-          </p>
-        </div>
-        <Link to={createPageUrl('CRMEnquiryForm')}>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            New Enquiry
-          </Button>
-        </Link>
-      </div>
+    <CRMPageWrapper>
+      <CRMPageHeader
+        title="Enquiries"
+        description="Manage incoming customer enquiries"
+        icon={FileText}
+        breadcrumbs={[{ label: 'Enquiries' }]}
+        actions={
+          <Link to={createPageUrl('CRMEnquiryForm')}>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              New Enquiry
+            </Button>
+          </Link>
+        }
+      />
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <Card>
-          <CardContent className="pt-4">
-            <div className="text-2xl font-bold">{stats.total}</div>
+        <CRMCard>
+          <CRMCardContent className="pt-4">
+            <div className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>{stats.total}</div>
             <p className="text-sm text-muted-foreground">Total Enquiries</p>
-          </CardContent>
-        </Card>
-        <Card className="border-blue-200 bg-blue-50/50">
-          <CardContent className="pt-4">
-            <div className="text-2xl font-bold text-blue-700">{stats.new}</div>
-            <p className="text-sm text-blue-600">New</p>
-          </CardContent>
-        </Card>
-        <Card className="border-green-200 bg-green-50/50">
-          <CardContent className="pt-4">
-            <div className="text-2xl font-bold text-green-700">{stats.qualified}</div>
-            <p className="text-sm text-green-600">Qualified</p>
-          </CardContent>
-        </Card>
-        <Card className="border-emerald-200 bg-emerald-50/50">
-          <CardContent className="pt-4">
-            <div className="text-2xl font-bold text-emerald-700">{stats.converted}</div>
-            <p className="text-sm text-emerald-600">Converted</p>
-          </CardContent>
-        </Card>
+          </CRMCardContent>
+        </CRMCard>
+        <CRMCard className="border" style={{ borderColor: 'var(--primary-200)', backgroundColor: 'var(--primary-50)' }}>
+          <CRMCardContent className="pt-4">
+            <div className="text-2xl font-bold" style={{ color: 'var(--primary-700)' }}>{stats.new}</div>
+            <p className="text-sm" style={{ color: 'var(--primary-600)' }}>New</p>
+          </CRMCardContent>
+        </CRMCard>
+        <CRMCard className="border" style={{ borderColor: 'var(--secondary-200)', backgroundColor: 'var(--secondary-50)' }}>
+          <CRMCardContent className="pt-4">
+            <div className="text-2xl font-bold" style={{ color: 'var(--secondary-700)' }}>{stats.qualified}</div>
+            <p className="text-sm" style={{ color: 'var(--secondary-600)' }}>Qualified</p>
+          </CRMCardContent>
+        </CRMCard>
+        <CRMCard className="border" style={{ borderColor: 'var(--accent-200)', backgroundColor: 'var(--accent-50)' }}>
+          <CRMCardContent className="pt-4">
+            <div className="text-2xl font-bold" style={{ color: 'var(--accent-700)' }}>{stats.converted}</div>
+            <p className="text-sm" style={{ color: 'var(--accent-600)' }}>Converted</p>
+          </CRMCardContent>
+        </CRMCard>
       </div>
 
-      <Card>
-        <CardHeader className="pb-4">
+      <CRMCard>
+        <CRMCardHeader className="pb-4">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -179,8 +176,8 @@ export default function CRMEnquiries() {
               </SelectContent>
             </Select>
           </div>
-        </CardHeader>
-        <CardContent>
+        </CRMCardHeader>
+        <CRMCardContent>
           {filteredEnquiries.length === 0 ? (
             <div className="text-center py-12">
               <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
@@ -262,8 +259,8 @@ export default function CRMEnquiries() {
               )}
             </>
           )}
-        </CardContent>
-      </Card>
-    </div>
+        </CRMCardContent>
+      </CRMCard>
+    </CRMPageWrapper>
   );
 }
