@@ -31,21 +31,31 @@ export function TailwindAppShell({
   const [searchQuery, setSearchQuery] = useState('');
 
   // Transform navItems to format expected by Tailwind components
+  // navItems come from NavigationConfig.items with structure: id, name, slug, icon, parent_id, order, item_type
   const transformedNavigation = useMemo(() => {
+    if (!navItems || navItems.length === 0) return [];
+    
     const buildNavTree = (items, parentId = null) => {
       return items
-        .filter(item => (item.parent_id || null) === parentId)
+        .filter(item => {
+          const itemParentId = item.parent_id || null;
+          return itemParentId === parentId;
+        })
         .sort((a, b) => (a.order || 0) - (b.order || 0))
         .map(item => {
-          const children = buildNavTree(items, item.id);
+          const itemId = item.id || item._id;
+          const children = buildNavTree(items, itemId);
           const IconComponent = item.icon ? getIconByName(item.icon) : null;
+          const isFolder = item.item_type === 'folder';
           
           return {
+            id: itemId,
             name: item.name,
-            slug: item.slug,
+            slug: item.slug || '',
             href: item.slug ? createPageUrl(item.slug) : '#',
             icon: IconComponent,
             current: currentPageName === item.slug,
+            isFolder,
             children: children.length > 0 ? children : undefined,
           };
         });
