@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Plus, Search, Users, Phone, Mail } from 'lucide-react';
+import { Plus, Search, Users, Phone, Mail, MapPin } from 'lucide-react';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
 
 export default function CRMCustomers() {
@@ -24,13 +24,30 @@ export default function CRMCustomers() {
   const { getOptions, isLoading: optionsLoading } = useAllDropdownOptions();
   const customerTypes = getOptions('Customer Types');
 
+  const { data: addresses = [] } = useQuery({
+    queryKey: ['addresses'],
+    queryFn: () => base44.entities.Address.list(),
+  });
+
+  const addressMap = addresses.reduce((acc, addr) => {
+    acc[addr.id] = addr;
+    return acc;
+  }, {});
+
   const filteredCustomers = customers.filter((customer) => {
+    const address = addressMap[customer.primary_address_id];
+    const addressString = address
+      ? `${address.street} ${address.city} ${address.post_code}`.toLowerCase()
+      : '';
+
     const matchesSearch =
       searchTerm === '' ||
       customer.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customer.surname?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customer.email_address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      customer.customer_number?.toLowerCase().includes(searchTerm.toLowerCase());
+      customer.customer_number?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      customer.mobile?.includes(searchTerm) ||
+      addressString.includes(searchTerm.toLowerCase());
 
     const matchesType = typeFilter === 'all' || customer.customer_type === typeFilter;
 
@@ -121,6 +138,7 @@ export default function CRMCustomers() {
                   <TableHead>Name</TableHead>
                   <TableHead>Type</TableHead>
                   <TableHead>Contact</TableHead>
+                  <TableHead>Location</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -149,6 +167,17 @@ export default function CRMCustomers() {
                           {customer.mobile}
                         </span>
                       </div>
+                    </TableCell>
+                    <TableCell>
+                      {addressMap[customer.primary_address_id] && (
+                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                          <MapPin className="h-3 w-3" />
+                          <span>
+                            {addressMap[customer.primary_address_id].city},{' '}
+                            {addressMap[customer.primary_address_id].post_code}
+                          </span>
+                        </div>
+                      )}
                     </TableCell>
                     <TableCell className="text-right">
                       <Link to={createPageUrl('CRMCustomerDetail') + `?id=${customer.id}`}>
