@@ -123,6 +123,7 @@
 
   /* Text Colors */
   --color-text-primary: var(--midnight-900);
+  --text-primary: var(--midnight-900);
   --color-text-secondary: var(--charcoal-800);
   --color-text-muted: var(--charcoal-600);
 
