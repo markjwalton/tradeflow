@@ -255,18 +255,6 @@ export default function Layout({ children, currentPageName }) {
               document.documentElement.classList.add('dark');
             }
           }
-          
-          // Apply theme CSS if exists (already in user object)
-          if (user.active_theme?.css_variables) {
-            const styleId = 'active-theme-css';
-            let styleEl = document.getElementById(styleId);
-            if (!styleEl) {
-              styleEl = document.createElement('style');
-              styleEl.id = styleId;
-              document.head.appendChild(styleEl);
-            }
-            styleEl.textContent = user.active_theme.css_variables;
-          }
         }
 
         // OPTIMIZATION: Only fetch nav config once, cache in session
