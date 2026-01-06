@@ -37,13 +37,14 @@ export default function TailwindNavigation({
 
   const renderNavItem = (item, isChild = false) => {
     const hasChildren = item.children && item.children.length > 0;
-    const isExpanded = expandedFolders.has(item.name);
+    const isFolder = item.isFolder || hasChildren;
+    const isExpanded = expandedFolders.has(item.id || item.name);
     const Icon = item.icon;
 
-    if (hasChildren) {
+    if (isFolder && hasChildren) {
       const folderButton = (
         <button
-          onClick={(e) => toggleFolder(item.name, e)}
+          onClick={(e) => toggleFolder(item.id || item.name, e)}
           className={classNames(
             item.current ? 'bg-gray-50' : 'hover:bg-gray-50',
             'group flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm/6 font-semibold text-gray-700',
@@ -65,7 +66,7 @@ export default function TailwindNavigation({
       );
 
       return (
-        <li key={item.name}>
+        <li key={item.id || item.name}>
           {isIconsOnly ? (
             <Popover>
               <PopoverTrigger asChild>
@@ -134,7 +135,7 @@ export default function TailwindNavigation({
 
     if (isIconsOnly && !isChild) {
       return (
-        <li key={item.name}>
+        <li key={item.id || item.name}>
           <Tooltip>
             <TooltipTrigger asChild>
               {linkContent}
@@ -147,7 +148,7 @@ export default function TailwindNavigation({
       );
     }
 
-    return <li key={item.name}>{linkContent}</li>;
+    return <li key={item.id || item.name}>{linkContent}</li>;
   };
 
   return (
