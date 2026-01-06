@@ -225,11 +225,34 @@ export default function Layout({ children, currentPageName }) {
     const skipHeavyInit = cachedInit && (Date.now() - parseInt(cachedInit)) < LAYOUT_CACHE_TTL;
 
     const handleSiteSettingsChange = (event) => {
-      setSiteSettings(event.detail);
-      if (event.detail?.darkMode) {
+      const newSettings = event.detail;
+      setSiteSettings(newSettings);
+      if (newSettings?.darkMode) {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');
+      }
+      
+      // Apply colors to CSS variables that components actually use
+      if (newSettings) {
+        const colorMap = {
+          'background-50': '#fdfcfa', 'background-100': '#f5f3ef', 'background-200': '#e8e5de',
+          'primary-50': '#f0f5f3', 'primary-100': '#dce8e3', 'primary-500': '#4a7c6b',
+          'sidebar': '#faf9f7', 'card': '#ffffff', 'muted': '#e5e2dc', 'background': '#f5f3ef',
+        };
+        const root = document.documentElement;
+        if (newSettings.backgroundColor) {
+          const hex = colorMap[newSettings.backgroundColor] || '#f5f3ef';
+          root.style.setProperty('--color-background', hex);
+        }
+        if (newSettings.navbarBackground) {
+          const hex = colorMap[newSettings.navbarBackground] || '#ffffff';
+          root.style.setProperty('--color-card', hex);
+        }
+        if (newSettings.panelBackground) {
+          const hex = colorMap[newSettings.panelBackground] || '#faf9f7';
+          root.style.setProperty('--color-sidebar', hex);
+        }
       }
     };
 
@@ -256,9 +279,30 @@ export default function Layout({ children, currentPageName }) {
           
           // Apply site settings from user object (already fetched)
           if (user.site_settings) {
-            setSiteSettings(user.site_settings);
-            if (user.site_settings.darkMode) {
+            const settings = user.site_settings;
+            setSiteSettings(settings);
+            if (settings.darkMode) {
               document.documentElement.classList.add('dark');
+            }
+            
+            // Apply colors to CSS variables that components actually use
+            const colorMap = {
+              'background-50': '#fdfcfa', 'background-100': '#f5f3ef', 'background-200': '#e8e5de',
+              'primary-50': '#f0f5f3', 'primary-100': '#dce8e3', 'primary-500': '#4a7c6b',
+              'sidebar': '#faf9f7', 'card': '#ffffff', 'muted': '#e5e2dc', 'background': '#f5f3ef',
+            };
+            const root = document.documentElement;
+            if (settings.backgroundColor) {
+              const hex = colorMap[settings.backgroundColor] || '#f5f3ef';
+              root.style.setProperty('--color-background', hex);
+            }
+            if (settings.navbarBackground) {
+              const hex = colorMap[settings.navbarBackground] || '#ffffff';
+              root.style.setProperty('--color-card', hex);
+            }
+            if (settings.panelBackground) {
+              const hex = colorMap[settings.panelBackground] || '#faf9f7';
+              root.style.setProperty('--color-sidebar', hex);
             }
           }
         }
