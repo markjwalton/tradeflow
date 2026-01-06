@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { Upload, FolderPlus, FileImage, Trash2, Copy, Download, FileArchive, Loader2, ArrowRightLeft } from 'lucide-react';
+import { Upload, FolderPlus, FileImage, Trash2, Copy, Download, FileArchive, Loader2, ArrowRightLeft, FolderX } from 'lucide-react';
 
 export default function AssetManager() {
   const [selectedFolder, setSelectedFolder] = useState(null);
@@ -76,6 +76,22 @@ export default function AssetManager() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['website-assets'] });
       toast.success('Asset deleted');
+    },
+  });
+
+  const deleteFolderMutation = useMutation({
+    mutationFn: async (folderId) => {
+      // Delete all assets in the folder
+      const folderAssets = await base44.entities.WebsiteAsset.filter({ website_folder_id: folderId });
+      await Promise.all(folderAssets.map(asset => base44.entities.WebsiteAsset.delete(asset.id)));
+      // Delete the folder itself
+      await base44.entities.WebsiteFolder.delete(folderId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['website-folders'] });
+      queryClient.invalidateQueries({ queryKey: ['website-assets'] });
+      setSelectedFolder(null);
+      toast.success('Website folder deleted');
     },
   });
 
@@ -273,7 +289,25 @@ export default function AssetManager() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Select Website</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle>Select Website</CardTitle>
+            {selectedFolder && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  if (confirm(`Delete "${selectedFolder.name}" and all its assets? This cannot be undone.`)) {
+                    deleteFolderMutation.mutate(selectedFolder.id);
+                  }
+                }}
+                disabled={deleteFolderMutation.isPending}
+                className="text-destructive hover:text-destructive"
+              >
+                <FolderX className="h-4 w-4 mr-2" />
+                {deleteFolderMutation.isPending ? 'Deleting...' : 'Delete Website'}
+              </Button>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
           <Select value={selectedFolder?.id} onValueChange={(id) => {
