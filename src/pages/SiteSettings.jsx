@@ -310,7 +310,7 @@ export default function SiteSettings() {
                   onValueChange={(value) => setSettings({ ...settings, backgroundColor: value })}
                 >
                   <SelectTrigger id="background-color" className="flex-1">
-                    <SelectValue />
+                    <SelectValue>{settings.backgroundColor && <ColorSelectValue value={settings.backgroundColor} />}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {colorTokens.map((color) => (
@@ -341,7 +341,7 @@ export default function SiteSettings() {
                   onValueChange={(value) => setSettings({ ...settings, navbarBackground: value })}
                 >
                   <SelectTrigger id="navbar-background" className="flex-1">
-                    <SelectValue />
+                    <SelectValue>{settings.navbarBackground && <ColorSelectValue value={settings.navbarBackground} />}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {colorTokens.map((color) => (
@@ -372,7 +372,7 @@ export default function SiteSettings() {
                   onValueChange={(value) => setSettings({ ...settings, headerBackground: value })}
                 >
                   <SelectTrigger id="header-background" className="flex-1">
-                    <SelectValue />
+                    <SelectValue>{settings.headerBackground && <ColorSelectValue value={settings.headerBackground} />}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {colorTokens.map((color) => (
@@ -403,7 +403,7 @@ export default function SiteSettings() {
                   onValueChange={(value) => setSettings({ ...settings, panelBackground: value })}
                 >
                   <SelectTrigger id="panel-background" className="flex-1">
-                    <SelectValue />
+                    <SelectValue>{settings.panelBackground && <ColorSelectValue value={settings.panelBackground} />}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {colorTokens.map((color) => (
@@ -434,7 +434,7 @@ export default function SiteSettings() {
                   onValueChange={(value) => setSettings({ ...settings, footerBackground: value })}
                 >
                   <SelectTrigger id="footer-background" className="flex-1">
-                    <SelectValue />
+                    <SelectValue>{settings.footerBackground && <ColorSelectValue value={settings.footerBackground} />}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {colorTokens.map((color) => (
@@ -465,7 +465,7 @@ export default function SiteSettings() {
                   onValueChange={(value) => setSettings({ ...settings, editorBackground: value })}
                 >
                   <SelectTrigger id="editor-background" className="flex-1">
-                    <SelectValue />
+                    <SelectValue>{settings.editorBackground && <ColorSelectValue value={settings.editorBackground} />}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {colorTokens.map((color) => (
@@ -509,7 +509,7 @@ export default function SiteSettings() {
                   onValueChange={(value) => setSettings({ ...settings, overlayColor: value })}
                 >
                   <SelectTrigger id="overlay-color" className="flex-1">
-                    <SelectValue />
+                    <SelectValue>{settings.overlayColor && <ColorSelectValue value={settings.overlayColor} />}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {overlayColorOptions.concat(colorTokens).map((color) => (
@@ -629,7 +629,7 @@ export default function SiteSettings() {
                   onValueChange={(value) => setSettings({ ...settings, ghostButtonHoverColor: value })}
                 >
                   <SelectTrigger id="ghost-hover" className="flex-1">
-                    <SelectValue />
+                    <SelectValue>{settings.ghostButtonHoverColor && <ColorSelectValue value={settings.ghostButtonHoverColor} />}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {colorTokens.map((color) => (
@@ -660,7 +660,7 @@ export default function SiteSettings() {
                   onValueChange={(value) => setSettings({ ...settings, selectedButtonColor: value })}
                 >
                   <SelectTrigger id="selected-color" className="flex-1">
-                    <SelectValue />
+                    <SelectValue>{settings.selectedButtonColor && <ColorSelectValue value={settings.selectedButtonColor} />}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {colorTokens.map((color) => (
@@ -699,7 +699,7 @@ export default function SiteSettings() {
                   onValueChange={(value) => setSettings({ ...settings, iconOnlyParentHoverColor: value })}
                 >
                   <SelectTrigger id="parent-hover" className="flex-1">
-                    <SelectValue />
+                    <SelectValue>{settings.iconOnlyParentHoverColor && <ColorSelectValue value={settings.iconOnlyParentHoverColor} />}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {colorTokens.map((color) => (
@@ -730,7 +730,7 @@ export default function SiteSettings() {
                   onValueChange={(value) => setSettings({ ...settings, iconOnlyPageHoverColor: value })}
                 >
                   <SelectTrigger id="page-hover" className="flex-1">
-                    <SelectValue />
+                    <SelectValue>{settings.iconOnlyPageHoverColor && <ColorSelectValue value={settings.iconOnlyPageHoverColor} />}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {colorTokens.map((color) => (
