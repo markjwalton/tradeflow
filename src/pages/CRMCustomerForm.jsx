@@ -101,7 +101,16 @@ export default function CRMCustomerForm() {
 
   useEffect(() => {
     if (existingAddress?.[0]) {
-      setAddressData(existingAddress[0]);
+      const addr = existingAddress[0];
+      setAddressData({
+        name_number: addr.name_number || '',
+        street: addr.street || '',
+        additional_field: addr.additional_field || '',
+        town: addr.town || '',
+        city: addr.city || '',
+        county: addr.county || '',
+        post_code: addr.post_code || '',
+      });
     }
   }, [existingAddress]);
 
