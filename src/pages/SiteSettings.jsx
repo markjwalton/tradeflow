@@ -85,6 +85,27 @@ const getColorStyle = (tokenValue) => {
   return { backgroundColor: `var(--color-${tokenValue}, #cccccc)` };
 };
 
+// Helper to get token label
+const getColorLabel = (tokenValue) => {
+  const token = colorTokens.find(t => t.value === tokenValue);
+  return token?.label || tokenValue;
+};
+
+// Render swatch + label for SelectValue
+const ColorSelectValue = ({ value }) => {
+  const token = colorTokens.find(t => t.value === value);
+  if (!token) return value || "Select...";
+  return (
+    <div className="flex items-center gap-2">
+      <div
+        className="w-4 h-4 rounded border flex-shrink-0"
+        style={{ backgroundColor: token.hex }}
+      />
+      {token.label}
+    </div>
+  );
+};
+
 const blurOptions = [
   { value: "none", label: "None" },
   { value: "sm", label: "Small" },
