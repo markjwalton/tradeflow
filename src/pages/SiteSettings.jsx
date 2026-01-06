@@ -144,7 +144,7 @@ export default function SiteSettings() {
       try {
         const user = await base44.auth.me();
         const defaultSettings = {
-          backgroundColor: "background-50",
+          backgroundColor: "background-100",
           navbarBackground: "sidebar",
           headerBackground: "background",
           panelBackground: "card",
@@ -155,7 +155,7 @@ export default function SiteSettings() {
           overlayBlur: "md",
           buttonSize: "md",
           ghostButtonHoverColor: "muted",
-          selectedButtonColor: "primary",
+          selectedButtonColor: "primary-500",
           iconOnlyParentHoverColor: "primary-100",
           iconOnlyPageHoverColor: "muted",
           maxWidth: "1400",
@@ -164,7 +164,7 @@ export default function SiteSettings() {
           backgroundSeason: "spring",
           darkMode: false,
         };
-        const loadedSettings = user?.site_settings || defaultSettings;
+        const loadedSettings = { ...defaultSettings, ...(user?.site_settings || {}) };
         setSettings(loadedSettings);
         setOriginalSettings(loadedSettings);
         
@@ -178,6 +178,32 @@ export default function SiteSettings() {
         }
       } catch (e) {
         console.error("Failed to load site settings:", e);
+        // Set defaults even on error
+        const defaultSettings = {
+          backgroundColor: "background-100",
+          navbarBackground: "sidebar",
+          headerBackground: "background",
+          panelBackground: "card",
+          footerBackground: "background",
+          editorBackground: "card",
+          overlayColor: "midnight-900",
+          overlayOpacity: 60,
+          overlayBlur: "md",
+          buttonSize: "md",
+          ghostButtonHoverColor: "muted",
+          selectedButtonColor: "primary-500",
+          iconOnlyParentHoverColor: "primary-100",
+          iconOnlyPageHoverColor: "muted",
+          maxWidth: "1400",
+          contentAlignment: "center",
+          backgroundImage: null,
+          backgroundSeason: "spring",
+          darkMode: false,
+        };
+        setSettings(defaultSettings);
+        setOriginalSettings(defaultSettings);
+      } finally {
+        setIsLoading(false);
       }
     };
     loadSettings();
