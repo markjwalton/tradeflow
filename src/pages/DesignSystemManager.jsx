@@ -40,7 +40,7 @@ import ThemeCreatorDialog from "@/components/design-system/ThemeCreatorDialog";
 import { PageHeader } from "@/components/sturij";
 
 // IMPORTANT: Update this to match your actual Tailwind CSS version from package.json
-const TAILWIND_VERSION = "3.4.17";
+const TAILWIND_VERSION = "4.0.0";
 
 export default function DesignSystemManager() {
   const queryClient = useQueryClient();
