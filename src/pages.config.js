@@ -40,6 +40,7 @@ import DashboardManager from './pages/DashboardManager';
 import DataDisplayShowcase from './pages/DataDisplayShowcase';
 import DebugProjectEditor from './pages/DebugProjectEditor';
 import DebugProjectWorkspace from './pages/DebugProjectWorkspace';
+import DebugShell from './pages/DebugShell';
 import DesignPatternAudit from './pages/DesignPatternAudit';
 import DesignSystemManager from './pages/DesignSystemManager';
 import DesignTokenEditor from './pages/DesignTokenEditor';
@@ -93,8 +94,8 @@ import ProjectsOverview from './pages/ProjectsOverview';
 import PromptSettings from './pages/PromptSettings';
 import RadiantHome from './pages/RadiantHome';
 import RoadmapJournal from './pages/RoadmapJournal';
-import RoadmapManager from './pages/RoadmapManager';
 import RuleBook from './pages/RuleBook';
+import RoadmapManager from './pages/RoadmapManager';
 import SchemaVisualEditor from './pages/SchemaVisualEditor';
 import SecurityDashboard from './pages/SecurityDashboard';
 import SecurityMonitor from './pages/SecurityMonitor';
@@ -149,7 +150,6 @@ import UXShowcase from './pages/UXShowcase';
 import ViolationReport from './pages/ViolationReport';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import WebsiteThemeManager from './pages/WebsiteThemeManager';
-import DebugShell from './pages/DebugShell';
 import __Layout from './Layout.jsx';
 
 
@@ -196,6 +196,7 @@ export const PAGES = {
     "DataDisplayShowcase": DataDisplayShowcase,
     "DebugProjectEditor": DebugProjectEditor,
     "DebugProjectWorkspace": DebugProjectWorkspace,
+    "DebugShell": DebugShell,
     "DesignPatternAudit": DesignPatternAudit,
     "DesignSystemManager": DesignSystemManager,
     "DesignTokenEditor": DesignTokenEditor,
@@ -249,8 +250,8 @@ export const PAGES = {
     "PromptSettings": PromptSettings,
     "RadiantHome": RadiantHome,
     "RoadmapJournal": RoadmapJournal,
-    "RoadmapManager": RoadmapManager,
     "RuleBook": RuleBook,
+    "RoadmapManager": RoadmapManager,
     "SchemaVisualEditor": SchemaVisualEditor,
     "SecurityDashboard": SecurityDashboard,
     "SecurityMonitor": SecurityMonitor,
@@ -305,7 +306,6 @@ export const PAGES = {
     "ViolationReport": ViolationReport,
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
     "WebsiteThemeManager": WebsiteThemeManager,
-    "DebugShell": DebugShell,
 }
 
 export const pagesConfig = {
