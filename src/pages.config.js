@@ -95,6 +95,7 @@ import StudioHome from './pages/StudioHome';
 import SturijPackage from './pages/SturijPackage';
 import SyntaxDocs from './pages/SyntaxDocs';
 import SyntaxHome from './pages/SyntaxHome';
+import SystemMonitor from './pages/SystemMonitor';
 import SystemSpecification from './pages/SystemSpecification';
 import TailwindKnowledgeManager from './pages/TailwindKnowledgeManager';
 import Tasks from './pages/Tasks';
@@ -109,7 +110,6 @@ import TransmitHome from './pages/TransmitHome';
 import UXShowcase from './pages/UXShowcase';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import WebsiteThemeManager from './pages/WebsiteThemeManager';
-import SystemMonitor from './pages/SystemMonitor';
 import __Layout from './Layout.jsx';
 
 
@@ -211,6 +211,7 @@ export const PAGES = {
     "SturijPackage": SturijPackage,
     "SyntaxDocs": SyntaxDocs,
     "SyntaxHome": SyntaxHome,
+    "SystemMonitor": SystemMonitor,
     "SystemSpecification": SystemSpecification,
     "TailwindKnowledgeManager": TailwindKnowledgeManager,
     "Tasks": Tasks,
@@ -225,7 +226,6 @@ export const PAGES = {
     "UXShowcase": UXShowcase,
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
     "WebsiteThemeManager": WebsiteThemeManager,
-    "SystemMonitor": SystemMonitor,
 }
 
 export const pagesConfig = {

@@ -90,7 +90,7 @@ export default function CommitHome() {
             <ChangelogEntry
               date="April 6, 2023"
               title="Commit message suggestions"
-              image="/commit-suggestions.png"
+              image="https://base44.app/api/apps/69274b9c077e61d7cfe78ec7/files/public/69274b9c077e61d7cfe78ec7/a23729edd_commit-suggestions.png"
             >
               <p>
                 In the latest release, I've added support for commit message and description 
@@ -120,7 +120,7 @@ export default function CommitHome() {
             <ChangelogEntry
               date="March 17, 2023"
               title="Project configuration files"
-              image="/configuration-files.png"
+              image="https://base44.app/api/apps/69274b9c077e61d7cfe78ec7/files/public/69274b9c077e61d7cfe78ec7/857c4bf78_configuration-files.png"
             >
               <p>
                 I've added support for creating per-project <code className="rounded bg-gray-800 px-1.5 py-0.5 text-sm text-cyan-400">.commitrc</code> files 
