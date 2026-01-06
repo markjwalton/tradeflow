@@ -6,7 +6,7 @@ export default function TailwindBreadcrumb({ pages = [], homeHref }) {
   
   return (
     <nav aria-label="Breadcrumb" className="flex">
-      <ol role="list" className="flex items-center space-x-4 rounded-md bg-[var(--color-card)] px-6 shadow-sm border border-[var(--color-border)]">
+      <ol role="list" className="flex items-center space-x-4 rounded-[var(--radius-md)] bg-[var(--color-card)] px-6 shadow-[var(--shadow-sm)] border border-[var(--color-border)]">
         <li className="flex">
           <div className="flex items-center">
             <a href={homePage} className="text-[var(--text-muted)] hover:text-[var(--text-secondary)]">
@@ -30,14 +30,14 @@ export default function TailwindBreadcrumb({ pages = [], homeHref }) {
               {page.current ? (
                 <span
                   aria-current="page"
-                  className="ml-4 text-sm font-medium text-[var(--text-primary)]"
+                  className="ml-4 text-[var(--text-sm)] font-medium text-[var(--text-primary)]"
                 >
                   {page.name}
                 </span>
               ) : (
                 <a
                   href={page.href}
-                  className="ml-4 text-sm font-medium text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
+                  className="ml-4 text-[var(--text-sm)] font-medium text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
                 >
                   {page.name}
                 </a>

@@ -187,16 +187,16 @@ export default function TailwindMobileDrawer({
                   <img
                     src={user.imageUrl}
                     alt={user.name || user.email}
-                    className="h-10 w-10 rounded-full bg-[var(--background-100)]"
+                    className="h-10 w-10 rounded-[var(--radius-full)] bg-[var(--background-100)]"
                   />
                 ) : (
-                  <div className="h-10 w-10 rounded-full bg-[var(--primary-100)] flex items-center justify-center">
-                    <span className="text-sm font-medium text-[var(--primary-600)]">{userInitials}</span>
+                  <div className="h-10 w-10 rounded-[var(--radius-full)] bg-[var(--primary-100)] flex items-center justify-center">
+                    <span className="text-[var(--text-sm)] font-medium text-[var(--primary-600)]">{userInitials}</span>
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-[var(--text-primary)] truncate">{user.name || 'User'}</p>
-                  <p className="text-xs text-[var(--text-muted)] truncate">{user.email}</p>
+                  <p className="text-[var(--text-xs)] text-[var(--text-muted)] truncate">{user.email}</p>
                 </div>
               </div>
               <button
@@ -204,7 +204,7 @@ export default function TailwindMobileDrawer({
                   onLogout?.();
                   onClose();
                 }}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[var(--background-100)] hover:bg-[var(--background-200)] rounded-lg transition-colors min-h-[44px]"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[var(--background-100)] hover:bg-[var(--background-200)] rounded-[var(--radius-lg)] transition-colors min-h-[44px]"
               >
                 <LogOut className="h-4 w-4" />
                 <span>Log out</span>

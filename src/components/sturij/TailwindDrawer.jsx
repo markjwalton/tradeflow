@@ -50,7 +50,7 @@ export default function TailwindDrawer({
   if (pushContent && (side === 'top' || side === 'bottom')) {
     return (
       <div 
-        className={`bg-[var(--color-card)] shadow-xl transition-all duration-500 ease-in-out overflow-hidden ${
+        className={`bg-[var(--color-card)] shadow-[var(--shadow-xl)] transition-all duration-500 ease-in-out overflow-hidden ${
           open ? maxHeightClasses[maxHeight] : 'max-h-0'
         }`}
       >
@@ -89,7 +89,7 @@ export default function TailwindDrawer({
               data-token-applier-ui
               className={`pointer-events-auto ${isHorizontal ? `w-screen ${maxWidthClasses[maxWidth]}` : `w-full ${maxHeightClasses[maxHeight]}`} transform transition duration-500 ease-in-out ${transitionClasses[side]} sm:duration-700`}
             >
-              <div data-token-applier-ui className={`relative flex ${isHorizontal ? 'h-full flex-col' : 'w-full flex-row'} overflow-y-auto bg-[var(--color-card)] ${isHorizontal ? 'py-6' : 'px-6'} shadow-xl`}>
+              <div data-token-applier-ui className={`relative flex ${isHorizontal ? 'h-full flex-col' : 'w-full flex-row'} overflow-y-auto bg-[var(--color-card)] ${isHorizontal ? 'py-6' : 'px-6'} shadow-[var(--shadow-xl)]`}>
                 <div className="px-4 sm:px-6">
                   <div className="flex items-start justify-between">
                     <DialogTitle className="text-base font-semibold text-[var(--text-primary)]">{title}</DialogTitle>
