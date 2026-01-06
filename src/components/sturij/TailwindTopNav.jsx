@@ -1,8 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
-import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Search, Menu as MenuIcon, Bell, X } from 'lucide-react';
 import { createPageUrl } from '@/utils';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -47,7 +51,7 @@ export default function TailwindTopNav({
                 className="hidden md:inline-flex items-center justify-center rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-600 mr-2"
               >
                 <span className="sr-only">Toggle sidebar</span>
-                <Bars3Icon aria-hidden="true" className="h-6 w-6" />
+                <MenuIcon aria-hidden="true" className="h-6 w-6" />
               </button>
             )}
             <div className="flex shrink-0 items-center">
@@ -68,9 +72,9 @@ export default function TailwindTopNav({
                   onFocus={() => setShowResults(true)}
                   className="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pr-3 pl-10 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                 />
-                <MagnifyingGlassIcon
+                <Search
                   aria-hidden="true"
-                  className="pointer-events-none col-start-1 row-start-1 ml-3 size-5 self-center text-gray-400"
+                  className="pointer-events-none col-start-1 row-start-1 ml-3 h-5 w-5 self-center text-gray-400"
                 />
               </div>
               {/* Search Results Dropdown */}
@@ -106,7 +110,7 @@ export default function TailwindTopNav({
             >
               <span className="absolute -inset-0.5" />
               <span className="sr-only">Open menu</span>
-              <Bars3Icon aria-hidden="true" className="size-6" />
+              <MenuIcon aria-hidden="true" className="h-6 w-6" />
             </button>
           </div>
           <div className="hidden md:relative md:z-10 md:ml-4 md:flex md:items-center">
@@ -117,37 +121,34 @@ export default function TailwindTopNav({
             >
               <span className="absolute -inset-1.5" />
               <span className="sr-only">View notifications</span>
-              <BellIcon aria-hidden="true" className="size-6" />
+              <Bell aria-hidden="true" className="h-6 w-6" />
             </button>
 
             {user && (
-              <Menu as="div" className="relative ml-4 shrink-0">
-                <MenuButton className="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+              <DropdownMenu>
+                <DropdownMenuTrigger className="relative ml-4 flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">Open user menu</span>
                   {user.imageUrl ? (
                     <img
                       alt=""
                       src={user.imageUrl}
-                      className="size-8 rounded-full bg-gray-100 outline -outline-offset-1 outline-black/5"
+                      className="h-8 w-8 rounded-full bg-gray-100 outline -outline-offset-1 outline-black/5"
                     />
                   ) : (
-                    <div className="size-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-medium text-sm">
+                    <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-medium text-sm">
                       {user.name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase() || 'U'}
                     </div>
                   )}
-                </MenuButton>
+                </DropdownMenuTrigger>
 
-                <MenuItems
-                  transition
-                  className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg outline-1 outline-black/5 transition data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
-                >
+                <DropdownMenuContent align="end" className="w-48">
                   <div className="px-4 py-2 border-b border-gray-100">
                     <p className="text-sm font-medium text-gray-900 truncate">{user.name}</p>
                     <p className="text-xs text-gray-500 truncate">{user.email}</p>
                   </div>
                   {userNavigation.map((item) => (
-                    <MenuItem key={item.name}>
+                    <DropdownMenuItem key={item.name} asChild>
                       <a
                         href={item.href}
                         onClick={(e) => {
@@ -156,14 +157,14 @@ export default function TailwindTopNav({
                             item.onClick();
                           }
                         }}
-                        className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                        className="block px-4 py-2 text-sm text-gray-700"
                       >
                         {item.name}
                       </a>
-                    </MenuItem>
+                    </DropdownMenuItem>
                   ))}
-                </MenuItems>
-              </Menu>
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
           </div>
         </div>

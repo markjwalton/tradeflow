@@ -1,7 +1,6 @@
-import { Fragment, useState } from 'react';
-import { Dialog, DialogBackdrop, DialogPanel, TransitionChild } from '@headlessui/react';
-import { XMarkIcon, ChevronDownIcon, ChevronRightIcon, Cog6ToothIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
-import { HomeIcon, FolderIcon as FolderIconOutline, FolderOpenIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react';
+import { X, ChevronDown, ChevronRight, Settings, LogOut, Home, Folder, FolderOpen } from 'lucide-react';
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -48,10 +47,10 @@ export default function TailwindMobileDrawer({
   const renderNavItem = (item, isChild = false) => {
     const isFolder = item.children && item.children.length > 0;
     const isExpanded = expandedFolders.has(item.name);
-    const Icon = item.icon || HomeIcon;
+    const Icon = item.icon || Home;
 
     if (isFolder) {
-      const FolderDisplayIcon = isExpanded ? FolderOpenIcon : FolderIconOutline;
+      const FolderDisplayIcon = isExpanded ? FolderOpen : Folder;
       const DisplayIcon = item.icon || FolderDisplayIcon;
 
       return (
@@ -65,9 +64,9 @@ export default function TailwindMobileDrawer({
             )}
           >
             {isExpanded ? (
-              <ChevronDownIcon className="h-4 w-4 text-gray-400" />
+              <ChevronDown className="h-4 w-4 text-gray-400" />
             ) : (
-              <ChevronRightIcon className="h-4 w-4 text-gray-400" />
+              <ChevronRight className="h-4 w-4 text-gray-400" />
             )}
             <DisplayIcon className="h-5 w-5 text-indigo-500" />
             <span className={classNames('flex-1', !isChild && 'font-medium text-gray-900')}>
@@ -109,125 +108,110 @@ export default function TailwindMobileDrawer({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} className="relative z-50 md:hidden">
-      <DialogBackdrop
-        transition
-        className="fixed inset-0 bg-black/50 transition-opacity duration-300 ease-linear data-closed:opacity-0"
-      />
+    <Sheet open={open} onOpenChange={onClose}>
+      <SheetContent side="left" className="w-full max-w-xs p-0">
+        <div className="flex grow flex-col gap-y-2 overflow-y-auto bg-white h-full">
+          {/* Header with logo */}
+          <div className="flex h-16 shrink-0 items-center justify-between px-4 border-b border-gray-200">
+            <img
+              alt={logoAlt}
+              src={logoSrc}
+              className="h-8 w-auto"
+            />
+            <button
+              type="button"
+              onClick={onClose}
+              className="p-2 text-gray-400 hover:text-gray-500"
+            >
+              <span className="sr-only">Close sidebar</span>
+              <X className="h-5 w-5" aria-hidden="true" />
+            </button>
+          </div>
 
-      <div className="fixed inset-0 flex">
-        <DialogPanel
-          transition
-          className="relative mr-16 flex w-full max-w-xs flex-1 transform transition duration-300 ease-in-out data-closed:-translate-x-full"
-        >
-          <TransitionChild>
-            <div className="absolute top-0 left-full flex w-16 justify-center pt-5 duration-300 ease-in-out data-closed:opacity-0">
-              <button
-                type="button"
-                onClick={onClose}
-                className="-m-2.5 p-2.5"
-              >
-                <span className="sr-only">Close sidebar</span>
-                <XMarkIcon className="h-6 w-6 text-white" aria-hidden="true" />
-              </button>
-            </div>
-          </TransitionChild>
+          {/* Main Navigation */}
+          <nav className="flex-1 py-2">
+            {navigation.map((item) => renderNavItem(item, false))}
+          </nav>
 
-          <div className="flex grow flex-col gap-y-2 overflow-y-auto bg-white">
-            {/* Header with logo */}
-            <div className="flex h-16 shrink-0 items-center px-4 border-b border-gray-200">
-              <img
-                alt={logoAlt}
-                src={logoSrc}
-                className="h-8 w-auto"
-              />
-            </div>
+          {/* Secondary Navigation */}
+          {secondaryNavigation.length > 0 && (
+            <>
+              <div className="border-t border-gray-200" />
+              <nav className="py-2">
+                {secondaryNavigation.map((item) => (
+                  <button
+                    key={item.name}
+                    onClick={() => handleNavClick(item)}
+                    className={classNames(
+                      'w-full flex items-center gap-3 px-4 py-3 text-left transition-colors min-h-[44px]',
+                      item.current
+                        ? 'bg-indigo-600 text-white'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    )}
+                  >
+                    <span className={classNames('truncate', item.current && 'font-medium')}>
+                      {item.name}
+                    </span>
+                  </button>
+                ))}
+              </nav>
+            </>
+          )}
 
-            {/* Main Navigation */}
-            <nav className="flex-1 py-2">
-              {navigation.map((item) => renderNavItem(item, false))}
-            </nav>
+          {/* Separator */}
+          <div className="border-t border-gray-200" />
 
-            {/* Secondary Navigation */}
-            {secondaryNavigation.length > 0 && (
-              <>
-                <div className="border-t border-gray-200" />
-                <nav className="py-2">
-                  {secondaryNavigation.map((item) => (
-                    <button
-                      key={item.name}
-                      onClick={() => handleNavClick(item)}
-                      className={classNames(
-                        'w-full flex items-center gap-3 px-4 py-3 text-left transition-colors min-h-[44px]',
-                        item.current
-                          ? 'bg-indigo-600 text-white'
-                          : 'text-gray-700 hover:bg-gray-100'
-                      )}
-                    >
-                      <span className={classNames('truncate', item.current && 'font-medium')}>
-                        {item.name}
-                      </span>
-                    </button>
-                  ))}
-                </nav>
-              </>
-            )}
+          {/* Settings */}
+          <div className="py-2">
+            <button
+              onClick={() => {
+                onSettings?.();
+                onClose();
+              }}
+              className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 transition-colors min-h-[44px]"
+            >
+              <Settings className="h-5 w-5 text-gray-400" />
+              <span>Settings</span>
+            </button>
+          </div>
 
-            {/* Separator */}
-            <div className="border-t border-gray-200" />
+          {/* Separator */}
+          <div className="border-t border-gray-200" />
 
-            {/* Settings */}
-            <div className="py-2">
+          {/* User section */}
+          {user && (
+            <div className="p-4">
+              <div className="flex items-center gap-3 mb-3">
+                {user.imageUrl ? (
+                  <img
+                    src={user.imageUrl}
+                    alt={user.name || user.email}
+                    className="h-10 w-10 rounded-full bg-gray-100"
+                  />
+                ) : (
+                  <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                    <span className="text-sm font-medium text-indigo-600">{userInitials}</span>
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-gray-900 truncate">{user.name || 'User'}</p>
+                  <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                </div>
+              </div>
               <button
                 onClick={() => {
-                  onSettings?.();
+                  onLogout?.();
                   onClose();
                 }}
-                className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 transition-colors min-h-[44px]"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors min-h-[44px]"
               >
-                <Cog6ToothIcon className="h-5 w-5 text-gray-400" />
-                <span>Settings</span>
+                <LogOut className="h-4 w-4" />
+                <span>Log out</span>
               </button>
             </div>
-
-            {/* Separator */}
-            <div className="border-t border-gray-200" />
-
-            {/* User section */}
-            {user && (
-              <div className="p-4">
-                <div className="flex items-center gap-3 mb-3">
-                  {user.imageUrl ? (
-                    <img
-                      src={user.imageUrl}
-                      alt={user.name || user.email}
-                      className="h-10 w-10 rounded-full bg-gray-100"
-                    />
-                  ) : (
-                    <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                      <span className="text-sm font-medium text-indigo-600">{userInitials}</span>
-                    </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-900 truncate">{user.name || 'User'}</p>
-                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => {
-                    onLogout?.();
-                    onClose();
-                  }}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors min-h-[44px]"
-                >
-                  <ArrowRightOnRectangleIcon className="h-4 w-4" />
-                  <span>Log out</span>
-                </button>
-              </div>
-            )}
-          </div>
-        </DialogPanel>
-      </div>
-    </Dialog>
+          )}
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 }
