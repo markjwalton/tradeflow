@@ -189,6 +189,10 @@ function LayoutContent({ children, currentPageName, currentUser, currentTenant, 
   );
 }
 
+// Cache key for session-level caching
+const LAYOUT_CACHE_KEY = 'layout_init_cache';
+const LAYOUT_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
 export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -216,117 +220,18 @@ export default function Layout({ children, currentPageName }) {
   const isTenantPage = false;
 
   useEffect(() => {
-    // Load editor bubble preference and reset live edit mode on page load
-    const loadBubblePreference = async () => {
-      try {
-        const user = await base44.auth.me();
-        // Always turn off live edit mode on page load
-        await base44.auth.updateMe({
-          ui_preferences: {
-            ...(user.ui_preferences || {}),
-            liveEditMode: false
-          }
-        });
-        
-        // Apply active theme CSS if it exists
-        if (user?.active_theme?.css_variables) {
-          const styleId = 'active-theme-css';
-          let styleEl = document.getElementById(styleId);
-          if (!styleEl) {
-            styleEl = document.createElement('style');
-            styleEl.id = styleId;
-            document.head.appendChild(styleEl);
-          }
-          styleEl.textContent = user.active_theme.css_variables;
-        }
-        
-        // Apply theme fonts if they exist
-        if (user?.theme_fonts) {
-          const { heading, body } = user.theme_fonts;
-          
-          // Load font stylesheets
-          if (heading?.url && heading.source === 'google') {
-            const linkId = 'theme-heading-font';
-            if (!document.getElementById(linkId)) {
-              const link = document.createElement('link');
-              link.id = linkId;
-              link.rel = 'stylesheet';
-              link.href = heading.url;
-              document.head.appendChild(link);
-            }
-          }
-          
-          if (body?.url && body.source === 'google') {
-            const linkId = 'theme-body-font';
-            if (!document.getElementById(linkId)) {
-              const link = document.createElement('link');
-              link.id = linkId;
-              link.rel = 'stylesheet';
-              link.href = body.url;
-              document.head.appendChild(link);
-            }
-          }
-          
-          // Apply font families via CSS
-          const fontStyleId = 'theme-fonts-css';
-          let fontStyleEl = document.getElementById(fontStyleId);
-          if (!fontStyleEl) {
-            fontStyleEl = document.createElement('style');
-            fontStyleEl.id = fontStyleId;
-            document.head.appendChild(fontStyleEl);
-          }
-          fontStyleEl.textContent = `
-            :root {
-              --font-family-display: ${heading?.font_family || 'inherit'};
-              --font-family-body: ${body?.font_family || 'inherit'};
-            }
-          `;
-        }
-      } catch (e) {
-        // User not logged in or error
-      }
-    };
+    // Check if we already ran init recently (session cache)
+    const cachedInit = sessionStorage.getItem(LAYOUT_CACHE_KEY);
+    const skipHeavyInit = cachedInit && (Date.now() - parseInt(cachedInit)) < LAYOUT_CACHE_TTL;
 
     const handleSiteSettingsChange = (event) => {
       setSiteSettings(event.detail);
-      // Apply dark mode
       if (event.detail?.darkMode) {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');
       }
     };
-
-    loadBubblePreference();
-
-    // Prefetch common queries on idle
-    if (queryClient) {
-      prefetchOnIdle(queryClient, prefetchDashboardQueries);
-
-      // Prefetch library data after a delay
-      setTimeout(() => {
-        prefetchOnIdle(queryClient, prefetchLibraryQueries);
-      }, 3000);
-    }
-
-    // Load site settings
-    const loadSiteSettings = async () => {
-      try {
-        const user = await base44.auth.me();
-        if (user?.site_settings) {
-          setSiteSettings(user.site_settings);
-          // Apply dark mode on load
-          if (user.site_settings?.darkMode) {
-            document.documentElement.classList.add('dark');
-          } else {
-            document.documentElement.classList.remove('dark');
-          }
-        }
-      } catch (e) {
-        // User not logged in
-      }
-    };
-    loadSiteSettings();
 
     window.addEventListener('site-settings-changed', handleSiteSettingsChange);
 
