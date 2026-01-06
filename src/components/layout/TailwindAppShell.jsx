@@ -140,7 +140,7 @@ export function TailwindAppShell({
 
   return (
     <BreadcrumbContext.Provider value={{ navItems, currentPageName }}>
-      <div className="min-h-screen flex flex-col bg-gray-50">
+      <div className="min-h-screen flex flex-col bg-[var(--color-background)]">
         {/* Top Navigation */}
         <TailwindTopNav
           user={formattedUser}
@@ -175,10 +175,10 @@ export function TailwindAppShell({
           />
 
           {/* Page Content - takes remaining space */}
-          <main className="flex-1 overflow-y-auto min-w-0">
+          <main className="flex-1 overflow-y-auto min-w-0 bg-[var(--color-background)]">
             {/* Breadcrumb */}
             {breadcrumbPages.length > 0 && (
-              <div className="border-b border-gray-200 bg-white px-4 py-3">
+              <div className="border-b border-[var(--color-border)] bg-[var(--color-card)] px-4 py-3">
                 <TailwindBreadcrumb pages={breadcrumbPages} />
               </div>
             )}

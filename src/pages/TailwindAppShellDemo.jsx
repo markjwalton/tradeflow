@@ -221,7 +221,7 @@ function AppShellContent() {
         onClose={() => setEditorOpen(false)}
         selectedElement={selectedElement}
       />
-      <div className="flex flex-col h-screen bg-gray-100" style={{ marginTop: editorOpen ? '120px' : '0', transition: 'margin-top 300ms ease-in-out' }}>
+      <div className="flex flex-col h-screen bg-[var(--color-background)]" style={{ marginTop: editorOpen ? '120px' : '0', transition: 'margin-top 300ms ease-in-out' }}>
       {/* Mobile Navigation Drawer */}
       <TailwindMobileDrawer
         open={mobileNavOpen}
@@ -275,8 +275,8 @@ function AppShellContent() {
           ]}
           renderItem={(item) => (
             <div>
-              <h4 className="font-medium text-gray-900">{item.title}</h4>
-              <p className="text-sm text-gray-500">{item.message}</p>
+              <h4 className="font-medium text-[var(--text-primary)]">{item.title}</h4>
+              <p className="text-sm text-[var(--text-muted)]">{item.message}</p>
             </div>
           )}
         />
@@ -310,34 +310,34 @@ function AppShellContent() {
               <TailwindBreadcrumb pages={breadcrumbPages} />
 
               {/* Page Header */}
-              <div className="mt-6 mb-6 border-b border-gray-200 pb-5">
+              <div className="mt-6 mb-6 border-b border-[var(--color-border)] pb-5">
                 <div className="sm:flex sm:items-center sm:justify-between">
                   <div className="min-w-0 flex-1">
-                    <h1 className="text-2xl font-semibold text-gray-900">{pageTitle}</h1>
-                    <p className="mt-1 text-sm text-gray-500">{pageDescription}</p>
+                    <h1 className="text-2xl font-semibold text-[var(--text-primary)]">{pageTitle}</h1>
+                    <p className="mt-1 text-sm text-[var(--text-muted)]">{pageDescription}</p>
                   </div>
                   <div className="mt-4 flex gap-2 sm:ml-4 sm:mt-0">
                     <button
                       onClick={() => setPagePropertiesOpen(true)}
-                      className="px-3 py-1 rounded text-sm bg-gray-200 hover:bg-gray-300"
+                      className="px-3 py-1 rounded text-sm bg-[var(--background-200)] hover:bg-[var(--background-300)] text-[var(--text-secondary)]"
                     >
                       Page Properties
                     </button>
                     <button
                       onClick={() => setNavigationMode('expanded')}
-                      className={`px-3 py-1 rounded text-sm ${navigationMode === 'expanded' ? 'bg-indigo-600 text-white' : 'bg-gray-200'}`}
+                      className={`px-3 py-1 rounded text-sm ${navigationMode === 'expanded' ? 'bg-[var(--color-primary)] text-[var(--color-primary-foreground)]' : 'bg-[var(--background-200)] text-[var(--text-secondary)]'}`}
                     >
                       Expanded
                     </button>
                     <button
                       onClick={() => setNavigationMode('icons')}
-                      className={`px-3 py-1 rounded text-sm ${navigationMode === 'icons' ? 'bg-indigo-600 text-white' : 'bg-gray-200'}`}
+                      className={`px-3 py-1 rounded text-sm ${navigationMode === 'icons' ? 'bg-[var(--color-primary)] text-[var(--color-primary-foreground)]' : 'bg-[var(--background-200)] text-[var(--text-secondary)]'}`}
                     >
                       Icons
                     </button>
                     <button
                       onClick={() => setNavigationMode('hidden')}
-                      className={`px-3 py-1 rounded text-sm ${navigationMode === 'hidden' ? 'bg-indigo-600 text-white' : 'bg-gray-200'}`}
+                      className={`px-3 py-1 rounded text-sm ${navigationMode === 'hidden' ? 'bg-[var(--color-primary)] text-[var(--color-primary-foreground)]' : 'bg-[var(--background-200)] text-[var(--text-secondary)]'}`}
                     >
                       Hidden
                     </button>
@@ -349,25 +349,25 @@ function AppShellContent() {
               <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
                 <button
                   onClick={() => setTopDrawerOpen(true)}
-                  className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
+                  className="rounded-md bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-[var(--color-primary-foreground)] hover:opacity-90"
                 >
                   Open Top Drawer
                 </button>
                 <button
                   onClick={() => setRightDrawerOpen(true)}
-                  className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
+                  className="rounded-md bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-[var(--color-primary-foreground)] hover:opacity-90"
                 >
                   Open Right Drawer
                 </button>
                 <button
                   onClick={() => setBottomDrawerOpen(true)}
-                  className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
+                  className="rounded-md bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-[var(--color-primary-foreground)] hover:opacity-90"
                 >
                   Open Bottom Drawer
                 </button>
                 <button
                   onClick={() => setLeftDrawerOpen(true)}
-                  className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
+                  className="rounded-md bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-[var(--color-primary-foreground)] hover:opacity-90"
                 >
                   Open Left Drawer
                 </button>
@@ -376,25 +376,25 @@ function AppShellContent() {
               {/* Cards Grid */}
               <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <TailwindCard>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Plain Card</h3>
-                  <p className="text-gray-600">This is a simple card with content.</p>
+                  <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Plain Card</h3>
+                  <p className="text-[var(--text-body)]">This is a simple card with content.</p>
                 </TailwindCard>
 
-                <TailwindCardWithHeader title="Card with Header" headerContent={<span className="text-sm text-gray-500">Last updated 2 hours ago</span>}>
-                  <p className="text-gray-600">This card has a header section.</p>
+                <TailwindCardWithHeader title="Card with Header" headerContent={<span className="text-sm text-[var(--text-muted)]">Last updated 2 hours ago</span>}>
+                  <p className="text-[var(--text-body)]">This card has a header section.</p>
                 </TailwindCardWithHeader>
               </div>
 
               {/* List */}
               <div className="mt-8">
                 <TailwindCard>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Task List</h3>
+                  <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Task List</h3>
                   <TailwindList
                     items={listItems}
                     renderItem={(item) => (
                       <div>
-                        <h4 className="font-medium text-gray-900">{item.name}</h4>
-                        <p className="text-sm text-gray-500">{item.description}</p>
+                        <h4 className="font-medium text-[var(--text-primary)]">{item.name}</h4>
+                        <p className="text-sm text-[var(--text-muted)]">{item.description}</p>
                       </div>
                     )}
                   />
@@ -457,16 +457,16 @@ function AppShellContent() {
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Status</label>
-            <select className="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+            <label className="block text-sm font-medium text-[var(--text-secondary)]">Status</label>
+            <select className="mt-1 block w-full rounded-md border-[var(--color-border)] bg-[var(--color-card)] text-[var(--text-primary)] shadow-sm">
               <option>All</option>
               <option>Active</option>
               <option>Completed</option>
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Team</label>
-            <select className="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+            <label className="block text-sm font-medium text-[var(--text-secondary)]">Team</label>
+            <select className="mt-1 block w-full rounded-md border-[var(--color-border)] bg-[var(--color-card)] text-[var(--text-primary)] shadow-sm">
               <option>All Teams</option>
               <option>Engineering</option>
               <option>Design</option>
@@ -484,21 +484,21 @@ function AppShellContent() {
         maxHeight="md"
       >
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <button className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100">
-            <DocumentDuplicateIcon className="h-6 w-6 mx-auto text-gray-600" />
-            <span className="mt-2 block text-sm text-gray-900">New Document</span>
+          <button className="p-4 bg-[var(--background-50)] rounded-lg hover:bg-[var(--background-100)]">
+            <DocumentDuplicateIcon className="h-6 w-6 mx-auto text-[var(--text-muted)]" />
+            <span className="mt-2 block text-sm text-[var(--text-primary)]">New Document</span>
           </button>
-          <button className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100">
-            <FolderIcon className="h-6 w-6 mx-auto text-gray-600" />
-            <span className="mt-2 block text-sm text-gray-900">New Project</span>
+          <button className="p-4 bg-[var(--background-50)] rounded-lg hover:bg-[var(--background-100)]">
+            <FolderIcon className="h-6 w-6 mx-auto text-[var(--text-muted)]" />
+            <span className="mt-2 block text-sm text-[var(--text-primary)]">New Project</span>
           </button>
-          <button className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100">
-            <UsersIcon className="h-6 w-6 mx-auto text-gray-600" />
-            <span className="mt-2 block text-sm text-gray-900">Add Member</span>
+          <button className="p-4 bg-[var(--background-50)] rounded-lg hover:bg-[var(--background-100)]">
+            <UsersIcon className="h-6 w-6 mx-auto text-[var(--text-muted)]" />
+            <span className="mt-2 block text-sm text-[var(--text-primary)]">Add Member</span>
           </button>
-          <button className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100">
-            <CalendarIcon className="h-6 w-6 mx-auto text-gray-600" />
-            <span className="mt-2 block text-sm text-gray-900">Schedule</span>
+          <button className="p-4 bg-[var(--background-50)] rounded-lg hover:bg-[var(--background-100)]">
+            <CalendarIcon className="h-6 w-6 mx-auto text-[var(--text-muted)]" />
+            <span className="mt-2 block text-sm text-[var(--text-primary)]">Schedule</span>
           </button>
         </div>
       </TailwindDrawer>
@@ -573,7 +573,7 @@ function AppShellContent() {
           <div className="flex items-center justify-between py-2">
             <div>
               <Label>Show Breadcrumb</Label>
-              <p className="text-xs text-gray-500">Display breadcrumb navigation</p>
+              <p className="text-xs text-[var(--text-muted)]">Display breadcrumb navigation</p>
             </div>
             <Switch defaultChecked={currentPageData?.show_breadcrumb ?? true} />
           </div>
@@ -581,7 +581,7 @@ function AppShellContent() {
           <div className="flex items-center justify-between py-2">
             <div>
               <Label>Include in App Shell</Label>
-              <p className="text-xs text-gray-500">Render within the main layout</p>
+              <p className="text-xs text-[var(--text-muted)]">Render within the main layout</p>
             </div>
             <Switch defaultChecked={currentPageData?.includes_app_shell ?? true} />
           </div>
@@ -589,13 +589,13 @@ function AppShellContent() {
           <div className="flex items-center justify-between py-2">
             <div>
               <Label>Enable Pagination</Label>
-              <p className="text-xs text-gray-500">Show pagination controls</p>
+              <p className="text-xs text-[var(--text-muted)]">Show pagination controls</p>
             </div>
             <Switch defaultChecked={currentPageData?.pagination_enabled ?? false} />
           </div>
 
-          <div className="pt-4 border-t">
-            <button className="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-500">
+          <div className="pt-4 border-t border-[var(--color-border)]">
+            <button className="w-full px-4 py-2 bg-[var(--color-primary)] text-[var(--color-primary-foreground)] rounded-md hover:opacity-90">
               Save Properties
             </button>
           </div>
