@@ -75,11 +75,19 @@ export default function CRMCustomerDetail() {
     );
   }
 
-  if (!customer) {
+  if (!customer && allCustomers.length > 0) {
     return (
       <div className="p-6">
         <p>Customer not found (ID: {customerId})</p>
         <p className="text-sm text-muted-foreground mt-2">Available customers: {allCustomers.length}</p>
+      </div>
+    );
+  }
+
+  if (!customer) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     );
   }
