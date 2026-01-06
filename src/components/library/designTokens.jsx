@@ -279,7 +279,176 @@ h1, h2, h3, h4, h5, h6 {
 
 :root {
   /* ================================
-     SHADCN/UI BASE TOKENS (HSL)
+     TYPOGRAPHY TOKENS
+     ================================ */
+  --font-family-display: degular-display, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-body: mrs-eaves-xl-serif-narrow, Georgia, "Times New Roman", serif;
+  --font-family-mono: source-code-pro, "SF Mono", Monaco, monospace;
+  --font-heading: var(--font-family-display);
+  --font-body: var(--font-family-body);
+  --font-mono: var(--font-family-mono);
+
+  /* Font Sizes */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+
+  /* ================================
+     PRIMARY COLOR SCALE (Sage Green)
+     ================================ */
+  --primary-50: #f0f5f3;
+  --primary-100: #dce8e3;
+  --primary-200: #b9d1c7;
+  --primary-300: #8ab5a5;
+  --primary-400: #5a9480;
+  --primary-500: #4a7c6b;
+  --primary-600: #3d6658;
+  --primary-700: #325447;
+  --primary-800: #2a463b;
+  --primary-900: #233a31;
+
+  /* ================================
+     SECONDARY COLOR SCALE (Warm Beige)
+     ================================ */
+  --secondary-50: #faf8f5;
+  --secondary-100: #f5f0e8;
+  --secondary-200: #e8dcc8;
+  --secondary-300: #d6c3a0;
+  --secondary-400: #c4a87a;
+  --secondary-500: #b5956a;
+  --secondary-600: #a0815a;
+  --secondary-700: #7d644a;
+  --secondary-800: #5f4c3a;
+  --secondary-900: #4a3b2d;
+
+  /* ================================
+     ACCENT COLOR SCALE (Dusty Rose)
+     ================================ */
+  --accent-50: #faf7f6;
+  --accent-100: #f5eeec;
+  --accent-200: #e8d8d3;
+  --accent-300: #d4bab2;
+  --accent-400: #c4a198;
+  --accent-500: #b08880;
+  --accent-600: #9a7068;
+  --accent-700: #7a5850;
+  --accent-800: #5f4540;
+  --accent-900: #4a3633;
+
+  /* ================================
+     BACKGROUND COLOR SCALE
+     ================================ */
+  --background-50: #fdfcfa;
+  --background-100: #f5f3ef;
+  --background-200: #e8e5de;
+  --background-300: #d6d1c7;
+  --background-400: #bfb8ab;
+  --background-500: #a39c91;
+
+  /* ================================
+     MIDNIGHT COLOR SCALE (Dark Blue-Gray)
+     ================================ */
+  --midnight-50: #f5f7f9;
+  --midnight-100: #e8ecf1;
+  --midnight-200: #cdd5df;
+  --midnight-300: #a3b1c4;
+  --midnight-400: #7589a3;
+  --midnight-500: #5a6f89;
+  --midnight-600: #4d5f78;
+  --midnight-700: #404f64;
+  --midnight-800: #364354;
+  --midnight-900: #1e2a38;
+
+  /* ================================
+     CHARCOAL COLOR SCALE
+     ================================ */
+  --charcoal-50: #f7f7f7;
+  --charcoal-100: #e8e8e8;
+  --charcoal-200: #d4d4d4;
+  --charcoal-300: #b5b5b5;
+  --charcoal-400: #8f8f8f;
+  --charcoal-500: #6b6b6b;
+  --charcoal-600: #525252;
+  --charcoal-700: #404040;
+  --charcoal-800: #333333;
+  --charcoal-900: #262626;
+
+  /* ================================
+     DESTRUCTIVE COLOR SCALE
+     ================================ */
+  --destructive-50: #faf6f5;
+  --destructive-100: #f5ecea;
+  --destructive-200: #e8d5d0;
+  --destructive-300: #d4b5ac;
+  --destructive-400: #b88d80;
+  --destructive-500: #9a6b5c;
+  --destructive-600: #7a4f42;
+  --destructive-700: #5f3f35;
+  --destructive-800: #4a322a;
+  --destructive-900: #3a2822;
+
+  /* ================================
+     SEMANTIC COLORS
+     ================================ */
+  --color-primary: var(--primary-500);
+  --color-secondary: var(--secondary-400);
+  --color-accent: var(--accent-300);
+  --color-background: var(--background-100);
+  --color-card: #ffffff;
+  --color-border: var(--background-300);
+
+  /* Text Colors */
+  --text-primary: var(--midnight-900);
+  --text-secondary: var(--charcoal-800);
+  --text-body: var(--charcoal-700);
+  --text-muted: var(--charcoal-600);
+  --text-subtle: var(--charcoal-500);
+
+  /* ================================
+     SPACING TOKENS
+     ================================ */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+
+  /* ================================
+     BORDER RADIUS TOKENS
+     ================================ */
+  --radius-none: 0;
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* ================================
+     SHADOW TOKENS
+     ================================ */
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+  /* ================================
+     SHADCN/UI TOKENS (for compatibility)
      ================================ */
   --background: 0 0% 100%;
   --foreground: 0 0% 3.9%;
@@ -303,96 +472,18 @@ h1, h2, h3, h4, h5, h6 {
   --radius: 0.5rem;
 
   /* ================================
-     STURIJ DESIGN SYSTEM TOKENS
+     Z-INDEX TOKENS
      ================================ */
-  
-  /* Primary palette (Forest Green) */
-  --sturij-primary: 135 12% 33%;
-  --sturij-primary-light: 135 11% 40%;
-  --sturij-primary-dark: 135 13% 26%;
-
-  /* Secondary palette (Warm Copper/Tan) */
-  --sturij-secondary: 30 52% 65%;
-  --sturij-secondary-light: 30 52% 73%;
-  --sturij-secondary-dark: 30 52% 54%;
-
-  /* Accent palette (Soft Blush) */
-  --sturij-accent: 17 36% 75%;
-  --sturij-accent-light: 17 40% 84%;
-  --sturij-accent-dark: 17 32% 66%;
-
-  /* Background palette */
-  --sturij-background: 40 20% 95%;
-  --sturij-background-paper: 0 0% 100%;
-  --sturij-background-subtle: 40 25% 98%;
-  --sturij-background-muted: 40 15% 91%;
-
-  /* Midnight palette (Dark Blue-Grey) */
-  --sturij-midnight: 203 33% 16%;
-  --sturij-midnight-light: 203 29% 23%;
-  --sturij-midnight-dark: 203 36% 11%;
-
-  /* Charcoal palette */
-  --sturij-charcoal: 0 0% 23%;
-  --sturij-charcoal-light: 0 0% 33%;
-  --sturij-charcoal-dark: 0 0% 16%;
-
-  /* Semantic colors */
-  --sturij-success: 130 16% 41%;
-  --sturij-warning: 44 46% 56%;
-  --sturij-info: 200 21% 45%;
-  --sturij-destructive: 0 20% 45%;
-
-  /* ================================
-     OKLCH COLOR VALUES
-     ================================ */
-  --color-primary: oklch(0.398 0.037 159.8);
-  --color-primary-light: oklch(0.668 0.048 159.8);
-  --color-primary-dark: oklch(0.279 0.026 159.8);
-  --color-secondary: oklch(0.728 0.074 70.3);
-  --color-secondary-light: oklch(0.835 0.060 70.3);
-  --color-secondary-dark: oklch(0.610 0.090 70.3);
-  --color-accent: oklch(0.785 0.044 35.6);
-  --color-accent-light: oklch(0.894 0.032 35.6);
-  --color-accent-dark: oklch(0.646 0.052 35.6);
-  --color-background: oklch(0.962 0.010 83.1);
-  --color-background-paper: oklch(1.000 0.000 0);
-  --color-background-subtle: oklch(0.990 0.007 83.1);
-  --color-background-muted: oklch(0.927 0.020 83.1);
-  --color-midnight: oklch(0.223 0.036 235.4);
-  --color-midnight-light: oklch(0.341 0.038 235.4);
-  --color-midnight-dark: oklch(0.223 0.036 235.4);
-  --color-charcoal: oklch(0.297 0.000 0);
-  --color-charcoal-light: oklch(0.439 0.000 0);
-  --color-charcoal-dark: oklch(0.250 0.000 0);
-  --color-destructive: oklch(0.482 0.071 25.7);
-  --color-success: oklch(0.513 0.040 159.8);
-  --color-warning: oklch(0.676 0.085 70.3);
-  --color-info: oklch(0.513 0.040 235.4);
-
-  /* Typography */
-  --font-heading: degular-display, system-ui, sans-serif;
-  --font-body: mrs-eaves-xl-serif-narrow, Georgia, serif;
-  --font-mono: ui-monospace, SFMono-Regular, SF Mono, Menlo, monospace;
-
-  /* Spacing */
-  --spacing-1: 0.25rem;
-  --spacing-2: 0.5rem;
-  --spacing-3: 0.75rem;
-  --spacing-4: 1rem;
-  --spacing-6: 1.5rem;
-  --spacing-8: 2rem;
-  --spacing-12: 3rem;
-
-  /* Effects */
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-xl: 12px;
-  --shadow-sm: 0 1px 3px 0 oklch(0.223 0.036 235.4 / 0.1);
-  --shadow-md: 0 4px 6px -1px oklch(0.223 0.036 235.4 / 0.1);
-  --shadow-lg: 0 10px 15px -3px oklch(0.223 0.036 235.4 / 0.1);
-  --transition-normal: 200ms ease;
+  --z-base: 0;
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  --z-toast: 1080;
+  --z-max: 9999;
 }
 `;
 
