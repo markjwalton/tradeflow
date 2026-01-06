@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { ArrowLeft, Edit, FolderOpen, User, MapPin, MessageSquare, Save, Home } from 'lucide-react';
+import { ArrowLeft, Edit, FolderOpen, User, MapPin, MessageSquare, Save, Home, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
 
@@ -169,6 +169,12 @@ export default function CRMProjectDetail() {
                 </div>
               </div>
             </div>
+            <Link to={createPageUrl('CRMProjectForm') + `?id=${project.id}`}>
+              <Button variant="outline">
+                <Pencil className="h-4 w-4 mr-2" />
+                Edit Project
+              </Button>
+            </Link>
           </div>
 
           {/* Status Update */}
