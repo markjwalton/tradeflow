@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Plus, Trash2, GripVertical, Save, Settings } from 'lucide-react';
 import { toast } from 'sonner';
-import { CRMAppShell, CRMPageHeader } from '../components/crm/CRMAppShell';
+import { CRMPageHeader } from '../components/crm/CRMUI';
 
 export default function CRMSettings() {
   const queryClient = useQueryClient();
