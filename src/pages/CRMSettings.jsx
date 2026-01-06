@@ -75,7 +75,7 @@ export default function CRMSettings() {
   }
 
   return (
-    <CRMAppShell currentPage="CRMSettings" breadcrumbs={[{ label: 'Settings' }]}>
+    <div className="space-y-6">
       <CRMPageHeader
         title="CRM Settings"
         description="Manage dropdown options for your CRM system"
@@ -195,6 +195,6 @@ export default function CRMSettings() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </CRMAppShell>
+    </div>
   );
 }

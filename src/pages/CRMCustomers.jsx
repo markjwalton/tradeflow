@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Plus, Search, Users, Phone, Mail, MapPin } from 'lucide-react';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
 import CRMPagination, { usePagination } from '../components/crm/CRMPagination';
-import { CRMAppShell, CRMPageHeader, CRMCard, CRMCardContent, CRMCardHeader } from '../components/crm/CRMAppShell';
+import { CRMPageHeader, CRMCard, CRMCardContent, CRMCardHeader } from '../components/crm/CRMUI';
 
 export default function CRMCustomers() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -76,7 +76,7 @@ export default function CRMCustomers() {
   }
 
   return (
-    <CRMAppShell currentPage="CRMCustomers" breadcrumbs={[{ label: 'Customers' }]}>
+    <div className="space-y-6">
       <CRMPageHeader
         title="Customers"
         description="Manage your customer database"
@@ -197,6 +197,6 @@ export default function CRMCustomers() {
           )}
         </CRMCardContent>
       </CRMCard>
-    </CRMAppShell>
+    </div>
   );
 }
