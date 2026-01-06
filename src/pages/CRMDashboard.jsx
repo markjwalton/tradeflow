@@ -270,10 +270,10 @@ export default function CRMDashboard() {
                 <span>Log Interaction</span>
               </Button>
             </Link>
-            <Link to={createPageUrl('CRMProjects')}>
+            <Link to={createPageUrl('CRMInteractions')}>
               <Button variant="outline" className="w-full h-auto py-4 flex flex-col gap-2">
-                <FolderKanban className="h-5 w-5" />
-                <span>View Projects</span>
+                <MessageSquare className="h-5 w-5" />
+                <span>All Interactions</span>
               </Button>
             </Link>
           </div>
