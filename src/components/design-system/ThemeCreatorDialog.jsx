@@ -79,7 +79,7 @@ export default function ThemeCreatorDialog({
     mutationFn: async (data) => {
       return base44.entities.DesignSystemPackage.create({
         ...data,
-        tailwind_version: "3.4.0",
+        tailwind_version: "4.0.0",
         base44_compatible: true,
         status: "draft",
         changelog: [{
