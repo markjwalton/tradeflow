@@ -47,7 +47,6 @@ Deno.serve(async (req) => {
       });
 
       // Determine file type
-      const fileName = relativePath.split('/').pop();
       const extension = fileName.split('.').pop()?.toLowerCase();
       const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'];
       const fileType = imageExtensions.includes(extension) ? 'image' : 'other';
