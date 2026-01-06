@@ -49,7 +49,6 @@ import Estimates from './pages/Estimates';
 import FeedbackShowcase from './pages/FeedbackShowcase';
 import FontManager from './pages/FontManager';
 import FormSchemaBuilder from './pages/FormSchemaBuilder';
-import FormsShowcase from './pages/FormsShowcase';
 import GeneratedApps from './pages/GeneratedApps';
 import GitHubIntegration from './pages/GitHubIntegration';
 import GradientTest from './pages/GradientTest';
@@ -179,7 +178,6 @@ export const PAGES = {
     "FeedbackShowcase": FeedbackShowcase,
     "FontManager": FontManager,
     "FormSchemaBuilder": FormSchemaBuilder,
-    "FormsShowcase": FormsShowcase,
     "GeneratedApps": GeneratedApps,
     "GitHubIntegration": GitHubIntegration,
     "GradientTest": GradientTest,
