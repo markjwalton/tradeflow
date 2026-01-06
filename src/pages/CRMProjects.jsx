@@ -149,92 +149,94 @@ export default function CRMProjects() {
               </p>
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Created</TableHead>
-                  <TableHead>Customer</TableHead>
-                  <TableHead>Location</TableHead>
-                  <TableHead>Scope</TableHead>
-                  <TableHead>Rooms</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {pagination.paginatedItems.map((project) => {
-                  const customer = customerMap[project.customer_id];
-                  const totalRooms =
-                    (project.bedrooms_qty || 0) +
-                    (project.kitchens_qty || 0) +
-                    (project.bathrooms_qty || 0) +
-                    (project.living_rooms_qty || 0);
+            <>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Created</TableHead>
+                    <TableHead>Customer</TableHead>
+                    <TableHead>Location</TableHead>
+                    <TableHead>Scope</TableHead>
+                    <TableHead>Rooms</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {pagination.paginatedItems.map((project) => {
+                    const customer = customerMap[project.customer_id];
+                    const totalRooms =
+                      (project.bedrooms_qty || 0) +
+                      (project.kitchens_qty || 0) +
+                      (project.bathrooms_qty || 0) +
+                      (project.living_rooms_qty || 0);
 
-                  return (
-                    <TableRow key={project.id}>
-                      <TableCell className="text-sm">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="h-3 w-3" />
-                          {new Date(project.created_date).toLocaleDateString()}
-                        </div>
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        <Link
-                          to={createPageUrl('CRMCustomerDetail') + `?id=${project.customer_id}`}
-                          className="hover:underline text-primary"
-                        >
-                          {customer
-                            ? `${customer.first_name} ${customer.surname}`
-                            : 'Unknown'}
-                        </Link>
-                      </TableCell>
-                      <TableCell>
-                        {addressMap[project.project_address_id] && (
-                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                            <MapPin className="h-3 w-3" />
-                            <span>
-                              {addressMap[project.project_address_id].city}
-                            </span>
+                    return (
+                      <TableRow key={project.id}>
+                        <TableCell className="text-sm">
+                          <div className="flex items-center gap-1">
+                            <Calendar className="h-3 w-3" />
+                            {new Date(project.created_date).toLocaleDateString()}
                           </div>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex flex-wrap gap-1">
-                          {project.project_scope_types?.slice(0, 2).map((type) => (
-                            <Badge key={type} variant="secondary" className="text-xs">
-                              {type}
-                            </Badge>
-                          ))}
-                          {project.project_scope_types?.length > 2 && (
-                            <Badge variant="secondary" className="text-xs">
-                              +{project.project_scope_types.length - 2}
-                            </Badge>
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          <Link
+                            to={createPageUrl('CRMCustomerDetail') + `?id=${project.customer_id}`}
+                            className="hover:underline text-primary"
+                          >
+                            {customer
+                              ? `${customer.first_name} ${customer.surname}`
+                              : 'Unknown'}
+                          </Link>
+                        </TableCell>
+                        <TableCell>
+                          {addressMap[project.project_address_id] && (
+                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                              <MapPin className="h-3 w-3" />
+                              <span>
+                                {addressMap[project.project_address_id].city}
+                              </span>
+                            </div>
                           )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        {totalRooms > 0 ? `${totalRooms} rooms` : '-'}
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={getStatusBadgeColor(project.status)}>
-                          {project.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Link to={createPageUrl('CRMProjectDetail') + `?id=${project.id}`}>
-                          <Button variant="outline" size="sm">
-                            View
-                          </Button>
-                        </Link>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-            {filteredProjects.length > 10 && (
-              <CRMPagination {...pagination} />
-            )}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-wrap gap-1">
+                            {project.project_scope_types?.slice(0, 2).map((type) => (
+                              <Badge key={type} variant="secondary" className="text-xs">
+                                {type}
+                              </Badge>
+                            ))}
+                            {project.project_scope_types?.length > 2 && (
+                              <Badge variant="secondary" className="text-xs">
+                                +{project.project_scope_types.length - 2}
+                              </Badge>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          {totalRooms > 0 ? `${totalRooms} rooms` : '-'}
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={getStatusBadgeColor(project.status)}>
+                            {project.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Link to={createPageUrl('CRMProjectDetail') + `?id=${project.id}`}>
+                            <Button variant="outline" size="sm">
+                              View
+                            </Button>
+                          </Link>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+              {filteredProjects.length > 10 && (
+                <CRMPagination {...pagination} />
+              )}
+            </>
           )}
         </CardContent>
       </Card>

@@ -192,73 +192,75 @@ export default function CRMEnquiries() {
               </p>
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Customer</TableHead>
-                  <TableHead>Channel</TableHead>
-                  <TableHead>Project Types</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {pagination.paginatedItems.map((enquiry) => {
-                  const customer = customerMap[enquiry.customer_id];
-                  return (
-                    <TableRow key={enquiry.id}>
-                      <TableCell className="text-sm">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="h-3 w-3" />
-                          {new Date(enquiry.enquiry_date).toLocaleDateString()}
-                        </div>
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        <Link
-                          to={createPageUrl('CRMCustomerDetail') + `?id=${enquiry.customer_id}`}
-                          className="hover:underline text-primary"
-                        >
-                          {customer
-                            ? `${customer.first_name} ${customer.surname}`
-                            : 'Unknown'}
-                        </Link>
-                      </TableCell>
-                      <TableCell>{enquiry.inbound_channel}</TableCell>
-                      <TableCell>
-                        <div className="flex flex-wrap gap-1">
-                          {enquiry.initial_project_types?.slice(0, 2).map((type) => (
-                            <Badge key={type} variant="secondary" className="text-xs">
-                              {type}
-                            </Badge>
-                          ))}
-                          {enquiry.initial_project_types?.length > 2 && (
-                            <Badge variant="secondary" className="text-xs">
-                              +{enquiry.initial_project_types.length - 2}
-                            </Badge>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={getStatusBadgeColor(enquiry.status)}>
-                          {enquiry.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Link to={createPageUrl('CRMEnquiryDetail') + `?id=${enquiry.id}`}>
-                          <Button variant="outline" size="sm">
-                            View
-                          </Button>
-                        </Link>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-            {sortedEnquiries.length > 10 && (
-              <CRMPagination {...pagination} />
-            )}
+            <>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Customer</TableHead>
+                    <TableHead>Channel</TableHead>
+                    <TableHead>Project Types</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {pagination.paginatedItems.map((enquiry) => {
+                    const customer = customerMap[enquiry.customer_id];
+                    return (
+                      <TableRow key={enquiry.id}>
+                        <TableCell className="text-sm">
+                          <div className="flex items-center gap-1">
+                            <Calendar className="h-3 w-3" />
+                            {new Date(enquiry.enquiry_date).toLocaleDateString()}
+                          </div>
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          <Link
+                            to={createPageUrl('CRMCustomerDetail') + `?id=${enquiry.customer_id}`}
+                            className="hover:underline text-primary"
+                          >
+                            {customer
+                              ? `${customer.first_name} ${customer.surname}`
+                              : 'Unknown'}
+                          </Link>
+                        </TableCell>
+                        <TableCell>{enquiry.inbound_channel}</TableCell>
+                        <TableCell>
+                          <div className="flex flex-wrap gap-1">
+                            {enquiry.initial_project_types?.slice(0, 2).map((type) => (
+                              <Badge key={type} variant="secondary" className="text-xs">
+                                {type}
+                              </Badge>
+                            ))}
+                            {enquiry.initial_project_types?.length > 2 && (
+                              <Badge variant="secondary" className="text-xs">
+                                +{enquiry.initial_project_types.length - 2}
+                              </Badge>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={getStatusBadgeColor(enquiry.status)}>
+                            {enquiry.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Link to={createPageUrl('CRMEnquiryDetail') + `?id=${enquiry.id}`}>
+                            <Button variant="outline" size="sm">
+                              View
+                            </Button>
+                          </Link>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+              {sortedEnquiries.length > 10 && (
+                <CRMPagination {...pagination} />
+              )}
+            </>
           )}
         </CardContent>
       </Card>

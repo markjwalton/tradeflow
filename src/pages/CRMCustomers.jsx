@@ -134,68 +134,70 @@ export default function CRMCustomers() {
               </p>
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Customer #</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Contact</TableHead>
-                  <TableHead>Location</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {pagination.paginatedItems.map((customer) => (
-                  <TableRow key={customer.id}>
-                    <TableCell className="font-mono text-sm">
-                      {customer.customer_number}
-                    </TableCell>
-                    <TableCell className="font-medium">
-                      {customer.first_name} {customer.surname}
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={getTypeBadgeColor(customer.customer_type)}>
-                        {customer.customer_type}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-col gap-1 text-sm">
-                        <span className="flex items-center gap-1">
-                          <Mail className="h-3 w-3" />
-                          {customer.email_address}
-                        </span>
-                        <span className="flex items-center gap-1 text-muted-foreground">
-                          <Phone className="h-3 w-3" />
-                          {customer.mobile}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      {addressMap[customer.primary_address_id] && (
-                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                          <MapPin className="h-3 w-3" />
-                          <span>
-                            {addressMap[customer.primary_address_id].city},{' '}
-                            {addressMap[customer.primary_address_id].post_code}
+            <>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Customer #</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Contact</TableHead>
+                    <TableHead>Location</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {pagination.paginatedItems.map((customer) => (
+                    <TableRow key={customer.id}>
+                      <TableCell className="font-mono text-sm">
+                        {customer.customer_number}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {customer.first_name} {customer.surname}
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={getTypeBadgeColor(customer.customer_type)}>
+                          {customer.customer_type}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-1 text-sm">
+                          <span className="flex items-center gap-1">
+                            <Mail className="h-3 w-3" />
+                            {customer.email_address}
+                          </span>
+                          <span className="flex items-center gap-1 text-muted-foreground">
+                            <Phone className="h-3 w-3" />
+                            {customer.mobile}
                           </span>
                         </div>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Link to={createPageUrl('CRMCustomerDetail') + `?id=${customer.id}`}>
-                        <Button variant="outline" size="sm">
-                          View
-                        </Button>
-                      </Link>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            {filteredCustomers.length > 10 && (
-              <CRMPagination {...pagination} />
-            )}
+                      </TableCell>
+                      <TableCell>
+                        {addressMap[customer.primary_address_id] && (
+                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                            <MapPin className="h-3 w-3" />
+                            <span>
+                              {addressMap[customer.primary_address_id].city},{' '}
+                              {addressMap[customer.primary_address_id].post_code}
+                            </span>
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Link to={createPageUrl('CRMCustomerDetail') + `?id=${customer.id}`}>
+                          <Button variant="outline" size="sm">
+                            View
+                          </Button>
+                        </Link>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              {filteredCustomers.length > 10 && (
+                <CRMPagination {...pagination} />
+              )}
+            </>
           )}
         </CardContent>
       </Card>
