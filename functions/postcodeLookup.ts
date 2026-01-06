@@ -28,7 +28,28 @@ Deno.serve(async (req) => {
     
     const data = await response.json();
     
-    return Response.json(data);
+    // Transform the response for easier use
+    if (data.result && Array.isArray(data.result)) {
+      const addresses = data.result.map((addr) => ({
+        formatted: [
+          addr.building_number || addr.building_name,
+          addr.thoroughfare || addr.line_1,
+          addr.post_town,
+          addr.postcode,
+        ].filter(Boolean).join(', '),
+        building_number: addr.building_number || '',
+        building_name: addr.building_name || '',
+        thoroughfare: addr.thoroughfare || '',
+        line_1: addr.line_1 || '',
+        line_2: addr.line_2 || '',
+        town_or_city: addr.post_town || '',
+        county: addr.county || '',
+        postcode: addr.postcode || '',
+      }));
+      return Response.json({ addresses });
+    }
+    
+    return Response.json({ addresses: [] });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
