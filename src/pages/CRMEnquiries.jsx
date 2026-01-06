@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Plus, Search, FileText, Calendar, Clock } from 'lucide-react';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
 import CRMPagination, { usePagination } from '../components/crm/CRMPagination';
-import { CRMPageWrapper, CRMPageHeader, CRMCard, CRMCardContent, CRMCardHeader } from '../components/crm/CRMPageWrapper';
+import { CRMAppShell, CRMPageHeader, CRMCard, CRMCardContent, CRMCardHeader } from '../components/crm/CRMAppShell';
 
 export default function CRMEnquiries() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -93,12 +93,11 @@ export default function CRMEnquiries() {
   }
 
   return (
-    <CRMPageWrapper>
+    <CRMAppShell currentPage="CRMEnquiries" breadcrumbs={[{ label: 'Enquiries' }]}>
       <CRMPageHeader
         title="Enquiries"
         description="Manage incoming customer enquiries"
         icon={FileText}
-        breadcrumbs={[{ label: 'Enquiries' }]}
         actions={
           <Link to={createPageUrl('CRMEnquiryForm')}>
             <Button>
@@ -261,6 +260,6 @@ export default function CRMEnquiries() {
           )}
         </CRMCardContent>
       </CRMCard>
-    </CRMPageWrapper>
+    </CRMAppShell>
   );
 }
