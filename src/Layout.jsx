@@ -95,7 +95,6 @@ function LayoutContent({ children, currentPageName, currentUser, currentTenant, 
             Back
           </Button>
         </div>
-        <GlobalAIAssistant />
       </TenantContext.Provider>
     );
   }
@@ -116,7 +115,6 @@ function LayoutContent({ children, currentPageName, currentUser, currentTenant, 
 
   return (
     <TenantContext.Provider value={tenantContextValue}>
-      <link rel="stylesheet" href="https://use.typekit.net/iwm1gcu.css" />
       <SidebarProvider>
         {editorPanelOpen && (
           <TopEditorPanel 
