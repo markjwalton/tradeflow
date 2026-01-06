@@ -180,7 +180,7 @@ export default function CRMCustomers() {
                         )}
                       </TableCell>
                       <TableCell className="text-right">
-                        <Link to={createPageUrl('CRMCustomerDetail') + `?id=${customer.id}`}>
+                        <Link to={`${createPageUrl('CRMCustomerDetail')}?id=${customer.id}`}>
                           <Button variant="outline" size="sm">
                             View
                           </Button>
