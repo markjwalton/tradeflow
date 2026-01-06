@@ -82,26 +82,35 @@ const getColorStyle = (tokenValue) => {
   if (token?.hex) {
     return { backgroundColor: token.hex };
   }
-  return { backgroundColor: `var(--color-${tokenValue}, #cccccc)` };
-};
-
-// Helper to get token label
-const getColorLabel = (tokenValue) => {
-  const token = colorTokens.find(t => t.value === tokenValue);
-  return token?.label || tokenValue;
+  // Fallback: use CSS variable
+  return { backgroundColor: `var(--${tokenValue}, var(--color-${tokenValue}, #cccccc))` };
 };
 
 // Render swatch + label for SelectValue
 const ColorSelectValue = ({ value }) => {
+  if (!value) return <span className="text-muted-foreground">Select color...</span>;
+  
   const token = colorTokens.find(t => t.value === value);
-  if (!token) return value || "Select...";
+  if (token) {
+    return (
+      <div className="flex items-center gap-2">
+        <div
+          className="w-4 h-4 rounded border flex-shrink-0"
+          style={{ backgroundColor: token.hex }}
+        />
+        <span>{token.label}</span>
+      </div>
+    );
+  }
+  
+  // Fallback for values not in our token list - show the token name
   return (
     <div className="flex items-center gap-2">
       <div
         className="w-4 h-4 rounded border flex-shrink-0"
-        style={{ backgroundColor: token.hex }}
+        style={{ backgroundColor: `var(--${value}, var(--color-${value}, #cccccc))` }}
       />
-      {token.label}
+      <span>{value}</span>
     </div>
   );
 };
