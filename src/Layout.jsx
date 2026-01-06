@@ -170,7 +170,7 @@ function LayoutContent({ children, currentPageName, currentUser, currentTenant, 
               <button
                 type="button"
                 onClick={handleEditorToggle}
-                className="rounded-full bg-indigo-600 p-3 text-white shadow-2xl hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="rounded-[var(--radius-full)] bg-[var(--color-primary)] p-3 text-[var(--color-primary-foreground)] shadow-[var(--shadow-2xl)] hover:bg-[var(--primary-600)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
                 title="Page Editor"
               >
                 {editorPanelOpen ? (
@@ -467,8 +467,8 @@ export default function Layout({ children, currentPageName }) {
   // Show loading while checking
   if (checkingAccess) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      <div className="min-h-screen flex items-center justify-center bg-[var(--color-background)]">
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--text-muted)]" />
       </div>
     );
   }
