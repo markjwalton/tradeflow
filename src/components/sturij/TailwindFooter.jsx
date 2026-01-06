@@ -68,17 +68,17 @@ export default function TailwindFooter({
   className = '' 
 }) {
   return (
-    <footer className={`relative z-10 bg-white shadow-[0_-1px_3px_0_rgb(0_0_0_/_0.1)] ${className}`}>
+    <footer className={`relative z-10 bg-[var(--color-card)] shadow-[0_-1px_3px_0_rgb(0_0_0_/_0.1)] border-t border-[var(--color-border)] ${className}`}>
       <div className="mx-auto max-w-7xl px-6 py-12 md:flex md:items-center md:justify-between lg:px-8">
         <div className="flex justify-center gap-x-6 md:order-2">
           {navigation.map((item) => (
-            <a key={item.name} href={item.href} className="text-gray-600 hover:text-gray-800">
+            <a key={item.name} href={item.href} className="text-[var(--text-muted)] hover:text-[var(--text-secondary)]">
               <span className="sr-only">{item.name}</span>
               <item.icon aria-hidden="true" className="size-6" />
             </a>
           ))}
         </div>
-        <p className="mt-8 text-center text-sm/6 text-gray-600 md:order-1 md:mt-0">
+        <p className="mt-8 text-center text-sm/6 text-[var(--text-muted)] md:order-1 md:mt-0">
           &copy; {copyrightText}
         </p>
       </div>

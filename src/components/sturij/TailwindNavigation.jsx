@@ -46,19 +46,19 @@ export default function TailwindNavigation({
         <button
           onClick={(e) => toggleFolder(item.id || item.name, e)}
           className={classNames(
-            item.current ? 'bg-gray-50' : 'hover:bg-gray-50',
-            'group flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm/6 font-semibold text-gray-700',
+            item.current ? 'bg-[var(--background-100)]' : 'hover:bg-[var(--background-100)]',
+            'group flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm/6 font-semibold text-[var(--text-secondary)]',
             isIconsOnly && 'justify-center'
           )}
         >
-          <Icon aria-hidden="true" className="size-6 shrink-0 text-gray-400" />
+          <Icon aria-hidden="true" className="size-6 shrink-0 text-[var(--text-muted)]" />
           {!isIconsOnly && (
             <>
               {item.name}
               {isExpanded ? (
-                <ChevronDown aria-hidden="true" className="ml-auto h-5 w-5 shrink-0 text-gray-400" />
+                <ChevronDown aria-hidden="true" className="ml-auto h-5 w-5 shrink-0 text-[var(--text-muted)]" />
               ) : (
-                <ChevronRight aria-hidden="true" className="ml-auto h-5 w-5 shrink-0 text-gray-400" />
+                <ChevronRight aria-hidden="true" className="ml-auto h-5 w-5 shrink-0 text-[var(--text-muted)]" />
               )}
             </>
           )}
@@ -72,15 +72,15 @@ export default function TailwindNavigation({
               <PopoverTrigger asChild>
                 <button
                   className={classNames(
-                    item.current ? 'bg-gray-50' : 'hover:bg-gray-50',
-                    'group flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm/6 font-semibold text-gray-700 justify-center'
+                    item.current ? 'bg-[var(--background-100)]' : 'hover:bg-[var(--background-100)]',
+                    'group flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm/6 font-semibold text-[var(--text-secondary)] justify-center'
                   )}
                 >
-                  <Icon aria-hidden="true" className="size-6 shrink-0 text-gray-400" />
+                  <Icon aria-hidden="true" className="size-6 shrink-0 text-[var(--text-muted)]" />
                 </button>
               </PopoverTrigger>
-              <PopoverContent side="right" align="start" className="w-48 p-2">
-                <div className="font-semibold text-sm text-gray-900 mb-2 px-2">{item.name}</div>
+              <PopoverContent side="right" align="start" className="w-48 p-2 bg-[var(--color-card)] border-[var(--color-border)]">
+                <div className="font-semibold text-sm text-[var(--text-primary)] mb-2 px-2">{item.name}</div>
                 <ul className="space-y-1">
                   {item.children.map((subItem) => (
                     <li key={subItem.name}>
@@ -92,7 +92,7 @@ export default function TailwindNavigation({
                             onNavigate(subItem);
                           }
                         }}
-                        className="block rounded-md py-2 px-2 text-sm text-gray-700 hover:bg-gray-50"
+                        className="block rounded-md py-2 px-2 text-sm text-[var(--text-secondary)] hover:bg-[var(--background-100)]"
                       >
                         {subItem.name}
                       </a>
@@ -123,12 +123,12 @@ export default function TailwindNavigation({
           }
         }}
         className={classNames(
-          item.current ? 'bg-gray-50' : 'hover:bg-gray-50',
-          isChild ? 'block rounded-md py-2 pr-2 pl-9 text-sm/6 text-gray-700' : 'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-gray-700',
+          item.current ? 'bg-[var(--background-100)]' : 'hover:bg-[var(--background-100)]',
+          isChild ? 'block rounded-md py-2 pr-2 pl-9 text-sm/6 text-[var(--text-secondary)]' : 'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-[var(--text-secondary)]',
           isIconsOnly && !isChild && 'justify-center'
         )}
       >
-        {!isChild && <Icon aria-hidden="true" className="size-6 shrink-0 text-gray-400" />}
+        {!isChild && <Icon aria-hidden="true" className="size-6 shrink-0 text-[var(--text-muted)]" />}
         {(!isIconsOnly || isChild) && item.name}
       </a>
     );
@@ -153,7 +153,7 @@ export default function TailwindNavigation({
 
   return (
     <div className={classNames(
-      "hidden md:flex flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white z-0 shrink-0",
+      "hidden md:flex flex-col gap-y-5 overflow-y-auto border-r border-[var(--color-border)] bg-[var(--color-sidebar)] z-0 shrink-0",
       isIconsOnly ? "w-16 px-2 pt-6" : "w-64 px-6 pt-6"
     )}>
       <TooltipProvider delayDuration={300}>
@@ -171,15 +171,15 @@ export default function TailwindNavigation({
       {/* Editor Toggle Button */}
       {onEditorToggle && (
         <TooltipProvider delayDuration={300}>
-          <div className="border-t border-gray-200 pt-3">
+          <div className="border-t border-[var(--color-border)] pt-3">
             {isIconsOnly ? (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
                     onClick={onEditorToggle}
-                    className="group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-gray-700 hover:bg-gray-50 w-full justify-center"
+                    className="group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-[var(--text-secondary)] hover:bg-[var(--background-100)] w-full justify-center"
                   >
-                    <svg className="size-6 shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="size-6 shrink-0 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
                     </svg>
                   </button>
@@ -191,9 +191,9 @@ export default function TailwindNavigation({
             ) : (
               <button
                 onClick={onEditorToggle}
-                className="group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-gray-700 hover:bg-gray-50 w-full"
+                className="group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-[var(--text-secondary)] hover:bg-[var(--background-100)] w-full"
               >
-                <svg className="size-6 shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="size-6 shrink-0 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
                 </svg>
                 Toggle Editor

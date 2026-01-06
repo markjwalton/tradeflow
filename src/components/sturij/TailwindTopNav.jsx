@@ -39,8 +39,8 @@ export default function TailwindTopNav({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
   return (
-    <header className="relative z-10 bg-white shadow-sm">
-      <div className="mx-auto max-w-full px-2 sm:px-4 md:divide-y md:divide-gray-200 lg:px-8">
+    <header className="relative z-10 bg-[var(--color-card)] shadow-sm">
+      <div className="mx-auto max-w-full px-2 sm:px-4 md:divide-y md:divide-[var(--color-border)] lg:px-8">
         <div className="relative flex h-16 justify-between">
           <div className="relative z-10 flex items-center px-2 lg:px-0">
             {/* Sidebar toggle - visible on tablet (md) and desktop (lg) */}
@@ -48,7 +48,7 @@ export default function TailwindTopNav({
               <button
                 type="button"
                 onClick={onSidebarToggle}
-                className="hidden md:inline-flex items-center justify-center rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-600 mr-2"
+                className="hidden md:inline-flex items-center justify-center rounded-md p-2 text-[var(--text-muted)] hover:bg-[var(--background-100)] hover:text-[var(--text-secondary)] focus:outline-2 focus:-outline-offset-1 focus:outline-[var(--color-primary)] mr-2"
               >
                 <span className="sr-only">Toggle sidebar</span>
                 <MenuIcon aria-hidden="true" className="h-6 w-6" />
@@ -70,34 +70,34 @@ export default function TailwindTopNav({
                     setShowResults(true);
                   }}
                   onFocus={() => setShowResults(true)}
-                  className="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pr-3 pl-10 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                  className="col-start-1 row-start-1 block w-full rounded-md bg-[var(--color-card)] py-1.5 pr-3 pl-10 text-base text-[var(--text-primary)] outline-1 -outline-offset-1 outline-[var(--color-border)] placeholder:text-[var(--text-muted)] focus:outline-2 focus:-outline-offset-2 focus:outline-[var(--color-primary)] sm:text-sm/6"
                 />
                 <Search
                   aria-hidden="true"
-                  className="pointer-events-none col-start-1 row-start-1 ml-3 h-5 w-5 self-center text-gray-400"
+                  className="pointer-events-none col-start-1 row-start-1 ml-3 h-5 w-5 self-center text-[var(--text-muted)]"
                 />
               </div>
               {/* Search Results Dropdown */}
               {showResults && searchResults.length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-md shadow-lg border border-gray-200 max-h-64 overflow-y-auto z-50">
+                <div className="absolute top-full left-0 right-0 mt-1 bg-[var(--color-card)] rounded-md shadow-lg border border-[var(--color-border)] max-h-64 overflow-y-auto z-50">
                   {searchResults.map((result) => (
                     <a
                       key={result.id || result.slug}
                       href={result.slug ? createPageUrl(result.slug) : '#'}
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      className="block px-4 py-2 text-sm text-[var(--text-secondary)] hover:bg-[var(--background-100)]"
                       onClick={() => setShowResults(false)}
                     >
                       <div className="font-medium">{result.name}</div>
                       {result.slug && (
-                        <div className="text-xs text-gray-500">{result.slug}</div>
+                        <div className="text-xs text-[var(--text-muted)]">{result.slug}</div>
                       )}
                     </a>
                   ))}
                 </div>
               )}
               {showResults && searchQuery && searchResults.length === 0 && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-md shadow-lg border border-gray-200 z-50">
-                  <div className="px-4 py-3 text-sm text-gray-500">No pages found</div>
+                <div className="absolute top-full left-0 right-0 mt-1 bg-[var(--color-card)] rounded-md shadow-lg border border-[var(--color-border)] z-50">
+                  <div className="px-4 py-3 text-sm text-[var(--text-muted)]">No pages found</div>
                 </div>
               )}
             </div>
@@ -106,7 +106,7 @@ export default function TailwindTopNav({
             <button
               type="button"
               onClick={onMobileMenuClick}
-              className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-600"
+              className="relative inline-flex items-center justify-center rounded-md p-2 text-[var(--text-muted)] hover:bg-[var(--background-100)] hover:text-[var(--text-secondary)] focus:outline-2 focus:-outline-offset-1 focus:outline-[var(--color-primary)]"
             >
               <span className="absolute -inset-0.5" />
               <span className="sr-only">Open menu</span>
@@ -117,7 +117,7 @@ export default function TailwindTopNav({
             <button
               type="button"
               onClick={onNotificationClick}
-              className="relative shrink-0 rounded-full p-1 text-gray-400 hover:text-gray-500 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600"
+              className="relative shrink-0 rounded-full p-1 text-[var(--text-muted)] hover:text-[var(--text-secondary)] focus:outline-2 focus:outline-offset-2 focus:outline-[var(--color-primary)]"
             >
               <span className="absolute -inset-1.5" />
               <span className="sr-only">View notifications</span>
@@ -126,26 +126,26 @@ export default function TailwindTopNav({
 
             {user && (
               <DropdownMenu>
-                <DropdownMenuTrigger className="relative ml-4 flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                <DropdownMenuTrigger className="relative ml-4 flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]">
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">Open user menu</span>
                   {user.imageUrl ? (
                     <img
                       alt=""
                       src={user.imageUrl}
-                      className="h-8 w-8 rounded-full bg-gray-100 outline -outline-offset-1 outline-black/5"
+                      className="h-8 w-8 rounded-full bg-[var(--background-100)] outline -outline-offset-1 outline-black/5"
                     />
                   ) : (
-                    <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-medium text-sm">
+                    <div className="h-8 w-8 rounded-full bg-[var(--primary-100)] flex items-center justify-center text-[var(--primary-600)] font-medium text-sm">
                       {user.name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase() || 'U'}
                     </div>
                   )}
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent align="end" className="w-48">
-                  <div className="px-4 py-2 border-b border-gray-100">
-                    <p className="text-sm font-medium text-gray-900 truncate">{user.name}</p>
-                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                <DropdownMenuContent align="end" className="w-48 bg-[var(--color-card)] border-[var(--color-border)]">
+                  <div className="px-4 py-2 border-b border-[var(--color-border)]">
+                    <p className="text-sm font-medium text-[var(--text-primary)] truncate">{user.name}</p>
+                    <p className="text-xs text-[var(--text-muted)] truncate">{user.email}</p>
                   </div>
                   {userNavigation.map((item) => (
                     <DropdownMenuItem key={item.name} asChild>
@@ -157,7 +157,7 @@ export default function TailwindTopNav({
                             item.onClick();
                           }
                         }}
-                        className="block px-4 py-2 text-sm text-gray-700"
+                        className="block px-4 py-2 text-sm text-[var(--text-secondary)]"
                       >
                         {item.name}
                       </a>
@@ -176,7 +176,7 @@ export default function TailwindTopNav({
               onClick={item.onClick}
               aria-current={item.current ? 'page' : undefined}
               className={classNames(
-                item.current ? 'bg-gray-100 text-gray-900' : 'text-gray-900 hover:bg-gray-50',
+                item.current ? 'bg-[var(--background-100)] text-[var(--text-primary)]' : 'text-[var(--text-primary)] hover:bg-[var(--background-50)]',
                 'inline-flex items-center rounded-md px-3 py-2 text-sm font-medium',
               )}
             >

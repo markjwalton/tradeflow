@@ -50,18 +50,18 @@ export default function TailwindDrawer({
   if (pushContent && (side === 'top' || side === 'bottom')) {
     return (
       <div 
-        className={`bg-white shadow-xl transition-all duration-500 ease-in-out overflow-hidden ${
+        className={`bg-[var(--color-card)] shadow-xl transition-all duration-500 ease-in-out overflow-hidden ${
           open ? maxHeightClasses[maxHeight] : 'max-h-0'
         }`}
       >
         <div className="px-4 py-4 sm:px-6">
           <div className="flex items-start justify-between">
-            <h3 className="text-base font-semibold text-gray-900">{title}</h3>
+            <h3 className="text-base font-semibold text-[var(--text-primary)]">{title}</h3>
             <div className="ml-3 flex h-7 items-center">
               <button
                 type="button"
                 onClick={onClose}
-                className="relative rounded-md text-gray-400 hover:text-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="relative rounded-md text-[var(--text-muted)] hover:text-[var(--text-secondary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
               >
                 <span className="absolute -inset-2.5" />
                 <span className="sr-only">Close panel</span>
@@ -89,15 +89,15 @@ export default function TailwindDrawer({
               data-token-applier-ui
               className={`pointer-events-auto ${isHorizontal ? `w-screen ${maxWidthClasses[maxWidth]}` : `w-full ${maxHeightClasses[maxHeight]}`} transform transition duration-500 ease-in-out ${transitionClasses[side]} sm:duration-700`}
             >
-              <div data-token-applier-ui className={`relative flex ${isHorizontal ? 'h-full flex-col' : 'w-full flex-row'} overflow-y-auto bg-white ${isHorizontal ? 'py-6' : 'px-6'} shadow-xl`}>
+              <div data-token-applier-ui className={`relative flex ${isHorizontal ? 'h-full flex-col' : 'w-full flex-row'} overflow-y-auto bg-[var(--color-card)] ${isHorizontal ? 'py-6' : 'px-6'} shadow-xl`}>
                 <div className="px-4 sm:px-6">
                   <div className="flex items-start justify-between">
-                    <DialogTitle className="text-base font-semibold text-gray-900">{title}</DialogTitle>
+                    <DialogTitle className="text-base font-semibold text-[var(--text-primary)]">{title}</DialogTitle>
                     <div className="ml-3 flex h-7 items-center">
                       <button
                         type="button"
                         onClick={onClose}
-                        className="relative rounded-md text-gray-400 hover:text-gray-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        className="relative rounded-md text-[var(--text-muted)] hover:text-[var(--text-secondary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
                       >
                         <span className="absolute -inset-2.5" />
                         <span className="sr-only">Close panel</span>
