@@ -39,6 +39,9 @@ import { createPageUrl } from "@/utils";
 import ThemeCreatorDialog from "@/components/design-system/ThemeCreatorDialog";
 import { PageHeader } from "@/components/sturij";
 
+// IMPORTANT: Update this to match your actual Tailwind CSS version from package.json
+const TAILWIND_VERSION = "3.4.17";
+
 export default function DesignSystemManager() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("overview");
@@ -83,7 +86,7 @@ export default function DesignSystemManager() {
       return base44.entities.DesignSystemPackage.create({
         ...data,
         css_content: cssContent,
-        tailwind_version: "3.4.0",
+        tailwind_version: TAILWIND_VERSION,
         base44_compatible: true,
         changelog: [{
           version: data.version,
@@ -132,7 +135,7 @@ CURRENT PACKAGES: ${packages.length}
 - Customer themes: ${packages.filter(p => p.package_type === "customer_theme").length}
 
 TAILWIND CSS:
-- Current version in use: 3.4.0
+- Current version in use: ${TAILWIND_VERSION}
 - Latest stable: Check and recommend if update needed
 
 ANALYSIS NEEDED:
