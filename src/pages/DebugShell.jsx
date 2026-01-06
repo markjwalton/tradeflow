@@ -268,6 +268,82 @@ Document Classes: ${document.documentElement.className}
               </pre>
             </CardContent>
           </Card>
+
+          {/* Stylesheets Loaded */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Loaded Stylesheets</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2 text-xs">
+                {Array.from(document.styleSheets).map((sheet, i) => (
+                  <div key={i} className="p-2 bg-gray-50 rounded border">
+                    <p><strong>#{i}:</strong> {sheet.href || '(inline/embedded)'}</p>
+                    <p className="text-gray-500">Rules: {(() => { try { return sheet.cssRules?.length || 0; } catch { return 'CORS blocked'; } })()}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Raw CSS Check */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Raw :root CSS Check</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <p className="text-sm">Checking if :root has any custom properties defined:</p>
+                <pre className="text-xs bg-gray-100 p-4 rounded overflow-auto max-h-48">
+                  {(() => {
+                    const root = document.documentElement;
+                    const style = getComputedStyle(root);
+                    // Try to get ALL custom properties
+                    const allProps = [];
+                    for (let i = 0; i < style.length; i++) {
+                      const prop = style[i];
+                      if (prop.startsWith('--')) {
+                        allProps.push(`${prop}: ${style.getPropertyValue(prop).slice(0, 50)}`);
+                      }
+                    }
+                    return allProps.length > 0 
+                      ? `Found ${allProps.length} CSS vars:\n${allProps.slice(0, 20).join('\n')}${allProps.length > 20 ? '\n... and more' : ''}`
+                      : 'NO CSS VARIABLES FOUND ON :root';
+                  })()}
+                </pre>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Direct Style Test */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Direct Tailwind Class Test</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm">These use Tailwind classes directly (not CSS vars):</p>
+              <div className="grid grid-cols-3 gap-2">
+                <div className="bg-primary text-primary-foreground p-3 rounded text-center text-sm">
+                  bg-primary
+                </div>
+                <div className="bg-secondary text-secondary-foreground p-3 rounded text-center text-sm">
+                  bg-secondary
+                </div>
+                <div className="bg-muted text-muted-foreground p-3 rounded text-center text-sm">
+                  bg-muted
+                </div>
+                <div className="bg-card border p-3 rounded text-center text-sm">
+                  bg-card
+                </div>
+                <div className="bg-destructive text-destructive-foreground p-3 rounded text-center text-sm">
+                  bg-destructive
+                </div>
+                <div className="bg-accent text-accent-foreground p-3 rounded text-center text-sm">
+                  bg-accent
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </>
       )}
     </div>
