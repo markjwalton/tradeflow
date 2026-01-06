@@ -59,12 +59,12 @@ export default function CRMCustomers() {
 
   const getTypeBadgeColor = (type) => {
     const colors = {
-      Retail: 'bg-blue-100 text-blue-800',
-      Trade: 'bg-green-100 text-green-800',
-      Commercial: 'bg-purple-100 text-purple-800',
-      Ecommerce: 'bg-orange-100 text-orange-800',
+      Retail: 'bg-[var(--midnight-100)] text-[var(--midnight-700)]',
+      Trade: 'bg-[var(--primary-100)] text-[var(--primary-700)]',
+      Commercial: 'bg-[var(--accent-100)] text-[var(--accent-700)]',
+      Ecommerce: 'bg-[var(--secondary-100)] text-[var(--secondary-700)]',
     };
-    return colors[type] || 'bg-gray-100 text-gray-800';
+    return colors[type] || 'bg-[var(--charcoal-100)] text-[var(--charcoal-700)]';
   };
 
   if (isLoading || optionsLoading) {
