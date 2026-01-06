@@ -210,7 +210,9 @@ export default function SiteSettings() {
   }, []);
 
   useEffect(() => {
-    setHasChanges(JSON.stringify(settings) !== JSON.stringify(originalSettings));
+    if (settings && originalSettings) {
+      setHasChanges(JSON.stringify(settings) !== JSON.stringify(originalSettings));
+    }
   }, [settings, originalSettings]);
 
   const handleCancel = () => {
