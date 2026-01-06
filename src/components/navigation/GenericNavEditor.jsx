@@ -233,16 +233,21 @@ export default function GenericNavEditor({
           }
         },
         onSuccess: (_, newItems) => {
-          queryClient.invalidateQueries({ queryKey: ["navConfig", effectiveConfigType] });
+          // Invalidate ALL navigation queries
+          queryClient.invalidateQueries({ queryKey: ["navConfig"] });
           setOriginalItems(JSON.parse(JSON.stringify(newItems)));
           setHasUnsavedChanges(false);
           
           // Clear layout cache so navigation refreshes immediately
           sessionStorage.removeItem('nav_config_cache');
-          sessionStorage.removeItem(LAYOUT_CACHE_KEY);
-          window.dispatchEvent(new Event('navigation-updated'));
+          sessionStorage.removeItem('layout_init_cache');
           
-          toast.success("Navigation saved");
+          toast.success("Navigation saved - refreshing...");
+          
+          // Force reload after a brief delay
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
         },
       });
 
