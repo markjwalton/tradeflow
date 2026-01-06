@@ -237,98 +237,137 @@ export default function Layout({ children, currentPageName }) {
 
     const checkAccess = async () => {
       try {
-        let loadedNavConfig = null;
-        let loadedNavItems = [];
+        // OPTIMIZATION: Fetch user first - we need it for everything
+        let user = null;
         try {
-          const navConfigs = await base44.entities.NavigationConfig.filter({ config_type: "admin_console" });
-          if (navConfigs.length > 0) {
-            loadedNavConfig = navConfigs[0];
-            setNavConfig(loadedNavConfig);
-            
-            // Use items from NavigationConfig - preserve ALL database fields including IDs
-            if (loadedNavConfig.items?.length > 0) {
-              loadedNavItems = loadedNavConfig.items
-                .filter(item => item.is_visible !== false) // Only include visible items
-                .map((item) => ({
-                  // CRITICAL: Use database ID directly - never generate new IDs
-                  id: item.id || item._id,
-                  _id: item.id || item._id, // For backward compatibility
-                  
-                  // Core navigation fields
-                  name: item.name,
-                  slug: item.slug,
-                  item_type: item.item_type,
-                  page_url: item.slug,
-                  
-                  // Icon configuration
-                  icon: item.icon,
-                  icon_size: item.icon_size,
-                  icon_stroke_width: item.icon_stroke_width,
-                  
-                  // Hierarchy and ordering
-                  order: item.order,
-                  parent_id: item.parent_id, // References database IDs
-                  
-                  // Display and behavior
-                  is_visible: item.is_visible,
-                  default_collapsed: item.default_collapsed,
-                  tooltip_text: item.tooltip_text,
-                }));
+          user = await base44.auth.me();
+        } catch (e) {
+          // Not logged in - continue with public page check
+        }
 
-              setNavItems(loadedNavItems);
+        // Apply user settings immediately if available (no extra API call)
+        if (user) {
+          setCurrentUser(user);
+          setIsGlobalAdmin(user.is_global_admin === true);
+          
+          // Apply site settings from user object (already fetched)
+          if (user.site_settings) {
+            setSiteSettings(user.site_settings);
+            if (user.site_settings.darkMode) {
+              document.documentElement.classList.add('dark');
             }
           }
-        } catch (e) {
-          console.error("Nav config error:", e);
+          
+          // Apply theme CSS if exists (already in user object)
+          if (user.active_theme?.css_variables) {
+            const styleId = 'active-theme-css';
+            let styleEl = document.getElementById(styleId);
+            if (!styleEl) {
+              styleEl = document.createElement('style');
+              styleEl.id = styleId;
+              document.head.appendChild(styleEl);
+            }
+            styleEl.textContent = user.active_theme.css_variables;
+          }
+        }
+
+        // OPTIMIZATION: Only fetch nav config once, cache in session
+        let loadedNavConfig = null;
+        let loadedNavItems = [];
+        
+        const cachedNavConfig = sessionStorage.getItem('nav_config_cache');
+        if (cachedNavConfig && skipHeavyInit) {
+          try {
+            const parsed = JSON.parse(cachedNavConfig);
+            loadedNavConfig = parsed.config;
+            loadedNavItems = parsed.items;
+            setNavConfig(loadedNavConfig);
+            setNavItems(loadedNavItems);
+          } catch (e) {
+            sessionStorage.removeItem('nav_config_cache');
+          }
         }
         
-        // Get public pages from config or use defaults
+        if (!loadedNavConfig) {
+          try {
+            const navConfigs = await base44.entities.NavigationConfig.filter({ config_type: "admin_console" });
+            if (navConfigs.length > 0) {
+              loadedNavConfig = navConfigs[0];
+              setNavConfig(loadedNavConfig);
+              
+              if (loadedNavConfig.items?.length > 0) {
+                loadedNavItems = loadedNavConfig.items
+                  .filter(item => item.is_visible !== false)
+                  .map((item) => ({
+                    id: item.id || item._id,
+                    _id: item.id || item._id,
+                    name: item.name,
+                    slug: item.slug,
+                    item_type: item.item_type,
+                    page_url: item.slug,
+                    icon: item.icon,
+                    order: item.order,
+                    parent_id: item.parent_id,
+                    is_visible: item.is_visible,
+                    default_collapsed: item.default_collapsed,
+                  }));
+                setNavItems(loadedNavItems);
+                
+                // Cache for session
+                sessionStorage.setItem('nav_config_cache', JSON.stringify({
+                  config: loadedNavConfig,
+                  items: loadedNavItems
+                }));
+              }
+            }
+          } catch (e) {
+            console.error("Nav config error:", e);
+          }
+        }
+        
         const configPublicPages = loadedNavConfig?.public_pages || ["TenantAccess", "Setup", "Dashboard"];
         
-        // Skip access check for public pages
+        // Public pages - allow immediately
         if (configPublicPages.includes(currentPageName)) {
           setCheckingAccess(false);
           setHasAccess(true);
+          sessionStorage.setItem(LAYOUT_CACHE_KEY, Date.now().toString());
           return;
         }
     
-        const user = await base44.auth.me();
         if (!user) {
           setHasAccess(false);
           setAccessDeniedReason("not_logged_in");
           setCheckingAccess(false);
           return;
         }
-        setCurrentUser(user);
-        setIsGlobalAdmin(user.is_global_admin === true);
-        
-        // Sentry disabled
         
         const configStandalonePages = loadedNavConfig?.standalone_pages || [];
         const isAdminPage = loadedNavItems.some(item => item.page_url === currentPageName) || configStandalonePages.includes(currentPageName);
         
-        // Global admin pages: for is_global_admin OR tenant admins (with tenant context)
+        // Global admins always have access
+        if (user.is_global_admin === true) {
+          setHasAccess(true);
+          setCheckingAccess(false);
+          sessionStorage.setItem(LAYOUT_CACHE_KEY, Date.now().toString());
+          return;
+        }
+        
+        // Admin page access check
         if (isAdminPage) {
-          // Global admins always have access
-          if (user.is_global_admin === true) {
-            setHasAccess(true);
-            setCheckingAccess(false);
-            return;
-          }
-          
-          // Standalone pages - check if user has any tenant admin access
+          // Standalone pages - check tenant admin access
           if (configStandalonePages.includes(currentPageName)) {
             const userRolesAll = await base44.entities.TenantUserRole.filter({ user_id: user.id });
             const hasAnyAdminRole = userRolesAll.some(r => r.roles?.includes("admin"));
             if (hasAnyAdminRole) {
               setHasAccess(true);
-              sessionStorage.setItem('layout_access_checked', 'true');
               setCheckingAccess(false);
+              sessionStorage.setItem(LAYOUT_CACHE_KEY, Date.now().toString());
               return;
             }
           }
           
-          // Tenant admins can access NavigationManager with tenant context
+          // Tenant-specific NavigationManager access
           if (currentPageName === "NavigationManager" && tenantSlug) {
             const tenants = await base44.entities.Tenant.filter({ slug: tenantSlug });
             if (tenants.length > 0) {
@@ -342,8 +381,8 @@ export default function Layout({ children, currentPageName }) {
                 setUserRoles(roles[0].roles);
                 setIsTenantAdmin(true);
                 setHasAccess(true);
-                sessionStorage.setItem('layout_access_checked', 'true');
                 setCheckingAccess(false);
+                sessionStorage.setItem(LAYOUT_CACHE_KEY, Date.now().toString());
                 return;
               }
             }
@@ -355,7 +394,7 @@ export default function Layout({ children, currentPageName }) {
           return;
         }
         
-        // Tenant pages: need tenant slug and access to that tenant
+        // Tenant pages
         if (isTenantPage) {
           if (!tenantSlug) {
             setHasAccess(false);
@@ -373,18 +412,6 @@ export default function Layout({ children, currentPageName }) {
           }
           
           const tenant = tenants[0];
-          
-          // Global admins have access to all tenants
-          if (user.is_global_admin === true) {
-            setCurrentTenant(tenant);
-            setUserRoles(["admin"]);
-            setIsTenantAdmin(true);
-            setHasAccess(true);
-            setCheckingAccess(false);
-            return;
-          }
-          
-          // Check tenant-specific access
           const roles = await base44.entities.TenantUserRole.filter({ 
             tenant_id: tenant.id, 
             user_id: user.id 
@@ -402,16 +429,8 @@ export default function Layout({ children, currentPageName }) {
           setUserRoles(userRoleList);
           setIsTenantAdmin(userRoleList.includes("admin"));
           setHasAccess(true);
-          sessionStorage.setItem('layout_access_checked', 'true');
           setCheckingAccess(false);
-          return;
-        }
-        
-        // Page not in any category - global admins still get access
-        if (user.is_global_admin === true) {
-          setHasAccess(true);
-          sessionStorage.setItem('layout_access_checked', 'true');
-          setCheckingAccess(false);
+          sessionStorage.setItem(LAYOUT_CACHE_KEY, Date.now().toString());
           return;
         }
 
@@ -428,11 +447,10 @@ export default function Layout({ children, currentPageName }) {
 
     checkAccess();
     
-    // Cleanup event listeners
     return () => {
       window.removeEventListener('site-settings-changed', handleSiteSettingsChange);
     };
-  }, []); // Run once on mount - currentPageName changes shouldn't re-run access check
+  }, []); // Run once on mount
 
   // Pages without layout wrapper (TenantAccess, Setup, ClientOnboardingPortal render without chrome)
   if (currentPageName === "TenantAccess" || currentPageName === "Setup" || currentPageName === "ClientOnboardingPortal") {
