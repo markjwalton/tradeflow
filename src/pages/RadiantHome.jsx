@@ -65,6 +65,8 @@ function FeatureSection() {
 }
 
 function BentoSection() {
+  const { getAssetUrl } = useWebsiteAssets('radiant');
+  
   return (
     <Container>
       <Subheading>Sales</Subheading>
@@ -78,7 +80,7 @@ function BentoSection() {
           title="Get perfect clarity"
           description="Radiant uses social engineering to build a detailed financial picture of your leads. Know their budget, compensation package, social security number, and more."
           graphic={
-            <div className="h-80 bg-[url(https://base44.app/api/apps/69274b9c077e61d7cfe78ec7/files/public/69274b9c077e61d7cfe78ec7/11c4e21a3_profile.png)] bg-[length:1000px_560px] bg-[position:left_-109px_top_-112px] bg-no-repeat" />
+            <div className="h-80 bg-no-repeat bg-[length:1000px_560px] bg-[position:left_-109px_top_-112px]" style={{ backgroundImage: `url(${getAssetUrl('/screenshots/profile.png')})` }} />
           }
           fade={['bottom']}
           className="max-lg:rounded-t-[2rem] lg:col-span-3 lg:rounded-tl-[2rem]"
@@ -88,7 +90,7 @@ function BentoSection() {
           title="Undercut your competitors"
           description="With our advanced data mining, you'll know which companies your leads are talking to and exactly how much they're being charged."
           graphic={
-            <div className="absolute inset-0 bg-[url(https://base44.app/api/apps/69274b9c077e61d7cfe78ec7/files/public/69274b9c077e61d7cfe78ec7/f24b64b22_competitors.png)] bg-[length:1100px_650px] bg-[position:left_-38px_top_-73px] bg-no-repeat" />
+            <div className="absolute inset-0 bg-no-repeat bg-[length:1100px_650px] bg-[position:left_-38px_top_-73px]" style={{ backgroundImage: `url(${getAssetUrl('/screenshots/competitors.png')})` }} />
           }
           fade={['bottom']}
           className="lg:col-span-3 lg:rounded-tr-[2rem]"
@@ -136,6 +138,8 @@ function BentoSection() {
 }
 
 function DarkBentoSection() {
+  const { getAssetUrl } = useWebsiteAssets('radiant');
+  
   return (
     <div className="mx-2 mt-2 rounded-[2rem] bg-gray-900 py-32">
       <Container>
@@ -151,7 +155,7 @@ function DarkBentoSection() {
             title="Sell at the speed of light"
             description="Our RadiantAI chat assistants analyze the sentiment of your conversations in real time, ensuring you're always one step ahead."
             graphic={
-              <div className="h-80 bg-[url(https://base44.app/api/apps/69274b9c077e61d7cfe78ec7/files/public/69274b9c077e61d7cfe78ec7/d82bb1ed5_networking.png)] bg-[length:851px_344px] bg-no-repeat" />
+              <div className="h-80 bg-no-repeat bg-[length:851px_344px]" style={{ backgroundImage: `url(${getAssetUrl('/screenshots/networking.png')})` }} />
             }
             fade={['top']}
             className="max-lg:rounded-t-[2rem] lg:col-span-4 lg:rounded-tl-[2rem]"
@@ -194,7 +198,7 @@ function DarkBentoSection() {
             title="Become a thought leader"
             description="RadiantAI automatically writes LinkedIn posts that relate current events to B2B sales, helping you build a reputation as a thought leader."
             graphic={
-              <div className="h-80 bg-[url(https://base44.app/api/apps/69274b9c077e61d7cfe78ec7/files/public/69274b9c077e61d7cfe78ec7/c830072d7_engagement.png)] bg-[length:851px_344px] bg-no-repeat" />
+              <div className="h-80 bg-no-repeat bg-[length:851px_344px]" style={{ backgroundImage: `url(${getAssetUrl('/screenshots/engagement.png')})` }} />
             }
             fade={['top']}
             className="max-lg:rounded-b-[2rem] lg:col-span-4 lg:rounded-br-[2rem]"
