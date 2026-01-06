@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronRightIcon, ChevronDownIcon } from '@heroicons/react/20/solid';
+import { ChevronRight, ChevronDown } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
@@ -55,9 +55,9 @@ export default function TailwindNavigation({
             <>
               {item.name}
               {isExpanded ? (
-                <ChevronDownIcon aria-hidden="true" className="ml-auto size-5 shrink-0 text-gray-400" />
+                <ChevronDown aria-hidden="true" className="ml-auto h-5 w-5 shrink-0 text-gray-400" />
               ) : (
-                <ChevronRightIcon aria-hidden="true" className="ml-auto size-5 shrink-0 text-gray-400" />
+                <ChevronRight aria-hidden="true" className="ml-auto h-5 w-5 shrink-0 text-gray-400" />
               )}
             </>
           )}
