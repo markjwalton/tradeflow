@@ -148,6 +148,7 @@ import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import WebsiteThemeManager from './pages/WebsiteThemeManager';
 import CRMProjectForm from './pages/CRMProjectForm';
 import CRMDashboard from './pages/CRMDashboard';
+import CRMInteractions from './pages/CRMInteractions';
 import __Layout from './Layout.jsx';
 
 
@@ -302,6 +303,7 @@ export const PAGES = {
     "WebsiteThemeManager": WebsiteThemeManager,
     "CRMProjectForm": CRMProjectForm,
     "CRMDashboard": CRMDashboard,
+    "CRMInteractions": CRMInteractions,
 }
 
 export const pagesConfig = {
