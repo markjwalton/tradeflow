@@ -146,6 +146,8 @@ import UXShowcase from './pages/UXShowcase';
 import ViolationReport from './pages/ViolationReport';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import WebsiteThemeManager from './pages/WebsiteThemeManager';
+import CRMProjectForm from './pages/CRMProjectForm';
+import CRMDashboard from './pages/CRMDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -298,6 +300,8 @@ export const PAGES = {
     "ViolationReport": ViolationReport,
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
     "WebsiteThemeManager": WebsiteThemeManager,
+    "CRMProjectForm": CRMProjectForm,
+    "CRMDashboard": CRMDashboard,
 }
 
 export const pagesConfig = {
