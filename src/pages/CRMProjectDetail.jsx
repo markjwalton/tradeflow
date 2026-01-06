@@ -15,6 +15,7 @@ import { ArrowLeft, Edit, FolderOpen, User, MapPin, MessageSquare, Save, Home, P
 import InteractionTimeline from '../components/crm/InteractionTimeline';
 import { toast } from 'sonner';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
+import { CRMAppShell } from '../components/crm/CRMAppShell';
 
 export default function CRMProjectDetail() {
   const navigate = useNavigate();
@@ -134,7 +135,7 @@ export default function CRMProjectDetail() {
   const address = projectAddress?.[0];
 
   return (
-    <div className="p-6">
+    <CRMAppShell currentPage="CRMProjects" breadcrumbs={[{ label: 'Projects', href: createPageUrl('CRMProjects') }, { label: `${customer?.first_name || ''} ${customer?.surname || ''} Project` }]}>
       <Button
         variant="ghost"
         onClick={() => navigate(createPageUrl('CRMProjects'))}
@@ -513,6 +514,6 @@ export default function CRMProjectDetail() {
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
+    </CRMAppShell>
   );
 }

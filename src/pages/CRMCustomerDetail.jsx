@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowLeft, Edit, User, MapPin, Phone, Mail, MessageSquare, FileText, FolderOpen, Plus } from 'lucide-react';
 import InteractionTimeline from '../components/crm/InteractionTimeline';
+import { CRMAppShell } from '../components/crm/CRMAppShell';
 
 export default function CRMCustomerDetail() {
   const navigate = useNavigate();
@@ -76,7 +77,7 @@ export default function CRMCustomerDetail() {
   const addressData = address?.[0];
 
   return (
-    <div className="p-6">
+    <CRMAppShell currentPage="CRMCustomers" breadcrumbs={[{ label: 'Customers', href: createPageUrl('CRMCustomers') }, { label: `${customer.first_name} ${customer.surname}` }]}>
       <Button
         variant="ghost"
         onClick={() => navigate(createPageUrl('CRMCustomers'))}
@@ -273,6 +274,6 @@ export default function CRMCustomerDetail() {
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
+    </CRMAppShell>
   );
 }
