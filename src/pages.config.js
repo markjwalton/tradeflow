@@ -92,8 +92,8 @@ import ProjectsOverview from './pages/ProjectsOverview';
 import PromptSettings from './pages/PromptSettings';
 import RadiantHome from './pages/RadiantHome';
 import RoadmapJournal from './pages/RoadmapJournal';
-import RuleBook from './pages/RuleBook';
 import RoadmapManager from './pages/RoadmapManager';
+import RuleBook from './pages/RuleBook';
 import SchemaVisualEditor from './pages/SchemaVisualEditor';
 import SecurityDashboard from './pages/SecurityDashboard';
 import SecurityMonitor from './pages/SecurityMonitor';
@@ -121,7 +121,6 @@ import TestDataManager from './pages/TestDataManager';
 import TestingHub from './pages/TestingHub';
 import TransmitHome from './pages/TransmitHome';
 import TypographyShowcase from './pages/TypographyShowcase';
-import UILibrary from './pages/UILibrary';
 import UXShowcase from './pages/UXShowcase';
 import ViolationReport from './pages/ViolationReport';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
@@ -224,8 +223,8 @@ export const PAGES = {
     "PromptSettings": PromptSettings,
     "RadiantHome": RadiantHome,
     "RoadmapJournal": RoadmapJournal,
-    "RuleBook": RuleBook,
     "RoadmapManager": RoadmapManager,
+    "RuleBook": RuleBook,
     "SchemaVisualEditor": SchemaVisualEditor,
     "SecurityDashboard": SecurityDashboard,
     "SecurityMonitor": SecurityMonitor,
@@ -253,7 +252,6 @@ export const PAGES = {
     "TestingHub": TestingHub,
     "TransmitHome": TransmitHome,
     "TypographyShowcase": TypographyShowcase,
-    "UILibrary": UILibrary,
     "UXShowcase": UXShowcase,
     "ViolationReport": ViolationReport,
     "WebsiteEnquiryForm": WebsiteEnquiryForm,

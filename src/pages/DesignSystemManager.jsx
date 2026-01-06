@@ -519,14 +519,14 @@ For each recommendation, provide:
                   </Card>
                 </Link>
 
-                <Link to={createPageUrl("UILibrary")}>
+                <Link to={createPageUrl("UXShowcase")}>
                   <Card className="border-border hover:shadow-md transition-shadow cursor-pointer h-full">
                     <CardContent className="pt-6">
                       <Boxes className="h-10 w-10 text-success mb-3" />
-                      <h3 className="font-heading font-medium text-foreground mb-2">UI Library</h3>
-                      <p className="text-sm text-muted-foreground mb-3">Browse all UI components and showcases</p>
+                      <h3 className="font-heading font-medium text-foreground mb-2">UI Library & Styles Inspector</h3>
+                      <p className="text-sm text-muted-foreground mb-3">Browse components, UX patterns, and inspect computed styles</p>
                       <div className="flex items-center text-primary text-sm font-medium">
-                        View Tool <ArrowRight className="h-4 w-4 ml-1" />
+                        View Showcase <ArrowRight className="h-4 w-4 ml-1" />
                       </div>
                     </CardContent>
                   </Card>
