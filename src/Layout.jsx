@@ -191,16 +191,6 @@ const LayoutContent = React.memo(function LayoutContent({ children, currentPageN
 const LAYOUT_CACHE_KEY = 'layout_init_cache';
 const LAYOUT_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
-// Load Adobe Fonts once at module level
-const FONTS_LOADED = { current: false };
-if (!FONTS_LOADED.current && typeof document !== 'undefined') {
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = 'https://use.typekit.net/iwm1gcu.css';
-  document.head.appendChild(link);
-  FONTS_LOADED.current = true;
-}
-
 export default function Layout({ children, currentPageName }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
