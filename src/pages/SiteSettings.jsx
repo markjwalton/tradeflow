@@ -282,7 +282,7 @@ export default function SiteSettings() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--color-${settings.backgroundColor})` }}
+                  style={getColorStyle(settings.backgroundColor)}
                 />
                 <Select
                   value={settings.backgroundColor}
@@ -297,7 +297,7 @@ export default function SiteSettings() {
                         <div className="flex items-center gap-2">
                           <div
                             className="w-4 h-4 rounded border"
-                            style={{ backgroundColor: `var(--color-${color.value})` }}
+                            style={{ backgroundColor: color.hex }}
                           />
                           {color.label}
                         </div>
@@ -313,7 +313,7 @@ export default function SiteSettings() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--color-${settings.navbarBackground})` }}
+                  style={getColorStyle(settings.navbarBackground)}
                 />
                 <Select
                   value={settings.navbarBackground}
@@ -328,7 +328,7 @@ export default function SiteSettings() {
                         <div className="flex items-center gap-2">
                           <div
                             className="w-4 h-4 rounded border"
-                            style={{ backgroundColor: `var(--color-${color.value})` }}
+                            style={{ backgroundColor: color.hex }}
                           />
                           {color.label}
                         </div>
@@ -344,7 +344,7 @@ export default function SiteSettings() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--color-${settings.headerBackground})` }}
+                  style={getColorStyle(settings.headerBackground)}
                 />
                 <Select
                   value={settings.headerBackground}
@@ -359,7 +359,7 @@ export default function SiteSettings() {
                         <div className="flex items-center gap-2">
                           <div
                             className="w-4 h-4 rounded border"
-                            style={{ backgroundColor: `var(--color-${color.value})` }}
+                            style={{ backgroundColor: color.hex }}
                           />
                           {color.label}
                         </div>
@@ -375,7 +375,7 @@ export default function SiteSettings() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--color-${settings.panelBackground})` }}
+                  style={getColorStyle(settings.panelBackground)}
                 />
                 <Select
                   value={settings.panelBackground}
@@ -390,7 +390,7 @@ export default function SiteSettings() {
                         <div className="flex items-center gap-2">
                           <div
                             className="w-4 h-4 rounded border"
-                            style={{ backgroundColor: `var(--color-${color.value})` }}
+                            style={{ backgroundColor: color.hex }}
                           />
                           {color.label}
                         </div>
@@ -406,7 +406,7 @@ export default function SiteSettings() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--color-${settings.footerBackground})` }}
+                  style={getColorStyle(settings.footerBackground)}
                 />
                 <Select
                   value={settings.footerBackground}
@@ -421,7 +421,7 @@ export default function SiteSettings() {
                         <div className="flex items-center gap-2">
                           <div
                             className="w-4 h-4 rounded border"
-                            style={{ backgroundColor: `var(--color-${color.value})` }}
+                            style={{ backgroundColor: color.hex }}
                           />
                           {color.label}
                         </div>
@@ -437,7 +437,7 @@ export default function SiteSettings() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded border-2 flex-shrink-0"
-                  style={{ backgroundColor: `var(--color-${settings.editorBackground})` }}
+                  style={getColorStyle(settings.editorBackground)}
                 />
                 <Select
                   value={settings.editorBackground}
@@ -452,7 +452,7 @@ export default function SiteSettings() {
                         <div className="flex items-center gap-2">
                           <div
                             className="w-4 h-4 rounded border"
-                            style={{ backgroundColor: `var(--color-${color.value})` }}
+                            style={{ backgroundColor: color.hex }}
                           />
                           {color.label}
                         </div>
