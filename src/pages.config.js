@@ -149,6 +149,7 @@ import UXShowcase from './pages/UXShowcase';
 import ViolationReport from './pages/ViolationReport';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import WebsiteThemeManager from './pages/WebsiteThemeManager';
+import DebugShell from './pages/DebugShell';
 import __Layout from './Layout.jsx';
 
 
@@ -304,6 +305,7 @@ export const PAGES = {
     "ViolationReport": ViolationReport,
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
     "WebsiteThemeManager": WebsiteThemeManager,
+    "DebugShell": DebugShell,
 }
 
 export const pagesConfig = {
