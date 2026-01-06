@@ -128,27 +128,8 @@ const blurOptions = [
 
 export default function SiteSettings() {
   const navigate = useNavigate();
-  const [settings, setSettings] = useState({
-    backgroundColor: "background-50",
-    navbarBackground: "sidebar",
-    headerBackground: "background",
-    panelBackground: "card",
-    footerBackground: "background",
-    editorBackground: "card",
-    overlayColor: "midnight-900",
-    overlayOpacity: 60,
-    overlayBlur: "md",
-    buttonSize: "md",
-    ghostButtonHoverColor: "muted",
-    selectedButtonColor: "primary",
-    iconOnlyParentHoverColor: "primary-100",
-    iconOnlyPageHoverColor: "muted",
-    maxWidth: "1400",
-    contentAlignment: "center",
-    backgroundImage: null,
-    backgroundSeason: "spring",
-    darkMode: false,
-  });
+  const [settings, setSettings] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [uiPreferences, setUiPreferences] = useState({
     showEditorBubble: true,
     showPageProperties: false,
