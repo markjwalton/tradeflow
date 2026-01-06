@@ -214,6 +214,146 @@ Deno.serve(async (req) => {
         }
         break;
 
+      case 'create_commit':
+        // Create a commit with multiple files
+        try {
+          const { files, commit_message, branch = 'main' } = body;
+          
+          if (!files || !Array.isArray(files) || files.length === 0) {
+            return Response.json({ error: 'files array required' }, { status: 400 });
+          }
+          if (!commit_message) {
+            return Response.json({ error: 'commit_message required' }, { status: 400 });
+          }
+
+          // 1. Get the latest commit SHA for the branch
+          const refResponse = await fetch(
+            `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/ref/heads/${branch}`,
+            { headers }
+          );
+          if (!refResponse.ok) {
+            const err = await refResponse.text();
+            return Response.json({ error: `Failed to get branch ref: ${err}` }, { status: 500 });
+          }
+          const refData = await refResponse.json();
+          const latestCommitSha = refData.object.sha;
+
+          // 2. Get the tree SHA from the latest commit
+          const commitResponse = await fetch(
+            `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/commits/${latestCommitSha}`,
+            { headers }
+          );
+          if (!commitResponse.ok) {
+            const err = await commitResponse.text();
+            return Response.json({ error: `Failed to get commit: ${err}` }, { status: 500 });
+          }
+          const commitData = await commitResponse.json();
+          const baseTreeSha = commitData.tree.sha;
+
+          // 3. Create blobs for each file
+          const treeItems = [];
+          for (const file of files) {
+            const blobResponse = await fetch(
+              `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/blobs`,
+              {
+                method: 'POST',
+                headers: { ...headers, 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  content: file.content,
+                  encoding: 'utf-8'
+                })
+              }
+            );
+            if (!blobResponse.ok) {
+              const err = await blobResponse.text();
+              return Response.json({ error: `Failed to create blob for ${file.path}: ${err}` }, { status: 500 });
+            }
+            const blobData = await blobResponse.json();
+            treeItems.push({
+              path: file.path,
+              mode: '100644',
+              type: 'blob',
+              sha: blobData.sha
+            });
+          }
+
+          // 4. Create a new tree
+          const treeResponse = await fetch(
+            `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/trees`,
+            {
+              method: 'POST',
+              headers: { ...headers, 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                base_tree: baseTreeSha,
+                tree: treeItems
+              })
+            }
+          );
+          if (!treeResponse.ok) {
+            const err = await treeResponse.text();
+            return Response.json({ error: `Failed to create tree: ${err}` }, { status: 500 });
+          }
+          const treeData = await treeResponse.json();
+
+          // 5. Create the commit
+          const newCommitResponse = await fetch(
+            `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/commits`,
+            {
+              method: 'POST',
+              headers: { ...headers, 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                message: commit_message,
+                tree: treeData.sha,
+                parents: [latestCommitSha]
+              })
+            }
+          );
+          if (!newCommitResponse.ok) {
+            const err = await newCommitResponse.text();
+            return Response.json({ error: `Failed to create commit: ${err}` }, { status: 500 });
+          }
+          const newCommitData = await newCommitResponse.json();
+
+          // 6. Update the branch reference
+          const updateRefResponse = await fetch(
+            `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/refs/heads/${branch}`,
+            {
+              method: 'PATCH',
+              headers: { ...headers, 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                sha: newCommitData.sha
+              })
+            }
+          );
+          if (!updateRefResponse.ok) {
+            const err = await updateRefResponse.text();
+            return Response.json({ error: `Failed to update ref: ${err}` }, { status: 500 });
+          }
+
+          // Store commit in database
+          await base44.asServiceRole.entities.GitHubCommit.create({
+            repo_name: REPO_NAME,
+            sha: newCommitData.sha,
+            message: commit_message,
+            author_name: newCommitData.author.name,
+            author_email: newCommitData.author.email,
+            commit_date: newCommitData.author.date,
+            html_url: newCommitData.html_url
+          });
+
+          return Response.json({ 
+            success: true,
+            commit: {
+              sha: newCommitData.sha,
+              message: commit_message,
+              html_url: `https://github.com/${REPO_OWNER}/${REPO_NAME}/commit/${newCommitData.sha}`,
+              files_committed: files.length
+            }
+          });
+        } catch (error) {
+          return Response.json({ error: `Commit failed: ${error.message}` }, { status: 500 });
+        }
+
       case 'scan_colors':
         // Scan repository for color occurrences
         try {
