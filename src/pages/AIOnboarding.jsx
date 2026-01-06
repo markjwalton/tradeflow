@@ -158,16 +158,16 @@ Respond naturally and ask ONE focused follow-up question at a time. Keep respons
 
       {/* Status Badge */}
       {currentSession && (
-        <Badge className="mb-4 capitalize">
+        <Badge className="mb-4 capitalize bg-[var(--primary-100)] text-[var(--primary-700)]">
           {currentSession.status.replace('_', ' ')}
         </Badge>
       )}
 
       {/* Chat Container */}
-      <Card className="rounded-xl mb-4" style={{ height: "500px", display: "flex", flexDirection: "column" }}>
+      <Card className="rounded-[var(--radius-xl)] mb-4 bg-[var(--color-card)] border border-[var(--color-border)]" style={{ height: "500px", display: "flex", flexDirection: "column" }}>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-primary" />
+          <CardTitle className="flex items-center gap-2 text-[var(--text-primary)]">
+            <Sparkles className="h-5 w-5 text-[var(--color-primary)]" />
             Discovery Session
           </CardTitle>
         </CardHeader>
@@ -177,7 +177,7 @@ Respond naturally and ask ONE focused follow-up question at a time. Keep respons
               <Button
                 onClick={() => createSessionMutation.mutate()}
                 disabled={createSessionMutation.isPending}
-                className="bg-primary hover:bg-primary/90"
+                className="bg-[var(--color-primary)] hover:bg-[var(--primary-600)] text-[var(--color-primary-foreground)]"
               >
                 {createSessionMutation.isPending ? (
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -194,22 +194,22 @@ Respond naturally and ask ONE focused follow-up question at a time. Keep respons
                 className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 {msg.role === "assistant" && (
-                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Bot className="h-4 w-4 text-primary" />
+                  <div className="h-8 w-8 rounded-[var(--radius-full)] bg-[var(--primary-100)] flex items-center justify-center flex-shrink-0">
+                    <Bot className="h-4 w-4 text-[var(--color-primary)]" />
                   </div>
                 )}
                 <div
-                  className={`max-w-[80%] rounded-xl p-4 ${
+                  className={`max-w-[80%] rounded-[var(--radius-xl)] p-4 ${
                     msg.role === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted"
+                      ? "bg-[var(--color-primary)] text-[var(--color-primary-foreground)]"
+                      : "bg-[var(--color-muted)]"
                   }`}
                 >
-                  <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                  <p className="text-[var(--text-sm)] whitespace-pre-wrap">{msg.content}</p>
                 </div>
                 {msg.role === "user" && (
-                  <div className="h-8 w-8 rounded-full bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                    <User className="h-4 w-4 text-secondary" />
+                  <div className="h-8 w-8 rounded-[var(--radius-full)] bg-[var(--secondary-100)] flex items-center justify-center flex-shrink-0">
+                    <User className="h-4 w-4 text-[var(--color-secondary)]" />
                   </div>
                 )}
               </div>
@@ -217,11 +217,11 @@ Respond naturally and ask ONE focused follow-up question at a time. Keep respons
           )}
           {sendMessageMutation.isPending && (
             <div className="flex gap-3 justify-start">
-              <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                <Bot className="h-4 w-4 text-primary" />
+              <div className="h-8 w-8 rounded-[var(--radius-full)] bg-[var(--primary-100)] flex items-center justify-center">
+                <Bot className="h-4 w-4 text-[var(--color-primary)]" />
               </div>
-              <div className="bg-muted rounded-xl p-4">
-                <Loader2 className="h-4 w-4 animate-spin" />
+              <div className="bg-[var(--color-muted)] rounded-[var(--radius-xl)] p-4">
+                <Loader2 className="h-4 w-4 animate-spin text-[var(--text-muted)]" />
               </div>
             </div>
           )}
@@ -240,7 +240,7 @@ Respond naturally and ask ONE focused follow-up question at a time. Keep respons
             }
           }}
           placeholder="Type your response or click the mic to speak..."
-          className="min-h-[80px] resize-none"
+          className="min-h-[80px] resize-none bg-[var(--color-input-background)] border-[var(--color-border)] text-[var(--text-body)] placeholder:text-[var(--text-subtle)]"
           disabled={!currentSessionId || sendMessageMutation.isPending}
         />
         <div className="flex flex-col gap-2">
@@ -249,15 +249,15 @@ Respond naturally and ask ONE focused follow-up question at a time. Keep respons
             size="icon"
             onClick={handleVoiceInput}
             disabled={!currentSessionId || sendMessageMutation.isPending || isRecording}
-            className="h-10 w-10"
+            className="h-10 w-10 border-[var(--color-border)] bg-[var(--color-card)]"
           >
-            <Mic className={`h-4 w-4 ${isRecording ? "text-destructive animate-pulse" : ""}`} />
+            <Mic className={`h-4 w-4 ${isRecording ? "text-[var(--color-destructive)] animate-pulse" : "text-[var(--text-muted)]"}`} />
           </Button>
           <Button
             size="icon"
             onClick={handleSendMessage}
             disabled={!currentSessionId || !userInput.trim() || sendMessageMutation.isPending}
-            className="h-10 w-10 bg-primary hover:bg-primary/90"
+            className="h-10 w-10 bg-[var(--color-primary)] hover:bg-[var(--primary-600)] text-[var(--color-primary-foreground)]"
           >
             <Send className="h-4 w-4" />
           </Button>
