@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Search, FolderOpen, Calendar, Plus, MapPin } from 'lucide-react';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
+import CRMPagination, { usePagination } from '../components/crm/CRMPagination';
 
 export default function CRMProjects() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -61,6 +62,8 @@ export default function CRMProjects() {
 
     return matchesSearch && matchesStatus;
   });
+
+  const pagination = usePagination(filteredProjects, 25);
 
   const getStatusBadgeColor = (status) => {
     const colors = {
@@ -159,7 +162,7 @@ export default function CRMProjects() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredProjects.map((project) => {
+                {pagination.paginatedItems.map((project) => {
                   const customer = customerMap[project.customer_id];
                   const totalRooms =
                     (project.bedrooms_qty || 0) +
@@ -229,6 +232,9 @@ export default function CRMProjects() {
                 })}
               </TableBody>
             </Table>
+            {filteredProjects.length > 10 && (
+              <CRMPagination {...pagination} />
+            )}
           )}
         </CardContent>
       </Card>

@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Plus, Search, Users, Phone, Mail, MapPin } from 'lucide-react';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
+import CRMPagination, { usePagination } from '../components/crm/CRMPagination';
 
 export default function CRMCustomers() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -53,6 +54,8 @@ export default function CRMCustomers() {
 
     return matchesSearch && matchesType;
   });
+
+  const pagination = usePagination(filteredCustomers, 25);
 
   const getTypeBadgeColor = (type) => {
     const colors = {
@@ -143,7 +146,7 @@ export default function CRMCustomers() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredCustomers.map((customer) => (
+                {pagination.paginatedItems.map((customer) => (
                   <TableRow key={customer.id}>
                     <TableCell className="font-mono text-sm">
                       {customer.customer_number}
@@ -190,6 +193,9 @@ export default function CRMCustomers() {
                 ))}
               </TableBody>
             </Table>
+            {filteredCustomers.length > 10 && (
+              <CRMPagination {...pagination} />
+            )}
           )}
         </CardContent>
       </Card>

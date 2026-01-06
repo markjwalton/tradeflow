@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Plus, Search, FileText, Calendar, Clock } from 'lucide-react';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
+import CRMPagination, { usePagination } from '../components/crm/CRMPagination';
 
 export default function CRMEnquiries() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -59,6 +60,8 @@ export default function CRMEnquiries() {
     if (a.status !== 'New' && b.status === 'New') return 1;
     return new Date(b.enquiry_date) - new Date(a.enquiry_date);
   });
+
+  const pagination = usePagination(sortedEnquiries, 25);
 
   // Calculate stats
   const stats = {
@@ -201,7 +204,7 @@ export default function CRMEnquiries() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {sortedEnquiries.map((enquiry) => {
+                {pagination.paginatedItems.map((enquiry) => {
                   const customer = customerMap[enquiry.customer_id];
                   return (
                     <TableRow key={enquiry.id}>
@@ -253,6 +256,9 @@ export default function CRMEnquiries() {
                 })}
               </TableBody>
             </Table>
+            {sortedEnquiries.length > 10 && (
+              <CRMPagination {...pagination} />
+            )}
           )}
         </CardContent>
       </Card>

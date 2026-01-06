@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Search, MessageSquare, Plus } from 'lucide-react';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
 import InteractionCard from '../components/crm/InteractionCard';
+import CRMPagination, { usePagination } from '../components/crm/CRMPagination';
 
 export default function CRMInteractions() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -50,6 +51,8 @@ export default function CRMInteractions() {
 
     return matchesSearch && matchesType;
   });
+
+  const pagination = usePagination(filteredInteractions, 25);
 
   if (isLoading || optionsLoading) {
     return (
@@ -118,21 +121,26 @@ export default function CRMInteractions() {
               </p>
             </div>
           ) : (
-            <div className="space-y-3">
-              {filteredInteractions.map((interaction) => {
-                const customer = customerMap[interaction.customer_id];
-                return (
-                  <InteractionCard
-                    key={interaction.id}
-                    interaction={interaction}
-                    showCustomer={true}
-                    customerName={customer ? `${customer.first_name} ${customer.surname}` : 'Unknown'}
-                    expanded={expandedId === interaction.id}
-                    onToggle={() => setExpandedId(expandedId === interaction.id ? null : interaction.id)}
-                  />
-                );
-              })}
-            </div>
+            <>
+              <div className="space-y-3">
+                {pagination.paginatedItems.map((interaction) => {
+                  const customer = customerMap[interaction.customer_id];
+                  return (
+                    <InteractionCard
+                      key={interaction.id}
+                      interaction={interaction}
+                      showCustomer={true}
+                      customerName={customer ? `${customer.first_name} ${customer.surname}` : 'Unknown'}
+                      expanded={expandedId === interaction.id}
+                      onToggle={() => setExpandedId(expandedId === interaction.id ? null : interaction.id)}
+                    />
+                  );
+                })}
+              </div>
+              {filteredInteractions.length > 10 && (
+                <CRMPagination {...pagination} />
+              )}
+            </>
           )}
         </CardContent>
       </Card>
