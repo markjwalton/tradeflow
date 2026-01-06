@@ -11,7 +11,8 @@ import {
   Calendar, Phone, Settings, LayoutDashboard
 } from 'lucide-react';
 import { format, isToday, isYesterday, differenceInDays } from 'date-fns';
-import { CRMPageHeader, CRMCard, CRMCardContent, CRMCardHeader } from '../components/crm/CRMUI';
+import { PageHeader } from '@/components/sturij';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 export default function CRMDashboard() {
   const { data: customers = [] } = useQuery({
