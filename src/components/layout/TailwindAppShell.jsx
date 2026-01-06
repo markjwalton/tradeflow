@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, createContext, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
@@ -6,7 +6,12 @@ import TailwindTopNav from '../sturij/TailwindTopNav';
 import TailwindNavigation from '../sturij/TailwindNavigation';
 import TailwindMobileDrawer from '../sturij/TailwindMobileDrawer';
 import TailwindFooter from '../sturij/TailwindFooter';
+import TailwindBreadcrumb from '../sturij/TailwindBreadcrumb';
 import { getIconByName } from '../navigation/NavIconMap';
+
+// Breadcrumb context for child components
+const BreadcrumbContext = createContext(null);
+export const useBreadcrumb = () => useContext(BreadcrumbContext);
 
 /**
  * TailwindAppShell - Unified application shell using Tailwind UI patterns
@@ -106,56 +111,82 @@ export function TailwindAppShell({
     imageUrl: user.avatar_url
   } : null;
 
+  // Build breadcrumb pages from current navigation path
+  const breadcrumbPages = useMemo(() => {
+    const findPath = (items, slug, path = []) => {
+      for (const item of items) {
+        if (item.slug === slug) {
+          return [...path, { name: item.name, href: item.href, current: true }];
+        }
+        if (item.children) {
+          const found = findPath(item.children, slug, [...path, { name: item.name, href: item.href }]);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+    return findPath(transformedNavigation, currentPageName) || [];
+  }, [transformedNavigation, currentPageName]);
+
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* Top Navigation */}
-      <TailwindTopNav
-        user={formattedUser}
-        userNavigation={userNavigation}
-        searchQuery={searchQuery}
-        searchResults={searchResults}
-        onSearch={setSearchQuery}
-        onMobileMenuClick={() => setMobileNavOpen(true)}
-        onSidebarToggle={handleSidebarToggle}
-        onNotificationClick={() => {}}
-      />
+    <BreadcrumbContext.Provider value={{ navItems, currentPageName }}>
+      <div className="min-h-screen flex flex-col bg-gray-50">
+        {/* Top Navigation */}
+        <TailwindTopNav
+          user={formattedUser}
+          userNavigation={userNavigation}
+          searchQuery={searchQuery}
+          searchResults={searchResults}
+          onSearch={setSearchQuery}
+          onMobileMenuClick={() => setMobileNavOpen(true)}
+          onSidebarToggle={handleSidebarToggle}
+          onNotificationClick={() => {}}
+        />
 
-      {/* Mobile Navigation Drawer */}
-      <TailwindMobileDrawer
-        open={mobileNavOpen}
-        onClose={() => setMobileNavOpen(false)}
-        navigation={transformedNavigation}
-        user={formattedUser}
-        onNavigate={handleNavigate}
-        onSettings={() => navigate(createPageUrl('SiteSettings'))}
-        onLogout={() => base44.auth.logout()}
-      />
-
-      {/* Main Content Area with Sidebar */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Desktop Sidebar */}
-        <TailwindNavigation
+        {/* Mobile Navigation Drawer */}
+        <TailwindMobileDrawer
+          open={mobileNavOpen}
+          onClose={() => setMobileNavOpen(false)}
           navigation={transformedNavigation}
-          navigationMode={sidebarMode}
+          user={formattedUser}
           onNavigate={handleNavigate}
-          onEditorToggle={onEditorToggle}
+          onSettings={() => navigate(createPageUrl('SiteSettings'))}
+          onLogout={() => base44.auth.logout()}
         />
 
-        {/* Page Content */}
-        <main className="flex-1 overflow-y-auto">
-          <div className="p-4 md:p-6 lg:p-8">
-            {children}
-          </div>
-        </main>
-      </div>
+        {/* Main Content Area with Sidebar */}
+        <div className="flex flex-1 overflow-hidden">
+          {/* Desktop Sidebar - fixed width */}
+          <TailwindNavigation
+            navigation={transformedNavigation}
+            navigationMode={sidebarMode}
+            onNavigate={handleNavigate}
+            onEditorToggle={onEditorToggle}
+          />
 
-      {/* Footer - hidden on mobile */}
-      <div className="hidden md:block">
-        <TailwindFooter 
-          copyrightText={`${new Date().getFullYear()} ${tenant?.name || 'Sturij'}. All rights reserved.`}
-        />
+          {/* Page Content - takes remaining space */}
+          <main className="flex-1 overflow-y-auto min-w-0">
+            {/* Breadcrumb */}
+            {breadcrumbPages.length > 0 && (
+              <div className="border-b border-gray-200 bg-white px-4 py-3">
+                <TailwindBreadcrumb pages={breadcrumbPages} />
+              </div>
+            )}
+            
+            <div className="p-4 md:p-6 lg:p-8">
+              {children}
+            </div>
+          </main>
+        </div>
+
+        {/* Footer - hidden on mobile */}
+        <div className="hidden md:block">
+          <TailwindFooter 
+            copyrightText={`${new Date().getFullYear()} ${tenant?.name || 'Sturij'}. All rights reserved.`}
+          />
+        </div>
       </div>
-    </div>
+    </BreadcrumbContext.Provider>
   );
 }
 
