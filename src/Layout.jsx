@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
-import "@/globals.css"; // Explicit globals.css import
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 // DISABLED: Prefetching was causing excessive network requests
