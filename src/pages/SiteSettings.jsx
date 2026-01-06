@@ -6,10 +6,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Save, X, Sparkles, Loader2, Image as ImageIcon, Moon, Palette, MessageSquare, Settings2 } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Save, X, Sparkles, Loader2, Image as ImageIcon, Moon, Palette, MessageSquare, Settings2, FileCode } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "@/components/sturij";
+import PageRegistryManager from "@/components/settings/PageRegistryManager";
 
 const overlayColorOptions = [
   { value: "none", label: "None" },
@@ -235,13 +237,26 @@ export default function SiteSettings() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto pb-8 -mt-6">
+    <div className="max-w-5xl mx-auto pb-8 -mt-6">
       <PageHeader 
         title="Site Settings"
         description="Configure global appearance settings for the application"
       />
 
-      <div className="space-y-6">
+      <Tabs defaultValue="appearance" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="appearance">Appearance</TabsTrigger>
+          <TabsTrigger value="pages" className="gap-2">
+            <FileCode className="h-4 w-4" />
+            Page Registry
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="pages">
+          <PageRegistryManager />
+        </TabsContent>
+
+        <TabsContent value="appearance" className="space-y-6">
         <Card>
           <CardHeader>
             <CardTitle>Background Settings</CardTitle>
@@ -928,7 +943,8 @@ export default function SiteSettings() {
             Save Settings
           </Button>
         </div>
-      </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
