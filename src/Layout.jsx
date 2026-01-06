@@ -21,12 +21,8 @@ import { TopEditorPanel } from "@/components/page-builder/TopEditorPanel";
 import { Palette } from "lucide-react";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { WebVitals } from "@/components/common/WebVitals";
-import { initializeSentry, setUserContext } from "@/components/common/sentryConfig";
-
-// Initialize Sentry once
-if (typeof window !== 'undefined') {
-  initializeSentry();
-}
+// Sentry disabled - no DSN configured
+// import { initializeSentry, setUserContext } from "@/components/common/sentryConfig";
 
 function LayoutContent({ children, currentPageName, currentUser, currentTenant, navItems, isFullscreenPage, publicPages, standalonePages, fullscreenPages, userRoles, isGlobalAdmin, isTenantAdmin, siteSettings }) {
   const { toggleEditMode } = useEditMode();
@@ -401,12 +397,7 @@ export default function Layout({ children, currentPageName }) {
         setCurrentUser(user);
         setIsGlobalAdmin(user.is_global_admin === true);
         
-        // Set Sentry user context
-        try {
-          setUserContext(user);
-        } catch (e) {
-          console.error('Failed to set Sentry context:', e);
-        }
+        // Sentry disabled
         
         const configStandalonePages = loadedNavConfig?.standalone_pages || [];
         const isAdminPage = loadedNavItems.some(item => item.page_url === currentPageName) || configStandalonePages.includes(currentPageName);
