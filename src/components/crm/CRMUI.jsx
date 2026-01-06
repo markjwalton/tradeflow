@@ -19,7 +19,7 @@ export function CRMPageHeader({ title, description, icon: Icon, actions }) {
           )}
           <div>
             <h1 
-              className="text-2xl font-display"
+              className="text-[var(--text-3xl)] font-[var(--font-family-display)] font-[var(--font-weight-light)] leading-[var(--leading-tight)] tracking-[var(--tracking-airy)]"
               style={{ color: 'var(--text-primary)' }}
             >
               {title}
