@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ArrowLeft, Save, MessageSquare } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
+import { CRMAppShell } from '../components/crm/CRMAppShell';
 
 export default function CRMInteractionForm() {
   const navigate = useNavigate();
@@ -122,7 +123,8 @@ export default function CRMInteractionForm() {
   const isDesignVisit = formData.interaction_type === 'Design Visit';
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
+    <CRMAppShell currentPage="CRMInteractions" breadcrumbs={[{ label: 'Interactions', href: createPageUrl('CRMInteractions') }, { label: isEditing ? 'Edit Interaction' : 'Log Interaction' }]}>
+      <div className="max-w-2xl mx-auto">
       <Button variant="ghost" onClick={navigateBack} className="mb-4">
         <ArrowLeft className="h-4 w-4 mr-2" />
         Back
@@ -294,6 +296,7 @@ export default function CRMInteractionForm() {
           </form>
         </CardContent>
       </Card>
-    </div>
+      </div>
+    </CRMAppShell>
   );
 }

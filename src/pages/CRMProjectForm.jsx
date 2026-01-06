@@ -15,6 +15,7 @@ import { ArrowLeft, Save, Loader2, Home, Bed, Bath, Sofa, ChefHat } from 'lucide
 import { toast } from 'sonner';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
 import PostcodeLookup from '../components/crm/PostcodeLookup';
+import { CRMAppShell } from '../components/crm/CRMAppShell';
 
 export default function CRMProjectForm() {
   const navigate = useNavigate();
@@ -206,7 +207,8 @@ export default function CRMProjectForm() {
   }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <CRMAppShell currentPage="CRMProjects" breadcrumbs={[{ label: 'Projects', href: createPageUrl('CRMProjects') }, { label: isEditing ? 'Edit Project' : 'New Project' }]}>
+      <div className="max-w-4xl mx-auto">
       <Button
         variant="ghost"
         onClick={() => navigate(-1)}
@@ -534,6 +536,7 @@ export default function CRMProjectForm() {
           </form>
         </CardContent>
       </Card>
-    </div>
+      </div>
+    </CRMAppShell>
   );
 }
