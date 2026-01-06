@@ -142,6 +142,10 @@ import CRMCustomerForm from './pages/CRMCustomerForm';
 import CRMCustomerDetail from './pages/CRMCustomerDetail';
 import CRMEnquiries from './pages/CRMEnquiries';
 import CRMEnquiryForm from './pages/CRMEnquiryForm';
+import CRMEnquiryDetail from './pages/CRMEnquiryDetail';
+import CRMProjects from './pages/CRMProjects';
+import CRMProjectDetail from './pages/CRMProjectDetail';
+import CRMInteractionForm from './pages/CRMInteractionForm';
 import __Layout from './Layout.jsx';
 
 
@@ -290,6 +294,10 @@ export const PAGES = {
     "CRMCustomerDetail": CRMCustomerDetail,
     "CRMEnquiries": CRMEnquiries,
     "CRMEnquiryForm": CRMEnquiryForm,
+    "CRMEnquiryDetail": CRMEnquiryDetail,
+    "CRMProjects": CRMProjects,
+    "CRMProjectDetail": CRMProjectDetail,
+    "CRMInteractionForm": CRMInteractionForm,
 }
 
 export const pagesConfig = {
