@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,14 +10,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowLeft, Edit, User, MapPin, Phone, Mail, MessageSquare, FileText, FolderOpen, Plus } from 'lucide-react';
 import InteractionTimeline from '../components/crm/InteractionTimeline';
 
+// Capture ID immediately before component mounts
+const getInitialCustomerId = () => {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('id');
+};
+
 export default function CRMCustomerDetail() {
   const navigate = useNavigate();
   
-  // Memoize customerId to prevent it from changing on re-renders
-  const customerId = useMemo(() => {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('id');
-  }, []);
+  // Use ref to capture ID on first render and never change it
+  const customerIdRef = useRef(getInitialCustomerId());
+  const customerId = customerIdRef.current;
 
   const { data: allCustomers = [], isLoading: customerLoading } = useQuery({
     queryKey: ['crmCustomers'],
