@@ -3,15 +3,15 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
   Users, FileText, FolderKanban, MessageSquare, 
   Plus, ArrowRight, Clock, TrendingUp,
-  Calendar, Phone, Settings
+  Calendar, Phone, Settings, LayoutDashboard
 } from 'lucide-react';
 import { format, isToday, isYesterday, differenceInDays } from 'date-fns';
+import { CRMPageWrapper, CRMPageHeader, CRMCard, CRMCardContent, CRMCardHeader } from '../components/crm/CRMPageWrapper';
 
 export default function CRMDashboard() {
   const { data: customers = [] } = useQuery({
@@ -67,88 +67,87 @@ export default function CRMDashboard() {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">CRM Dashboard</h1>
-          <p className="text-muted-foreground">Overview of your customer relationships</p>
-        </div>
-        <div className="flex gap-2">
+    <CRMPageWrapper>
+      <CRMPageHeader
+        title="CRM Dashboard"
+        description="Overview of your customer relationships"
+        icon={LayoutDashboard}
+        actions={
           <Link to={createPageUrl('CRMEnquiryForm')}>
             <Button>
               <Plus className="h-4 w-4 mr-2" />
               New Enquiry
             </Button>
           </Link>
-        </div>
-      </div>
+        }
+      />
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="pt-6">
+        <CRMCard>
+          <CRMCardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Total Customers</p>
-                <p className="text-3xl font-bold">{customers.length}</p>
+                <p className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>{customers.length}</p>
               </div>
               <Users className="h-8 w-8 text-muted-foreground" />
             </div>
-          </CardContent>
-        </Card>
+          </CRMCardContent>
+        </CRMCard>
 
-        <Card className="border-blue-200 bg-blue-50/50">
-          <CardContent className="pt-6">
+        <CRMCard className="border" style={{ borderColor: 'var(--primary-200)', backgroundColor: 'var(--primary-50)' }}>
+          <CRMCardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-blue-600">New Enquiries</p>
-                <p className="text-3xl font-bold text-blue-700">{newEnquiries}</p>
+                <p className="text-sm" style={{ color: 'var(--primary-600)' }}>New Enquiries</p>
+                <p className="text-3xl font-bold" style={{ color: 'var(--primary-700)' }}>{newEnquiries}</p>
               </div>
-              <FileText className="h-8 w-8 text-blue-400" />
+              <FileText className="h-8 w-8" style={{ color: 'var(--primary-400)' }} />
             </div>
-          </CardContent>
-        </Card>
+          </CRMCardContent>
+        </CRMCard>
 
-        <Card className="border-green-200 bg-green-50/50">
-          <CardContent className="pt-6">
+        <CRMCard className="border" style={{ borderColor: 'var(--secondary-200)', backgroundColor: 'var(--secondary-50)' }}>
+          <CRMCardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-green-600">Qualified</p>
-                <p className="text-3xl font-bold text-green-700">{qualifiedEnquiries}</p>
+                <p className="text-sm" style={{ color: 'var(--secondary-600)' }}>Qualified</p>
+                <p className="text-3xl font-bold" style={{ color: 'var(--secondary-700)' }}>{qualifiedEnquiries}</p>
               </div>
-              <TrendingUp className="h-8 w-8 text-green-400" />
+              <TrendingUp className="h-8 w-8" style={{ color: 'var(--secondary-400)' }} />
             </div>
-          </CardContent>
-        </Card>
+          </CRMCardContent>
+        </CRMCard>
 
-        <Card className="border-purple-200 bg-purple-50/50">
-          <CardContent className="pt-6">
+        <CRMCard className="border" style={{ borderColor: 'var(--accent-200)', backgroundColor: 'var(--accent-50)' }}>
+          <CRMCardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-purple-600">Active Projects</p>
-                <p className="text-3xl font-bold text-purple-700">{activeProjects}</p>
+                <p className="text-sm" style={{ color: 'var(--accent-600)' }}>Active Projects</p>
+                <p className="text-3xl font-bold" style={{ color: 'var(--accent-700)' }}>{activeProjects}</p>
               </div>
-              <FolderKanban className="h-8 w-8 text-purple-400" />
+              <FolderKanban className="h-8 w-8" style={{ color: 'var(--accent-400)' }} />
             </div>
-          </CardContent>
-        </Card>
+          </CRMCardContent>
+        </CRMCard>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Recent Enquiries */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
+        <CRMCard>
+          <CRMCardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle className="text-lg">Recent Enquiries</CardTitle>
-              <CardDescription>Latest customer enquiries</CardDescription>
+              <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>Recent Enquiries</h3>
+              <p className="text-sm text-muted-foreground">Latest customer enquiries</p>
             </div>
             <Link to={createPageUrl('CRMEnquiries')}>
               <Button variant="ghost" size="sm">
                 View All <ArrowRight className="h-4 w-4 ml-1" />
               </Button>
             </Link>
-          </CardHeader>
-          <CardContent>
+          </CRMCardHeader>
+          <CRMCardContent>
             {recentEnquiries.length === 0 ? (
               <p className="text-muted-foreground text-center py-8">No enquiries yet</p>
             ) : (
@@ -185,23 +184,23 @@ export default function CRMDashboard() {
                 })}
               </div>
             )}
-          </CardContent>
-        </Card>
+          </CRMCardContent>
+        </CRMCard>
 
         {/* Recent Activity */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
+        <CRMCard>
+          <CRMCardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle className="text-lg">Recent Activity</CardTitle>
-              <CardDescription>Latest interactions</CardDescription>
+              <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>Recent Activity</h3>
+              <p className="text-sm text-muted-foreground">Latest interactions</p>
             </div>
             <Link to={createPageUrl('CRMInteractions')}>
               <Button variant="ghost" size="sm">
                 View All <ArrowRight className="h-4 w-4 ml-1" />
               </Button>
             </Link>
-          </CardHeader>
-          <CardContent>
+          </CRMCardHeader>
+          <CRMCardContent>
             {interactions.length === 0 ? (
               <p className="text-muted-foreground text-center py-8">No interactions logged</p>
             ) : (
@@ -241,16 +240,16 @@ export default function CRMDashboard() {
                 })}
               </div>
             )}
-          </CardContent>
-        </Card>
+          </CRMCardContent>
+        </CRMCard>
       </div>
 
       {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Quick Actions</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <CRMCard>
+        <CRMCardHeader>
+          <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>Quick Actions</h3>
+        </CRMCardHeader>
+        <CRMCardContent>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             <Link to={createPageUrl('CRMCustomerForm')}>
               <Button variant="outline" className="w-full h-auto py-4 flex flex-col gap-2">
@@ -283,8 +282,8 @@ export default function CRMDashboard() {
               </Button>
             </Link>
           </div>
-        </CardContent>
-      </Card>
-    </div>
+        </CRMCardContent>
+      </CRMCard>
+    </CRMPageWrapper>
   );
 }
