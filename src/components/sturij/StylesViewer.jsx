@@ -10,22 +10,22 @@ export default function StylesViewer() {
   return (
     <div className="space-y-6" data-token-applier-ui>
       <div>
-        <h3 className="text-lg font-semibold mb-2 text-gray-900">Sturij Design Tokens</h3>
-        <p className="text-sm text-gray-600">Directly loaded from designTokens.js</p>
+        <h3 className="text-lg font-semibold mb-2 text-[var(--text-primary)]">Sturij Design Tokens</h3>
+        <p className="text-sm text-[var(--text-muted)]">Directly loaded from designTokens.js</p>
       </div>
 
       {Object.entries(colors).map(([paletteName, paletteObject]) => (
         <div key={paletteName}>
-          <h4 className="text-sm font-semibold mb-2 capitalize text-gray-900">{paletteName}</h4>
+          <h4 className="text-sm font-semibold mb-2 capitalize text-[var(--text-primary)]">{paletteName}</h4>
           <div className="grid grid-cols-5 gap-2">
             {Object.entries(paletteObject).map(([shadeName, colorValue]) => (
               <div key={shadeName} className="space-y-1">
                 <div 
-                  className="h-12 rounded border border-gray-300" 
+                  className="h-12 rounded border border-[var(--color-border)]" 
                   style={{ backgroundColor: colorValue || 'transparent' }}
                 />
-                <div className="text-xs text-gray-700 capitalize">{shadeName}</div>
-                <code className="text-[10px] text-gray-500 block truncate" title={colorValue}>
+                <div className="text-xs text-[var(--text-secondary)] capitalize">{shadeName}</div>
+                <code className="text-[10px] text-[var(--text-muted)] block truncate" title={colorValue}>
                   {colorValue || 'not found'}
                 </code>
                 {isActive && colorValue && (
