@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Plus, Trash2, GripVertical, Save, Settings } from 'lucide-react';
 import { toast } from 'sonner';
+import { CRMAppShell, CRMPageHeader } from '../components/crm/CRMAppShell';
 
 export default function CRMSettings() {
   const queryClient = useQueryClient();
@@ -74,16 +75,12 @@ export default function CRMSettings() {
   }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold flex items-center gap-2">
-          <Settings className="h-6 w-6" />
-          CRM Settings
-        </h1>
-        <p className="text-muted-foreground mt-1">
-          Manage dropdown options for your CRM system
-        </p>
-      </div>
+    <CRMAppShell currentPage="CRMSettings" breadcrumbs={[{ label: 'Settings' }]}>
+      <CRMPageHeader
+        title="CRM Settings"
+        description="Manage dropdown options for your CRM system"
+        icon={Settings}
+      />
 
       <Accordion type="single" collapsible className="space-y-4">
         {optionSets.map((set) => (
@@ -198,6 +195,6 @@ export default function CRMSettings() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </CRMAppShell>
   );
 }
