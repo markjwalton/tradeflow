@@ -120,7 +120,6 @@ import TenantSetup from './pages/TenantSetup';
 import TestDataManager from './pages/TestDataManager';
 import TestingHub from './pages/TestingHub';
 import TransmitHome from './pages/TransmitHome';
-import TypographyShowcase from './pages/TypographyShowcase';
 import UXShowcase from './pages/UXShowcase';
 import ViolationReport from './pages/ViolationReport';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
@@ -251,7 +250,6 @@ export const PAGES = {
     "TestDataManager": TestDataManager,
     "TestingHub": TestingHub,
     "TransmitHome": TransmitHome,
-    "TypographyShowcase": TypographyShowcase,
     "UXShowcase": UXShowcase,
     "ViolationReport": ViolationReport,
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
