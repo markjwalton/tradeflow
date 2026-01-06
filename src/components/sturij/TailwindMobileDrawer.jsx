@@ -45,18 +45,19 @@ export default function TailwindMobileDrawer({
     : user?.email?.substring(0, 2).toUpperCase() || 'U';
 
   const renderNavItem = (item, isChild = false) => {
-    const isFolder = item.children && item.children.length > 0;
-    const isExpanded = expandedFolders.has(item.name);
+    const hasChildren = item.children && item.children.length > 0;
+    const isFolder = item.isFolder || hasChildren;
+    const isExpanded = expandedFolders.has(item.id || item.name);
     const Icon = item.icon || Home;
 
-    if (isFolder) {
+    if (isFolder && hasChildren) {
       const FolderDisplayIcon = isExpanded ? FolderOpen : Folder;
       const DisplayIcon = item.icon || FolderDisplayIcon;
 
       return (
-        <div key={item.name}>
+        <div key={item.id || item.name}>
           <button
-            onClick={(e) => toggleFolder(item.name, e)}
+            onClick={(e) => toggleFolder(item.id || item.name, e)}
             className={classNames(
               'w-full flex items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-gray-100',
               isChild && 'pl-8',
@@ -84,7 +85,7 @@ export default function TailwindMobileDrawer({
 
     return (
       <button
-        key={item.name}
+        key={item.id || item.name}
         onClick={() => handleNavClick(item)}
         className={classNames(
           'w-full flex items-center gap-3 px-4 py-3 text-left transition-colors min-h-[44px]',
