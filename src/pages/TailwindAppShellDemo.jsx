@@ -109,24 +109,28 @@ function AppShellContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
-  // Fetch current user
+  // Fetch current user - with caching
   useEffect(() => {
     base44.auth.me().then(setCurrentUser).catch(() => {});
   }, []);
 
-  // Fetch navigation configs
+  // Fetch navigation configs - with longer stale time to reduce refetches
   const { data: navConfigs = [] } = useQuery({
     queryKey: ['navigationConfigs'],
     queryFn: () => base44.entities.NavigationConfig.list(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 
-  // Fetch UIPage for current page
+  // Fetch UIPage for current page - with caching
   const { data: currentPageData } = useQuery({
     queryKey: ['uiPage', CURRENT_PAGE_SLUG],
     queryFn: async () => {
       const pages = await base44.entities.UIPage.filter({ slug: CURRENT_PAGE_SLUG });
       return pages[0] || null;
     },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 
   // Get main nav (admin_console) and secondary nav (app_pages_source or live_pages_source)
