@@ -7,6 +7,16 @@ import AssetManager from './pages/AssetManager';
 import BrandIdentity from './pages/BrandIdentity';
 import ButtonsShowcase from './pages/ButtonsShowcase';
 import CMSManager from './pages/CMSManager';
+import CRMCustomerDetail from './pages/CRMCustomerDetail';
+import CRMCustomerForm from './pages/CRMCustomerForm';
+import CRMCustomers from './pages/CRMCustomers';
+import CRMEnquiries from './pages/CRMEnquiries';
+import CRMEnquiryDetail from './pages/CRMEnquiryDetail';
+import CRMEnquiryForm from './pages/CRMEnquiryForm';
+import CRMInteractionForm from './pages/CRMInteractionForm';
+import CRMProjectDetail from './pages/CRMProjectDetail';
+import CRMProjects from './pages/CRMProjects';
+import CRMSettings from './pages/CRMSettings';
 import CSSAudit from './pages/CSSAudit';
 import Calendar from './pages/Calendar';
 import CardsShowcase from './pages/CardsShowcase';
@@ -136,16 +146,6 @@ import UXShowcase from './pages/UXShowcase';
 import ViolationReport from './pages/ViolationReport';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import WebsiteThemeManager from './pages/WebsiteThemeManager';
-import CRMSettings from './pages/CRMSettings';
-import CRMCustomers from './pages/CRMCustomers';
-import CRMCustomerForm from './pages/CRMCustomerForm';
-import CRMCustomerDetail from './pages/CRMCustomerDetail';
-import CRMEnquiries from './pages/CRMEnquiries';
-import CRMEnquiryForm from './pages/CRMEnquiryForm';
-import CRMEnquiryDetail from './pages/CRMEnquiryDetail';
-import CRMProjects from './pages/CRMProjects';
-import CRMProjectDetail from './pages/CRMProjectDetail';
-import CRMInteractionForm from './pages/CRMInteractionForm';
 import __Layout from './Layout.jsx';
 
 
@@ -159,6 +159,16 @@ export const PAGES = {
     "BrandIdentity": BrandIdentity,
     "ButtonsShowcase": ButtonsShowcase,
     "CMSManager": CMSManager,
+    "CRMCustomerDetail": CRMCustomerDetail,
+    "CRMCustomerForm": CRMCustomerForm,
+    "CRMCustomers": CRMCustomers,
+    "CRMEnquiries": CRMEnquiries,
+    "CRMEnquiryDetail": CRMEnquiryDetail,
+    "CRMEnquiryForm": CRMEnquiryForm,
+    "CRMInteractionForm": CRMInteractionForm,
+    "CRMProjectDetail": CRMProjectDetail,
+    "CRMProjects": CRMProjects,
+    "CRMSettings": CRMSettings,
     "CSSAudit": CSSAudit,
     "Calendar": Calendar,
     "CardsShowcase": CardsShowcase,
@@ -288,16 +298,6 @@ export const PAGES = {
     "ViolationReport": ViolationReport,
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
     "WebsiteThemeManager": WebsiteThemeManager,
-    "CRMSettings": CRMSettings,
-    "CRMCustomers": CRMCustomers,
-    "CRMCustomerForm": CRMCustomerForm,
-    "CRMCustomerDetail": CRMCustomerDetail,
-    "CRMEnquiries": CRMEnquiries,
-    "CRMEnquiryForm": CRMEnquiryForm,
-    "CRMEnquiryDetail": CRMEnquiryDetail,
-    "CRMProjects": CRMProjects,
-    "CRMProjectDetail": CRMProjectDetail,
-    "CRMInteractionForm": CRMInteractionForm,
 }
 
 export const pagesConfig = {

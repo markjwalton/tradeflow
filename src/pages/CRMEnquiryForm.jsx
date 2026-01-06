@@ -10,9 +10,10 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Save, FileText } from 'lucide-react';
+import { ArrowLeft, Save, FileText, UserPlus } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
+import QuickCustomerForm from '../components/crm/QuickCustomerForm';
 
 export default function CRMEnquiryForm() {
   const navigate = useNavigate();
@@ -32,6 +33,8 @@ export default function CRMEnquiryForm() {
     referring_channel: '',
     status: 'New',
   });
+
+  const [showQuickCustomer, setShowQuickCustomer] = useState(false);
 
   const { getOptions, isLoading: optionsLoading } = useAllDropdownOptions();
   const inboundChannels = getOptions('Inbound Channels');
@@ -143,33 +146,44 @@ export default function CRMEnquiryForm() {
             {/* Customer Selection */}
             <div className="space-y-2">
               <Label>Customer *</Label>
-              <Select
-                value={formData.customer_id}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, customer_id: value })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a customer" />
-                </SelectTrigger>
-                <SelectContent>
-                  {customers.map((customer) => (
-                    <SelectItem key={customer.id} value={customer.id}>
-                      {customer.first_name} {customer.surname} ({customer.customer_number})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-muted-foreground">
-                <a
-                  href={createPageUrl('CRMCustomerForm')}
-                  className="text-primary hover:underline"
+              <div className="flex gap-2">
+                <Select
+                  value={formData.customer_id}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, customer_id: value })
+                  }
                 >
-                  Create new customer
-                </a>{' '}
-                if not in list
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder="Select a customer" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {customers.map((customer) => (
+                      <SelectItem key={customer.id} value={customer.id}>
+                        {customer.first_name} {customer.surname} ({customer.customer_number})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowQuickCustomer(true)}
+                >
+                  <UserPlus className="h-4 w-4" />
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Select existing customer or click + to add new
               </p>
             </div>
+
+            <QuickCustomerForm
+              open={showQuickCustomer}
+              onOpenChange={setShowQuickCustomer}
+              onCustomerCreated={(customer) => {
+                setFormData({ ...formData, customer_id: customer.id });
+              }}
+            />
 
             {/* Enquiry Details */}
             <div className="grid grid-cols-2 gap-4">

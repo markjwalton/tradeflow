@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ArrowLeft, Save, User } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
+import PostcodeLookup from '../components/crm/PostcodeLookup';
 
 // Generate customer number: [R/T/C/E][MM][YY][NNN]
 const generateCustomerNumber = async (customerType) => {
@@ -103,6 +104,18 @@ export default function CRMCustomerForm() {
       setAddressData(existingAddress[0]);
     }
   }, [existingAddress]);
+
+  const handleAddressSelect = (address) => {
+    setAddressData({
+      name_number: address.name_number || '',
+      street: address.street || '',
+      additional_field: address.additional_field || '',
+      town: address.town || '',
+      city: address.city || '',
+      county: address.county || '',
+      post_code: address.post_code || '',
+    });
+  };
 
   const createAddressMutation = useMutation({
     mutationFn: (data) => base44.entities.Address.create(data),
@@ -270,7 +283,8 @@ export default function CRMCustomerForm() {
             {/* Address */}
             <div className="border-t pt-4">
               <h3 className="font-medium mb-4">Address</h3>
-              <div className="grid grid-cols-2 gap-4">
+              <PostcodeLookup onAddressSelect={handleAddressSelect} />
+              <div className="grid grid-cols-2 gap-4 mt-4">
                 <div className="space-y-2">
                   <Label>House Name/Number</Label>
                   <Input
