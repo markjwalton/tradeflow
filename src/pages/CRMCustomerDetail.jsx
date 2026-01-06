@@ -12,8 +12,8 @@ import InteractionTimeline from '../components/crm/InteractionTimeline';
 
 export default function CRMCustomerDetail() {
   const navigate = useNavigate();
-  const urlParams = new URLSearchParams(window.location.search);
-  const customerId = urlParams.get('id');
+  const [searchParams] = useSearchParams();
+  const customerId = searchParams.get('id');
 
   const { data: allCustomers = [], isLoading: customerLoading } = useQuery({
     queryKey: ['crmCustomers'],
