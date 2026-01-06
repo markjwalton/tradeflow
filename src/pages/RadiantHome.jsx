@@ -10,6 +10,7 @@ import { LogoCloud } from '@/components/radiant/LogoCloud';
 import { Navbar } from '@/components/radiant/Navbar';
 import { Screenshot } from '@/components/radiant/Screenshot';
 import { Heading, Subheading } from '@/components/radiant/Text';
+import { useWebsiteAssets } from '@/components/cms/useWebsiteAssets';
 
 function Hero() {
   return (
@@ -47,6 +48,8 @@ function Hero() {
 }
 
 function FeatureSection() {
+  const { getAssetUrl } = useWebsiteAssets('radiant');
+  
   return (
     <div className="overflow-hidden">
       <Container className="pb-24">
@@ -56,7 +59,7 @@ function FeatureSection() {
         <Screenshot
           width={1216}
           height={768}
-          src="https://base44.app/api/apps/69274b9c077e61d7cfe78ec7/files/public/69274b9c077e61d7cfe78ec7/2cfaba050_app.png"
+          src={getAssetUrl('/screenshots/app.png')}
           className="mt-16 h-[36rem] sm:h-auto sm:w-[76rem]"
         />
       </Container>
