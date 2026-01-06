@@ -344,6 +344,45 @@ Document Classes: ${document.documentElement.className}
               </div>
             </CardContent>
           </Card>
+
+          {/* CRITICAL: CSS var() inline test */}
+          <Card>
+            <CardHeader>
+              <CardTitle>🔴 Inline var() Test (THE REAL TEST)</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm font-bold">If these boxes have NO color, the CSS vars aren't in :root</p>
+              <div className="grid grid-cols-4 gap-2">
+                <div style={{ backgroundColor: 'var(--primary-500)', color: '#fff' }} className="p-3 rounded text-center text-xs">
+                  --primary-500
+                </div>
+                <div style={{ backgroundColor: 'var(--secondary-400)', color: '#fff' }} className="p-3 rounded text-center text-xs">
+                  --secondary-400
+                </div>
+                <div style={{ backgroundColor: 'var(--accent-300)', color: '#000' }} className="p-3 rounded text-center text-xs">
+                  --accent-300
+                </div>
+                <div style={{ backgroundColor: 'var(--midnight-900)', color: '#fff' }} className="p-3 rounded text-center text-xs">
+                  --midnight-900
+                </div>
+              </div>
+              <p className="text-sm font-bold mt-4">Fallback test (should ALWAYS show color):</p>
+              <div className="grid grid-cols-4 gap-2">
+                <div style={{ backgroundColor: 'var(--primary-500, #4a7c6b)', color: '#fff' }} className="p-3 rounded text-center text-xs">
+                  with fallback
+                </div>
+                <div style={{ backgroundColor: '#4a7c6b', color: '#fff' }} className="p-3 rounded text-center text-xs">
+                  hardcoded hex
+                </div>
+                <div style={{ backgroundColor: 'oklch(0.398 0.037 159.8)', color: '#fff' }} className="p-3 rounded text-center text-xs">
+                  raw oklch
+                </div>
+                <div className="bg-primary-500 text-white p-3 rounded text-center text-xs">
+                  TW class
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </>
       )}
     </div>
