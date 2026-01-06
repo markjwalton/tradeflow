@@ -20,6 +20,9 @@ const overlayColorOptions = [
 
 // Color tokens with hex fallbacks for browsers without OKLCH support
 const colorTokens = [
+  { value: "background-50", label: "Background 50", hex: "#fdfcfa" },
+  { value: "background-100", label: "Background 100", hex: "#f5f3ef" },
+  { value: "background-200", label: "Background 200", hex: "#e8e5de" },
   { value: "primary-50", label: "Primary 50", hex: "#f0f5f3" },
   { value: "primary-100", label: "Primary 100", hex: "#dce8e3" },
   { value: "primary-200", label: "Primary 200", hex: "#b9d1c7" },
