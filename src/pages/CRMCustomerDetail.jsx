@@ -18,9 +18,12 @@ export default function CRMCustomerDetail() {
   const { data: allCustomers = [], isLoading: customerLoading } = useQuery({
     queryKey: ['crmCustomers'],
     queryFn: () => base44.entities.CRMCustomer.list(),
+    enabled: !!customerId,
   });
 
-  const customer = allCustomers.find(c => c.id === customerId);
+  const customer = customerId && allCustomers.length > 0 
+    ? allCustomers.find(c => c.id === customerId) 
+    : null;
 
   const { data: address } = useQuery({
     queryKey: ['address', customer?.primary_address_id],
