@@ -11,7 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { ArrowLeft, Edit, FolderOpen, User, MapPin, MessageSquare, Save, Home, Pencil } from 'lucide-react';
+import { ArrowLeft, Edit, FolderOpen, User, MapPin, MessageSquare, Save, Home, Pencil, Plus } from 'lucide-react';
+import InteractionTimeline from '../components/crm/InteractionTimeline';
 import { toast } from 'sonner';
 import { useAllDropdownOptions } from '../components/crm/useDropdownOptions';
 
@@ -501,32 +502,13 @@ export default function CRMProjectDetail() {
 
         <TabsContent value="interactions" className="mt-4">
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Interactions</CardTitle>
-              <Link to={createPageUrl('CRMInteractionForm') + `?customer_id=${project.customer_id}&project_id=${project.id}`}>
-                <Button size="sm">Log Interaction</Button>
-              </Link>
-            </CardHeader>
-            <CardContent>
-              {interactions.length === 0 ? (
-                <p className="text-muted-foreground text-center py-8">
-                  No interactions logged for this project
-                </p>
-              ) : (
-                <div className="space-y-3">
-                  {interactions.map((interaction) => (
-                    <div key={interaction.id} className="p-3 border rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <Badge variant="outline">{interaction.interaction_type}</Badge>
-                        <span className="text-sm text-muted-foreground">
-                          {new Date(interaction.interaction_date).toLocaleDateString()}
-                        </span>
-                      </div>
-                      <p className="text-sm">{interaction.summary_notes}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
+            <CardContent className="pt-6">
+              <InteractionTimeline
+                interactions={interactions}
+                customerId={project.customer_id}
+                projectId={project.id}
+                emptyMessage="No interactions logged for this project"
+              />
             </CardContent>
           </Card>
         </TabsContent>
