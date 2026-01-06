@@ -4,7 +4,6 @@ import AppointmentConfirm from './pages/AppointmentConfirm';
 import AppointmentHub from './pages/AppointmentHub';
 import AppointmentManager from './pages/AppointmentManager';
 import AssetManager from './pages/AssetManager';
-import ButtonsShowcase from './pages/ButtonsShowcase';
 import CMSManager from './pages/CMSManager';
 import CRMCustomerDetail from './pages/CRMCustomerDetail';
 import CRMCustomerForm from './pages/CRMCustomerForm';
@@ -21,11 +20,9 @@ import CRMProjects from './pages/CRMProjects';
 import CRMSettings from './pages/CRMSettings';
 import CSSAudit from './pages/CSSAudit';
 import Calendar from './pages/Calendar';
-import CardsShowcase from './pages/CardsShowcase';
 import ClientOnboardingPortal from './pages/ClientOnboardingPortal';
 import CommitHome from './pages/CommitHome';
 import CommunityPublish from './pages/CommunityPublish';
-import CompactButtonShowcase from './pages/CompactButtonShowcase';
 import CompassHome from './pages/CompassHome';
 import CompassInterviews from './pages/CompassInterviews';
 import CompassLogin from './pages/CompassLogin';
@@ -36,7 +33,6 @@ import CoreLibraryManager from './pages/CoreLibraryManager';
 import Customers from './pages/Customers';
 import Dashboard from './pages/Dashboard';
 import DashboardManager from './pages/DashboardManager';
-import DataDisplayShowcase from './pages/DataDisplayShowcase';
 import DebugProjectEditor from './pages/DebugProjectEditor';
 import DebugProjectWorkspace from './pages/DebugProjectWorkspace';
 import DebugShell from './pages/DebugShell';
@@ -46,7 +42,6 @@ import DevTools from './pages/DevTools';
 import DeveloperDocs from './pages/DeveloperDocs';
 import DocumentationManager from './pages/DocumentationManager';
 import Estimates from './pages/Estimates';
-import FeedbackShowcase from './pages/FeedbackShowcase';
 import FontManager from './pages/FontManager';
 import FormSchemaBuilder from './pages/FormSchemaBuilder';
 import GeneratedApps from './pages/GeneratedApps';
@@ -59,7 +54,6 @@ import KeynoteHome from './pages/KeynoteHome';
 import KnowledgeManager from './pages/KnowledgeManager';
 import LayoutBuilder from './pages/LayoutBuilder';
 import LayoutPatternManager from './pages/LayoutPatternManager';
-import LayoutShowcase from './pages/LayoutShowcase';
 import LearnedPatterns from './pages/LearnedPatterns';
 import Library from './pages/Library';
 import LibraryItemBuilder from './pages/LibraryItemBuilder';
@@ -67,7 +61,6 @@ import LivePreview from './pages/LivePreview';
 import LookupTestForms from './pages/LookupTestForms';
 import NavigationManager from './pages/NavigationManager';
 import NavigationManagerTest from './pages/NavigationManagerTest';
-import NavigationShowcase from './pages/NavigationShowcase';
 import OklchColorPicker from './pages/OklchColorPicker';
 import OnboardingDashboard from './pages/OnboardingDashboard';
 import OnboardingDocuments from './pages/OnboardingDocuments';
@@ -94,14 +87,13 @@ import RoadmapJournal from './pages/RoadmapJournal';
 import RoadmapManager from './pages/RoadmapManager';
 import RuleBook from './pages/RuleBook';
 import SchemaVisualEditor from './pages/SchemaVisualEditor';
-import SecurityDashboard from './pages/SecurityDashboard';
 import SecurityMonitor from './pages/SecurityMonitor';
+import SecurityDashboard from './pages/SecurityDashboard';
 import Setup from './pages/Setup';
 import SiteSettings from './pages/SiteSettings';
 import SprintManager from './pages/SprintManager';
 import StandaloneAPIStrategy from './pages/StandaloneAPIStrategy';
 import StandaloneInstanceManager from './pages/StandaloneInstanceManager';
-import StandardPageReference from './pages/StandardPageReference';
 import StudioAbout from './pages/StudioAbout';
 import StudioHome from './pages/StudioHome';
 import SturijPackage from './pages/SturijPackage';
@@ -133,7 +125,6 @@ export const PAGES = {
     "AppointmentHub": AppointmentHub,
     "AppointmentManager": AppointmentManager,
     "AssetManager": AssetManager,
-    "ButtonsShowcase": ButtonsShowcase,
     "CMSManager": CMSManager,
     "CRMCustomerDetail": CRMCustomerDetail,
     "CRMCustomerForm": CRMCustomerForm,
@@ -150,11 +141,9 @@ export const PAGES = {
     "CRMSettings": CRMSettings,
     "CSSAudit": CSSAudit,
     "Calendar": Calendar,
-    "CardsShowcase": CardsShowcase,
     "ClientOnboardingPortal": ClientOnboardingPortal,
     "CommitHome": CommitHome,
     "CommunityPublish": CommunityPublish,
-    "CompactButtonShowcase": CompactButtonShowcase,
     "CompassHome": CompassHome,
     "CompassInterviews": CompassInterviews,
     "CompassLogin": CompassLogin,
@@ -165,7 +154,6 @@ export const PAGES = {
     "Customers": Customers,
     "Dashboard": Dashboard,
     "DashboardManager": DashboardManager,
-    "DataDisplayShowcase": DataDisplayShowcase,
     "DebugProjectEditor": DebugProjectEditor,
     "DebugProjectWorkspace": DebugProjectWorkspace,
     "DebugShell": DebugShell,
@@ -175,7 +163,6 @@ export const PAGES = {
     "DeveloperDocs": DeveloperDocs,
     "DocumentationManager": DocumentationManager,
     "Estimates": Estimates,
-    "FeedbackShowcase": FeedbackShowcase,
     "FontManager": FontManager,
     "FormSchemaBuilder": FormSchemaBuilder,
     "GeneratedApps": GeneratedApps,
@@ -188,7 +175,6 @@ export const PAGES = {
     "KnowledgeManager": KnowledgeManager,
     "LayoutBuilder": LayoutBuilder,
     "LayoutPatternManager": LayoutPatternManager,
-    "LayoutShowcase": LayoutShowcase,
     "LearnedPatterns": LearnedPatterns,
     "Library": Library,
     "LibraryItemBuilder": LibraryItemBuilder,
@@ -196,7 +182,6 @@ export const PAGES = {
     "LookupTestForms": LookupTestForms,
     "NavigationManager": NavigationManager,
     "NavigationManagerTest": NavigationManagerTest,
-    "NavigationShowcase": NavigationShowcase,
     "OklchColorPicker": OklchColorPicker,
     "OnboardingDashboard": OnboardingDashboard,
     "OnboardingDocuments": OnboardingDocuments,
@@ -223,14 +208,13 @@ export const PAGES = {
     "RoadmapManager": RoadmapManager,
     "RuleBook": RuleBook,
     "SchemaVisualEditor": SchemaVisualEditor,
-    "SecurityDashboard": SecurityDashboard,
     "SecurityMonitor": SecurityMonitor,
+    "SecurityDashboard": SecurityDashboard,
     "Setup": Setup,
     "SiteSettings": SiteSettings,
     "SprintManager": SprintManager,
     "StandaloneAPIStrategy": StandaloneAPIStrategy,
     "StandaloneInstanceManager": StandaloneInstanceManager,
-    "StandardPageReference": StandardPageReference,
     "StudioAbout": StudioAbout,
     "StudioHome": StudioHome,
     "SturijPackage": SturijPackage,
