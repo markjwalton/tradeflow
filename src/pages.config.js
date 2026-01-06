@@ -137,6 +137,11 @@ import ViolationReport from './pages/ViolationReport';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import WebsiteThemeManager from './pages/WebsiteThemeManager';
 import CRMSettings from './pages/CRMSettings';
+import CRMCustomers from './pages/CRMCustomers';
+import CRMCustomerForm from './pages/CRMCustomerForm';
+import CRMCustomerDetail from './pages/CRMCustomerDetail';
+import CRMEnquiries from './pages/CRMEnquiries';
+import CRMEnquiryForm from './pages/CRMEnquiryForm';
 import __Layout from './Layout.jsx';
 
 
@@ -280,6 +285,11 @@ export const PAGES = {
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
     "WebsiteThemeManager": WebsiteThemeManager,
     "CRMSettings": CRMSettings,
+    "CRMCustomers": CRMCustomers,
+    "CRMCustomerForm": CRMCustomerForm,
+    "CRMCustomerDetail": CRMCustomerDetail,
+    "CRMEnquiries": CRMEnquiries,
+    "CRMEnquiryForm": CRMEnquiryForm,
 }
 
 export const pagesConfig = {
