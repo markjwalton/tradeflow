@@ -23,6 +23,7 @@ import Calendar from './pages/Calendar';
 import ClientOnboardingPortal from './pages/ClientOnboardingPortal';
 import CommitHome from './pages/CommitHome';
 import CommunityPublish from './pages/CommunityPublish';
+import Packages from './pages/Packages';
 import CompassHome from './pages/CompassHome';
 import CompassInterviews from './pages/CompassInterviews';
 import CompassLogin from './pages/CompassLogin';
@@ -69,7 +70,6 @@ import OnboardingSpecifications from './pages/OnboardingSpecifications';
 import OnboardingWorkflow from './pages/OnboardingWorkflow';
 import PackageDetail from './pages/PackageDetail';
 import PackageExport from './pages/PackageExport';
-import PackageLibrary from './pages/PackageLibrary';
 import PageBuilder from './pages/PageBuilder';
 import PerformanceMonitor from './pages/PerformanceMonitor';
 import PlaygroundSummary from './pages/PlaygroundSummary';
@@ -115,7 +115,6 @@ import UXShowcase from './pages/UXShowcase';
 import ViolationReport from './pages/ViolationReport';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import WebsiteThemeManager from './pages/WebsiteThemeManager';
-import Packages from './pages/Packages';
 import __Layout from './Layout.jsx';
 
 
@@ -145,6 +144,7 @@ export const PAGES = {
     "ClientOnboardingPortal": ClientOnboardingPortal,
     "CommitHome": CommitHome,
     "CommunityPublish": CommunityPublish,
+    "Packages": Packages,
     "CompassHome": CompassHome,
     "CompassInterviews": CompassInterviews,
     "CompassLogin": CompassLogin,
@@ -191,7 +191,6 @@ export const PAGES = {
     "OnboardingWorkflow": OnboardingWorkflow,
     "PackageDetail": PackageDetail,
     "PackageExport": PackageExport,
-    "PackageLibrary": PackageLibrary,
     "PageBuilder": PageBuilder,
     "PerformanceMonitor": PerformanceMonitor,
     "PlaygroundSummary": PlaygroundSummary,
@@ -237,7 +236,6 @@ export const PAGES = {
     "ViolationReport": ViolationReport,
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
     "WebsiteThemeManager": WebsiteThemeManager,
-    "Packages": Packages,
 }
 
 export const pagesConfig = {
