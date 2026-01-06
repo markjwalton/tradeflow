@@ -23,7 +23,6 @@ import Calendar from './pages/Calendar';
 import ClientOnboardingPortal from './pages/ClientOnboardingPortal';
 import CommitHome from './pages/CommitHome';
 import CommunityPublish from './pages/CommunityPublish';
-import Packages from './pages/Packages';
 import CompassHome from './pages/CompassHome';
 import CompassInterviews from './pages/CompassInterviews';
 import CompassLogin from './pages/CompassLogin';
@@ -70,6 +69,7 @@ import OnboardingSpecifications from './pages/OnboardingSpecifications';
 import OnboardingWorkflow from './pages/OnboardingWorkflow';
 import PackageDetail from './pages/PackageDetail';
 import PackageExport from './pages/PackageExport';
+import Packages from './pages/Packages';
 import PageBuilder from './pages/PageBuilder';
 import PerformanceMonitor from './pages/PerformanceMonitor';
 import PlaygroundSummary from './pages/PlaygroundSummary';
@@ -87,8 +87,8 @@ import RoadmapJournal from './pages/RoadmapJournal';
 import RoadmapManager from './pages/RoadmapManager';
 import RuleBook from './pages/RuleBook';
 import SchemaVisualEditor from './pages/SchemaVisualEditor';
-import SecurityMonitor from './pages/SecurityMonitor';
 import SecurityDashboard from './pages/SecurityDashboard';
+import SecurityMonitor from './pages/SecurityMonitor';
 import Setup from './pages/Setup';
 import SiteSettings from './pages/SiteSettings';
 import SprintManager from './pages/SprintManager';
@@ -144,7 +144,6 @@ export const PAGES = {
     "ClientOnboardingPortal": ClientOnboardingPortal,
     "CommitHome": CommitHome,
     "CommunityPublish": CommunityPublish,
-    "Packages": Packages,
     "CompassHome": CompassHome,
     "CompassInterviews": CompassInterviews,
     "CompassLogin": CompassLogin,
@@ -191,6 +190,7 @@ export const PAGES = {
     "OnboardingWorkflow": OnboardingWorkflow,
     "PackageDetail": PackageDetail,
     "PackageExport": PackageExport,
+    "Packages": Packages,
     "PageBuilder": PageBuilder,
     "PerformanceMonitor": PerformanceMonitor,
     "PlaygroundSummary": PlaygroundSummary,
@@ -208,8 +208,8 @@ export const PAGES = {
     "RoadmapManager": RoadmapManager,
     "RuleBook": RuleBook,
     "SchemaVisualEditor": SchemaVisualEditor,
-    "SecurityMonitor": SecurityMonitor,
     "SecurityDashboard": SecurityDashboard,
+    "SecurityMonitor": SecurityMonitor,
     "Setup": Setup,
     "SiteSettings": SiteSettings,
     "SprintManager": SprintManager,

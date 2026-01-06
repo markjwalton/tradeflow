@@ -279,6 +279,15 @@ export default function Layout({ children, currentPageName }) {
 
     window.addEventListener('site-settings-changed', handleSiteSettingsChange);
 
+    // Clear cache when navigation is updated
+    const handleNavigationUpdate = () => {
+      sessionStorage.removeItem('nav_config_cache');
+      sessionStorage.removeItem(LAYOUT_CACHE_KEY);
+      // Force reload to pick up new navigation
+      window.location.reload();
+    };
+    window.addEventListener('navigation-updated', handleNavigationUpdate);
+
     const checkAccess = async () => {
       try {
         if (!isMounted) return;
@@ -507,6 +516,7 @@ export default function Layout({ children, currentPageName }) {
     return () => {
       isMounted = false;
       window.removeEventListener('site-settings-changed', handleSiteSettingsChange);
+      window.removeEventListener('navigation-updated', handleNavigationUpdate);
     };
   }, []); // Run once on mount
 

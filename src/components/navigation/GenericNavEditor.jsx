@@ -38,6 +38,9 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { toast } from "sonner";
 import NotificationCard from "../common/NotificationCard";
 
+// Layout cache key (shared with Layout.js)
+const LAYOUT_CACHE_KEY = 'layout_init_cache';
+
 // Import shared nav utilities
 import { getIconOptions, getIconByName, renderIcon } from "./NavIconMap";
 import { 
@@ -233,6 +236,12 @@ export default function GenericNavEditor({
           queryClient.invalidateQueries({ queryKey: ["navConfig", effectiveConfigType] });
           setOriginalItems(JSON.parse(JSON.stringify(newItems)));
           setHasUnsavedChanges(false);
+          
+          // Clear layout cache so navigation refreshes immediately
+          sessionStorage.removeItem('nav_config_cache');
+          sessionStorage.removeItem(LAYOUT_CACHE_KEY);
+          window.dispatchEvent(new Event('navigation-updated'));
+          
           toast.success("Navigation saved");
         },
       });
