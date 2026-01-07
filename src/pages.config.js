@@ -105,6 +105,7 @@ import UXShowcase from './pages/UXShowcase';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import WebsiteTemplateManager from './pages/WebsiteTemplateManager';
 import WebsiteThemeManager from './pages/WebsiteThemeManager';
+import ComponentLibrary from './pages/ComponentLibrary';
 import __Layout from './Layout.jsx';
 
 
@@ -216,6 +217,7 @@ export const PAGES = {
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
     "WebsiteTemplateManager": WebsiteTemplateManager,
     "WebsiteThemeManager": WebsiteThemeManager,
+    "ComponentLibrary": ComponentLibrary,
 }
 
 export const pagesConfig = {
