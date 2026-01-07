@@ -20,6 +20,9 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   const [saveAsNew, setSaveAsNew] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState(['border']);
   const [styleValues, setStyleValues] = useState({});
+  const [componentState, setComponentState] = useState('default');
+  const [shadowEffect, setShadowEffect] = useState('none');
+  const [animation, setAnimation] = useState('none');
 
   const selectedElement = propSelectedElement || 'button';
   const selectedComponent = COMPONENT_TYPES.find(c => c.value === selectedElement);
@@ -65,7 +68,50 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
       onUpdate(newValues);
     }
     if (onPreviewUpdate) {
-      onPreviewUpdate({ element: selectedElement, property, value });
+      onPreviewUpdate({ 
+        element: selectedElement, 
+        property, 
+        value,
+        state: componentState,
+        shadow: shadowEffect,
+        animation
+      });
+    }
+  };
+
+  const handleStateChange = (newState) => {
+    setComponentState(newState);
+    if (onPreviewUpdate) {
+      onPreviewUpdate({ 
+        element: selectedElement, 
+        state: newState,
+        shadow: shadowEffect,
+        animation
+      });
+    }
+  };
+
+  const handleShadowChange = (newShadow) => {
+    setShadowEffect(newShadow);
+    if (onPreviewUpdate) {
+      onPreviewUpdate({ 
+        element: selectedElement, 
+        state: componentState,
+        shadow: newShadow,
+        animation
+      });
+    }
+  };
+
+  const handleAnimationChange = (newAnimation) => {
+    setAnimation(newAnimation);
+    if (onPreviewUpdate) {
+      onPreviewUpdate({ 
+        element: selectedElement, 
+        state: componentState,
+        shadow: shadowEffect,
+        animation: newAnimation
+      });
     }
   };
 
@@ -95,6 +141,53 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 value={currentStyle}
                 onChange={(e) => setCurrentStyle(e.target.value)}
               />
+            </div>
+          </div>
+
+          {/* State, Shadow, Animation Controls */}
+          <div className="grid grid-cols-3 gap-3">
+            <div>
+              <label className="text-xs font-medium mb-1 block">Component State</label>
+              <select
+                className="w-full px-3 py-2 border rounded-md text-sm bg-background"
+                value={componentState}
+                onChange={(e) => handleStateChange(e.target.value)}
+              >
+                <option value="default">Default</option>
+                <option value="hover">Hover</option>
+                <option value="active">Active</option>
+                <option value="focus">Focus</option>
+                <option value="disabled">Disabled</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="text-xs font-medium mb-1 block">Shadow Effect</label>
+              <select
+                className="w-full px-3 py-2 border rounded-md text-sm bg-background"
+                value={shadowEffect}
+                onChange={(e) => handleShadowChange(e.target.value)}
+              >
+                <option value="none">No Shadow</option>
+                <option value="sm">Shadow SM</option>
+                <option value="md">Shadow MD</option>
+                <option value="lg">Shadow LG</option>
+                <option value="xl">Shadow XL</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="text-xs font-medium mb-1 block">Animation</label>
+              <select
+                className="w-full px-3 py-2 border rounded-md text-sm bg-background"
+                value={animation}
+                onChange={(e) => handleAnimationChange(e.target.value)}
+              >
+                <option value="none">No Animation</option>
+                <option value="pulse">Pulse</option>
+                <option value="bounce">Bounce</option>
+                <option value="spin">Spin</option>
+              </select>
             </div>
           </div>
 

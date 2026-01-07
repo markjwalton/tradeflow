@@ -13,6 +13,9 @@ export default function StyleEditor() {
   const [showCode, setShowCode] = useState(false);
   const [styleValues, setStyleValues] = useState({});
   const [selectedElement, setSelectedElement] = useState('button');
+  const [componentState, setComponentState] = useState('default');
+  const [shadowEffect, setShadowEffect] = useState('none');
+  const [animation, setAnimation] = useState('none');
 
   const handleSaveToGlobals = async (styleValues) => {
     try {
@@ -52,9 +55,14 @@ export default function StyleEditor() {
     setStyleValues(values);
   };
 
-  const handlePreviewUpdate = ({ element }) => {
-    setSelectedElement(element);
-    setPreviewComponent(element);
+  const handlePreviewUpdate = ({ element, state, shadow, animation }) => {
+    if (element) {
+      setSelectedElement(element);
+      setPreviewComponent(element);
+    }
+    if (state !== undefined) setComponentState(state);
+    if (shadow !== undefined) setShadowEffect(shadow);
+    if (animation !== undefined) setAnimation(animation);
   };
 
   const componentExamples = {
@@ -146,6 +154,9 @@ export default function StyleEditor() {
             <LiveComponentPreview 
               jsxCode={componentExamples[previewComponent] || componentExamples.button}
               showCode={false}
+              componentState={componentState}
+              shadowEffect={shadowEffect}
+              animation={animation}
             />
           </CardContent>
         </Card>
