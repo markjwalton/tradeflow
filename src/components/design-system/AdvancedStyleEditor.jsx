@@ -431,14 +431,30 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
 
       {/* Style Categories */}
       <Card>
-        <StyleCategory
-          title="Component Properties"
-          isLive={true}
-          isApplicable={true}
-          isEdited={editMode === 'global' ? editedGlobalCategories.has('properties') : editedCustomCategories.has('properties')}
-          isExpanded={expandedCategories.includes('properties')}
-          onToggle={() => toggleCategory('properties')}
-        >
+        <Collapsible open={expandedCategories.includes('styleEditor')} onOpenChange={() => toggleCategory('styleEditor')}>
+          <CollapsibleTrigger asChild>
+            <div className="p-6 cursor-pointer hover:bg-muted/30 transition-colors border-b">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-foreground">Style Editor</h3>
+                <div className="flex items-center gap-2">
+                  {hasUnsavedChanges && (
+                    <div className="h-3 w-3 rounded-full bg-amber-500" />
+                  )}
+                  {expandedCategories.includes('styleEditor') ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                </div>
+              </div>
+            </div>
+          </CollapsibleTrigger>
+
+          <CollapsibleContent>
+            <StyleCategory
+              title="Component Properties"
+              isLive={true}
+              isApplicable={true}
+              isEdited={editMode === 'global' ? editedGlobalCategories.has('properties') : editedCustomCategories.has('properties')}
+              isExpanded={expandedCategories.includes('properties')}
+              onToggle={() => toggleCategory('properties')}
+            >
           <div className="space-y-4">
             {/* Button Variant - only for button components */}
             {selectedElement === 'button' && (
