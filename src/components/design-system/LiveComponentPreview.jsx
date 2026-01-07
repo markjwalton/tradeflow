@@ -27,13 +27,26 @@ export function LiveComponentPreview({ jsxCode, componentName }) {
 
   useEffect(() => {
     try {
+      // Transform JSX to React.createElement calls
+      let transformedCode = jsxCode
+        .replace(/<(\w+)([^>]*)>/g, (match, tag, attrs) => {
+          const propsMatch = attrs.match(/className="([^"]*)"/);
+          const className = propsMatch ? propsMatch[1] : '';
+          if (className) {
+            return `React.createElement(${tag}, { className: "${className}" }, `;
+          }
+          return `React.createElement(${tag}, null, `;
+        })
+        .replace(/<\/\w+>/g, ')')
+        .replace(/return\s+/, 'return ');
+
       const componentFunction = new Function(
         'React',
         ...Object.keys(componentImports),
         `
         const { useState, useEffect, useRef, useMemo, useCallback } = React;
         return function PreviewComponent() {
-          ${jsxCode}
+          ${transformedCode}
         };
         `
       );
