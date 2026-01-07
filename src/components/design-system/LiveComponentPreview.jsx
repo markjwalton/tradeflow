@@ -368,15 +368,21 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
         };
 
         const ActionIcon = actionIcons[buttonActionType] || Settings;
+        const iconProps = {
+          className: "h-4 w-4",
+          strokeWidth: parseFloat(iconStrokeWidth) || 2,
+          ...(iconColor !== 'currentColor' && { color: iconColor })
+        };
+        
         const getButtonContent = (size, variant) => {
           const IconComponent = ActionIcon;
           if (buttonContentType === 'icon-only' || size === 'icon') {
-            return <IconComponent className="h-4 w-4" strokeWidth={iconStrokeWidth} style={{ color: iconColor }} />;
+            return <IconComponent {...iconProps} />;
           } else if (buttonContentType === 'icon-text') {
             const label = size === 'sm' ? 'Small' : size === 'lg' ? 'Large' : 'Default';
             return (
               <>
-                <IconComponent className="h-4 w-4" strokeWidth={iconStrokeWidth} style={{ color: iconColor }} />
+                <IconComponent {...iconProps} />
                 {label}
               </>
             );
@@ -417,11 +423,7 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
                       style={shadowStyles[shadowEffect] || {}}
                       disabled={componentState === 'disabled'}
                     >
-                      <ActionIcon 
-                        className="h-4 w-4" 
-                        strokeWidth={iconStrokeWidth}
-                        style={{ color: iconColor }}
-                      />
+                      <ActionIcon {...iconProps} />
                     </Button>
                     <Button 
                       variant={variant} 
@@ -429,10 +431,10 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
                       className="focus:ring-2 focus:ring-primary focus:ring-offset-2"
                     >
                       {buttonContentType === 'icon-only' ? (
-                        <ActionIcon className="h-4 w-4" strokeWidth={iconStrokeWidth} style={{ color: iconColor }} />
+                        <ActionIcon {...iconProps} />
                       ) : buttonContentType === 'icon-text' ? (
                         <>
-                          <ActionIcon className="h-4 w-4" strokeWidth={iconStrokeWidth} style={{ color: iconColor }} />
+                          <ActionIcon {...iconProps} />
                           Focus
                         </>
                       ) : (
@@ -445,10 +447,10 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
                       disabled
                     >
                       {buttonContentType === 'icon-only' ? (
-                        <ActionIcon className="h-4 w-4" strokeWidth={iconStrokeWidth} style={{ color: iconColor }} />
+                        <ActionIcon {...iconProps} />
                       ) : buttonContentType === 'icon-text' ? (
                         <>
-                          <ActionIcon className="h-4 w-4" strokeWidth={iconStrokeWidth} style={{ color: iconColor }} />
+                          <ActionIcon {...iconProps} />
                           Disabled
                         </>
                       ) : (
