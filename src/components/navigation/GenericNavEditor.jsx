@@ -173,18 +173,6 @@ export default function GenericNavEditor({
     const hasChanges = JSON.stringify(items) !== JSON.stringify(originalItems);
     setHasUnsavedChanges(hasChanges);
   }, [items, originalItems]);
-
-  // Warn before leaving with unsaved changes
-  useEffect(() => {
-    const handleBeforeUnload = (e) => {
-      if (hasUnsavedChanges) {
-        e.preventDefault();
-        e.returnValue = '';
-      }
-    };
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [hasUnsavedChanges]);
   
   // Get slugs from config's source_slugs, filtered against registry to exclude deleted pages
   const effectiveSlugs = React.useMemo(() => {
