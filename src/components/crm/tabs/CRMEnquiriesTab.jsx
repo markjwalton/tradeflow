@@ -103,6 +103,7 @@ export default function CRMEnquiriesTab() {
       Unqualified: 'bg-gray-100 text-gray-800',
       ConvertedToProject: 'bg-emerald-100 text-emerald-800',
       Archived: 'bg-slate-100 text-slate-800',
+      NoEnquiry: 'bg-slate-100 text-slate-600',
     };
     return colors[status] || 'bg-gray-100 text-gray-800';
   };
