@@ -29,6 +29,47 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   const [editedGlobalCategories, setEditedGlobalCategories] = useState(new Set(['typography', 'colors']));
   const [editedCustomCategories, setEditedCustomCategories] = useState(new Set());
   const [isHeaderOpen, setIsHeaderOpen] = useState(true);
+  const [isVersionsOpen, setIsVersionsOpen] = useState(false);
+  const [currentVersionPage, setCurrentVersionPage] = useState(1);
+  const versionsPerPage = 3;
+  const [versionHistory, setVersionHistory] = useState([
+    {
+      id: 1,
+      version: 'v1.3',
+      name: 'Primary Brand Update',
+      mode: 'global',
+      changedProperties: ['--color-primary', '--font-family-display', '--spacing-4'],
+      timestamp: '2026-01-07 14:30',
+      author: 'Current User'
+    },
+    {
+      id: 2,
+      version: 'v1.2',
+      name: 'Button Style Refinement',
+      mode: 'custom',
+      changedProperties: ['--button-variant', '--shadow-md', '--radius-button'],
+      timestamp: '2026-01-07 11:15',
+      author: 'Current User'
+    },
+    {
+      id: 3,
+      version: 'v1.1',
+      name: 'Typography Scale Adjustment',
+      mode: 'global',
+      changedProperties: ['--text-base', '--leading-normal', '--tracking-normal'],
+      timestamp: '2026-01-06 16:45',
+      author: 'Current User'
+    },
+    {
+      id: 4,
+      version: 'v1.0',
+      name: 'Initial Design System',
+      mode: 'global',
+      changedProperties: ['--color-primary', '--color-secondary', '--font-family-display', '--font-family-body'],
+      timestamp: '2026-01-05 09:00',
+      author: 'System'
+    }
+  ]);
   const [savedStylesList, setSavedStylesList] = useState([
     {
       id: 1,
@@ -339,6 +380,23 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
     toast.success('Style deleted');
   };
 
+  const handleRollbackVersion = (version) => {
+    // Load the version's properties
+    toast.success(`Rolled back to ${version.version}: ${version.name}`);
+    // In a real implementation, you would load the actual saved state here
+  };
+
+  const handleDeleteVersion = (id) => {
+    setVersionHistory(prev => prev.filter(v => v.id !== id));
+    toast.success('Version deleted');
+  };
+
+  const paginatedVersions = versionHistory.slice(
+    (currentVersionPage - 1) * versionsPerPage,
+    currentVersionPage * versionsPerPage
+  );
+  const totalVersionPages = Math.ceil(versionHistory.length / versionsPerPage);
+
   const hasUnsavedChanges = editMode === 'global' ? editedGlobalCategories.size > 0 : editedCustomCategories.size > 0;
   const elementName = editMode === 'custom' && customStyleName 
     ? `Custom ${selectedComponent?.label || 'Component'}` 
@@ -465,6 +523,114 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                       </div>
                     </div>
                   ))}
+                </div>
+              )}
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
+      </Card>
+
+      {/* Version Control */}
+      <Card>
+        <Collapsible open={isVersionsOpen} onOpenChange={setIsVersionsOpen}>
+          <CollapsibleTrigger asChild>
+            <div className="p-6 cursor-pointer hover:bg-muted/30 transition-colors">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-foreground">Version Control</h3>
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary" className="text-xs">{versionHistory.length} versions</Badge>
+                  {isVersionsOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                </div>
+              </div>
+            </div>
+          </CollapsibleTrigger>
+
+          <CollapsibleContent>
+            <div className="px-6 pb-6 space-y-4">
+              {/* Version Cards */}
+              <div className="space-y-3">
+                {paginatedVersions.map(version => (
+                  <div 
+                    key={version.id}
+                    className="flex items-center justify-between p-4 bg-gradient-to-r from-muted/40 to-muted/20 rounded-xl border border-border hover:border-primary/40 transition-all group"
+                  >
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Badge variant="outline" className="text-xs font-mono">
+                          {version.version}
+                        </Badge>
+                        <span className="text-sm font-semibold text-foreground">{version.name}</span>
+                        <Badge 
+                          variant={version.mode === 'global' ? 'default' : 'secondary'} 
+                          className="text-xs px-2 py-0.5"
+                        >
+                          {version.mode}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
+                        <span className="italic">{version.timestamp}</span>
+                        <span>•</span>
+                        <span>by {version.author}</span>
+                        <span>•</span>
+                        <span>{version.changedProperties.length} properties changed</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleRollbackVersion(version)}
+                        className="h-9 px-3 bg-primary/5 hover:bg-primary/10 text-primary border-primary/20"
+                      >
+                        Rollback
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDeleteVersion(version.id)}
+                        className="h-9 px-3 text-destructive hover:text-destructive hover:bg-destructive/10"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Pagination */}
+              {totalVersionPages > 1 && (
+                <div className="flex items-center justify-between pt-4 border-t">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentVersionPage(prev => Math.max(1, prev - 1))}
+                    disabled={currentVersionPage === 1}
+                    className="h-8"
+                  >
+                    Previous
+                  </Button>
+                  <div className="flex items-center gap-2">
+                    {Array.from({ length: totalVersionPages }, (_, i) => i + 1).map(page => (
+                      <Button
+                        key={page}
+                        variant={page === currentVersionPage ? 'default' : 'ghost'}
+                        size="sm"
+                        onClick={() => setCurrentVersionPage(page)}
+                        className="h-8 w-8 p-0"
+                      >
+                        {page}
+                      </Button>
+                    ))}
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentVersionPage(prev => Math.min(totalVersionPages, prev + 1))}
+                    disabled={currentVersionPage === totalVersionPages}
+                    className="h-8"
+                  >
+                    Next
+                  </Button>
                 </div>
               )}
             </div>
