@@ -438,6 +438,30 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               { value: 'justify', label: 'Justify' }
             ]}
           />
+          <StyleProperty
+            label="Word Spacing"
+            value={styleValues['--word-spacing-normal'] || 'var(--word-spacing-normal)'}
+            onChange={(val) => handleStyleChange('--word-spacing-normal', val)}
+            type="select"
+            options={[
+              { value: 'var(--word-spacing-tight)', label: 'Tight (-0.05em)' },
+              { value: 'var(--word-spacing-normal)', label: 'Normal (0)' },
+              { value: 'var(--word-spacing-wide)', label: 'Wide (0.1em)' },
+              { value: 'var(--word-spacing-airy)', label: 'Airy (0.2em)' }
+            ]}
+          />
+          <StyleProperty
+            label="Paragraph Spacing"
+            value={styleValues['--paragraph-spacing-normal'] || 'var(--paragraph-spacing-normal)'}
+            onChange={(val) => handleStyleChange('--paragraph-spacing-normal', val)}
+            type="select"
+            options={[
+              { value: 'var(--paragraph-spacing-tight)', label: 'Tight (0.5rem)' },
+              { value: 'var(--paragraph-spacing-normal)', label: 'Normal (1rem)' },
+              { value: 'var(--paragraph-spacing-relaxed)', label: 'Relaxed (1.5rem)' },
+              { value: 'var(--paragraph-spacing-loose)', label: 'Loose (2rem)' }
+            ]}
+          />
         </StyleCategory>
 
         <StyleCategory
