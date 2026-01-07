@@ -9,6 +9,7 @@ export function StyleCategory({
   currentValue, 
   isLive, 
   isApplicable = true,
+  isEdited = false,
   isExpanded = false,
   onToggle,
   children 
@@ -28,8 +29,10 @@ export function StyleCategory({
             </span>
           )}
           <div 
-            className={`w-3 h-3 rounded-full ${isLive ? 'bg-green-500' : 'bg-red-500'}`}
-            title={isLive ? 'Live themed value' : 'Default/unmanaged value'}
+            className={`w-3 h-3 rounded-full ${
+              isEdited ? 'bg-amber-500' : isLive ? 'bg-green-500' : 'bg-red-500'
+            }`}
+            title={isEdited ? 'Edited - unsaved changes' : isLive ? 'Live themed value' : 'Default/unmanaged value'}
           />
           {isExpanded ? (
             <ChevronDown className="h-4 w-4" />

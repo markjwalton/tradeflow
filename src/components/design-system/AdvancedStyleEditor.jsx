@@ -94,6 +94,30 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   const handleStyleChange = (property, value) => {
     const newValues = { ...styleValues, [property]: value };
     setStyleValues(newValues);
+    
+    // Mark category as edited based on which properties it affects
+    const categoryMap = {
+      'border': ['--color-border', '--border-width', '--border-style'],
+      'padding': ['--spacing-1', '--spacing-2', '--spacing-3', '--spacing-4', '--spacing-5', '--spacing-6', '--spacing-8', '--spacing-10', '--spacing-12', '--spacing-16'],
+      'font': ['--font-family-display', '--font-family-body', '--text-xs', '--text-sm', '--text-base', '--text-lg', '--text-xl', '--text-2xl', '--text-3xl', '--text-4xl', '--text-5xl', '--font-weight-normal', '--font-weight-medium', '--font-weight-semibold', '--font-weight-bold', '--leading-tight', '--leading-snug', '--leading-normal', '--leading-relaxed', '--leading-loose', '--tracking-tight', '--tracking-normal', '--tracking-wide', '--tracking-airy', '--text-align', '--word-spacing-tight', '--word-spacing-normal', '--word-spacing-wide', '--word-spacing-airy', '--paragraph-spacing-tight', '--paragraph-spacing-normal', '--paragraph-spacing-relaxed', '--paragraph-spacing-loose'],
+      'text': ['--color-primary', '--color-secondary', '--color-text-primary'],
+      'background': ['--color-background', '--color-card', '--color-muted'],
+      'position': ['--z-base'],
+      'extras': ['--opacity'],
+      'css3': ['--shadow-card', '--shadow-card-hover', '--radius-button']
+    };
+    
+    for (const [category, props] of Object.entries(categoryMap)) {
+      if (props.includes(property)) {
+        if (editMode === 'global') {
+          setEditedGlobalCategories(prev => new Set(prev).add(category));
+        } else {
+          setEditedCustomCategories(prev => new Set(prev).add(category));
+        }
+        break;
+      }
+    }
+    
     // Live preview update
     document.documentElement.style.setProperty(property, value);
     window.dispatchEvent(new CustomEvent('css-variables-updated'));
@@ -114,6 +138,11 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
 
   const handleStateChange = (newState) => {
     setComponentState(newState);
+    if (editMode === 'global') {
+      setEditedGlobalCategories(prev => new Set(prev).add('properties'));
+    } else {
+      setEditedCustomCategories(prev => new Set(prev).add('properties'));
+    }
     if (onPreviewUpdate) {
       onPreviewUpdate({ 
         element: selectedElement, 
@@ -126,6 +155,11 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
 
   const handleShadowChange = (newShadow) => {
     setShadowEffect(newShadow);
+    if (editMode === 'global') {
+      setEditedGlobalCategories(prev => new Set(prev).add('properties'));
+    } else {
+      setEditedCustomCategories(prev => new Set(prev).add('properties'));
+    }
     if (onPreviewUpdate) {
       onPreviewUpdate({ 
         element: selectedElement, 
@@ -216,6 +250,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
           currentValue={`${componentState} • ${shadowEffect} • ${animation}`}
           isLive={true}
           isApplicable={true}
+          isEdited={editMode === 'global' ? editedGlobalCategories.has('properties') : editedCustomCategories.has('properties')}
           isExpanded={expandedCategories.includes('properties')}
           onToggle={() => toggleCategory('properties')}
         >
@@ -303,6 +338,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
           currentValue={styleValues['--color-border'] || 'var(--charcoal-200)'}
           isLive={isStyleLive('--color-border')}
           isApplicable={isStyleApplicable('border')}
+          isEdited={editMode === 'global' ? editedGlobalCategories.has('border') : editedCustomCategories.has('border')}
           isExpanded={expandedCategories.includes('border')}
           onToggle={() => toggleCategory('border')}
         >
@@ -327,6 +363,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
           currentValue={styleValues['--spacing-4'] || 'var(--spacing-4)'}
           isLive={isStyleLive('--spacing-4')}
           isApplicable={isStyleApplicable('padding')}
+          isEdited={editMode === 'global' ? editedGlobalCategories.has('padding') : editedCustomCategories.has('padding')}
           isExpanded={expandedCategories.includes('padding')}
           onToggle={() => toggleCategory('padding')}
         >
@@ -370,6 +407,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
           currentValue={styleValues['--font-family-display'] || 'var(--font-family-display)'}
           isLive={isStyleLive('--font-family-display')}
           isApplicable={isStyleApplicable('font')}
+          isEdited={editMode === 'global' ? editedGlobalCategories.has('font') : editedCustomCategories.has('font')}
           isExpanded={expandedCategories.includes('font')}
           onToggle={() => toggleCategory('font')}
         >
@@ -481,6 +519,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
           currentValue={styleValues['--color-primary'] || 'var(--primary-500)'}
           isLive={isStyleLive('--color-primary')}
           isApplicable={isStyleApplicable('text')}
+          isEdited={editMode === 'global' ? editedGlobalCategories.has('text') : editedCustomCategories.has('text')}
           isExpanded={expandedCategories.includes('text')}
           onToggle={() => toggleCategory('text')}
         >
@@ -528,6 +567,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
           currentValue={styleValues['--color-background'] || 'var(--background-100)'}
           isLive={isStyleLive('--color-background')}
           isApplicable={isStyleApplicable('background')}
+          isEdited={editMode === 'global' ? editedGlobalCategories.has('background') : editedCustomCategories.has('background')}
           isExpanded={expandedCategories.includes('background')}
           onToggle={() => toggleCategory('background')}
         >
@@ -571,6 +611,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
           title="Position Styles"
           isLive={false}
           isApplicable={isStyleApplicable('position')}
+          isEdited={editMode === 'global' ? editedGlobalCategories.has('position') : editedCustomCategories.has('position')}
           isExpanded={expandedCategories.includes('position')}
           onToggle={() => toggleCategory('position')}
         >
@@ -583,9 +624,10 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         </StyleCategory>
 
         <StyleCategory
-          title="Extras"
+          title="Transparency"
           isLive={false}
           isApplicable={true}
+          isEdited={editMode === 'global' ? editedGlobalCategories.has('extras') : editedCustomCategories.has('extras')}
           isExpanded={expandedCategories.includes('extras')}
           onToggle={() => toggleCategory('extras')}
         >
@@ -605,6 +647,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
           currentValue={styleValues['--shadow-card'] || 'var(--shadow-sm)'}
           isLive={isStyleLive('--shadow-card')}
           isApplicable={true}
+          isEdited={editMode === 'global' ? editedGlobalCategories.has('css3') : editedCustomCategories.has('css3')}
           isExpanded={expandedCategories.includes('css3')}
           onToggle={() => toggleCategory('css3')}
         >
