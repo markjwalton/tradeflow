@@ -27,6 +27,35 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   const selectedElement = propSelectedElement || 'button';
   const selectedComponent = COMPONENT_TYPES.find(c => c.value === selectedElement);
 
+  // Read current computed styles from DOM on mount
+  useEffect(() => {
+    const loadCurrentStyles = () => {
+      const root = document.documentElement;
+      const computedStyle = getComputedStyle(root);
+      
+      const stylesToRead = [
+        '--border-width', '--color-border', '--border-style',
+        '--spacing-4', '--spacing-2',
+        '--font-family-display', '--text-base', '--font-weight-medium',
+        '--color-text-primary', '--leading-normal', '--tracking-normal',
+        '--color-background',
+        '--shadow-md', '--radius-lg'
+      ];
+      
+      const currentValues = {};
+      stylesToRead.forEach(prop => {
+        const value = computedStyle.getPropertyValue(prop).trim();
+        if (value) {
+          currentValues[prop] = value;
+        }
+      });
+      
+      setStyleValues(currentValues);
+    };
+    
+    loadCurrentStyles();
+  }, [selectedElement]);
+
   const isStyleApplicable = (styleCategory) => {
     return selectedComponent?.applicableStyles.includes(styleCategory);
   };
