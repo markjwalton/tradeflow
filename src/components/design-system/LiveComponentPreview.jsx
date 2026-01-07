@@ -68,21 +68,40 @@ export function LiveComponentPreview({ jsxCode, componentName }) {
           ? 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.'
           : 'The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.');
         
+        // Extract inline style from jsxCode to capture CSS variables
+        const styleMatch = jsxCode.match(/style={{([^}]+)}}/);
+        let inlineStyle = {};
+        if (styleMatch) {
+          const styleStr = styleMatch[1];
+          // Parse simple style objects (color, fontSize, etc.)
+          const colorMatch = styleStr.match(/color:\s*['"]([^'"]+)['"]/);
+          const fontSizeMatch = styleStr.match(/fontSize:\s*['"]([^'"]+)['"]/);
+          const lineHeightMatch = styleStr.match(/lineHeight:\s*['"]([^'"]+)['"]/);
+          const letterSpacingMatch = styleStr.match(/letterSpacing:\s*['"]([^'"]+)['"]/);
+          const fontWeightMatch = styleStr.match(/fontWeight:\s*['"]([^'"]+)['"]/);
+          
+          if (colorMatch) inlineStyle.color = colorMatch[1];
+          if (fontSizeMatch) inlineStyle.fontSize = fontSizeMatch[1];
+          if (lineHeightMatch) inlineStyle.lineHeight = lineHeightMatch[1];
+          if (letterSpacingMatch) inlineStyle.letterSpacing = letterSpacingMatch[1];
+          if (fontWeightMatch) inlineStyle.fontWeight = fontWeightMatch[1];
+        }
+        
         return () => (
           <div className="w-full max-w-2xl space-y-2">
             {isHeading ? (
-              <h1 className={className}>{displayText.split('.')[0]}</h1>
+              <h1 className={className} style={inlineStyle}>{displayText.split('.')[0]}</h1>
             ) : (
               <>
                 {isParagraph ? (
                   <div className="space-y-3">
-                    <p className={className}>{displayText}</p>
-                    <p className={className}>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
-                    <p className={className}>Sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium.</p>
+                    <p className={className} style={inlineStyle}>{displayText}</p>
+                    <p className={className} style={inlineStyle}>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
+                    <p className={className} style={inlineStyle}>Sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium.</p>
                   </div>
                 ) : (
                   <div className="space-y-1">
-                    <p className={className}>{displayText}</p>
+                    <p className={className} style={inlineStyle}>{displayText}</p>
                   </div>
                 )}
               </>
