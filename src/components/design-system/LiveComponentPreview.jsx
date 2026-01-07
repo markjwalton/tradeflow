@@ -56,9 +56,10 @@ export function LiveComponentPreview({ jsxCode, componentName }) {
   const [error, setError] = useState(null);
   const [Component, setComponent] = useState(null);
   const [previewBg, setPreviewBg] = useState('transparent');
-
+  const [contentType, setContentType] = useState('lines');
+  const [contentCount, setContentCount] = useState(3);
   const [customText, setCustomText] = useState('');
-  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [textColor, setTextColor] = useState('default');
   const [refreshKey, setRefreshKey] = useState(0);
 
   // Force refresh when CSS variables change
