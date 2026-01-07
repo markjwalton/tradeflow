@@ -1132,7 +1132,12 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               { value: 'bg-[radial-gradient(circle,transparent_20%,white_20%,white_80%,transparent_80%,transparent),radial-gradient(circle,transparent_20%,white_20%,white_80%,transparent_80%,transparent_50px_50px)] [background-size:50px_50px]', label: 'Circles Pattern' },
               { value: 'bg-[repeating-linear-gradient(0deg,#00000005,#00000005_1px,transparent_1px,transparent_10px),repeating-linear-gradient(90deg,#00000005,#00000005_1px,transparent_1px,transparent_10px)]', label: 'Paper Grid' },
               { value: 'bg-[linear-gradient(30deg,#00000008_12%,transparent_12.5%,transparent_87%,#00000008_87.5%,#00000008),linear-gradient(150deg,#00000008_12%,transparent_12.5%,transparent_87%,#00000008_87.5%,#00000008)] [background-size:20px_35px]', label: 'Rhombus' },
-              { value: 'bg-[repeating-linear-gradient(90deg,transparent,transparent_50px,#00000010_50px,#00000010_53px,transparent_53px,transparent_63px)]', label: 'Lines' }
+              { value: 'bg-[repeating-linear-gradient(90deg,transparent,transparent_50px,#00000010_50px,#00000010_53px,transparent_53px,transparent_63px)]', label: 'Lines' },
+              { value: 'bg-[conic-gradient(from_90deg_at_1px_1px,#0000_90deg,#00000008_0)]', label: 'Checkerboard' },
+              { value: 'bg-[repeating-conic-gradient(#00000008_0%_25%,transparent_0%_50%)] [background-size:20px_20px]', label: 'Cross Hatch' },
+              { value: 'bg-[linear-gradient(115deg,transparent_75%,#00000008_75%),linear-gradient(245deg,transparent_75%,#00000008_75%)] [background-size:20px_20px]', label: 'Zigzag' },
+              { value: 'bg-[radial-gradient(ellipse_at_center,transparent_60%,#00000008_60%)] [background-size:30px_30px]', label: 'Waves' },
+              { value: 'bg-[linear-gradient(63deg,#00000008_23%,transparent_23%),linear-gradient(63deg,transparent_74%,#00000008_78%),linear-gradient(63deg,transparent_34%,#00000008_38%,#00000008_58%,transparent_62%)] [background-size:20px_35px]', label: 'Hexagons' }
             ]}
           />
           <StyleProperty
