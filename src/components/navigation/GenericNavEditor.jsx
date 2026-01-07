@@ -1232,7 +1232,7 @@ export default function GenericNavEditor({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="__none__">Select page...</SelectItem>
-                    {[...unallocatedSlugs, formData.slug].filter(Boolean).filter((v, i, a) => a.indexOf(v) === i).map(slug => (
+                    {effectiveSlugs.sort().map(slug => (
                       <SelectItem key={slug} value={slug}>{slug}</SelectItem>
                     ))}
                   </SelectContent>
