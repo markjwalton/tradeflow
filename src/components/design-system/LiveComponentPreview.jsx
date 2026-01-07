@@ -72,6 +72,12 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
     return () => window.removeEventListener('css-variables-updated', handleCSSChange);
   }, []);
 
+  // Force refresh when props change
+  useEffect(() => {
+    console.log('[LiveComponentPreview] Props changed:', { componentState, shadowEffect, animation });
+    setRefreshKey(prev => prev + 1);
+  }, [componentState, shadowEffect, animation]);
+
   useEffect(() => {
     console.log('[LiveComponentPreview] useEffect triggered, refreshKey:', refreshKey);
     // Render based on component patterns
