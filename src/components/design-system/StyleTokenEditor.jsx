@@ -408,7 +408,7 @@ export function StyleTokenEditor({ tokens = [], onUpdate, componentName }) {
 
           {Object.entries(groupedTokens).map(([type, typeTokens]) => (
             <TabsContent key={type} value={type} className="space-y-3 mt-4">
-            {typeTokens.map(token => {
+              {typeTokens.map(token => {
               const currentValue = getCurrentValue(token);
               const isModified = !!localTokens[token];
 
