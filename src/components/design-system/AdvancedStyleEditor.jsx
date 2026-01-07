@@ -466,13 +466,12 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
 
                 {/* Applied Styles Cards */}
                 {savedStylesList.length > 0 && (
-                <div className="space-y-3 pt-4 border-t">
-                <h4 className="text-sm font-medium text-foreground">Saved Styles</h4>
-                {savedStylesList.map(style => (
-                  <div 
-                    key={style.id}
-                    className="flex items-center justify-between p-4 bg-gradient-to-r from-muted/40 to-muted/20 rounded-xl border border-border hover:border-primary/40 transition-all group"
-                  >
+                  <div className="space-y-3">
+                    {savedStylesList.map(style => (
+                      <div 
+                        key={style.id}
+                        className="flex items-center justify-between bg-gradient-to-r from-muted/40 to-muted/20 rounded-xl border border-border hover:border-primary/40 transition-all group"
+                      >
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <span className="text-sm font-semibold text-foreground">{style.name}</span>
