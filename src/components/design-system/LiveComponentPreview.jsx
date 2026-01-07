@@ -61,6 +61,9 @@ export function LiveComponentPreview({ jsxCode, componentName }) {
   const [customText, setCustomText] = useState('');
   const [textColor, setTextColor] = useState('default');
   const [refreshKey, setRefreshKey] = useState(0);
+  const [componentState, setComponentState] = useState('default');
+  const [shadowEffect, setShadowEffect] = useState('none');
+  const [animation, setAnimation] = useState('none');
 
   // Force refresh when CSS variables change
   useEffect(() => {
@@ -175,8 +178,38 @@ export function LiveComponentPreview({ jsxCode, componentName }) {
         // Button component
         const variantMatch = jsxCode.match(/variant="([^"]+)"/);
         const sizeMatch = jsxCode.match(/size="([^"]+)"/);
+        
+        const stateClasses = {
+          default: '',
+          hover: 'hover:opacity-100',
+          active: 'active:scale-95',
+          focus: 'focus:ring-2 focus:ring-offset-2',
+          disabled: 'opacity-50 cursor-not-allowed'
+        };
+        
+        const shadowStyles = {
+          none: {},
+          sm: { boxShadow: 'var(--shadow-sm)' },
+          md: { boxShadow: 'var(--shadow-md)' },
+          lg: { boxShadow: 'var(--shadow-lg)' },
+          xl: { boxShadow: 'var(--shadow-xl)' }
+        };
+        
+        const animationClasses = {
+          none: '',
+          pulse: 'animate-pulse',
+          bounce: 'animate-bounce',
+          spin: 'animate-spin'
+        };
+        
         return () => (
-          <Button variant={variantMatch?.[1]} size={sizeMatch?.[1]}>
+          <Button 
+            variant={variantMatch?.[1]} 
+            size={sizeMatch?.[1]}
+            className={`${stateClasses[componentState] || ''} ${animationClasses[animation] || ''}`}
+            style={shadowStyles[shadowEffect] || {}}
+            disabled={componentState === 'disabled'}
+          >
             Sample Button
           </Button>
         );
@@ -210,28 +243,94 @@ export function LiveComponentPreview({ jsxCode, componentName }) {
     const PreviewComponent = renderStaticPreview();
     setComponent(() => PreviewComponent);
     setError(null);
-  }, [jsxCode, contentType, contentCount, customText, textColor, refreshKey]);
+  }, [jsxCode, contentType, contentCount, customText, textColor, refreshKey, componentState, shadowEffect, animation]);
+
+  // Get OKLCH with hex fallback for current background
+  const getCurrentBgColor = () => {
+    if (previewBg === 'transparent') return 'Transparent';
+    if (previewBg.startsWith('var(')) {
+      const varName = previewBg.match(/var\((--[^)]+)\)/)?.[1];
+      if (varName) {
+        const computed = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+        // Check if it's OKLCH format
+        if (computed.includes('oklch')) {
+          const oklchMatch = computed.match(/oklch\([^)]+\)/);
+          const hexMatch = computed.match(/#[0-9a-fA-F]{6}/);
+          return `${oklchMatch?.[0] || computed} (${hexMatch?.[0] || 'no fallback'})`;
+        }
+        return computed;
+      }
+    }
+    return previewBg;
+  };
 
   return (
     <div className="border rounded-lg overflow-hidden">
-      <div className="bg-muted/50 p-3 border-b">
-        <div className="flex items-center justify-between gap-2 mb-2">
+      <div className="bg-muted/50 p-3 border-b space-y-2">
+        <div className="flex items-center justify-between gap-2">
           <span className="text-sm font-medium">Live Preview</span>
           <div className="flex items-center gap-2">
-            <Select value={previewBg} onValueChange={setPreviewBg}>
-              <SelectTrigger className="w-40 h-8 text-xs">
-                <SelectValue placeholder="Background" />
-              </SelectTrigger>
-              <SelectContent>
-                {bgColors.map(c => (
-                  <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
             <Button variant="ghost" size="sm" onClick={() => setShowCode(!showCode)}>
               {showCode ? <Eye className="h-4 w-4" /> : <Code className="h-4 w-4" />}
             </Button>
           </div>
+        </div>
+        
+        {/* Background and States Row */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <Select value={previewBg} onValueChange={setPreviewBg}>
+            <SelectTrigger className="w-40 h-8 text-xs">
+              <SelectValue placeholder="Background" />
+            </SelectTrigger>
+            <SelectContent>
+              {bgColors.map(c => (
+                <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          
+          <Select value={componentState} onValueChange={setComponentState}>
+            <SelectTrigger className="w-32 h-8 text-xs">
+              <SelectValue placeholder="State" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="default">Default</SelectItem>
+              <SelectItem value="hover">Hover</SelectItem>
+              <SelectItem value="active">Active</SelectItem>
+              <SelectItem value="focus">Focus</SelectItem>
+              <SelectItem value="disabled">Disabled</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <Select value={shadowEffect} onValueChange={setShadowEffect}>
+            <SelectTrigger className="w-32 h-8 text-xs">
+              <SelectValue placeholder="Shadow" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">No Shadow</SelectItem>
+              <SelectItem value="sm">Shadow SM</SelectItem>
+              <SelectItem value="md">Shadow MD</SelectItem>
+              <SelectItem value="lg">Shadow LG</SelectItem>
+              <SelectItem value="xl">Shadow XL</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <Select value={animation} onValueChange={setAnimation}>
+            <SelectTrigger className="w-32 h-8 text-xs">
+              <SelectValue placeholder="Animation" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">No Animation</SelectItem>
+              <SelectItem value="pulse">Pulse</SelectItem>
+              <SelectItem value="bounce">Bounce</SelectItem>
+              <SelectItem value="spin">Spin</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        
+        {/* Color Reference */}
+        <div className="text-xs text-muted-foreground font-mono bg-background/50 px-2 py-1 rounded">
+          BG: {getCurrentBgColor()}
         </div>
         
         {jsxCode.includes('text-') && (
