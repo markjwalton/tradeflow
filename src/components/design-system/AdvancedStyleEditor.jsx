@@ -318,35 +318,44 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
       {/* Editing Mode Header - Collapsible */}
       <Card className={hasUnsavedChanges ? 'border-l-4 border-l-amber-500 bg-amber-50/20' : ''}>
         <Collapsible open={isHeaderOpen} onOpenChange={setIsHeaderOpen}>
-          <div className="p-6">
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <h3 className="text-lg font-semibold text-foreground mb-1">Editing</h3>
-                <p className="text-sm text-muted-foreground">Element: <span className="font-medium text-foreground">{elementName}</span></p>
+          <CollapsibleTrigger asChild>
+            <div className="p-6 cursor-pointer hover:bg-muted/30 transition-colors">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <h3 className="text-lg font-semibold text-foreground">Editing</h3>
+                  {hasUnsavedChanges && !isHeaderOpen && (
+                    <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
+                  )}
+                </div>
+                {isHeaderOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
               </div>
-              <CollapsibleTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                  {isHeaderOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-                </Button>
-              </CollapsibleTrigger>
             </div>
-            
-            <div className="flex items-center gap-2 mb-4 flex-wrap">
-              <Badge variant="secondary" className="text-xs">{instances} Instances</Badge>
-              {hasUnsavedChanges && (
-                <>
-                  <Badge variant="warning" className="bg-amber-100 text-amber-800 border-amber-400">
-                    {editMode === 'global' ? 'Global updates pending' : 'Custom pending'}
-                  </Badge>
-                  <Badge variant="destructive" className="text-xs">
-                    {editMode === 'global' ? editedGlobalCategories.size : editedCustomCategories.size} unsaved
-                  </Badge>
-                </>
-              )}
-            </div>
+          </CollapsibleTrigger>
 
-            <CollapsibleContent>
-              <div className="flex items-center justify-between gap-3 pt-4 border-t">
+          <CollapsibleContent>
+            <div className="px-6 pb-6 space-y-4">
+              <div>
+                <p className="text-sm text-muted-foreground mb-3">Element: <span className="font-medium text-foreground">{elementName}</span></p>
+                
+                <div className="flex items-center gap-2 mb-4 flex-wrap">
+                  <Badge variant="secondary" className="text-xs">{instances} Instances</Badge>
+                  <Badge variant="warning" className="bg-blue-100 text-blue-800 border-blue-400">
+                    3 pending updates
+                  </Badge>
+                  {hasUnsavedChanges && (
+                    <>
+                      <Badge variant="warning" className="bg-amber-100 text-amber-800 border-amber-400">
+                        {editMode === 'global' ? 'Global updates pending' : 'Custom pending'}
+                      </Badge>
+                      <Badge variant="destructive" className="text-xs">
+                        {editMode === 'global' ? editedGlobalCategories.size : editedCustomCategories.size} unsaved
+                      </Badge>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between gap-3 pb-4 border-b">
                 <div className="flex items-center gap-2 bg-muted p-1 rounded-lg">
                   <Button
                     variant={editMode === 'global' ? 'default' : 'ghost'}
@@ -374,66 +383,61 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                   Apply Style
                 </Button>
               </div>
-            </CollapsibleContent>
-          </div>
+
+              {/* Applied Styles Cards */}
+              {savedStylesList.length > 0 && (
+                <div className="space-y-3">
+                  {savedStylesList.map(style => (
+                    <div 
+                      key={style.id}
+                      className="flex items-center justify-between p-4 bg-gradient-to-r from-muted/40 to-muted/20 rounded-xl border border-border hover:border-primary/40 transition-all group"
+                    >
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-sm font-semibold text-foreground">{style.name}</span>
+                          <Badge 
+                            variant={style.mode === 'global' ? 'default' : 'secondary'} 
+                            className="text-xs px-2 py-0.5"
+                          >
+                            {style.mode}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                          <span className="px-2 py-1 bg-background/60 rounded">{style.variant}</span>
+                          <span className="px-2 py-1 bg-background/60 rounded">{style.size}</span>
+                          <span className="px-2 py-1 bg-background/60 rounded">{style.state}</span>
+                          <span>•</span>
+                          <span className="italic">{style.timestamp}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleLoadStyle(style)}
+                          className="h-9 px-3"
+                        >
+                          <Pencil className="h-3.5 w-3.5 mr-1.5" />
+                          Edit
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDeleteStyle(style.id)}
+                          className="h-9 px-3 text-destructive hover:text-destructive hover:bg-destructive/10"
+                        >
+                          <Trash2 className="h-3.5 w-3.5 mr-1.5" />
+                          Delete
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </CollapsibleContent>
         </Collapsible>
       </Card>
-
-      {/* Saved Styles List */}
-      {savedStylesList.length > 0 && (
-        <Card>
-          <CardContent className="p-6">
-            <h4 className="text-lg font-semibold mb-4">Applied Styles</h4>
-            <div className="space-y-3">
-              {savedStylesList.map(style => (
-                <div 
-                  key={style.id}
-                  className="flex items-center justify-between p-4 bg-gradient-to-r from-muted/40 to-muted/20 rounded-xl border border-border hover:border-primary/40 transition-all group"
-                >
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-sm font-semibold text-foreground">{style.name}</span>
-                      <Badge 
-                        variant={style.mode === 'global' ? 'default' : 'secondary'} 
-                        className="text-xs px-2 py-0.5"
-                      >
-                        {style.mode}
-                      </Badge>
-                    </div>
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                      <span className="px-2 py-1 bg-background/60 rounded">{style.variant}</span>
-                      <span className="px-2 py-1 bg-background/60 rounded">{style.size}</span>
-                      <span className="px-2 py-1 bg-background/60 rounded">{style.state}</span>
-                      <span>•</span>
-                      <span className="italic">{style.timestamp}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleLoadStyle(style)}
-                      className="h-9 px-3"
-                    >
-                      <Pencil className="h-3.5 w-3.5 mr-1.5" />
-                      Edit
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDeleteStyle(style.id)}
-                      className="h-9 px-3 text-destructive hover:text-destructive hover:bg-destructive/10"
-                    >
-                      <Trash2 className="h-3.5 w-3.5 mr-1.5" />
-                      Delete
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
       {/* Style Categories */}
       <Card>
