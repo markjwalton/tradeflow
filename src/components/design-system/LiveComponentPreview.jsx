@@ -51,7 +51,7 @@ const textColors = [
   { label: 'Charcoal 900', value: 'var(--charcoal-900)' },
 ];
 
-export function LiveComponentPreview({ jsxCode, componentName, componentState = 'default', shadowEffect = 'none', animation = 'none', buttonVariant = 'default', buttonSize = 'default' }) {
+export function LiveComponentPreview({ jsxCode, componentName, componentState = 'default', shadowEffect = 'none', animation = 'none', buttonVariant = 'default', buttonSize = 'default', editMode = 'global' }) {
   const [showCode, setShowCode] = useState(false);
   const [error, setError] = useState(null);
   const [Component, setComponent] = useState(null);
@@ -230,7 +230,12 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
             <div className="border border-border rounded-lg p-4 bg-card">
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <h3 className="text-sm font-semibold text-foreground mb-1">Editing Mode: Button</h3>
+                  <h3 className="text-sm font-semibold text-foreground mb-1">
+                    Editing Mode: Button 
+                    <Badge variant={editMode === 'global' ? 'default' : 'secondary'} className="ml-2">
+                      {editMode === 'global' ? 'Global' : 'Custom'}
+                    </Badge>
+                  </h3>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <span className="px-2 py-1 bg-primary/10 text-primary rounded capitalize">{buttonVariant} / {buttonSize}</span>
                     <span className="px-2 py-1 bg-accent/10 text-accent-700 rounded">{componentState}</span>
@@ -240,27 +245,38 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="default">5 Instances</Badge>
-                  <Button size="sm" variant="outline" onClick={() => window.dispatchEvent(new CustomEvent('save-custom-variation'))}>
-                    Save Custom
-                  </Button>
-                  <Button size="sm" onClick={() => window.dispatchEvent(new CustomEvent('update-global-styles'))}>
-                    Update Global
-                  </Button>
+                  {editMode === 'global' ? (
+                    <>
+                      <Badge variant="default">5 Instances</Badge>
+                      <Button size="sm" onClick={() => window.dispatchEvent(new CustomEvent('update-global-styles'))}>
+                        Update Global
+                      </Button>
+                    </>
+                  ) : (
+                    <Button size="sm" variant="outline" onClick={() => window.dispatchEvent(new CustomEvent('save-custom-variation'))}>
+                      Save Custom
+                    </Button>
+                  )}
                 </div>
               </div>
               <p className="text-xs text-muted-foreground mb-3">
-                "Save Custom" creates a new variation • "Update Global" modifies the design system
+                {editMode === 'global' 
+                  ? 'Editing core design system • Changes affect all instances'
+                  : 'Creating custom variation • Independent of global styles • Can be deleted anytime'
+                }
               </p>
 
-              {/* Saved Styles List */}
-              {savedStyles.length > 0 && (
+              {/* Saved Custom Styles List */}
+              {savedStyles.filter(s => s.isCustom).length > 0 && (
                 <div className="space-y-2 pt-3 border-t border-border">
-                  <p className="text-xs font-medium text-muted-foreground">Saved Configurations:</p>
-                  {savedStyles.map((style, index) => (
+                  <p className="text-xs font-medium text-muted-foreground">Custom Variations:</p>
+                  {savedStyles.filter(s => s.isCustom).map((style, index) => (
                     <div key={index} className="flex items-center justify-between p-2 bg-muted/50 rounded-md group">
                       <div className="flex-1 cursor-pointer" onClick={() => handleApplyStyle(style)}>
-                        <p className="text-xs font-medium text-foreground">{style.name}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-xs font-medium text-foreground">{style.name}</p>
+                          <Badge variant="secondary" className="text-xs">Custom</Badge>
+                        </div>
                         <p className="text-xs text-muted-foreground">
                           {style.variant} • {style.size} • {style.state}
                         </p>
@@ -272,12 +288,12 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
                           className="h-7 px-2 text-xs"
                           onClick={() => handleApplyStyle(style)}
                         >
-                          Apply
+                          Load
                         </Button>
                         <Button 
                           size="sm" 
                           variant="ghost" 
-                          className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100"
+                          className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 text-destructive hover:text-destructive"
                           onClick={() => handleDeleteStyle(index)}
                         >
                           <X className="h-3 w-3" />

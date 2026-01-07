@@ -23,6 +23,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   const [componentState, setComponentState] = useState('default');
   const [shadowEffect, setShadowEffect] = useState('none');
   const [animation, setAnimation] = useState('none');
+  const [editMode, setEditMode] = useState('global'); // 'global' or 'custom'
+  const [customStyleName, setCustomStyleName] = useState('');
 
   const selectedElement = propSelectedElement || 'button';
   const selectedComponent = COMPONENT_TYPES.find(c => c.value === selectedElement);
@@ -141,35 +143,43 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         shadow: shadowEffect,
         animation: newAnimation,
         buttonVariant: styleValues['--button-variant'] || 'default',
-        buttonSize: styleValues['--button-size'] || 'default'
+        buttonSize: styleValues['--button-size'] || 'default',
+        editMode: editMode
       });
     }
   };
 
   useEffect(() => {
     const handleSaveCustom = () => {
-      const customName = prompt('Enter name for custom button variation:');
-      if (customName) {
-        const customVariation = {
-          name: customName,
-          variant: styleValues['--button-variant'] || 'default',
-          size: styleValues['--button-size'] || 'default',
-          state: componentState,
-          shadow: shadowEffect,
-          animation: animation,
-          styles: { ...styleValues }
-        };
-        
-        window.dispatchEvent(new CustomEvent('save-style-configuration', { 
-          detail: customVariation 
-        }));
-        
-        toast.success(`Custom variation "${customName}" created`);
+      if (editMode === 'custom') {
+        const customName = customStyleName || prompt('Enter name for custom button variation:');
+        if (customName) {
+          const customVariation = {
+            name: customName,
+            variant: styleValues['--button-variant'] || 'default',
+            size: styleValues['--button-size'] || 'default',
+            state: componentState,
+            shadow: shadowEffect,
+            animation: animation,
+            styles: { ...styleValues },
+            isCustom: true
+          };
+          
+          window.dispatchEvent(new CustomEvent('save-style-configuration', { 
+            detail: customVariation 
+          }));
+          
+          toast.success(`Custom variation "${customName}" created`);
+          setCustomStyleName('');
+        }
       }
     };
 
     const handleUpdateGlobal = () => {
-      handleStyleSave();
+      if (editMode === 'global') {
+        handleStyleSave();
+        toast.success('Global design system updated');
+      }
     };
 
     window.addEventListener('save-custom-variation', handleSaveCustom);
@@ -179,7 +189,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
       window.removeEventListener('save-custom-variation', handleSaveCustom);
       window.removeEventListener('update-global-styles', handleUpdateGlobal);
     };
-  }, [styleValues, componentState, shadowEffect, animation]);
+  }, [styleValues, componentState, shadowEffect, animation, editMode, customStyleName]);
 
   const handleCreateNew = () => {
     toast.info('Creating new style variant...');
