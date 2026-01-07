@@ -20,6 +20,7 @@ Deno.serve(async (req) => {
       "TenantAccess",
       
       // CRM Pages
+      "CRM",
       "CRMCustomers",
       "CRMCustomerDetail",
       "CRMCustomerForm",
