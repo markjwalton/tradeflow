@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Eye, Code, ArrowRight, ChevronDown, Check, X, AlertCircle, Info, Plus, Minus, Settings, User } from 'lucide-react';
+import { Eye, Code, ArrowRight, ChevronDown, Check, X, AlertCircle, Info, Plus, Minus, Settings, User, Save, Pencil, Trash2, Search, Download, Upload, RefreshCw, AlertTriangle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import * as ButtonComponents from '@/components/ui/button';
 import * as CardComponents from '@/components/ui/card';
@@ -19,7 +19,26 @@ const componentImports = {
   ...InputComponents,
   ...TabsComponents,
   toast,
-  ArrowRight, ChevronDown, Check, X, AlertCircle, Info, Plus, Minus, Settings, User
+  ArrowRight, ChevronDown, Check, X, AlertCircle, Info, Plus, Minus, Settings, User, Save, Pencil, Trash2, Search, Download, Upload, RefreshCw, AlertTriangle
+};
+
+// Icon mapping for action types
+const actionIcons = {
+  general: Settings,
+  save: Save,
+  edit: Pencil,
+  delete: Trash2,
+  add: Plus,
+  close: X,
+  settings: Settings,
+  user: User,
+  search: Search,
+  download: Download,
+  upload: Upload,
+  refresh: RefreshCw,
+  check: Check,
+  info: Info,
+  warning: AlertTriangle
 };
 
 const bgColors = [
@@ -156,7 +175,7 @@ const textColors = [
   { label: 'Destructive 900', value: 'var(--destructive-900)' },
 ];
 
-export function LiveComponentPreview({ jsxCode, componentName, componentState = 'default', shadowEffect = 'none', animation = 'none', buttonVariant = 'default', buttonSize = 'default', editMode = 'global', hasEdits = false, onEditModeChange, iconStrokeWidth = '2', iconColor = 'currentColor' }) {
+export function LiveComponentPreview({ jsxCode, componentName, componentState = 'default', shadowEffect = 'none', animation = 'none', buttonVariant = 'default', buttonSize = 'default', buttonActionType = 'general', buttonContentType = 'text-only', editMode = 'global', hasEdits = false, onEditModeChange, iconStrokeWidth = '2', iconColor = 'currentColor' }) {
   const [showCode, setShowCode] = useState(false);
   const [error, setError] = useState(null);
   const [Component, setComponent] = useState(null);
@@ -197,9 +216,9 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
 
   // Force refresh when props change
   useEffect(() => {
-    console.log('[LiveComponentPreview] Props changed:', { componentState, shadowEffect, animation, iconStrokeWidth, iconColor });
+    console.log('[LiveComponentPreview] Props changed:', { componentState, shadowEffect, animation, buttonActionType, buttonContentType, iconStrokeWidth, iconColor });
     setRefreshKey(prev => prev + 1);
-  }, [componentState, shadowEffect, animation, iconStrokeWidth, iconColor]);
+  }, [componentState, shadowEffect, animation, buttonActionType, buttonContentType, iconStrokeWidth, iconColor]);
 
   useEffect(() => {
     console.log('[LiveComponentPreview] useEffect triggered, refreshKey:', refreshKey);
@@ -348,6 +367,24 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
           toast.success(`Deleted: ${style.name}`);
         };
 
+        const ActionIcon = actionIcons[buttonActionType] || Settings;
+        const getButtonContent = (size, variant) => {
+          const IconComponent = ActionIcon;
+          if (buttonContentType === 'icon-only' || size === 'icon') {
+            return <IconComponent className="h-4 w-4" strokeWidth={iconStrokeWidth} style={{ color: iconColor }} />;
+          } else if (buttonContentType === 'icon-text') {
+            const label = size === 'sm' ? 'Small' : size === 'lg' ? 'Large' : 'Default';
+            return (
+              <>
+                <IconComponent className="h-4 w-4" strokeWidth={iconStrokeWidth} style={{ color: iconColor }} />
+                {label}
+              </>
+            );
+          } else {
+            return size === 'sm' ? 'Small' : size === 'lg' ? 'Large' : 'Default';
+          }
+        };
+
         return () => (
           <div className="w-full space-y-4">
             {/* State demo buttons */}
@@ -357,14 +394,32 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
                 size={buttonSize}
                 className="focus:ring-2 focus:ring-primary focus:ring-offset-2"
               >
-                Keyboard Focus (Tab)
+                {buttonContentType === 'icon-only' ? (
+                  <ActionIcon className="h-4 w-4" strokeWidth={iconStrokeWidth} style={{ color: iconColor }} />
+                ) : buttonContentType === 'icon-text' ? (
+                  <>
+                    <ActionIcon className="h-4 w-4" strokeWidth={iconStrokeWidth} style={{ color: iconColor }} />
+                    Keyboard Focus (Tab)
+                  </>
+                ) : (
+                  'Keyboard Focus (Tab)'
+                )}
               </Button>
               <Button 
                 variant={buttonVariant} 
                 size={buttonSize}
                 disabled
               >
-                Disabled State
+                {buttonContentType === 'icon-only' ? (
+                  <ActionIcon className="h-4 w-4" strokeWidth={iconStrokeWidth} style={{ color: iconColor }} />
+                ) : buttonContentType === 'icon-text' ? (
+                  <>
+                    <ActionIcon className="h-4 w-4" strokeWidth={iconStrokeWidth} style={{ color: iconColor }} />
+                    Disabled State
+                  </>
+                ) : (
+                  'Disabled State'
+                )}
               </Button>
             </div>
 
@@ -387,7 +442,7 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
                           style={shadowStyles[shadowEffect] || {}}
                           disabled={componentState === 'disabled'}
                         >
-                          {size === 'sm' ? 'Small' : size === 'lg' ? 'Large' : 'Default'}
+                          {getButtonContent(size, variant)}
                         </Button>
                       );
                     })}
@@ -398,7 +453,7 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
                       style={shadowStyles[shadowEffect] || {}}
                       disabled={componentState === 'disabled'}
                     >
-                      <Settings 
+                      <ActionIcon 
                         className="h-4 w-4" 
                         strokeWidth={iconStrokeWidth}
                         style={{ color: iconColor }}
@@ -440,7 +495,7 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
     const PreviewComponent = renderStaticPreview();
     setComponent(() => PreviewComponent);
     setError(null);
-  }, [jsxCode, contentType, contentCount, customText, textColor, refreshKey, componentState, shadowEffect, animation]);
+  }, [jsxCode, contentType, contentCount, customText, textColor, refreshKey, componentState, shadowEffect, animation, buttonActionType, buttonContentType, buttonVariant, buttonSize, iconStrokeWidth, iconColor]);
 
   // Get OKLCH with hex fallback for current background
   const getCurrentBgColor = () => {

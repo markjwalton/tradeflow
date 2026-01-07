@@ -53,6 +53,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
       state: 'default',
       shadow: 'lg',
       animation: 'pulse',
+      actionType: 'save',
       contentType: 'icon-text',
       iconStrokeWidth: '2.5',
       iconColor: 'var(--primary-500)',
@@ -67,6 +68,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
       state: 'focus',
       shadow: 'none',
       animation: 'none',
+      actionType: 'settings',
       contentType: 'icon-only',
       iconStrokeWidth: '1.5',
       iconColor: 'var(--charcoal-600)',
@@ -180,6 +182,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         animation,
         buttonVariant: styleValues['--button-variant'] || 'default',
         buttonSize: styleValues['--button-size'] || 'default',
+        buttonActionType: styleValues['--button-action-type'] || 'general',
         buttonContentType: styleValues['--button-content-type'] || 'text-only',
         iconStrokeWidth: styleValues['--icon-stroke-width'] || '2',
         iconColor: styleValues['--icon-color'] || 'currentColor'
@@ -202,6 +205,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         animation,
         buttonVariant: styleValues['--button-variant'] || 'default',
         buttonSize: styleValues['--button-size'] || 'default',
+        buttonActionType: styleValues['--button-action-type'] || 'general',
         buttonContentType: styleValues['--button-content-type'] || 'text-only',
         iconStrokeWidth: styleValues['--icon-stroke-width'] || '2',
         iconColor: styleValues['--icon-color'] || 'currentColor'
@@ -224,6 +228,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         animation,
         buttonVariant: styleValues['--button-variant'] || 'default',
         buttonSize: styleValues['--button-size'] || 'default',
+        buttonActionType: styleValues['--button-action-type'] || 'general',
         buttonContentType: styleValues['--button-content-type'] || 'text-only',
         iconStrokeWidth: styleValues['--icon-stroke-width'] || '2',
         iconColor: styleValues['--icon-color'] || 'currentColor'
@@ -241,6 +246,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         animation: newAnimation,
         buttonVariant: styleValues['--button-variant'] || 'default',
         buttonSize: styleValues['--button-size'] || 'default',
+        buttonActionType: styleValues['--button-action-type'] || 'general',
         buttonContentType: styleValues['--button-content-type'] || 'text-only',
         editMode: editMode,
         hasEdits: editMode === 'global' ? editedGlobalCategories.size > 0 : editedCustomCategories.size > 0,
@@ -278,6 +284,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         animation,
         buttonVariant: styleValues['--button-variant'] || 'default',
         buttonSize: styleValues['--button-size'] || 'default',
+        buttonActionType: styleValues['--button-action-type'] || 'general',
         buttonContentType: styleValues['--button-content-type'] || 'text-only',
         editMode: editMode,
         hasEdits: editMode === 'global' ? editedGlobalCategories.size > 0 : editedCustomCategories.size > 0,
@@ -298,6 +305,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
       state: componentState,
       shadow: shadowEffect,
       animation,
+      actionType: styleValues['--button-action-type'] || 'general',
       contentType: styleValues['--button-content-type'] || 'text-only',
       iconStrokeWidth: styleValues['--icon-stroke-width'] || '2',
       iconColor: styleValues['--icon-color'] || 'currentColor',
@@ -319,6 +327,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
     setComponentState(style.state);
     setShadowEffect(style.shadow);
     setAnimation(style.animation);
+    if (style.actionType) handleStyleChange('--button-action-type', style.actionType);
     if (style.contentType) handleStyleChange('--button-content-type', style.contentType);
     handleStyleChange('--icon-stroke-width', style.iconStrokeWidth);
     handleStyleChange('--icon-color', style.iconColor);
@@ -417,6 +426,9 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                         <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
                           <span className="px-2 py-1 bg-background/60 rounded">{style.variant}</span>
                           <span className="px-2 py-1 bg-background/60 rounded">{style.size}</span>
+                          {style.actionType && style.actionType !== 'general' && (
+                            <span className="px-2 py-1 bg-indigo-50 text-indigo-700 rounded border border-indigo-200">{style.actionType}</span>
+                          )}
                           {style.contentType && (
                             <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded border border-blue-200">{style.contentType}</span>
                           )}
@@ -521,6 +533,33 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               />
             )}
             
+            {/* Button Action Type - only for button components */}
+            {selectedElement === 'button' && (
+              <StyleProperty
+                label="Button Action Type"
+                value={styleValues['--button-action-type'] || 'general'}
+                onChange={(val) => handleStyleChange('--button-action-type', val)}
+                type="select"
+                options={[
+                  { value: 'general', label: 'General' },
+                  { value: 'save', label: 'Save (Floppy Disk)' },
+                  { value: 'edit', label: 'Edit (Pencil)' },
+                  { value: 'delete', label: 'Delete (Trash)' },
+                  { value: 'add', label: 'Add (Plus)' },
+                  { value: 'close', label: 'Close (X)' },
+                  { value: 'settings', label: 'Settings (Gear)' },
+                  { value: 'user', label: 'User (Person)' },
+                  { value: 'search', label: 'Search (Magnifier)' },
+                  { value: 'download', label: 'Download (Arrow Down)' },
+                  { value: 'upload', label: 'Upload (Arrow Up)' },
+                  { value: 'refresh', label: 'Refresh (Circular Arrow)' },
+                  { value: 'check', label: 'Check (Checkmark)' },
+                  { value: 'info', label: 'Info (i Circle)' },
+                  { value: 'warning', label: 'Warning (Triangle)' }
+                ]}
+              />
+            )}
+
             {/* Button Content Type - only for button components */}
             {selectedElement === 'button' && (
               <StyleProperty
