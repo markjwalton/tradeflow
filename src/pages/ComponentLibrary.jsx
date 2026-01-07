@@ -7,43 +7,17 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Search, Download, Grid3x3, Layers, Box, Eye, Code, ChevronDown } from 'lucide-react';
+import { Search, Download, Grid3x3, Layers, Box, Settings, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
-
-// Component Preview Renderer
-function ComponentPreview({ jsxCode, componentName }) {
-  const [showCode, setShowCode] = useState(false);
-  
-  // For safety, we'll just show the code for now
-  // In a full implementation, you'd use a sandbox or iframe
-  return (
-    <div className="border rounded-lg overflow-hidden">
-      <div className="bg-muted/50 p-4 flex items-center justify-between border-b">
-        <span className="text-sm font-medium">Preview</span>
-        <Button variant="ghost" size="sm" onClick={() => setShowCode(!showCode)}>
-          {showCode ? <Eye className="h-4 w-4" /> : <Code className="h-4 w-4" />}
-        </Button>
-      </div>
-      <div className="p-6 bg-background">
-        {showCode ? (
-          <pre className="text-xs bg-muted p-4 rounded overflow-x-auto">
-            <code>{jsxCode}</code>
-          </pre>
-        ) : (
-          <div className="text-center text-sm text-muted-foreground">
-            Interactive preview coming soon
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
+import { LiveComponentPreview } from '@/components/design-system/LiveComponentPreview';
+import { StyleTokenEditor } from '@/components/design-system/StyleTokenEditor';
 
 export default function ComponentLibrary() {
   const queryClient = useQueryClient();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedComponent, setExpandedComponent] = useState(null);
+  const [editingTokens, setEditingTokens] = useState(null);
 
   const { data: components = [], isLoading } = useQuery({
     queryKey: ['components'],
@@ -66,6 +40,22 @@ export default function ComponentLibrary() {
     },
     onError: (error) => {
       toast.error('Failed to extract components: ' + error.message);
+    },
+  });
+
+  const updateTokensMutation = useMutation({
+    mutationFn: async (tokenUpdates) => {
+      const response = await base44.functions.invoke('updateGlobalCSS', { 
+        cssVariables: tokenUpdates 
+      });
+      return response;
+    },
+    onSuccess: () => {
+      toast.success('Design tokens updated site-wide');
+      setTimeout(() => window.location.reload(), 1000);
+    },
+    onError: (error) => {
+      toast.error('Failed to update tokens: ' + error.message);
     },
   });
 
@@ -193,10 +183,31 @@ export default function ComponentLibrary() {
 
                     {latestVersion?.jsx_code && (
                       <div>
-                        <h4 className="text-sm font-medium mb-3">Preview</h4>
-                        <ComponentPreview 
+                        <div className="flex items-center justify-between mb-3">
+                          <h4 className="text-sm font-medium">Preview</h4>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => setEditingTokens(editingTokens === component.id ? null : component.id)}
+                          >
+                            <Settings className="h-4 w-4 mr-2" />
+                            {editingTokens === component.id ? 'Hide' : 'Edit'} Tokens
+                          </Button>
+                        </div>
+                        <LiveComponentPreview 
                           jsxCode={latestVersion.jsx_code}
                           componentName={component.name}
+                        />
+                      </div>
+                    )}
+
+                    {editingTokens === component.id && latestVersion?.style_token_references && (
+                      <div>
+                        <h4 className="text-sm font-medium mb-3">Style Token Editor</h4>
+                        <StyleTokenEditor
+                          tokens={latestVersion.style_token_references}
+                          componentName={component.name}
+                          onUpdate={(tokens) => updateTokensMutation.mutate(tokens)}
                         />
                       </div>
                     )}
