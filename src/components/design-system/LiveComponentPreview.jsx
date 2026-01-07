@@ -44,6 +44,14 @@ export function LiveComponentPreview({ jsxCode, componentName }) {
 
   const [customText, setCustomText] = useState('');
   const [showCustomInput, setShowCustomInput] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // Force refresh when CSS variables change
+  useEffect(() => {
+    const handleCSSChange = () => setRefreshKey(prev => prev + 1);
+    window.addEventListener('css-variables-updated', handleCSSChange);
+    return () => window.removeEventListener('css-variables-updated', handleCSSChange);
+  }, []);
 
   useEffect(() => {
     // Render based on component patterns
