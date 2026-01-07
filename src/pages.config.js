@@ -110,6 +110,7 @@ import TransmitHome from './pages/TransmitHome';
 import UXShowcase from './pages/UXShowcase';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import WebsiteThemeManager from './pages/WebsiteThemeManager';
+import CRM from './pages/CRM';
 import __Layout from './Layout.jsx';
 
 
@@ -226,6 +227,7 @@ export const PAGES = {
     "UXShowcase": UXShowcase,
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
     "WebsiteThemeManager": WebsiteThemeManager,
+    "CRM": CRM,
 }
 
 export const pagesConfig = {
