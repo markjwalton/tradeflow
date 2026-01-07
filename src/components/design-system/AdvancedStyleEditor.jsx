@@ -247,7 +247,6 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
       <Card>
         <StyleCategory
           title="Component Properties"
-          currentValue={`${componentState} • ${shadowEffect} • ${animation}`}
           isLive={true}
           isApplicable={true}
           isEdited={editMode === 'global' ? editedGlobalCategories.has('properties') : editedCustomCategories.has('properties')}
@@ -335,7 +334,6 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         </StyleCategory>
         <StyleCategory
           title="Border Styles"
-          currentValue={styleValues['--color-border'] || 'var(--charcoal-200)'}
           isLive={isStyleLive('--color-border')}
           isApplicable={isStyleApplicable('border')}
           isEdited={editMode === 'global' ? editedGlobalCategories.has('border') : editedCustomCategories.has('border')}
@@ -360,7 +358,6 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
 
         <StyleCategory
           title="Spacing"
-          currentValue={styleValues['--spacing-4'] || 'var(--spacing-4)'}
           isLive={isStyleLive('--spacing-4')}
           isApplicable={isStyleApplicable('padding')}
           isEdited={editMode === 'global' ? editedGlobalCategories.has('padding') : editedCustomCategories.has('padding')}
@@ -404,7 +401,6 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
 
         <StyleCategory
           title="Typography"
-          currentValue={styleValues['--font-family-display'] || 'var(--font-family-display)'}
           isLive={isStyleLive('--font-family-display')}
           isApplicable={isStyleApplicable('font')}
           isEdited={editMode === 'global' ? editedGlobalCategories.has('font') : editedCustomCategories.has('font')}
@@ -516,7 +512,6 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
 
         <StyleCategory
           title="Colors"
-          currentValue={styleValues['--color-primary'] || 'var(--primary-500)'}
           isLive={isStyleLive('--color-primary')}
           isApplicable={isStyleApplicable('text')}
           isEdited={editMode === 'global' ? editedGlobalCategories.has('text') : editedCustomCategories.has('text')}
@@ -564,7 +559,6 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
 
         <StyleCategory
           title="Backgrounds"
-          currentValue={styleValues['--color-background'] || 'var(--background-100)'}
           isLive={isStyleLive('--color-background')}
           isApplicable={isStyleApplicable('background')}
           isEdited={editMode === 'global' ? editedGlobalCategories.has('background') : editedCustomCategories.has('background')}
@@ -644,7 +638,6 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
 
         <StyleCategory
           title="Shadows & Radius"
-          currentValue={styleValues['--shadow-card'] || 'var(--shadow-sm)'}
           isLive={isStyleLive('--shadow-card')}
           isApplicable={true}
           isEdited={editMode === 'global' ? editedGlobalCategories.has('css3') : editedCustomCategories.has('css3')}

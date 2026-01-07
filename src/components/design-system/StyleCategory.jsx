@@ -23,11 +23,6 @@ export function StyleCategory({
       >
         <span className="font-medium">{title}</span>
         <div className="flex items-center gap-3">
-          {isApplicable && currentValue && (
-            <span className="text-xs font-mono text-muted-foreground">
-              Current: {currentValue}
-            </span>
-          )}
           <div 
             className={`w-3 h-3 rounded-full ${
               isEdited ? 'bg-amber-500' : isLive ? 'bg-green-500' : 'bg-red-500'
