@@ -199,24 +199,28 @@ export default function GenericNavEditor({
     return slugs.filter(s => !deletedSlugs.includes(s)).sort();
   }, [config?.source_slugs, allPages]);
   
-  // Initial expand logic - always check user settings on mount
+  // Initial expand logic - check user settings AND previously expanded folders
   React.useEffect(() => {
     if (!initialExpandDone && items.length > 0) {
       base44.auth.me()
         .then(user => {
-          const defaultCollapsed = user?.ui_preferences?.navManager_settings?.defaultCollapsed || false;
-
-          if (!defaultCollapsed) {
-            // Expand all top-level folders
-            const foldersToExpand = items
-              .filter(item => !item.parent_id && item.item_type === "folder")
-              .map(item => item.id);
-            setExpandedParents(new Set(foldersToExpand));
-            sessionStorage.setItem(`nav_expanded_${configType}`, JSON.stringify(foldersToExpand));
+          const savedExpanded = user?.ui_preferences?.navManager_expanded?.[configType];
+          
+          if (savedExpanded && Array.isArray(savedExpanded)) {
+            // Use saved expanded state
+            setExpandedParents(new Set(savedExpanded));
           } else {
-            // Everything collapsed
-            setExpandedParents(new Set());
-            sessionStorage.setItem(`nav_expanded_${configType}`, JSON.stringify([]));
+            const defaultCollapsed = user?.ui_preferences?.navManager_settings?.defaultCollapsed || false;
+            if (!defaultCollapsed) {
+              // Expand all top-level folders
+              const foldersToExpand = items
+                .filter(item => !item.parent_id && item.item_type === "folder")
+                .map(item => item.id);
+              setExpandedParents(new Set(foldersToExpand));
+            } else {
+              // Everything collapsed
+              setExpandedParents(new Set());
+            }
           }
           
           setInitialExpandDone(true);
@@ -227,7 +231,6 @@ export default function GenericNavEditor({
             .filter(item => !item.parent_id && item.item_type === "folder")
             .map(item => item.id);
           setExpandedParents(new Set(foldersToExpand));
-          sessionStorage.setItem(`nav_expanded_${configType}`, JSON.stringify(foldersToExpand));
           setInitialExpandDone(true);
         });
     }
