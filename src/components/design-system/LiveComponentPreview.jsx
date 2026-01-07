@@ -61,6 +61,16 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
   const [customText, setCustomText] = useState('');
   const [textColor, setTextColor] = useState('default');
   const [refreshKey, setRefreshKey] = useState(0);
+  const [savedStyles, setSavedStyles] = useState([]);
+
+  // Listen for saved style configurations
+  useEffect(() => {
+    const handleSaveStyle = (event) => {
+      setSavedStyles(prev => [...prev, event.detail]);
+    };
+    window.addEventListener('save-style-configuration', handleSaveStyle);
+    return () => window.removeEventListener('save-style-configuration', handleSaveStyle);
+  }, []);
 
   // Force refresh when CSS variables change
   useEffect(() => {
