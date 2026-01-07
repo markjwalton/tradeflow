@@ -355,7 +355,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 <h3 className="text-lg font-semibold text-foreground">Editing</h3>
                 <div className="flex items-center gap-2">
                   {hasUnsavedChanges && !isHeaderOpen && (
-                    <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
+                    <div className="h-3 w-3 rounded-full bg-amber-500 animate-pulse" />
                   )}
                   {isHeaderOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                 </div>
