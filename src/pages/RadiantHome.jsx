@@ -10,8 +10,6 @@ import { LogoCloud } from '@/components/radiant/LogoCloud';
 import { Navbar } from '@/components/radiant/Navbar';
 import { Screenshot } from '@/components/radiant/Screenshot';
 import { Heading, Subheading } from '@/components/radiant/Text';
-import { useWebsiteAssets } from '@/components/cms/useWebsiteAssets';
-
 function Hero() {
   return (
     <div className="relative">
@@ -48,8 +46,6 @@ function Hero() {
 }
 
 function FeatureSection() {
-  const { getAssetUrl } = useWebsiteAssets('radiant');
-  
   return (
     <div className="overflow-hidden">
       <Container className="pb-24">
@@ -68,8 +64,6 @@ function FeatureSection() {
 }
 
 function BentoSection() {
-  const { getAssetUrl } = useWebsiteAssets('radiant');
-  
   return (
     <Container>
       <Subheading>Sales</Subheading>
@@ -141,8 +135,6 @@ function BentoSection() {
 }
 
 function DarkBentoSection() {
-  const { getAssetUrl } = useWebsiteAssets('radiant');
-  
   return (
     <div className="mx-2 mt-2 rounded-[2rem] bg-gray-900 py-32">
       <Container>
