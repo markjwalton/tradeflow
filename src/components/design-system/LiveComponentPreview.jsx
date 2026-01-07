@@ -64,7 +64,10 @@ export function LiveComponentPreview({ jsxCode, componentName }) {
 
   // Force refresh when CSS variables change
   useEffect(() => {
-    const handleCSSChange = () => setRefreshKey(prev => prev + 1);
+    const handleCSSChange = () => {
+      console.log('[LiveComponentPreview] Received css-variables-updated event, refreshing');
+      setRefreshKey(prev => prev + 1);
+    };
     window.addEventListener('css-variables-updated', handleCSSChange);
     return () => window.removeEventListener('css-variables-updated', handleCSSChange);
   }, []);

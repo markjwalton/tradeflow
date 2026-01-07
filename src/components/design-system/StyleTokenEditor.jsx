@@ -298,18 +298,26 @@ export function StyleTokenEditor({ tokens = [], onUpdate, componentName }) {
   };
 
   const updateToken = (tokenName, value) => {
+    console.log('[StyleTokenEditor] updateToken called:', tokenName, '=', value);
     setLocalTokens(prev => ({ ...prev, [tokenName]: value }));
     // Live preview
     document.documentElement.style.setProperty(tokenName, value);
+    console.log('[StyleTokenEditor] CSS variable set, dispatching event');
     // Notify preview to refresh
     window.dispatchEvent(new CustomEvent('css-variables-updated'));
   };
 
   const handleSave = async () => {
+    console.log('[StyleTokenEditor] handleSave called with:', localTokens);
     setIsUpdating(true);
     try {
       await onUpdate(localTokens);
+      console.log('[StyleTokenEditor] Save successful');
+      toast.success('Tokens saved successfully');
       setLocalTokens({});
+    } catch (error) {
+      console.error('[StyleTokenEditor] Save error:', error);
+      toast.error('Failed to save tokens');
     } finally {
       setIsUpdating(false);
     }
