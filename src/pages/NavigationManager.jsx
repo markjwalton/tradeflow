@@ -53,12 +53,35 @@ export default function NavigationManager() {
   const [navMode, setNavMode] = useState("side"); // "side" or "top"
   const [pageSettings, setPageSettings] = useState({ navMode: "side", defaultCollapsed: false });
   
-  // Load settings from user profile
+  // Load settings from NavigationConfig (source of truth)
   useEffect(() => {
-    if (currentUser?.ui_preferences?.navManager_settings) {
-      const settings = currentUser.ui_preferences.navManager_settings;
-      setPageSettings(settings);
-      setNavMode(settings.navMode || "side");
+    const loadSettings = async () => {
+      try {
+        // Load navMode from user preferences
+        if (currentUser?.ui_preferences?.navManager_settings?.navMode) {
+          setNavMode(currentUser.ui_preferences.navManager_settings.navMode);
+        }
+        
+        // Load defaultCollapsed from NavigationConfig (source of truth)
+        const configs = await base44.entities.NavigationConfig.filter({ config_type: "admin_console" });
+        if (configs.length > 0) {
+          const config = configs[0];
+          const folderItems = (config.items || []).filter(item => item.item_type === "folder");
+          const hasCollapsed = folderItems.some(item => item.default_collapsed === true);
+          
+          const newSettings = {
+            navMode: currentUser?.ui_preferences?.navManager_settings?.navMode || "side",
+            defaultCollapsed: hasCollapsed
+          };
+          setPageSettings(newSettings);
+        }
+      } catch (e) {
+        console.error("Failed to load settings:", e);
+      }
+    };
+    
+    if (currentUser) {
+      loadSettings();
     }
   }, [currentUser]);
 
