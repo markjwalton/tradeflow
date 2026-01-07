@@ -169,6 +169,40 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
           onToggle={() => toggleCategory('properties')}
         >
           <div className="space-y-4">
+            {/* Button Variant - only for button components */}
+            {selectedElement === 'button' && (
+              <StyleProperty
+                label="Button Variant"
+                value={styleValues['--button-variant'] || 'default'}
+                onChange={(val) => handleStyleChange('--button-variant', val)}
+                type="select"
+                options={[
+                  { value: 'default', label: 'Default (Primary)' },
+                  { value: 'destructive', label: 'Destructive' },
+                  { value: 'outline', label: 'Outline' },
+                  { value: 'secondary', label: 'Secondary' },
+                  { value: 'ghost', label: 'Ghost' },
+                  { value: 'link', label: 'Link' }
+                ]}
+              />
+            )}
+            
+            {/* Button Size - only for button components */}
+            {selectedElement === 'button' && (
+              <StyleProperty
+                label="Button Size"
+                value={styleValues['--button-size'] || 'default'}
+                onChange={(val) => handleStyleChange('--button-size', val)}
+                type="select"
+                options={[
+                  { value: 'sm', label: 'Small' },
+                  { value: 'default', label: 'Default' },
+                  { value: 'lg', label: 'Large' },
+                  { value: 'icon', label: 'Icon Only' }
+                ]}
+              />
+            )}
+            
             <StyleProperty
               label="Component State"
               value={componentState}
@@ -176,9 +210,9 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               type="select"
               options={[
                 { value: 'default', label: 'Default' },
-                { value: 'hover', label: 'Hover' },
-                { value: 'active', label: 'Active' },
-                { value: 'focus', label: 'Focus' },
+                { value: 'hover', label: 'Hover (Mouse over)' },
+                { value: 'focus', label: 'Focus (Keyboard Tab)' },
+                { value: 'active', label: 'Active (Being pressed)' },
                 { value: 'disabled', label: 'Disabled' }
               ]}
             />
