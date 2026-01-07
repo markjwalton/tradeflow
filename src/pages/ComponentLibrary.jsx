@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Search, Download, Grid3x3, Layers, Box, Eye, Code } from 'lucide-react';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Search, Download, Grid3x3, Layers, Box, Eye, Code, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 
 // Component Preview Renderer
@@ -43,18 +43,19 @@ export default function ComponentLibrary() {
   const queryClient = useQueryClient();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedComponent, setSelectedComponent] = useState(null);
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [expandedComponent, setExpandedComponent] = useState(null);
 
   const { data: components = [], isLoading } = useQuery({
     queryKey: ['components'],
     queryFn: () => base44.entities.Component.list(),
   });
 
-  const { data: versions = [] } = useQuery({
-    queryKey: ['component-versions', selectedComponent?.id],
-    queryFn: () => base44.entities.ComponentVersion.filter({ component_id: selectedComponent.id }),
-    enabled: !!selectedComponent,
+  const { data: allVersions = [] } = useQuery({
+    queryKey: ['all-component-versions'],
+    queryFn: async () => {
+      const versions = await base44.entities.ComponentVersion.list();
+      return versions;
+    },
   });
 
   const extractMutation = useMutation({
@@ -78,9 +79,8 @@ export default function ComponentLibrary() {
     return matchesCategory && matchesSearch;
   });
 
-  const handleViewDetails = (component) => {
-    setSelectedComponent(component);
-    setIsDetailsOpen(true);
+  const getComponentVersions = (componentId) => {
+    return allVersions.filter(v => v.component_id === componentId);
   };
 
   return (
@@ -137,151 +137,126 @@ export default function ComponentLibrary() {
           </Button>
         </Card>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {filteredComponents.map(component => (
-            <Card key={component.id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => handleViewDetails(component)}>
-              <CardHeader>
-                <div className="flex items-start justify-between mb-2">
-                  <Badge variant="outline">{component.category}</Badge>
-                  {component.grid_suitability && (
-                    <Badge variant="secondary" className="text-xs">
-                      <Grid3x3 className="h-3 w-3 mr-1" />
-                      {component.grid_suitability}
-                    </Badge>
-                  )}
-                </div>
-                <CardTitle className="text-lg">{component.name}</CardTitle>
-                <CardDescription className="line-clamp-2">{component.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-1 mb-3">
-                  {component.tags?.slice(0, 4).map(tag => (
-                    <Badge key={tag} variant="outline" className="text-xs">{tag}</Badge>
-                  ))}
-                </div>
-                {component.is_global && (
-                  <Badge className="bg-primary/10 text-primary">
-                    <Layers className="h-3 w-3 mr-1" />
-                    Global
-                  </Badge>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
-
-      <Sheet open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-        <SheetContent className="w-full sm:max-w-2xl overflow-y-auto">
-          {selectedComponent && (
-            <>
-              <SheetHeader>
-                <SheetTitle>{selectedComponent.name}</SheetTitle>
-              </SheetHeader>
-              <div className="mt-6 space-y-6">
-                <div>
-                  <h4 className="text-sm font-medium mb-2">Description</h4>
-                  <p className="text-sm text-muted-foreground">{selectedComponent.description}</p>
-                </div>
-
-                {selectedComponent.functional_specification && (
-                  <div>
-                    <h4 className="text-sm font-medium mb-2">Functional Specification</h4>
-                    <p className="text-sm text-muted-foreground">{selectedComponent.functional_specification}</p>
-                  </div>
-                )}
-
-                <div>
-                  <h4 className="text-sm font-medium mb-2">Properties</h4>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Category:</span>
-                      <Badge variant="outline">{selectedComponent.category}</Badge>
+        <Accordion type="single" collapsible className="space-y-2">
+          {filteredComponents.map(component => {
+            const versions = getComponentVersions(component.id);
+            const latestVersion = versions.filter(v => v.status === 'approved')[0] || versions[0];
+            
+            return (
+              <AccordionItem key={component.id} value={component.id} className="border rounded-lg px-4">
+                <AccordionTrigger className="hover:no-underline">
+                  <div className="flex items-center justify-between w-full pr-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex flex-col items-start gap-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{component.name}</span>
+                          <Badge variant="outline" className="text-xs">{component.category}</Badge>
+                          {component.is_global && (
+                            <Badge className="bg-primary/10 text-primary text-xs">
+                              <Layers className="h-3 w-3 mr-1" />
+                              Global
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground text-left">{component.description}</p>
+                      </div>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Grid Suitability:</span>
-                      <span>{selectedComponent.grid_suitability || 'Not specified'}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Scope:</span>
-                      <Badge>{selectedComponent.is_global ? 'Global' : 'Tenant'}</Badge>
+                    <div className="flex items-center gap-2">
+                      {component.grid_suitability && (
+                        <Badge variant="secondary" className="text-xs">
+                          <Grid3x3 className="h-3 w-3 mr-1" />
+                          {component.grid_suitability}
+                        </Badge>
+                      )}
                     </div>
                   </div>
-                </div>
-
-                {selectedComponent.tags && selectedComponent.tags.length > 0 && (
-                  <div>
-                    <h4 className="text-sm font-medium mb-2">Tags</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedComponent.tags.map(tag => (
-                        <Badge key={tag} variant="outline">{tag}</Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {versions.length > 0 && (
-                  <div>
-                    <h4 className="text-sm font-medium mb-3">Latest Version Preview</h4>
-                    {versions.filter(v => v.status === 'approved')[0]?.jsx_code && (
-                      <ComponentPreview 
-                        jsxCode={versions.filter(v => v.status === 'approved')[0].jsx_code}
-                        componentName={selectedComponent.name}
-                      />
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="pt-4 space-y-6">
+                    {component.functional_specification && (
+                      <div>
+                        <h4 className="text-sm font-medium mb-2">Functional Specification</h4>
+                        <p className="text-sm text-muted-foreground">{component.functional_specification}</p>
+                      </div>
                     )}
-                    
-                    <h4 className="text-sm font-medium mb-3 mt-6">All Versions ({versions.length})</h4>
-                    <div className="space-y-3">
-                      {versions.map(version => (
-                        <Card key={version.id}>
-                          <CardContent className="pt-4">
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="font-mono text-sm">{version.version_number}</span>
-                              <Badge className={
-                                version.status === 'approved' ? 'bg-green-100 text-green-800' :
-                                version.status === 'draft' ? 'bg-gray-100 text-gray-800' :
-                                'bg-yellow-100 text-yellow-800'
-                              }>
-                                {version.status}
-                              </Badge>
-                            </div>
-                            {version.change_summary && (
-                              <p className="text-xs text-muted-foreground mb-2">{version.change_summary}</p>
-                            )}
-                            {version.usage_notes && (
-                              <p className="text-xs text-muted-foreground mb-2 italic">{version.usage_notes}</p>
-                            )}
-                            {version.style_token_references && version.style_token_references.length > 0 && (
-                              <div className="mt-2">
-                                <p className="text-xs font-medium mb-1">Style Tokens:</p>
-                                <div className="flex flex-wrap gap-1">
-                                  {version.style_token_references.map(token => (
-                                    <code key={token} className="text-xs bg-muted px-1.5 py-0.5 rounded">
-                                      {token}
-                                    </code>
-                                  ))}
+
+                    {component.tags && component.tags.length > 0 && (
+                      <div>
+                        <h4 className="text-sm font-medium mb-2">Tags</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {component.tags.map(tag => (
+                            <Badge key={tag} variant="outline" className="text-xs">{tag}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {latestVersion?.jsx_code && (
+                      <div>
+                        <h4 className="text-sm font-medium mb-3">Preview</h4>
+                        <ComponentPreview 
+                          jsxCode={latestVersion.jsx_code}
+                          componentName={component.name}
+                        />
+                      </div>
+                    )}
+
+                    {versions.length > 0 && (
+                      <div>
+                        <h4 className="text-sm font-medium mb-3">Versions ({versions.length})</h4>
+                        <div className="space-y-2">
+                          {versions.map(version => (
+                            <Card key={version.id}>
+                              <CardContent className="pt-3 pb-3">
+                                <div className="flex items-center justify-between mb-2">
+                                  <span className="font-mono text-xs">{version.version_number}</span>
+                                  <Badge className={
+                                    version.status === 'approved' ? 'bg-green-100 text-green-800' :
+                                    version.status === 'draft' ? 'bg-gray-100 text-gray-800' :
+                                    'bg-yellow-100 text-yellow-800'
+                                  }>
+                                    {version.status}
+                                  </Badge>
                                 </div>
-                              </div>
-                            )}
-                            {version.jsx_code && (
-                              <details className="mt-3">
-                                <summary className="text-xs font-medium cursor-pointer">View Code</summary>
-                                <pre className="text-xs bg-muted p-3 rounded mt-2 overflow-x-auto">
-                                  <code>{version.jsx_code}</code>
-                                </pre>
-                              </details>
-                            )}
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
+                                {version.change_summary && (
+                                  <p className="text-xs text-muted-foreground mb-2">{version.change_summary}</p>
+                                )}
+                                {version.usage_notes && (
+                                  <p className="text-xs text-muted-foreground mb-2 italic">{version.usage_notes}</p>
+                                )}
+                                {version.style_token_references && version.style_token_references.length > 0 && (
+                                  <div className="mt-2">
+                                    <p className="text-xs font-medium mb-1">Style Tokens:</p>
+                                    <div className="flex flex-wrap gap-1">
+                                      {version.style_token_references.map(token => (
+                                        <code key={token} className="text-xs bg-muted px-1.5 py-0.5 rounded">
+                                          {token}
+                                        </code>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                                {version.jsx_code && (
+                                  <details className="mt-3">
+                                    <summary className="text-xs font-medium cursor-pointer hover:text-primary">View Code</summary>
+                                    <pre className="text-xs bg-muted p-3 rounded mt-2 overflow-x-auto">
+                                      <code>{version.jsx_code}</code>
+                                    </pre>
+                                  </details>
+                                )}
+                              </CardContent>
+                            </Card>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            </>
-          )}
-        </SheetContent>
-      </Sheet>
+                </AccordionContent>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
+      )}
     </div>
   );
 }
