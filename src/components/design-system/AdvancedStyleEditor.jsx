@@ -29,7 +29,47 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   const [editedGlobalCategories, setEditedGlobalCategories] = useState(new Set());
   const [editedCustomCategories, setEditedCustomCategories] = useState(new Set());
   const [isHeaderOpen, setIsHeaderOpen] = useState(true);
-  const [savedStylesList, setSavedStylesList] = useState([]);
+  const [savedStylesList, setSavedStylesList] = useState([
+    {
+      id: 1,
+      name: 'Primary Button - Hover',
+      mode: 'global',
+      variant: 'default',
+      size: 'default',
+      state: 'hover',
+      shadow: 'md',
+      animation: 'none',
+      iconStrokeWidth: '2',
+      iconColor: 'currentColor',
+      timestamp: '2026-01-07 10:23'
+    },
+    {
+      id: 2,
+      name: 'CTA Large Button',
+      mode: 'custom',
+      variant: 'default',
+      size: 'lg',
+      state: 'default',
+      shadow: 'lg',
+      animation: 'pulse',
+      iconStrokeWidth: '2.5',
+      iconColor: 'var(--primary-500)',
+      timestamp: '2026-01-07 09:15'
+    },
+    {
+      id: 3,
+      name: 'Ghost Small Button',
+      mode: 'global',
+      variant: 'ghost',
+      size: 'sm',
+      state: 'default',
+      shadow: 'none',
+      animation: 'none',
+      iconStrokeWidth: '1.5',
+      iconColor: 'var(--charcoal-600)',
+      timestamp: '2026-01-07 08:45'
+    }
+  ]);
 
   const selectedElement = propSelectedElement || 'button';
   const selectedComponent = COMPONENT_TYPES.find(c => c.value === selectedElement);
@@ -276,43 +316,43 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   return (
     <div className="space-y-4">
       {/* Editing Mode Header - Collapsible */}
-      <Card className={hasUnsavedChanges ? 'border-amber-400 border-2' : ''}>
+      <Card className={hasUnsavedChanges ? 'border-l-4 border-l-amber-500 bg-amber-50/20' : ''}>
         <Collapsible open={isHeaderOpen} onOpenChange={setIsHeaderOpen}>
-          <CollapsibleTrigger asChild>
-            <div className="p-4 cursor-pointer hover:bg-muted/50 transition-colors">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  {isHeaderOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-                  <div>
-                    <h3 className="text-sm font-semibold text-foreground">Editing</h3>
-                    <p className="text-xs text-muted-foreground">Element: {elementName}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  {hasUnsavedChanges && (
-                    <Badge variant="warning" className="bg-amber-100 text-amber-800 border-amber-300">
-                      {editMode === 'global' ? 'Global updates pending' : 'Custom pending'}
-                    </Badge>
-                  )}
-                  <Badge variant="secondary">{instances} Instances</Badge>
-                  {hasUnsavedChanges && (
-                    <Badge variant="destructive">
-                      {editMode === 'global' ? editedGlobalCategories.size : editedCustomCategories.size} unsaved changes
-                    </Badge>
-                  )}
-                </div>
+          <div className="p-6">
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-semibold text-foreground mb-1">Editing</h3>
+                <p className="text-sm text-muted-foreground">Element: <span className="font-medium text-foreground">{elementName}</span></p>
               </div>
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  {isHeaderOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                </Button>
+              </CollapsibleTrigger>
             </div>
-          </CollapsibleTrigger>
-          <CollapsibleContent>
-            <CardContent className="pt-0 pb-4 space-y-4">
-              <div className="flex items-center justify-between gap-3">
+            
+            <div className="flex items-center gap-2 mb-4 flex-wrap">
+              <Badge variant="secondary" className="text-xs">{instances} Instances</Badge>
+              {hasUnsavedChanges && (
+                <>
+                  <Badge variant="warning" className="bg-amber-100 text-amber-800 border-amber-400">
+                    {editMode === 'global' ? 'Global updates pending' : 'Custom pending'}
+                  </Badge>
+                  <Badge variant="destructive" className="text-xs">
+                    {editMode === 'global' ? editedGlobalCategories.size : editedCustomCategories.size} unsaved
+                  </Badge>
+                </>
+              )}
+            </div>
+
+            <CollapsibleContent>
+              <div className="flex items-center justify-between gap-3 pt-4 border-t">
                 <div className="flex items-center gap-2 bg-muted p-1 rounded-lg">
                   <Button
                     variant={editMode === 'global' ? 'default' : 'ghost'}
                     size="sm"
                     onClick={() => setEditMode('global')}
-                    className="h-7 px-3 text-xs"
+                    className="h-8 px-4 text-xs"
                   >
                     Global
                   </Button>
@@ -320,66 +360,72 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                     variant={editMode === 'custom' ? 'default' : 'ghost'}
                     size="sm"
                     onClick={() => setEditMode('custom')}
-                    className="h-7 px-3 text-xs"
+                    className="h-8 px-4 text-xs"
                   >
                     Custom
                   </Button>
                 </div>
                 <Button 
-                  size="sm" 
                   onClick={handleApplyStyle}
                   disabled={!hasUnsavedChanges}
-                  className="bg-primary hover:bg-primary-600"
+                  className="h-9 px-6"
                 >
-                  <Save className="h-3 w-3 mr-1" />
+                  <Save className="h-4 w-4 mr-2" />
                   Apply Style
                 </Button>
               </div>
-            </CardContent>
-          </CollapsibleContent>
+            </CollapsibleContent>
+          </div>
         </Collapsible>
       </Card>
 
       {/* Saved Styles List */}
       {savedStylesList.length > 0 && (
         <Card>
-          <CardContent className="p-4">
-            <h4 className="text-sm font-semibold mb-3">Applied Styles</h4>
-            <div className="space-y-2">
+          <CardContent className="p-6">
+            <h4 className="text-lg font-semibold mb-4">Applied Styles</h4>
+            <div className="space-y-3">
               {savedStylesList.map(style => (
                 <div 
                   key={style.id}
-                  className="flex items-center justify-between p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors"
+                  className="flex items-center justify-between p-4 bg-gradient-to-r from-muted/40 to-muted/20 rounded-xl border border-border hover:border-primary/40 transition-all group"
                 >
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-sm font-medium">{style.name}</span>
-                      <Badge variant={style.mode === 'global' ? 'default' : 'secondary'} className="text-xs">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-sm font-semibold text-foreground">{style.name}</span>
+                      <Badge 
+                        variant={style.mode === 'global' ? 'default' : 'secondary'} 
+                        className="text-xs px-2 py-0.5"
+                      >
                         {style.mode}
                       </Badge>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span>{style.variant} • {style.size}</span>
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                      <span className="px-2 py-1 bg-background/60 rounded">{style.variant}</span>
+                      <span className="px-2 py-1 bg-background/60 rounded">{style.size}</span>
+                      <span className="px-2 py-1 bg-background/60 rounded">{style.state}</span>
                       <span>•</span>
-                      <span>{style.timestamp}</span>
+                      <span className="italic">{style.timestamp}</span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
                       onClick={() => handleLoadStyle(style)}
-                      className="h-8 px-2"
+                      className="h-9 px-3"
                     >
-                      <Pencil className="h-3 w-3" />
+                      <Pencil className="h-3.5 w-3.5 mr-1.5" />
+                      Edit
                     </Button>
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
                       onClick={() => handleDeleteStyle(style.id)}
-                      className="h-8 px-2 text-destructive hover:text-destructive"
+                      className="h-9 px-3 text-destructive hover:text-destructive hover:bg-destructive/10"
                     >
-                      <Trash2 className="h-3 w-3" />
+                      <Trash2 className="h-3.5 w-3.5 mr-1.5" />
+                      Delete
                     </Button>
                   </div>
                 </div>
