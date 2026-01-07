@@ -26,38 +26,55 @@ export function LiveComponentPreview({ jsxCode, componentName }) {
   const [Component, setComponent] = useState(null);
 
   useEffect(() => {
-    try {
-      // Transform JSX to React.createElement calls
-      let transformedCode = jsxCode
-        .replace(/<(\w+)([^>]*)>/g, (match, tag, attrs) => {
-          const propsMatch = attrs.match(/className="([^"]*)"/);
-          const className = propsMatch ? propsMatch[1] : '';
-          if (className) {
-            return `React.createElement(${tag}, { className: "${className}" }, `;
-          }
-          return `React.createElement(${tag}, null, `;
-        })
-        .replace(/<\/\w+>/g, ')')
-        .replace(/return\s+/, 'return ');
-
-      const componentFunction = new Function(
-        'React',
-        ...Object.keys(componentImports),
-        `
-        const { useState, useEffect, useRef, useMemo, useCallback } = React;
-        return function PreviewComponent() {
-          ${transformedCode}
-        };
-        `
-      );
-
-      const CompiledComponent = componentFunction(React, ...Object.values(componentImports));
-      setComponent(() => CompiledComponent);
-      setError(null);
-    } catch (err) {
-      setError(err.message);
-      console.error('Component compilation error:', err);
-    }
+    // Render based on component patterns
+    const renderStaticPreview = () => {
+      if (jsxCode.includes('className="text-')) {
+        // Typography component
+        const textMatch = jsxCode.match(/className="([^"]+)"/);
+        const textContent = jsxCode.match(/>([^<]+)</)?.[1] || 'Sample Text';
+        const className = textMatch?.[1] || 'text-base';
+        return () => <p className={className}>{textContent}</p>;
+      }
+      
+      if (jsxCode.includes('<Button')) {
+        // Button component
+        const variantMatch = jsxCode.match(/variant="([^"]+)"/);
+        const sizeMatch = jsxCode.match(/size="([^"]+)"/);
+        return () => (
+          <Button variant={variantMatch?.[1]} size={sizeMatch?.[1]}>
+            Sample Button
+          </Button>
+        );
+      }
+      
+      if (jsxCode.includes('<Card')) {
+        // Card component
+        return () => (
+          <Card className="w-full max-w-md">
+            <CardComponents.CardHeader>
+              <CardComponents.CardTitle>Sample Card</CardComponents.CardTitle>
+              <CardComponents.CardDescription>Card preview</CardComponents.CardDescription>
+            </CardComponents.CardHeader>
+            <CardComponents.CardContent>
+              <p className="text-sm">This is a preview of the card component.</p>
+            </CardComponents.CardContent>
+          </Card>
+        );
+      }
+      
+      if (jsxCode.includes('<Badge')) {
+        // Badge component
+        const variantMatch = jsxCode.match(/variant="([^"]+)"/);
+        return () => <Badge variant={variantMatch?.[1]}>Sample Badge</Badge>;
+      }
+      
+      // Default fallback
+      return null;
+    };
+    
+    const PreviewComponent = renderStaticPreview();
+    setComponent(() => PreviewComponent);
+    setError(null);
   }, [jsxCode]);
 
   return (
