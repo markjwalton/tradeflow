@@ -602,13 +602,26 @@ export default function GenericNavEditor({
     toast.success(`${item.name} removed from navigation`);
   };
 
-  const toggleParent = (id) => {
+  const toggleParent = async (id) => {
     setExpandedParents(prev => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
-      // Save to sessionStorage
-      sessionStorage.setItem(`nav_expanded_${configType}`, JSON.stringify([...next]));
+      
+      // Persist to user preferences
+      const expandedArray = [...next];
+      base44.auth.me().then(user => {
+        base44.auth.updateMe({
+          ui_preferences: {
+            ...(user?.ui_preferences || {}),
+            navManager_expanded: {
+              ...(user?.ui_preferences?.navManager_expanded || {}),
+              [configType]: expandedArray
+            }
+          }
+        }).catch(() => {});
+      }).catch(() => {});
+      
       return next;
     });
   };
