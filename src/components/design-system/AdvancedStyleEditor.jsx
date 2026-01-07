@@ -19,7 +19,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   const [currentStyle, setCurrentStyle] = useState('--color-primary');
   const [instances, setInstances] = useState(5);
   const [saveAsNew, setSaveAsNew] = useState(false);
-  const [expandedCategories, setExpandedCategories] = useState(['properties']);
+  const [expandedCategories, setExpandedCategories] = useState(['properties', 'styleEditor']);
   const [styleValues, setStyleValues] = useState({});
   const [componentState, setComponentState] = useState('default');
   const [shadowEffect, setShadowEffect] = useState('none');
