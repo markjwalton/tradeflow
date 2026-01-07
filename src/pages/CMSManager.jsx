@@ -6,7 +6,7 @@ import { PageHeader } from '@/components/sturij/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus } from 'lucide-react';
+import { Plus, Package } from 'lucide-react';
 import { ContentList } from '@/components/cms/ContentList';
 import { ContentEditor } from '@/components/cms/ContentEditor';
 import { MediaManager } from '@/components/cms/MediaManager';
@@ -14,12 +14,25 @@ import { TemplateLibrary } from '@/components/cms/TemplateLibrary';
 import { PackageManager } from '@/components/cms/PackageManager';
 import { ScheduleManager } from '@/components/cms/ScheduleManager';
 import PageTemplateGenerator from '@/components/cms/PageTemplateGenerator';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 export default function CMSManager() {
   const [activeTab, setActiveTab] = useState('pages');
   const [editingContent, setEditingContent] = useState(null);
   const [contentType, setContentType] = useState(null);
   const [selectedWebsite, setSelectedWebsite] = useState(null);
+  const [templateDialogOpen, setTemplateDialogOpen] = useState(false);
+  const [templateData, setTemplateData] = useState({
+    template_name: '',
+    description: '',
+    category: 'other'
+  });
+  const queryClient = useQueryClient();
 
   const { data: websiteFolders = [] } = useQuery({
     queryKey: ['websiteFolders'],
@@ -41,6 +54,36 @@ export default function CMSManager() {
     setContentType(null);
   };
 
+  const createTemplateMutation = useMutation({
+    mutationFn: async (data) => {
+      return await base44.entities.WebsiteTemplate.create(data);
+    },
+    onSuccess: () => {
+      toast.success('Website template created successfully!');
+      queryClient.invalidateQueries({ queryKey: ['websiteTemplates'] });
+      setTemplateDialogOpen(false);
+      setTemplateData({ template_name: '', description: '', category: 'other' });
+    },
+    onError: (error) => {
+      toast.error('Failed to create template: ' + error.message);
+    }
+  });
+
+  const handleCreateTemplate = () => {
+    if (!selectedWebsite || !templateData.template_name) {
+      toast.error('Please fill in template name');
+      return;
+    }
+
+    createTemplateMutation.mutate({
+      template_name: templateData.template_name,
+      description: templateData.description,
+      source_folder_id: selectedWebsite.id,
+      category: templateData.category,
+      is_public: true
+    });
+  };
+
   if (editingContent) {
     return (
       <ContentEditor
@@ -60,8 +103,18 @@ export default function CMSManager() {
       />
 
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Website</CardTitle>
+          {selectedWebsite && (
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setTemplateDialogOpen(true)}
+            >
+              <Package className="h-4 w-4 mr-2" />
+              Save as Template
+            </Button>
+          )}
         </CardHeader>
         <CardContent>
           <Select 
@@ -162,6 +215,71 @@ export default function CMSManager() {
         </TabsContent>
       </Tabs>
       )}
+
+      <Dialog open={templateDialogOpen} onOpenChange={setTemplateDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Save as Website Template</DialogTitle>
+            <DialogDescription>
+              Create a reusable template from {selectedWebsite?.name}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="templateName">Template Name *</Label>
+              <Input
+                id="templateName"
+                placeholder="Modern Business Template"
+                value={templateData.template_name}
+                onChange={(e) => setTemplateData({ ...templateData, template_name: e.target.value })}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                placeholder="A modern, professional template for businesses..."
+                value={templateData.description}
+                onChange={(e) => setTemplateData({ ...templateData, description: e.target.value })}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="category">Category</Label>
+              <Select 
+                value={templateData.category}
+                onValueChange={(value) => setTemplateData({ ...templateData, category: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="business">Business</SelectItem>
+                  <SelectItem value="portfolio">Portfolio</SelectItem>
+                  <SelectItem value="ecommerce">E-commerce</SelectItem>
+                  <SelectItem value="blog">Blog</SelectItem>
+                  <SelectItem value="landing">Landing Page</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setTemplateDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleCreateTemplate}
+              disabled={createTemplateMutation.isPending}
+            >
+              Create Template
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
