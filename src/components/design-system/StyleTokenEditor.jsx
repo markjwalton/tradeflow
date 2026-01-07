@@ -11,13 +11,14 @@ import { Paintbrush, Type, Ruler, Box as BoxIcon, Save, RefreshCw, Sparkles } fr
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 
-function ColorTokenEditor({ token, currentValue, onUpdate }) {
+function ColorTokenEditor({ token, currentValue, onUpdate, allColorTokens = [] }) {
   const [isConverting, setIsConverting] = useState(false);
   const [hexFallback, setHexFallback] = useState('');
   const [oklchValue, setOklchValue] = useState('');
   const [alpha, setAlpha] = useState(1);
-  const [enableAlpha, setEnableAlpha] = useState(false);
+  const [transparencyMode, setTransparencyMode] = useState('none');
   const [defaultValue, setDefaultValue] = useState('');
+  const [selectedVariant, setSelectedVariant] = useState(token);
 
   // Get default value from stylesheet
   React.useEffect(() => {
@@ -40,6 +41,14 @@ function ColorTokenEditor({ token, currentValue, onUpdate }) {
     }
   }, [token]);
 
+  // Get color family variants
+  const getColorVariants = () => {
+    const tokenBase = token.replace(/(-\d+|-foreground)$/, '');
+    return allColorTokens.filter(t => t.startsWith(tokenBase) && t !== token);
+  };
+
+  const colorVariants = getColorVariants();
+
   // Parse current value to extract OKLCH and hex
   React.useEffect(() => {
     if (currentValue.includes('oklch')) {
@@ -50,12 +59,12 @@ function ColorTokenEditor({ token, currentValue, onUpdate }) {
       setHexFallback(hexMatch?.[0] || '#4a7c6b');
       const alphaVal = alphaMatch ? parseFloat(alphaMatch[1]) : 1;
       setAlpha(alphaVal);
-      setEnableAlpha(alphaVal < 1);
+      setTransparencyMode(alphaVal < 1 ? 'custom' : 'none');
     } else if (currentValue.startsWith('#')) {
       setHexFallback(currentValue);
       setOklchValue('');
       setAlpha(1);
-      setEnableAlpha(false);
+      setTransparencyMode('none');
     }
   }, [currentValue]);
 
@@ -135,9 +144,9 @@ function ColorTokenEditor({ token, currentValue, onUpdate }) {
     }
   };
 
-  const toggleAlpha = (checked) => {
-    setEnableAlpha(checked);
-    if (!checked) {
+  const handleTransparencyChange = (mode) => {
+    setTransparencyMode(mode);
+    if (mode === 'none') {
       setAlpha(1);
       if (oklchValue) {
         onUpdate(token, `${oklchValue}, ${hexFallback}`);
@@ -145,20 +154,48 @@ function ColorTokenEditor({ token, currentValue, onUpdate }) {
     }
   };
 
+  const handleVariantChange = (newToken) => {
+    setSelectedVariant(newToken);
+    const newValue = getComputedStyle(document.documentElement).getPropertyValue(newToken).trim();
+    if (newValue) {
+      // Parse the new value and update
+      if (newValue.includes('oklch')) {
+        const oklchMatch = newValue.match(/oklch\([^)]+\)/);
+        const hexMatch = newValue.match(/#[0-9a-fA-F]{6}/);
+        setOklchValue(oklchMatch?.[0] || '');
+        setHexFallback(hexMatch?.[0] || '#4a7c6b');
+        onUpdate(token, newValue);
+      }
+    }
+  };
+
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
+      {/* Classname display */}
+      <div className="p-2 bg-muted rounded-md font-mono text-xs">
+        <span className="text-muted-foreground">var(</span>
+        <span className="text-primary">{token}</span>
+        <span className="text-muted-foreground">)</span>
+      </div>
+
+      {/* Color swatch and hex input */}
       <div className="flex gap-2 items-center">
+        <div 
+          className="w-12 h-12 rounded-md border-2 flex-shrink-0 shadow-sm"
+          style={{ backgroundColor: hexFallback }}
+          title={hexFallback}
+        />
         <Input
           type="color"
           value={hexFallback || '#4a7c6b'}
           onChange={(e) => handleHexChange(e.target.value)}
-          className="w-20 h-10"
+          className="w-16 h-10 cursor-pointer"
         />
         <Input
           type="text"
           value={hexFallback}
           onChange={(e) => handleHexChange(e.target.value)}
-          className="w-28"
+          className="flex-1 font-mono text-sm"
           placeholder="#000000"
         />
         <Button
@@ -170,11 +207,31 @@ function ColorTokenEditor({ token, currentValue, onUpdate }) {
           <Sparkles className="h-4 w-4 mr-1" />
           {isConverting ? 'Converting...' : 'To OKLCH'}
         </Button>
-        <div 
-          className="w-10 h-10 rounded border flex-shrink-0"
-          style={{ backgroundColor: hexFallback }}
-        />
       </div>
+
+      {/* Stylesheet default */}
+      {defaultValue && (
+        <div className="text-xs text-muted-foreground">
+          <span className="font-semibold">Stylesheet default:</span> {defaultValue}
+        </div>
+      )}
+
+      {/* Color variants dropdown */}
+      {colorVariants.length > 0 && (
+        <div className="space-y-1">
+          <Label className="text-xs">Load from variant</Label>
+          <select
+            className="w-full px-3 py-2 border rounded-md text-sm font-mono bg-background"
+            value={selectedVariant}
+            onChange={(e) => handleVariantChange(e.target.value)}
+          >
+            <option value={token}>{token}</option>
+            {colorVariants.map(variant => (
+              <option key={variant} value={variant}>{variant}</option>
+            ))}
+          </select>
+        </div>
+      )}
       {oklchValue && (
         <>
           <div className="flex gap-2 items-center">
@@ -195,40 +252,37 @@ function ColorTokenEditor({ token, currentValue, onUpdate }) {
               To Hex
             </Button>
           </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id={`alpha-${token}`}
-              checked={enableAlpha}
-              onCheckedChange={toggleAlpha}
-            />
-            <Label htmlFor={`alpha-${token}`} className="text-xs cursor-pointer">
-              Enable transparency
-            </Label>
+          
+          {/* Transparency control */}
+          <div className="space-y-2">
+            <Label className="text-xs">Transparency</Label>
+            <select
+              className="w-full px-3 py-2 border rounded-md text-sm bg-background"
+              value={transparencyMode}
+              onChange={(e) => handleTransparencyChange(e.target.value)}
+            >
+              <option value="none">None (100%)</option>
+              <option value="custom">Custom</option>
+            </select>
+            {transparencyMode === 'custom' && (
+              <div className="space-y-1 pt-2">
+                <div className="flex justify-between items-center">
+                  <Label className="text-xs">Opacity</Label>
+                  <span className="text-xs font-mono text-muted-foreground">{(alpha * 100).toFixed(0)}%</span>
+                </div>
+                <Slider
+                  value={[alpha]}
+                  onValueChange={([val]) => handleAlphaChange(val)}
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  className="w-full"
+                />
+              </div>
+            )}
           </div>
-          {enableAlpha && (
-            <div className="space-y-1">
-              <Label className="text-xs">Opacity: {alpha.toFixed(2)}</Label>
-              <Slider
-                value={[alpha]}
-                onValueChange={([val]) => handleAlphaChange(val)}
-                min={0}
-                max={1}
-                step={0.01}
-              />
-            </div>
-          )}
         </>
       )}
-      <div className="space-y-1">
-        <p className="text-xs text-muted-foreground">
-          Format: {oklchValue ? `${oklchValue}${alpha < 1 ? ` / ${alpha}` : ''}, ${hexFallback}` : hexFallback}
-        </p>
-        {defaultValue && (
-          <p className="text-xs text-muted-foreground">
-            Stylesheet default: {defaultValue}
-          </p>
-        )}
-      </div>
     </div>
   );
 }
@@ -421,11 +475,12 @@ export function StyleTokenEditor({ tokens = [], onUpdate, componentName }) {
                     </div>
 
                     {type === 'color' && (
-                      <ColorTokenEditor
-                        token={token}
-                        currentValue={currentValue}
-                        onUpdate={updateToken}
-                      />
+                     <ColorTokenEditor
+                       token={token}
+                       currentValue={currentValue}
+                       onUpdate={updateToken}
+                       allColorTokens={typeTokens}
+                     />
                     )}
 
                     {type === 'spacing' && (
