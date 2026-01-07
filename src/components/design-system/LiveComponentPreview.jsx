@@ -384,25 +384,6 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
                 </div>
               ))}
             </div>
-            
-            {/* Hover vs Focus explainer */}
-            <div className="mt-6 p-3 bg-muted/50 rounded-lg text-xs space-y-2">
-              <div className="font-semibold text-primary">State Differences:</div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <span className="font-medium">Hover:</span> Mouse pointer over element
-                </div>
-                <div>
-                  <span className="font-medium">Focus:</span> Keyboard navigation (Tab key)
-                </div>
-                <div>
-                  <span className="font-medium">Active:</span> Button being clicked/pressed
-                </div>
-                <div>
-                  <span className="font-medium">Disabled:</span> Non-interactive state
-                </div>
-              </div>
-            </div>
           </div>
         );
       }
