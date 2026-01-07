@@ -576,6 +576,44 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               { value: 'var(--midnight-200)', label: 'Midnight 200' }
             ]}
           />
+          <StyleProperty
+            label="Left Border Width"
+            value={styleValues['--border-left-width'] || '0'}
+            onChange={(val) => handleStyleChange('--border-left-width', val)}
+            type="select"
+            options={[
+              { value: '0', label: 'None' },
+              { value: '2px', label: '2px' },
+              { value: '4px', label: '4px (border-l-4)' },
+              { value: '6px', label: '6px' },
+              { value: '8px', label: '8px' }
+            ]}
+          />
+          <StyleProperty
+            label="Left Border Color"
+            value={styleValues['--border-left-color'] || 'var(--primary-500)'}
+            onChange={(val) => handleStyleChange('--border-left-color', val)}
+            type="select"
+            options={[
+              { value: 'var(--primary-500)', label: 'Primary 500' },
+              { value: 'var(--amber-500)', label: 'Amber 500' },
+              { value: 'var(--destructive-500)', label: 'Destructive 500' },
+              { value: 'var(--secondary-500)', label: 'Secondary 500' },
+              { value: 'var(--accent-500)', label: 'Accent 500' }
+            ]}
+          />
+          <StyleProperty
+            label="Conditional Background"
+            value={styleValues['--conditional-bg'] || 'transparent'}
+            onChange={(val) => handleStyleChange('--conditional-bg', val)}
+            type="select"
+            options={[
+              { value: 'transparent', label: 'None' },
+              { value: 'rgb(251 191 36 / 0.2)', label: 'Amber 50/20' },
+              { value: 'rgb(59 130 246 / 0.1)', label: 'Blue 50/10' },
+              { value: 'rgb(239 68 68 / 0.1)', label: 'Red 50/10' }
+            ]}
+          />
         </StyleCategory>
 
         <StyleCategory
