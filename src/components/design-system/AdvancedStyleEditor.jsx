@@ -964,6 +964,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             ]}
           />
         </StyleCategory>
+          </CollapsibleContent>
+        </Collapsible>
       </Card>
     </div>
   );
