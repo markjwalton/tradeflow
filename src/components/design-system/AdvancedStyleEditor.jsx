@@ -251,8 +251,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         </StyleCategory>
 
         <StyleCategory
-          title="Paddings / Margins"
-          currentValue={styleValues['--spacing-4'] || '1rem'}
+          title="Spacing"
+          currentValue={styleValues['--spacing-4'] || 'var(--spacing-4)'}
           isLive={isStyleLive('--spacing-4')}
           isApplicable={isStyleApplicable('padding')}
           isExpanded={expandedCategories.includes('padding')}
@@ -260,21 +260,36 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         >
           <StyleProperty
             label="Padding"
-            value={styleValues['--spacing-4'] || '1rem'}
+            value={styleValues['--spacing-4'] || 'var(--spacing-4)'}
             onChange={(val) => handleStyleChange('--spacing-4', val)}
-            type="slider"
-            min={0}
-            max={5}
-            step={0.25}
+            type="select"
+            options={[
+              { value: 'var(--spacing-1)', label: 'Spacing 1 (0.25rem)' },
+              { value: 'var(--spacing-2)', label: 'Spacing 2 (0.5rem)' },
+              { value: 'var(--spacing-3)', label: 'Spacing 3 (0.75rem)' },
+              { value: 'var(--spacing-4)', label: 'Spacing 4 (1rem)' },
+              { value: 'var(--spacing-5)', label: 'Spacing 5 (1.25rem)' },
+              { value: 'var(--spacing-6)', label: 'Spacing 6 (1.5rem)' },
+              { value: 'var(--spacing-8)', label: 'Spacing 8 (2rem)' },
+              { value: 'var(--spacing-10)', label: 'Spacing 10 (2.5rem)' },
+              { value: 'var(--spacing-12)', label: 'Spacing 12 (3rem)' },
+              { value: 'var(--spacing-16)', label: 'Spacing 16 (4rem)' }
+            ]}
           />
           <StyleProperty
             label="Margin"
-            value={styleValues['--spacing-2'] || '0.5rem'}
+            value={styleValues['--spacing-2'] || 'var(--spacing-2)'}
             onChange={(val) => handleStyleChange('--spacing-2', val)}
-            type="slider"
-            min={0}
-            max={5}
-            step={0.25}
+            type="select"
+            options={[
+              { value: 'var(--spacing-1)', label: 'Spacing 1 (0.25rem)' },
+              { value: 'var(--spacing-2)', label: 'Spacing 2 (0.5rem)' },
+              { value: 'var(--spacing-3)', label: 'Spacing 3 (0.75rem)' },
+              { value: 'var(--spacing-4)', label: 'Spacing 4 (1rem)' },
+              { value: 'var(--spacing-5)', label: 'Spacing 5 (1.25rem)' },
+              { value: 'var(--spacing-6)', label: 'Spacing 6 (1.5rem)' },
+              { value: 'var(--spacing-8)', label: 'Spacing 8 (2rem)' }
+            ]}
           />
         </StyleCategory>
 
