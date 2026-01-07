@@ -98,15 +98,19 @@ export default function PageRegistryManager() {
     queryFn: () => base44.entities.PageRegistry.list(),
   });
 
-  // Fetch navigation config for allocation status
+  // Fetch GLOBAL ADMIN navigation config for allocation status
   const { data: navConfigs = [] } = useQuery({
     queryKey: ["navConfig", "admin_console"],
     queryFn: () => base44.entities.NavigationConfig.filter({ config_type: "admin_console" }),
   });
 
-  const navConfig = navConfigs[0];
-  const allocatedSlugs = navConfig?.items?.map(i => i.slug).filter(Boolean) || [];
-  const sourceSlugs = navConfig?.source_slugs || [];
+  const adminNavConfig = navConfigs[0];
+  
+  // CRITICAL: Only admin_console items determine allocation - NOT app_pages_source
+  const allocatedSlugs = adminNavConfig?.items?.map(i => i.slug).filter(Boolean) || [];
+  
+  // Source slugs should come from scanPages, not from nav config
+  const sourceSlugs = adminNavConfig?.source_slugs || [];
 
   // Create/Update mutation
   const saveMutation = useMutation({
@@ -139,21 +143,30 @@ export default function PageRegistryManager() {
     },
   });
 
-  // Sync pages from source_slugs to registry
+  // Sync pages from scanPages function to registry
   const handleSyncPages = async () => {
-    // Exclude deleted pages from being re-added
-    const deletedSlugs = pages.filter(p => p.status === 'deleted').map(p => p.slug);
-    const existingSlugs = pages.map(p => p.slug);
-    const newSlugs = sourceSlugs.filter(s => !existingSlugs.includes(s) && !deletedSlugs.includes(s));
-    
-    if (newSlugs.length === 0) {
-      toast.info("All pages are already registered");
-      return;
-    }
-
-    const loadingToast = toast.loading(`Registering ${newSlugs.length} pages...`);
+    const loadingToast = toast.loading("Scanning pages...");
     
     try {
+      // Call scanPages function to get actual pages from filesystem
+      const scanResult = await base44.functions.invoke('scanPages', {});
+      const scannedPages = scanResult.data?.pages || [];
+      
+      if (scannedPages.length === 0) {
+        toast.info("No pages found", { id: loadingToast });
+        return;
+      }
+      
+      // Exclude deleted pages from being re-added
+      const deletedSlugs = pages.filter(p => p.status === 'deleted').map(p => p.slug);
+      const existingSlugs = pages.map(p => p.slug);
+      const newSlugs = scannedPages.filter(s => !existingSlugs.includes(s) && !deletedSlugs.includes(s));
+      
+      if (newSlugs.length === 0) {
+        toast.info("All pages are already registered", { id: loadingToast });
+        return;
+      }
+      
       const newPages = newSlugs.map(slug => ({
         slug,
         display_name: slug.replace(/([A-Z])/g, ' $1').trim(),
