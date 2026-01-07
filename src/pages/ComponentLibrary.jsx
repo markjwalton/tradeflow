@@ -7,8 +7,37 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Search, Download, Grid3x3, Layers, Box } from 'lucide-react';
+import { Search, Download, Grid3x3, Layers, Box, Eye, Code } from 'lucide-react';
 import { toast } from 'sonner';
+
+// Component Preview Renderer
+function ComponentPreview({ jsxCode, componentName }) {
+  const [showCode, setShowCode] = useState(false);
+  
+  // For safety, we'll just show the code for now
+  // In a full implementation, you'd use a sandbox or iframe
+  return (
+    <div className="border rounded-lg overflow-hidden">
+      <div className="bg-muted/50 p-4 flex items-center justify-between border-b">
+        <span className="text-sm font-medium">Preview</span>
+        <Button variant="ghost" size="sm" onClick={() => setShowCode(!showCode)}>
+          {showCode ? <Eye className="h-4 w-4" /> : <Code className="h-4 w-4" />}
+        </Button>
+      </div>
+      <div className="p-6 bg-background">
+        {showCode ? (
+          <pre className="text-xs bg-muted p-4 rounded overflow-x-auto">
+            <code>{jsxCode}</code>
+          </pre>
+        ) : (
+          <div className="text-center text-sm text-muted-foreground">
+            Interactive preview coming soon
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function ComponentLibrary() {
   const queryClient = useQueryClient();
@@ -193,7 +222,15 @@ export default function ComponentLibrary() {
 
                 {versions.length > 0 && (
                   <div>
-                    <h4 className="text-sm font-medium mb-3">Versions ({versions.length})</h4>
+                    <h4 className="text-sm font-medium mb-3">Latest Version Preview</h4>
+                    {versions.filter(v => v.status === 'approved')[0]?.jsx_code && (
+                      <ComponentPreview 
+                        jsxCode={versions.filter(v => v.status === 'approved')[0].jsx_code}
+                        componentName={selectedComponent.name}
+                      />
+                    )}
+                    
+                    <h4 className="text-sm font-medium mb-3 mt-6">All Versions ({versions.length})</h4>
                     <div className="space-y-3">
                       {versions.map(version => (
                         <Card key={version.id}>
@@ -211,6 +248,9 @@ export default function ComponentLibrary() {
                             {version.change_summary && (
                               <p className="text-xs text-muted-foreground mb-2">{version.change_summary}</p>
                             )}
+                            {version.usage_notes && (
+                              <p className="text-xs text-muted-foreground mb-2 italic">{version.usage_notes}</p>
+                            )}
                             {version.style_token_references && version.style_token_references.length > 0 && (
                               <div className="mt-2">
                                 <p className="text-xs font-medium mb-1">Style Tokens:</p>
@@ -222,6 +262,14 @@ export default function ComponentLibrary() {
                                   ))}
                                 </div>
                               </div>
+                            )}
+                            {version.jsx_code && (
+                              <details className="mt-3">
+                                <summary className="text-xs font-medium cursor-pointer">View Code</summary>
+                                <pre className="text-xs bg-muted p-3 rounded mt-2 overflow-x-auto">
+                                  <code>{version.jsx_code}</code>
+                                </pre>
+                              </details>
                             )}
                           </CardContent>
                         </Card>
