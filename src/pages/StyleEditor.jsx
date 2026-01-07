@@ -168,33 +168,7 @@ export default function StyleEditor() {
           selectedElement={selectedElement}
         />
 
-        {/* Version Control */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <GitBranch className="h-5 w-5" />
-              <CardTitle>Version Control</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Current Version</span>
-                <Badge>1.0.0</Badge>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Last Modified</span>
-                <span className="text-foreground">Just now</span>
-              </div>
-              <div className="pt-3 border-t">
-                <Button variant="outline" size="sm" className="w-full">
-                  <GitBranch className="h-4 w-4 mr-2" />
-                  View Change History
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+
       </div>
     </div>
   );
