@@ -342,16 +342,6 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                   <Badge variant="warning" className="bg-blue-100 text-blue-800 border-blue-400">
                     3 pending updates
                   </Badge>
-                  {hasUnsavedChanges && (
-                    <>
-                      <Badge variant="warning" className="bg-amber-100 text-amber-800 border-amber-400">
-                        {editMode === 'global' ? 'Global updates pending' : 'Custom pending'}
-                      </Badge>
-                      <Badge variant="destructive" className="text-xs">
-                        {editMode === 'global' ? editedGlobalCategories.size : editedCustomCategories.size} unsaved
-                      </Badge>
-                    </>
-                  )}
                 </div>
               </div>
 
