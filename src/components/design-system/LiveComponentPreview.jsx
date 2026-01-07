@@ -73,9 +73,11 @@ export function LiveComponentPreview({ jsxCode, componentName }) {
   }, []);
 
   useEffect(() => {
+    console.log('[LiveComponentPreview] useEffect triggered, refreshKey:', refreshKey);
     // Render based on component patterns
     const renderStaticPreview = () => {
       if (jsxCode.includes('className="text-')) {
+        console.log('[LiveComponentPreview] Rendering typography component');
         // Typography component
         const textMatch = jsxCode.match(/className="([^"]+)"/);
         const className = textMatch?.[1] || 'text-base';
@@ -118,6 +120,8 @@ export function LiveComponentPreview({ jsxCode, componentName }) {
         if (textColor !== 'default') {
           baseStyle.color = textColor;
         }
+        
+        console.log('[LiveComponentPreview] Final base style before render:', baseStyle);
         
         // Generate content based on type
         const loremParagraphs = [
