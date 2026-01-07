@@ -82,11 +82,87 @@ Deno.serve(async (req) => {
 
     await Promise.all(assetPromises);
 
+    // Duplicate Blog Posts
+    const sourceBlogPosts = await base44.asServiceRole.entities.CMSBlogPost.filter({ 
+      website_folder_id: template.source_folder_id 
+    });
+
+    const blogPromises = sourceBlogPosts.map(post => 
+      base44.asServiceRole.entities.CMSBlogPost.create({
+        website_folder_id: newFolder.id,
+        tenant_id: tenantId || null,
+        title: post.title,
+        slug: post.slug,
+        content: post.content,
+        excerpt: post.excerpt,
+        author: post.author,
+        featured_image: post.featured_image,
+        status: 'draft',
+        categories: post.categories,
+        tags: post.tags,
+        custom_fields: post.custom_fields
+      })
+    );
+
+    await Promise.all(blogPromises);
+
+    // Duplicate Products
+    const sourceProducts = await base44.asServiceRole.entities.CMSProduct.filter({ 
+      website_folder_id: template.source_folder_id 
+    });
+
+    const productPromises = sourceProducts.map(product => 
+      base44.asServiceRole.entities.CMSProduct.create({
+        website_folder_id: newFolder.id,
+        tenant_id: tenantId || null,
+        name: product.name,
+        slug: product.slug,
+        description: product.description,
+        short_description: product.short_description,
+        price: product.price,
+        sale_price: product.sale_price,
+        currency: product.currency,
+        sku: product.sku,
+        stock_quantity: product.stock_quantity,
+        images: product.images,
+        categories: product.categories,
+        tags: product.tags,
+        status: 'draft',
+        custom_fields: product.custom_fields
+      })
+    );
+
+    await Promise.all(productPromises);
+
+    // Duplicate Sections
+    const sourceSections = await base44.asServiceRole.entities.CMSSection.filter({ 
+      website_folder_id: template.source_folder_id 
+    });
+
+    const sectionPromises = sourceSections.map(section => 
+      base44.asServiceRole.entities.CMSSection.create({
+        website_folder_id: newFolder.id,
+        tenant_id: tenantId || null,
+        name: section.name,
+        slug: section.slug,
+        content: section.content,
+        section_type: section.section_type,
+        order: section.order,
+        custom_fields: section.custom_fields
+      })
+    );
+
+    await Promise.all(sectionPromises);
+
     return Response.json({
       success: true,
       websiteFolder: newFolder,
       pagesCreated: sourcePages.length,
-      assetsCreated: sourceAssets.length
+      assetsCreated: sourceAssets.length,
+      blogPostsCreated: sourceBlogPosts.length,
+      productsCreated: sourceProducts.length,
+      sectionsCreated: sourceSections.length,
+      message: `Website instance created from template. Template remains unchanged.`
     });
 
   } catch (error) {
