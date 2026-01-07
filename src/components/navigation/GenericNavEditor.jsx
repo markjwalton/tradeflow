@@ -607,12 +607,25 @@ export default function GenericNavEditor({
               className="text-sm hover:bg-green-50 hover:text-green-700"
               onClick={() => { 
                 setEditingItem(null); 
-                setFormData({ name: "", slug: "", icon: "Home", is_visible: true, parent_id: null, item_type: "page", default_collapsed: false }); 
+                setFormData({ name: "", slug: "", icon: "File", is_visible: true, parent_id: null, item_type: "page", default_collapsed: false }); 
                 setShowDialog(true); 
               }}
             >
               <Plus className="h-3.5 w-3.5 mr-1.5" />
-              Add Navigation
+              Add Page
+            </Button>
+            <Button 
+              size="sm"
+              variant="ghost"
+              className="text-sm hover:bg-amber-50 hover:text-amber-700"
+              onClick={() => { 
+                setEditingItem(null); 
+                setFormData({ name: "", slug: "", icon: "Folder", is_visible: true, parent_id: null, item_type: "folder", default_collapsed: false }); 
+                setShowDialog(true); 
+              }}
+            >
+              <Folder className="h-3.5 w-3.5 mr-1.5" />
+              Add Folder
             </Button>
             <Button 
               size="sm"
@@ -1254,9 +1267,16 @@ export default function GenericNavEditor({
               <Label>Icon</Label>
               <Select value={formData.icon} onValueChange={(v) => setFormData({ ...formData, icon: v })}>
                 <SelectTrigger>
-                  <SelectValue />
+                  <SelectValue>
+                    {formData.icon && (
+                      <div className="flex items-center gap-2">
+                        {renderIcon(formData.icon, "h-4 w-4")}
+                        {formData.icon}
+                      </div>
+                    )}
+                  </SelectValue>
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="max-h-64 overflow-y-auto">
                   {iconOptions.map(({ name, icon: IconComp }) => (
                     <SelectItem key={name} value={name}>
                       <div className="flex items-center gap-2">
