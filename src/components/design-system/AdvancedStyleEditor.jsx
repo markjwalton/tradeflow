@@ -369,36 +369,49 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         </StyleCategory>
 
         <StyleCategory
-          title="Text Styles"
-          currentValue={styleValues['--color-text-primary'] || 'var(--midnight-900)'}
-          isLive={isStyleLive('--color-text-primary')}
+          title="Colors"
+          currentValue={styleValues['--color-primary'] || 'var(--primary-500)'}
+          isLive={isStyleLive('--color-primary')}
           isApplicable={isStyleApplicable('text')}
           isExpanded={expandedCategories.includes('text')}
           onToggle={() => toggleCategory('text')}
         >
           <StyleProperty
+            label="Primary Color"
+            value={styleValues['--color-primary'] || 'var(--primary-500)'}
+            onChange={(val) => handleStyleChange('--color-primary', val)}
+            type="select"
+            options={[
+              { value: 'var(--primary-400)', label: 'Primary 400' },
+              { value: 'var(--primary-500)', label: 'Primary 500' },
+              { value: 'var(--primary-600)', label: 'Primary 600' },
+              { value: 'var(--primary-700)', label: 'Primary 700' }
+            ]}
+          />
+          <StyleProperty
+            label="Secondary Color"
+            value={styleValues['--color-secondary'] || 'var(--secondary-400)'}
+            onChange={(val) => handleStyleChange('--color-secondary', val)}
+            type="select"
+            options={[
+              { value: 'var(--secondary-300)', label: 'Secondary 300' },
+              { value: 'var(--secondary-400)', label: 'Secondary 400' },
+              { value: 'var(--secondary-500)', label: 'Secondary 500' },
+              { value: 'var(--secondary-600)', label: 'Secondary 600' }
+            ]}
+          />
+          <StyleProperty
             label="Text Color"
-            value={styleValues['--color-text-primary'] || '#1e2a38'}
+            value={styleValues['--color-text-primary'] || 'var(--midnight-900)'}
             onChange={(val) => handleStyleChange('--color-text-primary', val)}
-            type="color"
-          />
-          <StyleProperty
-            label="Line Height"
-            value={styleValues['--leading-normal'] || '1.5'}
-            onChange={(val) => handleStyleChange('--leading-normal', val)}
-            type="slider"
-            min={1}
-            max={2.5}
-            step={0.125}
-          />
-          <StyleProperty
-            label="Letter Spacing"
-            value={styleValues['--tracking-normal'] || '0'}
-            onChange={(val) => handleStyleChange('--tracking-normal', val)}
-            type="slider"
-            min={-0.05}
-            max={0.1}
-            step={0.005}
+            type="select"
+            options={[
+              { value: 'var(--midnight-900)', label: 'Midnight 900' },
+              { value: 'var(--midnight-800)', label: 'Midnight 800' },
+              { value: 'var(--charcoal-900)', label: 'Charcoal 900' },
+              { value: 'var(--charcoal-800)', label: 'Charcoal 800' },
+              { value: 'var(--charcoal-600)', label: 'Charcoal 600 (Muted)' }
+            ]}
           />
         </StyleCategory>
 
