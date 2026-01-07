@@ -3,9 +3,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ChevronLeft, ChevronRight, Save } from 'lucide-react';
+import { ChevronDown, ChevronRight, Save, Trash2, Pencil } from 'lucide-react';
 import { StyleCategory, StyleProperty } from './StyleCategory';
 import { toast } from 'sonner';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 const COMPONENT_TYPES = [
   { value: 'button', label: 'Button', applicableStyles: ['border', 'padding', 'font', 'text', 'background'] },
@@ -27,6 +28,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   const [customStyleName, setCustomStyleName] = useState('');
   const [editedGlobalCategories, setEditedGlobalCategories] = useState(new Set());
   const [editedCustomCategories, setEditedCustomCategories] = useState(new Set());
+  const [isHeaderOpen, setIsHeaderOpen] = useState(true);
+  const [savedStylesList, setSavedStylesList] = useState([]);
 
   const selectedElement = propSelectedElement || 'button';
   const selectedComponent = COMPONENT_TYPES.find(c => c.value === selectedElement);
@@ -224,39 +227,167 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
     }
   }, [editMode, editedGlobalCategories, editedCustomCategories, styleValues]);
 
+  const handleApplyStyle = () => {
+    const styleName = editMode === 'custom' ? (customStyleName || 'Custom Style') : 'Global Style';
+    const newStyle = {
+      id: Date.now(),
+      name: styleName,
+      mode: editMode,
+      variant: styleValues['--button-variant'] || 'default',
+      size: styleValues['--button-size'] || 'default',
+      state: componentState,
+      shadow: shadowEffect,
+      animation,
+      iconStrokeWidth: styleValues['--icon-stroke-width'] || '2',
+      iconColor: styleValues['--icon-color'] || 'currentColor',
+      timestamp: new Date().toLocaleString()
+    };
+    setSavedStylesList(prev => [...prev, newStyle]);
+    if (editMode === 'global') {
+      setEditedGlobalCategories(new Set());
+    } else {
+      setEditedCustomCategories(new Set());
+    }
+    toast.success(`Style "${styleName}" applied`);
+  };
+
+  const handleLoadStyle = (style) => {
+    setEditMode(style.mode);
+    handleStyleChange('--button-variant', style.variant);
+    handleStyleChange('--button-size', style.size);
+    setComponentState(style.state);
+    setShadowEffect(style.shadow);
+    setAnimation(style.animation);
+    handleStyleChange('--icon-stroke-width', style.iconStrokeWidth);
+    handleStyleChange('--icon-color', style.iconColor);
+    toast.info(`Loaded: ${style.name}`);
+  };
+
+  const handleDeleteStyle = (id) => {
+    setSavedStylesList(prev => prev.filter(s => s.id !== id));
+    toast.success('Style deleted');
+  };
+
+  const hasUnsavedChanges = editMode === 'global' ? editedGlobalCategories.size > 0 : editedCustomCategories.size > 0;
+  const elementName = editMode === 'custom' && customStyleName 
+    ? `Custom ${selectedComponent?.label || 'Component'}` 
+    : selectedComponent?.label || 'Component';
+
   return (
     <div className="space-y-4">
-      {/* Editing Mode Header */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <h3 className="text-sm font-semibold text-foreground">
-                Editing: {selectedComponent?.label || 'Component'}
-              </h3>
-              <div className="flex items-center gap-2 bg-muted p-1 rounded-lg">
-                <Button
-                  variant={editMode === 'global' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setEditMode('global')}
-                  className="h-7 px-3 text-xs"
+      {/* Editing Mode Header - Collapsible */}
+      <Card className={hasUnsavedChanges ? 'border-amber-400 border-2' : ''}>
+        <Collapsible open={isHeaderOpen} onOpenChange={setIsHeaderOpen}>
+          <CollapsibleTrigger asChild>
+            <div className="p-4 cursor-pointer hover:bg-muted/50 transition-colors">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  {isHeaderOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                  <div>
+                    <h3 className="text-sm font-semibold text-foreground">Editing</h3>
+                    <p className="text-xs text-muted-foreground">Element: {elementName}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  {hasUnsavedChanges && (
+                    <Badge variant="warning" className="bg-amber-100 text-amber-800 border-amber-300">
+                      {editMode === 'global' ? 'Global updates pending' : 'Custom pending'}
+                    </Badge>
+                  )}
+                  <Badge variant="secondary">{instances} Instances</Badge>
+                  {hasUnsavedChanges && (
+                    <Badge variant="destructive">
+                      {editMode === 'global' ? editedGlobalCategories.size : editedCustomCategories.size} unsaved changes
+                    </Badge>
+                  )}
+                </div>
+              </div>
+            </div>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <CardContent className="pt-0 pb-4 space-y-4">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2 bg-muted p-1 rounded-lg">
+                  <Button
+                    variant={editMode === 'global' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setEditMode('global')}
+                    className="h-7 px-3 text-xs"
+                  >
+                    Global
+                  </Button>
+                  <Button
+                    variant={editMode === 'custom' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setEditMode('custom')}
+                    className="h-7 px-3 text-xs"
+                  >
+                    Custom
+                  </Button>
+                </div>
+                <Button 
+                  size="sm" 
+                  onClick={handleApplyStyle}
+                  disabled={!hasUnsavedChanges}
+                  className="bg-primary hover:bg-primary-600"
                 >
-                  Global
-                </Button>
-                <Button
-                  variant={editMode === 'custom' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setEditMode('custom')}
-                  className="h-7 px-3 text-xs"
-                >
-                  Custom
+                  <Save className="h-3 w-3 mr-1" />
+                  Apply Style
                 </Button>
               </div>
-              {editMode === 'global' && <Badge variant="default" className="whitespace-nowrap">{instances} Instances</Badge>}
-            </div>
-          </div>
-        </CardContent>
+            </CardContent>
+          </CollapsibleContent>
+        </Collapsible>
       </Card>
+
+      {/* Saved Styles List */}
+      {savedStylesList.length > 0 && (
+        <Card>
+          <CardContent className="p-4">
+            <h4 className="text-sm font-semibold mb-3">Applied Styles</h4>
+            <div className="space-y-2">
+              {savedStylesList.map(style => (
+                <div 
+                  key={style.id}
+                  className="flex items-center justify-between p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors"
+                >
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-sm font-medium">{style.name}</span>
+                      <Badge variant={style.mode === 'global' ? 'default' : 'secondary'} className="text-xs">
+                        {style.mode}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <span>{style.variant} • {style.size}</span>
+                      <span>•</span>
+                      <span>{style.timestamp}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleLoadStyle(style)}
+                      className="h-8 px-2"
+                    >
+                      <Pencil className="h-3 w-3" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDeleteStyle(style.id)}
+                      className="h-8 px-2 text-destructive hover:text-destructive"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Style Categories */}
       <Card>
