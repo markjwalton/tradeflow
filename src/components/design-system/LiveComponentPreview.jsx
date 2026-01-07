@@ -363,7 +363,7 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
                           key={`${variant}-${size}`}
                           variant={variant} 
                           size={size}
-                          className={`${stateClasses[componentState] || ''} ${animationClasses[animation] || ''} ${!isSelected ? 'opacity-30' : 'ring-2 ring-primary ring-offset-2'}`}
+                          className={`${stateClasses[componentState] || ''} ${animationClasses[animation] || ''} ${editMode === 'custom' && !isSelected ? 'opacity-30' : ''} ${isSelected ? 'ring-2 ring-primary ring-offset-2' : ''}`}
                           style={shadowStyles[shadowEffect] || {}}
                           disabled={componentState === 'disabled'}
                         >
@@ -374,7 +374,7 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
                     <Button 
                       variant={variant} 
                       size="icon"
-                      className={`${stateClasses[componentState] || ''} ${animationClasses[animation] || ''} ${!(variant === buttonVariant && 'icon' === buttonSize) ? 'opacity-30' : 'ring-2 ring-primary ring-offset-2'}`}
+                      className={`${stateClasses[componentState] || ''} ${animationClasses[animation] || ''} ${editMode === 'custom' && !(variant === buttonVariant && 'icon' === buttonSize) ? 'opacity-30' : ''} ${variant === buttonVariant && 'icon' === buttonSize ? 'ring-2 ring-primary ring-offset-2' : ''}`}
                       style={shadowStyles[shadowEffect] || {}}
                       disabled={componentState === 'disabled'}
                     >
