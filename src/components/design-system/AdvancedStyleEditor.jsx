@@ -26,7 +26,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   const [animation, setAnimation] = useState('none');
   const [editMode, setEditMode] = useState('global'); // 'global' or 'custom'
   const [customStyleName, setCustomStyleName] = useState('');
-  const [editedGlobalCategories, setEditedGlobalCategories] = useState(new Set());
+  const [editedGlobalCategories, setEditedGlobalCategories] = useState(new Set(['typography', 'colors']));
   const [editedCustomCategories, setEditedCustomCategories] = useState(new Set());
   const [isHeaderOpen, setIsHeaderOpen] = useState(true);
   const [savedStylesList, setSavedStylesList] = useState([
