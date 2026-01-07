@@ -517,12 +517,12 @@ export function StyleTokenEditor({ tokens = [], onUpdate, componentName }) {
                     )}
                   </CardContent>
                 </Card>
-              );
+                );
               })}
-              </TabsContent>
-              ))}
-              </Tabs>
-              )}
-              </div>
-              );
-              }
+            </TabsContent>
+          ))}
+        </Tabs>
+      )}
+    </div>
+  );
+}
