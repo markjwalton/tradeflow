@@ -228,37 +228,24 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         </StyleCategory>
         <StyleCategory
           title="Border Styles"
-          currentValue={styleValues['--border-width'] || '1px'}
+          currentValue={styleValues['--color-border'] || 'var(--charcoal-200)'}
           isLive={isStyleLive('--color-border')}
           isApplicable={isStyleApplicable('border')}
           isExpanded={expandedCategories.includes('border')}
           onToggle={() => toggleCategory('border')}
         >
           <StyleProperty
-            label="Border Width"
-            value={styleValues['--border-width'] || '1px'}
-            onChange={(val) => handleStyleChange('--border-width', val)}
-            type="slider"
-            min={0}
-            max={10}
-            step={1}
-          />
-          <StyleProperty
             label="Border Color"
-            value={styleValues['--color-border'] || '#d6d1c7'}
+            value={styleValues['--color-border'] || 'var(--charcoal-200)'}
             onChange={(val) => handleStyleChange('--color-border', val)}
-            type="color"
-          />
-          <StyleProperty
-            label="Border Style"
-            value={styleValues['--border-style'] || 'solid'}
-            onChange={(val) => handleStyleChange('--border-style', val)}
             type="select"
             options={[
-              { value: 'solid', label: 'Solid' },
-              { value: 'dashed', label: 'Dashed' },
-              { value: 'dotted', label: 'Dotted' },
-              { value: 'none', label: 'None' }
+              { value: 'var(--primary-200)', label: 'Primary 200' },
+              { value: 'var(--primary-300)', label: 'Primary 300' },
+              { value: 'var(--secondary-200)', label: 'Secondary 200' },
+              { value: 'var(--charcoal-200)', label: 'Charcoal 200' },
+              { value: 'var(--charcoal-300)', label: 'Charcoal 300' },
+              { value: 'var(--midnight-200)', label: 'Midnight 200' }
             ]}
           />
         </StyleCategory>
