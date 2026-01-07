@@ -1102,6 +1102,33 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             ]}
           />
           <StyleProperty
+            label="Background Pattern (Card)"
+            value={styleValues['--card-bg-pattern'] || 'none'}
+            onChange={(val) => handleStyleChange('--card-bg-pattern', val)}
+            type="select"
+            options={[
+              { value: 'none', label: 'No Pattern' },
+              { value: 'bg-gradient-to-r from-muted/40 to-muted/20', label: 'Gradient Subtle' },
+              { value: 'bg-gradient-to-r from-primary/5 to-primary/10', label: 'Gradient Primary' },
+              { value: 'bg-gradient-to-r from-secondary/5 to-secondary/10', label: 'Gradient Secondary' },
+              { value: 'bg-gradient-to-br from-background-50 to-background-100', label: 'Gradient Soft' }
+            ]}
+          />
+          <StyleProperty
+            label="Background Pattern (Page)"
+            value={styleValues['--page-bg-pattern'] || 'none'}
+            onChange={(val) => handleStyleChange('--page-bg-pattern', val)}
+            type="select"
+            options={[
+              { value: 'none', label: 'No Pattern' },
+              { value: 'bg-gradient-to-br from-gray-50 to-gray-100', label: 'Gradient Gray' },
+              { value: 'bg-gradient-to-br from-primary-50/30 to-background-100', label: 'Gradient Primary Soft' },
+              { value: 'bg-gradient-to-br from-secondary-50/30 to-background-100', label: 'Gradient Secondary Soft' },
+              { value: 'bg-[radial-gradient(circle_at_30%_20%,var(--primary-100),transparent_50%)]', label: 'Radial Primary' },
+              { value: 'bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)]', label: 'Grid Pattern' }
+            ]}
+          />
+          <StyleProperty
             label="Muted Background"
             value={styleValues['--color-muted'] || 'var(--background-200)'}
             onChange={(val) => handleStyleChange('--color-muted', val)}
