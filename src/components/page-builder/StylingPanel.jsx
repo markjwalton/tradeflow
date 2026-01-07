@@ -552,7 +552,7 @@ export default function StylingPanel({ selectedElement, onApplyStyle }) {
                     <div 
                       className={cn(
                         "w-3 h-3 rounded-full",
-                        status === "token" ? "bg-green-500" : "bg-red-500"
+                        status === "token" ? "bg-green-500" : status === "custom" ? "bg-red-500" : "bg-amber-500"
                       )}
                     />
                     <ChevronDown className={cn(
