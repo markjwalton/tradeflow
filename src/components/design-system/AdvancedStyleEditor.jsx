@@ -181,7 +181,9 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         buttonVariant: styleValues['--button-variant'] || 'default',
         buttonSize: styleValues['--button-size'] || 'default',
         editMode: editMode,
-        hasEdits: editMode === 'global' ? editedGlobalCategories.size > 0 : editedCustomCategories.size > 0
+        hasEdits: editMode === 'global' ? editedGlobalCategories.size > 0 : editedCustomCategories.size > 0,
+        iconStrokeWidth: styleValues['--icon-stroke-width'] || '2',
+        iconColor: styleValues['--icon-color'] || 'currentColor'
       });
     }
   };
@@ -215,10 +217,12 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         buttonVariant: styleValues['--button-variant'] || 'default',
         buttonSize: styleValues['--button-size'] || 'default',
         editMode: editMode,
-        hasEdits: editMode === 'global' ? editedGlobalCategories.size > 0 : editedCustomCategories.size > 0
+        hasEdits: editMode === 'global' ? editedGlobalCategories.size > 0 : editedCustomCategories.size > 0,
+        iconStrokeWidth: styleValues['--icon-stroke-width'] || '2',
+        iconColor: styleValues['--icon-color'] || 'currentColor'
       });
     }
-  }, [editMode, editedGlobalCategories, editedCustomCategories]);
+  }, [editMode, editedGlobalCategories, editedCustomCategories, styleValues]);
 
   return (
     <div className="space-y-4">
@@ -340,6 +344,42 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               ]}
             />
 
+            {/* Icon Properties */}
+            {selectedElement === 'button' && (
+              <>
+                <StyleProperty
+                  label="Icon Stroke Width"
+                  value={styleValues['--icon-stroke-width'] || '2'}
+                  onChange={(val) => handleStyleChange('--icon-stroke-width', val)}
+                  type="select"
+                  options={[
+                    { value: '1', label: 'Thin (1)' },
+                    { value: '1.5', label: 'Light (1.5)' },
+                    { value: '2', label: 'Regular (2)' },
+                    { value: '2.5', label: 'Medium (2.5)' },
+                    { value: '3', label: 'Bold (3)' }
+                  ]}
+                />
+                
+                <StyleProperty
+                  label="Icon Color"
+                  value={styleValues['--icon-color'] || 'currentColor'}
+                  onChange={(val) => handleStyleChange('--icon-color', val)}
+                  type="select"
+                  options={[
+                    { value: 'currentColor', label: 'Current Color (inherit)' },
+                    { value: 'var(--primary-500)', label: 'Primary 500' },
+                    { value: 'var(--primary-600)', label: 'Primary 600' },
+                    { value: 'var(--primary-700)', label: 'Primary 700' },
+                    { value: 'var(--secondary-500)', label: 'Secondary 500' },
+                    { value: 'var(--midnight-900)', label: 'Midnight 900' },
+                    { value: 'var(--charcoal-600)', label: 'Charcoal 600' },
+                    { value: 'var(--charcoal-800)', label: 'Charcoal 800' },
+                    { value: '#ffffff', label: 'White' }
+                  ]}
+                />
+              </>
+            )}
 
           </div>
         </StyleCategory>

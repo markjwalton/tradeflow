@@ -156,7 +156,7 @@ const textColors = [
   { label: 'Destructive 900', value: 'var(--destructive-900)' },
 ];
 
-export function LiveComponentPreview({ jsxCode, componentName, componentState = 'default', shadowEffect = 'none', animation = 'none', buttonVariant = 'default', buttonSize = 'default', editMode = 'global', hasEdits = false, onEditModeChange }) {
+export function LiveComponentPreview({ jsxCode, componentName, componentState = 'default', shadowEffect = 'none', animation = 'none', buttonVariant = 'default', buttonSize = 'default', editMode = 'global', hasEdits = false, onEditModeChange, iconStrokeWidth = '2', iconColor = 'currentColor' }) {
   const [showCode, setShowCode] = useState(false);
   const [error, setError] = useState(null);
   const [Component, setComponent] = useState(null);
@@ -197,9 +197,9 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
 
   // Force refresh when props change
   useEffect(() => {
-    console.log('[LiveComponentPreview] Props changed:', { componentState, shadowEffect, animation });
+    console.log('[LiveComponentPreview] Props changed:', { componentState, shadowEffect, animation, iconStrokeWidth, iconColor });
     setRefreshKey(prev => prev + 1);
-  }, [componentState, shadowEffect, animation]);
+  }, [componentState, shadowEffect, animation, iconStrokeWidth, iconColor]);
 
   useEffect(() => {
     console.log('[LiveComponentPreview] useEffect triggered, refreshKey:', refreshKey);
@@ -398,7 +398,11 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
                       style={shadowStyles[shadowEffect] || {}}
                       disabled={componentState === 'disabled'}
                     >
-                      <Settings className="h-4 w-4" />
+                      <Settings 
+                        className="h-4 w-4" 
+                        strokeWidth={iconStrokeWidth}
+                        style={{ color: iconColor }}
+                      />
                     </Button>
                   </div>
                 </div>

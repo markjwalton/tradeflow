@@ -55,7 +55,7 @@ export default function StyleEditor() {
     setStyleValues(values);
   };
 
-  const handlePreviewUpdate = ({ element, state, shadow, animation }) => {
+  const handlePreviewUpdate = ({ element, state, shadow, animation, iconStrokeWidth, iconColor }) => {
     if (element) {
       setSelectedElement(element);
       setPreviewComponent(element);
