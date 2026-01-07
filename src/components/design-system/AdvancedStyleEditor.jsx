@@ -180,104 +180,48 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         animation: newAnimation,
         buttonVariant: styleValues['--button-variant'] || 'default',
         buttonSize: styleValues['--button-size'] || 'default',
-        editMode: editMode
+        editMode: editMode,
+        hasEdits: editMode === 'global' ? editedGlobalCategories.size > 0 : editedCustomCategories.size > 0
       });
     }
   };
 
   useEffect(() => {
-    const handleSaveCustom = () => {
-      if (editMode === 'custom') {
-        const customName = customStyleName || prompt('Enter name for custom button variation:');
-        if (customName) {
-          const customVariation = {
-            name: customName,
-            variant: styleValues['--button-variant'] || 'default',
-            size: styleValues['--button-size'] || 'default',
-            state: componentState,
-            shadow: shadowEffect,
-            animation: animation,
-            styles: { ...styleValues },
-            isCustom: true
-          };
-          
-          window.dispatchEvent(new CustomEvent('save-style-configuration', { 
-            detail: customVariation 
-          }));
-          
-          toast.success(`Custom variation "${customName}" created`);
-          setCustomStyleName('');
-          setEditedCustomCategories(new Set());
-        }
-      }
+    const handleLoadStyle = (event) => {
+      const style = event.detail;
+      // Load the style configuration for editing
+      if (style.variant) handleStyleChange('--button-variant', style.variant);
+      if (style.size) handleStyleChange('--button-size', style.size);
+      if (style.state) setComponentState(style.state);
+      if (style.shadow) setShadowEffect(style.shadow);
+      if (style.animation) setAnimation(style.animation);
+      setEditMode(style.isGlobal ? 'global' : 'custom');
     };
 
-    const handleUpdateGlobal = () => {
-      if (editMode === 'global') {
-        handleStyleSave();
-        toast.success('Global design system updated');
-        setEditedGlobalCategories(new Set());
-      }
-    };
-
-    window.addEventListener('save-custom-variation', handleSaveCustom);
-    window.addEventListener('update-global-styles', handleUpdateGlobal);
+    window.addEventListener('load-style-for-editing', handleLoadStyle);
     
     return () => {
-      window.removeEventListener('save-custom-variation', handleSaveCustom);
-      window.removeEventListener('update-global-styles', handleUpdateGlobal);
+      window.removeEventListener('load-style-for-editing', handleLoadStyle);
     };
-  }, [styleValues, componentState, shadowEffect, animation, editMode, customStyleName]);
+  }, []);
 
-  const handleCreateNew = () => {
-    toast.info('Creating new style variant...');
-    // TODO: Implement save as new variant logic
-  };
-
-  const handleUpdateGlobal = async () => {
-    if (onUpdate) {
-      await onUpdate(styleValues);
+  useEffect(() => {
+    if (onPreviewUpdate) {
+      onPreviewUpdate({ 
+        element: selectedElement, 
+        state: componentState,
+        shadow: shadowEffect,
+        animation,
+        buttonVariant: styleValues['--button-variant'] || 'default',
+        buttonSize: styleValues['--button-size'] || 'default',
+        editMode: editMode,
+        hasEdits: editMode === 'global' ? editedGlobalCategories.size > 0 : editedCustomCategories.size > 0
+      });
     }
-    toast.success('Styles saved globally');
-  };
+  }, [editMode, editedGlobalCategories, editedCustomCategories]);
 
   return (
     <div className="space-y-4">
-      {/* Edit Mode Toggle */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <h3 className="text-sm font-semibold">Editing Mode</h3>
-              <p className="text-xs text-muted-foreground">
-                {editMode === 'global' 
-                  ? 'Editing core design system • Changes affect all instances'
-                  : 'Creating custom variation • Independent of global styles'
-                }
-              </p>
-            </div>
-            <div className="flex items-center gap-2 bg-muted p-1 rounded-lg">
-              <Button
-                variant={editMode === 'global' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setEditMode('global')}
-                className="h-8 px-3"
-              >
-                Global
-              </Button>
-              <Button
-                variant={editMode === 'custom' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setEditMode('custom')}
-                className="h-8 px-3"
-              >
-                Custom
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Style Categories */}
       <Card>
         <StyleCategory

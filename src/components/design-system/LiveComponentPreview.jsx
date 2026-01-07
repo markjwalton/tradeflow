@@ -51,7 +51,7 @@ const textColors = [
   { label: 'Charcoal 900', value: 'var(--charcoal-900)' },
 ];
 
-export function LiveComponentPreview({ jsxCode, componentName, componentState = 'default', shadowEffect = 'none', animation = 'none', buttonVariant = 'default', buttonSize = 'default', editMode = 'global' }) {
+export function LiveComponentPreview({ jsxCode, componentName, componentState = 'default', shadowEffect = 'none', animation = 'none', buttonVariant = 'default', buttonSize = 'default', editMode = 'global', hasEdits = false, onEditModeChange }) {
   const [showCode, setShowCode] = useState(false);
   const [error, setError] = useState(null);
   const [Component, setComponent] = useState(null);
@@ -62,14 +62,22 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
   const [textColor, setTextColor] = useState('default');
   const [refreshKey, setRefreshKey] = useState(0);
   const [savedStyles, setSavedStyles] = useState([]);
+  const [appliedStyles, setAppliedStyles] = useState([]);
 
   // Listen for saved style configurations
   useEffect(() => {
     const handleSaveStyle = (event) => {
       setSavedStyles(prev => [...prev, event.detail]);
     };
+    const handleApplyStyle = (event) => {
+      setAppliedStyles(prev => [...prev, event.detail]);
+    };
     window.addEventListener('save-style-configuration', handleSaveStyle);
-    return () => window.removeEventListener('save-style-configuration', handleSaveStyle);
+    window.addEventListener('apply-style-configuration', handleApplyStyle);
+    return () => {
+      window.removeEventListener('save-style-configuration', handleSaveStyle);
+      window.removeEventListener('apply-style-configuration', handleApplyStyle);
+    };
   }, []);
 
   // Force refresh when CSS variables change
@@ -221,86 +229,126 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
           spin: 'animate-spin'
         };
         
-        const handleApplyStyle = (style) => {
-          // Apply saved style configuration
-          console.log('Applying style:', style);
+        const handleApplyCurrentStyle = () => {
+          const currentStyle = {
+            name: editMode === 'global' ? 'Global Update' : (prompt('Enter name for this style:') || 'Custom Style'),
+            variant: buttonVariant,
+            size: buttonSize,
+            state: componentState,
+            shadow: shadowEffect,
+            animation: animation,
+            isGlobal: editMode === 'global',
+            timestamp: new Date().toISOString()
+          };
+          
+          setAppliedStyles(prev => [...prev, currentStyle]);
+          window.dispatchEvent(new CustomEvent('apply-style-configuration', { detail: currentStyle }));
+          toast.success(`Style applied: ${currentStyle.name}`);
+        };
+
+        const handleLoadStyle = (style) => {
+          // Reload style for editing
+          window.dispatchEvent(new CustomEvent('load-style-for-editing', { detail: style }));
+          toast.info(`Loaded: ${style.name}`);
         };
 
         const handleDeleteStyle = (index) => {
-          setSavedStyles(prev => prev.filter((_, i) => i !== index));
+          const style = appliedStyles[index];
+          setAppliedStyles(prev => prev.filter((_, i) => i !== index));
+          toast.success(`Deleted: ${style.name}`);
         };
 
         return () => (
           <div className="w-full space-y-6">
-            {/* Editing Mode Header */}
+            {/* Editing Mode Header - Merged */}
             <div className="border border-border rounded-lg p-4 bg-card">
               <div className="flex items-start justify-between mb-3">
-                <div>
-                  <h3 className="text-sm font-semibold text-foreground mb-1">
-                    Editing Mode: Button 
-                    <Badge variant={editMode === 'global' ? 'default' : 'secondary'} className="ml-2">
-                      {editMode === 'global' ? 'Global' : 'Custom'}
-                    </Badge>
-                  </h3>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-2">
+                    <h3 className="text-sm font-semibold text-foreground">
+                      Currently Editing: Button
+                    </h3>
+                    <div className="flex items-center gap-2 bg-muted p-1 rounded-lg">
+                      <Button
+                        variant={editMode === 'global' ? 'default' : 'ghost'}
+                        size="sm"
+                        onClick={() => onEditModeChange && onEditModeChange('global')}
+                        className="h-7 px-3 text-xs"
+                      >
+                        Global
+                      </Button>
+                      <Button
+                        variant={editMode === 'custom' ? 'default' : 'ghost'}
+                        size="sm"
+                        onClick={() => onEditModeChange && onEditModeChange('custom')}
+                        className="h-7 px-3 text-xs"
+                      >
+                        Custom
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
                     <span className="px-2 py-1 bg-primary/10 text-primary rounded capitalize">{buttonVariant} / {buttonSize}</span>
                     <span className="px-2 py-1 bg-accent/10 text-accent-700 rounded">{componentState}</span>
                     {shadowEffect !== 'none' && (
                       <span className="px-2 py-1 bg-secondary/10 text-secondary-700 rounded">Shadow: {shadowEffect}</span>
                     )}
                   </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {editMode === 'global' 
+                      ? 'Editing core design system • Changes affect all instances'
+                      : 'Creating custom variation • Independent of global styles'
+                    }
+                  </p>
                 </div>
-                <div className="flex items-center gap-2">
-                  {editMode === 'global' ? (
-                    <>
-                      <Badge variant="default">5 Instances</Badge>
-                      <Button size="sm" onClick={() => window.dispatchEvent(new CustomEvent('update-global-styles'))}>
-                        Update Global
-                      </Button>
-                    </>
-                  ) : (
-                    <Button size="sm" variant="outline" onClick={() => window.dispatchEvent(new CustomEvent('save-custom-variation'))}>
-                      Save Custom
-                    </Button>
-                  )}
+                <div className="flex flex-col items-end gap-2">
+                  {editMode === 'global' && <Badge variant="default" className="whitespace-nowrap">5 Instances</Badge>}
+                  <Button 
+                    size="sm" 
+                    onClick={handleApplyCurrentStyle}
+                    disabled={!hasEdits}
+                    className="whitespace-nowrap"
+                  >
+                    Apply {editMode === 'global' ? 'Global' : 'Custom'}
+                  </Button>
                 </div>
               </div>
-              <p className="text-xs text-muted-foreground mb-3">
-                {editMode === 'global' 
-                  ? 'Editing core design system • Changes affect all instances'
-                  : 'Creating custom variation • Independent of global styles • Can be deleted anytime'
-                }
-              </p>
 
-              {/* Saved Custom Styles List */}
-              {savedStyles.filter(s => s.isCustom).length > 0 && (
+              {/* Applied Styles List */}
+              {appliedStyles.length > 0 && (
                 <div className="space-y-2 pt-3 border-t border-border">
-                  <p className="text-xs font-medium text-muted-foreground">Custom Variations:</p>
-                  {savedStyles.filter(s => s.isCustom).map((style, index) => (
-                    <div key={index} className="flex items-center justify-between p-2 bg-muted/50 rounded-md group">
-                      <div className="flex-1 cursor-pointer" onClick={() => handleApplyStyle(style)}>
+                  <p className="text-xs font-medium text-muted-foreground">Applied Styles:</p>
+                  {appliedStyles.map((style, index) => (
+                    <div key={index} className="flex items-center justify-between p-2 bg-muted/50 rounded-md group hover:bg-muted transition-colors">
+                      <div className="flex-1 cursor-pointer" onClick={() => handleLoadStyle(style)}>
                         <div className="flex items-center gap-2">
                           <p className="text-xs font-medium text-foreground">{style.name}</p>
-                          <Badge variant="secondary" className="text-xs">Custom</Badge>
+                          <Badge variant={style.isGlobal ? 'default' : 'secondary'} className="text-xs">
+                            {style.isGlobal ? 'Global' : 'Custom'}
+                          </Badge>
                         </div>
                         <p className="text-xs text-muted-foreground">
                           {style.variant} • {style.size} • {style.state}
+                          {style.shadow !== 'none' && ` • ${style.shadow}`}
                         </p>
                       </div>
                       <div className="flex items-center gap-1">
                         <Button 
                           size="sm" 
                           variant="ghost" 
-                          className="h-7 px-2 text-xs"
-                          onClick={() => handleApplyStyle(style)}
+                          className="h-7 px-2 text-xs hover:bg-primary/10"
+                          onClick={() => handleLoadStyle(style)}
                         >
                           Load
                         </Button>
                         <Button 
                           size="sm" 
                           variant="ghost" 
-                          className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 text-destructive hover:text-destructive"
-                          onClick={() => handleDeleteStyle(index)}
+                          className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100 text-destructive hover:text-destructive hover:bg-destructive/10"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteStyle(index);
+                          }}
                         >
                           <X className="h-3 w-3" />
                         </Button>
