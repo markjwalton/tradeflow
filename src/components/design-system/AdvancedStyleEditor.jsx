@@ -158,89 +158,74 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
 
   return (
     <div className="space-y-4">
-      {/* Top Controls */}
+      {/* Style Categories */}
       <Card>
-        <CardContent className="pt-6 space-y-4">
-          <div className="flex items-center gap-4">
-            <div className="flex-1">
-              <label className="text-xs font-medium mb-1 block">Style Variable</label>
-              <input
-                type="text"
-                className="w-full px-3 py-2 border rounded-md text-sm font-mono bg-muted"
-                value={currentStyle}
-                onChange={(e) => setCurrentStyle(e.target.value)}
-              />
-            </div>
-          </div>
-
-          {/* State, Shadow, Animation Controls */}
-          <div className="grid grid-cols-3 gap-3">
-            <div>
-              <label className="text-xs font-medium mb-1 block">Component State</label>
-              <select
-                className="w-full px-3 py-2 border rounded-md text-sm bg-background"
-                value={componentState}
-                onChange={(e) => handleStateChange(e.target.value)}
-              >
-                <option value="default">Default</option>
-                <option value="hover">Hover</option>
-                <option value="active">Active</option>
-                <option value="focus">Focus</option>
-                <option value="disabled">Disabled</option>
-              </select>
-            </div>
+        <StyleCategory
+          title="Component Properties"
+          currentValue={`${componentState} • ${shadowEffect} • ${animation}`}
+          isLive={true}
+          isApplicable={true}
+          isExpanded={expandedCategories.includes('properties')}
+          onToggle={() => toggleCategory('properties')}
+        >
+          <div className="space-y-4">
+            <StyleProperty
+              label="Component State"
+              value={componentState}
+              onChange={(val) => handleStateChange(val)}
+              type="select"
+              options={[
+                { value: 'default', label: 'Default' },
+                { value: 'hover', label: 'Hover' },
+                { value: 'active', label: 'Active' },
+                { value: 'focus', label: 'Focus' },
+                { value: 'disabled', label: 'Disabled' }
+              ]}
+            />
             
-            <div>
-              <label className="text-xs font-medium mb-1 block">Shadow Effect</label>
-              <select
-                className="w-full px-3 py-2 border rounded-md text-sm bg-background"
-                value={shadowEffect}
-                onChange={(e) => handleShadowChange(e.target.value)}
-              >
-                <option value="none">No Shadow</option>
-                <option value="sm">Shadow SM</option>
-                <option value="md">Shadow MD</option>
-                <option value="lg">Shadow LG</option>
-                <option value="xl">Shadow XL</option>
-              </select>
-            </div>
+            <StyleProperty
+              label="Shadow Effect"
+              value={shadowEffect}
+              onChange={(val) => handleShadowChange(val)}
+              type="select"
+              options={[
+                { value: 'none', label: 'No Shadow' },
+                { value: 'sm', label: 'Shadow SM' },
+                { value: 'md', label: 'Shadow MD' },
+                { value: 'lg', label: 'Shadow LG' },
+                { value: 'xl', label: 'Shadow XL' }
+              ]}
+            />
             
-            <div>
-              <label className="text-xs font-medium mb-1 block">Animation</label>
-              <select
-                className="w-full px-3 py-2 border rounded-md text-sm bg-background"
-                value={animation}
-                onChange={(e) => handleAnimationChange(e.target.value)}
-              >
-                <option value="none">No Animation</option>
-                <option value="pulse">Pulse</option>
-                <option value="bounce">Bounce</option>
-                <option value="spin">Spin</option>
-              </select>
-            </div>
-          </div>
+            <StyleProperty
+              label="Animation"
+              value={animation}
+              onChange={(val) => handleAnimationChange(val)}
+              type="select"
+              options={[
+                { value: 'none', label: 'No Animation' },
+                { value: 'pulse', label: 'Pulse' },
+                { value: 'bounce', label: 'Bounce' },
+                { value: 'spin', label: 'Spin' }
+              ]}
+            />
 
-          {/* Instances and Actions */}
-          <div className="flex items-center justify-between p-3 bg-muted/50 rounded-md">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center justify-between p-3 bg-muted/50 rounded-md mt-4">
               <Badge variant={instances > 3 ? 'destructive' : 'default'}>
                 {instances} Instances
               </Badge>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button size="sm" variant="outline" onClick={handleCreateNew}>
-                Create New Style
-              </Button>
-              <Button size="sm" onClick={handleUpdateGlobal}>
-                Update Global
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button size="sm" variant="outline" onClick={handleCreateNew}>
+                  Create New
+                </Button>
+                <Button size="sm" onClick={handleUpdateGlobal}>
+                  <Save className="h-3 w-3 mr-1" />
+                  Update
+                </Button>
+              </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Style Categories */}
-      <Card>
+        </StyleCategory>
         <StyleCategory
           title="Border Styles"
           currentValue={styleValues['--border-width'] || '1px'}
