@@ -23,7 +23,7 @@ const componentImports = {
 };
 
 const bgColors = [
-  { label: 'Default', value: 'transparent' },
+  { label: 'Transparent', value: 'transparent' },
   { label: 'Background', value: 'var(--color-background)' },
   { label: 'Card', value: 'var(--color-card)' },
   { label: 'Muted', value: 'var(--color-muted)' },
@@ -459,17 +459,8 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
   return (
     <div className="border rounded-lg overflow-hidden">
       <div className="bg-muted/50 p-3 border-b space-y-2">
-        <div className="flex items-center justify-between gap-2">
-          <span className="text-sm font-medium">Live Preview</span>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={() => setShowCode(!showCode)}>
-              {showCode ? <Eye className="h-4 w-4" /> : <Code className="h-4 w-4" />}
-            </Button>
-          </div>
-        </div>
-        
         {/* Background Selector */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between gap-2">
           <Select value={previewBg} onValueChange={setPreviewBg}>
             <SelectTrigger className="w-48 h-8 text-xs">
               <SelectValue placeholder="Background" />
@@ -480,11 +471,9 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
               ))}
             </SelectContent>
           </Select>
-        </div>
-        
-        {/* Color Reference */}
-        <div className="text-xs text-muted-foreground font-mono bg-background/50 px-2 py-1 rounded">
-          BG: {getCurrentBgColor()}
+          <Button variant="ghost" size="sm" onClick={() => setShowCode(!showCode)}>
+            {showCode ? <Eye className="h-4 w-4" /> : <Code className="h-4 w-4" />}
+          </Button>
         </div>
         
         {jsxCode.includes('text-') && (
