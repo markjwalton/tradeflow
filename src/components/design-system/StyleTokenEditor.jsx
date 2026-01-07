@@ -359,31 +359,55 @@ export function StyleTokenEditor({ tokens = [], onUpdate, componentName }) {
         </Card>
       )}
 
-      <Tabs defaultValue="color" className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="color">
-            <Paintbrush className="h-4 w-4 mr-2" />
-            Colors
-          </TabsTrigger>
-          <TabsTrigger value="spacing">
-            <Ruler className="h-4 w-4 mr-2" />
-            Spacing
-          </TabsTrigger>
-          <TabsTrigger value="typography">
-            <Type className="h-4 w-4 mr-2" />
-            Typography
-          </TabsTrigger>
-          <TabsTrigger value="radius">
-            <BoxIcon className="h-4 w-4 mr-2" />
-            Radius
-          </TabsTrigger>
-          <TabsTrigger value="other">
-            Other
-          </TabsTrigger>
-        </TabsList>
+      {Object.keys(groupedTokens).length === 0 && (
+        <Card>
+          <CardContent className="pt-6 text-center text-muted-foreground">
+            No editable tokens found for this component
+          </CardContent>
+        </Card>
+      )}
 
-        {Object.entries(groupedTokens).map(([type, typeTokens]) => (
-          <TabsContent key={type} value={type} className="space-y-3">
+      {Object.keys(groupedTokens).length > 0 && (
+        <Tabs defaultValue={Object.keys(groupedTokens)[0]} className="w-full">
+          <TabsList className={`grid w-full grid-cols-${Math.min(Object.keys(groupedTokens).length, 5)}`}>
+            {groupedTokens.color && (
+              <TabsTrigger value="color">
+                <Paintbrush className="h-4 w-4 mr-2" />
+                Colors
+              </TabsTrigger>
+            )}
+            {groupedTokens.spacing && (
+              <TabsTrigger value="spacing">
+                <Ruler className="h-4 w-4 mr-2" />
+                Spacing
+              </TabsTrigger>
+            )}
+            {groupedTokens.typography && (
+              <TabsTrigger value="typography">
+                <Type className="h-4 w-4 mr-2" />
+                Typography
+              </TabsTrigger>
+            )}
+            {groupedTokens.radius && (
+              <TabsTrigger value="radius">
+                <BoxIcon className="h-4 w-4 mr-2" />
+                Radius
+              </TabsTrigger>
+            )}
+            {groupedTokens.shadow && (
+              <TabsTrigger value="shadow">
+                Shadow
+              </TabsTrigger>
+            )}
+            {groupedTokens.other && (
+              <TabsTrigger value="other">
+                Other
+              </TabsTrigger>
+            )}
+          </TabsList>
+
+          {Object.entries(groupedTokens).map(([type, typeTokens]) => (
+            <TabsContent key={type} value={type} className="space-y-3 mt-4">
             {typeTokens.map(token => {
               const currentValue = getCurrentValue(token);
               const isModified = !!localTokens[token];
