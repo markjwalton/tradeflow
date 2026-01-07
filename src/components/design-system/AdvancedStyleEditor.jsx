@@ -416,18 +416,46 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         </StyleCategory>
 
         <StyleCategory
-          title="Background Styles"
-          currentValue={styleValues['--color-background'] || '#f5f3ef'}
+          title="Backgrounds"
+          currentValue={styleValues['--color-background'] || 'var(--background-100)'}
           isLive={isStyleLive('--color-background')}
           isApplicable={isStyleApplicable('background')}
           isExpanded={expandedCategories.includes('background')}
           onToggle={() => toggleCategory('background')}
         >
           <StyleProperty
-            label="Background Color"
-            value={styleValues['--color-background'] || '#f5f3ef'}
+            label="Background"
+            value={styleValues['--color-background'] || 'var(--background-100)'}
             onChange={(val) => handleStyleChange('--color-background', val)}
-            type="color"
+            type="select"
+            options={[
+              { value: 'var(--background-50)', label: 'Background 50 (Lightest)' },
+              { value: 'var(--background-100)', label: 'Background 100' },
+              { value: 'var(--background-200)', label: 'Background 200' }
+            ]}
+          />
+          <StyleProperty
+            label="Card Background"
+            value={styleValues['--color-card'] || 'var(--color-card)'}
+            onChange={(val) => handleStyleChange('--color-card', val)}
+            type="select"
+            options={[
+              { value: '#ffffff', label: 'White' },
+              { value: 'var(--background-50)', label: 'Background 50' },
+              { value: 'var(--primary-50)', label: 'Primary 50' },
+              { value: 'var(--secondary-50)', label: 'Secondary 50' }
+            ]}
+          />
+          <StyleProperty
+            label="Muted Background"
+            value={styleValues['--color-muted'] || 'var(--background-200)'}
+            onChange={(val) => handleStyleChange('--color-muted', val)}
+            type="select"
+            options={[
+              { value: 'var(--background-100)', label: 'Background 100' },
+              { value: 'var(--background-200)', label: 'Background 200' },
+              { value: 'var(--charcoal-100)', label: 'Charcoal 100' }
+            ]}
           />
         </StyleCategory>
 
