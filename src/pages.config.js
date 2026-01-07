@@ -7,17 +7,11 @@ import AssetManager from './pages/AssetManager';
 import CMSManager from './pages/CMSManager';
 import CRMCustomerDetail from './pages/CRMCustomerDetail';
 import CRMCustomerForm from './pages/CRMCustomerForm';
-import CRMCustomers from './pages/CRMCustomers';
-import CRMDashboard from './pages/CRMDashboard';
-import CRMEnquiries from './pages/CRMEnquiries';
 import CRMEnquiryDetail from './pages/CRMEnquiryDetail';
 import CRMEnquiryForm from './pages/CRMEnquiryForm';
 import CRMInteractionForm from './pages/CRMInteractionForm';
-import CRMInteractions from './pages/CRMInteractions';
 import CRMProjectDetail from './pages/CRMProjectDetail';
 import CRMProjectForm from './pages/CRMProjectForm';
-import CRMProjects from './pages/CRMProjects';
-import CRMSettings from './pages/CRMSettings';
 import CSSAudit from './pages/CSSAudit';
 import Calendar from './pages/Calendar';
 import ClientOnboardingPortal from './pages/ClientOnboardingPortal';
@@ -124,17 +118,11 @@ export const PAGES = {
     "CMSManager": CMSManager,
     "CRMCustomerDetail": CRMCustomerDetail,
     "CRMCustomerForm": CRMCustomerForm,
-    "CRMCustomers": CRMCustomers,
-    "CRMDashboard": CRMDashboard,
-    "CRMEnquiries": CRMEnquiries,
     "CRMEnquiryDetail": CRMEnquiryDetail,
     "CRMEnquiryForm": CRMEnquiryForm,
     "CRMInteractionForm": CRMInteractionForm,
-    "CRMInteractions": CRMInteractions,
     "CRMProjectDetail": CRMProjectDetail,
     "CRMProjectForm": CRMProjectForm,
-    "CRMProjects": CRMProjects,
-    "CRMSettings": CRMSettings,
     "CSSAudit": CSSAudit,
     "Calendar": Calendar,
     "ClientOnboardingPortal": ClientOnboardingPortal,
