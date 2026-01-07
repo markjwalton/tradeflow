@@ -1118,6 +1118,27 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             ]}
           />
           <StyleProperty
+            label="Card Pattern Color"
+            value={styleValues['--card-pattern-color'] || '#000000'}
+            onChange={(val) => handleStyleChange('--card-pattern-color', val)}
+            type="color"
+          />
+          <StyleProperty
+            label="Card Pattern Opacity"
+            value={styleValues['--card-pattern-opacity'] || '0.08'}
+            onChange={(val) => handleStyleChange('--card-pattern-opacity', val)}
+            type="select"
+            options={[
+              { value: '0.03', label: '3% (Subtle)' },
+              { value: '0.05', label: '5%' },
+              { value: '0.08', label: '8%' },
+              { value: '0.10', label: '10%' },
+              { value: '0.15', label: '15%' },
+              { value: '0.20', label: '20%' },
+              { value: '0.30', label: '30% (Bold)' }
+            ]}
+          />
+          <StyleProperty
             label="Background Pattern (Page)"
             value={styleValues['--page-bg-pattern'] || 'none'}
             onChange={(val) => handleStyleChange('--page-bg-pattern', val)}
@@ -1138,6 +1159,27 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               { value: 'bg-[linear-gradient(115deg,transparent_75%,#00000008_75%),linear-gradient(245deg,transparent_75%,#00000008_75%)] [background-size:20px_20px]', label: 'Zigzag' },
               { value: 'bg-[radial-gradient(ellipse_at_center,transparent_60%,#00000008_60%)] [background-size:30px_30px]', label: 'Waves' },
               { value: 'bg-[linear-gradient(63deg,#00000008_23%,transparent_23%),linear-gradient(63deg,transparent_74%,#00000008_78%),linear-gradient(63deg,transparent_34%,#00000008_38%,#00000008_58%,transparent_62%)] [background-size:20px_35px]', label: 'Hexagons' }
+            ]}
+          />
+          <StyleProperty
+            label="Page Pattern Color"
+            value={styleValues['--page-pattern-color'] || '#000000'}
+            onChange={(val) => handleStyleChange('--page-pattern-color', val)}
+            type="color"
+          />
+          <StyleProperty
+            label="Page Pattern Opacity"
+            value={styleValues['--page-pattern-opacity'] || '0.05'}
+            onChange={(val) => handleStyleChange('--page-pattern-opacity', val)}
+            type="select"
+            options={[
+              { value: '0.02', label: '2% (Very Subtle)' },
+              { value: '0.03', label: '3%' },
+              { value: '0.05', label: '5%' },
+              { value: '0.08', label: '8%' },
+              { value: '0.10', label: '10%' },
+              { value: '0.15', label: '15%' },
+              { value: '0.20', label: '20% (Bold)' }
             ]}
           />
           <StyleProperty
