@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LayoutDashboard, Users, FileText, FolderOpen, MessageSquare, Settings } from 'lucide-react';
+import { LayoutDashboard, Users, FileText, FolderOpen, Settings } from 'lucide-react';
 
 // Import tab components
 import CRMDashboardTab from '@/components/crm/tabs/CRMDashboardTab';
 import CRMCustomersTab from '@/components/crm/tabs/CRMCustomersTab';
 import CRMEnquiriesTab from '@/components/crm/tabs/CRMEnquiriesTab';
 import CRMProjectsTab from '@/components/crm/tabs/CRMProjectsTab';
-import CRMInteractionsTab from '@/components/crm/tabs/CRMInteractionsTab';
 import CRMSettingsTab from '@/components/crm/tabs/CRMSettingsTab';
 
 export default function CRM() {
@@ -47,13 +46,6 @@ export default function CRM() {
               Projects
             </TabsTrigger>
             <TabsTrigger 
-              value="interactions" 
-              className="gap-2 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none"
-            >
-              <MessageSquare className="h-4 w-4" />
-              Interactions
-            </TabsTrigger>
-            <TabsTrigger 
               value="settings" 
               className="gap-2 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none"
             >
@@ -75,9 +67,6 @@ export default function CRM() {
           </TabsContent>
           <TabsContent value="projects" className="m-0">
             <CRMProjectsTab />
-          </TabsContent>
-          <TabsContent value="interactions" className="m-0">
-            <CRMInteractionsTab />
           </TabsContent>
           <TabsContent value="settings" className="m-0">
             <CRMSettingsTab />
