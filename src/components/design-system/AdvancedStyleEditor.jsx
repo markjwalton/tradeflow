@@ -1110,8 +1110,11 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               { value: 'none', label: 'No Pattern' },
               { value: 'bg-gradient-to-r from-muted/40 to-muted/20', label: 'Gradient Subtle' },
               { value: 'bg-gradient-to-r from-primary/5 to-primary/10', label: 'Gradient Primary' },
-              { value: 'bg-gradient-to-r from-secondary/5 to-secondary/10', label: 'Gradient Secondary' },
-              { value: 'bg-gradient-to-br from-background-50 to-background-100', label: 'Gradient Soft' }
+              { value: 'bg-[radial-gradient(circle_at_1px_1px,rgb(0_0_0_/_15%)_1px,transparent_0)] [background-size:20px_20px]', label: 'Polka Dots' },
+              { value: 'bg-[linear-gradient(135deg,#00000008_10%,transparent_10%,transparent_50%,#00000008_50%,#00000008_60%,transparent_60%,transparent)] [background-size:7.07px_7.07px]', label: 'Diagonal Lines' },
+              { value: 'bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,#00000008_10px,#00000008_20px)]', label: 'Diagonal Stripes' },
+              { value: 'bg-[linear-gradient(#00000008_2px,transparent_2px),linear-gradient(90deg,#00000008_2px,transparent_2px)] [background-size:20px_20px]', label: 'Grid' },
+              { value: 'bg-[radial-gradient(circle,transparent_20%,white_20%,white_80%,transparent_80%,transparent)] [background-size:30px_30px]', label: 'Circles' }
             ]}
           />
           <StyleProperty
@@ -1122,10 +1125,14 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             options={[
               { value: 'none', label: 'No Pattern' },
               { value: 'bg-gradient-to-br from-gray-50 to-gray-100', label: 'Gradient Gray' },
-              { value: 'bg-gradient-to-br from-primary-50/30 to-background-100', label: 'Gradient Primary Soft' },
-              { value: 'bg-gradient-to-br from-secondary-50/30 to-background-100', label: 'Gradient Secondary Soft' },
-              { value: 'bg-[radial-gradient(circle_at_30%_20%,var(--primary-100),transparent_50%)]', label: 'Radial Primary' },
-              { value: 'bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)]', label: 'Grid Pattern' }
+              { value: 'bg-[radial-gradient(circle_at_1px_1px,rgb(0_0_0_/_15%)_1px,transparent_0)] [background-size:40px_40px]', label: 'Polka Dots' },
+              { value: 'bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] [background-size:24px_24px]', label: 'Grid' },
+              { value: 'bg-[linear-gradient(135deg,#00000008_10%,transparent_10%,transparent_50%,#00000008_50%,#00000008_60%,transparent_60%,transparent)] [background-size:10px_10px]', label: 'Diagonal Lines' },
+              { value: 'bg-[repeating-linear-gradient(45deg,transparent,transparent_15px,#00000005_15px,#00000005_30px)]', label: 'Diagonal Stripes' },
+              { value: 'bg-[radial-gradient(circle,transparent_20%,white_20%,white_80%,transparent_80%,transparent),radial-gradient(circle,transparent_20%,white_20%,white_80%,transparent_80%,transparent_50px_50px)] [background-size:50px_50px]', label: 'Circles Pattern' },
+              { value: 'bg-[repeating-linear-gradient(0deg,#00000005,#00000005_1px,transparent_1px,transparent_10px),repeating-linear-gradient(90deg,#00000005,#00000005_1px,transparent_1px,transparent_10px)]', label: 'Paper Grid' },
+              { value: 'bg-[linear-gradient(30deg,#00000008_12%,transparent_12.5%,transparent_87%,#00000008_87.5%,#00000008),linear-gradient(150deg,#00000008_12%,transparent_12.5%,transparent_87%,#00000008_87.5%,#00000008)] [background-size:20px_35px]', label: 'Rhombus' },
+              { value: 'bg-[repeating-linear-gradient(90deg,transparent,transparent_50px,#00000010_50px,#00000010_53px,transparent_53px,transparent_63px)]', label: 'Lines' }
             ]}
           />
           <StyleProperty
