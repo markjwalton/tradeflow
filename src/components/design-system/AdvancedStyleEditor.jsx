@@ -493,27 +493,55 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         </StyleCategory>
 
         <StyleCategory
-          title="CSS3 Styles"
-          currentValue={styleValues['--shadow-md']}
-          isLive={isStyleLive('--shadow-md')}
+          title="Shadows & Radius"
+          currentValue={styleValues['--shadow-card'] || 'var(--shadow-sm)'}
+          isLive={isStyleLive('--shadow-card')}
           isApplicable={true}
           isExpanded={expandedCategories.includes('css3')}
           onToggle={() => toggleCategory('css3')}
         >
           <StyleProperty
-            label="Box Shadow"
-            value={styleValues['--shadow-md'] || '0 4px 6px -1px rgb(0 0 0 / 0.1)'}
-            onChange={(val) => handleStyleChange('--shadow-md', val)}
-            type="text"
+            label="Shadow"
+            value={styleValues['--shadow-card'] || 'var(--shadow-sm)'}
+            onChange={(val) => handleStyleChange('--shadow-card', val)}
+            type="select"
+            options={[
+              { value: 'var(--shadow-xs)', label: 'Shadow XS' },
+              { value: 'var(--shadow-sm)', label: 'Shadow SM' },
+              { value: 'var(--shadow-md)', label: 'Shadow MD' },
+              { value: 'var(--shadow-lg)', label: 'Shadow LG' },
+              { value: 'var(--shadow-xl)', label: 'Shadow XL' },
+              { value: 'var(--shadow-2xl)', label: 'Shadow 2XL' }
+            ]}
+          />
+          <StyleProperty
+            label="Hover Shadow"
+            value={styleValues['--shadow-card-hover'] || 'var(--shadow-md)'}
+            onChange={(val) => handleStyleChange('--shadow-card-hover', val)}
+            type="select"
+            options={[
+              { value: 'var(--shadow-sm)', label: 'Shadow SM' },
+              { value: 'var(--shadow-md)', label: 'Shadow MD' },
+              { value: 'var(--shadow-lg)', label: 'Shadow LG' },
+              { value: 'var(--shadow-xl)', label: 'Shadow XL' }
+            ]}
           />
           <StyleProperty
             label="Border Radius"
-            value={styleValues['--radius-lg'] || '0.5rem'}
-            onChange={(val) => handleStyleChange('--radius-lg', val)}
-            type="slider"
-            min={0}
-            max={3}
-            step={0.125}
+            value={styleValues['--radius-button'] || 'var(--radius-md)'}
+            onChange={(val) => handleStyleChange('--radius-button', val)}
+            type="select"
+            options={[
+              { value: 'var(--radius-none)', label: 'None (0)' },
+              { value: 'var(--radius-xs)', label: 'XS (0.125rem)' },
+              { value: 'var(--radius-sm)', label: 'SM (0.25rem)' },
+              { value: 'var(--radius-md)', label: 'MD (0.375rem)' },
+              { value: 'var(--radius-lg)', label: 'LG (0.5rem)' },
+              { value: 'var(--radius-xl)', label: 'XL (0.75rem)' },
+              { value: 'var(--radius-2xl)', label: '2XL (1rem)' },
+              { value: 'var(--radius-3xl)', label: '3XL (1.5rem)' },
+              { value: 'var(--radius-full)', label: 'Full (9999px)' }
+            ]}
           />
         </StyleCategory>
       </Card>
