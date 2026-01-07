@@ -100,6 +100,18 @@ export function LiveComponentPreview({ jsxCode, componentName }) {
           if (wordSpacingMatch) baseStyle.wordSpacing = wordSpacingMatch[1];
           if (fontWeightMatch) baseStyle.fontWeight = fontWeightMatch[1];
           if (colorMatch && textColor === 'default') baseStyle.color = colorMatch[1];
+          
+          console.log('[LiveComponentPreview] Parsed base style:', baseStyle);
+          
+          // Resolve CSS variables
+          if (baseStyle.color && baseStyle.color.startsWith('var(')) {
+            const varName = baseStyle.color.match(/var\((--[^)]+)\)/)?.[1];
+            if (varName) {
+              const resolvedColor = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+              console.log(`[LiveComponentPreview] Resolving ${varName} = ${resolvedColor}`);
+              baseStyle.color = resolvedColor || baseStyle.color;
+            }
+          }
         }
         
         // Apply color override if not default
