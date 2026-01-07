@@ -28,14 +28,31 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Source folder not found' }, { status: 404 });
     }
 
-    // Create new WebsiteFolder
+    // Clone the theme if it exists (don't share themes between instances)
+    let newThemeId = null;
+    if (applyTheme && template.default_theme_id) {
+      const sourceThemes = await base44.asServiceRole.entities.WebsiteTheme.filter({ id: template.default_theme_id });
+      if (sourceThemes.length > 0) {
+        const sourceTheme = sourceThemes[0];
+        const newTheme = await base44.asServiceRole.entities.WebsiteTheme.create({
+          name: `${newWebsiteName} Theme`,
+          description: `Cloned from ${sourceTheme.name}`,
+          theme_data: sourceTheme.theme_data,
+          css_variables: sourceTheme.css_variables,
+          is_active: true
+        });
+        newThemeId = newTheme.id;
+      }
+    }
+
+    // Create new WebsiteFolder with cloned theme
     const newFolder = await base44.asServiceRole.entities.WebsiteFolder.create({
       name: newWebsiteName,
       slug: newWebsiteSlug,
       description: `Created from template: ${template.template_name}`,
       is_active: true,
       tenant_id: tenantId || null,
-      theme_id: applyTheme && template.default_theme_id ? template.default_theme_id : null
+      theme_id: newThemeId
     });
 
     // Duplicate CMSPages
@@ -162,7 +179,8 @@ Deno.serve(async (req) => {
       blogPostsCreated: sourceBlogPosts.length,
       productsCreated: sourceProducts.length,
       sectionsCreated: sourceSections.length,
-      message: `Website instance created from template. Template remains unchanged.`
+      themeCloned: newThemeId ? true : false,
+      message: `Independent website instance created. Template and original theme remain unchanged - you can now customize this instance freely.`
     });
 
   } catch (error) {
