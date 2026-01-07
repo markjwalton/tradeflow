@@ -316,7 +316,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   return (
     <div className="space-y-4">
       {/* Editing Mode Header - Collapsible */}
-      <Card className={hasUnsavedChanges && isHeaderOpen ? 'border-l-4 border-l-amber-500 bg-amber-50/20' : ''}>
+      <Card>
         <Collapsible open={isHeaderOpen} onOpenChange={setIsHeaderOpen}>
           <CollapsibleTrigger asChild>
             <div className="p-6 cursor-pointer hover:bg-muted/30 transition-colors">
