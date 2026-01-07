@@ -116,6 +116,21 @@ export function LiveComponentPreview({ jsxCode, componentName }) {
           }
         }
         
+        // Resolve CSS variables to actual values so changes are visible
+        Object.keys(baseStyle).forEach(key => {
+          const value = baseStyle[key];
+          if (typeof value === 'string' && value.startsWith('var(')) {
+            const varName = value.match(/var\((--[^)]+)\)/)?.[1];
+            if (varName) {
+              const resolvedValue = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+              if (resolvedValue) {
+                baseStyle[key] = resolvedValue;
+                console.log(`[LiveComponentPreview] Resolved ${varName} to ${resolvedValue}`);
+              }
+            }
+          }
+        });
+        
         // Apply color override if not default
         if (textColor !== 'default') {
           baseStyle.color = textColor;
