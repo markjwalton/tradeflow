@@ -350,11 +350,31 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
 
         return () => (
           <div className="w-full space-y-4">
+            {/* State demo buttons */}
+            <div className="flex gap-3 items-center mb-4">
+              <Button 
+                variant={buttonVariant} 
+                size={buttonSize}
+                className="focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              >
+                Keyboard Focus (Tab)
+              </Button>
+              <Button 
+                variant={buttonVariant} 
+                size={buttonSize}
+                disabled
+              >
+                Disabled State
+              </Button>
+            </div>
+
             {/* All button variations */}
             <div className="space-y-4">
               {variants.map(variant => (
                 <div key={variant} className="space-y-2">
-                  <h4 className="text-xs font-semibold text-muted-foreground capitalize">{variant}</h4>
+                  <h4 className="text-xs font-semibold text-muted-foreground capitalize">
+                    {variant === 'default' ? 'Default' : variant}
+                  </h4>
                   <div className="flex gap-3 items-center flex-wrap">
                     {sizes.map(size => {
                       const isSelected = variant === buttonVariant && size === buttonSize;

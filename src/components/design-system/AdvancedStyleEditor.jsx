@@ -273,7 +273,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 onChange={(val) => handleStyleChange('--button-variant', val)}
                 type="select"
                 options={[
-                  { value: 'default', label: 'Default (Primary)' },
+                  { value: 'default', label: 'Default' },
                   { value: 'destructive', label: 'Destructive' },
                   { value: 'outline', label: 'Outline' },
                   { value: 'secondary', label: 'Secondary' },
@@ -305,7 +305,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               onChange={(val) => handleStateChange(val)}
               type="select"
               options={[
-                { value: 'default', label: 'Default' },
+                { value: 'default', label: 'Theme Defaults' },
                 { value: 'hover', label: 'Hover (Mouse over)' },
                 { value: 'focus', label: 'Focus (Keyboard Tab)' },
                 { value: 'active', label: 'Active (Being pressed)' },
