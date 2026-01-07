@@ -196,11 +196,11 @@ export default function CRMEnquiriesTab() {
           {filteredEnquiries.length === 0 ? (
             <div className="text-center py-12">
               <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium">No enquiries found</h3>
+              <h3 className="text-lg font-medium">No customers found</h3>
               <p className="text-muted-foreground">
                 {searchTerm || statusFilter !== 'all'
                   ? 'Try adjusting your search or filter'
-                  : 'Get started by creating your first enquiry'}
+                  : 'Get started by creating your first customer'}
               </p>
             </div>
           ) : (
