@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Eye, Code, ArrowRight, ChevronDown, Check, X, AlertCircle, Info, Plus, Minus, Settings, User } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import * as ButtonComponents from '@/components/ui/button';
 import * as CardComponents from '@/components/ui/card';
 import * as BadgeComponents from '@/components/ui/badge';
@@ -41,15 +42,45 @@ export function LiveComponentPreview({ jsxCode, componentName }) {
   const [Component, setComponent] = useState(null);
   const [previewBg, setPreviewBg] = useState('transparent');
 
+  const [customText, setCustomText] = useState('');
+  const [showCustomInput, setShowCustomInput] = useState(false);
+
   useEffect(() => {
     // Render based on component patterns
     const renderStaticPreview = () => {
       if (jsxCode.includes('className="text-')) {
-        // Typography component
+        // Typography component - show multiple lines/paragraphs
         const textMatch = jsxCode.match(/className="([^"]+)"/);
-        const textContent = jsxCode.match(/>([^<]+)</)?.[1] || 'Sample Text';
         const className = textMatch?.[1] || 'text-base';
-        return () => <p className={className}>{textContent}</p>;
+        
+        const isParagraph = className.includes('paragraph') || className.includes('body');
+        const isHeading = className.includes('h1') || className.includes('h2') || className.includes('h3') || className.includes('heading');
+        
+        const displayText = customText || (isParagraph 
+          ? 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.'
+          : 'The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.');
+        
+        return () => (
+          <div className="w-full max-w-2xl space-y-2">
+            {isHeading ? (
+              <h1 className={className}>{displayText.split('.')[0]}</h1>
+            ) : (
+              <>
+                {isParagraph ? (
+                  <div className="space-y-3">
+                    <p className={className}>{displayText}</p>
+                    <p className={className}>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
+                    <p className={className}>Sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-1">
+                    <p className={className}>{displayText}</p>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        );
       }
       
       if (jsxCode.includes('<Button')) {
@@ -91,12 +122,35 @@ export function LiveComponentPreview({ jsxCode, componentName }) {
     const PreviewComponent = renderStaticPreview();
     setComponent(() => PreviewComponent);
     setError(null);
-  }, [jsxCode]);
+  }, [jsxCode, customText]);
 
   return (
     <div className="border rounded-lg overflow-hidden">
-      <div className="bg-muted/50 p-3 flex items-center justify-between border-b">
+      <div className="bg-muted/50 p-3 flex items-center justify-between border-b gap-2">
         <span className="text-sm font-medium">Live Preview</span>
+        <div className="flex items-center gap-2 flex-1 max-w-xl">
+          {jsxCode.includes('text-') && (
+            <>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setShowCustomInput(!showCustomInput)}
+                className="text-xs h-8"
+              >
+                {showCustomInput ? 'Hide' : 'Custom Text'}
+              </Button>
+              {showCustomInput && (
+                <Input
+                  type="text"
+                  placeholder="Enter custom text..."
+                  value={customText}
+                  onChange={(e) => setCustomText(e.target.value)}
+                  className="h-8 text-xs flex-1"
+                />
+              )}
+            </>
+          )}
+        </div>
         <div className="flex items-center gap-2">
           <Select value={previewBg} onValueChange={setPreviewBg}>
             <SelectTrigger className="w-40 h-8 text-xs">
