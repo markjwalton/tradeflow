@@ -205,15 +205,65 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
           spin: 'animate-spin'
         };
         
+        const handleApplyStyle = (style) => {
+          // Apply saved style configuration
+          console.log('Applying style:', style);
+        };
+
+        const handleDeleteStyle = (index) => {
+          setSavedStyles(prev => prev.filter((_, i) => i !== index));
+        };
+
         return () => (
           <div className="w-full space-y-6">
-            {/* State indicator */}
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="font-medium">Editing:</span>
-              <span className="px-2 py-1 bg-primary/10 text-primary rounded capitalize">{buttonVariant} / {buttonSize}</span>
-              <span className="px-2 py-1 bg-accent/10 text-accent-700 rounded">{componentState}</span>
-              {shadowEffect !== 'none' && (
-                <span className="px-2 py-1 bg-secondary/10 text-secondary-700 rounded">Shadow: {shadowEffect}</span>
+            {/* Editing Mode Header */}
+            <div className="border border-border rounded-lg p-4 bg-card">
+              <div className="flex items-start justify-between mb-3">
+                <div>
+                  <h3 className="text-sm font-semibold text-foreground mb-1">Editing Mode: Button</h3>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <span className="px-2 py-1 bg-primary/10 text-primary rounded capitalize">{buttonVariant} / {buttonSize}</span>
+                    <span className="px-2 py-1 bg-accent/10 text-accent-700 rounded">{componentState}</span>
+                    {shadowEffect !== 'none' && (
+                      <span className="px-2 py-1 bg-secondary/10 text-secondary-700 rounded">Shadow: {shadowEffect}</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Saved Styles List */}
+              {savedStyles.length > 0 && (
+                <div className="space-y-2 pt-3 border-t border-border">
+                  <p className="text-xs font-medium text-muted-foreground">Saved Configurations:</p>
+                  {savedStyles.map((style, index) => (
+                    <div key={index} className="flex items-center justify-between p-2 bg-muted/50 rounded-md group">
+                      <div className="flex-1 cursor-pointer" onClick={() => handleApplyStyle(style)}>
+                        <p className="text-xs font-medium text-foreground">{style.name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {style.variant} • {style.size} • {style.state}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          className="h-7 px-2 text-xs"
+                          onClick={() => handleApplyStyle(style)}
+                        >
+                          Apply
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100"
+                          onClick={() => handleDeleteStyle(index)}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
             

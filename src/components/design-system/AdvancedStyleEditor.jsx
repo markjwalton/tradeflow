@@ -159,9 +159,13 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         animation: animation,
         styles: { ...styleValues }
       };
+      
+      // Dispatch event to add to saved styles list
+      window.dispatchEvent(new CustomEvent('save-style-configuration', { 
+        detail: customVariation 
+      }));
+      
       toast.success(`Custom variation "${customName}" created`);
-      console.log('Custom variation:', customVariation);
-      // TODO: Save to database/library
     }
   };
 
