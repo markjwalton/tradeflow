@@ -17,6 +17,15 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Website folder not found' }, { status: 404 });
     }
 
+    // Fetch theme if assigned
+    let theme = null;
+    if (folder.theme_id) {
+      const themes = await base44.entities.WebsiteTheme.filter({ id: folder.theme_id });
+      if (themes.length > 0) {
+        theme = themes[0];
+      }
+    }
+
     const cmsPages = await base44.entities.CMSPage.filter({ 
       website_folder_id: websiteFolderId,
       status: 'published'
@@ -121,6 +130,7 @@ Return ONLY valid JSON with this structure:
     return Response.json({
       success: true,
       renderData: result,
+      theme: theme,
       metadata: {
         websiteName: folder.name,
         framework: frameworkPage,

@@ -1,22 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Eye, RefreshCw } from 'lucide-react';
+import { Loader2, Eye, RefreshCw, Palette, Download } from 'lucide-react';
 import { BentoCard } from '@/components/radiant/BentoCard';
 import { Container } from '@/components/radiant/Container';
 import { Footer } from '@/components/radiant/Footer';
 import { Gradient } from '@/components/radiant/Gradient';
 import { Navbar } from '@/components/radiant/Navbar';
 import { Heading, Subheading } from '@/components/radiant/Text';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export default function CMSPreview() {
   const [selectedWebsite, setSelectedWebsite] = useState(null);
   const [selectedFramework, setSelectedFramework] = useState('RadiantHome');
   const [renderData, setRenderData] = useState(null);
   const [isRendering, setIsRendering] = useState(false);
+  const [isExtractingTheme, setIsExtractingTheme] = useState(false);
 
   const { data: websites = [], isLoading: loadingWebsites } = useQuery({
     queryKey: ['websites'],
@@ -40,6 +44,44 @@ export default function CMSPreview() {
       setIsRendering(false);
     }
   };
+
+  const handleExtractTheme = async () => {
+    if (!selectedWebsite || !selectedFramework) return;
+    
+    setIsExtractingTheme(true);
+    try {
+      const response = await base44.functions.invoke('extractThemeFromTemplate', {
+        templatePage: selectedFramework,
+        websiteFolderId: selectedWebsite,
+        themeName: `${selectedFramework} Theme`
+      });
+      
+      if (response.data.success) {
+        alert('Theme extracted successfully!');
+        handleRender(); // Re-render with new theme
+      }
+    } catch (error) {
+      console.error('Theme extraction error:', error);
+      alert('Failed to extract theme');
+    } finally {
+      setIsExtractingTheme(false);
+    }
+  };
+
+  // Apply theme CSS variables
+  useEffect(() => {
+    if (renderData?.theme?.css_variables) {
+      const styleEl = document.createElement('style');
+      styleEl.id = 'cms-preview-theme';
+      styleEl.textContent = renderData.theme.css_variables;
+      document.head.appendChild(styleEl);
+      
+      return () => {
+        const existing = document.getElementById('cms-preview-theme');
+        if (existing) existing.remove();
+      };
+    }
+  }, [renderData?.theme]);
 
   const renderHero = (hero) => {
     if (!hero) return null;
@@ -189,11 +231,58 @@ export default function CMSPreview() {
               )}
             </Button>
 
+            <Button 
+              variant="outline"
+              onClick={handleExtractTheme}
+              disabled={!selectedWebsite || !selectedFramework || isExtractingTheme}
+            >
+              {isExtractingTheme ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Extracting...
+                </>
+              ) : (
+                <>
+                  <Palette className="w-4 h-4 mr-2" />
+                  Extract Theme
+                </>
+              )}
+            </Button>
+
             {renderData && (
-              <Button variant="outline" onClick={handleRender}>
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Refresh
-              </Button>
+              <>
+                <Button variant="outline" onClick={handleRender}>
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Refresh
+                </Button>
+                
+                {renderData.theme && (
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button variant="outline">
+                        <Palette className="w-4 h-4 mr-2" />
+                        Edit Theme
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent className="w-[400px] overflow-y-auto">
+                      <SheetHeader>
+                        <SheetTitle>Theme Settings</SheetTitle>
+                      </SheetHeader>
+                      <div className="mt-6 space-y-4">
+                        <div>
+                          <h3 className="font-medium mb-2">Theme: {renderData.theme.name}</h3>
+                          <p className="text-sm text-gray-500">{renderData.theme.description}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500 font-mono">
+                            Theme editing coming soon - customize colors, fonts, and spacing
+                          </p>
+                        </div>
+                      </div>
+                    </SheetContent>
+                  </Sheet>
+                )}
+              </>
             )}
           </div>
         </Container>
