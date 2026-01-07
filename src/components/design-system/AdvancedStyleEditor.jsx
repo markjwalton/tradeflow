@@ -39,6 +39,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
       state: 'hover',
       shadow: 'md',
       animation: 'none',
+      contentType: 'text-only',
       iconStrokeWidth: '2',
       iconColor: 'currentColor',
       timestamp: '2026-01-07 10:23'
@@ -52,6 +53,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
       state: 'default',
       shadow: 'lg',
       animation: 'pulse',
+      contentType: 'icon-text',
       iconStrokeWidth: '2.5',
       iconColor: 'var(--primary-500)',
       timestamp: '2026-01-07 09:15'
@@ -62,9 +64,10 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
       mode: 'global',
       variant: 'ghost',
       size: 'sm',
-      state: 'default',
+      state: 'focus',
       shadow: 'none',
       animation: 'none',
+      contentType: 'icon-only',
       iconStrokeWidth: '1.5',
       iconColor: 'var(--charcoal-600)',
       timestamp: '2026-01-07 08:45'
@@ -278,6 +281,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
       state: componentState,
       shadow: shadowEffect,
       animation,
+      contentType: styleValues['--button-content-type'] || 'text-only',
       iconStrokeWidth: styleValues['--icon-stroke-width'] || '2',
       iconColor: styleValues['--icon-color'] || 'currentColor',
       timestamp: new Date().toLocaleString()
@@ -298,6 +302,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
     setComponentState(style.state);
     setShadowEffect(style.shadow);
     setAnimation(style.animation);
+    if (style.contentType) handleStyleChange('--button-content-type', style.contentType);
     handleStyleChange('--icon-stroke-width', style.iconStrokeWidth);
     handleStyleChange('--icon-color', style.iconColor);
     toast.info(`Loaded: ${style.name}`);
@@ -392,10 +397,19 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                             {style.mode}
                           </Badge>
                         </div>
-                        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                        <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
                           <span className="px-2 py-1 bg-background/60 rounded">{style.variant}</span>
                           <span className="px-2 py-1 bg-background/60 rounded">{style.size}</span>
-                          <span className="px-2 py-1 bg-background/60 rounded">{style.state}</span>
+                          {style.contentType && (
+                            <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded border border-blue-200">{style.contentType}</span>
+                          )}
+                          <span className={`px-2 py-1 rounded ${
+                            style.state === 'focus' ? 'bg-blue-50 text-blue-700 border border-blue-300' :
+                            style.state === 'disabled' ? 'bg-gray-100 text-gray-500 border border-gray-300' :
+                            style.state === 'hover' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
+                            style.state === 'active' ? 'bg-green-50 text-green-700 border border-green-200' :
+                            'bg-background/60'
+                          }`}>{style.state}</span>
                           <span>•</span>
                           <span className="italic">{style.timestamp}</span>
                         </div>
@@ -490,6 +504,21 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               />
             )}
             
+            {/* Button Content Type - only for button components */}
+            {selectedElement === 'button' && (
+              <StyleProperty
+                label="Button Content"
+                value={styleValues['--button-content-type'] || 'text-only'}
+                onChange={(val) => handleStyleChange('--button-content-type', val)}
+                type="select"
+                options={[
+                  { value: 'text-only', label: 'Text Only' },
+                  { value: 'icon-only', label: 'Icon Only' },
+                  { value: 'icon-text', label: 'Icon + Text' }
+                ]}
+              />
+            )}
+
             <StyleProperty
               label="Component State"
               value={componentState}
