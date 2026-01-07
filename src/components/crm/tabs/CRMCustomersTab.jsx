@@ -9,9 +9,9 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Plus, Search, Users, Phone, Mail, MapPin } from 'lucide-react';
-import { useAllDropdownOptions } from '../../useDropdownOptions';
-import CRMPagination, { usePagination } from '../../CRMPagination';
-import { CRMCard, CRMCardContent, CRMCardHeader } from '../../CRMUI';
+import { useAllDropdownOptions } from '../useDropdownOptions';
+import CRMPagination, { usePagination } from '../CRMPagination';
+import { CRMCard, CRMCardContent, CRMCardHeader } from '../CRMUI';
 
 export default function CRMCustomersTab() {
   const [searchTerm, setSearchTerm] = useState('');

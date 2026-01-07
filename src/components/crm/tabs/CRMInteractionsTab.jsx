@@ -7,10 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search, MessageSquare, Plus } from 'lucide-react';
-import { useAllDropdownOptions } from '../../useDropdownOptions';
-import InteractionCard from '../../InteractionCard';
-import CRMPagination, { usePagination } from '../../CRMPagination';
-import { CRMCard, CRMCardContent, CRMCardHeader } from '../../CRMUI';
+import { useAllDropdownOptions } from '../useDropdownOptions';
+import InteractionCard from '../InteractionCard';
+import CRMPagination, { usePagination } from '../CRMPagination';
+import { CRMCard, CRMCardContent, CRMCardHeader } from '../CRMUI';
 
 export default function CRMInteractionsTab() {
   const [searchTerm, setSearchTerm] = useState('');
