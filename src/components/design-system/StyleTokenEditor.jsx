@@ -241,7 +241,7 @@ export function StyleTokenEditor({ tokens = [], onUpdate, componentName }) {
   const getTokenType = (tokenName) => {
     if (tokenName.includes('color') || tokenName.includes('primary') || tokenName.includes('secondary') || tokenName.includes('accent') || tokenName.includes('destructive') || tokenName.includes('midnight') || tokenName.includes('charcoal')) return 'color';
     if (tokenName.includes('spacing') || tokenName.includes('padding') || tokenName.includes('margin')) return 'spacing';
-    if (tokenName.includes('font') || tokenName.includes('text') || tokenName.includes('leading') || tokenName.includes('tracking')) return 'typography';
+    if (tokenName.includes('font') || tokenName.includes('text') || tokenName.includes('leading') || tokenName.includes('tracking') || tokenName.includes('word-spacing') || tokenName.includes('paragraph-spacing')) return 'typography';
     if (tokenName.includes('radius')) return 'radius';
     if (tokenName.includes('shadow')) return 'shadow';
     return 'other';
@@ -418,15 +418,23 @@ export function StyleTokenEditor({ tokens = [], onUpdate, componentName }) {
 
                     {type === 'typography' && (
                       <>
-                        {(token.includes('leading') || token.includes('tracking')) ? (
+                        {(token.includes('leading') || token.includes('tracking') || token.includes('word-spacing') || token.includes('paragraph-spacing')) ? (
                           <div className="space-y-2">
                             <div className="flex items-center gap-3">
                               <Slider
-                                value={[parseFloat(currentValue) || 1]}
-                                onValueChange={([val]) => updateToken(token, token.includes('tracking') ? `${val}em` : `${val}`)}
-                                min={token.includes('tracking') ? -0.1 : 1}
-                                max={token.includes('tracking') ? 0.2 : 2.5}
-                                step={token.includes('tracking') ? 0.005 : 0.125}
+                                value={[parseFloat(currentValue) || (token.includes('paragraph-spacing') ? 1 : token.includes('word-spacing') ? 0 : 1)]}
+                                onValueChange={([val]) => {
+                                  if (token.includes('paragraph-spacing')) {
+                                    updateToken(token, `${val}rem`);
+                                  } else if (token.includes('word-spacing') || token.includes('tracking')) {
+                                    updateToken(token, `${val}em`);
+                                  } else {
+                                    updateToken(token, `${val}`);
+                                  }
+                                }}
+                                min={token.includes('word-spacing') || token.includes('tracking') ? -0.1 : token.includes('paragraph-spacing') ? 0 : 1}
+                                max={token.includes('word-spacing') ? 0.3 : token.includes('tracking') ? 0.2 : token.includes('paragraph-spacing') ? 3 : 2.5}
+                                step={token.includes('word-spacing') || token.includes('tracking') ? 0.005 : token.includes('paragraph-spacing') ? 0.25 : 0.125}
                                 className="flex-1"
                               />
                               <Input

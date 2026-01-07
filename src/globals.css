@@ -153,6 +153,14 @@
   --tracking-normal: 0;
   --tracking-wide: 0.025em;
   --tracking-airy: 0.05em;
+  --word-spacing-tight: -0.05em;
+  --word-spacing-normal: 0;
+  --word-spacing-wide: 0.1em;
+  --word-spacing-airy: 0.2em;
+  --paragraph-spacing-tight: 0.5rem;
+  --paragraph-spacing-normal: 1rem;
+  --paragraph-spacing-relaxed: 1.5rem;
+  --paragraph-spacing-loose: 2rem;
 
   /* Spacing */
   --spacing-1: 0.25rem;
