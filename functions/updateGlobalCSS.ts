@@ -21,14 +21,17 @@ Deno.serve(async (req) => {
 
     // Update CSS variables in :root
     Object.entries(cssVariables).forEach(([varName, value]) => {
-      const regex = new RegExp(`(--${varName}:\\s*)([^;]+)(;)`, 'g');
+      // Strip leading -- if present
+      const cleanVarName = varName.startsWith('--') ? varName.slice(2) : varName;
+      
+      const regex = new RegExp(`(--${cleanVarName}:\\s*)([^;]+)(;)`, 'g');
       if (regex.test(currentCSS)) {
         currentCSS = currentCSS.replace(regex, `$1${value}$3`);
       } else {
         // Add new variable if it doesn't exist
         currentCSS = currentCSS.replace(
           /(:root\s*{[^}]*)/,
-          `$1\n  --${varName}: ${value};`
+          `$1\n  --${cleanVarName}: ${value};`
         );
       }
     });
