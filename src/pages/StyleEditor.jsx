@@ -161,15 +161,6 @@ export default function StyleEditor() {
           </CardContent>
         </Card>
 
-        {/* Current Preview Component */}
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-sm text-muted-foreground">
-              Currently editing: <span className="font-medium text-foreground">{selectedElement}</span>
-            </div>
-          </CardContent>
-        </Card>
-
         {/* Style Editor */}
         <AdvancedStyleEditor 
           onUpdate={handleStyleUpdate}

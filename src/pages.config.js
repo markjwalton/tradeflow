@@ -88,6 +88,7 @@ import StandaloneInstanceManager from './pages/StandaloneInstanceManager';
 import StudioAbout from './pages/StudioAbout';
 import StudioHome from './pages/StudioHome';
 import SturijPackage from './pages/SturijPackage';
+import StyleEditor from './pages/StyleEditor';
 import SyntaxDocs from './pages/SyntaxDocs';
 import SyntaxHome from './pages/SyntaxHome';
 import SystemMonitor from './pages/SystemMonitor';
@@ -106,7 +107,6 @@ import UXShowcase from './pages/UXShowcase';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import WebsiteTemplateManager from './pages/WebsiteTemplateManager';
 import WebsiteThemeManager from './pages/WebsiteThemeManager';
-import StyleEditor from './pages/StyleEditor';
 import __Layout from './Layout.jsx';
 
 
@@ -201,6 +201,7 @@ export const PAGES = {
     "StudioAbout": StudioAbout,
     "StudioHome": StudioHome,
     "SturijPackage": SturijPackage,
+    "StyleEditor": StyleEditor,
     "SyntaxDocs": SyntaxDocs,
     "SyntaxHome": SyntaxHome,
     "SystemMonitor": SystemMonitor,
@@ -219,7 +220,6 @@ export const PAGES = {
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
     "WebsiteTemplateManager": WebsiteTemplateManager,
     "WebsiteThemeManager": WebsiteThemeManager,
-    "StyleEditor": StyleEditor,
 }
 
 export const pagesConfig = {
