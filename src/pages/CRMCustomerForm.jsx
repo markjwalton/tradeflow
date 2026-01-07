@@ -135,7 +135,7 @@ export default function CRMCustomerForm() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['crmCustomers'] });
       toast.success('Customer created successfully');
-      navigate(createPageUrl('CRMCustomers'));
+      navigate(createPageUrl('CRM'));
     },
   });
 
@@ -144,7 +144,7 @@ export default function CRMCustomerForm() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['crmCustomers'] });
       toast.success('Customer updated successfully');
-      navigate(createPageUrl('CRMCustomers'));
+      navigate(createPageUrl('CRM'));
     },
   });
 
@@ -197,11 +197,11 @@ export default function CRMCustomerForm() {
       <div className="max-w-2xl mx-auto">
       <Button
         variant="ghost"
-        onClick={() => navigate(createPageUrl('CRMCustomers'))}
+        onClick={() => navigate(createPageUrl('CRM'))}
         className="mb-4"
       >
         <ArrowLeft className="h-4 w-4 mr-2" />
-        Back to Customers
+        Back to CRM
       </Button>
 
       <Card>
@@ -424,7 +424,7 @@ export default function CRMCustomerForm() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => navigate(createPageUrl('CRMCustomers'))}
+                onClick={() => navigate(createPageUrl('CRM'))}
               >
                 Cancel
               </Button>
