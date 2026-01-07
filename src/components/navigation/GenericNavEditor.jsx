@@ -1214,7 +1214,7 @@ export default function GenericNavEditor({
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent position="popper" side="bottom" align="start">
                   <SelectItem value="page">Page (has URL)</SelectItem>
                   <SelectItem value="folder">Folder (container only)</SelectItem>
                 </SelectContent>
@@ -1230,7 +1230,7 @@ export default function GenericNavEditor({
                   <SelectTrigger>
                     <SelectValue placeholder="Select page..." />
                   </SelectTrigger>
-                  <SelectContent className="max-h-80">
+                  <SelectContent position="popper" side="bottom" align="start" className="max-h-80">
                     {effectiveSlugs.length > 0 ? (
                       effectiveSlugs.sort().map(slug => (
                         <SelectItem key={slug} value={slug}>{slug}</SelectItem>
@@ -1240,6 +1240,11 @@ export default function GenericNavEditor({
                     )}
                   </SelectContent>
                 </Select>
+                {effectiveSlugs.length === 0 && (
+                  <p className="text-xs text-orange-600 mt-1">
+                    No pages found. Click "Scan Pages" to refresh the list.
+                  </p>
+                )}
               </div>
             )}
             <div>
@@ -1251,7 +1256,7 @@ export default function GenericNavEditor({
                 <SelectTrigger>
                   <SelectValue placeholder="No parent (top level)" />
                 </SelectTrigger>
-                <SelectContent className="max-h-80">
+                <SelectContent position="popper" side="bottom" align="start" className="max-h-80">
                   <SelectItem value="__none__">No parent (top level)</SelectItem>
                   {getFormParentOptions()
                     .sort((a, b) => a.name.localeCompare(b.name))
@@ -1276,7 +1281,7 @@ export default function GenericNavEditor({
                     )}
                   </SelectValue>
                 </SelectTrigger>
-                <SelectContent className="max-h-64 overflow-y-auto">
+                <SelectContent position="popper" side="bottom" align="start" className="max-h-64 overflow-y-auto">
                   {iconOptions.map(({ name, icon: IconComp }) => (
                     <SelectItem key={name} value={name}>
                       <div className="flex items-center gap-2">
