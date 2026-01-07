@@ -239,7 +239,19 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
                     )}
                   </div>
                 </div>
+                <div className="flex items-center gap-2">
+                  <Badge variant="default">5 Instances</Badge>
+                  <Button size="sm" variant="outline" onClick={() => window.dispatchEvent(new CustomEvent('save-custom-variation'))}>
+                    Save Custom
+                  </Button>
+                  <Button size="sm" onClick={() => window.dispatchEvent(new CustomEvent('update-global-styles'))}>
+                    Update Global
+                  </Button>
+                </div>
               </div>
+              <p className="text-xs text-muted-foreground mb-3">
+                "Save Custom" creates a new variation • "Update Global" modifies the design system
+              </p>
 
               {/* Saved Styles List */}
               {savedStyles.length > 0 && (

@@ -146,28 +146,40 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
     }
   };
 
-  const handleSaveAsCustom = () => {
-    const customName = prompt('Enter name for custom button variation:');
-    if (customName) {
-      // Save custom variation with all current settings
-      const customVariation = {
-        name: customName,
-        variant: styleValues['--button-variant'] || 'default',
-        size: styleValues['--button-size'] || 'default',
-        state: componentState,
-        shadow: shadowEffect,
-        animation: animation,
-        styles: { ...styleValues }
-      };
-      
-      // Dispatch event to add to saved styles list
-      window.dispatchEvent(new CustomEvent('save-style-configuration', { 
-        detail: customVariation 
-      }));
-      
-      toast.success(`Custom variation "${customName}" created`);
-    }
-  };
+  useEffect(() => {
+    const handleSaveCustom = () => {
+      const customName = prompt('Enter name for custom button variation:');
+      if (customName) {
+        const customVariation = {
+          name: customName,
+          variant: styleValues['--button-variant'] || 'default',
+          size: styleValues['--button-size'] || 'default',
+          state: componentState,
+          shadow: shadowEffect,
+          animation: animation,
+          styles: { ...styleValues }
+        };
+        
+        window.dispatchEvent(new CustomEvent('save-style-configuration', { 
+          detail: customVariation 
+        }));
+        
+        toast.success(`Custom variation "${customName}" created`);
+      }
+    };
+
+    const handleUpdateGlobal = () => {
+      handleStyleSave();
+    };
+
+    window.addEventListener('save-custom-variation', handleSaveCustom);
+    window.addEventListener('update-global-styles', handleUpdateGlobal);
+    
+    return () => {
+      window.removeEventListener('save-custom-variation', handleSaveCustom);
+      window.removeEventListener('update-global-styles', handleUpdateGlobal);
+    };
+  }, [styleValues, componentState, shadowEffect, animation]);
 
   const handleCreateNew = () => {
     toast.info('Creating new style variant...');
@@ -269,25 +281,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               ]}
             />
 
-            <div className="p-3 bg-muted/50 rounded-md mt-4 space-y-2">
-              <div className="flex items-center justify-between">
-                <Badge variant={instances > 3 ? 'destructive' : 'default'}>
-                  {instances} Instances
-                </Badge>
-                <div className="flex items-center gap-2">
-                  <Button size="sm" variant="outline" onClick={handleSaveAsCustom}>
-                    Save Custom
-                  </Button>
-                  <Button size="sm" onClick={handleUpdateGlobal}>
-                    <Save className="h-3 w-3 mr-1" />
-                    Update Global
-                  </Button>
-                </div>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                "Save Custom" creates a new variation • "Update Global" modifies the design system
-              </p>
-            </div>
+
           </div>
         </StyleCategory>
         <StyleCategory
