@@ -51,7 +51,7 @@ const textColors = [
   { label: 'Charcoal 900', value: 'var(--charcoal-900)' },
 ];
 
-export function LiveComponentPreview({ jsxCode, componentName, componentState = 'default', shadowEffect = 'none', animation = 'none' }) {
+export function LiveComponentPreview({ jsxCode, componentName, componentState = 'default', shadowEffect = 'none', animation = 'none', buttonVariant = 'default', buttonSize = 'default' }) {
   const [showCode, setShowCode] = useState(false);
   const [error, setError] = useState(null);
   const [Component, setComponent] = useState(null);
@@ -209,13 +209,11 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
           <div className="w-full space-y-6">
             {/* State indicator */}
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="font-medium">Current State:</span>
-              <span className="px-2 py-1 bg-primary/10 text-primary rounded">{componentState}</span>
+              <span className="font-medium">Editing:</span>
+              <span className="px-2 py-1 bg-primary/10 text-primary rounded capitalize">{buttonVariant} / {buttonSize}</span>
+              <span className="px-2 py-1 bg-accent/10 text-accent-700 rounded">{componentState}</span>
               {shadowEffect !== 'none' && (
-                <span className="px-2 py-1 bg-accent/10 text-accent-700 rounded">Shadow: {shadowEffect}</span>
-              )}
-              {animation !== 'none' && (
-                <span className="px-2 py-1 bg-secondary/10 text-secondary-700 rounded">Animation: {animation}</span>
+                <span className="px-2 py-1 bg-secondary/10 text-secondary-700 rounded">Shadow: {shadowEffect}</span>
               )}
             </div>
             
@@ -225,22 +223,25 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
                 <div key={variant} className="space-y-2">
                   <h4 className="text-xs font-semibold text-muted-foreground capitalize">{variant}</h4>
                   <div className="flex gap-3 items-center flex-wrap">
-                    {sizes.map(size => (
-                      <Button 
-                        key={`${variant}-${size}`}
-                        variant={variant} 
-                        size={size}
-                        className={`${stateClasses[componentState] || ''} ${animationClasses[animation] || ''}`}
-                        style={shadowStyles[shadowEffect] || {}}
-                        disabled={componentState === 'disabled'}
-                      >
-                        {size === 'sm' ? 'Small' : size === 'lg' ? 'Large' : 'Default'}
-                      </Button>
-                    ))}
+                    {sizes.map(size => {
+                      const isSelected = variant === buttonVariant && size === buttonSize;
+                      return (
+                        <Button 
+                          key={`${variant}-${size}`}
+                          variant={variant} 
+                          size={size}
+                          className={`${stateClasses[componentState] || ''} ${animationClasses[animation] || ''} ${!isSelected ? 'opacity-30' : 'ring-2 ring-primary ring-offset-2'}`}
+                          style={shadowStyles[shadowEffect] || {}}
+                          disabled={componentState === 'disabled'}
+                        >
+                          {size === 'sm' ? 'Small' : size === 'lg' ? 'Large' : 'Default'}
+                        </Button>
+                      );
+                    })}
                     <Button 
                       variant={variant} 
                       size="icon"
-                      className={`${stateClasses[componentState] || ''} ${animationClasses[animation] || ''}`}
+                      className={`${stateClasses[componentState] || ''} ${animationClasses[animation] || ''} ${!(variant === buttonVariant && 'icon' === buttonSize) ? 'opacity-30' : 'ring-2 ring-primary ring-offset-2'}`}
                       style={shadowStyles[shadowEffect] || {}}
                       disabled={componentState === 'disabled'}
                     >

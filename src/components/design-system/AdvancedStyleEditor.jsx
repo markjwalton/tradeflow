@@ -139,8 +139,29 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         element: selectedElement, 
         state: componentState,
         shadow: shadowEffect,
-        animation: newAnimation
+        animation: newAnimation,
+        buttonVariant: styleValues['--button-variant'] || 'default',
+        buttonSize: styleValues['--button-size'] || 'default'
       });
+    }
+  };
+
+  const handleSaveAsCustom = () => {
+    const customName = prompt('Enter name for custom button variation:');
+    if (customName) {
+      // Save custom variation with all current settings
+      const customVariation = {
+        name: customName,
+        variant: styleValues['--button-variant'] || 'default',
+        size: styleValues['--button-size'] || 'default',
+        state: componentState,
+        shadow: shadowEffect,
+        animation: animation,
+        styles: { ...styleValues }
+      };
+      toast.success(`Custom variation "${customName}" created`);
+      console.log('Custom variation:', customVariation);
+      // TODO: Save to database/library
     }
   };
 
@@ -244,19 +265,24 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               ]}
             />
 
-            <div className="flex items-center justify-between p-3 bg-muted/50 rounded-md mt-4">
-              <Badge variant={instances > 3 ? 'destructive' : 'default'}>
-                {instances} Instances
-              </Badge>
-              <div className="flex items-center gap-2">
-                <Button size="sm" variant="outline" onClick={handleCreateNew}>
-                  Create New
-                </Button>
-                <Button size="sm" onClick={handleUpdateGlobal}>
-                  <Save className="h-3 w-3 mr-1" />
-                  Update
-                </Button>
+            <div className="p-3 bg-muted/50 rounded-md mt-4 space-y-2">
+              <div className="flex items-center justify-between">
+                <Badge variant={instances > 3 ? 'destructive' : 'default'}>
+                  {instances} Instances
+                </Badge>
+                <div className="flex items-center gap-2">
+                  <Button size="sm" variant="outline" onClick={handleSaveAsCustom}>
+                    Save Custom
+                  </Button>
+                  <Button size="sm" onClick={handleUpdateGlobal}>
+                    <Save className="h-3 w-3 mr-1" />
+                    Update Global
+                  </Button>
+                </div>
               </div>
+              <p className="text-xs text-muted-foreground">
+                "Save Custom" creates a new variation • "Update Global" modifies the design system
+              </p>
             </div>
           </div>
         </StyleCategory>
@@ -398,6 +424,18 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               { value: 'var(--tracking-normal)', label: 'Normal (0)' },
               { value: 'var(--tracking-wide)', label: 'Wide (0.025em)' },
               { value: 'var(--tracking-airy)', label: 'Airy (0.05em)' }
+            ]}
+          />
+          <StyleProperty
+            label="Text Alignment"
+            value={styleValues['--text-align'] || 'left'}
+            onChange={(val) => handleStyleChange('--text-align', val)}
+            type="select"
+            options={[
+              { value: 'left', label: 'Left' },
+              { value: 'center', label: 'Center' },
+              { value: 'right', label: 'Right' },
+              { value: 'justify', label: 'Justify' }
             ]}
           />
         </StyleCategory>
