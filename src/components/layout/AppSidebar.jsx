@@ -70,12 +70,16 @@ export function AppSidebar({ navItems = [], onEditorToggle }) {
   useEffect(() => {
     const initiallyExpanded = new Set();
     navItems.forEach((item) => {
-      if (item.item_type === "folder" && item.default_collapsed === false) {
-        initiallyExpanded.add(item.id);
+      if (item.item_type === "folder") {
+        // If default_collapsed is explicitly false, expand it
+        // If default_collapsed is true or undefined, keep it collapsed
+        if (item.default_collapsed === false) {
+          initiallyExpanded.add(item.id || item._id);
+        }
       }
     });
     setExpandedFolders(initiallyExpanded);
-  }, [navItems]);
+  }, [JSON.stringify(navItems.map(i => ({ id: i.id || i._id, default_collapsed: i.default_collapsed })))]);
   const { 
     prefetchProjects, 
     prefetchTasks, 
