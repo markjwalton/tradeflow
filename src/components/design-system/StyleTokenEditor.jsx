@@ -54,6 +54,32 @@ function ColorTokenEditor({ token, currentValue, onUpdate }) {
     }
   };
 
+  const convertToHex = async () => {
+    if (!oklchValue) return;
+    
+    setIsConverting(true);
+    try {
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `Convert this OKLCH color "${oklchValue}" to hex format. Return ONLY the hex value with #, nothing else.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            hex: { type: "string" }
+          }
+        }
+      });
+      
+      const hex = response.hex || '#4a7c6b';
+      setHexFallback(hex);
+      onUpdate(token, `${oklchValue}, ${hex}`);
+      toast.success('Converted to Hex');
+    } catch (err) {
+      toast.error('Conversion failed');
+    } finally {
+      setIsConverting(false);
+    }
+  };
+
   const handleHexChange = (newHex) => {
     setHexFallback(newHex);
     if (oklchValue) {
@@ -99,13 +125,24 @@ function ColorTokenEditor({ token, currentValue, onUpdate }) {
         />
       </div>
       {oklchValue && (
-        <Input
-          type="text"
-          value={oklchValue}
-          onChange={(e) => handleOklchChange(e.target.value)}
-          className="font-mono text-xs"
-          placeholder="oklch(0.65 0.15 160)"
-        />
+        <div className="flex gap-2 items-center">
+          <Input
+            type="text"
+            value={oklchValue}
+            onChange={(e) => handleOklchChange(e.target.value)}
+            className="font-mono text-xs flex-1"
+            placeholder="oklch(0.65 0.15 160)"
+          />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={convertToHex}
+            disabled={isConverting}
+          >
+            <Sparkles className="h-4 w-4 mr-1" />
+            To Hex
+          </Button>
+        </div>
       )}
       <p className="text-xs text-muted-foreground">
         Format: {oklchValue ? `${oklchValue}, ${hexFallback}` : hexFallback}
