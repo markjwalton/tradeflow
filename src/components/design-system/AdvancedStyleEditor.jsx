@@ -294,8 +294,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         </StyleCategory>
 
         <StyleCategory
-          title="Font Styles"
-          currentValue={styleValues['--font-family-display'] || 'degular-display'}
+          title="Typography"
+          currentValue={styleValues['--font-family-display'] || 'var(--font-family-display)'}
           isLive={isStyleLive('--font-family-display')}
           isApplicable={isStyleApplicable('font')}
           isExpanded={expandedCategories.includes('font')}
@@ -303,29 +303,67 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         >
           <StyleProperty
             label="Font Family"
-            value={styleValues['--font-family-display'] || 'degular-display'}
+            value={styleValues['--font-family-display'] || 'var(--font-family-display)'}
             onChange={(val) => handleStyleChange('--font-family-display', val)}
-            type="text"
+            type="select"
+            options={[
+              { value: 'var(--font-family-display)', label: 'Display (degular-display)' },
+              { value: 'var(--font-family-body)', label: 'Body (mrs-eaves-xl-serif-narrow)' },
+              { value: 'var(--font-family-mono)', label: 'Mono (source-code-pro)' }
+            ]}
           />
           <StyleProperty
             label="Font Size"
-            value={styleValues['--text-base'] || '1rem'}
+            value={styleValues['--text-base'] || 'var(--text-base)'}
             onChange={(val) => handleStyleChange('--text-base', val)}
-            type="slider"
-            min={0.75}
-            max={3}
-            step={0.125}
+            type="select"
+            options={[
+              { value: 'var(--text-xs)', label: 'Extra Small (0.75rem)' },
+              { value: 'var(--text-sm)', label: 'Small (0.875rem)' },
+              { value: 'var(--text-base)', label: 'Base (1rem)' },
+              { value: 'var(--text-lg)', label: 'Large (1.125rem)' },
+              { value: 'var(--text-xl)', label: 'XL (1.25rem)' },
+              { value: 'var(--text-2xl)', label: '2XL (1.5rem)' },
+              { value: 'var(--text-3xl)', label: '3XL (1.875rem)' },
+              { value: 'var(--text-4xl)', label: '4XL (2.25rem)' },
+              { value: 'var(--text-5xl)', label: '5XL (3rem)' }
+            ]}
           />
           <StyleProperty
             label="Font Weight"
-            value={styleValues['--font-weight-medium'] || '500'}
+            value={styleValues['--font-weight-medium'] || 'var(--font-weight-medium)'}
             onChange={(val) => handleStyleChange('--font-weight-medium', val)}
             type="select"
             options={[
-              { value: '400', label: 'Normal (400)' },
-              { value: '500', label: 'Medium (500)' },
-              { value: '600', label: 'Semibold (600)' },
-              { value: '700', label: 'Bold (700)' }
+              { value: 'var(--font-weight-normal)', label: 'Normal (400)' },
+              { value: 'var(--font-weight-medium)', label: 'Medium (500)' },
+              { value: 'var(--font-weight-semibold)', label: 'Semibold (600)' },
+              { value: 'var(--font-weight-bold)', label: 'Bold (700)' }
+            ]}
+          />
+          <StyleProperty
+            label="Line Height"
+            value={styleValues['--leading-normal'] || 'var(--leading-normal)'}
+            onChange={(val) => handleStyleChange('--leading-normal', val)}
+            type="select"
+            options={[
+              { value: 'var(--leading-tight)', label: 'Tight (1.25)' },
+              { value: 'var(--leading-snug)', label: 'Snug (1.375)' },
+              { value: 'var(--leading-normal)', label: 'Normal (1.5)' },
+              { value: 'var(--leading-relaxed)', label: 'Relaxed (1.625)' },
+              { value: 'var(--leading-loose)', label: 'Loose (2)' }
+            ]}
+          />
+          <StyleProperty
+            label="Letter Spacing"
+            value={styleValues['--tracking-normal'] || 'var(--tracking-normal)'}
+            onChange={(val) => handleStyleChange('--tracking-normal', val)}
+            type="select"
+            options={[
+              { value: 'var(--tracking-tight)', label: 'Tight (-0.025em)' },
+              { value: 'var(--tracking-normal)', label: 'Normal (0)' },
+              { value: 'var(--tracking-wide)', label: 'Wide (0.025em)' },
+              { value: 'var(--tracking-airy)', label: 'Airy (0.05em)' }
             ]}
           />
         </StyleCategory>
