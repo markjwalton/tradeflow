@@ -37,27 +37,52 @@ export default function CRMEnquiriesTab() {
     return acc;
   }, {});
 
-  const filteredEnquiries = enquiries.filter((enquiry) => {
-    const customer = customerMap[enquiry.customer_id];
-    const customerName = customer
-      ? `${customer.first_name} ${customer.surname}`.toLowerCase()
-      : '';
+  // Create customer-enquiry rows (all customers, with or without enquiries)
+  const customerEnquiryRows = customers.map(customer => {
+    const customerEnquiries = enquiries.filter(e => e.customer_id === customer.id);
+    
+    if (customerEnquiries.length > 0) {
+      // Return enquiries for this customer
+      return customerEnquiries.map(enquiry => ({
+        ...enquiry,
+        customer,
+        hasEnquiry: true
+      }));
+    } else {
+      // Return customer without enquiry
+      return [{
+        id: `customer-${customer.id}`,
+        customer_id: customer.id,
+        customer,
+        hasEnquiry: false,
+        enquiry_date: customer.created_date,
+        status: 'NoEnquiry'
+      }];
+    }
+  }).flat();
+
+  const filteredEnquiries = customerEnquiryRows.filter((row) => {
+    const customerName = `${row.customer.first_name} ${row.customer.surname}`.toLowerCase();
 
     const matchesSearch =
       searchTerm === '' ||
       customerName.includes(searchTerm.toLowerCase()) ||
-      enquiry.inbound_channel?.toLowerCase().includes(searchTerm.toLowerCase());
+      row.inbound_channel?.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesStatus = statusFilter === 'all' || enquiry.status === statusFilter;
-    const matchesChannel = channelFilter === 'all' || enquiry.inbound_channel === channelFilter;
+    const matchesStatus = statusFilter === 'all' || row.status === statusFilter;
+    const matchesChannel = channelFilter === 'all' || row.inbound_channel === channelFilter;
 
     return matchesSearch && matchesStatus && matchesChannel;
   });
 
   const sortedEnquiries = [...filteredEnquiries].sort((a, b) => {
+    // Customers without enquiries go last
+    if (!a.hasEnquiry && b.hasEnquiry) return 1;
+    if (a.hasEnquiry && !b.hasEnquiry) return -1;
+    
     if (a.status === 'New' && b.status !== 'New') return -1;
     if (a.status !== 'New' && b.status === 'New') return 1;
-    return new Date(b.enquiry_date) - new Date(a.enquiry_date);
+    return new Date(b.enquiry_date || b.customer.created_date) - new Date(a.enquiry_date || a.customer.created_date);
   });
 
   const pagination = usePagination(sortedEnquiries, 25);
