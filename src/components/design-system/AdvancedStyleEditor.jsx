@@ -1121,7 +1121,24 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             label="Card Pattern Color"
             value={styleValues['--card-pattern-color'] || '#000000'}
             onChange={(val) => handleStyleChange('--card-pattern-color', val)}
-            type="color"
+            type="select"
+            options={[
+              { value: '#000000', label: 'Black' },
+              { value: '#ffffff', label: 'White' },
+              { value: 'var(--primary-500)', label: 'Primary 500' },
+              { value: 'var(--primary-600)', label: 'Primary 600' },
+              { value: 'var(--primary-700)', label: 'Primary 700' },
+              { value: 'var(--secondary-500)', label: 'Secondary 500' },
+              { value: 'var(--secondary-600)', label: 'Secondary 600' },
+              { value: 'var(--accent-500)', label: 'Accent 500' },
+              { value: 'var(--accent-600)', label: 'Accent 600' },
+              { value: 'var(--midnight-500)', label: 'Midnight 500' },
+              { value: 'var(--midnight-700)', label: 'Midnight 700' },
+              { value: 'var(--midnight-900)', label: 'Midnight 900' },
+              { value: 'var(--charcoal-500)', label: 'Charcoal 500' },
+              { value: 'var(--charcoal-700)', label: 'Charcoal 700' },
+              { value: 'var(--charcoal-900)', label: 'Charcoal 900' }
+            ]}
           />
           <StyleProperty
             label="Card Pattern Opacity"
@@ -1165,7 +1182,24 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             label="Page Pattern Color"
             value={styleValues['--page-pattern-color'] || '#000000'}
             onChange={(val) => handleStyleChange('--page-pattern-color', val)}
-            type="color"
+            type="select"
+            options={[
+              { value: '#000000', label: 'Black' },
+              { value: '#ffffff', label: 'White' },
+              { value: 'var(--primary-500)', label: 'Primary 500' },
+              { value: 'var(--primary-600)', label: 'Primary 600' },
+              { value: 'var(--primary-700)', label: 'Primary 700' },
+              { value: 'var(--secondary-500)', label: 'Secondary 500' },
+              { value: 'var(--secondary-600)', label: 'Secondary 600' },
+              { value: 'var(--accent-500)', label: 'Accent 500' },
+              { value: 'var(--accent-600)', label: 'Accent 600' },
+              { value: 'var(--midnight-500)', label: 'Midnight 500' },
+              { value: 'var(--midnight-700)', label: 'Midnight 700' },
+              { value: 'var(--midnight-900)', label: 'Midnight 900' },
+              { value: 'var(--charcoal-500)', label: 'Charcoal 500' },
+              { value: 'var(--charcoal-700)', label: 'Charcoal 700' },
+              { value: 'var(--charcoal-900)', label: 'Charcoal 900' }
+            ]}
           />
           <StyleProperty
             label="Page Pattern Opacity"
