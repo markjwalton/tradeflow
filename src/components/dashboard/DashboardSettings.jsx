@@ -32,7 +32,7 @@ function DashboardSettings({
   allWidgets,
   visibleWidgetIds,
   onVisibleWidgetsChange
-}) => {
+}) {
   const widgets = allWidgets || [];
   const visible = visibleWidgetIds || [];
   const [newsSettings, setNewsSettings] = React.useState(getTechNewsSettings());
