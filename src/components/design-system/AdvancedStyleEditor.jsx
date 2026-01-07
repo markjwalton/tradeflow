@@ -25,6 +25,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   const [animation, setAnimation] = useState('none');
   const [editMode, setEditMode] = useState('global'); // 'global' or 'custom'
   const [customStyleName, setCustomStyleName] = useState('');
+  const [editedGlobalCategories, setEditedGlobalCategories] = useState(new Set());
+  const [editedCustomCategories, setEditedCustomCategories] = useState(new Set());
 
   const selectedElement = propSelectedElement || 'button';
   const selectedComponent = COMPONENT_TYPES.find(c => c.value === selectedElement);
@@ -171,6 +173,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
           
           toast.success(`Custom variation "${customName}" created`);
           setCustomStyleName('');
+          setEditedCustomCategories(new Set());
         }
       }
     };
@@ -179,6 +182,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
       if (editMode === 'global') {
         handleStyleSave();
         toast.success('Global design system updated');
+        setEditedGlobalCategories(new Set());
       }
     };
 
