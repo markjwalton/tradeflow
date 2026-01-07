@@ -177,7 +177,12 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         value,
         state: componentState,
         shadow: shadowEffect,
-        animation
+        animation,
+        buttonVariant: styleValues['--button-variant'] || 'default',
+        buttonSize: styleValues['--button-size'] || 'default',
+        buttonContentType: styleValues['--button-content-type'] || 'text-only',
+        iconStrokeWidth: styleValues['--icon-stroke-width'] || '2',
+        iconColor: styleValues['--icon-color'] || 'currentColor'
       });
     }
   };
@@ -194,7 +199,12 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         element: selectedElement, 
         state: newState,
         shadow: shadowEffect,
-        animation
+        animation,
+        buttonVariant: styleValues['--button-variant'] || 'default',
+        buttonSize: styleValues['--button-size'] || 'default',
+        buttonContentType: styleValues['--button-content-type'] || 'text-only',
+        iconStrokeWidth: styleValues['--icon-stroke-width'] || '2',
+        iconColor: styleValues['--icon-color'] || 'currentColor'
       });
     }
   };
@@ -211,7 +221,12 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         element: selectedElement, 
         state: componentState,
         shadow: newShadow,
-        animation
+        animation,
+        buttonVariant: styleValues['--button-variant'] || 'default',
+        buttonSize: styleValues['--button-size'] || 'default',
+        buttonContentType: styleValues['--button-content-type'] || 'text-only',
+        iconStrokeWidth: styleValues['--icon-stroke-width'] || '2',
+        iconColor: styleValues['--icon-color'] || 'currentColor'
       });
     }
   };
@@ -226,6 +241,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         animation: newAnimation,
         buttonVariant: styleValues['--button-variant'] || 'default',
         buttonSize: styleValues['--button-size'] || 'default',
+        buttonContentType: styleValues['--button-content-type'] || 'text-only',
         editMode: editMode,
         hasEdits: editMode === 'global' ? editedGlobalCategories.size > 0 : editedCustomCategories.size > 0,
         iconStrokeWidth: styleValues['--icon-stroke-width'] || '2',
@@ -262,6 +278,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         animation,
         buttonVariant: styleValues['--button-variant'] || 'default',
         buttonSize: styleValues['--button-size'] || 'default',
+        buttonContentType: styleValues['--button-content-type'] || 'text-only',
         editMode: editMode,
         hasEdits: editMode === 'global' ? editedGlobalCategories.size > 0 : editedCustomCategories.size > 0,
         iconStrokeWidth: styleValues['--icon-stroke-width'] || '2',
