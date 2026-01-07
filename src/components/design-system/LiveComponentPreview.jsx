@@ -178,9 +178,9 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
       }
       
       if (jsxCode.includes('<Button')) {
-        // Button component
-        const variantMatch = jsxCode.match(/variant="([^"]+)"/);
-        const sizeMatch = jsxCode.match(/size="([^"]+)"/);
+        // Button component - show all variations in a grid
+        const variants = ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'];
+        const sizes = ['sm', 'default', 'lg'];
         
         const stateClasses = {
           default: '',
@@ -206,15 +206,70 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
         };
         
         return () => (
-          <Button 
-            variant={variantMatch?.[1]} 
-            size={sizeMatch?.[1]}
-            className={`${stateClasses[componentState] || ''} ${animationClasses[animation] || ''}`}
-            style={shadowStyles[shadowEffect] || {}}
-            disabled={componentState === 'disabled'}
-          >
-            Sample Button
-          </Button>
+          <div className="w-full space-y-6">
+            {/* State indicator */}
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span className="font-medium">Current State:</span>
+              <span className="px-2 py-1 bg-primary/10 text-primary rounded">{componentState}</span>
+              {shadowEffect !== 'none' && (
+                <span className="px-2 py-1 bg-accent/10 text-accent-700 rounded">Shadow: {shadowEffect}</span>
+              )}
+              {animation !== 'none' && (
+                <span className="px-2 py-1 bg-secondary/10 text-secondary-700 rounded">Animation: {animation}</span>
+              )}
+            </div>
+            
+            {/* All button variations */}
+            <div className="space-y-4">
+              {variants.map(variant => (
+                <div key={variant} className="space-y-2">
+                  <h4 className="text-xs font-semibold text-muted-foreground capitalize">{variant}</h4>
+                  <div className="flex gap-3 items-center flex-wrap">
+                    {sizes.map(size => (
+                      <Button 
+                        key={`${variant}-${size}`}
+                        variant={variant} 
+                        size={size}
+                        className={`${stateClasses[componentState] || ''} ${animationClasses[animation] || ''}`}
+                        style={shadowStyles[shadowEffect] || {}}
+                        disabled={componentState === 'disabled'}
+                      >
+                        {size === 'sm' ? 'Small' : size === 'lg' ? 'Large' : 'Default'}
+                      </Button>
+                    ))}
+                    <Button 
+                      variant={variant} 
+                      size="icon"
+                      className={`${stateClasses[componentState] || ''} ${animationClasses[animation] || ''}`}
+                      style={shadowStyles[shadowEffect] || {}}
+                      disabled={componentState === 'disabled'}
+                    >
+                      <Settings className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Hover vs Focus explainer */}
+            <div className="mt-6 p-3 bg-muted/50 rounded-lg text-xs space-y-2">
+              <div className="font-semibold text-primary">State Differences:</div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <span className="font-medium">Hover:</span> Mouse pointer over element
+                </div>
+                <div>
+                  <span className="font-medium">Focus:</span> Keyboard navigation (Tab key)
+                </div>
+                <div>
+                  <span className="font-medium">Active:</span> Button being clicked/pressed
+                </div>
+                <div>
+                  <span className="font-medium">Disabled:</span> Non-interactive state
+                </div>
+              </div>
+            </div>
+          </div>
         );
       }
       
