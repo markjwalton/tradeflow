@@ -387,42 +387,6 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
 
         return () => (
           <div className="w-full space-y-4">
-            {/* State demo buttons */}
-            <div className="flex gap-3 items-center mb-4">
-              <Button 
-                variant={buttonVariant} 
-                size={buttonSize}
-                className="focus:ring-2 focus:ring-primary focus:ring-offset-2"
-              >
-                {buttonContentType === 'icon-only' ? (
-                  <ActionIcon className="h-4 w-4" strokeWidth={iconStrokeWidth} style={{ color: iconColor }} />
-                ) : buttonContentType === 'icon-text' ? (
-                  <>
-                    <ActionIcon className="h-4 w-4" strokeWidth={iconStrokeWidth} style={{ color: iconColor }} />
-                    Keyboard Focus (Tab)
-                  </>
-                ) : (
-                  'Keyboard Focus (Tab)'
-                )}
-              </Button>
-              <Button 
-                variant={buttonVariant} 
-                size={buttonSize}
-                disabled
-              >
-                {buttonContentType === 'icon-only' ? (
-                  <ActionIcon className="h-4 w-4" strokeWidth={iconStrokeWidth} style={{ color: iconColor }} />
-                ) : buttonContentType === 'icon-text' ? (
-                  <>
-                    <ActionIcon className="h-4 w-4" strokeWidth={iconStrokeWidth} style={{ color: iconColor }} />
-                    Disabled State
-                  </>
-                ) : (
-                  'Disabled State'
-                )}
-              </Button>
-            </div>
-
             {/* All button variations */}
             <div className="space-y-4">
               {variants.map(variant => (
@@ -458,6 +422,38 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
                         strokeWidth={iconStrokeWidth}
                         style={{ color: iconColor }}
                       />
+                    </Button>
+                    <Button 
+                      variant={variant} 
+                      size={buttonSize}
+                      className="focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                    >
+                      {buttonContentType === 'icon-only' ? (
+                        <ActionIcon className="h-4 w-4" strokeWidth={iconStrokeWidth} style={{ color: iconColor }} />
+                      ) : buttonContentType === 'icon-text' ? (
+                        <>
+                          <ActionIcon className="h-4 w-4" strokeWidth={iconStrokeWidth} style={{ color: iconColor }} />
+                          Focus
+                        </>
+                      ) : (
+                        'Focus'
+                      )}
+                    </Button>
+                    <Button 
+                      variant={variant} 
+                      size={buttonSize}
+                      disabled
+                    >
+                      {buttonContentType === 'icon-only' ? (
+                        <ActionIcon className="h-4 w-4" strokeWidth={iconStrokeWidth} style={{ color: iconColor }} />
+                      ) : buttonContentType === 'icon-text' ? (
+                        <>
+                          <ActionIcon className="h-4 w-4" strokeWidth={iconStrokeWidth} style={{ color: iconColor }} />
+                          Disabled
+                        </>
+                      ) : (
+                        'Disabled'
+                      )}
                     </Button>
                   </div>
                 </div>
