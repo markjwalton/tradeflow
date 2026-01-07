@@ -4,7 +4,6 @@ import AppointmentConfirm from './pages/AppointmentConfirm';
 import AppointmentHub from './pages/AppointmentHub';
 import AppointmentManager from './pages/AppointmentManager';
 import AssetManager from './pages/AssetManager';
-import CMSManager from './pages/CMSManager';
 import CRM from './pages/CRM';
 import CRMCustomerDetail from './pages/CRMCustomerDetail';
 import CRMCustomerForm from './pages/CRMCustomerForm';
@@ -106,7 +105,6 @@ import UXShowcase from './pages/UXShowcase';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import WebsiteTemplateManager from './pages/WebsiteTemplateManager';
 import WebsiteThemeManager from './pages/WebsiteThemeManager';
-import CMSPreview from './pages/CMSPreview';
 import __Layout from './Layout.jsx';
 
 
@@ -117,7 +115,6 @@ export const PAGES = {
     "AppointmentHub": AppointmentHub,
     "AppointmentManager": AppointmentManager,
     "AssetManager": AssetManager,
-    "CMSManager": CMSManager,
     "CRM": CRM,
     "CRMCustomerDetail": CRMCustomerDetail,
     "CRMCustomerForm": CRMCustomerForm,
@@ -219,7 +216,6 @@ export const PAGES = {
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
     "WebsiteTemplateManager": WebsiteTemplateManager,
     "WebsiteThemeManager": WebsiteThemeManager,
-    "CMSPreview": CMSPreview,
 }
 
 export const pagesConfig = {
