@@ -25,18 +25,18 @@ export default function CRM() {
               Dashboard
             </TabsTrigger>
             <TabsTrigger 
-              value="customers" 
-              className="gap-2 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none"
-            >
-              <Users className="h-4 w-4" />
-              Customers
-            </TabsTrigger>
-            <TabsTrigger 
               value="enquiries" 
               className="gap-2 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none"
             >
               <FileText className="h-4 w-4" />
               Enquiries
+            </TabsTrigger>
+            <TabsTrigger 
+              value="customers" 
+              className="gap-2 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none"
+            >
+              <Users className="h-4 w-4" />
+              Customers
             </TabsTrigger>
             <TabsTrigger 
               value="projects" 
