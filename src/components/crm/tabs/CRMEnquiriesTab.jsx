@@ -217,52 +217,59 @@ export default function CRMEnquiriesTab() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {pagination.paginatedItems.map((enquiry) => {
-                    const customer = customerMap[enquiry.customer_id];
+                  {pagination.paginatedItems.map((row) => {
                     return (
-                      <TableRow key={enquiry.id}>
+                      <TableRow key={row.id}>
                         <TableCell className="text-sm">
                           <div className="flex items-center gap-1">
                             <Calendar className="h-3 w-3" />
-                            {new Date(enquiry.enquiry_date).toLocaleDateString()}
+                            {row.enquiry_date ? new Date(row.enquiry_date).toLocaleDateString() : '-'}
                           </div>
                         </TableCell>
                         <TableCell className="font-medium">
                           <Link
-                            to={createPageUrl('CRMCustomerDetail') + `?id=${enquiry.customer_id}`}
+                            to={createPageUrl('CRMCustomerDetail') + `?id=${row.customer_id}`}
                             className="hover:underline text-primary"
                           >
-                            {customer
-                              ? `${customer.first_name} ${customer.surname}`
-                              : 'Unknown'}
+                            {`${row.customer.first_name} ${row.customer.surname}`}
                           </Link>
                         </TableCell>
-                        <TableCell>{enquiry.inbound_channel}</TableCell>
+                        <TableCell>{row.inbound_channel || '-'}</TableCell>
                         <TableCell>
-                          <div className="flex flex-wrap gap-1">
-                            {enquiry.initial_project_types?.slice(0, 2).map((type) => (
-                              <Badge key={type} variant="secondary" className="text-xs">
-                                {type}
-                              </Badge>
-                            ))}
-                            {enquiry.initial_project_types?.length > 2 && (
-                              <Badge variant="secondary" className="text-xs">
-                                +{enquiry.initial_project_types.length - 2}
-                              </Badge>
-                            )}
-                          </div>
+                          {row.initial_project_types?.length > 0 ? (
+                            <div className="flex flex-wrap gap-1">
+                              {row.initial_project_types.slice(0, 2).map((type) => (
+                                <Badge key={type} variant="secondary" className="text-xs">
+                                  {type}
+                                </Badge>
+                              ))}
+                              {row.initial_project_types.length > 2 && (
+                                <Badge variant="secondary" className="text-xs">
+                                  +{row.initial_project_types.length - 2}
+                                </Badge>
+                              )}
+                            </div>
+                          ) : '-'}
                         </TableCell>
                         <TableCell>
-                          <Badge className={getStatusBadgeColor(enquiry.status)}>
-                            {enquiry.status}
+                          <Badge className={getStatusBadgeColor(row.status)}>
+                            {row.status === 'NoEnquiry' ? 'No Enquiry' : row.status}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right">
-                          <Link to={createPageUrl('CRMEnquiryDetail') + `?id=${enquiry.id}`}>
-                            <Button variant="outline" size="sm">
-                              View
-                            </Button>
-                          </Link>
+                          {row.hasEnquiry ? (
+                            <Link to={createPageUrl('CRMEnquiryDetail') + `?id=${row.id}`}>
+                              <Button variant="outline" size="sm">
+                                View
+                              </Button>
+                            </Link>
+                          ) : (
+                            <Link to={createPageUrl('CRMEnquiryForm') + `?customer_id=${row.customer_id}`}>
+                              <Button variant="outline" size="sm">
+                                Create Enquiry
+                              </Button>
+                            </Link>
+                          )}
                         </TableCell>
                       </TableRow>
                     );
