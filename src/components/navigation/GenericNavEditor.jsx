@@ -137,14 +137,28 @@ export default function GenericNavEditor({
   const config = navConfigs[0];
   const rawItems = config?.items || [];
 
-  // Normalize IDs: database uses 'id', ensure all items have it
+  // Normalize IDs and filter out items pointing to deleted pages
   const items = React.useMemo(() => {
     if (!Array.isArray(rawItems)) return [];
-    return rawItems.map(item => ({
-      ...item,
-      id: item.id || item._id || generateId()
-    }));
-  }, [rawItems]);
+    
+    // Get deleted page slugs
+    const deletedSlugs = allPages
+      .filter(p => p.status === 'deleted')
+      .map(p => p.slug);
+    
+    // Filter out navigation items that point to deleted pages
+    return rawItems
+      .filter(item => {
+        // Keep folders (no slug)
+        if (!item.slug) return true;
+        // Keep only pages not marked as deleted
+        return !deletedSlugs.includes(item.slug);
+      })
+      .map(item => ({
+        ...item,
+        id: item.id || item._id || generateId()
+      }));
+  }, [rawItems, allPages]);
 
   // Track original items for unsaved changes detection
   useEffect(() => {
