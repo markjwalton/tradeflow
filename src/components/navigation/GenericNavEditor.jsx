@@ -262,7 +262,7 @@ export default function GenericNavEditor({
             });
           }
         },
-        onSuccess: (_, newItems) => {
+        onSuccess: async (_, newItems) => {
           // Invalidate ALL navigation queries
           queryClient.invalidateQueries({ queryKey: ["navConfig"] });
           setOriginalItems(JSON.parse(JSON.stringify(newItems)));
@@ -271,6 +271,9 @@ export default function GenericNavEditor({
           // Clear layout cache so navigation refreshes immediately
           sessionStorage.removeItem('nav_config_cache');
           sessionStorage.removeItem('layout_init_cache');
+          
+          // Trigger navigation update event
+          window.dispatchEvent(new CustomEvent('navigation-updated'));
           
           toast.success("Navigation saved");
         },
