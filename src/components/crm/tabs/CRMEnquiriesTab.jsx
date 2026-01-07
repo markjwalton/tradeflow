@@ -88,7 +88,7 @@ export default function CRMEnquiriesTab() {
   const pagination = usePagination(sortedEnquiries, 25);
 
   const stats = {
-    total: enquiries.length,
+    total: customers.length,
     new: enquiries.filter((e) => e.status === 'New').length,
     qualified: enquiries.filter((e) => e.status === 'Qualified').length,
     converted: enquiries.filter((e) => e.status === 'ConvertedToProject').length,
