@@ -98,11 +98,11 @@ export default function CRMCustomerDetail() {
     <div className="space-y-6">
       <Button
         variant="ghost"
-        onClick={() => navigate(createPageUrl('CRMCustomers'))}
+        onClick={() => navigate(createPageUrl('CRM'))}
         className="mb-4"
       >
         <ArrowLeft className="h-4 w-4 mr-2" />
-        Back to Customers
+        Back to CRM
       </Button>
 
       {/* Header Card */}
