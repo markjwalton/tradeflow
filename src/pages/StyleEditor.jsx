@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
 import { AdvancedStyleEditor } from '@/components/design-system/AdvancedStyleEditor';
 import { LiveComponentPreview } from '@/components/design-system/LiveComponentPreview';
-import { PageHeader } from '@/components/sturij';
-import { Palette, Eye, Code } from 'lucide-react';
+import { Save, RefreshCw, X, GitBranch } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 
 export default function StyleEditor() {
   const [previewComponent, setPreviewComponent] = useState('button');
   const [showCode, setShowCode] = useState(false);
+  const [styleValues, setStyleValues] = useState({});
+  const [selectedElement, setSelectedElement] = useState('button');
 
   const handleSaveToGlobals = async (styleValues) => {
     try {
@@ -24,6 +25,7 @@ export default function StyleEditor() {
       
       if (response.data?.success) {
         toast.success('Styles saved to globals.css');
+        setStyleValues({});
       } else {
         throw new Error(response.data?.error || 'Save failed');
       }
@@ -33,7 +35,25 @@ export default function StyleEditor() {
     }
   };
 
-  const handlePreviewUpdate = ({ element, property, value }) => {
+  const handleReset = () => {
+    Object.keys(styleValues).forEach(token => {
+      document.documentElement.style.removeProperty(token);
+    });
+    setStyleValues({});
+    window.dispatchEvent(new CustomEvent('css-variables-updated'));
+    toast.success('Styles reset');
+  };
+
+  const handleCancel = () => {
+    handleReset();
+  };
+
+  const handleStyleUpdate = (values) => {
+    setStyleValues(values);
+  };
+
+  const handlePreviewUpdate = ({ element }) => {
+    setSelectedElement(element);
     setPreviewComponent(element);
   };
 
@@ -58,70 +78,121 @@ export default function StyleEditor() {
 <Badge variant="destructive">Destructive</Badge>`
   };
 
+  const hasChanges = Object.keys(styleValues).length > 0;
+
   return (
-    <div className="min-h-screen p-6 max-w-7xl mx-auto">
-      <PageHeader 
-        title="Advanced Style Editor"
-        description="Edit design tokens with live preview and instance tracking"
-      />
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-        {/* Editor Panel */}
-        <div className="space-y-4">
-          <AdvancedStyleEditor 
-            onUpdate={handleSaveToGlobals}
-            onPreviewUpdate={handlePreviewUpdate}
-          />
+    <div className="min-h-screen">
+      {/* Header with actions */}
+      <div className="border-b bg-card sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold">Advanced Style Editor</h1>
+              <p className="text-sm text-muted-foreground">Edit design tokens with live preview and instance tracking</p>
+            </div>
+            <div className="flex items-center gap-2">
+              {hasChanges && (
+                <Badge variant="warning">
+                  {Object.keys(styleValues).length} unsaved changes
+                </Badge>
+              )}
+              <Button variant="ghost" onClick={handleCancel} disabled={!hasChanges}>
+                <X className="h-4 w-4 mr-2" />
+                Cancel
+              </Button>
+              <Button variant="outline" onClick={handleReset} disabled={!hasChanges}>
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Reset
+              </Button>
+              <Button onClick={() => handleSaveToGlobals(styleValues)} disabled={!hasChanges}>
+                <Save className="h-4 w-4 mr-2" />
+                Save
+              </Button>
+            </div>
+          </div>
         </div>
+      </div>
 
-        {/* Preview Panel */}
-        <div className="space-y-4">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2">
-                  <Eye className="h-5 w-5" />
-                  Live Preview
-                </CardTitle>
+      <div className="max-w-7xl mx-auto p-6 space-y-6">
+        {/* Element Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Element Selection</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex gap-2 flex-wrap">
+              {Object.keys(componentExamples).map(comp => (
                 <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowCode(!showCode)}
+                  key={comp}
+                  variant={selectedElement === comp ? 'default' : 'outline'}
+                  onClick={() => {
+                    setSelectedElement(comp);
+                    setPreviewComponent(comp);
+                  }}
                 >
-                  <Code className="h-4 w-4 mr-2" />
-                  {showCode ? 'Hide' : 'Show'} Code
+                  {comp.charAt(0).toUpperCase() + comp.slice(1)}
+                </Button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Live Preview */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Live Preview</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <LiveComponentPreview 
+              jsxCode={componentExamples[previewComponent] || componentExamples.button}
+              showCode={false}
+            />
+          </CardContent>
+        </Card>
+
+        {/* Current Preview Component */}
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-sm text-muted-foreground">
+              Currently editing: <span className="font-medium text-foreground">{selectedElement}</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Style Editor */}
+        <AdvancedStyleEditor 
+          onUpdate={handleStyleUpdate}
+          onPreviewUpdate={handlePreviewUpdate}
+          selectedElement={selectedElement}
+        />
+
+        {/* Version Control */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <GitBranch className="h-5 w-5" />
+              <CardTitle>Version Control</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Current Version</span>
+                <Badge>1.0.0</Badge>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Last Modified</span>
+                <span className="text-foreground">Just now</span>
+              </div>
+              <div className="pt-3 border-t">
+                <Button variant="outline" size="sm" className="w-full">
+                  <GitBranch className="h-4 w-4 mr-2" />
+                  View Change History
                 </Button>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <LiveComponentPreview 
-                jsxCode={componentExamples[previewComponent] || componentExamples.button}
-                showCode={showCode}
-              />
-            </CardContent>
-          </Card>
-
-          {/* Quick Component Switcher */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm">Preview Component</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex gap-2 flex-wrap">
-                {Object.keys(componentExamples).map(comp => (
-                  <Button
-                    key={comp}
-                    variant={previewComponent === comp ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setPreviewComponent(comp)}
-                  >
-                    {comp.charAt(0).toUpperCase() + comp.slice(1)}
-                  </Button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

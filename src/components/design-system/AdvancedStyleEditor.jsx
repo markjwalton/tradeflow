@@ -14,15 +14,14 @@ const COMPONENT_TYPES = [
   { value: 'badge', label: 'Badge', applicableStyles: ['padding', 'font', 'text', 'background', 'border'] },
 ];
 
-export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate }) {
-  const [selectedElement, setSelectedElement] = useState('button');
+export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement: propSelectedElement }) {
   const [currentStyle, setCurrentStyle] = useState('--color-primary');
   const [instances, setInstances] = useState(5);
-  const [currentInstance, setCurrentInstance] = useState(1);
-  const [applyToAll, setApplyToAll] = useState(true);
+  const [saveAsNew, setSaveAsNew] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState(['border']);
   const [styleValues, setStyleValues] = useState({});
 
+  const selectedElement = propSelectedElement || 'button';
   const selectedComponent = COMPONENT_TYPES.find(c => c.value === selectedElement);
 
   const isStyleApplicable = (styleCategory) => {
@@ -57,35 +56,29 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate }) {
   };
 
   const handleStyleChange = (property, value) => {
-    setStyleValues(prev => ({ ...prev, [property]: value }));
+    const newValues = { ...styleValues, [property]: value };
+    setStyleValues(newValues);
     // Live preview update
     document.documentElement.style.setProperty(property, value);
     window.dispatchEvent(new CustomEvent('css-variables-updated'));
+    if (onUpdate) {
+      onUpdate(newValues);
+    }
     if (onPreviewUpdate) {
       onPreviewUpdate({ element: selectedElement, property, value });
     }
   };
 
-  const handleSave = async () => {
-    if (!applyToAll) {
-      // Save as new style variant
-      toast.info('Creating new style variant...');
-      // TODO: Implement save as new variant logic
-    } else {
-      // Update global style
-      if (onUpdate) {
-        await onUpdate(styleValues);
-      }
-      toast.success('Styles saved globally');
-    }
+  const handleCreateNew = () => {
+    toast.info('Creating new style variant...');
+    // TODO: Implement save as new variant logic
   };
 
-  const navigateInstance = (direction) => {
-    if (direction === 'next' && currentInstance < instances) {
-      setCurrentInstance(prev => prev + 1);
-    } else if (direction === 'prev' && currentInstance > 1) {
-      setCurrentInstance(prev => prev - 1);
+  const handleUpdateGlobal = async () => {
+    if (onUpdate) {
+      await onUpdate(styleValues);
     }
+    toast.success('Styles saved globally');
   };
 
   return (
@@ -95,19 +88,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate }) {
         <CardContent className="pt-6 space-y-4">
           <div className="flex items-center gap-4">
             <div className="flex-1">
-              <label className="text-xs font-medium mb-1 block">Element</label>
-              <select
-                className="w-full px-3 py-2 border rounded-md text-sm bg-background"
-                value={selectedElement}
-                onChange={(e) => setSelectedElement(e.target.value)}
-              >
-                {COMPONENT_TYPES.map(type => (
-                  <option key={type.value} value={type.value}>{type.label}</option>
-                ))}
-              </select>
-            </div>
-            <div className="flex-1">
-              <label className="text-xs font-medium mb-1 block">Style</label>
+              <label className="text-xs font-medium mb-1 block">Style Variable</label>
               <input
                 type="text"
                 className="w-full px-3 py-2 border rounded-md text-sm font-mono bg-muted"
@@ -117,48 +98,19 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate }) {
             </div>
           </div>
 
-          {/* Instances Navigation */}
+          {/* Instances and Actions */}
           <div className="flex items-center justify-between p-3 bg-muted/50 rounded-md">
             <div className="flex items-center gap-4">
               <Badge variant={instances > 3 ? 'destructive' : 'default'}>
-                Instances: {instances}
+                {instances} Instances
               </Badge>
-              <div className="flex items-center gap-2">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => navigateInstance('prev')}
-                  disabled={currentInstance === 1}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <span className="text-sm font-mono px-3">
-                  {currentInstance} / {instances}
-                </span>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => navigateInstance('next')}
-                  disabled={currentInstance === instances}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
             </div>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="apply-all"
-                  checked={applyToAll}
-                  onCheckedChange={setApplyToAll}
-                />
-                <label htmlFor="apply-all" className="text-sm cursor-pointer">
-                  Apply to all {instances}
-                </label>
-              </div>
-              <Button size="sm" onClick={handleSave}>
-                <Save className="h-4 w-4 mr-2" />
-                Save
+            <div className="flex items-center gap-2">
+              <Button size="sm" variant="outline" onClick={handleCreateNew}>
+                Create New Style
+              </Button>
+              <Button size="sm" onClick={handleUpdateGlobal}>
+                Update Global
               </Button>
             </div>
           </div>
