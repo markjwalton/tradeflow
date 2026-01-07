@@ -178,7 +178,7 @@ export function LiveComponentPreview({ jsxCode, componentName }) {
             <pre className="mt-2 whitespace-pre-wrap">{error}</pre>
           </div>
         ) : Component ? (
-          <div className="flex items-center justify-center min-h-[100px]">
+          <div key={refreshKey} className="flex items-center justify-center min-h-[100px]">
             <Component />
           </div>
         ) : (

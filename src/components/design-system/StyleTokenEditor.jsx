@@ -245,6 +245,8 @@ export function StyleTokenEditor({ tokens = [], onUpdate, componentName }) {
     setLocalTokens(prev => ({ ...prev, [tokenName]: value }));
     // Live preview
     document.documentElement.style.setProperty(tokenName, value);
+    // Notify preview to refresh
+    window.dispatchEvent(new CustomEvent('css-variables-updated'));
   };
 
   const handleSave = async () => {
