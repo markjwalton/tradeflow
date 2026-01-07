@@ -316,18 +316,18 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   return (
     <div className="space-y-4">
       {/* Editing Mode Header - Collapsible */}
-      <Card className={hasUnsavedChanges ? 'border-l-4 border-l-amber-500 bg-amber-50/20' : ''}>
+      <Card className={hasUnsavedChanges && isHeaderOpen ? 'border-l-4 border-l-amber-500 bg-amber-50/20' : ''}>
         <Collapsible open={isHeaderOpen} onOpenChange={setIsHeaderOpen}>
           <CollapsibleTrigger asChild>
             <div className="p-6 cursor-pointer hover:bg-muted/30 transition-colors">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <h3 className="text-lg font-semibold text-foreground">Editing</h3>
+                <h3 className="text-lg font-semibold text-foreground">Editing</h3>
+                <div className="flex items-center gap-2">
                   {hasUnsavedChanges && !isHeaderOpen && (
                     <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
                   )}
+                  {isHeaderOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                 </div>
-                {isHeaderOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
               </div>
             </div>
           </CollapsibleTrigger>
