@@ -610,23 +610,28 @@ export default function GenericNavEditor({
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
-      
-      // Persist to user preferences
-      const expandedArray = [...next];
-      base44.auth.me().then(user => {
-        base44.auth.updateMe({
-          ui_preferences: {
-            ...(user?.ui_preferences || {}),
-            navManager_expanded: {
-              ...(user?.ui_preferences?.navManager_expanded || {}),
-              [configType]: expandedArray
-            }
-          }
-        }).catch(() => {});
-      }).catch(() => {});
-      
       return next;
     });
+
+    // Persist immediately after state update
+    try {
+      const user = await base44.auth.me();
+      const expandedArray = [...(expandedParents.has(id) ? 
+        Array.from(expandedParents).filter(fid => fid !== id) : 
+        [...expandedParents, id])];
+      
+      await base44.auth.updateMe({
+        ui_preferences: {
+          ...(user?.ui_preferences || {}),
+          navManager_expanded: {
+            ...(user?.ui_preferences?.navManager_expanded || {}),
+            [configType]: expandedArray
+          }
+        }
+      });
+    } catch (e) {
+      console.error("Failed to save expanded state:", e);
+    }
   };
 
   const togglePageDetails = (slug) => {
