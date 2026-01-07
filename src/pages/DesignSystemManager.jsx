@@ -532,6 +532,19 @@ For each recommendation, provide:
                   </Card>
                 </Link>
 
+                <Link to={createPageUrl("StyleEditor")}>
+                  <Card className="border-border hover:shadow-md transition-shadow cursor-pointer h-full">
+                    <CardContent className="pt-6">
+                      <Palette className="h-10 w-10 text-accent mb-3" />
+                      <h3 className="font-heading font-medium text-foreground mb-2">Advanced Style Editor</h3>
+                      <p className="text-sm text-muted-foreground mb-3">Edit design tokens with live preview and instance tracking</p>
+                      <div className="flex items-center text-primary text-sm font-medium">
+                        Open Editor <ArrowRight className="h-4 w-4 ml-1" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+
                 <Link to={createPageUrl("BrandIdentity")}>
                   <Card className="border-border hover:shadow-md transition-shadow cursor-pointer h-full">
                     <CardContent className="pt-6">
