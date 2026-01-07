@@ -152,6 +152,12 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
           baseStyle.color = textColor;
         }
         
+        // Apply text-align CSS variable
+        const textAlign = getComputedStyle(document.documentElement).getPropertyValue('--text-align').trim();
+        if (textAlign) {
+          baseStyle.textAlign = textAlign;
+        }
+        
         console.log('[LiveComponentPreview] Final base style before render:', baseStyle);
         
         // Generate content based on type
