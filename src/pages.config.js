@@ -20,6 +20,7 @@ import CommunityPublish from './pages/CommunityPublish';
 import CompassHome from './pages/CompassHome';
 import CompassInterviews from './pages/CompassInterviews';
 import CompassLogin from './pages/CompassLogin';
+import ComponentLibrary from './pages/ComponentLibrary';
 import ComponentPatterns from './pages/ComponentPatterns';
 import ComponentShowcase from './pages/ComponentShowcase';
 import Components from './pages/Components';
@@ -105,7 +106,6 @@ import UXShowcase from './pages/UXShowcase';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import WebsiteTemplateManager from './pages/WebsiteTemplateManager';
 import WebsiteThemeManager from './pages/WebsiteThemeManager';
-import ComponentLibrary from './pages/ComponentLibrary';
 import __Layout from './Layout.jsx';
 
 
@@ -132,6 +132,7 @@ export const PAGES = {
     "CompassHome": CompassHome,
     "CompassInterviews": CompassInterviews,
     "CompassLogin": CompassLogin,
+    "ComponentLibrary": ComponentLibrary,
     "ComponentPatterns": ComponentPatterns,
     "ComponentShowcase": ComponentShowcase,
     "Components": Components,
@@ -217,7 +218,6 @@ export const PAGES = {
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
     "WebsiteTemplateManager": WebsiteTemplateManager,
     "WebsiteThemeManager": WebsiteThemeManager,
-    "ComponentLibrary": ComponentLibrary,
 }
 
 export const pagesConfig = {
