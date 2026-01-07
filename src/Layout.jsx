@@ -224,6 +224,33 @@ export default function Layout({ children, currentPageName }) {
     const cachedInit = sessionStorage.getItem(LAYOUT_CACHE_KEY);
     const skipHeavyInit = cachedInit && (Date.now() - parseInt(cachedInit)) < LAYOUT_CACHE_TTL;
 
+    // Function to apply theme CSS variables
+    const applyTheme = async (websiteFolderId) => {
+      if (!websiteFolderId) return;
+      
+      try {
+        const folders = await base44.entities.WebsiteFolder.filter({ id: websiteFolderId });
+        if (folders.length === 0 || !folders[0].theme_id) return;
+        
+        const themes = await base44.entities.WebsiteTheme.filter({ id: folders[0].theme_id });
+        if (themes.length === 0) return;
+        
+        const theme = themes[0];
+        if (theme.css_variables) {
+          // Extract CSS variables and apply them
+          const cssVarRegex = /--([\w-]+):\s*([^;]+);/g;
+          let match;
+          const root = document.documentElement;
+          
+          while ((match = cssVarRegex.exec(theme.css_variables)) !== null) {
+            root.style.setProperty(`--${match[1]}`, match[2].trim());
+          }
+        }
+      } catch (e) {
+        console.error('Failed to apply theme:', e);
+      }
+    };
+
     const handleSiteSettingsChange = (event) => {
       const newSettings = event.detail;
       setSiteSettings(newSettings);
@@ -306,6 +333,13 @@ export default function Layout({ children, currentPageName }) {
         if (user) {
           setCurrentUser(user);
           setIsGlobalAdmin(user.is_global_admin === true);
+
+          // Apply website theme if set
+          const urlParams = new URLSearchParams(window.location.search);
+          const websiteFolderId = urlParams.get("website");
+          if (websiteFolderId) {
+            applyTheme(websiteFolderId);
+          }
           
           // Apply site settings from user object (already fetched)
           if (user.site_settings) {
