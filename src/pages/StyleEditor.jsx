@@ -99,11 +99,6 @@ export default function StyleEditor() {
               <p className="text-sm text-muted-foreground">Edit design tokens with live preview and instance tracking</p>
             </div>
             <div className="flex items-center gap-2">
-              {hasChanges && (
-                <Badge variant="warning">
-                  {Object.keys(styleValues).length} unsaved changes
-                </Badge>
-              )}
               <Button variant="ghost" onClick={handleCancel} disabled={!hasChanges}>
                 <X className="h-4 w-4 mr-2" />
                 Cancel
