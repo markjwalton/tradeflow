@@ -461,11 +461,75 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                   <Save className="h-4 w-4 mr-2" />
                   Apply Style
                 </Button>
-              </div>
-            </div>
-          </CollapsibleContent>
-        </Collapsible>
-      </Card>
+                </div>
+                </div>
+
+                {/* Applied Styles Cards */}
+                {savedStylesList.length > 0 && (
+                <div className="space-y-3 pt-4 border-t">
+                <h4 className="text-sm font-medium text-foreground">Saved Styles</h4>
+                {savedStylesList.map(style => (
+                  <div 
+                    key={style.id}
+                    className="flex items-center justify-between p-4 bg-gradient-to-r from-muted/40 to-muted/20 rounded-xl border border-border hover:border-primary/40 transition-all group"
+                  >
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-sm font-semibold text-foreground">{style.name}</span>
+                        <Badge 
+                          variant={style.mode === 'global' ? 'default' : 'secondary'} 
+                          className="text-xs px-2 py-0.5"
+                        >
+                          {style.mode}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
+                        <span className="px-2 py-1 bg-background/60 rounded">{style.variant}</span>
+                        <span className="px-2 py-1 bg-background/60 rounded">{style.size}</span>
+                        {style.actionType && style.actionType !== 'general' && (
+                          <span className="px-2 py-1 bg-indigo-50 text-indigo-700 rounded border border-indigo-200">{style.actionType}</span>
+                        )}
+                        {style.contentType && (
+                          <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded border border-blue-200">{style.contentType}</span>
+                        )}
+                        <span className={`px-2 py-1 rounded ${
+                          style.state === 'focus' ? 'bg-blue-50 text-blue-700 border border-blue-300' :
+                          style.state === 'disabled' ? 'bg-gray-100 text-gray-500 border border-gray-300' :
+                          style.state === 'hover' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
+                          style.state === 'active' ? 'bg-green-50 text-green-700 border border-green-200' :
+                          'bg-background/60'
+                        }`}>{style.state}</span>
+                        <span>•</span>
+                        <span className="italic">{style.timestamp}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleLoadStyle(style)}
+                        className="h-9 px-3"
+                      >
+                        <Pencil className="h-3.5 w-3.5 mr-1.5" />
+                        Edit
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDeleteStyle(style.id)}
+                        className="h-9 px-3 text-destructive hover:text-destructive hover:bg-destructive/10"
+                      >
+                        <Trash2 className="h-3.5 w-3.5 mr-1.5" />
+                        Delete
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                </div>
+                )}
+                </CollapsibleContent>
+                </Collapsible>
+                </Card>
 
       {/* Version Control */}
       <Card>
