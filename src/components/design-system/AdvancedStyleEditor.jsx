@@ -222,6 +222,38 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
 
   return (
     <div className="space-y-4">
+      {/* Editing Mode Header */}
+      <Card>
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <h3 className="text-sm font-semibold text-foreground">
+                Editing: {selectedComponent?.label || 'Component'}
+              </h3>
+              <div className="flex items-center gap-2 bg-muted p-1 rounded-lg">
+                <Button
+                  variant={editMode === 'global' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setEditMode('global')}
+                  className="h-7 px-3 text-xs"
+                >
+                  Global
+                </Button>
+                <Button
+                  variant={editMode === 'custom' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setEditMode('custom')}
+                  className="h-7 px-3 text-xs"
+                >
+                  Custom
+                </Button>
+              </div>
+              {editMode === 'global' && <Badge variant="default" className="whitespace-nowrap">{instances} Instances</Badge>}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Style Categories */}
       <Card>
         <StyleCategory
