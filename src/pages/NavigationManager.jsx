@@ -89,24 +89,22 @@ export default function NavigationManager() {
     const newSettings = { ...pageSettings, [key]: value };
     setPageSettings(newSettings);
     
-    // Save to user profile instead of localStorage
     try {
-      await base44.auth.updateMe({
-        ui_preferences: {
-          ...(currentUser?.ui_preferences || {}),
-          navManager_settings: newSettings
-        }
-      });
-      
-      // Update current user state
-      const updatedUser = await base44.auth.me();
-      setCurrentUser(updatedUser);
-      
       if (key === "navMode") {
+        // Save navMode to user preferences
+        await base44.auth.updateMe({
+          ui_preferences: {
+            ...(currentUser?.ui_preferences || {}),
+            navManager_settings: { navMode: value }
+          }
+        });
+        const updatedUser = await base44.auth.me();
+        setCurrentUser(updatedUser);
         setNavMode(value);
+        toast.success("Settings saved");
       }
       
-      // When defaultCollapsed changes, update all folder items in NavigationConfig
+      // When defaultCollapsed changes, update all folder items in NavigationConfig (source of truth)
       if (key === "defaultCollapsed") {
         const configs = await base44.entities.NavigationConfig.filter({ config_type: "admin_console" });
         if (configs.length > 0) {
@@ -122,8 +120,6 @@ export default function NavigationManager() {
           queryClient.invalidateQueries({ queryKey: ["navConfig"] });
           toast.success(value ? "All folders will start collapsed" : "All folders will start expanded");
         }
-      } else {
-        toast.success("Settings saved");
       }
     } catch (e) {
       toast.error("Failed to save settings: " + e.message);
