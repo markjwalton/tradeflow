@@ -128,6 +128,12 @@ export default function GenericNavEditor({
     enabled: !!tenantId && !isGlobal, // Only fetch when editing tenant-specific
   });
 
+  // Fetch page registry to filter out deleted pages
+  const { data: allPages = [] } = useQuery({
+    queryKey: ["pageRegistry"],
+    queryFn: () => base44.entities.PageRegistry.list(),
+  });
+
   const config = navConfigs[0];
   const rawItems = config?.items || [];
 
@@ -166,11 +172,18 @@ export default function GenericNavEditor({
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [hasUnsavedChanges]);
   
-  // Get slugs from config's source_slugs (no hardcoded fallback)
+  // Get slugs from config's source_slugs, filtered against registry to exclude deleted pages
   const effectiveSlugs = React.useMemo(() => {
     const slugs = config?.source_slugs || [];
-    return Array.isArray(slugs) ? slugs.sort() : [];
-  }, [config?.source_slugs]);
+    if (!Array.isArray(slugs)) return [];
+    
+    // Filter out pages that are marked as deleted in registry
+    const deletedSlugs = allPages
+      .filter(p => p.status === 'deleted')
+      .map(p => p.slug);
+    
+    return slugs.filter(s => !deletedSlugs.includes(s)).sort();
+  }, [config?.source_slugs, allPages]);
   
   // Initial expand logic - always check user settings on mount
   React.useEffect(() => {
@@ -458,31 +471,39 @@ export default function GenericNavEditor({
     toast.success(newParentId ? "Item moved" : "Moved to top level");
   };
 
-  const handleAllocate = (slug) => {
-        const name = slug.replace(/([A-Z])/g, ' $1').trim();
-        const newId = generateId();
-        const newItem = {
-          id: newId,
-          name,
-          slug,
-          icon: "File",
-          is_visible: true,
-          parent_id: null,
-          item_type: "page",
-          order: items.length
-        };
-        // Ensure all existing items keep their id
-        const existingItems = items.map(i => ({ ...i, id: i.id || generateId() }));
-        const loadingToast = toast.loading(`Adding "${name}" to navigation...`);
-        saveMutation.mutate([...existingItems, newItem], {
-          onSuccess: () => {
-            toast.success(`✓ "${name}" added to navigation`, { id: loadingToast });
-          },
-          onError: (error) => {
-            toast.error(`Failed to add page: ${error.message}`, { id: loadingToast });
-          }
-        });
-      };
+  const handleAllocate = async (slug) => {
+    const name = slug.replace(/([A-Z])/g, ' $1').trim();
+    const newId = generateId();
+    const newItem = {
+      id: newId,
+      name,
+      slug,
+      icon: "File",
+      is_visible: true,
+      parent_id: null,
+      item_type: "page",
+      order: items.length
+    };
+    
+    // Ensure all existing items keep their id
+    const existingItems = items.map(i => ({ ...i, id: i.id || generateId() }));
+    const loadingToast = toast.loading(`Adding "${name}" to navigation...`);
+    
+    saveMutation.mutate([...existingItems, newItem], {
+      onSuccess: async () => {
+        // Mark page as allocated in registry
+        const registryPage = allPages.find(p => p.slug === slug);
+        if (registryPage) {
+          await base44.entities.PageRegistry.update(registryPage.id, { is_allocated: true });
+          queryClient.invalidateQueries({ queryKey: ["pageRegistry"] });
+        }
+        toast.success(`✓ "${name}" added to navigation`, { id: loadingToast });
+      },
+      onError: (error) => {
+        toast.error(`Failed to add page: ${error.message}`, { id: loadingToast });
+      }
+    });
+  };
 
   const handleCreateNewPage = async () => {
     // Validation
@@ -541,7 +562,7 @@ export default function GenericNavEditor({
     }
   };
 
-  const handleUnallocate = (item) => {
+  const handleUnallocate = async (item) => {
     // Remove only this item, move its children to top level (set parent_id to null)
     const newItems = items
       .filter(i => i.id !== item.id)
@@ -551,7 +572,19 @@ export default function GenericNavEditor({
         // If this child's parent was the removed item, move to top level
         parent_id: i.parent_id === item.id ? null : i.parent_id
       }));
-    saveMutation.mutate(newItems);
+    
+    saveMutation.mutate(newItems, {
+      onSuccess: async () => {
+        // Mark page as unallocated in registry
+        if (item.slug) {
+          const registryPage = allPages.find(p => p.slug === item.slug);
+          if (registryPage) {
+            await base44.entities.PageRegistry.update(registryPage.id, { is_allocated: false });
+            queryClient.invalidateQueries({ queryKey: ["pageRegistry"] });
+          }
+        }
+      }
+    });
     toast.success(`${item.name} removed from navigation`);
   };
 

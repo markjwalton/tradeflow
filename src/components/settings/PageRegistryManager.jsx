@@ -167,6 +167,7 @@ export default function PageRegistryManager() {
         return;
       }
       
+      // Update allocation status for all pages
       const newPages = newSlugs.map(slug => ({
         slug,
         display_name: slug.replace(/([A-Z])/g, ' $1').trim(),
@@ -178,6 +179,14 @@ export default function PageRegistryManager() {
         related_entities: [],
         related_functions: [],
       }));
+      
+      // Update existing pages allocation status
+      for (const page of pages) {
+        const isNowAllocated = allocatedSlugs.includes(page.slug);
+        if (page.is_allocated !== isNowAllocated) {
+          await base44.entities.PageRegistry.update(page.id, { is_allocated: isNowAllocated });
+        }
+      }
       
       await base44.entities.PageRegistry.bulkCreate(newPages);
       queryClient.invalidateQueries({ queryKey: ["pageRegistry"] });
