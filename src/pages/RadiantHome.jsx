@@ -59,7 +59,7 @@ function FeatureSection() {
         <Screenshot
           width={1216}
           height={768}
-          src={getAssetUrl('public/screenshots/app.png')}
+          src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800"
           className="mt-16 h-[36rem] sm:h-auto sm:w-[76rem]"
         />
       </Container>
@@ -83,7 +83,7 @@ function BentoSection() {
           title="Get perfect clarity"
           description="Radiant uses social engineering to build a detailed financial picture of your leads. Know their budget, compensation package, social security number, and more."
           graphic={
-            <div className="h-80 bg-no-repeat bg-[length:1000px_560px] bg-[position:left_-109px_top_-112px]" style={{ backgroundImage: `url(${getAssetUrl('public/screenshots/profile.png')})` }} />
+            <div className="h-80 bg-no-repeat bg-[length:1000px_560px] bg-[position:left_-109px_top_-112px]" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1000)' }} />
           }
           fade={['bottom']}
           className="max-lg:rounded-t-[2rem] lg:col-span-3 lg:rounded-tl-[2rem]"
@@ -93,7 +93,7 @@ function BentoSection() {
           title="Undercut your competitors"
           description="With our advanced data mining, you'll know which companies your leads are talking to and exactly how much they're being charged."
           graphic={
-            <div className="absolute inset-0 bg-no-repeat bg-[length:1100px_650px] bg-[position:left_-38px_top_-73px]" style={{ backgroundImage: `url(${getAssetUrl('public/screenshots/competitors.png')})` }} />
+            <div className="absolute inset-0 bg-no-repeat bg-[length:1100px_650px] bg-[position:left_-38px_top_-73px]" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1100)' }} />
           }
           fade={['bottom']}
           className="lg:col-span-3 lg:rounded-tr-[2rem]"
@@ -158,7 +158,7 @@ function DarkBentoSection() {
             title="Sell at the speed of light"
             description="Our RadiantAI chat assistants analyze the sentiment of your conversations in real time, ensuring you're always one step ahead."
             graphic={
-              <div className="h-80 bg-no-repeat bg-[length:851px_344px]" style={{ backgroundImage: `url(${getAssetUrl('public/screenshots/networking.png')})` }} />
+              <div className="h-80 bg-no-repeat bg-[length:851px_344px]" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=851)' }} />
             }
             fade={['top']}
             className="max-lg:rounded-t-[2rem] lg:col-span-4 lg:rounded-tl-[2rem]"
@@ -201,7 +201,7 @@ function DarkBentoSection() {
             title="Become a thought leader"
             description="RadiantAI automatically writes LinkedIn posts that relate current events to B2B sales, helping you build a reputation as a thought leader."
             graphic={
-              <div className="h-80 bg-no-repeat bg-[length:851px_344px]" style={{ backgroundImage: `url(${getAssetUrl('public/screenshots/engagement.png')})` }} />
+              <div className="h-80 bg-no-repeat bg-[length:851px_344px]" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1552664730-d307ca884978?w=851)' }} />
             }
             fade={['top']}
             className="max-lg:rounded-b-[2rem] lg:col-span-4 lg:rounded-br-[2rem]"
