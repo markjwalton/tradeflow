@@ -14,17 +14,21 @@ function ColorTokenEditor({ token, currentValue, onUpdate }) {
   const [isConverting, setIsConverting] = useState(false);
   const [hexFallback, setHexFallback] = useState('');
   const [oklchValue, setOklchValue] = useState('');
+  const [alpha, setAlpha] = useState(1);
 
   // Parse current value to extract OKLCH and hex
   React.useEffect(() => {
     if (currentValue.includes('oklch')) {
       const oklchMatch = currentValue.match(/oklch\([^)]+\)/);
       const hexMatch = currentValue.match(/#[0-9a-fA-F]{6}/);
+      const alphaMatch = currentValue.match(/\/\s*([\d.]+)/);
       setOklchValue(oklchMatch?.[0] || '');
       setHexFallback(hexMatch?.[0] || '#4a7c6b');
+      setAlpha(alphaMatch ? parseFloat(alphaMatch[1]) : 1);
     } else if (currentValue.startsWith('#')) {
       setHexFallback(currentValue);
       setOklchValue('');
+      setAlpha(1);
     }
   }, [currentValue]);
 
@@ -82,8 +86,9 @@ function ColorTokenEditor({ token, currentValue, onUpdate }) {
 
   const handleHexChange = (newHex) => {
     setHexFallback(newHex);
+    const alphaStr = alpha < 1 ? ` / ${alpha}` : '';
     if (oklchValue) {
-      onUpdate(token, `${oklchValue}, ${newHex}`);
+      onUpdate(token, `${oklchValue}${alphaStr}, ${newHex}`);
     } else {
       onUpdate(token, newHex);
     }
@@ -91,7 +96,16 @@ function ColorTokenEditor({ token, currentValue, onUpdate }) {
 
   const handleOklchChange = (newOklch) => {
     setOklchValue(newOklch);
-    onUpdate(token, `${newOklch}, ${hexFallback}`);
+    const alphaStr = alpha < 1 ? ` / ${alpha}` : '';
+    onUpdate(token, `${newOklch}${alphaStr}, ${hexFallback}`);
+  };
+
+  const handleAlphaChange = (newAlpha) => {
+    setAlpha(newAlpha);
+    const alphaStr = newAlpha < 1 ? ` / ${newAlpha}` : '';
+    if (oklchValue) {
+      onUpdate(token, `${oklchValue}${alphaStr}, ${hexFallback}`);
+    }
   };
 
   return (
@@ -125,27 +139,39 @@ function ColorTokenEditor({ token, currentValue, onUpdate }) {
         />
       </div>
       {oklchValue && (
-        <div className="flex gap-2 items-center">
-          <Input
-            type="text"
-            value={oklchValue}
-            onChange={(e) => handleOklchChange(e.target.value)}
-            className="font-mono text-xs flex-1"
-            placeholder="oklch(0.65 0.15 160)"
-          />
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={convertToHex}
-            disabled={isConverting}
-          >
-            <Sparkles className="h-4 w-4 mr-1" />
-            To Hex
-          </Button>
-        </div>
+        <>
+          <div className="flex gap-2 items-center">
+            <Input
+              type="text"
+              value={oklchValue}
+              onChange={(e) => handleOklchChange(e.target.value)}
+              className="font-mono text-xs flex-1"
+              placeholder="oklch(0.65 0.15 160)"
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={convertToHex}
+              disabled={isConverting}
+            >
+              <Sparkles className="h-4 w-4 mr-1" />
+              To Hex
+            </Button>
+          </div>
+          <div className="space-y-1">
+            <Label className="text-xs">Opacity: {alpha.toFixed(2)}</Label>
+            <Slider
+              value={[alpha]}
+              onValueChange={([val]) => handleAlphaChange(val)}
+              min={0}
+              max={1}
+              step={0.01}
+            />
+          </div>
+        </>
       )}
       <p className="text-xs text-muted-foreground">
-        Format: {oklchValue ? `${oklchValue}, ${hexFallback}` : hexFallback}
+        Format: {oklchValue ? `${oklchValue}${alpha < 1 ? ` / ${alpha}` : ''}, ${hexFallback}` : hexFallback}
       </p>
     </div>
   );
@@ -157,15 +183,52 @@ export function StyleTokenEditor({ tokens = [], onUpdate, componentName }) {
 
   // Parse token type from name
   const getTokenType = (tokenName) => {
-    if (tokenName.includes('color') || tokenName.includes('primary') || tokenName.includes('secondary')) return 'color';
+    if (tokenName.includes('color') || tokenName.includes('primary') || tokenName.includes('secondary') || tokenName.includes('accent') || tokenName.includes('destructive') || tokenName.includes('midnight') || tokenName.includes('charcoal')) return 'color';
     if (tokenName.includes('spacing') || tokenName.includes('padding') || tokenName.includes('margin')) return 'spacing';
-    if (tokenName.includes('font') || tokenName.includes('text')) return 'typography';
+    if (tokenName.includes('font') || tokenName.includes('text') || tokenName.includes('leading') || tokenName.includes('tracking')) return 'typography';
     if (tokenName.includes('radius')) return 'radius';
     if (tokenName.includes('shadow')) return 'shadow';
     return 'other';
   };
 
-  const groupedTokens = tokens.reduce((acc, token) => {
+  // Filter tokens based on component type
+  const getRelevantTokens = (allTokens) => {
+    const name = componentName?.toLowerCase() || '';
+    
+    if (name.includes('button')) {
+      return allTokens.filter(t => 
+        t.includes('color') || t.includes('primary') || t.includes('radius') || 
+        t.includes('spacing') || t.includes('shadow') || t.includes('font')
+      );
+    }
+    
+    if (name.includes('card')) {
+      return allTokens.filter(t =>
+        t.includes('color') || t.includes('card') || t.includes('radius') ||
+        t.includes('spacing') || t.includes('shadow') || t.includes('border')
+      );
+    }
+    
+    if (name.includes('typography') || name.includes('text') || name.includes('heading')) {
+      return allTokens.filter(t =>
+        t.includes('font') || t.includes('text') || t.includes('color') ||
+        t.includes('leading') || t.includes('tracking')
+      );
+    }
+    
+    if (name.includes('badge')) {
+      return allTokens.filter(t =>
+        t.includes('color') || t.includes('radius') || t.includes('text') ||
+        t.includes('spacing')
+      );
+    }
+    
+    return allTokens;
+  };
+
+  const relevantTokens = getRelevantTokens(tokens);
+
+  const groupedTokens = relevantTokens.reduce((acc, token) => {
     const type = getTokenType(token);
     if (!acc[type]) acc[type] = [];
     acc[type].push(token);
@@ -296,12 +359,35 @@ export function StyleTokenEditor({ tokens = [], onUpdate, componentName }) {
                     )}
 
                     {type === 'typography' && (
-                      <Input
-                        type="text"
-                        value={currentValue}
-                        onChange={(e) => updateToken(token, e.target.value)}
-                        placeholder="1rem or 16px"
-                      />
+                      <>
+                        {(token.includes('leading') || token.includes('tracking')) ? (
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-3">
+                              <Slider
+                                value={[parseFloat(currentValue) || 1]}
+                                onValueChange={([val]) => updateToken(token, token.includes('tracking') ? `${val}em` : `${val}`)}
+                                min={token.includes('tracking') ? -0.1 : 1}
+                                max={token.includes('tracking') ? 0.2 : 2.5}
+                                step={token.includes('tracking') ? 0.005 : 0.125}
+                                className="flex-1"
+                              />
+                              <Input
+                                type="text"
+                                value={currentValue}
+                                onChange={(e) => updateToken(token, e.target.value)}
+                                className="w-24"
+                              />
+                            </div>
+                          </div>
+                        ) : (
+                          <Input
+                            type="text"
+                            value={currentValue}
+                            onChange={(e) => updateToken(token, e.target.value)}
+                            placeholder="1rem or 16px"
+                          />
+                        )}
+                      </>
                     )}
 
                     {type === 'radius' && (

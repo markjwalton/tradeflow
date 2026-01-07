@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Eye, Code, ArrowRight, ChevronDown, Check, X, AlertCircle, Info, Plus, Minus, Settings, User } from 'lucide-react';
 import * as ButtonComponents from '@/components/ui/button';
 import * as CardComponents from '@/components/ui/card';
@@ -20,10 +21,25 @@ const componentImports = {
   ArrowRight, ChevronDown, Check, X, AlertCircle, Info, Plus, Minus, Settings, User
 };
 
+const themeColors = [
+  { label: 'Default', value: 'transparent' },
+  { label: 'Background', value: 'var(--color-background)' },
+  { label: 'Card', value: 'var(--color-card)' },
+  { label: 'Primary 50', value: 'var(--primary-50)' },
+  { label: 'Primary 100', value: 'var(--primary-100)' },
+  { label: 'Primary 500', value: 'var(--primary-500)' },
+  { label: 'Primary 900', value: 'var(--primary-900)' },
+  { label: 'Secondary 50', value: 'var(--secondary-50)' },
+  { label: 'Secondary 500', value: 'var(--secondary-500)' },
+  { label: 'Charcoal 100', value: 'var(--charcoal-100)' },
+  { label: 'Charcoal 900', value: 'var(--charcoal-900)' },
+];
+
 export function LiveComponentPreview({ jsxCode, componentName }) {
   const [showCode, setShowCode] = useState(false);
   const [error, setError] = useState(null);
   const [Component, setComponent] = useState(null);
+  const [previewBg, setPreviewBg] = useState('transparent');
 
   useEffect(() => {
     // Render based on component patterns
@@ -81,11 +97,23 @@ export function LiveComponentPreview({ jsxCode, componentName }) {
     <div className="border rounded-lg overflow-hidden">
       <div className="bg-muted/50 p-3 flex items-center justify-between border-b">
         <span className="text-sm font-medium">Live Preview</span>
-        <Button variant="ghost" size="sm" onClick={() => setShowCode(!showCode)}>
-          {showCode ? <Eye className="h-4 w-4" /> : <Code className="h-4 w-4" />}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Select value={previewBg} onValueChange={setPreviewBg}>
+            <SelectTrigger className="w-40 h-8 text-xs">
+              <SelectValue placeholder="Background" />
+            </SelectTrigger>
+            <SelectContent>
+              {themeColors.map(c => (
+                <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button variant="ghost" size="sm" onClick={() => setShowCode(!showCode)}>
+            {showCode ? <Eye className="h-4 w-4" /> : <Code className="h-4 w-4" />}
+          </Button>
+        </div>
       </div>
-      <div className="p-6 bg-background">
+      <div className="p-6 transition-colors" style={{ backgroundColor: previewBg }}>
         {showCode ? (
           <pre className="text-xs bg-muted p-4 rounded overflow-x-auto">
             <code>{jsxCode}</code>
