@@ -22,7 +22,7 @@ const componentImports = {
   ArrowRight, ChevronDown, Check, X, AlertCircle, Info, Plus, Minus, Settings, User
 };
 
-const themeColors = [
+const bgColors = [
   { label: 'Default', value: 'transparent' },
   { label: 'Background', value: 'var(--color-background)' },
   { label: 'Card', value: 'var(--color-card)' },
@@ -33,6 +33,21 @@ const themeColors = [
   { label: 'Secondary 50', value: 'var(--secondary-50)' },
   { label: 'Secondary 500', value: 'var(--secondary-500)' },
   { label: 'Charcoal 100', value: 'var(--charcoal-100)' },
+  { label: 'Charcoal 900', value: 'var(--charcoal-900)' },
+];
+
+const textColors = [
+  { label: 'Default (from style)', value: 'default' },
+  { label: 'Text Primary', value: 'var(--color-text-primary)' },
+  { label: 'Text Secondary', value: 'var(--color-text-secondary)' },
+  { label: 'Text Muted', value: 'var(--color-text-muted)' },
+  { label: 'Primary 500', value: 'var(--primary-500)' },
+  { label: 'Primary 700', value: 'var(--primary-700)' },
+  { label: 'Secondary 500', value: 'var(--secondary-500)' },
+  { label: 'Accent 500', value: 'var(--accent-500)' },
+  { label: 'Midnight 700', value: 'var(--midnight-700)' },
+  { label: 'Midnight 900', value: 'var(--midnight-900)' },
+  { label: 'Charcoal 600', value: 'var(--charcoal-600)' },
   { label: 'Charcoal 900', value: 'var(--charcoal-900)' },
 ];
 
@@ -57,54 +72,65 @@ export function LiveComponentPreview({ jsxCode, componentName }) {
     // Render based on component patterns
     const renderStaticPreview = () => {
       if (jsxCode.includes('className="text-')) {
-        // Typography component - show multiple lines/paragraphs
+        // Typography component
         const textMatch = jsxCode.match(/className="([^"]+)"/);
         const className = textMatch?.[1] || 'text-base';
         
-        const isParagraph = className.includes('paragraph') || className.includes('body');
         const isHeading = className.includes('h1') || className.includes('h2') || className.includes('h3') || className.includes('heading');
         
-        const displayText = customText || (isParagraph 
-          ? 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.'
-          : 'The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.');
-        
-        // Extract inline style from jsxCode to capture CSS variables
+        // Extract base styles from jsxCode
         const styleMatch = jsxCode.match(/style={{([^}]+)}}/);
-        let inlineStyle = {};
+        let baseStyle = {};
         if (styleMatch) {
           const styleStr = styleMatch[1];
-          // Parse simple style objects (color, fontSize, etc.)
-          const colorMatch = styleStr.match(/color:\s*['"]([^'"]+)['"]/);
           const fontSizeMatch = styleStr.match(/fontSize:\s*['"]([^'"]+)['"]/);
           const lineHeightMatch = styleStr.match(/lineHeight:\s*['"]([^'"]+)['"]/);
           const letterSpacingMatch = styleStr.match(/letterSpacing:\s*['"]([^'"]+)['"]/);
+          const wordSpacingMatch = styleStr.match(/wordSpacing:\s*['"]([^'"]+)['"]/);
           const fontWeightMatch = styleStr.match(/fontWeight:\s*['"]([^'"]+)['"]/);
+          const colorMatch = styleStr.match(/color:\s*['"]([^'"]+)['"]/);
           
-          if (colorMatch) inlineStyle.color = colorMatch[1];
-          if (fontSizeMatch) inlineStyle.fontSize = fontSizeMatch[1];
-          if (lineHeightMatch) inlineStyle.lineHeight = lineHeightMatch[1];
-          if (letterSpacingMatch) inlineStyle.letterSpacing = letterSpacingMatch[1];
-          if (fontWeightMatch) inlineStyle.fontWeight = fontWeightMatch[1];
+          if (fontSizeMatch) baseStyle.fontSize = fontSizeMatch[1];
+          if (lineHeightMatch) baseStyle.lineHeight = lineHeightMatch[1];
+          if (letterSpacingMatch) baseStyle.letterSpacing = letterSpacingMatch[1];
+          if (wordSpacingMatch) baseStyle.wordSpacing = wordSpacingMatch[1];
+          if (fontWeightMatch) baseStyle.fontWeight = fontWeightMatch[1];
+          if (colorMatch && textColor === 'default') baseStyle.color = colorMatch[1];
+        }
+        
+        // Apply color override if not default
+        if (textColor !== 'default') {
+          baseStyle.color = textColor;
+        }
+        
+        // Generate content based on type
+        const loremParagraphs = [
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+          'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+          'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+        ];
+        
+        const quickBrownFox = 'The quick brown fox jumps over the lazy dog.';
+        
+        let content;
+        if (customText) {
+          content = [customText];
+        } else if (contentType === 'paragraphs') {
+          content = loremParagraphs.slice(0, contentCount);
+        } else {
+          content = Array(contentCount).fill(quickBrownFox);
         }
         
         return () => (
           <div className="w-full max-w-2xl space-y-2">
             {isHeading ? (
-              <h1 className={className} style={inlineStyle}>{displayText.split('.')[0]}</h1>
+              <h1 className={className} style={baseStyle}>{content[0]}</h1>
             ) : (
-              <>
-                {isParagraph ? (
-                  <div className="space-y-3">
-                    <p className={className} style={inlineStyle}>{displayText}</p>
-                    <p className={className} style={inlineStyle}>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
-                    <p className={className} style={inlineStyle}>Sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium.</p>
-                  </div>
-                ) : (
-                  <div className="space-y-1">
-                    <p className={className} style={inlineStyle}>{displayText}</p>
-                  </div>
-                )}
-              </>
+              <div className={contentType === 'paragraphs' ? 'space-y-3' : 'space-y-1'}>
+                {content.map((text, i) => (
+                  <p key={i} className={className} style={baseStyle}>{text}</p>
+                ))}
+              </div>
             )}
           </div>
         );
@@ -149,50 +175,90 @@ export function LiveComponentPreview({ jsxCode, componentName }) {
     const PreviewComponent = renderStaticPreview();
     setComponent(() => PreviewComponent);
     setError(null);
-  }, [jsxCode, customText]);
+  }, [jsxCode, contentType, contentCount, customText, textColor, refreshKey]);
 
   return (
     <div className="border rounded-lg overflow-hidden">
-      <div className="bg-muted/50 p-3 flex items-center justify-between border-b gap-2">
-        <span className="text-sm font-medium">Live Preview</span>
-        <div className="flex items-center gap-2 flex-1 max-w-xl">
-          {jsxCode.includes('text-') && (
-            <>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={() => setShowCustomInput(!showCustomInput)}
-                className="text-xs h-8"
-              >
-                {showCustomInput ? 'Hide' : 'Custom Text'}
-              </Button>
-              {showCustomInput && (
-                <Input
-                  type="text"
-                  placeholder="Enter custom text..."
-                  value={customText}
-                  onChange={(e) => setCustomText(e.target.value)}
-                  className="h-8 text-xs flex-1"
-                />
-              )}
-            </>
-          )}
+      <div className="bg-muted/50 p-3 border-b">
+        <div className="flex items-center justify-between gap-2 mb-2">
+          <span className="text-sm font-medium">Live Preview</span>
+          <div className="flex items-center gap-2">
+            <Select value={previewBg} onValueChange={setPreviewBg}>
+              <SelectTrigger className="w-40 h-8 text-xs">
+                <SelectValue placeholder="Background" />
+              </SelectTrigger>
+              <SelectContent>
+                {bgColors.map(c => (
+                  <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button variant="ghost" size="sm" onClick={() => setShowCode(!showCode)}>
+              {showCode ? <Eye className="h-4 w-4" /> : <Code className="h-4 w-4" />}
+            </Button>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Select value={previewBg} onValueChange={setPreviewBg}>
-            <SelectTrigger className="w-40 h-8 text-xs">
-              <SelectValue placeholder="Background" />
-            </SelectTrigger>
-            <SelectContent>
-              {themeColors.map(c => (
-                <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Button variant="ghost" size="sm" onClick={() => setShowCode(!showCode)}>
-            {showCode ? <Eye className="h-4 w-4" /> : <Code className="h-4 w-4" />}
-          </Button>
-        </div>
+        
+        {jsxCode.includes('text-') && (
+          <div className="flex items-center gap-2 flex-wrap">
+            <Select value={contentType} onValueChange={setContentType}>
+              <SelectTrigger className="w-32 h-8 text-xs">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="lines">Lines</SelectItem>
+                <SelectItem value="paragraphs">Paragraphs</SelectItem>
+                <SelectItem value="custom">Custom Text</SelectItem>
+              </SelectContent>
+            </Select>
+            
+            {contentType !== 'custom' && (
+              <Select value={contentCount.toString()} onValueChange={(v) => setContentCount(parseInt(v))}>
+                <SelectTrigger className="w-24 h-8 text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {contentType === 'paragraphs' ? (
+                    <>
+                      <SelectItem value="1">1</SelectItem>
+                      <SelectItem value="2">2</SelectItem>
+                      <SelectItem value="3">3</SelectItem>
+                    </>
+                  ) : (
+                    <>
+                      <SelectItem value="1">1</SelectItem>
+                      <SelectItem value="2">2</SelectItem>
+                      <SelectItem value="3">3</SelectItem>
+                      <SelectItem value="4">4</SelectItem>
+                      <SelectItem value="5">5</SelectItem>
+                    </>
+                  )}
+                </SelectContent>
+              </Select>
+            )}
+            
+            {contentType === 'custom' && (
+              <Input
+                type="text"
+                placeholder="Enter custom text..."
+                value={customText}
+                onChange={(e) => setCustomText(e.target.value)}
+                className="h-8 text-xs flex-1"
+              />
+            )}
+            
+            <Select value={textColor} onValueChange={setTextColor}>
+              <SelectTrigger className="w-44 h-8 text-xs">
+                <SelectValue placeholder="Text Color" />
+              </SelectTrigger>
+              <SelectContent>
+                {textColors.map(c => (
+                  <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
       </div>
       <div className="p-6 transition-colors" style={{ backgroundColor: previewBg }}>
         {showCode ? (
