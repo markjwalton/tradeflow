@@ -24,7 +24,7 @@ const widgetTypeIcons = {
   table: Table
 };
 
-const DashboardSettings = ({
+function DashboardSettings({
   isOpen,
   onClose,
   settings,
@@ -180,6 +180,6 @@ const DashboardSettings = ({
       </SheetContent>
     </Sheet>
   );
-};
+}
 
-export default React.memo(DashboardSettings);
+export default DashboardSettings;

@@ -31,7 +31,7 @@ const DEFAULT_SCAN_TRIGGER = 20;
 const STORAGE_KEY = "tech_news_dashboard_visits";
 const SETTINGS_KEY = "tech_news_scan_settings";
 
-export default function TechNewsWidget() {
+function TechNewsWidget() {
   const queryClient = useQueryClient();
 
   // Get settings from localStorage
@@ -242,3 +242,5 @@ export const getTechNewsSettings = () => {
 export const setTechNewsSettings = (settings) => {
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
 };
+
+export default TechNewsWidget;
