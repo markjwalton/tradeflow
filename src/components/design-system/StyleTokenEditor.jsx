@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Paintbrush, Type, Ruler, Box as BoxIcon, Save, RefreshCw, Sparkles } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
@@ -15,6 +16,29 @@ function ColorTokenEditor({ token, currentValue, onUpdate }) {
   const [hexFallback, setHexFallback] = useState('');
   const [oklchValue, setOklchValue] = useState('');
   const [alpha, setAlpha] = useState(1);
+  const [enableAlpha, setEnableAlpha] = useState(false);
+  const [defaultValue, setDefaultValue] = useState('');
+
+  // Get default value from stylesheet
+  React.useEffect(() => {
+    const sheets = Array.from(document.styleSheets);
+    for (const sheet of sheets) {
+      try {
+        const rules = Array.from(sheet.cssRules || []);
+        for (const rule of rules) {
+          if (rule.selectorText === ':root') {
+            const val = rule.style.getPropertyValue(token);
+            if (val) {
+              setDefaultValue(val.trim());
+              break;
+            }
+          }
+        }
+      } catch (e) {
+        // Cross-origin stylesheet
+      }
+    }
+  }, [token]);
 
   // Parse current value to extract OKLCH and hex
   React.useEffect(() => {
@@ -24,11 +48,14 @@ function ColorTokenEditor({ token, currentValue, onUpdate }) {
       const alphaMatch = currentValue.match(/\/\s*([\d.]+)/);
       setOklchValue(oklchMatch?.[0] || '');
       setHexFallback(hexMatch?.[0] || '#4a7c6b');
-      setAlpha(alphaMatch ? parseFloat(alphaMatch[1]) : 1);
+      const alphaVal = alphaMatch ? parseFloat(alphaMatch[1]) : 1;
+      setAlpha(alphaVal);
+      setEnableAlpha(alphaVal < 1);
     } else if (currentValue.startsWith('#')) {
       setHexFallback(currentValue);
       setOklchValue('');
       setAlpha(1);
+      setEnableAlpha(false);
     }
   }, [currentValue]);
 
@@ -108,6 +135,16 @@ function ColorTokenEditor({ token, currentValue, onUpdate }) {
     }
   };
 
+  const toggleAlpha = (checked) => {
+    setEnableAlpha(checked);
+    if (!checked) {
+      setAlpha(1);
+      if (oklchValue) {
+        onUpdate(token, `${oklchValue}, ${hexFallback}`);
+      }
+    }
+  };
+
   return (
     <div className="space-y-2">
       <div className="flex gap-2 items-center">
@@ -158,21 +195,40 @@ function ColorTokenEditor({ token, currentValue, onUpdate }) {
               To Hex
             </Button>
           </div>
-          <div className="space-y-1">
-            <Label className="text-xs">Opacity: {alpha.toFixed(2)}</Label>
-            <Slider
-              value={[alpha]}
-              onValueChange={([val]) => handleAlphaChange(val)}
-              min={0}
-              max={1}
-              step={0.01}
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id={`alpha-${token}`}
+              checked={enableAlpha}
+              onCheckedChange={toggleAlpha}
             />
+            <Label htmlFor={`alpha-${token}`} className="text-xs cursor-pointer">
+              Enable transparency
+            </Label>
           </div>
+          {enableAlpha && (
+            <div className="space-y-1">
+              <Label className="text-xs">Opacity: {alpha.toFixed(2)}</Label>
+              <Slider
+                value={[alpha]}
+                onValueChange={([val]) => handleAlphaChange(val)}
+                min={0}
+                max={1}
+                step={0.01}
+              />
+            </div>
+          )}
         </>
       )}
-      <p className="text-xs text-muted-foreground">
-        Format: {oklchValue ? `${oklchValue}${alpha < 1 ? ` / ${alpha}` : ''}, ${hexFallback}` : hexFallback}
-      </p>
+      <div className="space-y-1">
+        <p className="text-xs text-muted-foreground">
+          Format: {oklchValue ? `${oklchValue}${alpha < 1 ? ` / ${alpha}` : ''}, ${hexFallback}` : hexFallback}
+        </p>
+        {defaultValue && (
+          <p className="text-xs text-muted-foreground">
+            Stylesheet default: {defaultValue}
+          </p>
+        )}
+      </div>
     </div>
   );
 }
