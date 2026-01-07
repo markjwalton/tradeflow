@@ -1224,17 +1224,20 @@ export default function GenericNavEditor({
               <div>
                 <Label>Page Slug *</Label>
                 <Select 
-                  value={formData.slug || "__none__"} 
-                  onValueChange={(v) => setFormData({ ...formData, slug: v === "__none__" ? "" : v })}
+                  value={formData.slug || ""} 
+                  onValueChange={(v) => setFormData({ ...formData, slug: v })}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select page..." />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="__none__">Select page...</SelectItem>
-                    {effectiveSlugs.sort().map(slug => (
-                      <SelectItem key={slug} value={slug}>{slug}</SelectItem>
-                    ))}
+                  <SelectContent className="max-h-80">
+                    {effectiveSlugs.length > 0 ? (
+                      effectiveSlugs.sort().map(slug => (
+                        <SelectItem key={slug} value={slug}>{slug}</SelectItem>
+                      ))
+                    ) : (
+                      <div className="px-2 py-1.5 text-sm text-muted-foreground">No pages available</div>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
@@ -1248,16 +1251,13 @@ export default function GenericNavEditor({
                 <SelectTrigger>
                   <SelectValue placeholder="No parent (top level)" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="max-h-80">
                   <SelectItem value="__none__">No parent (top level)</SelectItem>
                   {getFormParentOptions()
                     .sort((a, b) => a.name.localeCompare(b.name))
                     .map(parent => (
                     <SelectItem key={String(parent.id)} value={String(parent.id)}>
-                      <div className="flex items-center gap-2">
-                        {isFolder(parent) ? <Folder className="h-3 w-3" /> : <File className="h-3 w-3" />}
-                        {parent.name || 'Unnamed'}
-                      </div>
+                      {isFolder(parent) ? "📁 " : "📄 "}{parent.name || 'Unnamed'}
                     </SelectItem>
                   ))}
                 </SelectContent>
