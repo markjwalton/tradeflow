@@ -3,13 +3,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ChevronDown, ChevronRight, Save, Trash2, Pencil } from 'lucide-react';
 import { StyleCategory, StyleProperty } from './StyleCategory';
 import { toast } from 'sonner';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { COMPONENT_CATEGORIES, isStyleApplicable, getComponentSpec } from './componentCategories';
 import { SHOWCASE_COMPONENTS, SHOWCASE_CATEGORIES, getShowcaseComponentSpec, getEditableProperties, isStyleApplicableToComponent } from './showcaseComponentSpecs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement: propSelectedElement }) {
   const [currentStyle, setCurrentStyle] = useState('--color-primary');
