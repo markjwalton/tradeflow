@@ -28,17 +28,21 @@ export default function PageSectionHeader({
         </div>
         {actions.length > 0 && (
           <div className="mt-3 flex gap-2 md:absolute md:top-3 md:right-0 md:mt-0">
-            {actions.map((action, index) => (
-              <Button
-                key={index}
-                type="button"
-                onClick={action.onClick}
-                variant={action.variant || (index === actions.length - 1 ? 'default' : 'outline')}
-                size={action.size || 'sm'}
-              >
-                {action.label}
-              </Button>
-            ))}
+            {actions.map((action, index) => {
+              const Icon = action.icon;
+              return (
+                <Button
+                  key={index}
+                  type="button"
+                  onClick={action.onClick}
+                  variant={action.variant || (index === actions.length - 1 ? 'default' : 'outline')}
+                  size={action.size || 'sm'}
+                >
+                  {Icon && <Icon className="h-4 w-4 mr-1.5" />}
+                  {action.label}
+                </Button>
+              );
+            })}
           </div>
         )}
       </div>
