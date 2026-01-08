@@ -80,7 +80,7 @@ export default function TailwindNavigation({
                 </button>
               </PopoverTrigger>
               <PopoverContent side="right" align="start" className="w-48 p-2 bg-[var(--color-card)] border-[var(--color-border)]">
-                <div className="font-semibold text-[var(--text-sm)] text-[var(--text-primary)] mb-2 px-2">{item.name}</div>
+                <div className="font-semibold text-[var(--text-sm)] text-[var(--text-primary)] mb-2 px-2 bg-[var(--primary-100)] rounded-[var(--radius-md)] py-1.5">{item.name}</div>
                 <ul className="space-y-1">
                   {item.children.map((subItem) => (
                     <li key={subItem.name}>
@@ -140,7 +140,7 @@ export default function TailwindNavigation({
             <TooltipTrigger asChild>
               {linkContent}
             </TooltipTrigger>
-            <TooltipContent side="right">
+            <TooltipContent side="right" className="bg-[var(--primary-50)] border-[var(--primary-200)] text-[var(--primary-700)] text-[var(--text-sm)] font-normal">
               {item.name}
             </TooltipContent>
           </Tooltip>
@@ -184,7 +184,7 @@ export default function TailwindNavigation({
                     </svg>
                   </button>
                 </TooltipTrigger>
-                <TooltipContent side="right">
+                <TooltipContent side="right" className="bg-[var(--primary-50)] border-[var(--primary-200)] text-[var(--primary-700)] text-[var(--text-sm)] font-normal">
                   Toggle Editor
                 </TooltipContent>
               </Tooltip>
