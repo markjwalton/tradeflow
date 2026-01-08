@@ -38,6 +38,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import ThemeCreatorDialog from "@/components/design-system/ThemeCreatorDialog";
 import { PageHeader } from "@/components/sturij";
+import PageSectionHeader from "@/components/common/PageSectionHeader";
 
 // IMPORTANT: Update this to match your actual Tailwind CSS version from package.json
 const TAILWIND_VERSION = "4.0.0";
@@ -51,6 +52,7 @@ export default function DesignSystemManager() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [expandedRecs, setExpandedRecs] = useState({});
   const [selectedBgColor, setSelectedBgColor] = useState("--background-100");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [formData, setFormData] = useState({
     package_name: "",
     package_code: "",
@@ -77,6 +79,16 @@ export default function DesignSystemManager() {
     queryKey: ["componentSpecs"],
     queryFn: () => base44.entities.ComponentSpecification.list()
   });
+
+  const categories = ["all", ...new Set(components.map(c => c.category))];
+  const filteredComponents = selectedCategory === "all" 
+    ? components 
+    : components.filter(c => c.category === selectedCategory);
+  
+  const componentsByCategory = categories.reduce((acc, cat) => {
+    acc[cat] = cat === "all" ? components.length : components.filter(c => c.category === cat).length;
+    return acc;
+  }, {});
 
   const createMutation = useMutation({
     mutationFn: async (data) => {
@@ -776,17 +788,24 @@ For each recommendation, provide:
           <Card className="border-border">
             <CardContent className="p-6">
               <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-h3">
-                Component Library
-              </h2>
-            <Link to={createPageUrl("ComponentShowcase")}>
-              <Button variant="outline">
-                <Eye className="h-4 w-4 mr-2" />
-                View Showcase
-              </Button>
-            </Link>
-            </div>
+            <PageSectionHeader
+              title="Component Library"
+              tabs={categories.map(cat => ({
+                name: cat === "all" ? "All" : cat.charAt(0).toUpperCase() + cat.slice(1),
+                href: `#${cat}`,
+                current: selectedCategory === cat
+              }))}
+              actions={[
+                {
+                  label: "View Showcase",
+                  onClick: () => window.location.href = createPageUrl("ComponentShowcase")
+                }
+              ]}
+              onTabChange={(tab) => {
+                const catName = tab.name === "All" ? "all" : tab.name.toLowerCase();
+                setSelectedCategory(catName);
+              }}
+            />
 
             {components.length === 0 ? (
             <Card className="border-border">
@@ -800,12 +819,17 @@ For each recommendation, provide:
             </Card>
             ) : (
               <div className="space-y-3">
-                {components.map(comp => (
+                {filteredComponents.map(comp => (
                 <Card key={comp.id} className="border-border">
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-base text-foreground">
-                      {comp.component_name}
-                    </CardTitle>
+                    <div className="flex items-center gap-2">
+                      <CardTitle className="text-base text-foreground">
+                        {comp.component_name}
+                      </CardTitle>
+                      <Badge variant="outline" className="text-xs">
+                        {componentsByCategory[comp.category]} in {comp.category}
+                      </Badge>
+                    </div>
                     <div className="flex items-center gap-2 mt-1">
                       <Badge variant="outline" className="text-xs">{comp.category}</Badge>
                       <Badge className="bg-muted text-muted-foreground text-xs">
