@@ -261,14 +261,26 @@ export const SHOWCASE_COMPONENTS = {
         type: 'text',
         default: 'Card Title'
       },
+      titleFontFamily: {
+        property: '--font-family-display',
+        label: 'Title Font Family',
+        type: 'select',
+        options: [
+          { value: 'var(--font-family-display)', label: 'Display (degular-display)' },
+          { value: 'var(--font-family-body)', label: 'Body (mrs-eaves)' },
+          { value: 'var(--font-family-mono)', label: 'Monospace' }
+        ]
+      },
       titleSize: {
         property: '--card-heading-default-size',
         label: 'Title Size',
         type: 'select',
         options: [
-          { value: 'var(--card-heading-small-size)', label: 'Small' },
-          { value: 'var(--card-heading-default-size)', label: 'Default (1.125rem)' },
-          { value: 'var(--card-heading-large-size)', label: 'Large (1.5rem)' }
+          { value: 'var(--text-sm)', label: 'Small (0.875rem)' },
+          { value: 'var(--text-base)', label: 'Base (1rem)' },
+          { value: 'var(--text-lg)', label: 'Large (1.125rem)' },
+          { value: 'var(--text-xl)', label: 'XL (1.25rem)' },
+          { value: 'var(--text-2xl)', label: '2XL (1.5rem)' }
         ]
       },
       titleWeight: {
@@ -287,10 +299,25 @@ export const SHOWCASE_COMPONENTS = {
         label: 'Title Color',
         type: 'select',
         options: [
-          { value: 'var(--color-text-primary)', label: 'Primary' },
-          { value: 'var(--midnight-900)', label: 'Midnight' },
-          { value: 'var(--charcoal-900)', label: 'Charcoal' },
-          { value: 'var(--primary-600)', label: 'Brand Primary' }
+          { value: 'var(--color-text-primary)', label: 'Text Primary' },
+          { value: 'var(--midnight-900)', label: 'Midnight 900' },
+          { value: 'var(--midnight-800)', label: 'Midnight 800' },
+          { value: 'var(--charcoal-900)', label: 'Charcoal 900' },
+          { value: 'var(--charcoal-800)', label: 'Charcoal 800' },
+          { value: 'var(--primary-600)', label: 'Primary 600' },
+          { value: 'var(--primary-700)', label: 'Primary 700' },
+          { value: 'var(--secondary-600)', label: 'Secondary 600' }
+        ]
+      },
+      titleTracking: {
+        property: '--tracking-normal',
+        label: 'Title Letter Spacing',
+        type: 'select',
+        options: [
+          { value: 'var(--tracking-tight)', label: 'Tight' },
+          { value: 'var(--tracking-normal)', label: 'Normal' },
+          { value: 'var(--tracking-wide)', label: 'Wide' },
+          { value: 'var(--tracking-airy)', label: 'Airy' }
         ]
       },
       descriptionText: {
@@ -299,6 +326,26 @@ export const SHOWCASE_COMPONENTS = {
         type: 'text',
         default: 'Card description text'
       },
+      descriptionFontFamily: {
+        property: '--font-family-body',
+        label: 'Description Font',
+        type: 'select',
+        options: [
+          { value: 'var(--font-family-body)', label: 'Body (mrs-eaves)' },
+          { value: 'var(--font-family-display)', label: 'Display (degular-display)' },
+          { value: 'var(--font-family-mono)', label: 'Monospace' }
+        ]
+      },
+      descriptionSize: {
+        property: '--text-sm',
+        label: 'Description Size',
+        type: 'select',
+        options: [
+          { value: 'var(--text-xs)', label: 'XS (0.75rem)' },
+          { value: 'var(--text-sm)', label: 'Small (0.875rem)' },
+          { value: 'var(--text-base)', label: 'Base (1rem)' }
+        ]
+      },
       descriptionColor: {
         property: '--color-text-muted',
         label: 'Description Color',
@@ -306,7 +353,9 @@ export const SHOWCASE_COMPONENTS = {
         options: [
           { value: 'var(--color-text-muted)', label: 'Muted' },
           { value: 'var(--charcoal-600)', label: 'Charcoal 600' },
-          { value: 'var(--charcoal-700)', label: 'Charcoal 700' }
+          { value: 'var(--charcoal-700)', label: 'Charcoal 700' },
+          { value: 'var(--charcoal-500)', label: 'Charcoal 500' },
+          { value: 'var(--midnight-600)', label: 'Midnight 600' }
         ]
       },
       contentText: {
@@ -314,6 +363,49 @@ export const SHOWCASE_COMPONENTS = {
         label: 'Content Text',
         type: 'text',
         default: 'Card content goes here'
+      },
+      contentFontFamily: {
+        property: '--font-family-body',
+        label: 'Content Font',
+        type: 'select',
+        options: [
+          { value: 'var(--font-family-body)', label: 'Body (mrs-eaves)' },
+          { value: 'var(--font-family-display)', label: 'Display (degular-display)' },
+          { value: 'var(--font-family-mono)', label: 'Monospace' }
+        ]
+      },
+      contentSize: {
+        property: '--text-base',
+        label: 'Content Size',
+        type: 'select',
+        options: [
+          { value: 'var(--text-sm)', label: 'Small (0.875rem)' },
+          { value: 'var(--text-base)', label: 'Base (1rem)' },
+          { value: 'var(--text-lg)', label: 'Large (1.125rem)' }
+        ]
+      },
+      contentColor: {
+        property: '--color-text-secondary',
+        label: 'Content Color',
+        type: 'select',
+        options: [
+          { value: 'var(--color-text-secondary)', label: 'Text Secondary' },
+          { value: 'var(--color-text-primary)', label: 'Text Primary' },
+          { value: 'var(--charcoal-800)', label: 'Charcoal 800' },
+          { value: 'var(--charcoal-700)', label: 'Charcoal 700' },
+          { value: 'var(--midnight-800)', label: 'Midnight 800' }
+        ]
+      },
+      contentLineHeight: {
+        property: '--leading-normal',
+        label: 'Content Line Height',
+        type: 'select',
+        options: [
+          { value: 'var(--leading-tight)', label: 'Tight (1.25)' },
+          { value: 'var(--leading-snug)', label: 'Snug (1.375)' },
+          { value: 'var(--leading-normal)', label: 'Normal (1.5)' },
+          { value: 'var(--leading-relaxed)', label: 'Relaxed (1.625)' }
+        ]
       },
       padding: {
         property: '--spacing-6',
@@ -355,7 +447,21 @@ export const SHOWCASE_COMPONENTS = {
         options: [
           { value: '#ffffff', label: 'White' },
           { value: 'var(--background-50)', label: 'Background 50' },
-          { value: 'var(--primary-50)', label: 'Primary Tint' }
+          { value: 'var(--background-100)', label: 'Background 100' },
+          { value: 'var(--primary-50)', label: 'Primary 50' },
+          { value: 'var(--secondary-50)', label: 'Secondary 50' }
+        ]
+      },
+      borderColor: {
+        property: '--color-border',
+        label: 'Border Color',
+        type: 'select',
+        options: [
+          { value: 'var(--color-border)', label: 'Default Border' },
+          { value: 'var(--charcoal-200)', label: 'Charcoal 200' },
+          { value: 'var(--charcoal-300)', label: 'Charcoal 300' },
+          { value: 'var(--primary-200)', label: 'Primary 200' },
+          { value: 'var(--primary-300)', label: 'Primary 300' }
         ]
       }
     },
