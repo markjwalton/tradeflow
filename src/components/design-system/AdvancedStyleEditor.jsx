@@ -784,31 +784,56 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 value="properties" 
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm"
               >
-                Properties
+                <span className="flex items-center gap-2">
+                  Properties
+                  {(editedGlobalCategories.has('properties') || editedCustomCategories.has('properties')) && (
+                    <span className="w-2 h-2 rounded-full bg-[var(--color-primary)]" />
+                  )}
+                </span>
               </TabsTrigger>
               <TabsTrigger 
                 value="layout" 
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm"
               >
-                Layout
+                <span className="flex items-center gap-2">
+                  Layout
+                  {(isStyleLive('--color-border') || isStyleLive('--spacing-4')) && (
+                    <span className="w-2 h-2 rounded-full bg-[var(--color-primary)]" />
+                  )}
+                </span>
               </TabsTrigger>
               <TabsTrigger 
                 value="typography" 
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm"
               >
-                Typography
+                <span className="flex items-center gap-2">
+                  Typography
+                  {isStyleLive('--font-family-display') && (
+                    <span className="w-2 h-2 rounded-full bg-[var(--color-primary)]" />
+                  )}
+                </span>
               </TabsTrigger>
               <TabsTrigger 
                 value="colors" 
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm"
               >
-                Colors
+                <span className="flex items-center gap-2">
+                  Colors
+                  {(isStyleLive('--color-primary') || isStyleLive('--color-background')) && (
+                    <span className="w-2 h-2 rounded-full bg-[var(--color-primary)]" />
+                  )}
+                </span>
               </TabsTrigger>
               <TabsTrigger 
                 value="effects" 
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm"
               >
-                Effects
+                <span className="flex items-center gap-2">
+                  Effects
+                  {isStyleLive('--shadow-card') && (
+                    <span className="w-2 h-2 rounded-full bg-[var(--color-primary)]" />
+                  )}
+                </span>
               </TabsTrigger>
             </TabsList>
 
