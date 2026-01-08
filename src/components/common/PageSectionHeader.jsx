@@ -26,19 +26,17 @@ export default function PageSectionHeader({
           <h3 className="page-section-title">{title}</h3>
         </div>
         {actions.length > 0 && (
-          <div className="mt-3 flex md:absolute md:top-3 md:right-0 md:mt-0">
+          <div className="mt-3 flex gap-2 md:absolute md:top-3 md:right-0 md:mt-0">
             {actions.map((action, index) => (
-              <button
+              <Button
                 key={index}
                 type="button"
                 onClick={action.onClick}
-                className={index === 0 
-                  ? "inline-flex items-center rounded-md bg-[var(--color-card)] px-3 py-2 text-sm font-semibold text-[var(--color-text-primary)] shadow-xs border border-[var(--color-border)] hover:bg-[var(--color-muted)]"
-                  : "ml-3 inline-flex items-center rounded-md bg-[var(--color-primary)] px-3 py-2 text-sm font-semibold text-[var(--color-primary-foreground)] shadow-xs hover:bg-[var(--primary-600)]"
-                }
+                variant={action.variant || (index === actions.length - 1 ? 'default' : 'outline')}
+                size={action.size || 'sm'}
               >
                 {action.label}
-              </button>
+              </Button>
             ))}
           </div>
         )}
