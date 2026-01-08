@@ -771,26 +771,24 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
 
     styles: (index, provided, snapshot) => (
       <Card key="styles" className="border-border">
-        <CardContent className="p-6 pb-0">
-          <div className="flex items-center justify-between">
-            <PageSectionHeader
-              title="Style Editor"
-              dragHandleProps={provided?.dragHandleProps}
-            />
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--radius-md)] border border-border bg-muted/50">
-              {editMode === 'global' ? (
-                <>
-                  <Globe className="w-3.5 h-3.5 text-muted-foreground" />
-                  <span className="text-xs text-muted-foreground font-medium">Global</span>
-                </>
-              ) : (
-                <>
-                  <User className="w-3.5 h-3.5 text-muted-foreground" />
-                  <span className="text-xs text-muted-foreground font-medium">Custom</span>
-                </>
-              )}
-            </div>
+        <CardContent className="p-6 pb-0 relative">
+          <div className="absolute top-6 right-6 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--radius-md)] border border-border bg-muted/50">
+            {editMode === 'global' ? (
+              <>
+                <Globe className="w-3.5 h-3.5 text-muted-foreground" />
+                <span className="text-xs text-muted-foreground font-medium">Global</span>
+              </>
+            ) : (
+              <>
+                <User className="w-3.5 h-3.5 text-muted-foreground" />
+                <span className="text-xs text-muted-foreground font-medium">Custom</span>
+              </>
+            )}
           </div>
+          <PageSectionHeader
+            title="Style Editor"
+            dragHandleProps={provided?.dragHandleProps}
+          />
         </CardContent>
         <CardContent className="p-6 pt-0">
           <Tabs defaultValue="properties" className="w-full -mx-6 px-6">
