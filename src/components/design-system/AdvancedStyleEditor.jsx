@@ -559,13 +559,13 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               <TabsList className="w-full bg-transparent p-0 h-auto border-b border-[var(--color-border)] justify-start gap-8">
                 <TabsTrigger 
                   value="description" 
-                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 px-1 text-sm"
+                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm"
                 >
                   Description
                 </TabsTrigger>
                 <TabsTrigger 
                   value="specification" 
-                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 px-1 text-sm"
+                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm"
                 >
                   Specification
                 </TabsTrigger>
