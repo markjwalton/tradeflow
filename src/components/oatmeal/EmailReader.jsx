@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { 
   Archive, Trash2, Star, MoreVertical, 
-  ChevronLeft, Send, Reply, ReplyAll, Forward 
+  ChevronLeft, Send, Reply, ReplyAll, Forward, Mail 
 } from 'lucide-react';
 
 export default function EmailReader({ email, onClose, onReply }) {
