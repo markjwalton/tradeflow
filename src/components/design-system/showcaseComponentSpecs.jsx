@@ -255,6 +255,66 @@ export const SHOWCASE_COMPONENTS = {
     description: 'Content containers with headers, body, and footers',
     functionalSpec: 'Container component for grouping related content, supports header/title, description, content area, and footer',
     editableProperties: {
+      titleText: {
+        property: '--card-title-text',
+        label: 'Title Text',
+        type: 'text',
+        default: 'Card Title'
+      },
+      titleSize: {
+        property: '--card-heading-default-size',
+        label: 'Title Size',
+        type: 'select',
+        options: [
+          { value: 'var(--card-heading-small-size)', label: 'Small' },
+          { value: 'var(--card-heading-default-size)', label: 'Default (1.125rem)' },
+          { value: 'var(--card-heading-large-size)', label: 'Large (1.5rem)' }
+        ]
+      },
+      titleWeight: {
+        property: '--card-heading-default-weight',
+        label: 'Title Weight',
+        type: 'select',
+        options: [
+          { value: 'var(--font-weight-normal)', label: 'Normal (400)' },
+          { value: 'var(--font-weight-medium)', label: 'Medium (500)' },
+          { value: 'var(--font-weight-semibold)', label: 'Semibold (600)' },
+          { value: 'var(--font-weight-bold)', label: 'Bold (700)' }
+        ]
+      },
+      titleColor: {
+        property: '--card-heading-color',
+        label: 'Title Color',
+        type: 'select',
+        options: [
+          { value: 'var(--color-text-primary)', label: 'Primary' },
+          { value: 'var(--midnight-900)', label: 'Midnight' },
+          { value: 'var(--charcoal-900)', label: 'Charcoal' },
+          { value: 'var(--primary-600)', label: 'Brand Primary' }
+        ]
+      },
+      descriptionText: {
+        property: '--card-description-text',
+        label: 'Description Text',
+        type: 'text',
+        default: 'Card description text'
+      },
+      descriptionColor: {
+        property: '--color-text-muted',
+        label: 'Description Color',
+        type: 'select',
+        options: [
+          { value: 'var(--color-text-muted)', label: 'Muted' },
+          { value: 'var(--charcoal-600)', label: 'Charcoal 600' },
+          { value: 'var(--charcoal-700)', label: 'Charcoal 700' }
+        ]
+      },
+      contentText: {
+        property: '--card-content-text',
+        label: 'Content Text',
+        type: 'text',
+        default: 'Card content goes here'
+      },
       padding: {
         property: '--spacing-6',
         label: 'Padding',
