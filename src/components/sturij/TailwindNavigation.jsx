@@ -46,8 +46,8 @@ export default function TailwindNavigation({
         <button
           onClick={(e) => toggleFolder(item.id || item.name, e)}
           className={classNames(
-            item.current ? 'bg-[var(--background-100)]' : 'hover:bg-[var(--background-100)]',
-            'group flex w-full items-center gap-x-3 rounded-[var(--radius-md)] p-2 text-left text-[var(--text-sm)] font-semibold text-[var(--text-secondary)]',
+            item.current ? 'bg-[var(--primary-100)]' : 'hover:bg-[var(--primary-100)]',
+            'group flex w-full items-center gap-x-3 rounded-[var(--radius-md)] p-2 text-left text-[var(--text-sm)] font-normal text-[var(--primary-700)]',
             isIconsOnly && 'justify-center'
           )}
         >
@@ -56,9 +56,9 @@ export default function TailwindNavigation({
             <>
               {item.name}
               {isExpanded ? (
-                <ChevronDown aria-hidden="true" className="ml-auto h-5 w-5 shrink-0 text-[var(--text-muted)]" />
+                <ChevronDown aria-hidden="true" className="ml-auto h-5 w-5 shrink-0 text-[var(--primary-600)]" strokeWidth={1} />
               ) : (
-                <ChevronRight aria-hidden="true" className="ml-auto h-5 w-5 shrink-0 text-[var(--text-muted)]" />
+                <ChevronRight aria-hidden="true" className="ml-auto h-5 w-5 shrink-0 text-[var(--primary-600)]" strokeWidth={1} />
               )}
             </>
           )}
@@ -72,11 +72,11 @@ export default function TailwindNavigation({
               <PopoverTrigger asChild>
                 <button
                   className={classNames(
-                    item.current ? 'bg-[var(--background-100)]' : 'hover:bg-[var(--background-100)]',
-                    'group flex w-full items-center gap-x-3 rounded-[var(--radius-md)] p-2 text-left text-[var(--text-sm)] font-semibold text-[var(--text-secondary)] justify-center'
+                    item.current ? 'bg-[var(--primary-100)]' : 'hover:bg-[var(--primary-100)]',
+                    'group flex w-full items-center gap-x-3 rounded-[var(--radius-md)] p-2 text-left text-[var(--text-sm)] font-normal text-[var(--primary-700)] justify-center'
                   )}
                 >
-                  <Icon aria-hidden="true" className="size-6 shrink-0 text-[var(--text-muted)]" />
+                  <Icon aria-hidden="true" className="size-6 shrink-0 text-[var(--primary-600)]" strokeWidth={1} />
                 </button>
               </PopoverTrigger>
               <PopoverContent side="right" align="start" className="w-48 p-2 bg-[var(--color-card)] border-[var(--color-border)]">
@@ -92,7 +92,7 @@ export default function TailwindNavigation({
                             onNavigate(subItem);
                           }
                         }}
-                        className="block rounded-[var(--radius-md)] py-2 px-2 text-[var(--text-sm)] text-[var(--text-secondary)] hover:bg-[var(--background-100)]"
+                        className="block rounded-[var(--radius-md)] py-2 px-2 text-[var(--text-sm)] text-[var(--charcoal-800)] hover:bg-[var(--primary-100)]"
                       >
                         {subItem.name}
                       </a>
@@ -123,12 +123,12 @@ export default function TailwindNavigation({
           }
         }}
         className={classNames(
-          item.current ? 'bg-[var(--background-100)]' : 'hover:bg-[var(--background-100)]',
-          isChild ? 'block rounded-[var(--radius-md)] py-2 pr-2 pl-9 text-[var(--text-sm)] text-[var(--text-secondary)]' : 'group flex gap-x-3 rounded-[var(--radius-md)] p-2 text-[var(--text-sm)] font-semibold text-[var(--text-secondary)]',
+          item.current ? 'bg-[var(--primary-100)]' : 'hover:bg-[var(--primary-100)]',
+          isChild ? 'block rounded-[var(--radius-md)] py-2 pr-2 pl-9 text-[var(--text-sm)] text-[var(--charcoal-800)]' : 'group flex gap-x-3 rounded-[var(--radius-md)] p-2 text-[var(--text-sm)] font-normal text-[var(--primary-700)]',
           isIconsOnly && !isChild && 'justify-center'
         )}
       >
-        {!isChild && <Icon aria-hidden="true" className="size-6 shrink-0 text-[var(--text-muted)]" />}
+        {!isChild && <Icon aria-hidden="true" className="size-6 shrink-0 text-[var(--primary-600)]" strokeWidth={1} />}
         {(!isIconsOnly || isChild) && item.name}
       </a>
     );
@@ -153,7 +153,7 @@ export default function TailwindNavigation({
 
   return (
     <div className={classNames(
-      "hidden md:flex flex-col gap-y-5 overflow-y-auto border-r border-[var(--color-border)] bg-[var(--color-sidebar)] z-0 shrink-0",
+      "hidden md:flex flex-col gap-y-5 overflow-y-auto border-r border-[var(--color-border)] bg-[var(--primary-50)] z-0 shrink-0",
       isIconsOnly ? "w-16 px-2 pt-6" : "w-64 px-6 pt-6"
     )} style={{ minHeight: '100%' }}>
       <TooltipProvider delayDuration={300}>
