@@ -1,4 +1,5 @@
 import { ChevronDownIcon } from '@heroicons/react/16/solid';
+import { GripVertical } from 'lucide-react';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -8,14 +9,22 @@ export default function PageSectionHeader({
   title, 
   tabs = [], 
   actions = [],
-  onTabChange
+  onTabChange,
+  dragHandleProps
 }) {
   const currentTab = tabs.find(tab => tab.current);
 
   return (
     <div className="relative border-b border-[var(--color-border)] pt-6 pb-5 sm:pt-6 sm:pb-0">
       <div className="md:flex md:items-center md:justify-between">
-        <h3 className="page-section-title">{title}</h3>
+        <div className="flex items-center gap-2">
+          {dragHandleProps && (
+            <div {...dragHandleProps} className="cursor-grab active:cursor-grabbing">
+              <GripVertical className="h-5 w-5 text-[var(--accent-400)]" />
+            </div>
+          )}
+          <h3 className="page-section-title">{title}</h3>
+        </div>
         {actions.length > 0 && (
           <div className="mt-3 flex md:absolute md:top-3 md:right-0 md:mt-0">
             {actions.map((action, index) => (
