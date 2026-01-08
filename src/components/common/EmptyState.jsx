@@ -11,10 +11,10 @@ export default function EmptyState({
   className
 }) {
   return (
-    <div className={cn("text-center py-12", className)}>
+    <div className={cn("text-center py-12 px-8 bg-[var(--primary-500)]/5 rounded-xl border border-[var(--primary-500)]/10", className)}>
       <Icon 
         className="mx-auto h-12 w-12 text-[var(--accent-500)]" 
-        strokeWidth={1.25}
+        strokeWidth={1}
       />
       <h3 className="mt-2 text-base font-medium font-[family-name:var(--font-family-display)] text-[var(--accent-500)]">
         {title}
