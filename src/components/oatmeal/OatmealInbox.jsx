@@ -61,7 +61,7 @@ export default function OatmealInbox({ user, onSignOut }) {
 
   const connectGmail = async () => {
     try {
-      const { data } = await base44.functions.invoke('gmailAuth', {});
+      const { data } = await base44.functions.invoke('gmailAuth', { email: 'contact@sturij.com' });
       
       if (data.error) {
         console.error('Auth error:', data.error);
