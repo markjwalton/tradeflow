@@ -13,9 +13,9 @@ export default function PageSectionHeader({
   const currentTab = tabs.find(tab => tab.current);
 
   return (
-    <div className="relative border-b border-gray-200 pb-5 sm:pb-0">
+    <div className="relative border-b border-[var(--color-border)] pb-5 sm:pb-0">
       <div className="md:flex md:items-center md:justify-between">
-        <h3 className="text-base font-semibold text-gray-900">{title}</h3>
+        <h3 className="text-base font-semibold text-[var(--color-text-primary)]">{title}</h3>
         {actions.length > 0 && (
           <div className="mt-3 flex md:absolute md:top-3 md:right-0 md:mt-0">
             {actions.map((action, index) => (
@@ -24,8 +24,8 @@ export default function PageSectionHeader({
                 type="button"
                 onClick={action.onClick}
                 className={index === 0 
-                  ? "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50"
-                  : "ml-3 inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  ? "inline-flex items-center rounded-md bg-[var(--color-card)] px-3 py-2 text-sm font-semibold text-[var(--color-text-primary)] shadow-xs border border-[var(--color-border)] hover:bg-[var(--color-muted)]"
+                  : "ml-3 inline-flex items-center rounded-md bg-[var(--color-primary)] px-3 py-2 text-sm font-semibold text-[var(--color-primary-foreground)] shadow-xs hover:bg-[var(--primary-600)]"
                 }
               >
                 {action.label}
@@ -38,7 +38,7 @@ export default function PageSectionHeader({
         <div className="mt-4">
           <div className="grid grid-cols-1 sm:hidden">
             <select
-              defaultValue={currentTab?.name}
+              value={currentTab?.name}
               aria-label="Select a tab"
               onChange={(e) => {
                 const selectedTab = tabs.find(tab => tab.name === e.target.value);
@@ -46,7 +46,7 @@ export default function PageSectionHeader({
                   onTabChange(selectedTab);
                 }
               }}
-              className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-2 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"
+              className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-[var(--color-card)] py-2 pr-8 pl-3 text-base text-[var(--color-text-primary)] border border-[var(--color-border)]"
             >
               {tabs.map((tab) => (
                 <option key={tab.name}>{tab.name}</option>
@@ -54,7 +54,7 @@ export default function PageSectionHeader({
             </select>
             <ChevronDownIcon
               aria-hidden="true"
-              className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end fill-gray-500"
+              className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end fill-[var(--color-text-muted)]"
             />
           </div>
           <div className="hidden sm:block">
@@ -72,8 +72,8 @@ export default function PageSectionHeader({
                   aria-current={tab.current ? 'page' : undefined}
                   className={classNames(
                     tab.current
-                      ? 'border-indigo-500 text-indigo-600'
-                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
+                      ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
+                      : 'border-transparent text-[var(--color-text-muted)] hover:border-[var(--color-border)] hover:text-[var(--color-text-primary)]',
                     'border-b-2 px-1 pb-4 text-sm font-medium whitespace-nowrap',
                   )}
                 >
