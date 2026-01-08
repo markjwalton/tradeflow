@@ -473,34 +473,46 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
       }
       
       if (jsxCode.includes('<Card')) {
+        // Helper to resolve CSS variables recursively
+        const resolveCSSVar = (value) => {
+          if (!value || !value.includes('var(')) return value;
+          const varMatch = value.match(/var\((--[^)]+)\)/);
+          if (varMatch) {
+            const varName = varMatch[1];
+            const resolved = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+            return resolveCSSVar(resolved); // Recursive resolution
+          }
+          return value;
+        };
+        
         // Card component - apply background pattern if set
         const root = document.documentElement;
         const cardPattern = getComputedStyle(root).getPropertyValue('--card-bg-pattern').trim();
         const cardPatternColor = getComputedStyle(root).getPropertyValue('--card-pattern-color').trim() || '#000000';
         const cardPatternOpacity = getComputedStyle(root).getPropertyValue('--card-pattern-opacity').trim() || '0.08';
         
-        // Get text content and styles from CSS variables
-        const titleText = getComputedStyle(root).getPropertyValue('--card-title-text').trim() || 'Sample Card';
-        const descriptionText = getComputedStyle(root).getPropertyValue('--card-description-text').trim() || 'Card preview with patterns';
-        const contentText = getComputedStyle(root).getPropertyValue('--card-content-text').trim() || 'This is a preview of the card component with background patterns and styling applied.';
+        // Get text content and styles from CSS variables - resolve them
+        const titleText = resolveCSSVar(getComputedStyle(root).getPropertyValue('--card-title-text').trim()) || 'Sample Card';
+        const descriptionText = resolveCSSVar(getComputedStyle(root).getPropertyValue('--card-description-text').trim()) || 'Card preview with patterns';
+        const contentText = resolveCSSVar(getComputedStyle(root).getPropertyValue('--card-content-text').trim()) || 'This is a preview of the card component with background patterns and styling applied.';
         
-        // Title styles
-        const titleFontFamily = getComputedStyle(root).getPropertyValue('--font-family-display').trim();
-        const titleSize = getComputedStyle(root).getPropertyValue('--card-heading-default-size').trim();
-        const titleWeight = getComputedStyle(root).getPropertyValue('--card-heading-default-weight').trim();
-        const titleColor = getComputedStyle(root).getPropertyValue('--card-heading-color').trim();
-        const titleTracking = getComputedStyle(root).getPropertyValue('--tracking-normal').trim();
+        // Title styles - resolve all CSS variables
+        const titleFontFamily = resolveCSSVar(getComputedStyle(root).getPropertyValue('--font-family-display').trim());
+        const titleSize = resolveCSSVar(getComputedStyle(root).getPropertyValue('--card-heading-default-size').trim());
+        const titleWeight = resolveCSSVar(getComputedStyle(root).getPropertyValue('--card-heading-default-weight').trim());
+        const titleColor = resolveCSSVar(getComputedStyle(root).getPropertyValue('--card-heading-color').trim());
+        const titleTracking = resolveCSSVar(getComputedStyle(root).getPropertyValue('--tracking-normal').trim());
         
-        // Description styles
-        const descriptionFontFamily = getComputedStyle(root).getPropertyValue('--font-family-body').trim();
-        const descriptionSize = getComputedStyle(root).getPropertyValue('--text-sm').trim();
-        const descriptionColor = getComputedStyle(root).getPropertyValue('--color-text-muted').trim();
+        // Description styles - resolve all CSS variables
+        const descriptionFontFamily = resolveCSSVar(getComputedStyle(root).getPropertyValue('--font-family-body').trim());
+        const descriptionSize = resolveCSSVar(getComputedStyle(root).getPropertyValue('--text-sm').trim());
+        const descriptionColor = resolveCSSVar(getComputedStyle(root).getPropertyValue('--color-text-muted').trim());
         
-        // Content styles
-        const contentFontFamily = getComputedStyle(root).getPropertyValue('--font-family-body').trim();
-        const contentSize = getComputedStyle(root).getPropertyValue('--text-base').trim();
-        const contentColor = getComputedStyle(root).getPropertyValue('--color-text-secondary').trim();
-        const contentLineHeight = getComputedStyle(root).getPropertyValue('--leading-normal').trim();
+        // Content styles - resolve all CSS variables
+        const contentFontFamily = resolveCSSVar(getComputedStyle(root).getPropertyValue('--font-family-body').trim());
+        const contentSize = resolveCSSVar(getComputedStyle(root).getPropertyValue('--text-base').trim());
+        const contentColor = resolveCSSVar(getComputedStyle(root).getPropertyValue('--color-text-secondary').trim());
+        const contentLineHeight = resolveCSSVar(getComputedStyle(root).getPropertyValue('--leading-normal').trim());
         
         // Build pattern classes or inline styles
         let patternClassName = '';
