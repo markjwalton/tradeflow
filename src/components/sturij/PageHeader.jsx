@@ -29,7 +29,7 @@ export function PageHeader({ title, description, children }) {
           )}
         </div>
         {children && (
-          <div className="ml-4">
+          <div className="ml-4 relative z-20">
             {children}
           </div>
         )}
