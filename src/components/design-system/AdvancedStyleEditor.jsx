@@ -461,13 +461,12 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                   <Save className="h-4 w-4 mr-2" />
                   Apply Style
                 </Button>
-                </div>
-                </div>
-                </div>
+              </div>
+            </div>
 
-                {/* Applied Styles Cards */}
-                {savedStylesList.length > 0 && (
-                <div className="px-6 pb-6 space-y-3">
+            {/* Applied Styles Cards */}
+            {savedStylesList.length > 0 && (
+              <div className="px-6 pb-6 space-y-3">
                   {savedStylesList.map(style => (
                     <div 
                       key={style.id}
@@ -512,10 +511,10 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                     </div>
                   ))}
                 </div>
-                )}
-                </CollapsibleContent>
-                </Collapsible>
-                </Card>
+              )}
+            </CollapsibleContent>
+          </Collapsible>
+        </Card>
 
       {/* Version Control */}
       <Card>
