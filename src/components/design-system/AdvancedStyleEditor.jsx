@@ -516,14 +516,15 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
     ),
 
     editing: (index, provided, snapshot) => (
-      <AccordionContainer
-        key="editing"
-        title="Editing"
-        defaultCollapsed={!isHeaderOpen}
-        dragHandleProps={provided?.dragHandleProps}
-        isDragging={snapshot?.isDragging}
-      >
-        <div className="space-y-4">
+      <Card key="editing" className="border-border">
+        <CardContent className="p-6 pb-0">
+          <PageSectionHeader
+            title="Editing"
+            dragHandleProps={provided?.dragHandleProps}
+          />
+        </CardContent>
+        <CardContent className="p-6">
+          <div className="space-y-4">
           <div>
             <p className="text-sm text-muted-foreground mb-3">Element: <span className="font-medium text-foreground">{elementName}</span></p>
             {componentDescription && (
@@ -631,21 +632,22 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               description="Apply your first style to start building your component library."
               className="py-8"
             />
-          )}
-        </div>
-      </AccordionContainer>
-    ),
+            )}
+            </div>
+            </CardContent>
+            </Card>
+            ),
 
     versions: (index, provided, snapshot) => (
-      <AccordionContainer
-        key="versions"
-        title="Version Control"
-        description={`${versionHistory.length} versions`}
-        defaultCollapsed={!isVersionsOpen}
-        dragHandleProps={provided?.dragHandleProps}
-        isDragging={snapshot?.isDragging}
-      >
-        <div className="space-y-4">
+      <Card key="versions" className="border-border">
+        <CardContent className="p-6 pb-0">
+          <PageSectionHeader
+            title="Version Control"
+            dragHandleProps={provided?.dragHandleProps}
+          />
+        </CardContent>
+        <CardContent className="p-6">
+          <div className="space-y-4">
           {versionHistory.length > 0 ? (
             <>
               <div className="space-y-3">
@@ -740,20 +742,21 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               description="Apply styles to create version snapshots you can rollback to."
               className="py-8"
             />
-          )}
-        </div>
-      </AccordionContainer>
-    ),
+            )}
+            </div>
+            </CardContent>
+            </Card>
+            ),
 
     styles: (index, provided, snapshot) => (
-      <AccordionContainer
-        key="styles"
-        title="Style Editor"
-        description={hasUnsavedChanges ? "Unsaved changes" : ""}
-        defaultCollapsed={!expandedCategories.includes('styleEditor')}
-        dragHandleProps={provided?.dragHandleProps}
-        isDragging={snapshot?.isDragging}
-      >
+      <Card key="styles" className="border-border">
+        <CardContent className="p-6 pb-0">
+          <PageSectionHeader
+            title="Style Editor"
+            dragHandleProps={provided?.dragHandleProps}
+          />
+        </CardContent>
+        <CardContent className="p-6">
         <StyleCategory
           title="Component Properties"
           isLive={true}
@@ -1482,10 +1485,11 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               { value: 'var(--radius-3xl)', label: '3XL (1.5rem)' },
               { value: 'var(--radius-full)', label: 'Full (9999px)' }
             ]}
-          />
-        </StyleCategory>
-      </AccordionContainer>
-    )
+            />
+            </StyleCategory>
+            </CardContent>
+            </Card>
+            )
   };
 
   return (
