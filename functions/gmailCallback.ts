@@ -45,7 +45,7 @@ Deno.serve(async (req) => {
     }
 
     // Store tokens securely for the user
-    await base44.asServiceRole.auth.updateUser(state, {
+    await base44.asServiceRole.entities.User.update(state, {
       gmail_access_token: tokens.access_token,
       gmail_refresh_token: tokens.refresh_token,
       gmail_token_expiry: Date.now() + (tokens.expires_in * 1000)
