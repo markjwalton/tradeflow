@@ -778,6 +778,41 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
           />
         </CardContent>
         <CardContent className="p-6">
+          <Tabs defaultValue="properties" className="w-full">
+            <TabsList className="w-full bg-transparent p-0 h-auto border-b border-[var(--color-border)] justify-start gap-8 mb-6">
+              <TabsTrigger 
+                value="properties" 
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm"
+              >
+                Properties
+              </TabsTrigger>
+              <TabsTrigger 
+                value="layout" 
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm"
+              >
+                Layout
+              </TabsTrigger>
+              <TabsTrigger 
+                value="typography" 
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm"
+              >
+                Typography
+              </TabsTrigger>
+              <TabsTrigger 
+                value="colors" 
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm"
+              >
+                Colors
+              </TabsTrigger>
+              <TabsTrigger 
+                value="effects" 
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm"
+              >
+                Effects
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="properties" className="mt-0 space-y-4">
         <StyleCategory
           title="Component Properties"
           isLive={true}
@@ -937,7 +972,9 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             )}
           </div>
         </StyleCategory>
+            </TabsContent>
 
+            <TabsContent value="layout" className="mt-0 space-y-4">
         <StyleCategory
           title="Border Styles"
           isLive={isStyleLive('--color-border')}
@@ -1043,6 +1080,24 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
           />
         </StyleCategory>
 
+        <StyleCategory
+          title="Position Styles"
+          isLive={false}
+          isApplicable={checkStyleApplicable('position')}
+          isEdited={editMode === 'global' ? editedGlobalCategories.has('position') : editedCustomCategories.has('position')}
+          isExpanded={expandedCategories.includes('position')}
+          onToggle={() => toggleCategory('position')}
+        >
+          <StyleProperty
+            label="Z-Index"
+            value={styleValues['--z-base'] || '0'}
+            onChange={(val) => handleStyleChange('--z-base', val)}
+            type="text"
+          />
+        </StyleCategory>
+            </TabsContent>
+
+            <TabsContent value="typography" className="mt-0 space-y-4">
         <StyleCategory
           title="Typography"
           isLive={isStyleLive('--font-family-display')}
@@ -1189,7 +1244,9 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             ]}
           />
         </StyleCategory>
+            </TabsContent>
 
+            <TabsContent value="colors" className="mt-0 space-y-4">
         <StyleCategory
           title="Colors"
           isLive={isStyleLive('--color-primary')}
@@ -1305,23 +1362,9 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             ]}
           />
         </StyleCategory>
+            </TabsContent>
 
-        <StyleCategory
-          title="Position Styles"
-          isLive={false}
-          isApplicable={checkStyleApplicable('position')}
-          isEdited={editMode === 'global' ? editedGlobalCategories.has('position') : editedCustomCategories.has('position')}
-          isExpanded={expandedCategories.includes('position')}
-          onToggle={() => toggleCategory('position')}
-        >
-          <StyleProperty
-            label="Z-Index"
-            value={styleValues['--z-base'] || '0'}
-            onChange={(val) => handleStyleChange('--z-base', val)}
-            type="text"
-          />
-        </StyleCategory>
-
+            <TabsContent value="effects" className="mt-0 space-y-4">
         <StyleCategory
           title="Transparency"
           isLive={false}
@@ -1393,9 +1436,11 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             ]}
             />
             </StyleCategory>
-            </CardContent>
-            </Card>
-            )
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
+    )
   };
 
   return (
