@@ -871,9 +871,9 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 <div className="flex items-center gap-2">
                   Properties
                   {(editMode === 'global' ? editedGlobalCategories.has('properties') : editedCustomCategories.has('properties')) ? (
-                    <span className="w-2 h-2 rounded-full bg-amber-500" />
+                    <span className="w-3 h-3 rounded-full bg-amber-500" />
                   ) : checkCategoryHasLoadedStyles(['properties']) ? (
-                    <span className="w-2 h-2 rounded-full bg-green-500" />
+                    <span className="w-3 h-3 rounded-full bg-green-500" />
                   ) : null}
                 </div>
               </TabsTrigger>
@@ -884,9 +884,9 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 <div className="flex items-center gap-2">
                   Layout
                   {(editMode === 'global' ? (editedGlobalCategories.has('border') || editedGlobalCategories.has('padding') || editedGlobalCategories.has('position')) : (editedCustomCategories.has('border') || editedCustomCategories.has('padding') || editedCustomCategories.has('position'))) ? (
-                    <span className="w-2 h-2 rounded-full bg-amber-500" />
+                    <span className="w-3 h-3 rounded-full bg-amber-500" />
                   ) : checkCategoryHasLoadedStyles(['border', 'padding', 'position']) ? (
-                    <span className="w-2 h-2 rounded-full bg-green-500" />
+                    <span className="w-3 h-3 rounded-full bg-green-500" />
                   ) : null}
                 </div>
               </TabsTrigger>
@@ -897,9 +897,9 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 <div className="flex items-center gap-2">
                   Typography
                   {(editMode === 'global' ? editedGlobalCategories.has('font') : editedCustomCategories.has('font')) ? (
-                    <span className="w-2 h-2 rounded-full bg-amber-500" />
+                    <span className="w-3 h-3 rounded-full bg-amber-500" />
                   ) : checkCategoryHasLoadedStyles(['font']) ? (
-                    <span className="w-2 h-2 rounded-full bg-green-500" />
+                    <span className="w-3 h-3 rounded-full bg-green-500" />
                   ) : null}
                 </div>
               </TabsTrigger>
@@ -910,9 +910,9 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 <div className="flex items-center gap-2">
                   Colors
                   {(editMode === 'global' ? (editedGlobalCategories.has('text') || editedGlobalCategories.has('background')) : (editedCustomCategories.has('text') || editedCustomCategories.has('background'))) ? (
-                    <span className="w-2 h-2 rounded-full bg-amber-500" />
+                    <span className="w-3 h-3 rounded-full bg-amber-500" />
                   ) : checkCategoryHasLoadedStyles(['text', 'background']) ? (
-                    <span className="w-2 h-2 rounded-full bg-green-500" />
+                    <span className="w-3 h-3 rounded-full bg-green-500" />
                   ) : null}
                 </div>
               </TabsTrigger>
@@ -923,9 +923,9 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 <div className="flex items-center gap-2">
                   Effects
                   {(editMode === 'global' ? (editedGlobalCategories.has('extras') || editedGlobalCategories.has('css3')) : (editedCustomCategories.has('extras') || editedCustomCategories.has('css3'))) ? (
-                    <span className="w-2 h-2 rounded-full bg-amber-500" />
+                    <span className="w-3 h-3 rounded-full bg-amber-500" />
                   ) : checkCategoryHasLoadedStyles(['extras', 'css3']) ? (
-                    <span className="w-2 h-2 rounded-full bg-green-500" />
+                    <span className="w-3 h-3 rounded-full bg-green-500" />
                   ) : null}
                 </div>
               </TabsTrigger>
