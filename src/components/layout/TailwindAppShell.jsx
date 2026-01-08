@@ -30,23 +30,6 @@ export function TailwindAppShell({
   const [sidebarMode, setSidebarMode] = useState('expanded'); // 'expanded', 'icons', 'hidden'
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Extract top-level navigation items from NavigationConfig
-  const { topNavItems, logoDropdownItems } = useMemo(() => {
-    // Get top-level items (no parent) for both top nav and logo dropdown
-    const topLevel = transformedNavigation.filter(item => !item.isFolder);
-    
-    return {
-      topNavItems: topLevel.slice(0, 5), // First 5 for horizontal nav
-      logoDropdownItems: topLevel.map(item => ({
-        id: item.id,
-        name: item.name,
-        href: item.href,
-        icon: item.icon,
-        current: item.current
-      }))
-    };
-  }, [transformedNavigation, currentPageName]);
-
   // Transform navItems to format expected by Tailwind components
   // navItems come from NavigationConfig.items with structure: id, name, slug, icon, parent_id, order, item_type
   const transformedNavigation = useMemo(() => {
@@ -80,6 +63,23 @@ export function TailwindAppShell({
 
     return buildNavTree(navItems);
   }, [navItems, currentPageName]);
+
+  // Extract top-level navigation items from NavigationConfig
+  const { topNavItems, logoDropdownItems } = useMemo(() => {
+    // Get top-level items (no parent) for both top nav and logo dropdown
+    const topLevel = transformedNavigation.filter(item => !item.isFolder);
+    
+    return {
+      topNavItems: topLevel.slice(0, 5), // First 5 for horizontal nav
+      logoDropdownItems: topLevel.map(item => ({
+        id: item.id,
+        name: item.name,
+        href: item.href,
+        icon: item.icon,
+        current: item.current
+      }))
+    };
+  }, [transformedNavigation, currentPageName]);
 
   // Search results filtering
   const searchResults = useMemo(() => {
