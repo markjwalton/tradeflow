@@ -4,10 +4,28 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
   Menu, Home, Settings, User, Bell, Search, 
-  ChevronRight, PanelLeft, X, LayoutGrid, RefreshCw, Code, Eye
+  ChevronRight, PanelLeft, X, LayoutGrid, RefreshCw, Code, Eye,
+  ChevronDown, Calendar, ShoppingCart, LogOut, Shield, Lightbulb, Plus, Inbox
 } from 'lucide-react';
 import { PageHeader } from '@/components/sturij/PageHeader';
 import { PageSectionHeader } from '@/components/sturij/PageSectionHeader';
+import { Avatar } from '@/components/ui/avatar';
+import { 
+  Dropdown, 
+  DropdownButton, 
+  DropdownDivider, 
+  DropdownItem, 
+  DropdownLabel, 
+  DropdownMenu 
+} from '@/components/ui/dropdown';
+import { 
+  Navbar, 
+  NavbarDivider, 
+  NavbarItem, 
+  NavbarLabel, 
+  NavbarSection, 
+  NavbarSpacer 
+} from '@/components/ui/navbar';
 
 export function AppShellPreview({ config = {} }) {
   const [sidebarMode, setSidebarMode] = useState('expanded'); // 'expanded', 'icons', 'hidden'
@@ -57,39 +75,117 @@ export function AppShellPreview({ config = {} }) {
       </PageHeader>
 
       <div className="border rounded-lg overflow-hidden bg-[var(--color-background)] h-[600px] flex flex-col">
-      {/* Top Navigation */}
+      {/* Top Navigation - Catalyst Style */}
       <div 
-        className="flex items-center justify-between px-4 border-b"
+        className="border-b"
         style={{ 
           height: topNavHeight,
           backgroundColor: topNavBg 
         }}
       >
-        <div className="flex items-center gap-4">
+        <Navbar>
+          {/* Sidebar Toggle */}
           <button 
             onClick={() => {
               if (sidebarMode === 'expanded') setSidebarMode('icons');
               else if (sidebarMode === 'icons') setSidebarMode('hidden');
               else setSidebarMode('expanded');
             }}
-            className="p-2 hover:bg-muted rounded-lg lg:block"
+            className="p-2 hover:bg-muted rounded-lg lg:inline-flex hidden"
           >
             {sidebarMode === 'hidden' ? <PanelLeft className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
-          <div className="font-semibold text-lg">App Shell Preview</div>
-        </div>
-        
-        <div className="flex items-center gap-3">
-          <button className="p-2 hover:bg-muted rounded-lg">
-            <Search className="h-5 w-5" />
-          </button>
-          <button className="p-2 hover:bg-muted rounded-lg">
-            <Bell className="h-5 w-5" />
-          </button>
-          <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center">
-            <User className="h-4 w-4 text-primary" />
-          </div>
-        </div>
+
+          {/* Organization Dropdown */}
+          <Dropdown>
+            <DropdownButton as={NavbarItem}>
+              <Avatar initials="TL" className="size-6" />
+              <NavbarLabel>Sturij Design</NavbarLabel>
+              <ChevronDown className="h-4 w-4" />
+            </DropdownButton>
+            <DropdownMenu className="min-w-64" anchor="bottom start">
+              <DropdownItem>
+                <Settings className="h-4 w-4" />
+                <DropdownLabel>Settings</DropdownLabel>
+              </DropdownItem>
+              <DropdownDivider />
+              <DropdownItem>
+                <Avatar initials="TL" className="size-5" />
+                <DropdownLabel>Sturij Design</DropdownLabel>
+              </DropdownItem>
+              <DropdownItem>
+                <Avatar initials="WC" className="size-5 bg-purple-500" />
+                <DropdownLabel>Workspace</DropdownLabel>
+              </DropdownItem>
+              <DropdownDivider />
+              <DropdownItem>
+                <Plus className="h-4 w-4" />
+                <DropdownLabel>New team...</DropdownLabel>
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+
+          <NavbarDivider className="max-lg:hidden" />
+
+          {/* Main Navigation */}
+          <NavbarSection className="max-lg:hidden">
+            <NavbarItem href="#" current>
+              <Home className="h-4 w-4" />
+              Home
+            </NavbarItem>
+            <NavbarItem href="#">
+              <Calendar className="h-4 w-4" />
+              Events
+            </NavbarItem>
+            <NavbarItem href="#">
+              <ShoppingCart className="h-4 w-4" />
+              Orders
+            </NavbarItem>
+          </NavbarSection>
+
+          <NavbarSpacer />
+
+          {/* Right Section */}
+          <NavbarSection>
+            <NavbarItem aria-label="Search">
+              <Search className="h-5 w-5" />
+            </NavbarItem>
+            <NavbarItem aria-label="Inbox">
+              <Inbox className="h-5 w-5" />
+            </NavbarItem>
+            
+            {/* User Dropdown */}
+            <Dropdown>
+              <DropdownButton as={NavbarItem}>
+                <Avatar initials="JD" className="size-8" />
+              </DropdownButton>
+              <DropdownMenu className="min-w-64" anchor="bottom end">
+                <DropdownItem>
+                  <User className="h-4 w-4" />
+                  <DropdownLabel>My profile</DropdownLabel>
+                </DropdownItem>
+                <DropdownItem>
+                  <Settings className="h-4 w-4" />
+                  <DropdownLabel>Settings</DropdownLabel>
+                </DropdownItem>
+                <DropdownDivider />
+                <DropdownItem>
+                  <Shield className="h-4 w-4" />
+                  <DropdownLabel>Privacy policy</DropdownLabel>
+                </DropdownItem>
+                <DropdownItem>
+                  <Lightbulb className="h-4 w-4" />
+                  <DropdownLabel>Share feedback</DropdownLabel>
+                </DropdownItem>
+                <DropdownDivider />
+                <DropdownItem>
+                  <LogOut className="h-4 w-4" />
+                  <DropdownLabel>Sign out</DropdownLabel>
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </NavbarSection>
+        </Navbar>
       </div>
 
       <div className="flex flex-1 overflow-hidden">
