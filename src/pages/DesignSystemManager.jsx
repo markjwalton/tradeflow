@@ -789,15 +789,11 @@ For each recommendation, provide:
             <CardContent className="p-6 pb-0">
               <PageSectionHeader
                 title="Component Library"
-                tabs={categories.map(cat => {
-                  const displayName = cat === "all" ? "All" : cat.charAt(0).toUpperCase() + cat.slice(1);
-                  const count = componentsByCategory[cat];
-                  return {
-                    name: `${displayName} (${count})`,
-                    href: `#${cat}`,
-                    current: selectedCategory === cat
-                  };
-                })}
+                tabs={categories.map(cat => ({
+                  name: `${cat === "all" ? "All" : cat.charAt(0).toUpperCase() + cat.slice(1)} (${componentsByCategory[cat]})`,
+                  href: `#${cat}`,
+                  current: selectedCategory === cat
+                }))}
                 actions={[
                   {
                     label: "View Showcase",
@@ -829,10 +825,10 @@ For each recommendation, provide:
                 {filteredComponents.map(comp => (
                 <Card key={comp.id} className="border-border">
                   <CardHeader className="pb-2">
-                    <div className="flex items-center gap-2">
-                      <CardTitle className="text-base text-foreground">
-                        {comp.component_name}
-                      </CardTitle>
+                    <CardTitle className="text-base text-foreground">
+                      {comp.component_name}
+                    </CardTitle>
+                    <div className="flex items-center gap-2 mt-1">
                       <Badge variant="outline" className="text-xs">{comp.category}</Badge>
                       <Badge className="bg-muted text-muted-foreground text-xs">
                         v{comp.version}
