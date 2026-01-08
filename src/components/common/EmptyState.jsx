@@ -13,13 +13,13 @@ export default function EmptyState({
   return (
     <div className={cn("text-center py-12", className)}>
       <Icon 
-        className="mx-auto h-12 w-12 text-muted-foreground/40" 
-        strokeWidth={1.5}
+        className="mx-auto h-12 w-12 text-[var(--accent-500)]" 
+        strokeWidth={1.25}
       />
-      <h3 className="mt-2 text-sm font-semibold text-foreground">
+      <h3 className="mt-2 text-base font-medium font-[family-name:var(--font-family-display)] text-[var(--accent-500)]">
         {title}
       </h3>
-      <p className="mt-1 text-sm text-muted-foreground">
+      <p className="mt-1 text-sm text-[var(--charcoal-800)] leading-[var(--leading-normal)]">
         {description}
       </p>
       {onAction && (
