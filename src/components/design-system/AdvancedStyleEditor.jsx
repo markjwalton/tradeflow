@@ -11,108 +11,81 @@ import { COMPONENT_CATEGORIES, isStyleApplicable, getComponentSpec } from './com
 
 export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement: propSelectedElement }) {
   const [currentStyle, setCurrentStyle] = useState('--color-primary');
-  const [instances, setInstances] = useState(5);
+  const [instances, setInstances] = useState(0);
   const [saveAsNew, setSaveAsNew] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState(['properties', 'styleEditor']);
   const [styleValues, setStyleValues] = useState({});
   const [componentState, setComponentState] = useState('default');
   const [shadowEffect, setShadowEffect] = useState('none');
   const [animation, setAnimation] = useState('none');
-  const [editMode, setEditMode] = useState('global'); // 'global' or 'custom'
+  const [editMode, setEditMode] = useState('global');
   const [customStyleName, setCustomStyleName] = useState('');
-  const [editedGlobalCategories, setEditedGlobalCategories] = useState(new Set(['typography', 'colors']));
+  const [editedGlobalCategories, setEditedGlobalCategories] = useState(new Set());
   const [editedCustomCategories, setEditedCustomCategories] = useState(new Set());
   const [isHeaderOpen, setIsHeaderOpen] = useState(true);
   const [isVersionsOpen, setIsVersionsOpen] = useState(false);
   const [currentVersionPage, setCurrentVersionPage] = useState(1);
   const versionsPerPage = 3;
-  const [versionHistory, setVersionHistory] = useState([
-    {
-      id: 1,
-      version: 'v1.3',
-      name: 'Primary Brand Update',
-      mode: 'global',
-      changedProperties: ['--color-primary', '--font-family-display', '--spacing-4'],
-      timestamp: '2026-01-07 14:30',
-      author: 'Current User'
-    },
-    {
-      id: 2,
-      version: 'v1.2',
-      name: 'Button Style Refinement',
-      mode: 'custom',
-      changedProperties: ['--button-variant', '--shadow-md', '--radius-button'],
-      timestamp: '2026-01-07 11:15',
-      author: 'Current User'
-    },
-    {
-      id: 3,
-      version: 'v1.1',
-      name: 'Typography Scale Adjustment',
-      mode: 'global',
-      changedProperties: ['--text-base', '--leading-normal', '--tracking-normal'],
-      timestamp: '2026-01-06 16:45',
-      author: 'Current User'
-    },
-    {
-      id: 4,
-      version: 'v1.0',
-      name: 'Initial Design System',
-      mode: 'global',
-      changedProperties: ['--color-primary', '--color-secondary', '--font-family-display', '--font-family-body'],
-      timestamp: '2026-01-05 09:00',
-      author: 'System'
-    }
-  ]);
-  const [savedStylesList, setSavedStylesList] = useState([
-    {
-      id: 1,
-      name: 'Primary Button - Hover',
-      mode: 'global',
-      variant: 'default',
-      size: 'default',
-      state: 'hover',
-      shadow: 'md',
-      animation: 'none',
-      contentType: 'text-only',
-      iconStrokeWidth: '2',
-      iconColor: 'currentColor',
-      timestamp: '2026-01-07 10:23'
-    },
-    {
-      id: 2,
-      name: 'CTA Large Button',
-      mode: 'custom',
-      variant: 'default',
-      size: 'lg',
-      state: 'default',
-      shadow: 'lg',
-      animation: 'pulse',
-      actionType: 'save',
-      contentType: 'icon-text',
-      iconStrokeWidth: '2.5',
-      iconColor: 'var(--primary-500)',
-      timestamp: '2026-01-07 09:15'
-    },
-    {
-      id: 3,
-      name: 'Ghost Small Button',
-      mode: 'global',
-      variant: 'ghost',
-      size: 'sm',
-      state: 'focus',
-      shadow: 'none',
-      animation: 'none',
-      actionType: 'settings',
-      contentType: 'icon-only',
-      iconStrokeWidth: '1.5',
-      iconColor: 'var(--charcoal-600)',
-      timestamp: '2026-01-07 08:45'
-    }
-  ]);
+  const [versionHistory, setVersionHistory] = useState([]);
+  const [savedStylesList, setSavedStylesList] = useState([]);
 
   const selectedElement = propSelectedElement || 'button';
   const selectedComponent = getComponentSpec(selectedElement);
+
+  // Load persisted data on mount
+  useEffect(() => {
+    const loadPersistedData = () => {
+      try {
+        const savedStyles = localStorage.getItem('advanced-editor-styles');
+        const savedVersions = localStorage.getItem('advanced-editor-versions');
+        
+        if (savedStyles) {
+          setSavedStylesList(JSON.parse(savedStyles));
+        }
+        if (savedVersions) {
+          setVersionHistory(JSON.parse(savedVersions));
+        }
+      } catch (e) {
+        console.error('Failed to load persisted data:', e);
+      }
+    };
+    
+    loadPersistedData();
+  }, []);
+
+  // Count instances in DOM
+  useEffect(() => {
+    const countInstances = () => {
+      let count = 0;
+      const selectors = {
+        button: 'button',
+        card: '[class*="card"]',
+        typography: 'h1, h2, h3, h4, h5, h6, p',
+        badge: '[class*="badge"]',
+        input: 'input',
+        select: 'select, [role="combobox"]',
+        dialog: '[role="dialog"]',
+        alert: '[role="alert"]',
+        table: 'table',
+        navigation: 'nav',
+        tooltip: '[role="tooltip"]',
+        avatar: '[class*="avatar"]',
+        skeleton: '[class*="skeleton"]',
+        separator: '[class*="separator"], hr'
+      };
+      
+      const selector = selectors[selectedElement];
+      if (selector) {
+        count = document.querySelectorAll(selector).length;
+      }
+      
+      setInstances(count);
+    };
+    
+    countInstances();
+    const interval = setInterval(countInstances, 2000);
+    return () => clearInterval(interval);
+  }, [selectedElement]);
 
   // Read current computed styles from DOM on mount
   useEffect(() => {
@@ -331,6 +304,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
 
   const handleApplyStyle = () => {
     const styleName = editMode === 'custom' ? (customStyleName || 'Custom Style') : 'Global Style';
+    const changedProperties = Object.keys(styleValues);
+    
     const newStyle = {
       id: Date.now(),
       name: styleName,
@@ -344,15 +319,37 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
       contentType: styleValues['--button-content-type'] || 'text-only',
       iconStrokeWidth: styleValues['--icon-stroke-width'] || '2',
       iconColor: styleValues['--icon-color'] || 'currentColor',
-      timestamp: new Date().toLocaleString()
+      timestamp: new Date().toLocaleString(),
+      changedProperties
     };
-    setSavedStylesList(prev => [...prev, newStyle]);
+    
+    const newVersion = {
+      id: Date.now(),
+      version: `v1.${versionHistory.length + 1}`,
+      name: styleName,
+      mode: editMode,
+      changedProperties,
+      timestamp: new Date().toLocaleString(),
+      author: 'Current User',
+      styleSnapshot: { ...styleValues }
+    };
+    
+    const updatedStyles = [...savedStylesList, newStyle];
+    const updatedVersions = [newVersion, ...versionHistory];
+    
+    setSavedStylesList(updatedStyles);
+    setVersionHistory(updatedVersions);
+    
+    localStorage.setItem('advanced-editor-styles', JSON.stringify(updatedStyles));
+    localStorage.setItem('advanced-editor-versions', JSON.stringify(updatedVersions));
+    
     if (editMode === 'global') {
       setEditedGlobalCategories(new Set());
     } else {
       setEditedCustomCategories(new Set());
     }
-    toast.success(`Style "${styleName}" applied`);
+    
+    toast.success(`Style "${styleName}" applied and saved`);
   };
 
   const handleLoadStyle = (style) => {
@@ -370,18 +367,29 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   };
 
   const handleDeleteStyle = (id) => {
-    setSavedStylesList(prev => prev.filter(s => s.id !== id));
+    const updatedStyles = savedStylesList.filter(s => s.id !== id);
+    setSavedStylesList(updatedStyles);
+    localStorage.setItem('advanced-editor-styles', JSON.stringify(updatedStyles));
     toast.success('Style deleted');
   };
 
   const handleRollbackVersion = (version) => {
-    // Load the version's properties
-    toast.success(`Rolled back to ${version.version}: ${version.name}`);
-    // In a real implementation, you would load the actual saved state here
+    if (version.styleSnapshot) {
+      Object.entries(version.styleSnapshot).forEach(([property, value]) => {
+        document.documentElement.style.setProperty(property, value);
+        handleStyleChange(property, value);
+      });
+      window.dispatchEvent(new CustomEvent('css-variables-updated'));
+      toast.success(`Rolled back to ${version.version}: ${version.name}`);
+    } else {
+      toast.error('No snapshot available for this version');
+    }
   };
 
   const handleDeleteVersion = (id) => {
-    setVersionHistory(prev => prev.filter(v => v.id !== id));
+    const updatedVersions = versionHistory.filter(v => v.id !== id);
+    setVersionHistory(updatedVersions);
+    localStorage.setItem('advanced-editor-versions', JSON.stringify(updatedVersions));
     toast.success('Version deleted');
   };
 
