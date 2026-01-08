@@ -9,14 +9,6 @@ import { Button } from "@/components/ui/button";
 // Prefetching disabled to reduce network requests
 // import { prefetchOnIdle, prefetchDashboardQueries, prefetchLibraryQueries } from "@/components/common/queryPrefetch";
 
-// Load Adobe Fonts
-if (typeof window !== 'undefined') {
-  const adobeFontsLink = document.createElement('link');
-  adobeFontsLink.rel = 'stylesheet';
-  adobeFontsLink.href = 'https://use.typekit.net/aft8lkt.css';
-  document.head.appendChild(adobeFontsLink);
-}
-
 // Tenant Context
 export const TenantContext = createContext(null);
 export const useTenant = () => useContext(TenantContext);
