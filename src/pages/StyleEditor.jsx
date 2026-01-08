@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { AdvancedStyleEditor } from '@/components/design-system/AdvancedStyleEditor';
+import { ComponentLogicEditor } from '@/components/design-system/ComponentLogicEditor';
 import { LiveComponentPreview } from '@/components/design-system/LiveComponentPreview';
 import { Save, RefreshCw, X, GitBranch } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -187,28 +189,47 @@ export default function StyleEditor() {
       <div className="max-w-7xl mx-auto p-6 space-y-6">
         {/* Component Selection is handled by AdvancedStyleEditor */}
 
-        {/* Live Preview */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Live Preview</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <LiveComponentPreview 
-              jsxCode={componentExamples[previewComponent] || componentExamples.button}
-              showCode={false}
-              componentState={componentState}
-              shadowEffect={shadowEffect}
-              animation={animation}
-            />
-          </CardContent>
-        </Card>
+        {/* Tabbed Interface */}
+        <Tabs defaultValue="styles" className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="styles">Style Editor</TabsTrigger>
+            <TabsTrigger value="logic">Component Logic</TabsTrigger>
+            <TabsTrigger value="preview">Live Preview</TabsTrigger>
+          </TabsList>
 
-        {/* Style Editor */}
-        <AdvancedStyleEditor 
-          onUpdate={handleStyleUpdate}
-          onPreviewUpdate={handlePreviewUpdate}
-          selectedElement={selectedElement}
-        />
+          <TabsContent value="styles" className="space-y-6">
+            <AdvancedStyleEditor 
+              onUpdate={handleStyleUpdate}
+              onPreviewUpdate={handlePreviewUpdate}
+              selectedElement={selectedElement}
+            />
+          </TabsContent>
+
+          <TabsContent value="logic" className="space-y-6">
+            <ComponentLogicEditor 
+              onUpdate={(components) => {
+                console.log('Components updated:', components);
+              }}
+            />
+          </TabsContent>
+
+          <TabsContent value="preview" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Live Preview</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <LiveComponentPreview 
+                  jsxCode={componentExamples[previewComponent] || componentExamples.button}
+                  showCode={false}
+                  componentState={componentState}
+                  shadowEffect={shadowEffect}
+                  animation={animation}
+                />
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
 
 
       </div>
