@@ -791,8 +791,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
           </div>
         </CardContent>
         <CardContent className="p-6 pt-0">
-          <Tabs defaultValue="properties" className="w-full">
-          <TabsList className="w-full bg-transparent p-0 h-auto border-b border-[var(--color-border)] justify-start gap-8 mb-4">
+          <Tabs defaultValue="properties" className="w-full -mx-6 px-6">
+          <TabsList className="w-full bg-transparent p-0 h-auto border-b border-[var(--color-border)] justify-start gap-8 mb-4 rounded-none">
               <TabsTrigger 
                 value="properties" 
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm"
