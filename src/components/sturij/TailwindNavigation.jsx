@@ -51,7 +51,7 @@ export default function TailwindNavigation({
             isIconsOnly && 'justify-center'
           )}
         >
-          <Icon aria-hidden="true" className="size-6 shrink-0 text-[var(--text-muted)]" />
+          <Icon aria-hidden="true" className="size-6 shrink-0 text-[var(--primary-600)]" strokeWidth={1} />
           {!isIconsOnly && (
             <>
               {item.name}
