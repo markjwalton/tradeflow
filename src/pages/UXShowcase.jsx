@@ -28,6 +28,7 @@ import DataDisplayShowcase from '@/components/showcase/DataDisplayShowcase';
 import LayoutShowcase from '@/components/showcase/LayoutShowcase';
 import FeedbackShowcase from '@/components/showcase/FeedbackShowcase';
 import ModalShowcase from '@/components/showcase/ModalShowcase';
+import AppShellShowcase from '@/components/showcase/AppShellShowcase';
 
 export default function UXShowcase() {
   const [showInspector, setShowInspector] = useState(false);
@@ -74,7 +75,7 @@ export default function UXShowcase() {
     {
       id: 'layout',
       label: 'Layout & Patterns',
-      components: ['layoutShowcase']
+      components: ['layoutShowcase', 'appShellShowcase']
     },
     {
       id: 'data',
@@ -100,6 +101,7 @@ export default function UXShowcase() {
     { value: 'navigationShowcase', label: 'Navigation', category: 'navigation' },
     { value: 'searchCard', label: 'Search', category: 'navigation' },
     { value: 'layoutShowcase', label: 'Layouts', category: 'layout' },
+    { value: 'appShellShowcase', label: 'App Shell', category: 'layout' },
     { value: 'dataDisplayShowcase', label: 'Data Display', category: 'data' },
     { value: 'loadingCard', label: 'Loading', category: 'feedback' },
     { value: 'errorCard', label: 'Errors', category: 'feedback' },
@@ -469,10 +471,14 @@ export default function UXShowcase() {
               </div>
             </AccordionTrigger>
             <AccordionContent>
-              <div className="px-6 pb-6">
+              <div className="px-6 pb-6 space-y-8">
                 <div data-category="layouts">
                   <h3 className="text-base font-medium mb-4 text-primary">Layout Patterns</h3>
                   <LayoutShowcase />
+                </div>
+                <div className="border-t pt-8" data-category="appshell">
+                  <h3 className="text-base font-medium mb-4 text-primary">App Shell</h3>
+                  <AppShellShowcase />
                 </div>
               </div>
             </AccordionContent>
