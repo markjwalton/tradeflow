@@ -556,16 +556,16 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             </div>
 
             <Tabs defaultValue="description" className="mb-4">
-              <TabsList className="w-full bg-transparent p-0 h-auto border-b border-[var(--color-border)]">
+              <TabsList className="w-full bg-transparent p-0 h-auto border-b border-[var(--color-border)] justify-start gap-8">
                 <TabsTrigger 
                   value="description" 
-                  className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3"
+                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 px-1 text-sm"
                 >
                   Description
                 </TabsTrigger>
                 <TabsTrigger 
                   value="specification" 
-                  className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3"
+                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3 px-1 text-sm"
                 >
                   Specification
                 </TabsTrigger>
