@@ -23,11 +23,14 @@ export default function TailwindTopNav({
 }) {
   return (
     <Navbar className="sticky top-0 z-40">
-      {/* Tenant/Org Dropdown */}
+      {/* Logo Dropdown */}
       <Dropdown>
-        <DropdownButton as={NavbarItem}>
-          <Avatar src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/c94580ddf_sturij-logo.png" square />
-          <NavbarLabel className="max-lg:hidden">{user?.company || 'Sturij'}</NavbarLabel>
+        <DropdownButton as={NavbarItem} className="gap-2">
+          <img 
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/c94580ddf_sturij-logo.png" 
+            alt="Logo"
+            className="h-8 w-8 object-contain"
+          />
           <ChevronDownIcon className="h-4 w-4 max-lg:hidden" />
         </DropdownButton>
         <DropdownMenu className="min-w-64" anchor="bottom start">

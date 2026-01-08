@@ -197,7 +197,7 @@ export default function StyleEditor() {
 
         {/* Tabbed Interface */}
         <Tabs defaultValue="styles" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList>
             <TabsTrigger value="styles">Style Editor</TabsTrigger>
             <TabsTrigger value="logic">Component Logic</TabsTrigger>
             <TabsTrigger value="preview">Live Preview</TabsTrigger>

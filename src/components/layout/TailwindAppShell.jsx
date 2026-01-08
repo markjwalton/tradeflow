@@ -195,10 +195,19 @@ export function TailwindAppShell({
 
           {/* Page Content - takes remaining space */}
           <main className="flex-1 overflow-y-auto min-w-0 bg-[var(--color-background)]">
-            {/* Breadcrumb */}
-            {breadcrumbPages.length > 0 && (
-              <div className="border-b border-[var(--color-border)] bg-[var(--color-card)] px-4 py-3">
-                <TailwindBreadcrumb pages={breadcrumbPages} />
+            {/* Page Header with Breadcrumb */}
+            {(breadcrumbPages.length > 0 || currentPageName) && (
+              <div className="border-b border-[var(--color-border)] bg-[var(--color-card)] px-6 py-4">
+                {breadcrumbPages.length > 0 && (
+                  <div className="mb-2">
+                    <TailwindBreadcrumb pages={breadcrumbPages} />
+                  </div>
+                )}
+                {currentPageName && (
+                  <h1 className="text-2xl font-bold text-[var(--color-text-primary)] font-[var(--font-family-display)]">
+                    {breadcrumbPages[breadcrumbPages.length - 1]?.name || currentPageName}
+                  </h1>
+                )}
               </div>
             )}
             
