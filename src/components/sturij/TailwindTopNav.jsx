@@ -18,7 +18,8 @@ export default function TailwindTopNav({
   onMobileMenuClick,
   onSidebarToggle,
   onNotificationClick,
-  topNavItems = [] // Items from NavigationManager for top nav
+  topNavItems = [], // Items from NavigationManager for top nav
+  logoDropdownItems = [] // Items for logo dropdown menu
 }) {
   return (
     <Navbar className="sticky top-0 z-40">
@@ -30,27 +31,33 @@ export default function TailwindTopNav({
           <ChevronDownIcon className="h-4 w-4 max-lg:hidden" />
         </DropdownButton>
         <DropdownMenu className="min-w-64" anchor="bottom start">
-          <DropdownItem href="/?page=Dashboard">
-            <DropdownLabel>Dashboard</DropdownLabel>
-          </DropdownItem>
-          <DropdownItem href="/?page=Projects">
-            <DropdownLabel>Projects</DropdownLabel>
-          </DropdownItem>
-          <DropdownItem href="/?page=CRM">
-            <DropdownLabel>CRM</DropdownLabel>
-          </DropdownItem>
-          <DropdownDivider />
-          <DropdownItem href="/?page=Library">
-            <DropdownLabel>Library</DropdownLabel>
-          </DropdownItem>
-          <DropdownItem href="/?page=ComponentLibrary">
-            <DropdownLabel>Components</DropdownLabel>
-          </DropdownItem>
-          <DropdownDivider />
-          <DropdownItem href="/?page=SiteSettings">
-            <Cog8ToothIcon className="h-4 w-4" />
-            <DropdownLabel>Settings</DropdownLabel>
-          </DropdownItem>
+          {logoDropdownItems.length > 0 ? (
+            logoDropdownItems.map((item, index) => (
+              <React.Fragment key={item.id || index}>
+                {item.divider ? (
+                  <DropdownDivider />
+                ) : (
+                  <DropdownItem href={item.href}>
+                    {item.icon && <item.icon className="h-4 w-4" />}
+                    <DropdownLabel>{item.name}</DropdownLabel>
+                  </DropdownItem>
+                )}
+              </React.Fragment>
+            ))
+          ) : (
+            <>
+              <DropdownItem href="/?page=Dashboard">
+                <DropdownLabel>Dashboard</DropdownLabel>
+              </DropdownItem>
+              <DropdownItem href="/?page=Projects">
+                <DropdownLabel>Projects</DropdownLabel>
+              </DropdownItem>
+              <DropdownItem href="/?page=SiteSettings">
+                <Cog8ToothIcon className="h-4 w-4" />
+                <DropdownLabel>Settings</DropdownLabel>
+              </DropdownItem>
+            </>
+          )}
         </DropdownMenu>
       </Dropdown>
 
