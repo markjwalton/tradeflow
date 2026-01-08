@@ -27,7 +27,7 @@ export function StyleCategory({
             className={`w-3 h-3 rounded-full ${
               isEdited ? 'bg-amber-500' : isLive ? 'bg-green-500' : 'bg-red-500'
             }`}
-            title={isEdited ? 'Edited - unsaved changes' : isLive ? 'Live themed value' : 'Default/unmanaged value'}
+            title={isEdited ? 'Edited - unsaved changes' : isLive ? 'Style loaded' : 'No style loaded'}
           />
           {isExpanded ? (
             <ChevronDown className="h-4 w-4" />
@@ -53,7 +53,7 @@ export function StyleProperty({ label, value, onChange, type = 'text', options =
           <h5 className={`text-sm font-medium font-[family-name:var(--font-family-display)] flex-1 ${disabled ? 'opacity-40' : ''}`}>{label}</h5>
           {isApplicable && (
             <div 
-              className={`w-2 h-2 rounded-full ${hasLoadedStyle ? 'bg-green-500' : 'bg-red-500'}`}
+              className={`w-3 h-3 rounded-full ${hasLoadedStyle ? 'bg-green-500' : 'bg-red-500'}`}
               title={hasLoadedStyle ? 'Style loaded' : 'No style loaded'}
             />
           )}
@@ -79,7 +79,7 @@ export function StyleProperty({ label, value, onChange, type = 'text', options =
           <h5 className={`text-sm font-medium font-[family-name:var(--font-family-display)] flex-1 ${disabled ? 'opacity-40' : ''}`}>{label}</h5>
           {isApplicable && (
             <div 
-              className={`w-2 h-2 rounded-full ${hasLoadedStyle ? 'bg-green-500' : 'bg-red-500'}`}
+              className={`w-3 h-3 rounded-full ${hasLoadedStyle ? 'bg-green-500' : 'bg-red-500'}`}
               title={hasLoadedStyle ? 'Style loaded' : 'No style loaded'}
             />
           )}
@@ -105,7 +105,7 @@ export function StyleProperty({ label, value, onChange, type = 'text', options =
           <h5 className={`text-sm font-medium font-[family-name:var(--font-family-display)] flex-1 ${disabled ? 'opacity-40' : ''}`}>{label}</h5>
           {isApplicable && (
             <div 
-              className={`w-2 h-2 rounded-full ${hasLoadedStyle ? 'bg-green-500' : 'bg-red-500'}`}
+              className={`w-3 h-3 rounded-full ${hasLoadedStyle ? 'bg-green-500' : 'bg-red-500'}`}
               title={hasLoadedStyle ? 'Style loaded' : 'No style loaded'}
             />
           )}

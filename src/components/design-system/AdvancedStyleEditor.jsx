@@ -30,6 +30,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   const [customStyleName, setCustomStyleName] = useState('');
   const [editedGlobalCategories, setEditedGlobalCategories] = useState(new Set());
   const [editedCustomCategories, setEditedCustomCategories] = useState(new Set());
+  const [appliedStyles, setAppliedStyles] = useState(new Set());
+  const [editedProperties, setEditedProperties] = useState(new Set());
   const [isHeaderOpen, setIsHeaderOpen] = useState(true);
   const [isVersionsOpen, setIsVersionsOpen] = useState(false);
   const [currentVersionPage, setCurrentVersionPage] = useState(1);
@@ -182,6 +184,9 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   const handleStyleChange = (property, value) => {
     const newValues = { ...styleValues, [property]: value };
     setStyleValues(newValues);
+    
+    // Track this property as edited
+    setEditedProperties(prev => new Set(prev).add(property));
     
     // Mark category as edited based on which properties it affects
     const categoryMap = {
@@ -375,6 +380,10 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
     localStorage.setItem('advanced-editor-styles', JSON.stringify(updatedStyles));
     localStorage.setItem('advanced-editor-versions', JSON.stringify(updatedVersions));
     
+    // Move edited properties to applied
+    setAppliedStyles(new Set([...appliedStyles, ...editedProperties]));
+    setEditedProperties(new Set());
+    
     if (editMode === 'global') {
       setEditedGlobalCategories(new Set());
     } else {
@@ -386,6 +395,12 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
 
   const handleLoadStyle = (style) => {
     setEditMode(style.mode);
+    
+    // Load properties without marking as edited
+    const tempEditedProps = new Set();
+    const prevEditedProps = editedProperties;
+    setEditedProperties(tempEditedProps);
+    
     handleStyleChange('--button-variant', style.variant);
     handleStyleChange('--button-size', style.size);
     setComponentState(style.state);
@@ -395,6 +410,17 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
     if (style.contentType) handleStyleChange('--button-content-type', style.contentType);
     handleStyleChange('--icon-stroke-width', style.iconStrokeWidth);
     handleStyleChange('--icon-color', style.iconColor);
+    
+    // Mark these as applied, not edited
+    setAppliedStyles(new Set(style.changedProperties || []));
+    setEditedProperties(new Set());
+    
+    if (editMode === 'global') {
+      setEditedGlobalCategories(new Set());
+    } else {
+      setEditedCustomCategories(new Set());
+    }
+    
     toast.info(`Loaded: ${style.name}`);
   };
 
@@ -407,10 +433,23 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
 
   const handleRollbackVersion = (version) => {
     if (version.styleSnapshot) {
+      // Rollback without marking as edited
+      setEditedProperties(new Set());
+      
       Object.entries(version.styleSnapshot).forEach(([property, value]) => {
         document.documentElement.style.setProperty(property, value);
-        handleStyleChange(property, value);
+        setStyleValues(prev => ({ ...prev, [property]: value }));
       });
+      
+      // Mark these as applied
+      setAppliedStyles(new Set(Object.keys(version.styleSnapshot)));
+      
+      if (editMode === 'global') {
+        setEditedGlobalCategories(new Set());
+      } else {
+        setEditedCustomCategories(new Set());
+      }
+      
       window.dispatchEvent(new CustomEvent('css-variables-updated'));
       toast.success(`Rolled back to ${version.version}: ${version.name}`);
     } else {
@@ -913,6 +952,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                   { value: 'ghost', label: 'Ghost' },
                   { value: 'link', label: 'Link' }
                 ]}
+                hasLoadedStyle={editedProperties.has('--button-variant') ? false : appliedStyles.has('--button-variant')}
+                isApplicable={selectedElement === 'button'}
               />
             )}
             
