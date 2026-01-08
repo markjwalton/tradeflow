@@ -555,7 +555,6 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                   Apply Style
                 </Button>
               </div>
-            </div>
 
           {/* Applied Styles Cards */}
           {savedStylesList.length > 0 && (
