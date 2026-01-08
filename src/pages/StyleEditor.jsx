@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { UnderlinedTabs, UnderlinedTabsContent } from '@/components/ui/underlined-tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { AdvancedStyleEditor } from '@/components/design-system/AdvancedStyleEditor';
@@ -188,33 +188,32 @@ export default function StyleEditor() {
       </PageHeader>
 
       <div>
-        {/* Component Selection is handled by AdvancedStyleEditor */}
-
         {/* Tabbed Interface */}
-        <Tabs defaultValue="styles" className="w-full">
-          <TabsList>
-            <TabsTrigger value="styles">Style Editor</TabsTrigger>
-            <TabsTrigger value="logic">Component Logic</TabsTrigger>
-            <TabsTrigger value="preview">Live Preview</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="styles" className="space-y-6">
+        <UnderlinedTabs 
+          defaultValue="styles"
+          tabs={[
+            { value: 'styles', label: 'Style Editor' },
+            { value: 'logic', label: 'Component Logic' },
+            { value: 'preview', label: 'Live Preview' }
+          ]}
+        >
+          <UnderlinedTabsContent value="styles">
             <AdvancedStyleEditor 
               onUpdate={handleStyleUpdate}
               onPreviewUpdate={handlePreviewUpdate}
               selectedElement={selectedElement}
             />
-          </TabsContent>
+          </UnderlinedTabsContent>
 
-          <TabsContent value="logic" className="space-y-6">
+          <UnderlinedTabsContent value="logic">
             <ComponentLogicEditor 
               onUpdate={(components) => {
                 console.log('Components updated:', components);
               }}
             />
-          </TabsContent>
+          </UnderlinedTabsContent>
 
-          <TabsContent value="preview" className="space-y-6">
+          <UnderlinedTabsContent value="preview">
             <Card>
               <CardHeader>
                 <CardTitle>Live Preview</CardTitle>
@@ -242,8 +241,8 @@ export default function StyleEditor() {
                 )}
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
+          </UnderlinedTabsContent>
+        </UnderlinedTabs>
       </div>
     </div>
   );
