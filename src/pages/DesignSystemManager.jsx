@@ -789,11 +789,15 @@ For each recommendation, provide:
             <CardContent className="p-6 pb-0">
               <PageSectionHeader
                 title="Component Library"
-                tabs={categories.map(cat => ({
-                  name: cat === "all" ? "All" : cat.charAt(0).toUpperCase() + cat.slice(1),
-                  href: `#${cat}`,
-                  current: selectedCategory === cat
-                }))}
+                tabs={categories.map(cat => {
+                  const displayName = cat === "all" ? "All" : cat.charAt(0).toUpperCase() + cat.slice(1);
+                  const count = componentsByCategory[cat];
+                  return {
+                    name: `${displayName} (${count})`,
+                    href: `#${cat}`,
+                    current: selectedCategory === cat
+                  };
+                })}
                 actions={[
                   {
                     label: "View Showcase",
@@ -801,8 +805,9 @@ For each recommendation, provide:
                   }
                 ]}
                 onTabChange={(tab) => {
-                  const catName = tab.name === "All" ? "all" : tab.name.toLowerCase();
-                  setSelectedCategory(catName);
+                  const catName = tab.name.split(' (')[0];
+                  const normalizedCat = catName === "All" ? "all" : catName.toLowerCase();
+                  setSelectedCategory(normalizedCat);
                 }}
               />
             </CardContent>
@@ -828,11 +833,6 @@ For each recommendation, provide:
                       <CardTitle className="text-base text-foreground">
                         {comp.component_name}
                       </CardTitle>
-                      <Badge variant="outline" className="text-xs">
-                        {componentsByCategory[comp.category]} in {comp.category}
-                      </Badge>
-                    </div>
-                    <div className="flex items-center gap-2 mt-1">
                       <Badge variant="outline" className="text-xs">{comp.category}</Badge>
                       <Badge className="bg-muted text-muted-foreground text-xs">
                         v{comp.version}
