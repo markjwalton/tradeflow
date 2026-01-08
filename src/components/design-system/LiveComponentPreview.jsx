@@ -479,6 +479,29 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
         const cardPatternColor = getComputedStyle(root).getPropertyValue('--card-pattern-color').trim() || '#000000';
         const cardPatternOpacity = getComputedStyle(root).getPropertyValue('--card-pattern-opacity').trim() || '0.08';
         
+        // Get text content and styles from CSS variables
+        const titleText = getComputedStyle(root).getPropertyValue('--card-title-text').trim() || 'Sample Card';
+        const descriptionText = getComputedStyle(root).getPropertyValue('--card-description-text').trim() || 'Card preview with patterns';
+        const contentText = getComputedStyle(root).getPropertyValue('--card-content-text').trim() || 'This is a preview of the card component with background patterns and styling applied.';
+        
+        // Title styles
+        const titleFontFamily = getComputedStyle(root).getPropertyValue('--font-family-display').trim();
+        const titleSize = getComputedStyle(root).getPropertyValue('--card-heading-default-size').trim();
+        const titleWeight = getComputedStyle(root).getPropertyValue('--card-heading-default-weight').trim();
+        const titleColor = getComputedStyle(root).getPropertyValue('--card-heading-color').trim();
+        const titleTracking = getComputedStyle(root).getPropertyValue('--tracking-normal').trim();
+        
+        // Description styles
+        const descriptionFontFamily = getComputedStyle(root).getPropertyValue('--font-family-body').trim();
+        const descriptionSize = getComputedStyle(root).getPropertyValue('--text-sm').trim();
+        const descriptionColor = getComputedStyle(root).getPropertyValue('--color-text-muted').trim();
+        
+        // Content styles
+        const contentFontFamily = getComputedStyle(root).getPropertyValue('--font-family-body').trim();
+        const contentSize = getComputedStyle(root).getPropertyValue('--text-base').trim();
+        const contentColor = getComputedStyle(root).getPropertyValue('--color-text-secondary').trim();
+        const contentLineHeight = getComputedStyle(root).getPropertyValue('--leading-normal').trim();
+        
         // Build pattern classes or inline styles
         let patternClassName = '';
         let patternStyle = {};
@@ -492,15 +515,36 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
           }
         }
         
+        const titleStyle = {
+          fontFamily: titleFontFamily,
+          fontSize: titleSize,
+          fontWeight: titleWeight,
+          color: titleColor,
+          letterSpacing: titleTracking
+        };
+        
+        const descriptionStyle = {
+          fontFamily: descriptionFontFamily,
+          fontSize: descriptionSize,
+          color: descriptionColor
+        };
+        
+        const contentStyle = {
+          fontFamily: contentFontFamily,
+          fontSize: contentSize,
+          color: contentColor,
+          lineHeight: contentLineHeight
+        };
+        
         return () => (
           <div className="relative">
             <Card className={`w-full max-w-md ${patternClassName}`} style={patternStyle}>
               <CardComponents.CardHeader>
-                <CardComponents.CardTitle>Sample Card</CardComponents.CardTitle>
-                <CardComponents.CardDescription>Card preview with patterns</CardComponents.CardDescription>
+                <CardComponents.CardTitle style={titleStyle}>{titleText}</CardComponents.CardTitle>
+                <CardComponents.CardDescription style={descriptionStyle}>{descriptionText}</CardComponents.CardDescription>
               </CardComponents.CardHeader>
               <CardComponents.CardContent>
-                <p className="text-sm">This is a preview of the card component with background patterns and styling applied.</p>
+                <p style={contentStyle}>{contentText}</p>
               </CardComponents.CardContent>
             </Card>
           </div>
