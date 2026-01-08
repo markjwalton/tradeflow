@@ -8,7 +8,8 @@ import { StyleCategory, StyleProperty } from './StyleCategory';
 import { toast } from 'sonner';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { COMPONENT_CATEGORIES, isStyleApplicable, getComponentSpec } from './componentCategories';
-import { SHOWCASE_COMPONENTS, getShowcaseComponentSpec, getEditableProperties, isStyleApplicableToComponent } from './showcaseComponentSpecs';
+import { SHOWCASE_COMPONENTS, SHOWCASE_CATEGORIES, getShowcaseComponentSpec, getEditableProperties, isStyleApplicableToComponent } from './showcaseComponentSpecs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement: propSelectedElement }) {
   const [currentStyle, setCurrentStyle] = useState('--color-primary');
@@ -29,8 +30,9 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   const versionsPerPage = 3;
   const [versionHistory, setVersionHistory] = useState([]);
   const [savedStylesList, setSavedStylesList] = useState([]);
+  const [selectedComponentId, setSelectedComponentId] = useState(propSelectedElement || 'button');
 
-  const selectedElement = propSelectedElement || 'button';
+  const selectedElement = selectedComponentId;
   const selectedComponent = getComponentSpec(selectedElement);
   const showcaseSpec = getShowcaseComponentSpec(selectedElement);
   const dynamicEditableProps = showcaseSpec ? getEditableProperties(selectedElement) : {};
@@ -412,9 +414,48 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   
   const componentDescription = showcaseSpec?.description || selectedComponent?.description || '';
   const functionalSpec = showcaseSpec?.functionalSpec || '';
+  
+  // Group components by category
+  const componentsByCategory = Object.entries(SHOWCASE_CATEGORIES).map(([key, categoryId]) => {
+    const components = Object.values(SHOWCASE_COMPONENTS).filter(c => c.category === categoryId);
+    return { categoryId, categoryLabel: key.charAt(0) + key.slice(1).toLowerCase(), components };
+  }).filter(cat => cat.components.length > 0);
 
   return (
     <div className="space-y-4">
+      {/* Component Selector */}
+      <Card>
+        <div className="p-6">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-semibold text-foreground">Select Component</h3>
+              <Badge variant="outline" className="text-xs">
+                {Object.keys(SHOWCASE_COMPONENTS).length} components
+              </Badge>
+            </div>
+            <Select value={selectedComponentId} onValueChange={setSelectedComponentId}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Choose a component..." />
+              </SelectTrigger>
+              <SelectContent>
+                {componentsByCategory.map(category => (
+                  <div key={category.categoryId}>
+                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground bg-muted/30">
+                      {category.categoryLabel}
+                    </div>
+                    {category.components.map(comp => (
+                      <SelectItem key={comp.id} value={comp.id}>
+                        {comp.label}
+                      </SelectItem>
+                    ))}
+                  </div>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </Card>
+      
       {/* Editing Mode Header - Collapsible */}
       <Card>
         <Collapsible open={isHeaderOpen} onOpenChange={setIsHeaderOpen}>
