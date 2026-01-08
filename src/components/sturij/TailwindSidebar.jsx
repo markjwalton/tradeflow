@@ -45,7 +45,7 @@ export default function TailwindSidebar({ navigation = [] }) {
                         'group flex gap-x-3 rounded-md p-2 text-sm/6 font-normal text-[var(--primary-700)]',
                       )}
                     >
-                      {item.icon && <item.icon aria-hidden="true" className="size-6 shrink-0 text-gray-400" />}
+                      {item.icon && <item.icon aria-hidden="true" className="size-6 shrink-0 text-[var(--primary-600)]" strokeWidth={1} />}
                       {item.name}
                     </a>
                   ) : (
