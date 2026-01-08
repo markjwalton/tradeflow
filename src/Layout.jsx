@@ -218,7 +218,24 @@ export default function Layout({ children, currentPageName }) {
   const isTenantPage = false;
 
   useEffect(() => {
-    let isMounted = true;
+      let isMounted = true;
+
+      // Load Adobe Fonts dynamically
+      const loadAdobeFonts = async () => {
+        try {
+          const response = await base44.functions.invoke('getAdobeFonts', {});
+          if (response.data?.success && response.data?.project_id) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = `https://use.typekit.net/${response.data.project_id}.css`;
+            document.head.appendChild(link);
+          }
+        } catch (e) {
+          console.warn('Failed to load Adobe Fonts:', e);
+        }
+      };
+
+      loadAdobeFonts();
     
     // Check if we already ran init recently (session cache)
     const cachedInit = sessionStorage.getItem(LAYOUT_CACHE_KEY);
