@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
  * Footer with social media links
  * Based on Tailwind UI simple centered footer pattern
  */
-export function TailwindFooter({ 
+export default function TailwindFooter({ 
   socialLinks = [],
   copyrightText = "© 2024 Your Company, Inc. All rights reserved.",
   className 
