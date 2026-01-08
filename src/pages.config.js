@@ -55,6 +55,7 @@ import LivePreview from './pages/LivePreview';
 import LookupTestForms from './pages/LookupTestForms';
 import NavigationManager from './pages/NavigationManager';
 import NavigationManagerTest from './pages/NavigationManagerTest';
+import Oatmeal from './pages/Oatmeal';
 import OklchColorPicker from './pages/OklchColorPicker';
 import OnboardingDashboard from './pages/OnboardingDashboard';
 import OnboardingDocuments from './pages/OnboardingDocuments';
@@ -107,7 +108,6 @@ import UXShowcase from './pages/UXShowcase';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import WebsiteTemplateManager from './pages/WebsiteTemplateManager';
 import WebsiteThemeManager from './pages/WebsiteThemeManager';
-import Oatmeal from './pages/Oatmeal';
 import __Layout from './Layout.jsx';
 
 
@@ -169,6 +169,7 @@ export const PAGES = {
     "LookupTestForms": LookupTestForms,
     "NavigationManager": NavigationManager,
     "NavigationManagerTest": NavigationManagerTest,
+    "Oatmeal": Oatmeal,
     "OklchColorPicker": OklchColorPicker,
     "OnboardingDashboard": OnboardingDashboard,
     "OnboardingDocuments": OnboardingDocuments,
@@ -221,7 +222,6 @@ export const PAGES = {
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
     "WebsiteTemplateManager": WebsiteTemplateManager,
     "WebsiteThemeManager": WebsiteThemeManager,
-    "Oatmeal": Oatmeal,
 }
 
 export const pagesConfig = {
