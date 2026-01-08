@@ -526,7 +526,10 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         <CardContent className="p-6">
           <div className="space-y-4">
           <div>
-            <p className="text-sm text-muted-foreground mb-3">Element: <span className="font-medium text-foreground">{elementName}</span></p>
+            <div className="mb-3">
+              <span className="text-base font-medium font-[family-name:var(--font-family-display)] text-foreground">Element: </span>
+              <span className="text-base font-[family-name:var(--font-family-body)] text-foreground">{elementName}</span>
+            </div>
             {componentDescription && (
               <p className="text-xs text-muted-foreground mb-2">{componentDescription}</p>
             )}
