@@ -6,7 +6,7 @@ import { Upload, X, Check, Move, ZoomIn, ZoomOut } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 
-export function BackgroundImageEditor({ value, onChange }) {
+export function BackgroundImageEditor({ value, onChange, onChangeComplete }) {
   const [isEditing, setIsEditing] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
   const [scale, setScale] = useState(1);
@@ -131,6 +131,7 @@ export function BackgroundImageEditor({ value, onChange }) {
       const result = await base44.integrations.Core.UploadFile({ file: blob });
       
       onChange(result.file_url);
+      if (onChangeComplete) onChangeComplete(result.file_url);
       setIsEditing(false);
       setImageSrc(null);
       toast.success('Background image saved');
@@ -238,7 +239,10 @@ export function BackgroundImageEditor({ value, onChange }) {
               <Button
                 size="sm"
                 variant="destructive"
-                onClick={() => onChange(null)}
+                onClick={() => {
+                  onChange(null);
+                  if (onChangeComplete) onChangeComplete(null);
+                }}
               >
                 <X className="h-4 w-4" />
               </Button>

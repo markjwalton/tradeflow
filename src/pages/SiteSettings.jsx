@@ -956,10 +956,8 @@ export default function SiteSettings() {
           <CardContent className="space-y-6">
             <BackgroundImageEditor
               value={settings.backgroundImage}
-              onChange={(url) => {
-                setSettings({ ...settings, backgroundImage: url });
-                setHasChanges(true);
-              }}
+              onChange={(url) => setSettings({ ...settings, backgroundImage: url })}
+              onChangeComplete={(url) => setHasChanges(true)}
             />
 
             <div className="relative">
