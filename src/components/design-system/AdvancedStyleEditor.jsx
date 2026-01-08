@@ -777,16 +777,16 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               title="Style Editor"
               dragHandleProps={provided?.dragHandleProps}
             />
-            <div className="flex items-center gap-2 px-4 py-2 rounded-[var(--radius-md)] border border-border bg-muted/50">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--radius-md)] border border-border bg-muted/50">
               {editMode === 'global' ? (
                 <>
-                  <Globe className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground font-medium">Global</span>
+                  <Globe className="w-3.5 h-3.5 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground font-medium">Global</span>
                 </>
               ) : (
                 <>
-                  <User className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground font-medium">Custom</span>
+                  <User className="w-3.5 h-3.5 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground font-medium">Custom</span>
                 </>
               )}
             </div>
