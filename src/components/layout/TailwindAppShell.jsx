@@ -30,21 +30,16 @@ export function TailwindAppShell({
   const [sidebarMode, setSidebarMode] = useState('expanded'); // 'expanded', 'icons', 'hidden'
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Extract top-level navigation items for header (items without parent)
+  // Extract top-level navigation items for header - example links for demonstration
   const topNavItems = useMemo(() => {
-    if (!navItems || navItems.length === 0) return [];
-    
-    return navItems
-      .filter(item => !item.parent_id && item.item_type !== 'folder')
-      .sort((a, b) => (a.order || 0) - (b.order || 0))
-      .slice(0, 5) // Limit to 5 items for top nav
-      .map(item => ({
-        id: item.id || item._id,
-        name: item.name,
-        href: item.slug ? createPageUrl(item.slug) : '#',
-        current: currentPageName === item.slug
-      }));
-  }, [navItems, currentPageName]);
+    return [
+      { id: 'home', name: 'Home', href: createPageUrl('Dashboard'), current: currentPageName === 'Dashboard' },
+      { id: 'projects', name: 'Projects', href: createPageUrl('Projects'), current: currentPageName === 'Projects' },
+      { id: 'team', name: 'Team', href: createPageUrl('Team'), current: currentPageName === 'Team' },
+      { id: 'library', name: 'Library', href: createPageUrl('Library'), current: currentPageName === 'Library' },
+      { id: 'ux', name: 'UX Showcase', href: createPageUrl('UXShowcase'), current: currentPageName === 'UXShowcase' }
+    ];
+  }, [currentPageName]);
 
   // Transform navItems to format expected by Tailwind components
   // navItems come from NavigationConfig.items with structure: id, name, slug, icon, parent_id, order, item_type
