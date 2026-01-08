@@ -14,7 +14,7 @@ export default function EmptyState({
     <div className={cn("text-center py-12 bg-[var(--primary-50)] rounded-[var(--radius-lg)] border border-[var(--primary-100)]", className)}>
       <Icon 
         className="mx-auto h-12 w-12 text-[var(--accent-500)]" 
-        strokeWidth={1.25}
+        strokeWidth={1}
       />
       <h3 className="mt-2 text-base font-medium font-[family-name:var(--font-family-display)] text-[var(--accent-500)]">
         {title}
