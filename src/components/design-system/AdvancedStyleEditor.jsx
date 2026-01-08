@@ -795,58 +795,48 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
           <TabsList className="w-full bg-transparent p-0 h-auto border-b border-[var(--color-border)] justify-start gap-8 mb-4 rounded-none">
               <TabsTrigger 
                 value="properties" 
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm relative"
               >
-                <div className="flex items-center gap-2">
-                  Properties
-                  {(editMode === 'global' ? editedGlobalCategories.has('properties') : editedCustomCategories.has('properties')) && (
-                    <span className="w-2 h-2 rounded-full bg-amber-500 flex-shrink-0" />
-                  )}
-                </div>
+                Properties
+                {(editMode === 'global' ? editedGlobalCategories.has('properties') : editedCustomCategories.has('properties')) && (
+                  <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-amber-500" />
+                )}
               </TabsTrigger>
               <TabsTrigger 
                 value="layout" 
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm relative"
               >
-                <div className="flex items-center gap-2">
-                  Layout
-                  {(editMode === 'global' ? (editedGlobalCategories.has('border') || editedGlobalCategories.has('padding') || editedGlobalCategories.has('position')) : (editedCustomCategories.has('border') || editedCustomCategories.has('padding') || editedCustomCategories.has('position'))) && (
-                    <span className="w-2 h-2 rounded-full bg-amber-500 flex-shrink-0" />
-                  )}
-                </div>
+                Layout
+                {(editMode === 'global' ? (editedGlobalCategories.has('border') || editedGlobalCategories.has('padding') || editedGlobalCategories.has('position')) : (editedCustomCategories.has('border') || editedCustomCategories.has('padding') || editedCustomCategories.has('position'))) && (
+                  <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-amber-500" />
+                )}
               </TabsTrigger>
               <TabsTrigger 
                 value="typography" 
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm relative"
               >
-                <div className="flex items-center gap-2">
-                  Typography
-                  {(editMode === 'global' ? editedGlobalCategories.has('font') : editedCustomCategories.has('font')) && (
-                    <span className="w-2 h-2 rounded-full bg-amber-500 flex-shrink-0" />
-                  )}
-                </div>
+                Typography
+                {(editMode === 'global' ? editedGlobalCategories.has('font') : editedCustomCategories.has('font')) && (
+                  <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-amber-500" />
+                )}
               </TabsTrigger>
               <TabsTrigger 
                 value="colors" 
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm relative"
               >
-                <div className="flex items-center gap-2">
-                  Colors
-                  {(editMode === 'global' ? (editedGlobalCategories.has('text') || editedGlobalCategories.has('background')) : (editedCustomCategories.has('text') || editedCustomCategories.has('background'))) && (
-                    <span className="w-2 h-2 rounded-full bg-amber-500 flex-shrink-0" />
-                  )}
-                </div>
+                Colors
+                {(editMode === 'global' ? (editedGlobalCategories.has('text') || editedGlobalCategories.has('background')) : (editedCustomCategories.has('text') || editedCustomCategories.has('background'))) && (
+                  <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-amber-500" />
+                )}
               </TabsTrigger>
               <TabsTrigger 
                 value="effects" 
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm relative"
               >
-                <div className="flex items-center gap-2">
-                  Effects
-                  {(editMode === 'global' ? (editedGlobalCategories.has('extras') || editedGlobalCategories.has('css3')) : (editedCustomCategories.has('extras') || editedCustomCategories.has('css3'))) && (
-                    <span className="w-2 h-2 rounded-full bg-amber-500 flex-shrink-0" />
-                  )}
-                </div>
+                Effects
+                {(editMode === 'global' ? (editedGlobalCategories.has('extras') || editedGlobalCategories.has('css3')) : (editedCustomCategories.has('extras') || editedCustomCategories.has('css3'))) && (
+                  <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-amber-500" />
+                )}
               </TabsTrigger>
             </TabsList>
 
