@@ -190,7 +190,6 @@ export function TailwindAppShell({
             navigation={transformedNavigation}
             navigationMode={sidebarMode}
             onNavigate={handleNavigate}
-            onEditorToggle={onEditorToggle}
           />
 
           {/* Page Content - takes remaining space */}

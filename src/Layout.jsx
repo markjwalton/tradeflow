@@ -26,43 +26,6 @@ import { WebVitals } from "@/components/common/WebVitals";
 // import { initializeSentry, setUserContext } from "@/components/common/sentryConfig";
 
 const LayoutContent = React.memo(function LayoutContent({ children, currentPageName, currentUser, currentTenant, navItems, isFullscreenPage, publicPages, standalonePages, fullscreenPages, userRoles, isGlobalAdmin, isTenantAdmin, siteSettings }) {
-  const { toggleEditMode } = useEditMode();
-  const [editorPanelOpen, setEditorPanelOpen] = useState(false);
-  const [editorViewMode, setEditorViewMode] = useState('full');
-  const [showEditorBubble, setShowEditorBubble] = useState(true);
-  const [showPageProperties, setShowPageProperties] = useState(false);
-  const [showAIAssistant, setShowAIAssistant] = useState(true);
-
-  useEffect(() => {
-    const handlePreferencesChange = (event) => {
-      setShowEditorBubble(event.detail.showEditorBubble ?? true);
-      setShowPageProperties(event.detail.showPageProperties ?? false);
-      setShowAIAssistant(event.detail.showAIAssistant ?? true);
-    };
-
-    const loadPreferences = async () => {
-      try {
-        const user = await base44.auth.me();
-        if (user?.ui_preferences) {
-          setShowEditorBubble(user.ui_preferences.showEditorBubble ?? true);
-          setShowPageProperties(user.ui_preferences.showPageProperties ?? false);
-          setShowAIAssistant(user.ui_preferences.showAIAssistant ?? true);
-        }
-      } catch (e) {
-        // User not logged in
-      }
-    };
-    
-    loadPreferences();
-    window.addEventListener('ui-preferences-changed', handlePreferencesChange);
-    return () => window.removeEventListener('ui-preferences-changed', handlePreferencesChange);
-  }, []);
-
-  const handleEditorToggle = () => {
-    const newState = !editorPanelOpen;
-    setEditorPanelOpen(newState);
-    toggleEditMode();
-  };
 
   if (isFullscreenPage) {
     const fullscreenContextValue = {
@@ -116,13 +79,6 @@ const LayoutContent = React.memo(function LayoutContent({ children, currentPageN
   return (
     <TenantContext.Provider value={tenantContextValue}>
       <SidebarProvider>
-        {editorPanelOpen && (
-          <TopEditorPanel 
-            isOpen={editorPanelOpen} 
-            onClose={() => setEditorPanelOpen(false)} 
-            onViewModeChange={setEditorViewMode}
-          />
-        )}
         <div 
           className="px-2 sm:px-0"
         >
@@ -150,38 +106,12 @@ const LayoutContent = React.memo(function LayoutContent({ children, currentPageN
               tenant={currentTenant} 
               navItems={navItems} 
               currentPageName={currentPageName}
-              onEditorToggle={handleEditorToggle}
             >
               <LiveEditWrapper>{children}</LiveEditWrapper>
             </TailwindAppShell>
           </div>
         </div>
         <GlobalAIAssistant />
-
-        {/* Tools bubble buttons - hide on fullscreen pages */}
-        {!isFullscreenPage && (showEditorBubble || showPageProperties || showAIAssistant) && (
-          <div 
-            className="fixed bottom-6 left-6 flex flex-col-reverse gap-2"
-            style={{ zIndex: 'var(--z-max)' }}
-          >
-            {showEditorBubble && (
-              <button
-                type="button"
-                onClick={handleEditorToggle}
-                className="rounded-[var(--radius-full)] bg-[var(--color-primary)] p-3 text-[var(--color-primary-foreground)] shadow-[var(--shadow-2xl)] hover:bg-[var(--primary-600)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
-                title="Page Editor"
-              >
-                {editorPanelOpen ? (
-                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                ) : (
-                  <Palette className="h-5 w-5" />
-                )}
-              </button>
-            )}
-          </div>
-        )}
       </SidebarProvider>
     </TenantContext.Provider>
   );

@@ -22,14 +22,25 @@ export default function TailwindTopNav({
   logoDropdownItems = [] // Items for logo dropdown menu
 }) {
   return (
-    <Navbar className="sticky top-0 z-40">
+    <Navbar className="sticky top-0 z-40 border-b border-[var(--color-border)] bg-[var(--color-card)]/95 backdrop-blur supports-[backdrop-filter]:bg-[var(--color-card)]/80">
+      {/* Sidebar Toggle (Desktop) - only visible on larger screens */}
+      {onSidebarToggle && (
+        <button
+          type="button"
+          onClick={onSidebarToggle}
+          className="hidden lg:inline-flex p-2 rounded-md text-[var(--color-text-secondary)] hover:bg-[var(--color-muted)]"
+        >
+          <Bars3Icon className="h-5 w-5" />
+        </button>
+      )}
+
       {/* Logo Dropdown */}
       <Dropdown>
         <DropdownButton as={NavbarItem} className="gap-2">
           <img 
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/c94580ddf_sturij-logo.png" 
             alt="Logo"
-            className="h-8 w-8 object-contain"
+            className="h-24 w-24 object-contain"
           />
           <ChevronDownIcon className="h-4 w-4 max-lg:hidden" />
         </DropdownButton>
@@ -83,17 +94,6 @@ export default function TailwindTopNav({
 
       {/* Right Section */}
       <NavbarSection>
-        {/* Sidebar Toggle (Desktop/Tablet) */}
-        {onSidebarToggle && (
-          <button
-            type="button"
-            onClick={onSidebarToggle}
-            className="hidden md:inline-flex p-2 rounded-md text-[var(--color-text-secondary)] hover:bg-[var(--color-muted)] lg:hidden"
-          >
-            <Bars3Icon className="h-5 w-5" />
-          </button>
-        )}
-
         {/* Mobile Menu Button */}
         <button
           type="button"
