@@ -466,17 +466,37 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
       }
       
       if (jsxCode.includes('<Card')) {
-        // Card component
+        // Card component - apply background pattern if set
+        const root = document.documentElement;
+        const cardPattern = getComputedStyle(root).getPropertyValue('--card-bg-pattern').trim();
+        const cardPatternColor = getComputedStyle(root).getPropertyValue('--card-pattern-color').trim() || '#000000';
+        const cardPatternOpacity = getComputedStyle(root).getPropertyValue('--card-pattern-opacity').trim() || '0.08';
+        
+        // Build pattern classes or inline styles
+        let patternClassName = '';
+        let patternStyle = {};
+        
+        if (cardPattern && cardPattern !== 'none') {
+          if (cardPattern.startsWith('bg-gradient')) {
+            patternClassName = cardPattern;
+          } else if (cardPattern.startsWith('bg-[')) {
+            // Extract the pattern classes - Tailwind 4 compatible
+            patternClassName = cardPattern;
+          }
+        }
+        
         return () => (
-          <Card className="w-full max-w-md">
-            <CardComponents.CardHeader>
-              <CardComponents.CardTitle>Sample Card</CardComponents.CardTitle>
-              <CardComponents.CardDescription>Card preview</CardComponents.CardDescription>
-            </CardComponents.CardHeader>
-            <CardComponents.CardContent>
-              <p className="text-sm">This is a preview of the card component.</p>
-            </CardComponents.CardContent>
-          </Card>
+          <div className="relative">
+            <Card className={`w-full max-w-md ${patternClassName}`} style={patternStyle}>
+              <CardComponents.CardHeader>
+                <CardComponents.CardTitle>Sample Card</CardComponents.CardTitle>
+                <CardComponents.CardDescription>Card preview with patterns</CardComponents.CardDescription>
+              </CardComponents.CardHeader>
+              <CardComponents.CardContent>
+                <p className="text-sm">This is a preview of the card component with background patterns and styling applied.</p>
+              </CardComponents.CardContent>
+            </Card>
+          </div>
         );
       }
       

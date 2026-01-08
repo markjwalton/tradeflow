@@ -45,15 +45,16 @@ export function StyleCategory({
   );
 }
 
-export function StyleProperty({ label, value, onChange, type = 'text', options = [], min, max, step }) {
+export function StyleProperty({ label, value, onChange, type = 'text', options = [], min, max, step, disabled = false }) {
   if (type === 'select') {
     return (
       <div className="space-y-1">
-        <Label className="text-xs">{label}</Label>
+        <Label className={`text-xs ${disabled ? 'opacity-40' : ''}`}>{label}</Label>
         <select
-          className="w-full px-3 py-2 border rounded-md text-sm bg-background"
+          className="w-full px-3 py-2 border rounded-md text-sm bg-background disabled:opacity-40 disabled:cursor-not-allowed"
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          disabled={disabled}
         >
           {options.map(opt => (
             <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -67,8 +68,8 @@ export function StyleProperty({ label, value, onChange, type = 'text', options =
     return (
       <div className="space-y-2">
         <div className="flex justify-between items-center">
-          <Label className="text-xs">{label}</Label>
-          <span className="text-xs font-mono text-muted-foreground">{value}</span>
+          <Label className={`text-xs ${disabled ? 'opacity-40' : ''}`}>{label}</Label>
+          <span className={`text-xs font-mono text-muted-foreground ${disabled ? 'opacity-40' : ''}`}>{value}</span>
         </div>
         <Slider
           value={[parseFloat(value) || 0]}
@@ -76,6 +77,8 @@ export function StyleProperty({ label, value, onChange, type = 'text', options =
           min={min || 0}
           max={max || 100}
           step={step || 1}
+          disabled={disabled}
+          className="disabled:opacity-40 disabled:cursor-not-allowed"
         />
       </div>
     );
@@ -84,19 +87,21 @@ export function StyleProperty({ label, value, onChange, type = 'text', options =
   if (type === 'color') {
     return (
       <div className="space-y-1">
-        <Label className="text-xs">{label}</Label>
+        <Label className={`text-xs ${disabled ? 'opacity-40' : ''}`}>{label}</Label>
         <div className="flex gap-2 items-center">
           <Input
             type="color"
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="w-16 h-10"
+            className="w-16 h-10 disabled:opacity-40 disabled:cursor-not-allowed"
+            disabled={disabled}
           />
           <Input
             type="text"
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="flex-1 font-mono text-sm"
+            className="flex-1 font-mono text-sm disabled:opacity-40 disabled:cursor-not-allowed"
+            disabled={disabled}
           />
         </div>
       </div>
@@ -105,12 +110,13 @@ export function StyleProperty({ label, value, onChange, type = 'text', options =
 
   return (
     <div className="space-y-1">
-      <Label className="text-xs">{label}</Label>
+      <Label className={`text-xs ${disabled ? 'opacity-40' : ''}`}>{label}</Label>
       <Input
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full"
+        className="w-full disabled:opacity-40 disabled:cursor-not-allowed"
+        disabled={disabled}
       />
     </div>
   );
