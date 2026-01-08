@@ -84,7 +84,74 @@ export default function StyleEditor() {
 <p className="text-muted-foreground">Muted text example.</p>`,
     badge: `<Badge>Default</Badge>
 <Badge variant="secondary">Secondary</Badge>
-<Badge variant="destructive">Destructive</Badge>`
+<Badge variant="destructive">Destructive</Badge>`,
+    input: `<Input placeholder="Enter text..." />
+<Input type="email" placeholder="Email address" />
+<Input disabled placeholder="Disabled input" />`,
+    select: `<Select>
+  <SelectTrigger>
+    <SelectValue placeholder="Select option" />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectItem value="1">Option 1</SelectItem>
+    <SelectItem value="2">Option 2</SelectItem>
+  </SelectContent>
+</Select>`,
+    dialog: `<Dialog>
+  <DialogTrigger asChild>
+    <Button>Open Dialog</Button>
+  </DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Dialog Title</DialogTitle>
+    </DialogHeader>
+    <p>Dialog content goes here.</p>
+  </DialogContent>
+</Dialog>`,
+    alert: `<Alert>
+  <AlertTitle>Alert Title</AlertTitle>
+  <AlertDescription>Alert message goes here.</AlertDescription>
+</Alert>`,
+    table: `<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Name</TableHead>
+      <TableHead>Status</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell>John Doe</TableCell>
+      <TableCell>Active</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>`,
+    navigation: `<nav>
+  <ul>
+    <li><a href="#">Home</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</nav>`,
+    tooltip: `<Tooltip>
+  <TooltipTrigger>Hover me</TooltipTrigger>
+  <TooltipContent>
+    <p>Tooltip content</p>
+  </TooltipContent>
+</Tooltip>`,
+    avatar: `<Avatar>
+  <AvatarImage src="/avatar.jpg" />
+  <AvatarFallback>JD</AvatarFallback>
+</Avatar>`,
+    skeleton: `<div className="space-y-2">
+  <Skeleton className="h-4 w-full" />
+  <Skeleton className="h-4 w-3/4" />
+</div>`,
+    separator: `<div>
+  <p>Section 1</p>
+  <Separator className="my-4" />
+  <p>Section 2</p>
+</div>`
   };
 
   const hasChanges = Object.keys(styleValues).length > 0;
