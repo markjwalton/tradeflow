@@ -617,15 +617,15 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <span className="text-base font-medium font-[family-name:var(--font-family-display)] text-foreground">Element: </span>
-              <Badge className="bg-[var(--accent-500)] text-white hover:bg-[var(--accent-600)] flex items-center gap-2">
-                {elementName}
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--radius-md)] border border-[var(--accent-300)] bg-[var(--accent-50)]">
+                <span className="text-xs text-[var(--accent-700)] font-medium">{elementName}</span>
                 <div 
                   className={`w-3 h-3 rounded-full ${
                     hasUnsavedChanges ? 'bg-amber-500' : appliedStyles.size > 0 ? 'bg-green-500' : 'bg-red-500'
                   }`}
                   title={hasUnsavedChanges ? 'Edited - unsaved changes' : appliedStyles.size > 0 ? 'Style loaded' : 'No style loaded'}
                 />
-              </Badge>
+              </div>
             </div>
             <div className="flex items-center gap-3 flex-wrap justify-end">
               <Badge variant="secondary" className="text-xs">{instances} Instances</Badge>
