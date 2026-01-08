@@ -14,7 +14,7 @@ export const TenantContext = createContext(null);
 export const useTenant = () => useContext(TenantContext);
 
 import GlobalAIAssistant from "@/components/ai-assistant/GlobalAIAssistant";
-import { AppShell } from "@/components/layout/AppShell";
+import { TailwindAppShell } from "@/components/layout/TailwindAppShell";
 import { SidebarProvider } from "@/components/layout/SidebarContext";
 import { EditModeProvider, useEditMode } from "@/components/page-builder/EditModeContext";
 import { LiveEditWrapper } from "@/components/page-builder/LiveEditWrapper";
@@ -145,7 +145,7 @@ const LayoutContent = React.memo(function LayoutContent({ children, currentPageN
               marginRight: contentAlignment === 'center' ? 'auto' : (contentAlignment === 'right' ? '0' : 'auto'),
             }}
           >
-            <AppShell 
+            <TailwindAppShell 
               user={currentUser} 
               tenant={currentTenant} 
               navItems={navItems} 
@@ -153,7 +153,7 @@ const LayoutContent = React.memo(function LayoutContent({ children, currentPageN
               onEditorToggle={handleEditorToggle}
             >
               <LiveEditWrapper>{children}</LiveEditWrapper>
-            </AppShell>
+            </TailwindAppShell>
           </div>
         </div>
         <GlobalAIAssistant />
