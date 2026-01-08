@@ -867,6 +867,40 @@ export const SHOWCASE_COMPONENTS = {
     sizes: ['default']
   },
 
+  sectionHeader: {
+    id: 'sectionHeader',
+    label: 'Section Header',
+    category: SHOWCASE_CATEGORIES.APPSHELL,
+    description: 'Section heading with tabs and action buttons',
+    functionalSpec: 'Combined heading, tabs navigation, and action buttons. Responsive with mobile select dropdown',
+    editableProperties: {
+      titleSize: {
+        property: '--section-title-size',
+        label: 'Title Size',
+        type: 'select',
+        options: [
+          { value: 'var(--text-sm)', label: 'Small' },
+          { value: 'var(--text-base)', label: 'Base' },
+          { value: 'var(--text-lg)', label: 'Large' }
+        ]
+      },
+      tabActiveColor: {
+        property: '--tab-active-color',
+        label: 'Active Tab Color',
+        type: 'select',
+        options: [
+          { value: 'var(--primary-500)', label: 'Primary' },
+          { value: 'var(--primary-600)', label: 'Primary Dark' },
+          { value: 'var(--accent-500)', label: 'Accent' }
+        ]
+      }
+    },
+    applicableStyles: ['border', 'font', 'text', 'padding'],
+    states: ['default'],
+    variants: ['default', 'with-tabs', 'with-actions'],
+    sizes: ['default']
+  },
+
   // Layout
   layout: {
     id: 'layout',

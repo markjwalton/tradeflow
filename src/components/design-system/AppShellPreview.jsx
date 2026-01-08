@@ -7,10 +7,12 @@ import {
   ChevronRight, PanelLeft, X, LayoutGrid, RefreshCw, Code, Eye
 } from 'lucide-react';
 import { PageHeader } from '@/components/sturij/PageHeader';
+import { PageSectionHeader } from '@/components/sturij/PageSectionHeader';
 
 export function AppShellPreview({ config = {} }) {
   const [sidebarMode, setSidebarMode] = useState('expanded'); // 'expanded', 'icons', 'hidden'
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('overview');
 
   const {
     sidebarWidth = '280px',
@@ -151,14 +153,32 @@ export function AppShellPreview({ config = {} }) {
               </nav>
             </div>
 
-            <div className="p-6">
+            <div className="p-6 space-y-6">
+              {/* Section Header Example */}
+              <PageSectionHeader
+                title="Candidates"
+                currentTab={activeTab}
+                onTabChange={setActiveTab}
+                tabs={[
+                  { value: 'overview', label: 'Applied', count: 12 },
+                  { value: 'screening', label: 'Phone Screening', count: 8 },
+                  { value: 'interview', label: 'Interview', count: 5 },
+                  { value: 'offer', label: 'Offer', count: 2 },
+                  { value: 'hired', label: 'Hired', count: 15 }
+                ]}
+                actions={[
+                  { label: 'Share', variant: 'outline' },
+                  { label: 'Create', variant: 'default' }
+                ]}
+              />
+
               <Card>
                 <CardHeader>
                   <CardTitle>Page Content Area</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-4">
-                    This preview shows the full app shell layout with all components combined, including page tabs for multiple views.
+                    This preview shows the full app shell layout with all components combined, including section headers with tabs and action buttons.
                   </p>
                   <div className="grid grid-cols-3 gap-4">
                     {[1, 2, 3].map(i => (

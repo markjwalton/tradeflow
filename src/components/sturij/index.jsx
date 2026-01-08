@@ -13,6 +13,7 @@
 
 // Core Components
 export { PageHeader } from './PageHeader';
+export { PageSectionHeader } from './PageSectionHeader';
 export { ContentSection } from './ContentSection';
 export { FeatureCard } from './FeatureCard';
 export { StatCard } from './StatCard';
