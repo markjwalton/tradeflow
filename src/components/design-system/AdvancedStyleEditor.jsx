@@ -496,7 +496,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         </CardContent>
         <CardContent className="p-6">
           <div className="space-y-2">
-            <h3 className="text-2xl font-normal text-foreground font-[family-name:var(--font-family-display)]">Component ({availableComponents.length})</h3>
+            <h5 className="text-base font-medium text-foreground font-[family-name:var(--font-family-display)]">Component ({availableComponents.length})</h5>
             <Select value={selectedComponentId} onValueChange={setSelectedComponentId}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Choose a component..." />
