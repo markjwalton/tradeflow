@@ -22,7 +22,7 @@ export default function TailwindTopNav({
   logoDropdownItems = [] // Items for logo dropdown menu
 }) {
   return (
-    <Navbar className="sticky top-0 z-40 border-b border-[var(--color-border)] bg-[var(--color-card)]/95 backdrop-blur supports-[backdrop-filter]:bg-[var(--color-card)]/80">
+    <Navbar className="sticky top-0 z-40 border-b border-[var(--color-border)] bg-[var(--primary-50)]/95 backdrop-blur supports-[backdrop-filter]:bg-[var(--primary-50)]/80">
       {/* Sidebar Toggle (Desktop) - only visible on larger screens */}
       {onSidebarToggle && (
         <button
@@ -30,7 +30,7 @@ export default function TailwindTopNav({
           onClick={onSidebarToggle}
           className="hidden lg:inline-flex p-2 rounded-md text-[var(--color-text-secondary)] hover:bg-[var(--color-muted)]"
         >
-          <Bars3Icon className="h-5 w-5" />
+          <Bars3Icon className="h-5 w-5" strokeWidth={1} />
         </button>
       )}
 
@@ -84,6 +84,7 @@ export default function TailwindTopNav({
             key={item.id} 
             href={item.href} 
             current={item.current}
+            className="text-[var(--primary-600)] font-normal"
           >
             {item.name}
           </NavbarItem>
@@ -100,17 +101,17 @@ export default function TailwindTopNav({
           className="md:hidden p-2 rounded-md text-[var(--color-text-secondary)] hover:bg-[var(--color-muted)]"
           onClick={onMobileMenuClick}
         >
-          <Bars3Icon className="h-6 w-6" />
+          <Bars3Icon className="h-6 w-6" strokeWidth={1} />
         </button>
 
         {/* Search */}
         <NavbarItem href="/search" aria-label="Search" className="max-md:hidden">
-          <MagnifyingGlassIcon className="h-5 w-5" />
+          <MagnifyingGlassIcon className="h-5 w-5" strokeWidth={1} />
         </NavbarItem>
 
         {/* Inbox/Notifications */}
         <NavbarItem href="/inbox" aria-label="Inbox" className="max-md:hidden">
-          <InboxIcon className="h-5 w-5" />
+          <InboxIcon className="h-5 w-5" strokeWidth={1} />
         </NavbarItem>
 
         {/* User Dropdown */}
