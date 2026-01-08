@@ -10,6 +10,7 @@ import {
 import { PageHeader } from '@/components/sturij/PageHeader';
 import { PageSectionHeader } from '@/components/sturij/PageSectionHeader';
 import { PageTitleHeader } from '@/components/sturij/PageTitleHeader';
+import { TailwindFooter } from '@/components/sturij/TailwindFooter';
 import { Avatar } from '@/components/ui/avatar';
 import { 
   Dropdown, 

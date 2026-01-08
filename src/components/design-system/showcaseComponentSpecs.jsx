@@ -935,6 +935,39 @@ export const SHOWCASE_COMPONENTS = {
     sizes: ['default']
   },
 
+  footer: {
+    id: 'footer',
+    label: 'Footer',
+    category: SHOWCASE_CATEGORIES.APPSHELL,
+    description: 'Footer with social links and copyright',
+    functionalSpec: 'Centered footer with social media icons and copyright text. Responsive layout',
+    editableProperties: {
+      iconColor: {
+        property: '--footer-icon-color',
+        label: 'Icon Color',
+        type: 'select',
+        options: [
+          { value: 'var(--muted-foreground)', label: 'Muted' },
+          { value: 'var(--charcoal-500)', label: 'Charcoal 500' },
+          { value: 'var(--primary-500)', label: 'Primary' }
+        ]
+      },
+      textColor: {
+        property: '--footer-text-color',
+        label: 'Text Color',
+        type: 'select',
+        options: [
+          { value: 'var(--muted-foreground)', label: 'Muted' },
+          { value: 'var(--charcoal-600)', label: 'Charcoal 600' }
+        ]
+      }
+    },
+    applicableStyles: ['border', 'background', 'font', 'text', 'padding'],
+    states: ['default'],
+    variants: ['default'],
+    sizes: ['default']
+  },
+
   // Layout
   layout: {
     id: 'layout',

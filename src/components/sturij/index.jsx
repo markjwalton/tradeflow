@@ -15,6 +15,7 @@
 export { PageHeader } from './PageHeader';
 export { PageSectionHeader } from './PageSectionHeader';
 export { PageTitleHeader } from './PageTitleHeader';
+export { TailwindFooter } from './TailwindFooter';
 export { ContentSection } from './ContentSection';
 export { FeatureCard } from './FeatureCard';
 export { StatCard } from './StatCard';
