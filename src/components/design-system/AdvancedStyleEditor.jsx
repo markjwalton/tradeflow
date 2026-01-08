@@ -30,6 +30,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   const versionsPerPage = 3;
   const [versionHistory, setVersionHistory] = useState([]);
   const [savedStylesList, setSavedStylesList] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('components');
   const [selectedComponentId, setSelectedComponentId] = useState(propSelectedElement || 'button');
 
   const selectedElement = selectedComponentId;
@@ -430,44 +431,70 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   
   const componentDescription = showcaseSpec?.description || selectedComponent?.description || '';
   const functionalSpec = showcaseSpec?.functionalSpec || '';
-  
-  // Group components by category - exclude Form to prevent editor UI conflicts
+
+  // Group components by category
   const componentsByCategory = Object.entries(SHOWCASE_CATEGORIES).map(([key, categoryId]) => {
-    const components = Object.values(SHOWCASE_COMPONENTS).filter(c => c.category === categoryId && c.id !== 'form');
+    const components = Object.values(SHOWCASE_COMPONENTS).filter(c => c.category === categoryId);
     return { categoryId, categoryLabel: key.charAt(0) + key.slice(1).toLowerCase(), components };
   }).filter(cat => cat.components.length > 0);
 
+  // Get components for currently selected category
+  const availableComponents = Object.values(SHOWCASE_COMPONENTS).filter(c => c.category === selectedCategory);
+
+  // Category labels mapping
+  const categoryLabels = {
+    'foundations': 'Design Foundations',
+    'components': 'UI Components',
+    'navigation': 'Navigation',
+    'layout': 'Layout & Structure',
+    'data': 'Data Display',
+    'feedback': 'Feedback & States'
+  };
+
   return (
     <div className="space-y-4">
-      {/* Component Selector */}
+      {/* Component Category & Selector */}
       <Card>
         <div className="p-6">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="text-base font-semibold text-foreground">Select Component</h3>
               <Badge variant="outline" className="text-xs">
-                {Object.keys(SHOWCASE_COMPONENTS).length} components
+                {availableComponents.length} in category
               </Badge>
             </div>
-            <Select value={selectedComponentId} onValueChange={setSelectedComponentId}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Choose a component..." />
-              </SelectTrigger>
-              <SelectContent>
-                {componentsByCategory.map(category => (
-                  <div key={category.categoryId}>
-                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground bg-muted/30">
-                      {category.categoryLabel}
-                    </div>
-                    {category.components.map(comp => (
-                      <SelectItem key={comp.id} value={comp.id}>
-                        {comp.label}
-                      </SelectItem>
-                    ))}
-                  </div>
-                ))}
-              </SelectContent>
-            </Select>
+
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-muted-foreground">Category</label>
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Choose category..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(SHOWCASE_CATEGORIES).map(([key, categoryId]) => (
+                    <SelectItem key={categoryId} value={categoryId}>
+                      {categoryLabels[categoryId] || key}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-muted-foreground">Component</label>
+              <Select value={selectedComponentId} onValueChange={setSelectedComponentId}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Choose a component..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {availableComponents.map(comp => (
+                    <SelectItem key={comp.id} value={comp.id}>
+                      {comp.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
       </Card>
