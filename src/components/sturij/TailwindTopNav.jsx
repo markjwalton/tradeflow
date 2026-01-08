@@ -40,7 +40,7 @@ export default function TailwindTopNav({
           <img 
             src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/c94580ddf_sturij-logo.png" 
             alt="Logo"
-            className="h-24 w-24 object-contain"
+            className="h-10 w-auto object-contain"
           />
           <ChevronDownIcon className="h-4 w-4 max-lg:hidden" />
         </DropdownButton>
