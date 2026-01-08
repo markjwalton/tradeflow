@@ -463,54 +463,55 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 </Button>
                 </div>
                 </div>
+                </div>
 
                 {/* Applied Styles Cards */}
                 {savedStylesList.length > 0 && (
-                  <div className="space-y-3">
-                    {savedStylesList.map(style => (
-                      <div 
-                        key={style.id}
-                        className="flex items-center justify-between p-4 bg-gradient-to-r from-muted/40 to-muted/20 rounded-xl border border-border hover:border-primary/40 transition-all group"
-                      >
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="text-sm font-semibold text-foreground">{style.name}</span>
-                            <Badge 
-                              variant={style.mode === 'global' ? 'default' : 'secondary'} 
-                              className="text-xs px-2 py-0.5"
-                            >
-                              {style.mode}
-                            </Badge>
-                          </div>
-                          <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
-                            <span className="italic">{style.timestamp}</span>
-                            <span>•</span>
-                            <span>by Current User</span>
-                            <span>•</span>
-                            <span>{style.variant} / {style.size}</span>
-                          </div>
+                <div className="px-6 pb-6 space-y-3">
+                  {savedStylesList.map(style => (
+                    <div 
+                      key={style.id}
+                      className="flex items-center justify-between p-4 bg-gradient-to-r from-muted/40 to-muted/20 rounded-xl border border-border hover:border-primary/40 transition-all group"
+                    >
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-sm font-semibold text-foreground">{style.name}</span>
+                          <Badge 
+                            variant={style.mode === 'global' ? 'default' : 'secondary'} 
+                            className="text-xs px-2 py-0.5"
+                          >
+                            {style.mode}
+                          </Badge>
                         </div>
-                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleLoadStyle(style)}
-                            className="h-9 px-3 bg-primary/5 hover:bg-primary/10 text-primary border-primary/20"
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleDeleteStyle(style.id)}
-                            className="h-9 px-3 text-destructive hover:text-destructive hover:bg-destructive/10"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
+                        <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
+                          <span className="italic">{style.timestamp}</span>
+                          <span>•</span>
+                          <span>by Current User</span>
+                          <span>•</span>
+                          <span>{style.variant} / {style.size}</span>
                         </div>
                       </div>
-                    ))}
-                  </div>
+                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleLoadStyle(style)}
+                          className="h-9 px-3 bg-primary/5 hover:bg-primary/10 text-primary border-primary/20"
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDeleteStyle(style.id)}
+                          className="h-9 px-3 text-destructive hover:text-destructive hover:bg-destructive/10"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
                 )}
                 </CollapsibleContent>
                 </Collapsible>
