@@ -521,24 +521,46 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
           <PageSectionHeader
             title="Editing"
             dragHandleProps={provided?.dragHandleProps}
+            actions={[
+              {
+                label: editMode === 'global' ? 'Global' : 'Custom',
+                onClick: () => setEditMode(editMode === 'global' ? 'custom' : 'global')
+              },
+              {
+                label: 'Apply Style',
+                onClick: handleApplyStyle
+              }
+            ]}
           />
         </CardContent>
         <CardContent className="p-6">
           <div className="space-y-4">
           <div>
-            <div className="mb-3">
+            <div className="mb-4">
               <span className="text-base font-medium font-[family-name:var(--font-family-display)] text-foreground">Element: </span>
-              <span className="text-base font-[family-name:var(--font-family-body)] text-foreground">{elementName}</span>
+              <span className="text-base font-[family-name:var(--font-family-body)] text-foreground ml-2">{elementName}</span>
             </div>
-            {componentDescription && (
-              <p className="text-xs text-muted-foreground mb-2">{componentDescription}</p>
-            )}
-            {functionalSpec && (
-              <details className="mb-3">
-                <summary className="text-xs text-primary cursor-pointer hover:underline">View Specification</summary>
-                <p className="text-xs text-muted-foreground mt-2 pl-3 border-l-2 border-muted">{functionalSpec}</p>
-              </details>
-            )}
+
+            <Tabs defaultValue="description" className="mb-4">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="description">Description</TabsTrigger>
+                <TabsTrigger value="specification">Specification</TabsTrigger>
+              </TabsList>
+              <TabsContent value="description" className="mt-3">
+                {componentDescription ? (
+                  <p className="text-sm text-[var(--charcoal-800)] leading-[var(--leading-normal)]">{componentDescription}</p>
+                ) : (
+                  <p className="text-sm text-[var(--charcoal-800)] leading-[var(--leading-normal)]">No description available.</p>
+                )}
+              </TabsContent>
+              <TabsContent value="specification" className="mt-3">
+                {functionalSpec ? (
+                  <p className="text-sm text-[var(--charcoal-800)] leading-[var(--leading-normal)]">{functionalSpec}</p>
+                ) : (
+                  <p className="text-sm text-[var(--charcoal-800)] leading-[var(--leading-normal)]">No specification available.</p>
+                )}
+              </TabsContent>
+            </Tabs>
 
             <div className="flex items-center gap-2 mb-4 flex-wrap">
               <Badge variant="secondary" className="text-xs">{instances} Instances</Badge>
@@ -551,38 +573,9 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 </>
               )}
             </div>
-          </div>
-
-          <div className="flex items-center justify-between gap-3 pb-4 border-b">
-            <div className="flex items-center gap-2 bg-muted p-1 rounded-lg">
-              <Button
-                variant={editMode === 'global' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setEditMode('global')}
-                className="h-8 px-4 text-xs"
-              >
-                Global
-              </Button>
-              <Button
-                variant={editMode === 'custom' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setEditMode('custom')}
-                className="h-8 px-4 text-xs"
-              >
-                Custom
-              </Button>
             </div>
-            <Button 
-              onClick={handleApplyStyle}
-              disabled={!hasUnsavedChanges}
-              className="h-9 px-6"
-            >
-              <Save className="h-4 w-4 mr-2" />
-              Apply Style
-            </Button>
-          </div>
 
-          {savedStylesList.length > 0 ? (
+            {savedStylesList.length > 0 ? (
             <div className="space-y-3">
               {savedStylesList.map(style => (
                 <div 
