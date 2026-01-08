@@ -185,30 +185,7 @@ export default function StyleEditor() {
       </div>
 
       <div className="max-w-7xl mx-auto p-6 space-y-6">
-        {/* Element Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle size="small">Select Component</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
-              {COMPONENT_CATEGORIES.map(comp => (
-                <Button
-                  key={comp.value}
-                  variant={selectedElement === comp.value ? 'default' : 'outline'}
-                  onClick={() => {
-                    setSelectedElement(comp.value);
-                    setPreviewComponent(comp.value);
-                  }}
-                  size="sm"
-                  className="justify-start"
-                >
-                  {comp.label}
-                </Button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        {/* Component Selection is handled by AdvancedStyleEditor */}
 
         {/* Live Preview */}
         <Card>
