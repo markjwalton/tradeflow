@@ -215,6 +215,18 @@ export const COMPONENT_CATEGORIES = [
     states: ['default'],
     hasIcon: false,
     examples: ['Section divider', 'Menu separator', 'Toolbar divider', 'Content break']
+  },
+  {
+    value: 'workflowProgress',
+    label: 'Workflow Progress',
+    description: 'Multi-step progress indicator',
+    functionalSpec: 'Displays progress through a multi-step workflow. Shows complete, current, and upcoming steps with visual indicators and descriptions.',
+    applicableStyles: ['border', 'padding', 'font', 'text', 'background', 'css3'],
+    variants: ['horizontal', 'vertical'],
+    sizes: ['default'],
+    states: ['complete', 'current', 'upcoming'],
+    hasIcon: true,
+    examples: ['Checkout flow', 'Onboarding steps', 'Form wizard', 'Application progress']
   }
 ];
 

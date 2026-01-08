@@ -154,7 +154,12 @@ export default function StyleEditor() {
   <p>Section 1</p>
   <Separator className="my-4" />
   <p>Section 2</p>
-</div>`
+</div>`,
+    workflowProgress: `<WorkflowProgress steps={[
+  { id: '01', name: 'Job Details', description: 'Vitae sed mi luctus laoreet.', status: 'complete' },
+  { id: '02', name: 'Application form', description: 'Cursus semper viverra.', status: 'current' },
+  { id: '03', name: 'Preview', description: 'Penatibus eu quis ante.', status: 'upcoming' },
+]} />`
   };
 
   const hasChanges = Object.keys(styleValues).length > 0;
