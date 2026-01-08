@@ -47,7 +47,7 @@ export function UnderlinedTabs({ tabs, defaultValue, onValueChange, children }) 
                   tab.value === currentTab
                     ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
                     : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
-                  'w-1/4 border-b-2 px-1 pt-2 pb-4 text-center text-base font-medium transition-colors',
+                  'w-1/4 border-b-2 px-1 pt-1 pb-4 text-center text-base font-medium transition-colors',
                 )}
               >
                 {tab.label}
