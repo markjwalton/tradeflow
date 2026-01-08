@@ -1510,47 +1510,34 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             )
   };
 
-  const sections = {
-    selector: () => (
-      <Card key="selector" className="border-border">
-        <CardContent className="p-6 pb-0">
-          <PageSectionHeader
-            title="Select Component"
-            tabs={componentsByCategory.map(cat => ({
-              name: `${cat.categoryLabel} (${cat.components.length})`,
-              href: `#${cat.categoryId}`,
-              current: selectedCategory === cat.categoryId
-            }))}
-            onTabChange={(tab) => {
-              const catLabel = tab.name.split(' (')[0];
-              const matchedCat = componentsByCategory.find(c => c.categoryLabel === catLabel);
-              if (matchedCat) {
-                setSelectedCategory(matchedCat.categoryId);
-              }
-            }}
-          />
-        </CardContent>
-        <CardContent className="p-6">
-          <div className="space-y-2">
-            <h5 className="text-base font-medium text-foreground font-[family-name:var(--font-family-display)]">Component ({availableComponents.length})</h5>
-            <Select value={selectedComponentId} onValueChange={setSelectedComponentId}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Choose a component..." />
-              </SelectTrigger>
-              <SelectContent>
-                {availableComponents.map(comp => (
-                  <SelectItem key={comp.id} value={comp.id}>
-                    {comp.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+  return (
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <Droppable droppableId="sections">
+        {(provided) => (
+          <div 
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+            className="space-y-6"
+          >
+            {sectionOrder.map((sectionKey, index) => (
+              <Draggable key={sectionKey} draggableId={sectionKey} index={index}>
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                  >
+                    {sections[sectionKey](index, provided, snapshot)}
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
           </div>
-        </CardContent>
-      </Card>
-    ),
-
-    editing: (index, provided, snapshot) => (
+        )}
+      </Droppable>
+    </DragDropContext>
+  );
+}
       <Card key="editing" className="border-border">
         <CardContent className="p-6 pb-0">
           <PageSectionHeader
