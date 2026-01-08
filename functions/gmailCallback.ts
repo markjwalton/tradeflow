@@ -41,7 +41,11 @@ Deno.serve(async (req) => {
     const tokens = await tokenResponse.json();
 
     if (!tokens.access_token) {
-      return Response.json({ error: 'Failed to get access token' }, { status: 500 });
+      console.error('Token exchange failed:', tokens);
+      return Response.json({ 
+        error: 'Failed to get access token',
+        details: tokens.error_description || tokens.error || 'Unknown error'
+      }, { status: 500 });
     }
 
     // Store tokens securely for the user
