@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -11,8 +11,10 @@ import { Save, RefreshCw, X, GitBranch } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import { COMPONENT_CATEGORIES } from '@/components/design-system/componentCategories';
+import { usePageHeader } from '@/components/layout/PageHeaderContext';
 
 export default function StyleEditor() {
+  const { setActions } = usePageHeader() || {};
   const [previewComponent, setPreviewComponent] = useState('button');
   const [showCode, setShowCode] = useState(false);
   const [styleValues, setStyleValues] = useState({});
@@ -163,6 +165,39 @@ export default function StyleEditor() {
   };
 
   const hasChanges = Object.keys(styleValues).length > 0;
+
+  // Set page header actions
+  useEffect(() => {
+    if (setActions) {
+      setActions([
+        {
+          label: 'Cancel',
+          onClick: handleCancel,
+          disabled: !hasChanges,
+          className: 'inline-flex items-center px-3 py-2 text-sm font-medium rounded-md text-[var(--color-text-secondary)] hover:bg-[var(--color-muted)] disabled:opacity-50',
+          icon: <X className="h-4 w-4" />
+        },
+        {
+          label: 'Reset',
+          onClick: handleReset,
+          disabled: !hasChanges,
+          className: 'inline-flex items-center px-3 py-2 text-sm font-medium rounded-md border border-[var(--color-border)] hover:bg-[var(--color-muted)] disabled:opacity-50',
+          icon: <RefreshCw className="h-4 w-4" />
+        },
+        {
+          label: 'Save',
+          onClick: () => handleSaveToGlobals(styleValues),
+          disabled: !hasChanges,
+          className: 'inline-flex items-center px-3 py-2 text-sm font-medium rounded-md bg-[var(--color-primary)] text-[var(--color-primary-foreground)] hover:bg-[var(--primary-600)] disabled:opacity-50',
+          icon: <Save className="h-4 w-4" />
+        }
+      ]);
+    }
+
+    return () => {
+      if (setActions) setActions([]);
+    };
+  }, [hasChanges, styleValues, setActions]);
 
   return (
     <div className="min-h-screen">
