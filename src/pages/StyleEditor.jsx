@@ -166,33 +166,7 @@ export default function StyleEditor() {
 
   return (
     <div className="min-h-screen">
-      {/* Header with actions */}
-      <div className="border-b bg-card sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold">Advanced Style Editor</h1>
-              <p className="text-sm text-muted-foreground">Edit design tokens with live preview and instance tracking</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" onClick={handleCancel} disabled={!hasChanges}>
-                <X className="h-4 w-4 mr-2" />
-                Cancel
-              </Button>
-              <Button variant="outline" onClick={handleReset} disabled={!hasChanges}>
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Reset
-              </Button>
-              <Button onClick={() => handleSaveToGlobals(styleValues)} disabled={!hasChanges}>
-                <Save className="h-4 w-4 mr-2" />
-                Save
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto p-6 space-y-6">
+      <div className="space-y-6">
         {/* Component Selection is handled by AdvancedStyleEditor */}
 
         {/* Tabbed Interface */}

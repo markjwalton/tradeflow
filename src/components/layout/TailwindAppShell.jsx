@@ -194,24 +194,22 @@ export function TailwindAppShell({
           />
 
           {/* Page Content - takes remaining space */}
-          <main className="flex-1 overflow-y-auto min-w-0 bg-[var(--color-background)]">
-            {/* Page Header with Breadcrumb */}
+          <main className="flex-1 flex flex-col overflow-y-auto min-w-0 bg-[var(--color-background)]">
+            {/* Page Header with Breadcrumb - spans full width */}
             {(breadcrumbPages.length > 0 || currentPageName) && (
-              <div className="border-b border-[var(--color-border)] bg-[var(--color-card)] px-6 py-4">
+              <div className="border-b border-[var(--color-border)] bg-[var(--color-card)] px-6 py-4 sticky top-0 z-10">
                 {breadcrumbPages.length > 0 && (
                   <div className="mb-2">
                     <TailwindBreadcrumb pages={breadcrumbPages} />
                   </div>
                 )}
-                {currentPageName && (
-                  <h1 className="text-2xl font-bold text-[var(--color-text-primary)] font-[var(--font-family-display)]">
-                    {breadcrumbPages[breadcrumbPages.length - 1]?.name || currentPageName}
-                  </h1>
-                )}
+                <h1 className="text-2xl font-bold text-[var(--color-text-primary)] font-[var(--font-family-display)]">
+                  {breadcrumbPages[breadcrumbPages.length - 1]?.name || currentPageName}
+                </h1>
               </div>
             )}
             
-            <div className="p-4 md:p-6 lg:p-8">
+            <div className="flex-1 p-4 md:p-6 lg:p-8">
               {children}
             </div>
           </main>
