@@ -171,7 +171,7 @@ export default function StyleEditor() {
         title="Advanced Style Editor"
         description="Edit design tokens with live preview and instance tracking"
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 bg-transparent">
           <Button variant="ghost" onClick={handleCancel} disabled={!hasChanges}>
             <X className="h-4 w-4 mr-2" />
             Cancel
