@@ -26,7 +26,6 @@ export { DataRow, DataRowGroup } from './DataRow';
 export { default as TailwindNavigation } from './TailwindNavigation';
 export { default as TailwindTopNav } from './TailwindTopNav';
 export { default as TailwindMobileDrawer } from './TailwindMobileDrawer';
-export { default as TailwindFooter } from './TailwindFooter';
 export { default as TailwindBreadcrumb } from './TailwindBreadcrumb';
 export { default as TailwindCard } from './TailwindCard';
 export { default as TailwindDrawer } from './TailwindDrawer';
