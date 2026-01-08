@@ -48,7 +48,7 @@ export function StyleCategory({
 export function StyleProperty({ label, value, onChange, type = 'text', options = [], min, max, step, disabled = false }) {
   if (type === 'select') {
     return (
-      <div className="space-y-1 p-3 bg-muted/30 rounded-lg">
+      <div className="space-y-1 p-3 bg-[var(--primary-50)] rounded-lg">
         <h5 className={`text-sm font-medium font-[family-name:var(--font-family-display)] ${disabled ? 'opacity-40' : ''}`}>{label}</h5>
         <select
           className="w-full px-3 py-2 border rounded-md text-sm bg-background disabled:opacity-40 disabled:cursor-not-allowed"
@@ -66,7 +66,7 @@ export function StyleProperty({ label, value, onChange, type = 'text', options =
 
   if (type === 'slider') {
     return (
-      <div className="space-y-2 p-3 bg-muted/30 rounded-lg">
+      <div className="space-y-2 p-3 bg-[var(--primary-50)] rounded-lg">
         <div className="flex justify-between items-center">
           <h5 className={`text-sm font-medium font-[family-name:var(--font-family-display)] ${disabled ? 'opacity-40' : ''}`}>{label}</h5>
           <span className={`text-xs font-mono text-muted-foreground ${disabled ? 'opacity-40' : ''}`}>{value}</span>
@@ -86,7 +86,7 @@ export function StyleProperty({ label, value, onChange, type = 'text', options =
 
   if (type === 'color') {
     return (
-      <div className="space-y-1 p-3 bg-muted/30 rounded-lg">
+      <div className="space-y-1 p-3 bg-[var(--primary-50)] rounded-lg">
         <h5 className={`text-sm font-medium font-[family-name:var(--font-family-display)] ${disabled ? 'opacity-40' : ''}`}>{label}</h5>
         <div className="flex gap-2 items-center">
           <Input
