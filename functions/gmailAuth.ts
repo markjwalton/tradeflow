@@ -23,8 +23,8 @@ Deno.serve(async (req) => {
     ].join(' ');
 
     // Add login_hint if provided to pre-select the correct Google account
-    const url = new URL(req.url);
-    const email = url.searchParams.get('email');
+    const body = await req.json().catch(() => ({}));
+    const email = body.email;
     
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
       `client_id=${encodeURIComponent(clientId)}` +
