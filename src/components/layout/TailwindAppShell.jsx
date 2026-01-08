@@ -30,16 +30,22 @@ export function TailwindAppShell({
   const [sidebarMode, setSidebarMode] = useState('expanded'); // 'expanded', 'icons', 'hidden'
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Extract top-level navigation items for header - example links for demonstration
-  const topNavItems = useMemo(() => {
-    return [
-      { id: 'home', name: 'Home', href: createPageUrl('Dashboard'), current: currentPageName === 'Dashboard' },
-      { id: 'projects', name: 'Projects', href: createPageUrl('Projects'), current: currentPageName === 'Projects' },
-      { id: 'team', name: 'Team', href: createPageUrl('Team'), current: currentPageName === 'Team' },
-      { id: 'library', name: 'Library', href: createPageUrl('Library'), current: currentPageName === 'Library' },
-      { id: 'ux', name: 'UX Showcase', href: createPageUrl('UXShowcase'), current: currentPageName === 'UXShowcase' }
-    ];
-  }, [currentPageName]);
+  // Extract top-level navigation items from NavigationConfig
+  const { topNavItems, logoDropdownItems } = useMemo(() => {
+    // Get top-level items (no parent) for both top nav and logo dropdown
+    const topLevel = transformedNavigation.filter(item => !item.isFolder);
+    
+    return {
+      topNavItems: topLevel.slice(0, 5), // First 5 for horizontal nav
+      logoDropdownItems: topLevel.map(item => ({
+        id: item.id,
+        name: item.name,
+        href: item.href,
+        icon: item.icon,
+        current: item.current
+      }))
+    };
+  }, [transformedNavigation, currentPageName]);
 
   // Transform navItems to format expected by Tailwind components
   // navItems come from NavigationConfig.items with structure: id, name, slug, icon, parent_id, order, item_type
@@ -157,6 +163,7 @@ export function TailwindAppShell({
           user={formattedUser}
           userNavigation={userNavigation}
           topNavItems={topNavItems}
+          logoDropdownItems={logoDropdownItems}
           searchQuery={searchQuery}
           searchResults={searchResults}
           onSearch={setSearchQuery}
