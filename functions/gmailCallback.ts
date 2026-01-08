@@ -4,9 +4,19 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const url = new URL(req.url);
-    const code = url.searchParams.get('code');
-    const state = url.searchParams.get('state');
+    
+    // Handle both GET (from Google OAuth redirect) and POST (from Base44)
+    let code, state;
+    
+    if (req.method === 'GET') {
+      const url = new URL(req.url);
+      code = url.searchParams.get('code');
+      state = url.searchParams.get('state');
+    } else {
+      const body = await req.json().catch(() => ({}));
+      code = body.code;
+      state = body.state;
+    }
 
     if (!code || !state) {
       return Response.json({ error: 'Missing code or state' }, { status: 400 });
