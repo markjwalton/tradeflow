@@ -556,7 +556,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             </div>
 
             <Tabs defaultValue="description" className="mb-4">
-              <TabsList className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground gap-1 w-full">
+              <TabsList className="w-full">
                 <TabsTrigger value="description" className="flex-1">Description</TabsTrigger>
                 <TabsTrigger value="specification" className="flex-1">Specification</TabsTrigger>
               </TabsList>
