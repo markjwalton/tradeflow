@@ -7,13 +7,7 @@ import { ChevronDown, ChevronRight, Save, Trash2, Pencil } from 'lucide-react';
 import { StyleCategory, StyleProperty } from './StyleCategory';
 import { toast } from 'sonner';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-
-const COMPONENT_TYPES = [
-  { value: 'button', label: 'Button', applicableStyles: ['border', 'padding', 'font', 'text', 'background'] },
-  { value: 'card', label: 'Card', applicableStyles: ['border', 'padding', 'background', 'position'] },
-  { value: 'typography', label: 'Typography', applicableStyles: ['font', 'text'] },
-  { value: 'badge', label: 'Badge', applicableStyles: ['padding', 'font', 'text', 'background', 'border'] },
-];
+import { COMPONENT_CATEGORIES, isStyleApplicable, getComponentSpec } from './componentCategories';
 
 export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement: propSelectedElement }) {
   const [currentStyle, setCurrentStyle] = useState('--color-primary');
@@ -118,7 +112,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   ]);
 
   const selectedElement = propSelectedElement || 'button';
-  const selectedComponent = COMPONENT_TYPES.find(c => c.value === selectedElement);
+  const selectedComponent = getComponentSpec(selectedElement);
 
   // Read current computed styles from DOM on mount
   useEffect(() => {
@@ -149,8 +143,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
     loadCurrentStyles();
   }, [selectedElement]);
 
-  const isStyleApplicable = (styleCategory) => {
-    return selectedComponent?.applicableStyles.includes(styleCategory);
+  const checkStyleApplicable = (styleCategory) => {
+    return isStyleApplicable(selectedElement, styleCategory);
   };
 
   const isStyleLive = (styleName) => {
@@ -810,7 +804,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         <StyleCategory
           title="Border Styles"
           isLive={isStyleLive('--color-border')}
-          isApplicable={isStyleApplicable('border')}
+          isApplicable={checkStyleApplicable('border')}
           isEdited={editMode === 'global' ? editedGlobalCategories.has('border') : editedCustomCategories.has('border')}
           isExpanded={expandedCategories.includes('border')}
           onToggle={() => toggleCategory('border')}
@@ -872,7 +866,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         <StyleCategory
           title="Spacing"
           isLive={isStyleLive('--spacing-4')}
-          isApplicable={isStyleApplicable('padding')}
+          isApplicable={checkStyleApplicable('padding')}
           isEdited={editMode === 'global' ? editedGlobalCategories.has('padding') : editedCustomCategories.has('padding')}
           isExpanded={expandedCategories.includes('padding')}
           onToggle={() => toggleCategory('padding')}
@@ -915,7 +909,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         <StyleCategory
           title="Typography"
           isLive={isStyleLive('--font-family-display')}
-          isApplicable={isStyleApplicable('font')}
+          isApplicable={checkStyleApplicable('font')}
           isEdited={editMode === 'global' ? editedGlobalCategories.has('font') : editedCustomCategories.has('font')}
           isExpanded={expandedCategories.includes('font')}
           onToggle={() => toggleCategory('font')}
@@ -1026,7 +1020,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         <StyleCategory
           title="Colors"
           isLive={isStyleLive('--color-primary')}
-          isApplicable={isStyleApplicable('text')}
+          isApplicable={checkStyleApplicable('text')}
           isEdited={editMode === 'global' ? editedGlobalCategories.has('text') : editedCustomCategories.has('text')}
           isExpanded={expandedCategories.includes('text')}
           onToggle={() => toggleCategory('text')}
@@ -1073,7 +1067,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         <StyleCategory
           title="Backgrounds"
           isLive={isStyleLive('--color-background')}
-          isApplicable={isStyleApplicable('background')}
+          isApplicable={checkStyleApplicable('background')}
           isEdited={editMode === 'global' ? editedGlobalCategories.has('background') : editedCustomCategories.has('background')}
           isExpanded={expandedCategories.includes('background')}
           onToggle={() => toggleCategory('background')}
@@ -1232,7 +1226,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         <StyleCategory
           title="Position Styles"
           isLive={false}
-          isApplicable={isStyleApplicable('position')}
+          isApplicable={checkStyleApplicable('position')}
           isEdited={editMode === 'global' ? editedGlobalCategories.has('position') : editedCustomCategories.has('position')}
           isExpanded={expandedCategories.includes('position')}
           onToggle={() => toggleCategory('position')}
