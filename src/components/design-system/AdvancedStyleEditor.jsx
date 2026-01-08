@@ -119,6 +119,22 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
     };
     
     loadCurrentStyles();
+    
+    // Trigger preview update when component changes
+    if (onPreviewUpdate) {
+      onPreviewUpdate({ 
+        element: selectedElement,
+        state: componentState,
+        shadow: shadowEffect,
+        animation,
+        buttonVariant: styleValues['--button-variant'] || 'default',
+        buttonSize: styleValues['--button-size'] || 'default',
+        buttonActionType: styleValues['--button-action-type'] || 'general',
+        buttonContentType: styleValues['--button-content-type'] || 'text-only',
+        iconStrokeWidth: styleValues['--icon-stroke-width'] || '2',
+        iconColor: styleValues['--icon-color'] || 'currentColor'
+      });
+    }
   }, [selectedElement]);
 
   const checkStyleApplicable = (styleCategory) => {
