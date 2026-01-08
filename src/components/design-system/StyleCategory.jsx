@@ -3,6 +3,7 @@ import { ChevronDown, ChevronRight } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export function StyleCategory({ 
   title, 
@@ -45,29 +46,45 @@ export function StyleCategory({
   );
 }
 
-export function StyleProperty({ label, value, onChange, type = 'text', options = [], min, max, step, disabled = false, hasLoadedStyle = false, isApplicable = true }) {
+export function StyleProperty({ label, value, onChange, type = 'text', options = [], min, max, step, disabled = false, hasLoadedStyle = false, isApplicable = true, colorSwatch = false }) {
+  const renderColorSwatch = () => {
+    if (colorSwatch) {
+      const hexColor = value.startsWith('var(') ? getComputedStyle(document.documentElement).getPropertyValue(value.replace('var(', '').replace(')', '')) : value;
+      return (
+        <div
+          className="w-4 h-4 rounded border-2 flex-shrink-0"
+          style={{ backgroundColor: hexColor || 'transparent' }}
+        />
+      );
+    }
+    return null;
+  };
+
   if (type === 'select') {
     return (
-      <div className={`space-y-1 p-3 bg-[var(--primary-50)] rounded-lg ${!isApplicable ? 'opacity-40' : ''}`}>
-        <div className="flex items-center gap-2">
-          <h5 className={`text-sm font-medium font-[family-name:var(--font-family-display)] flex-1 ${disabled ? 'opacity-40' : ''}`}>{label}</h5>
-          {isApplicable && (
-            <div 
-              className={`w-3 h-3 rounded-full ${hasLoadedStyle ? 'bg-green-500' : 'bg-red-500'}`}
-              title={hasLoadedStyle ? 'Style loaded' : 'No style loaded'}
-            />
-          )}
-        </div>
-        <select
-          className="w-full px-3 py-2 border rounded-md text-sm bg-background disabled:opacity-40 disabled:cursor-not-allowed"
+      <div className={`flex items-center gap-3 p-3 rounded-lg bg-[var(--primary-50)] border border-[var(--primary-100)] ${!isApplicable ? 'opacity-40' : ''}`}>
+        {isApplicable && (
+          <div 
+            className={`w-3 h-3 rounded-full flex-shrink-0 ${hasLoadedStyle ? 'bg-green-500' : 'bg-red-500'}`}
+            title={hasLoadedStyle ? 'Style loaded' : 'No style loaded'}
+          />
+        )}
+        {renderColorSwatch()}
+        <h5 className={`text-base font-medium text-foreground font-[family-name:var(--font-family-display)] whitespace-nowrap ${disabled ? 'opacity-40' : ''}`}>{label}</h5>
+        <Select
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onValueChange={onChange}
           disabled={disabled || !isApplicable}
         >
-          {options.map(opt => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
-          ))}
-        </select>
+          <SelectTrigger className="w-full bg-white">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {options.map(opt => (
+              <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     );
   }
