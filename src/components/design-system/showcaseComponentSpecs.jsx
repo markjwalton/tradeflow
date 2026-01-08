@@ -8,6 +8,7 @@ export const SHOWCASE_CATEGORIES = {
   COMPONENTS: 'components',
   NAVIGATION: 'navigation',
   LAYOUT: 'layout',
+  APPSHELL: 'appshell',
   DATA: 'data',
   FEEDBACK: 'feedback'
 };

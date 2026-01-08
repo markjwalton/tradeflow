@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -452,6 +451,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
     'components': 'UI Components',
     'navigation': 'Navigation',
     'layout': 'Layout & Structure',
+    'appshell': 'App Shell',
     'data': 'Data Display',
     'feedback': 'Feedback & States'
   };
