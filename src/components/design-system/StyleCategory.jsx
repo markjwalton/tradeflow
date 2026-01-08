@@ -49,7 +49,7 @@ export function StyleProperty({ label, value, onChange, type = 'text', options =
   if (type === 'select') {
     return (
       <div className="space-y-1">
-        <Label className={`text-xs ${disabled ? 'opacity-40' : ''}`}>{label}</Label>
+        <h5 className={`text-sm font-medium font-[family-name:var(--font-family-display)] ${disabled ? 'opacity-40' : ''}`}>{label}</h5>
         <select
           className="w-full px-3 py-2 border rounded-md text-sm bg-background disabled:opacity-40 disabled:cursor-not-allowed"
           value={value}
@@ -68,7 +68,7 @@ export function StyleProperty({ label, value, onChange, type = 'text', options =
     return (
       <div className="space-y-2">
         <div className="flex justify-between items-center">
-          <Label className={`text-xs ${disabled ? 'opacity-40' : ''}`}>{label}</Label>
+          <h5 className={`text-sm font-medium font-[family-name:var(--font-family-display)] ${disabled ? 'opacity-40' : ''}`}>{label}</h5>
           <span className={`text-xs font-mono text-muted-foreground ${disabled ? 'opacity-40' : ''}`}>{value}</span>
         </div>
         <Slider
@@ -87,7 +87,7 @@ export function StyleProperty({ label, value, onChange, type = 'text', options =
   if (type === 'color') {
     return (
       <div className="space-y-1">
-        <Label className={`text-xs ${disabled ? 'opacity-40' : ''}`}>{label}</Label>
+        <h5 className={`text-sm font-medium font-[family-name:var(--font-family-display)] ${disabled ? 'opacity-40' : ''}`}>{label}</h5>
         <div className="flex gap-2 items-center">
           <Input
             type="color"
