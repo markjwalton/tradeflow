@@ -32,7 +32,7 @@ Deno.serve(async (req) => {
       `&response_type=code` +
       `&scope=${encodeURIComponent(scopes)}` +
       `&access_type=offline` +
-      `&prompt=select_account consent` +
+      `&prompt=consent` +
       `&state=${user.id}` +
       (email ? `&login_hint=${encodeURIComponent(email)}` : '');
 
