@@ -465,6 +465,28 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
     'feedback': 'Feedback & States'
   };
 
+  const checkCategoryHasLoadedStyles = (categories) => {
+    const categoryMap = {
+      'properties': ['--button-variant', '--button-size', '--button-action-type', '--button-content-type', '--icon-stroke-width', '--icon-color'],
+      'border': ['--color-border', '--border-width', '--border-style', '--border-left-width', '--border-left-color', '--conditional-bg'],
+      'padding': ['--spacing-1', '--spacing-2', '--spacing-3', '--spacing-4', '--spacing-5', '--spacing-6', '--spacing-8', '--spacing-10', '--spacing-12', '--spacing-16'],
+      'position': ['--z-base'],
+      'font': ['--font-family-display', '--font-family-body', '--text-xs', '--text-sm', '--text-base', '--text-lg', '--text-xl', '--text-2xl', '--text-3xl', '--text-4xl', '--text-5xl', '--font-weight-normal', '--font-weight-medium', '--font-weight-semibold', '--font-weight-bold', '--leading-tight', '--leading-snug', '--leading-normal', '--leading-relaxed', '--leading-loose', '--tracking-tight', '--tracking-normal', '--tracking-wide', '--tracking-airy', '--text-align', '--word-spacing-tight', '--word-spacing-normal', '--word-spacing-wide', '--word-spacing-airy', '--paragraph-spacing-tight', '--paragraph-spacing-normal', '--paragraph-spacing-relaxed', '--paragraph-spacing-loose'],
+      'text': ['--color-primary', '--color-secondary', '--color-text-primary'],
+      'background': ['--color-background', '--color-card', '--color-muted'],
+      'extras': ['--opacity'],
+      'css3': ['--shadow-card', '--shadow-card-hover', '--radius-button']
+    };
+
+    for (const cat of categories) {
+      const props = categoryMap[cat] || [];
+      for (const prop of props) {
+        if (styleValues[prop]) return true;
+      }
+    }
+    return false;
+  };
+
   const handleDragEnd = (result) => {
     if (!result.destination) return;
     
@@ -805,45 +827,55 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm relative"
               >
                 Properties
-                {(editMode === 'global' ? editedGlobalCategories.has('properties') : editedCustomCategories.has('properties')) && (
+                {(editMode === 'global' ? editedGlobalCategories.has('properties') : editedCustomCategories.has('properties')) ? (
                   <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-amber-500" />
-                )}
+                ) : checkCategoryHasLoadedStyles(['properties']) ? (
+                  <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-green-500" />
+                ) : null}
               </TabsTrigger>
               <TabsTrigger 
                 value="layout" 
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm relative"
               >
                 Layout
-                {(editMode === 'global' ? (editedGlobalCategories.has('border') || editedGlobalCategories.has('padding') || editedGlobalCategories.has('position')) : (editedCustomCategories.has('border') || editedCustomCategories.has('padding') || editedCustomCategories.has('position'))) && (
+                {(editMode === 'global' ? (editedGlobalCategories.has('border') || editedGlobalCategories.has('padding') || editedGlobalCategories.has('position')) : (editedCustomCategories.has('border') || editedCustomCategories.has('padding') || editedCustomCategories.has('position'))) ? (
                   <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-amber-500" />
-                )}
+                ) : checkCategoryHasLoadedStyles(['border', 'padding', 'position']) ? (
+                  <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-green-500" />
+                ) : null}
               </TabsTrigger>
               <TabsTrigger 
                 value="typography" 
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm relative"
               >
                 Typography
-                {(editMode === 'global' ? editedGlobalCategories.has('font') : editedCustomCategories.has('font')) && (
+                {(editMode === 'global' ? editedGlobalCategories.has('font') : editedCustomCategories.has('font')) ? (
                   <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-amber-500" />
-                )}
+                ) : checkCategoryHasLoadedStyles(['font']) ? (
+                  <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-green-500" />
+                ) : null}
               </TabsTrigger>
               <TabsTrigger 
                 value="colors" 
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm relative"
               >
                 Colors
-                {(editMode === 'global' ? (editedGlobalCategories.has('text') || editedGlobalCategories.has('background')) : (editedCustomCategories.has('text') || editedCustomCategories.has('background'))) && (
+                {(editMode === 'global' ? (editedGlobalCategories.has('text') || editedGlobalCategories.has('background')) : (editedCustomCategories.has('text') || editedCustomCategories.has('background'))) ? (
                   <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-amber-500" />
-                )}
+                ) : checkCategoryHasLoadedStyles(['text', 'background']) ? (
+                  <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-green-500" />
+                ) : null}
               </TabsTrigger>
               <TabsTrigger 
                 value="effects" 
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm relative"
               >
                 Effects
-                {(editMode === 'global' ? (editedGlobalCategories.has('extras') || editedGlobalCategories.has('css3')) : (editedCustomCategories.has('extras') || editedCustomCategories.has('css3'))) && (
+                {(editMode === 'global' ? (editedGlobalCategories.has('extras') || editedGlobalCategories.has('css3')) : (editedCustomCategories.has('extras') || editedCustomCategories.has('css3'))) ? (
                   <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-amber-500" />
-                )}
+                ) : checkCategoryHasLoadedStyles(['extras', 'css3']) ? (
+                  <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-green-500" />
+                ) : null}
               </TabsTrigger>
             </TabsList>
 
