@@ -901,6 +901,40 @@ export const SHOWCASE_COMPONENTS = {
     sizes: ['default']
   },
 
+  pageTitleHeader: {
+    id: 'pageTitleHeader',
+    label: 'Page Title Header',
+    category: SHOWCASE_CATEGORIES.APPSHELL,
+    description: 'Page title with metadata and action buttons',
+    functionalSpec: 'Large page title with metadata items (icons + labels) and responsive action buttons',
+    editableProperties: {
+      titleSize: {
+        property: '--page-title-size',
+        label: 'Title Size',
+        type: 'select',
+        options: [
+          { value: 'var(--text-xl)', label: 'XL' },
+          { value: 'var(--text-2xl)', label: '2XL' },
+          { value: 'var(--text-3xl)', label: '3XL' }
+        ]
+      },
+      metadataColor: {
+        property: '--metadata-color',
+        label: 'Metadata Color',
+        type: 'select',
+        options: [
+          { value: 'var(--muted-foreground)', label: 'Muted' },
+          { value: 'var(--charcoal-500)', label: 'Charcoal 500' },
+          { value: 'var(--charcoal-600)', label: 'Charcoal 600' }
+        ]
+      }
+    },
+    applicableStyles: ['font', 'text', 'padding'],
+    states: ['default'],
+    variants: ['default', 'with-metadata', 'with-actions'],
+    sizes: ['default']
+  },
+
   // Layout
   layout: {
     id: 'layout',

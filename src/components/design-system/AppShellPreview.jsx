@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { PageHeader } from '@/components/sturij/PageHeader';
 import { PageSectionHeader } from '@/components/sturij/PageSectionHeader';
+import { PageTitleHeader } from '@/components/sturij/PageTitleHeader';
 import { Avatar } from '@/components/ui/avatar';
 import { 
   Dropdown, 
@@ -231,6 +232,24 @@ export function AppShellPreview({ config = {} }) {
             className="flex-1 overflow-auto"
             style={{ maxWidth: contentMaxWidth }}
           >
+            {/* Page Title Header */}
+            <div className="bg-card px-6 py-6 border-b">
+              <PageTitleHeader
+                title="Back End Developer"
+                metadata={[
+                  { label: 'Full-time', icon: LayoutGrid },
+                  { label: 'Remote', icon: Home },
+                  { label: '$120k – $140k', icon: LayoutGrid },
+                  { label: 'Closing on January 9, 2026', icon: Calendar }
+                ]}
+                actions={[
+                  { label: 'Edit', variant: 'outline', icon: Settings },
+                  { label: 'View', variant: 'outline', icon: Eye },
+                  { label: 'Publish', variant: 'default', icon: ChevronRight, primary: true }
+                ]}
+              />
+            </div>
+
             {/* Page Tabs Example */}
             <div className="border-b bg-card px-6">
               <nav className="flex gap-8" aria-label="Tabs">
