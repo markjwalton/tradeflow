@@ -15,7 +15,7 @@ export default function PageSectionHeader({
   return (
     <div className="relative border-b border-[var(--color-border)] pb-5 sm:pb-0">
       <div className="md:flex md:items-center md:justify-between">
-        <h3 className="text-base font-semibold text-[var(--color-text-primary)]">{title}</h3>
+        <h3 className="text-[length:var(--text-2xl)] font-[family:var(--font-family-display)] font-[var(--font-weight-normal)] text-[var(--color-text-primary)]">{title}</h3>
         {actions.length > 0 && (
           <div className="mt-3 flex md:absolute md:top-3 md:right-0 md:mt-0">
             {actions.map((action, index) => (
