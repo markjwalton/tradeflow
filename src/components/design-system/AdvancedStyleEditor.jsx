@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -5,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ChevronDown, ChevronRight, Save, Trash2, Pencil } from 'lucide-react';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { StyleCategory, StyleProperty } from './StyleCategory';
 import { toast } from 'sonner';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -34,6 +36,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   const [savedStylesList, setSavedStylesList] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('components');
   const [selectedComponentId, setSelectedComponentId] = useState(propSelectedElement || 'button');
+  const [sectionOrder, setSectionOrder] = useState(['selector', 'editing', 'versions', 'styles']);
 
   const selectedElement = selectedComponentId;
   const selectedComponent = getComponentSpec(selectedElement);
@@ -453,12 +456,24 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
     'feedback': 'Feedback & States'
   };
 
-  return (
-    <div className="space-y-4">
-      {/* Component Category & Selector */}
-      <PageContainer 
+  const handleDragEnd = (result) => {
+    if (!result.destination) return;
+    
+    const items = Array.from(sectionOrder);
+    const [reordered] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reordered);
+    
+    setSectionOrder(items);
+  };
+
+  const sections = {
+    selector: (index, provided, snapshot) => (
+      <PageContainer
+        key="selector"
         title="Select Component"
         description={`${availableComponents.length} components in category`}
+        dragHandleProps={provided?.dragHandleProps}
+        isDragging={snapshot?.isDragging}
       >
         <div className="space-y-4">
           <div className="space-y-2">
@@ -494,231 +509,238 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
           </div>
         </div>
       </PageContainer>
-      
-      {/* Editing Mode Header - Collapsible */}
+    ),
+
+    editing: (index, provided, snapshot) => (
       <AccordionContainer
+        key="editing"
         title="Editing"
         defaultCollapsed={!isHeaderOpen}
+        dragHandleProps={provided?.dragHandleProps}
+        isDragging={snapshot?.isDragging}
       >
-        <div className="space-y-4">{/* Content moved inside container */}
+        <div className="space-y-4">
+          <div>
+            <p className="text-sm text-muted-foreground mb-3">Element: <span className="font-medium text-foreground">{elementName}</span></p>
+            {componentDescription && (
+              <p className="text-xs text-muted-foreground mb-2">{componentDescription}</p>
+            )}
+            {functionalSpec && (
+              <details className="mb-3">
+                <summary className="text-xs text-primary cursor-pointer hover:underline">View Specification</summary>
+                <p className="text-xs text-muted-foreground mt-2 pl-3 border-l-2 border-muted">{functionalSpec}</p>
+              </details>
+            )}
 
-              <div>
-                <p className="text-sm text-muted-foreground mb-3">Element: <span className="font-medium text-foreground">{elementName}</span></p>
-                {componentDescription && (
-                  <p className="text-xs text-muted-foreground mb-2">{componentDescription}</p>
-                )}
-                {functionalSpec && (
-                  <details className="mb-3">
-                    <summary className="text-xs text-primary cursor-pointer hover:underline">View Specification</summary>
-                    <p className="text-xs text-muted-foreground mt-2 pl-3 border-l-2 border-muted">{functionalSpec}</p>
-                  </details>
-                )}
-
-                <div className="flex items-center gap-2 mb-4 flex-wrap">
-                  <Badge variant="secondary" className="text-xs">{instances} Instances</Badge>
-                  {showcaseSpec && (
-                    <>
-                      <Badge variant="outline" className="text-xs">{showcaseSpec.category}</Badge>
-                      {showcaseSpec.variants && (
-                        <Badge variant="outline" className="text-xs">{showcaseSpec.variants.length} variants</Badge>
-                      )}
-                    </>
+            <div className="flex items-center gap-2 mb-4 flex-wrap">
+              <Badge variant="secondary" className="text-xs">{instances} Instances</Badge>
+              {showcaseSpec && (
+                <>
+                  <Badge variant="outline" className="text-xs">{showcaseSpec.category}</Badge>
+                  {showcaseSpec.variants && (
+                    <Badge variant="outline" className="text-xs">{showcaseSpec.variants.length} variants</Badge>
                   )}
-                </div>
-              </div>
+                </>
+              )}
+            </div>
+          </div>
 
-              <div className="flex items-center justify-between gap-3 pb-4 border-b">
-                <div className="flex items-center gap-2 bg-muted p-1 rounded-lg">
-                  <Button
-                    variant={editMode === 'global' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => setEditMode('global')}
-                    className="h-8 px-4 text-xs"
-                  >
-                    Global
-                  </Button>
-                  <Button
-                    variant={editMode === 'custom' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => setEditMode('custom')}
-                    className="h-8 px-4 text-xs"
-                  >
-                    Custom
-                  </Button>
-                </div>
-                <Button 
-                  onClick={handleApplyStyle}
-                  disabled={!hasUnsavedChanges}
-                  className="h-9 px-6"
-                >
-                  <Save className="h-4 w-4 mr-2" />
-                  Apply Style
-                </Button>
-              </div>
+          <div className="flex items-center justify-between gap-3 pb-4 border-b">
+            <div className="flex items-center gap-2 bg-muted p-1 rounded-lg">
+              <Button
+                variant={editMode === 'global' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setEditMode('global')}
+                className="h-8 px-4 text-xs"
+              >
+                Global
+              </Button>
+              <Button
+                variant={editMode === 'custom' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setEditMode('custom')}
+                className="h-8 px-4 text-xs"
+              >
+                Custom
+              </Button>
+            </div>
+            <Button 
+              onClick={handleApplyStyle}
+              disabled={!hasUnsavedChanges}
+              className="h-9 px-6"
+            >
+              <Save className="h-4 w-4 mr-2" />
+              Apply Style
+            </Button>
+          </div>
 
-          {/* Applied Styles Cards */}
           {savedStylesList.length > 0 && (
             <div className="space-y-3">
-                  {savedStylesList.map(style => (
-                    <div 
-                      key={style.id}
-                      className="flex items-center justify-between p-4 bg-gradient-to-r from-muted/40 to-muted/20 rounded-xl border border-border hover:border-primary/40 transition-all group"
-                    >
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-sm font-semibold text-foreground">{style.name}</span>
-                          <Badge 
-                            variant={style.mode === 'global' ? 'default' : 'secondary'} 
-                            className="text-xs px-2 py-0.5"
-                          >
-                            {style.mode}
-                          </Badge>
-                        </div>
-                        <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
-                          <span className="italic">{style.timestamp}</span>
-                          <span>•</span>
-                          <span>by Current User</span>
-                          <span>•</span>
-                          <span>{style.variant} / {style.size}</span>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleLoadStyle(style)}
-                          className="h-9 px-3 bg-primary/5 hover:bg-primary/10 text-primary border-primary/20"
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDeleteStyle(style.id)}
-                          className="h-9 px-3 text-destructive hover:text-destructive hover:bg-destructive/10"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
-                      </div>
+              {savedStylesList.map(style => (
+                <div 
+                  key={style.id}
+                  className="flex items-center justify-between p-4 bg-gradient-to-r from-muted/40 to-muted/20 rounded-xl border border-border hover:border-primary/40 transition-all group"
+                >
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-sm font-semibold text-foreground">{style.name}</span>
+                      <Badge 
+                        variant={style.mode === 'global' ? 'default' : 'secondary'} 
+                        className="text-xs px-2 py-0.5"
+                      >
+                        {style.mode}
+                      </Badge>
                     </div>
-                ))}
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
+                      <span className="italic">{style.timestamp}</span>
+                      <span>•</span>
+                      <span>by Current User</span>
+                      <span>•</span>
+                      <span>{style.variant} / {style.size}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleLoadStyle(style)}
+                      className="h-9 px-3 bg-primary/5 hover:bg-primary/10 text-primary border-primary/20"
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDeleteStyle(style.id)}
+                      className="h-9 px-3 text-destructive hover:text-destructive hover:bg-destructive/10"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>
       </AccordionContainer>
+    ),
 
-      {/* Version Control */}
+    versions: (index, provided, snapshot) => (
       <AccordionContainer
+        key="versions"
         title="Version Control"
         description={`${versionHistory.length} versions`}
         defaultCollapsed={!isVersionsOpen}
+        dragHandleProps={provided?.dragHandleProps}
+        isDragging={snapshot?.isDragging}
       >
         <div className="space-y-4">
-              {/* Version Cards */}
-              <div className="space-y-3">
-                {paginatedVersions.map(version => (
-                  <div 
-                    key={version.id}
-                    className="flex items-center justify-between p-4 bg-gradient-to-r from-muted/40 to-muted/20 rounded-xl border border-border hover:border-primary/40 transition-all group"
-                  >
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="outline" className="text-xs font-mono">
-                          {version.version}
-                        </Badge>
-                        <span className="text-sm font-semibold text-foreground">{version.name}</span>
-                        <Badge 
-                          variant={version.mode === 'global' ? 'default' : 'secondary'} 
-                          className="text-xs px-2 py-0.5"
-                        >
-                          {version.mode}
-                        </Badge>
-                      </div>
-                      <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
-                        <span className="italic">{version.timestamp}</span>
-                        <span>•</span>
-                        <span>by {version.author}</span>
-                        <span>•</span>
-                        <span>{version.changedProperties.length} properties changed</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleRollbackVersion(version)}
-                        className="h-9 px-3 bg-primary/5 hover:bg-primary/10 text-primary border-primary/20"
-                      >
-                        Rollback
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDeleteVersion(version.id)}
-                        className="h-9 px-3 text-destructive hover:text-destructive hover:bg-destructive/10"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
-                    </div>
+          <div className="space-y-3">
+            {paginatedVersions.map(version => (
+              <div 
+                key={version.id}
+                className="flex items-center justify-between p-4 bg-gradient-to-r from-muted/40 to-muted/20 rounded-xl border border-border hover:border-primary/40 transition-all group"
+              >
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Badge variant="outline" className="text-xs font-mono">
+                      {version.version}
+                    </Badge>
+                    <span className="text-sm font-semibold text-foreground">{version.name}</span>
+                    <Badge 
+                      variant={version.mode === 'global' ? 'default' : 'secondary'} 
+                      className="text-xs px-2 py-0.5"
+                    >
+                      {version.mode}
+                    </Badge>
                   </div>
-                ))}
-              </div>
-
-              {/* Pagination */}
-              {totalVersionPages > 1 && (
-                <div className="flex items-center justify-between pt-4 border-t">
+                  <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
+                    <span className="italic">{version.timestamp}</span>
+                    <span>•</span>
+                    <span>by {version.author}</span>
+                    <span>•</span>
+                    <span>{version.changedProperties.length} properties changed</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setCurrentVersionPage(prev => Math.max(1, prev - 1))}
-                    disabled={currentVersionPage === 1}
-                    className="h-8"
+                    onClick={() => handleRollbackVersion(version)}
+                    className="h-9 px-3 bg-primary/5 hover:bg-primary/10 text-primary border-primary/20"
                   >
-                    Previous
+                    Rollback
                   </Button>
-                  <div className="flex items-center gap-2">
-                    {Array.from({ length: totalVersionPages }, (_, i) => i + 1).map(page => (
-                      <Button
-                        key={page}
-                        variant={page === currentVersionPage ? 'default' : 'ghost'}
-                        size="sm"
-                        onClick={() => setCurrentVersionPage(page)}
-                        className="h-8 w-8 p-0"
-                      >
-                        {page}
-                      </Button>
-                    ))}
-                  </div>
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setCurrentVersionPage(prev => Math.min(totalVersionPages, prev + 1))}
-                    disabled={currentVersionPage === totalVersionPages}
-                    className="h-8"
+                    onClick={() => handleDeleteVersion(version.id)}
+                    className="h-9 px-3 text-destructive hover:text-destructive hover:bg-destructive/10"
                   >
-                    Next
+                    <Trash2 className="h-3.5 w-3.5" />
                   </Button>
                 </div>
-              )}
+              </div>
+            ))}
+          </div>
+
+          {totalVersionPages > 1 && (
+            <div className="flex items-center justify-between pt-4 border-t">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentVersionPage(prev => Math.max(1, prev - 1))}
+                disabled={currentVersionPage === 1}
+                className="h-8"
+              >
+                Previous
+              </Button>
+              <div className="flex items-center gap-2">
+                {Array.from({ length: totalVersionPages }, (_, i) => i + 1).map(page => (
+                  <Button
+                    key={page}
+                    variant={page === currentVersionPage ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setCurrentVersionPage(page)}
+                    className="h-8 w-8 p-0"
+                  >
+                    {page}
+                  </Button>
+                ))}
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentVersionPage(prev => Math.min(totalVersionPages, prev + 1))}
+                disabled={currentVersionPage === totalVersionPages}
+                className="h-8"
+              >
+                Next
+              </Button>
+            </div>
+          )}
         </div>
       </AccordionContainer>
+    ),
 
-      {/* Style Categories */}
+    styles: (index, provided, snapshot) => (
       <AccordionContainer
+        key="styles"
         title="Style Editor"
         description={hasUnsavedChanges ? "Unsaved changes" : ""}
         defaultCollapsed={!expandedCategories.includes('styleEditor')}
+        dragHandleProps={provided?.dragHandleProps}
+        isDragging={snapshot?.isDragging}
       >
-            <StyleCategory
-              title="Component Properties"
-              isLive={true}
-              isApplicable={true}
-              isEdited={editMode === 'global' ? editedGlobalCategories.has('properties') : editedCustomCategories.has('properties')}
-              isExpanded={expandedCategories.includes('properties')}
-              onToggle={() => toggleCategory('properties')}
-            >
-              <div className="space-y-4">
-            {/* Button Variant - only for button components */}
+        <StyleCategory
+          title="Component Properties"
+          isLive={true}
+          isApplicable={true}
+          isEdited={editMode === 'global' ? editedGlobalCategories.has('properties') : editedCustomCategories.has('properties')}
+          isExpanded={expandedCategories.includes('properties')}
+          onToggle={() => toggleCategory('properties')}
+        >
+          <div className="space-y-4">
             {selectedElement === 'button' && (
               <StyleProperty
                 label="Button Variant"
@@ -736,7 +758,6 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               />
             )}
             
-            {/* Button Size - only for button components */}
             {selectedElement === 'button' && (
               <StyleProperty
                 label="Button Size"
@@ -752,7 +773,6 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               />
             )}
             
-            {/* Button Action Type - only for button components */}
             {selectedElement === 'button' && (
               <StyleProperty
                 label="Button Action Type"
@@ -779,7 +799,6 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               />
             )}
 
-            {/* Button Content Type - only for button components */}
             {selectedElement === 'button' && (
               <StyleProperty
                 label="Button Content"
@@ -835,7 +854,6 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               ]}
             />
 
-            {/* Icon Properties */}
             {selectedElement === 'button' && (
               <>
                 <StyleProperty
@@ -871,9 +889,9 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 />
               </>
             )}
-
           </div>
         </StyleCategory>
+
         <StyleCategory
           title="Border Styles"
           isLive={isStyleLive('--color-border')}
@@ -1018,7 +1036,6 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             return null;
           })}
 
-          {/* Standard Typography Properties */}
           {Object.keys(dynamicEditableProps).length > 0 && (
             <div className="border-t pt-4 mt-4">
               <div className="text-xs font-medium text-muted-foreground mb-4">Global Typography Tokens</div>
@@ -1155,7 +1172,6 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             return null;
           })}
 
-          {/* Standard Color Properties */}
           {Object.keys(dynamicEditableProps).length > 0 && (
             <div className="border-t pt-4 mt-4">
               <div className="text-xs font-medium text-muted-foreground mb-4">Global Color Tokens</div>
@@ -1447,6 +1463,34 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
           />
         </StyleCategory>
       </AccordionContainer>
-    </div>
+    )
+  };
+
+  return (
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <Droppable droppableId="editor-sections">
+        {(provided) => (
+          <div 
+            className="space-y-4"
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+          >
+            {sectionOrder.map((sectionKey, index) => (
+              <Draggable key={sectionKey} draggableId={sectionKey} index={index}>
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                  >
+                    {sections[sectionKey](index, provided, snapshot)}
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </DragDropContext>
   );
 }
