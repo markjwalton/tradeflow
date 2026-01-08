@@ -772,26 +772,22 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
     styles: (index, provided, snapshot) => (
       <Card key="styles" className="border-border">
         <CardContent className="p-6 pb-0">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <PageSectionHeader
-                title="Style Editor"
-                dragHandleProps={provided?.dragHandleProps}
-              />
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2 rounded-[var(--radius-md)] border border-border bg-muted/50">
-              {editMode === 'global' ? (
-                <>
-                  <Globe className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground font-medium">Global</span>
-                </>
-              ) : (
-                <>
-                  <User className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground font-medium">Custom</span>
-                </>
-              )}
-            </div>
+          <PageSectionHeader
+            title="Style Editor"
+            dragHandleProps={provided?.dragHandleProps}
+          />
+          <div className="flex items-center gap-2 px-4 py-2 rounded-[var(--radius-md)] border border-border bg-muted/50 mt-4 w-fit">
+            {editMode === 'global' ? (
+              <>
+                <Globe className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground font-medium">Global</span>
+              </>
+            ) : (
+              <>
+                <User className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground font-medium">Custom</span>
+              </>
+            )}
           </div>
         </CardContent>
         <CardContent className="p-6 pt-0">
