@@ -45,16 +45,24 @@ export function StyleCategory({
   );
 }
 
-export function StyleProperty({ label, value, onChange, type = 'text', options = [], min, max, step, disabled = false }) {
+export function StyleProperty({ label, value, onChange, type = 'text', options = [], min, max, step, disabled = false, hasLoadedStyle = false, isApplicable = true }) {
   if (type === 'select') {
     return (
-      <div className="space-y-1 p-3 bg-[var(--primary-50)] rounded-lg">
-        <h5 className={`text-sm font-medium font-[family-name:var(--font-family-display)] ${disabled ? 'opacity-40' : ''}`}>{label}</h5>
+      <div className={`space-y-1 p-3 bg-[var(--primary-50)] rounded-lg ${!isApplicable ? 'opacity-40' : ''}`}>
+        <div className="flex items-center gap-2">
+          <h5 className={`text-sm font-medium font-[family-name:var(--font-family-display)] flex-1 ${disabled ? 'opacity-40' : ''}`}>{label}</h5>
+          {isApplicable && (
+            <div 
+              className={`w-2 h-2 rounded-full ${hasLoadedStyle ? 'bg-green-500' : 'bg-red-500'}`}
+              title={hasLoadedStyle ? 'Style loaded' : 'No style loaded'}
+            />
+          )}
+        </div>
         <select
           className="w-full px-3 py-2 border rounded-md text-sm bg-background disabled:opacity-40 disabled:cursor-not-allowed"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          disabled={disabled}
+          disabled={disabled || !isApplicable}
         >
           {options.map(opt => (
             <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -66,10 +74,16 @@ export function StyleProperty({ label, value, onChange, type = 'text', options =
 
   if (type === 'slider') {
     return (
-      <div className="space-y-2 p-3 bg-[var(--primary-50)] rounded-lg">
+      <div className={`space-y-2 p-3 bg-[var(--primary-50)] rounded-lg ${!isApplicable ? 'opacity-40' : ''}`}>
         <div className="flex justify-between items-center">
-          <h5 className={`text-sm font-medium font-[family-name:var(--font-family-display)] ${disabled ? 'opacity-40' : ''}`}>{label}</h5>
-          <span className={`text-xs font-mono text-muted-foreground ${disabled ? 'opacity-40' : ''}`}>{value}</span>
+          <h5 className={`text-sm font-medium font-[family-name:var(--font-family-display)] flex-1 ${disabled ? 'opacity-40' : ''}`}>{label}</h5>
+          {isApplicable && (
+            <div 
+              className={`w-2 h-2 rounded-full ${hasLoadedStyle ? 'bg-green-500' : 'bg-red-500'}`}
+              title={hasLoadedStyle ? 'Style loaded' : 'No style loaded'}
+            />
+          )}
+          <span className={`text-xs font-mono text-muted-foreground ${disabled ? 'opacity-40' : ''} ml-2`}>{value}</span>
         </div>
         <Slider
           value={[parseFloat(value) || 0]}
@@ -86,8 +100,16 @@ export function StyleProperty({ label, value, onChange, type = 'text', options =
 
   if (type === 'color') {
     return (
-      <div className="space-y-1 p-3 bg-[var(--primary-50)] rounded-lg">
-        <h5 className={`text-sm font-medium font-[family-name:var(--font-family-display)] ${disabled ? 'opacity-40' : ''}`}>{label}</h5>
+      <div className={`space-y-1 p-3 bg-[var(--primary-50)] rounded-lg ${!isApplicable ? 'opacity-40' : ''}`}>
+        <div className="flex items-center gap-2">
+          <h5 className={`text-sm font-medium font-[family-name:var(--font-family-display)] flex-1 ${disabled ? 'opacity-40' : ''}`}>{label}</h5>
+          {isApplicable && (
+            <div 
+              className={`w-2 h-2 rounded-full ${hasLoadedStyle ? 'bg-green-500' : 'bg-red-500'}`}
+              title={hasLoadedStyle ? 'Style loaded' : 'No style loaded'}
+            />
+          )}
+        </div>
         <div className="flex gap-2 items-center">
           <Input
             type="color"
