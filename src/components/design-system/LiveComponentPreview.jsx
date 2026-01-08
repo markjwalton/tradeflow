@@ -5,6 +5,13 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Eye, Code, ArrowRight, ChevronDown, Check, X, AlertCircle, Info, Plus, Minus, Settings, User, Save, Pencil, Trash2, Search, Download, Upload, RefreshCw, AlertTriangle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Separator } from '@/components/ui/separator';
 import * as ButtonComponents from '@/components/ui/button';
 import * as CardComponents from '@/components/ui/card';
 import * as BadgeComponents from '@/components/ui/badge';
@@ -529,6 +536,144 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
                 <SelectItem value="3">Option 3</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+        );
+      }
+      
+      if (jsxCode.includes('<Dialog')) {
+        return () => (
+          <div className="w-full max-w-md">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button>Open Dialog</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Dialog Title</DialogTitle>
+                  <DialogDescription>This is a dialog description with some example text.</DialogDescription>
+                </DialogHeader>
+                <p className="text-sm">Dialog content goes here with additional information.</p>
+              </DialogContent>
+            </Dialog>
+          </div>
+        );
+      }
+      
+      if (jsxCode.includes('<Alert')) {
+        return () => (
+          <div className="w-full max-w-md space-y-3">
+            <Alert>
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Default Alert</AlertTitle>
+              <AlertDescription>This is a default alert message.</AlertDescription>
+            </Alert>
+            <Alert variant="destructive">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle>Error Alert</AlertTitle>
+              <AlertDescription>This is an error alert message.</AlertDescription>
+            </Alert>
+          </div>
+        );
+      }
+      
+      if (jsxCode.includes('<Table')) {
+        return () => (
+          <div className="w-full max-w-2xl">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Email</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-medium">John Doe</TableCell>
+                  <TableCell><Badge>Active</Badge></TableCell>
+                  <TableCell>john@example.com</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">Jane Smith</TableCell>
+                  <TableCell><Badge variant="secondary">Pending</Badge></TableCell>
+                  <TableCell>jane@example.com</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+        );
+      }
+      
+      if (jsxCode.includes('<nav') || jsxCode.includes('navigation')) {
+        return () => (
+          <nav className="w-full max-w-md">
+            <ul className="flex flex-col gap-1">
+              <li><a href="#" className="block px-4 py-2 rounded-md hover:bg-muted transition-colors">Home</a></li>
+              <li><a href="#" className="block px-4 py-2 rounded-md hover:bg-muted transition-colors">About</a></li>
+              <li><a href="#" className="block px-4 py-2 rounded-md hover:bg-muted transition-colors">Services</a></li>
+              <li><a href="#" className="block px-4 py-2 rounded-md hover:bg-muted transition-colors">Contact</a></li>
+            </ul>
+          </nav>
+        );
+      }
+      
+      if (jsxCode.includes('<Tooltip')) {
+        return () => (
+          <div className="w-full max-w-md">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="outline">Hover for tooltip</Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>This is a tooltip with helpful information</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        );
+      }
+      
+      if (jsxCode.includes('<Avatar')) {
+        return () => (
+          <div className="flex gap-3 items-center">
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+            <Avatar>
+              <AvatarFallback>JD</AvatarFallback>
+            </Avatar>
+            <Avatar className="h-12 w-12">
+              <AvatarFallback>AB</AvatarFallback>
+            </Avatar>
+          </div>
+        );
+      }
+      
+      if (jsxCode.includes('<Skeleton') || jsxCode.includes('skeleton')) {
+        return () => (
+          <div className="w-full max-w-md space-y-3">
+            <Skeleton className="h-12 w-12 rounded-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-4 w-1/2" />
+          </div>
+        );
+      }
+      
+      if (jsxCode.includes('<Separator') || jsxCode.includes('separator')) {
+        return () => (
+          <div className="w-full max-w-md space-y-4">
+            <div>
+              <h4 className="text-sm font-medium">Section 1</h4>
+              <p className="text-sm text-muted-foreground">Content for section one.</p>
+            </div>
+            <Separator />
+            <div>
+              <h4 className="text-sm font-medium">Section 2</h4>
+              <p className="text-sm text-muted-foreground">Content for section two.</p>
+            </div>
           </div>
         );
       }
