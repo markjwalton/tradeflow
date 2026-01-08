@@ -118,14 +118,17 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
       ];
       
       const currentValues = {};
+      const loadedProps = [];
       stylesToRead.forEach(prop => {
         const value = computedStyle.getPropertyValue(prop).trim();
         if (value) {
           currentValues[prop] = value;
+          loadedProps.push(prop);
         }
       });
       
       setStyleValues(currentValues);
+      setAppliedStyles(new Set(loadedProps));
     };
     
     loadCurrentStyles();
@@ -969,6 +972,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                   { value: 'lg', label: 'Large' },
                   { value: 'icon', label: 'Icon Only' }
                 ]}
+                hasLoadedStyle={editedProperties.has('--button-size') ? false : appliedStyles.has('--button-size')}
+                isApplicable={selectedElement === 'button'}
               />
             )}
             
@@ -995,6 +1000,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                   { value: 'info', label: 'Info (i Circle)' },
                   { value: 'warning', label: 'Warning (Triangle)' }
                 ]}
+                hasLoadedStyle={editedProperties.has('--button-action-type') ? false : appliedStyles.has('--button-action-type')}
+                isApplicable={selectedElement === 'button'}
               />
             )}
 
@@ -1009,6 +1016,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                   { value: 'icon-only', label: 'Icon Only' },
                   { value: 'icon-text', label: 'Icon + Text' }
                 ]}
+                hasLoadedStyle={editedProperties.has('--button-content-type') ? false : appliedStyles.has('--button-content-type')}
+                isApplicable={selectedElement === 'button'}
               />
             )}
 
@@ -1024,6 +1033,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 { value: 'active', label: 'Active (Being pressed)' },
                 { value: 'disabled', label: 'Disabled' }
               ]}
+              hasLoadedStyle={true}
+              isApplicable={true}
             />
             
             <StyleProperty
@@ -1038,6 +1049,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 { value: 'lg', label: 'Shadow LG' },
                 { value: 'xl', label: 'Shadow XL' }
               ]}
+              hasLoadedStyle={true}
+              isApplicable={true}
             />
             
             <StyleProperty
@@ -1051,6 +1064,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 { value: 'bounce', label: 'Bounce' },
                 { value: 'spin', label: 'Spin' }
               ]}
+              hasLoadedStyle={true}
+              isApplicable={true}
             />
 
             {selectedElement === 'button' && (
@@ -1067,6 +1082,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                     { value: '2.5', label: 'Medium (2.5)' },
                     { value: '3', label: 'Bold (3)' }
                   ]}
+                  hasLoadedStyle={editedProperties.has('--icon-stroke-width') ? false : appliedStyles.has('--icon-stroke-width')}
+                  isApplicable={selectedElement === 'button'}
                 />
                 
                 <StyleProperty
@@ -1085,6 +1102,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                     { value: 'var(--charcoal-800)', label: 'Charcoal 800' },
                     { value: '#ffffff', label: 'White' }
                   ]}
+                  hasLoadedStyle={editedProperties.has('--icon-color') ? false : appliedStyles.has('--icon-color')}
+                  isApplicable={selectedElement === 'button'}
                 />
               </>
             )}
