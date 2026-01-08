@@ -557,8 +557,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               </div>
             </div>
 
-            {/* Applied Styles Cards */}
-            {savedStylesList.length > 0 && (
+          {/* Applied Styles Cards */}
+          {savedStylesList.length > 0 && (
             <div className="space-y-3">
                   {savedStylesList.map(style => (
                     <div 
@@ -602,9 +602,9 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                         </Button>
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
+                ))}
+            </div>
+          )}
         </div>
       </AccordionContainer>
 
@@ -1447,7 +1447,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             ]}
           />
         </StyleCategory>
-        </AccordionContainer>
-        </div>
-        );
-        }
+      </AccordionContainer>
+    </div>
+  );
+}
