@@ -269,7 +269,7 @@ export function AppShellPreview({ config = {} }) {
               </nav>
             </div>
 
-            <div className="p-6 space-y-6">
+            <div className="p-6 space-y-6 flex-1">
               {/* Section Header Example */}
               <PageSectionHeader
                 title="Candidates"
@@ -307,6 +307,9 @@ export function AppShellPreview({ config = {} }) {
                 </CardContent>
               </Card>
             </div>
+
+            {/* Footer */}
+            <TailwindFooter />
           </div>
         </div>
       </div>
