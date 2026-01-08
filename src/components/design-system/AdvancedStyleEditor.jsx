@@ -527,19 +527,22 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 label: 'Global',
                 onClick: () => setEditMode('global'),
                 variant: editMode === 'global' ? 'default' : 'outline',
-                size: 'sm'
+                size: 'sm',
+                icon: Globe
               },
               {
                 label: 'Custom',
                 onClick: () => setEditMode('custom'),
                 variant: editMode === 'custom' ? 'default' : 'outline',
-                size: 'sm'
+                size: 'sm',
+                icon: User
               },
               {
                 label: 'Apply Style',
                 onClick: handleApplyStyle,
                 variant: 'default',
-                size: 'sm'
+                size: 'sm',
+                icon: Check
               }
             ]}
           />
