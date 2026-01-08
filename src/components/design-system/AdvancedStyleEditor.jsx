@@ -786,8 +786,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               >
                 <span className="flex items-center gap-2">
                   Properties
-                  {(editedGlobalCategories.has('properties') || editedCustomCategories.has('properties')) && (
-                    <span className="w-2 h-2 rounded-full bg-[var(--color-primary)]" />
+                  {(editMode === 'global' ? editedGlobalCategories.has('properties') : editedCustomCategories.has('properties')) && (
+                    <span className="w-2 h-2 rounded-full bg-amber-500" />
                   )}
                 </span>
               </TabsTrigger>
@@ -797,8 +797,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               >
                 <span className="flex items-center gap-2">
                   Layout
-                  {(isStyleLive('--color-border') || isStyleLive('--spacing-4')) && (
-                    <span className="w-2 h-2 rounded-full bg-[var(--color-primary)]" />
+                  {(editMode === 'global' ? (editedGlobalCategories.has('border') || editedGlobalCategories.has('padding') || editedGlobalCategories.has('position')) : (editedCustomCategories.has('border') || editedCustomCategories.has('padding') || editedCustomCategories.has('position'))) && (
+                    <span className="w-2 h-2 rounded-full bg-amber-500" />
                   )}
                 </span>
               </TabsTrigger>
@@ -808,8 +808,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               >
                 <span className="flex items-center gap-2">
                   Typography
-                  {isStyleLive('--font-family-display') && (
-                    <span className="w-2 h-2 rounded-full bg-[var(--color-primary)]" />
+                  {(editMode === 'global' ? editedGlobalCategories.has('font') : editedCustomCategories.has('font')) && (
+                    <span className="w-2 h-2 rounded-full bg-amber-500" />
                   )}
                 </span>
               </TabsTrigger>
@@ -819,8 +819,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               >
                 <span className="flex items-center gap-2">
                   Colors
-                  {(isStyleLive('--color-primary') || isStyleLive('--color-background')) && (
-                    <span className="w-2 h-2 rounded-full bg-[var(--color-primary)]" />
+                  {(editMode === 'global' ? (editedGlobalCategories.has('text') || editedGlobalCategories.has('background')) : (editedCustomCategories.has('text') || editedCustomCategories.has('background'))) && (
+                    <span className="w-2 h-2 rounded-full bg-amber-500" />
                   )}
                 </span>
               </TabsTrigger>
@@ -830,8 +830,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               >
                 <span className="flex items-center gap-2">
                   Effects
-                  {isStyleLive('--shadow-card') && (
-                    <span className="w-2 h-2 rounded-full bg-[var(--color-primary)]" />
+                  {(editMode === 'global' ? (editedGlobalCategories.has('extras') || editedGlobalCategories.has('css3')) : (editedCustomCategories.has('extras') || editedCustomCategories.has('css3'))) && (
+                    <span className="w-2 h-2 rounded-full bg-amber-500" />
                   )}
                 </span>
               </TabsTrigger>
