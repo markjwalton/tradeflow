@@ -592,21 +592,24 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 onClick: () => setEditMode('global'),
                 variant: editMode === 'global' ? 'default' : 'outline',
                 size: 'sm',
-                icon: Globe
+                icon: Globe,
+                className: 'h-7 px-2 text-xs'
               },
               {
                 label: 'Custom',
                 onClick: () => setEditMode('custom'),
                 variant: editMode === 'custom' ? 'default' : 'outline',
                 size: 'sm',
-                icon: User
+                icon: User,
+                className: 'h-7 px-2 text-xs'
               },
               {
                 label: 'Apply Style',
                 onClick: handleApplyStyle,
                 variant: 'default',
                 size: 'sm',
-                icon: Check
+                icon: Check,
+                className: 'h-7 px-2 text-xs'
               }
             ]}
           />
