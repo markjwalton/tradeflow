@@ -658,12 +658,11 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             </Card>
             ),
 
-    versions: (index, provided, snapshot) => (
+    versions: () => (
       <Card key="versions" className="border-border">
         <CardContent className="p-6 pb-0">
           <PageSectionHeader
             title="Version Control"
-            dragHandleProps={provided?.dragHandleProps}
           />
         </CardContent>
         <CardContent className="p-6">
