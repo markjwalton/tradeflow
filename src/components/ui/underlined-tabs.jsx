@@ -35,7 +35,7 @@ export function UnderlinedTabs({ tabs, defaultValue, onValueChange, children }) 
           className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end fill-gray-500"
         />
       </div>
-      <div className="hidden sm:block">
+      <div className="hidden sm:block -mt-3">
         <div className="border-b border-gray-200">
           <nav aria-label="Tabs" className="-mb-px flex">
             {tabs.map((tab) => (
