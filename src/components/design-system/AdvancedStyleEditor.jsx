@@ -614,15 +614,21 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         <CardContent className="p-6">
           <div className="space-y-4">
           <div>
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-base font-medium font-[family-name:var(--font-family-display)] text-foreground">Element: </span>
-                <Badge className="bg-[var(--accent-500)] text-white hover:bg-[var(--accent-600)]">
-                  {elementName}
-                </Badge>
-              </div>
-              <div className="flex items-center gap-3 flex-wrap justify-end">
-                <Badge variant="secondary" className="text-xs">{instances} Instances</Badge>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <span className="text-base font-medium font-[family-name:var(--font-family-display)] text-foreground">Element: </span>
+              <Badge className="bg-[var(--accent-500)] text-white hover:bg-[var(--accent-600)] flex items-center gap-2">
+                {elementName}
+                <div 
+                  className={`w-3 h-3 rounded-full ${
+                    hasUnsavedChanges ? 'bg-amber-500' : appliedStyles.size > 0 ? 'bg-green-500' : 'bg-red-500'
+                  }`}
+                  title={hasUnsavedChanges ? 'Edited - unsaved changes' : appliedStyles.size > 0 ? 'Style loaded' : 'No style loaded'}
+                />
+              </Badge>
+            </div>
+            <div className="flex items-center gap-3 flex-wrap justify-end">
+              <Badge variant="secondary" className="text-xs">{instances} Instances</Badge>
                 {showcaseSpec && (
                   <>
                     <Badge variant="outline" className="text-xs">{showcaseSpec.category}</Badge>
