@@ -1056,15 +1056,15 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             onChange={(val) => handleStyleChange('--text-base', val)}
             type="select"
             options={[
-              { value: 'var(--text-xs)', label: 'Extra Small (0.75rem)' },
-              { value: 'var(--text-sm)', label: 'Small (0.875rem)' },
-              { value: 'var(--text-base)', label: 'Base (1rem)' },
-              { value: 'var(--text-lg)', label: 'Large (1.125rem)' },
-              { value: 'var(--text-xl)', label: 'XL (1.25rem)' },
-              { value: 'var(--text-2xl)', label: '2XL (1.5rem)' },
-              { value: 'var(--text-3xl)', label: '3XL (1.875rem)' },
-              { value: 'var(--text-4xl)', label: '4XL (2.25rem)' },
-              { value: 'var(--text-5xl)', label: '5XL (3rem)' }
+              { value: 'var(--text-xs)', label: 'Caption (0.75rem)' },
+              { value: 'var(--text-sm)', label: 'Small Text (0.875rem)' },
+              { value: 'var(--text-base)', label: 'Body Text (1rem)' },
+              { value: 'var(--text-lg)', label: 'Large Body (1.125rem)' },
+              { value: 'var(--text-xl)', label: 'H4 Heading (1.25rem)' },
+              { value: 'var(--text-2xl)', label: 'H3 Heading (1.5rem)' },
+              { value: 'var(--text-3xl)', label: 'H2 Section (1.875rem)' },
+              { value: 'var(--text-4xl)', label: 'H1 Page Title (2.25rem)' },
+              { value: 'var(--text-5xl)', label: 'Hero / Display (3rem)' }
             ]}
           />
           <StyleProperty
