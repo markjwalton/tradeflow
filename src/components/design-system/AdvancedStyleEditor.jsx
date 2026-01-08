@@ -767,12 +767,11 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             </Card>
             ),
 
-    styles: (index, provided, snapshot) => (
+    styles: () => (
       <Card key="styles" className="border-border">
         <CardContent className="p-6 pb-0">
           <PageSectionHeader
             title="Style Editor"
-            dragHandleProps={provided?.dragHandleProps}
           />
         </CardContent>
         <CardContent className="p-6">
