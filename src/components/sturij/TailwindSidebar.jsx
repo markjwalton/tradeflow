@@ -23,7 +23,7 @@ export default function TailwindSidebar({ navigation = [] }) {
   }, []);
 
   return (
-    <div className="relative flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
+    <div className="relative flex grow flex-col gap-y-5 overflow-y-auto border-r border-[var(--color-border)] bg-[var(--primary-50)] px-6">
       <div className="relative flex h-16 shrink-0 items-center">
         <img
           alt="Your Company"
@@ -41,8 +41,8 @@ export default function TailwindSidebar({ navigation = [] }) {
                     <a
                       href={item.href}
                       className={classNames(
-                        item.current ? 'bg-gray-50' : 'hover:bg-gray-50',
-                        'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold text-gray-700',
+                        item.current ? 'bg-[var(--primary-100)]' : 'hover:bg-[var(--primary-100)]',
+                        'group flex gap-x-3 rounded-md p-2 text-sm/6 font-normal text-[var(--primary-700)]',
                       )}
                     >
                       {item.icon && <item.icon aria-hidden="true" className="size-6 shrink-0 text-gray-400" />}
@@ -52,15 +52,16 @@ export default function TailwindSidebar({ navigation = [] }) {
                     <Disclosure as="div">
                       <DisclosureButton
                         className={classNames(
-                          item.current ? 'bg-gray-50' : 'hover:bg-gray-50',
-                          'group flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm/6 font-semibold text-gray-700',
+                          item.current ? 'bg-[var(--primary-100)]' : 'hover:bg-[var(--primary-100)]',
+                          'group flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm/6 font-normal text-[var(--primary-700)]',
                         )}
                       >
-                        {item.icon && <item.icon aria-hidden="true" className="size-6 shrink-0 text-gray-400" />}
+                        {item.icon && <item.icon aria-hidden="true" className="size-6 shrink-0 text-[var(--primary-600)]" strokeWidth={1} />}
                         {item.name}
                         <ChevronRightIcon
                           aria-hidden="true"
-                          className="ml-auto size-5 shrink-0 text-gray-400 group-data-open:rotate-90 group-data-open:text-gray-500"
+                          className="ml-auto size-5 shrink-0 text-[var(--primary-600)] group-data-open:rotate-90 group-data-open:text-[var(--primary-700)]"
+                          strokeWidth={1}
                         />
                       </DisclosureButton>
                       <DisclosurePanel as="ul" className="mt-1 px-2">
@@ -70,8 +71,8 @@ export default function TailwindSidebar({ navigation = [] }) {
                               as="a"
                               href={subItem.href}
                               className={classNames(
-                                subItem.current ? 'bg-gray-50' : 'hover:bg-gray-50',
-                                'block rounded-md py-2 pr-2 pl-9 text-sm/6 text-gray-700',
+                                subItem.current ? 'bg-[var(--primary-100)]' : 'hover:bg-[var(--primary-100)]',
+                                'block rounded-md py-2 pr-2 pl-9 text-sm/6 text-[var(--charcoal-800)]',
                               )}
                             >
                               {subItem.name}
@@ -88,7 +89,7 @@ export default function TailwindSidebar({ navigation = [] }) {
           <li className="-mx-6 mt-auto">
             <a
               href="#"
-              className="flex items-center gap-x-4 px-6 py-3 text-sm/6 font-semibold text-gray-900 hover:bg-gray-50"
+              className="flex items-center gap-x-4 px-6 py-3 text-sm/6 font-normal text-[var(--charcoal-800)] hover:bg-[var(--primary-100)]"
             >
               <img
                 alt=""
