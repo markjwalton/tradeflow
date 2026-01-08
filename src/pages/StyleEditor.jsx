@@ -7,6 +7,7 @@ import { LiveComponentPreview } from '@/components/design-system/LiveComponentPr
 import { Save, RefreshCw, X, GitBranch } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
+import { COMPONENT_CATEGORIES } from '@/components/design-system/componentCategories';
 
 export default function StyleEditor() {
   const [previewComponent, setPreviewComponent] = useState('button');
@@ -120,20 +121,22 @@ export default function StyleEditor() {
         {/* Element Card */}
         <Card>
           <CardHeader>
-            <CardTitle>Element Selection</CardTitle>
+            <CardTitle size="small">Select Component</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex gap-2 flex-wrap">
-              {Object.keys(componentExamples).map(comp => (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+              {COMPONENT_CATEGORIES.map(comp => (
                 <Button
-                  key={comp}
-                  variant={selectedElement === comp ? 'default' : 'outline'}
+                  key={comp.value}
+                  variant={selectedElement === comp.value ? 'default' : 'outline'}
                   onClick={() => {
-                    setSelectedElement(comp);
-                    setPreviewComponent(comp);
+                    setSelectedElement(comp.value);
+                    setPreviewComponent(comp.value);
                   }}
+                  size="sm"
+                  className="justify-start"
                 >
-                  {comp.charAt(0).toUpperCase() + comp.slice(1)}
+                  {comp.label}
                 </Button>
               ))}
             </div>
