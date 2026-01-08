@@ -733,54 +733,6 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               onToggle={() => toggleCategory('properties')}
             >
               <div className="space-y-4">
-                {/* Dynamic Properties from Showcase Specs */}
-                {Object.keys(dynamicEditableProps).length > 0 && (
-                  <>
-                    <div className="text-xs font-medium text-primary mb-2">Dynamic Properties</div>
-                    {Object.entries(dynamicEditableProps).map(([key, prop]) => {
-                      if (prop.type === 'select') {
-                        return (
-                          <StyleProperty
-                            key={key}
-                            label={prop.label}
-                            value={styleValues[prop.property] || prop.options[0].value}
-                            onChange={(val) => handleStyleChange(prop.property, val)}
-                            type="select"
-                            options={prop.options}
-                          />
-                        );
-                      }
-                      if (prop.type === 'text') {
-                        return (
-                          <StyleProperty
-                            key={key}
-                            label={prop.label}
-                            value={styleValues[prop.property] || prop.default || ''}
-                            onChange={(val) => handleStyleChange(prop.property, val)}
-                            type="text"
-                          />
-                        );
-                      }
-                      if (prop.type === 'boolean') {
-                        return (
-                          <div key={key} className="flex items-center justify-between">
-                            <label className="text-sm">{prop.label}</label>
-                            <input
-                              type="checkbox"
-                              checked={styleValues[prop.property] || prop.default || false}
-                              onChange={(e) => handleStyleChange(prop.property, e.target.checked)}
-                              className="h-4 w-4"
-                            />
-                          </div>
-                        );
-                      }
-                      return null;
-                    })}
-                    <div className="border-t pt-4 mt-4">
-                      <div className="text-xs font-medium text-muted-foreground mb-2">Standard Properties</div>
-                    </div>
-                  </>
-                )}
             {/* Button Variant - only for button components */}
             {selectedElement === 'button' && (
               <StyleProperty
@@ -1050,6 +1002,43 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
           isExpanded={expandedCategories.includes('font')}
           onToggle={() => toggleCategory('font')}
         >
+          {/* Dynamic Typography Properties */}
+          {Object.entries(dynamicEditableProps).map(([key, prop]) => {
+            const isTypographyProp = ['fontSize', 'fontWeight', 'lineHeight', 'letterSpacing', 'fontFamily', 'textAlign'].some(t => prop.property.includes(t));
+            if (!isTypographyProp) return null;
+
+            if (prop.type === 'select') {
+              return (
+                <StyleProperty
+                  key={key}
+                  label={prop.label}
+                  value={styleValues[prop.property] || prop.options[0].value}
+                  onChange={(val) => handleStyleChange(prop.property, val)}
+                  type="select"
+                  options={prop.options}
+                />
+              );
+            }
+            if (prop.type === 'text') {
+              return (
+                <StyleProperty
+                  key={key}
+                  label={prop.label}
+                  value={styleValues[prop.property] || prop.default || ''}
+                  onChange={(val) => handleStyleChange(prop.property, val)}
+                  type="text"
+                />
+              );
+            }
+            return null;
+          })}
+
+          {/* Standard Typography Properties */}
+          {Object.keys(dynamicEditableProps).length > 0 && (
+            <div className="border-t pt-4 mt-4">
+              <div className="text-xs font-medium text-muted-foreground mb-4">Global Typography Tokens</div>
+            </div>
+          )}
           <StyleProperty
             label="Font Family"
             value={styleValues['--font-family-display'] || 'var(--font-family-display)'}
@@ -1161,6 +1150,32 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
           isExpanded={expandedCategories.includes('text')}
           onToggle={() => toggleCategory('text')}
         >
+          {/* Dynamic Color Properties */}
+          {Object.entries(dynamicEditableProps).map(([key, prop]) => {
+            const isColorProp = prop.property.includes('color') || prop.property.includes('Color');
+            if (!isColorProp) return null;
+
+            if (prop.type === 'select') {
+              return (
+                <StyleProperty
+                  key={key}
+                  label={prop.label}
+                  value={styleValues[prop.property] || prop.options[0].value}
+                  onChange={(val) => handleStyleChange(prop.property, val)}
+                  type="select"
+                  options={prop.options}
+                />
+              );
+            }
+            return null;
+          })}
+
+          {/* Standard Color Properties */}
+          {Object.keys(dynamicEditableProps).length > 0 && (
+            <div className="border-t pt-4 mt-4">
+              <div className="text-xs font-medium text-muted-foreground mb-4">Global Color Tokens</div>
+            </div>
+          )}
           <StyleProperty
             label="Primary Color"
             value={styleValues['--color-primary'] || 'var(--primary-500)'}
