@@ -496,7 +496,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             }}
           />
         </CardContent>
-        <CardContent className="p-6">
+        <CardContent className="p-6 pt-4">
           <div className="space-y-2">
             <h5 className="text-base font-medium text-foreground font-[family-name:var(--font-family-display)]">Component ({availableComponents.length})</h5>
             <Select value={selectedComponentId} onValueChange={setSelectedComponentId}>
@@ -772,14 +772,14 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
     styles: (index, provided, snapshot) => (
       <Card key="styles" className="border-border">
         <CardContent className="p-6 pb-0">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
               <PageSectionHeader
                 title="Style Editor"
                 dragHandleProps={provided?.dragHandleProps}
               />
             </div>
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-muted/50">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-[var(--radius-md)] border border-border bg-muted/50">
               {editMode === 'global' ? (
                 <>
                   <Globe className="w-4 h-4 text-muted-foreground" />
@@ -796,7 +796,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         </CardContent>
         <CardContent className="p-6 pt-0">
           <Tabs defaultValue="properties" className="w-full">
-            <TabsList className="w-full bg-transparent p-0 h-auto border-b border-[var(--color-border)] justify-start gap-8 mb-6">
+          <TabsList className="w-full bg-transparent p-0 h-auto border-b border-[var(--color-border)] justify-start gap-8 mb-4">
               <TabsTrigger 
                 value="properties" 
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm"
