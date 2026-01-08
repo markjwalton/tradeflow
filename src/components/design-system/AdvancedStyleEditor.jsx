@@ -14,6 +14,7 @@ import { SHOWCASE_COMPONENTS, SHOWCASE_CATEGORIES, getShowcaseComponentSpec, get
 import { PageContainer } from '@/components/common/PageContainer';
 import { AccordionContainer } from '@/components/common/AccordionContainer';
 import EmptyState from '@/components/common/EmptyState';
+import PageSectionHeader from '@/components/common/PageSectionHeader';
 
 export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement: propSelectedElement }) {
   const [currentStyle, setCurrentStyle] = useState('--color-primary');
@@ -445,6 +446,12 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
 
   // Get components for currently selected category
   const availableComponents = Object.values(SHOWCASE_COMPONENTS).filter(c => c.category === selectedCategory);
+  
+  // Count components per category for badges
+  const categoryComponentCounts = componentsByCategory.reduce((acc, cat) => {
+    acc[cat.categoryId] = cat.components.length;
+    return acc;
+  }, {});
 
   // Category labels mapping
   const categoryLabels = {
@@ -469,32 +476,27 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
 
   const sections = {
     selector: (index, provided, snapshot) => (
-      <PageContainer
-        key="selector"
-        title="Select Component"
-        description={`${availableComponents.length} components in category`}
-        dragHandleProps={provided?.dragHandleProps}
-        isDragging={snapshot?.isDragging}
-      >
-        <div className="space-y-4">
+      <Card key="selector" className="border-border">
+        <CardContent className="p-6 pb-0">
+          <PageSectionHeader
+            title="Select Component"
+            tabs={componentsByCategory.map(cat => ({
+              name: `${cat.categoryLabel} (${cat.components.length})`,
+              href: `#${cat.categoryId}`,
+              current: selectedCategory === cat.categoryId
+            }))}
+            onTabChange={(tab) => {
+              const catLabel = tab.name.split(' (')[0];
+              const matchedCat = componentsByCategory.find(c => c.categoryLabel === catLabel);
+              if (matchedCat) {
+                setSelectedCategory(matchedCat.categoryId);
+              }
+            }}
+          />
+        </CardContent>
+        <CardContent className="p-6">
           <div className="space-y-2">
-            <label className="text-xs font-medium text-muted-foreground">Category</label>
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Choose category..." />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.entries(SHOWCASE_CATEGORIES).map(([key, categoryId]) => (
-                  <SelectItem key={categoryId} value={categoryId}>
-                    {categoryLabels[categoryId] || key}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-xs font-medium text-muted-foreground">Component</label>
+            <label className="text-xs font-medium text-muted-foreground">Component ({availableComponents.length})</label>
             <Select value={selectedComponentId} onValueChange={setSelectedComponentId}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Choose a component..." />
@@ -508,8 +510,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               </SelectContent>
             </Select>
           </div>
-        </div>
-      </PageContainer>
+        </CardContent>
+      </Card>
     ),
 
     editing: (index, provided, snapshot) => (
