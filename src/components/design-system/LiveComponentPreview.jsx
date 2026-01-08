@@ -506,8 +506,42 @@ export function LiveComponentPreview({ jsxCode, componentName, componentState = 
         return () => <Badge variant={variantMatch?.[1]}>Sample Badge</Badge>;
       }
       
-      // Default fallback
-      return null;
+      if (jsxCode.includes('<Input')) {
+        return () => (
+          <div className="w-full max-w-md space-y-3">
+            <Input placeholder="Enter text..." />
+            <Input type="email" placeholder="Email address" />
+            <Input disabled placeholder="Disabled input" />
+          </div>
+        );
+      }
+      
+      if (jsxCode.includes('<Select')) {
+        return () => (
+          <div className="w-full max-w-md">
+            <Select>
+              <SelectTrigger>
+                <SelectValue placeholder="Select an option" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1">Option 1</SelectItem>
+                <SelectItem value="2">Option 2</SelectItem>
+                <SelectItem value="3">Option 3</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        );
+      }
+      
+      // Default: Show JSX code as text for unsupported components
+      return () => (
+        <div className="w-full max-w-2xl">
+          <div className="bg-muted/30 border border-dashed rounded-lg p-6 text-center">
+            <p className="text-sm text-muted-foreground mb-2">Component Preview</p>
+            <p className="text-xs font-mono text-foreground/70">{jsxCode.split('\n')[0].trim()}</p>
+          </div>
+        </div>
+      );
     };
     
     const PreviewComponent = renderStaticPreview();
