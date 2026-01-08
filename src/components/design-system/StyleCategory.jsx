@@ -109,8 +109,8 @@ export function StyleProperty({ label, value, onChange, type = 'text', options =
   }
 
   return (
-    <div className="space-y-1">
-      <Label className={`text-xs ${disabled ? 'opacity-40' : ''}`}>{label}</Label>
+    <div className="space-y-1 p-3 bg-muted/30 rounded-lg">
+      <h5 className={`text-sm font-medium font-[family-name:var(--font-family-display)] ${disabled ? 'opacity-40' : ''}`}>{label}</h5>
       <Input
         type={type}
         value={value}
