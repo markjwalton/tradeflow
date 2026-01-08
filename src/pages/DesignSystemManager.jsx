@@ -786,26 +786,28 @@ For each recommendation, provide:
         {/* Components Tab */}
         <TabsContent value="components" className="[margin-top:var(--spacing-4)]">
           <Card className="border-border">
+            <CardContent className="p-6 pb-0">
+              <PageSectionHeader
+                title="Component Library"
+                tabs={categories.map(cat => ({
+                  name: cat === "all" ? "All" : cat.charAt(0).toUpperCase() + cat.slice(1),
+                  href: `#${cat}`,
+                  current: selectedCategory === cat
+                }))}
+                actions={[
+                  {
+                    label: "View Showcase",
+                    onClick: () => window.location.href = createPageUrl("ComponentShowcase")
+                  }
+                ]}
+                onTabChange={(tab) => {
+                  const catName = tab.name === "All" ? "all" : tab.name.toLowerCase();
+                  setSelectedCategory(catName);
+                }}
+              />
+            </CardContent>
             <CardContent className="p-6">
               <div className="space-y-4">
-            <PageSectionHeader
-              title="Component Library"
-              tabs={categories.map(cat => ({
-                name: cat === "all" ? "All" : cat.charAt(0).toUpperCase() + cat.slice(1),
-                href: `#${cat}`,
-                current: selectedCategory === cat
-              }))}
-              actions={[
-                {
-                  label: "View Showcase",
-                  onClick: () => window.location.href = createPageUrl("ComponentShowcase")
-                }
-              ]}
-              onTabChange={(tab) => {
-                const catName = tab.name === "All" ? "all" : tab.name.toLowerCase();
-                setSelectedCategory(catName);
-              }}
-            />
 
             {components.length === 0 ? (
             <Card className="border-border">
