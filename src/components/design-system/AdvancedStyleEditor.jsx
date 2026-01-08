@@ -537,15 +537,28 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         <CardContent className="p-6">
           <div className="space-y-4">
           <div>
-            <div className="mb-4">
-              <span className="text-base font-medium font-[family-name:var(--font-family-display)] text-foreground">Element: </span>
-              <span className="text-base font-[family-name:var(--font-family-body)] text-foreground ml-2">{elementName}</span>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <span className="text-base font-medium font-[family-name:var(--font-family-display)] text-foreground">Element: </span>
+                <span className="text-base font-[family-name:var(--font-family-body)] text-foreground">{elementName}</span>
+              </div>
+              <div className="flex items-center gap-3 flex-wrap justify-end">
+                <Badge variant="secondary" className="text-xs">{instances} Instances</Badge>
+                {showcaseSpec && (
+                  <>
+                    <Badge variant="outline" className="text-xs">{showcaseSpec.category}</Badge>
+                    {showcaseSpec.variants && (
+                      <Badge variant="outline" className="text-xs">{showcaseSpec.variants.length} variants</Badge>
+                    )}
+                  </>
+                )}
+              </div>
             </div>
 
             <Tabs defaultValue="description" className="mb-4">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="description">Description</TabsTrigger>
-                <TabsTrigger value="specification">Specification</TabsTrigger>
+              <TabsList className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground gap-1 w-full">
+                <TabsTrigger value="description" className="flex-1">Description</TabsTrigger>
+                <TabsTrigger value="specification" className="flex-1">Specification</TabsTrigger>
               </TabsList>
               <TabsContent value="description" className="mt-3">
                 {componentDescription ? (
@@ -562,18 +575,6 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 )}
               </TabsContent>
             </Tabs>
-
-            <div className="flex items-center gap-2 mb-4 flex-wrap">
-              <Badge variant="secondary" className="text-xs">{instances} Instances</Badge>
-              {showcaseSpec && (
-                <>
-                  <Badge variant="outline" className="text-xs">{showcaseSpec.category}</Badge>
-                  {showcaseSpec.variants && (
-                    <Badge variant="outline" className="text-xs">{showcaseSpec.variants.length} variants</Badge>
-                  )}
-                </>
-              )}
-            </div>
             </div>
 
             {savedStylesList.length > 0 ? (
