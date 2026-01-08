@@ -8,6 +8,7 @@ import { StyleCategory, StyleProperty } from './StyleCategory';
 import { toast } from 'sonner';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { COMPONENT_CATEGORIES, isStyleApplicable, getComponentSpec } from './componentCategories';
+import { SHOWCASE_COMPONENTS, getShowcaseComponentSpec, getEditableProperties, isStyleApplicableToComponent } from './showcaseComponentSpecs';
 
 export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement: propSelectedElement }) {
   const [currentStyle, setCurrentStyle] = useState('--color-primary');
@@ -31,6 +32,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
 
   const selectedElement = propSelectedElement || 'button';
   const selectedComponent = getComponentSpec(selectedElement);
+  const showcaseSpec = getShowcaseComponentSpec(selectedElement);
+  const dynamicEditableProps = showcaseSpec ? getEditableProperties(selectedElement) : {};
 
   // Load persisted data on mount
   useEffect(() => {
@@ -117,7 +120,10 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   }, [selectedElement]);
 
   const checkStyleApplicable = (styleCategory) => {
-    return isStyleApplicable(selectedElement, styleCategory);
+    // Check both systems - original component categories and showcase specs
+    const fromCategories = isStyleApplicable(selectedElement, styleCategory);
+    const fromShowcase = showcaseSpec ? isStyleApplicableToComponent(selectedElement, styleCategory) : false;
+    return fromCategories || fromShowcase;
   };
 
   const isStyleLive = (styleName) => {
@@ -401,8 +407,11 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
 
   const hasUnsavedChanges = editMode === 'global' ? editedGlobalCategories.size > 0 : editedCustomCategories.size > 0;
   const elementName = editMode === 'custom' && customStyleName 
-    ? `Custom ${selectedComponent?.label || 'Component'}` 
-    : selectedComponent?.label || 'Component';
+    ? `Custom ${selectedComponent?.label || showcaseSpec?.label || 'Component'}` 
+    : selectedComponent?.label || showcaseSpec?.label || 'Component';
+  
+  const componentDescription = showcaseSpec?.description || selectedComponent?.description || '';
+  const functionalSpec = showcaseSpec?.functionalSpec || '';
 
   return (
     <div className="space-y-4">
@@ -427,12 +436,26 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             <div className="px-6 pb-6 space-y-4">
               <div>
                 <p className="text-sm text-muted-foreground mb-3">Element: <span className="font-medium text-foreground">{elementName}</span></p>
-                
+                {componentDescription && (
+                  <p className="text-xs text-muted-foreground mb-2">{componentDescription}</p>
+                )}
+                {functionalSpec && (
+                  <details className="mb-3">
+                    <summary className="text-xs text-primary cursor-pointer hover:underline">View Specification</summary>
+                    <p className="text-xs text-muted-foreground mt-2 pl-3 border-l-2 border-muted">{functionalSpec}</p>
+                  </details>
+                )}
+
                 <div className="flex items-center gap-2 mb-4 flex-wrap">
                   <Badge variant="secondary" className="text-xs">{instances} Instances</Badge>
-                  <Badge variant="warning" className="bg-blue-100 text-blue-800 border-blue-400">
-                    3 pending updates
-                  </Badge>
+                  {showcaseSpec && (
+                    <>
+                      <Badge variant="outline" className="text-xs">{showcaseSpec.category}</Badge>
+                      {showcaseSpec.variants && (
+                        <Badge variant="outline" className="text-xs">{showcaseSpec.variants.length} variants</Badge>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -652,7 +675,55 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
               isExpanded={expandedCategories.includes('properties')}
               onToggle={() => toggleCategory('properties')}
             >
-          <div className="space-y-4">
+              <div className="space-y-4">
+                {/* Dynamic Properties from Showcase Specs */}
+                {Object.keys(dynamicEditableProps).length > 0 && (
+                  <>
+                    <div className="text-xs font-medium text-primary mb-2">Dynamic Properties</div>
+                    {Object.entries(dynamicEditableProps).map(([key, prop]) => {
+                      if (prop.type === 'select') {
+                        return (
+                          <StyleProperty
+                            key={key}
+                            label={prop.label}
+                            value={styleValues[prop.property] || prop.options[0].value}
+                            onChange={(val) => handleStyleChange(prop.property, val)}
+                            type="select"
+                            options={prop.options}
+                          />
+                        );
+                      }
+                      if (prop.type === 'text') {
+                        return (
+                          <StyleProperty
+                            key={key}
+                            label={prop.label}
+                            value={styleValues[prop.property] || prop.default || ''}
+                            onChange={(val) => handleStyleChange(prop.property, val)}
+                            type="text"
+                          />
+                        );
+                      }
+                      if (prop.type === 'boolean') {
+                        return (
+                          <div key={key} className="flex items-center justify-between">
+                            <label className="text-sm">{prop.label}</label>
+                            <input
+                              type="checkbox"
+                              checked={styleValues[prop.property] || prop.default || false}
+                              onChange={(e) => handleStyleChange(prop.property, e.target.checked)}
+                              className="h-4 w-4"
+                            />
+                          </div>
+                        );
+                      }
+                      return null;
+                    })}
+                    <div className="border-t pt-4 mt-4">
+                      <div className="text-xs font-medium text-muted-foreground mb-2">Standard Properties</div>
+                    </div>
+                  </>
+                )}
             {/* Button Variant - only for button components */}
             {selectedElement === 'button' && (
               <StyleProperty
