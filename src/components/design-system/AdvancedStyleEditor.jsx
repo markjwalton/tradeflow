@@ -431,9 +431,9 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   const componentDescription = showcaseSpec?.description || selectedComponent?.description || '';
   const functionalSpec = showcaseSpec?.functionalSpec || '';
   
-  // Group components by category
+  // Group components by category - exclude Form to prevent editor UI conflicts
   const componentsByCategory = Object.entries(SHOWCASE_CATEGORIES).map(([key, categoryId]) => {
-    const components = Object.values(SHOWCASE_COMPONENTS).filter(c => c.category === categoryId);
+    const components = Object.values(SHOWCASE_COMPONENTS).filter(c => c.category === categoryId && c.id !== 'form');
     return { categoryId, categoryLabel: key.charAt(0) + key.slice(1).toLowerCase(), components };
   }).filter(cat => cat.components.length > 0);
 
