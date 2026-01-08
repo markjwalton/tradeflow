@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { GripVertical } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import PageSectionHeader from './PageSectionHeader';
 
 /**
  * PageContainer - A reusable container component with optional title and description
@@ -13,6 +14,10 @@ import { cn } from '@/lib/utils';
  * @param {ReactNode} children - Content to render inside the container
  * @param {object} dragHandleProps - Props from drag and drop library (optional)
  * @param {boolean} isDragging - Whether component is being dragged (optional)
+ * @param {array} tabs - Optional tabs for section header
+ * @param {array} actions - Optional action buttons for section header
+ * @param {function} onTabChange - Optional tab change handler
+ * @param {boolean} useSectionHeader - Use PageSectionHeader instead of CardHeader
  */
 export function PageContainer({ 
   title = 'Container Title',
@@ -21,6 +26,10 @@ export function PageContainer({
   titleBackground,
   dragHandleProps,
   isDragging,
+  tabs,
+  actions,
+  onTabChange,
+  useSectionHeader = false,
   children 
 }) {
   return (
@@ -31,7 +40,7 @@ export function PageContainer({
       )}
       style={{ backgroundColor: containerBackground }}
     >
-      {title && (
+      {title && !useSectionHeader && (
         <CardHeader 
           className="relative flex flex-row items-center gap-2"
           style={{ 
@@ -52,6 +61,16 @@ export function PageContainer({
             {description && <CardDescription>{description}</CardDescription>}
           </div>
         </CardHeader>
+      )}
+      {title && useSectionHeader && (
+        <div className="p-6 pb-0">
+          <PageSectionHeader
+            title={title}
+            tabs={tabs}
+            actions={actions}
+            onTabChange={onTabChange}
+          />
+        </div>
       )}
       <CardContent className="relative" style={{ zIndex: 1 }}>
         {children}
