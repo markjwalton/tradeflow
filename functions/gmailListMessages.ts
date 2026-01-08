@@ -17,7 +17,7 @@ async function refreshTokenIfNeeded(base44, user) {
     });
 
     const tokens = await response.json();
-    await base44.asServiceRole.auth.updateUser(user.id, {
+    await base44.asServiceRole.entities.User.update(user.id, {
       gmail_access_token: tokens.access_token,
       gmail_token_expiry: Date.now() + (tokens.expires_in * 1000)
     });
