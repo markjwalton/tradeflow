@@ -21,7 +21,7 @@ export function StyleCategory({
         className={`w-full flex items-center justify-between p-4 hover:bg-muted/50 transition-colors ${!isApplicable ? 'opacity-40' : ''}`}
         disabled={!isApplicable}
       >
-        <span className="font-medium">{title}</span>
+        <h4 className="text-lg font-medium font-[family-name:var(--font-family-display)]">{title}</h4>
         <div className="flex items-center gap-3">
           <div 
             className={`w-3 h-3 rounded-full ${
