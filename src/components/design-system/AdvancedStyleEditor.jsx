@@ -823,12 +823,12 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 value="typography" 
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm"
               >
-                <span className="flex items-center gap-2">
+                <div className="flex items-center gap-2">
                   Typography
                   {(editMode === 'global' ? editedGlobalCategories.has('font') : editedCustomCategories.has('font')) && (
-                    <span className="w-2 h-2 rounded-full bg-amber-500" />
+                    <span className="w-2 h-2 rounded-full bg-amber-500 flex-shrink-0" />
                   )}
-                </span>
+                </div>
               </TabsTrigger>
               <TabsTrigger 
                 value="colors" 
