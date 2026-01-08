@@ -1,64 +1,145 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
+import { base44 } from '@/api/base44Client';
 import { 
   Mail, Inbox, Send, Archive, Star, Trash2, Search, 
   Menu, Settings, LogOut, Paperclip, MoreVertical,
-  ChevronLeft, Plus
+  ChevronLeft, Plus, Loader2, AlertCircle
 } from 'lucide-react';
 
 export default function OatmealInbox({ user, onSignOut }) {
   const [selectedEmail, setSelectedEmail] = useState(null);
   const [showCompose, setShowCompose] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-
-  // Mock email data
-  const emails = [
-    {
-      id: 1,
-      from: 'Sarah Chen',
-      email: 'sarah@company.com',
-      subject: 'Q4 Marketing Review',
-      preview: 'Hi team, I wanted to share some insights from our Q4 campaign...',
-      time: '10:30 AM',
-      unread: true,
-      starred: false,
-      labels: ['work']
-    },
-    {
-      id: 2,
-      from: 'Alex Morgan',
-      email: 'alex@startup.io',
-      subject: 'Partnership Opportunity',
-      preview: 'I came across your product and think there could be a great synergy...',
-      time: '9:15 AM',
-      unread: true,
-      starred: true,
-      labels: ['important']
-    },
-    {
-      id: 3,
-      from: 'Newsletter',
-      email: 'hello@designnews.com',
-      subject: 'Weekly Design Inspiration',
-      preview: 'This week: Minimalist web design trends, color theory basics...',
-      time: 'Yesterday',
-      unread: false,
-      starred: false,
-      labels: ['newsletter']
-    },
-  ];
+  const [emails, setEmails] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [needsAuth, setNeedsAuth] = useState(false);
+  const [selectedFolder, setSelectedFolder] = useState('INBOX');
+  const [composeTo, setComposeTo] = useState('');
+  const [composeSubject, setComposeSubject] = useState('');
+  const [composeMessage, setComposeMessage] = useState('');
+  const [sending, setSending] = useState(false);
 
   const folders = [
-    { name: 'Inbox', icon: Inbox, count: 12 },
-    { name: 'Starred', icon: Star, count: 3 },
-    { name: 'Sent', icon: Send, count: 0 },
-    { name: 'Archive', icon: Archive, count: 156 },
-    { name: 'Trash', icon: Trash2, count: 8 },
+    { name: 'Inbox', icon: Inbox, id: 'INBOX' },
+    { name: 'Starred', icon: Star, id: 'STARRED' },
+    { name: 'Sent', icon: Send, id: 'SENT' },
+    { name: 'Trash', icon: Trash2, id: 'TRASH' },
   ];
+
+  useEffect(() => {
+    loadEmails();
+  }, [selectedFolder]);
+
+  const loadEmails = async () => {
+    try {
+      setLoading(true);
+      const { data } = await base44.functions.invoke('gmailListMessages', {
+        folder: selectedFolder,
+        maxResults: 50
+      });
+
+      if (data.needsAuth) {
+        setNeedsAuth(true);
+      } else {
+        setEmails(data.messages || []);
+        setNeedsAuth(false);
+      }
+    } catch (error) {
+      console.error('Failed to load emails:', error);
+      if (error.response?.data?.needsAuth) {
+        setNeedsAuth(true);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const connectGmail = async () => {
+    try {
+      const { data } = await base44.functions.invoke('gmailAuth', {});
+      const popup = window.open(data.authUrl, 'Gmail Auth', 'width=600,height=700');
+      
+      const handleMessage = (event) => {
+        if (event.data?.type === 'gmail-auth-success') {
+          window.removeEventListener('message', handleMessage);
+          loadEmails();
+        }
+      };
+      
+      window.addEventListener('message', handleMessage);
+    } catch (error) {
+      console.error('Failed to connect Gmail:', error);
+    }
+  };
+
+  const handleSendEmail = async () => {
+    if (!composeTo || !composeSubject || !composeMessage) return;
+    
+    try {
+      setSending(true);
+      await base44.functions.invoke('gmailSendMessage', {
+        to: composeTo,
+        subject: composeSubject,
+        message: composeMessage
+      });
+      
+      setShowCompose(false);
+      setComposeTo('');
+      setComposeSubject('');
+      setComposeMessage('');
+      loadEmails();
+    } catch (error) {
+      console.error('Failed to send email:', error);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const formatEmailTime = (date) => {
+    const emailDate = new Date(date);
+    const now = new Date();
+    const diffMs = now - emailDate;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays === 0) return 'Today';
+    if (diffDays === 1) return 'Yesterday';
+    return emailDate.toLocaleDateString();
+  };
+
+  const parseEmailAddress = (fromField) => {
+    const match = fromField?.match(/(.*?)\s*<(.+?)>/);
+    if (match) return { name: match[1].trim(), email: match[2] };
+    return { name: fromField, email: fromField };
+  };
+
+  if (needsAuth) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-[#F5F1E8]">
+        <Card className="p-8 max-w-md text-center">
+          <Mail className="h-16 w-16 text-[#8B7355] mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-[#2C2416] mb-2">Connect Your Gmail</h2>
+          <p className="text-[#6B5744] mb-6">
+            To access your emails, please connect your Gmail account.
+          </p>
+          <Button 
+            onClick={connectGmail}
+            className="bg-[#2C2416] text-white hover:bg-[#3E3420]"
+          >
+            Connect Gmail
+          </Button>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen flex bg-[#F5F1E8] overflow-hidden">
@@ -81,18 +162,16 @@ export default function OatmealInbox({ user, onSignOut }) {
         <div className="flex-1 overflow-y-auto p-2">
           {folders.map((folder) => (
             <button
-              key={folder.name}
-              className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-[#F5F1E8] transition-colors group"
+              key={folder.id}
+              onClick={() => setSelectedFolder(folder.id)}
+              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-[#F5F1E8] transition-colors group ${
+                selectedFolder === folder.id ? 'bg-[#F5F1E8]' : ''
+              }`}
             >
               <div className="flex items-center gap-3">
                 <folder.icon className="h-5 w-5 text-[#6B5744]" />
                 <span className="text-sm text-[#2C2416]">{folder.name}</span>
               </div>
-              {folder.count > 0 && (
-                <Badge variant="secondary" className="text-xs bg-[#E5DCC9] text-[#2C2416]">
-                  {folder.count}
-                </Badge>
-              )}
             </button>
           ))}
         </div>
@@ -150,29 +229,43 @@ export default function OatmealInbox({ user, onSignOut }) {
         <div className="flex-1 flex overflow-hidden">
           {/* Email List */}
           <div className={`${selectedEmail ? 'w-80' : 'flex-1'} border-r border-[#E5DCC9] overflow-y-auto bg-white`}>
-            {emails.map((email) => (
-              <div
-                key={email.id}
-                onClick={() => setSelectedEmail(email)}
-                className={`p-4 border-b border-[#E5DCC9] cursor-pointer hover:bg-[#F5F1E8] transition-colors ${
-                  email.unread ? 'bg-[#FDFBF8]' : ''
-                } ${selectedEmail?.id === email.id ? 'bg-[#F5F1E8]' : ''}`}
-              >
-                <div className="flex items-start justify-between mb-1">
-                  <span className={`font-medium text-sm ${email.unread ? 'text-[#2C2416]' : 'text-[#6B5744]'}`}>
-                    {email.from}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    {email.starred && <Star className="h-4 w-4 fill-[#F59E0B] text-[#F59E0B]" />}
-                    <span className="text-xs text-[#6B5744]">{email.time}</span>
-                  </div>
-                </div>
-                <p className={`text-sm mb-1 ${email.unread ? 'font-medium text-[#2C2416]' : 'text-[#6B5744]'}`}>
-                  {email.subject}
-                </p>
-                <p className="text-xs text-[#6B5744] line-clamp-1">{email.preview}</p>
+            {loading ? (
+              <div className="flex items-center justify-center h-32">
+                <Loader2 className="h-6 w-6 animate-spin text-[#6B5744]" />
               </div>
-            ))}
+            ) : emails.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-32 text-center p-4">
+                <Mail className="h-12 w-12 text-[#E5DCC9] mb-2" />
+                <p className="text-sm text-[#6B5744]">No emails in this folder</p>
+              </div>
+            ) : (
+              emails.map((email) => {
+                const { name, email: emailAddr } = parseEmailAddress(email.from);
+                return (
+                  <div
+                    key={email.id}
+                    onClick={() => setSelectedEmail(email)}
+                    className={`p-4 border-b border-[#E5DCC9] cursor-pointer hover:bg-[#F5F1E8] transition-colors ${
+                      !email.isRead ? 'bg-[#FDFBF8]' : ''
+                    } ${selectedEmail?.id === email.id ? 'bg-[#F5F1E8]' : ''}`}
+                  >
+                    <div className="flex items-start justify-between mb-1">
+                      <span className={`font-medium text-sm ${!email.isRead ? 'text-[#2C2416]' : 'text-[#6B5744]'}`}>
+                        {name}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        {email.isStarred && <Star className="h-4 w-4 fill-[#F59E0B] text-[#F59E0B]" />}
+                        <span className="text-xs text-[#6B5744]">{formatEmailTime(email.date)}</span>
+                      </div>
+                    </div>
+                    <p className={`text-sm mb-1 ${!email.isRead ? 'font-medium text-[#2C2416]' : 'text-[#6B5744]'}`}>
+                      {email.subject}
+                    </p>
+                    <p className="text-xs text-[#6B5744] line-clamp-1">{email.snippet}</p>
+                  </div>
+                );
+              })
+            )}
           </div>
 
           {/* Email Reader */}
@@ -194,7 +287,7 @@ export default function OatmealInbox({ user, onSignOut }) {
                         {selectedEmail.subject}
                       </h2>
                       <p className="text-sm text-[#6B5744]">
-                        {selectedEmail.from} &lt;{selectedEmail.email}&gt;
+                        {selectedEmail.from}
                       </p>
                     </div>
                   </div>
@@ -219,21 +312,22 @@ export default function OatmealInbox({ user, onSignOut }) {
 
               <div className="flex-1 overflow-y-auto p-6">
                 <div className="prose max-w-none">
-                  <p className="text-[#2C2416] leading-relaxed">
-                    {selectedEmail.preview}
-                  </p>
-                  <p className="text-[#2C2416] leading-relaxed mt-4">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
-                  </p>
-                  <p className="text-[#2C2416] leading-relaxed mt-4">
-                    Best regards,<br />
-                    {selectedEmail.from}
+                  <p className="text-[#2C2416] leading-relaxed whitespace-pre-wrap">
+                    {selectedEmail.body ? atob(selectedEmail.body.replace(/-/g, '+').replace(/_/g, '/')) : selectedEmail.snippet}
                   </p>
                 </div>
               </div>
 
               <div className="p-4 border-t border-[#E5DCC9]">
-                <Button className="bg-[#2C2416] text-white hover:bg-[#3E3420]">
+                <Button 
+                  onClick={() => {
+                    const { email } = parseEmailAddress(selectedEmail.from);
+                    setComposeTo(email);
+                    setComposeSubject(`Re: ${selectedEmail.subject}`);
+                    setShowCompose(true);
+                  }}
+                  className="bg-[#2C2416] text-white hover:bg-[#3E3420]"
+                >
                   <Send className="h-4 w-4 mr-2" />
                   Reply
                 </Button>
@@ -267,11 +361,23 @@ export default function OatmealInbox({ user, onSignOut }) {
               </Button>
             </div>
             <div className="p-4 space-y-3 flex-1 overflow-y-auto">
-              <Input placeholder="To" className="border-[#E5DCC9]" />
-              <Input placeholder="Subject" className="border-[#E5DCC9]" />
+              <Input 
+                placeholder="To" 
+                className="border-[#E5DCC9]"
+                value={composeTo}
+                onChange={(e) => setComposeTo(e.target.value)}
+              />
+              <Input 
+                placeholder="Subject" 
+                className="border-[#E5DCC9]"
+                value={composeSubject}
+                onChange={(e) => setComposeSubject(e.target.value)}
+              />
               <Textarea 
                 placeholder="Write your message..." 
                 className="min-h-[200px] border-[#E5DCC9]"
+                value={composeMessage}
+                onChange={(e) => setComposeMessage(e.target.value)}
               />
             </div>
             <div className="p-4 border-t border-[#E5DCC9] flex items-center justify-between">
@@ -282,16 +388,27 @@ export default function OatmealInbox({ user, onSignOut }) {
               <div className="flex gap-2">
                 <Button 
                   variant="outline" 
-                  onClick={() => setShowCompose(false)}
+                  onClick={() => {
+                    setShowCompose(false);
+                    setComposeTo('');
+                    setComposeSubject('');
+                    setComposeMessage('');
+                  }}
                   className="border-[#E5DCC9]"
+                  disabled={sending}
                 >
                   Cancel
                 </Button>
                 <Button 
                   className="bg-[#2C2416] text-white hover:bg-[#3E3420]"
-                  onClick={() => setShowCompose(false)}
+                  onClick={handleSendEmail}
+                  disabled={sending || !composeTo || !composeSubject}
                 >
-                  <Send className="h-4 w-4 mr-2" />
+                  {sending ? (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    <Send className="h-4 w-4 mr-2" />
+                  )}
                   Send
                 </Button>
               </div>
