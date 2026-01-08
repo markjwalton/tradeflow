@@ -1515,30 +1515,89 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   };
 
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
-      <Droppable droppableId="editor-sections">
-        {(provided) => (
-          <div 
-            className="space-y-4"
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-          >
-            {sectionOrder.map((sectionKey, index) => (
-              <Draggable key={sectionKey} draggableId={sectionKey} index={index}>
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                  >
-                    {sections[sectionKey](index, provided, snapshot)}
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+    <Tabs defaultValue="selector" className="w-full">
+      <TabsList className="w-full bg-transparent p-0 h-auto border-b border-[var(--color-border)] justify-start gap-8">
+        <TabsTrigger 
+          value="selector" 
+          className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm flex items-center gap-2"
+        >
+          <Target className="h-4 w-4" />
+          Select Component
+        </TabsTrigger>
+        <TabsTrigger 
+          value="editing" 
+          className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm flex items-center gap-2"
+        >
+          <Edit3 className="h-4 w-4" />
+          Editing {hasUnsavedChanges && <span className="h-2 w-2 rounded-full bg-[var(--color-primary)]" />}
+        </TabsTrigger>
+        <TabsTrigger 
+          value="versions" 
+          className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm flex items-center gap-2"
+        >
+          <Clock className="h-4 w-4" />
+          Version Control
+        </TabsTrigger>
+        <TabsTrigger 
+          value="styles" 
+          className="rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[var(--color-primary)] pb-3 px-1 text-sm flex items-center gap-2"
+        >
+          <Palette className="h-4 w-4" />
+          Style Editor
+        </TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="selector" className="mt-6">
+        <Accordion type="single" collapsible defaultValue="selector-content">
+          <AccordionItem value="selector-content" className="border-[var(--color-border)]">
+            <AccordionTrigger className="px-6 hover:no-underline">
+              <span className="page-section-title">Select Component</span>
+            </AccordionTrigger>
+            <AccordionContent>
+              {sections.selector()}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </TabsContent>
+
+      <TabsContent value="editing" className="mt-6">
+        <Accordion type="single" collapsible defaultValue="editing-content">
+          <AccordionItem value="editing-content" className="border-[var(--color-border)]">
+            <AccordionTrigger className="px-6 hover:no-underline">
+              <span className="page-section-title">Editing</span>
+            </AccordionTrigger>
+            <AccordionContent>
+              {sections.editing()}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </TabsContent>
+
+      <TabsContent value="versions" className="mt-6">
+        <Accordion type="single" collapsible defaultValue="versions-content">
+          <AccordionItem value="versions-content" className="border-[var(--color-border)]">
+            <AccordionTrigger className="px-6 hover:no-underline">
+              <span className="page-section-title">Version Control</span>
+            </AccordionTrigger>
+            <AccordionContent>
+              {sections.versions()}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </TabsContent>
+
+      <TabsContent value="styles" className="mt-6">
+        <Accordion type="single" collapsible defaultValue="styles-content">
+          <AccordionItem value="styles-content" className="border-[var(--color-border)]">
+            <AccordionTrigger className="px-6 hover:no-underline">
+              <span className="page-section-title">Style Editor</span>
+            </AccordionTrigger>
+            <AccordionContent>
+              {sections.styles()}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </TabsContent>
+    </Tabs>
   );
 }
