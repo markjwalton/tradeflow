@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ChevronDown, ChevronRight, Save, Trash2, Pencil } from 'lucide-react';
+import { ChevronDown, ChevronRight, Save, Trash2, Pencil, History } from 'lucide-react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { StyleCategory, StyleProperty } from './StyleCategory';
 import { toast } from 'sonner';
@@ -13,6 +13,7 @@ import { COMPONENT_CATEGORIES, isStyleApplicable, getComponentSpec } from './com
 import { SHOWCASE_COMPONENTS, SHOWCASE_CATEGORIES, getShowcaseComponentSpec, getEditableProperties, isStyleApplicableToComponent } from './showcaseComponentSpecs';
 import { PageContainer } from '@/components/common/PageContainer';
 import { AccordionContainer } from '@/components/common/AccordionContainer';
+import EmptyState from '@/components/common/EmptyState';
 
 export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement: propSelectedElement }) {
   const [currentStyle, setCurrentStyle] = useState('--color-primary');
@@ -574,7 +575,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             </Button>
           </div>
 
-          {savedStylesList.length > 0 && (
+          {savedStylesList.length > 0 ? (
             <div className="space-y-3">
               {savedStylesList.map(style => (
                 <div 
@@ -620,6 +621,13 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 </div>
               ))}
             </div>
+          ) : (
+            <EmptyState
+              icon={Save}
+              title="No saved styles"
+              description="Apply your first style to start building your component library."
+              className="py-8"
+            />
           )}
         </div>
       </AccordionContainer>
@@ -635,8 +643,10 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         isDragging={snapshot?.isDragging}
       >
         <div className="space-y-4">
-          <div className="space-y-3">
-            {paginatedVersions.map(version => (
+          {versionHistory.length > 0 ? (
+            <>
+              <div className="space-y-3">
+                {paginatedVersions.map(version => (
               <div 
                 key={version.id}
                 className="flex items-center justify-between p-4 bg-gradient-to-r from-muted/40 to-muted/20 rounded-xl border border-border hover:border-primary/40 transition-all group"
@@ -681,10 +691,10 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                   </Button>
                 </div>
               </div>
-            ))}
-          </div>
+                ))}
+              </div>
 
-          {totalVersionPages > 1 && (
+              {totalVersionPages > 1 && (
             <div className="flex items-center justify-between pt-4 border-t">
               <Button
                 variant="outline"
@@ -718,6 +728,15 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                 Next
               </Button>
             </div>
+              )}
+            </>
+          ) : (
+            <EmptyState
+              icon={History}
+              title="No version history"
+              description="Apply styles to create version snapshots you can rollback to."
+              className="py-8"
+            />
           )}
         </div>
       </AccordionContainer>
