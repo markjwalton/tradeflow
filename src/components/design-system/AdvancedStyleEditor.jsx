@@ -524,12 +524,22 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             dragHandleProps={provided?.dragHandleProps}
             actions={[
               {
-                label: editMode === 'global' ? 'Global' : 'Custom',
-                onClick: () => setEditMode(editMode === 'global' ? 'custom' : 'global')
+                label: 'Global',
+                onClick: () => setEditMode('global'),
+                variant: editMode === 'global' ? 'default' : 'outline',
+                size: 'sm'
+              },
+              {
+                label: 'Custom',
+                onClick: () => setEditMode('custom'),
+                variant: editMode === 'custom' ? 'default' : 'outline',
+                size: 'sm'
               },
               {
                 label: 'Apply Style',
-                onClick: handleApplyStyle
+                onClick: handleApplyStyle,
+                variant: 'default',
+                size: 'sm'
               }
             ]}
           />
