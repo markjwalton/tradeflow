@@ -130,27 +130,47 @@ export function AppShellPreview({ config = {} }) {
 
           {/* Page Content */}
           <div 
-            className="flex-1 overflow-auto p-6"
+            className="flex-1 overflow-auto"
             style={{ maxWidth: contentMaxWidth }}
           >
-            <Card>
-              <CardHeader>
-                <CardTitle>Page Content Area</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  This preview shows the full app shell layout with all components combined.
-                </p>
-                <div className="grid grid-cols-3 gap-4">
-                  {[1, 2, 3].map(i => (
-                    <div key={i} className="p-4 border rounded-lg">
-                      <div className="h-3 bg-muted rounded mb-2"></div>
-                      <div className="h-3 bg-muted rounded w-2/3"></div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            {/* Page Tabs Example */}
+            <div className="border-b bg-card px-6">
+              <nav className="flex gap-8" aria-label="Tabs">
+                {['Overview', 'Analytics', 'Settings'].map((tab, idx) => (
+                  <button
+                    key={tab}
+                    className={`border-b-2 py-4 px-1 text-sm font-medium transition-colors ${
+                      idx === 0
+                        ? 'border-primary text-primary'
+                        : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </nav>
+            </div>
+
+            <div className="p-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Page Content Area</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    This preview shows the full app shell layout with all components combined, including page tabs for multiple views.
+                  </p>
+                  <div className="grid grid-cols-3 gap-4">
+                    {[1, 2, 3].map(i => (
+                      <div key={i} className="p-4 border rounded-lg">
+                        <div className="h-3 bg-muted rounded mb-2"></div>
+                        <div className="h-3 bg-muted rounded w-2/3"></div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </div>

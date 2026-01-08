@@ -833,6 +833,40 @@ export const SHOWCASE_COMPONENTS = {
     sizes: ['default']
   },
 
+  pageTabs: {
+    id: 'pageTabs',
+    label: 'Page Tabs',
+    category: SHOWCASE_CATEGORIES.APPSHELL,
+    description: 'Tabs for switching views within a page',
+    functionalSpec: 'Horizontal tabs for single page of truth with multiple views, responsive with mobile select',
+    editableProperties: {
+      activeColor: {
+        property: '--tab-active-color',
+        label: 'Active Tab Color',
+        type: 'select',
+        options: [
+          { value: 'var(--primary-500)', label: 'Primary' },
+          { value: 'var(--primary-600)', label: 'Primary Dark' },
+          { value: 'var(--accent-500)', label: 'Accent' }
+        ]
+      },
+      borderColor: {
+        property: '--tab-border-color',
+        label: 'Border Color',
+        type: 'select',
+        options: [
+          { value: 'var(--charcoal-200)', label: 'Light' },
+          { value: 'var(--charcoal-300)', label: 'Medium' },
+          { value: 'var(--primary-200)', label: 'Primary Tint' }
+        ]
+      }
+    },
+    applicableStyles: ['border', 'font', 'text'],
+    states: ['default', 'active', 'hover'],
+    variants: ['default', 'pills', 'full-width'],
+    sizes: ['default']
+  },
+
   // Layout
   layout: {
     id: 'layout',
