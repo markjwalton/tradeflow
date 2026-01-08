@@ -10,6 +10,8 @@ import { toast } from 'sonner';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { COMPONENT_CATEGORIES, isStyleApplicable, getComponentSpec } from './componentCategories';
 import { SHOWCASE_COMPONENTS, SHOWCASE_CATEGORIES, getShowcaseComponentSpec, getEditableProperties, isStyleApplicableToComponent } from './showcaseComponentSpecs';
+import { PageContainer } from '@/components/common/PageContainer';
+import { AccordionContainer } from '@/components/common/AccordionContainer';
 
 export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement: propSelectedElement }) {
   const [currentStyle, setCurrentStyle] = useState('--color-primary');
@@ -454,70 +456,52 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
   return (
     <div className="space-y-4">
       {/* Component Category & Selector */}
-      <Card>
-        <div className="p-6">
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-semibold text-foreground">Select Component</h3>
-              <Badge variant="outline" className="text-xs">
-                {availableComponents.length} in category
-              </Badge>
-            </div>
+      <PageContainer 
+        title="Select Component"
+        description={`${availableComponents.length} components in category`}
+      >
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-muted-foreground">Category</label>
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Choose category..." />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(SHOWCASE_CATEGORIES).map(([key, categoryId]) => (
+                  <SelectItem key={categoryId} value={categoryId}>
+                    {categoryLabels[categoryId] || key}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-            <div className="space-y-2">
-              <label className="text-xs font-medium text-muted-foreground">Category</label>
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Choose category..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.entries(SHOWCASE_CATEGORIES).map(([key, categoryId]) => (
-                    <SelectItem key={categoryId} value={categoryId}>
-                      {categoryLabels[categoryId] || key}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-xs font-medium text-muted-foreground">Component</label>
-              <Select value={selectedComponentId} onValueChange={setSelectedComponentId}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Choose a component..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableComponents.map(comp => (
-                    <SelectItem key={comp.id} value={comp.id}>
-                      {comp.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-muted-foreground">Component</label>
+            <Select value={selectedComponentId} onValueChange={setSelectedComponentId}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Choose a component..." />
+              </SelectTrigger>
+              <SelectContent>
+                {availableComponents.map(comp => (
+                  <SelectItem key={comp.id} value={comp.id}>
+                    {comp.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
-      </Card>
+      </PageContainer>
       
       {/* Editing Mode Header - Collapsible */}
-      <Card>
-        <Collapsible open={isHeaderOpen} onOpenChange={setIsHeaderOpen}>
-          <CollapsibleTrigger asChild>
-            <div className="p-6 cursor-pointer hover:bg-muted/30 transition-colors">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-foreground">Editing</h3>
-                <div className="flex items-center gap-2">
-                  {hasUnsavedChanges && !isHeaderOpen && (
-                    <div className="h-3 w-3 rounded-full bg-amber-500 animate-pulse" />
-                  )}
-                  {isHeaderOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-                </div>
-              </div>
-            </div>
-          </CollapsibleTrigger>
+      <AccordionContainer
+        title="Editing"
+        defaultCollapsed={!isHeaderOpen}
+      >
+        <div className="space-y-4">{/* Content moved inside container */}
 
-          <CollapsibleContent>
-            <div className="px-6 pb-6 space-y-4">
               <div>
                 <p className="text-sm text-muted-foreground mb-3">Element: <span className="font-medium text-foreground">{elementName}</span></p>
                 {componentDescription && (
@@ -575,7 +559,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
 
             {/* Applied Styles Cards */}
             {savedStylesList.length > 0 && (
-              <div className="px-6 pb-6 space-y-3">
+            <div className="space-y-3">
                   {savedStylesList.map(style => (
                     <div 
                       key={style.id}
@@ -621,27 +605,16 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                   ))}
                 </div>
               )}
-            </CollapsibleContent>
-          </Collapsible>
-        </Card>
+        </div>
+      </AccordionContainer>
 
       {/* Version Control */}
-      <Card>
-        <Collapsible open={isVersionsOpen} onOpenChange={setIsVersionsOpen}>
-          <CollapsibleTrigger asChild>
-            <div className="p-6 cursor-pointer hover:bg-muted/30 transition-colors">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-foreground">Version Control</h3>
-                <div className="flex items-center gap-2">
-                  <Badge variant="secondary" className="text-xs">{versionHistory.length} versions</Badge>
-                  {isVersionsOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-                </div>
-              </div>
-            </div>
-          </CollapsibleTrigger>
-
-          <CollapsibleContent>
-            <div className="px-6 pb-6 space-y-4">
+      <AccordionContainer
+        title="Version Control"
+        description={`${versionHistory.length} versions`}
+        defaultCollapsed={!isVersionsOpen}
+      >
+        <div className="space-y-4">
               {/* Version Cards */}
               <div className="space-y-3">
                 {paginatedVersions.map(version => (
@@ -728,29 +701,15 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
                   </Button>
                 </div>
               )}
-            </div>
-          </CollapsibleContent>
-        </Collapsible>
-      </Card>
+        </div>
+      </AccordionContainer>
 
       {/* Style Categories */}
-      <Card>
-        <Collapsible open={expandedCategories.includes('styleEditor')} onOpenChange={() => toggleCategory('styleEditor')}>
-          <CollapsibleTrigger asChild>
-            <div className="p-6 cursor-pointer hover:bg-muted/30 transition-colors border-b">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-foreground">Style Editor</h3>
-                <div className="flex items-center gap-2">
-                  {hasUnsavedChanges && (
-                    <div className="h-3 w-3 rounded-full bg-amber-500" />
-                  )}
-                  {expandedCategories.includes('styleEditor') ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-                </div>
-              </div>
-            </div>
-          </CollapsibleTrigger>
-
-          <CollapsibleContent>
+      <AccordionContainer
+        title="Style Editor"
+        description={hasUnsavedChanges ? "Unsaved changes" : ""}
+        defaultCollapsed={!expandedCategories.includes('styleEditor')}
+      >
             <StyleCategory
               title="Component Properties"
               isLive={true}
@@ -1488,9 +1447,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             ]}
           />
         </StyleCategory>
-          </CollapsibleContent>
-        </Collapsible>
-      </Card>
-    </div>
-  );
-}
+        </AccordionContainer>
+        </div>
+        );
+        }
