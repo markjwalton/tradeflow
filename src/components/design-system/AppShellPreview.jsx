@@ -4,8 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
   Menu, Home, Settings, User, Bell, Search, 
-  ChevronRight, PanelLeft, X, LayoutGrid
+  ChevronRight, PanelLeft, X, LayoutGrid, RefreshCw, Code, Eye
 } from 'lucide-react';
+import { PageHeader } from '@/components/sturij/PageHeader';
 
 export function AppShellPreview({ config = {} }) {
   const [sidebarMode, setSidebarMode] = useState('expanded'); // 'expanded', 'icons', 'hidden'
@@ -28,7 +29,32 @@ export function AppShellPreview({ config = {} }) {
   ];
 
   return (
-    <div className="border rounded-lg overflow-hidden bg-[var(--color-background)] h-[600px] flex flex-col">
+    <div className="space-y-4">
+      <PageHeader
+        title="App Shell Live Preview"
+        description="Full application layout with all components combined"
+      >
+        <div className="flex items-center gap-2">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setSidebarMode(sidebarMode === 'expanded' ? 'icons' : sidebarMode === 'icons' ? 'hidden' : 'expanded')}
+          >
+            <Eye className="h-4 w-4 mr-2" />
+            Toggle Layout
+          </Button>
+          <Button variant="outline" size="sm">
+            <Code className="h-4 w-4 mr-2" />
+            View Code
+          </Button>
+          <Button variant="outline" size="sm">
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Reset
+          </Button>
+        </div>
+      </PageHeader>
+
+      <div className="border rounded-lg overflow-hidden bg-[var(--color-background)] h-[600px] flex flex-col">
       {/* Top Navigation */}
       <div 
         className="flex items-center justify-between px-4 border-b"
@@ -129,26 +155,23 @@ export function AppShellPreview({ config = {} }) {
         </div>
       </div>
 
-      {/* Configuration Controls */}
-      <div className="border-t bg-muted/30 p-3 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <Badge variant="outline" className="text-xs">
-            Sidebar: {sidebarMode}
-          </Badge>
-          <Badge variant="outline" className="text-xs">
-            Width: {sidebarMode === 'expanded' ? sidebarWidth : '80px'}
-          </Badge>
-          <Badge variant="outline" className="text-xs">
-            Max Content: {contentMaxWidth}
-          </Badge>
+        {/* Configuration Controls */}
+        <div className="border-t bg-muted/30 p-3 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <Badge variant="outline" className="text-xs">
+              Sidebar: {sidebarMode}
+            </Badge>
+            <Badge variant="outline" className="text-xs">
+              Width: {sidebarMode === 'expanded' ? sidebarWidth : '80px'}
+            </Badge>
+            <Badge variant="outline" className="text-xs">
+              Max Content: {contentMaxWidth}
+            </Badge>
+            <Badge variant="outline" className="text-xs">
+              Top Nav: {topNavHeight}
+            </Badge>
+          </div>
         </div>
-        <Button 
-          size="sm" 
-          variant="outline"
-          onClick={() => setSidebarMode(sidebarMode === 'expanded' ? 'icons' : 'expanded')}
-        >
-          Toggle Sidebar
-        </Button>
       </div>
     </div>
   );
