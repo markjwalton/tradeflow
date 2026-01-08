@@ -10,6 +10,22 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: degular-display, system-ui, sans-serif;
   }
+  
+  .page-header-title {
+    font-family: degular-display, system-ui, sans-serif;
+    font-size: var(--text-4xl);
+    font-weight: 500;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-airy);
+    color: var(--text-primary);
+  }
+  
+  .page-section-title {
+    font-family: degular-display, system-ui, sans-serif;
+    font-size: var(--text-2xl);
+    font-weight: 400;
+    color: var(--color-text-primary);
+  }
 }
 
 :root {
