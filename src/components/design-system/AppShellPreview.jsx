@@ -194,13 +194,13 @@ export function AppShellPreview({ config = {} }) {
         {/* Sidebar */}
         {sidebarMode !== 'hidden' && (
           <div 
-            className="border-r flex flex-col transition-all duration-200"
+            className="border-r transition-all duration-200"
             style={{ 
               width: sidebarMode === 'expanded' ? sidebarWidth : '80px',
               backgroundColor: sidebarBg 
             }}
           >
-            <nav className="flex-1 p-4 space-y-1">
+            <nav className="p-4 space-y-1">
               {navItems.map((item, idx) => (
                 <button
                   key={idx}
@@ -218,7 +218,7 @@ export function AppShellPreview({ config = {} }) {
         )}
 
         {/* Main Content */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col min-w-0">
           {/* Breadcrumb */}
           <div className="border-b bg-card px-6 py-3">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -307,12 +307,12 @@ export function AppShellPreview({ config = {} }) {
                 </CardContent>
               </Card>
             </div>
-
-            {/* Footer */}
-            <TailwindFooter />
           </div>
         </div>
       </div>
+      
+      {/* Footer - Full Width */}
+      <TailwindFooter />
 
         {/* Configuration Controls */}
         <div className="border-t bg-muted/30 p-3 flex items-center justify-between">
