@@ -480,6 +480,7 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
         <CardContent className="p-6 pb-0">
           <PageSectionHeader
             title="Select Component"
+            dragHandleProps={provided?.dragHandleProps}
             tabs={componentsByCategory.map(cat => ({
               name: `${cat.categoryLabel} (${cat.components.length})`,
               href: `#${cat.categoryId}`,
