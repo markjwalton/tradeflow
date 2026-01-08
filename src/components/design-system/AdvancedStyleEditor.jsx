@@ -556,9 +556,19 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             </div>
 
             <Tabs defaultValue="description" className="mb-4">
-              <TabsList className="w-full">
-                <TabsTrigger value="description" className="flex-1">Description</TabsTrigger>
-                <TabsTrigger value="specification" className="flex-1">Specification</TabsTrigger>
+              <TabsList className="w-full bg-transparent p-0 h-auto border-b border-[var(--color-border)]">
+                <TabsTrigger 
+                  value="description" 
+                  className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3"
+                >
+                  Description
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="specification" 
+                  className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-[var(--color-primary)] data-[state=active]:bg-transparent data-[state=active]:shadow-none pb-3"
+                >
+                  Specification
+                </TabsTrigger>
               </TabsList>
               <TabsContent value="description" className="mt-3">
                 {componentDescription ? (
