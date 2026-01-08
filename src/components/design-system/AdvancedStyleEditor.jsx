@@ -6,7 +6,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { ChevronDown, ChevronRight, Save, Trash2, Pencil, History, Globe, User, Check } from 'lucide-react';
+import { ChevronDown, ChevronRight, Save, Trash2, Pencil, History, Globe, User, Check, Target, Edit3, Clock, Palette } from 'lucide-react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { StyleCategory, StyleProperty } from './StyleCategory';
 import { toast } from 'sonner';
