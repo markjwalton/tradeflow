@@ -62,18 +62,50 @@ export default function OatmealInbox({ user, onSignOut }) {
   const connectGmail = async () => {
     try {
       const { data } = await base44.functions.invoke('gmailAuth', {});
-      const popup = window.open(data.authUrl, 'Gmail Auth', 'width=600,height=700');
+      
+      if (data.error) {
+        console.error('Auth error:', data.error);
+        return;
+      }
+      
+      const width = 600;
+      const height = 700;
+      const left = window.screen.width / 2 - width / 2;
+      const top = window.screen.height / 2 - height / 2;
+      
+      const popup = window.open(
+        data.authUrl, 
+        'Gmail Auth', 
+        `width=${width},height=${height},left=${left},top=${top}`
+      );
+      
+      if (!popup) {
+        alert('Please allow popups for this site to connect Gmail');
+        return;
+      }
       
       const handleMessage = (event) => {
         if (event.data?.type === 'gmail-auth-success') {
           window.removeEventListener('message', handleMessage);
+          setNeedsAuth(false);
           loadEmails();
         }
       };
       
       window.addEventListener('message', handleMessage);
+      
+      // Fallback: check if popup was closed without success
+      const checkPopup = setInterval(() => {
+        if (popup.closed) {
+          clearInterval(checkPopup);
+          window.removeEventListener('message', handleMessage);
+          // Try loading emails in case auth completed
+          loadEmails();
+        }
+      }, 1000);
     } catch (error) {
       console.error('Failed to connect Gmail:', error);
+      alert('Failed to connect Gmail: ' + error.message);
     }
   };
 
