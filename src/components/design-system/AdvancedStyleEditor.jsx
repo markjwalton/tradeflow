@@ -553,7 +553,9 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <span className="text-base font-medium font-[family-name:var(--font-family-display)] text-foreground">Element: </span>
-                <span className="text-base font-[family-name:var(--font-family-body)] text-foreground">{elementName}</span>
+                <Badge className="bg-[var(--accent-500)] text-white hover:bg-[var(--accent-600)]">
+                  {elementName}
+                </Badge>
               </div>
               <div className="flex items-center gap-3 flex-wrap justify-end">
                 <Badge variant="secondary" className="text-xs">{instances} Instances</Badge>
@@ -772,18 +774,23 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
     styles: (index, provided, snapshot) => (
       <Card key="styles" className="border-border">
         <CardContent className="p-6 pb-0 relative">
-          <div className="absolute top-6 right-6 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--radius-md)] border border-border bg-muted/50">
-            {editMode === 'global' ? (
-              <>
-                <Globe className="w-3.5 h-3.5 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground font-medium">Global</span>
-              </>
-            ) : (
-              <>
-                <User className="w-3.5 h-3.5 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground font-medium">Custom</span>
-              </>
-            )}
+          <div className="absolute top-6 right-6 z-10 flex items-center gap-2">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--radius-md)] border border-[var(--accent-300)] bg-[var(--accent-50)]">
+              <span className="text-xs text-[var(--accent-700)] font-medium">{elementName}</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-[var(--radius-md)] border border-border bg-muted/50">
+              {editMode === 'global' ? (
+                <>
+                  <Globe className="w-3.5 h-3.5 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground font-medium">Global</span>
+                </>
+              ) : (
+                <>
+                  <User className="w-3.5 h-3.5 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground font-medium">Custom</span>
+                </>
+              )}
+            </div>
           </div>
           <PageSectionHeader
             title="Style Editor"
