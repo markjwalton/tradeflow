@@ -705,6 +705,134 @@ export const SHOWCASE_COMPONENTS = {
     sizes: ['sm', 'default', 'lg']
   },
 
+  // App Shell Components
+  appShell: {
+    id: 'appShell',
+    label: 'App Shell',
+    category: SHOWCASE_CATEGORIES.APPSHELL,
+    description: 'Main application layout wrapper',
+    functionalSpec: 'Provides consistent layout structure with sidebar, top nav, and content area',
+    editableProperties: {
+      sidebarWidth: {
+        property: '--sidebar-width',
+        label: 'Sidebar Width',
+        type: 'select',
+        options: [
+          { value: '240px', label: 'Narrow (240px)' },
+          { value: '280px', label: 'Default (280px)' },
+          { value: '320px', label: 'Wide (320px)' }
+        ]
+      },
+      contentMaxWidth: {
+        property: '--content-max-width',
+        label: 'Content Max Width',
+        type: 'select',
+        options: [
+          { value: '1280px', label: 'Standard (1280px)' },
+          { value: '1440px', label: 'Wide (1440px)' },
+          { value: '1600px', label: 'Extra Wide (1600px)' },
+          { value: '100%', label: 'Full Width' }
+        ]
+      }
+    },
+    applicableStyles: ['background', 'border', 'padding'],
+    states: ['default'],
+    variants: ['default'],
+    sizes: ['default']
+  },
+
+  topNav: {
+    id: 'topNav',
+    label: 'Top Navigation',
+    category: SHOWCASE_CATEGORIES.APPSHELL,
+    description: 'Horizontal navigation bar',
+    functionalSpec: 'Top bar with logo, search, and user menu',
+    editableProperties: {
+      topNavHeight: {
+        property: '--topnav-height',
+        label: 'Height',
+        type: 'select',
+        options: [
+          { value: '56px', label: 'Compact (56px)' },
+          { value: '64px', label: 'Default (64px)' },
+          { value: '72px', label: 'Tall (72px)' }
+        ]
+      },
+      topNavBg: {
+        property: '--topnav-bg',
+        label: 'Background',
+        type: 'select',
+        options: [
+          { value: 'var(--color-card)', label: 'Card' },
+          { value: 'var(--background-50)', label: 'Background 50' },
+          { value: 'var(--primary-50)', label: 'Primary 50' }
+        ]
+      }
+    },
+    applicableStyles: ['background', 'border', 'padding', 'font'],
+    states: ['default'],
+    variants: ['default', 'compact'],
+    sizes: ['default']
+  },
+
+  sidebar: {
+    id: 'sidebar',
+    label: 'Sidebar Navigation',
+    category: SHOWCASE_CATEGORIES.APPSHELL,
+    description: 'Collapsible sidebar with navigation',
+    functionalSpec: 'Hierarchical navigation with expand/collapse',
+    editableProperties: {
+      sidebarBg: {
+        property: '--sidebar-bg',
+        label: 'Background',
+        type: 'select',
+        options: [
+          { value: 'var(--color-card)', label: 'Card' },
+          { value: 'var(--background-50)', label: 'Background 50' },
+          { value: 'var(--primary-50)', label: 'Primary 50' }
+        ]
+      },
+      sidebarItemHoverBg: {
+        property: '--sidebar-item-hover-bg',
+        label: 'Item Hover Background',
+        type: 'select',
+        options: [
+          { value: 'var(--primary-100)', label: 'Primary 100' },
+          { value: 'var(--background-100)', label: 'Background 100' },
+          { value: 'var(--muted)', label: 'Muted' }
+        ]
+      }
+    },
+    applicableStyles: ['background', 'padding', 'font', 'text'],
+    states: ['default', 'collapsed'],
+    variants: ['expanded', 'icons', 'hidden'],
+    sizes: ['default']
+  },
+
+  breadcrumb: {
+    id: 'breadcrumb',
+    label: 'Breadcrumb',
+    category: SHOWCASE_CATEGORIES.APPSHELL,
+    description: 'Navigation trail showing current location',
+    functionalSpec: 'Shows hierarchical path to current page',
+    applicableStyles: ['font', 'text'],
+    states: ['default'],
+    variants: ['default'],
+    sizes: ['default']
+  },
+
+  mobileDrawer: {
+    id: 'mobileDrawer',
+    label: 'Mobile Drawer',
+    category: SHOWCASE_CATEGORIES.APPSHELL,
+    description: 'Slide-out navigation for mobile',
+    functionalSpec: 'Off-canvas navigation menu for small screens',
+    applicableStyles: ['background', 'padding'],
+    states: ['default', 'open'],
+    variants: ['default'],
+    sizes: ['default']
+  },
+
   // Layout
   layout: {
     id: 'layout',

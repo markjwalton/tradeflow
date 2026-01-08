@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { AdvancedStyleEditor } from '@/components/design-system/AdvancedStyleEditor';
 import { ComponentLogicEditor } from '@/components/design-system/ComponentLogicEditor';
 import { LiveComponentPreview } from '@/components/design-system/LiveComponentPreview';
+import { AppShellPreview } from '@/components/design-system/AppShellPreview';
 import { Save, RefreshCw, X, GitBranch } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
@@ -219,13 +220,26 @@ export default function StyleEditor() {
                 <CardTitle>Live Preview</CardTitle>
               </CardHeader>
               <CardContent>
-                <LiveComponentPreview 
-                  jsxCode={componentExamples[previewComponent] || componentExamples.button}
-                  showCode={false}
-                  componentState={componentState}
-                  shadowEffect={shadowEffect}
-                  animation={animation}
-                />
+                {['appShell', 'topNav', 'sidebar', 'breadcrumb', 'mobileDrawer'].includes(previewComponent) ? (
+                  <AppShellPreview 
+                    config={{
+                      sidebarWidth: styleValues['--sidebar-width'] || '280px',
+                      contentMaxWidth: styleValues['--content-max-width'] || '1440px',
+                      topNavHeight: styleValues['--topnav-height'] || '64px',
+                      topNavBg: styleValues['--topnav-bg'] || 'var(--color-card)',
+                      sidebarBg: styleValues['--sidebar-bg'] || 'var(--color-card)',
+                      sidebarItemHoverBg: styleValues['--sidebar-item-hover-bg'] || 'var(--primary-100)'
+                    }}
+                  />
+                ) : (
+                  <LiveComponentPreview 
+                    jsxCode={componentExamples[previewComponent] || componentExamples.button}
+                    showCode={false}
+                    componentState={componentState}
+                    shadowEffect={shadowEffect}
+                    animation={animation}
+                  />
+                )}
               </CardContent>
             </Card>
           </TabsContent>
