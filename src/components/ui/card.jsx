@@ -27,17 +27,25 @@ const CardHeader = React.forwardRef(({ className, ...props }, ref) => (
 ))
 CardHeader.displayName = "CardHeader"
 
-const CardTitle = React.forwardRef(({ className, ...props }, ref) => (
-  <h2
-    ref={ref}
-    className={cn(
-      "font-[var(--font-family-display)] text-[var(--text-lg)] font-[var(--font-weight-normal)] leading-[var(--leading-snug)] tracking-[var(--tracking-airy)] text-[var(--color-text-primary)]",
-      "sm:text-[var(--text-xl)]",
-      className
-    )}
-    {...props}
-  />
-))
+const CardTitle = React.forwardRef(({ className, size = 'default', ...props }, ref) => {
+  const sizeClasses = {
+    small: "text-[length:var(--card-heading-small-size)] font-[var(--card-heading-small-weight)] leading-[var(--card-heading-small-leading)] tracking-[var(--card-heading-small-tracking)]",
+    default: "text-[length:var(--card-heading-default-size)] font-[var(--card-heading-default-weight)] leading-[var(--card-heading-default-leading)] tracking-[var(--card-heading-default-tracking)] sm:text-[length:var(--text-xl)]",
+    large: "text-[length:var(--card-heading-large-size)] font-[var(--card-heading-large-weight)] leading-[var(--card-heading-large-leading)] tracking-[var(--card-heading-large-tracking)]"
+  };
+  
+  return (
+    <h2
+      ref={ref}
+      className={cn(
+        "font-[var(--font-family-display)] text-[color:var(--card-heading-color)]",
+        sizeClasses[size],
+        className
+      )}
+      {...props}
+    />
+  );
+})
 CardTitle.displayName = "CardTitle"
 
 const CardDescription = React.forwardRef(({ className, ...props }, ref) => (

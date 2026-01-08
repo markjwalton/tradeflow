@@ -162,6 +162,24 @@
   --paragraph-spacing-relaxed: 1.5rem;
   --paragraph-spacing-loose: 2rem;
 
+  /* Card Heading Variants */
+  --card-heading-small-size: var(--text-base);
+  --card-heading-small-weight: var(--font-weight-medium);
+  --card-heading-small-leading: var(--leading-snug);
+  --card-heading-small-tracking: var(--tracking-normal);
+
+  --card-heading-default-size: var(--text-lg);
+  --card-heading-default-weight: var(--font-weight-normal);
+  --card-heading-default-leading: var(--leading-snug);
+  --card-heading-default-tracking: var(--tracking-airy);
+
+  --card-heading-large-size: var(--text-2xl);
+  --card-heading-large-weight: var(--font-weight-semibold);
+  --card-heading-large-leading: var(--leading-tight);
+  --card-heading-large-tracking: var(--tracking-tight);
+
+  --card-heading-color: var(--color-text-primary);
+
   /* Spacing */
   --spacing-1: 0.25rem;
   --spacing-2: 0.5rem;
