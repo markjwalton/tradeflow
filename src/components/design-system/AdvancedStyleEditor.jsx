@@ -561,8 +561,8 @@ export function AdvancedStyleEditor({ onUpdate, onPreviewUpdate, selectedElement
           />
         </CardContent>
         <CardContent className="p-6 pt-4">
-          <div className="space-y-2">
-            <h5 className="text-base font-medium text-foreground font-[family-name:var(--font-family-display)]">Component ({availableComponents.length})</h5>
+          <div className="flex items-center gap-3 p-3 rounded-[var(--radius-lg)] bg-[var(--primary-50)] border border-[var(--primary-100)]">
+            <h5 className="text-base font-medium text-foreground font-[family-name:var(--font-family-display)] whitespace-nowrap">Component ({availableComponents.length})</h5>
             <Select value={selectedComponentId} onValueChange={setSelectedComponentId}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Choose a component..." />
