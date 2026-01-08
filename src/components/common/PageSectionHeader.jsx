@@ -13,7 +13,7 @@ export default function PageSectionHeader({
   const currentTab = tabs.find(tab => tab.current);
 
   return (
-    <div className="relative border-b border-[var(--color-border)] pt-5 pb-5 sm:pt-0 sm:pb-0">
+    <div className="relative border-b border-[var(--color-border)] pt-6 pb-5 sm:pt-6 sm:pb-0">
       <div className="md:flex md:items-center md:justify-between">
         <h3 className="page-section-title">{title}</h3>
         {actions.length > 0 && (
