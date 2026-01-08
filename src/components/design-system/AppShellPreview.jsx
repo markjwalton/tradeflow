@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { 
   Menu, Home, Settings, User, Bell, Search, 
   ChevronRight, PanelLeft, X, LayoutGrid, RefreshCw, Code, Eye,
-  ChevronDown, Calendar, ShoppingCart, LogOut, Shield, Lightbulb, Plus, Inbox
+  ChevronDown, Calendar, ShoppingCart, LogOut, Shield, Lightbulb, Plus, Inbox, Maximize
 } from 'lucide-react';
 import { PageHeader } from '@/components/sturij/PageHeader';
 import { PageSectionHeader } from '@/components/sturij/PageSectionHeader';
@@ -33,6 +33,17 @@ export function AppShellPreview({ config = {} }) {
   const [sidebarMode, setSidebarMode] = useState('expanded'); // 'expanded', 'icons', 'hidden'
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
+  const previewRef = React.useRef(null);
+
+  const handleFullScreen = () => {
+    if (previewRef.current) {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        previewRef.current.requestFullscreen();
+      }
+    }
+  };
 
   const {
     sidebarWidth = '280px',
@@ -73,10 +84,17 @@ export function AppShellPreview({ config = {} }) {
             <RefreshCw className="h-4 w-4 mr-2" />
             Reset
           </Button>
+          <Button variant="outline" size="sm" onClick={handleFullScreen}>
+            <Maximize className="h-4 w-4 mr-2" />
+            Full Screen
+          </Button>
         </div>
       </PageHeader>
 
-      <div className="border rounded-lg overflow-hidden bg-[var(--color-background)] h-[600px] flex flex-col">
+      <div 
+        ref={previewRef}
+        className="border rounded-lg overflow-hidden bg-[var(--color-background)] h-[600px] flex flex-col"
+      >
       {/* Top Navigation - Catalyst Style */}
       <div 
         className="border-b"
