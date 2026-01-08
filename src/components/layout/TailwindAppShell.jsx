@@ -8,51 +8,10 @@ import TailwindMobileDrawer from '../sturij/TailwindMobileDrawer';
 import TailwindFooter from '../sturij/TailwindFooter';
 import TailwindBreadcrumb from '../sturij/TailwindBreadcrumb';
 import { getIconByName } from '../navigation/NavIconMap';
-import { PageHeaderProvider, usePageHeader } from './PageHeaderContext';
 
 // Breadcrumb context for child components
 const BreadcrumbContext = createContext(null);
 export const useBreadcrumb = () => useContext(BreadcrumbContext);
-
-// Page Header Component
-function PageHeader({ breadcrumbPages, currentPageName }) {
-  const headerContext = usePageHeader();
-  const actions = headerContext?.actions || [];
-
-  if (!breadcrumbPages.length && !currentPageName) return null;
-
-  return (
-    <div className="border-b border-[var(--color-border)] bg-[var(--color-card)] px-6 py-4 sticky top-0 z-10">
-      <div className="flex items-center justify-between">
-        <div className="flex-1 min-w-0">
-          {breadcrumbPages.length > 0 && (
-            <div className="mb-2">
-              <TailwindBreadcrumb pages={breadcrumbPages} />
-            </div>
-          )}
-          <h1 className="text-2xl font-bold text-[var(--color-text-primary)] font-[var(--font-family-display)]">
-            {breadcrumbPages[breadcrumbPages.length - 1]?.name || currentPageName}
-          </h1>
-        </div>
-        {actions.length > 0 && (
-          <div className="flex items-center gap-2 ml-4">
-            {actions.map((action, idx) => (
-              <button
-                key={idx}
-                onClick={action.onClick}
-                disabled={action.disabled}
-                className={action.className}
-              >
-                {action.icon && <span className="mr-2">{action.icon}</span>}
-                {action.label}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
 
 /**
  * TailwindAppShell - Unified application shell using Tailwind UI patterns
@@ -198,8 +157,7 @@ export function TailwindAppShell({
 
   return (
     <BreadcrumbContext.Provider value={{ navItems, currentPageName }}>
-      <PageHeaderProvider>
-        <div className="min-h-screen flex flex-col bg-[var(--color-background)]">
+      <div className="min-h-screen flex flex-col bg-[var(--color-background)]">
         {/* Top Navigation */}
         <TailwindTopNav
           user={formattedUser}
@@ -236,13 +194,8 @@ export function TailwindAppShell({
           />
 
           {/* Page Content - takes remaining space */}
-          <main className="flex-1 flex flex-col overflow-y-auto min-w-0 bg-[var(--color-background)]">
-            <PageHeader 
-              breadcrumbPages={breadcrumbPages}
-              currentPageName={currentPageName}
-            />
-            
-            <div className="flex-1 p-4 md:p-6 lg:p-8">
+          <main className="flex-1 overflow-y-auto min-w-0 bg-[var(--color-background)]">
+            <div className="p-4 md:p-6 lg:p-8">
               {children}
             </div>
           </main>
@@ -255,7 +208,6 @@ export function TailwindAppShell({
           />
         </div>
       </div>
-      </PageHeaderProvider>
     </BreadcrumbContext.Provider>
   );
 }
