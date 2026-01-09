@@ -2,8 +2,14 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { UnderlinedTabs, UnderlinedTabsContent } from "@/components/ui/underlined-tabs";
-import { LayoutDashboard, Layers, Target, FolderOpen, FileText, MessageSquare, Lightbulb } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { LayoutDashboard, Layers, Target, FolderOpen, FileText, MessageSquare, Lightbulb, Plus } from "lucide-react";
 import { PageHeader } from "@/components/sturij/PageHeader";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import DashboardOverview from "@/components/project-mvp/DashboardOverview";
 import ProjectVersioning from "@/components/project-mvp/ProjectVersioning";
@@ -16,6 +22,12 @@ import LearningsLog from "@/components/project-mvp/LearningsLog";
 export default function MasterProjectManagementMVP() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [masterProject, setMasterProject] = useState(null);
+  const [newVersionDialogOpen, setNewVersionDialogOpen] = useState(false);
+  const [newVersion, setNewVersion] = useState({
+    version_number: "",
+    description: "",
+    key_changes: ""
+  });
 
   // Fetch or create the master project
   useEffect(() => {
@@ -61,7 +73,55 @@ export default function MasterProjectManagementMVP() {
       <PageHeader 
         title="Master Project Management MVP"
         description="Single source of truth for project evolution, insights, and technical specifications"
-      />
+      >
+        <Button onClick={() => setNewVersionDialogOpen(true)}>
+          <Plus className="h-4 w-4 mr-2" />
+          New Version
+        </Button>
+      </PageHeader>
+
+      <Dialog open={newVersionDialogOpen} onOpenChange={setNewVersionDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create New Version</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleVersionSubmit} className="space-y-4">
+            <div>
+              <Label>Version Number</Label>
+              <Input
+                value={newVersion.version_number}
+                onChange={(e) => setNewVersion({ ...newVersion, version_number: e.target.value })}
+                placeholder="e.g., 1.0, MVP-Iteration-2"
+                required
+              />
+            </div>
+            <div>
+              <Label>Description</Label>
+              <Textarea
+                value={newVersion.description}
+                onChange={(e) => setNewVersion({ ...newVersion, description: e.target.value })}
+                placeholder="Summary of changes/focus for this version"
+                required
+              />
+            </div>
+            <div>
+              <Label>Key Changes (one per line)</Label>
+              <Textarea
+                value={newVersion.key_changes}
+                onChange={(e) => setNewVersion({ ...newVersion, key_changes: e.target.value })}
+                placeholder="- First change&#10;- Second change&#10;- Third change"
+                rows={6}
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button type="button" variant="outline" onClick={() => setNewVersionDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit">Create Version</Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       <UnderlinedTabs 
         defaultValue={activeTab}
@@ -82,7 +142,10 @@ export default function MasterProjectManagementMVP() {
         </UnderlinedTabsContent>
 
         <UnderlinedTabsContent value="versions">
-          <ProjectVersioning projectId={masterProject.id} />
+          <ProjectVersioning 
+            projectId={masterProject.id}
+            onNewVersionClick={() => setNewVersionDialogOpen(true)}
+          />
         </UnderlinedTabsContent>
 
         <UnderlinedTabsContent value="sprints">
