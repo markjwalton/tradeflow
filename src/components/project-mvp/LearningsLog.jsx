@@ -1,43 +1,37 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Lightbulb, TrendingUp } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronDown, Lightbulb, TrendingUp } from "lucide-react";
+import PageSectionHeader from "@/components/common/PageSectionHeader";
 
 export default function LearningsLog({ projectId }) {
-  const [showCreateDialog, setShowCreateDialog] = useState(false);
-  const [newLearning, setNewLearning] = useState({
-    title: '',
-    description: '',
-    category: 'technical_best_practice',
-    impact: 'medium'
-  });
+  const [openLearnings, setOpenLearnings] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
-  const queryClient = useQueryClient();
-
-  const { data: learnings = [] } = useQuery({
+  const { data: learnings = [], isLoading } = useQuery({
     queryKey: ['learnings', projectId],
     queryFn: () => base44.entities.Learning.filter({ project_id: projectId }),
+    initialData: []
   });
 
-  const createLearning = useMutation({
-    mutationFn: (learningData) => base44.entities.Learning.create({ ...learningData, project_id: projectId }),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['learnings', projectId]);
-      setShowCreateDialog(false);
-      setNewLearning({ title: '', description: '', category: 'technical_best_practice', impact: 'medium' });
-    },
-  });
+  const sortedLearnings = [...learnings].sort((a, b) => 
+    new Date(b.created_date) - new Date(a.created_date)
+  );
 
-  const handleCreateLearning = () => {
-    if (newLearning.title && newLearning.description) {
-      createLearning.mutate(newLearning);
-    }
+  const totalPages = Math.ceil(sortedLearnings.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedLearnings = sortedLearnings.slice(startIndex, startIndex + itemsPerPage);
+
+  const toggleLearning = (learningId) => {
+    setOpenLearnings(prev => ({
+      ...prev,
+      [learningId]: !prev[learningId]
+    }));
   };
 
   const getCategoryColor = (category) => {
@@ -65,111 +59,85 @@ export default function LearningsLog({ projectId }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="page-section-title">Learnings & Insights</h2>
-        <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
-          <DialogTrigger asChild>
-            <Button className="bg-[var(--color-primary)] text-white">
-              <Plus className="h-4 w-4 mr-2" />
-              New Learning
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Capture Learning</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <Input
-                placeholder="Learning title"
-                value={newLearning.title}
-                onChange={(e) => setNewLearning({ ...newLearning, title: e.target.value })}
-              />
-              <Textarea
-                placeholder="Detailed insight or learning"
-                value={newLearning.description}
-                onChange={(e) => setNewLearning({ ...newLearning, description: e.target.value })}
-                rows={4}
-              />
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm text-[var(--color-text-secondary)] mb-1 block">Category</label>
-                  <select
-                    value={newLearning.category}
-                    onChange={(e) => setNewLearning({ ...newLearning, category: e.target.value })}
-                    className="w-full px-3 py-2 border rounded-lg"
-                  >
-                    <option value="technical_best_practice">Technical Best Practice</option>
-                    <option value="process_improvement">Process Improvement</option>
-                    <option value="ui_ux_pattern">UI/UX Pattern</option>
-                    <option value="ai_prompting">AI Prompting</option>
-                    <option value="project_management">Project Management</option>
-                    <option value="client_communication">Client Communication</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="text-sm text-[var(--color-text-secondary)] mb-1 block">Impact</label>
-                  <select
-                    value={newLearning.impact}
-                    onChange={(e) => setNewLearning({ ...newLearning, impact: e.target.value })}
-                    className="w-full px-3 py-2 border rounded-lg"
-                  >
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                    <option value="critical">Critical</option>
-                  </select>
-                </div>
-              </div>
-              <Button onClick={handleCreateLearning} className="w-full" disabled={!newLearning.title || !newLearning.description}>
-                Save Learning
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
+      <PageSectionHeader 
+        title="Learnings & Insights"
+      />
 
-      <div className="grid gap-4">
-        {learnings.map(learning => (
-          <Card key={learning.id}>
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <CardTitle className="card-heading-default flex items-center gap-3">
-                  <Lightbulb className="h-5 w-5 text-amber-500" />
-                  {learning.title}
-                </CardTitle>
-                <div className="flex gap-2">
-                  <Badge className={getCategoryColor(learning.category)}>
-                    {learning.category.replace('_', ' ')}
-                  </Badge>
-                  <Badge className={getImpactColor(learning.impact)}>
-                    <TrendingUp className="h-3 w-3 mr-1" />
-                    {learning.impact}
-                  </Badge>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-[var(--color-text-primary)] whitespace-pre-wrap">{learning.description}</p>
-              {learning.applicable_to && learning.applicable_to.length > 0 && (
-                <div className="flex gap-2 mt-3">
-                  <span className="text-sm text-[var(--color-text-secondary)]">Applies to:</span>
-                  {learning.applicable_to.map((area, idx) => (
-                    <Badge key={idx} variant="outline" className="text-xs">{area}</Badge>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
+      <div className="space-y-4">
+        {isLoading ? (
+          <p>Loading learnings...</p>
+        ) : sortedLearnings.length === 0 ? (
+          <p className="text-muted-foreground">No learnings yet. Capture insights as you work on the project.</p>
+        ) : (
+          <>
+            {paginatedLearnings.map((learning) => (
+              <Collapsible 
+                key={learning.id}
+                open={openLearnings[learning.id]}
+                onOpenChange={() => toggleLearning(learning.id)}
+              >
+                <Card>
+                  <CollapsibleTrigger className="w-full">
+                    <div className="cursor-pointer hover:bg-[var(--color-muted)] transition-colors p-6">
+                      <div className="flex items-start justify-between">
+                        <div className="card-heading-default flex items-center gap-3">
+                          <Lightbulb className="h-5 w-5 text-amber-500" />
+                          {learning.title}
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Badge className={getCategoryColor(learning.category)}>
+                            {learning.category.replace('_', ' ')}
+                          </Badge>
+                          <Badge className={getImpactColor(learning.impact)}>
+                            <TrendingUp className="h-3 w-3 mr-1" />
+                            {learning.impact}
+                          </Badge>
+                          <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${openLearnings[learning.id] ? 'rotate-180' : ''}`} />
+                        </div>
+                      </div>
+                    </div>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <CardContent className="pt-0">
+                      <p className="text-[var(--color-text-primary)] whitespace-pre-wrap">{learning.description}</p>
+                      {learning.applicable_to && learning.applicable_to.length > 0 && (
+                        <div className="flex gap-2 mt-3">
+                          <span className="text-sm text-[var(--color-text-secondary)]">Applies to:</span>
+                          {learning.applicable_to.map((area, idx) => (
+                            <Badge key={idx} variant="outline" className="text-xs">{area}</Badge>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </CollapsibleContent>
+                </Card>
+              </Collapsible>
+            ))}
 
-        {learnings.length === 0 && (
-          <Card>
-            <CardContent className="py-12 text-center">
-              <Lightbulb className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-              <p className="text-[var(--color-text-secondary)]">No learnings yet. Capture insights as you work on the project.</p>
-            </CardContent>
-          </Card>
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2 mt-6">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </Button>
+                <span className="text-sm text-muted-foreground">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

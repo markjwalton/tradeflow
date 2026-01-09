@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, Layers, Calendar } from "lucide-react";
 import { format } from "date-fns";
+import PageSectionHeader from "@/components/common/PageSectionHeader";
 
 export default function ProjectVersioning({ projectId }) {
   const [openVersions, setOpenVersions] = useState({});
@@ -36,6 +37,10 @@ export default function ProjectVersioning({ projectId }) {
 
   return (
     <div className="space-y-6">
+      <PageSectionHeader 
+        title="Project Versions"
+      />
+
       <div className="space-y-4">
         {isLoading ? (
           <p>Loading versions...</p>
@@ -51,9 +56,9 @@ export default function ProjectVersioning({ projectId }) {
               >
                 <Card>
                   <CollapsibleTrigger className="w-full">
-                    <CardHeader className="cursor-pointer hover:bg-[var(--color-muted)] transition-colors">
+                    <div className="cursor-pointer hover:bg-[var(--color-muted)] transition-colors p-6">
                       <div className="flex items-center justify-between">
-                        <CardTitle className="card-heading-default flex items-center gap-3">
+                        <div className="card-heading-default flex items-center gap-3">
                           <Layers className="h-5 w-5 text-[var(--color-primary)]" />
                           Version {version.version_number}
                           <Badge className={
@@ -61,7 +66,7 @@ export default function ProjectVersioning({ projectId }) {
                           }>
                             {version.status}
                           </Badge>
-                        </CardTitle>
+                        </div>
                         <div className="flex items-center gap-3">
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <Calendar className="h-4 w-4" />
@@ -70,7 +75,7 @@ export default function ProjectVersioning({ projectId }) {
                           <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${openVersions[version.id] ? 'rotate-180' : ''}`} />
                         </div>
                       </div>
-                    </CardHeader>
+                    </div>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
                     <CardContent className="pt-0">
