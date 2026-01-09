@@ -153,15 +153,14 @@ export default function Layout({ children, currentPageName }) {
       // Load Adobe Fonts dynamically
       const loadAdobeFonts = async () => {
         try {
-          const response = await base44.functions.invoke('getAdobeFonts', {});
-          if (response.data?.success && response.data?.project_id) {
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = `https://use.typekit.net/${response.data.project_id}.css`;
-            document.head.appendChild(link);
-          }
+          const projectId = 'azz2vhp'; // Direct project ID
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = `https://use.typekit.net/${projectId}.css`;
+          document.head.appendChild(link);
+          console.log('Adobe Fonts link added:', link.href);
         } catch (e) {
-          console.warn('Failed to load Adobe Fonts:', e);
+          console.error('Failed to load Adobe Fonts:', e);
         }
       };
 
