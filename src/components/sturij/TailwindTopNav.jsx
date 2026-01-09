@@ -1,3 +1,4 @@
+import React from 'react';
 import { Bars3Icon, InboxIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { 
   ChevronDownIcon,

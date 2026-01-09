@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { X, ChevronDown, ChevronRight, Settings, LogOut, Home, Folder, FolderOpen } from 'lucide-react';
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 
