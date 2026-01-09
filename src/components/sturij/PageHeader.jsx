@@ -1,4 +1,3 @@
-import React from 'react';
 import { AppBreadcrumb } from '@/components/layout/AppBreadcrumb';
 import { useBreadcrumb } from '@/components/layout/AppContent';
 
