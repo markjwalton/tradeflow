@@ -107,7 +107,7 @@ export default function TechnicalSpecsEditor({ projectId }) {
                 onClick={() => { setEditingSpec(spec); setShowEditor(true); }}>
             <CardHeader>
               <div className="flex items-start justify-between">
-                <CardTitle className="flex items-center gap-3">
+                <CardTitle className="card-heading-default flex items-center gap-3">
                   <FileText className="h-5 w-5 text-[var(--color-primary)]" />
                   {spec.name}
                 </CardTitle>

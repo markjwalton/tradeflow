@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { UnderlinedTabs, UnderlinedTabsContent } from "@/components/ui/underlined-tabs";
 import { LayoutDashboard, Layers, Target, FolderOpen, FileText, MessageSquare, Lightbulb } from "lucide-react";
+import { PageHeader } from "@/components/sturij/PageHeader";
 
 import DashboardOverview from "@/components/project-mvp/DashboardOverview";
 import ProjectVersioning from "@/components/project-mvp/ProjectVersioning";
@@ -56,78 +57,54 @@ export default function MasterProjectManagementMVP() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--color-background)] p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-[var(--text-4xl)] font-[var(--font-family-display)] font-[var(--font-weight-semibold)] text-[var(--color-text-primary)] mb-2">
-            Master Project Management MVP
-          </h1>
-          <p className="text-[var(--text-lg)] text-[var(--color-text-secondary)]">
-            Single source of truth for project evolution, insights, and technical specifications
-          </p>
-        </div>
+    <div className="space-y-6">
+      <PageHeader 
+        title="Master Project Management MVP"
+        description="Single source of truth for project evolution, insights, and technical specifications"
+      />
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid grid-cols-7 w-full mb-6">
-            <TabsTrigger value="dashboard" className="flex items-center gap-2">
-              <LayoutDashboard className="h-4 w-4" />
-              <span className="hidden sm:inline">Dashboard</span>
-            </TabsTrigger>
-            <TabsTrigger value="versions" className="flex items-center gap-2">
-              <Layers className="h-4 w-4" />
-              <span className="hidden sm:inline">Versions</span>
-            </TabsTrigger>
-            <TabsTrigger value="sprints" className="flex items-center gap-2">
-              <Target className="h-4 w-4" />
-              <span className="hidden sm:inline">Sprints</span>
-            </TabsTrigger>
-            <TabsTrigger value="assets" className="flex items-center gap-2">
-              <FolderOpen className="h-4 w-4" />
-              <span className="hidden sm:inline">Assets</span>
-            </TabsTrigger>
-            <TabsTrigger value="specs" className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              <span className="hidden sm:inline">Specs</span>
-            </TabsTrigger>
-            <TabsTrigger value="discussions" className="flex items-center gap-2">
-              <MessageSquare className="h-4 w-4" />
-              <span className="hidden sm:inline">Discussions</span>
-            </TabsTrigger>
-            <TabsTrigger value="learnings" className="flex items-center gap-2">
-              <Lightbulb className="h-4 w-4" />
-              <span className="hidden sm:inline">Learnings</span>
-            </TabsTrigger>
-          </TabsList>
+      <UnderlinedTabs 
+        defaultValue={activeTab}
+        value={activeTab}
+        onValueChange={setActiveTab}
+        tabs={[
+          { value: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+          { value: 'versions', label: 'Versions', icon: Layers },
+          { value: 'sprints', label: 'Sprints', icon: Target },
+          { value: 'assets', label: 'Assets', icon: FolderOpen },
+          { value: 'specs', label: 'Specs', icon: FileText },
+          { value: 'discussions', label: 'Discussions', icon: MessageSquare },
+          { value: 'learnings', label: 'Learnings', icon: Lightbulb }
+        ]}
+      >
+        <UnderlinedTabsContent value="dashboard">
+          <DashboardOverview projectId={masterProject.id} />
+        </UnderlinedTabsContent>
 
-          <TabsContent value="dashboard">
-            <DashboardOverview projectId={masterProject.id} />
-          </TabsContent>
+        <UnderlinedTabsContent value="versions">
+          <ProjectVersioning projectId={masterProject.id} />
+        </UnderlinedTabsContent>
 
-          <TabsContent value="versions">
-            <ProjectVersioning projectId={masterProject.id} />
-          </TabsContent>
+        <UnderlinedTabsContent value="sprints">
+          <SprintManager projectId={masterProject.id} />
+        </UnderlinedTabsContent>
 
-          <TabsContent value="sprints">
-            <SprintManager projectId={masterProject.id} />
-          </TabsContent>
+        <UnderlinedTabsContent value="assets">
+          <AssetLibrary projectId={masterProject.id} />
+        </UnderlinedTabsContent>
 
-          <TabsContent value="assets">
-            <AssetLibrary projectId={masterProject.id} />
-          </TabsContent>
+        <UnderlinedTabsContent value="specs">
+          <TechnicalSpecsEditor projectId={masterProject.id} />
+        </UnderlinedTabsContent>
 
-          <TabsContent value="specs">
-            <TechnicalSpecsEditor projectId={masterProject.id} />
-          </TabsContent>
+        <UnderlinedTabsContent value="discussions">
+          <DiscussionFeed projectId={masterProject.id} />
+        </UnderlinedTabsContent>
 
-          <TabsContent value="discussions">
-            <DiscussionFeed projectId={masterProject.id} />
-          </TabsContent>
-
-          <TabsContent value="learnings">
-            <LearningsLog projectId={masterProject.id} />
-          </TabsContent>
-        </Tabs>
-      </div>
+        <UnderlinedTabsContent value="learnings">
+          <LearningsLog projectId={masterProject.id} />
+        </UnderlinedTabsContent>
+      </UnderlinedTabs>
     </div>
   );
 }

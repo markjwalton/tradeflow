@@ -66,7 +66,7 @@ export default function LearningsLog({ projectId }) {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-[var(--color-text-primary)]">Learnings & Insights</h2>
+        <h2 className="page-section-title">Learnings & Insights</h2>
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
           <DialogTrigger asChild>
             <Button className="bg-[var(--color-primary)] text-white">
@@ -134,7 +134,7 @@ export default function LearningsLog({ projectId }) {
           <Card key={learning.id}>
             <CardHeader>
               <div className="flex items-start justify-between">
-                <CardTitle className="flex items-center gap-3">
+                <CardTitle className="card-heading-default flex items-center gap-3">
                   <Lightbulb className="h-5 w-5 text-amber-500" />
                   {learning.title}
                 </CardTitle>

@@ -51,7 +51,7 @@ export default function ProjectVersioning({ projectId }) {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-[var(--color-text-primary)]">Project Versions</h2>
+        <h2 className="page-section-title">Project Versions</h2>
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
           <DialogTrigger asChild>
             <Button className="bg-[var(--color-primary)] text-white">
@@ -88,7 +88,7 @@ export default function ProjectVersioning({ projectId }) {
           <Card key={version.id}>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-3">
+                <CardTitle className="card-heading-default flex items-center gap-3">
                   <Layers className="h-5 w-5 text-[var(--color-primary)]" />
                   Version {version.version_number}
                   <Badge className={

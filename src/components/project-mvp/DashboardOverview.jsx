@@ -103,7 +103,7 @@ export default function DashboardOverview({ projectId }) {
       {activeSprint && (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="page-section-title flex items-center gap-2">
               <Target className="h-5 w-5 text-[var(--color-primary)]" />
               Current Sprint: {activeSprint.name}
             </CardTitle>
@@ -134,7 +134,7 @@ export default function DashboardOverview({ projectId }) {
         {/* Recent Assets */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Recent Assets</CardTitle>
+            <CardTitle className="page-section-title">Recent Assets</CardTitle>
           </CardHeader>
           <CardContent>
             {recentAssets.length > 0 ? (
@@ -158,7 +158,7 @@ export default function DashboardOverview({ projectId }) {
         {/* Recent Learnings */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Recent Learnings</CardTitle>
+            <CardTitle className="page-section-title">Recent Learnings</CardTitle>
           </CardHeader>
           <CardContent>
             {recentLearnings.length > 0 ? (

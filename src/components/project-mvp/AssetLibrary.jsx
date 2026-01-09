@@ -120,7 +120,7 @@ export default function AssetLibrary({ projectId }) {
                   {getAssetIcon(asset.type)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-[var(--color-text-primary)] truncate mb-1">
+                  <h3 className="card-heading-default truncate mb-1">
                     {asset.name}
                   </h3>
                   {asset.description && (

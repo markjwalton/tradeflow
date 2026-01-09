@@ -48,7 +48,7 @@ export default function DiscussionFeed({ projectId }) {
     <div className="space-y-6">
       <Card>
         <CardContent className="p-6">
-          <h3 className="text-lg font-semibold text-[var(--color-text-primary)] mb-4">Add Discussion</h3>
+          <h3 className="card-heading-default mb-4">Add Discussion</h3>
           <div className="space-y-3">
             <input
               type="text"
@@ -92,7 +92,7 @@ export default function DiscussionFeed({ projectId }) {
                     )}
                   </div>
                   {discussion.title && (
-                    <h4 className="font-medium text-[var(--color-text-primary)] mb-1">{discussion.title}</h4>
+                    <h4 className="card-heading-small mb-1">{discussion.title}</h4>
                   )}
                   <p className="text-[var(--color-text-primary)] whitespace-pre-wrap">{discussion.content}</p>
                   {discussion.related_entity_type !== 'general' && (
