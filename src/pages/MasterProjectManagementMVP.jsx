@@ -29,6 +29,35 @@ export default function MasterProjectManagementMVP() {
     key_changes: ""
   });
 
+  const queryClient = useQueryClient();
+
+  const createVersionMutation = useMutation({
+    mutationFn: (versionData) => base44.entities.ProjectVersion.create({
+      project_id: masterProject.id,
+      ...versionData,
+      snapshot_date: new Date().toISOString()
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projectVersions', masterProject.id] });
+      setNewVersionDialogOpen(false);
+      setNewVersion({ version_number: "", description: "", key_changes: "" });
+      setActiveTab("versions");
+    }
+  });
+
+  const handleVersionSubmit = (e) => {
+    e.preventDefault();
+    const changes = newVersion.key_changes
+      .split('\n')
+      .filter(line => line.trim())
+      .map(line => line.trim());
+    
+    createVersionMutation.mutate({
+      ...newVersion,
+      key_changes: changes
+    });
+  };
+
   // Fetch or create the master project
   useEffect(() => {
     const initializeMasterProject = async () => {
