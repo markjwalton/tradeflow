@@ -7,13 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Layers, Target, FolderOpen, FileText, MessageSquare, Lightbulb, Plus } from "lucide-react";
+import { LayoutDashboard, Layers, Target, FolderOpen, FileText, MessageSquare, Lightbulb, Plus, CheckSquare } from "lucide-react";
 import { PageHeader } from "@/components/sturij/PageHeader";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import DashboardOverview from "@/components/project-mvp/DashboardOverview";
 import ProjectVersioning from "@/components/project-mvp/ProjectVersioning";
 import SprintManager from "@/components/project-mvp/SprintManager";
+import TaskManager from "@/components/project-mvp/TaskManager";
 import AssetLibrary from "@/components/project-mvp/AssetLibrary";
 import TechnicalSpecsEditor from "@/components/project-mvp/TechnicalSpecsEditor";
 import DiscussionFeed from "@/components/project-mvp/DiscussionFeed";
@@ -160,6 +161,7 @@ export default function MasterProjectManagementMVP() {
           { value: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
           { value: 'versions', label: 'Versions', icon: Layers },
           { value: 'sprints', label: 'Sprints', icon: Target },
+          { value: 'tasks', label: 'Tasks', icon: CheckSquare },
           { value: 'assets', label: 'Assets', icon: FolderOpen },
           { value: 'specs', label: 'Specs', icon: FileText },
           { value: 'discussions', label: 'Discussions', icon: MessageSquare },
@@ -179,6 +181,10 @@ export default function MasterProjectManagementMVP() {
 
         <UnderlinedTabsContent value="sprints">
           <SprintManager projectId={masterProject.id} />
+        </UnderlinedTabsContent>
+
+        <UnderlinedTabsContent value="tasks">
+          <TaskManager projectId={masterProject.id} />
         </UnderlinedTabsContent>
 
         <UnderlinedTabsContent value="assets">
