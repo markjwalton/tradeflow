@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, FileText } from "lucide-react";
-import PageSectionHeader from "@/components/common/PageSectionHeader";
+import { AccordionContainer } from "@/components/common/AccordionContainer";
 
 export default function TechnicalSpecsEditor({ projectId }) {
   const [openSpecs, setOpenSpecs] = useState({});
@@ -48,11 +48,7 @@ export default function TechnicalSpecsEditor({ projectId }) {
   };
 
   return (
-    <div className="space-y-6">
-      <PageSectionHeader 
-        title="Technical Specifications"
-      />
-
+    <AccordionContainer title="Technical Specifications" defaultCollapsed={true}>
       <div className="space-y-4">
         {isLoading ? (
           <p>Loading specifications...</p>
@@ -121,6 +117,6 @@ export default function TechnicalSpecsEditor({ projectId }) {
           </>
         )}
       </div>
-    </div>
+    </AccordionContainer>
   );
 }

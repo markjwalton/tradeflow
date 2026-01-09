@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, Layers, Calendar } from "lucide-react";
 import { format } from "date-fns";
-import PageSectionHeader from "@/components/common/PageSectionHeader";
+import { AccordionContainer } from "@/components/common/AccordionContainer";
 
 export default function ProjectVersioning({ projectId }) {
   const [openVersions, setOpenVersions] = useState({});
@@ -36,11 +36,7 @@ export default function ProjectVersioning({ projectId }) {
   };
 
   return (
-    <div className="space-y-6">
-      <PageSectionHeader 
-        title="Project Versions"
-      />
-
+    <AccordionContainer title="Project Versions" defaultCollapsed={true}>
       <div className="space-y-4">
         {isLoading ? (
           <p>Loading versions...</p>
@@ -122,6 +118,6 @@ export default function ProjectVersioning({ projectId }) {
           </>
         )}
       </div>
-    </div>
+    </AccordionContainer>
   );
 }

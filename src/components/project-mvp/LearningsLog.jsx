@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, Lightbulb, TrendingUp } from "lucide-react";
-import PageSectionHeader from "@/components/common/PageSectionHeader";
+import { AccordionContainer } from "@/components/common/AccordionContainer";
 
 export default function LearningsLog({ projectId }) {
   const [openLearnings, setOpenLearnings] = useState({});
@@ -58,11 +58,7 @@ export default function LearningsLog({ projectId }) {
   };
 
   return (
-    <div className="space-y-6">
-      <PageSectionHeader 
-        title="Learnings & Insights"
-      />
-
+    <AccordionContainer title="Learnings & Insights" defaultCollapsed={true}>
       <div className="space-y-4">
         {isLoading ? (
           <p>Loading learnings...</p>
@@ -140,6 +136,6 @@ export default function LearningsLog({ projectId }) {
           </>
         )}
       </div>
-    </div>
+    </AccordionContainer>
   );
 }

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, Target, Calendar, CheckCircle2 } from "lucide-react";
-import PageSectionHeader from "@/components/common/PageSectionHeader";
+import { AccordionContainer } from "@/components/common/AccordionContainer";
 
 export default function SprintManager({ projectId, onNewSprintClick }) {
   const [openSprints, setOpenSprints] = useState({});
@@ -62,11 +62,7 @@ export default function SprintManager({ projectId, onNewSprintClick }) {
   };
 
   return (
-    <div className="space-y-6">
-      <PageSectionHeader 
-        title="Sprints"
-      />
-
+    <AccordionContainer title="Sprints" defaultCollapsed={true}>
       <div className="space-y-4">
         {sortedSprints.length === 0 ? (
           <p className="text-muted-foreground">No sprints yet. Create your first sprint to get started.</p>
@@ -194,6 +190,6 @@ export default function SprintManager({ projectId, onNewSprintClick }) {
           </>
         )}
       </div>
-    </div>
+    </AccordionContainer>
   );
 }
