@@ -66,6 +66,7 @@ import OnboardingWorkflow from './pages/OnboardingWorkflow';
 import PackageDetail from './pages/PackageDetail';
 import PackageExport from './pages/PackageExport';
 import Packages from './pages/Packages';
+import PageBuildWorkspace from './pages/PageBuildWorkspace';
 import PageBuilder from './pages/PageBuilder';
 import PlaygroundSummary from './pages/PlaygroundSummary';
 import PocketHome from './pages/PocketHome';
@@ -109,7 +110,6 @@ import UXShowcase from './pages/UXShowcase';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import WebsiteTemplateManager from './pages/WebsiteTemplateManager';
 import WebsiteThemeManager from './pages/WebsiteThemeManager';
-import PageBuildWorkspace from './pages/PageBuildWorkspace';
 import __Layout from './Layout.jsx';
 
 
@@ -182,6 +182,7 @@ export const PAGES = {
     "PackageDetail": PackageDetail,
     "PackageExport": PackageExport,
     "Packages": Packages,
+    "PageBuildWorkspace": PageBuildWorkspace,
     "PageBuilder": PageBuilder,
     "PlaygroundSummary": PlaygroundSummary,
     "PocketHome": PocketHome,
@@ -225,7 +226,6 @@ export const PAGES = {
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
     "WebsiteTemplateManager": WebsiteTemplateManager,
     "WebsiteThemeManager": WebsiteThemeManager,
-    "PageBuildWorkspace": PageBuildWorkspace,
 }
 
 export const pagesConfig = {

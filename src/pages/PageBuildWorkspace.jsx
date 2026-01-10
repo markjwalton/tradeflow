@@ -112,8 +112,26 @@ export default function PageBuildWorkspace() {
 
   const sortedSections = [...sections].sort((a, b) => a.order - b.order);
 
+  if (!pageId) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[var(--color-background)]">
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold text-[var(--color-text-primary)] mb-2">No Page Selected</h2>
+          <p className="text-[var(--color-text-secondary)]">Please select a page from the Page Builder.</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!page) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[var(--color-background)]">
+        <div className="text-center">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-[var(--color-primary)] border-r-transparent mb-4"></div>
+          <p className="text-[var(--color-text-secondary)]">Loading page...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
