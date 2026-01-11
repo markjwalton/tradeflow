@@ -1,39 +1,45 @@
-import React, { useRef } from "react";
+import React from "react";
+import { Carousel, useCarousel } from "motion-plus/react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-export default function SwatchCarousel({ swatches, onSwatchClick }) {
-  const scrollRef = useRef(null);
-
-  const scroll = (direction) => {
-    if (scrollRef.current) {
-      const scrollAmount = 220;
-      scrollRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
-      });
-    }
-  };
+function Navigation() {
+  const { nextPage, prevPage } = useCarousel();
 
   return (
-    <div className="relative group">
+    <>
       <button
-        onClick={() => scroll('left')}
+        onClick={prevPage}
         className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full backdrop-blur-md transition-opacity opacity-0 group-hover:opacity-100"
         style={{ 
           backgroundColor: 'var(--tone-light-20, rgba(255,255,255,0.2))',
           color: 'var(--tone-text, rgba(255,255,255,0.9))'
         }}
+        aria-label="Previous page"
       >
         <ChevronLeft className="w-5 h-5" />
       </button>
 
-      <div 
-        ref={scrollRef}
-        className="flex gap-5 overflow-x-auto scrollbar-hide scroll-smooth px-2"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      <button
+        onClick={nextPage}
+        className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full backdrop-blur-md transition-opacity opacity-0 group-hover:opacity-100"
+        style={{ 
+          backgroundColor: 'var(--tone-light-20, rgba(255,255,255,0.2))',
+          color: 'var(--tone-text, rgba(255,255,255,0.9))'
+        }}
+        aria-label="Next page"
       >
-        {swatches.map((swatch) => (
+        <ChevronRight className="w-5 h-5" />
+      </button>
+    </>
+  );
+}
+
+export default function SwatchCarousel({ swatches, onSwatchClick }) {
+  return (
+    <div className="relative group">
+      <Carousel
+        items={swatches.map((swatch) => (
           <motion.div
             key={swatch.id}
             className="flex-shrink-0 cursor-pointer"
@@ -69,18 +75,12 @@ export default function SwatchCarousel({ swatches, onSwatchClick }) {
             </div>
           </motion.div>
         ))}
-      </div>
-
-      <button
-        onClick={() => scroll('right')}
-        className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full backdrop-blur-md transition-opacity opacity-0 group-hover:opacity-100"
-        style={{ 
-          backgroundColor: 'var(--tone-light-20, rgba(255,255,255,0.2))',
-          color: 'var(--tone-text, rgba(255,255,255,0.9))'
-        }}
+        overflow
+        gap={20}
+        snap="page"
       >
-        <ChevronRight className="w-5 h-5" />
-      </button>
+        <Navigation />
+      </Carousel>
     </div>
   );
 }
