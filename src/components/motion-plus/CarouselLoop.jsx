@@ -59,29 +59,67 @@ function CarouselDots() {
 
 export default function CarouselLoop({ 
   items = [],
-  gap = 20,
-  loop = true,
+  gap = 16,
+  loop = false,
   className = '',
   showControls = true,
-  showDots = true,
+  showDots = false,
   renderItem,
 }) {
-  // Render items as JSX if renderItem is provided
-  const renderedItems = renderItem 
-    ? items.map((item, index) => renderItem(item, index))
-    : items;
+  const scrollContainerRef = React.useRef(null);
+
+  const scroll = (direction) => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = scrollContainerRef.current.offsetWidth * 0.75;
+      scrollContainerRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   return (
-    <Carousel
-      items={renderedItems}
-      loop={loop}
-      gap={gap}
-      className={className}
-      style={{ width: '100%', minHeight: '400px' }}
-    >
-      {showControls && <CarouselNav />}
-      {showDots && <CarouselDots />}
-    </Carousel>
+    <div className="relative">
+      {showControls && (
+        <>
+          <Button
+            onClick={() => scroll('left')}
+            variant="ghost"
+            size="icon"
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <Button
+            onClick={() => scroll('right')}
+            variant="ghost"
+            size="icon"
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </>
+      )}
+      
+      <div 
+        ref={scrollContainerRef}
+        className={`flex gap-${gap / 4} overflow-x-auto scrollbar-hide ${className}`}
+        style={{ 
+          scrollSnapType: 'x mandatory',
+          WebkitOverflowScrolling: 'touch'
+        }}
+      >
+        {items.map((item, index) => (
+          <div 
+            key={index}
+            className="flex-shrink-0 w-[280px]"
+            style={{ scrollSnapAlign: 'start' }}
+          >
+            {renderItem ? renderItem(item, index) : item}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
