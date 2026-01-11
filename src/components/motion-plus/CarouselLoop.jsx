@@ -71,15 +71,3 @@ export default function CarouselLoop({
     </div>
   );
 }
-
-// Individual carousel item component (for manual item creation)
-export function CarouselItem({ children, className = '' }) {
-  return (
-    <div className={className}>
-      {children}
-    </div>
-  );
-}
-
-// Re-export for convenience
-export { Carousel, useCarousel } from './Carousel';
