@@ -6,11 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Plus, ChevronDown, Upload, MessageSquare } from "lucide-react";
+import { Plus, ChevronDown, Upload, MessageSquare, ExternalLink } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 
 export default function PageBuildWorkspace() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -286,7 +288,7 @@ export default function PageBuildWorkspace() {
                       </div>
                     )}
 
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-wrap">
                       <Button 
                         size="sm" 
                         variant="outline"
@@ -314,6 +316,18 @@ export default function PageBuildWorkspace() {
                         <MessageSquare className="h-4 w-4 mr-2" />
                         Add AI Feedback
                       </Button>
+                      {section.status === 'built' || section.status === 'complete' ? (
+                        <Button 
+                          size="sm" 
+                          variant="default"
+                          asChild
+                        >
+                          <Link to={createPageUrl("MaterialsBrowser")} target="_blank">
+                            <ExternalLink className="h-4 w-4 mr-2" />
+                            View Live Page
+                          </Link>
+                        </Button>
+                      ) : null}
                     </div>
                   </CardContent>
                 </CollapsibleContent>
