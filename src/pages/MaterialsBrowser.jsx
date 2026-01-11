@@ -183,18 +183,18 @@ export default function MaterialsBrowser() {
                                 <img 
                                   src={m.image} 
                                   alt={m.name}
-                                  className="w-full h-full object-cover"
+                                  className="w-full h-full object-cover pointer-events-none"
                                 />
                                 <button
                                   onClick={() => toggleFavorite(m.id)}
-                                  className="absolute top-2 right-2 p-2 bg-black/50 rounded-full hover:bg-black/70 transition-colors"
+                                  className="absolute top-2 right-2 p-2 bg-black/50 rounded-full hover:bg-black/70 transition-colors pointer-events-auto z-10"
                                 >
                                   <Heart 
                                     className={cn("w-4 h-4", favorites.includes(m.id) ? "fill-red-500 text-red-500" : "text-white")} 
                                   />
                                 </button>
                               </div>
-                              <div className="p-3">
+                              <div className="p-3 pointer-events-none">
                                 <h4 className="font-medium text-white mb-1">{m.name}</h4>
                                 <p className="text-xs text-white/60">{m.color} {m.texture} {m.finish}</p>
                               </div>
@@ -249,16 +249,16 @@ export default function MaterialsBrowser() {
                                   <img 
                                     src={m.image} 
                                     alt={m.name}
-                                    className="w-full h-full object-cover"
+                                    className="w-full h-full object-cover pointer-events-none"
                                   />
                                   <button
                                     onClick={() => toggleFavorite(m.id)}
-                                    className="absolute top-2 right-2 p-2 bg-black/50 rounded-full hover:bg-black/70 transition-colors"
+                                    className="absolute top-2 right-2 p-2 bg-black/50 rounded-full hover:bg-black/70 transition-colors pointer-events-auto z-10"
                                   >
                                     <Heart className="w-4 h-4 fill-red-500 text-red-500" />
                                   </button>
                                 </div>
-                                <div className="p-3">
+                                <div className="p-3 pointer-events-none">
                                   <h4 className="font-medium text-white mb-1">{m.name}</h4>
                                   <p className="text-xs text-white/60">{m.color} {m.texture} {m.finish}</p>
                                 </div>
