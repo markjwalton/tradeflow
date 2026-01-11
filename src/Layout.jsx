@@ -523,11 +523,13 @@ export default function Layout({ children, currentPageName }) {
 
   // Redirect to TenantAccess if no access (but not while still checking)
   if (!hasAccess && !checkingAccess) {
-    const accessUrl = createPageUrl("TenantAccess");
-    if (tenantSlug) {
-      window.location.href = accessUrl + (accessUrl.includes("?") ? "&" : "?") + `tenant=${tenantSlug}`;
-    } else {
-      window.location.href = accessUrl;
+    if (typeof window !== 'undefined') {
+      const accessUrl = createPageUrl("TenantAccess");
+      if (tenantSlug) {
+        window.location.href = accessUrl + (accessUrl.includes("?") ? "&" : "?") + `tenant=${tenantSlug}`;
+      } else {
+        window.location.href = accessUrl;
+      }
     }
     return null;
   }
