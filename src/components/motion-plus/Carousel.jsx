@@ -39,10 +39,8 @@ export function Carousel({
   const [currentPage, setCurrentPage] = useState(page || 0)
   const [totalPages, setTotalPages] = useState(1)
   
-  const targetOffset = useMotionValue(0)
-  const offset = useMotionValue(0)
-  const tugOffset = useMotionValue(0)
-  const renderedOffset = useTransform(() => tugOffset.get() + offset.get())
+  const x = useMotionValue(0)
+  const dragX = useMotionValue(0)
 
   // Measure container and items
   useEffect(() => {
