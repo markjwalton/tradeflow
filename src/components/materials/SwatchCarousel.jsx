@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Heart } from "lucide-react";
 
-export default function SwatchCarousel({ swatches, onSwatchClick }) {
+export default function SwatchCarousel({ swatches, onSwatchClick, favorites = [], onToggleFavorite }) {
   const scrollRef = useRef(null);
 
   const scroll = (direction) => {
@@ -59,6 +59,22 @@ export default function SwatchCarousel({ swatches, onSwatchClick }) {
                   alt={swatch.name}
                   className="w-full h-full object-cover"
                 />
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onToggleFavorite?.(swatch.id);
+                  }}
+                  className="absolute top-2 right-2 p-1.5 rounded-full backdrop-blur-md transition-all hover:scale-110"
+                  style={{ 
+                    backgroundColor: 'var(--tone-light-20, rgba(255,255,255,0.2))',
+                  }}
+                >
+                  <Heart 
+                    className="w-4 h-4" 
+                    fill={favorites.includes(swatch.id) ? 'currentColor' : 'none'}
+                    style={{ color: 'var(--tone-text, rgba(255,255,255,0.9))' }}
+                  />
+                </button>
               </div>
               <div className="p-3 backdrop-blur-sm">
                 <h3 className="text-sm font-light tracking-wide text-center transition-colors" 
