@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { PageLoader, ButtonLoader } from "@/components/common/LoadingStates";
 import { ErrorRecovery } from "@/components/common/ErrorRecovery";
 import { useMutationError } from "@/components/common/MutationErrorToast";
-import { Pagination } from "@/components/ui/Pagination";
+import { Pagination } from "@/components/ui/pagination";
 import { useDebounce } from "@/components/common/useDebounce";
 import { useValidatedForm } from "@/components/forms/useValidatedForm";
 import { ValidatedInput } from "@/components/forms/ValidatedInput";
