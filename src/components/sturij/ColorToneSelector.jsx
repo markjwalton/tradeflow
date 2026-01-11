@@ -143,17 +143,17 @@ export default function ColorToneSelector({ onColorChange }) {
           <span className="hidden sm:inline">Set the tone</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-0" align="end">
+      <PopoverContent className="w-80 bg-white shadow-xl border" align="end" sideOffset={8}>
         <div className="p-4">
-          <h3 className="font-medium text-sm mb-3">Set the tone</h3>
+          <h3 className="font-semibold text-sm mb-4 text-gray-900">Set the tone</h3>
           
           {!selectedGroup ? (
-            <div className="space-y-2">
+            <div className="space-y-1">
               {Object.keys(colorGroups).map((groupName) => (
                 <button
                   key={groupName}
                   onClick={() => setSelectedGroup(groupName)}
-                  className="w-full text-left px-3 py-2 rounded-md hover:bg-muted text-sm transition-colors"
+                  className="w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 text-sm transition-colors text-gray-700 hover:text-gray-900"
                 >
                   {groupName}
                 </button>
@@ -163,22 +163,22 @@ export default function ColorToneSelector({ onColorChange }) {
             <div>
               <button
                 onClick={() => setSelectedGroup(null)}
-                className="text-xs text-muted-foreground hover:text-foreground mb-3"
+                className="text-xs text-gray-500 hover:text-gray-900 mb-3 flex items-center gap-1"
               >
-                ← Back to categories
+                <span>←</span> Back to categories
               </button>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto">
                 {colorGroups[selectedGroup].map((color) => (
                   <button
                     key={color.name}
                     onClick={() => applyColorTone(color)}
-                    className="group flex flex-col items-center gap-2 p-2 rounded-md hover:bg-muted transition-colors"
+                    className="group flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-gray-50 transition-all border border-transparent hover:border-gray-200"
                   >
                     <div
-                      className="w-12 h-12 rounded-md border border-border shadow-sm group-hover:scale-110 transition-transform"
+                      className="w-16 h-16 rounded-lg shadow-md group-hover:scale-105 transition-transform border border-gray-200"
                       style={{ backgroundColor: color.hex }}
                     />
-                    <span className="text-xs text-center leading-tight">{color.name}</span>
+                    <span className="text-xs text-center leading-tight text-gray-700 font-medium">{color.name}</span>
                   </button>
                 ))}
               </div>
