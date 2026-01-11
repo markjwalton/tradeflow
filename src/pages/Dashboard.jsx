@@ -3,11 +3,13 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Settings, LayoutGrid, RefreshCw, Loader2 } from "lucide-react";
+import { Settings, LayoutGrid, RefreshCw, Loader2, Palette } from "lucide-react";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import DashboardWidgetCard from "@/components/dashboard/DashboardWidgetCard";
 import useDashboardSettings from "@/components/dashboard/useDashboardSettings";
 import { PageHeader } from "@/components/sturij";
+import { createPageUrl } from "@/utils";
+import { Link } from "react-router-dom";
 
 // Lazy load heavy components
 const WidgetConfigEditor = lazy(() => import("@/components/dashboard/WidgetConfigEditor"));
@@ -107,6 +109,12 @@ export default function Dashboard() {
           description="Welcome back! Here's what's happening."
         />
         <div className="flex gap-2 w-full sm:w-auto ml-auto">
+          <Button asChild variant="outline" size="sm" className="gap-2 flex-1 sm:flex-none">
+            <Link to={createPageUrl("MaterialsBrowser")}>
+              <Palette className="h-4 w-4" />
+              <span className="sm:inline hidden">Materials</span>
+            </Link>
+          </Button>
           <Button variant="outline" size="sm" onClick={() => refetch()} className="gap-2 flex-1 sm:flex-none">
             <RefreshCw className="h-4 w-4" />
             <span className="sm:inline hidden">Refresh</span>
