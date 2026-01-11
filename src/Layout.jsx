@@ -152,10 +152,9 @@ export default function Layout({ children, currentPageName }) {
       // Load Adobe Fonts dynamically
       const loadAdobeFonts = async () => {
         try {
-          const projectId = 'azz2vhp'; // Direct project ID
           const link = document.createElement('link');
           link.rel = 'stylesheet';
-          link.href = `https://use.typekit.net/${projectId}.css`;
+          link.href = 'https://use.typekit.net/iwm1gcu.css';
           document.head.appendChild(link);
           console.log('Adobe Fonts link added:', link.href);
         } catch (e) {
