@@ -132,20 +132,25 @@ export function Carousel({
     gotoPage,
   }
 
-  const handleDragEnd = (event, info) => {
-    const swipeThreshold = 50
-    const velocity = info.velocity.x
-    const distance = info.offset.x
+  const getMaxScroll = () => {
+    if (itemSizes.length === 0) return 0
+    return itemSizes.reduce((sum, size) => sum + size + gap, 0) - gap - containerSize
+  }
 
-    if (Math.abs(distance) > swipeThreshold || Math.abs(velocity) > 500) {
-      if (distance > 0) {
-        prevPage()
-      } else {
-        nextPage()
-      }
-    } else {
-      animateToPage(currentPage)
+  const handleDragEnd = (event, info) => {
+    const velocity = info.velocity.x
+    const currentPos = x.get()
+    const maxScroll = getMaxScroll()
+    
+    // Calculate next position based on velocity and current position
+    let nextPos = currentPos
+    if (Math.abs(velocity) > 500) {
+      nextPos = currentPos - velocity * 0.3
     }
+    
+    // Constrain to valid range
+    nextPos = Math.max(-maxScroll, Math.min(0, nextPos))
+    x.set(nextPos)
   }
 
   return (
