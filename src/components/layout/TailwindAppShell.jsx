@@ -185,16 +185,18 @@ export function TailwindAppShell({
 
         {/* Main Content Area with Sidebar */}
         <div className="flex flex-1 overflow-hidden">
-          {/* Desktop Sidebar - fixed width */}
-          <TailwindNavigation
-            navigation={transformedNavigation}
-            navigationMode={sidebarMode}
-            onNavigate={handleNavigate}
-          />
+          {/* Desktop Sidebar - hidden on mobile */}
+          <div className="hidden md:block">
+            <TailwindNavigation
+              navigation={transformedNavigation}
+              navigationMode={sidebarMode}
+              onNavigate={handleNavigate}
+            />
+          </div>
 
-          {/* Page Content - takes remaining space */}
-          <main className="flex-1 overflow-y-auto min-w-0 bg-[var(--color-background)]">
-            <div className="p-4 md:p-6 lg:p-8 text-[var(--charcoal-800)]">
+          {/* Page Content - takes remaining space, full width on mobile */}
+          <main className="flex-1 overflow-y-auto min-w-0 w-full bg-[var(--color-background)]">
+            <div className="px-4 py-4 sm:px-6 md:p-6 lg:p-8 text-[var(--charcoal-800)]">
               {children}
             </div>
           </main>
