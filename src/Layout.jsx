@@ -79,9 +79,7 @@ const LayoutContent = React.memo(function LayoutContent({ children, currentPageN
   return (
     <TenantContext.Provider value={tenantContextValue}>
       <SidebarProvider>
-        <div 
-          className="px-2 sm:px-0"
-        >
+        <div className="min-h-screen">
           {backgroundImage && (
             <div 
               className="fixed inset-0 z-0 pointer-events-none"
@@ -95,6 +93,7 @@ const LayoutContent = React.memo(function LayoutContent({ children, currentPageN
             />
           )}
           <div 
+            className="w-full"
             style={{
               maxWidth: maxWidth === 'full' ? '100%' : `${maxWidth}px`,
               marginLeft: contentAlignment === 'center' ? 'auto' : (contentAlignment === 'right' ? 'auto' : '0'),
