@@ -2,7 +2,9 @@
 
 import { motion, useMotionValue, useTransform } from "framer-motion"
 import { useEffect, useRef, useState } from "react"
-import { clamp } from "@/lib/utils"
+
+// Utility function
+const clamp = (min, max, value) => Math.min(Math.max(value, min), max)
 
 // Simplified Carousel implementation based on Motion+ private repo
 // Source: github.com/motiondivision/plus/packages/motion-plus/src/components/Carousel
