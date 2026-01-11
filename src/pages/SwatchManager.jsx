@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Upload, Trash2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import PageHeader from "@/components/sturij/PageHeader";
+import { PageHeader } from "@/components/sturij/PageHeader";
 
 export default function SwatchManager() {
   const [uploading, setUploading] = useState(false);
