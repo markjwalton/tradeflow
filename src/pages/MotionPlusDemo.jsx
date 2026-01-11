@@ -74,7 +74,20 @@ export default function MotionPlusDemo() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <CarouselLoop items={customItems} className="max-w-4xl mx-auto" />
+              <CarouselLoop 
+                items={customItems} 
+                className="max-w-4xl mx-auto"
+                renderItem={(item) => (
+                  <Card className="h-full flex flex-col">
+                    <CardHeader>
+                      <CardTitle className="text-lg">{item.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex-grow">
+                      <p className="text-sm text-muted-foreground">{item.description}</p>
+                    </CardContent>
+                  </Card>
+                )}
+              />
             </CardContent>
           </Card>
         </TabsContent>
