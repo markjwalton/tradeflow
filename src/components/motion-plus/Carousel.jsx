@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, useMotionValue, useAnimation } from "framer-motion"
+import { motion, useMotionValue } from "framer-motion"
 import { useEffect, useRef, useState, useCallback } from "react"
 
 const clamp = (min, max, value) => Math.min(Math.max(value, min), max)
@@ -22,6 +22,7 @@ export function Carousel({
   children,
 }) {
   const containerRef = useRef(null)
+  const contentRef = useRef(null)
   const [containerSize, setContainerSize] = useState(0)
   const [itemSizes, setItemSizes] = useState([])
   const [currentPage, setCurrentPage] = useState(0)
@@ -63,27 +64,21 @@ export function Carousel({
     return offset
   }, [itemSizes, gap])
 
-  const getMaxScroll = useCallback(() => {
-    if (itemSizes.length === 0) return 0
-    return itemSizes.reduce((sum, size) => sum + size + gap, 0) - gap - containerSize
-  }, [itemSizes, gap, containerSize])
-
   // Animate to a specific page with spring
   const animateToPage = useCallback((pageIndex) => {
     if (itemSizes.length === 0) return
-    const offset = getOffsetForPage(pageIndex)
+    const clampedPage = clamp(0, itemSizes.length - 1, pageIndex)
+    const offset = getOffsetForPage(clampedPage)
     x.set(-offset)
-    setCurrentPage(pageIndex)
+    setCurrentPage(clampedPage)
   }, [itemSizes, getOffsetForPage, x])
 
   const nextPage = useCallback(() => {
-    const nextIdx = Math.min(currentPage + 1, itemSizes.length - 1)
-    animateToPage(nextIdx)
-  }, [currentPage, itemSizes.length, animateToPage])
+    animateToPage(currentPage + 1)
+  }, [currentPage, animateToPage])
 
   const prevPage = useCallback(() => {
-    const prevIdx = Math.max(currentPage - 1, 0)
-    animateToPage(prevIdx)
+    animateToPage(currentPage - 1)
   }, [currentPage, animateToPage])
 
   const isNextActive = currentPage < itemSizes.length - 1
@@ -99,11 +94,15 @@ export function Carousel({
 
   const handleDragEnd = (event, info) => {
     const velocity = info.velocity.x
-    const currentPos = x.get()
+    const distance = info.offset.x
     
-    // Snap to nearest page based on velocity
+    // Snap based on drag distance or velocity
     let targetPage = currentPage
-    if (Math.abs(velocity) > 300) {
+    if (Math.abs(distance) > 50) {
+      targetPage = distance > 0 
+        ? Math.max(0, currentPage - 1) 
+        : Math.min(itemSizes.length - 1, currentPage + 1)
+    } else if (Math.abs(velocity) > 300) {
       targetPage = velocity > 0 
         ? Math.max(0, currentPage - 1) 
         : Math.min(itemSizes.length - 1, currentPage + 1)
@@ -123,6 +122,7 @@ export function Carousel({
       }}
     >
       <motion.div
+        ref={contentRef}
         style={{
           display: "flex",
           flexDirection: axis === "x" ? "row" : "column",
@@ -130,7 +130,7 @@ export function Carousel({
           x,
         }}
         drag={axis === "x" ? "x" : "y"}
-        dragElastic={0.2}
+        dragElastic={0.15}
         dragMomentum={true}
         onDragEnd={handleDragEnd}
         transition={transition}
