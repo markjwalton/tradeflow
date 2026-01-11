@@ -1,13 +1,9 @@
 "use client"
 
-import { motion, useMotionValue, useTransform } from "framer-motion"
-import { useEffect, useRef, useState } from "react"
+import { motion, useMotionValue, useAnimation } from "framer-motion"
+import { useEffect, useRef, useState, useCallback } from "react"
 
-// Utility function
 const clamp = (min, max, value) => Math.min(Math.max(value, min), max)
-
-// Simplified Carousel implementation based on Motion+ private repo
-// Source: github.com/motiondivision/plus/packages/motion-plus/src/components/Carousel
 
 const defaultTransition = {
   type: "spring",
@@ -15,19 +11,11 @@ const defaultTransition = {
   damping: 40,
 }
 
-const limitSpring = {
-  type: "spring",
-  stiffness: 80,
-  damping: 10,
-}
-
 export function Carousel({
   items = [],
   loop = true,
   transition = defaultTransition,
   axis = "x",
-  snap = "page",
-  page,
   gap = 20,
   className = "",
   style = {},
@@ -36,11 +24,9 @@ export function Carousel({
   const containerRef = useRef(null)
   const [containerSize, setContainerSize] = useState(0)
   const [itemSizes, setItemSizes] = useState([])
-  const [currentPage, setCurrentPage] = useState(page || 0)
-  const [totalPages, setTotalPages] = useState(1)
+  const [currentPage, setCurrentPage] = useState(0)
   
   const x = useMotionValue(0)
-  const dragX = useMotionValue(0)
 
   // Measure container and items
   useEffect(() => {
@@ -54,103 +40,76 @@ export function Carousel({
       const size = axis === "x" ? containerRect.width : containerRect.height
       setContainerSize(size)
 
-      // Measure all items
       const itemElements = Array.from(container.querySelectorAll('[data-carousel-item]'))
       const sizes = itemElements.map(el => {
         const rect = el.getBoundingClientRect()
         return axis === "x" ? rect.width : rect.height
       })
       setItemSizes(sizes)
-
-      // Calculate pages
-      if (size > 0 && sizes.length > 0) {
-        const pages = Math.max(1, sizes.length)
-        setTotalPages(pages)
-      }
     }
 
     updateMeasurements()
-
     const resizeObserver = new ResizeObserver(updateMeasurements)
     resizeObserver.observe(containerRef.current)
-
     return () => resizeObserver.disconnect()
   }, [axis, items.length])
 
-  // Handle page navigation
-  const nextPage = () => {
-    if (loop || currentPage < totalPages - 1) {
-      const newPage = loop ? (currentPage + 1) % totalPages : Math.min(currentPage + 1, totalPages - 1)
-      setCurrentPage(newPage)
-      animateToPage(newPage)
-    }
-  }
-
-  const prevPage = () => {
-    if (loop || currentPage > 0) {
-      const newPage = loop ? (currentPage - 1 + totalPages) % totalPages : Math.max(currentPage - 1, 0)
-      setCurrentPage(newPage)
-      animateToPage(newPage)
-    }
-  }
-
-  const gotoPage = (pageIndex) => {
-    const clampedPage = clamp(0, totalPages - 1, pageIndex)
-    setCurrentPage(clampedPage)
-    animateToPage(clampedPage)
-  }
-
-  const animateToPage = (pageIndex) => {
-    if (itemSizes.length === 0 || containerSize === 0) return
-
-    // Calculate offset for this page
-    let pageOffset = 0
+  // Calculate offset for a given page index
+  const getOffsetForPage = useCallback((pageIndex) => {
+    let offset = 0
     for (let i = 0; i < pageIndex && i < itemSizes.length; i++) {
-      pageOffset += itemSizes[i] + gap
+      offset += itemSizes[i] + gap
     }
+    return offset
+  }, [itemSizes, gap])
 
-    x.set(-pageOffset)
-  }
+  const getMaxScroll = useCallback(() => {
+    if (itemSizes.length === 0) return 0
+    return itemSizes.reduce((sum, size) => sum + size + gap, 0) - gap - containerSize
+  }, [itemSizes, gap, containerSize])
 
-  // Initialize page offset
-  useEffect(() => {
-    if (page !== undefined && itemSizes.length > 0) {
-      animateToPage(page)
-    }
-  }, [page, itemSizes])
+  // Animate to a specific page with spring
+  const animateToPage = useCallback((pageIndex) => {
+    if (itemSizes.length === 0) return
+    const offset = getOffsetForPage(pageIndex)
+    x.set(-offset)
+    setCurrentPage(pageIndex)
+  }, [itemSizes, getOffsetForPage, x])
 
-  const isNextActive = loop || currentPage < totalPages - 1
-  const isPrevActive = loop || currentPage > 0
+  const nextPage = useCallback(() => {
+    const nextIdx = Math.min(currentPage + 1, itemSizes.length - 1)
+    animateToPage(nextIdx)
+  }, [currentPage, itemSizes.length, animateToPage])
+
+  const prevPage = useCallback(() => {
+    const prevIdx = Math.max(currentPage - 1, 0)
+    animateToPage(prevIdx)
+  }, [currentPage, animateToPage])
+
+  const isNextActive = currentPage < itemSizes.length - 1
+  const isPrevActive = currentPage > 0
 
   const carouselContext = {
     currentPage,
-    totalPages,
     nextPage,
     prevPage,
     isNextActive,
     isPrevActive,
-    gotoPage,
-  }
-
-  const getMaxScroll = () => {
-    if (itemSizes.length === 0) return 0
-    return itemSizes.reduce((sum, size) => sum + size + gap, 0) - gap - containerSize
   }
 
   const handleDragEnd = (event, info) => {
     const velocity = info.velocity.x
     const currentPos = x.get()
-    const maxScroll = getMaxScroll()
     
-    // Calculate next position based on velocity and current position
-    let nextPos = currentPos
-    if (Math.abs(velocity) > 500) {
-      nextPos = currentPos - velocity * 0.3
+    // Snap to nearest page based on velocity
+    let targetPage = currentPage
+    if (Math.abs(velocity) > 300) {
+      targetPage = velocity > 0 
+        ? Math.max(0, currentPage - 1) 
+        : Math.min(itemSizes.length - 1, currentPage + 1)
     }
     
-    // Constrain to valid range
-    nextPos = Math.max(-maxScroll, Math.min(0, nextPos))
-    x.set(nextPos)
+    animateToPage(targetPage)
   }
 
   return (
@@ -196,7 +155,6 @@ export function Carousel({
   )
 }
 
-// Context for carousel controls
 import { createContext, useContext } from "react"
 
 const CarouselContext = createContext(null)
