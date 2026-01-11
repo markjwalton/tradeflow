@@ -130,7 +130,6 @@ export function Carousel({
     isNextActive,
     isPrevActive,
     gotoPage,
-    targetOffset,
   }
 
   const handleDragEnd = (event, info) => {
