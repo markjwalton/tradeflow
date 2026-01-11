@@ -1,10 +1,10 @@
 import React from 'react';
-import { Carousel } from 'motion-plus/react';
+import { Carousel, useCarousel } from './Carousel';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 function CarouselControls() {
-  const { nextPage, prevPage, isNextActive, isPrevActive } = Carousel.useCarousel();
+  const { nextPage, prevPage, isNextActive, isPrevActive } = useCarousel();
   
   return (
     <>
