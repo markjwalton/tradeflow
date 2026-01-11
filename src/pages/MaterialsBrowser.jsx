@@ -42,6 +42,7 @@ export default function MaterialsBrowser() {
 
   const filterOptions = {
     swatches: [],
+    favourites: [],
     colour: ["All", "Light", "Medium", "Dark", "Neutral", "Warm"],
     texture: ["All", "Smooth", "Textured"],
     finishes: ["All", "Matt", "Satin", "Gloss"],
@@ -101,10 +102,6 @@ export default function MaterialsBrowser() {
               </button>
               <button className="text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
                 Contact
-              </button>
-              <ColorToneSelector />
-              <button className="text-red-400 hover:text-red-300">
-                <Heart className="h-5 w-5" />
               </button>
             </div>
           </div>
@@ -166,12 +163,66 @@ export default function MaterialsBrowser() {
                         animate={{ y: 0 }}
                         exit={{ y: -20 }}
                       >
+                        <div className="flex justify-between items-center mb-4">
+                          <h3 className="text-sm font-light tracking-wide" style={{ color: 'var(--tone-text, rgba(255,255,255,0.9))' }}>
+                            Colour Palette
+                          </h3>
+                          <ColorToneSelector />
+                        </div>
                         <SwatchCarousel 
                           swatches={filteredMaterials} 
                           onSwatchClick={(swatch) => console.log('Clicked:', swatch)}
                           favorites={favorites}
                           onToggleFavorite={toggleFavorite}
                         />
+                      </motion.div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              );
+            }
+            
+            if (filterKey === "favourites") {
+              const favoriteMaterials = materials.filter(m => favorites.includes(m.id));
+              return (
+                <AnimatePresence key={filterKey}>
+                  {activeFilterTab === "favourites" && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ 
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 40,
+                        mass: 0.8
+                      }}
+                      className="overflow-hidden"
+                    >
+                      <motion.div 
+                        className="backdrop-blur-md rounded-lg mt-2 p-6 shadow-2xl"
+                        style={{ 
+                          backgroundColor: 'var(--tone-light-10, rgba(255,255,255,0.1))',
+                          borderColor: 'var(--tone-border, rgba(255,255,255,0.2))',
+                          border: '1px solid',
+                          boxShadow: '0 20px 40px rgba(0,0,0,0.3), 0 8px 16px rgba(0,0,0,0.2)'
+                        }}
+                        initial={{ y: -20 }}
+                        animate={{ y: 0 }}
+                        exit={{ y: -20 }}
+                      >
+                        {favoriteMaterials.length > 0 ? (
+                          <SwatchCarousel 
+                            swatches={favoriteMaterials} 
+                            onSwatchClick={(swatch) => console.log('Clicked:', swatch)}
+                            favorites={favorites}
+                            onToggleFavorite={toggleFavorite}
+                          />
+                        ) : (
+                          <p className="text-center py-8 text-sm font-light tracking-wide" style={{ color: 'var(--tone-text-muted, rgba(255,255,255,0.6))' }}>
+                            No favourites yet. Click the heart icon on swatches to add them.
+                          </p>
+                        )}
                       </motion.div>
                     </motion.div>
                   )}
