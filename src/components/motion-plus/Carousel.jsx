@@ -109,8 +109,7 @@ export function Carousel({
       pageOffset += itemSizes[i] + gap
     }
 
-    targetOffset.set(-pageOffset)
-    offset.set(-pageOffset)
+    x.set(-pageOffset)
   }
 
   // Initialize page offset
