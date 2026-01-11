@@ -1,5 +1,5 @@
 import React from 'react'
-import { Carousel, useCarousel } from 'motion-plus/react'
+import { Carousel, useCarousel } from './Carousel'
 import { motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
