@@ -105,6 +105,11 @@ export default function CarouselLoop({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
+      style={{
+        flexShrink: 0,
+        width: itemSize !== 'auto' ? itemSize : undefined,
+        minWidth: itemSize !== 'auto' ? itemSize : undefined,
+      }}
     >
       {renderItem ? renderItem(item, index) : item}
     </motion.div>
