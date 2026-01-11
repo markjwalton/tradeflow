@@ -133,9 +133,21 @@ export function Carousel({
     targetOffset,
   }
 
-  const transformStyle = axis === "x" 
-    ? { x: renderedOffset }
-    : { y: renderedOffset }
+  const handleDragEnd = (event, info) => {
+    const swipeThreshold = 50
+    const velocity = info.velocity.x
+    const distance = info.offset.x
+
+    if (Math.abs(distance) > swipeThreshold || Math.abs(velocity) > 500) {
+      if (distance > 0) {
+        prevPage()
+      } else {
+        nextPage()
+      }
+    } else {
+      animateToPage(currentPage)
+    }
+  }
 
   return (
     <div 
@@ -152,8 +164,12 @@ export function Carousel({
           display: "flex",
           flexDirection: axis === "x" ? "row" : "column",
           gap: `${gap}px`,
-          ...transformStyle,
+          x,
         }}
+        drag={axis === "x" ? "x" : "y"}
+        dragElastic={0.2}
+        dragMomentum={true}
+        onDragEnd={handleDragEnd}
         transition={transition}
       >
         {items.map((item, index) => (
