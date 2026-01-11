@@ -65,42 +65,44 @@ export default function MaterialsBrowser() {
     <div className="min-h-screen transition-colors duration-500" style={{ backgroundColor: 'var(--tone-base, #65617d)' }}>
       {/* Top Navigation */}
       <nav className="bg-transparent transition-colors" style={{ borderBottom: '1px solid var(--tone-light-20, rgba(255,255,255,0.1))' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-8">
-              <button className="text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14 sm:h-16">
+            {/* Left Nav - hidden on mobile, compact on tablet */}
+            <div className="hidden md:flex items-center gap-4 lg:gap-8">
+              <button className="text-xs lg:text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
                 About
               </button>
-              <button className="text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
+              <button className="text-xs lg:text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
                 Design
               </button>
-              <button className="text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
+              <button className="text-xs lg:text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
                 Manufacture
               </button>
-              <button className="text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
+              <button className="text-xs lg:text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
                 Installation
               </button>
             </div>
 
-            {/* Logo */}
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                <div className="w-4 h-4 rounded-full bg-white/20" />
+            {/* Logo - centered on mobile */}
+            <div className="flex items-center gap-2 mx-auto md:mx-0">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-white/10 flex items-center justify-center">
+                <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-white/20" />
               </div>
-              <span className="text-xl font-light tracking-widest transition-colors" style={{ color: 'var(--tone-text, rgba(255,255,255,1))' }}>sturij</span>
+              <span className="text-lg sm:text-xl font-light tracking-widest transition-colors" style={{ color: 'var(--tone-text, rgba(255,255,255,1))' }}>sturij</span>
             </div>
 
-            <div className="flex items-center gap-8">
-              <button className="text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
+            {/* Right Nav - hidden on mobile, compact on tablet */}
+            <div className="hidden md:flex items-center gap-4 lg:gap-8">
+              <button className="text-xs lg:text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
                 Materials
               </button>
-              <button className="text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
+              <button className="text-xs lg:text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
                 Commitment
               </button>
-              <button className="text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
+              <button className="text-xs lg:text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
                 Information
               </button>
-              <button className="text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
+              <button className="text-xs lg:text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
                 Contact
               </button>
             </div>
@@ -110,15 +112,15 @@ export default function MaterialsBrowser() {
 
       {/* Filter Tabs */}
       <div className="transition-colors" style={{ borderBottom: '1px solid var(--tone-light-20, rgba(255,255,255,0.1))' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-center gap-12 py-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center gap-4 sm:gap-8 lg:gap-12 py-3 sm:py-4 overflow-x-auto scrollbar-hide">
             {Object.keys(filterOptions).map((filterKey) => (
               <button
                 key={filterKey}
                 onClick={() => toggleFilterTab(filterKey)}
                 className={cn(
-                  "text-sm font-light tracking-wider uppercase transition-all",
-                  "hover:scale-105"
+                  "text-xs sm:text-sm font-light tracking-wider uppercase transition-all whitespace-nowrap",
+                  "hover:scale-105 flex-shrink-0"
                 )}
                 style={{ 
                   color: activeFilterTab === filterKey || filters[filterKey] !== "All"
@@ -133,7 +135,7 @@ export default function MaterialsBrowser() {
         </div>
         
         {/* Filter Dropdowns */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pb-3 sm:pb-4">
           {Object.keys(filterOptions).map((filterKey) => {
             if (filterKey === "swatches") {
               return (
@@ -152,7 +154,7 @@ export default function MaterialsBrowser() {
                       className="overflow-hidden"
                     >
                       <motion.div 
-                        className="backdrop-blur-md rounded-lg mt-2 p-6 shadow-2xl"
+                        className="backdrop-blur-md rounded-lg mt-2 p-3 sm:p-6 shadow-2xl"
                         style={{ 
                           backgroundColor: 'var(--tone-light-10, rgba(255,255,255,0.1))',
                           borderColor: 'var(--tone-border, rgba(255,255,255,0.2))',
@@ -163,8 +165,8 @@ export default function MaterialsBrowser() {
                         animate={{ y: 0 }}
                         exit={{ y: -20 }}
                       >
-                        <div className="flex justify-between items-center mb-4">
-                          <h3 className="text-sm font-light tracking-wide" style={{ color: 'var(--tone-text, rgba(255,255,255,0.9))' }}>
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                          <h3 className="text-xs sm:text-sm font-light tracking-wide" style={{ color: 'var(--tone-text, rgba(255,255,255,0.9))' }}>
                             Colour Palette
                           </h3>
                           <ColorToneSelector />
@@ -200,7 +202,7 @@ export default function MaterialsBrowser() {
                       className="overflow-hidden"
                     >
                       <motion.div 
-                        className="backdrop-blur-md rounded-lg mt-2 p-6 shadow-2xl"
+                        className="backdrop-blur-md rounded-lg mt-2 p-3 sm:p-6 shadow-2xl"
                         style={{ 
                           backgroundColor: 'var(--tone-light-10, rgba(255,255,255,0.1))',
                           borderColor: 'var(--tone-border, rgba(255,255,255,0.2))',
@@ -219,7 +221,7 @@ export default function MaterialsBrowser() {
                             onToggleFavorite={toggleFavorite}
                           />
                         ) : (
-                          <p className="text-center py-8 text-sm font-light tracking-wide" style={{ color: 'var(--tone-text-muted, rgba(255,255,255,0.6))' }}>
+                          <p className="text-center py-6 sm:py-8 text-xs sm:text-sm font-light tracking-wide" style={{ color: 'var(--tone-text-muted, rgba(255,255,255,0.6))' }}>
                             No favourites yet. Click the heart icon on swatches to add them.
                           </p>
                         )}
