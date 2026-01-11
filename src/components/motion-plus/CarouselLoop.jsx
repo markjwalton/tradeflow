@@ -1,7 +1,6 @@
-import { motion } from 'framer-motion';
+import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Carousel, useCarousel } from './Carousel';
 
 /**
  * CarouselLoop - Infinite looping carousel component
