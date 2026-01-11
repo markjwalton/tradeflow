@@ -173,13 +173,30 @@ export default function MaterialsBrowser() {
                           <ColorToneSelector />
                         </div>
                         <CarouselLoop 
-                          items={filteredMaterials.map(m => ({
-                            title: m.name,
-                            imageSrc: m.image,
-                            description: `${m.color} ${m.texture} ${m.finish}`,
-                            isFavorite: favorites.includes(m.id),
-                            onFavoriteClick: () => toggleFavorite(m.id)
-                          }))}
+                          items={filteredMaterials}
+                          renderItem={(m) => (
+                            <Card className="overflow-hidden bg-white/5 backdrop-blur-sm border-white/10">
+                              <div className="aspect-square relative">
+                                <img 
+                                  src={m.image} 
+                                  alt={m.name}
+                                  className="w-full h-full object-cover"
+                                />
+                                <button
+                                  onClick={() => toggleFavorite(m.id)}
+                                  className="absolute top-2 right-2 p-2 bg-black/50 rounded-full hover:bg-black/70 transition-colors"
+                                >
+                                  <Heart 
+                                    className={cn("w-4 h-4", favorites.includes(m.id) ? "fill-red-500 text-red-500" : "text-white")} 
+                                  />
+                                </button>
+                              </div>
+                              <div className="p-3">
+                                <h4 className="font-medium text-white mb-1">{m.name}</h4>
+                                <p className="text-xs text-white/60">{m.color} {m.texture} {m.finish}</p>
+                              </div>
+                            </Card>
+                          )}
                         />
                       </motion.div>
                     </motion.div>
