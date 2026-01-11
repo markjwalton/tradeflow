@@ -55,16 +55,16 @@ export default function MaterialsBrowser() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-8">
-              <button className="text-white/80 hover:text-white text-sm font-light tracking-wide">
+              <button className="text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
                 About
               </button>
-              <button className="text-white/80 hover:text-white text-sm font-light tracking-wide">
+              <button className="text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
                 Design
               </button>
-              <button className="text-white/80 hover:text-white text-sm font-light tracking-wide">
+              <button className="text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
                 Manufacture
               </button>
-              <button className="text-white/80 hover:text-white text-sm font-light tracking-wide">
+              <button className="text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
                 Installation
               </button>
             </div>
@@ -74,20 +74,20 @@ export default function MaterialsBrowser() {
               <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
                 <div className="w-4 h-4 rounded-full bg-white/20" />
               </div>
-              <span className="text-white text-xl font-light tracking-widest">sturij</span>
+              <span className="text-xl font-light tracking-widest transition-colors" style={{ color: 'var(--tone-text, rgba(255,255,255,1))' }}>sturij</span>
             </div>
 
             <div className="flex items-center gap-8">
-              <button className="text-white/80 hover:text-white text-sm font-light tracking-wide">
+              <button className="text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
                 Materials
               </button>
-              <button className="text-white/80 hover:text-white text-sm font-light tracking-wide">
+              <button className="text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
                 Commitment
               </button>
-              <button className="text-white/80 hover:text-white text-sm font-light tracking-wide">
+              <button className="text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
                 Information
               </button>
-              <button className="text-white/80 hover:text-white text-sm font-light tracking-wide">
+              <button className="text-sm font-light tracking-wide transition-colors" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
                 Contact
               </button>
               <ColorToneSelector />
@@ -106,12 +106,12 @@ export default function MaterialsBrowser() {
             {Object.keys(filterOptions).map((filterKey) => (
               <button
                 key={filterKey}
-                className={cn(
-                  "text-sm font-light tracking-wider uppercase",
-                  filters[filterKey] !== "All" 
-                    ? "text-white" 
-                    : "text-white/60 hover:text-white/80"
-                )}
+                className="text-sm font-light tracking-wider uppercase transition-colors"
+                style={{ 
+                  color: filters[filterKey] !== "All" 
+                    ? 'var(--tone-text, rgba(255,255,255,1))' 
+                    : 'var(--tone-text-muted, rgba(255,255,255,0.6))'
+                }}
               >
                 {filterKey}
               </button>
@@ -129,14 +129,15 @@ export default function MaterialsBrowser() {
               <div className="mb-4">
                 <button
                   onClick={() => setCategoryOpen(!categoryOpen)}
-                  className="flex items-center justify-between w-full text-white/80 hover:text-white text-sm tracking-wide mb-2"
+                  className="flex items-center justify-between w-full text-sm tracking-wide mb-2 transition-colors"
+                  style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}
                 >
                   <span>{selectedCategory}</span>
                   <ChevronDown className={cn("h-4 w-4 transition-transform", categoryOpen && "rotate-180")} />
                 </button>
                 {categoryOpen && (
                   <div className="space-y-1 pl-2">
-                    <button className="block text-white/60 hover:text-white text-sm">
+                    <button className="block text-sm transition-colors" style={{ color: 'var(--tone-text-muted, rgba(255,255,255,0.6))' }}>
                       All
                     </button>
                   </div>
@@ -147,7 +148,8 @@ export default function MaterialsBrowser() {
               <div>
                 <button
                   onClick={() => setColorOpen(!colorOpen)}
-                  className="flex items-center justify-between w-full text-white/80 hover:text-white text-sm tracking-wide mb-2"
+                  className="flex items-center justify-between w-full text-sm tracking-wide mb-2 transition-colors"
+                  style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}
                 >
                   <span>Colour</span>
                   <ChevronDown className={cn("h-4 w-4 transition-transform", colorOpen && "rotate-180")} />
@@ -158,16 +160,21 @@ export default function MaterialsBrowser() {
                       <button
                         key={color}
                         onClick={() => setFilters(prev => ({ ...prev, color }))}
-                        className={cn(
-                          "flex items-center gap-2 text-sm w-full text-left",
-                          filters.color === color ? "text-white" : "text-white/60 hover:text-white"
-                        )}
+                        className="flex items-center gap-2 text-sm w-full text-left transition-colors"
+                        style={{ 
+                          color: filters.color === color 
+                            ? 'var(--tone-text, rgba(255,255,255,1))' 
+                            : 'var(--tone-text-muted, rgba(255,255,255,0.6))' 
+                        }}
                       >
-                        <div className={cn(
-                          "w-3 h-3 rounded-sm border border-white/30",
-                          color === "Dark" && "bg-gray-800",
-                          color === "Light" && "bg-gray-300"
-                        )} />
+                        <div 
+                          className={cn(
+                            "w-3 h-3 rounded-sm border",
+                            color === "Dark" && "bg-gray-800",
+                            color === "Light" && "bg-gray-300"
+                          )}
+                          style={{ borderColor: 'var(--tone-border, rgba(255,255,255,0.3))' }}
+                        />
                         {color}
                       </button>
                     ))}
@@ -212,7 +219,7 @@ export default function MaterialsBrowser() {
                     </button>
                   </div>
                   <div className="p-3">
-                    <h3 className="text-white/90 text-sm font-light tracking-wide text-center">
+                    <h3 className="text-sm font-light tracking-wide text-center transition-colors" style={{ color: 'var(--tone-text, rgba(255,255,255,0.9))' }}>
                       {material.name}
                     </h3>
                   </div>
