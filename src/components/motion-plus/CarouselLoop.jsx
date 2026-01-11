@@ -67,23 +67,25 @@ function CarouselItem({ index, imageSrc, title, description, isFavorite, onFavor
 
 // Navigation Controls Component
 function CarouselNav() {
-  const { goToNext, goToPrevious } = useCarousel();
+  const { nextPage, prevPage, isNextActive, isPrevActive } = useCarousel();
 
   return (
     <div className="absolute bottom-6 right-6 flex gap-2 z-10">
       <Button
-        onClick={goToPrevious}
+        onClick={prevPage}
         variant="secondary"
         size="icon"
+        disabled={!isPrevActive}
         className="rounded-full shadow-lg hover:shadow-xl transition-shadow"
         aria-label="Previous slide"
       >
         <ChevronLeft className="h-5 w-5" />
       </Button>
       <Button
-        onClick={goToNext}
+        onClick={nextPage}
         variant="secondary"
         size="icon"
+        disabled={!isNextActive}
         className="rounded-full shadow-lg hover:shadow-xl transition-shadow"
         aria-label="Next slide"
       >
@@ -95,21 +97,21 @@ function CarouselNav() {
 
 // Dot Indicators Component
 function CarouselDots() {
-  const { itemCount, activeIndex, goToItem } = useCarousel();
+  const { currentPage, totalPages, gotoPage } = useCarousel();
 
   return (
     <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-      {Array.from({ length: itemCount }).map((_, index) => (
+      {Array.from({ length: totalPages }).map((_, index) => (
         <button
           key={index}
-          onClick={() => goToItem(index)}
+          onClick={() => gotoPage(index)}
           className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
-            index === activeIndex
+            index === currentPage
               ? 'bg-primary w-8'
               : 'bg-white/50 hover:bg-white/75'
           }`}
           aria-label={`Go to slide ${index + 1}`}
-          aria-current={index === activeIndex ? 'true' : 'false'}
+          aria-current={index === currentPage ? 'true' : 'false'}
         />
       ))}
     </div>
