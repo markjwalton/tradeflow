@@ -168,7 +168,9 @@ export default function MaterialsBrowser() {
                       >
                         <SwatchCarousel 
                           swatches={filteredMaterials} 
-                          onSwatchClick={(swatch) => console.log('Clicked:', swatch)} 
+                          onSwatchClick={(swatch) => console.log('Clicked:', swatch)}
+                          favorites={favorites}
+                          onToggleFavorite={toggleFavorite}
                         />
                       </motion.div>
                     </motion.div>
@@ -194,57 +196,7 @@ export default function MaterialsBrowser() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex gap-6">
-          {/* Materials Grid */}
-          <div className="flex-1">
-            <h2 className="text-xl font-light tracking-wide mb-6 transition-colors" 
-              style={{ color: 'var(--tone-text, rgba(255,255,255,0.9))' }}>
-              All Materials ({filteredMaterials.length})
-            </h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {filteredMaterials.map((material) => (
-                <Card 
-                  key={material.id}
-                  className="group backdrop-blur-sm overflow-hidden transition-all"
-                  style={{ 
-                    backgroundColor: 'var(--tone-light-10, rgba(255,255,255,0.05))',
-                    borderColor: 'var(--tone-light-20, rgba(255,255,255,0.1))'
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--tone-light-30, rgba(255,255,255,0.3))'}
-                  onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--tone-light-20, rgba(255,255,255,0.1))'}
-                >
-                  <div className="relative aspect-square">
-                    <img 
-                      src={material.image} 
-                      alt={material.name}
-                      className="w-full h-full object-cover"
-                    />
-                    <button
-                      onClick={() => toggleFavorite(material.id)}
-                      className="absolute top-2 right-2 p-2 bg-black/20 backdrop-blur-sm rounded-full hover:bg-black/40 transition-colors"
-                    >
-                      <Heart 
-                        className={cn(
-                          "h-4 w-4 transition-colors",
-                          favorites.includes(material.id) 
-                            ? "fill-red-400 text-red-400" 
-                            : "text-white/80"
-                        )}
-                      />
-                    </button>
-                  </div>
-                  <div className="p-3">
-                    <h3 className="text-sm font-light tracking-wide text-center transition-colors" style={{ color: 'var(--tone-text, rgba(255,255,255,0.9))' }}>
-                      {material.name}
-                    </h3>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+
 
       {/* Background Decoration */}
       <div className="fixed inset-0 pointer-events-none opacity-5">
