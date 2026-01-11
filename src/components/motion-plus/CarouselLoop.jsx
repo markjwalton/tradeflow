@@ -1,11 +1,12 @@
-import { Carousel, useCarousel } from 'motion-plus/react';
+import React, { useCallback, useEffect, useState } from 'react';
+import useEmblaCarousel from 'embla-carousel-react';
 import { ChevronLeft, ChevronRight, Heart } from 'lucide-react';
 import { Button } from '../ui/button';
 
 // Carousel Item Component
 function CarouselItem({ index, imageSrc, title, description, isFavorite, onFavoriteClick }) {
   return (
-    <div className="flex-shrink-0 w-full h-full flex items-center justify-center bg-card rounded-lg border border-border overflow-hidden relative group">
+    <div className="flex-[0_0_100%] min-w-0 h-full flex items-center justify-center bg-card rounded-lg border border-border overflow-hidden relative group">
       {imageSrc ? (
         <>
           <img 
@@ -65,107 +66,110 @@ function CarouselItem({ index, imageSrc, title, description, isFavorite, onFavor
   );
 }
 
-// Navigation Controls Component
-function CarouselNav() {
-  const { nextPage, prevPage, isNextActive, isPrevActive } = useCarousel();
-
-  return (
-    <div className="absolute bottom-6 right-6 flex gap-2 z-10">
-      <Button
-        onClick={prevPage}
-        variant="secondary"
-        size="icon"
-        disabled={!isPrevActive}
-        className="rounded-full shadow-lg hover:shadow-xl transition-shadow"
-        aria-label="Previous slide"
-      >
-        <ChevronLeft className="h-5 w-5" />
-      </Button>
-      <Button
-        onClick={nextPage}
-        variant="secondary"
-        size="icon"
-        disabled={!isNextActive}
-        className="rounded-full shadow-lg hover:shadow-xl transition-shadow"
-        aria-label="Next slide"
-      >
-        <ChevronRight className="h-5 w-5" />
-      </Button>
-    </div>
-  );
-}
-
-// Dot Indicators Component
-function CarouselDots() {
-  const { currentPage, totalPages, gotoPage } = useCarousel();
-
-  return (
-    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-      {Array.from({ length: totalPages }).map((_, index) => (
-        <button
-          key={index}
-          onClick={() => gotoPage(index)}
-          className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
-            index === currentPage
-              ? 'bg-primary w-8'
-              : 'bg-white/50 hover:bg-white/75'
-          }`}
-          aria-label={`Go to slide ${index + 1}`}
-          aria-current={index === currentPage ? 'true' : 'false'}
-        />
-      ))}
-    </div>
-  );
-}
-
 // Main Carousel Loop Component
-export default function CarouselLoop({ items = [], className = '' }) {
-  // Default demo items if none provided
+export default function CarouselLoop({
+  items = [],
+  className = '',
+  height = '400px',
+  showNav = true,
+  showDots = true,
+  loop = true,
+}) {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop, align: 'start' });
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+
+  // Default items if none provided
   const defaultItems = [
-    {
-      title: 'Welcome to TradeFlow',
-      description: 'Manage your projects with ease and efficiency',
-    },
-    {
-      title: 'Powerful Features',
-      description: 'Everything you need to streamline your workflow',
-    },
-    {
-      title: 'Beautiful Design',
-      description: 'Built with your design system in mind',
-    },
-    {
-      title: 'Infinite Scrolling',
-      description: 'Smooth carousel with infinite loop capability',
-    },
+    { title: 'Slide 1', description: 'Beautiful carousel component', imageSrc: null },
+    { title: 'Slide 2', description: 'Smooth animations', imageSrc: null },
+    { title: 'Slide 3', description: 'Fully customizable', imageSrc: null },
   ];
 
   const carouselItems = items.length > 0 ? items : defaultItems;
 
+  const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
+  const scrollTo = useCallback((index) => emblaApi && emblaApi.scrollTo(index), [emblaApi]);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+    setCanScrollPrev(emblaApi.canScrollPrev());
+    setCanScrollNext(emblaApi.canScrollNext());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on('select', onSelect);
+    emblaApi.on('reInit', onSelect);
+  }, [emblaApi, onSelect]);
+
   return (
-    <div className={`relative w-full ${className}`}>
-      <Carousel
-        items={carouselItems.map((item, index) => (
-          <CarouselItem
-            key={index}
-            index={index}
-            imageSrc={item.imageSrc}
-            title={item.title}
-            description={item.description}
-            isFavorite={item.isFavorite}
-            onFavoriteClick={item.onFavoriteClick}
-          />
-        ))}
-        loop
-        className="w-full h-full"
-        style={{ height: '400px' }}
-      >
-        <CarouselNav />
-        <CarouselDots />
-      </Carousel>
+    <div className={`relative ${className}`} style={{ height }}>
+      <div className="overflow-hidden h-full" ref={emblaRef}>
+        <div className="flex h-full">
+          {carouselItems.map((item, index) => (
+            <CarouselItem 
+              key={index}
+              index={index}
+              imageSrc={item.imageSrc}
+              title={item.title}
+              description={item.description}
+              isFavorite={item.isFavorite}
+              onFavoriteClick={item.onFavoriteClick}
+            />
+          ))}
+        </div>
+      </div>
+      
+      {showNav && (
+        <div className="absolute bottom-6 right-6 flex gap-2 z-10">
+          <Button
+            onClick={scrollPrev}
+            variant="secondary"
+            size="icon"
+            disabled={!canScrollPrev}
+            className="rounded-full shadow-lg hover:shadow-xl transition-shadow"
+            aria-label="Previous slide"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </Button>
+          <Button
+            onClick={scrollNext}
+            variant="secondary"
+            size="icon"
+            disabled={!canScrollNext}
+            className="rounded-full shadow-lg hover:shadow-xl transition-shadow"
+            aria-label="Next slide"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </Button>
+        </div>
+      )}
+      
+      {showDots && (
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+          {carouselItems.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => scrollTo(index)}
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
+                index === selectedIndex
+                  ? 'bg-primary w-8'
+                  : 'bg-white/50 hover:bg-white/75'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+              aria-current={index === selectedIndex ? 'true' : 'false'}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
 // Named export for individual components if needed
-export { CarouselItem, CarouselNav, CarouselDots };
+export { CarouselItem };
