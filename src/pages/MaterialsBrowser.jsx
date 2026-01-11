@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Heart, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 import ColorToneSelector from "@/components/sturij/ColorToneSelector";
 import SwatchCarousel from "@/components/materials/SwatchCarousel";
 import FilterDropdown from "@/components/materials/FilterDropdown";
@@ -40,6 +41,7 @@ export default function MaterialsBrowser() {
   };
 
   const filterOptions = {
+    swatches: [],
     colour: ["All", "Light", "Medium", "Dark", "Neutral", "Warm"],
     texture: ["All", "Smooth", "Textured"],
     finishes: ["All", "Matt", "Satin", "Gloss"],
@@ -135,35 +137,64 @@ export default function MaterialsBrowser() {
         
         {/* Filter Dropdowns */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-4">
-          {Object.keys(filterOptions).map((filterKey) => (
-            <FilterDropdown
-              key={filterKey}
-              isOpen={activeFilterTab === filterKey}
-              options={filterOptions[filterKey]}
-              selectedValue={filters[filterKey === "colour" ? "color" : filterKey === "finishes" ? "finish" : filterKey]}
-              onSelect={(value) => {
-                const actualKey = filterKey === "colour" ? "color" : filterKey === "finishes" ? "finish" : filterKey;
-                setFilters(prev => ({ ...prev, [actualKey]: value }));
-              }}
-              title={filterKey}
-            />
-          ))}
+          {Object.keys(filterOptions).map((filterKey) => {
+            if (filterKey === "swatches") {
+              return (
+                <AnimatePresence key={filterKey}>
+                  {activeFilterTab === "swatches" && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ 
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 40,
+                        mass: 0.8
+                      }}
+                      className="overflow-hidden"
+                    >
+                      <motion.div 
+                        className="backdrop-blur-md rounded-lg mt-2 p-6 shadow-2xl"
+                        style={{ 
+                          backgroundColor: 'var(--tone-light-10, rgba(255,255,255,0.1))',
+                          borderColor: 'var(--tone-border, rgba(255,255,255,0.2))',
+                          border: '1px solid',
+                          boxShadow: '0 20px 40px rgba(0,0,0,0.3), 0 8px 16px rgba(0,0,0,0.2)'
+                        }}
+                        initial={{ y: -20 }}
+                        animate={{ y: 0 }}
+                        exit={{ y: -20 }}
+                      >
+                        <SwatchCarousel 
+                          swatches={filteredMaterials} 
+                          onSwatchClick={(swatch) => console.log('Clicked:', swatch)} 
+                        />
+                      </motion.div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              );
+            }
+            
+            return (
+              <FilterDropdown
+                key={filterKey}
+                isOpen={activeFilterTab === filterKey}
+                options={filterOptions[filterKey]}
+                selectedValue={filters[filterKey === "colour" ? "color" : filterKey === "finishes" ? "finish" : filterKey]}
+                onSelect={(value) => {
+                  const actualKey = filterKey === "colour" ? "color" : filterKey === "finishes" ? "finish" : filterKey;
+                  setFilters(prev => ({ ...prev, [actualKey]: value }));
+                }}
+                title={filterKey}
+              />
+            );
+          })}
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Carousel Section */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-light tracking-wide mb-6 transition-colors" 
-            style={{ color: 'var(--tone-text, rgba(255,255,255,0.9))' }}>
-            Browse Swatches
-          </h2>
-          <SwatchCarousel 
-            swatches={filteredMaterials} 
-            onSwatchClick={(swatch) => console.log('Clicked:', swatch)} 
-          />
-        </div>
-
         <div className="flex gap-6">
           {/* Materials Grid */}
           <div className="flex-1">
