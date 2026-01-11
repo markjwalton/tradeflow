@@ -49,9 +49,9 @@ export default function MaterialsBrowser() {
   });
 
   return (
-    <div className="min-h-screen bg-[#65617d]">
+    <div className="min-h-screen transition-colors duration-500" style={{ backgroundColor: 'var(--tone-base, #65617d)' }}>
       {/* Top Navigation */}
-      <nav className="bg-transparent border-b border-white/10">
+      <nav className="bg-transparent transition-colors" style={{ borderBottom: '1px solid var(--tone-light-20, rgba(255,255,255,0.1))' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-8">
@@ -100,7 +100,7 @@ export default function MaterialsBrowser() {
       </nav>
 
       {/* Filter Tabs */}
-      <div className="border-b border-white/10">
+      <div className="transition-colors" style={{ borderBottom: '1px solid var(--tone-light-20, rgba(255,255,255,0.1))' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-center gap-12 py-4">
             {Object.keys(filterOptions).map((filterKey) => (
@@ -124,7 +124,7 @@ export default function MaterialsBrowser() {
         <div className="flex gap-6">
           {/* Left Sidebar */}
           <div className="w-56 flex-shrink-0">
-            <Card className="bg-white/5 backdrop-blur-sm border-white/10 p-4">
+            <Card className="backdrop-blur-sm p-4 transition-colors" style={{ backgroundColor: 'var(--tone-light-10, rgba(255,255,255,0.05))', borderColor: 'var(--tone-light-20, rgba(255,255,255,0.1))' }}>
               {/* Category Filter */}
               <div className="mb-4">
                 <button
@@ -183,7 +183,13 @@ export default function MaterialsBrowser() {
               {filteredMaterials.map((material) => (
                 <Card 
                   key={material.id}
-                  className="group bg-white/5 backdrop-blur-sm border-white/10 overflow-hidden hover:border-white/30 transition-all"
+                  className="group backdrop-blur-sm overflow-hidden transition-all"
+                  style={{ 
+                    backgroundColor: 'var(--tone-light-10, rgba(255,255,255,0.05))',
+                    borderColor: 'var(--tone-light-20, rgba(255,255,255,0.1))'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--tone-light-30, rgba(255,255,255,0.3))'}
+                  onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--tone-light-20, rgba(255,255,255,0.1))'}
                 >
                   <div className="relative aspect-square">
                     <img 
