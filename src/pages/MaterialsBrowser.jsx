@@ -174,6 +174,9 @@ export default function MaterialsBrowser() {
                         </div>
                         <CarouselLoop 
                           items={filteredMaterials}
+                          slideWidth="280px"
+                          gap={16}
+                          showControls={true}
                           renderItem={(m) => (
                             <Card className="overflow-hidden bg-white/5 backdrop-blur-sm border-white/10">
                               <div className="aspect-square relative">
@@ -237,6 +240,9 @@ export default function MaterialsBrowser() {
                         {favoriteMaterials.length > 0 ? (
                           <CarouselLoop 
                             items={favoriteMaterials}
+                            slideWidth="280px"
+                            gap={16}
+                            showControls={true}
                             renderItem={(m) => (
                               <Card className="overflow-hidden bg-white/5 backdrop-blur-sm border-white/10">
                                 <div className="aspect-square relative">

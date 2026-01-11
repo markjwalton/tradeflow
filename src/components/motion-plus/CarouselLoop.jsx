@@ -85,7 +85,8 @@ export default function CarouselLoop({
   showControls = true,
   showDots = false,
   renderItem,
-  itemSize = '300px',
+  itemSize = 'auto',
+  slideWidth,
   axis = 'x',
   snap = 'page',
   align = 'start',
@@ -98,22 +99,28 @@ export default function CarouselLoop({
     damping: 30,
   }
 
-  // Render items with stagger animation
-  const carouselItems = items.map((item, index) => (
-    <motion.div 
-      key={index}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: index * 0.05 }}
-      style={{
-        flexShrink: 0,
-        width: itemSize !== 'auto' ? itemSize : undefined,
-        minWidth: itemSize !== 'auto' ? itemSize : undefined,
-      }}
-    >
-      {renderItem ? renderItem(item, index) : item}
-    </motion.div>
-  ))
+  // Render items (Motion+ Carousel handles sizing via itemSize prop)
+  const carouselItems = items.map((item, index) => {
+    const content = renderItem ? renderItem(item, index) : item
+    
+    // If slideWidth specified, wrap in div with fixed width
+    if (slideWidth) {
+      return (
+        <div 
+          key={index}
+          style={{
+            width: slideWidth,
+            minWidth: slideWidth,
+            flexShrink: 0,
+          }}
+        >
+          {content}
+        </div>
+      )
+    }
+    
+    return <div key={index}>{content}</div>
+  })
 
   return (
     <div className={`relative ${className}`}>
