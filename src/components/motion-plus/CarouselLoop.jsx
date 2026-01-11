@@ -64,10 +64,16 @@ export default function CarouselLoop({
   className = '',
   showControls = true,
   showDots = true,
+  renderItem,
 }) {
+  // Render items as JSX if renderItem is provided
+  const renderedItems = renderItem 
+    ? items.map((item, index) => renderItem(item, index))
+    : items;
+
   return (
     <Carousel
-      items={items}
+      items={renderedItems}
       loop={loop}
       gap={gap}
       className={className}
