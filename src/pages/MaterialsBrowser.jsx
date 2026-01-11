@@ -236,13 +236,28 @@ export default function MaterialsBrowser() {
                       >
                         {favoriteMaterials.length > 0 ? (
                           <CarouselLoop 
-                            items={favoriteMaterials.map(m => ({
-                              title: m.name,
-                              imageSrc: m.image,
-                              description: `${m.color} ${m.texture} ${m.finish}`,
-                              isFavorite: true,
-                              onFavoriteClick: () => toggleFavorite(m.id)
-                            }))}
+                            items={favoriteMaterials}
+                            renderItem={(m) => (
+                              <Card className="overflow-hidden bg-white/5 backdrop-blur-sm border-white/10">
+                                <div className="aspect-square relative">
+                                  <img 
+                                    src={m.image} 
+                                    alt={m.name}
+                                    className="w-full h-full object-cover"
+                                  />
+                                  <button
+                                    onClick={() => toggleFavorite(m.id)}
+                                    className="absolute top-2 right-2 p-2 bg-black/50 rounded-full hover:bg-black/70 transition-colors"
+                                  >
+                                    <Heart className="w-4 h-4 fill-red-500 text-red-500" />
+                                  </button>
+                                </div>
+                                <div className="p-3">
+                                  <h4 className="font-medium text-white mb-1">{m.name}</h4>
+                                  <p className="text-xs text-white/60">{m.color} {m.texture} {m.finish}</p>
+                                </div>
+                              </Card>
+                            )}
                           />
                         ) : (
                           <p className="text-center py-6 sm:py-8 text-xs sm:text-sm font-light tracking-wide" style={{ color: 'var(--tone-text-muted, rgba(255,255,255,0.6))' }}>
