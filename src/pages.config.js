@@ -93,6 +93,7 @@ import StudioAbout from './pages/StudioAbout';
 import StudioHome from './pages/StudioHome';
 import SturijPackage from './pages/SturijPackage';
 import StyleEditor from './pages/StyleEditor';
+import SwatchManager from './pages/SwatchManager';
 import SyntaxDocs from './pages/SyntaxDocs';
 import SyntaxHome from './pages/SyntaxHome';
 import SystemMonitor from './pages/SystemMonitor';
@@ -111,7 +112,6 @@ import UXShowcase from './pages/UXShowcase';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import WebsiteTemplateManager from './pages/WebsiteTemplateManager';
 import WebsiteThemeManager from './pages/WebsiteThemeManager';
-import SwatchManager from './pages/SwatchManager';
 import __Layout from './Layout.jsx';
 
 
@@ -211,6 +211,7 @@ export const PAGES = {
     "StudioHome": StudioHome,
     "SturijPackage": SturijPackage,
     "StyleEditor": StyleEditor,
+    "SwatchManager": SwatchManager,
     "SyntaxDocs": SyntaxDocs,
     "SyntaxHome": SyntaxHome,
     "SystemMonitor": SystemMonitor,
@@ -229,7 +230,6 @@ export const PAGES = {
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
     "WebsiteTemplateManager": WebsiteTemplateManager,
     "WebsiteThemeManager": WebsiteThemeManager,
-    "SwatchManager": SwatchManager,
 }
 
 export const pagesConfig = {

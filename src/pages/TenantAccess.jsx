@@ -131,9 +131,9 @@ export default function TenantAccess() {
 
   // If user has access, redirect appropriately (only if coming directly to TenantAccess)
   if (user && !tenantSlug && !selectedTenant) {
-    // Global admins go straight to MindMapEditor
+    // Global admins go straight to Dashboard
     if (user.is_global_admin === true) {
-      window.location.href = createPageUrl("MindMapEditor");
+      window.location.href = createPageUrl("Dashboard");
       return null;
     }
     // Regular users go to their first tenant's Navigation Manager (if admin) or Home
@@ -141,7 +141,7 @@ export default function TenantAccess() {
       const firstTenant = userTenantAccess[0].tenant;
       const roles = userTenantAccess[0].roles || [];
       if (firstTenant?.slug) {
-        const targetPage = roles.includes("admin") ? "MindMapEditor" : "Home";
+        const targetPage = roles.includes("admin") ? "Dashboard" : "Home";
         const url = createPageUrl(targetPage);
         // Only add tenant param for Home page
         if (targetPage === "Home") {
