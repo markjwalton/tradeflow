@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { createPageUrl } from "@/utils";
 import { PageHeader } from "@/components/sturij/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -129,7 +130,7 @@ export default function PageBuilder() {
                   variant="outline" 
                   size="sm" 
                   className="w-full mt-4"
-                  onClick={() => window.location.href = `/page-build-workspace?page=${page.id}`}
+                  onClick={() => window.location.href = `${createPageUrl('PageBuildWorkspace')}?page=${page.id}`}
                 >
                   Open Workspace
                 </Button>
