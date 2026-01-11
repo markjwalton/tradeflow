@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import ColorToneSelector from "@/components/sturij/ColorToneSelector";
 import SwatchCarousel from "@/components/materials/SwatchCarousel";
+import CarouselLoop from "@/components/motion-plus/CarouselLoop";
 import FilterDropdown from "@/components/materials/FilterDropdown";
 
 // Real wood swatches data
@@ -171,11 +172,14 @@ export default function MaterialsBrowser() {
                           </h3>
                           <ColorToneSelector />
                         </div>
-                        <SwatchCarousel 
-                          swatches={filteredMaterials} 
-                          onSwatchClick={(swatch) => console.log('Clicked:', swatch)}
-                          favorites={favorites}
-                          onToggleFavorite={toggleFavorite}
+                        <CarouselLoop 
+                          items={filteredMaterials.map(m => ({
+                            title: m.name,
+                            imageSrc: m.image,
+                            description: `${m.color} ${m.texture} ${m.finish}`,
+                            isFavorite: favorites.includes(m.id),
+                            onFavoriteClick: () => toggleFavorite(m.id)
+                          }))}
                         />
                       </motion.div>
                     </motion.div>
@@ -214,11 +218,14 @@ export default function MaterialsBrowser() {
                         exit={{ y: -20 }}
                       >
                         {favoriteMaterials.length > 0 ? (
-                          <SwatchCarousel 
-                            swatches={favoriteMaterials} 
-                            onSwatchClick={(swatch) => console.log('Clicked:', swatch)}
-                            favorites={favorites}
-                            onToggleFavorite={toggleFavorite}
+                          <CarouselLoop 
+                            items={favoriteMaterials.map(m => ({
+                              title: m.name,
+                              imageSrc: m.image,
+                              description: `${m.color} ${m.texture} ${m.finish}`,
+                              isFavorite: true,
+                              onFavoriteClick: () => toggleFavorite(m.id)
+                            }))}
                           />
                         ) : (
                           <p className="text-center py-6 sm:py-8 text-xs sm:text-sm font-light tracking-wide" style={{ color: 'var(--tone-text-muted, rgba(255,255,255,0.6))' }}>
