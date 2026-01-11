@@ -1,17 +1,49 @@
 import { Carousel, useCarousel } from 'motion-plus/react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Heart } from 'lucide-react';
 import { Button } from '../ui/button';
 
 // Carousel Item Component
-function CarouselItem({ index, imageSrc, title, description }) {
+function CarouselItem({ index, imageSrc, title, description, isFavorite, onFavoriteClick }) {
   return (
-    <div className="flex-shrink-0 w-full h-full flex items-center justify-center bg-card rounded-lg border border-border overflow-hidden">
+    <div className="flex-shrink-0 w-full h-full flex items-center justify-center bg-card rounded-lg border border-border overflow-hidden relative group">
       {imageSrc ? (
-        <img 
-          src={imageSrc} 
-          alt={title || `Slide ${index + 1}`}
-          className="w-full h-full object-cover"
-        />
+        <>
+          <img 
+            src={imageSrc} 
+            alt={title || `Slide ${index + 1}`}
+            className="w-full h-full object-cover"
+          />
+          {onFavoriteClick && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onFavoriteClick();
+              }}
+              className="absolute top-4 right-4 p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all opacity-0 group-hover:opacity-100"
+              aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+            >
+              <Heart 
+                className="w-5 h-5" 
+                fill={isFavorite ? 'currentColor' : 'none'}
+                style={{ color: 'white' }}
+              />
+            </button>
+          )}
+          {(title || description) && (
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6">
+              {title && (
+                <h3 className="text-2xl font-display font-semibold text-white mb-2">
+                  {title}
+                </h3>
+              )}
+              {description && (
+                <p className="text-sm text-white/90">
+                  {description}
+                </p>
+              )}
+            </div>
+          )}
+        </>
       ) : (
         <div 
           className="w-full h-full flex flex-col items-center justify-center p-8"
@@ -118,11 +150,13 @@ export default function CarouselLoop({ items = [], className = '' }) {
             imageSrc={item.imageSrc}
             title={item.title}
             description={item.description}
+            isFavorite={item.isFavorite}
+            onFavoriteClick={item.onFavoriteClick}
           />
         ))}
         loop
         className="w-full h-full"
-        style={{ height: '500px' }}
+        style={{ height: '400px' }}
       >
         <CarouselNav />
         <CarouselDots />
