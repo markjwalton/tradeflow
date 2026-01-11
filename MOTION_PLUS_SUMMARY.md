@@ -4,13 +4,14 @@
 
 ---
 
-## Installation Status ✅
+## Installation Status ✅ FULLY WORKING
 
 **Package:** `motion-plus@2.0.2`  
 **Source:** Private registry at `api.motion.dev`  
 **License:** £289 lifetime premium (purchased by client)  
 **Auth Token:** `b6799b56321768b32397bc30545e0a5eebe959b751bf24751fff6d98ef124a7c`  
-**Installed:** January 11, 2026
+**Installed:** January 11, 2026  
+**Status:** All features working correctly (drag, swipe, wheel, spring animations)
 
 ```bash
 # Install command (token configured)
@@ -215,6 +216,25 @@ Shows 3 carousel variants:
 
 ---
 
+## Implementation Notes
+
+### Pointer Events Fix (CRITICAL)
+
+When using carousel with cards containing images or interactive content:
+
+```jsx
+// Images and text - allow drag to pass through
+<img className="pointer-events-none" />
+<div className="pointer-events-none">Text content</div>
+
+// Interactive buttons - keep clickable
+<button className="pointer-events-auto">Click me</button>
+```
+
+**Without this fix:** Drag only works on empty areas, not over images.
+
+---
+
 ## Troubleshooting
 
 ### "Cannot find module 'motion-plus/react'"
@@ -245,9 +265,12 @@ function MyPage() {
 }
 
 // ✅ Correct
-function MyControls() {
-  const carousel = useCarousel() // Works
-  return <button onClick={carousel.nextPage}>Next</button>
+funNo local `Carousel.jsx` file interfering with imports
+4. **Add `pointer-events-none` to images/content inside cards**
+5. **Add `pointer-events-auto` to interactive buttons**
+6. Browser supports pointer events
+
+**Common cause:** Images block drag events. See "Pointer Events Fix" above..nextPage}>Next</button>
 }
 
 function MyPage() {
@@ -312,8 +335,28 @@ Motion+ v2.0.2 includes additional components not yet integrated:
 - Developer: Base44 Team
 - Package: motion-plus@2.0.2
 - Status: Production Ready
+---
+
+## Resolution History
+
+**Issues Encountered:**
+1. ❌ NPM package deprecated (v1.5.1)
+2. ❌ Local Carousel.jsx file blocking premium imports
+3. ❌ itemSize prop confusion (pixel values vs semantic)
+4. ❌ Images blocking drag events
+
+**Final Solution:**
+1. ✅ Installed motion-plus@2.0.2 from private registry
+2. ✅ Removed local Carousel.jsx interference
+3. ✅ Added slideWidth prop for pixel-based sizing
+4. ✅ Added pointer-events-none to images/content
+5. ✅ All drag/swipe/wheel features working
 
 ---
+
+**Last Updated:** January 11, 2026  
+**Package Version:** motion-plus@2.0.2  
+**Status:** ✅ Production Ready - All Features Working
 
 **Last Updated:** January 11, 2026  
 **Package Version:** motion-plus@2.0.2  
