@@ -5,16 +5,21 @@ import { Button } from "@/components/ui/button";
 import { Heart, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ColorToneSelector from "@/components/sturij/ColorToneSelector";
+import SwatchCarousel from "@/components/materials/SwatchCarousel";
+import FilterDropdown from "@/components/materials/FilterDropdown";
 
-// Mock data - replace with actual data source later
+// Real wood swatches data
 const materials = [
-  { id: 1, name: "Lissa Oak", image: "https://images.unsplash.com/photo-1563291074-2bf8677ac0e5?w=400", category: "Wood", color: "Light", texture: "Smooth", finish: "Matt", style: "Contemporary" },
-  { id: 2, name: "Lissa Oak", image: "https://images.unsplash.com/photo-1551958219-acbc608c6377?w=400", category: "Wood", color: "Dark", texture: "Textured", finish: "Matt", style: "Traditional" },
-  { id: 3, name: "Lissa Oak", image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=400", category: "Wood", color: "Dark", texture: "Smooth", finish: "Satin", style: "Contemporary" },
-  { id: 4, name: "Lissa Oak", image: "https://images.unsplash.com/photo-1615876234886-fd9a39fda97f?w=400", category: "Wood", color: "Dark", texture: "Textured", finish: "Matt", style: "Rustic" },
-  { id: 5, name: "Lissa Oak", image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=400", category: "Wood", color: "Light", texture: "Smooth", finish: "Gloss", style: "Contemporary" },
-  { id: 6, name: "Lissa Oak", image: "https://images.unsplash.com/photo-1604066867775-43f48e3957d8?w=400", category: "Wood", color: "Light", texture: "Textured", finish: "Matt", style: "Natural" },
-  { id: 7, name: "Lissa Oak", image: "https://images.unsplash.com/photo-1615875605825-5eb9bb5d52ac?w=400", category: "Wood", color: "Light", texture: "Smooth", finish: "Satin", style: "Contemporary" },
+  { id: 1, name: "FA115", image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/74ac893c3_FA115.jpg", category: "Wood", color: "Neutral", texture: "Smooth", finish: "Matt", style: "Contemporary" },
+  { id: 2, name: "FA117", image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/e1b2a7ae1_FA117.jpg", category: "Wood", color: "Warm", texture: "Smooth", finish: "Matt", style: "Contemporary" },
+  { id: 3, name: "H0045 ST15", image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/867a7e882_H0045_ST15_H.jpg", category: "Wood", color: "Light", texture: "Textured", finish: "Matt", style: "Natural" },
+  { id: 4, name: "H046 ST15", image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/d51aed765_H046_ST15_H.jpg", category: "Wood", color: "Medium", texture: "Textured", finish: "Matt", style: "Natural" },
+  { id: 5, name: "H047 ST15", image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/34c86e2ad_H047_ST15_H.jpg", category: "Wood", color: "Medium", texture: "Textured", finish: "Matt", style: "Rustic" },
+  { id: 6, name: "H178 ST15", image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/d4afc9a53_H178_ST15_H.jpg", category: "Wood", color: "Dark", texture: "Textured", finish: "Matt", style: "Traditional" },
+  { id: 7, name: "H207 ST9", image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/1253ea357_H207_ST9_H.jpg", category: "Wood", color: "Light", texture: "Smooth", finish: "Satin", style: "Natural" },
+  { id: 8, name: "H0296 ST22", image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/c164a15cd_H0296_ST22_H.jpg", category: "Wood", color: "Light", texture: "Smooth", finish: "Satin", style: "Contemporary" },
+  { id: 9, name: "H1137 ST24", image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/ad9deadf0_H1137_ST24_h.jpg", category: "Wood", color: "Neutral", texture: "Smooth", finish: "Matt", style: "Contemporary" },
+  { id: 10, name: "H1232 ST9", image: "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/04e32a9ac_H1232_ST9_H.jpg", category: "Wood", color: "Dark", texture: "Textured", finish: "Matt", style: "Traditional" },
 ];
 
 export default function MaterialsBrowser() {
@@ -26,8 +31,7 @@ export default function MaterialsBrowser() {
     finish: "All",
     style: "All"
   });
-  const [categoryOpen, setCategoryOpen] = useState(true);
-  const [colorOpen, setColorOpen] = useState(false);
+  const [activeFilterTab, setActiveFilterTab] = useState(null);
 
   const toggleFavorite = (id) => {
     setFavorites(prev => 
@@ -36,16 +40,22 @@ export default function MaterialsBrowser() {
   };
 
   const filterOptions = {
-    color: ["All", "Light", "Dark"],
+    colour: ["All", "Light", "Medium", "Dark", "Neutral", "Warm"],
     texture: ["All", "Smooth", "Textured"],
-    finish: ["All", "Matt", "Satin", "Gloss"],
+    finishes: ["All", "Matt", "Satin", "Gloss"],
     style: ["All", "Contemporary", "Traditional", "Rustic", "Natural"]
   };
 
+  const toggleFilterTab = (tab) => {
+    setActiveFilterTab(activeFilterTab === tab ? null : tab);
+  };
+
   const filteredMaterials = materials.filter(material => {
-    return Object.keys(filters).every(key => 
-      filters[key] === "All" || material[key] === filters[key]
-    );
+    const colorMatch = filters.color === "All" || material.color === filters.color;
+    const textureMatch = filters.texture === "All" || material.texture === filters.texture;
+    const finishMatch = filters.finish === "All" || material.finish === filters.finish;
+    const styleMatch = filters.style === "All" || material.style === filters.style;
+    return colorMatch && textureMatch && finishMatch && styleMatch;
   });
 
   return (
@@ -106,9 +116,13 @@ export default function MaterialsBrowser() {
             {Object.keys(filterOptions).map((filterKey) => (
               <button
                 key={filterKey}
-                className="text-sm font-light tracking-wider uppercase transition-colors"
+                onClick={() => toggleFilterTab(filterKey)}
+                className={cn(
+                  "text-sm font-light tracking-wider uppercase transition-all",
+                  "hover:scale-105"
+                )}
                 style={{ 
-                  color: filters[filterKey] !== "All" 
+                  color: activeFilterTab === filterKey || filters[filterKey] !== "All"
                     ? 'var(--tone-text, rgba(255,255,255,1))' 
                     : 'var(--tone-text-muted, rgba(255,255,255,0.6))'
                 }}
@@ -118,74 +132,45 @@ export default function MaterialsBrowser() {
             ))}
           </div>
         </div>
+        
+        {/* Filter Dropdowns */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-4">
+          {Object.keys(filterOptions).map((filterKey) => (
+            <FilterDropdown
+              key={filterKey}
+              isOpen={activeFilterTab === filterKey}
+              options={filterOptions[filterKey]}
+              selectedValue={filters[filterKey === "colour" ? "color" : filterKey === "finishes" ? "finish" : filterKey]}
+              onSelect={(value) => {
+                const actualKey = filterKey === "colour" ? "color" : filterKey === "finishes" ? "finish" : filterKey;
+                setFilters(prev => ({ ...prev, [actualKey]: value }));
+              }}
+              title={filterKey}
+            />
+          ))}
+        </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Carousel Section */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-light tracking-wide mb-6 transition-colors" 
+            style={{ color: 'var(--tone-text, rgba(255,255,255,0.9))' }}>
+            Browse Swatches
+          </h2>
+          <SwatchCarousel 
+            swatches={filteredMaterials} 
+            onSwatchClick={(swatch) => console.log('Clicked:', swatch)} 
+          />
+        </div>
+
         <div className="flex gap-6">
-          {/* Left Sidebar */}
-          <div className="w-56 flex-shrink-0">
-            <Card className="backdrop-blur-sm p-4 transition-colors" style={{ backgroundColor: 'var(--tone-light-10, rgba(255,255,255,0.05))', borderColor: 'var(--tone-light-20, rgba(255,255,255,0.1))' }}>
-              {/* Category Filter */}
-              <div className="mb-4">
-                <button
-                  onClick={() => setCategoryOpen(!categoryOpen)}
-                  className="flex items-center justify-between w-full text-sm tracking-wide mb-2 transition-colors"
-                  style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}
-                >
-                  <span>{selectedCategory}</span>
-                  <ChevronDown className={cn("h-4 w-4 transition-transform", categoryOpen && "rotate-180")} />
-                </button>
-                {categoryOpen && (
-                  <div className="space-y-1 pl-2">
-                    <button className="block text-sm transition-colors" style={{ color: 'var(--tone-text-muted, rgba(255,255,255,0.6))' }}>
-                      All
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* Color Filter */}
-              <div>
-                <button
-                  onClick={() => setColorOpen(!colorOpen)}
-                  className="flex items-center justify-between w-full text-sm tracking-wide mb-2 transition-colors"
-                  style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}
-                >
-                  <span>Colour</span>
-                  <ChevronDown className={cn("h-4 w-4 transition-transform", colorOpen && "rotate-180")} />
-                </button>
-                {colorOpen && (
-                  <div className="space-y-2 pl-2">
-                    {filterOptions.color.map((color) => (
-                      <button
-                        key={color}
-                        onClick={() => setFilters(prev => ({ ...prev, color }))}
-                        className="flex items-center gap-2 text-sm w-full text-left transition-colors"
-                        style={{ 
-                          color: filters.color === color 
-                            ? 'var(--tone-text, rgba(255,255,255,1))' 
-                            : 'var(--tone-text-muted, rgba(255,255,255,0.6))' 
-                        }}
-                      >
-                        <div 
-                          className={cn(
-                            "w-3 h-3 rounded-sm border",
-                            color === "Dark" && "bg-gray-800",
-                            color === "Light" && "bg-gray-300"
-                          )}
-                          style={{ borderColor: 'var(--tone-border, rgba(255,255,255,0.3))' }}
-                        />
-                        {color}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </Card>
-          </div>
-
           {/* Materials Grid */}
           <div className="flex-1">
+            <h2 className="text-xl font-light tracking-wide mb-6 transition-colors" 
+              style={{ color: 'var(--tone-text, rgba(255,255,255,0.9))' }}>
+              All Materials ({filteredMaterials.length})
+            </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {filteredMaterials.map((material) => (
                 <Card 
