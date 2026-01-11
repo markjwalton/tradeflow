@@ -1,75 +1,116 @@
 # Motion+ Carousel Component - Complete Reference Guide
 
+**STATUS: ✅ PRODUCTION READY - Motion+ v2.0.2 Installed**
+
+Last Updated: January 11, 2026  
+Package: `motion-plus@2.0.2` (Premium License - £289 lifetime)  
+Auth Token: Configured in TradeFlow project
+
+---
+
 ## Overview
 
 The Motion+ Carousel component creates **performant, accessible, and fully-featured carousels** in React. It goes beyond traditional CSS-only approaches with support for infinite scrolling, advanced animations, and extensive customization options.
 
 **Key Differentiators:**
-- Breaks free from CSS carousel limitations
-- True infinite scrolling without performance penalties
-- Full styling freedom (not constrained by CSS tricks)
-- Built on Framer Motion's animation engine
-- Accessible by default (ARIA, keyboard, reduced motion)
+- ✅ **Mouse drag & grab** - Native pointer events with smooth physics
+- ✅ **Touch swipe** - Mobile-optimized gesture support
+- ✅ **Wheel scroll** - Trackpad and mouse wheel navigation
+- ✅ **Spring animations** - Smooth, natural transitions (not jumpy)
+- ✅ **Infinite loop** - Reprojection rendering (minimal DOM cloning)
+- ✅ **Built on Ticker** - 750+ lines of proven drag/wheel/offset logic
+- ✅ **Page snapping** - Intelligent snap points ("page" | "loose" | false)
 
 ---
 
-## Core Features
+## Architecture
 
-### 🪶 Lightweight
-- **+5.5kb** on top of the motion component
-- Minimal bundle impact for maximum functionality
+Motion+ Carousel is built **on top of the Ticker component**:
 
-### ♿ Accessible
-- Automatic ARIA labels (`role="region"`, `aria-roledescription="carousel"`)
-- Respects `prefers-reduced-motion`
-- RTL (right-to-left) layout support
-- Full keyboard navigation (arrow keys, tab)
-- Mouse, touch, and wheel input support
+```
+Ticker Component (Foundation)
+├── Drag handling (_dragX, _dragY props)
+├── Wheel scrolling (motion-plus-dom utilities)
+├── Offset management (wrappedOffset, focusOffset)
+├── Reprojection rendering (infinite scroll)
+├── Velocity tracking (auto-scroll, hover effects)
+└── Spring physics (pageTransition)
 
-### ⚡ Performant
-- **Unique rendering approach**: Minimal or zero item cloning for infinite scrolling
-- Same rendering technology as Motion+ Ticker component
-- Uses reprojection instead of duplicating DOM nodes
-- Optimized for smooth 60fps animations
+Carousel Component (Adds pagination)
+├── Uses Ticker as base
+├── Page navigation (nextPage, prevPage, gotoPage)
+├── Snap points ("page" | "loose" | false)
+└── useCarousel hook (currentPage, totalPages, controls)
+```
 
-### 🎨 Customizable
-- Provides state and functions for custom controls
-- Build your own pagination indicators
-- Create autoplay functionality
-- Animate items based on scroll position
-- Full Framer Motion integration
+**Cannot work standalone** - Requires complete Ticker implementation.
 
 ---
 
 ## Installation
 
-### Private Token Required
+### ✅ TradeFlow: Motion+ v2.0.2 Installed
 
-Motion+ is a **premium product** distributed via private token. You must be a Motion+ member to access.
+**Current Status:** Premium package installed from private registry.
 
 ```bash
-npm install "https://api.motion.dev/registry.tgz?package=motion-plus&version=2.0.2&token=YOUR_AUTH_TOKEN"
+npm install "https://api.motion.dev/registry.tgz?package=motion-plus&version=2.0.2&token=b6799b56321768b32397bc30545e0a5eebe959b751bf24751fff6d98ef124a7c"
 ```
 
-**TradeFlow Project:** Base44 has credentials configured ("the secret is installed in base444"), allowing direct access to `github.com/motiondivision/plus` private repository.
+**License:** £289 lifetime premium access  
+**Version:** 2.0.2 (latest production release)  
+**Auth Token:** Configured in Base44 credentials ("the secret is installed in base444")  
+**Private Repo:** github.com/motiondivision/plus (MIT licensed source code)
 
-**Alternative (TradeFlow):** Components can be copied directly from the private GitHub repo at `/packages/motion-plus/src/components/Carousel/` (MIT licensed).
+### Package Contents
+
+```
+motion-plus@2.0.2
+├── Carousel - Page-based carousel with drag/swipe
+├── Ticker - Foundation marquee/ticker component
+├── Cursor - Custom cursor with magnetic effects
+├── Typewriter - Realistic typing animations
+├── AnimateNumber - Smooth number transitions
+└── AnimateText - Character/word/line animations
+```
+
+**Dependencies:**
+- `motion@12.23.24` - Core animation library
+- `motion-plus-dom@2.0.2` - Wheel utilities, splitText
+- `motion-utils@12.23.6` - Shared utilities
 
 ---
 
 ## Basic Usage
 
-### Import
+### Import (Production)
 
 ```jsx
-import { Carousel } from "motion-plus/react"
+import { Carousel, useCarousel } from 'motion-plus/react'
 ```
 
-### Minimal Example
+### TradeFlow Implementation
 
-The only **required prop** is `items` - an array of React nodes (components, strings, or numbers):
+**Location:** `src/components/motion-plus/CarouselLoop.jsx`
 
 ```jsx
+import CarouselLoop from '@/components/motion-plus/CarouselLoop'
+
+// Simple usage
+<CarouselLoop 
+  items={[...]} 
+  showControls={true}
+  showDots={true}
+/>
+```
+
+### Minimal Example (Direct Motion+)
+
+The only **required prop** is `items` - an array of React nodes:
+
+```jsx
+import { Carousel } from 'motion-plus/react'
+
 const items = [
   <span>One</span>,
   <span>Two</span>,
@@ -78,6 +119,13 @@ const items = [
 
 return <Carousel items={items} />
 ```
+
+**Features enabled by default:**
+- ✅ Mouse drag (horizontal)
+- ✅ Touch swipe
+- ✅ Page snapping
+- ✅ Infinite loop
+- ✅ Smooth spring animations
 
 ---
 
