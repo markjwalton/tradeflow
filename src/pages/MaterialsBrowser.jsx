@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Heart, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ColorToneSelector from "@/components/sturij/ColorToneSelector";
 
 // Mock data - replace with actual data source later
 const materials = [
@@ -89,6 +90,7 @@ export default function MaterialsBrowser() {
               <button className="text-white/80 hover:text-white text-sm font-light tracking-wide">
                 Contact
               </button>
+              <ColorToneSelector />
               <button className="text-red-400 hover:text-red-300">
                 <Heart className="h-5 w-5" />
               </button>

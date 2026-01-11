@@ -54,6 +54,7 @@ import LibraryItemBuilder from './pages/LibraryItemBuilder';
 import LivePreview from './pages/LivePreview';
 import LookupTestForms from './pages/LookupTestForms';
 import MasterProjectManagementMVP from './pages/MasterProjectManagementMVP';
+import MaterialsBrowser from './pages/MaterialsBrowser';
 import NavigationManager from './pages/NavigationManager';
 import NavigationManagerTest from './pages/NavigationManagerTest';
 import Oatmeal from './pages/Oatmeal';
@@ -110,7 +111,6 @@ import UXShowcase from './pages/UXShowcase';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import WebsiteTemplateManager from './pages/WebsiteTemplateManager';
 import WebsiteThemeManager from './pages/WebsiteThemeManager';
-import MaterialsBrowser from './pages/MaterialsBrowser';
 import __Layout from './Layout.jsx';
 
 
@@ -171,6 +171,7 @@ export const PAGES = {
     "LivePreview": LivePreview,
     "LookupTestForms": LookupTestForms,
     "MasterProjectManagementMVP": MasterProjectManagementMVP,
+    "MaterialsBrowser": MaterialsBrowser,
     "NavigationManager": NavigationManager,
     "NavigationManagerTest": NavigationManagerTest,
     "Oatmeal": Oatmeal,
@@ -227,7 +228,6 @@ export const PAGES = {
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
     "WebsiteTemplateManager": WebsiteTemplateManager,
     "WebsiteThemeManager": WebsiteThemeManager,
-    "MaterialsBrowser": MaterialsBrowser,
 }
 
 export const pagesConfig = {
