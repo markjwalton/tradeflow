@@ -85,7 +85,7 @@ export default function CarouselLoop({
   showControls = true,
   showDots = false,
   renderItem,
-  itemSize = 'auto',
+  itemSize = '300px',
   axis = 'x',
   snap = 'page',
   align = 'start',
