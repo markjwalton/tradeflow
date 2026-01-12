@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Upload, File, Image, FileText, Code, Video, Search, Palette } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import MaterialsBatchUpload from "@/components/materials/MaterialsBatchUpload";
+import MaterialsDataTable from "@/components/materials/MaterialsDataTable";
 
 export default function AssetLibrary({ projectId }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -84,6 +85,10 @@ export default function AssetLibrary({ projectId }) {
         <TabsTrigger value="materials">
           <Palette className="h-4 w-4 mr-2" />
           Materials
+        </TabsTrigger>
+        <TabsTrigger value="materials-data">
+          <Palette className="h-4 w-4 mr-2" />
+          Materials Database
         </TabsTrigger>
       </TabsList>
 
