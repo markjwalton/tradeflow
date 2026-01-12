@@ -182,11 +182,15 @@ export default function MaterialsBrowser() {
                           showControls={true}
                           renderItem={(m) => (
                             <Card className="overflow-hidden bg-white/5 backdrop-blur-sm border-white/10">
-                              <div className="aspect-square relative">
+                              <div className="aspect-square relative overflow-hidden">
                                 <img 
                                   src={m.image} 
                                   alt={m.name}
                                   className="w-full h-full object-cover pointer-events-none"
+                                  style={{ 
+                                    objectFit: 'cover',
+                                    objectPosition: 'center'
+                                  }}
                                 />
                                 <button
                                   onClick={() => toggleFavorite(m.id)}
@@ -249,12 +253,16 @@ export default function MaterialsBrowser() {
                             showControls={true}
                             renderItem={(m) => (
                               <Card className="overflow-hidden bg-white/5 backdrop-blur-sm border-white/10">
-                                <div className="aspect-square relative">
-                                  <img 
-                                    src={m.image} 
-                                    alt={m.name}
-                                    className="w-full h-full object-cover pointer-events-none"
-                                  />
+                               <div className="aspect-square relative overflow-hidden">
+                                 <img 
+                                   src={m.image} 
+                                   alt={m.name}
+                                   className="w-full h-full object-cover pointer-events-none"
+                                   style={{ 
+                                     objectFit: 'cover',
+                                     objectPosition: 'center'
+                                   }}
+                                 />
                                   <button
                                     onClick={() => toggleFavorite(m.id)}
                                     className="absolute top-2 right-2 p-2 bg-black/50 rounded-full hover:bg-black/70 transition-colors pointer-events-auto z-10"

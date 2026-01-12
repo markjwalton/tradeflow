@@ -1,11 +1,15 @@
 import React, { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Search, AlertCircle, CheckCircle2, Pencil, Trash2, Upload, Download, Plus, FileUp } from "lucide-react";
+import { toast } from "sonner";
 
 // Expected color codes from EGGER_COLORS
 const EXPECTED_COLORS = [
@@ -33,10 +37,42 @@ const EXPECTED_COLORS = [
 export default function MaterialsDataTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterSupplier, setFilterSupplier] = useState("all");
+  const [editingMaterial, setEditingMaterial] = useState(null);
+  const [showAddDialog, setShowAddDialog] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(null);
+  const [csvFile, setCsvFile] = useState(null);
+  
+  const queryClient = useQueryClient();
 
   const { data: materials = [], isLoading } = useQuery({
     queryKey: ["materials"],
     queryFn: () => base44.entities.Material.list(),
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.Material.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["materials"]);
+      toast.success("Material updated");
+      setEditingMaterial(null);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities.Material.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["materials"]);
+      toast.success("Material deleted");
+    },
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (data) => base44.entities.Material.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["materials"]);
+      toast.success("Material created");
+      setShowAddDialog(false);
+    },
   });
 
   // Find uploaded codes
@@ -46,6 +82,92 @@ export default function MaterialsDataTable() {
   const missingColors = EXPECTED_COLORS.filter(
     color => !uploadedCodes.has(color.code.toUpperCase())
   );
+
+  // Handle image upload
+  const handleImageUpload = async (materialId, file) => {
+    setUploadingImage(materialId);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      await updateMutation.mutateAsync({ id: materialId, data: { image_url: file_url } });
+      toast.success("Image uploaded");
+    } catch (error) {
+      toast.error("Upload failed: " + error.message);
+    } finally {
+      setUploadingImage(null);
+    }
+  };
+
+  // Export CSV
+  const exportCSV = () => {
+    const headers = ["code", "surface_type", "name", "supplier_folder", "image_url", "is_active", "notes"];
+    const rows = materials.map(m => headers.map(h => m[h] || "").join(","));
+    const csv = [headers.join(","), ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `materials_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("CSV exported");
+  };
+
+  // Import CSV
+  const handleCSVImport = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    try {
+      const text = await file.text();
+      const lines = text.split("\n").filter(l => l.trim());
+      const headers = lines[0].split(",");
+      
+      const newMaterials = [];
+      for (let i = 1; i < lines.length; i++) {
+        const values = lines[i].split(",");
+        const material = {};
+        headers.forEach((h, idx) => {
+          material[h.trim()] = values[idx]?.trim();
+        });
+        if (material.code) {
+          newMaterials.push(material);
+        }
+      }
+      
+      // Create or update materials
+      for (const mat of newMaterials) {
+        const existing = materials.find(m => m.code === mat.code && m.surface_type === mat.surface_type);
+        if (existing) {
+          await updateMutation.mutateAsync({ id: existing.id, data: mat });
+        } else {
+          await createMutation.mutateAsync(mat);
+        }
+      }
+      
+      toast.success(`Imported ${newMaterials.length} materials`);
+    } catch (error) {
+      toast.error("Import failed: " + error.message);
+    }
+  };
+
+  // Delete orphaned entries
+  const deleteOrphans = async () => {
+    const expectedCodes = new Set(EXPECTED_COLORS.map(c => c.code.toUpperCase()));
+    const orphans = materials.filter(m => !expectedCodes.has(m.code?.toUpperCase()));
+    
+    if (orphans.length === 0) {
+      toast.info("No orphaned entries found");
+      return;
+    }
+    
+    if (!confirm(`Delete ${orphans.length} orphaned materials?`)) return;
+    
+    for (const orphan of orphans) {
+      await deleteMutation.mutateAsync(orphan.id);
+    }
+    
+    toast.success(`Deleted ${orphans.length} orphaned materials`);
+  };
 
   // Get unique suppliers
   const suppliers = [...new Set(materials.map(m => m.supplier_folder))].filter(Boolean);
@@ -86,8 +208,8 @@ export default function MaterialsDataTable() {
         </Card>
       )}
 
-      {/* Filters */}
-      <div className="flex gap-4">
+      {/* Filters & Actions */}
+      <div className="flex gap-4 flex-wrap">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <Input
@@ -110,6 +232,29 @@ export default function MaterialsDataTable() {
             ))}
           </SelectContent>
         </Select>
+        
+        <Button onClick={() => setShowAddDialog(true)} className="gap-2">
+          <Plus className="w-4 h-4" />
+          Add Material
+        </Button>
+        
+        <Button onClick={exportCSV} variant="outline" className="gap-2">
+          <Download className="w-4 h-4" />
+          Export CSV
+        </Button>
+        
+        <Button variant="outline" className="gap-2">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <FileUp className="w-4 h-4" />
+            Import CSV
+            <input type="file" accept=".csv" className="hidden" onChange={handleCSVImport} />
+          </label>
+        </Button>
+        
+        <Button onClick={deleteOrphans} variant="destructive" className="gap-2">
+          <Trash2 className="w-4 h-4" />
+          Delete Orphans
+        </Button>
       </div>
 
       {/* Stats */}
@@ -152,23 +297,39 @@ export default function MaterialsDataTable() {
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
                 </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredMaterials.map((material) => (
                 <tr key={material.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3">
-                    {material.image_url ? (
-                      <img 
-                        src={material.image_url} 
-                        alt={material.name}
-                        className="w-16 h-16 object-cover rounded"
-                      />
-                    ) : (
-                      <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">
-                        No image
-                      </div>
-                    )}
+                    <div className="relative group">
+                      {material.image_url ? (
+                        <img 
+                          src={material.image_url} 
+                          alt={material.name}
+                          className="w-16 h-16 object-cover rounded"
+                          style={{ objectPosition: 'center' }}
+                        />
+                      ) : (
+                        <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">
+                          No image
+                        </div>
+                      )}
+                      <label className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer flex items-center justify-center rounded">
+                        <Upload className="w-4 h-4 text-white" />
+                        <input 
+                          type="file" 
+                          accept="image/*" 
+                          className="hidden" 
+                          onChange={(e) => e.target.files?.[0] && handleImageUpload(material.id, e.target.files[0])}
+                          disabled={uploadingImage === material.id}
+                        />
+                      </label>
+                    </div>
                   </td>
                   <td className="px-4 py-3 font-medium">{material.code || '-'}</td>
                   <td className="px-4 py-3">{material.name || '-'}</td>
@@ -192,6 +353,28 @@ export default function MaterialsDataTable() {
                       </Badge>
                     )}
                   </td>
+                  <td className="px-4 py-3">
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => setEditingMaterial(material)}
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          if (confirm("Delete this material?")) {
+                            deleteMutation.mutate(material.id);
+                          }
+                        }}
+                      >
+                        <Trash2 className="w-4 h-4 text-red-600" />
+                      </Button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -204,6 +387,156 @@ export default function MaterialsDataTable() {
           )}
         </div>
       </Card>
+
+      {/* Edit Dialog */}
+      <Dialog open={!!editingMaterial} onOpenChange={() => setEditingMaterial(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Material</DialogTitle>
+          </DialogHeader>
+          {editingMaterial && (
+            <div className="space-y-4">
+              <div>
+                <Label>Code</Label>
+                <Input
+                  value={editingMaterial.code || ""}
+                  onChange={(e) => setEditingMaterial({...editingMaterial, code: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label>Name</Label>
+                <Input
+                  value={editingMaterial.name || ""}
+                  onChange={(e) => setEditingMaterial({...editingMaterial, name: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label>Surface Type</Label>
+                <Input
+                  value={editingMaterial.surface_type || ""}
+                  onChange={(e) => setEditingMaterial({...editingMaterial, surface_type: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label>Supplier Folder</Label>
+                <Input
+                  value={editingMaterial.supplier_folder || ""}
+                  onChange={(e) => setEditingMaterial({...editingMaterial, supplier_folder: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label>Notes</Label>
+                <Input
+                  value={editingMaterial.notes || ""}
+                  onChange={(e) => setEditingMaterial({...editingMaterial, notes: e.target.value})}
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={editingMaterial.is_active !== false}
+                  onChange={(e) => setEditingMaterial({...editingMaterial, is_active: e.target.checked})}
+                />
+                <Label>Active</Label>
+              </div>
+              <Button 
+                onClick={() => updateMutation.mutate({ id: editingMaterial.id, data: editingMaterial })}
+                className="w-full"
+              >
+                Save Changes
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Dialog */}
+      <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Material</DialogTitle>
+          </DialogHeader>
+          <MaterialForm onSubmit={(data) => createMutation.mutate(data)} />
+        </DialogContent>
+      </Dialog>
     </div>
+  );
+}
+
+function MaterialForm({ onSubmit, initialData = {} }) {
+  const [formData, setFormData] = useState({
+    code: initialData.code || "",
+    name: initialData.name || "",
+    surface_type: initialData.surface_type || "",
+    supplier_folder: initialData.supplier_folder || "Egger Boards",
+    notes: initialData.notes || "",
+    is_active: initialData.is_active !== false,
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(formData);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <Label>Code *</Label>
+        <Input
+          required
+          value={formData.code}
+          onChange={(e) => setFormData({...formData, code: e.target.value})}
+          placeholder="e.g., W990"
+        />
+      </div>
+      <div>
+        <Label>Name *</Label>
+        <Input
+          required
+          value={formData.name}
+          onChange={(e) => setFormData({...formData, name: e.target.value})}
+          placeholder="e.g., Crystal White"
+        />
+      </div>
+      <div>
+        <Label>Surface Type</Label>
+        <Input
+          value={formData.surface_type}
+          onChange={(e) => setFormData({...formData, surface_type: e.target.value})}
+          placeholder="e.g., ST9"
+        />
+      </div>
+      <div>
+        <Label>Supplier Folder</Label>
+        <Select value={formData.supplier_folder} onValueChange={(v) => setFormData({...formData, supplier_folder: v})}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Egger Boards">Egger Boards</SelectItem>
+            <SelectItem value="Handles">Handles</SelectItem>
+            <SelectItem value="Door Styles">Door Styles</SelectItem>
+            <SelectItem value="Vinyl Colours">Vinyl Colours</SelectItem>
+            <SelectItem value="Worktops">Worktops</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div>
+        <Label>Notes</Label>
+        <Input
+          value={formData.notes}
+          onChange={(e) => setFormData({...formData, notes: e.target.value})}
+        />
+      </div>
+      <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={formData.is_active}
+          onChange={(e) => setFormData({...formData, is_active: e.target.checked})}
+        />
+        <Label>Active</Label>
+      </div>
+      <Button type="submit" className="w-full">Add Material</Button>
+    </form>
   );
 }
