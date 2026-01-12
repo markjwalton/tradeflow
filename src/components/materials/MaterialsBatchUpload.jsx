@@ -226,7 +226,7 @@ export default function MaterialsBatchUpload() {
 
   const handleFileSelect = (e) => {
     const file = e.target.files?.[0];
-    if (file && file.type === 'application/zip') {
+    if (file && (file.type === 'application/zip' || file.type === 'application/x-zip-compressed' || file.name.toLowerCase().endsWith('.zip'))) {
       setZipFile(file);
       setResult(null);
     } else {
