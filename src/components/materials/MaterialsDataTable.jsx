@@ -11,28 +11,10 @@ import { Label } from "@/components/ui/label";
 import { Search, AlertCircle, CheckCircle2, Pencil, Trash2, Upload, Download, Plus, FileUp } from "lucide-react";
 import { toast } from "sonner";
 
-// Expected color codes from EGGER_COLORS
-const EXPECTED_COLORS = [
-  { code: "W990", name: "Crystal White" },
-  { code: "W908", name: "Platinum White" },
-  { code: "W1000", name: "Premium White" },
-  { code: "W1100", name: "Alpine White" },
-  { code: "U104", name: "Cashmere Grey" },
-  { code: "U702", name: "Light Grey" },
-  { code: "U717", name: "Stone Grey" },
-  { code: "U727", name: "Pebble Grey" },
-  { code: "U732", name: "Dust Grey" },
-  { code: "U741", name: "Lava Grey" },
-  { code: "U775", name: "Dakar Grey" },
-  { code: "U780", name: "Monument Grey" },
-  { code: "U899", name: "Graphite Grey" },
-  { code: "U961", name: "Anthracite" },
-  { code: "U999", name: "Black" },
-  { code: "H1145", name: "Bardolino Oak" },
-  { code: "H1176", name: "Halifax Oak" },
-  { code: "H3309", name: "Vicenza Oak" },
-  { code: "F121", name: "Sand Beige" },
-];
+// Import the full EGGER_COLORS list from batch upload
+import { EGGER_COLORS } from "./MaterialsBatchUpload";
+
+const EXPECTED_COLORS = EGGER_COLORS;
 
 export default function MaterialsDataTable() {
   const [searchTerm, setSearchTerm] = useState("");

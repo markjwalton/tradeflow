@@ -9,7 +9,7 @@ import { Upload, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 // Egger color mappings
-const EGGER_COLORS = [
+export const EGGER_COLORS = [
   { code: "W990", surface_type: "ST9", name: "Crystal White" },
   { code: "W1000", surface_type: "ST9", name: "Premium White" },
   { code: "W1000", surface_type: "ST19", name: "Premium White" },
