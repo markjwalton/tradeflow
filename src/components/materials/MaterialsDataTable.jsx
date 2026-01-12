@@ -128,14 +128,21 @@ export default function MaterialsDataTable() {
     try {
       const text = await file.text();
       const lines = text.split("\n").filter(l => l.trim());
-      const headers = lines[0].split(",");
+      const headers = lines[0].split(",").map(h => h.trim());
       
       const newMaterials = [];
       for (let i = 1; i < lines.length; i++) {
         const values = lines[i].split(",");
         const material = {};
         headers.forEach((h, idx) => {
-          material[h.trim()] = values[idx]?.trim();
+          // Map dcode to code
+          const key = h === 'dcode' ? 'code' : h;
+          const value = values[idx]?.trim();
+          if (key === 'is_active') {
+            material[key] = value === 'true';
+          } else if (value) {
+            material[key] = value;
+          }
         });
         if (material.code) {
           newMaterials.push(material);
@@ -279,7 +286,7 @@ export default function MaterialsDataTable() {
           <label className="flex items-center gap-2 cursor-pointer">
             <FileUp className="w-4 h-4" />
             Import CSV
-            <input type="file" accept=".csv" className="hidden" onChange={handleCSVImport} />
+            <input type="file" accept=".csv,.txt" className="hidden" onChange={handleCSVImport} />
           </label>
         </Button>
         
