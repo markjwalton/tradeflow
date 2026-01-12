@@ -41,15 +41,29 @@ Deno.serve(async (req) => {
         const extension = fileName.split('.').pop()?.toLowerCase();
         if (!['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(extension)) continue;
 
-        // Match filename to color mapping (e.g., "W990.jpg" -> W990)
+        // Extract code from filename (flexible matching)
+        // Handles: "W990.jpg", "U775_ST2.jpg", "U780 ST9 Monument Grey.jpg"
+        const fileUpper = fileNameWithoutExt.toUpperCase();
+        const codeMatch = fileUpper.match(/^([A-Z]\d+)/);
+        
+        if (!codeMatch) {
+          errors.push(`Could not extract code from ${fileName}`);
+          continue;
+        }
+        
+        const extractedCode = codeMatch[1];
         const matchedColor = colorMappings?.find(m => 
-          fileNameWithoutExt.toUpperCase() === m.code.toUpperCase()
+          m.code.toUpperCase() === extractedCode
         );
 
         if (!matchedColor) {
-          errors.push(`No color mapping found for ${fileName}`);
+          errors.push(`No color mapping found for code ${extractedCode} (from ${fileName})`);
           continue;
         }
+        
+        // Try to extract surface type from filename
+        const surfaceMatch = fileUpper.match(/ST\d+|TM\d+/);
+        const surfaceType = surfaceMatch ? surfaceMatch[0] : matchedColor.surface_type;
 
         // Upload image
         const file = new File([fileContent], fileName, { type: `image/${extension}` });
@@ -58,7 +72,7 @@ Deno.serve(async (req) => {
         // Create material record
         await base44.asServiceRole.entities.Material.create({
           code: matchedColor.code,
-          surface_type: matchedColor.surface_type,
+          surface_type: surfaceType,
           name: matchedColor.name,
           supplier_folder: supplierFolder,
           image_url: file_url,
