@@ -9,6 +9,8 @@ import ColorToneSelector from "@/components/sturij/ColorToneSelector";
 import SwatchCarousel from "@/components/materials/SwatchCarousel";
 import CarouselLoop from "@/components/motion-plus/CarouselLoop";
 import FilterDropdown from "@/components/materials/FilterDropdown";
+import ScrollRevealImage from "@/components/common/ScrollRevealImage";
+import ImageWithPlaceholder from "@/components/common/ImageWithPlaceholder";
 
 // Real wood swatches data
 const materials = [
@@ -297,6 +299,100 @@ export default function MaterialsBrowser() {
       </div>
 
 
+
+      {/* Full-screen Scrolling Sections */}
+      <ScrollRevealImage 
+        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/867a7e882_H0045_ST15_H.jpg"
+        alt="Natural Wood Collection"
+        colors={['#4a7c6b', '#b5956a', '#b08880', '#5a6f89']}
+        parallaxStrength={0.3}
+      />
+
+      {/* Content Section */}
+      <div className="relative min-h-screen flex items-center justify-center px-6" style={{ backgroundColor: 'var(--tone-base, #65617d)' }}>
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+          className="max-w-4xl text-center"
+        >
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-light tracking-wide mb-6" style={{ color: 'var(--tone-text, rgba(255,255,255,1))' }}>
+            Crafted Surfaces
+          </h2>
+          <p className="text-lg sm:text-xl font-light tracking-wide mb-8" style={{ color: 'var(--tone-text-secondary, rgba(255,255,255,0.8))' }}>
+            Discover our collection of premium materials designed for contemporary living.
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
+            {filteredMaterials.slice(0, 4).map((m) => (
+              <ImageWithPlaceholder
+                key={m.id}
+                src={m.image}
+                alt={m.name}
+                width="100%"
+                height="200px"
+                colors={['#4a7c6b', '#b5956a', '#b08880', '#5a6f89']}
+                className="rounded-lg"
+              />
+            ))}
+          </div>
+        </motion.div>
+      </div>
+
+      <ScrollRevealImage 
+        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/d51aed765_H046_ST15_H.jpg"
+        alt="Textured Finishes"
+        colors={['#b08880', '#5a6f89', '#4a7c6b', '#b5956a']}
+        parallaxStrength={0.4}
+      />
+
+      {/* Feature Grid Section */}
+      <div className="relative min-h-screen flex items-center justify-center px-6 py-20" style={{ backgroundColor: 'var(--tone-base, #65617d)' }}>
+        <motion.div 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1 }}
+          className="max-w-6xl w-full"
+        >
+          <h2 className="text-3xl sm:text-4xl font-light tracking-wide mb-12 text-center" style={{ color: 'var(--tone-text, rgba(255,255,255,1))' }}>
+            Explore Collections
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {filteredMaterials.slice(4, 8).map((m, i) => (
+              <motion.div
+                key={m.id}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ delay: i * 0.1, duration: 0.6 }}
+              >
+                <ImageWithPlaceholder
+                  src={m.image}
+                  alt={m.name}
+                  width="100%"
+                  height="400px"
+                  colors={['#5a6f89', '#b5956a', '#4a7c6b', '#b08880']}
+                  className="rounded-lg"
+                />
+                <div className="mt-4 text-center">
+                  <h3 className="text-xl font-light tracking-wide" style={{ color: 'var(--tone-text, rgba(255,255,255,1))' }}>{m.name}</h3>
+                  <p className="text-sm font-light mt-2" style={{ color: 'var(--tone-text-muted, rgba(255,255,255,0.6))' }}>
+                    {m.color} • {m.finish}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+
+      <ScrollRevealImage 
+        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69274b9c077e61d7cfe78ec7/34c86e2ad_H047_ST15_H.jpg"
+        alt="Contemporary Design"
+        colors={['#b5956a', '#4a7c6b', '#5a6f89', '#b08880']}
+        parallaxStrength={0.5}
+      />
 
       {/* Background Decoration */}
       <div className="fixed inset-0 pointer-events-none opacity-5">
