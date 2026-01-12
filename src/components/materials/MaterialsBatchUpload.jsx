@@ -323,6 +323,9 @@ export default function MaterialsBatchUpload() {
             <>
               <Upload className="mr-2 h-4 w-4" />
               Upload Materials
+              {!zipFile && !supplierFolder && ' (Select supplier & file)'}
+              {!zipFile && supplierFolder && ' (Select zip file)'}
+              {zipFile && !supplierFolder && ' (Select supplier)'}
             </>
           )}
         </Button>
