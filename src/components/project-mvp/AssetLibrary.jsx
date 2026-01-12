@@ -184,6 +184,10 @@ export default function AssetLibrary({ projectId }) {
       <TabsContent value="materials">
         <MaterialsBatchUpload />
       </TabsContent>
-    </Tabs>
+
+      <TabsContent value="materials-data">
+        <MaterialsDataTable />
+      </TabsContent>
+      </Tabs>
   );
 }
