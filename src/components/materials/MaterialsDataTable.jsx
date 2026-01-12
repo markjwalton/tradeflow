@@ -6,23 +6,30 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
-import { Search, AlertCircle, CheckCircle2, Pencil, Trash2, Upload, Download, Plus, FileUp } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Search, AlertCircle, CheckCircle2, Pencil, Trash2, Upload, Download, Plus, FileUp, Settings, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 // Import the full EGGER_COLORS list from batch upload
 import { EGGER_COLORS } from "./MaterialsBatchUpload";
 
 const EXPECTED_COLORS = EGGER_COLORS;
 
+const DEFAULT_COLUMNS = ["image", "code", "name", "surface_type", "supplier_folder", "is_active", "actions"];
+
 export default function MaterialsDataTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterSupplier, setFilterSupplier] = useState("all");
   const [editingMaterial, setEditingMaterial] = useState(null);
-  const [showAddDialog, setShowAddDialog] = useState(false);
+  const [showAddDrawer, setShowAddDrawer] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(null);
   const [csvFile, setCsvFile] = useState(null);
+  const [visibleColumns, setVisibleColumns] = useState(DEFAULT_COLUMNS);
+  const [customFields, setCustomFields] = useState([]);
   
   const queryClient = useQueryClient();
 
@@ -53,9 +60,28 @@ export default function MaterialsDataTable() {
     onSuccess: () => {
       queryClient.invalidateQueries(["materials"]);
       toast.success("Material created");
-      setShowAddDialog(false);
+      setShowAddDrawer(false);
     },
   });
+
+  // Get all unique fields from materials
+  const allFields = React.useMemo(() => {
+    const fields = new Set(["image", "code", "name", "surface_type", "supplier_folder", "is_active", "notes", "actions"]);
+    materials.forEach(m => {
+      Object.keys(m).forEach(key => {
+        if (!["id", "created_date", "updated_date", "created_by", "image_url"].includes(key)) {
+          fields.add(key);
+        }
+      });
+    });
+    return Array.from(fields);
+  }, [materials]);
+
+  const toggleColumn = (col) => {
+    setVisibleColumns(prev => 
+      prev.includes(col) ? prev.filter(c => c !== col) : [...prev, col]
+    );
+  };
 
   // Find uploaded codes
   const uploadedCodes = new Set(materials.map(m => m.code?.toUpperCase()));
@@ -215,10 +241,34 @@ export default function MaterialsDataTable() {
           </SelectContent>
         </Select>
         
-        <Button onClick={() => setShowAddDialog(true)} className="gap-2">
+        <Button onClick={() => setShowAddDrawer(true)} className="gap-2">
           <Plus className="w-4 h-4" />
           Add Material
         </Button>
+        
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" className="gap-2">
+              <Settings className="w-4 h-4" />
+              Columns
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-64">
+            <div className="space-y-2">
+              <h4 className="font-medium mb-2">Visible Columns</h4>
+              {allFields.map(field => (
+                <label key={field} className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={visibleColumns.includes(field)}
+                    onChange={() => toggleColumn(field)}
+                  />
+                  <span className="text-sm">{field.replace(/_/g, ' ')}</span>
+                </label>
+              ))}
+            </div>
+          </PopoverContent>
+        </Popover>
         
         <Button onClick={exportCSV} variant="outline" className="gap-2">
           <Download className="w-4 h-4" />
@@ -261,102 +311,154 @@ export default function MaterialsDataTable() {
           <table className="w-full">
             <thead className="bg-gray-50 border-b">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Image
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Code
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Surface
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Supplier
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
+                {visibleColumns.includes("image") && (
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Image
+                  </th>
+                )}
+                {visibleColumns.includes("code") && (
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Code
+                  </th>
+                )}
+                {visibleColumns.includes("name") && (
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Name
+                  </th>
+                )}
+                {visibleColumns.includes("surface_type") && (
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Surface
+                  </th>
+                )}
+                {visibleColumns.includes("supplier_folder") && (
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Supplier
+                  </th>
+                )}
+                {visibleColumns.includes("notes") && (
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Notes
+                  </th>
+                )}
+                {visibleColumns.includes("is_active") && (
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                )}
+                {allFields.filter(f => !["image", "code", "name", "surface_type", "supplier_folder", "notes", "is_active", "actions"].includes(f)).map(field => (
+                  visibleColumns.includes(field) && (
+                    <th key={field} className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {field.replace(/_/g, ' ')}
+                    </th>
+                  )
+                ))}
+                {visibleColumns.includes("actions") && (
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredMaterials.map((material) => (
                 <tr key={material.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3">
-                    <div className="relative group">
-                      {material.image_url ? (
-                        <img 
-                          src={material.image_url} 
-                          alt={material.name}
-                          className="w-16 h-16 object-cover rounded"
-                          style={{ objectPosition: 'center' }}
-                        />
+                  {visibleColumns.includes("image") && (
+                    <td className="px-4 py-3">
+                      <div className="relative group">
+                        {material.image_url ? (
+                          <img 
+                            src={material.image_url} 
+                            alt={material.name}
+                            className="w-16 h-16 object-cover rounded"
+                            style={{ objectPosition: 'center' }}
+                          />
+                        ) : (
+                          <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">
+                            No image
+                          </div>
+                        )}
+                        <label className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer flex items-center justify-center rounded">
+                          <Upload className="w-4 h-4 text-white" />
+                          <input 
+                            type="file" 
+                            accept="image/*" 
+                            className="hidden" 
+                            onChange={(e) => e.target.files?.[0] && handleImageUpload(material.id, e.target.files[0])}
+                            disabled={uploadingImage === material.id}
+                          />
+                        </label>
+                      </div>
+                    </td>
+                  )}
+                  {visibleColumns.includes("code") && (
+                    <td className="px-4 py-3 font-medium">{material.code || '-'}</td>
+                  )}
+                  {visibleColumns.includes("name") && (
+                    <td className="px-4 py-3">{material.name || '-'}</td>
+                  )}
+                  {visibleColumns.includes("surface_type") && (
+                    <td className="px-4 py-3">
+                      {material.surface_type ? (
+                        <Badge variant="outline">{material.surface_type}</Badge>
+                      ) : '-'}
+                    </td>
+                  )}
+                  {visibleColumns.includes("supplier_folder") && (
+                    <td className="px-4 py-3 text-sm text-gray-600">
+                      {material.supplier_folder || '-'}
+                    </td>
+                  )}
+                  {visibleColumns.includes("notes") && (
+                    <td className="px-4 py-3 text-sm text-gray-600 max-w-xs truncate">
+                      {material.notes || '-'}
+                    </td>
+                  )}
+                  {visibleColumns.includes("is_active") && (
+                    <td className="px-4 py-3">
+                      {material.is_active ? (
+                        <Badge className="bg-green-100 text-green-800">
+                          <CheckCircle2 className="w-3 h-3 mr-1" />
+                          Active
+                        </Badge>
                       ) : (
-                        <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">
-                          No image
-                        </div>
+                        <Badge variant="outline" className="text-gray-500">
+                          Inactive
+                        </Badge>
                       )}
-                      <label className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer flex items-center justify-center rounded">
-                        <Upload className="w-4 h-4 text-white" />
-                        <input 
-                          type="file" 
-                          accept="image/*" 
-                          className="hidden" 
-                          onChange={(e) => e.target.files?.[0] && handleImageUpload(material.id, e.target.files[0])}
-                          disabled={uploadingImage === material.id}
-                        />
-                      </label>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 font-medium">{material.code || '-'}</td>
-                  <td className="px-4 py-3">{material.name || '-'}</td>
-                  <td className="px-4 py-3">
-                    {material.surface_type ? (
-                      <Badge variant="outline">{material.surface_type}</Badge>
-                    ) : '-'}
-                  </td>
-                  <td className="px-4 py-3 text-sm text-gray-600">
-                    {material.supplier_folder || '-'}
-                  </td>
-                  <td className="px-4 py-3">
-                    {material.is_active ? (
-                      <Badge className="bg-green-100 text-green-800">
-                        <CheckCircle2 className="w-3 h-3 mr-1" />
-                        Active
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline" className="text-gray-500">
-                        Inactive
-                      </Badge>
-                    )}
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => setEditingMaterial(material)}
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => {
-                          if (confirm("Delete this material?")) {
-                            deleteMutation.mutate(material.id);
-                          }
-                        }}
-                      >
-                        <Trash2 className="w-4 h-4 text-red-600" />
-                      </Button>
-                    </div>
-                  </td>
+                    </td>
+                  )}
+                  {allFields.filter(f => !["image", "code", "name", "surface_type", "supplier_folder", "notes", "is_active", "actions"].includes(f)).map(field => (
+                    visibleColumns.includes(field) && (
+                      <td key={field} className="px-4 py-3 text-sm text-gray-600">
+                        {material[field] || '-'}
+                      </td>
+                    )
+                  ))}
+                  {visibleColumns.includes("actions") && (
+                    <td className="px-4 py-3">
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setEditingMaterial(material)}
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => {
+                            if (confirm("Delete this material?")) {
+                              deleteMutation.mutate(material.id);
+                            }
+                          }}
+                        >
+                          <Trash2 className="w-4 h-4 text-red-600" />
+                        </Button>
+                      </div>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -432,20 +534,22 @@ export default function MaterialsDataTable() {
         </DialogContent>
       </Dialog>
 
-      {/* Add Dialog */}
-      <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Add New Material</DialogTitle>
-          </DialogHeader>
-          <MaterialForm onSubmit={(data) => createMutation.mutate(data)} />
-        </DialogContent>
-      </Dialog>
+      {/* Add Drawer */}
+      <Sheet open={showAddDrawer} onOpenChange={setShowAddDrawer}>
+        <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>Add New Material</SheetTitle>
+          </SheetHeader>
+          <div className="mt-6">
+            <MaterialForm onSubmit={(data) => createMutation.mutate(data)} allFields={allFields} />
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
 
-function MaterialForm({ onSubmit, initialData = {} }) {
+function MaterialForm({ onSubmit, initialData = {}, allFields = [] }) {
   const [formData, setFormData] = useState({
     code: initialData.code || "",
     name: initialData.name || "",
@@ -453,7 +557,11 @@ function MaterialForm({ onSubmit, initialData = {} }) {
     supplier_folder: initialData.supplier_folder || "Egger Boards",
     notes: initialData.notes || "",
     is_active: initialData.is_active !== false,
+    ...initialData
   });
+  
+  const [customFieldName, setCustomFieldName] = useState("");
+  const [showAddField, setShowAddField] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -505,11 +613,60 @@ function MaterialForm({ onSubmit, initialData = {} }) {
       </div>
       <div>
         <Label>Notes</Label>
-        <Input
+        <Textarea
           value={formData.notes}
           onChange={(e) => setFormData({...formData, notes: e.target.value})}
+          rows={3}
         />
       </div>
+      
+      {/* Custom fields */}
+      {allFields.filter(f => !["code", "name", "surface_type", "supplier_folder", "notes", "is_active", "image", "actions"].includes(f)).map(field => (
+        <div key={field}>
+          <Label>{field.replace(/_/g, ' ')}</Label>
+          <Input
+            value={formData[field] || ""}
+            onChange={(e) => setFormData({...formData, [field]: e.target.value})}
+          />
+        </div>
+      ))}
+      
+      {/* Add custom field */}
+      <div className="border-t pt-4">
+        {!showAddField ? (
+          <Button type="button" variant="outline" onClick={() => setShowAddField(true)} className="w-full">
+            <Plus className="w-4 h-4 mr-2" />
+            Add Custom Field
+          </Button>
+        ) : (
+          <div className="space-y-2">
+            <Input
+              placeholder="Field name (e.g., finish_type)"
+              value={customFieldName}
+              onChange={(e) => setCustomFieldName(e.target.value)}
+            />
+            <div className="flex gap-2">
+              <Button 
+                type="button" 
+                size="sm"
+                onClick={() => {
+                  if (customFieldName) {
+                    setFormData({...formData, [customFieldName]: ""});
+                    setCustomFieldName("");
+                    setShowAddField(false);
+                  }
+                }}
+              >
+                Add
+              </Button>
+              <Button type="button" size="sm" variant="outline" onClick={() => setShowAddField(false)}>
+                Cancel
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+      
       <div className="flex items-center gap-2">
         <input
           type="checkbox"
