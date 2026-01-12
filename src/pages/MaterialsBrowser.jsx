@@ -176,6 +176,7 @@ export default function MaterialsBrowser() {
                           items={filteredMaterials}
                           slideWidth="280px"
                           gap={16}
+                          loop={filteredMaterials.length > 5}
                           showControls={true}
                           renderItem={(m) => (
                             <Card className="overflow-hidden bg-white/5 backdrop-blur-sm border-white/10">
@@ -242,6 +243,7 @@ export default function MaterialsBrowser() {
                             items={favoriteMaterials}
                             slideWidth="280px"
                             gap={16}
+                            loop={favoriteMaterials.length > 5}
                             showControls={true}
                             renderItem={(m) => (
                               <Card className="overflow-hidden bg-white/5 backdrop-blur-sm border-white/10">
