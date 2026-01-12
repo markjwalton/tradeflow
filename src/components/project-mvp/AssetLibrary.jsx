@@ -5,7 +5,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Upload, File, Image, FileText, Code, Video, Search } from "lucide-react";
+import { Upload, File, Image, FileText, Code, Video, Search, Palette } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import MaterialsBatchUpload from "@/components/materials/MaterialsBatchUpload";
 
 export default function AssetLibrary({ projectId }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -73,8 +75,20 @@ export default function AssetLibrary({ projectId }) {
   });
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row gap-4 justify-between">
+    <Tabs defaultValue="files" className="space-y-6">
+      <TabsList>
+        <TabsTrigger value="files">
+          <File className="h-4 w-4 mr-2" />
+          Files
+        </TabsTrigger>
+        <TabsTrigger value="materials">
+          <Palette className="h-4 w-4 mr-2" />
+          Materials
+        </TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="files" className="space-y-6">
+        <div className="flex flex-col sm:flex-row gap-4 justify-between">
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
           <Input
@@ -165,6 +179,11 @@ export default function AssetLibrary({ projectId }) {
           </CardContent>
         </Card>
       )}
-    </div>
+      </TabsContent>
+
+      <TabsContent value="materials">
+        <MaterialsBatchUpload />
+      </TabsContent>
+    </Tabs>
   );
 }
