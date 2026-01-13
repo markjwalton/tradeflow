@@ -135,6 +135,40 @@ export default function MaterialsDataTable() {
   const getDisplayImage = (material) => {
     return material.image_url || material.image_board || material.image_raport || material.image_detail || material.image_room;
   };
+  
+  // Render color swatch or image
+  const renderMaterialVisual = (material) => {
+    const imageUrl = getDisplayImage(material);
+    
+    if (imageUrl) {
+      return (
+        <img 
+          src={imageUrl} 
+          alt={material.name}
+          className="w-16 h-16 object-cover rounded"
+          style={{ objectPosition: 'center' }}
+        />
+      );
+    }
+    
+    // Show color swatch if hex_color is available
+    if (material.hex_color) {
+      return (
+        <div 
+          className="w-16 h-16 rounded border-2 border-gray-300"
+          style={{ backgroundColor: material.hex_color }}
+          title={material.hex_color}
+        />
+      );
+    }
+    
+    // No image or color
+    return (
+      <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">
+        No image
+      </div>
+    );
+  };
 
   // Export CSV
   const exportCSV = () => {
@@ -396,32 +430,21 @@ export default function MaterialsDataTable() {
                 <tr key={material.id} className="hover:bg-gray-50">
                   {visibleColumns.includes("image") && (
                     <td className="px-4 py-3">
-                      <div className="relative group">
-                        {getDisplayImage(material) ? (
-                          <img 
-                            src={getDisplayImage(material)} 
-                            alt={material.name}
-                            className="w-16 h-16 object-cover rounded"
-                            style={{ objectPosition: 'center' }}
-                          />
-                        ) : (
-                          <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">
-                            No image
-                          </div>
-                        )}
-                        <label className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer flex items-center justify-center rounded">
-                          <Upload className="w-4 h-4 text-white" />
-                          <input 
-                            type="file" 
-                            accept="image/*" 
-                            className="hidden" 
-                            onChange={(e) => e.target.files?.[0] && handleImageUpload(material.id, e.target.files[0])}
-                            disabled={uploadingImage === material.id}
-                          />
-                        </label>
-                      </div>
-                    </td>
-                  )}
+                        <div className="relative group">
+                          {renderMaterialVisual(material)}
+                          <label className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer flex items-center justify-center rounded">
+                            <Upload className="w-4 h-4 text-white" />
+                            <input 
+                              type="file" 
+                              accept="image/*" 
+                              className="hidden" 
+                              onChange={(e) => e.target.files?.[0] && handleImageUpload(material.id, e.target.files[0])}
+                              disabled={uploadingImage === material.id}
+                            />
+                          </label>
+                        </div>
+                      </td>
+                    )}
                   {visibleColumns.includes("code") && (
                     <td className="px-4 py-3 font-medium">{material.code || '-'}</td>
                   )}
