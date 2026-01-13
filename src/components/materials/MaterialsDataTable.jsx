@@ -42,11 +42,33 @@ export default function MaterialsDataTable() {
       if (!filterCategory && !filterSupplier) {
         return { items: [], total: 0 };
       }
-      const filters = {};
-      if (filterCategory) filters.category_id = filterCategory;
-      if (filterSupplier) filters.supplier_id = filterSupplier;
       
-      const allMaterials = await base44.entities.Material.filter(filters);
+      let allMaterials = [];
+      
+      // Query by new fields (category_id, supplier_id)
+      if (filterCategory || filterSupplier) {
+        const filters = {};
+        if (filterCategory) filters.category_id = filterCategory;
+        if (filterSupplier) filters.supplier_id = filterSupplier;
+        allMaterials = await base44.entities.Material.filter(filters);
+      }
+      
+      // Also query by legacy supplier_folder field if needed
+      if (filterSupplier) {
+        const supplier = suppliers.find(s => s.id === filterSupplier);
+        if (supplier?.name) {
+          const legacyFolderName = supplier.name === "Egger" ? "Egger Boards" : supplier.name;
+          const legacyMaterials = await base44.entities.Material.filter({ supplier_folder: legacyFolderName });
+          // Merge without duplicates
+          const existingIds = new Set(allMaterials.map(m => m.id));
+          legacyMaterials.forEach(m => {
+            if (!existingIds.has(m.id)) {
+              allMaterials.push(m);
+            }
+          });
+        }
+      }
+      
       const startIndex = (page - 1) * pageSize;
       const endIndex = startIndex + pageSize;
       
