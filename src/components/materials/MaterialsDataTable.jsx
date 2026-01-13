@@ -23,8 +23,8 @@ const DEFAULT_COLUMNS = ["image", "code", "name", "surface_type", "supplier_fold
 
 export default function MaterialsDataTable() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterCategory, setFilterCategory] = useState("all");
-  const [filterSupplier, setFilterSupplier] = useState("all");
+  const [filterCategory, setFilterCategory] = useState("");
+  const [filterSupplier, setFilterSupplier] = useState("");
   const [editingMaterial, setEditingMaterial] = useState(null);
   const [showAddDrawer, setShowAddDrawer] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(null);
@@ -35,8 +35,17 @@ export default function MaterialsDataTable() {
   const queryClient = useQueryClient();
 
   const { data: materials = [], isLoading } = useQuery({
-    queryKey: ["materials"],
-    queryFn: () => base44.entities.Material.list(),
+    queryKey: ["materials", filterCategory, filterSupplier],
+    queryFn: async () => {
+      if (!filterCategory && !filterSupplier) {
+        return [];
+      }
+      const filters = {};
+      if (filterCategory) filters.category_id = filterCategory;
+      if (filterSupplier) filters.supplier_id = filterSupplier;
+      return base44.entities.Material.filter(filters);
+    },
+    enabled: !!(filterCategory || filterSupplier),
   });
 
   const { data: categories = [] } = useQuery({
@@ -220,26 +229,34 @@ export default function MaterialsDataTable() {
     return '-';
   };
 
-  // Filter materials
+  // Filter materials (client-side search only)
   const filteredMaterials = materials.filter(m => {
     const matchesSearch = !searchTerm || 
       m.code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       m.name?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = filterCategory === "all" || 
-      m.category_id === filterCategory || 
-      (!m.category_id && filterCategory === "all");
-    const matchesSupplier = filterSupplier === "all" || 
-      m.supplier_id === filterSupplier || 
-      (!m.supplier_id && filterSupplier === "all");
-    return matchesSearch && matchesCategory && matchesSupplier;
+    return matchesSearch;
   });
-
-  if (isLoading) {
-    return <div className="p-6">Loading materials...</div>;
-  }
 
   return (
     <div className="space-y-6">
+      {/* Selection prompt when no filters selected */}
+      {!filterCategory && !filterSupplier && (
+        <Card className="p-8 text-center">
+          <div className="text-gray-500">
+            <p className="text-lg font-medium mb-2">Select a category or supplier to view materials</p>
+            <p className="text-sm">Use the dropdowns above to filter and load materials</p>
+          </div>
+        </Card>
+      )}
+      
+      {isLoading && (
+        <Card className="p-8 text-center">
+          <div className="text-gray-500">Loading materials...</div>
+        </Card>
+      )}
+      
+      {(filterCategory || filterSupplier) && !isLoading && (
+        <div className="space-y-6">
       {/* Missing Colors Alert */}
       {missingColors.length > 0 && (
         <Card className="p-6 border-orange-200 bg-orange-50">
@@ -274,10 +291,9 @@ export default function MaterialsDataTable() {
         </div>
         <Select value={filterCategory} onValueChange={setFilterCategory}>
           <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="All Categories" />
+            <SelectValue placeholder="Select Category" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
             {categories.map((cat) => (
               <SelectItem key={cat.id} value={cat.id}>
                 {cat.name}
@@ -287,10 +303,9 @@ export default function MaterialsDataTable() {
         </Select>
         <Select value={filterSupplier} onValueChange={setFilterSupplier}>
           <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="All Suppliers" />
+            <SelectValue placeholder="Select Supplier" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Suppliers</SelectItem>
             {suppliers.map((sup) => (
               <SelectItem key={sup.id} value={sup.id}>
                 {sup.name}
@@ -714,6 +729,8 @@ export default function MaterialsDataTable() {
           </div>
         </SheetContent>
       </Sheet>
+        </div>
+      )}
     </div>
   );
 }
