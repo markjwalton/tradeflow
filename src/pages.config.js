@@ -55,6 +55,7 @@ import LivePreview from './pages/LivePreview';
 import LookupTestForms from './pages/LookupTestForms';
 import MasterProjectManagementMVP from './pages/MasterProjectManagementMVP';
 import MaterialsBrowser from './pages/MaterialsBrowser';
+import MaterialsManager from './pages/MaterialsManager';
 import MotionPlusDemo from './pages/MotionPlusDemo';
 import NavigationManager from './pages/NavigationManager';
 import NavigationManagerTest from './pages/NavigationManagerTest';
@@ -113,7 +114,6 @@ import UXShowcase from './pages/UXShowcase';
 import WebsiteEnquiryForm from './pages/WebsiteEnquiryForm';
 import WebsiteTemplateManager from './pages/WebsiteTemplateManager';
 import WebsiteThemeManager from './pages/WebsiteThemeManager';
-import MaterialsManager from './pages/MaterialsManager';
 import __Layout from './Layout.jsx';
 
 
@@ -175,6 +175,7 @@ export const PAGES = {
     "LookupTestForms": LookupTestForms,
     "MasterProjectManagementMVP": MasterProjectManagementMVP,
     "MaterialsBrowser": MaterialsBrowser,
+    "MaterialsManager": MaterialsManager,
     "MotionPlusDemo": MotionPlusDemo,
     "NavigationManager": NavigationManager,
     "NavigationManagerTest": NavigationManagerTest,
@@ -233,7 +234,6 @@ export const PAGES = {
     "WebsiteEnquiryForm": WebsiteEnquiryForm,
     "WebsiteTemplateManager": WebsiteTemplateManager,
     "WebsiteThemeManager": WebsiteThemeManager,
-    "MaterialsManager": MaterialsManager,
 }
 
 export const pagesConfig = {
