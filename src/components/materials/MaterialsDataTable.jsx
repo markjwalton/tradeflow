@@ -31,22 +31,36 @@ export default function MaterialsDataTable() {
   const [csvFile, setCsvFile] = useState(null);
   const [visibleColumns, setVisibleColumns] = useState(DEFAULT_COLUMNS);
   const [customFields, setCustomFields] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(50);
   
   const queryClient = useQueryClient();
 
-  const { data: materials = [], isLoading } = useQuery({
-    queryKey: ["materials", filterCategory, filterSupplier],
+  const { data: materialsData, isLoading } = useQuery({
+    queryKey: ["materials", filterCategory, filterSupplier, page, pageSize],
     queryFn: async () => {
       if (!filterCategory && !filterSupplier) {
-        return [];
+        return { items: [], total: 0 };
       }
       const filters = {};
       if (filterCategory) filters.category_id = filterCategory;
       if (filterSupplier) filters.supplier_id = filterSupplier;
-      return base44.entities.Material.filter(filters);
+      
+      const allMaterials = await base44.entities.Material.filter(filters);
+      const startIndex = (page - 1) * pageSize;
+      const endIndex = startIndex + pageSize;
+      
+      return {
+        items: allMaterials.slice(startIndex, endIndex),
+        total: allMaterials.length
+      };
     },
     enabled: !!(filterCategory || filterSupplier),
   });
+  
+  const materials = materialsData?.items || [];
+  const totalMaterials = materialsData?.total || 0;
+  const totalPages = Math.ceil(totalMaterials / pageSize);
 
   const { data: categories = [] } = useQuery({
     queryKey: ["material-categories"],
@@ -311,8 +325,15 @@ export default function MaterialsDataTable() {
         <>
       {/* Stats */}
       <Card className="p-4">
-        <div className="text-sm text-gray-500">Total Materials</div>
-        <div className="text-2xl font-semibold">{materials.length}</div>
+        <div className="flex justify-between items-center">
+          <div>
+            <div className="text-sm text-gray-500">Total Materials</div>
+            <div className="text-2xl font-semibold">{totalMaterials}</div>
+          </div>
+          <div className="text-sm text-gray-500">
+            Showing {materials.length > 0 ? (page - 1) * pageSize + 1 : 0} - {Math.min(page * pageSize, totalMaterials)} of {totalMaterials}
+          </div>
+        </div>
       </Card>
 
       {/* Table */}
@@ -484,8 +505,71 @@ export default function MaterialsDataTable() {
               No materials found
             </div>
           )}
-        </div>
-      </Card>
+          </div>
+          </Card>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+          <Card className="p-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-500">Rows per page:</span>
+              <Select value={pageSize.toString()} onValueChange={(v) => {
+                setPageSize(Number(v));
+                setPage(1);
+              }}>
+                <SelectTrigger className="w-20">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="25">25</SelectItem>
+                  <SelectItem value="50">50</SelectItem>
+                  <SelectItem value="100">100</SelectItem>
+                  <SelectItem value="200">200</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(1)}
+                disabled={page === 1}
+              >
+                First
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(p => Math.max(1, p - 1))}
+                disabled={page === 1}
+              >
+                Previous
+              </Button>
+              <span className="text-sm text-gray-500 px-4">
+                Page {page} of {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+              >
+                Next
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(totalPages)}
+                disabled={page === totalPages}
+              >
+                Last
+              </Button>
+            </div>
+          </div>
+          </Card>
+          )}
 
       {/* Edit Sheet */}
       <Sheet open={!!editingMaterial} onOpenChange={() => setEditingMaterial(null)}>
