@@ -39,7 +39,7 @@ export default function MaterialsDataTable() {
   const { data: materialsData, isLoading } = useQuery({
     queryKey: ["materials", filterCategory, filterSupplier, page, pageSize],
     queryFn: async () => {
-      if (!filterCategory && !filterSupplier) {
+      if (!filterCategory || !filterSupplier) {
         return { items: [], total: 0 };
       }
       const filters = {};
@@ -55,7 +55,7 @@ export default function MaterialsDataTable() {
         total: allMaterials.length
       };
     },
-    enabled: !!(filterCategory || filterSupplier),
+    enabled: !!(filterCategory && filterSupplier),
   });
   
   const materials = materialsData?.items || [];
@@ -340,10 +340,10 @@ export default function MaterialsDataTable() {
       </div>
 
       {/* Selection prompt when no filters selected */}
-      {!filterCategory && !filterSupplier && (
+      {(!filterCategory || !filterSupplier) && (
         <Card className="p-8 text-center">
           <div className="text-gray-500">
-            <p className="text-lg font-medium mb-2">Select a category or supplier to view materials</p>
+            <p className="text-lg font-medium mb-2">Select both category and supplier to view materials</p>
             <p className="text-sm">Use the dropdowns above to filter and load materials</p>
           </div>
         </Card>
@@ -354,8 +354,8 @@ export default function MaterialsDataTable() {
           <div className="text-gray-500">Loading materials...</div>
         </Card>
       )}
-      
-      {(filterCategory || filterSupplier) && !isLoading && (
+
+      {filterCategory && filterSupplier && !isLoading && (
         <>
       {/* Stats */}
       <Card className="p-4">
