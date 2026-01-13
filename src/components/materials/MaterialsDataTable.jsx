@@ -203,13 +203,34 @@ export default function MaterialsDataTable() {
   // Get unique supplier folders (legacy)
   const supplierFolders = [...new Set(materials.map(m => m.supplier_folder))].filter(Boolean);
 
+  // Helper functions to get category/supplier names
+  const getCategoryName = (material) => {
+    if (material.category_id) {
+      const cat = categories.find(c => c.id === material.category_id);
+      return cat?.name || material.category_id;
+    }
+    return material.supplier_folder || '-';
+  };
+
+  const getSupplierName = (material) => {
+    if (material.supplier_id) {
+      const sup = suppliers.find(s => s.id === material.supplier_id);
+      return sup?.name || material.supplier_id;
+    }
+    return '-';
+  };
+
   // Filter materials
   const filteredMaterials = materials.filter(m => {
     const matchesSearch = !searchTerm || 
       m.code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       m.name?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = filterCategory === "all" || m.category_id === filterCategory;
-    const matchesSupplier = filterSupplier === "all" || m.supplier_id === filterSupplier;
+    const matchesCategory = filterCategory === "all" || 
+      m.category_id === filterCategory || 
+      (!m.category_id && filterCategory === "all");
+    const matchesSupplier = filterSupplier === "all" || 
+      m.supplier_id === filterSupplier || 
+      (!m.supplier_id && filterSupplier === "all");
     return matchesSearch && matchesCategory && matchesSupplier;
   });
 
@@ -370,7 +391,7 @@ export default function MaterialsDataTable() {
                 )}
                 {visibleColumns.includes("supplier_folder") && (
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Supplier
+                    Category / Supplier
                   </th>
                 )}
                 {visibleColumns.includes("notes") && (
@@ -443,7 +464,12 @@ export default function MaterialsDataTable() {
                   )}
                   {visibleColumns.includes("supplier_folder") && (
                     <td className="px-4 py-3 text-sm text-gray-600">
-                      {material.supplier_folder || '-'}
+                      <div className="flex flex-col gap-1">
+                        <span className="font-medium">{getCategoryName(material)}</span>
+                        {material.supplier_id && (
+                          <span className="text-xs text-gray-500">{getSupplierName(material)}</span>
+                        )}
+                      </div>
                     </td>
                   )}
                   {visibleColumns.includes("notes") && (
