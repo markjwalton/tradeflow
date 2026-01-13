@@ -38,6 +38,16 @@ export default function MaterialsDataTable() {
     queryFn: () => base44.entities.Material.list(),
   });
 
+  const { data: categories = [] } = useQuery({
+    queryKey: ["material-categories"],
+    queryFn: () => base44.entities.MaterialCategory.list(),
+  });
+
+  const { data: suppliers = [] } = useQuery({
+    queryKey: ["material-suppliers"],
+    queryFn: () => base44.entities.MaterialSupplier.list(),
+  });
+
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.Material.update(id, data),
     onSuccess: () => {
@@ -575,11 +585,41 @@ export default function MaterialsDataTable() {
                 />
               </div>
               <div>
-                <Label>Supplier Folder</Label>
-                <Input
-                  value={editingMaterial.supplier_folder || ""}
-                  onChange={(e) => setEditingMaterial({...editingMaterial, supplier_folder: e.target.value})}
-                />
+                <Label>Category</Label>
+                <Select 
+                  value={editingMaterial.category_id || ""} 
+                  onValueChange={(v) => setEditingMaterial({...editingMaterial, category_id: v})}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <Label>Supplier</Label>
+                <Select 
+                  value={editingMaterial.supplier_id || ""} 
+                  onValueChange={(v) => setEditingMaterial({...editingMaterial, supplier_id: v})}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select supplier" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {suppliers.map((sup) => (
+                      <SelectItem key={sup.id} value={sup.id}>
+                        {sup.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               
               {/* Show all uploaded fields */}
