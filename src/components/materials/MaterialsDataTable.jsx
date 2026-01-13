@@ -492,16 +492,65 @@ export default function MaterialsDataTable() {
           </SheetHeader>
           {editingMaterial && (
             <div className="mt-6 space-y-4">
-              {/* Preview Image */}
+              {/* Image Details */}
               {getDisplayImage(editingMaterial) && (
-                <div className="mb-4">
-                  <Label>Preview</Label>
-                  <img 
-                    src={getDisplayImage(editingMaterial)} 
-                    alt={editingMaterial.name}
-                    className="w-full h-48 object-cover rounded-lg mt-2"
-                  />
-                </div>
+                <Card className="p-4 space-y-3">
+                  <Label className="text-sm font-semibold">Image Details</Label>
+                  
+                  {/* Preview with color swatch */}
+                  <div className="flex gap-4">
+                    <img 
+                      src={getDisplayImage(editingMaterial)} 
+                      alt={editingMaterial.name}
+                      className="w-32 h-32 object-cover rounded-lg border"
+                      onLoad={(e) => {
+                        const img = e.target;
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.naturalWidth;
+                        canvas.height = img.naturalHeight;
+                        img.dataset.size = `${img.naturalWidth}x${img.naturalHeight}`;
+                      }}
+                    />
+                    <div className="flex-1 space-y-2 text-sm">
+                      <div>
+                        <span className="text-gray-500">Name:</span>
+                        <div className="font-mono text-xs break-all">
+                          {editingMaterial.code}_{editingMaterial.name?.replace(/\s+/g, '_')}.jpg
+                        </div>
+                      </div>
+                      <div>
+                        <span className="text-gray-500">URL:</span>
+                        <div className="font-mono text-xs break-all">
+                          {getDisplayImage(editingMaterial)}
+                        </div>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="gap-2"
+                        onClick={async () => {
+                          try {
+                            const response = await fetch(getDisplayImage(editingMaterial));
+                            const blob = await response.blob();
+                            const { file_url } = await base44.integrations.Core.UploadFile({ 
+                              file: new File([blob], `${editingMaterial.code}_${editingMaterial.name?.replace(/\s+/g, '_')}.jpg`, { type: blob.type })
+                            });
+                            await updateMutation.mutateAsync({ 
+                              id: editingMaterial.id, 
+                              data: { image_url: file_url } 
+                            });
+                            toast.success("Image saved to database");
+                          } catch (error) {
+                            toast.error("Download failed: " + error.message);
+                          }
+                        }}
+                      >
+                        <Download className="w-3 h-3" />
+                        Save to Database
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
               )}
               
               <div>
