@@ -23,6 +23,7 @@ const DEFAULT_COLUMNS = ["image", "code", "name", "surface_type", "supplier_fold
 
 export default function MaterialsDataTable() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [filterCategory, setFilterCategory] = useState("all");
   const [filterSupplier, setFilterSupplier] = useState("all");
   const [editingMaterial, setEditingMaterial] = useState(null);
   const [showAddDrawer, setShowAddDrawer] = useState(false);
@@ -207,8 +208,9 @@ export default function MaterialsDataTable() {
     const matchesSearch = !searchTerm || 
       m.code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       m.name?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesSupplier = filterSupplier === "all" || m.supplier_folder === filterSupplier;
-    return matchesSearch && matchesSupplier;
+    const matchesCategory = filterCategory === "all" || m.category_id === filterCategory;
+    const matchesSupplier = filterSupplier === "all" || m.supplier_id === filterSupplier;
+    return matchesSearch && matchesCategory && matchesSupplier;
   });
 
   if (isLoading) {
@@ -249,15 +251,28 @@ export default function MaterialsDataTable() {
             className="pl-10"
           />
         </div>
+        <Select value={filterCategory} onValueChange={setFilterCategory}>
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="All Categories" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Categories</SelectItem>
+            {categories.map((cat) => (
+              <SelectItem key={cat.id} value={cat.id}>
+                {cat.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <Select value={filterSupplier} onValueChange={setFilterSupplier}>
           <SelectTrigger className="w-[200px]">
             <SelectValue placeholder="All Suppliers" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Suppliers</SelectItem>
-            {supplierFolders.map((folder) => (
-              <SelectItem key={folder} value={folder}>
-                {folder}
+            {suppliers.map((sup) => (
+              <SelectItem key={sup.id} value={sup.id}>
+                {sup.name}
               </SelectItem>
             ))}
           </SelectContent>
