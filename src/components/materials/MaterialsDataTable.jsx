@@ -103,14 +103,6 @@ export default function MaterialsDataTable() {
     );
   };
 
-  // Find uploaded codes
-  const uploadedCodes = new Set(materials.map(m => m.code?.toUpperCase()));
-  
-  // Find missing colors
-  const missingColors = EXPECTED_COLORS.filter(
-    color => !uploadedCodes.has(color.code.toUpperCase())
-  );
-
   // Handle image upload
   const handleImageUpload = async (materialId, file) => {
     setUploadingImage(materialId);
@@ -190,25 +182,6 @@ export default function MaterialsDataTable() {
     }
   };
 
-  // Delete orphaned entries
-  const deleteOrphans = async () => {
-    const expectedCodes = new Set(EXPECTED_COLORS.map(c => c.code.toUpperCase()));
-    const orphans = materials.filter(m => !expectedCodes.has(m.code?.toUpperCase()));
-    
-    if (orphans.length === 0) {
-      toast.info("No orphaned entries found");
-      return;
-    }
-    
-    if (!confirm(`Delete ${orphans.length} orphaned materials?`)) return;
-    
-    for (const orphan of orphans) {
-      await deleteMutation.mutateAsync(orphan.id);
-    }
-    
-    toast.success(`Deleted ${orphans.length} orphaned materials`);
-  };
-
   // Get unique supplier folders (legacy)
   const supplierFolders = [...new Set(materials.map(m => m.supplier_folder))].filter(Boolean);
 
@@ -257,26 +230,6 @@ export default function MaterialsDataTable() {
       
       {(filterCategory || filterSupplier) && !isLoading && (
         <div className="space-y-6">
-      {/* Missing Colors Alert */}
-      {missingColors.length > 0 && (
-        <Card className="p-6 border-orange-200 bg-orange-50">
-          <div className="flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-orange-600 mt-0.5 flex-shrink-0" />
-            <div className="flex-1">
-              <h3 className="font-semibold text-orange-900 mb-2">
-                Missing {missingColors.length} Color{missingColors.length !== 1 ? 's' : ''}
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {missingColors.map((color) => (
-                  <Badge key={color.code} variant="outline" className="bg-white">
-                    {color.code} - {color.name}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          </div>
-        </Card>
-      )}
 
       {/* Filters & Actions */}
       <div className="flex gap-4 flex-wrap">
@@ -355,28 +308,13 @@ export default function MaterialsDataTable() {
             <input type="file" accept=".csv,.txt" className="hidden" onChange={handleCSVImport} />
           </label>
         </Button>
-        
-        <Button onClick={deleteOrphans} variant="destructive" className="gap-2">
-          <Trash2 className="w-4 h-4" />
-          Delete Orphans
-        </Button>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4">
-        <Card className="p-4">
-          <div className="text-sm text-gray-500">Total Materials</div>
-          <div className="text-2xl font-semibold">{materials.length}</div>
-        </Card>
-        <Card className="p-4">
-          <div className="text-sm text-gray-500">Uploaded Codes</div>
-          <div className="text-2xl font-semibold text-green-600">{uploadedCodes.size}</div>
-        </Card>
-        <Card className="p-4">
-          <div className="text-sm text-gray-500">Missing Codes</div>
-          <div className="text-2xl font-semibold text-orange-600">{missingColors.length}</div>
-        </Card>
-      </div>
+      <Card className="p-4">
+        <div className="text-sm text-gray-500">Total Materials</div>
+        <div className="text-2xl font-semibold">{materials.length}</div>
+      </Card>
 
       {/* Table */}
       <Card>
