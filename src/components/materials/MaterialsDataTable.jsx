@@ -199,8 +199,8 @@ export default function MaterialsDataTable() {
     toast.success(`Deleted ${orphans.length} orphaned materials`);
   };
 
-  // Get unique suppliers
-  const suppliers = [...new Set(materials.map(m => m.supplier_folder))].filter(Boolean);
+  // Get unique supplier folders (legacy)
+  const supplierFolders = [...new Set(materials.map(m => m.supplier_folder))].filter(Boolean);
 
   // Filter materials
   const filteredMaterials = materials.filter(m => {
@@ -255,9 +255,9 @@ export default function MaterialsDataTable() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Suppliers</SelectItem>
-            {suppliers.map((supplier) => (
-              <SelectItem key={supplier} value={supplier}>
-                {supplier}
+            {supplierFolders.map((folder) => (
+              <SelectItem key={folder} value={folder}>
+                {folder}
               </SelectItem>
             ))}
           </SelectContent>
