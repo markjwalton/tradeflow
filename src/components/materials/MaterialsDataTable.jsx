@@ -212,25 +212,6 @@ export default function MaterialsDataTable() {
 
   return (
     <div className="space-y-6">
-      {/* Selection prompt when no filters selected */}
-      {!filterCategory && !filterSupplier && (
-        <Card className="p-8 text-center">
-          <div className="text-gray-500">
-            <p className="text-lg font-medium mb-2">Select a category or supplier to view materials</p>
-            <p className="text-sm">Use the dropdowns above to filter and load materials</p>
-          </div>
-        </Card>
-      )}
-      
-      {isLoading && (
-        <Card className="p-8 text-center">
-          <div className="text-gray-500">Loading materials...</div>
-        </Card>
-      )}
-      
-      {(filterCategory || filterSupplier) && !isLoading && (
-        <div className="space-y-6">
-
       {/* Filters & Actions */}
       <div className="flex gap-4 flex-wrap">
         <div className="relative flex-1">
@@ -310,6 +291,24 @@ export default function MaterialsDataTable() {
         </Button>
       </div>
 
+      {/* Selection prompt when no filters selected */}
+      {!filterCategory && !filterSupplier && (
+        <Card className="p-8 text-center">
+          <div className="text-gray-500">
+            <p className="text-lg font-medium mb-2">Select a category or supplier to view materials</p>
+            <p className="text-sm">Use the dropdowns above to filter and load materials</p>
+          </div>
+        </Card>
+      )}
+      
+      {isLoading && (
+        <Card className="p-8 text-center">
+          <div className="text-gray-500">Loading materials...</div>
+        </Card>
+      )}
+      
+      {(filterCategory || filterSupplier) && !isLoading && (
+        <>
       {/* Stats */}
       <Card className="p-4">
         <div className="text-sm text-gray-500">Total Materials</div>
@@ -667,7 +666,7 @@ export default function MaterialsDataTable() {
           </div>
         </SheetContent>
       </Sheet>
-        </div>
+        </>
       )}
     </div>
   );
