@@ -105,6 +105,11 @@ export default function MaterialsDataTable() {
     }
   };
 
+  // Get display image for material
+  const getDisplayImage = (material) => {
+    return material.image_url || material.image_board || material.image_raport || material.image_detail || material.image_room;
+  };
+
   // Export CSV
   const exportCSV = () => {
     const headers = ["code", "surface_type", "name", "supplier_folder", "image_url", "is_active", "notes"];
@@ -373,9 +378,9 @@ export default function MaterialsDataTable() {
                   {visibleColumns.includes("image") && (
                     <td className="px-4 py-3">
                       <div className="relative group">
-                        {material.image_url ? (
+                        {getDisplayImage(material) ? (
                           <img 
-                            src={material.image_url} 
+                            src={getDisplayImage(material)} 
                             alt={material.name}
                             className="w-16 h-16 object-cover rounded"
                             style={{ objectPosition: 'center' }}
@@ -479,14 +484,26 @@ export default function MaterialsDataTable() {
         </div>
       </Card>
 
-      {/* Edit Dialog */}
-      <Dialog open={!!editingMaterial} onOpenChange={() => setEditingMaterial(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit Material</DialogTitle>
-          </DialogHeader>
+      {/* Edit Sheet */}
+      <Sheet open={!!editingMaterial} onOpenChange={() => setEditingMaterial(null)}>
+        <SheetContent className="w-[400px] sm:w-[600px] overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>Edit Material</SheetTitle>
+          </SheetHeader>
           {editingMaterial && (
-            <div className="space-y-4">
+            <div className="mt-6 space-y-4">
+              {/* Preview Image */}
+              {getDisplayImage(editingMaterial) && (
+                <div className="mb-4">
+                  <Label>Preview</Label>
+                  <img 
+                    src={getDisplayImage(editingMaterial)} 
+                    alt={editingMaterial.name}
+                    className="w-full h-48 object-cover rounded-lg mt-2"
+                  />
+                </div>
+              )}
+              
               <div>
                 <Label>Code</Label>
                 <Input
@@ -515,13 +532,28 @@ export default function MaterialsDataTable() {
                   onChange={(e) => setEditingMaterial({...editingMaterial, supplier_folder: e.target.value})}
                 />
               </div>
+              
+              {/* Show all uploaded fields */}
+              {allFields.filter(f => !["code", "name", "surface_type", "supplier_folder", "is_active", "image", "actions", "image_url", "image_board", "image_raport", "image_detail", "image_room"].includes(f) && editingMaterial[f]).map(field => (
+                <div key={field}>
+                  <Label>{field.replace(/_/g, ' ')}</Label>
+                  <Textarea
+                    value={editingMaterial[field] || ""}
+                    onChange={(e) => setEditingMaterial({...editingMaterial, [field]: e.target.value})}
+                    rows={2}
+                  />
+                </div>
+              ))}
+              
               <div>
                 <Label>Notes</Label>
-                <Input
+                <Textarea
                   value={editingMaterial.notes || ""}
                   onChange={(e) => setEditingMaterial({...editingMaterial, notes: e.target.value})}
+                  rows={3}
                 />
               </div>
+              
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -538,8 +570,8 @@ export default function MaterialsDataTable() {
               </Button>
             </div>
           )}
-        </DialogContent>
-      </Dialog>
+        </SheetContent>
+      </Sheet>
 
       {/* Add Drawer */}
       <Sheet open={showAddDrawer} onOpenChange={setShowAddDrawer}>
