@@ -99,8 +99,19 @@ export default function EggerDataImporter() {
       const text = await file.text();
       const materials = parseEggerTSV(text);
       
+      // DELETE ALL EXISTING EGGER MATERIALS FIRST (TSV is single source of truth)
+      toast.info("Clearing existing Egger data...");
+      const existingEgger = await base44.entities.Material.filter({
+        supplier_folder: { $regex: "Egger" }
+      });
+      
+      for (const mat of existingEgger) {
+        await base44.entities.Material.delete(mat.id);
+      }
+      
+      toast.info(`Deleted ${existingEgger.length} existing materials. Importing fresh data...`);
+      
       let created = 0;
-      let updated = 0;
       let errors = [];
       
       for (let i = 0; i < materials.length; i++) {
@@ -108,27 +119,16 @@ export default function EggerDataImporter() {
         setProgress(Math.round(((i + 1) / materials.length) * 100));
         
         try {
-          // Check if material exists
-          const existing = await base44.entities.Material.filter({
-            code: material.code,
-            surface_type: material.surface_type
-          });
-          
-          if (existing.length > 0) {
-            await base44.entities.Material.update(existing[0].id, material);
-            updated++;
-          } else {
-            await base44.entities.Material.create(material);
-            created++;
-          }
+          await base44.entities.Material.create(material);
+          created++;
         } catch (error) {
           errors.push({ code: material.code, error: error.message });
         }
       }
       
-      setResults({ created, updated, errors, total: materials.length });
+      setResults({ created, updated: 0, deleted: existingEgger.length, errors, total: materials.length });
       queryClient.invalidateQueries(['materials']);
-      toast.success(`Import complete: ${created} created, ${updated} updated`);
+      toast.success(`Import complete: ${created} created, ${existingEgger.length} deleted`);
     } catch (error) {
       toast.error("Import failed: " + error.message);
     } finally {
@@ -179,7 +179,12 @@ export default function EggerDataImporter() {
 
         {results && (
           <div className="space-y-2">
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-4 gap-3">
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-center">
+                <AlertCircle className="w-5 h-5 text-red-600 mx-auto mb-1" />
+                <div className="text-xl font-semibold text-red-700">{results.deleted}</div>
+                <div className="text-xs text-red-600">Deleted</div>
+              </div>
               <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-center">
                 <CheckCircle2 className="w-5 h-5 text-green-600 mx-auto mb-1" />
                 <div className="text-xl font-semibold text-green-700">{results.created}</div>

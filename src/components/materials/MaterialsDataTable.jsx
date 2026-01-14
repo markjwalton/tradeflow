@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Search, AlertCircle, CheckCircle2, Pencil, Trash2, Upload, Download, Plus, FileUp, Settings, Eye, EyeOff } from "lucide-react";
+import { Search, AlertCircle, CheckCircle2, Pencil, Trash2, Upload, Download, Plus, FileUp, Settings, Eye, EyeOff, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
@@ -33,6 +33,7 @@ export default function MaterialsDataTable() {
   const [customFields, setCustomFields] = useState([]);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(50);
+  const [bulkDeleteConfirm, setBulkDeleteConfirm] = useState(false);
   
   const queryClient = useQueryClient();
 
@@ -95,6 +96,27 @@ export default function MaterialsDataTable() {
       queryClient.invalidateQueries(["materials"]);
       toast.success("Material created");
       setShowAddDrawer(false);
+    },
+  });
+
+  const bulkDeleteMutation = useMutation({
+    mutationFn: async () => {
+      const toDelete = materials.filter(m => 
+        (!searchTerm || 
+          m.code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          m.name?.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+      
+      for (const mat of toDelete) {
+        await base44.entities.Material.delete(mat.id);
+      }
+      
+      return toDelete.length;
+    },
+    onSuccess: (count) => {
+      queryClient.invalidateQueries(["materials"]);
+      toast.success(`Deleted ${count} materials`);
+      setBulkDeleteConfirm(false);
     },
   });
 
@@ -337,7 +359,49 @@ export default function MaterialsDataTable() {
             <input type="file" accept=".csv,.txt" className="hidden" onChange={handleCSVImport} />
           </label>
         </Button>
+        
+        <Button 
+          variant="destructive" 
+          className="gap-2"
+          onClick={() => setBulkDeleteConfirm(true)}
+          disabled={filteredMaterials.length === 0}
+        >
+          <Trash className="w-4 h-4" />
+          Delete All ({filteredMaterials.length})
+        </Button>
       </div>
+      
+      {/* Bulk Delete Confirmation Dialog */}
+      <Dialog open={bulkDeleteConfirm} onOpenChange={setBulkDeleteConfirm}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Bulk Delete</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-gray-600">
+              You are about to delete <strong>{filteredMaterials.length} materials</strong> from:
+            </p>
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm">
+              <div><strong>Category:</strong> {categories.find(c => c.id === filterCategory)?.name || 'N/A'}</div>
+              <div><strong>Supplier:</strong> {suppliers.find(s => s.id === filterSupplier)?.name || 'N/A'}</div>
+              {searchTerm && <div><strong>Search filter:</strong> "{searchTerm}"</div>}
+            </div>
+            <p className="text-sm text-red-600 font-medium">This action cannot be undone.</p>
+            <div className="flex gap-2 justify-end">
+              <Button variant="outline" onClick={() => setBulkDeleteConfirm(false)}>
+                Cancel
+              </Button>
+              <Button 
+                variant="destructive" 
+                onClick={() => bulkDeleteMutation.mutate()}
+                disabled={bulkDeleteMutation.isPending}
+              >
+                {bulkDeleteMutation.isPending ? "Deleting..." : "Delete All"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Selection prompt when no filters selected */}
       {(!filterCategory || !filterSupplier) && (
